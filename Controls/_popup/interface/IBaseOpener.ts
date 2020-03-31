@@ -1,5 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import {IEventHandlers} from './IPopup';
+import {IEventHandlers, IPopupItemInfo} from './IPopup';
+import {List} from 'Types/collection';
+import {IControlOptions} from 'UI/Base';
 
 /**
  * Интерфейс базовых опций опенеров.
@@ -11,14 +13,16 @@ import {IEventHandlers} from './IPopup';
 
 export interface IBasePopupOptions {
     className?: string;
-    template?: Control | TemplateFunction | string | any; // TODO: https://online.sbis.ru/opendoc.html?guid=875d74bf-5b84-4a5b-802c-e7f47f1f98d1
+    template?: Control<IControlOptions, unknown> | TemplateFunction | string;
     closeOnOutsideClick?: boolean;
-    templateOptions?: any;
-    opener?: Control | any; // TODO: https://online.sbis.ru/opendoc.html?guid=875d74bf-5b84-4a5b-802c-e7f47f1f98d1
+    templateOptions?: unknown;
+    opener?: Control<IControlOptions, unknown>;
     autofocus?: boolean;
+    topPopup?: boolean;
     modal?: boolean;
     eventHandlers?: IEventHandlers;
     isDefaultOpener?: boolean;
+    zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     actionOnScroll?: string; // TODO Перенести на sticky, Удалить из baseOpener
     zIndex?: number; // TODO Compatible
     isCompoundTemplate?: boolean; // TODO Compatible

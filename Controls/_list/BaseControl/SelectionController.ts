@@ -19,9 +19,6 @@ var _private = {
     notifyAndUpdateSelection: function(self, options) {
         const
             selectionCount = self._multiselection.getCount(),
-            itemsCount = self._options.items.getCount(),
-            model = self._options.listModel,
-            root = model.getRoot ? model.getRoot().getContents() : null,
             oldSelectedKeys = options.selectedKeys,
             oldExcludedKeys = options.excludedKeys,
             // selectionCount будет равен нулю, если в списке не отмечено ни одного элемента
@@ -29,9 +26,7 @@ var _private = {
             newSelectedKeys = selectionCount === 0 ? [] : self._multiselection.selectedKeys,
             newExcludedKeys = selectionCount === 0 ? [] : self._multiselection.excludedKeys,
             selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
-            excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys),
-            isAllSelected = !model.getHasMoreData() && selectionCount === itemsCount ||
-               newSelectedKeys.includes(root) && (newExcludedKeys.length === 0 || newExcludedKeys.length === 1 && newExcludedKeys[0] === root);
+            excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
 
         if (selectedKeysDiff.added.length || selectedKeysDiff.removed.length) {
             self._notify('selectedKeysChanged', [newSelectedKeys, selectedKeysDiff.added, selectedKeysDiff.removed]);
@@ -61,7 +56,7 @@ var _private = {
          4) Прокидывать событие в Container/Scroll.
          Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
          */
-       self._notify('listSelectedKeysCountChanged', [selectionCount, isAllSelected], {bubbling: true});
+        _private.notifySelectedCountChangedEvent(self, newSelectedKeys, newExcludedKeys);
        self._multiselection.updateSelectionForRender();
     },
 
@@ -73,12 +68,50 @@ var _private = {
         return keys;
     },
 
+    isAllSelected(self, selectedKeys, excludedKeys): boolean {
+        const model = self._options.listModel;
+        const selectedCount = self._multiselection.getCount();
+        const selectionCountEqualsItemsCount = !model.getHasMoreData() && selectedCount && selectedCount === model.getCount();
+        const root = _private.getRoot(self);
+
+        return !model.getHasMoreData() && selectionCountEqualsItemsCount ||
+            selectedKeys.includes(root) && (excludedKeys.length === 0 || excludedKeys.length === 1 && excludedKeys[0] === root);
+    },
+
+    isAllSelectedInRoot(self, root): boolean {
+        const selectedKeys = self._multiselection.selectedKeys;
+        const excludedKeys = self._multiselection.excludedKeys;
+        const isAllSelected = _private.isAllSelected(self, selectedKeys, excludedKeys);
+
+        return isAllSelected && selectedKeys.includes(root);
+    },
+
+    getRoot(self): number|string|null {
+        const model = self._options.listModel;
+        return model.getRoot && model.getRoot() ? model.getRoot().getContents() : null;
+    },
+
+    notifySelectedCountChangedEvent(self, selectedKeys, excludedKeys): void {
+        const count = self._multiselection.getCount();
+        const isAllSelected = _private.isAllSelected(self, selectedKeys, excludedKeys);
+        self._notify('listSelectedKeysCountChanged', [count, isAllSelected], {bubbling: true});
+    },
+
     onCollectionChange: function (event, action, newItems, newItemsIndex, removedItems) {
         // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
         // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
         if (this._options.listModel.getItems()) {
             if (action === collection.IObservable.ACTION_REMOVE) {
                 this._multiselection.remove(_private.getItemsKeys(removedItems));
+            }
+            // Выделение надо сбросить только после вставки новых данных в модель
+            // Это необходимо, чтобы чекбоксы сбросились только после отрисовки новых данных,
+            // Иначе при проваливании в узел или при смене фильтрации сначала сбросятся чекбоксы,
+            // а данные отрисуются только после загрузки
+            if (this._resetSelection && action === collection.IObservable.ACTION_RESET) {
+                this._resetSelection = false;
+                this._multiselection.selectedKeys = [];
+                this._multiselection.excludedKeys = [];
             }
             _private.notifyAndUpdateSelection(this, this._options);
         }
@@ -130,11 +163,34 @@ var _private = {
               }
            });
         });
+    },
+
+    isSelectionChanged(self, newOptions): boolean {
+        return !isEqual(newOptions.selectedKeys, self._multiselection.selectedKeys) ||
+               !isEqual(newOptions.excludedKeys, self._multiselection.excludedKeys);
+    },
+
+    shouldResetSelection(self, newOptions): boolean {
+        const listFilterChanged = !isEqual(self._options.filter, newOptions.filter);
+        const rootChanged = self._options.root !== newOptions.root;
+        const isAllSelected = _private.isAllSelectedInRoot(self, _private.getRoot(self));
+
+        return isAllSelected && (rootChanged || listFilterChanged);
+    },
+
+    clearSelection(self): void {
+        self._multiselection.selectedKeys = [];
+        self._multiselection.excludedKeys = [];
+
+        if (self._options.listModel.getCount()) {
+            self._multiselection.updateSelectionForRender();
+        }
     }
 };
 
 var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/SelectionController.prototype */{
     _template: template,
+    _resetSelection: false,
     _beforeMount: function (options) {
         // todo Костыль, т.к. построение ListView зависит от SelectionController.
         // Будет удалено при выполнении одного из пунктов:
@@ -152,39 +208,41 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
         });
     },
 
-    _afterMount: function () {
+    _afterMount(): void {
+        const options = this._options;
+
         this._notify('register', ['selectedTypeChanged', this, _private.selectedTypeChangedHandler], {bubbling: true});
-        this._notify('listSelectedKeysCountChanged', [this._multiselection.getCount()], {bubbling: true});
+        _private.notifySelectedCountChangedEvent(this, options.selectedKeys, options.excludedKeys);
 
         this._onCollectionChangeHandler = _private.onCollectionChange.bind(this);
-        this._options.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
+        options.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
     },
 
     _beforeUpdate: function (newOptions) {
-        let
-           itemsIsChanged = newOptions.items !== this._options.items,
-           modelIsChanged = this._options.listModel !== newOptions.listModel,
-           selectionChanged = !isEqual(newOptions.selectedKeys, this._multiselection.selectedKeys) ||
-              !isEqual(newOptions.excludedKeys, this._multiselection.excludedKeys);
+        const itemsChanged = newOptions.items !== this._options.items;
+        const modelChanged = this._options.listModel !== newOptions.listModel;
+        const selectionChanged = _private.isSelectionChanged(this, newOptions);
 
         if (this._options.keyProperty !== newOptions.keyProperty) {
            this._multiselection.setKeyProperty(newOptions.keyProperty);
         }
 
-        if (modelIsChanged) {
+        if (modelChanged) {
             this._multiselection.setListModel(newOptions.listModel);
         }
 
-        if (itemsIsChanged) {
+        if (itemsChanged) {
             this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
             newOptions.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
         }
 
-        if (selectionChanged) {
+        if (_private.shouldResetSelection(this, newOptions)) {
+            this._resetSelection = true;
+        } else if (selectionChanged) {
             this._multiselection.selectedKeys = newOptions.selectedKeys;
             this._multiselection.excludedKeys = newOptions.excludedKeys;
             _private.notifyAndUpdateSelection(this, newOptions);
-        } else if (itemsIsChanged || modelIsChanged) {
+        } else if (itemsChanged || modelChanged) {
            this._multiselection.updateSelectionForRender();
         }
     },
@@ -199,7 +257,8 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
     },
 
     _beforeUnmount: function () {
-        this._options.listModel.updateSelection({});
+        _private.clearSelection(this);
+        this._notify('listSelectedKeysCountChanged', [0], {bubbling: true});
         this._multiselection = null;
         this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
         this._onCollectionChangeHandler = null;

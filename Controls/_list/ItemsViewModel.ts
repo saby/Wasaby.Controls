@@ -129,13 +129,13 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     reset: function() {
-        this._startIndex = this._options.virtualScrolling && !!this._startIndex ? this._startIndex : 0;
+        this._startIndex = (this._options.virtualScrolling || Boolean(this._options.virtualScrollConfig)) && !!this._startIndex ? this._startIndex : 0;
         this._curIndex = this._startIndex;
     },
 
     isEnd: function() {
         var endIndex;
-        if (this._options.virtualScrolling) {
+        if (this._options.virtualScrolling || Boolean(this._options.virtualScrollConfig)) {
             endIndex = !!this._stopIndex ? this._stopIndex : 0;
         } else {
             endIndex = (this._display ? this._display.getCount() : 0);
@@ -167,7 +167,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     isLast: function() {
         var lastIndex;
-        if (this._options.virtualScrolling) {
+        if (this._options.virtualScrolling || Boolean(this._options.virtualScrollConfig)) {
             lastIndex = this._stopIndex - 1;
         } else {
             lastIndex = (this._display ? this._display.getCount() - 1 : 0);
@@ -308,7 +308,7 @@ var ItemsViewModel = BaseViewModel.extend({
         this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
         this._nextModelVersion();
         this._notify('onGroupsExpandChange', {
-            groupId,
+            group: groupId,
             changeType: state ? 'expand' : 'collapse',
             collapsedGroups: _private.prepareCollapsedGroupsByObject(this._collapsedGroups)
         });

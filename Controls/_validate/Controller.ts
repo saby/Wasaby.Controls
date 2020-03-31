@@ -13,7 +13,7 @@ interface IValidateResult {
 
 /**
  * Контрол, регулирующий валидацию формы.
- * Валидация запускается при вызове метода {@link Controls/_validate/FormController#submit submit}.
+ * Валидация запускается при вызове метода {@link Controls/_validate/Controller#submit submit}.
  * @class Controls/_validate/Controller
  * @extends Core/Control
  * @control

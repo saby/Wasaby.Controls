@@ -77,7 +77,7 @@ var
 
 /**
  * Контроллер для редактирования полей ввода.
- * <a href="/materials/demo-ws4-editable-area">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FEditableArea%2FEditableArea">Демо-пример</a>.
  *
  * @class Controls/_editableArea/View
  * @extends Core/Control
@@ -85,15 +85,16 @@ var
  * @author Авраменко А.С.
  * @public
  *
- * @css @background-color_EditableArea_style_withBackground Background color of the input field with the style option set to "accentHeader".
- * @css @spacing_EditableArea-between-editor-toolbar Spacing between the editor and the toolbar.
+ * @remark
+ * Если в качестве шаблона редактирования используются поля ввода, то при переключении в режим чтения может наблюдаться скачок текста.
+ * Для того, чтобы избежать этого, рекомендуется навесить css класс controls-Input_negativeOffset_theme_{{_options.theme}} на редактируемую область.
  *
  * @demo Controls-demo/EditableArea/EditableArea
  */
 
 /*
  * Controller for editing of input fields.
- * <a href="/materials/demo-ws4-editable-area">Demo</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FEditableArea%2FEditableArea">Demo</a>.
  *
  * @class Controls/_editableArea/View
  * @extends Core/Control

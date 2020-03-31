@@ -27,7 +27,7 @@ function getBoundingClientRect(element: HTMLElement, clear?: boolean): ClientRec
         element.style.position = 'static';
     }
     const clientRect: ClientRect = element.getBoundingClientRect();
-    if (clear) {
+    if (clear && position !== undefined) {
         element.style.position = position;
     }
     return clientRect;
@@ -62,7 +62,7 @@ function getDimensions(element: HTMLElement, clear?: boolean): ClientRect {
 
     dimensions = {
         width: lastChildDimensions.right - firstChildDimensions.left,
-        height: firstChildDimensions.height,
+        height: lastChildDimensions.height,
         top: firstChildDimensions.top,
         right: lastChildDimensions.right,
         bottom: firstChildDimensions.bottom,

@@ -2,12 +2,11 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Input/Input');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {getOptionTypes} from 'Controls/_suggest/Utils';
-import 'css!theme?Controls/suggest';
 
 /**
  * Поле ввода с автодополнением это одострочное поле ввода, которое помогает пользователю ввести текст, предлагая подходящие варианты по первым набранным символам.
  * @remark
- * См. <a href="/materials/demo/demo-suggest-input">демо-пример</a>
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FSuggest%2FSuggest">демо-пример</a>
  *
  * @class Controls/_suggest/Input
  * @extends Core/Control
@@ -36,7 +35,7 @@ import 'css!theme?Controls/suggest';
 /*
  * The Input/Suggest control is a normal text input enhanced by a panel of suggested options.
  *
- * Here you can see the <a href="/materials/demo/demo-suggest-input">demo examples</a>.
+ * Here you can see the <a href="/materials/Controls-demo/app/Controls-demo%2FSuggest%2FSuggest">demo examples</a>.
  *
  * @class Controls/_suggest/Input
  * @extends Core/Control
@@ -55,8 +54,6 @@ import 'css!theme?Controls/suggest';
  * @author Gerasimov A.M.
  */
 
-
-
 var Suggest = Control.extend({
 
    _template: template,
@@ -69,6 +66,7 @@ var Suggest = Control.extend({
    _beforeMount: function() {
       this._searchStart = this._searchStart.bind(this);
       this._searchEnd = this._searchEnd.bind(this);
+      this._searchError = this._searchError.bind(this);
    },
 
    // </editor-fold>
@@ -118,8 +116,11 @@ var Suggest = Control.extend({
    _searchEnd: function() {
       this._searchState = false;
       this._forceUpdate();
-   }
+   },
 
+   _searchError: function() {
+      this._searchState = false;
+   }
    // </editor-fold>
 
 });
@@ -127,6 +128,7 @@ var Suggest = Control.extend({
 
 // <editor-fold desc="OptionsDesc">
 
+Suggest._theme = ['Controls/suggest', 'Controls/Classes'];
 Suggest.getOptionTypes = getOptionTypes;
 Suggest.getDefaultOptions = function() {
    return {
@@ -137,4 +139,3 @@ Suggest.getDefaultOptions = function() {
 // </editor-fold>
 
 export = Suggest;
-

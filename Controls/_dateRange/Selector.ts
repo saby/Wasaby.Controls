@@ -90,7 +90,7 @@ var Component = BaseSelector.extend({
             template: 'Controls/datePopup',
             className,
             templateOptions: {
-                ...getOptions.getTemplateOptions(this),
+                ...getOptions.getDateRangeTemplateOptions(this),
                 headerType: 'link',
                 captionFormatter: this._options.captionFormatter,
                 emptyCaption: this._options.emptyCaption,

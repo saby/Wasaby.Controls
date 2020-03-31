@@ -10,6 +10,7 @@ define([
    describe('Controls.operations:TreeSelectionStrategy', function() {
       let
          treeStrategy,
+         treeStrategyWithDescendantsAndAncestors,
          recordSet, model,
          selection = {
             selected: [],
@@ -34,7 +35,13 @@ define([
          model = new treeGrid.ViewModel({columns: [], items: recordSet});
          treeStrategy = new operations.TreeSelectionStrategy({
             selectDescendants: false,
-            selectAncestors: false
+            selectAncestors: false,
+            parentProperty: ListData.PARENT_PROPERTY
+         });
+         treeStrategyWithDescendantsAndAncestors = new operations.TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            parentProperty: ListData.PARENT_PROPERTY
          });
       });
 
@@ -95,45 +102,76 @@ define([
       });
 
       describe('getCount', function() {
-         it('without selection', function() {
-            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 0);
+
+         describe('selectDescendants: false, selectAncestors: false', () => {
+            it('without selection', function() {
+               assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 0);
+            });
+
+            it('with selected items', function() {
+               selection.selected = [1, 2, 5, 10, 15];
+               assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 5);
+            });
+
+            it('with selected and excluded items', function() {
+               selection.selected = [1, 2, 10];
+               selection.excluded = [3, 4];
+               assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 3);
+            });
+
+            it('select root', function() {
+               selection.selected = [null];
+               selection.excluded = [null];
+               assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 3);
+
+            });
+
+            it('select root with excluded', function() {
+               // Дети корня 1,6,7
+               selection.selected = [null];
+               selection.excluded = [null, 1, 7, 10];
+               assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 1);
+            });
+
+            it('with not loaded selected root', function() {
+               selection.selected = [null];
+               selection.excluded = [null];
+               assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 3);
+            });
+
+            it('with not loaded node', function() {
+               selection.selected = [10];
+               selection.excluded = [10];
+               assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), null);
+            });
          });
 
-         it('with selected items', function() {
-            selection.selected = [1, 2, 10, 15];
-            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 4);
-         });
+         describe('selectDescendants: true, selectAncestors: true', () => {
+            it('with selected items', function() {
+               selection.selected = [1, 2, 3, 4, 5];
+               assert.equal(
+                  treeStrategyWithDescendantsAndAncestors.getCount(selection, model, {}, hierarchyRelation),
+                  5
+               );
+            });
 
-         it('with selected and excluded items', function() {
-            selection.selected = [1, 2, 10];
-            selection.excluded = [3, 4];
-            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 3);
-         });
+            it('unSelect', function() {
+               let selectResult = treeStrategyWithDescendantsAndAncestors.unSelect(selection, [3, 4], model, hierarchyRelation);
+               assert.deepEqual(selectResult.selected, []);
+               assert.deepEqual(selectResult.excluded, []);
 
-         it('select root', function() {
-            selection.selected = [null];
-            selection.excluded = [null];
-            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 3);
+               // 2 - родитедль 3 и 4
+               selection.selected = [2];
+               selectResult = treeStrategyWithDescendantsAndAncestors.unSelect(selection, [3, 4], model, hierarchyRelation);
+               assert.deepEqual(selectResult.selected, []);
+               assert.deepEqual(selectResult.excluded, []);
 
-         });
-
-         it('select root with excluded', function() {
-            // Дети корня 1,6,7
-            selection.selected = [null];
-            selection.excluded = [null, 1, 7, 10];
-            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 1);
-         });
-
-         it('with not loaded selected root', function() {
-            selection.selected = [null];
-            selection.excluded = [null];
-            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), 3);
-         });
-
-         it('with not loaded node', function() {
-            selection.selected = [10];
-            selection.excluded = [10];
-            assert.equal(treeStrategy.getCount(selection, model, {}, hierarchyRelation), null);
+               selection.selected = [2];
+               selection.excluded = [2];
+               selectResult = treeStrategyWithDescendantsAndAncestors.unSelect(selection, [3, 4], model, hierarchyRelation);
+               assert.deepEqual(selectResult.selected, []);
+               assert.deepEqual(selectResult.excluded, [2]);
+            });
          });
       });
 

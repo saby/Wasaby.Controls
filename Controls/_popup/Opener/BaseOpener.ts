@@ -42,6 +42,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     protected _template: TemplateFunction = Template;
     private _actionOnScroll: string = 'none';
     private _popupId: string = '';
+    private _openerUnmounted: boolean = false;
     private _indicatorId: string = '';
     private _loadModulesPromise: Promise<ILoadDependencies|Error>;
     private _openerUpdateCallback: Function;
@@ -55,6 +56,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     protected _beforeUnmount(): void {
         this._notify('unregisterOpenerUpdateCallback', [this._openerUpdateCallback], {bubbling: true});
         this._toggleIndicator(false);
+        this._openerUnmounted = true;
         if (this._options.closePopupBeforeUnmount) {
             if (this._openPopupTimerId) {
                 clearTimeout(this._openPopupTimerId);
@@ -135,10 +137,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 this._loadModulesPromise = null;
                 // todo https://online.sbis.ru/opendoc.html?guid=b954dff3-9aa5-4415-a9b2-7d3430bb20a5
                 // If Opener was destroyed while template loading, then don't open popup.
-                if (!this._destroyed || this._options.closePopupBeforeUnmount === false) {
+                if (!this._openerUnmounted || this._options.closePopupBeforeUnmount === false) {
                     return results;
                 }
-                return new Error('Opener was destroyed');
+                Logger.warn(`Controls/popup: Во время открытия окна с шаблоном ${cfg.template} задестроился opener`);
+                throw new Error('Opener was destroyed');
             }).catch((error) => {
                 this._loadModulesPromise = null;
                 throw error;
@@ -166,6 +169,13 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         baseConfig.id = this._popupId;
 
         this._prepareNotifyConfig(baseConfig);
+
+        if (this._options.closePopupBeforeUnmount === false) {
+            const message = 'Если при дестрое опенера окно не должно закрываться, используйте ' +
+                'статический метод openPopup вместо опции closePopupBeforeUnmount';
+            Logger.warn(` ${this._moduleName}: ${message}`);
+        }
+
         return baseConfig;
     }
 
@@ -181,14 +191,18 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     private _popupHandler(eventName: string, args: any[]): void {
-        // Trim the prefix "on" in the event name
-        const event = eventName.substr(2).toLowerCase();
+        // В ядре появилась новая фича, при дестрое контрола через несколько секунд очищаются все св-ва и методы
+        // с инстанса. Если закроют окно после того, как открыватор был задестроен, то метода _notify уже не будет.
+        if (!this._openerUnmounted) {
+            // Trim the prefix "on" in the event name
+            const event = eventName.substr(2).toLowerCase();
 
-        if (event === 'close' || event === 'open') {
-            this._toggleIndicator(false);
+            if (event === 'close' || event === 'open') {
+                this._toggleIndicator(false);
+            }
+
+            this._notify(event, args);
         }
-
-        this._notify(event, args);
     }
 
     private _toggleIndicator(visible: boolean): void {
@@ -231,7 +245,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         this.close();
     }
 
-    private _getCurrentPopupId(): string {
+    protected _getCurrentPopupId(): string {
         return this._popupId;
     }
 
@@ -255,13 +269,24 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
         const def = new Deferred();
+        // Если задали опцию, берем с опции, иначе с контрола, который открывает
+        const popupOpener = cfg?.opener || opener;
+
+        // protect against wrong config. Opener must be specified only on popupOptions.
+        if (cfg?.templateOptions?.opener) {
+            delete cfg.templateOptions.opener;
+            Logger.warn('Controls/popup: Опция opener не должна задаваться на templateOptions');
+        }
+
         if (!BaseOpener.isNewEnvironment()) {
             BaseOpener.getManager().then(() => {
                 BaseOpener.getZIndexUtil().addCallback((getZIndex) => {
-                    const popupOpener = opener || cfg.opener;
                     if (popupOpener) {
                         // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
-                        cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
+                        // Если topPopup, то zIndex менеджер высчитает сам
+                        if (!cfg.topPopup) {
+                            cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
+                        }
                         cfg.theme = popupOpener._options.theme;
                     }
                     if (!BaseOpener.isVDOMTemplate(rootTpl)) {
@@ -274,7 +299,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                     }
                 });
             });
-        } else if (BaseOpener.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
+        } else if (BaseOpener.isVDOMTemplate(rootTpl) &&
+            !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
             BaseOpener.getManager().then(() => {
                 BaseOpener._openPopup(cfg, controller, def);
             });
@@ -396,10 +422,12 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             'corner',
             'targetPoint',
             'targetTracking',
+            'topPopup',
             'locationStrategy',
             'fittingMode',
             'actionOnScroll',
-            'isWS3Compatible'
+            'isWS3Compatible',
+            'zIndexCallback'
         ];
 
         // merge _options to popupOptions
@@ -417,11 +445,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         CoreMerge(templateOptions, popupOptions.templateOptions || {}, {rec: false});
 
         const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
-
-        // protect against wrong config. Opener must be specified only on popupOptions.
-        if (baseCfg.templateOptions) {
-            delete baseCfg.templateOptions.opener;
-        }
 
         if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
             Logger.warn('Controls/popup:Sticky : Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
@@ -477,10 +500,10 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 managerContainer.classList.add('controls-PopupContainer');
                 document.body.insertBefore(managerContainer, document.body.firstChild);
 
-                ManagerWrapperCreatingPromise = new Promise((resolve) => {
+                ManagerWrapperCreatingPromise = new Promise((resolve, reject) => {
                     require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
                         Creator(compatiblePopup.ManagerWrapper, {}, managerContainer).then(resolve);
-                    });
+                    }, reject);
                 });
             } else {
                 // Защита от случаев, когда позвали открытие окна до полного построения страницы

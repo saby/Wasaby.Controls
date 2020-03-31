@@ -2,9 +2,11 @@ define(
    [
       'Controls/filterPopup',
       'Core/core-clone',
-      'Types/collection'
+      'Types/collection',
+      'Core/Deferred',
+      'Controls/_filter/HistoryUtils'
    ],
-   function(filterPopup, Clone, collection) {
+   function(filterPopup, Clone, collection, Deferred, HistoryUtils) {
       describe('Filter:SimplePanel', function() {
 
          let defaultItems = [
@@ -105,6 +107,29 @@ define(
             panel._beforeUpdate(newConfig).addCallback(() => {
                assert.deepStrictEqual(panel._items, expectedItems);
                assert.isTrue(panel._needShowApplyButton);
+               done();
+            });
+         });
+
+         it('_beforeUpdate loadDeferred', function(done) {
+            let panel = getPanel(defaultConfig);
+            panel._beforeMount(defaultConfig);
+
+            let items = Clone(defaultItemsConfig);
+            items[0].loadDeferred = Deferred.success(items[0].items);
+            items[0].sourceController = { hasMoreData: () => true };
+            items[0].source = { prepareItems: () => {} };
+            const sandBox = sinon.createSandbox();
+            sandBox.stub(HistoryUtils, 'isHistorySource').returns(true);
+
+            let newConfig = {...defaultConfig, items: new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: items
+            })};
+
+            panel._beforeUpdate(newConfig).addCallback(() => {
+               assert.isTrue(panel._items[0].hasMoreButton);
+               sandBox.restore();
                done();
             });
          });

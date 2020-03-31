@@ -5,6 +5,7 @@ import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/
 import Utils = require('Types/util');
 import chain = require('Types/chain');
 import dropdownUtils = require('Controls/_dropdown/Util');
+import {isEqual} from 'Types/object';
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
@@ -52,7 +53,7 @@ var _private = {
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
  * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто.
  * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
- * <a href="/materials/demo-ws4-input-dropdown">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDropdown%2FDropdown">Демо-пример</a>.
  * Руководство разработчика {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/dropdown-menu/ Меню и выпадающий список}.
  *
  * @class Controls/_dropdown/Input
@@ -83,7 +84,7 @@ var _private = {
 /*
  * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
  * The full list of options is displayed when you click on the control.
- * <a href="/materials/demo-ws4-input-dropdown">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDropdown%2FDropdown">Demo-example</a>.
  *
  * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
  * @class Controls/_dropdown/Input
@@ -287,7 +288,10 @@ var Input = Control.extend({
 
    _selectedItemsChangedHandler: function (event, items) {
       this._notify('textValueChanged', [_private.getText(this, items) + _private.getMoreText(items)]);
-      return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
+      const newSelectedKeys = _private.getSelectedKeys(items, this._options.keyProperty);
+      if (!isEqual(this._options.selectedKeys, newSelectedKeys) || this._options.task1178744737) {
+         return this._notify('selectedKeysChanged', [newSelectedKeys]);
+      }
    },
 
    _dataLoadCallback: function (items) {
@@ -315,7 +319,7 @@ var Input = Control.extend({
    // Делаем через событие deactivated на Controller'e,
    // т.к в Controller передается просто шаблон, а не контрол, который не обладает состоянием активности,
    // и подписка на _deactivated на это шаблоне работать не будет
-   _deactivated: function () {
+   _deactivated: function() {
       this.closeMenu();
    },
 

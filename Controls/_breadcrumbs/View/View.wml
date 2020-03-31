@@ -12,14 +12,13 @@
 
     <Controls.popup:Sticky
             on:result="_onResult()"
+            on:close="_onClose()"
+            on:open="_onOpen()"
             name="menuOpener"
             template="Controls/dropdownPopup:List"
             closeOnOutsideClick="{{true}}"
             actionOnScroll="close">
-        <ws:templateOptions className="controls-BreadCrumbsController__menu"/>
-        <ws:targetPoint vertical="top"
-                   horizontal="right"/>
-        <ws:direction horizontal="left"/>
+        <ws:templateOptions className="controls-BreadCrumbsController__menu_theme-{{_options.theme}}"/>
     </Controls.popup:Sticky>
 
 </div>

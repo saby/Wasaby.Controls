@@ -181,6 +181,7 @@ var TileView = ListView.extend({
         const isCurrentItemHovered = hoveredItem && hoveredItem.key === itemData.key;
 
         if (
+            this._options.tileScalingMode !== TILE_SCALING_MODE.NONE &&
             !isCurrentItemHovered &&
             !this._listModel.getDragEntity() &&
             _private.shouldProcessHover(this)
@@ -201,16 +202,17 @@ var TileView = ListView.extend({
         let itemSize;
 
         //If the hover on the checkbox does not increase the element
-        if (this._options.tileScalingMode === TILE_SCALING_MODE.NONE || event.target.closest('.js-controls-TileView__withoutZoom')) {
+        if (event.target.closest('.js-controls-TileView__withoutZoom')) {
             if (itemData.dispItem.isNode() === false) {
                 if (documentForUnits) {
                     itemSize = itemContainerRect;
                 } else {
                     itemSize = ItemSizeUtils.getItemSize(itemContainer, 1, this._options.tileMode);
                 }
-                const position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
+                let position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
                 const documentRect = documentObject.documentElement.getBoundingClientRect();
-                this._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect, true), position, true);
+                position = _private.getPositionInDocument(position, containerRect, documentRect, true);
+                this._setHoveredItem(itemData, position, position, true);
             } else {
                 this._setHoveredItem(itemData);
             }
@@ -247,13 +249,15 @@ var TileView = ListView.extend({
     },
 
     _setHoveredItem: function (itemData, position, startPosition, noZoom) {
-        this._listModel.setHoveredItem({
-            key: itemData.key,
-            canShowActions: noZoom || !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
-            zoomCoefficient: this._getZoomCoefficient(),
-            position: _private.getPositionStyle(startPosition || position),
-            endPosition: _private.getPositionStyle(position)
-        });
+        if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
+            this._listModel.setHoveredItem({
+                key: itemData.key,
+                canShowActions: noZoom || !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
+                zoomCoefficient: this._getZoomCoefficient(),
+                position: _private.getPositionStyle(startPosition || position),
+                endPosition: _private.getPositionStyle(position)
+            });
+        }
     },
 
     _onItemWheel: function () {

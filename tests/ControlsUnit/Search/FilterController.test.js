@@ -5,10 +5,11 @@ define(['Controls/search'], function(search) {
 
          filterController._beforeMount({
             searchParam: 'title',
-            searchValue: 'test'
+            searchValue: 'test',
+            parentProperty: 'test'
          });
 
-         assert.deepEqual(filterController._filter, { title: 'test' });
+         assert.deepEqual(filterController._filter, {  'Разворот': 'С разворотом', 'usePages': 'full', title: 'test' });
 
          filterController._filter = null;
          filterController._beforeMount({
@@ -16,6 +17,17 @@ define(['Controls/search'], function(search) {
          });
          assert.deepEqual(filterController._filter, {});
       });
+
+      it('_beforeMount with short option searchValue', () => {
+         var filterController = new search.FilterController();
+         filterController._beforeMount({
+            minSearchLength: 3,
+            searchParam: 'title',
+            searchValue: 'te'
+         });
+         assert.deepEqual(filterController._filter, {});
+      });
+
       it('_beforeUpdate', () => {
          var filterController = new search.FilterController();
          filterController.saveOptions({
@@ -29,6 +41,16 @@ define(['Controls/search'], function(search) {
          });
 
          assert.deepEqual(filterController._filter, { title: 'test2' });
+
+         filterController._beforeUpdate({
+            filter: {
+               title: 'test2'
+            },
+            searchValue: 'test',
+            searchParam: 'search_string'
+         });
+
+         assert.deepEqual(filterController._filter, { title: 'test2', search_string: 'test' });
 
          filterController._filter = null;
          // filter options is not changed

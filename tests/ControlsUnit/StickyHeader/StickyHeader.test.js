@@ -33,6 +33,22 @@ define([
             const component2 = createComponent(StickyHeader, options);
             assert.strictEqual(component._index, component2._index - 1);
          });
+
+         it('should not create a observer if the control was created invisible, and must create after it has become visible', function () {
+            const component = createComponent(StickyHeader, options);
+            component._container = {
+               offsetParent: null,
+               closest: sinon.stub().returns(true)
+            };
+            sinon.stub(component, '_initResizeObserver');
+            sinon.stub(component, '_createObserver');
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            assert.isUndefined(component._observer);
+            component._container.offsetParent = {};
+            component._resizeHandler();
+            sinon.assert.called(component._createObserver);
+            sinon.restore();
+         });
       });
 
       describe('_beforeUnmount', function() {
@@ -74,19 +90,16 @@ define([
 
          it('should return correct top.', function() {
             const component = createComponent(StickyHeader, {fixedZIndex: 2, position: 'topbottom'});
-            component._context = {
-               stickyHeader: { top: 2, bottom: 5 }
-            };
             component._stickyHeadersHeight = {
                top: 10,
                bottom: 20
             };
 
             component._model = { fixedPosition: 'top' };
-            assert.include(component._getStyle(), 'top: 12px;');
+            assert.include(component._getStyle(), 'top: 10px;');
 
             component._model = { fixedPosition: 'bottom' };
-            assert.include(component._getStyle(), 'bottom: 25px;');
+            assert.include(component._getStyle(), 'bottom: 20px;');
          });
 
          it('should return correct min-height.', function() {
@@ -123,9 +136,6 @@ define([
             sandbox.replace(component, '_getComputedStyle', function() {
                return { boxSizing: 'border-box', minHeight: '30px', paddingTop: '1px' };
             });
-            component._context = {
-               stickyHeader: { top: 5 }
-            };
             component._stickyHeadersHeight = {
                top: 10
             };
@@ -136,7 +146,7 @@ define([
 
             style = component._getStyle();
             assert.include(style, 'min-height:33px;');
-            assert.include(style, 'top: 12px;');
+            assert.include(style, 'top: 7px;');
             assert.include(style, 'margin-top: -3px;');
             assert.include(style, 'padding-top:4px;');
 
@@ -151,9 +161,6 @@ define([
             sandbox.replace(component, '_getComputedStyle', function() {
                return { boxSizing: 'border-box', minHeight: '30px', paddingTop: '1px', 'border-top-width': '1px' };
             });
-            component._context = {
-               stickyHeader: { top: 5 }
-            };
             component._stickyHeadersHeight = {
                top: 10
             };
@@ -164,7 +171,7 @@ define([
 
             style = component._getStyle();
             assert.include(style, 'min-height:31px;');
-            assert.include(style, 'top: 14px;');
+            assert.include(style, 'top: 9px;');
             assert.include(style, 'margin-top: -1px;');
             assert.include(style, 'border-top-width:2px;');
 
@@ -285,7 +292,9 @@ define([
                   id: component._index,
                   mode: "replaceable",
                   offsetHeight: 10,
-                  prevPosition: "top"
+                  prevPosition: "top",
+                  shadowVisible: true,
+                  ignoreHeight: undefined
                }], {
                   bubbling: true
                }
@@ -309,7 +318,9 @@ define([
                   id: component._index,
                   mode: "replaceable",
                   offsetHeight: 10,
-                  prevPosition: "top"
+                  prevPosition: "top",
+                  shadowVisible: true,
+                  ignoreHeight: undefined
                }], {
                   bubbling: true
                }

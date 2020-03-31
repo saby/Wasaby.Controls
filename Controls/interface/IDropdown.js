@@ -422,6 +422,39 @@ define('Controls/interface/IDropdown', [], function() {
     * @cfg {String} Unique id for save history.
     */
 
+   /**
+    * @name Controls/interface/IDropdown#menuPopupOptions
+    * @cfg {Controls/popup:IStickyPopupOptions} Опции для окна выпадающего списка
+    * @example
+    * Открываем окно выпадающего списка влево. По умолчанию окно открывается вправо.
+    * WML:
+    * <pre>
+    *    <Controls.dropdown:Button source="{{_source}}" displayProperty="title" keyProperty="id"
+    *       menuPopupOptions={{_menuPopupOptions}}/>
+    * </pre>
+    *
+    * JS:
+    * <pre>
+    *     import sourceLib from "Types/source"
+    *
+    *     _beforeMount() {
+    *         this._source = new sourceLib.Memory({
+    *             keyProperty: 'id',
+    *             data: [
+    *                {id: 1, title: 'Name'},
+    *                {id: 2, title: 'Date of change'}
+    *             ]
+    *         });
+    *         this._menuPopupOptions = {
+    *            direction: {
+    *               horizontal: 'left',
+    *               vertical: 'bottom'
+    *            }
+    *         }
+    *     }
+    * </pre>
+    *
+    */
 
    /**
     * @event Controls/interface/IDropdown#dropDownOpen Происходит при открытии выпадающего списка.
@@ -510,7 +543,7 @@ define('Controls/interface/IDropdown', [], function() {
    /**
     * Открывает выпадающий список.
     * @function Controls/interface/IDropdown#openMenu
-    * @param {Object} popupOptions Конфигурация прилипающего блока {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
+    * @param {Object} popupOptions Конфигурация прилипающего блока {@link https://wi.sbis.ru/docs/js/Controls/popup/IStickyPopupOptions/ popupOptions}
     * @example
     * WML:
     * <pre>

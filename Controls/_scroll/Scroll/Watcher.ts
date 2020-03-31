@@ -126,7 +126,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
                _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
             }
             if (oldClientHeight !== sizeCache.clientHeight) {
-                _private.sendByRegistrar(self, 'viewPortResize', [sizeCache.clientHeight, container.getBoundingClientRect()]);
+                _private.sendByRegistrar(self, 'viewportResize', {
+                    scrollHeight: sizeCache.scrollHeight,
+                    scrollTop: sizeCache.scrollTop,
+                    clientHeight: sizeCache.clientHeight,
+                    rect: container.getBoundingClientRect()
+                });
             }
             if ((oldClientHeight !== sizeCache.clientHeight) || (oldScrollHeight !== sizeCache.scrollHeight)) {
                 _private.sendByRegistrar(self, 'scrollResize', {...sizeCache});
@@ -138,7 +143,10 @@ import {SyntheticEvent} from "Vdom/Vdom"
             var sizeCache = _private.getSizeCache(self, container);
 
              const newScrollTop = container.scrollTop;
-
+             // todo будет удалено по: https://online.sbis.ru/opendoc.html?guid=bcc4b6be-7513-4f3d-8f26-eb27512d0a28
+             if (!self._options.task1178703223 && container.scrollLeft) {
+                 container.scrollLeft = 0;
+             }
              if (newScrollTop === self._scrollTopCache) {
                  return;
              }
@@ -218,7 +226,10 @@ import {SyntheticEvent} from "Vdom/Vdom"
                   if (self._observers === null) {
                      return;
                   }
-                  for (var i = 0; i < changes.length; i++) {
+                  // Изменения необходимо проходить с конца, чтобы сначала нотифицировать о видимости нижнего триггера
+                  // Это необходимо для того, чтобы когда вся высота записей списочного контрола была меньше вьюпорта, то
+                  // сначала список заполнялся бы вниз, а не вверх, при этом сохраняя положение скролла
+                  for (var i = changes.length - 1; i > -1 ; i--) {
                      switch (changes[i].target) {
                         case elements.topLoadTrigger:
                            if (changes[i].isIntersecting) {
@@ -234,18 +245,18 @@ import {SyntheticEvent} from "Vdom/Vdom"
                               eventName = 'loadBottomStop';
                            }
                            break;
-                        case elements.topVirtualScrollTrigger:
+                         case elements.bottomVirtualScrollTrigger:
+                             if (changes[i].isIntersecting) {
+                                 eventName = 'virtualPageBottomStart';
+                             } else {
+                                 eventName = 'virtualPageBottomStop';
+                             }
+                             break;
+                         case elements.topVirtualScrollTrigger:
                            if (changes[i].isIntersecting) {
                               eventName = 'virtualPageTopStart';
                            } else {
                                eventName = 'virtualPageTopStop';
-                           }
-                           break;
-                        case elements.bottomVirtualScrollTrigger:
-                           if (changes[i].isIntersecting) {
-                              eventName = 'virtualPageBottomStart';
-                           } else {
-                               eventName = 'virtualPageBottomStop';
                            }
                            break;
                      }
@@ -283,7 +294,12 @@ import {SyntheticEvent} from "Vdom/Vdom"
                self._registrar.startOnceTarget(component, 'cantScroll');
             }
 
-            self._registrar.startOnceTarget(component, 'viewPortResize', [sizeCache.clientHeight, container.getBoundingClientRect()]);
+            self._registrar.startOnceTarget(component, 'viewportResize', {
+                scrollHeight: sizeCache.scrollHeight,
+                scrollTop: sizeCache.scrollTop,
+                clientHeight: sizeCache.clientHeight,
+                rect: container.getBoundingClientRect()
+            });
 
             if (!withObserver) {
                //TODO надо кидать не всем компонентам, а адресно одному

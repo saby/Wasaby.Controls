@@ -40,6 +40,14 @@ export default {
          this._managerWrapper.unregisterListener(event, registerType, component);
       }
    },
+
+   getMaxZIndex: function() {
+      if (this._managerWrapper) {
+         return this._managerWrapper.getMaxZIndex();
+      }
+      return 0;
+   },
+
    startResizeEmitter(): void {
       if (this._managerWrapper) {
          const eventCfg = {

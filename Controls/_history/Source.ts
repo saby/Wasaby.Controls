@@ -448,6 +448,10 @@ var _private = {
 
    checkPinnedAmount: function (pinned) {
       return pinned.getCount() !== Constants.MAX_HISTORY;
+   },
+
+   isError(data: unknown): boolean {
+      return data instanceof Error;
    }
 };
 
@@ -501,11 +505,15 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
       var where = query.getWhere();
       var newItems;
 
+      let originSourceQuery;
+      let historySourceQuery;
+
       // For Selector/Suggest load data from history, if there is a historyKeys
       if (where && (where['$_history'] === true || where['historyKeys'])) {
          delete query._where['$_history'];
 
-         pd.push(self.historySource.query());
+         historySourceQuery = self.historySource.query();
+         pd.push(historySourceQuery);
 
          if (where['historyKeys']) {
             where = clone(where);
@@ -513,17 +521,19 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
             query.where(where);
          }
 
-         pd.push(self.originSource.query(query));
+         originSourceQuery = self.originSource.query(query);
+         pd.push(originSourceQuery);
 
-         return pd.done().getResult().addBoth(function (data) {
+         return pd.done().getResult().addBoth((data) => {
+            const isCancelled = _private.isError(data) && data.canceled;
             let result;
 
             // method returns error
-            if (data[1] && !(data[1] instanceof Error)) {
+            if (!isCancelled && data[1] && !_private.isError(data[1])) {
                self._oldItems = data[1].getAll();
 
                // history service returns error
-               if (data[0] && !(data[0] instanceof Error)) {
+               if (data[0] && !_private.isError(data[0])) {
                   _private.initHistory(self, data[0], self._oldItems);
                   newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
                   self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
@@ -533,8 +543,14 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
                result = new sourceLib.DataSet({
                   rawData: newItems.getRawData(true),
                   keyProperty: newItems.getKeyProperty(),
-                  adapter: newItems.getAdapter()
+                  adapter: newItems.getAdapter(),
+                  model: newItems.getModel()
                });
+            } else if (isCancelled) {
+               // Необходимо вернуть ошибку из deferred'a, чтобы вся цепочка завершилась ошибкой
+               result = data;
+               historySourceQuery.cancel();
+               originSourceQuery.cancel();
             } else {
                result = data[1];
             }

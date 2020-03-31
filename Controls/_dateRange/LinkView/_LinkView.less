@@ -2,7 +2,8 @@
    display: inline-block;
    .user-select();
    white-space: nowrap;
-   line-height: normal;
+   height: @height_DateLinkView;
+   line-height: @height_DateLinkView;
 }
 
 .controls-DateLinkView-wrapper {
@@ -57,9 +58,11 @@
 }
 
 .ws-is-hover {
-   .controls-DateLinkView__style-secondary_clickable_theme-@{themeName}:hover {
+   .controls-DateLinkView__style-secondary_clickable_theme-@{themeName} {
       cursor: pointer;
-      color: @color_DateLinkView-secondaryStyle_hover;
+      &:hover {
+         color: @color_DateLinkView-secondaryStyle_hover;
+      }
    }
 
    .controls-DateLinkView__value-hovered:hover {
@@ -72,7 +75,12 @@
 }
 
 .controls-DateLinkView__value-wrapper {
-   display: inline-block;
+   //В разных браузерах, при нечетнром количестве пикселей при делении, разные браузеры округлят по разному.
+   //Из-за этого существует разница в 1px по высоте. Увиеличил высоту контейнера на 1px и прижал к низу.
+   display: flex;
+   justify-content: center;
+   height: @height_DateLinkView + 1px;
+   align-items: flex-end;
    flex-grow: 1;
    text-align: center;
 }
@@ -90,7 +98,6 @@
 .controls-DateLinkView__value_theme-@{themeName} {
    font-size: @font-size_DateLinkView;
    font-weight: @font-weight_DateLinkView-value;
-   padding-top: @padding_DateLinkView-value;
 }
 
 .controls-DateLinkView__clear_theme-@{themeName} {

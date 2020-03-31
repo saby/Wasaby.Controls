@@ -9,23 +9,33 @@
 }
 
 .controls-SuggestV__loader {
-	.flex-shrink(0);
-	background: @background-image_Suggest-spinner 0 0 no-repeat center contain;
+	flex-shrink: 0;
+}
+
+.controls-Suggest__loader_theme-@{themeName} {
+	background: @background-image_Suggest-spinner 0 0 no-repeat;
+	background-size: contain;
 	height: @height_Suggest-spinner;
 	width: @width_Suggest-spinner;
 	margin-right: @spacing_Suggest-between-spinner-clear;
 }
 
 .controls-SuggestV__clear {
-	.icon-size(@icon-size_Suggest-clear);
 	margin: auto;
-	color: @color_Suggest-clear;
 	cursor: pointer;
 }
 
+.controls-Suggest__clear_theme-@{themeName}{
+	.icon-size(@icon-size_Suggest-clear);
+	color: @color_Suggest-clear;
+}
+
 .controls-SuggestV__afterFieldWrapper {
-	.inline-flexbox();
+	display: inline-flex;
 	align-self: center;
+}
+
+.controls-Suggest__afterFieldWrapper_theme-@{themeName} {
 	margin-right: @spacing_Suggest-between-afterFieldWrapper-inputRenderWrapper;
 }
 

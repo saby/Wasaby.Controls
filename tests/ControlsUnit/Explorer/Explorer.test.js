@@ -102,7 +102,6 @@ define([
          explorerMod.View._private.serviceDataLoadCallback(self, testData1, testData3);
          assert.deepEqual(self._breadCrumbsItems, null, 'Incorrect "breadCrumbsItems"');
       });
-
       it('should update subscription on data recordSet on change', function () {
          let
              isSubscribed = false,
@@ -292,6 +291,12 @@ define([
             root: 'rootNode',
             virtualScrolling: true
          };
+         var newCfg3 = {
+            viewMode: 'search',
+            root: 'rootNode',
+            virtualScrolling: true,
+            searchStartingWith: 'root'
+         };
          var instance = new explorerMod.View(cfg);
          var rootChanged = false;
 
@@ -349,6 +354,9 @@ define([
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
                assert.isFalse(rootChanged);
                assert.isFalse(instance._virtualScrolling);
+            }).then(() => {
+               explorerMod.View._private.setViewMode(instance, newCfg3.viewMode, newCfg3);
+               assert.equal(instance._breadCrumbsItems, null);
             });
       });
 
@@ -390,36 +398,112 @@ define([
          assert.deepEqual({ 1: { markedKey: null } }, instance._restoredMarkedKeys);
 
          path.clear();
+
+         let itemsPromiseResolved = false;
+         instance._resolveItemsPromise = function() {
+            itemsPromiseResolved = true;
+         };
          instance._beforeMount(cfg);
          assert.equal(instance._breadCrumbsItems, null);
+         assert.isTrue(itemsPromiseResolved);
       });
 
-      it('_beforeUpdate', function() {
-         const cfg = { viewMode: 'tree', root: null };
-         const cfg2 = { viewMode: 'search' , root: null };
-         const instance = new explorerMod.View(cfg);
-         let resetExpandedItemsCalled = false;
-         instance._children = {
-            treeControl: {
-               resetExpandedItems: () => resetExpandedItemsCalled = true
-            }
+      it('dataLoadErrback', () => {
+         let instance = new explorerMod.View();
+         let path = new collection.RecordSet({
+            rawData: [
+               { id: 1, title: 'item1' }
+            ],
+            keyProperty: 'id'
+         });
+         let cfg = {
+            source: {},
+            items: {
+               getMetaData: function() {
+                  return { path: path };
+               }
+            },
+            root: 1
          };
 
-         instance._viewMode = cfg.viewMode;
 
-         instance._beforeUpdate(cfg2);
-         assert.isTrue(resetExpandedItemsCalled);
+         let itemsPromiseResolved = false;
+         instance._beforeMount(cfg);
+         instance._itemsResolver = function() {
+            itemsPromiseResolved = true;
+         };
+         instance._dataLoadErrback({});
+         assert.isTrue(itemsPromiseResolved);
+      });
+      describe('_beforeUpdate', function() {
+         it('collapses and expands items as needed', () => {
+            const cfg = { viewMode: 'tree', root: null };
+            const cfg2 = { viewMode: 'search' , root: null };
+            const instance = new explorerMod.View(cfg);
+            let resetExpandedItemsCalled = false;
+            instance._children = {
+               treeControl: {
+                  resetExpandedItems: () => resetExpandedItemsCalled = true
+               }
+            };
 
-         resetExpandedItemsCalled = false;
-         instance._viewMode = cfg2.viewMode;
+            instance.saveOptions(cfg);
+            instance._viewMode = cfg.viewMode;
 
-         instance._beforeUpdate(cfg2);
-         assert.isFalse(resetExpandedItemsCalled);
+            instance._beforeUpdate(cfg2);
+            assert.isTrue(resetExpandedItemsCalled);
 
-         instance._isGoingFront = true;
-         instance.saveOptions(cfg);
-         instance._beforeUpdate(cfg2);
-         assert.isFalse(instance._isGoingFront);
+            resetExpandedItemsCalled = false;
+            instance._viewMode = cfg2.viewMode;
+
+            instance._beforeUpdate(cfg2);
+            assert.isFalse(resetExpandedItemsCalled);
+
+            instance._isGoingFront = true;
+            instance.saveOptions(cfg);
+            instance._beforeUpdate(cfg2);
+            assert.isFalse(instance._isGoingFront);
+         });
+
+         it('changes viewMode on items set if both viewMode and root changed(tree -> search)', () => {
+            const cfg = { viewMode: 'tree', root: null };
+            const cfg2 = { viewMode: 'search' , root: 'abc' };
+            const instance = new explorerMod.View(cfg);
+            instance._children = {
+               treeControl: {
+                  resetExpandedItems: () => null
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._viewMode = 'tree';
+
+            instance._beforeUpdate(cfg2);
+            instance.saveOptions(cfg2);
+            assert.strictEqual(instance._viewMode, 'search');
+
+         });
+
+         it('changes viewMode on items set if both viewMode and root changed(tree -> tile)', () => {
+            const cfg = { viewMode: 'tree', root: null };
+            const cfg2 = { viewMode: 'tile' , root: 'abc' };
+            const instance = new explorerMod.View(cfg);
+            instance._children = {
+               treeControl: {
+                  resetExpandedItems: () => null
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._viewMode = 'tree';
+
+            instance._beforeUpdate(cfg2);
+            instance.saveOptions(cfg2);
+            assert.strictEqual(instance._viewMode, 'tree');
+
+            explorerMod.View._private.itemsSetCallback(instance);
+            assert.strictEqual(instance._viewMode, 'tile');
+         });
       });
 
       it('_onBreadCrumbsClick', function() {
@@ -576,17 +660,25 @@ define([
 
          });
 
-         it('_onItemClick', function() {
+         it('_onItemClick', async function() {
             isNotified = false;
             isWeNotified = false;
 
+            const successfulCommit = Promise.resolve({});
+            const unSuccessfulCommit = Promise.resolve({ validationFailed: true });
+
+            let commitEditResult = successfulCommit;
+
             var
-               explorer = new explorerMod.View({}),
+               explorer = new explorerMod.View({
+                  editingConfig: {}
+               }),
                isEventResultReturns = false,
-               cancelEditCalled = false,
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
-            explorer.saveOptions({});
+            explorer.saveOptions({
+               editingConfig: {}
+            });
             explorer._notify = (eName, eArgs) => {
                if (eName === 'itemClick') {
                   assert.equal(3, eArgs[2]);
@@ -603,9 +695,7 @@ define([
                   _children: {
 
                   },
-                  cancelEdit: function() {
-                     cancelEditCalled = true;
-                  }
+                  commitEdit: () => commitEditResult
                }
             };
 
@@ -616,22 +706,28 @@ define([
             };
 
 
-            isEventResultReturns = explorer._onItemClick({
-               stopPropagation: function() {
-                  isPropagationStopped = true;
-               }
-            }, {
-               get: function() {
-                  return true;
-               },
-               getId: function() {
-                  return 'itemId';
-               }
-            }, {
-               nativeEvent: 123
-            }, 3);
+            await (new Promise((res) => {
+               isEventResultReturns = explorer._onItemClick({
+                  stopPropagation: function() {
+                     isPropagationStopped = true;
+                  }
+               }, {
+                  get: function() {
+                     return true;
+                  },
+                  getId: function() {
+                     return 'itemId';
+                  }
+               }, {
+                  nativeEvent: 123
+               }, 3);
+
+               setTimeout(() => {
+                  res();
+               }, 0);
+            }));
+
             assert.isFalse(isEventResultReturns);
-            assert.isTrue(cancelEditCalled);
             assert.deepEqual({
                ...explorer._restoredMarkedKeys,
                itemId: {
@@ -657,20 +753,51 @@ define([
 
             isPropagationStopped = false;
 
-            explorer._onItemClick({
-               stopPropagation: function() {
-                  isPropagationStopped = true;
-               }
-            }, {
-               get: function() {
-                  return true;
-               },
-               getId: function() {
-                  return 'itemIdOneMore';
-               }
-            }, {
-               nativeEvent: 123
+            await new Promise((res) => {
+               explorer._onItemClick({
+                  stopPropagation: function () {
+                     isPropagationStopped = true;
+                  }
+               }, {
+                  get: function () {
+                     return true;
+                  },
+                  getId: function () {
+                     return 'itemIdOneMore';
+                  }
+               }, {
+                  nativeEvent: 123
+               });
+               setTimeout(() => {
+                  res();
+               }, 0);
             });
+
+            assert.isTrue(isPropagationStopped);
+            // Root wasn't changed
+            assert.equal(root, 'itemId');
+
+
+            explorer._notify = () => true;
+            commitEditResult = unSuccessfulCommit;
+            isPropagationStopped = false;
+
+            await new Promise((res) => {
+               explorer._onItemClick({
+                  stopPropagation: () => {
+                     isPropagationStopped = true;
+                  }
+               }, {
+                  get: () => true,
+                  getId: () => 'itemIdOneMore'
+               }, {
+                  nativeEvent: 123
+               });
+               setTimeout(() => {
+                  res();
+               }, 0);
+            });
+
             assert.isTrue(isPropagationStopped);
             // Root wasn't changed
             assert.equal(root, 'itemId');

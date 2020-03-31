@@ -4,10 +4,25 @@
   position:absolute;
 }
 
+.controls-itemActionsV_full_item_size {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  pointer-events: none;
+  background: transparent;
+}
+
 .controls-itemActionsV__wrapper {
    height: 100%;
    display: inline-flex;
    align-items: center;
+}
+
+.controls-itemActionsV__wrapper_absolute {
+  pointer-events: auto;
+  position: absolute;
 }
 
 .controls-itemActionsV__wrapper-isEditing {
@@ -122,7 +137,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   box-sizing: border-box;
   flex-shrink: 0;
   position: relative;
@@ -172,7 +187,8 @@
 }
 
 .ws-is-hover {
-   .controls-itemActionsV__action_title:hover {
+
+   .controls-itemActionsV__action:hover .controls-itemActionsV__action_title {
       color: @color_ItemActions-title_hover;
       text-decoration: underline;
    }
@@ -205,4 +221,13 @@
 .controls-itemActionsV_columnScrollDraw {
    position: absolute;
    right: 0;
+}
+
+.controls-itemActionsV__icon-with-title {
+   padding-right: @spacing_ItemActions-between-icon-and-title;
+}
+// убрать после https://online.sbis.ru/opendoc.html?guid=c558bf80-4cd1-4854-a963-4af211246111
+.controls-ItemActions__popup__list {
+   margin-top: -(@close-button_offset-top_sticky + @border-thickness_sticky);
+   margin-left: @close-button_offset-right_sticky + @border-thickness_sticky;
 }

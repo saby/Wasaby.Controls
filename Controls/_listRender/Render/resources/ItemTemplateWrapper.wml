@@ -4,7 +4,7 @@
          <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
       </ws:partial>
    </ws:if>
-   <ws:if data="{{ marker !== false && item.isMarked() }}">
+   <ws:if data="{{ item.shouldDisplayMarker(marker) }}">
       <div class="controls-ListView__itemV_marker"></div>
    </ws:if>
    <ws:if data="{{ contentTemplate }}">
@@ -28,7 +28,7 @@
          <ws:partial template="{{ swipeTemplate }}" />
       </ws:if>
       <ws:else data="{{ itemActionsPosition !== 'custom' }}">
-         <ws:partial template="{{ itemActionsTemplate }}" />
+         <ws:partial template="{{ itemActionsTemplate }}" itemActionsClass="{{itemActionsClass}}"/>
       </ws:else>
    </ws:if>
 </div>

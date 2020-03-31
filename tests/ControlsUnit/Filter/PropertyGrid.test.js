@@ -239,6 +239,39 @@ define(
             });
          });
 
+         it('_afterUpdate', function() {
+            let pGrid = getPropertyGrid(config);
+            let controlResizeEventFired = false;
+
+            pGrid.activate = () => {};
+            pGrid._notify = (eventName) => {
+               if (eventName === 'controlResize') {
+                  controlResizeEventFired = true;
+               }
+            };
+
+            pGrid._changedIndex = -1;
+            pGrid._afterUpdate();
+            assert.isFalse(controlResizeEventFired);
+
+            pGrid._changedIndex = 1;
+            pGrid._afterUpdate();
+            assert.isTrue(controlResizeEventFired);
+         });
+
+         it('update control after change item by property observer', function() {
+            const PG = getPropertyGrid(config);
+            let itemsChangedFired = false;
+            let newItems = config.items;
+            PG._afterMount();
+            PG._notify = (event, items) => {
+               itemsChangedFired = true;
+               newItems = items;
+            };
+            PG._items[0].value = 3;
+            assert.isTrue(itemsChangedFired);
+            assert.notDeepEqual(PG._options.items, newItems);
+         });
       });
    }
 );

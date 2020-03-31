@@ -7,7 +7,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * Выбранные значения отображаются в виде текста с кнопкой удаления.
  * Поддерживает одиночный и множественный выбор.
  * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/directory/lookup/'>здесь</a>
- * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-button">демонстрационный пример</a>.
+ * Здесь вы можете увидеть <a href="/materials/Controls-demo/app/Engine-demo%2FSelectorButton">демонстрационный пример</a>.
  *
  * @class Controls/_lookup/Button
  * @extends Core/Control
@@ -24,12 +24,12 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @mixes Controls/_interface/ITextValue
  * @control
  * @public
- * @author Капустин И.А.
+ * @author Герасимов А.М.
  * @demo Controls-demo/Buttons/SelectorButtonPG
  */
 /*
  * Button link with the specified text, on clicking on which a selection window opens.
- * Here you can see <a href="/materials/demo-ws4-engine-selector-button">demo-example</a>.
+ * Here you can see <a href="/materials/Controls-demo/app/Engine-demo%2FSelectorButton">demo-example</a>.
  *
  * @class Controls/_lookup/Button
  * @extends Core/Control
@@ -43,7 +43,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @mixes Controls/_lookup/Button/SelectorButtonStyles
  * @control
  * @public
- * @author Kapustin I.A.
+ * @author Герасимов А.М.
  * @demo Controls-demo/Buttons/SelectorButtonPG
  */
 

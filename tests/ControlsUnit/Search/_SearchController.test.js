@@ -121,24 +121,34 @@ define(
             }, 60);
          });
 
-         it('abort', function(done) {
-            var aborted = false;
-            var searchController = new searchLib._SearchController({
+         it('abort', function() {
+            let aborted = false;
+            const filter = {};
+            const searchController = new searchLib._SearchController({
                minSearchLength: 3,
                source: source,
                searchDelay: 50,
                searchParam: 'name',
-               filter: {},
-               abortCallback: () => { done(); },
+               filter: filter,
+               abortCallback: () => { aborted = true },
             });
+            const searchPromise = searchController.search('test');
 
-            searchController.search('test');
             assert.isFalse(aborted);
 
             searchController.abort();
             assert.isFalse(aborted);
 
-            searchController.abort(true);
+            return new Promise((resolve) => {
+               searchController.search('test').then(() => {
+                  assert.deepEqual(searchController._options.filter, {});
+
+                  searchController.setFilter({name: 'test'});
+                  searchController.abort(true);
+                  assert.deepEqual(searchController._options.filter, {name: 'test'});
+                  resolve();
+               });
+            });
          });
 
          it('search with sorting', function(done) {
@@ -166,6 +176,7 @@ define(
             var searchController = new searchLib._SearchController({
                minSearchLength: 3,
                source: source,
+               keyProperty: 'id',
                filter: {}
             });
 
@@ -183,6 +194,8 @@ define(
 
                   return originalSearch.apply(search, arguments);
                };
+
+               assert.equal(search._sourceController._options.keyProperty, 'id');
 
                return searchController.search('1', true).then(() => {
                   assert.isTrue(searched);
@@ -215,8 +228,9 @@ define(
             };
 
             let originalAbort = searchController._search.abort;
-            searchController._search.abort = function() {
+            searchController._search.abort = function(force) {
                reseted = true;
+               forced = force;
                return originalAbort.apply(searchController._search, arguments);
             };
 
@@ -239,6 +253,7 @@ define(
             reseted = false;
             searchController._search.search('').then(() => {
                assert.isTrue(reseted);
+               assert.isTrue(forced);
             });
          });
       });

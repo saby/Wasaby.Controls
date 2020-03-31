@@ -8,7 +8,6 @@ import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import 'css!theme?Controls/suggest';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -131,6 +130,7 @@ var _private = {
       //aborting of the search may be caused before the search start, because of the delay before searching
       if (self._loading !== null) {
          self._loading = false;
+         self._forceUpdate();
       }
       if (!error || !error.canceled) {
           return new Promise(function(resolve) {
@@ -374,7 +374,7 @@ var SuggestLayout = Control.extend({
       if ((needSearchOnValueChanged || valueCleared) && this._searchValue !== newOptions.value) {
          this._searchValue = newOptions.value;
 
-         if (this._options.suggestState) {
+         if (this._options.suggestState && newOptions.suggestState) {
             _private.updateSuggestState(this);
          }
       }
@@ -513,6 +513,9 @@ var SuggestLayout = Control.extend({
    },
    _searchErrback: function(error) {
       _private.searchErrback(this, error);
+      if (this._options.searchErrorCallback) {
+         this._options.searchErrorCallback();
+      }
    },
    _showAllClick: function() {
       var filter = clone(this._filter) || {};
@@ -598,6 +601,7 @@ SuggestLayout.getDefaultOptions = function() {
 };
 
 // </editor-fold>
+SuggestLayout._theme = ['Controls/suggest'];
 SuggestLayout._private = _private;
 export = SuggestLayout;
 

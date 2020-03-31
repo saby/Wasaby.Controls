@@ -1,4 +1,5 @@
 import cClone = require('Core/core-clone');
+import {IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import getZIndex = require('Controls/Utils/getZIndex');
 import {DefaultOpenerFinder} from 'UI/Focus';
@@ -22,6 +23,7 @@ import {IInfoBoxPopupOptions, IInfoBoxOpener} from 'Controls/_popup/interface/II
 const INFOBOX_HIDE_DELAY = 300;
 const INFOBOX_SHOW_DELAY = 300;
 const POPUP_CONTROLLER = 'Controls/popupTemplate:InfoBoxController';
+const Z_INDEX_STEP = 10;
 
 // Default popup configuration
 const DEFAULT_CONFIG = {
@@ -97,19 +99,30 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         }
 
         // Find opener for InfoBox
-        if (!newCfg.opener) {
+        if (!newCfg.opener && newCfg.target) {
             newCfg.opener = DefaultOpenerFinder.find(newCfg.target);
         }
+
+        // Высчитывается только на старой странице через утилиту getZIndex, т.к. открывать инфобокс могут со старых окон
+        // Аналогично новому механизму, zIndex инфобокса на 1 больше родительского.
+        const zIndex = newCfg.zIndex || ( getZIndex(newCfg.opener || this) - (Z_INDEX_STEP - 1));
         return {
             // todo: https://online.sbis.ru/doc/7c921a5b-8882-4fd5-9b06-77950cbe2f79
             target: newCfg.target && newCfg.target[0] || newCfg.target,
             position: newCfg.position,
             autofocus: false,
             maxWidth: newCfg.maxWidth,
-            zIndex: newCfg.zIndex || getZIndex(newCfg.opener || this),
             eventHandlers: newCfg.eventHandlers,
             closeOnOutsideClick: newCfg.closeOnOutsideClick,
             opener: newCfg.opener,
+            zIndexCallback: (item: IPopupItemInfo) => {
+                if (zIndex) {
+                    return zIndex;
+                }
+                if (item.parentZIndex) {
+                    return item.parentZIndex + 1;
+                }
+            },
             templateOptions: { // for template: Opener/InfoBox/resources/template
                 template: newCfg.template,
                 templateOptions: newCfg.templateOptions, // for user template: newCfg.template

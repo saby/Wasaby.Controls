@@ -274,11 +274,21 @@ var _private = {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
     },
 
-    getItemsBySelection: function (selection) {
-        //Support moving with mass selection.
-        //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+    getItemsBySelection(selection): Promise<Record<string, unknown>> {
+        let resultSelection;
+        // Support moving with mass selection.
+        // Full transition to selection will be made by:
+        // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
         selection.recursive = false;
-        return selection instanceof Array ? Deferred.success(selection) : getItemsBySelection(selection, this._source, this._items, this._filter);
+
+        if (selection instanceof Array) {
+            resultSelection = Deferred.success(selection);
+        } else {
+            const filter = _private.prepareFilter(this, this._filter, selection);
+            resultSelection = getItemsBySelection(selection, this._source, this._items, filter);
+        }
+
+        return resultSelection;
     },
 
     prepareMovedItems(self, items) {
@@ -288,12 +298,25 @@ var _private = {
         });
         return result;
     },
+
+    prepareFilter(self, filter, selection): object {
+        const searchParam = self._options.searchParam;
+        const root = self._options.root;
+        let resultFilter = filter;
+
+        if (searchParam && !selection.selected.includes(root)) {
+            resultFilter = {...filter};
+            delete resultFilter[searchParam];
+        }
+
+        return resultFilter;
+    }
 };
 
 /**
  * Контрол для перемещения элементов списка в recordSet и dataSource.
  * Контрол должен располагаться в одном контейнере {@link Controls/list:DataContainer} со списком.
- * <a href="/materials/demo-ws4-operations-panel">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Демо-пример</a>.
  * @class Controls/_list/Mover
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
@@ -307,7 +330,7 @@ var _private = {
 /*
  * Сontrol to move the list items in recordSet and dataSource.
  * Сontrol must be in one {@link Controls/list:DataContainer} with a list.
- * <a href="/materials/demo-ws4-operations-panel">Demo examples</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo examples</a>.
  * @class Controls/_list/Mover
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable

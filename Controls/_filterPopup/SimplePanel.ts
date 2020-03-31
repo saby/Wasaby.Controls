@@ -51,6 +51,7 @@ var _private = {
                 pDef.push(curItem.loadDeferred.addCallback(() => {
                     if (isHistorySource(curItem.source)) {
                         curItem.items = curItem.source.prepareItems(curItem.items);
+                        curItem.hasMoreButton = curItem.sourceController.hasMoreData('down');
                     }
                 }));
             }
@@ -163,7 +164,7 @@ Panel.getDefaultOptions = (): object => {
     };
 };
 
-Panel._theme = ['Controls/filterPopup', 'Controls/dropdownPopup'];
+Panel._theme = ['Controls/filterPopup', 'Controls/dropdownPopup', 'Controls/menu'];
 
 Panel._private = _private;
 

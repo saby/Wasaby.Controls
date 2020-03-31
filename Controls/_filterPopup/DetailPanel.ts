@@ -13,10 +13,12 @@ import {factory, List} from 'Types/collection';
 import {HistoryUtils, FilterUtils} from 'Controls/filter';
 import 'Controls/form';
 import {Logger} from 'UI/Utils';
+import {_scrollContext as ScrollData} from 'Controls/scroll';
+
 /**
     * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
     * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
-    * <a href="/materials/demo-ws4-filter-button">Демо-пример</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FFilter%2FButton%2FPanelVDom">Демо-пример</a>.
     *
     *
     * @class Controls/_filterPopup/DetailPanel
@@ -39,7 +41,7 @@ import {Logger} from 'UI/Utils';
    /*
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Also possible to select, Previously selected.
-    * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
+    * Here you can see <a href="/materials/Controls-demo/app/Controls-demo%2FFilter%2FButton%2FPanelVDom">demo-example</a>.
     *
     *
     * @class Controls/_filterPopup/DetailPanel
@@ -66,6 +68,12 @@ import {Logger} from 'UI/Utils';
     * @event Controls/_filterPopup/DetailPanel#sendResult Happens when clicking the button "Select".
     * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
     * @param {Object} items items
+    */
+
+   /**
+    * @event Controls/_filterPopup/DetailPanel#historyApply Происходит при применении фильтра из истории фильтров.
+    * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
+    * @param {Controls/_filter/View/interface/IFilterView#source} source Конфигурация фильтра.
     */
 
 
@@ -142,6 +150,7 @@ import {Logger} from 'UI/Utils';
                       historyItems = items;
                    }
                    self._historyItems = _private.filterHistoryItems(self, historyItems);
+                   self._hasHistory = !!self._historyItems.getCount();
                    return self._historyItems;
                 })
                 .addErrback(() => {
@@ -205,6 +214,7 @@ import {Logger} from 'UI/Utils';
 
       reloadHistoryItems: function(self, historyId) {
          self._historyItems = _private.filterHistoryItems(self, HistoryUtils.getHistorySource({historyId: historyId}).getItems());
+         self._hasHistory = !!self._historyItems.getCount();
       },
 
       cloneItems: function(items) {
@@ -283,6 +293,7 @@ import {Logger} from 'UI/Utils';
       _isChanged: false,
       _hasResetValue: false,
       _hasAdditionalParams: false,
+      _hasHistory: false,
 
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
@@ -339,6 +350,7 @@ import {Logger} from 'UI/Utils';
          };
 
          if (history) {
+            this._notify('historyApply', [curItems]);
             apply(curItems);
          } else {
             _private.validate(this).addCallback(function (result) {
@@ -354,6 +366,12 @@ import {Logger} from 'UI/Utils';
          FilterUtils.resetFilter(this._items);
          this._isChanged = false;
          this._notify('itemsChanged', [this._items]);
+      },
+
+      _getChildContext: function() {
+         return {
+            ScrollData: new ScrollData({pagingVisible: false})
+         };
       }
    });
 

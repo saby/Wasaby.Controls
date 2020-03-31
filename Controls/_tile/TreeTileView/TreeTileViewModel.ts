@@ -37,7 +37,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         prevItem = this._display.at(current.index - 1);
         nextItem = this._display.at(current.index + 1);
 
-        if (!nextItem && current.dispItem.isNode()) {
+        if (!nextItem && !current.isGroup && current.dispItem.isNode()) {
             current.afterItemTemplate = InvisibleFor;
             current.afterItemTemplateOptions = {
                 type: 'folder'
@@ -69,6 +69,8 @@ var TreeTileViewModel = TreeViewModel.extend({
         }
 
         current.isScaled = this.isScaled(current);
+        current.isUnscaleable = !current.scalingMode || current.scalingMode === 'none';
+        current.isUnfixed = current.isSwiped || !current.isScaled && !current.isUnscaleable;
 
         var
             originalGetVersion = current.getVersion;

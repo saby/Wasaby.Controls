@@ -118,11 +118,13 @@ import {SyntheticEvent} from 'Vdom/Vdom';
             if (self._options.emptyText && self._listModel.getSelectedKeys()[0] === null) {
                result.data = [self._listModel.getEmptyItem().item];
             } else {
-               let selectedItems = [];
-               chain.factory(self._listModel.getSelectedKeys()).each(function (key) {
-                  selectedItems.push(self._options.items.getRecordById(key));
+               const newSelectedItems = [];
+               const currentSelectedItems = self._options.selectorItems || self._options.items;
+
+               chain.factory(self._listModel.getSelectedKeys()).each((key) => {
+                  newSelectedItems.push(currentSelectedItems.getRecordById(key));
                });
-               result.data = selectedItems;
+               result.data = newSelectedItems;
             }
             return result;
          },
@@ -194,10 +196,11 @@ import {SyntheticEvent} from 'Vdom/Vdom';
                 headerIcon = options.headConfig && options.headConfig.icon || options.showHeader && options.icon,
                 menuStyle = options.headConfig && options.headConfig.menuStyle,
                 optIconSize = options.iconSize;
+            const hasHeader = options.headerTemplate || options.showHeader;
             let iconPadding = {}, icon, parentKey;
 
             // необходимо учесть иконку в шапке
-            if (headerIcon && menuStyle !== 'titleHead') {
+            if (hasHeader && headerIcon && menuStyle !== 'titleHead') {
                iconPadding[parentProperty ? rootKey || 'null' : 'undefined'] = _private.getIconSize(headerIcon, optIconSize);
             } else {
                chain.factory(options.items).each((item) => {
@@ -209,7 +212,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
                });
             }
 
-            return iconPadding;
+            return iconPadding[options.rootKey];
          },
 
          isHeadConfigChanged: function(newOptions, oldOptions) {
@@ -286,6 +289,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 
             if (rootChanged) {
                this._listModel.setRootKey(_private.getRootKey(newOptions.rootKey));
+               this._iconPadding = _private.getIconPadding(this, newOptions);
             }
 
             if (itemsChanged) {
@@ -454,11 +458,12 @@ import {SyntheticEvent} from 'Vdom/Vdom';
             menuStyle: 'defaultHead',
             typeShadow: 'default',
             moreButtonCaption: rk('Еще') + '...',
-            itemPadding: {}
+            itemPadding: {},
+            iconSize: 'm'
          };
       };
 
-      DropdownList._theme = ['Controls/dropdownPopup', 'Controls/Classes'];
+      DropdownList._theme = ['Controls/dropdownPopup', 'Controls/Classes', 'Controls/menu'];
 
       export = DropdownList;
 

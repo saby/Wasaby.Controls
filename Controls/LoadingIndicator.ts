@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import tmpl = require('wml!Controls/_LoadingIndicator/LoadingIndicator');
 import randomId = require('Core/helpers/Number/randomId');
 import collection = require('Types/collection');
-import 'css!theme?Controls/_LoadingIndicator/LoadingIndicator';
 
 /*
  * @name Controls/LoadingIndicator#isGlobal
@@ -248,6 +247,8 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     small: '',
     overlay: 'default',
     mods: null,
+    _overlayDiv: null,
+    _messageDiv: null,
 
     _beforeMount(cfg) {
         this.mods = [];
@@ -265,9 +266,14 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
                 ManagerController.setIndicator(self);
             });
         }
+
+        // TODO Откатить DOM-решение или доказать невозмодность другого в задаче по ссылке ниже.
+        // https://online.sbis.ru/opendoc.html?guid=2bd41176-8896-4a0a-a04d-a93b8a4c3a2d
+        this._redrawOverlay();
     },
     _beforeUpdate(cfg) {
         this._updateProperties(cfg);
+        this._redrawOverlay();
     },
     _updateProperties(cfg) {
         if (cfg.isGlobal !== undefined) {
@@ -285,6 +291,9 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         if (cfg.overlay !== undefined) {
             this.overlay = cfg.overlay;
         }
+        if (cfg.theme !== undefined) {
+            this.theme = cfg.theme;
+        }
         if (cfg.mods !== undefined) {
             // todo сделать mods строкой всегда, или вообще удалить опцию
             if (Array.isArray(cfg.mods)) {
@@ -294,7 +303,6 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
             }
         }
         this.delay = cfg.delay !== undefined ? cfg.delay : this._delay;
-
     },
 
     // Indicator is opened above existing popups.
@@ -336,7 +344,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
      * @see hide
      */
     show(config, waitPromise) {
-        return this._show(config, waitPromise);
+        return this._show({...config}, waitPromise);
     },
 
     _show(config, waitPromise) {
@@ -497,7 +505,7 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     },
     _toggleOverlay(toggle: boolean, config): void {
         this._isOverlayVisible = toggle && config.overlay !== 'none';
-        this._forceUpdate();
+        this._redrawOverlay();
     },
     _clearOverlayTimerId() {
         if (this._toggleOverlayTimerId) {
@@ -514,7 +522,103 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
         } else {
             this._isMessageVisible = false;
         }
+        this._redrawOverlay();
+    },
+
+    _createOverlay(): void {
+        const overlayDiv = document.createElement('div');
+        overlayDiv.setAttribute('data-vdomignore', 'true');
+        overlayDiv.setAttribute('tabindex', '1');
+
+        const messageDiv = document.createElement('div');
+
+        this._overlayDiv = overlayDiv;
+        this._messageDiv = messageDiv;
+    },
+
+    _redrawOverlay(): void {
+        const container = this._container;
+        if (!container) {
+            return;
+        }
+        if (!this._overlayDiv) {
+            this._createOverlay();
+        }
+
+        const overlayDiv = this._overlayDiv;
+        const messageDiv = this._messageDiv;
+
+        const currentOverlayVisibility = !!overlayDiv.parentElement;
+        const nextOverlayVisibility = this._isOverlayVisible;
+        if (nextOverlayVisibility) {
+            const newOverlayClassName = this._calculateOverlayClassName();
+            if (overlayDiv.className !== newOverlayClassName) {
+                overlayDiv.className = newOverlayClassName;
+            }
+            if (this._zIndex) {
+                overlayDiv.setAttribute('style', 'z-index: ' + this._zIndex);
+            }
+        }
+        if (currentOverlayVisibility !== nextOverlayVisibility) {
+            if (nextOverlayVisibility) {
+                container.appendChild(overlayDiv);
+            } else {
+                container.removeChild(overlayDiv);
+            }
+        }
+
+        const currentMessageVisibility = !!messageDiv.parentElement;
+        const nextMessageVisibility = this._isMessageVisible;
+        if (nextMessageVisibility) {
+            const newMessageClassName = this._getThemedClassName('controls-loading-indicator-in');
+            if (messageDiv.className !== newMessageClassName) {
+                messageDiv.className = newMessageClassName;
+            }
+            if (messageDiv.innerText !== this.message) {
+                messageDiv.innerText = this.message;
+            }
+        }
+        if (currentMessageVisibility !== nextMessageVisibility) {
+            if (nextMessageVisibility) {
+                overlayDiv.appendChild(messageDiv);
+            } else {
+                overlayDiv.removeChild(messageDiv);
+            }
+        }
+    },
+
+    _calculateOverlayClassName(): string {
+        const classList = [this._getThemedClassName('controls-loading-indicator'), 'controls-Popup__isolatedFocusingContext'];
+
+        classList.push(this.isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local');
+
+        if (this.message) {
+            classList.push('controls-loading-indicator_text');
+        }
+        if (this.scroll) {
+            classList.push('controls-loading-indicator_scroll');
+            classList.push('controls-loading-indicator_sided controls-loading-indicator_sided-' + this.scroll);
+        }
+        if (this.small) {
+            classList.push('controls-loading-indicator_small');
+            if (this.small !== 'yes') {
+                classList.push('controls-loading-indicator_sided controls-loading-indicator_sided-' + this.small);
+            }
+        }
+        if (this.overlay) {
+            const overlayClassName = 'controls-loading-indicator_overlay-' + this._getOverlay(this.overlay);
+            classList.push(this._getThemedClassName(overlayClassName));
+        }
+        if (this?.mods?.length) {
+            classList.concat(this.mods.map((mod) => 'controls-loading-indicator_mod-' + mod));
+        }
+
+        return classList.join(' ');
+    },
+
+    _getThemedClassName(simpleClassName: string): string {
+        return simpleClassName + ' ' + simpleClassName + '_theme-' + this.theme;
     }
 });
-
+module._theme = ['Controls/_LoadingIndicator/LoadingIndicator'];
 export = module;

@@ -21,7 +21,8 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                getResultsPosition: () => undefined,
                getItems: () => ({
                   getCount: () => 3
-               })
+               }),
+               getEditingItemData: () => true,
             }
          },
          columnScroll = new ColumnScroll(cfg);
@@ -355,16 +356,11 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                }
             },
          }
-         clearColumnScroll._setOffsetForHScroll();
 
-         assert.equal(clearColumnScroll._offsetForHScroll, 50);
-         assert.equal(clearColumnScroll._leftOffsetForHScroll, 74);
 
          clearColumnScroll._options.multiSelectVisibility = 'hidden';
          clearColumnScroll._afterUpdate({...cfg, multiSelectVisibility: 'visible'});
 
-         assert.equal(clearColumnScroll._offsetForHScroll, 50);
-         assert.equal(clearColumnScroll._leftOffsetForHScroll, 100);
          assert.equal(clearColumnScroll._contentSize, 500);
          assert.equal(clearColumnScroll._contentSizeForHScroll, 400);
 
@@ -418,6 +414,72 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(clearColumnScroll._contentContainerSize, 250);
          assert.deepEqual(clearColumnScroll._shadowState, 'end');
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 0);
+      });
+
+      it('_onEditingElementFocus', function() {
+         let clearColumnScroll = new ColumnScroll({...cfg});
+
+         clearColumnScroll._children = {
+            contentStyle: {
+               innerHTML: ''
+            },
+            startShadow: {
+               getBoundingClientRect: () => ({
+                  left: 570
+               }),
+               offsetWidth: 12,
+
+            },
+            content: {
+               getBoundingClientRect: () => ({
+                  right: 929,
+               }),
+               getClientRects: () => [{x: 200}],
+               getElementsByClassName: () => {
+                  return [{
+                     style: {
+                        display: 'block',
+                        removeProperty: () => true
+                     },
+                     scrollWidth: 1773,
+                     offsetWidth: 929,
+                     getBoundingClientRect: () => {
+                        return {
+                           left: 200
+                        }
+                     },
+                     querySelector: function() {
+                        return {
+                           getBoundingClientRect: () => {
+                              return {
+                                 left: 220
+                              }
+                           },
+                           offsetWidth: 350
+                        };
+                     },
+                  }]
+               }
+            }
+         };
+         clearColumnScroll.saveOptions({...cfg});
+         clearColumnScroll._beforeMount({...cfg});
+         clearColumnScroll._afterMount({...cfg});
+
+         let focusEvent = {
+            target: {
+               tagName: "INPUT",
+               getBoundingClientRect: () => ({ left: 1129, right: 1088 })
+            }
+         }
+         assert.equal(clearColumnScroll._scrollPosition, 0);
+         // to next cell
+         clearColumnScroll._onFocusInEditingCell(focusEvent);
+         assert.equal(clearColumnScroll._scrollPosition, 171);
+         // to prev cell
+         focusEvent.target.getBoundingClientRect = () => ({ left: 519, right: 568 });
+         clearColumnScroll._onFocusInEditingCell(focusEvent);
+         assert.equal(clearColumnScroll._scrollPosition, 108);
       });
       it('empty grid', function() {
          let clearColumnScroll = new ColumnScroll({...cfg, stickyColumnsCount: 0});
@@ -901,68 +963,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(-100, delta);
       });
 
-      it('setOffsetForHScroll', function () {
 
-         columnScroll._children = {
-            content: {
-               offsetTop: 0,
-               getElementsByClassName: function (className) {
-                  if (className === 'controls-Grid__header') {
-                     return [];
-                  } else if (className === 'controls-Grid__results') {
-                     return [];
-                  }
-               }
-            }
-         };
-
-         columnScroll._setOffsetForHScroll();
-         assert.equal(columnScroll._leftOffsetForHScroll, 0);
-         assert.equal(columnScroll._offsetForHScroll, 0);
-
-         columnScroll._children.content.getElementsByClassName = function (className) {
-            if (className === 'controls-Grid__header') {
-               return [
-                  {
-                     childNodes: [
-                        {
-                           offsetHeight: 50,
-                           offsetTop: 0,
-                        },
-                        {
-                           offsetHeight: 50,
-                           offsetTop: 0,
-                        },
-                     ]
-                  }
-               ];
-            } else if (className === 'controls-Grid__results') {
-               return [
-                  {
-                     childNodes: [
-                        {
-                           offsetHeight: 50,
-                        },
-                        {
-                           offsetHeight: 50,
-                        },
-                     ]
-                  }
-               ];
-            }
-         }
-         columnScroll._setOffsetForHScroll();
-         assert.equal(columnScroll._leftOffsetForHScroll, 100);
-         assert.equal(columnScroll._offsetForHScroll, 50);
-
-         columnScroll._options.listModel.getResultsPosition = () => 'top';
-         columnScroll._setOffsetForHScroll();
-
-         assert.equal(columnScroll._offsetForHScroll, 100);
-
-         columnScroll._leftOffsetForHScroll = 0;
-         columnScroll._offsetForHScroll = 0;
-      });
       it('updateSizes after destroy', function () {
          assert.equal(450, columnScroll._contentSize);
          assert.equal(200, columnScroll._contentContainerSize);

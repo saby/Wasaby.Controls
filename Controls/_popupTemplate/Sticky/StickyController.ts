@@ -6,6 +6,7 @@ import Env = require('Env/Env');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyContent = require('wml!Controls/_popupTemplate/Sticky/StickyContent');
 import * as cInstance from 'Core/core-instance';
+import {Logger} from 'UI/Utils';
 
 export type TVertical = 'top' | 'bottom' | 'center';
 export type THorizontal = 'left' | 'right' | 'center';
@@ -174,20 +175,13 @@ const _private = {
     },
 
     getFakeDivMargins(item) {
-        if (!document) {
-            return {
-                left: 0,
-                top: 0
-            };
-        }
-
         const fakeDiv = _private.getFakeDiv();
         fakeDiv.className = item.popupOptions.className;
 
         const styles = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
         return {
-            top: parseInt(styles.marginTop, 10),
-            left: parseInt(styles.marginLeft, 10)
+            top: parseFloat(styles.marginTop),
+            left: parseFloat(styles.marginLeft)
         };
     },
 
@@ -196,6 +190,12 @@ const _private = {
      * Element is created with position absolute and far beyond the screen left position
      */
     getFakeDiv(): HTMLDivElement {
+        if (!document) {
+            return {
+                marginLeft: 0,
+                marginTop: 0
+            };
+        }
         // create fake div on invisible part of window, cause user class can overlap the body
         if (!_fakeDiv) {
             _fakeDiv = document.createElement('div');
@@ -225,7 +225,7 @@ class StickyController extends BaseController {
             item.position.position = undefined;
             this.prepareConfig(item, container);
         } else {
-            require('Controls/popup').Controller.remove(item.id);
+            this._printTargetRemovedWarn();
         }
     }
 
@@ -251,13 +251,20 @@ class StickyController extends BaseController {
                 }
             }
         } else {
-            require('Controls/popup').Controller.remove(item.id);
+            this._printTargetRemovedWarn();
         }
     }
 
     elementAfterUpdated(item, container) {
+        // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+        if (!this._isTargetVisible(item)) {
+            this._printTargetRemovedWarn();
+            return false;
+        }
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
         const width = container.style.width;
+        const maxHeight = container.style.maxHeight;
+        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '100vh';
         container.style.width = 'auto';
         container.style.height = 'auto';
 
@@ -267,6 +274,7 @@ class StickyController extends BaseController {
 
         /* start: Return all values to the node. Need for vdom synchronizer */
         container.style.width = width;
+        container.style.maxHeight = maxHeight;
         // После того, как дочерние контролы меняют размеры, они кидают событие controlResize, окно отлавливает событие,
         // измеряет верстку и выставляет себе новую позицию и размеры. Т.к. это проходит минимум в 2 цикла синхронизации,
         // то визуально видны прыжки. Уменьшаю на 1 цикл синхронизации простановку размеров
@@ -302,7 +310,7 @@ class StickyController extends BaseController {
             position: 'fixed'
         };
 
-        if (Env.detection.isMobileIOS && Env.detection.IOSVersion === 12) {
+        if (Env.detection.isMobileIOS) {
             item.position.top = 0;
             item.position.left = 0;
             item.position.hidden = true;
@@ -377,6 +385,10 @@ class StickyController extends BaseController {
             };
         }
         return TargetCoords.get(_private.getTargetNode(cfg));
+    }
+
+    private _printTargetRemovedWarn(): void {
+        Logger.warn('Controls/popup:Sticky: Пропал target из DOM. Позиция окна может быть не верная');
     }
 
     private _isTargetVisible(item): boolean {

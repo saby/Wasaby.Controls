@@ -23,7 +23,6 @@ var
     ],
     _private = {
         beginEdit: function (self, options, isAdd) {
-            _private.registerPending(self);
             var result = self._notify('beforeBeginEdit', [options, !!isAdd]);
             if (!isAdd) {
                 self._originalItem = options.item;
@@ -35,13 +34,6 @@ var
             self._editingItem = options.item.clone();
             self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
             self._notify('afterBeginEdit', [self._editingItem, isAdd]);
-
-            /**
-             * This code exists because there's no way to declaratively change editing item, so the users are forced to write something like this:
-             * editingItem.set('field', 'value').
-             */
-            self._editingItem.subscribe('onPropertyChange', self._resetValidation);
-
             return options;
         },
 
@@ -50,19 +42,21 @@ var
 
             if (eventResult === Constants.editing.CANCEL) {
                 result = Deferred.success({cancelled: true});
-            } else if (eventResult && eventResult.addBoth) {
-                var id = self._notify('showIndicator', [{}], {bubbling: true});
-                eventResult.addBoth(function (defResult) {
-                    self._notify('hideIndicator', [id], {bubbling: true});
-                    return defResult;
-                });
-                result = eventResult;
-            } else if ((eventResult && eventResult.item instanceof entity.Record) || (options && options.item instanceof entity.Record)) {
-                result = Deferred.success(eventResult || options);
-            } else if (isAdd) {
-                result = _private.createModel(self, eventResult || options);
+            } else {
+                _private.registerPending(self);
+                if (eventResult && eventResult.addBoth) {
+                    var id = self._notify('showIndicator', [{}], {bubbling: true});
+                    eventResult.addBoth(function (defResult) {
+                        self._notify('hideIndicator', [id], {bubbling: true});
+                        return defResult;
+                    });
+                    result = eventResult;
+                } else if ((eventResult && eventResult.item instanceof entity.Record) || (options && options.item instanceof entity.Record)) {
+                    result = Deferred.success(eventResult || options);
+                } else if (isAdd) {
+                    result = _private.createModel(self, eventResult || options);
+                }
             }
-
             return result;
         },
 
@@ -140,6 +134,7 @@ var
                     return self._options.source.update(self._editingItem).addCallbacks(function () {
                         _private.acceptChanges(self);
                     }, (error: Error) => {
+                        self._isCommitInProcess = false;
                         return _private.processError(self, error);
                     });
 
@@ -161,6 +156,7 @@ var
 
             return self.__errorController.process({
                 error,
+                theme: self._options.theme,
                 mode: dataSourceError.Mode.dialog
             }).then((errorConfig: dataSourceError.ViewConfig) => {
                 self._children.errorContainer.show(errorConfig);
@@ -206,14 +202,15 @@ var
         },
 
         editNextRow: function (self, editNextRow: boolean, addAnyway: boolean = false) {
-            var index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
+            const index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
+            const editingConfig = self._options.editingConfig || {};
 
             if (editNextRow) {
-                if (_private.getNext(self._editingItem, index, self._options.listModel)) {
+                if (!self._isAdd && _private.getNext(self._editingItem, index, self._options.listModel)) {
                     self.beginEdit({
                         item: _private.getNext(self._editingItem, index, self._options.listModel)
                     });
-                } else if (addAnyway || self._options.editingConfig && self._options.editingConfig.autoAdd) {
+                } else if (addAnyway || editingConfig.autoAdd) {
                     self.beginAdd();
                 } else {
                     self.commitEdit();
@@ -341,17 +338,23 @@ var
             * Если добавление идет в существующуюю группу, то добавляем ей в начало или в конец.
             * Если добавление идет в несуществующую группу, то добавляем в начало или в конец списка.
             *   При добавлении в начало - добавляем ее действительно первой, до всех групп. Сделать это просто
-            *   выставлением индекса нельзя, в силу организации шаблонов: добавляемая запись рисуется под другой записью.
+            *   выставлением индекса нельзя, в силу организации шаблонов: добавляемая запись рисуется под другой записью,
+            *   поэтому рисуем его над первой группой в Controls/_list/resources/For.wml:47
+            *
+            *   При добавлении в конец индекс будет на один больше последнего элемента списка / группы.
+            *   Controls/_list/resources/ItemOutput.wml:31
+            *   TODO: Возможно, стоит всегда выставлять индекс записи рядом с которой выводим добавляемую запись, а,
+            *    над или под ней выводить, решать через editingConfig.addPosition
             * */
             let index = 0;
             if (display.getCount()) {
                 const groupItems = display.getGroupItems(groupId);
                 if (typeof groupId === 'undefined' || groupItems.length === 0) {
                     if (!isAddInTop) {
-                        index = display.getIndex(display.getLast());
+                        index = display.getIndex(display.getLast()) + 1;
                     }
                 } else {
-                    index = display.getIndex(groupItems[isAddInTop ? 0 : groupItems.length - 1]);
+                    index = display.getIndex(groupItems[isAddInTop ? 0 : groupItems.length - 1]) + (isAddInTop ? 0 : 1);
                 }
             }
             return index;
@@ -462,32 +465,48 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             return self._endEditDeferred;
         }
 
-        return _private.validate(this).addCallback(function (result) {
-            for (var key in result) {
-                if (result.hasOwnProperty(key) && result[key]) {
-                    return Deferred.success({validationFailed: true});
+        if (!self._isCommitInProcess) {
+            self._isCommitInProcess = true;
+            self._commitPromise = _private.validate(this).addCallback(function(result) {
+                for (var key in result) {
+                    if (result.hasOwnProperty(key) && result[key]) {
+                        self._isCommitInProcess = false;
+                        return Deferred.success({validationFailed: true});
+                    }
                 }
-            }
-            return _private.endItemEdit(self, true).addCallback((result) => {
-                return Deferred.success({validationFailed: result && result.cancelled});
+                return _private.endItemEdit(self, true).addCallback((result) => {
+                    self._isCommitInProcess = false;
+                    return Deferred.success({validationFailed: result && result.cancelled});
+                });
             });
-        });
+        }
+
+        return self._commitPromise;
     },
 
     cancelEdit: function () {
-        return _private.endItemEdit(this, false);
+        const self = this;
+        return this._isCommitInProcess ? this._commitPromise.addBoth(() => {
+            return _private.endItemEdit(self, false);
+        }) : _private.endItemEdit(this, false);
     },
 
     _onKeyDown: function (e, nativeEvent) {
         switch (nativeEvent.keyCode) {
             case 13: // Enter
-                if (this._options.editingConfig && !this._sequentialEditing) {
+                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+                e.stopPropagation();
+                if (this._isAdd) {
+                    _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);
+                } else if (this._options.editingConfig && !this._sequentialEditing) {
                     this.commitEdit();
                 } else {
                     _private.editNextRow(this, true);
                 }
                 break;
             case 27: // Esc
+                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+                e.stopPropagation();
                 this.cancelEdit();
                 break;
         }
@@ -604,6 +623,12 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             return;
         }
 
+        /**
+         * This code exists because there's no way to declaratively change editing item, so the users are forced to write something like this:
+         * editingItem.set('field', 'value').
+         */
+        this._editingItem.subscribe('onPropertyChange', this._resetValidation);
+
         let editingItemProjection;
         if (options.useNewModel) {
             editingItemProjection = listModel.getItemBySourceKey(this._editingItem.get(listModel.getKeyProperty()));
@@ -661,7 +686,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         * 2) если сохраняется только что добавленная запись, то происходит ее сохранение и начинается добавление новой.
         * */
         if (this._isAdd) {
-            _private.editNextRow(this, true, true);
+            _private.editNextRow(this, true, !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton);
         } else {
             this.commitEdit();
         }
@@ -684,23 +709,25 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         e.stopPropagation();
     },
 
-    _onPendingFail(forceFinishValue: boolean, pendingDeferred: Promise<boolean>): void {
+    _onPendingFail(shouldSave: boolean, pendingDeferred: Promise<boolean>): void {
         const cancelPending = () => this._notify('cancelFinishingPending', [], {bubbling: true});
 
-        if (this._editingItem && this._editingItem.isChanged()) {
-            this.commitEdit().addCallback((result = {}) => {
+        if (!(this._options.task1178703576 && !shouldSave) && this._editingItem && this._editingItem.isChanged()) {
+            return this.commitEdit().addCallback((result = {}) => {
                 if (result.validationFailed) {
                     cancelPending();
                 }
+                return result;
             }).addErrback(() => {
                 cancelPending();
             });
         } else {
-            this.cancelEdit();
+            return this.cancelEdit();
         }
     },
 
     _beforeUnmount: function () {
+        this._commitPromise = null;
         _private.resetVariables(this);
     }
 });

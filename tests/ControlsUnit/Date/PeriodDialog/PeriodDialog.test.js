@@ -193,6 +193,37 @@ define([
             assert.strictEqual(component._yearRangeSelectionType, PeriodDialog.SELECTION_TYPES.disable);
          });
 
+         [{
+            homeButtonVisiable: false,
+            options: {
+               startValue: new Date(),
+               endValue: new Date()
+            },
+         }, {
+            homeButtonVisiable: false,
+            options: {
+               startValue: dateUtils.getStartOfYear(new Date()),
+               endValue: dateUtils.getEndOfQuarter(new Date())
+            },
+         }, {
+            homeButtonVisiable: true,
+            options: {
+               startValue: new Date(2019, 0, 3),
+               endValue: new Date(2019, 0, 4)
+            },
+         }, {
+            homeButtonVisiable: true,
+            options: {
+               startValue: new Date(2019, 0, 3),
+               endValue: new Date(2019, 2, 3)
+            },
+         }].forEach(function(test) {
+            it(`should set homeButtonVisiable to ${test.homeButtonVisiable} if options are ${JSON.stringify(test.options)}`, function() {
+               const component = calendarTestUtils.createComponent(PeriodDialog, test.options);
+               assert.strictEqual(component._homeButtonVisible, test.homeButtonVisiable);
+            });
+         });
+
          it('should set correct header type.', function() {
             const component = calendarTestUtils.createComponent(
                PeriodDialog,
@@ -319,13 +350,23 @@ define([
       });
 
       describe('_toggleStateClick', function() {
-         it('should toggle state and set correct displayed date.', function() {
-            const component = calendarTestUtils.createComponent(
-               PeriodDialog, { startValue: new Date(2019, 3, 10), endValue: new Date(2019, 5, 0) });
-            assert.strictEqual(component._state, component._STATES.year);
-            component._toggleStateClick();
-            assert.strictEqual(component._state, component._STATES.month);
-            assert(dateUtils.isDatesEqual(component._displayedDate, new Date(2019, 3, 10)));
+         [{
+            options: { startValue: new Date(2019, 3, 10), endValue: new Date(2019, 5, 0) },
+            state: PeriodDialog._STATES.year,
+            displayedDate: new Date(2019, 3, 1)
+         }, {
+            options: { startValue: new Date(2019, 3, 10), endValue: new Date(2019, 5, 0) },
+            state: PeriodDialog._STATES.month,
+            displayedDate: new Date(2019, 0, 1)
+         }].forEach(function(test) {
+            it('should toggle state and set correct displayed date.', function() {
+               const component = calendarTestUtils.createComponent(PeriodDialog, test.options);
+               component._state = test.state;
+               component._toggleStateClick();
+               assert.strictEqual(component._state,
+                  test.state === component._STATES.year ? component._STATES.month : component._STATES.year);
+               assert(dateUtils.isDatesEqual(component._displayedDate, test.displayedDate));
+            });
          });
       });
 

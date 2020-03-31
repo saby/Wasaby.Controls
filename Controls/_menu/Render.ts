@@ -1,24 +1,26 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {IRenderOptions} from 'Controls/listRender';
 import {IMenuOptions} from 'Controls/_menu/interface/IMenuControl';
-import {Tree} from 'Controls/display';
+import {Tree, TreeItem, GroupItem, SelectionController} from 'Controls/display';
 import * as itemTemplate from 'wml!Controls/_menu/Render/itemTemplate';
+import * as multiSelectTpl from 'wml!Controls/_menu/Render/multiSelectTpl';
 import ViewTemplate = require('wml!Controls/_menu/Render/Render');
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {factory} from 'Types/chain';
-import {ActualApi} from 'Controls/buttons';
+import {ItemsUtil} from 'Controls/list';
+import {create as DiCreate} from 'Types/di';
 
 interface IMenuRenderOptions extends IMenuOptions, IRenderOptions {
 }
 
 class MenuRender extends Control<IMenuRenderOptions> {
     protected _template: TemplateFunction = ViewTemplate;
-    protected _iconSpacing: string;
+    protected _iconPadding: string;
 
     protected _beforeMount(options: IMenuRenderOptions): void {
         this.setListModelOptions(options);
-        this._iconSpacing = this.getIconSpacing(options);
+        this._iconPadding = this.getIconPadding(options);
     }
 
     protected _beforeUpdate(newOptions: IMenuRenderOptions): void {
@@ -31,22 +33,78 @@ class MenuRender extends Control<IMenuRenderOptions> {
         return this._options.emptyText && itemData.getContents().getId() === this._options.emptyKey;
     }
 
-    protected _getClassList(itemData): string {
-        const item = itemData.getContents();
-        let classes = itemData.getContentClasses();
-        classes += ' controls-Menu__row_state_' + (item.get('readOnly')  ? 'readOnly' : 'default') + '_theme-' + this._options.theme;
-        if (this._isEmptyItem(itemData)) {
-            classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
-        }
-        if (item.get('pinned') === true && !itemData.hasParent) {
-            classes += ' controls-Menu__row_pinned';
-        }
-        return classes;
+    // FIXME
+    protected _getItemData(item): object {
+        return {
+            item: item.getContents(),
+            treeItem: item,
+            iconPadding: this._iconPadding,
+            iconSize: this._options.iconSize,
+            multiSelect: this._options.multiSelect,
+            parentProperty: this._options.parentProperty,
+            nodeProperty: this._options.nodeProperty,
+            multiSelectTpl,
+            itemClassList: this._getClassList(item),
+            getPropValue: ItemsUtil.getPropertyValue,
+            isEmptyItem: this._isEmptyItem(item),
+            isSelected: item.isSelected.bind(item)
+        };
     }
 
     protected _proxyEvent(e: SyntheticEvent<MouseEvent>, eventName: string, item: Model, sourceEvent: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
-        this._notify(eventName, [item, sourceEvent]);
+        if (!(item instanceof GroupItem)) {
+            this._notify(eventName, [item, sourceEvent]);
+        }
+    }
+
+    protected _getClassList(treeItem): string {
+        const item = treeItem.getContents();
+        let classes = treeItem.getContentClasses();
+        classes += ' controls-Menu__row_state_' + (item.get('readOnly')  ? 'readOnly' : 'default') + '_theme-' + this._options.theme;
+        if (this._isEmptyItem(treeItem) && !this._options.multiSelect) {
+            classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
+        } else {
+            classes += ' controls-Menu__defaultItem_theme-' + this._options.theme;
+        }
+        if (item.get('pinned') === true && !this.hasParent(item)) {
+            classes += ' controls-Menu__row_pinned controls-DropdownList__row_pinned';
+        }
+        if (this._options.listModel.getLast() !== treeItem &&
+            !this._isGroupNext(treeItem) && !this._isHistorySeparatorVisible(treeItem)) {
+            classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
+        }
+        return classes;
+    }
+
+    protected _isHistorySeparatorVisible(treeItem): boolean {
+        const item = treeItem.getContents();
+        const nextItem = this._getNextItem(treeItem);
+        const isGroupNext = this._isGroupNext(treeItem);
+        return !isGroupNext && nextItem?.getContents() && this._isHistoryItem(item) && !this.hasParent(treeItem.getContents()) && !this._isHistoryItem(nextItem.getContents());
+    }
+
+    protected _isGroupVisible(groupItem: GroupItem): boolean {
+        let collection = groupItem.getOwner();
+        let itemsGroupCount = collection.getGroupItems(groupItem.getContents()).length;
+        return !groupItem.isHiddenGroup() && itemsGroupCount > 0 && itemsGroupCount !== collection.getCount(true);
+    }
+
+    private hasParent(item: Model): boolean {
+        return item.get(this._options.parentProperty) !== undefined && item.get(this._options.parentProperty) !== null;
+    }
+
+    private _isHistoryItem(item: Model): boolean {
+        return item.get('pinned') || item.get('recent') || item.get('frequent');
+    }
+
+    private _isGroupNext(treeItem: TreeItem<Model>): boolean {
+        return this._getNextItem(treeItem) instanceof GroupItem;
+    }
+
+    private _getNextItem(treeItem): TreeItem {
+        const index = treeItem.getOwner().getIndex(treeItem);
+        return treeItem.getOwner().at(index + 1);
     }
 
     private setListModelOptions(options: IMenuRenderOptions) {
@@ -55,25 +113,49 @@ class MenuRender extends Control<IMenuRenderOptions> {
             left: this.getLeftSpacing(options),
             right: this.getRightSpacing(options)
         });
-        if (options.emptyText) {
+        if (options.emptyText && !options.listModel.getItemBySourceKey(options.emptyKey)) {
             this.addEmptyItem(options.listModel, options);
         }
     }
 
     private addEmptyItem(listModel: Tree, options: IMenuRenderOptions): void {
-        let data = {};
+        const collection = listModel.getCollection();
+        let emptyItem = this._getItemModel(collection, options.keyProperty);
+
+        const data = {};
         data[options.keyProperty] = options.emptyKey;
         data[options.displayProperty] = options.emptyText;
-        listModel.getCollection().prepend([new Model({
-            keyProperty: options.keyProperty,
-            rawData: data
-        })]);
+
+        emptyItem.set(data);
+        collection.prepend([emptyItem]);
+
+        if (!options.selectedKeys.length || options.selectedKeys.includes(options.emptyKey)) {
+            SelectionController.selectItem(listModel, options.emptyKey, true);
+        }
+    }
+
+    private _getItemModel(collection, keyProperty) {
+        const model = collection.getModel();
+        const modelConfig = {
+            keyProperty,
+            format: collection.getFormat(),
+            adapter: collection.getAdapter()
+        };
+        if (typeof model === 'string') {
+            return this._createModel(model, modelConfig);
+        } else {
+            return new model(modelConfig);
+        }
+    }
+
+    private _createModel(model, config) {
+        return DiCreate(model, config);
     }
 
     private getLeftSpacing(options: IMenuRenderOptions): string {
         let leftSpacing = 'l';
-        if (options.leftSpacing) {
-            leftSpacing = options.leftSpacing;
+        if (options.itemPadding.left) {
+            leftSpacing = options.itemPadding.left;
         } else if (options.multiSelect) {
             leftSpacing = 'null';
         }
@@ -82,37 +164,58 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     private getRightSpacing(options: IMenuRenderOptions): string {
         let rightSpacing = 'l';
-        if (!options.rightSpacing) {
-            factory(options.listModel.getCollection()).each((item) => {
-                if (item.get(options.nodeProperty)) {
+        if (!options.itemPadding.right) {
+            factory(options.listModel).each((item) => {
+                if (item.getContents().get && item.getContents().get(options.nodeProperty)) {
                     rightSpacing = 'menu-expander';
                 }
             });
         } else {
-            rightSpacing = options.rightSpacing;
+            rightSpacing = options.itemPadding.right;
         }
         return rightSpacing;
     }
 
-    private getIconSpacing(options: IMenuRenderOptions): string {
+    private getIconPadding(options: IMenuRenderOptions): string {
         const items = options.listModel.getCollection();
         const parentProperty = options.parentProperty;
-        let iconSpacing = '', icon;
+        let iconPadding = '', icon;
+        let headingIcon = options.headConfig?.icon || options.headingIcon;
 
-        factory(items).each((item) => {
-            icon = item.get('icon');
-            if (icon && (!parentProperty || item.get(parentProperty) === options.root)) {
-                iconSpacing = ActualApi.iconSize(options.iconSize, icon);
-            }
-        });
-        return iconSpacing;
+        if (options.root === null && headingIcon && (!options.headConfig || options.headConfig.menuStyle !== 'titleHead')) {
+            iconPadding = this.getIconSize(options.iconSize, headingIcon);
+        } else {
+            factory(items).each((item) => {
+                icon = item.get('icon');
+                if (icon && (!parentProperty || item.get(parentProperty) === options.root)) {
+                    iconPadding = this.getIconSize(options.iconSize, icon);
+                }
+            });
+        }
+        return iconPadding;
+    }
+
+    private getIconSize(iconSize: string, icon: string): string {
+        const iconSizes = [['icon-small', 's'], ['icon-medium', 'm'], ['icon-large', 'l']];
+        if (iconSize) {
+            return iconSize;
+        } else {
+            let result = '';
+            iconSizes.forEach((size) => {
+                if (icon.indexOf(size[0]) !== -1) {
+                    result = size[1];
+                }
+            });
+            return result;
+        }
     }
 
     static _theme: string[] = ['Controls/menu', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
-            itemTemplate
+            itemTemplate,
+            itemPadding: {}
         };
     }
 }

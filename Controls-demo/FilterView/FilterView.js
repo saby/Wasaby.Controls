@@ -73,6 +73,7 @@ define('Controls-demo/FilterView/FilterView',
          _buttonItemsWithoutResetValue: null,
          _fastButtonItems: null,
          _fastButtonItems2: null,
+         _fastButtonItems3: null,
          _oneFastItems: null,
          _oneFastItems2: null,
          _customTemplateItems: null,
@@ -530,7 +531,9 @@ define('Controls-demo/FilterView/FilterView',
                {name: 'responsible', value: '', resetValue: '', viewMode: 'extended', visibility: false},
                {name: 'tagging', value: false, resetValue: false, textValue: 'Marks', viewMode: 'extended', visibility: false}
             ].concat(this._buttonItems);
+
             this._fastButtonItems2 = Clone(this._fastButtonItems);
+            this._fastButtonItems2[0].editorOptions.editorMode = 'Selector';
             this._fastButtonItems2.push({
                name: 'detailingPeriod',
                value: [1],
@@ -549,6 +552,10 @@ define('Controls-demo/FilterView/FilterView',
                   ]
                })
             });
+
+            this._fastButtonItems3 = Clone(this._fastButtonItems);
+            this._fastButtonItems3[0].editorOptions.clearButtonVisibility = true;
+
             this._oneFastItems = [
                { name: 'acting',
                   value: '1',
@@ -635,8 +642,8 @@ define('Controls-demo/FilterView/FilterView',
             return items;
          },
 
-         _itemsChanged: function(event, items) {
-            this._hierarchyItems = Clone(items);
+         _itemsChanged: function(event, field, items) {
+            this[field] = items;
          }
       });
 

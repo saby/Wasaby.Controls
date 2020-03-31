@@ -5,10 +5,10 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { TKeySelection as TKey } from 'Controls/interface/';
 
-/**
- * Контроллер для работы с множественным выбором.
- * Передает состояние массового выделения дочерним контролам.
- * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>здесь</a>.
+/** 
+ * Контрол используется для организации множественного выбора. 
+ * Он обеспечивает связь между Controls/operationsPanel:Containter и {@link Controls/list:Containter}.
+ * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/operations/'>здесь</a>.
  *
  * @class Controls/_operations/Controller
  * @extends Core/Control
@@ -72,5 +72,10 @@ export default class MultiSelector extends Control {
 
    protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: TKey): void {
       this._listMarkedKey = markedKey;
+      this._notify('markedKeyChanged', [markedKey]);
+   }
+
+   protected _markedKeyChangedHandler(event: SyntheticEvent<null>): void {
+      event.stopPropagation();
    }
 }

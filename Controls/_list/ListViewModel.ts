@@ -8,8 +8,10 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
-import { CollectionItem } from 'Types/display';
+import { CollectionItem } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
+import {Logger} from 'UI/Utils';
+import {detection} from 'Env/Env';
 
 /**
  *
@@ -90,6 +92,28 @@ var _private = {
         const right = `controls-ListView__groupContent__rightPadding_${current.itemPadding.right}`;
         const left =  `controls-ListView__groupContent__leftPadding_${current.hasMultiSelect ? 'withCheckboxes' : current.itemPadding.left}`;
         return {right, left};
+    },
+    // itemActions classes only For Edge
+    getItemActionsClasses(itemData, isTile, itemActionsPosition, itemActionsClass,
+                          toolbarVisibility, actionMenuIsShown): string {
+        let classList = 'controls-itemActionsV' + ' controls-itemActionsV_full_item_size';
+        classList += itemActionsPosition ? ` controls-itemActionsV_${itemActionsPosition}` : '';
+        classList += itemData.isActive && actionMenuIsShown ? ' controls-itemActionsV_visible' : '';
+        classList += itemData.isSwiped ? ' controls-itemActionsV_swiped' : '';
+        classList += itemData.itemActionsColumnScrollDraw ? ' controls-itemActionsV_columnScrollDraw' : '';
+        return classList;
+    },
+    getItemActionsWrapperClasses(itemData, isTile, itemActionsPosition, highlightOnHover, style,
+                                 getContainerPaddingClass, itemActionsClass, itemPadding, toolbarVisibility): string {
+        let classList = 'controls-itemActionsV__wrapper';
+        classList += '  controls-itemActionsV__wrapper_absolute';
+        classList += itemData.isEditing ? ' controls-itemActionsV_editing' : '';
+        classList += itemData.isEditing && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
+        classList += ` controls-itemActionsV_${itemActionsPosition}`;
+        classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
+        classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') : '';
+        classList += getContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding);
+        return classList;
     }
 };
 
@@ -128,8 +152,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._reloadedKeys = {};
     },
     setEditingConfig: function(editingConfig) {
-        this._options.editingConfig = editingConfig;
-        this._nextModelVersion();
+        if (!isEqual(editingConfig, this._options.editingConfig)) {
+            this._options.editingConfig = editingConfig;
+            this._nextModelVersion();
+        }
     },
     setItemPadding: function(itemPadding) {
         this._options.itemPadding = itemPadding;
@@ -167,7 +193,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
+        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master' && !(this._options.virtualScrolling  || Boolean(this._options.virtualScrollConfig));
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -176,6 +202,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
+            itemsModelCurrent.virtualScrolling = this._options.virtualScrolling || Boolean(this._options.virtualScrollConfig);
         }
 
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
@@ -196,6 +223,11 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         itemsModelCurrent.drawActions = _private.needToDrawActions(this._editingItemData, itemsModelCurrent, this._options.editingConfig, drawnActions);
+
+        // itemActionsClassesForEdge
+        itemsModelCurrent.isIE12 = detection.isIE12;
+        itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
+        itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
 
         if (itemsModelCurrent.drawActions && drawnActions) {
             itemsModelCurrent.hasActionWithIcon = false;
@@ -227,8 +259,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemsModelCurrent;
     },
 
-    _calcCursorClasses: function(clickable) {
-        return ` controls-ListView__itemV ${clickable === false ? 'controls-ListView__itemV_cursor-default' : 'controls-ListView__itemV_cursor-pointer'}`;
+    _calcCursorClasses: function(clickable, cursor) {
+        const cursorStyle = cursor || (clickable === false ? 'default' : 'pointer');
+        if (typeof clickable !== 'undefined') {
+            Logger.warn('Controls/list:BaseItemTemplate', 'Option "clickable" is deprecated and will be removed in 20.3000. Use option "cursor" with value "default".');
+        }
+        return ` controls-ListView__itemV controls-ListView__itemV_cursor-${cursorStyle}`;
     },
 
     _calcItemVersion: function(item, key) {
@@ -284,7 +320,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
-    setMarkedKey: function(key) {
+    setMarkedKey: function(key, byOptions) {
+        if (byOptions) {
+            this._options.markedKey = key;
+        }
         if (key === this._markedKey) {
             return;
         }

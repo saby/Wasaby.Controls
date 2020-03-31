@@ -1,4 +1,7 @@
 @z-index-Grid-results-cell: 1;
+.get-padding-top(@padding-top: 0px) {
+   padding-top: calc(@padding-top - (@height_Grid-row-separator-l - @height_Grid-row-separator));
+}
 
 .controls-Grid {
    display: -ms-grid;
@@ -6,7 +9,12 @@
    width: 100%;
    position: relative;
 }
-
+.controls-Grid_dragging_process .controls-Grid__row-ladder-cell {
+   display: none;
+}
+.controls-Grid_dragging_process .controls-Grid__row-cell__content_ladderHeader {
+   visibility: visible;
+}
 .controls-GridView__itemV_marker_theme-@{themeName} {
    position: absolute;
    width: @width_Grid-selection-marker;
@@ -82,7 +90,6 @@
 
 .controls-Grid__sorting-button {
    display: inline-flex;
-   max-width: 100%;
 }
 
 .controls-Grid__row-header__content_baseline_theme-@{themeName}:before {
@@ -136,8 +143,15 @@
    box-sizing: border-box;
    position: relative;
 }
-.controls-Grid__itemAction {
-   z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у колонок results;
+
+.controls-Grid__row-cell_colspaned {
+   flex-grow: 1;
+   box-sizing: border-box;
+   max-width: 100%;
+}
+
+.controls-Grid__itemAction.controls-itemActionsV_outside {
+   z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у results; только для весла, иначе будут поверх шапки
 }
 
 
@@ -202,7 +216,7 @@
    display: -ms-grid;
 }
 .ws-is-hover {
-   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName}:not(.controls-Grid__row-ladder-cell) {
       background-color: @background-color_Grid-row_hover;
    }
    .controls-BaseControl_showActions .controls-Grid__row:hover {
@@ -213,10 +227,21 @@
             visibility: visible;
          }
       }
-      .controls-BreadCrumbsView__menu__dots {
+      /** Общая проблема с background'ом у контролов, которые лежат в списке, решается через background: inherit **/
+      //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
+      .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
          background-color: @background-color_Grid-row_hover;
          box-shadow: -15px 2px 4px -6px @background-color_Grid-row_hover;
       }
+
+      .controls-SelectedCollection__InfoBox_fixed {
+         background-color: @background-color_Grid-row_hover;
+      }
+
+      .controls-SelectedCollection__InfoBox_fixed:after {
+         .horizontal-gradient(@background-color_Grid-row_hover, rgba(255, 255, 255, 0));
+      }
+      /**********************************************/
    }
 
 }
@@ -254,6 +279,10 @@
    }
 }
 
+.controls-Grid__row-cell-wide-sep_rowSpacingTop_default_theme-@{themeName} {
+  .get-padding-top(@spacing_Grid-row-between-content-borderTop_default);
+}
+
 .controls-Grid__row-cell_rowSpacingTop_default_theme-@{themeName} {
    padding-top: @spacing_Grid-row-between-content-borderTop_default;
 }
@@ -261,11 +290,19 @@
    padding-bottom: @spacing_Grid-row-between-content-borderBottom_default;
 }
 
+.controls-Grid__row-cell-wide-sep_rowSpacingTop_m_theme-@{themeName} {
+   .get-padding-top(@spacing_Grid-row-between-content-borderTop_s);
+}
+
 .controls-Grid__row-cell_rowSpacingTop_m_theme-@{themeName} {
    padding-top: @spacing_Grid-row-between-content-borderTop_s;
 }
 .controls-Grid__row-cell_rowSpacingBottom_m_theme-@{themeName} {
    padding-bottom: @spacing_Grid-row-between-content-borderBottom_s;
+}
+
+.controls-Grid__row-cell-wide-sep_rowSpacingTop_l_theme-@{themeName} {
+   .get-padding-top(@spacing_Grid-row-between-content-borderTop_l);
 }
 
 .controls-Grid__row-cell_rowSpacingTop_l_theme-@{themeName} {
@@ -311,7 +348,7 @@
 }
 
 .controls-Grid__row-ladder-cell__content_default_theme-@{themeName} {
-   top: @spacing_Grid-row-between-content-borderTop_default;
+   top: 0;
 }
 .controls-Grid__row-ladder-cell__content_m_theme-@{themeName} {
    top: @spacing_Grid-row-between-content-borderTop_s;
@@ -322,6 +359,9 @@
 
 .controls-Grid__row-ladder-cell__content {
    .position-sticky();
+   // иначе не будет работать мини-карточка
+   // https://online.sbis.ru/opendoc.html?guid=873e5d1a-016f-456f-b51e-1a67a18a53d4
+   pointer-events: auto;
 }
 
 .controls-Grid__row-cell_first-row-in-group {
@@ -467,12 +507,18 @@
    max-width: @click-area_width_checkbox;
 }
 
+// При включенном скроле колонок также нужен min-width https://online.sbis.ru/opendoc.html?guid=fe24dbc6-e04f-4cf3-a397-39c8e074f5f8
+.controls-Grid_columnScroll .controls-Grid__header-cell-checkbox_theme-@{themeName}.controls-Grid__header-cell-checkbox_min-width_theme-@{themeName},
 .controls-Grid__header-cell-checkbox_min-width_theme-@{themeName} {
    min-width: @click-area_width_checkbox;
 }
 
 .controls-GridView__footer__paddingLeft_withCheckboxes_theme-@{themeName} {
    padding-left: @spacing_Grid-row-with-checkbox-between-content-borderLeft;
+}
+
+.controls-GridView__footer__itemActionsV_outside {
+   min-height: @height_ItemActions_outside;
 }
 
 .controls-GridView__checkbox_theme-@{themeName} {
@@ -490,6 +536,11 @@
    align-items: baseline;
    min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
    flex-shrink: 1;
+   box-sizing: border-box;
+}
+
+.controls-Grid__row-cell_cursor-default {
+   cursor: default;
 }
 
 //MasterList styles
@@ -552,9 +603,16 @@
       z-index: 1;
    }
 }
+
 .ws-is-hover {
    .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
       background-color: @background-color_List-masterList-item_hover;
+   }
+
+   //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
+   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
+      background-color: @background-color_List-masterList-item_hover;
+      box-shadow: -15px 2px 4px -6px @background-color_List-masterList-item_hover;
    }
 }
 .ws-is-no-touch {
@@ -653,6 +711,7 @@
    position: relative;
    background: @background-color_Grid-row_hover;
    z-index: 1;
+   .icon(@height_Grid-editArrow)
 }
 
 .controls-Grid__editArrow_style-default_background {
@@ -694,4 +753,13 @@
 
 .controls-Grid__cell-content_full-height {
    height: 100%;
+}
+
+.controls-Grid__cell_tag {
+   position: relative;
+   right: -@tag_offset-horizontal_gridView;
+
+   .controls__tag_theme-@{themeName} {
+      top: -@tag_offset-vertical_gridView;
+   }
 }

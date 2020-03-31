@@ -6,10 +6,16 @@ import Control = require('Core/Control');
 import Controller from 'Controls/Popup/Compatible/ManagerWrapper/Controller';
 import template = require('wml!Controls/_compatiblePopup/ManagerWrapper/ManagerWrapper');
 import {Controller as ControllerPopup} from 'Controls/popup';
+import {setController, IPopupSettingsController} from 'Controls/Application/SettingsController';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
 var ManagerWrapper = Control.extend({
    _template: template,
+
+   _beforeMount: function() {
+      // TODO: https://online.sbis.ru/opendoc.html?guid=3f08c72a-8ee2-4068-9f9e-74b34331e595
+      this._loadViewSettingsController();
+   },
 
    _afterMount: function() {
       Controller.registerManager(this);
@@ -24,6 +30,39 @@ var ManagerWrapper = Control.extend({
       this._mouseupPage = this._eventRegistratorHandler.bind(this, 'mouseupDetect');
 
       this._toggleWindowHandlers(true);
+   },
+
+   _loadViewSettingsController: function() {
+      const isBilling = document.body.classList.contains('billing-page');
+      // Совместимость есть на онлайне и в биллинге. В биллинге нет ViewSettings и движения границ
+      if (!isBilling) {
+         // Для совместимости, временно, пока не решат проблемыв с ViewSettings делаю локальное хранилище.
+         // todo: https://online.sbis.ru/opendoc.html?guid=3f08c72a-8ee2-4068-9f9e-74b34331e595
+         const localController: IPopupSettingsController = {
+            getSettings(ids) {
+               const storage = window && JSON.parse(window.localStorage.getItem('controlSettingsStorage')) || {};
+               const data = {};
+
+               if (ids instanceof Array) {
+                  ids.map((id: string) => {
+                     if (storage[id]) {
+                        data[id] = storage[id];
+                     }
+                  });
+               }
+               return Promise.resolve(data);
+            },
+            setSettings(settings) {
+               const storage = window && JSON.parse(window.localStorage.getItem('controlSettingsStorage')) || {};
+               if (typeof settings === 'object') {
+                  const savedData = {...storage, ...settings};
+                  window.localStorage.setItem('controlSettingsStorage', JSON.stringify(savedData));
+               }
+            }
+         };
+         setController(localController);
+      }
+      return Promise.resolve();
    },
 
    _beforePopupDestroyedHandler: function() {
@@ -45,8 +84,24 @@ var ManagerWrapper = Control.extend({
    },
 
    startResizeEmitter(event: Event): void {
+      // запустим перепозиционирование вдомных окон (инициатор _onResizeHandler в слое совместимости)
+      // Не запускаем только для подсказки, т.к. она на апдейт закрывается
       if (!this._destroyed) {
-          this._resizePage(event);
+         this._resizePage(event);
+         // защита на случай если не подмешалась совместимость
+         if (this._children.PopupContainer.getChildControls) {
+            const popups = this._children.PopupContainer.getChildControls(null, false, (instance) => {
+               return instance._moduleName === 'Controls/_popup/Manager/Popup' && instance._options.template !== 'Controls/popupTemplate:templateInfoBox';
+            });
+            if (popups && popups.map) {
+               popups.map((popup) => {
+                  // На всякий случай если фильтр вернет не то
+                  if (popup._controlResizeOuterHandler) {
+                     popup._controlResizeOuterHandler();
+                  }
+               });
+            }
+         }
       }
    },
 
@@ -105,6 +160,17 @@ var ManagerWrapper = Control.extend({
             this._children.Manager.remove(item.id);
          }
       });
+   },
+
+   getMaxZIndex(): number {
+      const items = this.getItems();
+      let maxZIndex = 0;
+      items.each((item) => {
+         if (item.currentZIndex > maxZIndex && !item.popupOptions.topPopup) {
+            maxZIndex = item.currentZIndex;
+         }
+      });
+      return maxZIndex;
    },
 
    getItems: function() {

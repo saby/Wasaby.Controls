@@ -2,28 +2,32 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
    'use strict';
 
    describe('Controls/_lookup/showSelector', function() {
-      let
-         lastPopupOptions,
-         isShowSelector = false,
-         baseController = new BaseController();
+      let lastPopupOptions;
+      let isShowSelector = false;
+      const getBaseController = function() {
+         const baseController = new BaseController();
 
-      baseController._options.selectorTemplate = {
-         templateOptions: {
-            selectedTab: 'defaultTab'
-         },
-         popupOptions: {
-            width: 100
-         }
-      };
-      baseController._children.selectorOpener = {
-         open: function(popupOptions) {
-            isShowSelector = true;
-            lastPopupOptions = popupOptions;
-            return Promise.resolve();
-         }
+         baseController._options.selectorTemplate = {
+            templateOptions: {
+               selectedTab: 'defaultTab'
+            },
+            popupOptions: {
+               width: 100
+            }
+         };
+         baseController._children.selectorOpener = {
+            open: function(popupOptions) {
+               isShowSelector = true;
+               lastPopupOptions = popupOptions;
+               return Promise.resolve();
+            }
+         };
+         
+         return baseController;
       };
 
       it('showSelector without params', function() {
+         const baseController = getBaseController();
          let items = baseController._getItems();
          showSelector.default(baseController);
          assert.isTrue(isShowSelector);
@@ -35,6 +39,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
       });
 
       it('showSelector with templateOptions', function() {
+         const baseController = getBaseController();
          isShowSelector = false;
          showSelector.default(baseController, {
             templateOptions: {
@@ -48,6 +53,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
       });
 
       it('showSelector with popupOptions', function() {
+         const baseController = getBaseController();
          isShowSelector = false;
          showSelector.default(baseController, {
             width: 50,
@@ -60,8 +66,20 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
       });
 
       it('showSelector with multiSelect', function() {
+         const baseController = getBaseController();
+         let selectCompleted = false;
+         let selectorClosed = false;
+
+         baseController._selectCallback = () => {
+            selectCompleted = true;
+         };
+         baseController._children.selectorOpener.close = () => {
+            selectorClosed = true;
+            assert.isFalse(selectCompleted);
+         };
+
          showSelector.default(baseController, undefined, true);
-         assert.isTrue(lastPopupOptions.templateOptions.multiSelect);
+         lastPopupOptions.templateOptions.handlers.onSelectComplete();
       });
    });
 });

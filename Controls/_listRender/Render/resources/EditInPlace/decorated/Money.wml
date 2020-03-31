@@ -1,5 +1,5 @@
 <ws:partial template="wml!Controls/_listRender/Render/resources/EditInPlace/baseEditingTemplate" scope="{{ _options }}">
-    <ws:notEditingTemplate>
+    <ws:viewTemplate>
         <Controls.decorator:Money
                 value="{{ value }}"
                 style="{{ style }}"
@@ -8,5 +8,5 @@
                 tooltip="{{ tooltip }}"
                 readOnly="{{ readOnly }}"
         />
-    </ws:notEditingTemplate>
+    </ws:viewTemplate>
 </ws:partial>

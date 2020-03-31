@@ -75,9 +75,9 @@ define('Controls/Container/Async',
 
       var moduleLoader = new ModuleLoader();
 
-      function generateErrorMsg(template, msg) {
+      function generateErrorMsg(templateName, msg) {
          return 'Couldn\'t load module ' +
-            template + ' ' +
+            templateName + ' ' +
             (msg || '');
       }
 
@@ -87,7 +87,8 @@ define('Controls/Container/Async',
          canUpdate: true,
          _beforeMount: function(options, ctx, receivedState) {
             var self = this;
-            if (!self._isServer() && (!moduleLoader.isLoaded(options.templateName) || this._isCompat() || !receivedState)) {
+            if (!self._isServer() && (!moduleLoader.isLoaded(options.templateName) ||
+                  this._isCompat() || !receivedState)) {
                return self._loadContentAsync(options.templateName, options.templateOptions, true);
             }
 
@@ -108,11 +109,12 @@ define('Controls/Container/Async',
                return;
             }
 
-            if (opts.templateName === this._options.templateName) {
+            if (opts.templateName === this.currentTemplateName) {
                // поменялись только опции шаблона
-               return this._insertComponent(this.optionsForComponent.resolvedTemplate,
+               this._insertComponent(this.optionsForComponent.resolvedTemplate,
                   opts.templateOptions,
                   opts.templateName);
+               return;
             }
 
             if (moduleLoader.isLoaded(opts.templateName)) {
@@ -129,7 +131,7 @@ define('Controls/Container/Async',
             }
 
             var self = this;
-            this._loadContentAsync(this._options.templateName, this._options.templateOptions).then(function () {
+            this._loadContentAsync(this._options.templateName, this._options.templateOptions).then(function() {
                self._forceUpdate();
             });
          },
@@ -142,6 +144,7 @@ define('Controls/Container/Async',
 
             this._insertComponent(loaded, options, name);
             this._pushDepToHeadData(library.parse(name).name);
+            return false;
          },
 
          _loadContentAsync: function(name, options) {
@@ -197,7 +200,8 @@ define('Controls/Container/Async',
             }
 
             if (tpl && tpl.__esModule) {
-               return this.optionsForComponent.resolvedTemplate = tpl.default;
+               this.optionsForComponent.resolvedTemplate = tpl.default;
+               return;
             }
             this.optionsForComponent.resolvedTemplate = tpl;
          },

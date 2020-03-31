@@ -65,9 +65,10 @@
     height: @min-height_Grid-header;
   }
 
-  .controls-Grid__results {
-    display: table-row-group;
-  }
+   // Этот стиль задаётся для tr и при display: table-row-group ломает вёрстку в IE/Edge
+   .controls-Grid__results {
+      display: table-row;
+   }
 
   .controls-Grid__results-cell {
     display: table-cell;
@@ -80,12 +81,31 @@
 
   .controls-Grid__row-cell {
     display: table-cell;
-    white-space: nowrap;
     vertical-align: top;
+  }
+
+  // default
+  .controls-Grid__cell_valign_baseline {
+    vertical-align: baseline;
+  }
+  .controls-Grid__cell_valign_top {
+    vertical-align: top;
+  }
+
+  .controls-Grid__cell_valign_center {
+    vertical-align: middle;
+  }
+
+  .controls-Grid__cell_valign_bottom {
+    vertical-align: bottom;
   }
 
   .controls-Grid__cell_fixed {
     position: relative;
+  }
+
+  .controls-Grid__row-cell_colspaned {
+    width: 100%;
   }
 
   .controls-Grid__row-cell__contentWrapper {

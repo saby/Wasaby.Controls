@@ -1,6 +1,6 @@
 import * as CntTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/content';
 import * as CntTwoLvlTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/contentTwoLvl';
-import * as explorerImages from 'Controls-demo/Explorer/ExplorerImages';
+import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 
 export const Gadgets = {
 
@@ -353,6 +353,63 @@ export const Gadgets = {
         return [
             {
                 displayProperty: 'title'
+            }
+        ];
+    },
+    getColumnsForColumnScroll() {
+        return [
+            {
+                displayProperty: 'id',
+                width: '60px'
+            },
+            {
+                displayProperty: 'title',
+                width: '200px'
+            },
+            {
+                displayProperty: 'country',
+                width: '150px'
+            },
+            {
+                displayProperty: 'rating',
+                width: '60px'
+            },
+            {
+                displayProperty: 'hasChild',
+                width: '120px'
+            },
+            {
+                displayProperty: 'country',
+                width: '120px'
+            },
+            {
+                displayProperty: 'rating',
+                width: '120px'
+            }
+        ];
+    },
+    getHeaderForColumnScroll() {
+        return [
+            {
+                title: '#'
+            },
+            {
+                title: 'Бренд'
+            },
+            {
+                title: 'Страна производителя'
+            },
+            {
+                title: 'Рейтинг'
+            },
+            {
+                title: 'Есть товары?'
+            },
+            {
+                title: 'Еще раз страна'
+            },
+            {
+                title: 'Еще раз рейтинг'
             }
         ];
     },

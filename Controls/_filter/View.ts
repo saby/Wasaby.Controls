@@ -12,7 +12,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {detection} from 'Env/Env';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
-import {RecordSet} from 'Types/collection';
+import {factory as CollectionFactory, RecordSet} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
 import {hasResetValue} from 'Controls/_filter/resetFilterUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
@@ -24,11 +24,11 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
  * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
  * @remark
- * См. <a href="/materials/demo-ws4-filter-view">демо-пример</a>
- * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-view/ здесь}.
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FFilterView%2FFilterView">демо-пример</a>
+ * Подробнее о работе с контролом читайте {@link https://wasaby.dev/doc/platform/controls/list-environment/filter-search/filter-view здесь}.
  * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
  * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
- * 
+ *
  * При клике на кнопку-иконку или строковое представления открывается панель фильтров, созданная на основе {@link Controls/filterPopup:DetailPanel}.
  * При клике на параметры быстрого фильтра открывается панель "Быстрых фильтров", созданная на основе {@link Controls/filterPopup:SimplePanel}.
  *
@@ -39,7 +39,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/FilterView/ItemTemplates/Index
- * 
+ *
  * @see Controls/filterPopup:SimplePanel
  * @see Controls/filterPopup:DetailPanel
  * @see Controls/filter:ViewContainer
@@ -49,7 +49,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * Control for data filtering. Consists of an icon-button, a string representation of the selected filter and fast filter parameters.
  * Clicking on a icon-button or a string opens the detail panel. {@link Controls/filterPopup:DetailPanel}
  * Clicking on fast filter parameters opens the simple panel. {@link Controls/filterPopup:SimplePanel}
- * Here you can see <a href="/materials/demo-ws4-filter-view">demo-example</a>.
+ * Here you can see <a href="/materials/Controls-demo/app/Controls-demo%2FFilterView%2FFilterView">demo-example</a>.
  *
  * @class Controls/_filter/View
  * @extends Core/Control
@@ -83,9 +83,19 @@ var _private = {
         self._hasResetValues = hasResetValue(items);
     },
 
+    sourcesIsLoaded: function(configs) {
+        let result = true;
+        factory(configs).each((config) => {
+            if (config.sourceController && config.sourceController.isLoading()) {
+                result = false;
+            }
+        });
+        return result;
+    },
+
     calculateStateSourceControllers: function(configs, source) {
         factory(source).each(function(item) {
-            if (_private.isFrequentItem(item)) {
+            if (_private.isFrequentItem(item) && configs[item.name]) {
                 var sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source,
                      item.editorOptions.navigation);
                 sourceController.calculateState(configs[item.name].items);
@@ -113,6 +123,16 @@ var _private = {
         return dateRangeItem;
     },
 
+    loadUnloadedFrequentItems(self, configs, items): Promise<RecordSet[]> {
+        const loadPromises = [];
+        factory(items).each((item): void => {
+            if (_private.isFrequentItem(item) && !configs[item.name]) {
+                loadPromises.push(_private.loadItems(self, item));
+            }
+        });
+        return Promise.all(loadPromises);
+    },
+
     getPopupConfig: function(self, configs, items) {
         var popupItems = [];
         factory(items).each(function(item) {
@@ -126,11 +146,15 @@ var _private = {
                 popupItem.selectorItems = configs[item.name].items;
                 if (item.editorOptions.source) {
                     if (!configs[item.name].source && (!configs[item.name].loadDeferred || configs[item.name].loadDeferred.isReady())) {  // TODO https://online.sbis.ru/opendoc.html?guid=99e97896-1953-47b4-9230-8b28e50678f8
-                        popupItem.loadDeferred = _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter);
+                        popupItem.loadDeferred = _private.loadItemsFromSource(configs[item.name], item.editorOptions.source, popupItem.filter, item.editorOptions.navigation);
                         configs[item.name].loadDeferred = popupItem.loadDeferred;
                     }
-                    popupItem.hasMoreButton = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation).hasMoreData('down');
-                    popupItem.sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
+                    if (!configs[item.name].sourceController) {
+                        let sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
+                        sourceController.calculateState(popupItem.items);
+                    }
+                    popupItem.hasMoreButton = configs[item.name].sourceController.hasMoreData('down');
+                    popupItem.sourceController = configs[item.name].sourceController;
                     popupItem.selectorOpener = self._children.selectorOpener;
                     popupItem.selectorDialogResult = self._onSelectorTemplateResult.bind(self);
                 }
@@ -140,7 +164,7 @@ var _private = {
         return popupItems;
     },
 
-    getFolderIds: function({items, nodeProperty, parentProperty, keyProperty}) {
+    getFolderIds: function(items, {nodeProperty, parentProperty, keyProperty}) {
         let folders = [];
         factory(items).each((item) => {
             if (item.get(nodeProperty) && !item.get(parentProperty)) {
@@ -228,16 +252,50 @@ var _private = {
         return newKeys;
     },
 
-    setItems: function(config, item, newItems) {
-        config.popupItems = getItemsWithHistory(config.popupItems || CoreClone(config.items), newItems,
+    getPreparedItems: function(config, item, newItems, folderId) {
+        const getItemsByParentKey = (items) => {
+            return factory(items).filter((popupItem) => {
+                return popupItem.get(config.parentProperty) === folderId;
+            });
+        };
+
+        let folderItems = getItemsByParentKey(config.popupItems).value(CollectionFactory.recordSet, {
+            adapter: config.popupItems.getAdapter(),
+            keyProperty: config.popupItems.getKeyProperty(),
+            format: config.popupItems.getFormat(),
+            model: config.popupItems.getModel()
+        });
+        let newFolderItems = getItemsByParentKey(newItems).value();
+        folderItems = getItemsWithHistory(folderItems, newFolderItems,
             config.sourceController, item.editorOptions.source, config.keyProperty);
+        folderItems.prepend([config.popupItems.getRecordById(folderId)]);
+        return folderItems;
+    },
+
+    setItems: function(config, item, newItems) {
+        if (config.nodeProperty) {
+            config.popupItems = config.popupItems || config.items.clone();
+            const folders = _private.getFolderIds(config.popupItems, config);
+            let resultItems;
+            factory(folders).each((folderId) => {
+                if (!resultItems) {
+                    resultItems = _private.getPreparedItems(config, item, newItems, folderId);
+                } else {
+                    resultItems.append(_private.getPreparedItems(config, item, newItems, folderId));
+                }
+            });
+            config.popupItems.assign(resultItems);
+        } else {
+            config.popupItems = getItemsWithHistory(config.popupItems || config.items.clone(), newItems,
+                config.sourceController, item.editorOptions.source, config.keyProperty);
+        }
         config.items = getUniqItems(config.items, newItems, config.keyProperty);
     },
 
     loadSelectedItems: function(items, configs) {
         let pDef = new ParallelDeferred();
         factory(items).each(function(item) {
-            if (_private.isFrequentItem(item)) {
+            if (_private.isFrequentItem(item) && configs[item.name]) {
                 const config = configs[item.name];
                 let keys = _private.getKeysUnloadedItems(config, item.value);
                 if (keys.length) {
@@ -246,11 +304,11 @@ var _private = {
 
                     const keyProperty = config.keyProperty;
                     editorOpts.filter[keyProperty] = keys;
-                    let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter).addCallback((newItems) => {
+                    let result = _private.loadItemsFromSource({}, editorOpts.source, editorOpts.filter, null,
                         // FIXME https://online.sbis.ru/opendoc.html?guid=b6ca9523-38ce-42d3-a3ec-36be075bccfe
-                        if (item.editorOptions.dataLoadCallback) {
-                            item.editorOptions.dataLoadCallback(newItems);
-                        }
+                        item.editorOptions.dataLoadCallback,
+                        false).addCallback((newItems) => {
+
                         _private.setItems(config, item, newItems);
                     });
                     pDef.push(result);
@@ -260,13 +318,13 @@ var _private = {
         return pDef.done().getResult();
     },
 
-    loadItemsFromSource: function(instance, source, filter, navigation?, dataLoadCallback?) {
+    loadItemsFromSource: function(instance, source, filter, navigation?, dataLoadCallback?, withHistory = true) {
         let queryFilter;
         if (instance.nodeProperty) {
             queryFilter = Merge(filter, {historyId: instance.historyId});
         }
             // As the data source can be history source, then you need to merge the filter
-        queryFilter = historyUtils.getSourceFilter(filter, source);
+        queryFilter = withHistory ? historyUtils.getSourceFilter(filter, source) : filter;
         return _private.getSourceController(instance, source, navigation).load(queryFilter).addCallback(function(items) {
             instance.items = items;
             if (dataLoadCallback) {
@@ -317,10 +375,10 @@ var _private = {
         });
     },
 
-    reload: function(self) {
+    reload: function(self, onlyChangedItems: boolean = false) {
         var pDef = new ParallelDeferred();
         factory(self._source).each(function(item) {
-            if (_private.isFrequentItem(item)) {
+            if (_private.isFrequentItem(item) && (!onlyChangedItems || onlyChangedItems && _private.isItemChanged(item))) {
                 var result = _private.loadItems(self, item);
                 pDef.push(result);
             }
@@ -362,7 +420,7 @@ var _private = {
             keyProperty = config.keyProperty;
 
         factory(selectedItems).each(function(item) {
-            if (item.has(keyProperty) && !curItems.getRecordById(object.getPropertyValue(item, keyProperty))) {
+            if (item.has(keyProperty)) {
                 newItems.push(item);
             }
         });
@@ -374,7 +432,7 @@ var _private = {
 
         let getHierarchySelectedKeys = () => {
             // selectedKeys - { folderId1: [selected keys for folder] , folderId2: [selected keys for folder], ... }
-            let folderIds = _private.getFolderIds(config);
+            let folderIds = _private.getFolderIds(config.items, config);
             factory(folderIds).each((folderId, index) => {
                 selectedKeys[folderId] = [];
                 factory(items).each((item) => {
@@ -396,10 +454,10 @@ var _private = {
         return selectedKeys;
     },
 
-    hasSelectorTemplate: function(configs) {
+    hasSelectorTemplate: function(source) {
         let hasSelectorTemplate;
-        factory(configs).each((config) => {
-            if (config.selectorTemplate) {
+        factory(source).each((item) => {
+            if (_private.isFrequentItem(item) && item.editorOptions?.selectorTemplate) {
                 hasSelectorTemplate = true;
             }
         });
@@ -425,7 +483,7 @@ var _private = {
     },
 
     prepareHierarchySelection: function(selectedKeys, curConfig, resetValue) {
-        let folderIds = _private.getFolderIds(curConfig);
+        let folderIds = _private.getFolderIds(curConfig.items, curConfig);
         let isEmptySelection = true;
         let onlyFoldersSelected = true;
 
@@ -460,8 +518,6 @@ var _private = {
                     sKey = _private.prepareHierarchySelection(sKey, curConfig, item.resetValue);
                 }
                 const selectedItems = _private.getSelectedItems(curConfig.items, sKey);
-                curConfig.popupItems = getItemsWithHistory(curConfig.popupItems || CoreClone(curConfig.items), selectedItems,
-                    curConfig.sourceController, item.editorOptions.source, curConfig.keyProperty);
                 _private.setValue(self, sKey, index);
                 _private.updateHistory(self, index, selectedItems);
             }
@@ -493,7 +549,7 @@ var _private = {
         this._configs[result.id].initSelectorItems = result.selectedItems;
     },
 
-    isNeedReload(oldItems, newItems): boolean {
+    isNeedReload(oldItems, newItems, configs): boolean {
         const optionsToCheck = ['source', 'filter', 'navigation'];
         const getOptionsChecker = (oldItem, newItem) => {
             return (changed, optName) => changed || !isEqual(oldItem.editorOptions[optName], newItem.editorOptions[optName]);
@@ -507,7 +563,9 @@ var _private = {
                 const oldItem = _private.getItemByName(oldItems, newItem.name);
                 const isFrequent = _private.isFrequentItem(newItem);
                 if (isFrequent && (!oldItem || !_private.isFrequentItem(oldItem) ||
-                    optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false))) {
+                    optionsToCheck.reduce(getOptionsChecker(oldItem, newItem), false) ||
+                    !isEqual(newItem.value, oldItem.value) && !configs[newItem.name])
+                ) {
                     result = true;
                 }
             });
@@ -516,7 +574,7 @@ var _private = {
     },
 
     updateHierarchyHistory: function(currentFilter, selectedItems, source) {
-        let folderIds = _private.getFolderIds(currentFilter);
+        let folderIds = _private.getFolderIds(currentFilter.items, currentFilter);
 
         let getNodeItems = (parentKey) => {
             let nodeItems = [];
@@ -589,9 +647,9 @@ var Filter = Control.extend({
             _private.updateText(this, this._source, this._configs);
         } else if (options.source) {
             _private.resolveItems(this, options.source);
-            resultDef = _private.reload(this);
+            resultDef = _private.reload(this, true);
         }
-        this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
+        this._hasSelectorTemplate = _private.hasSelectorTemplate(this._source);
         return resultDef;
     },
 
@@ -600,10 +658,10 @@ var Filter = Control.extend({
             const self = this;
             let resultDef;
             _private.resolveItems(this, newOptions.source);
-            if (_private.isNeedReload(this._options.source, newOptions.source) || _private.isNeedHistoryReload(this._configs)) {
+            if (_private.isNeedReload(this._options.source, newOptions.source, this._configs) || _private.isNeedHistoryReload(this._configs)) {
                 _private.clearConfigs(this._source, this._configs);
                 resultDef = _private.reload(this).addCallback(() => {
-                    self._hasSelectorTemplate = _private.hasSelectorTemplate(self._configs);
+                    self._hasSelectorTemplate = _private.hasSelectorTemplate(self._source);
                 });
             } else if (_private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this);
@@ -628,7 +686,12 @@ var Filter = Control.extend({
     openDetailPanel: function() {
         if (this._options.detailPanelTemplateName) {
             let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);
-            let popupOptions =  {};
+            let popupOptions =  {
+                fittingMode: {
+                    horizontal: 'overflow',
+                    vertical: 'adaptive'
+                }
+            };
             if (this._options.alignment === 'right') {
                 popupOptions.targetPoint = {
                     vertical: 'top',
@@ -647,28 +710,36 @@ var Filter = Control.extend({
         }
     },
 
-    _openPanel(event: SyntheticEvent<'click'>, name?: string): void {
-        if (this._options.panelTemplateName) {
-            const items = new RecordSet({
-                rawData: _private.getPopupConfig(this, this._configs, this._source)
-            });
-            const popupOptions = {
-                template: this._options.panelTemplateName,
-                fittingMode: {
-                    horizontal: 'overflow',
-                    vertical: 'adaptive'
-                }
-            };
+    _openPanel(event: SyntheticEvent<'click'>, name?: string) {
+        const isLoading = this._loadDeferred && !this._loadDeferred.isReady();
+        if (this._options.panelTemplateName && _private.sourcesIsLoaded(this._configs) && !isLoading) {
+            const clickOnFrequentItem = !!name;
+            const target = clickOnFrequentItem && event.currentTarget;
+            return _private.loadUnloadedFrequentItems(this, this._configs, this._source).then(() => {
+                const items = new RecordSet({
+                    rawData: _private.getPopupConfig(this, this._configs, this._source)
+                });
+                const popupOptions = {
+                    template: this._options.panelTemplateName,
+                    fittingMode: {
+                        horizontal: 'overflow',
+                        vertical: 'adaptive'
+                    }
+                };
 
-            if (name) {
-                const eventTarget =  event.currentTarget;
-                popupOptions.target = eventTarget.getElementsByClassName('js-controls-FilterView__target')[0];
-                popupOptions.className = 'controls-FilterView-SimplePanel-popup';
-            } else {
-                popupOptions.className = 'controls-FilterView-SimplePanel__buttonTarget-popup';
-            }
-            popupOptions.templateOptions = this._options.panelTemplateOptions || {};
-            this._open(items, popupOptions);
+                if (clickOnFrequentItem) {
+                    /*
+                        В кейсе, когда переопределен itemTemplate, контейнера нет в _children
+                        Нужно открыться от таргета, который закэширован перед запросом.
+                     */
+                    popupOptions.target = this._children[name] || target.getElementsByClassName('js-controls-FilterView__target')[0];
+                    popupOptions.className = 'controls-FilterView-SimplePanel-popup';
+                } else {
+                    popupOptions.className = 'controls-FilterView-SimplePanel__buttonTarget-popup';
+                }
+                popupOptions.templateOptions = this._options.panelTemplateOptions || {};
+                this._open(items, popupOptions);
+            });
         }
     },
 
@@ -771,6 +842,7 @@ var Filter = Control.extend({
                 if (object.getPropertyValue(item, 'visibility') !== undefined) {
                     object.setPropertyValue(item, 'visibility', false);
                 }
+                item.textValue = '';
             }
         });
         _private.notifyChanges(this, this._source);

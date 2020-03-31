@@ -31,6 +31,21 @@
   height: @icon-size_m;
   font-family: @icon_font-family_m;
 }
+
+
+//todo change font icons to svg https://online.sbis.ru/opendoc.html?guid=90761cbd-04f8-4fad-be7d-8c1707bdd30e
+//icon-24 font has a problem with baseline in FF IE
+//important is for cases when non-theme css loads after theme css
+.controls-icon_size-m_theme-@{themeName} when not(@icon_font-family_m = 'cbuc-icons') {
+  line-height: @icon-size_m - 1 !important;
+}
+
+//отключаем сглаживание. Ждем svg https://online.sbis.ru/opendoc.html?guid=90761cbd-04f8-4fad-be7d-8c1707bdd30e
+.icon-RoundPlus.controls-icon_size-s_theme-@{themeName}, .icon-RoundPlus.controls-icon_size-m_theme-@{themeName} {
+  transform: rotate(360deg);
+}
+//end todo
+
 .controls-icon_size-l_theme-@{themeName} {
   font-size: @icon-size_l;
   line-height: @icon-size_l;
@@ -191,4 +206,24 @@
   //Для того, чтобы отображались дочерние элементы с отрицательным z-index-ом, если задается цвет фона. Пример: https://jsfiddle.net/koshka_alesya/df1cqL6s/42/
   //https://stackoverflow.com/questions/18564974/html-backgrounds-with-z-index0-hidden-by-parent-background
   z-index: 0;
+}
+
+.controls__tag_theme-@{themeName} {
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  position: absolute;
+  width: @tag-size;
+  height: @tag-size;
+}
+
+.controls__tag_style- {
+  @variants: danger, primary, success, secondary, warning;
+  .for(@variants, { &@{_item}_theme-@{themeName} {
+    fill: ~"@{@{_item}_color}";
+  } });
+}
+
+.controls__tag_style-info_theme-@{themeName} {
+  fill: @unaccented_color;
 }

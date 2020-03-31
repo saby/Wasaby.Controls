@@ -18,6 +18,14 @@ var _private = {
       return !JSON.parse(data, _private.getSerialize().desirialize).hasOwnProperty('linkText');
    },
 
+   createRecordSet(data: object): collection.RecordSet {
+       return new collection.RecordSet({
+           rawData: data,
+           keyProperty: 'ObjectId',
+           adapter: 'adapter.sbis'
+       });
+   },
+
    deleteOldPinned: function(self, history, query) {
       let toDelete = [];
       const hSource = _private.getSourceByMeta(self, {'$_pinned': true});
@@ -395,7 +403,7 @@ var _private = {
  *           })
  *       });
  * </pre>
- */ 
+ */
 
 /**
  * @name Controls/_history/FilterSource#originSource
@@ -495,9 +503,9 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
    },
 
    query: function (query) {
-      var self = this;
-      var where = query.getWhere();
-      var newItems;
+      const self = this;
+      const where = query.getWhere();
+      let newItems;
 
       if (where && where['$_history'] === true) {
          const prepareHistory = () => {
@@ -511,18 +519,31 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
             );
          };
 
-          self._loadDef = self._loadDef && !self._loadDef.isReady() ? self._loadDef : new Deferred();
-          self.historySource.query().addCallback(function (data) {
-              _private.initHistory(self, data);
-              if (self._history.client) {  // TODO Delete with old favorite
+         if (!self._loadDef || self._loadDef.isReady()) {
+            self._loadDef = new Deferred();
+
+            self.historySource.query().addCallback((data) => {
+               _private.initHistory(self, data);
+               if (self._history.client) {  // TODO Delete with old favorite
                   if (_private.deleteOldPinned(self, self._history, query)) {
                      prepareHistory();
                   }
-              } else {
-                 prepareHistory();
-              }
-         });
-          return self._loadDef;
+               } else {
+                  prepareHistory();
+               }
+            }).addErrback((error): Promise<sourceLib.DataSet> => {
+               _private.initHistory(this, new sourceLib.DataSet({
+                  rawData: {
+                      pinned: _private.createRecordSet({}),
+                      frequent: _private.createRecordSet({}),
+                      recent: _private.createRecordSet({})
+                  }}));
+               prepareHistory();
+               error.processed = true;
+               return error;
+            });
+         }
+         return self._loadDef;
       }
       return self.originSource.query(query);
    },

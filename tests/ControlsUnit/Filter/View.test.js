@@ -6,9 +6,11 @@ define(
       'Types/collection',
       'Controls/history',
       'Core/Deferred',
+      'Types/chain',
+      'Controls/_dropdown/dropdownHistoryUtils',
       'Core/nativeExtensions'
    ],
-   function(filter, Clone, sourceLib, collection, history, Deferred) {
+   function(filter, Clone, sourceLib, collection, history, Deferred, chain, historyUtils) {
       describe('Filter:View', function() {
 
          let defaultItems = [
@@ -116,7 +118,7 @@ define(
             assert.isOk(view._configs.state.sourceController);
             assert.isFalse(view._hasSelectorTemplate);
 
-            receivedState.configs.document.selectorTemplate = 'New Template';
+            defaultConfig.source[0].editorOptions.selectorTemplate = 'New Template';
             view._beforeMount(defaultConfig, {}, receivedState);
             assert.isTrue(view._hasSelectorTemplate);
          });
@@ -124,13 +126,12 @@ define(
          it('_beforeMount from options', function(done) {
             let view = getView(defaultConfig);
             let expectedDisplayText = {
-               document: {},
                state: {text: 'In any state', title: 'In any state', hasMoreText: ''}
             };
             view._beforeMount(defaultConfig).addCallback(function() {
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
                assert.strictEqual(view._filterText, 'Author: Ivanov K.K.');
-               assert.isOk(view._configs.document.sourceController);
+               assert.isUndefined(view._configs.document);
                assert.isOk(view._configs.state.sourceController);
                done();
             });
@@ -259,6 +260,10 @@ define(
             newItems[2].viewMode = 'frequent';
             result = filter.View._private.isNeedReload(oldItems, newItems);
             assert.isTrue(result);
+
+            oldItems = [];
+            result = filter.View._private.isNeedReload(oldItems, newItems);
+            assert.isTrue(result);
          });
 
          it('openDetailPanel', function() {
@@ -275,12 +280,16 @@ define(
 
             assert.strictEqual(popupOptions.template, 'detailPanelTemplateName.wml');
             assert.strictEqual(popupOptions.templateOptions.items.length, 5);
+            assert.deepEqual(popupOptions.fittingMode, {
+               horizontal: 'overflow',
+               vertical: 'adaptive'
+            });
 
             view._options.detailPanelTemplateName = null;
             view.openDetailPanel();
          });
 
-         it('_openPanel', function() {
+         it('_openPanel', function(done) {
             let view = getView(defaultConfig),
                popupOptions, filterClassName = '';
             let event = {
@@ -289,7 +298,8 @@ define(
                }
             };
             view._children = {
-               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
+               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} },
+               state: 'div_state_filter'
             };
             view._container = {
                0: 'filter_container',
@@ -300,26 +310,42 @@ define(
                document: {
                   items: Clone(defaultItems[0]),
                   displayProperty: 'title',
-                  keyProperty: 'id'},
+                  keyProperty: 'id',
+                  source: defaultSource[0].editorOptions.source
+               },
                state: {
                   items: Clone(defaultItems[1]),
                   displayProperty: 'title',
                   keyProperty: 'id',
+                  source: defaultSource[1].editorOptions.source,
                   multiSelect: true}
             };
-            view._openPanel();
-
-            assert.strictEqual(popupOptions.template, 'panelTemplateName.wml');
-            assert.strictEqual(popupOptions.templateOptions.items.getCount(), 2);
-            assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel__buttonTarget-popup');
-
-            filterClassName = 'div_second_filter';
-            view._openPanel(event, 'second_filter');
-            assert.strictEqual(popupOptions.target, 'div_second_filter');
-            assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel-popup');
-
-            view._openPanel('click');
-            assert.deepStrictEqual(popupOptions.target, 'filter_container');
+            view._openPanel().then(() => {
+               assert.strictEqual(popupOptions.template, 'panelTemplateName.wml');
+               assert.strictEqual(popupOptions.templateOptions.items.getCount(), 2);
+               assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel__buttonTarget-popup');
+               assert.exists(view._configs.document);
+               filterClassName = 'div_second_filter';
+               view._openPanel(event, 'state').then(() => {
+                  assert.strictEqual(popupOptions.target, 'div_state_filter');
+                  assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel-popup');
+                  view._children.state = null;
+                  view._openPanel(event, 'state').then(() => {
+                     assert.strictEqual(popupOptions.target, 'div_second_filter');
+                     assert.strictEqual(popupOptions.className, 'controls-FilterView-SimplePanel-popup');
+                     view._openPanel('click').then(() => {
+                        assert.deepStrictEqual(popupOptions.target, 'filter_container');
+                        view._configs.state.sourceController = {
+                           isLoading: () => { return true; }
+                        };
+                        popupOptions = null;
+                        view._openPanel('click');
+                        assert.isNull(popupOptions);
+                        done();
+                     });
+                  });
+               });
+            });
          });
 
          it('_needShowFastFilter', () => {
@@ -427,6 +453,7 @@ define(
             };
             view._displayText = {};
             view._source = Clone(defaultConfig.source);
+            view._source[2].textValue = 'test';
             view._configs = {
                document: {
                   items: getItems(Clone(defaultItems[0])),
@@ -441,6 +468,7 @@ define(
             view._resetFilterText();
             assert.isTrue(closed);
             assert.strictEqual(view._source[2].value, '');
+            assert.strictEqual(view._source[2].textValue, '');
             assert.deepStrictEqual(filterChanged, {state: [1]});
             assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state', hasMoreText: ''}});
 
@@ -625,8 +653,7 @@ define(
                ],
                keyProperty: 'key'
             });
-            const folders = filter.View._private.getFolderIds({
-               items: items,
+            const folders = filter.View._private.getFolderIds(items, {
                nodeProperty: 'node',
                parentProperty: 'parent',
                keyProperty: 'key'
@@ -664,11 +691,17 @@ define(
                   multiSelect: true}
             };
             assert.strictEqual(configs['state'].items.getCount(), 6);
+
+            const sandBox = sinon.createSandbox();
+            let stub = sandBox.stub(historyUtils, 'getSourceFilter');
+
             filter.View._private.loadSelectedItems(source, configs).addCallback(() => {
                assert.strictEqual(configs['state'].popupItems.getCount(), 6);
                assert.strictEqual(configs['state'].items.getCount(), 7);
                assert.deepStrictEqual(configs['state'].items.at(0).getRawData(), {id: 1, title: 'In any state'});
                assert.isTrue(isDataLoad);
+               assert.isFalse(stub.called);
+               sandBox.restore();
                done();
             });
          });
@@ -734,9 +767,18 @@ define(
             let isLoading = false;
             let source = Clone(defaultSource);
             source[0].editorOptions.itemTemplate = 'new';
+            source[0].editorOptions.navigation = {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 1,
+                  page: 0
+               }
+            };
+            let navItems = getItems(Clone(defaultItems[0]));
+            navItems.setMetaData({more: true});
             let configs = {
                document: {
-                  items: Clone(defaultItems[0]),
+                  items: navItems,
                   itemTemplate: 'old',
                   keyProperty: 'id',
                   source: new sourceLib.Memory({
@@ -763,6 +805,7 @@ define(
 
             let resultItems = filter.View._private.getPopupConfig(self, configs, source);
             assert.isTrue(isLoading);
+            assert.isTrue(resultItems[0].hasMoreButton);
             assert.equal(resultItems[0].displayProperty, 'title');
             assert.equal(resultItems[0].itemTemplate, 'new');
          });
@@ -908,12 +951,12 @@ define(
                assert.strictEqual(view._configs.state.items.getCount(), 9);
 
                newItems = new collection.RecordSet({
-                  keyProperty: 'key',
-                  rawData: [{key: 15, text: 'Completed'}] // without id field
+                  keyProperty: 'id',
+                  rawData: [{id: 15, title: 'Completed'}] // without id field
                });
                eventResult.data = newItems;
                view._resultHandler('resultEvent', eventResult);
-               assert.strictEqual(view._configs.state.items.getCount(), 9);
+               assert.strictEqual(view._configs.state.items.getCount(), 10);
             });
 
             it('selectorResult selectorCallback', function() {
@@ -1104,6 +1147,29 @@ define(
                view._resultHandler('resultEvent', eventResult);
                assert.strictEqual(view._idOpenSelector, 'document');
                assert.isTrue(isClosed);
+            });
+
+            it('_private::setItems', function() {
+               let newItems = new collection.RecordSet({
+                  rawData: [
+                     { id: 6, title: 'item folder 1', parent: -1 },
+                     { id: 7, title: 'item2 folder 1', parent: -1 },
+                     { id: 8, title: 'item folder 2', parent: -2 }],
+                  keyProperty: 'id'
+               });
+               let expectedResult = [
+                  { id: -1, title: 'Folder 1', node: true, parent: null },
+                  { id: 6, title: 'item folder 1', parent: -1, node: null },
+                  { id: 7, title: 'item2 folder 1', parent: -1, node: null },
+                  { id: 1, title: 'In any state', parent: -1, node: null },
+                  { id: -2, title: 'Folder 2', node: true, parent: null },
+                  { id: 8, title: 'item folder 2', parent: -2, node: null },
+                  { id: 4, title: 'Deleted', parent: -2, node: null }
+               ];
+               filter.View._private.setItems(view._configs.document, view._source[0], chain.factory(newItems).toArray());
+
+               assert.deepEqual(view._configs.document.popupItems.getRawData(), expectedResult);
+               assert.equal(view._configs.document.items.getCount(), 10);
             });
          });
 

@@ -8,7 +8,7 @@ import {Logger} from 'UI/Utils';
 
 /**
  * A link button that displays the period. Supports the change of periods to adjacent.
- * <a href="/materials/demo-ws4-input-date-linkView">Demo examples.</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FLinkView">Demo examples.</a>.
  * @class Controls/_dateRange/LinkView
  * @extends Core/Control
  * @mixes Controls/interface/ILinkView
@@ -154,10 +154,7 @@ var Component = BaseControl.extend({
    },
 
    getPopupTarget: function() {
-       if (this._options.nextArrowVisibility || this._options.prevArrowVisibility) {
-           return this._children.openPopupTarget;
-       }
-      return this._container;
+      return this._children.openPopupTarget || this._container;
    },
 
    _onClick: function() {

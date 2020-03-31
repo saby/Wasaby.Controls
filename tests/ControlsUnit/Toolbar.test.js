@@ -49,7 +49,7 @@ define(
             rawData: defaultItems
          });
          let config = {
-            items: new sourceLib.Memory({
+            source: new sourceLib.Memory({
                keyProperty: 'id',
                data: defaultItems
             }),
@@ -145,7 +145,7 @@ define(
                return new Promise((resolve) => {
                   toolbar._beforeMount({
                      keyProperty: 'id',
-                     source: config.items
+                     source: config.source
                   }).addCallback(() => {
                      assert.equal(!!toolbar._needShowMenu, true);
                      assert.equal(toolbar._menuItems.getCount(), 4);
@@ -253,7 +253,7 @@ define(
                         buttonViewMode: 'buttonViewMode',
                         popupClassName: 'popupClassName',
                         keyProperty: 'itemKeyProperty',
-                        showHeader: 'showHeader',
+                        showHeader: true,
                         icon: 'icon icon-size',
                         title: 'title',
                         iconStyle: 'iconStyle'
@@ -269,11 +269,13 @@ define(
                         itemTemplateProperty: 'myTemplate',
                         iconSize: 'm',
                         nodeProperty: '@parent',
-                        parentProperty: 'parent'
+                        parentProperty: 'parent',
+                        source: '_options.source'
                      },
-                     _items: 'items'
+                     _source: 'items',
+                     _items: { getIndexByValue: () => {} }
                   },
-                  config = {
+                  expectedConfig = {
                      opener: testSelf,
                      className: 'controls-Toolbar__popup__icon_theme-default popupClassName',
                      targetPoint: {
@@ -298,12 +300,22 @@ define(
                            icon: 'icon icon-size',
                            iconStyle: 'iconStyle'
                         },
-                        items: 'items',
-                        rootKey: 'itemKeyProperty',
-                        showHeader: 'showHeader'
+                        source: 'items',
+                        root: 'itemKeyProperty',
+                        showHeader: true,
+                        closeButtonVisibility: false
                      }
                   };
-               assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), config);
+               assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
+
+               testSelf._items = { getIndexByValue: () => { return -1; } }; // для элемента не найдены записи в списке
+               expectedConfig.templateOptions.source = '_options.source';
+               assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
+
+               testItem.set('showHeader', false);
+               expectedConfig.templateOptions.showHeader = false;
+               expectedConfig.templateOptions.closeButtonVisibility = true;
+               assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
             });
             it('get button template options by item', function() {
                let item = new entity.Record(
@@ -374,7 +386,7 @@ define(
                      _children: {
                         menuTarget: 'menuTarget'
                      },
-                     _menuItems: recordForMenu
+                     _menuSource: recordForMenu
                   },
                   config = {
                      className: 'popupClassName controls-Toolbar__popup__list_theme-default',
@@ -384,7 +396,7 @@ define(
                         keyProperty: 'id',
                         nodeProperty: '@parent',
                         parentProperty: 'parent',
-                        items: recordForMenu,
+                        source: recordForMenu,
                         additionalProperty: 'additional',
                         itemTemplateProperty: 'itp',
                         groupTemplate: 'groupTemplate',
@@ -401,12 +413,7 @@ define(
                toolbar._children.menuOpener.close = function() {
                   isMenuClosed = true;
                };
-               toolbar._resultHandler({
-                  action: 'itemClick', event: {
-                     name: 'event', stopPropagation: () => {
-                     }
-                  }, data: [itemWithOutMenu]
-               });
+               toolbar._resultHandler('itemClick', itemWithOutMenu);
                assert.equal(isMenuClosed, true, 'toolbar closed, but his submenu did not');
             });
             it('_closeHandler', () => {
@@ -415,6 +422,7 @@ define(
                   assert.equal(e, 'menuClosed', 'closeHandler is uncorrect');
                   assert.equal(bubl.bubbling, true, 'closeHandler is uncorrect');
                };
+               toolbar._options.source = config.source;
                toolbar._closeHandler();
             });
          });

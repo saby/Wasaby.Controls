@@ -3,7 +3,7 @@ import Popup from 'Controls/_popup/Manager/Popup';
 import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {Logger} from 'UI/Utils';
-import {IPopupItem, IPopupOptions, IPopupController} from 'Controls/_popup/interface/IPopup';
+import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
 import {goUpByControlTree} from 'UI/Focus';
 import {delay as runDelayed} from 'Types/function';
 import {List} from 'Types/collection';
@@ -414,7 +414,13 @@ class Manager extends Control<IManagerOptions> {
             for (let i = 0; i < deactivatedPopups.length; i++) {
                 const itemContainer = this._getItemContainer(deactivatedPopups[i].id);
                 if (deactivatedPopups[i].popupOptions.isCompoundTemplate) {
-                    this._getCompoundArea(itemContainer).close();
+                    // TODO: Compatible ветка.
+                    // Если попап создался, а слой совместимости еще не готов, то считаем что окно не построилось
+                    // и не должно закрываться на клик мимо.
+                    const compoundArea = this._getCompoundArea(itemContainer);
+                    if (compoundArea.isPopupCreated()) {
+                        compoundArea.close();
+                    }
                 } else {
                     deactivatedPopups[i].controller.popupDeactivated(deactivatedPopups[i]);
                 }
@@ -541,8 +547,53 @@ class Manager extends Control<IManagerOptions> {
     }
 
     private _redrawItems(): void {
+        this._updateZIndex();
         this._popupItems._nextVersion();
         ManagerController.getContainer().setPopupItems(this._popupItems);
+    }
+
+    private _updateZIndex(): void {
+        const popupList = this._preparePopupList();
+        const POPUP_ZINDEX_STEP = 10;
+        // для topPopup сделал шаг 2000, чтобы не писать отдельный просчет zIndex на старой странице
+        const TOP_POPUP_ZINDEX_STEP = 2000;
+
+        this._popupItems.each((item: IPopupItem, index: number) => {
+            // todo Нужно будет удалить поддержку опции zIndex, теперь есть zIndexCallback
+            let customZIndex: number = item.popupOptions.zIndex;
+            const currentItem = popupList.at(index);
+            if (item.popupOptions.zIndexCallback) {
+                customZIndex = item.popupOptions.zIndexCallback(currentItem, popupList);
+            }
+            const step = item.popupOptions.topPopup ? TOP_POPUP_ZINDEX_STEP : POPUP_ZINDEX_STEP;
+            const calculatedZIndex: number = currentItem.parentZIndex ? currentItem.parentZIndex + step : null;
+            const baseZIndex: number = (index + 1) * step;
+
+            item.currentZIndex = customZIndex || calculatedZIndex || baseZIndex;
+        });
+    }
+
+    private _preparePopupList(): List<IPopupItemInfo> {
+        const popupList: List<IPopupItemInfo> = new List();
+        this._popupItems.each((item: IPopupItem) => {
+            let parentZIndex = null;
+            if (item.parentId) {
+                const index = this._popupItems && this._popupItems.getIndexByValue('id', item.parentId);
+                if (index > -1) {
+                    parentZIndex = this._popupItems.at(index).currentZIndex;
+                }
+            }
+            popupList.add({
+                id: item.id,
+                type: item.controller.TYPE,
+                parentId: item.parentId,
+                parentZIndex,
+                popupOptions: {
+                    maximize: !!item.popupOptions.maximize // for notification popup
+                }
+            });
+        });
+        return popupList;
     }
 
     private _controllerVisibilityChangeHandler(): void {
@@ -610,9 +661,10 @@ class Manager extends Control<IManagerOptions> {
     private _isIgnoreActivationArea(focusedContainer: HTMLElement): boolean {
         while (focusedContainer && focusedContainer.classList) {
             // TODO: Compatible
-            // Клик по старому оверлею не должен приводить к закрытию вдомных окон на старой странице
+            // Клик по старому оверлею и по старому индикатору не должен приводить к закрытию вдомных окон на старой странице
             if (focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext') ||
-                focusedContainer.classList.contains('ws-window-overlay')) {
+                focusedContainer.classList.contains('ws-window-overlay') ||
+                focusedContainer.classList.contains('ws-wait-indicator')) {
                 return true;
             }
             focusedContainer = focusedContainer.parentElement;

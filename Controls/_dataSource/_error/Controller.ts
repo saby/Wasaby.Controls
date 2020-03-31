@@ -1,23 +1,21 @@
 /// <amd-module name="Controls/_dataSource/_error/Controller" />
-import { Controller as ParkingController } from 'Controls/_dataSource/parking';
+import { Controller as ParkingController, loadHandlers } from 'Controls/_dataSource/parking';
 import {
     Handler,
     HandlerConfig,
     ViewConfig
-} from 'Controls/_dataSource/_error/Handler';
-import Mode from 'Controls/_dataSource/_error/Mode';
+} from './Handler';
+import Mode from './Mode';
 import { fetch } from 'Browser/Transport';
 import { IVersionable } from 'Types/entity';
-
-const { Errors } = fetch;
-const { Abort } = Errors;
+import Popup from './Popup';
 
 export type Config = {
-    handlers?: Array<Handler>
-}
+    handlers?: Handler[]
+};
 
 /// region helpers
-let getIVersion = (): IVersionable => {
+const getIVersion = (): IVersionable => {
     const id: number = Math.random();
     /*
      * неоходимо для прохождения dirty-checking при схранении объекта на инстансе компонента,
@@ -29,31 +27,40 @@ let getIVersion = (): IVersionable => {
         getVersion(): number {
             return id;
         }
-    }
+    };
 };
 
-let isNeedHandle = (error: Error): boolean => {
+const isNeedHandle = (error: Error): boolean => {
     return !(
-        (error instanceof Abort) ||
+        (error instanceof fetch.Errors.Abort) ||
         // @ts-ignore
         error.processed ||
         // @ts-ignore
         error.canceled
-    )
+    );
 };
 
-let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> => {
+const prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> => {
     if (config instanceof Error) {
         return {
-            error: <T>config,
+            error: config,
             mode: Mode.dialog
-        }
+        };
     }
     return {
         mode: Mode.dialog,
         ...config
-    }
+    };
 };
+
+let popupHelper: Popup;
+function getPopupHelper(): Popup {
+    if (!popupHelper) {
+        popupHelper = new Popup();
+    }
+
+    return popupHelper;
+}
 
 /// endregion helpers
 
@@ -90,15 +97,18 @@ let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): Han
  */
 export default class ErrorController {
     private __controller: ParkingController;
-    constructor(config: Config) {
+
+    constructor(config: Config, private _popupHelper: Popup = getPopupHelper()) {
         this.__controller = new ParkingController({
-            configField: 'errorHandlers',
+            configField: ErrorController.CONFIG_FIELD,
             ...config
         });
     }
-    destroy() {
+
+    destroy(): void {
         this.__controller.destroy();
         delete this.__controller;
+        delete this._popupHelper;
     }
 
     /**
@@ -134,7 +144,7 @@ export default class ErrorController {
      * @return {void | Controls/_dataSource/_error/ViewConfig} Данные для отображения шаблона
      */
     process<T extends Error = Error>(config: HandlerConfig<T> | T): Promise<ViewConfig | void> {
-        let _config = prepareConfig<T>(config);
+        const _config = prepareConfig<T>(config);
         if (!isNeedHandle(_config.error)) {
             return Promise.resolve();
         }
@@ -154,11 +164,19 @@ export default class ErrorController {
     }
 
     private _getDefault<T extends Error = Error>(config: HandlerConfig<T>): void {
-        const message = config.error.message;
-        const style = 'danger';
-        const type = 'ok';
-        // @ts-ignore
-        import('Controls/popup').then((popup) => { popup.Confirmation.openPopup({ type, style, message }); });
+        this._popupHelper.openConfirmation({
+            type: 'ok',
+            style: 'danger',
+            theme: config.theme,
+            message: config.error.message
+        });
     }
 
+    /**
+     * Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
+     */
+    static readonly CONFIG_FIELD: string = 'errorHandlers';
 }
+
+// Загружаем модули обработчиков заранее, чтобы была возможность использовать их при разрыве соединения.
+loadHandlers(ErrorController.CONFIG_FIELD);

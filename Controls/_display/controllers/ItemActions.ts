@@ -1,12 +1,15 @@
 import { IBaseCollection, TItemKey } from '../interface';
 import { IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig } from '../Collection';
-import { showType } from 'Controls/Utils/Toolbar';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 
-// TODO Move these measurers to listRender, maybe rewrite them
-import { SwipeVerticalMeasurer, SwipeHorizontalMeasurer } from 'Controls/list';
+// FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
+const showType = {
+    MENU: 0,
+    MENU_TOOLBAR: 1,
+    TOOLBAR: 2
+};
 
 // TODO Написать реальный тип для action'ов
 type TItemAction = any;
@@ -28,6 +31,8 @@ export interface IItemActionsTemplateOptions {
     itemActionsPosition: string;
     actionAlignment?: string;
     actionCaptionPosition: 'right'|'bottom'|'none';
+    itemActionsClass?: string;
+    actionClickCallback?: Function;
 }
 
 export interface IItemActionsItem {
@@ -68,17 +73,21 @@ export function assignActions(
     }
 
     const supportsEventRaising = typeof collection.setEventRaising === 'function';
+    let hasChanges = false;
 
     if (supportsEventRaising) {
         collection.setEventRaising(false, true);
     }
 
     collection.each((item) => {
-        const fixedActions = actionsGetter(item).map(_fixActionIcon);
-        const actionsForItem = fixedActions.filter((action) =>
-            visibilityCallback(action, item.getContents())
-        );
-        _setItemActions(item, _wrapActionsInContainer(actionsForItem));
+        if (!item.isActive()) {
+            const fixedActions = actionsGetter(item).map(_fixActionIcon);
+            const actionsForItem = fixedActions.filter((action) =>
+                visibilityCallback(action, item.getContents())
+            );
+            const itemChanged = _setItemActions(item, _wrapActionsInContainer(actionsForItem));
+            hasChanges = hasChanges || itemChanged;
+        }
     });
 
     if (supportsEventRaising) {
@@ -87,7 +96,9 @@ export function assignActions(
 
     collection.setActionsAssigned(true);
 
-    collection.nextVersion();
+    if (hasChanges) {
+        collection.nextVersion();
+    }
 }
 
 export function resetActionsAssignment(collection: IItemActionsCollection): void {
@@ -117,7 +128,8 @@ export function calculateActionsTemplateConfig(
         size: editingConfig ? 's' : 'm',
         itemActionsPosition: options.itemActionsPosition,
         actionAlignment: options.actionAlignment,
-        actionCaptionPosition: options.actionCaptionPosition
+        actionCaptionPosition: options.actionCaptionPosition,
+        itemActionsClass: options.itemActionsClass
     });
 }
 
@@ -170,22 +182,24 @@ export function processActionClick(
     itemKey: TItemKey,
     action: TItemAction,
     clickEvent: SyntheticEvent<MouseEvent>,
-    fromDropdown: boolean
+    fromDropdown: boolean,
+    actionClickCallback: Function
 ): void {
     clickEvent.stopPropagation();
     if (action._isMenu) {
-        prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false);
+        prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false, actionClickCallback);
     } else if (action['parent@']) {
         if (!fromDropdown) {
-            prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false);
+            prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false, actionClickCallback);
         }
     } else {
         const item = collection.getItemBySourceKey(itemKey);
         if (item) {
             const contents = item.getContents();
 
-            // How to fire from here???
+            // How to calculate itemContainer?
             // this._notify('actionClick', [action, contents, itemContainer]);
+            actionClickCallback(clickEvent, action, contents);
 
             if (action.handler) {
                 action.handler(contents);
@@ -201,7 +215,8 @@ export function prepareActionsMenuConfig(
     itemKey: TItemKey,
     clickEvent: SyntheticEvent<MouseEvent>,
     parentAction: TItemAction,
-    isContext: boolean
+    isContext: boolean,
+    actionClickCallback: Function
 ): void {
     const item = collection.getItemBySourceKey(itemKey);
     if (!item) {
@@ -217,13 +232,16 @@ export function prepareActionsMenuConfig(
         clickEvent.preventDefault();
 
         // there was a fake target before, check if it is needed
-        const menuTarget = isContext ? null : clickEvent.target?.closest('.controls-ListView__itemV');
-        const closeHandler = _processActionsMenuClose.bind(null, collection);
+        const menuTarget = isContext ? null : getFakeMenuTarget(clickEvent.target as HTMLElement);
+        const closeHandler = _processActionsMenuClose.bind(null, collection, actionClickCallback);
         const menuRecordSet = new RecordSet({
             rawData: menuActions,
             keyProperty: 'id'
         });
-        const headConfig = hasParentAction ? { caption: parentAction.title } : null;
+        const headConfig = hasParentAction ? {
+            caption: parentAction.title,
+            icon: parentAction.icon
+        } : null;
         const contextMenuConfig = collection.getContextMenuConfig();
         const menuConfig = {
             items: menuRecordSet,
@@ -233,7 +251,7 @@ export function prepareActionsMenuConfig(
             dropdownClassName: 'controls-itemActionsV__popup',
             showClose: true,
             ...contextMenuConfig,
-            rootKey: parentAction,
+            rootKey: parentAction && parentAction.id,
             showHeader: hasParentAction,
             headConfig
         };
@@ -253,8 +271,9 @@ export function prepareActionsMenuConfig(
             direction: {
                 horizontal: isContext ? 'right' : 'left'
             },
-            className: 'controls-DropdownList__margin-head controls-Toolbar__popup__list_theme-',
-            nativeEvent: isContext ? clickEvent.nativeEvent : null
+            className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list',
+            nativeEvent: isContext ? clickEvent.nativeEvent : null,
+            autofocus: false
         };
 
         setActiveItem(collection, itemKey);
@@ -263,7 +282,16 @@ export function prepareActionsMenuConfig(
         collection.nextVersion();
     }
 }
-
+function getFakeMenuTarget(realTarget: HTMLElement): {
+    getBoundingClientRect(): ClientRect;
+} {
+    const rect = realTarget.getBoundingClientRect();
+    return {
+        getBoundingClientRect(): ClientRect {
+            return rect;
+        }
+    };
+}
 export function activateSwipe(
     collection: IItemActionsCollection,
     itemKey: TItemKey,
@@ -357,6 +385,10 @@ function _calculateSwipeConfig(
     actionsContainerHeight: number,
     actionCaptionPosition: 'right'|'bottom'|'none'
 ): ISwipeConfig {
+    // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
+    // TODO Move these measurers to listRender, maybe rewrite them
+    const {SwipeVerticalMeasurer, SwipeHorizontalMeasurer} = require('Controls/list');
+
     const measurer =
         actionAlignment === 'vertical'
         ? SwipeVerticalMeasurer.default
@@ -382,7 +414,8 @@ function _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
 
 function _processActionsMenuClose(
     collection: IItemActionsCollection,
-    args?: { action: string, event: SyntheticEvent<MouseEvent>, data: any[] }
+    actionClickCallback: Function,
+    args?: { action: string, event: SyntheticEvent<MouseEvent>, data: any[] },
 ): void {
     // Actions dropdown can start closing after the view itself was unmounted already, in which case
     // the model would be destroyed and there would be no need to process the action itself
@@ -396,7 +429,8 @@ function _processActionsMenuClose(
                 getActiveItem(collection)?.getContents()?.getKey(),
                 action,
                 args.event,
-                true
+                true,
+                actionClickCallback
             );
 
             // If this action has children, don't close the menu if it was clicked
@@ -407,7 +441,7 @@ function _processActionsMenuClose(
 
         setActiveItem(collection, null);
         collection.setActionsMenuConfig(null);
-
+        deactivateSwipe(collection);
         collection.nextVersion();
     }
 }
@@ -415,11 +449,13 @@ function _processActionsMenuClose(
 function _setItemActions(
     item: IItemActionsItem,
     actions: IItemActionsContainer
-): void {
+): boolean {
     const oldActions = item.getActions();
     if (!oldActions || (actions && !_isMatchingActions(oldActions, actions))) {
         item.setActions(actions);
+        return true;
     }
+    return false;
 }
 
 function _fixActionIcon(action: TItemAction): TItemAction {

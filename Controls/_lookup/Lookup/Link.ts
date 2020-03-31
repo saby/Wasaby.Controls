@@ -13,7 +13,7 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
  * @mixes Controls/_lookup/Lookup/Link/LookupLinkStyles
  * @control
  * @public
- * @author Капустин И.А.
+ * @author Герасимов А.М.
  */
 /*
  * Label for use within the link field.
@@ -24,7 +24,7 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
  * @mixes Controls/_lookup/Lookup/Link/LookupLinkStyles
  * @control
  * @public
- * @author Kapustin I.A.
+ * @author Герасимов А.М.
  */
 
 const Link = Control.extend({

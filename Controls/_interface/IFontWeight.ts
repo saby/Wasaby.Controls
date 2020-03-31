@@ -7,6 +7,11 @@ import {descriptor} from 'Types/entity';
  */
 export type TFontWeight = 'default' | 'bold';
 
+/**
+ * @interface Controls/_interface/IFontWeightOptions
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IFontWeightOptions {
     /**
      * Начертание шрифта.
@@ -32,6 +37,7 @@ export function getFontWeightTypes(): Record<keyof IFontWeightOptions, Function>
  *
  * @interface Controls/_interface/IFontWeight
  * @public
+ * @author Красильников А.С.
  */
 export default interface IFontWeight {
     readonly '[Controls/_interface/IFontWeight]': boolean;

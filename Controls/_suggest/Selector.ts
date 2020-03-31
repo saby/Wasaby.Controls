@@ -5,11 +5,10 @@ import {Controller} from 'Controls/source';
 import {Service, Source} from 'Controls/history';
 import {object} from 'Types/util';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
-import 'css!theme?Controls/suggest';
 
 /**
  * Поле ввода с выпадающим списком с возможностью автодополнения.
- * <a href="/materials/demo-ws4-selector-suggest">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">Демо-пример</a>.
  *
  * @class Controls/_suggest/Selector
  * @extends Controls/input:Text
@@ -26,7 +25,7 @@ import 'css!theme?Controls/suggest';
 
 /*
  * Combobox input that suggests options as you are typing.
- * <a href="/materials/demo-ws4-selector-suggest">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">Demo-example</a>.
  *
  * @class Controls/_suggest/Selector
  * @extends Controls/input:Text
@@ -168,6 +167,7 @@ Suggest.getDefaultOptions = function() {
    };
 };
 
+Suggest._theme = ['Controls/suggest'];
 Suggest._private = _private;
 
 export default Suggest;

@@ -28,6 +28,14 @@
    width: @width_l_filterPanel;
 }
 
+.controls-FilterPanel__width-m.controls-FilterPanel__horizontal_withHistory {
+   width: @width_m_filterPanel + @history_width_s_filterPanel;
+}
+
+.controls-FilterPanel__width-l.controls-FilterPanel__horizontal_withHistory {
+   width: @width_m_filterPanel + @history_width_l_filterPanel;
+}
+
 .controls-FilterPanel__width-xl.controls-FilterPanel__vertical {
    width: @width_xl_filterPanel;
 }
@@ -76,7 +84,7 @@
 
 //PropertyGrid block
 .controls-FilterPanel__PropertyGrid {
-   padding: 0 @basic_content_padding-right_filterPanel 0 @basic_content_padding-left_filterPanel;
+   padding: @basic_content_padding-top_filterPanel @basic_content_padding-right_filterPanel 0 @basic_content_padding-left_filterPanel;
 }
 
 //AdditionalParams
@@ -97,7 +105,7 @@
    width: 50%;
    box-sizing: border-box;
    margin-bottom: @padding-bottom_filterPanel;
-   padding: @history_offset_filterPanel @history_content_padding-right_filterPanel 0 @history_heading_padding-left_filterPanel;
+   padding: 0 @history_content_padding-right_filterPanel 0 @history_heading_padding-left_filterPanel;
    border-left: @separator_thickness_filterPanel solid @separator_color_filterPanel;
 }
 

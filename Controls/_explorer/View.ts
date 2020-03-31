@@ -13,7 +13,6 @@ import 'css!theme?Controls/explorer';
 import 'css!theme?Controls/tile';
 import 'Types/entity';
 
-
 var
       HOT_KEYS = {
          backByPath: constants.key.backspace
@@ -47,16 +46,16 @@ var
             }
             self._forceUpdate();
          },
-          setRestoredKeyObject: function(self, root) {
-              const curRoot = _private.getRoot(self, self._options.root);
-              self._restoredMarkedKeys[root] = {
-                  parent: curRoot,
-                  markedKey: null
-              };
-              if (self._restoredMarkedKeys[curRoot]) {
-                  self._restoredMarkedKeys[curRoot].markedKey = root;
-              }
-          },
+         setRestoredKeyObject: function(self, root) {
+            const curRoot = _private.getRoot(self, self._options.root);
+            self._restoredMarkedKeys[root] = {
+               parent: curRoot,
+               markedKey: null
+            };
+            if (self._restoredMarkedKeys[curRoot]) {
+               self._restoredMarkedKeys[curRoot].markedKey = root;
+            }
+         },
           cleanRestoredKeyObject: function(self, root) {
               _private.pathCleaner(self, root);
           },
@@ -104,13 +103,47 @@ var
              }
              return breadCrumbs;
          },
+         resolveItemsOnFirstLoad(self, resolver, result) {
+            if (self._firstLoad) {
+               resolver(result);
+               self._firstLoad = false;
+               _private.fillRestoredMarkedKeysByBreadCrumbs(_private.getDataRoot(self),
+                   self._breadCrumbsItems,
+                   self._restoredMarkedKeys,
+                   self._options.parentProperty);
+            }
+         },
+         dataLoadErrback: function(self, cfg, error) {
+            _private.resolveItemsOnFirstLoad(self, self._itemsResolver, null);
+            if (cfg.dataLoadErrback) {
+               cfg.dataLoadErrback(error);
+            }
+         },
          serviceDataLoadCallback: function(self, oldData, newData) {
             self._breadCrumbsItems = _private.getPath(newData);
+            _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
+         },
+         fillRestoredMarkedKeysByBreadCrumbs: function(root, breadCrumbs, restoredMarkedKeys, parentProperty) {
+            restoredMarkedKeys[root] = {
+               markedKey: null
+            };
+            if (breadCrumbs && breadCrumbs.forEach) {
+               breadCrumbs.forEach((crumb) => {
+                  const parentKey = crumb.get(parentProperty);
+                  const crumbKey = crumb.getKey();
+                  restoredMarkedKeys[crumbKey] = {
+                     parent: parentKey,
+                     markedKey: null
+                  };
+                  if (restoredMarkedKeys[parentKey]) {
+                     restoredMarkedKeys[parentKey].markedKey = crumbKey;
+                  }
+               });
+            }
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
-
             if (self._options.itemsReadyCallback) {
                self._options.itemsReadyCallback(items);
             }
@@ -126,6 +159,10 @@ var
             if (self._isGoingFront) {
                self._children.treeControl.setMarkedKey(null);
                self._isGoingFront = false;
+            }
+            if (self._pendingViewMode) {
+               _private.checkedChangeViewMode(self, self._pendingViewMode, self._options);
+               self._pendingViewMode = null;
             }
          },
          setVirtualScrolling(self, viewMode, cfg): void {
@@ -148,8 +185,11 @@ var
             var dataRoot = _private.getDataRoot(self);
             var result;
 
-            if (viewMode === 'search' && cfg.searchStartingWith === 'root' && dataRoot !== currentRoot) {
-               _private.setRoot(self, dataRoot);
+            if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
+               self._breadCrumbsItems = null;
+               if (dataRoot !== currentRoot) {
+                  _private.setRoot(self, dataRoot);
+               }
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
@@ -223,6 +263,12 @@ var
                   newPath.subscribe('onCollectionItemChange', updateHeadingPathCallback);
                }
             }
+         },
+         checkedChangeViewMode(self, viewMode: string, cfg): void {
+            _private.setViewMode(self, viewMode, cfg);
+            if (cfg.searchNavigationMode !== 'expand') {
+               self._children.treeControl.resetExpandedItems();
+            }
          }
       };
 
@@ -233,8 +279,8 @@ var
     * Инструкции по настройке контрола доступны в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководстве разработчика</a>.
     * Демо-примеры:
     * <ul>
-    *    <li><a href="/materials/demo-ws4-explorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
-    *    <li><a href="/materials/demo-ws4-explorer-with-search">Иерархический проводник в режиме "список" и строкой поиска</a></li>
+    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
+    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FSearch">Иерархический проводник в режиме "список" и строкой поиска</a></li>
     * </ul>
     *
     * @class Controls/_explorer/View
@@ -266,8 +312,8 @@ var
 
    /*
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
-    * <a href="/materials/demo-ws4-explorer">Demo example</a>.
-    * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Demo example</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FSearch">Demo example with search</a>.
     * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>here</a>.
     *
     * @class Controls/_explorer/View
@@ -334,8 +380,16 @@ var
       _hoveredBreadCrumb: undefined,
       _virtualScrolling: false,
       _dragControlId: null,
+      _firstLoad: true,
+      _itemsPromise: null,
+      _itemsResolver: null,
+
+      _resolveItemsPromise() {
+         this._itemsResolver();
+      },
 
       _beforeMount: function(cfg) {
+         this._dataLoadErrback = _private.dataLoadErrback.bind(null, this, cfg);
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
          this._itemsSetCallback = _private.itemsSetCallback.bind(null, this);
@@ -343,6 +397,10 @@ var
          this._updateHeadingPath = this._updateHeadingPath.bind(this);
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
 
+         this._itemsPromise = new Promise((res) => { this._itemsResolver = res; });
+         if (!cfg.source) {
+            this._resolveItemsPromise();
+         }
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
          [root]: {
@@ -354,18 +412,26 @@ var
          return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
-
          //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
          if (this._isGoingFront && this._options.hasOwnProperty('root') && cfg.root === this._options.root) {
             this._isGoingFront = false;
          }
 
-         if (this._viewMode !== cfg.viewMode) {
-            _private.setViewMode(this, cfg.viewMode, cfg);
-            if (cfg.searchNavigationMode !== 'expand') {
-               this._children.treeControl.resetExpandedItems();
-            }
+         if (
+             cfg.viewMode !== 'search' &&
+             (cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
+             this._pendingViewMode && cfg.viewMode !== this._pendingViewMode)
+         ) {
+            // Если меняется и root и viewMode, не меняем режим отображения сразу,
+            // потому что тогда мы перерисуем explorer в новом режиме отображения
+            // со старыми записями, а после загрузки новых получим еще одну перерисовку.
+            // Вместо этого запомним, какой режим отображения от нас хотят, и проставим
+            // его, когда новые записи будут установлены в модель (itemsSetCallback).
+            this._pendingViewMode = cfg.viewMode;
+         } else if (cfg.viewMode !== this._viewMode && !this._pendingViewMode) {
+            _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
          }
+
          if (cfg.virtualScrolling !== this._options.virtualScrolling) {
             _private.setVirtualScrolling(this, this._viewMode, cfg);
          }
@@ -404,24 +470,45 @@ var
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
-      _onItemClick: function(event, item, clickEvent, columnIndex?: number) {
-         event.stopPropagation();
+      _onItemClick(event, item, clickEvent, columnIndex?: number): boolean {
          const res = this._notify('itemClick', [item, clickEvent, columnIndex]);
-         if (res !== false) {
-            if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-                _private.setRestoredKeyObject(this, item.getId());
-                _private.setRoot(this, item.getId());
-                this._isGoingFront = true;
-                this.cancelEdit();
-                return false;
+         event.stopPropagation();
+
+         const changeRoot = () => {
+             // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся
+            _private.setRestoredKeyObject(this, item.getId());
+            _private.setRoot(this, item.getId());
+            this._isGoingFront = true;
+         };
+
+         if (res !== false && item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
+            if (!this._options.editingConfig) {
+               changeRoot();
+            } else {
+               this.commitEdit().addCallback((res = {}) => {
+                  if (!res.validationFailed) {
+                     changeRoot();
+                  }
+               });
             }
+
+            // Проваливание в папку и попытка проваливания в папку не должны вызывать разворот узла.
+            // Мы не можем провалиться в папку, пока на другом элементе списка запущено редактирование.
+            return false;
          }
+
          return res;
       },
       _onBreadCrumbsClick: function(event, item) {
           _private.cleanRestoredKeyObject(this, item.getId());
           _private.setRoot(this, item.getId());
           this._isGoingBack = true;
+      },
+      _onExternalKeyDown(event): void {
+         this._onExplorerKeyDown(event);
+         if (!event.stopped && event._bubbling !== false) {
+            this._children.treeControl.handleKeyDown(event);
+         }
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
@@ -478,7 +565,8 @@ var
          viewMode: DEFAULT_VIEW_MODE,
          backButtonStyle: 'secondary',
          stickyHeader: true,
-         searchStartingWith: 'root'
+         searchStartingWith: 'root',
+         showActionButton: false
       };
    };
 
@@ -486,6 +574,6 @@ var
 
    /**
     * @event Controls/_explorer/View#arrowClick  Происходит при клике на кнопку "Просмотр записи".
-    * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка показывается.
+    * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка скрыта.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     */

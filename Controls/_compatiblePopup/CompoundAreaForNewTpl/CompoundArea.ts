@@ -15,9 +15,8 @@ import Deferred = require('Core/Deferred');
 import {constants} from 'Env/Env';
 import {StackStrategy} from 'Controls/popupTemplate';
 import {load} from 'Core/library';
-import 'css!theme?Controls/compatiblePopup';
 import {Logger} from 'UI/Utils';
-
+import 'css!theme?Controls/compatiblePopup';
 /**
  * Слой совместимости для открытия новых шаблонов в старых попапах
  * */
@@ -341,7 +340,7 @@ const moduleClass = CompoundControl.extend({
    _onRegisterHandler(event, eventName, emitter, handler) {
       // Пробрасываю событие о регистрации listener'ов до регистраторов, которые лежат в managerWrapper и физически
       // не могут отловить событие
-      if (handler) {
+      if (event.type === 'register') {
          this._listeners.push({
             event,
             eventName,
@@ -349,8 +348,27 @@ const moduleClass = CompoundControl.extend({
          });
          ManagerWrapperController.registerListener(event, eventName, emitter, handler);
       } else {
+         if (emitter && emitter.getInstanceId()) {
+            const index = this._getListenerIndex(emitter);
+            if (typeof index === 'number') {
+               this._listeners.splice(index, 1);``
+            }
+         }
          ManagerWrapperController.unregisterListener(event, eventName, emitter);
       }
+   },
+   _getListenerIndex(emitter) {
+      const length = this._listeners.length;
+      for (let index = 0; index < length; index++) {
+         const listener = this._listeners[index];
+         const unregisterEmitter = listener.emitter;
+         if (unregisterEmitter && unregisterEmitter.getInstanceId()) {
+            if (unregisterEmitter.getInstanceId() === emitter.getInstanceId()) {
+               return index;
+            }
+         }
+      }
+      return undefined;
    },
 
    onBringToFront() {
@@ -590,5 +608,4 @@ const moduleClass = CompoundControl.extend({
 moduleClass.dimensions = {
    resizable: false
 };
-
 export default moduleClass;

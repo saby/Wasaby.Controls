@@ -33,6 +33,15 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  */
 
 /**
+ * @name Controls/_search/Input/Search#searchButtonVisible
+ * @cfg {Boolean} Определяет отображение иконки лупы внутри поля поиска, клик по которой запускает поиск.
+ * @default true
+ * @remark
+ * * true - иконка отображается.
+ * * false - иконка не отображается.
+ */
+
+/**
  * @name Controls/_search/Input/Search#contrastBackground
  * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
  * @default false
@@ -56,8 +65,8 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  *
  * Information on searching settings in the list using the "input:Search" control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *
- * <a href="/materials/demo-ws4-search-container">Demo with Input/Search and List control</a>.
- * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FSearch%2FContainer">Demo with Input/Search and List control</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">Demo with Filter/Button, Input/Search and List control</a>.
  *
  * @class Controls/_search/Input/Search
  * @extends Controls/_input/Base

@@ -24,13 +24,18 @@ define([
          return {
             id: scroll.getNextStickyId(),
             position: (cfg && cfg.position) || 'top',
+            container: {
+               offsetParent: {}
+            },
             inst: {
                getOffset: function() {
                   return 0;
                },
-               height: 10
+               height: 10,
+               resetSticky: sinon.fake(),
+               restoreSticky: sinon.fake()
             }
-         }
+         };
       },
       options = {
       },
@@ -42,7 +47,9 @@ define([
                getOffset: function() {
                   return 0;
                },
-               height: 10
+               height: 10,
+               resetSticky: sinon.fake(),
+               restoreSticky: sinon.fake()
             }
          };
 
@@ -59,6 +66,11 @@ define([
             scrollHeight: 100,
             clientHeight: 100
          };
+         sinon.stub(scroll._stickyHeaderController, '_isVisible').returns(true);
+      });
+
+      afterEach(function() {
+         sinon.restore();
       });
 
       describe('_stickyRegisterHandler', function() {
@@ -71,8 +83,10 @@ define([
                blockUpdate: false,
                stopImmediatePropagation: sinon.fake()
             };
-            component._stickyRegisterHandler(event, data, true);
-            sinon.assert.calledOnce(event.stopImmediatePropagation);
+            component._afterMount({});
+            return component._stickyRegisterHandler(event, data, true).then(function() {
+               sinon.assert.calledOnce(event.stopImmediatePropagation);
+            });
          });
 
          [{
@@ -88,16 +102,50 @@ define([
                      stopImmediatePropagation: sinon.fake()
                   },
                   data = getRegisterObject(test);
-               component._stickyRegisterHandler(event, data, true);
-               assert.deepOwnInclude(component._headers[data.id], data);
-               if (test.position === 'topbottom') {
-                  assert.include(component._headersStack['top'], data.id);
-                  assert.include(component._headersStack['bottom'], data.id);
-               } else {
-                  assert.include(component._headersStack[test.position], data.id);
-               }
+               component._afterMount({});
+               return component._stickyRegisterHandler(event, data, true).then(function() {
+                  assert.deepOwnInclude(component._headers[data.id], data);
+                  if (test.position === 'topbottom') {
+                     assert.include(component._headersStack['top'], data.id);
+                     assert.include(component._headersStack['bottom'], data.id);
+                  } else {
+                     assert.include(component._headersStack[test.position], data.id);
+                  }
+               });
             });
          });
+
+         [{
+            position: 'top'
+         }, {
+            position: 'bottom',
+         }, {
+            position: 'topbottom'
+         }].forEach(function(test) {
+            it(`should put headers in delayedHeaders collection, after afterMount register on position ${test.position}`, function() {
+               let
+                  event = {
+                     stopImmediatePropagation: sinon.fake()
+                  },
+                  data = getRegisterObject(test);
+               return Promise.all([
+                  component._stickyRegisterHandler(event, data, true),
+                  component._stickyRegisterHandler(event, data, true)
+               ]).then(function() {
+                  assert.equal(component._delayedHeaders.length, 2);
+                  component._afterMount({});
+                  assert.equal(component._delayedHeaders.length, 0);
+                  if (test.position === 'topbottom'){
+                     assert.equal(component._headersStack['top'].length, 2);
+                     assert.equal(component._headersStack['bottom'].length, 2);
+                  } else{
+                     assert.equal(component._headersStack[test.position].length, 2);
+                  }
+               });
+            });
+         });
+
+
 
          [{
             position: 'top',
@@ -124,15 +172,17 @@ define([
                   },
                   data = getRegisterObject(test);
 
+               component._afterMount({});
                component._container.scrollTop = test.scrollTop || 0;
                component._container.scrollHeight = test.scrollHeight || 100;
                component._container.clientHeight = test.clientHeight || 100;
-               component._stickyRegisterHandler(event, data, true);
-               if (test.result) {
-                  assert.isTrue(component._headers[data.id].fixedInitially);
-               } else {
-                  assert.isFalse(component._headers[data.id].fixedInitially);
-               }
+               return component._stickyRegisterHandler(event, data, true).then(function() {
+                  if (test.result) {
+                     assert.isTrue(component._headers[data.id].fixedInitially);
+                  } else {
+                     assert.isFalse(component._headers[data.id].fixedInitially);
+                  }
+               });
             });
          });
 
@@ -143,7 +193,7 @@ define([
          }, {
             position: 'topbottom'
          }].forEach(function(test) {
-            it('should unregister deleted header on position ${test.position}', function() {
+            it(`should unregister deleted header on position ${test.position}`, function() {
                let event = {
                      blockUpdate: false,
                      stopImmediatePropagation: sinon.fake()
@@ -157,19 +207,21 @@ define([
                } else {
                   component._headersStack[test.position].push(data.id);
                }
-               component._stickyRegisterHandler(event, data, false);
-               assert.isUndefined(component._headers[data.id]);
-               if (test.position === 'topbottom') {
-                  assert.notInclude(component._headersStack['top'], data.id);
-                  assert.notInclude(component._headersStack['bottom'], data.id);
-               } else {
-                  assert.notInclude(component._headersStack[test.position], data.id);
-               }
+               return component._stickyRegisterHandler(event, data, false).then(function() {
+                  assert.isUndefined(component._headers[data.id]);
+                  if (test.position === 'topbottom') {
+                     assert.notInclude(component._headersStack['top'], data.id);
+                     assert.notInclude(component._headersStack['bottom'], data.id);
+                  } else {
+                     assert.notInclude(component._headersStack[test.position], data.id);
+                  }
+               });
             });
          });
 
          it('should insert header in proper position', function() {
-            [0, 20, 10].forEach(function (offset, index) {
+            component._afterMount({});
+            return Promise.all([0, 20, 10].map(function(offset, index) {
                const header = {
                   id: index,
                   position: 'top',
@@ -177,12 +229,15 @@ define([
                   inst: {
                      getOffset: function() {
                         return offset;
-                     }
+                     },
+                     resetSticky: sinon.fake(),
+                     restoreSticky: sinon.fake()
                   }
                };
                component._stickyRegisterHandler(event, header, true);
+            })).then(function() {
+               assert.deepEqual(component._headersStack.top, [0, 2, 1]);
             });
-            assert.deepEqual(component._headersStack.top, [0, 2, 1]);
          });
       });
 
@@ -341,20 +396,23 @@ define([
             assert.equal(component.getHeadersHeight('bottom'), 0);
          });
          it('should return the correct height after a new header has been registered.', function () {
-            component._stickyRegisterHandler(event, data, true);
-            assert.equal(component.getHeadersHeight('top'), 0);
-            assert.equal(component.getHeadersHeight('bottom'), 0);
+            return component._stickyRegisterHandler(event, data, true).then(function() {
+               assert.equal(component.getHeadersHeight('top'), 0);
+               assert.equal(component.getHeadersHeight('bottom'), 0);
+            });
          });
          it('should return the correct height after a new replaceable header has been registered and fixed.', function () {
-            component._stickyRegisterHandler(event, data, true);
-            component._fixedHandler(event, {
+            component._afterMount({});
+            return component._stickyRegisterHandler(event, data, true).then(function() {
+               component._fixedHandler(event, {
                   id: data.id,
                   fixedPosition: 'top',
                   prevPosition: '',
                   height: 10
                });
-            assert.equal(component.getHeadersHeight('top'), 10);
-            assert.equal(component.getHeadersHeight('bottom'), 0);
+               assert.equal(component.getHeadersHeight('top'), 10);
+               assert.equal(component.getHeadersHeight('bottom'), 0);
+            });
          });
 
          it('should return the correct height after a new header is not at the very top has been registered and fixed.', function () {
@@ -366,30 +424,36 @@ define([
                   getOffset: function() {
                      return 10;
                   },
-                  height: 10
+                  height: 10,
+                  resetSticky: sinon.fake(),
+                  restoreSticky: sinon.fake()
                }
             };
-            component._stickyRegisterHandler(event, data, true);
-            component._fixedHandler(event, {
-               id: data.id,
-               fixedPosition: 'top',
-               prevPosition: '',
-               height: 10
-            });
-            assert.equal(component.getHeadersHeight('top'), 0);
-            assert.equal(component.getHeadersHeight('bottom'), 0);
-         });
-
-         it('should return the correct height after a new stackable header has been registered and fixed.', function () {
-            component._stickyRegisterHandler(event, coreMerge({ mode: 'stackable' }, data, { preferSource: true }), true);
-            component._fixedHandler(event, {
+            component._afterMount({});
+            return component._stickyRegisterHandler(event, data, true).then(function() {
+               component._fixedHandler(event, {
                   id: data.id,
                   fixedPosition: 'top',
                   prevPosition: '',
                   height: 10
                });
-            assert.equal(component.getHeadersHeight('top'), 10);
-            assert.equal(component.getHeadersHeight('bottom'), 0);
+               assert.equal(component.getHeadersHeight('top'), 0);
+               assert.equal(component.getHeadersHeight('bottom'), 0);
+            });
+         });
+
+         it('should return the correct height after a new stackable header has been registered and fixed.', function () {
+            component._afterMount({});
+            return component._stickyRegisterHandler(event, coreMerge({ mode: 'stackable' }, data, { preferSource: true }), true).then(function() {
+               component._fixedHandler(event, {
+                  id: data.id,
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  height: 10
+               });
+               assert.equal(component.getHeadersHeight('top'), 10);
+               assert.equal(component.getHeadersHeight('bottom'), 0);
+            });
          });
       });
 

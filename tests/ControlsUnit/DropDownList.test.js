@@ -240,27 +240,36 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             assert.equal(dropDownList._headConfig.caption, 'New caption');
          });
 
-         it('change root key', function() {
-            let dropDownConfig = getDropDownConfig();
-            dropDownConfig.rootKey = 'test';
+         describe('change root key', function() {
+            let dropDownConfig, dropDownList;
+            beforeEach(() => {
+               dropDownConfig = getDropDownConfig();
+               dropDownList = getDropDownListWithConfig(dropDownConfig);
+               dropDownList._beforeMount(Clone(dropDownConfig));
+               dropDownConfig = Clone(dropDownConfig);
+            });
 
-            let dropDownList = getDropDownListWithConfig(dropDownConfig);
-            dropDownList._beforeMount(dropDownConfig);
+            it('simple', function() {
+               dropDownConfig.rootKey = 'test root';
+               dropDownList._beforeUpdate(dropDownConfig);
+               assert.equal(dropDownList._listModel._options.rootKey, 'test root');
+            });
 
-            dropDownList.saveOptions(dropDownConfig);
-            dropDownConfig = getDropDownConfig();
-            dropDownConfig.rootKey = 'test root';
+            it('set rootKey = undefined', function() {
+               dropDownConfig.rootKey = undefined;
+               dropDownList._beforeUpdate(dropDownConfig);
+               assert.equal(dropDownList._listModel._options.rootKey, null);
+            });
 
-            dropDownList._beforeUpdate(dropDownConfig);
-            assert.equal(dropDownList._listModel._options.rootKey, 'test root');
+            it('check update _iconPadding', function() {
+               let iconItems = dropDownConfig.items.clone();
+               iconItems.at(0).set('icon', 'icon-test');
+               dropDownConfig = { ...dropDownConfig, root: undefined, items: iconItems, iconSize: 'm' };
+               dropDownList.saveOptions(dropDownConfig);
 
-            dropDownList.saveOptions(dropDownConfig);
-            dropDownConfig = getDropDownConfig();
-            dropDownConfig.rootKey = undefined;
-
-            dropDownList._beforeUpdate(dropDownConfig);
-            dropDownList.saveOptions(dropDownConfig);
-            assert.equal(dropDownList._listModel._options.rootKey, null);
+               dropDownList._beforeUpdate({ ...dropDownConfig, rootKey: null });
+               assert.equal(dropDownList._iconPadding, 'icon-medium');
+            });
          });
 
          it('itemschanged', function() {
@@ -372,15 +381,21 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             ddlConfig = {...ddlConfig, ...config2};
             let ddl = getDropDownListWithConfig(ddlConfig);
             ddl._beforeMount(ddlConfig);
-            assert.deepEqual(ddl._iconPadding, { 'null': 'icon-medium' });
+            assert.equal(ddl._iconPadding, 'icon-medium');
 
             ddlConfig.iconSize = 's';
             ddl._beforeMount(ddlConfig);
-            assert.deepEqual(ddl._iconPadding, { 'null': 'icon-small' });
+            assert.equal(ddl._iconPadding, 'icon-small');
 
             ddlConfig.showHeader = false;
             ddl._beforeMount(ddlConfig);
-            assert.deepEqual(ddl._iconPadding, {});
+            assert.isUndefined(ddl._iconPadding);
+
+            ddlConfig.headConfig = {
+               icon: 'icon-add'
+            };
+            ddl._beforeMount(ddlConfig);
+            assert.isUndefined(ddl._iconPadding);
 
             ddlConfig.iconSize = 'm';
             ddlConfig.items = new collection.RecordSet({
@@ -392,9 +407,11 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
                ],
                keyProperty: 'key'
             });
-            ddl._beforeMount(ddlConfig);
-            ddl.root = 'first';
-            assert.deepEqual(ddl._iconPadding, { 'first': 'icon-medium' });
+
+            let config = Clone(ddlConfig);
+            config.rootKey = 'first';
+            ddl._beforeMount(config);
+            assert.equal(ddl._iconPadding, 'icon-medium');
          });
       });
 
@@ -491,6 +508,16 @@ define(['Controls/dropdownPopup', 'Types/collection', 'Core/core-clone'], functi
             };
             let result = dropdownPopup.List._private.getResult(dropdownList, 'itemClick', 'itemClick');
             assert.deepEqual(result, expectedResult);
+
+            const selectorItemsRawData = rawData.slice();
+            selectorItemsRawData.push({id: 'testId' });
+
+            dropdownList._options.selectorItems = new collection.RecordSet({ rawData: selectorItemsRawData, keyProperty: 'id' });
+            dropdownList._listModel.setSelectedKeys(['testId', 1]);
+
+            result = dropdownPopup.List._private.getResult(dropdownList, 'itemClick', 'applyClick');
+            assert.equal(result.data.length, 2);
+            dropdownList._listModel.setSelectedKeys([]);
 
             let ddlConfig = getDropDownConfig();
             ddlConfig.emptyText = 'Not selected';

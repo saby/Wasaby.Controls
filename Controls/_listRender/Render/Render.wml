@@ -9,7 +9,8 @@
             itemActionsPosition="{{ _options.itemActionsPosition }}"
             multiSelectTpl="{{ _options.multiSelectTpl }}"
             isAdd="{{ _options.isAdd }}"
-            itemTemplate="{{ _itemTemplate }}"
+            itemTemplate="{{ _options.itemTemplate }}"
+            groupTemplate="{{ _options.groupTemplate }}"
 
             itemActionsTemplate="{{ _options.itemActionsTemplate }}"
             swipeTemplate="{{ _options.swipeTemplate }}" />

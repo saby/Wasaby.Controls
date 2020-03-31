@@ -48,9 +48,6 @@ var Component = BaseSelector.extend({
             className = 'controls-DateRangeSelectorLite__picker-years-only';
         } else {
             className = 'controls-DateRangeSelectorLite__picker-normal';
-            if (this._options.prevArrowVisibility || this._options.prevArrowVisibility) {
-                className += '-prevNext';
-            }
         }
 
         return {
@@ -76,6 +73,8 @@ var Component = BaseSelector.extend({
 
                 emptyCaption: this._options.emptyCaption,
 
+                source: this._options.source,
+                monthTemplate: this._options.monthTemplate,
                 itemTemplate: this._options.itemTemplate,
                 displayedRanges: this._options.displayedRanges,
                 stubTemplate: this._options.stubTemplate,

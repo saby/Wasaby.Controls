@@ -3,9 +3,10 @@ define(
       'Controls/_popupTemplate/Sticky/StickyStrategy',
       'Controls/_popupTemplate/Sticky/StickyController',
       'Controls/popup',
-      'UI/Base'
+      'UI/Base',
+      'Core/core-clone'
    ],
-   (StickyStrategy, StickyController, popupLib, UIBase) => {
+   (StickyStrategy, StickyController, popupLib, UIBase, cClone) => {
       'use strict';
 
       describe('Controls/_popup/Opener/Sticky', () => {
@@ -58,6 +59,8 @@ define(
                }
             };
          }
+
+         StickyStrategy._private.isPortrait = () => false;
 
          it('Sticky initializing state', () => {
             let itemConfig = {
@@ -116,7 +119,7 @@ define(
                isRemoveCalled = true;
             };
             StickyController.elementCreated({});
-            assert.equal(isRemoveCalled, true);
+            assert.equal(isRemoveCalled, false);
 
             popupLib.Controller.remove = ManagerControllerRemove;
             StickyController._isTargetVisible = () => true;
@@ -145,6 +148,7 @@ define(
             };
             StickyStrategy._private.getWindow = () => windowData;
             StickyStrategy._private.getKeyboardHeight = () => 50;
+            StickyStrategy._private.isIOS12 = () => true;
             StickyStrategy._private._fixBottomPositionForIos(position, tCoords);
             assert.equal(position.bottom, 50);
             position.bottom = 200;
@@ -153,6 +157,7 @@ define(
             StickyStrategy._private.considerTopScroll = () => true;
             StickyStrategy._private._fixBottomPositionForIos(position, tCoords);
             StickyStrategy._private.considerTopScroll = () => false;
+            StickyStrategy._private.isIOS12 = () => false;
             assert.equal(position.bottom, 210);
          });
 
@@ -582,6 +587,64 @@ define(
             StickyStrategy._private._isMobileIOS = () => false;
          });
 
+         it('getFakeDivMargins', () => {
+            StickyController._private.getFakeDiv = () => {
+               return {
+                  currentStyle: {
+                     marginTop: '10.2px',
+                     marginLeft: '11.4px'
+                  }
+               }
+            };
+
+            const item = {
+               popupOptions: {}
+            };
+
+            const margins = StickyController._private.getFakeDivMargins(item);
+            assert.equal(margins.left, 11.4);
+            assert.equal(margins.top, 10.2);
+         });
+
+         it('elementAfterUpdated', () => {
+            let item = {
+               popupOptions: {},
+               position: {
+                  height: 100
+               }
+            };
+            let container = {
+               style: {
+                  width: '100px',
+                  height: '300px'
+               }
+            };
+            let newContainer = {};
+            let prepareConfig = StickyController.prepareConfig;
+            let isTargetVisible = StickyController._isTargetVisible;
+            StickyController.prepareConfig = (itemConfig, containerConfig) => newContainer = cClone(containerConfig);
+            StickyController._isTargetVisible = () => true;
+            StickyController.elementAfterUpdated(item, container);
+
+            // сбрасываем размеры с контейнера
+            assert.strictEqual(newContainer.style.width, 'auto');
+            assert.strictEqual(newContainer.style.height, 'auto');
+            assert.strictEqual(newContainer.style.maxHeight, '100vh');
+
+            // возвращаем их обратно
+            assert.strictEqual(container.style.width, '100px');
+            assert.strictEqual(container.style.height, '100px');
+            assert.isUndefined(container.style.maxHeight);
+
+            item.position.maxHeight = 300;
+            container.style.maxHeight = '200px';
+            StickyController.elementAfterUpdated(item, container);
+            assert.strictEqual(newContainer.style.maxHeight, '300px');
+            assert.strictEqual(container.style.maxHeight, '200px');
+            StickyController.prepareConfig = prepareConfig;
+            StickyController._isTargetVisible = isTargetVisible;
+         });
+
          it('getMargins', () => {
             let margins = {
                top: 1,
@@ -620,6 +683,93 @@ define(
                left: 4,
                top: 3
             }, StickyController._private.getMargins(item));
+         });
+         it('moveContainer', () => {
+            let position = {
+               right: -10
+            };
+            let flagRestrict = false;
+            let restrictContainer = StickyStrategy._private.restrictContainer;
+            StickyStrategy._private.restrictContainer = () => { flagRestrict = !flagRestrict};
+
+            // если начальная позиция отрицательная
+            StickyStrategy._private.moveContainer({}, position, '', 80);
+            assert.strictEqual(flagRestrict, false);
+
+            // если начальная позиция положительная, но есть перекрытие
+            position.right = 60;
+            StickyStrategy._private.moveContainer({}, position, '', 80);
+            assert.strictEqual(flagRestrict, true);
+
+            StickyStrategy._private.restrictContainer = restrictContainer;
+         });
+         it('checkOverflow', () => {
+            let position = {
+               right: -10,
+               bottom: -20
+            };
+            let result = 0;
+
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
+            let isMobileIOS = StickyStrategy._private._isMobileIOS;
+            StickyStrategy._private._isMobileIOS = () => true;
+
+            // правый и нижний край не влезли
+            result = StickyStrategy._private.checkOverflow({}, {}, position, 'horizontal');
+            assert.strictEqual(result, 10);
+            result = StickyStrategy._private.checkOverflow({}, {}, position, 'vettical');
+            assert.strictEqual(result, 20);
+
+            position = {
+               left: -10,
+               top: -20
+            };
+
+            // левый и верхний край не влезли
+            result = StickyStrategy._private.checkOverflow({}, {}, position, 'horizontal');
+            assert.strictEqual(result, 10);
+            result = StickyStrategy._private.checkOverflow({}, {}, position, 'vettical');
+            assert.strictEqual(result, 20);
+
+            StickyStrategy._private._isMobileIOS = isMobileIOS;
+         });
+
+         it('revertPosition outsideOfWindow', () => {
+            let popupCfg = {
+               direction: {
+                  horizontal: 'right'
+               },
+               sizes: {
+                  width: 100
+               },
+               fittingMode: {
+                  horizontal: 'adaptive'
+               }
+            };
+
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
+            let isMobileIOS = StickyStrategy._private._isMobileIOS;
+            StickyStrategy._private._isMobileIOS = () => true;
+
+            let getMargins = StickyStrategy._private.getMargins;
+            StickyStrategy._private.getMargins = () => 0;
+
+            //правый край таргета за пределами области видимости экрана
+            let getTargetCoords = StickyStrategy._private.getTargetCoords;
+            StickyStrategy._private.getTargetCoords = (a, b, coord) => { return coord === 'right' ?  1930 :  1850};
+
+            let invertPosition = StickyStrategy._private.invertPosition;
+            StickyStrategy._private.invertPosition = () => { popupCfg.direction.horizontal = 'left' };
+
+
+            let result = StickyStrategy._private.calculatePosition(popupCfg, {leftScroll: 0},'horizontal');
+            //проверяем, что окно позиционируется с правого края и его ширина не обрезается
+            assert.deepEqual(result, {right: 0});
+
+            StickyStrategy._private._isMobileIOS = isMobileIOS;
+            StickyStrategy._private.getMargins = getMargins;
+            StickyStrategy._private.getTargetCoords = getTargetCoords;
+            StickyStrategy._private.invertPosition = invertPosition;
          });
       });
    }

@@ -642,6 +642,12 @@ var Base = Control.extend({
          */
         if (this._options.readOnly === false && newOptions.readOnly === true) {
             this._firstFocus = true;
+        } else if (this._options.readOnly === true && newOptions.readOnly === false) {
+            // oldDisplayValue запоминается при клике на поле ввода. Если контрол был задизаблен и прикладной разработчик по
+            // клику на поле ввода меняет опцию readonly с true на false, то обработчик на клик не вызовется, т.к. в режиме
+            // readOnly поле ввода не отображается. Подробнее:
+            // TODO: https://online.sbis.ru/opendoc.html?guid=ba1ec63e-1915-499d-9e05-babfa3b79b41
+            this._viewModel._oldDisplayValue = oldDisplayValue;
         }
 
         const displayValueChangedByParent: boolean = oldDisplayValue !== this._viewModel.displayValue;
@@ -875,10 +881,15 @@ var Base = Control.extend({
         }
     },
 
-    _activatedHandler: function(): void {
+    _mouseDownOnContainerHandler: function(event: MouseEvent): void {
+        /**
+         * Нативное поле ввода позиционируется относительно контейнера с отступами. Клик в область отступов
+         * не будет приводить к фокусировке поля. Зовем фокусировку вручную.
+         */
         const readOnlyField: boolean = this._options.readOnly || this._field.scope.readOnly;
+        const clickByField: boolean = event.target === this._getField();
 
-        if (!readOnlyField) {
+        if (!readOnlyField && !clickByField) {
             this.activate({enableScreenKeyboard: true, enableScrollToElement: true});
         }
     },

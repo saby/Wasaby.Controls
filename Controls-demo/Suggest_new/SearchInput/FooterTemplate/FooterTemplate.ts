@@ -6,12 +6,14 @@ import {_departmentsDataLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCa
 import controlTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/FooterTemplate/FooterTemplate');
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/FooterTemplate/resources/SuggestTemplate');
 import footerTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/FooterTemplate/resources/FooterTemplate');
+import standartFooterTemplate = require('wml!Controls-demo/Suggest_new/Input/FooterTemplate/resources/StandartFooterTemplate');
 import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control{
    protected _template: TemplateFunction = controlTemplate;
    protected _suggestTemplate: TemplateFunction = suggestTemplate;
    protected _demoFooterTemplate: TemplateFunction = footerTemplate;
+   protected _standartFooterTemplate: TemplateFunction = standartFooterTemplate;
    protected _source: Memory;
    protected _navigation: object;
    protected _beforeMount() {

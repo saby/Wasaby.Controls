@@ -361,6 +361,7 @@ define(['Controls/_tile/TileView/TileView',
          assert.equal(hoveredItem.key, 'itemKey1');
 
          cfg.tileScalingMode = 'none';
+         tileView._listModel.setHoveredItem(null);
          tileView.saveOptions(cfg);
 
          tileView._setHoveredItem({
@@ -373,10 +374,7 @@ define(['Controls/_tile/TileView/TileView',
          });
 
          hoveredItem = tileView._listModel.getHoveredItem();
-         assert.equal(hoveredItem.zoomCoefficient, 1);
-         assert.isFalse(hoveredItem.canShowActions);
-         assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
-         assert.equal(hoveredItem.key, 'itemKey1');
+         assert.isNull(hoveredItem);
 
 
          cfg.tileScalingMode = 'overlap';
@@ -597,6 +595,7 @@ define(['Controls/_tile/TileView/TileView',
       it('_calculateHoveredItemPosition', function() {
          var
             closestResult = false,
+            noZoomExpectation = undefined,
             document = {
                documentElement: {
                   getBoundingClientRect: () => {
@@ -637,7 +636,7 @@ define(['Controls/_tile/TileView/TileView',
 
          tileView._setHoveredItem = function(itemData, position, startPosition, noZoom) {
             setHoveredItemCalled = true;
-            assert.isTrue(noZoom);
+            assert.equal(noZoomExpectation, noZoom);
          };
          let itemData = {
             dispItem: {
@@ -645,12 +644,9 @@ define(['Controls/_tile/TileView/TileView',
             },
 
          }
-         cfg.tileScalingMode = 'none';
-         tileView.saveOptions(cfg);
-         tileView._calculateHoveredItemPosition(event, itemData, document);
-         assert.isTrue(setHoveredItemCalled);
 
          cfg.tileScalingMode = 'outside';
+         noZoomExpectation = true;
          tileView.saveOptions(cfg);
          setHoveredItemCalled = null;
          closestResult = true;

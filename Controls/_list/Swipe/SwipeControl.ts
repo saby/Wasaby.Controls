@@ -7,6 +7,7 @@ import 'css!theme?Controls/list';
 import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction, ShowType } from './interface/IItemAction';
 import { ISwipeConfig } from './interface/ISwipeConfig';
+import {compatibility} from 'Env/Env';
 import {
    ISwipeContext,
    ISwipeControlOptions,
@@ -80,9 +81,9 @@ export default class SwipeControl extends Control {
    }
 
    private _notifyAndResetSwipe(): void {
+      this._notify('closeSwipe', [this._options.useNewModel ? this. _currentItemData : this._options.listModel.getSwipeItem()]);
       this._swipeConfig = null;
       this._currentItemData = null;
-      this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
       if (this._options.useNewModel) {
          displayLib.ItemActionsController.setSwipeItem(this._options.listModel, null);
          displayLib.ItemActionsController.setActiveItem(this._options.listModel, null);
@@ -105,6 +106,10 @@ export default class SwipeControl extends Control {
    }
 
    private _onListChange(event, changesType, action): void {
+      if (this._destroyed) {
+         return;
+      }
+
       if (changesType !== 'itemActionsUpdated' && action !== 'ch' || changesType === 'newModelUpdated - editing') {
          this.closeSwipe();
       } else if (changesType === 'itemActionsUpdated') {
@@ -242,10 +247,6 @@ export default class SwipeControl extends Control {
       this.closeSwipe();
    }
 
-   protected _listDeactivated(): void {
-      this.closeSwipe();
-   }
-
    async _beforeMount(newOptions: ISwipeControlOptions): Promise<void> {
       this._updateModel(newOptions);
       this._setMeasurer(newOptions.actionAlignment);
@@ -265,7 +266,12 @@ export default class SwipeControl extends Control {
          this._swipeConfig &&
          context &&
          context.isTouch &&
-         !context.isTouch.isTouch
+         !context.isTouch.isTouch &&
+
+          // В слое совместимости не приходит context.isTouch.isTouch
+          // приходится узнавать о наличии тача из compatibility
+          // https://online.sbis.ru/opendoc.html?guid=53d7d489-aae1-4881-8503-86cfc364a235
+         !compatibility.touch
       ) {
          this.closeSwipe();
       }

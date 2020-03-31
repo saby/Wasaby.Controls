@@ -169,6 +169,9 @@ var
             expanderClasses += ' controls-TreeGrid__row-expander_size_' + (expanderSize || 'default') + `_theme-${theme}`;
             expanderClasses += ' js-controls-ListView__notEditable';
 
+            expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${itemData.itemPadding.top}_theme-${theme}`;
+            expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${itemData.itemPadding.bottom}_theme-${theme}`;
+
             if (expanderIcon) {
                 expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
                 expanderClasses += expanderIconClass;
@@ -270,6 +273,7 @@ var
             if (!current.nodeProperty || !current.parentProperty) {
                 return;
             }
+            const theme = self._options.theme;
             const isRootChild = (item) => item.get(current.parentProperty) === null;
             const getChildCount = (dispItem) => self._display.getChildren(dispItem).getCount();
             const hasChildren = (dispItem) => !!getChildCount(dispItem);
@@ -282,6 +286,15 @@ var
                 template?: TemplateFunction,
                 hasMoreStorage?: boolean
             }) => {
+                const getFooterClasses = () => {
+                    let classes = `controls-TreeGrid__nodeFooterContent controls-TreeGrid__nodeFooterContent_theme-${theme} ` +
+                        `controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
+                    if (!current.hasMultiSelect) {
+                        classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
+                    }
+                    return classes;
+                };
+
                 current.nodeFooters.push({
                     key: params.key,
                     item: params.dispItem.getContents(),
@@ -290,6 +303,7 @@ var
                     getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                     multiSelectVisibility: current.multiSelectVisibility,
                     template: params.template,
+                    classes: getFooterClasses(),
                     hasMoreStorage: !!params.hasMoreStorage
                 });
             };
@@ -317,7 +331,7 @@ var
                     const _parentItem = dispItem.getParent().getContents();
                     const _parentKey = _parentItem && _parentItem.getId();
                     const _parentChildren = self._hierarchyRelation.getChildren(_parentKey, self._items);
-                    return _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
+                    return !!_parentChildren.length && _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
                 };
 
                 let result = true;
@@ -426,6 +440,10 @@ var
             _private.resetExpandedItems(this);
         },
 
+        getCollapsedItems(): unknown[] {
+            return this._collapsedItems;
+        },
+
         _prepareDisplay: function(items, cfg) {
             return TreeItemsUtil.getDefaultDisplayTree(items, cfg, this.getDisplayFilter(this.prepareDisplayFilterData(), cfg));
         },
@@ -527,6 +545,9 @@ var
 
         setExpanderVisibility: function(expanderVisibility) {
             this._options.expanderVisibility = expanderVisibility;
+            if (_private.getExpanderVisibility(this._options) === 'hasChildren') {
+                _private.determinePresenceChildItem(this);
+            }
             this._nextModelVersion();
         },
 

@@ -4,6 +4,7 @@ import {debounce} from 'Types/function';
 import {Base as BaseSource} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {detection} from 'Env/Env';
 import {IMonthListSource, IMonthListSourceOptions} from './interfaces/IMonthListSource';
 import {IMonthList, IMonthListOptions} from './interfaces/IMonthList';
 import {IMonthListVirtualPageSize, IMonthListVirtualPageSizeOptions} from './interfaces/IMonthListVirtualPageSize';
@@ -99,12 +100,14 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
 
+        const normalizedPosition = this._normalizeStartPosition(position, options.viewMode);
+
         this._enrichItemsDebounced = debounce(this._enrichItems, 150);
 
         this._updateItemTemplate(options);
         this._updateSource(options);
         this._updateVirtualPageSize(options);
-        this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
+        this._startPositionId = monthListUtils.dateToId(normalizedPosition);
         this._positionToScroll = position;
         this._displayedPosition = position;
         this._lastNotifiedPositionChangedDate = position;
@@ -113,8 +116,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             if (receivedState) {
                 this._extData.updateData(receivedState);
             } else {
-                this._displayedDates = this._getDisplayedRanges(position, options.virtualPageSize);
-                return this._extData.enrichItems(this._displayedDates);
+                const displayedDates = this._getDisplayedRanges(normalizedPosition, options.virtualPageSize, options.viewMode);
+                return this._extData.enrichItems(displayedDates);
             }
         }
     }
@@ -174,8 +177,11 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    private  _getDisplayedRanges(position: Date, virtualPageSize: number): number[] {
+    private  _getDisplayedRanges(position: Date, virtualPageSize: number, viewMode): number[] {
         const displayedRanges = [];
+        if ( viewMode === 'year') {
+            virtualPageSize *= 12;
+        }
         for (let i = 0; i < virtualPageSize; i++) {
             displayedRanges.push(Date.parse(new Date(position.getFullYear(), position.getMonth() + i)));
         }
@@ -252,8 +258,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    private _normalizeStartPosition(date: Date): Date {
-        return this._options.viewMode === VIEW_MODE.year ?
+    private _normalizeStartPosition(date: Date, viewMode?: VIEW_MODE): Date {
+        return (viewMode || this._options.viewMode) === VIEW_MODE.year ?
             dateUtils.getStartOfYear(date) : dateUtils.getStartOfMonth(date);
     }
 
@@ -277,16 +283,21 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             if (entry.data.type !== ITEM_TYPES.body) {
                 continue;
             }
-            const entryDate = entry.data.date;
+            const entryDate: Date = entry.data.date;
+            const rootBounds: DOMRect = entry.nativeEntry.rootBounds;
+            // На Ipad приходит уже не актуальное положение элементов.
+            // При дальнейшем скролировании обсервер уже не вызывается.
+            const boundingClientRect: DOMRect = detection.isMobileIOS ?
+                entry.nativeEntry.target.getBoundingClientRect() : entry.nativeEntry.boundingClientRect;
 
             // We select only those containers that are not fully displayed
             // and intersect with the scrolled container in its upper part, or lie higher.
-            if (entry.nativeEntry.boundingClientRect.top - entry.nativeEntry.rootBounds.top <= 0) {
-                if (entry.nativeEntry.boundingClientRect.bottom - entry.nativeEntry.rootBounds.top > 0) {
+            if (boundingClientRect.top - rootBounds.top <= 0) {
+                if (boundingClientRect.bottom - rootBounds.top > 0) {
                     // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
                     date = entryDate;
                     break;
-                } else if (entry.nativeEntry.rootBounds.top - entry.nativeEntry.boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
+                } else if (rootBounds.top - boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
                     // If the container is completely invisible and lies on top of the scrolled area,
                     // then the next container may intersect with the scrolled area.
                     // We save the date, and check the following. This condition branch is needed,

@@ -9,6 +9,8 @@ import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
 import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent');
 import {detection} from 'Env/Env';
+import {Bus} from 'Env/Event';
+import oldWindowManager from 'Controls/_popupTemplate/_oldWindowManager';
 
 /**
  * Stack Popup Controller
@@ -18,9 +20,13 @@ import {detection} from 'Env/Env';
  * @category Popup
  */
 
+const ACCORDEON_MIN_WIDTH = 50;
+
 class StackController extends BaseController {
     TYPE: string = 'Stack';
     _stack: collection.List<IPopupItem> = new collection.List();
+
+    private _sideBarVisible: boolean = true;
 
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         const isSinglePopup = this._stack.getCount() < 2;
@@ -40,6 +46,14 @@ class StackController extends BaseController {
             // Пересчитаем еще раз позицию, на случай, если ресайзили окно браузера
             item.position = this._getItemPosition(item);
         }
+
+        if (!isNewEnvironment()) {
+            oldWindowManager.addZIndex(item.currentZIndex);
+            if (isSinglePopup) {
+                this._updateSideBarVisibility();
+            }
+        }
+
         return true;
     }
 
@@ -62,6 +76,9 @@ class StackController extends BaseController {
     elementDestroyed(item: IPopupItem): Promise<null> {
         this._stack.remove(item);
         this._update();
+        if (!isNewEnvironment()) {
+            oldWindowManager.removeZIndex(item.currentZIndex);
+        }
         return (new Deferred()).callback();
     }
 
@@ -106,11 +123,11 @@ class StackController extends BaseController {
                 item.position = this._getItemPosition(item);
                 this._updatePopupWidth(item);
                 this._removeLastStackClass(item);
-                const currentWidth = item.containerWidth || item.position.width;
+                const currentWidth = this._getPopupHorizontalLength(item);
                 let forRemove;
                 if (currentWidth) {
                     const cacheItem = cache.find((el) => {
-                        const itemWidth = el.containerWidth || el.position.width;
+                        const itemWidth = this._getPopupHorizontalLength(el);
                         return itemWidth === currentWidth;
                     });
 
@@ -127,7 +144,7 @@ class StackController extends BaseController {
                         forRemove = null;
                         return false;
                     }
-                    const itemWidth = el.containerWidth || el.position.width;
+                    const itemWidth = this._getPopupHorizontalLength(el);
                     const isVisiblePopup = itemWidth >= (currentWidth || 0);
                     if (!isVisiblePopup) {
                         this._hidePopup(el);
@@ -144,6 +161,14 @@ class StackController extends BaseController {
         if (lastItem) {
             this._addLastStackClass(lastItem);
         }
+        if (!isNewEnvironment()) {
+            this._updateSideBarVisibility();
+        }
+    }
+
+    // length = popup size + popup padding
+    private _getPopupHorizontalLength(item: IPopupItem): number {
+        return (item.containerWidth || item.position.width) + (item.position?.right || 0);
     }
 
     private _prepareSizes(item: IPopupItem, container?: HTMLDivElement): void {
@@ -435,6 +460,28 @@ class StackController extends BaseController {
     private _removeLastStackClass(item: IPopupItem): void {
         const className = (item.popupOptions.className || '').replace(/controls-Stack__last-item/ig, '');
         item.popupOptions.className = className.trim();
+    }
+
+    // TODO COMPATIBLE
+    private _getSideBarWidth(): number {
+        const sideBar = document.querySelector('.ws-float-area-stack-sidebar, .navSidebar__sideLeft, .online-Sidebar');
+        return sideBar && sideBar.clientWidth || 0;
+    }
+
+    private _updateSideBarVisibility(): void {
+        let maxStackWidth = 0;
+        this._stack.each((item) => {
+            if (item.popupOptions.width > maxStackWidth) {
+                maxStackWidth = item.popupOptions.width;
+            }
+        });
+
+        const isVisible = this._getWindowSize().width - maxStackWidth >= this._getSideBarWidth() + ACCORDEON_MIN_WIDTH;
+
+        if (isVisible !== this._sideBarVisible) {
+            this._sideBarVisible = isVisible;
+            Bus.channel('navigation').notify('accordeonVisibilityStateChange', this._sideBarVisible);
+        }
     }
 }
 

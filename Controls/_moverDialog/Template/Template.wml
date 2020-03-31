@@ -3,6 +3,7 @@
       <Controls.list:DataContainer source="{{_options.source}}"
                                    filter="{{_options.filter}}"
                                    navigation="{{_options.navigation}}"
+                                   dataLoadCallback="{{_options.dataLoadCallback}}"
                                    keyProperty="{{_options.keyProperty}}">
          <Controls.search:Controller searchParam="{{_options.searchParam}}">
             <div class="controls-MoveDialog__content">

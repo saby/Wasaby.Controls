@@ -68,7 +68,13 @@ define(['Controls/grid'], function(gridMod) {
       preparedColumnsWithMultiselect = 'grid-template-columns: max-content 1fr auto 100px 1fr;',
       preparedColumnsWithoutMiltiselect = 'grid-template-columns: 1fr auto 100px 1fr;',
       fakeSelf = {
-         _options: {}
+         _options: {
+            listModel: {
+               getDragItemData: function() {
+                  return null;
+               }
+            }
+         }
       };
 
    describe('Controls.List.Grid.GridView', function() {
@@ -146,12 +152,6 @@ define(['Controls/grid'], function(gridMod) {
             _isMultiHeader: true,
             setHeader: () => null,
          };
-
-         let resetWasCalled = false;
-         gridMod.GridView._private._resetScroll = () => {resetWasCalled = true}
-         gridView._beforeUpdate({...cfg, header: [{}, {}, {}, {}]});
-         assert.isTrue(resetWasCalled);
-
          let isColumnScrollChanged = false;
          gridView._listModel.setColumnScroll = () => { isColumnScrollChanged = true; }
          gridView._beforeUpdate({ ...cfg, columnScroll: true });

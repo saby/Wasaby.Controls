@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import ColumnScrollTpl = require('wml!Controls/_grid/ColumnScroll');
-import 'css!theme?Controls/grid';
 import { detection } from 'Env/Env';
 import Entity = require('Types/entity');
 import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
@@ -46,10 +45,11 @@ const
           // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
          _private.setDispalyNoneForScroll(self._children.content);
          _private.drawTransform(self, 0);
+         const isFullSupport = isFullGridSupport();
          let
             newContentSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].scrollWidth,
             newContentContainerSize = null;
-         if (!isFullGridSupport()) {
+         if (!isFullSupport) {
             newContentContainerSize = self._children.content.offsetWidth;
          } else {
             newContentContainerSize = self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0].offsetWidth;
@@ -73,8 +73,7 @@ const
          if (newContentContainerSize + self._scrollPosition > newContentSize) {
             self._scrollPosition -= (newContentContainerSize + self._scrollPosition) - newContentSize;
          }
-         self._setOffsetForHScroll();
-         self._contentSizeForHScroll = self._contentSize - self._leftOffsetForHScroll;
+         self._contentSizeForHScroll = isFullSupport ? self._contentSize - self._fixedColumnsWidth : self._contentSize;
          _private.drawTransform(self, self._scrollPosition);
          // после расчетов убираем display: none
          _private.removeDisplayFromScroll(self._children.content);
@@ -130,35 +129,17 @@ const
       drawTransform (self, position) {
          // This is the fastest synchronization method scroll position and cell transform.
          // Scroll position synchronization via VDOM is much slower.
-         const newHTML = '.' + self._transformSelector +
-            ' .controls-Grid__cell_transform { transform: translateX(-' + position + 'px); }';
+         let newHTML = `.${self._transformSelector} .controls-Grid__cell_transform { transform: translateX(-${position}px); }`;
+
+         if (!isFullGridSupport()) {
+             const maxTranslate = self._contentSize - self._contentContainerSize;
+             newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(-${maxTranslate}px); }`;
+         }
+
          if (self._children.contentStyle.innerHTML !== newHTML) {
             self._children.contentStyle.innerHTML = newHTML;
          }
 
-      },
-      setOffsetForHScroll (self) {
-          const container = self._children.content;
-          self._offsetForHScroll = 0;
-          self._leftOffsetForHScroll = 0;
-          const HeaderGroup = container.getElementsByClassName('controls-Grid__header')[0] && container.getElementsByClassName('controls-Grid__header')[0].childNodes;
-          if (HeaderGroup && !!HeaderGroup.length) {
-              const firstCell = HeaderGroup[0];
-              if (self._fixedColumnsWidth) {
-                  self._leftOffsetForHScroll = self._fixedColumnsWidth;
-              } else if (self._options.multiSelectVisibility !== 'hidden') {
-                  self._leftOffsetForHScroll = firstCell.offsetWidth + HeaderGroup[1].offsetWidth;
-              } else {
-                  self._leftOffsetForHScroll = firstCell.offsetWidth;
-              }
-              self._offsetForHScroll += firstCell.offsetHeight;
-          }
-          if (self._options.listModel.getResultsPosition() === 'top') {
-              const ResultsContainer = container.getElementsByClassName('controls-Grid__results')[0] && container.getElementsByClassName('controls-Grid__results')[0].childNodes;
-              if (ResultsContainer && !!ResultsContainer.length) {
-                  self._offsetForHScroll += ResultsContainer[0].offsetHeight;
-              }
-          }
       },
 
       removeDisplayFromScroll: function(container) {
@@ -233,7 +214,6 @@ const
          }
          if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
             _private.updateFixedColumnWidth(this);
-            this._setOffsetForHScroll();
          }
          if (oldOptions.root !== this._options.root) {
              this._contentSize = 0;
@@ -265,11 +245,21 @@ const
          return _private.calculateShadowStyles(this, position);
       },
 
-      _setOffsetForHScroll() {
-         if (isFullGridSupport()) {
-            _private.setOffsetForHScroll(this);
-         }
-      },
+      _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
+           if (e.target.tagName !== 'INPUT' || !this._options.listModel.getEditingItemData() || !this._isDisplayColumnScroll()) {
+               return;
+           }
+           const container = this._children.content;
+           const startShadow = this._children.startShadow;
+           const { right: activeElementRight, left: activeElementLeft  } = e.target.getBoundingClientRect();
+           const { right: containerRight } = container.getBoundingClientRect();
+           const { left: startShadowLeft } = startShadow.getBoundingClientRect();
+           if (activeElementRight > containerRight) {
+               this._setScrollPosition(this._scrollPosition + (activeElementRight - containerRight + (this._children.startShadow.offsetWidth || 0)));
+           } else if (startShadowLeft > activeElementLeft) {
+               this._setScrollPosition(this._scrollPosition - (startShadowLeft - activeElementLeft + (this._children.startShadow.offsetWidth || 0)));
+           }
+       },
 
       _setScrollPosition: function(position) {
           const
@@ -338,5 +328,6 @@ const
            return delta;
        }
    });
+ColumnScroll._theme = ['Controls/grid'];
 ColumnScroll._private = _private;
 export = ColumnScroll;

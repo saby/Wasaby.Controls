@@ -25,6 +25,7 @@
                            fixedHeadersHeights="{{_headersHeight.top}}"
                            attr:class="controls-Scroll__userContent"
                            on:saveScrollPosition="_saveScrollPosition()"
+                           on:scrollToElement="_scrollToElement()"
                            on:updatePlaceholdersSize="_updatePlaceholdersSize()"
                            on:restoreScrollPosition="_restoreScrollPosition()"
                            on:updateShadowMode="_updateShadowMode()"
@@ -36,6 +37,7 @@
                            on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
                            on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
                            on:checkboxClick="_tmplNotify('checkboxClick')"
+                           on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
                            on:actionClick="_tmplNotify('actionClick')"
                            on:editArrowClick="_tmplNotify('editArrowClick')"/>
             </span>
@@ -75,7 +77,7 @@
                             on:onArrowClick="_arrowClickHandler()"/>
    </ws:if>
 
-   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
+   <Controls.event:Listener listenAll="{{true}}" event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>
 </ws:template>
 

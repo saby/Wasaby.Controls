@@ -107,47 +107,6 @@ define([
          assert.deepEqual(twoColumns, [[1, 2], [3, 4]]);
       });
 
-      describe('_listDeactivated', function() {
-         it('_animationState: open', function() {
-            var swipeItem = {};
-            instance._animationState = 'open';
-            instance._swipeConfig = {};
-            instance.saveOptions({
-               listModel: mockListModel(swipeItem)
-            });
-            instance._notify = function(eventName, eventArgs) {
-               assert.equal(eventName, 'closeSwipe');
-               assert.equal(eventArgs[0], swipeItem);
-            };
-            instance._listDeactivated();
-            assert.isNull(instance._swipeConfig);
-            assert.equal(instance._animationState, 'close');
-            assert.isNull(instance._options.listModel.swipeItem);
-            assert.isNull(instance._options.listModel.activeItem);
-            assert.equal(instance._options.listModel.version, 0);
-         });
-
-         it('_animationState: close', function() {
-            var
-               swipeItem = {},
-               swipeConfig = {};
-            instance._animationState = 'close';
-            instance._swipeConfig = swipeConfig;
-            instance.saveOptions({
-               listModel: mockListModel(swipeItem)
-            });
-            instance._notify = function() {
-               throw new Error('_notify shouldn\'t be called if swipe is closed.');
-            };
-            instance._listDeactivated();
-            assert.equal(instance._swipeConfig, swipeConfig);
-            assert.equal(instance._animationState, 'close');
-            assert.equal(instance._options.listModel.swipeItem, swipeItem);
-            assert.equal(instance._options.listModel.activeItem, swipeItem);
-            assert.equal(instance._options.listModel.version, 0);
-         });
-      });
-
       describe('_listClick', function() {
          it('_animationState: open', function() {
             var swipeItem = {};
@@ -347,6 +306,13 @@ define([
             instance._isActual = true
             instance._onListChange({}, 'itemActionsUpdated');
             assert.isFalse(instance._isActual);
+         });
+         it('no update after destroy', function() {
+            let isCloseCalled = false;
+            instance._destroyed = true;
+            instance.closeSwipe = () => { isCloseCalled = true; };
+            instance._onListChange({}, 'itemActionsUpdated');
+            assert.isFalse(isCloseCalled);
          });
       });
       describe('_listSwipe', function() {

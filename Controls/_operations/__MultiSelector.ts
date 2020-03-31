@@ -7,6 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {TKeysSelection, ISelectionObject} from 'Controls/interface';
 import {default as getCountUtil, IGetCountCallParams} from 'Controls/_operations/MultiSelector/getCount';
 
+const DEFAULT_CAPTION = rk('Отметить');
 const DEFAULT_ITEMS = [
    {
       id: 'selectAll',
@@ -22,7 +23,7 @@ const DEFAULT_ITEMS = [
 
 const SHOW_SELECTED_ITEM =  {
    id: 'selected',
-   title: rk('Показать отмеченнные')
+   title: rk('Показать отмеченные')
 };
 
 const SHOW_ALL_ITEM =  {
@@ -52,16 +53,19 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       return this._updateMenuCaptionByOptions(options);
    }
 
-   protected _beforeUpdate(options: IMultiSelectorOptions): void|Promise<TCount> {
-      const currOpts = this._options;
-      const selectionIsChanged = currOpts.selectedKeys !== options.selectedKeys || currOpts.excludedKeys !== options.excludedKeys;
+   protected _beforeUpdate(newOptions: IMultiSelectorOptions): void|Promise<TCount> {
+      const options = this._options;
+      const selectionIsChanged = options.selectedKeys !== newOptions.selectedKeys ||
+                                 options.excludedKeys !== newOptions.excludedKeys;
+      const viewModeChanged = options.selectionViewMode !== newOptions.selectionViewMode;
+      const isAllSelectedChanged = options.isAllSelected !== newOptions.isAllSelected;
 
-      if (selectionIsChanged || currOpts.selectionViewMode !== options.selectionViewMode) {
-         this._menuSource = this._getMenuSource(options);
+      if (selectionIsChanged || viewModeChanged || isAllSelectedChanged) {
+         this._menuSource = this._getMenuSource(newOptions);
       }
 
-      if (selectionIsChanged || currOpts.selectedKeysCount !== options.selectedKeysCount || currOpts.isAllSelected !== options.isAllSelected) {
-         return this._updateMenuCaptionByOptions(options);
+      if (selectionIsChanged || options.selectedKeysCount !== newOptions.selectedKeysCount || isAllSelectedChanged) {
+         return this._updateMenuCaptionByOptions(newOptions);
       }
    }
 
@@ -96,45 +100,59 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       const selectedKeys = options.selectedKeys;
       const excludedKeys = options.excludedKeys;
       const selection = this._getSelection(selectedKeys, excludedKeys);
-
-      return this._getCount(selection, options.selectedKeysCount).then((countResult) => {
-         this._menuCaption = this._getMenuCaption(selection, countResult, options.isAllSelected);
+      const getCountCallback = (count) => {
+         this._menuCaption = this._getMenuCaption(selection, count, options.isAllSelected);
          this._sizeChanged = true;
-      });
+      };
+      const getCountResult = this._getCount(selection, options.selectedKeysCount);
+
+      // Если счётчик удаётся посчитать без вызова метода, то надо это делать синхронно,
+      // иначе promise порождает асинхронность и перестроение панели операций будет происходить скачками,
+      // хотя можно было это сделать за одну синхронизацию
+      if (getCountResult instanceof Promise) {
+         return getCountResult.then(getCountCallback);
+      } else {
+         getCountCallback(getCountResult);
+      }
    }
 
    private _getMenuCaption({selected, excluded}: ISelectionObject, count: TCount, isAllSelected: boolean): string {
+      const hasSelected = !!selected.length;
       let caption;
 
-      if (count > 0 && selected.length) {
-         caption = rk('Отмечено') + ': ' + count;
-      } else if (isAllSelected) {
-         caption = rk('Отмечено всё');
-      } else if (count === null) {
-         caption = rk('Отмечено');
+      if (hasSelected) {
+         if (count > 0) {
+            caption = rk('Отмечено') + ': ' + count;
+         } else if (isAllSelected) {
+            caption = rk('Отмечено всё');
+         } else if (count === null) {
+            caption = rk('Отмечено');
+         } else {
+            caption = DEFAULT_CAPTION;
+         }
       } else {
-         caption = rk('Отметить');
+         caption = DEFAULT_CAPTION;
       }
 
       return caption;
    }
 
-   private _getCount(selection: ISelectionObject, count: TCount): Promise<TCount> {
-      let methodResult;
+   private _getCount(selection: ISelectionObject, count: TCount): Promise<TCount>|TCount {
       let countResult;
 
       if (this._isCorrectCount(count) || !this._options.selectedCountConfig) {
          countResult = count === undefined ? selection.selected.length : count;
-         methodResult = Promise.resolve(countResult);
       } else {
-         this._children.countIndicator.show();
-         methodResult = getCountUtil.getCount(selection, this._options.selectedCountConfig).then((count) => {
-            this._children.countIndicator.hide();
+         if (this._menuCaption !== DEFAULT_CAPTION) {
+            this._menuCaption = rk('Отмечено') + ':';
+         }
+         this._countLoading = true;
+         countResult = getCountUtil.getCount(selection, this._options.selectedCountConfig).then((count) => {
+            this._countLoading = false;
             return count;
          });
       }
-
-      return methodResult;
+      return countResult;
    }
 
    private _getSelection(selectedKeys: TKeysSelection, excludedKeys: TKeysSelection): ISelectionObject {

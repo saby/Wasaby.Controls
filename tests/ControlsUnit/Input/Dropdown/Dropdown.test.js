@@ -90,9 +90,10 @@ define(
 
          it('check selectedItemsChanged event', () => {
             let ddl = getDropdown(config);
-            let keys, text;
+            let keys, text, isKeysChanged;
             ddl._notify = (e, data) => {
                if (e === 'selectedKeysChanged') {
+                  isKeysChanged = true;
                   keys = data[0];
                }
                if (e === 'textValueChanged') {
@@ -102,6 +103,12 @@ define(
             ddl._selectedItemsChangedHandler('itemClick', [itemsRecords.at(5)]);
             assert.deepEqual(keys, ['6']);
             assert.strictEqual(text, 'Запись 6');
+            assert.isTrue(isKeysChanged);
+
+            isKeysChanged = false;
+            ddl._options.selectedKeys = ['6'];
+            ddl._selectedItemsChangedHandler('itemClick', [itemsRecords.at(5)]); // key = '6'
+            assert.isFalse(isKeysChanged);
          });
 
          it('_dataLoadCallback', () => {
@@ -134,6 +141,19 @@ define(
             ddl._setText([{id: null}]);
             assert.equal(ddl._text, 'Не выбрано');
             assert.isNull(ddl._icon);
+         });
+
+
+         it('_deactivated', () => {
+            let ddl = getDropdown(config);
+            let closed = false;
+
+            ddl.closeMenu = () => {
+               closed = true;
+            };
+
+            ddl._deactivated();
+            assert.isTrue(closed);
          });
 
          it('_private::getTooltip', function() {

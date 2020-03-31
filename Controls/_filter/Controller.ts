@@ -97,7 +97,11 @@ const _private = {
             }
 
             if (visibility !== false && textValue !== getPropValue(item, 'resetTextValue')) {
-                minimizedItem.textValue = getPropValue(item, 'textValue');
+                if (isEqual(value, getPropValue(item, 'resetValue'))) {
+                    minimizedItem.textValue = '';
+                } else {
+                    minimizedItem.textValue = getPropValue(item, 'textValue');
+                }
             }
 
             if (getPropValue(item, 'id')) {
@@ -137,13 +141,16 @@ const _private = {
 
                self._sourceController.load({ $_history: true })
                   .addCallback(function(res) {
+                     let historyResult;
                      recent = source.getRecent();
+
                      if (recent.getCount()) {
                         lastFilter = recent.at(ACTIVE_HISTORY_FILTER_INDEX);
-                        result.callback(source.getDataObject(lastFilter));
+                        historyResult = source.getDataObject(lastFilter) || [];
                      } else {
-                        result.callback([]);
+                        historyResult = [];
                      }
+                     result.callback(historyResult);
                      return res;
                   })
                   .addErrback(function(error) {
@@ -160,12 +167,14 @@ const _private = {
                $_addFromData: true
             };
 
-            function update() {
-               historyUtils.getHistorySource({historyId: historyId}).update(
-                   _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams),
-                   meta
-               );
-            }
+             function update() {
+                 let historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
+
+                 // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
+                 self._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
+
+                 historyUtils.getHistorySource({historyId: historyId}).update(historyData, meta);
+             }
 
             if (!historyUtils.getHistorySource({historyId: historyId})._history) {
                // Getting history before updating if it hasn’t already done
@@ -233,13 +242,13 @@ const _private = {
             }
         },
 
-        processPrefetchOnItemsChanged(self, options): void {
+        processPrefetchOnItemsChanged(self, options, items): void {
             // Меняют фильтр с помощью кнопки фильтров,
             // но такой фильтр уже может быть сохранён в истории и по нему могут быть закэшированные данные,
             // поэтому ищем в истории такой фильтр, если есть, смотрим валидны ли ещё закэшированные данные,
             // если валидны, то просто добавляем идентификатор сессии в фильтр,
             // если данные не валидны, то такую запись из истории надо удалить
-            const history = _private.getHistoryByItems(options.historyId, self._filterButtonItems);
+            const history = _private.getHistoryByItems(options.historyId, items || self._filterButtonItems);
             let filter = self._filter;
             let needDeleteFromHistory = false;
             let needApplyPrefetch = false;
@@ -276,7 +285,7 @@ const _private = {
 
         processHistoryOnItemsChanged(self, items, options): void {
             if (options.prefetchParams) {
-                _private.processPrefetchOnItemsChanged(self, options);
+                _private.processPrefetchOnItemsChanged(self, options, items);
                 self._isFilterChanged = true;
             } else if (options.historyId) {
                 _private.addToHistory(self, self._filterButtonItems, self._fastFilterItems, options.historyId);
@@ -712,6 +721,13 @@ const _private = {
        * @cfg {Array|Types/collection:IList} You can prepare filter items from history by your self,
        * this items will applied/merged to filterButtonItems and fastFilterItem. Filter history will not loading, if this option setted.
        */
+
+/**
+ * @event Происходит перед сохранением фильтра в историю
+ * @name Controls/_filter/Controller#historySave
+ * @param {Env/Event.Object} event Дескриптор события.
+ * @param {Array|Function|Types/collection:IList} historyItems Список полей фильтра и их конфигурация, которая будет сохранена в историю.
+ */
 
 const Container = Control.extend(/** @lends Controls/_filter/Container.prototype */{
 

@@ -4,7 +4,6 @@
 import thelpers = require('View/Executor/TClosure');
 import validHtml = require('Core/validHtml');
 import {Logger} from 'UI/Utils';
-import 'css!theme?Controls/decorator';
 
    var markupGenerator,
       defCollection,
@@ -41,7 +40,7 @@ import 'css!theme?Controls/decorator';
       ],
       goodLinkAttributeRegExp = new RegExp(`^(${startOfGoodLinks.join('|')})`
          .replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`)),
-      dataAttributeRegExp = /^data-(?!component$)([\w-]*[\w])+$/,
+      dataAttributeRegExp = /^data-(?!component$|bind$)([\w-]*[\w])+$/,
       escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
 
@@ -57,8 +56,7 @@ import 'css!theme?Controls/decorator';
            strNode = '"Невалидный Json узел"';
        }
 
-       Logger.error('View/Executor/TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`);
-       // Logger.error(`Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}\n`, control, {});
+       Logger.error('View/Executor/TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`, control);
    }
 
    function generateEventSubscribeObject(handlerName) {
@@ -236,8 +234,8 @@ import 'css!theme?Controls/decorator';
       }
 
       if (!elements.length) {
-         elements = [isVdom ? markupGenerator.createTag('div', { key: key + '0_' }, [], attrsToDecorate,
-            defCollection, control, key + '0_') : ''];
+         elements = [!control._isMarkupConverter ? markupGenerator.createTag('div', { key: key + '0_' }, [],
+            attrsToDecorate, defCollection, control, key + '0_') : ''];
       }
 
       // Избежим утечки из-за глобальных переменных.

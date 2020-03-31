@@ -387,6 +387,6 @@
     </div>
     <div attr:class="ControlsDemo__baseLine">
         <h2>Проверка базовой линии</h2>
-        <Controls-demo.Buttons.ButtonsVdom/>
+        <Controls-demo.Buttons.Baseline.Index/>
     </div>
 </div>

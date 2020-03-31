@@ -60,19 +60,43 @@ define(
             scroll._isMounted = true;
          });
 
+         describe('_afterUpdate', function() {
+            it('should not update state if control is invisible', function () {
+               sinon.stub(scroll, '_isHidden').returns(true);
+               sinon.stub(scrollMod.Container._private, 'calcDisplayState');
+               scroll._afterUpdate();
+               sinon.assert.notCalled(scrollMod.Container._private.calcDisplayState);
+               sinon.restore();
+            });
+         });
+
          describe('_shadowVisible', function() {
             [{
                title: "shouldn't display shadow if there are fixed headers",
                shadowPosition: 'top',
                hasFixed: true,
+               hasShadowVisible: true,
                result: false
+            }, {
+               title: "should display shadow if there are fixed headers",
+               shadowPosition: 'top',
+               hasFixed: true,
+               hasShadowVisible: false,
+               result: true
             }].forEach(function(test) {
                it(test.title, function () {
                   scroll._displayState.shadowPosition = test.shadowPosition || '';
+                  scroll._displayState.shadowVisible = {
+                     top: true,
+                     bottom: true
+                  };
                   scroll._shadowVisibilityByInnerComponents.top = test.shadowVisibilityByInnerComponents;
                   scroll._children.stickyController = {
                      hasFixed: function () {
                         return Boolean(test.hasFixed);
+                     },
+                     hasShadowVisible: function() {
+                        return Boolean(test.hasShadowVisible);
                      }
                   };
 
@@ -101,6 +125,9 @@ define(
                   scroll._children.stickyController = {
                      hasFixed: function () {
                         return false;
+                     },
+                     hasShadowVisible: function() {
+                        return false;
                      }
                   };
 
@@ -113,6 +140,9 @@ define(
                   scroll._children.stickyController = {
                      hasFixed: function () {
                         return false;
+                     },
+                     hasShadowVisible: function() {
+                        return false;
                      }
                   };
 
@@ -123,6 +153,36 @@ define(
                   scroll._children = {};
 
                   assert.isFalse(scroll._shadowVisible('top'));
+               });
+            });
+         });
+
+         describe('canScrollTo', function() {
+            [{
+               offset: 0,
+               scrollHeight: 100,
+               clientHeight: 100,
+               result: true
+            }, {
+               offset: 50,
+               scrollHeight: 200,
+               clientHeight: 100,
+               result: true
+            }, {
+               offset: 50,
+               scrollHeight: 100,
+               clientHeight: 100,
+               result: false
+            }].forEach(function (test) {
+               it(`should return ${test.result} if offset = ${test.offset},  scrollHeight = ${test.scrollHeight},  clientHeight = ${test.clientHeight}`, function () {
+                  scroll._children.content.scrollHeight = test.scrollHeight;
+                  scroll._children.content.clientHeight = test.clientHeight;
+
+                  if (test.result) {
+                     assert.isTrue(scroll.canScrollTo(test.offset));
+                  } else {
+                     assert.isFalse(scroll.canScrollTo(test.offset));
+                  }
                });
             });
          });
@@ -152,6 +212,11 @@ define(
          });
 
          describe('_resizeHandler. Paging buttons.', function() {
+            beforeEach(function() {
+               scroll._container = {
+                  closest: () => {}
+               };
+            });
             it('Content at the top', function() {
                scroll._pagingState = {};
                scroll._children.content = {
@@ -199,6 +264,9 @@ define(
          describe('_resizeHandler', function() {
             it('should update _displayState if it changed.', function() {
                let oldDisplayState = scroll._displayState;
+               scroll._container = {
+                  closest: () => {}
+               };
                scroll._pagingState = {};
                scroll._children.content = {
                   scrollTop: 100,
@@ -368,7 +436,7 @@ define(
                scroll._saveScrollPosition({stopPropagation: function(){}});
                scroll._children.content.scrollHeight += addedHeight;
                scroll._restoreScrollPosition({stopPropagation: function(){}}, 0);
-               assert.equal(scroll._children.content.scrollTop, 0);
+               assert.equal(scroll._children.content.scrollTop, 10);
             });
          });
 
@@ -485,6 +553,24 @@ define(
             });
          });
 
+         it('scrollToBottom', () => {
+            let
+               sandbox = sinon.createSandbox(),
+               scrollContainer = new scrollMod.Container({});
+
+            scrollContainer._children = {
+               content: {
+                  scrollHeight: 200,
+                  clientHeight: 50,
+               }
+            };
+            sandbox.stub(scrollMod.Container._private, 'setScrollTop');
+            scrollContainer.scrollToBottom();
+
+            sinon.assert.calledWith(scrollMod.Container._private.setScrollTop, sinon.match.any, 150);
+            sandbox.restore();
+         });
+
          it('restores scroll after scrollbar drag end', () => {
             let
                sandbox = sinon.createSandbox(),
@@ -586,6 +672,24 @@ define(
                   assert.equal(result, 'topbottom');
                });
             });
+
+            describe('_updateShadowMode', function() {
+               it('Should update shadow mode if the container is visible.', function() {
+                  const mode = 'newMode';
+                  sinon.stub(scroll, '_isHidden').returns(false);
+                  scroll._updateShadowMode({}, mode);
+                  assert.strictEqual(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.restore();
+               });
+               it('Should\'t update shadow mode if the container is hidden.', function() {
+                  const mode = 'newMode';
+                  sinon.stub(scroll, '_isHidden').returns(true);
+                  scroll._updateShadowMode({}, mode);
+                  assert.notEqual(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.restore();
+               });
+            });
+
             describe('getSizes', function() {
                var container = {
                   scrollHeight: 200,

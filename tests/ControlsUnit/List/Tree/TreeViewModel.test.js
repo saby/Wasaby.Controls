@@ -2,12 +2,14 @@ define([
    'Controls/treeGrid',
    'Core/core-merge',
    'Types/entity',
-   'Types/collection'
+   'Types/collection',
+    'ControlsUnit/CustomAsserts'
 ], function(
    treeGrid,
    cMerge,
    entity,
-   collection
+   collection,
+   cAssert
 ) {
    function MockedDisplayItem(cfg) {
       var
@@ -330,8 +332,37 @@ define([
             };
             treeGrid.TreeViewModel._private.onBeginCollectionChange(treeViewModel);
             assert.isTrue(updated);
-
-
+         });
+         it('determinePresenceChildItem after setExpanderVisibility', function() {
+            var
+               rs = new collection.RecordSet({
+                  rawData: [
+                     {
+                        key: 1,
+                        parent: null,
+                        hasChildren: false,
+                        type: null
+                     },
+                     {
+                        key: 2,
+                        parent: null,
+                        hasChildren: true,
+                        type: true
+                     }
+                  ],
+                  keyProperty: 'key'
+               }),
+               treeViewModel = new treeGrid.TreeViewModel({
+                  items: rs,
+                  hasChildrenProperty: 'hasChildren',
+                  expanderVisibility: 'visibly',
+                  parentProperty: 'parent',
+                  keyProperty: 'id',
+                  nodeProperty: 'type'
+               });
+            assert.isFalse(treeViewModel._thereIsChildItem);
+            treeViewModel.setExpanderVisibility('hasChildren');
+            assert.isTrue(treeViewModel._thereIsChildItem);
          });
          it('getExpanderPaddingClasses', function() {
             let expectation = [
@@ -349,13 +380,18 @@ define([
          });
          it('prepareExpanderClasses', function() {
             var
+               itemPadding = {
+                  top: 'default',
+                  bottom: 'default'
+                },
                testsPrepareExpanderClasses = [{
                   itemData: {
                      item: {
                         get: function() {
                            return false;
                         }
-                     }
+                     },
+                     itemPadding
                   }
                }, {
                   itemData: {
@@ -363,7 +399,8 @@ define([
                         get: function() {
                            return false;
                         }
-                     }
+                     },
+                     itemPadding
                   },
                   expanderIcon: 'testIcon'
                }, {
@@ -372,7 +409,8 @@ define([
                         get: function() {
                            return true;
                         }
-                     }
+                     },
+                     itemPadding
                   }
                }, {
                   itemData: {
@@ -380,7 +418,8 @@ define([
                         get: function() {
                            return true;
                         }
-                     }
+                     },
+                     itemPadding
                   },
                   expanderIcon: 'testIcon'
                }, {
@@ -389,7 +428,8 @@ define([
                         get: function() {
                            return true;
                         }
-                     }
+                     },
+                     itemPadding
                   },
                   expanderIcon: 'node'
                }, {
@@ -398,22 +438,25 @@ define([
                         get: function() {
                            return true;
                         }
-                     }
+                     },
+                     itemPadding
                   },
                   expanderIcon: 'hiddenNode'
                }],
                testsResultPrepareExpanderClasses = [
-                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default',
-                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
-                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
-                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
-                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
-                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default'
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default'
                ];
             testsPrepareExpanderClasses.forEach(function(item, i) {
-               assert.equal(treeGrid.TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon, undefined, theme),
-                  testsResultPrepareExpanderClasses[i],
-                  'Invalid value "prepareExpanderClasses(...)" for step ' + i + '.');
+               cAssert.isClassesEqual(
+                   treeGrid.TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon, undefined, theme),
+                   testsResultPrepareExpanderClasses[i],
+                   'Invalid value "prepareExpanderClasses(...)" for step ' + i + '.'
+               );
             });
          });
       });
@@ -932,6 +975,17 @@ define([
       describe('setNodeFooterIfNeed', function() {
          let model;
 
+         /*
+            123
+               234
+                  1 (лист)
+                  2 (лист)
+                  3 (пустая папка)
+            345 (лист)
+            456 (лист)
+            567 (лист)
+         */
+
          beforeEach(function() {
             model = new treeGrid.TreeViewModel(cfg);
          });
@@ -942,6 +996,14 @@ define([
             itemData.parentProperty = undefined;
             treeGrid.TreeViewModel._private.setNodeFooterIfNeed(model, itemData);
             assert.deepEqual(itemData.nodeFooters, []);
+         });
+
+         it('try to get node footers for item that not exists in record set', function() {
+            model.setExpandedItems(['123', '234']);
+            const itemModel = model.getItemById('234', 'id');
+            const itemData = model.getItemDataByItem(itemModel);
+            model._items.remove(itemModel.getContents());
+            treeGrid.TreeViewModel._private.setNodeFooterIfNeed(model, itemData);
          });
       });
    });

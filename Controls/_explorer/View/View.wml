@@ -1,7 +1,9 @@
-<div class="controls-Explorer">
+<div class="controls-Explorer" on:keyDown="_onExternalKeyDown()">
    <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
       <Controls._explorer.PathController
                                  scope="{{_options}}"
+                                 header="{{_options.viewMode === 'tile' ? undefined : _options.header}}"
+                                 itemsPromise="{{_itemsPromise}}"
                                  items="{{_breadCrumbsItems}}"
                                  rootVisible="{{_dragOnBreadCrumbs}}"
                                  highlighter="{{[_breadCrumbsDragHighlighter]}}"
@@ -35,6 +37,7 @@
                                     on:dragStart="_notifyHandler('dragStart')"
                                     on:dragEnd="_notifyHandler('dragEnd')"
                                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                                    on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
                                     on:rootChanged="_notifyHandler('rootChanged')"
                                     on:changeDragTarget="_notifyHandler('changeDragTarget')"
                                     on:dragEnter="_notifyHandler('dragEnter')"
@@ -54,6 +57,7 @@
                                     on:expandedItemsChanged="_notifyHandler('expandedItemsChanged')"
                                     on:collapsedItemsChanged="_notifyHandler('collapsedItemsChanged')"
                                     on:editArrowClick="_notifyHandler('editArrowClick')"
+                                    dataLoadErrback="{{_dataLoadErrback}}"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     serviceDataLoadCallback="{{_serviceDataLoadCallback}}"
                                     itemsSetCallback="{{_itemsSetCallback}}"/>

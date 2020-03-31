@@ -58,6 +58,24 @@ var _private = {
             var container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
             self._notify('hoveredItemChanged', [item, container]);
         }
+    },
+
+    /**
+     * Проверяет, что markedKey был изменён в модели ListViewModel, например,
+     * в случае, когда заданный в опциях ключ не был найден в пришедших с сервера данных
+     * @param self
+     */
+    checkMarkedKeyHasChangedInModel: function(self) {
+        return self._options.markedKey !== undefined && self._options.markedKey !== null &&
+            self._options.markedKey !== self._listModel.getMarkedKey();
+    },
+
+    /**
+     * Проверяет, нужно ли показывать markedKey
+     * @param self
+     */
+    checkMarkerShouldBeVisible: function(self) {
+        return self._options.markerVisibility === 'always' || self._options.markerVisibility === 'visible';
     }
 };
 
@@ -84,6 +102,7 @@ var ListView = BaseControl.extend(
                   this._pendingRedraw = true;
                }
             };
+            this._onMarkedKeyChangedHandlerFnc = this._onMarkedKeyChangedHandler.bind(this);
         },
        _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions, this);
@@ -93,7 +112,7 @@ var ListView = BaseControl.extend(
             if (newOptions.listModel) {
                 this._listModel = newOptions.listModel;
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
-                this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandler.bind(this));
+                this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
             // todo Костыль, т.к. построение ListView зависит от SelectionController.
@@ -102,6 +121,13 @@ var ListView = BaseControl.extend(
             // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
             if (newOptions.multiSelectReady) {
                return newOptions.multiSelectReady;
+            }
+        },
+
+        _beforeUnmount: function() {
+            if (this._listModel) {
+                this._listModel.unsubscribe('onListChange', this._onListChangeFnc);
+                this._listModel.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
             }
         },
 
@@ -163,7 +189,12 @@ var ListView = BaseControl.extend(
             if (!this._options._innerList) {
                 this.resizeNotifyOnListChanged();
             }
-            if (this._options.markedKey === undefined && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
+            // корректное значение _listModel.markedKey устанавливается в BaseControl после получения данных
+            // методом BaseControl.reload() и событие 'onMarkedKeyChanged' модели ListViewModel
+            // вызывается до того, как в ListView._beforeMount() на него делается подписка
+            // может, задействовать Env/Event:Bus?
+            if ((this._options.markedKey === undefined || _private.checkMarkedKeyHasChangedInModel(this)) &&
+                _private.checkMarkerShouldBeVisible(this)) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
             }
         },
@@ -263,7 +294,7 @@ ListView.getDefaultOptions = function() {
     return {
         contextMenuVisibility: true,
         markerVisibility: 'onactivated',
-        headerInEmptyListVisible: true
+        headerInEmptyListVisible: true,
     };
 };
 

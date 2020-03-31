@@ -4,9 +4,12 @@ define(
       'Types/source',
       'Controls/context',
       'Core/Deferred',
-      'Types/collection'
+      'Types/collection',
+      'Application/Initializer',
+      'Application/Env',
+      'Env/Config'
    ],
-   function(lists, sourceLib, contexts, Deferred, collection) {
+   function(lists, sourceLib, contexts, Deferred, collection, AppInit, AppEnv, Config) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -36,6 +39,23 @@ define(
             var data = new lists.DataContainer(config);
             data.saveOptions(config);
             return data;
+         };
+
+         var setNewEnvironmentValue = function(value) {
+            let sandbox = sinon.createSandbox();
+
+            if (value) {
+               sandbox.replace(AppInit, 'isInit', () => true);
+               sandbox.replace(AppEnv, 'getStore', () => ({
+                  isNewEnvironment: true
+               }));
+            } else {
+               sandbox.replace(AppInit, 'isInit', () => false);
+            }
+
+            return function resetNewEnvironmentValue() {
+               sandbox.restore();
+            };
          };
 
          it('resolvePrefetchSourceResult', function() {
@@ -108,15 +128,18 @@ define(
          });
 
          it('_beforeMount with receivedState', function() {
-            var data = getDataWithConfig({source: source, keyProperty: 'id'});
-            var newSource = new sourceLib.Memory({
+            let data = getDataWithConfig({source: source, keyProperty: 'id'});
+            let newSource = new sourceLib.Memory({
                keyProperty: 'id',
                data: sourceData
             });
+            let resetCallback = setNewEnvironmentValue(true);
             data._beforeMount({source: newSource, idProperty: 'id'}, {}, sourceData);
 
             assert.deepEqual(data._items, sourceData);
             assert.isTrue(!!data._prefetchSource);
+
+            resetCallback();
          });
 
          it('_beforeMount with receivedState and prefetchProxy', function() {
@@ -131,11 +154,14 @@ define(
                }
             });
             let data = getDataWithConfig({source: prefetchSource, keyProperty: 'id'});
+            let resetCallback = setNewEnvironmentValue(true);
 
             data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
             assert.isTrue(data._prefetchSource.getOriginal() === memory);
             assert.isTrue(data._prefetchSource !== prefetchSource);
             assert.equal(data._prefetchSource._$data.query, sourceData);
+
+            resetCallback();
          });
 
          it('_beforeMount with prefetchProxy', async function() {
@@ -174,6 +200,18 @@ define(
                   done();
                });
             });
+         });
+
+         it('_itemsReadyCallbackHandler', async function() {
+            const options = {source: source, keyProperty: 'id'};
+            let data = getDataWithConfig(options);
+            await data._beforeMount(options);
+
+            const currentItems = data._items;
+            const newItems = new collection.RecordSet();
+
+            data._itemsReadyCallbackHandler(newItems);
+            assert.isTrue(data._items === newItems);
          });
 
          it('update not equal source', function(done) {
@@ -219,7 +257,7 @@ define(
             });
          });
 
-         it('itemsChanged', () => {
+         it('itemsChanged', (done) => {
             const config = {
                source: source,
                keyProperty: 'id'
@@ -234,9 +272,10 @@ define(
             let propagationStopped = false;
 
             data._beforeMount(config).addCallback(function() {
-               data._itemsChanged(event, []);
+               const newList = new collection.RecordSet();
+               data._itemsChanged(event, newList);
                assert.isTrue(propagationStopped);
-               assert.deepEqual(data._items, []);
+               assert.equal(data._items, newList);
                done();
             });
          });
@@ -417,6 +456,52 @@ define(
             });
          });
 
+         it('_private.createPrefetchSource with collapsed groups', function(done) {
+            var data = {test: true};
+            var queryCalled = false;
+
+            var source = {
+               query: function(a, d, v, b, r) {
+                  queryCalled = true;
+                  return Deferred.success(data);
+               },
+               _mixins: [],
+               "[Types/_source/ICrud]": true
+            };
+            var dataLoadErrbackCalled = false;
+            var dataLoadErrback = function() {
+               dataLoadErrbackCalled = true;
+            };
+
+            var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback, groupProperty: 'prop', historyIdCollapsedGroups: 'gid' };
+            var self = getDataWithConfig(config);
+            self._filter = {};
+            const originConfigGetParam = Config.UserConfig.getParam;
+            Config.UserConfig.getParam = (preparedStoreKey) => {
+               if (preparedStoreKey === 'LIST_COLLAPSED_GROUP_gid') {
+                  return Promise.resolve('[1, 3]');
+               }
+               return originConfigGetParam();
+            };
+
+            lists.DataContainer._private.resolveOptions(self, {source:source});
+
+            var promise = lists.DataContainer._private.createPrefetchSource(self, data, dataLoadErrback, 'gid');
+
+            assert.instanceOf(promise, Promise);
+            promise.then(function(result) {
+               assert.equal(result.data, data);
+               assert.isFalse(dataLoadErrbackCalled);
+               assert.isFalse(queryCalled);
+               Config.UserConfig.getParam = originConfigGetParam;
+               assert.deepEqual(self._filter, { collapsedGroups: [1, 3] });
+               done();
+            }).catch(function(error) {
+               Config.UserConfig.getParam = originConfigGetParam;
+               done(error);
+            });
+         });
+
          it('_private.resolveOptions', function() {
             var self = {
                _options: {
@@ -436,6 +521,7 @@ define(
 
             let filter = {test: 123};
             self._options.filter = filter;
+            self._options.root = 'test';
             options.filter = filter;
             lists.DataContainer._private.resolveOptions(self, options);
             //if filter option was not changed, _filter from state will not updated by resolveOptions
@@ -478,6 +564,29 @@ define(
             assert.equal(lists.DataContainer._private.isEqualItems(source1, source3), false);
 
          });
+         it('_private.getGroupHistoryId', function() {
+            assert.equal(lists.DataContainer._private.getGroupHistoryId({
+               groupingKeyCallback: () => {},
+               historyIdCollapsedGroups: 'grId'
+            }), 'grId');
 
+            assert.equal(lists.DataContainer._private.getGroupHistoryId({
+               groupProperty: 'any',
+               historyIdCollapsedGroups: 'grId'
+            }), 'grId');
+
+            assert.equal(lists.DataContainer._private.getGroupHistoryId({
+               groupingKeyCallback: () => {},
+               groupHistoryId: 'grId',
+            }), 'grId');
+
+            assert.isUndefined(lists.DataContainer._private.getGroupHistoryId({
+               groupHistoryId: 'grId',
+            }));
+
+            assert.isUndefined(lists.DataContainer._private.getGroupHistoryId({
+               groupProperty: 'any',
+            }));
+         });
       });
    });

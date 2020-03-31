@@ -109,7 +109,7 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _beforeUpdate: function(newOptions) {
-         if (!isEqual(newOptions.items, this._items)) {
+         if (!isEqual(newOptions.items, this._options.items)) {
             this._changedIndex = _private.getIndexChangedVisibility(newOptions.items, this._items);
             _private.setItems(this, _private.cloneItems(newOptions.items));
          } else {
@@ -118,12 +118,13 @@ import 'css!theme?Controls/filterPopup';
          this._lastVisibleIndex = _private.getLastVisibleItemIndex(newOptions.items);
       },
 
-      _afterUpdate: function() {
+      _afterUpdate(): void {
          // Когда элемент перемещается из блока "Еще можно отобрать" в основной блок,
          // запоминаем индекс этого элемента в _changedIndex.
          // Когда основной блок перестроился, зовем activate, чтобы сфокусировать этот элемент.
          if (this._changedIndex !== -1) {
             this.activate();
+            this._notify('controlResize', [], {bubbling: true});
          }
       },
 

@@ -14,7 +14,6 @@ import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
 import dayTmpl = require('wml!Controls/_datePopup/day');
 import {MonthViewDayTemplate} from 'Controls/calendar';
-import 'css!theme?Controls/datePopup';
 import {Controller as ManagerController} from 'Controls/popup';
 import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "./scroll";
 
@@ -237,8 +236,11 @@ var _private = {
         },
 
         toggleState: function(self, date?: Date): void {
-            self._displayedDate = date || self._options.startValue || self._options.endValue || new Date();
             self._state = self._state === STATES.year ? STATES.month : STATES.year;
+
+            const displayedDate = date || self._options.startValue || self._options.endValue || new Date();
+            self._displayedDate = self._state === STATES.year ?
+                dateUtils.getStartOfYear(displayedDate) : dateUtils.getStartOfMonth(displayedDate);
         },
 
         isMaskWithDays: function(mask: string) {
@@ -350,6 +352,11 @@ var Component = BaseControl.extend([EventProxyMixin], {
             this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
         }
 
+        if ((this._state === STATES.year && this._displayedDate.getFullYear() === new Date().getFullYear()) ||
+            (this._state === STATES.month && this._displayedDate.getMonth() === new Date().getMonth())) {
+            this._homeButtonVisible = false;
+        }
+
         this._headerType = options.headerType;
     },
 
@@ -451,8 +458,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
         _private.selectionChanged(this, start, end ? dateUtils.getEndOfMonth(end) : null);
     },
 
-    _monthsRangeSelectionEnded: function (e, start, end) {
-        _private.sendResult(this, start, dateUtils.getEndOfMonth(end));
+    _monthsRangeSelectionEnded: function(e: SyntheticEvent<Event>, start: Date, end: Date): void {
+        const endOfMonth: Date = dateUtils.getEndOfMonth(end);
+        _private.rangeChanged(this, start, endOfMonth);
+        _private.sendResult(this, start, endOfMonth);
     },
 
     _monthRangeMonthClick: function (e, date) {
@@ -533,9 +542,11 @@ var Component = BaseControl.extend([EventProxyMixin], {
 });
 
 Component._private = _private;
+Component._theme = ['Controls/datePopup'];
 
 Component.SELECTION_TYPES = IRangeSelectable.SELECTION_TYPES;
 Component.HEADER_TYPES = HEADER_TYPES;
+Component._STATES = STATES;
 
 Component.getDefaultOptions = function () {
     return coreMerge({

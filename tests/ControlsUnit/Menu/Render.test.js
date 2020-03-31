@@ -5,9 +5,10 @@ define(
       'Core/core-clone',
       'Controls/display',
       'Types/collection',
-      'Types/entity'
+      'Types/entity',
+      'Types/di'
    ],
-   function(menu, source, Clone, display, collection, entity) {
+   function(menu, source, Clone, display, collection, entity, di) {
       describe('Menu:Render', function() {
          let defaultItems = [
             { key: 0, title: 'все страны' },
@@ -16,13 +17,31 @@ define(
             { key: 3, title: 'Великобритания' }
          ];
 
-         let getListModel = function(items) {
+         let getListModel = function(items, nodeProperty) {
             return new display.Tree({
                collection: new collection.RecordSet({
-                  rawData: items || defaultItems,
+                  rawData: Clone(items || defaultItems),
                   keyProperty: 'key'
                }),
-               keyProperty: 'key'
+               keyProperty: 'key',
+               nodeProperty
+            });
+         };
+
+         let getListModelWithSbisAdapter = function() {
+            return new display.Tree({
+               collection: new collection.RecordSet({
+                  rawData: {
+                     _type: 'recordset',
+                     d: [],
+                     s: [
+                        { n: 'id', t: 'Строка' },
+                        { n: 'title', t: 'Строка' },
+                     ]
+                  },
+                  keyProperty: 'id',
+                  adapter: new entity.adapter.Sbis()
+               })
             });
          };
 
@@ -57,7 +76,8 @@ define(
          it('getLeftSpacing', function() {
             let menuRender = getRender();
             let renderOptions = {
-               listModel: getListModel()
+               listModel: getListModel(),
+               itemPadding: {}
             };
             let leftSpacing = menuRender.getLeftSpacing(renderOptions);
             assert.equal(leftSpacing, 'l');
@@ -66,7 +86,7 @@ define(
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
             assert.equal(leftSpacing, 'null');
 
-            renderOptions.leftSpacing = 'xs';
+            renderOptions.itemPadding.left = 'xs';
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
             assert.equal(leftSpacing, 'xs');
          });
@@ -74,35 +94,200 @@ define(
          it('getRightSpacing', function() {
             let menuRender = getRender();
             let renderOptions = {
-               listModel: getListModel()
+               listModel: getListModel(),
+               itemPadding: {},
+               nodeProperty: 'node'
             };
             let rightSpacing = menuRender.getRightSpacing(renderOptions);
             assert.equal(rightSpacing, 'l');
 
-            renderOptions.nodeProperty = 'node';
             let items = Clone(defaultItems);
             items[0].node = true;
-            renderOptions.listModel = getListModel(items);
+            renderOptions.listModel = getListModel(items, 'node');
             rightSpacing = menuRender.getRightSpacing(renderOptions);
             assert.equal(rightSpacing, 'menu-expander');
 
-            renderOptions.rightSpacing = 'xs';
+            renderOptions.itemPadding.right = 'xs';
             rightSpacing = menuRender.getRightSpacing(renderOptions);
             assert.equal(rightSpacing, 'xs');
          });
 
-         it('addEmptyItem', function() {
-            let menuRender = getRender();
-            let renderOptions = {
-               listModel: getListModel(),
-               emptyText: 'Not selected',
-               emptyKey: null
-            };
-            menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
-            assert.equal(renderOptions.listModel.getCollection().getCount(), 5);
+         describe('addEmptyItem', function() {
+            let menuRender, renderOptions;
+            beforeEach(function() {
+               menuRender = getRender();
+               renderOptions = {
+                  listModel: getListModelWithSbisAdapter(),
+                  emptyText: 'Not selected',
+                  emptyKey: null,
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKeys: []
+               };
+            });
+
+            it('check items count', function() {
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.equal(renderOptions.listModel.getCount(), 1);
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('title'), 'Not selected');
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('id'), null);
+            });
+
+            it('check selected empty item', function() {
+               renderOptions.selectedKeys = [];
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isSelected());
+
+               renderOptions.selectedKeys = [null];
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isSelected());
+            });
+
+            it('check model', function() {
+               let isCreatedModel;
+               let sandbox = sinon.createSandbox();
+               sandbox.replace(menuRender, '_createModel', (model, config) => {
+                  isCreatedModel = true;
+                  return new entity.Model(config);
+               });
+
+               renderOptions.listModel = new display.Tree({
+                  collection: new collection.RecordSet({
+                     rawData: defaultItems,
+                     keyProperty: 'id'
+                  })
+               });
+
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('id'), null);
+               assert.isTrue(isCreatedModel);
+               sandbox.restore();
+            });
          });
 
-         it('getIconSpacing', function() {
+         describe('grouping', function() {
+            let getGroup = (item) => {
+               if (!item.get('group')) {
+                  return 'CONTROLS_HIDDEN_GROUP';
+               }
+               return item.get('group');
+            };
+            it('_isGroupVisible simple', function() {
+               let groupListModel = getListModel([
+                  { key: 0, title: 'все страны' },
+                  { key: 1, title: 'Россия', icon: 'icon-add' },
+                  { key: 2, title: 'США', group: '2' },
+                  { key: 3, title: 'Великобритания', group: '2' },
+                  { key: 4, title: 'Великобритания', group: '2' },
+                  { key: 5, title: 'Великобритания', group: '3' }
+               ]);
+               groupListModel.setGroup(getGroup);
+
+               let menuRender = getRender(
+                  { listModel: groupListModel }
+               );
+
+               let result = menuRender._isGroupVisible(groupListModel.at(0));
+               assert.isFalse(result);
+
+               result = menuRender._isGroupVisible(groupListModel.at(3));
+               assert.isTrue(result);
+            });
+
+            it('_isGroupVisible one group', function() {
+               let groupListModel = getListModel([
+                  { key: 0, title: 'все страны', group: '2' },
+                  { key: 1, title: 'Россия', icon: 'icon-add', group: '2' },
+                  { key: 2, title: 'США', group: '2' },
+                  { key: 3, title: 'Великобритания', group: '2' },
+                  { key: 4, title: 'Великобритания', group: '2' }
+               ]);
+               groupListModel.setGroup(getGroup);
+
+               let menuRender = getRender(
+                  { listModel: groupListModel }
+               );
+
+               let result = menuRender._isGroupVisible(groupListModel.at(0));
+               assert.isFalse(result);
+            });
+
+            it('_isHistorySeparatorVisible', function() {
+               let groupListModel = getListModel([
+                  { key: 0, title: 'все страны' },
+                  { key: 1, title: 'Россия', icon: 'icon-add' },
+                  { key: 2, title: 'США', group: '2' },
+                  { key: 3, title: 'Великобритания', group: '2' },
+                  { key: 4, title: 'Великобритания', group: '2' },
+                  { key: 5, title: 'Великобритания', group: '3' }
+               ]);
+               groupListModel.setGroup(getGroup);
+
+               let menuRender = getRender(
+                  { listModel: groupListModel }
+               );
+               let result = menuRender._isHistorySeparatorVisible(groupListModel.at(1));
+               assert.isFalse(!!result);
+
+               groupListModel.at(1).getContents().set('pinned', true);
+               result = menuRender._isHistorySeparatorVisible(groupListModel.at(1));
+               assert.isTrue(result);
+
+               groupListModel.at(2).getContents().set('pinned', true);
+               result = menuRender._isHistorySeparatorVisible(groupListModel.at(2));
+               assert.isFalse(result);
+            });
+
+            describe('check class separator', function() {
+               let groupListModel, menuRender, expectedClasses = 'controls-Menu__row-separator';
+               beforeEach(function() {
+                  groupListModel = getListModel([
+                     { key: 0, title: 'все страны' },
+                     { key: 1, title: 'Россия', icon: 'icon-add' },
+                     { key: 2, title: 'США', group: '2' },
+                     { key: 3, title: 'Великобритания', group: '2' },
+                     { key: 4, title: 'Великобритания', group: '2' },
+                     { key: 5, title: 'Великобритания', group: '3' }
+                  ]);
+                  groupListModel.setGroup(getGroup);
+
+                  menuRender = getRender(
+                     { listModel: groupListModel }
+                  );
+               });
+
+               it('collectionItem', function() {
+                  let expectedClasses = 'controls-Menu__row-separator';
+                  let actualClasses = menuRender._getClassList(groupListModel.at(1));
+                  assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+               });
+
+               it('next item is groupItem', function() {
+                  // Collection: [GroupItem, CollectionItem, CollectionItem, GroupItem,...]
+                  let actualClasses = menuRender._getClassList(groupListModel.at(2));
+                  assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+               });
+
+               it('history separator is visible', function() {
+                  groupListModel.at(1).getContents().set('pinned', true);
+                  let actualClasses = menuRender._getClassList(groupListModel.at(1));
+                  assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+               });
+            });
+         });
+
+         it('_getItemData', function() {
+            let menuRender = getRender();
+            let itemData = menuRender._getItemData(menuRender._options.listModel.at(0));
+            assert.isOk(itemData.itemClassList);
+            assert.isOk(itemData.treeItem);
+            assert.isOk(itemData.multiSelectTpl);
+            assert.isOk(itemData.item);
+            assert.isOk(itemData.isSelected);
+            assert.isOk(itemData.getPropValue);
+         });
+
+         it('getIconPadding', function() {
             let menuRender = getRender();
             let iconItems = [
                { key: 0, title: 'все страны' },
@@ -114,8 +299,8 @@ define(
                listModel: getListModel(iconItems),
                iconSize: 'm'
             };
-            let iconSpacing = menuRender.getIconSpacing(renderOptions);
-            assert.equal(iconSpacing, 'm');
+            let iconPadding = menuRender.getIconPadding(renderOptions);
+            assert.equal(iconPadding, 'm');
 
             iconItems = [
                { key: 0, title: 'все страны', node: true },
@@ -126,8 +311,12 @@ define(
             renderOptions.listModel = getListModel(iconItems);
             renderOptions.parentProperty = 'parent';
             renderOptions.nodeProperty = 'node';
-            iconSpacing = menuRender.getIconSpacing(renderOptions);
-            assert.equal(iconSpacing, '');
+            iconPadding = menuRender.getIconPadding(renderOptions);
+            assert.equal(iconPadding, '');
+
+            renderOptions.headingIcon = 'icon-Add';
+            iconPadding = menuRender.getIconPadding(renderOptions);
+            assert.equal(iconPadding, '');
          });
 
       });

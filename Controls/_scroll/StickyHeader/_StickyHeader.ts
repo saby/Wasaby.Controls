@@ -1,8 +1,16 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
 import {descriptor} from 'Types/entity';
 import Context = require('Controls/_scroll/StickyHeader/Context');
-import {getNextId, getOffset, POSITION, MODE, IOffset} from 'Controls/_scroll/StickyHeader/Utils';
+import {
+    getNextId,
+    getOffset,
+    POSITION,
+    MODE,
+    IOffset,
+    validateIntersectionEntries
+} from 'Controls/_scroll/StickyHeader/Utils';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
@@ -53,6 +61,12 @@ interface IStickyHeaderContext {
     stickyHeader: Function;
 }
 
+interface IResizeObserver {
+    observe: (el: HTMLElement) => void;
+    unobserve: (el: HTMLElement) => void;
+    disconnect: () => void;
+}
+
 export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     /**
@@ -66,6 +80,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
      * @private
      */
     private _observer: IntersectionObserver;
+    private _resizeObserver: IResizeObserver;
 
     private _model: Model;
 
@@ -94,9 +109,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     protected _notifyHandler: Function = tmplNotify;
 
-    protected _bottomShadowStyle: string = '';
+   _bottomShadowStyle: string = '';
+   _topShadowStyle: string = '';
 
     private _stickyDestroy: boolean = false;
+    private _scroll: HTMLElement;
+
+    private _needUpdateObserver: boolean = false;
 
     protected _beforeMount(): void {
         this._observeHandler = this._observeHandler.bind(this);
@@ -110,27 +129,40 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _afterMount(): void {
         const children = this._children;
 
+        // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
+        // отказаться от closest.
+        this._scroll = this._container.closest('.controls-Scroll');
+        if (!this._scroll) {
+            Logger.warn('Controls.scroll:StickyHeader: Используются фиксация заголовков вне Controls.scroll:Container. Либо используйте Controls.scroll:Container, либо уберите, либо отключите фиксацию заголовков в контролах в которых она включена.', this);
+            return;
+        }
+
         this._notify('stickyRegister', [{
             id: this._index,
             inst: this,
+            container: this._container,
             position: this._options.position,
             mode: this._options.mode
         }, true], {bubbling: true});
-        this._observer = new IntersectionObserver(this._observeHandler);
+
         this._model = new Model({
             topTarget: children.observationTargetTop,
             bottomTarget: children.observationTargetBottom,
             position: this._options.position,
         });
 
-        this._observer.observe(children.observationTargetTop);
-        this._observer.observe(children.observationTargetBottom);
+        this._initObserver();
 
         this._updateBottomShadowStyle();
+        this._initResizeObserver();
     }
 
     protected _beforeUnmount(): void {
-        this._model.destroy();
+        if (this._model) {
+            //Let the listeners know that the element is no longer fixed before the unmount.
+            this._fixationStateChangeHandler('', this._model.fixedPosition);
+            this._model.destroy();
+        }
         this._stickyDestroy = true;
 
         // его может и не быть, если контрол рушится не успев замаунтиться
@@ -138,15 +170,26 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._observer.disconnect();
         }
 
-        //Let the listeners know that the element is no longer fixed before the unmount.
-        this._fixationStateChangeHandler('', this._model.fixedPosition);
+        if (this._resizeObserver) {
+            this._resizeObserver.disconnect();
+        }
+
         this._observeHandler = undefined;
         this._observer = undefined;
+        this._resizeObserver = undefined;
         this._notify('stickyRegister', [{id: this._index}, false], {bubbling: true});
     }
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
         return getOffset(parentElement, this._container, position);
+    }
+
+    resetSticky(): void {
+        this._container.style.position = 'static';
+    }
+
+    restoreSticky(): void {
+        this._container.style.position = '';
     }
 
     get height(): number {
@@ -179,8 +222,59 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
+    get shadowVisibility(): SHADOW_VISIBILITY {
+        return this._options.shadowVisibility;
+    }
+
     protected _resizeHandler(): void {
+        if (this._needUpdateObserver) {
+            this._initObserver();
+        }
+        if (this._isSafari13) {
+            this._updateBottomShadowStyle();
+        }
+    }
+
+    protected _selfResizeHandler(): void {
         this._notify('stickyHeaderResize', [], {bubbling: true});
+    }
+
+    private _initObserver(): void {
+        // Если заголовок невидим(display: none), то мы не сможем рассчитать его положение. Вернее обсервер вернет нам
+        // что тригеры невидимы, но рассчеты мы сделать не сможем. Когда заголовк станет видим, и если он находится
+        // в самом верху скролируемой области, то верхний тригер останется невидимым, т.е. сбытия не будет.
+        // Что бы самостоятельно не рассчитывать положение тригеров, мы просто пересоздадим обсервер когда заголовок
+        // станет видимым.
+        if (this._container.offsetParent === null) {
+            this._needUpdateObserver = true;
+            return;
+        }
+
+        if (this._observer) {
+            this._observer.disconnect();
+        }
+
+        this._createObserver();
+        this._needUpdateObserver = false;
+    }
+
+    private _createObserver(): void {
+        const children = this._children;
+        this._observer = new IntersectionObserver(
+            this._observeHandler,
+            { root: this._scroll }
+        );
+        this._observer.observe(children.observationTargetTop);
+        this._observer.observe(children.observationTargetBottom);
+    }
+
+    private _initResizeObserver(): void {
+        if (typeof window !== 'undefined' && window.ResizeObserver) {
+            this._resizeObserver = new ResizeObserver(() => {
+                this._selfResizeHandler();
+            });
+            this._resizeObserver.observe(this._container);
+        }
     }
 
     /**
@@ -205,7 +299,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
         const fixedPosition: POSITION = this._model.fixedPosition;
 
-        this._model.update(entries);
+        this._model.update(validateIntersectionEntries(entries, this._scroll));
 
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
@@ -228,7 +322,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             fixedPosition: newPosition,
             offsetHeight: this._height,
             prevPosition,
-            mode: this._options.mode
+            mode: this._options.mode,
+            shadowVisible: this._options.shadowVisibility === 'visible',
+            // Костыль для 2100. В 3000 удалено.
+            ignoreHeight: this._options.ignoreHeight
         };
 
         this._shadowVisible = !!newPosition;
@@ -266,21 +363,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         if (this._options.position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
-
-            if (this._context.stickyHeader) {
-                top += this._context.stickyHeader.top;
-            }
-
             style += 'top: ' + (top - (fixedPosition ? offset : 0)) + 'px;';
         }
 
         if (this._options.position.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
             bottom = this._stickyHeadersHeight.bottom;
-
-            if (this._context.stickyHeader) {
-                bottom += this._context.stickyHeader.bottom;
-            }
-
             style += 'bottom: ' + (bottom - offset) + 'px;';
         }
 
@@ -318,6 +405,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             style += 'z-index: ' + this._options.fixedZIndex + ';';
         }
 
+        /**
+         * Сценарий: проскролить список с группой заголовков, вызвать перестроение заголовков.
+         * Ошибка и причина: Значение top(позиция заголовка) определяется после монтирования в DOM. Из-за этого происходит скачок.
+         * Решение: Так как в группе уже определено значение top, то пробросим его до заголовков через контекст.
+         * Берем значение из контекста только в случае, когда ещё не произошел моинтинг в DOM, не смогли определить top.
+         * Это костыль, который будет удален по https://online.sbis.ru/opendoc.html?guid=243c78ec-7f27-4625-b347-d92523702e50
+         */
+        if (style.indexOf('top') === -1 && style.indexOf('bottom') === -1 && this._context?.stickyHeader && !this._container) {
+            style += `top: ${this._context.stickyHeader.top}px;`;
+        }
+
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
         if (this._options.task1177692247 && this._options.fixedZIndex) {
             style += 'z-index: ' + this._options.fixedZIndex + ';';
@@ -350,8 +448,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
             // There's no container at first building of template.
             if (container) {
-                this._bottomShadowStyle = 'bottom: unset; right: unset; top:' + container.offsetHeight + 'px;' +
-                    'width:' + container.offsetWidth + 'px;';
+                const offsetWidth = container.offsetWidth;
+                let offsetHeight = container.offsetHeight;
+                if (this._options.position.indexOf('bottom') !== -1) {
+                    offsetHeight -= MOBILE_GAP_FIX_OFFSET;
+                }
+                this._bottomShadowStyle =
+                     `bottom: unset; right: unset; top:${offsetHeight}px; width:${offsetWidth}px;`;
+                this._topShadowStyle = `right: unset; width:${offsetWidth}px;`;
             }
         }
     }

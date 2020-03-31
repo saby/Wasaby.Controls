@@ -10,7 +10,7 @@ import {IConfirmationOpener, IConfirmationOptions} from 'Controls/_popup/interfa
  * @remark
  * Подробнее о работе с контролом читайте
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/ здесь}.
- * См. <a href="/materials/demo-ws4-confirmation">демо-пример</a>.
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FConfirmation%2FConfirmation">демо-пример</a>.
  * @class Controls/_popup/Opener/Confirmation
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IConfirmation
@@ -20,7 +20,7 @@ import {IConfirmationOpener, IConfirmationOptions} from 'Controls/_popup/interfa
  * @public
  * @category Popup
  * @author Красильников А.С.
- * @demo Controls-demo/Popup/Opener/ConfirmationPG
+ * @demo Controls-demo/Confirmation/Confirmation
  */
 
 interface IConfirmationOpenerOptions extends IBaseOpenerOptions {
@@ -40,9 +40,8 @@ class Confirmation extends Control<IControlOptions> implements IConfirmationOpen
 
     open(templateOptions: IConfirmationOptions = {}): Promise<boolean | undefined> {
         const options: IConfirmationOptions = {...templateOptions};
-        options.opener = this;
         options.theme = this._options.theme;
-        return Confirmation.openPopup(options);
+        return Confirmation.openPopup(options, this);
     }
 
     private static _compatibleOptions(popupOptions: IConfirmationOpenerOptions): void {
@@ -55,23 +54,32 @@ class Confirmation extends Control<IControlOptions> implements IConfirmationOpen
     }
 
     private static _getConfig(templateOptions: IConfirmationOptions,
-                              closeHandler: Function): IConfirmationOpenerOptions {
+                              closeHandler: Function,
+                              opener?: Control<IControlOptions, unknown>): IConfirmationOpenerOptions {
         templateOptions.closeHandler = closeHandler;
+
+        // На шаблоне не должно быть опции opener, иначе ломаются базовые механизмы ядра (пример UI/hotKeys:Dispatcher)
+        if (templateOptions.hasOwnProperty('opener')) {
+            delete templateOptions.opener;
+        }
         const popupOptions: IConfirmationOpenerOptions = {
             template: 'Controls/popupTemplate:ConfirmationDialog',
+            topPopup: true,
             modal: true,
             autofocus: true,
             className: 'controls-Confirmation_popup',
             isCentered: true,
+            opener,
             templateOptions
         };
         Confirmation._compatibleOptions(popupOptions);
         return popupOptions;
     }
 
-    static openPopup(templateOptions: IConfirmationOptions): Promise<boolean | undefined> {
+    static openPopup(templateOptions: IConfirmationOptions,
+                     opener?: Control<IControlOptions, unknown>): Promise<boolean | undefined> {
         return new Promise((resolve) => {
-            const config: IConfirmationOpenerOptions = Confirmation._getConfig(templateOptions, resolve);
+            const config: IConfirmationOpenerOptions = Confirmation._getConfig(templateOptions, resolve, opener);
             return BaseOpener.requireModules(config, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
                 BaseOpener.showDialog(result.template, config, result.controller);
             });

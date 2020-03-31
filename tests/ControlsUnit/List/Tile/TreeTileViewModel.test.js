@@ -49,16 +49,19 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
          keyProperty: 'id',
          parentProperty: 'parent',
          nodeProperty: 'parent@',
+         groupProperty: 'group',
          items: new collection.RecordSet({
             rawData: [{
                'id': 1,
                'parent': null,
                'parent@': true,
+               'group': 'group_1'
             },
             {
                'id': 2,
                'parent': null,
                'parent@': true,
+               'group': 'group_1'
             }],
             keyProperty: 'id'
          }),
@@ -103,6 +106,13 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
          assert.equal(cur.position, 'string with style');
          assert.equal(cur.zoomCoefficient, 1.5);
 
+
+         cur = treeTileViewModelWithoutLeaves.getCurrent();
+         assert.isFalse(!!cur.afterItemTemplate);
+
+         treeTileViewModelWithoutLeaves.goToNext();
+         cur = treeTileViewModelWithoutLeaves.getCurrent();
+         assert.isFalse(!!cur.afterItemTemplate);
 
          treeTileViewModelWithoutLeaves.goToNext();
          cur = treeTileViewModelWithoutLeaves.getCurrent();

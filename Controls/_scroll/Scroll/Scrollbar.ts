@@ -76,6 +76,11 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _dragPointOffset: number | null = null;
     protected _trackVisible: boolean = false;
 
+    protected _beforeMount(): void {
+        //TODO Compatibility на старых страницах нет Register, который скажет controlResize
+        this._resizeHandler = this._resizeHandler.bind(this);
+    }
+
     protected _afterMount(): void {
         if (this._options.direction === 'horizontal') {
             this._trackVisible = !!this._options.trackVisible;
@@ -85,8 +90,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
             this._thumbSize, this._options.position);
 
-        //TODO Compatibility на старых страницах нет Register, который скажет controlResize
-        this._resizeHandler = this._resizeHandler.bind(this);
         if (!newEnv() && window) {
             window.addEventListener('resize', this._resizeHandler);
         }

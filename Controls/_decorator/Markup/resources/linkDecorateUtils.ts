@@ -37,11 +37,11 @@ const correctTopLevelDomainNames = [
     'рус'
 ];
 const protocolLinkPrefixPattern = `(?:${protocolNames.join('|')})`.replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`);
-const simpleLinkPrefixPattern = '([\\w\\-]+(?:\\.[a-zA-Z]+)*\\.([a-zA-Z]+)(?::[0-9]+)?)';
+const simpleLinkPrefixPattern = '([\\w\\-]{1,100}(?:\\.[a-zA-Z]{1,100}){0,100}\\.([a-zA-Z]{1,100})(?::[0-9]{1,100})?)';
 const linkPrefixPattern = `(?:${protocolLinkPrefixPattern}|${simpleLinkPrefixPattern})`;
-const linkPattern = `(${linkPrefixPattern}(?:[^\\s()]*))`;
-const emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]+@[^\\s@()]+\\.([\\wа-яёА-ЯЁ]+))';
-const endingPattern = '([^.,:\\s()])';
+const linkPattern = `(${linkPrefixPattern}(?:[^\\s()\\ud800-\\udfff]{0,100}))`;
+const emailPattern = '([\\wа-яёА-ЯЁ!#$%&\'*+\\-/=?^`{|}~.]{1,100}@[^\\s@()\\ud800-\\udfff]{1,100}\\.([\\wа-яёА-ЯЁ]{1,100}))';
+const endingPattern = '([^.,:\\s()\\ud800-\\udfff])';
 const characterRegExp = /[\wа-яёА-ЯЁ]/;
 const linkParseRegExp = new RegExp(`(?:(?:${emailPattern}|${linkPattern})${endingPattern})|(.|\\s)`, 'g');
 
@@ -109,15 +109,17 @@ function createLinkNode(href: string, text: string = href, isEmail: boolean = fa
 }
 
 function isLinkGoodForDecorating(linkNode) {
-   const attributes = getAttributes(linkNode);
-   const firstChild = getFirstChild(linkNode);
-   const linkHref = attributes.href && attributes.href.toLowerCase();
-   const linkText = typeof firstChild === 'string' && firstChild.toLowerCase();
+    const attributes = getAttributes(linkNode);
+    const firstChild = getFirstChild(linkNode);
 
-   // Decorate link only with text == href, and href length shouldn't be more than given maximum.
-   // And decorate link that starts with "http://" or "https://".
-   return !!linkHref && linkHref.length <= getHrefMaxLength() &&
-      isTextNode(firstChild) && linkHref === linkText && linkHref.indexOf('http') === 0;
+    const linkHref = attributes.href ? attributes.href.toLowerCase() : '';
+    const decodedLinkHref = decodeURI(linkHref);
+    const linkText = isTextNode(firstChild) ? firstChild.toLowerCase() : '';
+
+    // Decorate link only with text == href, and href length shouldn't be more than given maximum.
+    // And decorate link that starts with "http://" or "https://".
+    return !!linkHref && linkHref.length <= getHrefMaxLength() && linkHref.indexOf('http') === 0 &&
+        (linkHref === linkText || decodedLinkHref === linkText);
 }
 
 /**
@@ -384,7 +386,8 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
 
             let nodeToPush: any[]|string;
             if (link) {
-                if (link === simpleLinkPrefix) {
+                const isEndingPartOfDomain = characterRegExp.test(ending) && link === simpleLinkPrefix;
+                if (isEndingPartOfDomain) {
                     simpleLinkDomain += ending;
                 }
                 const wrongDomain = simpleLinkDomain && correctTopLevelDomainNames.indexOf(simpleLinkDomain) === -1;
@@ -394,7 +397,7 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
                     (simpleLinkPrefix ? 'http://' : '') + link,
                     link
                 );
-            } else if(email) {
+            } else if (email) {
                 const isEndingPartOfEmail = characterRegExp.test(ending);
                 if (isEndingPartOfEmail) {
                     emailDomain += ending;

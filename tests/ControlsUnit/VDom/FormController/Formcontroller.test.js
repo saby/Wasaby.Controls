@@ -308,13 +308,15 @@ define([
          FC.destroy();
       });
 
-      it('requestCustomUpdate isNewRecord', () => {
+      it('requestCustomUpdate isNewRecord', (done) => {
          let FC = new form.Controller();
          FC._isNewRecord = true;
          FC._notify = () => true;
-         FC.update();
-         assert.equal(FC._isNewRecord, false);
-         FC.destroy();
+         FC.update().then(() => {
+            assert.equal(FC._isNewRecord, false);
+            done();
+            FC.destroy();
+         });
       });
       it('createHandler and readHandler ', () => {
          let FC = new form.Controller();

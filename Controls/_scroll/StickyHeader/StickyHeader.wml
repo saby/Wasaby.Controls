@@ -3,6 +3,6 @@
 </ws:if>
 <ws:else>
    <div>
-      <ws:partial if="{{_options.content}}" template="{{_options.content}}"/>
+      <ws:partial if="{{_options.content}}" template="{{_options.content}}" scope="{{_options}}"/>
    </div>
 </ws:else>

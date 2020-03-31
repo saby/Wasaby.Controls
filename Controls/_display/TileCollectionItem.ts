@@ -54,21 +54,6 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         }
     }
 
-    isHovered(): boolean {
-        return this._$hovered;
-    }
-
-    setHovered(hovered: boolean, silent?: boolean): void {
-        if (this._$hovered === hovered) {
-            return;
-        }
-        this._$hovered = hovered;
-        this._nextVersion();
-        if (!silent) {
-            this._notifyItemChangeToOwner('hovered');
-        }
-    }
-
     setActive(active: boolean, silent?: boolean): void {
         // TODO This is copied from TileViewModel, but there must be a better
         // place for it. For example, somewhere in ItemAcrions container
@@ -160,7 +145,7 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         if (this.isAnimated()) {
             classes += ' controls-TileView__item_animated';
         }
-        if (templateMarker !== false && this.isMarked()) {
+        if (this.shouldDisplayMarker(templateMarker)) {
             classes += ' controls-TileView__item_withMarker';
         } else {
             classes += ' controls-TileView__item_withoutMarker';

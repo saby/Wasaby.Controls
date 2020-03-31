@@ -15,7 +15,8 @@ export default IGrouped;
 
 export interface IGroupedOptions {
     /**
-     * Шаблон группировки.
+     * @name Controls/_dropdown/interface/IGrouped#groupTemplate
+     * @cfg {Function} Шаблон группировки.
      * @remark
      * Для определения шаблона вызовите базовый шаблон - "Controls/dropdownPopup:GroupTemplate".
      * Шаблон должен быть помещен в компонент с помощью тега <ws:partial> с атрибутом "template".
@@ -25,8 +26,8 @@ export interface IGroupedOptions {
      * Содержимое можно переопределить с помощью параметра "contentTemplate".
      * Параметр "groupProperty" тоже должен быть установлен.
      * @example
-     * TMPL:
      * <pre>
+     * <!-- WML -->
      *    <Controls.dropdown:Menu
      *          keyProperty="id"
      *          icon="icon-small icon-AddButtonNew"
@@ -37,53 +38,54 @@ export interface IGroupedOptions {
      *       </ws:groupTemplate>
      *    </Controls.dropdown:Menu>
      * </pre>
-     * JS:
      * <pre>
-     *    this._source = new Memory({
-     *        data: [
-     *                   { id: 1, title: 'Task in development', group: 'Select' },
-     *                   { id: 2, title: 'Error in development', group: 'Select' },
-     *                   { id: 3, title: 'Application', group: 'Select' },
-     *                   { id: 4, title: 'Assignment', group: 'Create' },
-     *                   { id: 5, title: 'Approval', group: 'Create' },
-     *                   { id: 6, title: 'Working out', group: 'Create' },
-     *                   { id: 7, title: 'Assignment for accounting', group: 'Create' },
-     *                   { id: 8, title: 'Assignment for delivery', group: 'Create' },
-     *                   { id: 9, title: 'Assignment for logisticians', group: 'Create' }
-     *            ],
-     *        keyProperty: 'id'
-     *    });
+     * // JavaScript
+     * this._source = new Memory({
+     *    data: [
+     *       { id: 1, title: 'Task in development', group: 'Select' },
+     *       { id: 2, title: 'Error in development', group: 'Select' },
+     *       { id: 3, title: 'Application', group: 'Select' },
+     *       { id: 4, title: 'Assignment', group: 'Create' },
+     *       { id: 5, title: 'Approval', group: 'Create' },
+     *       { id: 6, title: 'Working out', group: 'Create' },
+     *       { id: 7, title: 'Assignment for accounting', group: 'Create' },
+     *       { id: 8, title: 'Assignment for delivery', group: 'Create' },
+     *       { id: 9, title: 'Assignment for logisticians', group: 'Create' }
+     *    ],
+     *    keyProperty: 'id'
+     * });
      * </pre>
      */
     groupTemplate: TemplateFunction;
     /**
-     * Функция обратного вызова для получения идентификатора группы элемента списка.
+     * @name Controls/_dropdown/interface/IGrouped#groupProperty
+     * @cfg {String} Имя свойства, содержащего идентификатор группы элемента списка.
      * @param item элемент списка.
      * @example
-     * TMPL:
      * <pre>
+     * <!-- WML -->
      *    <Controls.dropdown:Menu
      *          keyProperty="id"
      *          icon="icon-small icon-AddButtonNew"
      *          source="{{_source}}"
      *          groupProperty="group"/>
      * </pre>
-     * JS:
      * <pre>
-     *    this._source = new Memory({
-     *        data: [
-     *                   { id: 1, title: 'Task in development', group: 'Select' },
-     *                   { id: 2, title: 'Error in development', group: 'Select' },
-     *                   { id: 3, title: 'Application', group: 'Select' },
-     *                   { id: 4, title: 'Assignment', group: 'Create' },
-     *                   { id: 5, title: 'Approval', group: 'Create' },
-     *                   { id: 6, title: 'Working out', group: 'Create' },
-     *                   { id: 7, title: 'Assignment for accounting', group: 'Create' },
-     *                   { id: 8, title: 'Assignment for delivery', group: 'Create' },
-     *                   { id: 9, title: 'Assignment for logisticians', group: 'Create' }
-     *            ],
-     *        keyProperty: 'id'
-     *     });
+     * // JavaScript
+     * this._source = new Memory({
+     *    data: [
+     *       { id: 1, title: 'Task in development', group: 'Select' },
+     *       { id: 2, title: 'Error in development', group: 'Select' },
+     *       { id: 3, title: 'Application', group: 'Select' },
+     *       { id: 4, title: 'Assignment', group: 'Create' },
+     *       { id: 5, title: 'Approval', group: 'Create' },
+     *       { id: 6, title: 'Working out', group: 'Create' },
+     *       { id: 7, title: 'Assignment for accounting', group: 'Create' },
+     *       { id: 8, title: 'Assignment for delivery', group: 'Create' },
+     *       { id: 9, title: 'Assignment for logisticians', group: 'Create' }
+     *    ],
+     *    keyProperty: 'id'
+     * });
      * </pre>
      */
     groupProperty: string;

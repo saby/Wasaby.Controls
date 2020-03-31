@@ -4,6 +4,7 @@ import {constants} from 'Env/Env';
 import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksPhoto';
 import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksDescription';
 import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksReceived';
+import * as baseEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/baseEditor';
 import * as moneyEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/moneyEditor';
 import * as numberEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/numberEditor';
 import * as defaultEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/defaultEditor';
@@ -911,7 +912,8 @@ function getEditing() {
         getDecoratedEditingColumns: () => [
             {
                 displayProperty: 'title',
-                width: '300px'
+                width: '300px',
+                template: baseEditor
             },
             {
                 displayProperty: 'taxBase',

@@ -240,7 +240,8 @@ import dataSource = require('Controls/dataSource');
             this._setRecord(newOptions.record);
          }
          if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
-            if (newOptions.record && newOptions.record.isChanged()) {
+            // Если текущий рекорд изменен, то покажем вопрос
+            if (this._options.record && this._options.record.isChanged()) {
                this._showConfirmPopup('yesno').addCallback(function(answer) {
                   if (answer === true) {
                      self.update().addCallback(function(res) {
@@ -293,6 +294,10 @@ import dataSource = require('Controls/dataSource');
             this._pendingPromise = null;
          }
          // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
+         // Текущая реализация не подходит, завершать пендинги могут как сверху(при закрытии окна), так и
+         // снизу (редактирование закрывает пендинг).
+         // надо делать так, чтобы редактирование только на свой пендинг влияло
+         // https://online.sbis.ru/opendoc.html?guid=78c34d53-8705-4e25-bbb5-0033e81d6152
          this._tryDeleteNewRecord();
       },
       _setRecord: function(record) {
@@ -327,11 +332,11 @@ import dataSource = require('Controls/dataSource');
          self._pendingPromise = new Deferred();
          self._notify('registerPending', [self._pendingPromise, {
             showLoadingIndicator: false,
-            validate(): boolean {
-               return self._record && self._record.isChanged();
+            validate(isInside: boolean): boolean {
+               return self._record && self._record.isChanged() && !isInside;
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-               self._showConfirmDialog(deferred, forceFinishValue);
+                self._showConfirmDialog(deferred, forceFinishValue);
             }
          }], { bubbling: true });
       },
@@ -424,8 +429,8 @@ import dataSource = require('Controls/dataSource');
                var res = self._update().addCallback(getData);
                updateResult.dependOn(res);
             } else {
-               updateResult.callback(true);
                self._updateIsNewRecord(false);
+               updateResult.callback(true);
             }
          }
 
@@ -433,9 +438,9 @@ import dataSource = require('Controls/dataSource');
          var result = this._notify('requestCustomUpdate', [], { bubbling: true });
 
          // pending waiting while update process finished
-         var def = new Deferred();
-         self._notify('registerPending', [def, { showLoadingIndicator: false }], { bubbling: true });
-         def.dependOn(updateResult);
+         this._updatePromise = new Deferred();
+         self._notify('registerPending', [this._updatePromise, { showLoadingIndicator: false }], { bubbling: true });
+         this._updatePromise.dependOn(updateResult);
 
          if (result && result.then) {
             result.then(function(defResult) {
@@ -495,7 +500,7 @@ import dataSource = require('Controls/dataSource');
          });
          return updateDef;
       },
-      delete: function(destroyMetaData) {
+      delete: function(destroyMetaData?: unknown) {
          destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
          var self = this;
          var resultDef = this._children.crud.delete(this._record, destroyMetaData);
@@ -544,6 +549,7 @@ import dataSource = require('Controls/dataSource');
          var self = this;
          return self.__errorController.process({
             error: error,
+            theme: this._options.theme,
             mode: mode || dataSource.error.Mode.include
          }).then(function(errorConfig) {
             self._showError(errorConfig);

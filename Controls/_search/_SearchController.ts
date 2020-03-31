@@ -16,6 +16,7 @@ var _private = {
                sorting: self._options.sorting,
                navigation: self._options.navigation,
                searchDelay: self._options.searchDelay,
+               keyProperty: self._options.keyProperty,
                searchStartCallback: self._options.searchStartCallback
             });
          }
@@ -52,18 +53,23 @@ var _private = {
       });
    },
 
-   abort: function(self, force) {
-      _private.getSearch(self).addCallback(function(search) {
-         search.abort(force).addCallback(function() {
-            var filter = self._options.filter;
-            delete filter[self._options.searchParam];
-            filter = clone(filter);
-            if (self._options.abortCallback) {
-               self._options.abortCallback(filter);
+   abort(self, force: boolean, callback): void {
+      _private.getSearch(self).addCallback((search) => {
+         search.abort(force).addCallback(() => {
+            if (callback) {
+               callback(self);
             }
          });
          return search;
       });
+   },
+
+   resetFilters(self): void {
+      const filter = clone(self._options.filter);
+      delete filter[self._options.searchParam];
+      if (self._options.abortCallback) {
+         self._options.abortCallback(filter);
+      }
    }
 };
 
@@ -94,12 +100,13 @@ var SearchController = extend({
    search: function(value, force) {
       const valueLength = value.length;
       const searchByValueChanged = this._options.minSearchLength !== null;
+      const forceAbort = valueLength ? force : true;
       let result;
 
       if ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength)) {
          result = _private.search(this, value, force);
       } else if (searchByValueChanged || !valueLength) {
-         result = _private.abort(this);
+         result = _private.abort(this, forceAbort, _private.resetFilters);
       }
 
       return result;
@@ -122,7 +129,11 @@ var SearchController = extend({
    },
 
    abort: function(force) {
-      _private.abort(this, force);
+      _private.abort(this, force, _private.resetFilters);
+   },
+
+   cancel: function() {
+      _private.abort(this, true);
    },
 
    isLoading: function() {

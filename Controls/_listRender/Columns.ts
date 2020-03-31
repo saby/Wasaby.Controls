@@ -1,53 +1,47 @@
-import { TemplateFunction, IControlOptions } from 'UI/Base';
+import { TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls/_listRender/Columns/Columns');
 
 import defaultItemTemplate = require('wml!Controls/_listRender/Columns/resources/ItemTemplate');
 
 import { SyntheticEvent } from 'Vdom/Vdom';
-import { CollectionItem, Collection } from 'Controls/display';
-import {default as BaseRender, IRenderOptions} from './Render';
+import { ColumnsCollectionItem } from 'Controls/display';
+import { default as BaseRender, IRenderOptions } from './Render';
 
-export interface IRenderOptions extends IControlOptions {
-    listModel: Collection<unknown>;
-    contextMenuEnabled?: boolean;
-    contextMenuVisibility?: boolean;
-    multiselectVisibility?: string;
-    itemTemplate?: TemplateFunction;
-}
-
-export interface IRenderChildren {
-    itemsContainer?: HTMLDivElement;
+export interface IColumnsRenderOptions extends IRenderOptions {
+    columnMinWidth: number;
+    columnMaxWidth: number;
+    columnsMode: 'auto' | 'fixed';
+    columnsCount: number;
 }
 
 export default class Columns extends BaseRender {
+    protected _options: IColumnsRenderOptions;
     protected _template: TemplateFunction = template;
-    protected _itemTemplate: TemplateFunction;
 
-    protected _beforeMount(options: IRenderOptions): void {
+    protected _beforeMount(options: IColumnsRenderOptions): void {
+        super._beforeMount(options);
         this._templateKeyPrefix = `columns-render-${this.getInstanceId()}`;
-        this._itemTemplate = options.itemTemplate || defaultItemTemplate;
-
-        this._subscribeToModelChanges(options.listModel);
     }
-
     protected _beforeUnmount(): void {
         this._unsubscribeFromModelChanges(this._options.listModel);
     }
-
-    protected _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>): void {
+    protected _resizeHandler(): void {
+        this._notify('resize', []);
+    }
+    protected _onItemSwipe(e: SyntheticEvent<null>, item: ColumnsCollectionItem<unknown>): void {
         e.stopPropagation();
         this._notify('itemSwipe', [item, e]);
     }
 
-    // Обработка клавиатуры будет реализована по работам с маркером в ColumnsView
-    protected _onItemKeyDown(e: SyntheticEvent<KeyboardEvent>, item: CollectionItem<unknown>): void {
-        e.preventDefault();
-        e.stopPropagation();
+    protected _getItemsContainerStyle(): string {
+        return  `grid-template-columns: repeat(${this._options.columnsCount}, minmax(${this._options.columnMinWidth}px, ${this._options.columnMaxWidth}px)); `;
     }
-
-    // Обработка клавиатуры будет реализована по работам с маркером в ColumnsView
-    protected _keyDown(e: SyntheticEvent<KeyboardEvent>): void {
-        e.preventDefault();
-        e.stopPropagation();
+    protected _getPlaceholderStyle(): string {
+        return  `min-width:${this._options.columnMinWidth}px; max-width:${this._options.columnMaxWidth}px; `;
+    }
+    static getDefaultOptions(): Partial<IRenderOptions> {
+        return {
+            itemTemplate: defaultItemTemplate
+        };
     }
 }

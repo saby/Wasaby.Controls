@@ -71,7 +71,7 @@ export default class extends Memory {
    query(query) {
       let items = this._$data;
       let filter = query.getWhere();
-      let selection = filter.selectionWithPaths;
+      let selection = filter.SelectionWithPath;
       let parent = filter['Раздел'] instanceof Array ? filter['Раздел'][0] : filter['Раздел'];
 
       if (selection) {

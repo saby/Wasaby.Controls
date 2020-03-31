@@ -4,14 +4,25 @@ import { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';
 import { constants } from 'Env/Env';
 // @ts-ignore
 import { load } from 'Core/library';
-
 import {Logger} from 'UI/Utils';
 
 export type Config = {
-    handlers: Array<Handler>;
+    handlers: Handler[];
     configField: string;
-}
-let getDefaultConfig = (): Partial<Config> => {
+};
+
+/**
+ * Загружает модули обработчиков обшибок.
+ * Названия модулей обработчиков берутся из поля ApplicationConfig[handlersField].
+ * Функция может быть использована для предварительной загрузки обработчиков.
+ * Например, это может понадобиться для случая показа ошибки при разрыве соединения.
+ * @param handlersField
+ */
+export const loadHandlers = (handlersField: string): Array<Promise<Handler>> => {
+    return getApplicationHandlers(handlersField).map(getHandler);
+};
+
+const getDefaultConfig = (): Partial<Config> => {
     return {
         handlers: [],
         configField: 'parkingHandlers'
@@ -19,17 +30,19 @@ let getDefaultConfig = (): Partial<Config> => {
 };
 
 /// region helpers
-let log = (message) => {
+const log = (message) => {
     Logger.info(
         "Controls/_dataSource/_parking/Controller: " + message
     );
 };
-let getApplicationConfig = () => {
+
+const getApplicationConfig = () => {
     return constants.ApplicationConfig || {};
 };
-let getApplicationHandlers = (handlersField: string): Array<Handler | string> => {
-    let applicationConfig = getApplicationConfig();
-    let handlers = applicationConfig[handlersField];
+
+const getApplicationHandlers = (handlersField: string): Array<Handler | string> => {
+    const applicationConfig = getApplicationConfig();
+    const handlers = applicationConfig[handlersField];
     if (!Array.isArray(handlers)) {
         log(`ApplicationConfig:${handlersField} must be Array<Function>`);
         return [];
@@ -37,7 +50,7 @@ let getApplicationHandlers = (handlersField: string): Array<Handler | string> =>
     return handlers;
 };
 
-let getHandler = (handler: Handler | string): Promise<Handler> => {
+const getHandler = (handler: Handler | string): Promise<Handler> => {
     if (typeof handler === 'string') {
         return load(handler);
     }
@@ -46,7 +59,8 @@ let getHandler = (handler: Handler | string): Promise<Handler> => {
     }
     return Promise.reject(new Error('handler must be string|function'));
 };
-let findTemplate = (
+
+const findTemplate = (
     handlers: Array<Handler | string>,
     config: any
 ): Promise<ViewConfig | void> => {
@@ -54,9 +68,9 @@ let findTemplate = (
         return Promise.resolve();
     }
     let position: number = 0;
-    let fire = () => {
+    const fire = () => {
         return getHandler(handlers[position]).then((handler: Handler) => {
-            let result = handler(config);
+            const result = handler(config);
             if (result) {
                 return result;
             }
@@ -66,7 +80,7 @@ let findTemplate = (
             }
         }, (error: Error) => {
             log(error);
-        })
+        });
     };
     return fire();
 };
@@ -108,7 +122,7 @@ export default class ParkingController {
     private __handlers: Array<Handler>;
     private __configField: string;
     constructor(config: Partial<Config> = {}) {
-        let cfg = { ...getDefaultConfig(), ...config };
+        const cfg = { ...getDefaultConfig(), ...config };
         this.__handlers = cfg.handlers;
         this.__configField = cfg.configField;
     }

@@ -20,7 +20,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
  *
  * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>статье</a>.
  *
- * <a href="/materials/demo/demo-ws4-engine-selector-browser">Пример</a> использования контрола.
+ * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Пример</a> использования контрола.
  *
  * @class Controls/_lookupPopup/Container
  * @extends Core/Control
@@ -39,7 +39,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
  *
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>here</a>.
  *
- * <a href="/materials/demo/demo-ws4-engine-selector-browser">Here</a> you can see a demo.
+ * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Here</a> you can see a demo.
  *
  * @class Controls/_lookupPopup/Container
  * @extends Core/Control
@@ -206,7 +206,8 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
          },
 
          prepareFilter(filter: object, selection: TSelectionRecord, searchParam: string|undefined, parentProperty: string): object {
-            filter = Utils.object.clone(filter);
+            const propsToDelete = ['SelectionWithPath'];
+            const resultFilter = Utils.object.clone(filter);
 
              // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
              // TODO KINDO
@@ -220,13 +221,18 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
              // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
              // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
             if (searchParam && selection.get('marked')[0] !== null) {
-               delete filter[searchParam];
+               propsToDelete.push(searchParam);
             }
             if (parentProperty) {
-               delete filter[parentProperty];
+               propsToDelete.push(parentProperty);
             }
-            filter.selection = selection;
-            return filter;
+
+            propsToDelete.forEach((propName) => {
+               delete resultFilter[propName];
+            });
+
+            resultFilter.selection = selection;
+            return resultFilter;
          },
 
          prepareResult: function(result, initialSelection, keyProperty, selectCompleteInitiator) {

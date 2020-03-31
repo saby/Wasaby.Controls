@@ -31,6 +31,7 @@ export interface IViewOptions extends IControlOptions {
     itemActionsPosition?: string;
     itemActionsProperty?: string;
     style?: string;
+    itemActionsClass?: string;
 
     actionAlignment?: string;
     actionCaptionPosition?: 'right'|'bottom'|'none';
@@ -50,6 +51,7 @@ export default class View extends Control<IViewOptions> {
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
+        this._actionClickCallbackFn = this._actionClickCallback.bind(this);
 
         ItemActionsController.calculateActionsTemplateConfig(
             this._collection,
@@ -57,7 +59,8 @@ export default class View extends Control<IViewOptions> {
                 itemActionsPosition: options.itemActionsPosition,
                 style: options.style,
                 actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition
+                actionCaptionPosition: options.actionCaptionPosition,
+                itemActionsClass: options.itemActionsClass
             }
         );
 
@@ -102,7 +105,8 @@ export default class View extends Control<IViewOptions> {
                 itemActionsPosition: options.itemActionsPosition,
                 style: options.style,
                 actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition
+                actionCaptionPosition: options.actionCaptionPosition,
+                itemActionsClass: options.itemActionsClass
             }
         );
     }
@@ -161,6 +165,12 @@ export default class View extends Control<IViewOptions> {
         }
     }
 
+    protected _actionClickCallback(clickEvent, action, contents) {
+        // How to calculate itemContainer?
+        // this._notify('actionClick', [action, contents, itemContainer]);
+        this._notify('actionClick', [action, contents]);
+    }
+
     protected _onItemActionClick(
         e: SyntheticEvent<null>,
         item: CollectionItem<Model>,
@@ -176,9 +186,9 @@ export default class View extends Control<IViewOptions> {
             item.getContents().getKey(),
             action,
             clickEvent,
-            false
+            false,
+            this._actionClickCallbackFn
         );
-        // TODO fire 'actionClick' event
     }
 
     protected _onItemContextMenu(
@@ -191,7 +201,8 @@ export default class View extends Control<IViewOptions> {
             item.getContents().getKey(),
             clickEvent,
             null,
-            true
+            true,
+            this._actionClickCallbackFn
         );
     }
 
