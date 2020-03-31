@@ -1,8 +1,10 @@
 <div class="controls-BreadCrumbsPath__backButton__wrapper controls-BreadCrumbsPath__backButton__wrapper_theme-{{_options.theme}} {{_options.backButtonClass}}">
-   <Controls.heading:Back attr:class="controls-BreadCrumbsPath__backButton"
+   <Controls.heading:Back attr:class="controls-BreadCrumbsPath__backButton controls-BreadCrumbsPath__backButton_theme-{{_options.theme}}"
                           caption="{{ _options.backButtonCaption }}"
                           tooltip="{{ _options.backButtonCaption }}"
                           style="{{ _options.backButtonStyle }}"
+                          fontSize="3xl"
+                          iconSize="m"
                           theme="{{ _options.theme}}"
                           on:click="_onBackButtonClick()"/>
 
