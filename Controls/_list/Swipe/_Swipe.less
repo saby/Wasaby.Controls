@@ -81,18 +81,18 @@
 }
 
 .controls-Swipe__action_padding_size_s {
-  padding-top: @spacing_Swipe-between-actions_top_size_s;
-  padding-bottom: @spacing_Swipe-between-actions_bottom_size_s;
+  padding-top: @item_s_vertical_padding-vertical_swipe;
+  padding-bottom: @item_s_vertical_padding-vertical_swipe;
 }
 
 .controls-Swipe__action_padding_size_m {
-  padding-top: @spacing_Swipe-between-actions_top_size_m;
-  padding-bottom: @spacing_Swipe-between-actions_bottom_size_m;
+  padding-top: @item_horizontal_padding-vertical_swipe;
+  padding-bottom: @item_horizontal_padding-vertical_swipe;
 }
 
 .controls-Swipe__action_padding_size_l {
-  padding-top: @spacing_Swipe-between-actions_top_size_l;
-  padding-bottom: @spacing_Swipe-between-actions_bottom_size_l;
+  padding-top: @item_l_vertical_padding-vertical_swipe;
+  padding-bottom: @item_l_vertical_padding-vertical_swipe;
 }
 
 .controls-Swipe__action_icon_size_m {
@@ -111,7 +111,7 @@
 }
 
 .controls-Swipe__action_title_position_right {
-  padding-left: @spacing-Swipe-between-title-and-icon_position_right;
+  padding-left: @item_icon_offset-horizontal_swipe;
   max-width: @item_horizontal_text_max-width_swipe;
 }
 
@@ -135,9 +135,9 @@
 
 .controls-Swipe__separator_horizontal {
   width: @separator_thickness_swipe;
-  height: calc(100% ~'-' 2 * @spacing_Swipe-between-vertical-separator-and-border);
-  margin-bottom: @spacing_Swipe-between-vertical-separator-and-border;
-  margin-top: @spacing_Swipe-between-vertical-separator-and-border;
+  height: calc(100% ~'-' 2 * @separator_edge_padding-vertical_swipe);
+  margin-bottom: @separator_edge_padding-vertical_swipe;
+  margin-top: @separator_edge_padding-vertical_swipe;
 }
 
 .controls-Swipe__separator_vertical {
@@ -168,8 +168,8 @@
 
 .controls-Swipe_horizontal,
 .controls-Swipe_columns {
-  padding-left:  @spacing-Swipe-between-content-and-borders + @shadow-blur_swipe - @spacing_Swipe-between-vertical-separator-and-icon;
-  padding-right: @spacing-Swipe-between-content-and-borders - @spacing_Swipe-between-vertical-separator-and-icon;
+  padding-left:  @item_edge_padding-horizontal_swipe + @shadow-blur_swipe - @item_vertical_padding-horizontal_swipe;
+  padding-right: @item_edge_padding-horizontal_swipe - @item_vertical_padding-horizontal_swipe;
 }
 
 .controls-Swipe_horizontal {
@@ -187,15 +187,15 @@
 }
 
 .controls-Swipe__action_horizontal {
-  padding-left: @spacing_Swipe-between-vertical-separator-and-icon;
-  padding-right: @spacing_Swipe-between-vertical-separator-and-icon;
+  padding-left: @item_vertical_padding-horizontal_swipe;
+  padding-right: @item_vertical_padding-horizontal_swipe;
 }
 .controls-Swipe__action_vertical {
   /*
    * Gradient takes some of the container's width on the left side, so we should compensate for it with larger padding.
    */
-  padding-left:  @spacing-Swipe-between-content-and-borders + @shadow-blur_swipe;
-  padding-right: @spacing-Swipe-between-content-and-borders;
+  padding-left:  @item_edge_padding-horizontal_swipe + @shadow-blur_swipe;
+  padding-right: @item_edge_padding-horizontal_swipe;
 }
 .controls-Swipe__action_iconStyle_secondary {
   color: @secondary_icon-color_swipe;
