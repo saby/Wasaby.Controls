@@ -32,7 +32,7 @@ import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
-import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INavigation';
+import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {CollectionItem, ItemActionsController} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
