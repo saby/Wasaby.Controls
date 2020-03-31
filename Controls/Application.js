@@ -167,7 +167,7 @@ define('Controls/Application',
             }
          },
 
-         _isIOS13() {
+         _isIOS13: function() {
             return Env.detection.isMobileIOS && Env.detection.IOSVersion > 12;
          },
 
