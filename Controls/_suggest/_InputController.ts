@@ -229,7 +229,7 @@ var _private = {
    },
    loadDependencies: function(self, newOptions) {
       const templatesToLoad = _private.getTemplatesToLoad(self, newOptions || self._options);
-      if (!self._dependenciesDeferred && templatesToLoad) {
+      if (!self._dependenciesDeferred || (newOptions && templatesToLoad)) {
          self._dependenciesDeferred = mStubs.require(DEPS.concat(templatesToLoad.concat([self._options.layerName])));
       }
       return self._dependenciesDeferred;
