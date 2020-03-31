@@ -726,8 +726,10 @@ define([
             dataLoadCallback: function() {
                dataLoadFired = true;
             },
-            beforeLoadToDirectionCallback: function(items) {
+            beforeLoadToDirectionCallback: function() {
                beforeLoadToDirectionCalled = true;
+            },
+            serviceDataLoadCallback: function(currentItems, items) {
                metaData = items.getMetaData();
                metaData.iterative = isIterativeSearch;
                items.setMetaData(metaData);
@@ -765,7 +767,7 @@ define([
 
          await lists.BaseControl._private.loadToDirection(ctrl, 'up');
          assert.isTrue(ctrl._portionedSearchInProgress);
-         
+
          isIterativeSearch = false;
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.isFalse(ctrl._portionedSearchInProgress);
