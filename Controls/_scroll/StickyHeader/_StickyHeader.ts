@@ -199,6 +199,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return getOffset(parentElement, this._container, position);
     }
 
+    resetSticky(): void {
+        this._container.style.position = 'static';
+    }
+
+    restoreSticky(): void {
+        this._container.style.position = '';
+    }
+
     get height(): number {
         const container: HTMLElement = this._container;
         if (container.offsetParent !== null) {

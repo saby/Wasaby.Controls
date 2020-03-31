@@ -6,14 +6,15 @@ import Control = require('Core/Control');
 import Controller from 'Controls/Popup/Compatible/ManagerWrapper/Controller';
 import template = require('wml!Controls/_compatiblePopup/ManagerWrapper/ManagerWrapper');
 import {Controller as ControllerPopup} from 'Controls/popup';
-import {setController} from 'Controls/Application/SettingsController';
+import {setController, IPopupSettingsController} from 'Controls/Application/SettingsController';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
 var ManagerWrapper = Control.extend({
    _template: template,
 
    _beforeMount: function() {
-      return this._loadViewSettingsController();
+      // TODO: https://online.sbis.ru/opendoc.html?guid=3f08c72a-8ee2-4068-9f9e-74b34331e595
+      this._loadViewSettingsController();
    },
 
    _afterMount: function() {
@@ -35,13 +36,31 @@ var ManagerWrapper = Control.extend({
       const isBilling = document.body.classList.contains('billing-page');
       // Совместимость есть на онлайне и в биллинге. В биллинге нет ViewSettings и движения границ
       if (!isBilling) {
-         // Только для онлайна напрямую гружу контроллер Лобастова для получения конфига
-         return new Promise((resolve) => {
-            import('ViewSettings/controller').then((ViewController) => {
-               setController(ViewController.Settings);
-               resolve();
-            }, resolve);
-         });
+         // Для совместимости, временно, пока не решат проблемыв с ViewSettings делаю локальное хранилище.
+         // todo: https://online.sbis.ru/opendoc.html?guid=3f08c72a-8ee2-4068-9f9e-74b34331e595
+         const localController: IPopupSettingsController = {
+            getSettings(ids) {
+               const storage = window && JSON.parse(window.localStorage.getItem('controlSettingsStorage')) || {};
+               const data = {};
+
+               if (ids instanceof Array) {
+                  ids.map((id: string) => {
+                     if (storage[id]) {
+                        data[id] = storage[id];
+                     }
+                  });
+               }
+               return Promise.resolve(data);
+            },
+            setSettings(settings) {
+               const storage = window && JSON.parse(window.localStorage.getItem('controlSettingsStorage')) || {};
+               if (typeof settings === 'object') {
+                  const savedData = {...storage, ...settings};
+                  window.localStorage.setItem('controlSettingsStorage', JSON.stringify(savedData));
+               }
+            }
+         };
+         setController(localController);
       }
       return Promise.resolve();
    },
