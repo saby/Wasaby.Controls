@@ -72,7 +72,7 @@ var _private = {
       }
    },
    open: function(self) {
-      _private.loadDependencies(self).addCallback(function() {
+      _private.loadDependencies(self, self._options).addCallback(function() {
          //focus can be moved out while dependencies loading
          if (self._inputActive) {
             _private.suggestStateNotify(self, true);
@@ -227,10 +227,10 @@ var _private = {
       });
       return templatesToLoad;
    },
-   loadDependencies: function(self, newOptions) {
-      const templatesToLoad = _private.getTemplatesToLoad(self, newOptions || self._options);
-      if (!self._dependenciesDeferred || (newOptions && templatesToLoad)) {
-         self._dependenciesDeferred = mStubs.require(DEPS.concat(templatesToLoad.concat([self._options.layerName])));
+   loadDependencies: function(self, options) {
+      const templatesToLoad = _private.getTemplatesToLoad(self, options);
+      if (!self._dependenciesDeferred || templatesToLoad) {
+         self._dependenciesDeferred = mStubs.require(DEPS.concat(templatesToLoad.concat([options.layerName])));
       }
       return self._dependenciesDeferred;
    },
@@ -429,7 +429,7 @@ var SuggestLayout = Control.extend({
       shouldSearch = _private.shouldSearch(this, value);
 
       /* preload suggest dependencies on value changed */
-      _private.loadDependencies(this);
+      _private.loadDependencies(this, this._options);
       this._searchDelay = this._options.searchDelay;
 
       _private.setSearchValue(self, shouldSearch ? value : '');
