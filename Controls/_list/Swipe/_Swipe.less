@@ -24,7 +24,7 @@
   }
 
   50% {
-    transform: translateX(@animation-offset-Swipe-left-to-right);
+    transform: translateX(@animation_offset_swipe);
   }
 
   100% {
@@ -51,7 +51,7 @@
   overflow: hidden;
   box-sizing: border-box;
   background-color: transparent;
-  background-image: linear-gradient(to right, transparent, @background-color_Swipe-shadow @width_Swipe-shadow, @background-color_Swipe @width_Swipe-shadow, @background-color_Swipe 100%);
+  background-image: linear-gradient(to right, transparent, @shadow-color_swipe @shadow-blur_swipe, @background-color_swipe @shadow-blur_swipe, @background-color_swipe 100%);
 }
 
 .controls-Swipe__action {
@@ -96,15 +96,15 @@
 }
 
 .controls-Swipe__action_icon_size_m {
-  .icon(@font-size_Swipe-icon_size_m, @font-family_Swipe-icon);
+  .icon(@item_s_icon-size_swipe, @item_s_icon_font-family_swipe);
 }
 
 .controls-Swipe__action_icon_size_l {
-  .icon(@font-size_Swipe-icon_size_l, @font-family_Swipe-icon);
+  .icon(@item_l_icon-size_swipe, @item_l_icon_font-family_swipe);
 }
 
 .controls-Swipe__action_title {
-  color: @color_Swipe-title;
+  color: @item_text-color_swipe;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -112,29 +112,29 @@
 
 .controls-Swipe__action_title_position_right {
   padding-left: @spacing-Swipe-between-title-and-icon_position_right;
-  max-width: @max-width_Swipe-title_position_right;
+  max-width: @item_horizontal_text_max-width_swipe;
 }
 
 .controls-Swipe__action_title_position_bottom {
-  max-width: @max-width_Swipe-title_position_bottom;
+  max-width: @item_vertical_text_max-width_swipe;
 }
 
 .controls-Swipe__action_title_size_m {
-  font-size: @font-size_Swipe-title_size_m;
+  font-size: @item_s_font-size_swipe;
 }
 
 .controls-Swipe__action_title_size_l {
-  font-size: @font-size_Swipe-title_size_l;
+  font-size: @item_l_font-size_swipe;
 }
 
 .controls-Swipe__separator {
-  background: @background-color_Swipe-separator;
+  background: @separator_color_swipe;
   flex-shrink: 0;
   display: block;
 }
 
 .controls-Swipe__separator_horizontal {
-  width: @width_Swipe-separator;
+  width: @separator_thickness_swipe;
   height: calc(100% ~'-' 2 * @spacing_Swipe-between-vertical-separator-and-border);
   margin-bottom: @spacing_Swipe-between-vertical-separator-and-border;
   margin-top: @spacing_Swipe-between-vertical-separator-and-border;
@@ -142,20 +142,20 @@
 
 .controls-Swipe__separator_vertical {
   width: auto;
-  height: @width_Swipe-separator;
-  margin-left: @spacing_Swipe-between-horizontal-separator-and-border + @width_Swipe-shadow;
+  height: @separator_thickness_swipe;
+  margin-left: @spacing_Swipe-between-horizontal-separator-and-border + @shadow-blur_swipe;
   margin-right: @spacing_Swipe-between-horizontal-separator-and-border;
 }
 
 .controls-Swipe__separator_columns_first {
   width: auto;
-  height: @width_Swipe-separator;
+  height: @separator_thickness_swipe;
   margin-right: @spacing_Swipe-between-vertical-and-horizontal-separator;
 }
 
 .controls-Swipe__separator_columns_second {
   width: auto;
-  height: @width_Swipe-separator;
+  height: @separator_thickness_swipe;
   margin-left: @spacing_Swipe-between-vertical-and-horizontal-separator;
 }
 
@@ -168,7 +168,7 @@
 
 .controls-Swipe_horizontal,
 .controls-Swipe_columns {
-  padding-left:  @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow - @spacing_Swipe-between-vertical-separator-and-icon;
+  padding-left:  @spacing-Swipe-between-content-and-borders + @shadow-blur_swipe - @spacing_Swipe-between-vertical-separator-and-icon;
   padding-right: @spacing-Swipe-between-content-and-borders - @spacing_Swipe-between-vertical-separator-and-icon;
 }
 
@@ -194,23 +194,23 @@
   /*
    * Gradient takes some of the container's width on the left side, so we should compensate for it with larger padding.
    */
-  padding-left:  @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow;
+  padding-left:  @spacing-Swipe-between-content-and-borders + @shadow-blur_swipe;
   padding-right: @spacing-Swipe-between-content-and-borders;
 }
 .controls-Swipe__action_iconStyle_secondary {
-  color: @color_Swipe-icon_style_secondary;
+  color: @secondary_icon-color_swipe;
 }
 
 .controls-Swipe__action_iconStyle_danger {
-  color: @color_Swipe-icon_style_danger;
+  color: @danger_color;
 }
 
 .controls-Swipe__action_iconStyle_success {
-  color: @color_Swipe-icon_style_success;
+  color: @success_color;
 }
 
 .controls-Swipe__action_iconStyle_warning {
-  color: @color_Swipe-icon_style_warning;
+  color: @warning_color;
 }
 
 /**
