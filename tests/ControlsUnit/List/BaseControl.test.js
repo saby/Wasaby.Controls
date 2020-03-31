@@ -765,6 +765,9 @@ define([
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.isTrue(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
+
+         await lists.BaseControl._private.loadToDirection(ctrl, 'up');
+         assert.isTrue(ctrl._portionedSearchInProgress);
       });
 
       it('loadToDirection down with getHasMoreData option', async function() {

@@ -1080,7 +1080,7 @@ var _private = {
 
     loadToDirectionWithSearchValueEnded(self, loadedItems: RecordSet): void {
         const portionedSearch = _private.getPortionedSearch(self);
-        if (!_private.hasMoreData(self, self._sourceController, 'down')) {
+        if (!_private.hasMoreDataInAnyDirection(self, self._sourceController)) {
             portionedSearch.reset();
         } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
