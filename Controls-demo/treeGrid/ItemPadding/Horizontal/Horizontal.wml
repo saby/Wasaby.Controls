@@ -3,7 +3,7 @@
         <div if="{{_showTitle}}" class="controls-text-label_theme-{{_options.theme}}">Горизонтальные отступы</div>
         <div class="controlsDemo__wrapper ws-flexbox ws-flex-wrap">
 
-            <div class="controlsDemo__cell controlsDemo__width-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-null">
+            <div class="controlsDemo__cell controlsDemo__fixedWidth-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-null">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы размер null</div>
                 <Controls.treeGrid:View
                         keyProperty="id"
@@ -15,7 +15,7 @@
                 </Controls.treeGrid:View>
             </div>
 
-            <div class="controlsDemo__cell controlsDemo__width-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-s">
+            <div class="controlsDemo__cell controlsDemo__fixedWidth-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-s">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы размер S</div>
                 <Controls.treeGrid:View
                         keyProperty="id"
@@ -27,7 +27,7 @@
                 </Controls.treeGrid:View>
             </div>
 
-            <div class="controlsDemo__cell controlsDemo__width-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-m">
+            <div class="controlsDemo__cell controlsDemo__fixedWidth-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-m">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы размер M</div>
                 <Controls.treeGrid:View
                         keyProperty="id"
@@ -39,7 +39,7 @@
                 </Controls.treeGrid:View>
             </div>
 
-            <div class="controlsDemo__cell controlsDemo__width-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-l">
+            <div class="controlsDemo__cell controlsDemo__fixedWidth-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-l">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы размер L</div>
                 <Controls.treeGrid:View
                         keyProperty="id"
@@ -51,7 +51,7 @@
                 </Controls.treeGrid:View>
             </div>
 
-            <div class="controlsDemo__cell  controlsDemo__width-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-xl">
+            <div class="controlsDemo__cell  controlsDemo__fixedWidth-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-xl">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы размер XL</div>
                 <Controls.treeGrid:View
                         keyProperty="id"
@@ -63,7 +63,7 @@
                 </Controls.treeGrid:View>
             </div>
 
-            <div class="controlsDemo__cell  controlsDemo__width-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-xxl">
+            <div class="controlsDemo__cell  controlsDemo__fixedWidth-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-xxl">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы размер XXL</div>
                 <Controls.treeGrid:View
                         keyProperty="id"

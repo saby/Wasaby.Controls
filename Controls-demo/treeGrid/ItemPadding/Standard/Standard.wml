@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper ws-flexbox ws-flex-wrap">
-    <div class="controlsDemo__cell  controlsDemo__width-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-default">
+    <div class="controlsDemo__cell  controlsDemo__fixedWidth-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-default">
         <div if="{{_showTitle}}" class="controls-text-label_theme-{{_options.theme}}">Стандартные отступы</div>
         <Controls.treeGrid:View
                 keyProperty="id"
