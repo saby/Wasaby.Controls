@@ -228,7 +228,7 @@ var _private = {
       return !checkedValue;
    },
 
-   needStartSearch(self, options, needUpdateRoot, needRecreateSearchController, searchValue: string): string {
+   needStartSearch(self, options, needUpdateRoot, needRecreateSearchController, searchValue: string): boolean {
       return _private.isSearchValueChanged(self, searchValue) && !_private.isSearchValueShort(options.minSearchLength, searchValue)
           && !needUpdateRoot || searchValue && needRecreateSearchController;
    },
