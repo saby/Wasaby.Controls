@@ -1,7 +1,7 @@
-<div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell demo-ItemPaddingAll__horizontal">
+<div class="controlsDemo__wrapper__padding-left">
+    <div class="controlsDemo__cell demo-ItemPaddingAll__horizontal controlsDemo__inline-block">
         <div if="{{_showTitle}}" class="controls-text-label_theme-{{_options.theme}}">Горизонтальные отступы</div>
-        <div class="controlsDemo__wrapper ws-flexbox ws-flex-wrap">
+        <div class="ws-flexbox ws-flex-wrap">
 
             <div class="controlsDemo__cell controlsDemo__fixedWidth-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-horizontal-null">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы размер null</div>
