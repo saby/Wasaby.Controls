@@ -2,7 +2,23 @@
 @spacing_demo_default_controls: 4px;
 
 .controlsDemo__wrapper {
-  padding: 12px;
+  padding: @spacing_demo_default;
+}
+
+.controlsDemo__wrapper__padding-top {
+  padding-top: @spacing_demo_default;
+}
+
+.controlsDemo__wrapper__padding-left {
+  padding-left: @spacing_demo_default;
+}
+
+.controlsDemo__wrapper__horizontal {
+  padding-right: @spacing_demo_default;
+}
+
+.controlsDemo__cell {
+  padding-bottom: @spacing_demo_default;
 }
 
 .controlDemo__input-row {
@@ -10,14 +26,6 @@
   flex-direction: row;
   margin-bottom: 10px;
   align-items: center;
-}
-
-.controlsDemo__wrapper__horizontal {
-  padding-right: 12px;
-}
-
-.controlsDemo__cell {
-  padding-bottom: 12px;
 }
 
 .controlsDemo__button {
@@ -367,4 +375,14 @@
    flex-shrink: 0;
    background-color: @background-color_operationsPanel;
    height: @height_operationsPanel;
+}
+
+.controlsDemo__fixedWidth-s_theme-dark,
+.controlsDemo__fixedWidth-s_theme-default {
+  width: 240px;
+}
+
+.controlsDemo__fixedWidth-s_theme-dark-large,
+.controlsDemo__fixedWidth-s_theme-light-large {
+  width: 400px;
 }
