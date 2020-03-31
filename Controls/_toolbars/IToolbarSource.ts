@@ -68,7 +68,7 @@ export default interface IToolbarSource {
  * @remark
  * Может иметь свойства 'title' и 'showType':
  * * 'title' определяет заголовок элемента.
- * * 'showType' определяет, где отображается элемент:
+ * * 'showType' определяет, где будет отображаться элемент. Значение берется из утилиты 'Controls/Utils/Toolbar'. {@link Controls/Utils/Toolbar Подробнее}:
  *     * showType.MENU - Элемент отображается только в меню
  *     * showType.MENU_TOOLBAR - Элемент отображается в меню и в тулбаре
  *     * showType.TOOLBAR - Элемент отображается только в тулбаре
