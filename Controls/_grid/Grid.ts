@@ -21,7 +21,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IItemClick
     * @mixes Controls/interface/IGridItemTemplate
-    *
+    * @mixes Controls/_grid/interface/IPropStorage
     *
     * @control
     * @public
@@ -51,7 +51,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
     * @mixes Controls/interface/IDraggable
-    *
+    * @mixes Controls/_grid/interface/IPropStorage
     *
     * @control
     * @public
