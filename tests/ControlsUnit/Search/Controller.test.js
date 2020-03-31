@@ -136,25 +136,25 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isTrue(result);
       });
 
-      it('private.isSearchValueNotEmpty', function() {
+      it('private.isSearchValueEmpty', function() {
          var searchController = getSearchController();
          var result;
 
-         result = searchMod.Controller._private.isSearchValueNotEmpty(searchController, '', '');
-         assert.isFalse(!!result);
-
-         result = searchMod.Controller._private.isSearchValueNotEmpty(searchController, '  ', '');
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController, '', '');
          assert.isTrue(!!result);
+
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController, '  ', '');
+         assert.isFalse(!!result);
 
          searchController._options.searchValueTrim = true;
-         result = searchMod.Controller._private.isSearchValueNotEmpty(searchController, '  ', '');
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController, '  ', '');
+         assert.isTrue(!!result);
+
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController,'', 'test');
          assert.isFalse(!!result);
 
-         result = searchMod.Controller._private.isSearchValueNotEmpty(searchController,'', 'test');
-         assert.isTrue(!!result);
-
-         result = searchMod.Controller._private.isSearchValueNotEmpty(searchController,'test', '');
-         assert.isTrue(!!result);
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController,'test', '');
+         assert.isFalse(!!result);
       });
 
       it('_private.searchCallback', function() {

@@ -197,7 +197,7 @@ var _private = {
          const searchValue = self._options.searchValueTrim ? value.trim() : value;
          const shouldSearch = self._isSearchControllerLoading() ?
              _private.isInputSearchValueChanged(self, searchValue) :
-             _private.isSearchValueNotEmpty(self, self._inputSearchValue, searchValue);
+             !_private.isSearchValueEmpty(self, self._inputSearchValue, searchValue);
 
          if (shouldSearch) {
             _private.getSearchController(self).search(searchValue, force);
@@ -223,8 +223,9 @@ var _private = {
       return !searchValue || searchValue.length < minSearchLength;
    },
 
-   isSearchValueNotEmpty(self, inputSearchValue: string, searchValue: string): string {
-      return (self._options.searchValueTrim ? inputSearchValue.trim() : inputSearchValue) || searchValue;
+   isSearchValueEmpty(self, inputSearchValue: string, searchValue: string): boolean {
+      const checkedValue = (self._options.searchValueTrim ? inputSearchValue.trim() : inputSearchValue) || searchValue;
+      return !checkedValue;
    },
 
    needStartSearch(self, options, needUpdateRoot, needRecreateSearchController, searchValue: string): string {
