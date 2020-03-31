@@ -69,9 +69,9 @@ export default interface IToolbarSource {
  * Может иметь свойства 'title' и 'showType':
  * * 'title' определяет заголовок элемента.
  * * 'showType' определяет, где отображается элемент:
- *     * 0 - в меню.
- *     * 1 - в меню и тулбаре.
- *     * 2 - в тулбаре.
+ *     * showType.MENU - Элемент отображается только в меню
+ *     * showType.MENU_TOOLBAR - Элемент отображается в меню и в тулбаре
+ *     * showType.TOOLBAR - Элемент отображается только в тулбаре
  * Для readOnly элемента, установите значение 'true' в поле readOnly.
  * @example
  * Кнопки будут отображены из источника _source. Первый элемент выравнен по левому краю, другие элементы выравнены по правому краю по умолчанию.
@@ -79,12 +79,14 @@ export default interface IToolbarSource {
  *    <Controls.toolbars:View keyProperty="key" source="{{_source}}" />
  * </pre>
  * <pre>
- *    _source: new source.Memory({
+ *    import {showType} from 'Controls/Utils/Toolbar';
+ *      .....
+ *    this._source = new source.Memory({
  *        keyProperty: 'key',
  *        data: [
  *        {
  *           id: '1',
- *           showType: 2,
+ *           showType: showType.TOOLBAR,
  *           icon: 'icon-Time',
  *           '@parent': false,
  *           parent: null
