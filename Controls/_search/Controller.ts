@@ -209,6 +209,7 @@ var _private = {
                       self._notify('dataError', [{ error: result }]);
                    }
                 });
+               return searchResult;
             }
          }
       } else {
