@@ -19,15 +19,15 @@
    z-index: @z-index_Scroll-shadow;
    position: absolute;
    pointer-events: none;
-   width: @width-gradient_ColumnScroll-shadow;
+   width: @columnscroll_shadow-blur_grid;
    box-sizing: border-box;
 }
 
 // Набор классов для установки градиента горизонтального скролла через backgroundStyle (default, transparent)
 .controls-horizontal-gradient-default_theme-@{themeName},
 .controls-horizontal-gradient-transparent_theme-@{themeName} {
-   background: linear-gradient(to right, @start-color-gradient_ColumnScroll-shadow, @end-color-gradient_ColumnScroll-shadow);
-   border-left: 1px solid @border-color_ColumnScroll-shadow;
+   background: linear-gradient(to right, @columnscroll_shadow-start-color_grid, @columnscroll_shadow-end-color_grid);
+   border-left: @columnscroll_separator_thickness_grid solid @columnscroll_separator_color_grid;
 }
 
 .controls-ColumnScroll__shadow_invisible {
