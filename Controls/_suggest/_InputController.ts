@@ -8,9 +8,12 @@ import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
+
+const moduleLoader = new ModuleLoader();
 
 /* if suggest is opened and marked key from suggestions list was changed,
    we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
@@ -213,21 +216,21 @@ var _private = {
          _private.close(self);
       }
    },
-   loadDependencies: function(self, template) {
-      var getTemplatesToLoad = function(options) {
-         var templatesToCheck = ['footerTemplate', 'suggestTemplate', 'emptyTemplate'];
-         var templatesToLoad = [];
-         templatesToCheck.forEach(function(tpl) {
-            if (options[tpl] && options[tpl].templateName) {
-               templatesToLoad.push(options[tpl].templateName);
-            }
-         });
-         return templatesToLoad;
-      };
 
-      const isTemplateLoaded = template ? require.defined(self._options[template].templateName) : false;
-      if (!self._dependenciesDeferred && !isTemplateLoaded) {
-         self._dependenciesDeferred = mStubs.require(DEPS.concat(getTemplatesToLoad(self._options).concat([self._options.layerName])));
+   getTemplatesToLoad: function(self, options) {
+      var templatesToCheck = ['footerTemplate', 'suggestTemplate', 'emptyTemplate'];
+      var templatesToLoad = [];
+      templatesToCheck.forEach(function(tpl) {
+         if (options[tpl] && options[tpl].templateName && !moduleLoader.isLoaded(options[tpl].templateName)) {
+            templatesToLoad.push(options[tpl].templateName);
+         }
+      });
+      return templatesToLoad;
+   },
+   loadDependencies: function(self, newOptions) {
+      const templatesToLoad = _private.getTemplatesToLoad(self, newOptions || self._options);
+      if (!self._dependenciesDeferred && templatesToLoad) {
+         self._dependenciesDeferred = mStubs.require(DEPS.concat(templatesToLoad.concat([self._options.layerName])));
       }
       return self._dependenciesDeferred;
    },
@@ -362,6 +365,8 @@ var SuggestLayout = Control.extend({
       const valueChanged = this._options.value !== newOptions.value;
       const valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
       const needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, _private.prepareValue(this, newOptions.value));
+      const emptyTemplateChanged = !isEqual(this._options.emptyTemplate, newOptions.emptyTemplate);
+      const footerTempalteChanged = !isEqual(this._options.footerTemplate, newOptions.footerTemplate);
 
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
@@ -384,17 +389,13 @@ var SuggestLayout = Control.extend({
          _private.setFilter(this, newOptions.filter, newOptions);
       }
 
-      if (!isEqual(this._options.emptyTemplate, newOptions.emptyTemplate)) {
+      if (emptyTemplateChanged) {
          this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
-         if (newOptions.suggestState) {
-            _private.loadDependencies(this, 'emptyTemplate');
-         }
+
       }
 
-      if (!isEqual(this._options.footerTemplate, newOptions.footerTemplate)) {
-         if (newOptions.suggestState) {
-            _private.loadDependencies(this, 'footerTemplate');
-         }
+      if ((emptyTemplateChanged || footerTempalteChanged) && newOptions.suggestState ) {
+         _private.loadDependencies(this, newOptions);
       }
 
       if (this._options.searchDelay !== newOptions.searchDelay) {
@@ -609,4 +610,3 @@ SuggestLayout.getDefaultOptions = function() {
 SuggestLayout._theme = ['Controls/suggest'];
 SuggestLayout._private = _private;
 export = SuggestLayout;
-
