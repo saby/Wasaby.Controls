@@ -9,6 +9,7 @@ import DateUtil = require('Controls/Utils/Date');
 import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
 
 var _private = {
+    //testtest
     _setMonth: function (self, month, silent, dateConstructor) {
         if (DateUtil.isDatesEqual(month, self._month)) {
             return;
