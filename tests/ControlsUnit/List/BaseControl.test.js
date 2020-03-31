@@ -719,14 +719,18 @@ define([
          });
 
          let metaData;
+         let isIterativeSearch = false;
 
          const cfg = {
             viewName: 'Controls/List/ListView',
             dataLoadCallback: function() {
                dataLoadFired = true;
             },
-            beforeLoadToDirectionCallback: function() {
+            beforeLoadToDirectionCallback: function(items) {
                beforeLoadToDirectionCalled = true;
+               metaData = items.getMetaData();
+               metaData.iterative = isIterativeSearch;
+               items.setMetaData(metaData);
             },
             source: source,
             viewConfig: {
@@ -754,16 +758,17 @@ define([
          ctrl._afterMount(cfg);
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
-         metaData = ctrl._items.getMetaData();
-         metaData.iterative = true;
-         ctrl._items.setMetaData(metaData);
-
+         isIterativeSearch = true;
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.isTrue(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
 
          await lists.BaseControl._private.loadToDirection(ctrl, 'up');
          assert.isTrue(ctrl._portionedSearchInProgress);
+         
+         isIterativeSearch = false;
+         await lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         assert.isFalse(ctrl._portionedSearchInProgress);
       });
 
       it('loadToDirection down with getHasMoreData option', async function() {
