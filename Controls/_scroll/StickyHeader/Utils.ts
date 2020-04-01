@@ -38,29 +38,55 @@ export interface IOffset {
  * The position property with sticky value is not supported in ie and edge lower version 16.
  * https://developer.mozilla.org/ru/docs/Web/CSS/position
  */
-export function isStickySupport() {
+export function isStickySupport(): boolean {
    return !Env.detection.isIE || Env.detection.IEVersion > 15;
 }
 
-export function getNextId() {
+export function getNextId(): number {
    return lastId++;
 }
 
-export function _lastId() {
+export function _lastId(): number {
    return lastId - 1;
 }
 
-export function getOffset(parentElement: HTMLElement, element: HTMLElement, position: POSITION) {
+export function getOffset(parentElement: HTMLElement, element: HTMLElement, position: POSITION): number {
    //TODO redo after complete https://online.sbis.ru/opendoc.html?guid=7c921a5b-8882-4fd5-9b06-77950cbe2f79
    parentElement = (parentElement && parentElement.get) ? parentElement.get(0) : parentElement;
    element = (element && element.get) ? element.get(0) : element;
 
-   let
+   const
        offset = getDimensions(element, true),
-       parrentOffset = getDimensions(parentElement);
+       parrentOffset = getDimensions(parentElement, true);
    if (position === 'top') {
       return offset.top - parrentOffset.top;
    } else {
       return parrentOffset.bottom - offset.bottom;
    }
+}
+
+export function validateIntersectionEntries(entries: IntersectionObserverEntry[], rootContainer: HTMLElement): IntersectionObserverEntry[] {
+    const newEntries: IntersectionObserverEntry[] = [];
+    for (const entry: IntersectionObserverEntry of entries) {
+        // После создания элемента иногда приходит событие с неправильными нулевыми размерами.
+        // После этого, событий об изменении пересечения не происходит. Считаем размеры самостоятельно.
+        if (entry.boundingClientRect.top === 0 && entry.boundingClientRect.bottom === 0 &&
+            entry.boundingClientRect.height === 0) {
+            const newEntry = {
+                time: entry.time,
+                rootBounds: rootContainer.getBoundingClientRect(),
+                boundingClientRect: entry.target.getBoundingClientRect(),
+                intersectionRect: entry.intersectionRect,
+                intersectionRatio: entry.intersectionRatio,
+                target: entry.target,
+                isVisible: entry.isVisible
+            };
+            newEntry.isIntersecting = Math.max(newEntry.boundingClientRect.top, newEntry.rootBounds.top) <=
+                    Math.min(newEntry.boundingClientRect.bottom, newEntry.rootBounds.bottom);
+            newEntries.push(newEntry);
+        } else {
+            newEntries.push(entry);
+        }
+    }
+    return newEntries;
 }

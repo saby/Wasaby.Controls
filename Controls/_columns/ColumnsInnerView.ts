@@ -21,6 +21,7 @@ export interface IColumnsInnerViewOptions extends IList {
     listModel: Collection<Model>;
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
+    initialWidth: number;
     source: ICrudPlus;
 }
 
@@ -39,16 +40,19 @@ export default class ColumnsInnerView extends Control {
     protected _options: IColumnsInnerViewOptions;
 
     protected _beforeMount(options: IColumnsInnerViewOptions): void {
-        if (options.columnsCount) {
-            this._columnsCount = options.columnsCount;
-        }
-
         this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
         this._onCollectionChange = this._onCollectionChange.bind(this);
         this._subscribeToModelChanges(options.listModel);
         this._resizeHandler = this._resizeHandler.bind(this);
         this._model = options.listModel;
+        if (options.columnsMode === 'auto' && options.initialWidth) {
+            this._recalculateColumnsCountByWidth(options.initialWidth);
+        } else {
+            if (options.columnsCount) {
+                this._columnsCount = options.columnsCount;
+            }
         this.updateColumns();
+    }
     }
 
     protected _afterMount(): void {
@@ -67,12 +71,16 @@ export default class ColumnsInnerView extends Control {
     private saveItemsContainer(e: SyntheticEvent<Event>, itemsContainer: HTMLDivElement): void {
         this._itemsContainer = itemsContainer;
     }
-
+    private _recalculateColumnsCountByWidth(width: number): void {
+        const newColumnsCount = Math.floor(width / ((this._options.columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
+        if (newColumnsCount !== this._columnsCount) {
+            this._columnsCount = newColumnsCount;
+            this.updateColumns();
+        }
+    }
     protected _resizeHandler(): void {
         if (this._options.columnsMode === 'auto') {
-            const width = this._itemsContainer.getBoundingClientRect().width;
-            this._columnsCount = Math.floor(width / ((this._options.columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
-            this.updateColumns();
+            this._recalculateColumnsCountByWidth(this._container.getBoundingClientRect().width);
         }
     }
 

@@ -1,8 +1,16 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
 import {descriptor} from 'Types/entity';
 import Context = require('Controls/_scroll/StickyHeader/Context');
-import {getNextId, getOffset, POSITION, MODE, IOffset} from 'Controls/_scroll/StickyHeader/Utils';
+import {
+    getNextId,
+    getOffset,
+    POSITION,
+    MODE,
+    IOffset,
+    validateIntersectionEntries
+} from 'Controls/_scroll/StickyHeader/Utils';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
@@ -105,6 +113,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
    _topShadowStyle: string = '';
 
     private _stickyDestroy: boolean = false;
+    private _scroll: HTMLElement;
+
+    private _needUpdateObserver: boolean = false;
 
     protected _beforeMount(): void {
         this._observeHandler = this._observeHandler.bind(this);
@@ -118,6 +129,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _afterMount(): void {
         const children = this._children;
 
+        // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
+        // отказаться от closest.
+        this._scroll = this._container.closest('.controls-Scroll');
+        if (!this._scroll) {
+            Logger.warn('Controls.scroll:StickyHeader: Используются фиксация заголовков вне Controls.scroll:Container. Либо используйте Controls.scroll:Container, либо уберите, либо отключите фиксацию заголовков в контролах в которых она включена.', this);
+            return;
+        }
+
         this._notify('stickyRegister', [{
             id: this._index,
             inst: this,
@@ -126,28 +145,24 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             mode: this._options.mode
         }, true], {bubbling: true});
 
-        // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
-        // отказаться от closest.
-        this._observer = new IntersectionObserver(
-                this._observeHandler,
-                { root: this._container.closest('.controls-Scroll') }
-            );
-
         this._model = new Model({
             topTarget: children.observationTargetTop,
             bottomTarget: children.observationTargetBottom,
             position: this._options.position,
         });
 
-        this._observer.observe(children.observationTargetTop);
-        this._observer.observe(children.observationTargetBottom);
+        this._initObserver();
 
         this._updateBottomShadowStyle();
         this._initResizeObserver();
     }
 
     protected _beforeUnmount(): void {
-        this._model.destroy();
+        if (this._model) {
+            //Let the listeners know that the element is no longer fixed before the unmount.
+            this._fixationStateChangeHandler('', this._model.fixedPosition);
+            this._model.destroy();
+        }
         this._stickyDestroy = true;
 
         // его может и не быть, если контрол рушится не успев замаунтиться
@@ -159,8 +174,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._resizeObserver.disconnect();
         }
 
-        //Let the listeners know that the element is no longer fixed before the unmount.
-        this._fixationStateChangeHandler('', this._model.fixedPosition);
         this._observeHandler = undefined;
         this._observer = undefined;
         this._resizeObserver = undefined;
@@ -169,6 +182,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
         return getOffset(parentElement, this._container, position);
+    }
+
+    resetSticky(): void {
+        this._container.style.position = 'static';
+    }
+
+    restoreSticky(): void {
+        this._container.style.position = '';
     }
 
     get height(): number {
@@ -201,14 +222,56 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
+    get shadowVisibility(): SHADOW_VISIBILITY {
+        return this._options.shadowVisibility;
+    }
+
     protected _resizeHandler(): void {
+        if (this._needUpdateObserver) {
+            this._initObserver();
+        }
+        if (this._isSafari13) {
+            this._updateBottomShadowStyle();
+        }
+    }
+
+    protected _selfResizeHandler(): void {
         this._notify('stickyHeaderResize', [], {bubbling: true});
+    }
+
+    private _initObserver(): void {
+        // Если заголовок невидим(display: none), то мы не сможем рассчитать его положение. Вернее обсервер вернет нам
+        // что тригеры невидимы, но рассчеты мы сделать не сможем. Когда заголовк станет видим, и если он находится
+        // в самом верху скролируемой области, то верхний тригер останется невидимым, т.е. сбытия не будет.
+        // Что бы самостоятельно не рассчитывать положение тригеров, мы просто пересоздадим обсервер когда заголовок
+        // станет видимым.
+        if (this._container.offsetParent === null) {
+            this._needUpdateObserver = true;
+            return;
+        }
+
+        if (this._observer) {
+            this._observer.disconnect();
+        }
+
+        this._createObserver();
+        this._needUpdateObserver = false;
+    }
+
+    private _createObserver(): void {
+        const children = this._children;
+        this._observer = new IntersectionObserver(
+            this._observeHandler,
+            { root: this._scroll }
+        );
+        this._observer.observe(children.observationTargetTop);
+        this._observer.observe(children.observationTargetBottom);
     }
 
     private _initResizeObserver(): void {
         if (typeof window !== 'undefined' && window.ResizeObserver) {
             this._resizeObserver = new ResizeObserver(() => {
-                this._resizeHandler();
+                this._selfResizeHandler();
             });
             this._resizeObserver.observe(this._container);
         }
@@ -236,7 +299,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
         const fixedPosition: POSITION = this._model.fixedPosition;
 
-        this._model.update(entries);
+        this._model.update(validateIntersectionEntries(entries, this._scroll));
 
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);

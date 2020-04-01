@@ -46,16 +46,16 @@ var
             }
             self._forceUpdate();
          },
-          setRestoredKeyObject: function(self, root) {
-              const curRoot = _private.getRoot(self, self._options.root);
-              self._restoredMarkedKeys[root] = {
-                  parent: curRoot,
-                  markedKey: null
-              };
-              if (self._restoredMarkedKeys[curRoot]) {
-                  self._restoredMarkedKeys[curRoot].markedKey = root;
-              }
-          },
+         setRestoredKeyObject: function(self, root) {
+            const curRoot = _private.getRoot(self, self._options.root);
+            self._restoredMarkedKeys[root] = {
+               parent: curRoot,
+               markedKey: null
+            };
+            if (self._restoredMarkedKeys[curRoot]) {
+               self._restoredMarkedKeys[curRoot].markedKey = root;
+            }
+         },
           cleanRestoredKeyObject: function(self, root) {
               _private.pathCleaner(self, root);
           },
@@ -107,6 +107,10 @@ var
             if (self._firstLoad) {
                resolver(result);
                self._firstLoad = false;
+               _private.fillRestoredMarkedKeysByBreadCrumbs(_private.getDataRoot(self),
+                   self._breadCrumbsItems,
+                   self._restoredMarkedKeys,
+                   self._options.parentProperty);
             }
          },
          dataLoadErrback: function(self, cfg, error) {
@@ -119,6 +123,24 @@ var
             self._breadCrumbsItems = _private.getPath(newData);
             _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
+         },
+         fillRestoredMarkedKeysByBreadCrumbs: function(root, breadCrumbs, restoredMarkedKeys, parentProperty) {
+            restoredMarkedKeys[root] = {
+               markedKey: null
+            };
+            if (breadCrumbs && breadCrumbs.forEach) {
+               breadCrumbs.forEach((crumb) => {
+                  const parentKey = crumb.get(parentProperty);
+                  const crumbKey = crumb.getKey();
+                  restoredMarkedKeys[crumbKey] = {
+                     parent: parentKey,
+                     markedKey: null
+                  };
+                  if (restoredMarkedKeys[parentKey]) {
+                     restoredMarkedKeys[parentKey].markedKey = crumbKey;
+                  }
+               });
+            }
          },
          itemsReadyCallback: function(self, items) {
             self._items = items;
@@ -453,6 +475,7 @@ var
          event.stopPropagation();
 
          const changeRoot = () => {
+             // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся
             _private.setRestoredKeyObject(this, item.getId());
             _private.setRoot(this, item.getId());
             this._isGoingFront = true;

@@ -1053,6 +1053,7 @@ var _private = {
                 if (self._isScrollShown) {
                     _private.updateShadowMode(self, self._shadowVisibility);
                 }
+                self._notify('iterativeSearchAborted', []);
             }
         }));
     },
@@ -2057,7 +2058,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.markedKey !== this._options.markedKey) {
-            this._listViewModel.setMarkedKey(newOptions.markedKey, true);
+            if (newOptions.useNewModel) {
+                const markCommand = new displayLib.MarkerCommands.Mark(newOptions.markedKey);
+                markCommand.execute(this._listViewModel);
+            } else {
+                this._listViewModel.setMarkedKey(newOptions.markedKey, true);
+            }
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {

@@ -708,6 +708,7 @@ var
         getCurrentHeaderColumn: function(rowIndex, columnIndex) {
             const cell = this._headerRows[rowIndex][columnIndex];
             const theme = this._options.theme;
+            const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
             let
                 cellClasses = 'controls-Grid__header-cell controls-Grid__header-cell' + `_theme-${theme}` + (this._isMultiHeader ? ' controls-Grid__multi-header-cell_min-height' : ' controls-Grid__header-cell_min-height') + `_theme-${theme}`,
                 headerColumn = {
@@ -741,7 +742,7 @@ var
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0 && !cell.title) {
+            if (hasMultiSelect && columnIndex === 0 && !cell.title) {
                 cellClasses += ' controls-Grid__header-cell-checkbox' + `_theme-${theme}` + ` controls-Grid__header-cell-checkbox_min-width_theme-${theme}`;
 
                 // В grid-layout хлебные крошки нельзя расположить в первой ячейке, если в таблице включен множественный выбор,
@@ -756,7 +757,7 @@ var
                     style: this._options.style,
                     columns: this._headerRows[rowIndex],
                     columnIndex: columnIndex,
-                    multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
+                    multiSelectVisibility: hasMultiSelect,
                     itemPadding: this._model.getItemPadding(),
                     isMultiHeader: this._isMultiHeader,
                     isHeader: true,
@@ -781,6 +782,14 @@ var
                    }
                );
                headerColumn.colSpan = this.getColspanFor('headerBreadcrumbs');
+            }
+
+            if (this._options.columnScroll && !this._isMultiHeader && !GridLayoutUtil.isFullGridSupport()) {
+                headerColumn.style += ' ' + _private.getTableCellStyles({
+                    hasMultiSelect,
+                    columnIndex,
+                    column: this._columns[columnIndex - (hasMultiSelect ? 1 : 0)]
+                });
             }
 
             if (headerColumn.column.sortingProperty) {
@@ -933,6 +942,15 @@ var
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
                 }, this._options.theme);
+
+                if (!GridLayoutUtil.isFullGridSupport()) {
+                    const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
+                    resultsColumn.tableCellStyles = _private.getTableCellStyles({
+                        hasMultiSelect,
+                        columnIndex,
+                        column: this._columns[columnIndex - (hasMultiSelect ? 1 : 0)]
+                    });
+                }
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом

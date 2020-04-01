@@ -33,6 +33,22 @@ define([
             const component2 = createComponent(StickyHeader, options);
             assert.strictEqual(component._index, component2._index - 1);
          });
+
+         it('should not create a observer if the control was created invisible, and must create after it has become visible', function () {
+            const component = createComponent(StickyHeader, options);
+            component._container = {
+               offsetParent: null,
+               closest: sinon.stub().returns(true)
+            };
+            sinon.stub(component, '_initResizeObserver');
+            sinon.stub(component, '_createObserver');
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            assert.isUndefined(component._observer);
+            component._container.offsetParent = {};
+            component._resizeHandler();
+            sinon.assert.called(component._createObserver);
+            sinon.restore();
+         });
       });
 
       describe('_beforeUnmount', function() {

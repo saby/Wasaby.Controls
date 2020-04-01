@@ -33,6 +33,9 @@ define(
          describe('StickyHeader', function() {
             beforeEach(function() {
                ctrl = new scroll.StickyHeader({});
+               ctrl._container = {
+                  offsetParent: true
+               };
                template = TemplateUtil.clearTemplate(ctrl._template);
             });
 
@@ -49,7 +52,7 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader__background controls-StickyHeader_position">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
-                                                '<div></div><div></div>' +
+                                                '<div></div><div></div><div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
@@ -80,6 +83,7 @@ define(
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
+                                                '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
@@ -100,6 +104,7 @@ define(
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
+                                                '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
@@ -110,6 +115,7 @@ define(
             it('Move the header', function() {
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
+                                                '<div></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -125,6 +131,7 @@ define(
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
+                  '<div></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
@@ -136,6 +143,7 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
+                                                '<div></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -155,6 +163,7 @@ define(
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
+                                                '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom"></div>' +
@@ -170,6 +179,7 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top"></div>' +
+                                                '<div></div>' +
                                                 '<div></div>' +
                                                 '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +

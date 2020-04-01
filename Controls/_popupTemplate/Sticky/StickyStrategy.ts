@@ -222,9 +222,18 @@ interface IPosition {
 
       _fixBottomPositionForIos: function(position, targetCoords) {
          if (position.bottom) {
-            const keyboardHeight = _private.getKeyboardHeight();
-            if (!_private.isPortrait()) {
-               position.bottom += keyboardHeight;
+            if (_private.isIOS13()) {
+               // bottomSpace - расстояние он низа страницы(откуда начинает отсчет координата bottom),скрытая под клавой
+               // чем больше проскроллена страница вниз, тем это значение меньше. Если доскроллили до низа, то страница
+               // полностью располагается над клавиатурой (соответственно bottomSpace в этом случае 0).
+               const viewPort = _private.getVisualViewport();
+               const bottomSpace = document.body.clientHeight - (viewPort.height + viewPort.offsetTop);
+               position.bottom += bottomSpace;
+            } else { // ios12
+               const keyboardHeight = _private.getKeyboardHeight();
+               if (!_private.isPortrait()) {
+                  position.bottom += keyboardHeight;
+               }
             }
             // on newer versions of ios(12.1.3/12.1.4), in horizontal orientation sometimes(!) keyboard with the display
             // reduces screen height(as it should be). in this case, getKeyboardHeight returns height 0, and

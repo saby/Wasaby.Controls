@@ -81,7 +81,7 @@ export default class ScrollContainer extends Control<IOptions> {
     // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
     private get _calculatedTriggerVisibility(): ITriggerState {
         return {
-            up: this._triggerOffset >= this._lastScrollTop,
+            up: this._triggerOffset >= this._lastScrollTop - this._container.offsetTop,
             down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
         };
     }
