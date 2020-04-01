@@ -1,0 +1,13 @@
+<div class="{{value === null && triState ? 'controls-Checkbox__icon-tristate_theme-' + (theme)+
+             ' controls-Checkbox__icon-tristate-color__' + (readOnly ? 'disabled':'enabled')+ '_theme-'+(theme)}}
+             controls-Checkbox__icon-border-color__{{readOnly ? 'disabled': 'enabled'}}_theme-{{theme}}
+             controls-Checkbox__iconWrapper controls-Checkbox__iconWrapper_theme-{{theme}}">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 18 18"
+         attr:class="controls-Checkbox__icon-checked_theme-{{theme}}
+                    {{value ? ' controls-Checkbox__icon-checked-color_'+(readOnly ? 'disabled':'enabled')+ '_theme-' + (theme) :
+                     ' controls-Checkbox__icon-checked-color_transparent'}}">
+        <path d="M1.85,8.65l4,3.4,10.3-9.1-9.8,13.1Z"/>
+    </svg>
+</div>
+

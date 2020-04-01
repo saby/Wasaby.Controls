@@ -6,6 +6,7 @@
  * @includes DoubleSwitch Controls/_toggle/DoubleSwitch
  * @includes RadioGroup Controls/_toggle/RadioGroup
  * @includes Checkbox Controls/_toggle/Checkbox
+ * @includes CheckboxMarker Controls/_toggle/Checkbox/resources/CheckboxMarker
  * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
  * @includes Separator Controls/_toggle/Separator
  * @includes BigSeparator Controls/_toggle/BigSeparator
@@ -25,6 +26,7 @@
  * @includes DoubleSwitch Controls/_toggle/DoubleSwitch
  * @includes RadioGroup Controls/_toggle/RadioGroup
  * @includes Checkbox Controls/_toggle/Checkbox
+ * @includes CheckboxMarker Controls/_toggle/Checkbox/resources/CheckboxMarker
  * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
  * @includes Separator Controls/_toggle/Separator
  * @includes BigSeparator Controls/_toggle/BigSeparator
@@ -48,10 +50,12 @@ import RadioGroup = require('./_toggle/RadioGroup');
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 import CheckboxItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');
 import switchCircleTemplate = require('wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle');
+import CheckboxMarker = require('wml!Controls/_toggle/Checkbox/resources/CheckboxMarker');
 
 export {
-   RadioGroup,
-   ItemTemplate,
-   CheckboxItemTemplate,
-   switchCircleTemplate
+    RadioGroup,
+    ItemTemplate,
+    CheckboxItemTemplate,
+    switchCircleTemplate,
+    CheckboxMarker
 };
