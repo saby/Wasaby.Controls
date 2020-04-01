@@ -32,7 +32,7 @@ import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
-import {INavigationOptionValue, INavigationSourceConfig} from '../_interface/INavigation';
+import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {CollectionItem, ItemActionsController} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
@@ -1093,6 +1093,7 @@ var _private = {
                 if (self._isScrollShown) {
                     _private.updateShadowMode(self, self._shadowVisibility);
                 }
+                self._notify('iterativeSearchAborted', []);
             }
         }));
     },
@@ -2571,18 +2572,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _itemMouseDown: function(event, itemData, domEvent) {
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
 
-        const eventResult = this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]) || {};
-
-        if (eventResult.markItemByExpanderClick !== false) {
-            // При редактировании по месту маркер появляется только если в списке больше одной записи.
-            // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-            if (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1)) {
-                if (this._options.useNewModel) {
-                    const markCommand = new displayLib.MarkerCommands.Mark(key);
-                    markCommand.execute(this._listViewModel);
-                } else {
-                    this._listViewModel.setMarkedKey(key);
-                }
+        // При редактировании по месту маркер появляется только если в списке больше одной записи.
+        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
+        if (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1)) {
+            if (this._options.useNewModel) {
+                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                markCommand.execute(this._listViewModel);
+            } else {
+                this._listViewModel.setMarkedKey(key);
             }
         }
 
@@ -2596,6 +2593,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else {
             this._savedItemMouseDownEventArgs = {event, itemData, domEvent};
         }
+        this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
 
     _startDragNDropCallback(): void {

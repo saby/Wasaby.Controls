@@ -326,6 +326,11 @@ const
            }
 
            return delta;
+       },
+
+       _isDragScrollingEnabled(): boolean {
+          const hasOption = typeof this._options.dragScrolling === 'boolean';
+          return hasOption ? this._options.dragScrolling : !this._options.itemsDragNDrop;
        }
    });
 ColumnScroll._theme = ['Controls/grid', 'Controls/Classes'];

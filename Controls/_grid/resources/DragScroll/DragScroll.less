@@ -7,8 +7,8 @@
 }
 
 .controls-Grid__DragScroll__overlay_activated {
-   z-index: @z-index_DragScroll-overlay;
-   cursor: @cursor_DragScroll_scrolling;
+   z-index: 999;
+   cursor: grabbing;
 }
 
 .controls-Grid__DragScroll__overlay_deactivated {
@@ -18,12 +18,12 @@
 .controls-Grid__DragScroll__content {
    .controls-Grid__row-cell:not(.controls-Grid__cell_fixed) {
       .controls-Grid__row-cell__content:not(.js-controls-ColumnScroll__notDraggable) {
-         cursor: @cursor_DragScroll_hover;
+         cursor: grab;
       }
    }
    .controls-Grid__header-cell:not(.controls-Grid__cell_fixed) {
       .controls-Grid__header-cell__content:not(.js-controls-ColumnScroll__notDraggable) {
-         cursor: @cursor_DragScroll_hover;
+         cursor: grab;
       }
    }
 

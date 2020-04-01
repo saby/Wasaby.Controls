@@ -552,8 +552,16 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             item = this._children.baseControl.getViewModel().getItemById(key, this._options.keyProperty);
         _private.toggleExpanded(this, item);
     },
-    _onExpanderClick: function(e, dispItem) {
+    _onExpanderMouseDown: function(e, dispItem) {
         _private.toggleExpanded(this, dispItem);
+        if (this._options.markItemByExpanderClick) {
+            this._children.baseControl.getViewModel().setMarkedKey(dispItem.getContents().getId());
+        }
+        e.stopImmediatePropagation();
+    },
+    _onExpanderClick(e) {
+        // e.stopPropagation() на mousedown на ребенке никак не влияет на срабатывание itemClick на родителе.
+        // https://online.sbis.ru/opendoc.html?guid=4c3d7560-949c-4672-b252-bccb577aee38
         e.stopImmediatePropagation();
     },
     _onLoadMoreClick: function(e, dispItem) {
@@ -708,14 +716,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
 
     _onTreeViewKeyDown: function(event) {
         keysHandler(event, HOT_KEYS, _private, this);
-    },
-
-    _onItemMouseDown(e: SyntheticEvent<MouseEvent>, model, nativeEvent: MouseEvent) {
-        let eventResult = {};
-        if (nativeEvent.target.closest('.js-controls-TreeControl__expander')) {
-            eventResult.markItemByExpanderClick = this._options.markItemByExpanderClick;
-        }
-        return eventResult;
     },
 
     _beforeUnmount: function() {
