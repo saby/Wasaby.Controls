@@ -542,8 +542,12 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
       it('Suggest::_private.loadDependencies', function(done) {
          var self = getComponentObject();
-
-         suggestMod._InputController._private.loadDependencies(self).addCallback(function() {
+         var options = {
+            footerTemplate: 'test',
+            suggestTemplate: 'test',
+            emptyTemplate: 'test',
+         };
+         suggestMod._InputController._private.loadDependencies(self, options).addCallback(function() {
             assert.isTrue(self._dependenciesDeferred.isReady());
             done();
          });
