@@ -167,6 +167,7 @@ define([
             });
             assert.equal(listModel.at(0).getContents(), eip._editingItem);
             assert.equal(listModel.at(0).getContents(), eip._originalItem);
+            assert.isTrue(!!eip._pendingDeferred);
          });
 
          it('Add', function() {
@@ -180,6 +181,7 @@ define([
             assert.equal(newItem, eip._editingItem);
             assert.isTrue(eip._isAdd);
             assert.isTrue(eip._editingItemData.drawActions);
+            assert.isTrue(!!eip._pendingDeferred);
          });
 
          it('Adding to the top of the list', function() {
@@ -193,6 +195,7 @@ define([
             assert.equal(newItem, eip._editingItem);
             assert.isTrue(eip._isAdd);
             assert.equal(0, eip._editingItemData.index);
+            assert.isTrue(!!eip._pendingDeferred);
          });
       });
 

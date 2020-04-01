@@ -402,6 +402,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _beforeMount: function (newOptions) {
         if (newOptions.editingConfig) {
             if (newOptions.editingConfig.item) {
+                _private.registerPending(this);
                 this._editingItem = newOptions.editingConfig.item;
                 this._setEditingItemData(this._editingItem, newOptions.listModel, newOptions);
                 if (!this._isAdd) {
