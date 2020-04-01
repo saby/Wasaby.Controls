@@ -5,7 +5,7 @@
               keyProperty="key"
               displayProperty="title"
               itemActions="{{_itemActions}}"
-              attr:class="controlsDemo-menuControl_minWidth"
+              attr:class="ControlsDemo-menuControl_minWidth"
       />
    </div>
 </div>
