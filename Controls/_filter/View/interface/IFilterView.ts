@@ -378,7 +378,7 @@
 
 /**
  * @name Controls/_filter/View/interface/IFilterView#detailPanelPopupOptions
- * @cfg {Controls/popup:IStickyPopupOptions} Опции для попапа, которые будут переданы в {@link detailPanelTemplateName}
+ * @cfg {Controls/popup:IStickyPopupOptions} Опции для Sticky-опенера, открывающего панель фильтров.
  * @example
  * <pre>
  * <!-- MyModule.wml -->
