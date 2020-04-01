@@ -1256,7 +1256,8 @@ var _private = {
          * So, we have to save target's ClientRect here in order to work around it.
          * But popups don't work with ClientRect, so we have to wrap it in an object with getBoundingClientRect method.
          */
-        const target = context ? null : _private.mockTarget(childEvent.target);
+        self._menuTarget = _private.mockTarget(childEvent.target);
+        const target = context ? null : self._menuTarget;
         if (showActions && showActions.length) {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
@@ -1362,7 +1363,7 @@ var _private = {
                 self._options.useNewModel
                     ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
                     : self._listViewModel.getActiveItem();
-            aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel);
+            aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._menuTarget);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
                 _private.closeActionsMenu(self);
@@ -1746,6 +1747,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _viewPortSize: null,
     _scrollTop: 0,
     _popupOptions: null,
+    _menuTarget: null,
 
     //Variables for paging navigation
     _knownPagesCount: INITIAL_PAGES_COUNT,
