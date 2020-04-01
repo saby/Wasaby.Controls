@@ -15,7 +15,7 @@ export default interface ISorting {
 
 /**
  * @name Controls/_interface/ISorting#sorting
- * @cfg {Array.<Object>} Сортировка контрола.
+ * @cfg {Array.<Object>} Конфигурация сортировки.
  * @remark
  * Допустимы значения ASC/DESC.
  * 
