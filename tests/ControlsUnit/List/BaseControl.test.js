@@ -1987,6 +1987,7 @@ define([
          };
          const ctrl = new lists.BaseControl(cfg);
          let shadowMode;
+         let iterativeSearchAborted;
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
@@ -1997,11 +1998,15 @@ define([
             if (eventName === 'updateShadowMode') {
                shadowMode = eventResult[0];
             }
+            if (eventName === 'iterativeSearchAborted') {
+               iterativeSearchAborted = true;
+            }
          };
          ctrl._abortSearch();
 
          assert.deepEqual(ctrl._pagingCfg, {stateNext: 'disabled', stateEnd: 'disabled'});
          assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
+         assert.isTrue(iterativeSearchAborted);
       });
 
       it('scrollHide/scrollShow base control state', function() {
