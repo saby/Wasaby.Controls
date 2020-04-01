@@ -4,7 +4,6 @@
  *
  * @class Controls/grid:SortingSelector
  * @extends Core/Control
- * @mixes Controls/_interface/ISource
  * @public
  * @demo Controls-demo/grid/Sorting/SortingSelector/Index
  * @author Авраменко А.С.
@@ -73,21 +72,6 @@ export interface ISortingSelectorOptions extends IControlOptions {
     * _sortingValue: null,
     * _sortingSource: null,
     * _beforeMount: function(options) {
-    *    this._sortingSource = new source.Memory({
-    *       keyProperty: 'key',
-    *       data: [
-    *          {
-    *             key: '1',
-    *             title: 'По цене',
-    *             sortingParam: 'price'
-    *          },
-    *          {
-    *             key: '2',
-    *             title: 'По количеству',
-    *             sortingParam: 'count'
-    *          },
-    *       ]
-    *    });
     *    this._sortingValue = [
     *       {
     *          price: 'DESC'
@@ -100,10 +84,7 @@ export interface ISortingSelectorOptions extends IControlOptions {
     * 
     * <pre class="brush: html; highlight: [2,4]">
     * <Controls.grid:SortingSelector
-    *   bind:value="_sortingValue"
-    *   source="{{_sortingSource}}"
-    *   sortingParamProperty="sortingParam"
-    *   displayProperty="title" />
+    *   bind:value="_sortingValue" />
     * </pre>
     */
    value: [object];
