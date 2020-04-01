@@ -1660,7 +1660,7 @@ var _private = {
 
     /**
      * Запускает расчёт опций для шаблона Действий над записью.
-     * Когда используется newModel с контролом из Controls.list (например Controls.list:View или Controls.list:ColumnsView),
+     * Когда используется newModel с контролом из Controls.list (например Controls.list:View или Controls.columns:View),
      * в шаблон itemActions опции задаются из метода getActionsTemplateConfig()
      * (см Controls/_listRender/Render/resources/ForItemTemplate.wml) и их необходимо рассчитывать
      * на основе текущей модели viewModel.

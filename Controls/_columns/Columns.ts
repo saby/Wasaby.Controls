@@ -1,6 +1,7 @@
+// todo change this to import {View} from 'Controls/_list';
 import {default as View} from 'Controls/_list/List';
 import {Logger} from 'UI/Utils';
-import {default as viewTemplate} from 'Controls/_list/ColumnsControl';
+import {default as viewTemplate} from 'Controls/_columns/ColumnsControl';
 
 export default class Columns extends View {/** @lends Controls/_list/List.prototype */
     _viewName = null;
@@ -20,4 +21,3 @@ export default class Columns extends View {/** @lends Controls/_list/List.protot
         return 'Controls/display:ColumnsCollection';
     }
 }
-
