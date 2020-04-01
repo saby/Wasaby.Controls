@@ -126,7 +126,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       if (scope.weekend) {
          textColorClass += '-weekend';
       } else {
-         textColorClass += '-workday';
+         textColorClass += scope.today ? '-today' : '-workday';
       }
 
       if (scope.selected && (scope.isCurrentMonth || scope.mode === 'extended')) {
