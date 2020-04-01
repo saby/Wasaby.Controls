@@ -11,18 +11,17 @@
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         attr:class="controls-Dropdown_theme_{{_options.theme}} {{_options.style === 'invalid' ? 'controls-Dropdown-style_invalid_theme_' + _options.theme}}">
    <ws:content>
-      <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
-                  item="{{_item}}"
-                  icon="{{_icon}}"
-                  iconSize="{{_options.iconSize}}"
-                  fontSize="{{_options.fontSize}}"
-                  fontColorStyle="{{_options.fontColorStyle}}"
-                  text="{{_text}}"
-                  tooltip="{{_tooltip}}"
-                  countItems="{{_countItems}}"
-                  hasMoreText="{{_hasMoreText}}"
-                  isEmptyItem="{{_isEmptyItem && !_options.multiSelect}}"
-                  readOnly="{{_options.readOnly}}"
-                  footerTemplate="{{_options.footerTemplate}}"/>
+          <ws:partial template="wml!Controls/_dropdown/Input/resources/contentWrapper"
+                      selectedItems="{{_selectedItems}}"
+                      scope="{{_options}}"
+                      item="{{_item}}"
+                      icon="{{_icon}}"
+                      text="{{_text}}"
+                      tooltip="{{_tooltip}}"
+                      countItems="{{_countItems}}"
+                      hasMoreText="{{_hasMoreText}}"
+                      defaultContentTemplate="{{_defaultContentTemplate}}"
+                      isEmptyItem="{{_isEmptyItem && !_options.multiSelect}}" >
+          </ws:partial>
    </ws:content>
 </Controls._dropdown._Controller>
