@@ -73,7 +73,8 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       });
    }
    if (cfg.propStorageId) {
-      sortingPromise = wrapTimeout(loadSavedConfig(cfg.propStorageId, ['sorting']), HISTORY_FILTER_TIMEOUT).catch(() => {
+      sortingPromise = loadSavedConfig(cfg.propStorageId, ['sorting']);
+      sortingPromise = wrapTimeout(sortingPromise, HISTORY_FILTER_TIMEOUT).catch(() => {
          Logger.warn('Данные сортировки не загрузились за 1 секунду');
       })
    }
