@@ -79,9 +79,11 @@ define(
             source: defaultSource
          };
 
-         let getView = function (config) {
+         let getView = function(config) {
             let view = new filter.View();
-            view.saveOptions(config);
+            let defaultOptions = filter.View.getDefaultOptions();
+            const options = { ...defaultOptions, ...config };
+            view.saveOptions(options);
             return view;
          };
 
@@ -287,6 +289,7 @@ define(
             });
 
             view._options.detailPanelTemplateName = null;
+            view._configs = {};
             view.openDetailPanel();
          });
 

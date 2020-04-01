@@ -377,6 +377,20 @@
  */
 
 /**
+ * @name Controls/_filter/View/interface/IFilterView#detailPanelPopupOptions
+ * @cfg {Controls/popup:IStickyPopupOptions} Опции для попапа, которые будут переданы в {@link detailPanelTemplateName}
+ * @example
+ * <pre>
+ * <!-- MyModule.wml -->
+ * <Controls.filter:View
+ *    items="{{_items}}"
+ *    detailPanelTemplateName="wml!MyModule/panelTemplate">
+ *        8<ws:detailPanelPopupOptions closeOnOutSideClick="{{false}}"/>
+ * </Controls.filter:View>
+ * </pre>
+ */
+
+/**
  * @name Controls/_filter/View/interface/IFilterView#panelTemplateOptions
  * @cfg {Object} Опции для контрола, который передан в {@link panelTemplateName}.
  * @example
