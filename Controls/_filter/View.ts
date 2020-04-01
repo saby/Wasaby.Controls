@@ -701,6 +701,7 @@ var Filter = Control.extend({
                     horizontal: 'left'
                 };
             }
+            popupOptions = {...popupOptions, ...this._options.detailPanelPopupOptions};
             popupOptions.template = this._options.detailPanelTemplateName;
             popupOptions.className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
             popupOptions.templateOptions = this._options.detailPanelTemplateOptions || {};
@@ -854,7 +855,8 @@ Filter.getDefaultOptions = function() {
     return {
         panelTemplateName: 'Controls/filterPopup:SimplePanel',
         alignment: 'right',
-        itemTemplate: defaultItemTemplate
+        itemTemplate: defaultItemTemplate,
+        detailPanelPopupOptions: {}
     };
 };
 
