@@ -22,6 +22,8 @@ import {Controller as SourceController} from 'Controls/source';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
+import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
+import {Logger} from 'UI/Utils';
 
 type HistoryItems = object[];
 type SortingObject = object[];
@@ -64,13 +66,16 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
    let filterPromise;
    if (cfg.historyId && cfg.filterButtonSource && cfg.filter) {
       filterPromise = import('Controls/filter').then((filterLib): Promise<IFilter> => {
-         setTimeout(()=> {
-            return filterLib.Controller.getCalculatedFilter(cfg);
-         }, HISTORY_FILTER_TIMEOUT);
+         return filterLib.Controller.getCalculatedFilter(cfg);
+      });
+      filterPromise = wrapTimeout(filterPromise, HISTORY_FILTER_TIMEOUT).catch(() => {
+         Logger.warn('Данные фильтрации не загрузились за 1 секунду');
       });
    }
    if (cfg.propStorageId) {
-      sortingPromise = loadSavedConfig(cfg.propStorageId, ['sorting']);
+      sortingPromise = wrapTimeout(loadSavedConfig(cfg.propStorageId, ['sorting']), HISTORY_FILTER_TIMEOUT).catch(() => {
+         Logger.warn('Данные сортировки не загрузились за 1 секунду');
+      })
    }
 
    return Promise.all([filterPromise, sortingPromise]).then(([filterObject, sortingObject]: [IFilter, ISorting]) => {
