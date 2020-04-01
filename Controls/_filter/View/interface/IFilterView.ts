@@ -385,7 +385,7 @@
  * <Controls.filter:View
  *    items="{{_items}}"
  *    detailPanelTemplateName="wml!MyModule/panelTemplate">
- *        8<ws:detailPanelPopupOptions closeOnOutSideClick="{{false}}"/>
+ *        <ws:detailPanelPopupOptions closeOnOutSideClick="{{false}}"/>
  * </Controls.filter:View>
  * </pre>
  */
