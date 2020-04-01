@@ -69,14 +69,14 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
          return filterLib.Controller.getCalculatedFilter(cfg);
       });
       filterPromise = wrapTimeout(filterPromise, HISTORY_FILTER_TIMEOUT).catch(() => {
-         Logger.warn('Данные фильтрации не загрузились за 1 секунду');
+         Logger.info('Controls/_dataSource/requestDataUtil: Данные фильтрации не загрузились за 1 секунду');
       });
    }
    if (cfg.propStorageId) {
       sortingPromise = loadSavedConfig(cfg.propStorageId, ['sorting']);
       sortingPromise = wrapTimeout(sortingPromise, HISTORY_FILTER_TIMEOUT).catch(() => {
-         Logger.warn('Данные сортировки не загрузились за 1 секунду');
-      })
+         Logger.info('Controls/_dataSource/requestDataUtil: Данные сортировки не загрузились за 1 секунду');
+      });
    }
 
    return Promise.all([filterPromise, sortingPromise]).then(([filterObject, sortingObject]: [IFilter, ISorting]) => {
