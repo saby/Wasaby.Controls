@@ -56,8 +56,6 @@ export interface ISourceConfig {
 }
 
 const HISTORY_FILTER_TIMEOUT = 1000;
-const TEXT_FILTER_PROMISE = 'Данные фильтрации не загрузились за 1 секунду';
-const TEXT_SORTING_PROMISE = 'Данные сортировки не загрузились за 1 секунду';
 
 export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDataResult> {
    const sourceController = new SourceController({
