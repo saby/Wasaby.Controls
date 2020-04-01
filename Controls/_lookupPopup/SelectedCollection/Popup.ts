@@ -47,7 +47,7 @@ import 'css!theme?Controls/popup';
          }
       });
 
-      itemHiddenTemplate._theme = ['Controls/lookupPopup'];
+      itemHiddenTemplate._theme = ['Controls/lookup'];
       
       export = itemHiddenTemplate;
 
