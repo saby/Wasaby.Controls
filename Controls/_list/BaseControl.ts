@@ -1690,7 +1690,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _template: BaseControlTpl,
     iWantVDOM: true,
     _isActiveByClick: false,
-    _restoredScroll: null,
 
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -2248,11 +2247,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._children.scrollController.checkTriggerVisibilityWithTimeout();
-        }
-
-        if (this._restoredScroll !== null) {
-            _private.scrollToItem(this, this._restoredScroll.key, this._restoredScroll.toBottom);
-            this._restoredScroll = null;
         }
     },
 

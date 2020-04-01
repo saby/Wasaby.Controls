@@ -444,7 +444,7 @@ var
          }
       },
       _beforePaint: function() {
-         if (this._markerForRestoredScroll) {
+         if (this._markerForRestoredScroll !== null) {
             this.scrollToItem(this._markerForRestoredScroll);
             this._markerForRestoredScroll = null;
          }

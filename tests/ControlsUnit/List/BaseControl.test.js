@@ -2410,55 +2410,6 @@ define([
          });
       });
 
-      it('resetScroll after reload', function() {
-
-         var
-            lnSource = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: data
-            }),
-            lnSource2 = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: [{
-                  id: 4,
-                  title: 'Четвертый',
-                  type: 1
-               },
-                  {
-                     id: 5,
-                     title: 'Пятый',
-                     type: 2
-                  }]
-            }),
-            lnCfg = {
-               viewName: 'Controls/List/ListView',
-               source: lnSource,
-               keyProperty: 'id',
-               markedKey: 3,
-               viewModelConstructor: lists.ListViewModel
-            },
-            lnBaseControl = new lists.BaseControl(lnCfg);
-
-         lnBaseControl.saveOptions(lnCfg);
-         lnBaseControl._beforeMount(lnCfg);
-         lnBaseControl._children = {
-            listView: {
-               getItemsContainer: () => ({
-                 children: [{}, {}, { children: [{ tagName: "DIV"
-                    }]
-                 }]
-               })
-            }
-         }
-
-         lnBaseControl.reload()
-            .addCallback(() => {
-               lnBaseControl._isScrollShown = true;
-               lnBaseControl._shouldRestoreScrollPosition = true;
-               lnBaseControl._beforePaint();
-            })
-      });
-
       it('hasItemActions', function() {
          let itemAct = [1, 2, 3];
          let itemActionsProp = 'itemActions';
