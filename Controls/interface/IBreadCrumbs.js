@@ -25,7 +25,7 @@ define('Controls/interface/IBreadCrumbs', [
 
    /*
     * @name Controls/interface/IBreadCrumbs#items
-    * @cfg {Array.<Object>} Array of breadcrumbs to draw.
+    * @cfg {Array.<Record>} Array of breadcrumbs to draw.
     */
 
    /**

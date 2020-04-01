@@ -2,6 +2,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'Core/Control',
    'wml!Controls-demo/Input/Dropdown/Dropdown',
    'Types/source',
+   'Controls/Utils/Toolbar',
    'Controls-demo/Input/Dropdown/historySourceDropdown',
    'Controls/Constants',
    'Controls-demo/Search/SearchMemory',
@@ -15,7 +16,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/footerHierarchyItem',
    'wml!Controls-demo/Input/Dropdown/StackTemplateDdl'
-], function(Control, template, source, historySource, ControlsConstants, SearchMemory, ExplorerMemory, MemorySourceFilter) {
+], function(Control, template, source, Toolbar, historySource, ControlsConstants, SearchMemory, ExplorerMemory, MemorySourceFilter) {
 
    'use strict';
 
@@ -407,7 +408,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
                icon: 'icon-Edit',
                iconStyle: 'secondary',
                title: 'edit',
-               showType: 2,
+               showType: Toolbar.showType.TOOLBAR,
                handler: function(item) {
                   alert('Edit clicked at ' + item.getId());
                }
@@ -417,7 +418,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
                icon: 'icon-Erase',
                iconStyle: 'danger',
                title: 'delete',
-               showType: 2,
+               showType: Toolbar.showType.TOOLBAR,
                handler: (function(item) {
                   if (this._itemActionsItems.length <= 2) {
                      this._itemActions = null;

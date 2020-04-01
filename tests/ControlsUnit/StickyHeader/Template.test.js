@@ -33,6 +33,9 @@ define(
          describe('StickyHeader', function() {
             beforeEach(function() {
                ctrl = new scroll.StickyHeader({});
+               ctrl._container = {
+                  offsetParent: true
+               };
                template = TemplateUtil.clearTemplate(ctrl._template);
             });
 
@@ -51,7 +54,7 @@ define(
                template(inst, function(result) {
                   assert.equal(result, '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position">' +
                      '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
-                     '<div></div><div></div>' +
+                     '<div></div><div></div><div></div>' +
                      '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                      '<div class="controls-StickyHeader__content">testing the template</div>' +
                      '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
@@ -85,7 +88,8 @@ define(
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
-                  '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
+                  '<div></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                   '</div>');
@@ -107,7 +111,8 @@ define(
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
-                  '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
+                  '<div></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                   '</div>');
@@ -122,7 +127,8 @@ define(
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
-                  '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
+                  '<div></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
                   '</div>');
@@ -135,6 +141,7 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="bottom: 0px;">' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
+                  '<div></div>' +
                   '<div></div>' +
                   '<div></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -151,7 +158,8 @@ define(
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
-                  '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
+                  '<div></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +
@@ -170,7 +178,8 @@ define(
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
-                  '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
+                  '<div></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom"></div>' +
@@ -190,7 +199,8 @@ define(
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top"></div>' +
                   '<div></div>' +
                   '<div></div>' +
-                  '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
+                  '<div></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom ws-invisible"></div>' +

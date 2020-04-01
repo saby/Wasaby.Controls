@@ -13,6 +13,7 @@
  * @includes IGridControl Controls/_grid/interface/IGridControl
  * @includes IColumn Controls/grid:IColumn
  * @includes IHeaderCell Controls/_grid/interface/IHeaderCell
+ * @includes IPropStorage Controls/_grid/interface/IPropStorage
  * @public
  * @author Крайнов Д.О.
  */
