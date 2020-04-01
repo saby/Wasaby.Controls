@@ -1,4 +1,4 @@
-define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collection', 'Types/entity'], function(searchMod, sourceLib, cInstance, collection, entity) {
+define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collection', 'Types/entity', 'Controls/dataSource'], function(searchMod, sourceLib, cInstance, collection, entity, dataSource) {
 
    var data = [
       {
@@ -88,7 +88,10 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchMod.Controller._private.startSearch(searchController, 'test').then(() => {
             // notifies 'dataError' with proper arguments
             assert.strictEqual(searchController._notify.getCall(0).args[0], 'dataError');
-            assert.deepEqual(searchController._notify.getCall(0).args[1], [{ error }]);
+            assert.deepEqual(searchController._notify.getCall(0).args[1], [{
+               error,
+               mode: dataSource.error.Mode.include
+            }]);
             searchController._notify.reset();
          });
          assert.equal(value, 'test');

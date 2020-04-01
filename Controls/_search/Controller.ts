@@ -11,6 +11,7 @@ import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 import {Logger} from 'UI/Utils';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 var _private = {
    getSearchController: function (self, newOptions) {
@@ -206,7 +207,10 @@ var _private = {
             if (searchResult instanceof Promise) {
                searchResult.then((result) => {
                    if (self._errbackResult !== false && result instanceof Error) {
-                      self._notify('dataError', [{ error: result }]);
+                      self._notify('dataError', [{
+                         error: result,
+                         mode: dataSourceError.Mode.include
+                      }]);
                    }
                 });
                return searchResult;
