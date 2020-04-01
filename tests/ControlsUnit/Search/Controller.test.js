@@ -136,44 +136,44 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isFalse(result);
       });
 
-      it('private.isInputSearchValueShort', function() {
+      it('private.isSearchValueShort', function() {
          var searchController = getSearchController();
          var result;
          searchController._dataOptions = defaultOptions;
 
-         result = searchMod.Controller._private.isInputSearchValueShort(defaultOptions.minSearchLength, 'test');
+         result = searchMod.Controller._private.isSearchValueShort(defaultOptions.minSearchLength, 'test');
          assert.isFalse(result);
 
          searchMod.Controller._private.setInputSearchValue(searchController, 'test');
-         result = searchMod.Controller._private.isInputSearchValueShort(defaultOptions.minSearchLength, 'testing');
+         result = searchMod.Controller._private.isSearchValueShort(defaultOptions.minSearchLength, 'testing');
          assert.isFalse(result);
 
-         result = searchMod.Controller._private.isInputSearchValueShort(defaultOptions.minSearchLength, 'te');
+         result = searchMod.Controller._private.isSearchValueShort(defaultOptions.minSearchLength, 'te');
          assert.isTrue(result);
 
-         result = searchMod.Controller._private.isInputSearchValueShort(defaultOptions.minSearchLength, undefined);
+         result = searchMod.Controller._private.isSearchValueShort(defaultOptions.minSearchLength, undefined);
          assert.isTrue(result);
       });
 
-      it('private.needStartSearch', function() {
+      it('private.isSearchValueEmpty', function() {
          var searchController = getSearchController();
          var result;
 
-         result = searchMod.Controller._private.needStartSearch(searchController, '', '');
-         assert.isFalse(!!result);
-
-         result = searchMod.Controller._private.needStartSearch(searchController, '  ', '');
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController, '', '');
          assert.isTrue(!!result);
+
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController, '  ', '');
+         assert.isFalse(!!result);
 
          searchController._options.searchValueTrim = true;
-         result = searchMod.Controller._private.needStartSearch(searchController, '  ', '');
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController, '  ', '');
+         assert.isTrue(!!result);
+
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController,'', 'test');
          assert.isFalse(!!result);
 
-         result = searchMod.Controller._private.needStartSearch(searchController,'', 'test');
-         assert.isTrue(!!result);
-
-         result = searchMod.Controller._private.needStartSearch(searchController,'test', '');
-         assert.isTrue(!!result);
+         result = searchMod.Controller._private.isSearchValueEmpty(searchController,'test', '');
+         assert.isFalse(!!result);
       });
 
       it('_private.searchCallback', function() {
@@ -529,6 +529,18 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
 
             assert.equal(searchController._inputSearchValue, 'test2');
             assert.isTrue(searchStarted);
+         });
+
+         it('searchValue is short', function() {
+            var options = getDefaultOptions();
+            var searchStarted = false;
+            searchMod.Controller._private.startSearch = () => {searchStarted = true;};
+            searchController._inputSearchValue = 'te';
+            options.searchValue = '';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+
+            assert.equal(searchController._inputSearchValue, 'te');
+            assert.isFalse(searchStarted);
          });
 
          it('searchParam is changed', function() {

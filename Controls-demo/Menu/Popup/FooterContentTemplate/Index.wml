@@ -6,7 +6,7 @@
               keyProperty="key"
               displayProperty="title">
          <ws:footerContentTemplate>
-            <div class="controls-demo-Menu-Control__footerContentTemplate">+ {[Добавить]}</div>
+            <div class="ControlsDemo-Menu-Control__footerContentTemplate">+ {[Добавить]}</div>
          </ws:footerContentTemplate>
       </Controls.menu:Popup>
    </div>

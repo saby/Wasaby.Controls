@@ -10,7 +10,6 @@ import {IPropStorageOptions} from 'Controls/interface';
  * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/layout/master-detail/'>здесь</a>.
  * @class Controls/_masterDetail/Base
  * @extends Core/Control
- * @mixes Controls/_masterDetail/List/Styles
  * @mixes Controls/_interface/IPropStorage
  * @control
  * @author Авраменко А.С.
@@ -23,7 +22,6 @@ import {IPropStorageOptions} from 'Controls/interface';
  * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/master-detail/'>here</a>.
  * @class Controls/_masterDetail/Base
  * @extends Core/Control
- * @mixes Controls/_masterDetail/List/Styles
  * @control
  * @author Авраменко А.С.
  * @public

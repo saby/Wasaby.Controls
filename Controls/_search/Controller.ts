@@ -198,7 +198,7 @@ var _private = {
          const searchValue = self._options.searchValueTrim ? value.trim() : value;
          const shouldSearch = self._isSearchControllerLoading() ?
              _private.isInputSearchValueChanged(self, searchValue) :
-             _private.needStartSearch(self, self._inputSearchValue, searchValue);
+             !_private.isSearchValueEmpty(self, self._inputSearchValue, searchValue);
 
          if (shouldSearch) {
             const searchResult = _private.getSearchController(self).search(searchValue, force);
@@ -233,12 +233,18 @@ var _private = {
       return self._options.searchValue !== searchValue && _private.isInputSearchValueChanged(self, searchValue);
    },
 
-   isInputSearchValueShort(minSearchLength, searchValue: string): boolean {
+   isSearchValueShort(minSearchLength, searchValue: string): boolean {
       return !searchValue || searchValue.length < minSearchLength;
    },
 
-   needStartSearch(self, inputSearchValue: string, searchValue: string): string {
-      return (self._options.searchValueTrim ? inputSearchValue.trim() : inputSearchValue) || searchValue;
+   isSearchValueEmpty(self, inputSearchValue: string, searchValue: string): boolean {
+      const checkedValue = (self._options.searchValueTrim ? inputSearchValue.trim() : inputSearchValue) || searchValue;
+      return !checkedValue;
+   },
+
+   needStartSearch(self, options, needUpdateRoot, needRecreateSearchController, searchValue: string): boolean {
+      return _private.isSearchValueChanged(self, searchValue) && !_private.isSearchValueShort(options.minSearchLength, searchValue)
+          && !needUpdateRoot || searchValue && needRecreateSearchController;
    },
 
    needUpdateViewMode(self, newViewMode: string): boolean {
@@ -324,7 +330,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
 
       if (options.searchValue) {
          this._inputSearchValue = options.searchValue;
-         if (!_private.isInputSearchValueShort(options.minSearchLength, options.searchValue)) {
+         if (!_private.isSearchValueShort(options.minSearchLength, options.searchValue)) {
             this._searchValue = options.searchValue;
 
             if (_private.needUpdateViewMode(this, 'search')) {
@@ -377,7 +383,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (_private.isSearchValueChanged(this, searchValue) && !needUpdateRoot || searchValue && needRecreateSearchController) {
+      if (_private.needStartSearch(this, newOptions, needUpdateRoot, needRecreateSearchController, searchValue)) {
          _private.startSearch(this, searchValue);
          if (searchValue !== this._inputSearchValue) {
             _private.setInputSearchValue(this, searchValue);

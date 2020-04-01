@@ -136,7 +136,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#contextMenuConfig
- * @cfg {Controls/menu:IMenuControlOptions} Устанавливает конфигурацию для меню операций над записью.
+ * @cfg {Controls/menu:IMenuControlOptions} Конфигурация для меню операций над записью.
  * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию.
  * В качестве ключей можно использовать следующие свойства:
  * - items - для смены набора элементов.
@@ -156,7 +156,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#emptyTemplate
- * @cfg {Function} Устанавливает шаблон отображения контрола без элементов.
+ * @cfg {Function} Шаблон отображения контрола без элементов.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-пример</a>.
  * @default Controls/list:EmptyTemplate
@@ -435,7 +435,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#actionAlignment
- * @cfg {TActionAlignment} Устанавливает выравнивание опций записи, когда они отображаются в режиме swipe.
+ * @cfg {TActionAlignment} Выравнивание опций записи, когда они отображаются в режиме swipe.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">демо-пример</a>.
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
@@ -644,7 +644,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
- * @cfg {Function} Устанавливает функцию, которая вызывается, когда экземпляр данных получен из источника и подготовлен к дальнейшей обработке контролом.
+ * @cfg {Function} Функция, которая вызывается, когда экземпляр данных получен из источника и подготовлен к дальнейшей обработке контролом.
  * Функция вызывается единожды в рамках {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/control/#life-cycle-phases жизненного цикла} на этапе mount.
  * @remark
  * Единственный аргумент функции — **items** с типом данных {@link Types/collection:RecordSet}, где содержатся загруженные данные.
@@ -668,7 +668,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#dataLoadCallback
- * @cfg {Function} Устанавливает функцию, которая вызывается каждый раз непосредственно после загрузки данных из источника контрола.
+ * @cfg {Function} Функция, которая вызывается каждый раз непосредственно после загрузки данных из источника контрола.
  * Функцию можно использовать для изменения данных еще до того, как они будут отображены в контроле.
  * @remark
  * Единственный аргумент функции — **items** с типом данных {@link Types/collection:RecordSet}, где содержатся загруженные данные.

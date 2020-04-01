@@ -9,7 +9,7 @@
               parentProperty="parent"
       >
          <ws:nodeFooterTemplate>
-            <div class="controls-demo-Menu-Control__footerContentTemplate">
+            <div class="ControlsDemo-Menu-Control__footerContentTemplate">
                Node footer template for root = {{nodeFooterTemplate.itemData.key}}
             </div>
          </ws:nodeFooterTemplate>
