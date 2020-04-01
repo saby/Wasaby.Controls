@@ -1587,6 +1587,8 @@ var _private = {
         let top;
         let bottom;
         if (self._isScrollShown || (self._needScrollCalculation && viewRect && viewPortRect)) {
+            // Нужно смотреть именно на top, т.к. в IE и Edge результат выполнения getBoundingClientRect() не имеет поля y.
+            // https://developer.mozilla.org/ru/docs/Web/API/Element/getBoundingClientRect -> Примечания
             top = Math.max(viewRect.top, viewPortRect.top);
             bottom = Math.min(viewRect.top + viewRect.height, viewPortRect.top + viewPortRect.height);
         } else {
