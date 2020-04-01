@@ -44,6 +44,8 @@ class Confirmation extends Control<IControlOptions> implements IConfirmationOpen
         return Confirmation.openPopup(options, this);
     }
 
+    static _theme: string[] = ['Controls/popupConfirmation'];
+
     private static _compatibleOptions(popupOptions: IConfirmationOpenerOptions): void {
         const OLD_ENVIRONMENT_Z_INDEX = 5000;
         popupOptions.zIndex = popupOptions.zIndex || popupOptions.templateOptions.zIndex;
