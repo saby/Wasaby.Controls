@@ -46,6 +46,8 @@ import 'css!theme?Controls/popup';
             this._options.clickCallback('crossClick', item);
          }
       });
+
+      itemHiddenTemplate._theme = ['Controls/lookupPopup'];
       
       export = itemHiddenTemplate;
 
