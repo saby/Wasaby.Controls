@@ -53,6 +53,8 @@ export interface ISourceConfig {
    propStorageId: string;
 }
 
+const HISTORY_FILTER_TIMEOUT = 1000;
+
 export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDataResult> {
    const sourceController = new SourceController({
       source: cfg.source,
@@ -62,7 +64,9 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
    let filterPromise;
    if (cfg.historyId && cfg.filterButtonSource && cfg.filter) {
       filterPromise = import('Controls/filter').then((filterLib): Promise<IFilter> => {
-         return filterLib.Controller.getCalculatedFilter(cfg);
+         setTimeout(()=> {
+            return filterLib.Controller.getCalculatedFilter(cfg);
+         }, HISTORY_FILTER_TIMEOUT);
       });
    }
    if (cfg.propStorageId) {
