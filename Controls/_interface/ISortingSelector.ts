@@ -13,7 +13,7 @@ import {IControlOptions} from 'UI/Base';
 
 /**
  * @typedef {Object} SortingParam
- * @property {String|null} paramName Поле поля элемента, по которому может осуществляться сортировка. Чтобы задать сброс сортировки, нужно указать значение null.
+ * @property {String|null} paramName Имя поля элемента, по которому может осуществляться сортировка. Чтобы задать сброс сортировки, нужно указать значение null.
  * @property {String} title Подпись пункта меню, соответствующего данному полю.
  * @remark Если не задан пункт, сбрасывающий сортировку, то необходимо указать непустую конфигурацию сортировки в опции value.
  */
@@ -70,8 +70,18 @@ export interface ISortingSelectorOptions extends IControlOptions {
     * @example
     * <pre class="brush: js;">
     * _sortingValue: null,
-    * _sortingSource: null,
+    * _sortingParam: null,
     * _beforeMount: function(options) {
+    *    this._sortingParam = [
+    *       {
+    *          paramName: 'FirstParam',
+    *          title: 'По первому параметру'
+    *       },
+    *       {
+    *          paramName: 'SecondParam',
+    *          title: 'По второму параметру'
+    *       }
+    *    ]
     *    this._sortingValue = [
     *       {
     *          price: 'DESC'
@@ -85,6 +95,7 @@ export interface ISortingSelectorOptions extends IControlOptions {
     * <pre class="brush: html; highlight: [2,4]">
     * <Controls.grid:SortingSelector
     *   bind:value="_sortingValue" />
+    *   sortingParams="{{_sortingParam}}"
     * </pre>
     */
    value: [object];
