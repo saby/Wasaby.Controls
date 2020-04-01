@@ -3942,6 +3942,9 @@ define([
                   },
                   stopImmediatePropagation: function() {
                      callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{}
                   }
                },
                itemData = {
@@ -4012,6 +4015,9 @@ define([
                   },
                   stopImmediatePropagation: function() {
                      callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{}
                   }
                },
                itemData = {
@@ -4180,6 +4186,9 @@ define([
                   },
                   stopImmediatePropagation: function() {
                      callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{}
                   }
                },
                itemData = {};
@@ -4218,6 +4227,19 @@ define([
                      contextMenuStopped = true;
                   }
                },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{}
+                  }
+               },
                itemData = {
                   itemActions: { all: [] }
                };
@@ -4231,7 +4253,7 @@ define([
 
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._showActionsMenu(fakeEvent, itemData);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent);
             assert.equal(callBackCount, 0); // проверяем что не открывали меню
          });
 
