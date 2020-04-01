@@ -1062,6 +1062,7 @@ var _private = {
                 if (self._isScrollShown) {
                     _private.updateShadowMode(self, self._shadowVisibility);
                 }
+                self._notify('iterativeSearchAborted', []);
             }
         }));
     },
