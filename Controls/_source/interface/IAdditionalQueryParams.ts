@@ -1,4 +1,5 @@
-import {QueryNavigationType, QueryOrderSelector, QueryWhere} from 'Types/source';
+import {QueryNavigationType, QueryOrderSelector} from 'Types/source';
+import {IHashMap} from 'Types/declarations';
 
 export type Direction = 'up' | 'down';
 
@@ -12,6 +13,6 @@ export interface IAdditionalQueryParams {
    meta?: IAdditionQueryParamsMeta;
    limit?: number;
    offset?: number;
-   filter?: QueryWhere;
+   filter?: IHashMap<unknown>;
    sorting?: QueryOrderSelector;
 }
