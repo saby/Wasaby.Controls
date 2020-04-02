@@ -13,7 +13,8 @@
                            nodeConfig="{{_options.nodeConfig}}"
                            nodesSourceControllers="{{_nodesSourceControllers}}">
    <ws:expanderTemplate>
-      <div on:click="_onExpanderClick(expanderTemplate.itemData.dispItem)"
+      <div on:mousedown="_onExpanderMouseDown(expanderTemplate.itemData.dispItem)"
+           on:click="_onExpanderClick()"
            class="{{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize, _options.theme)}}"></div>
    </ws:expanderTemplate>
    <ws:content>
