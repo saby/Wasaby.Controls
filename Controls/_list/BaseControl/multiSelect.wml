@@ -5,6 +5,6 @@
                triState="{{triState}}"
                readOnly="{{checkboxReadOnly || false}}"
                value="{{multiSelectStatus}}"
-               on:click="_onCheckBoxClick(key, multiSelectStatus)"
+               on:click="_onCheckBoxClick(key, multiSelectStatus, checkboxReadOnly)"
    />
 </Controls.Container.Async>

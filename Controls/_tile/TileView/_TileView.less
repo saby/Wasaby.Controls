@@ -188,11 +188,13 @@
 }
 
 .controls-TileView__checkbox {
-   position: absolute;
-   z-index: 1;
+   &.controls-Checkbox__iconWrapper {
+      position: absolute;
+      z-index: 1;
 
-   &.controls-Checkbox__iconWrapper:before {
-      background-color: @background-color;
+      &:before {
+         background-color: @background-color;
+      }
    }
 }
 
