@@ -1,3 +1,4 @@
+<!-- TODO переделать на Controls.list:BaseControl -->
 <Controls._list.BaseControl scope="{{_options}}"
                             moveMarkerOnScrollPaging="{{false}}"
                             _keyDownHandler="{{_keyDownHandler}}"
