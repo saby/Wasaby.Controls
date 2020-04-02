@@ -2444,9 +2444,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (this._options.useNewModel) {
                 const markCommand = new displayLib.MarkerCommands.Mark(item.getId());
                 markCommand.execute(this._listViewModel);
+                displayLib.ItemActionsController.setActiveItem(
+                    this._listViewModel,
+                    null
+                );
             } else {
                 const newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
                 this._listViewModel.setMarkedKey(newKey);
+                this._listViewModel.setActiveItem(null);
             }
         }
     },
@@ -2580,14 +2585,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     self._draggingItem = itemData;
                 }
             });
-        }
-        if (self._options.useNewModel) {
-            displayLib.ItemActionsController.setActiveItem(
-                self._listViewModel,
-                null
-            );
-        } else {
-            self._listViewModel.setActiveItem(null);
         }
         this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
