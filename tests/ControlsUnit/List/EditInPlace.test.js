@@ -482,6 +482,7 @@ define([
                   assert.instanceOf(eip._editingItem, entity.Model);
                   assert.isTrue(eip._isAdd);
                   assert.equal(2, eip._editingItemData.level);
+                  assert.equal(4, eip._editingItemData.index);
                   done();
                });
             });
