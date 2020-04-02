@@ -29,12 +29,9 @@
                             footerTemplate="{{_options.footerTemplate}}"/>
             </ws:content>
             <ws:template>
-                <Controls.Container.Async templateName="Controls/heading:Title">
-                    <ws:templateOptions caption="{[Выбрано]}" size="s" readOnly="{{true}}"/>
-                </Controls.Container.Async>
-                <ws:for data="item in _selectedItems">
-                    <div>{{item.get(_options.displayProperty)}}</div>
-                </ws:for>
+                <ws:partial template="wml!Controls/_dropdown/Input/resources/infoBoxContentTemplate"
+                            selectedItems="{{_selectedItems}}"
+                            displayProperty="{{_options.displayProperty}}"/>
             </ws:template>
         </Controls.popup:InfoboxTarget>
     </ws:content>
