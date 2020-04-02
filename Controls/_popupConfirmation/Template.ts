@@ -72,4 +72,7 @@ class Template extends Control<IConfirmationTemplate> {
 
    static _theme: string[] = ['Controls/popupConfirmation'];
 }
+// css подгружаются при импорте и mount'e, т.о увеличивается их востребованность,
+// чтобы стили не удалялись при закрытии (unmount'e) окна
+Template.loadCSS();
 export default Template;
