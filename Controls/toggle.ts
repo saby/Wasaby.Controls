@@ -42,6 +42,7 @@ export {default as Switch} from './_toggle/Switch';
 export {default as DoubleSwitch} from './_toggle/DoubleSwitch';
 export {default as CheckboxGroup} from './_toggle/CheckboxGroup';
 export {default as Checkbox} from './_toggle/Checkbox';
+export {default as CheckboxMarker} from './_toggle/Checkbox/resources/CheckboxMarker';
 export {default as Separator} from './_toggle/Separator';
 export {default as BigSeparator} from './_toggle/BigSeparator';
 export {IToggleGroupOptions, IToggleGroup} from './_toggle/interface/IToggleGroup';
@@ -50,12 +51,10 @@ import RadioGroup = require('./_toggle/RadioGroup');
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 import CheckboxItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');
 import switchCircleTemplate = require('wml!Controls/_toggle/resources/SwitchCircle/SwitchCircle');
-import CheckboxMarker = require('wml!Controls/_toggle/Checkbox/resources/CheckboxMarker');
 
 export {
     RadioGroup,
     ItemTemplate,
     CheckboxItemTemplate,
-    switchCircleTemplate,
-    CheckboxMarker
+    switchCircleTemplate
 };

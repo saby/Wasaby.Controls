@@ -2864,7 +2864,7 @@ BaseControl.contextTypes = function contextTypes() {
     };
 };
 
-BaseControl._theme = ['Controls/Classes', 'Controls/list_multi', 'Controls/toggle'];
+BaseControl._theme = ['Controls/Classes', 'Controls/list_multi'];
 
 BaseControl.getDefaultOptions = function() {
     return {

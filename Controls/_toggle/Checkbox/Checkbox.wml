@@ -7,16 +7,10 @@
                     {{_options.value ? ' controls-Checked__checked'}}
                     {{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}"
              title="{{_options.tooltip}}">
-            <ws:partial template="wml!Controls/_toggle/Checkbox/resources/CheckboxMarker"
-                        class="controls-Checkbox__iconWrapper_inCheckbox_theme-{{_options.theme}}"
-                        readOnly="{{_options.readOnly}}"
+            <Controls._toggle.Checkbox.resources.CheckboxMarker
+                        attr:class="controls-Checkbox__iconWrapper_inCheckbox_theme-{{_options.theme}}"
                         value="{{_options.value}}"
-                        triState="{{_options.triState}}"
-                        theme="{{_options.theme}}"
-                        icon="{{_options.icon}}"
-                        iconSize="{{_options.iconSize}}"
-                        iconStyle="{{_options.iconStyle}}"
-                        caption="{{_options.caption}}"/>
+                        triState="{{_options.triState}}"/>
             <ws:partial template="wml!Controls/_toggle/Checkbox/resources/CheckboxCaption"
                         readOnly="{{_options.value !== null && !_options.value ? _options.readOnly : false}}"
                         icon="{{_options.icon}}"
