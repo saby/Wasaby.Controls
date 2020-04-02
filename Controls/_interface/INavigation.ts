@@ -50,8 +50,8 @@ export type TNavigationView = 'infinity' | 'pages' | 'demand' | 'maxCount';
 /**
  * @typedef {String} Direction
  * @description Направление выборки при навигации по курсору.
- * @variant after Вверх.
- * @variant before Вниз.
+ * @variant after Вниз.
+ * @variant before Вверх.
  * @variant both В обоих направлениях.
  */
 
