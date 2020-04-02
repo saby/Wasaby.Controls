@@ -1,12 +1,8 @@
 .controls-loading-indicator {
-   .flexbox();
-   .justify-content(center);
-   .align-items(center);
-   cursor: default !important;
-   -webkit-user-select: none;
-   -moz-user-select: none;
-   -ms-user-select: none;
-   -o-user-select: none;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   cursor: default;
    user-select: none;
 }
 
@@ -46,7 +42,7 @@
 .controls-loading-indicator_overlay-none {
    background-color: transparent;
    pointer-events: none;
-   cursor: auto !important;
+   cursor: auto;
 }
 
 .controls-loading-indicator_overlay-dark_theme-@{themeName} {
@@ -74,12 +70,10 @@
 }
 
 .controls-loading-indicator-in {
-   -moz-box-sizing: border-box;
    box-sizing: border-box;
    overflow: hidden;
    cursor: default !important;
    pointer-events: auto;
-   font-family: 'TensorFont Обычный', 'TensorFont Regular', 'TensorFont', sans-serif;
 }
 
 .controls-loading-indicator-in_theme-@{themeName} {
