@@ -104,20 +104,20 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       });
 
 
-      it('private.isSearchValueShort', function() {
+      it('private.isSearchValueChanged', function() {
          var searchController = getSearchController();
          var result;
          searchController._dataOptions = defaultOptions;
 
-         result = searchMod.Controller._private.isSearchValueShort(searchController, 'test');
+         result = searchMod.Controller._private.isSearchValueChanged(searchController, 'test');
          assert.isTrue(result);
 
          searchMod.Controller._private.setInputSearchValue(searchController, 'test');
-         result = searchMod.Controller._private.isSearchValueShort(searchController, 'test');
+         result = searchMod.Controller._private.isSearchValueChanged(searchController, 'test');
          assert.isFalse(result);
       });
 
-      it('private.isInputSearchValueShort', function() {
+      it('private.isSearchValueShort', function() {
          var searchController = getSearchController();
          var result;
          searchController._dataOptions = defaultOptions;
