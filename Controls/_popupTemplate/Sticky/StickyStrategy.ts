@@ -317,13 +317,7 @@ interface IPosition {
          if (Env.detection.isMobileIOS && window?.visualViewport) {
             return _private.getVisualViewport().height;
          }
-         /* https://learn.javascript.ru/metrics-window
-            Надёжно определить размер страницы с учётом прокрутки можно, взяв максимум из нескольких свойств:*/
-         return Math.max(
-             document.body.scrollHeight, document.documentElement.scrollHeight,
-             document.body.offsetHeight, document.documentElement.offsetHeight,
-             document.body.clientHeight, document.documentElement.clientHeight
-         );
+         return window.pageYOffset + document.body.clientHeight;
       },
 
       getVisualViewport(): object {
