@@ -462,26 +462,48 @@ define([
          });
 
          it('add item to a folder', function(done) {
-            var source = new sourceLib.Memory({
+            const deepTreeData = [
+               { id: 1, parent: null, node: true },
+               { id: 11, parent: 1, node: null },
+               { id: 12, parent: 1, node: true },
+               { id: 121, parent: 12, node: null },
+               { id: 13, parent: 1, node: null },
+            ];
+
+            const source = new sourceLib.Memory({
                keyProperty: 'id',
-               data: treeModel._items
+               data: deepTreeData
+            });
+
+            const tModel = new treeGrid.TreeViewModel({
+               items: new collection.RecordSet({
+                  rawData: treeData,
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               columns: [{
+                  displayProperty: 'id'
+               }],
+               parentProperty: 'parent',
+               nodeProperty: 'node'
             });
 
             eip.saveOptions({
-               listModel: treeModel,
+               listModel: tModel,
                source: source
             });
-            treeModel.setExpandedItems([1]);
+            tModel.setExpandedItems([1, 12]);
 
             source.create().addCallback(function(model) {
                model.set('parent', 1);
-               model.set('parent@', false);
+               model.set('node', null);
                eip.beginAdd({
                   item: model
                }).addCallback(function() {
                   assert.instanceOf(eip._editingItem, entity.Model);
                   assert.isTrue(eip._isAdd);
                   assert.equal(2, eip._editingItemData.level);
+                  assert.equal(5, eip._editingItemData.index);
                   done();
                });
             });
