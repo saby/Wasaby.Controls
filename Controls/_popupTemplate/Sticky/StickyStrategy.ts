@@ -314,10 +314,14 @@ interface IPosition {
       },
 
       getBodyHeight(): number {
-         if (window?.visualViewport) {
+         if (Env.detection.isMobileIOS && window?.visualViewport) {
             return _private.getVisualViewport().height;
          }
-         return document.body.clientHeight;
+         return Math.max(
+             document.body.scrollHeight, document.documentElement.scrollHeight,
+             document.body.offsetHeight, document.documentElement.offsetHeight,
+             document.body.clientHeight, document.documentElement.clientHeight
+         );
       },
 
       getVisualViewport(): object {
