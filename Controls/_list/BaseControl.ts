@@ -2411,6 +2411,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             e.stopPropagation();
         }
         if (this._options.useNewModel) {
+            displayLib.ItemActionsController.setActiveItem(
+                this._listViewModel,
+                null
+            );
+        } else {
+            this._listViewModel.setActiveItem(null);
+        }
+        if (this._options.useNewModel) {
             const markCommand = new displayLib.MarkerCommands.Mark(item.getId());
             markCommand.execute(this._listViewModel);
         } else {
@@ -2548,14 +2556,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     self._draggingItem = itemData;
                 }
             });
-        }
-        if (self._options.useNewModel) {
-            displayLib.ItemActionsController.setActiveItem(
-                self._listViewModel,
-                null
-            );
-        } else {
-            self._listViewModel.setActiveItem(null);
         }
         this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
