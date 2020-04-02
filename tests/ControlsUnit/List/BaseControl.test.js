@@ -4747,7 +4747,6 @@ define([
 
                   instance._listSwipe({}, itemData, childEvent);
                   assert.equal(callBackCount, 2);
-                  assert.equal(itemData, instance._listViewModel._activeItem);
                   done();
                });
             return done;
@@ -4796,7 +4795,6 @@ define([
                   itemData.multiSelectStatus = false;
                   instance._listSwipe({}, itemData, childEvent);
                   assert.equal(callBackCount, 1);
-                  assert.equal(itemData, instance._listViewModel._activeItem);
                   done();
                });
             return done;
@@ -4849,7 +4847,6 @@ define([
 
                   instance._listSwipe({}, itemData, childEvent);
                   assert.equal(callBackCount, 1);
-                  assert.equal(itemData, instance._listViewModel._activeItem);
                   done();
                });
             return done;

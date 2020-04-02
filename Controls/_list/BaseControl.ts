@@ -2375,11 +2375,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (this._options.useNewModel) {
                 const markCommand = new displayLib.MarkerCommands.Mark(key);
                 markCommand.execute(this._listViewModel);
-                displayLib.ItemActionsController.setActiveItem(this._listViewModel, key);
             } else {
                 var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
                 this._listViewModel.setMarkedKey(newKey);
-                this._listViewModel.setActiveItem(itemData);
             }
         }
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
