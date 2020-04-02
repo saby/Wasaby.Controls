@@ -294,7 +294,7 @@ define(
             assert.equal(item.position.maxWidth, item.popupOptions.maxWidth);
             assert.equal(item.position.maxHeight, item.popupOptions.maxHeight);
             assert.equal(item.position.left, -10000);
-            assert.equal(item.position.right, -1000);
+            assert.equal(item.position.top, -10000);
             assert.equal(item.position.position, 'fixed');
          });
 
