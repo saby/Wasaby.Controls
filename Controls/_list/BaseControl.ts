@@ -2411,19 +2411,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             e.stopPropagation();
         }
         if (this._options.useNewModel) {
+            const markCommand = new displayLib.MarkerCommands.Mark(item.getId());
+            markCommand.execute(this._listViewModel);
             displayLib.ItemActionsController.setActiveItem(
                 this._listViewModel,
                 null
             );
         } else {
-            this._listViewModel.setActiveItem(null);
-        }
-        if (this._options.useNewModel) {
-            const markCommand = new displayLib.MarkerCommands.Mark(item.getId());
-            markCommand.execute(this._listViewModel);
-        } else {
             var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
+            this._listViewModel.setActiveItem(null);
         }
     },
 
