@@ -16,7 +16,7 @@ type TPoint = {
 };
 
 const SCROLL_SPEED_BY_DRAG = 0.75;
-const DISTANCE_TO_START_DRAG_N_DROP = 5;
+const DISTANCE_TO_START_DRAG_N_DROP = 3;
 const START_ITEMS_DRAG_N_DROP_DELAY = 250;
 const NOT_DRAG_SCROLLABLE_SELECTOR = '.js-controls-ColumnScroll__notDraggable';
 
@@ -54,9 +54,12 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @private
      */
     private _manageDragScrollStart(startPosition: TPoint, target: HTMLElement): void {
+        const hasDragNDrop = !!this._options.startDragNDropCallback;
+        const isTargetDraggable = !target.closest('.controls-DragNDrop__notDraggable');
 
+        // Если за данный элемент нельзя скролить, то при возможности сразу начинаем DragNDrop.
         if (!this._isTargetScrollable(target)) {
-            if (this._options.startDragNDropCallback) {
+            if (hasDragNDrop && isTargetDraggable) {
                 this._initDragNDrop();
             }
             return;
@@ -70,8 +73,11 @@ export class DragScroll extends Control<IDragScrollOptions> {
 
         // Если в списке доступен DragNDrop, то он запускается отложенно и только в том случае, если пользователь
         // не начал водить мышью.
-        if (this._options.startDragNDropCallback) {
+        // Если недоступен, то ничего не ждем и начинаем скроллирование.
+        if (hasDragNDrop && isTargetDraggable) {
             this._initDelayedDragNDrop();
+        } else {
+            this._showOverlay();
         }
     }
 
@@ -106,9 +112,12 @@ export class DragScroll extends Control<IDragScrollOptions> {
         // Если активно начали водить мышью по горизонтали, то считаем, что будет drag scrolling.
         // Сбрасываем таймер отложенного запуска Drag'n'drop'а записей, при скролле он не должен возникать.
         // Показывыем overlay во весь экран, чтобы можно было водить мышкой где угодно на экране.
-        if (mouseMoveDistance.x > DISTANCE_TO_START_DRAG_N_DROP) {
-            this._isOverlayShown = true;
-            this._clearDragNDropTimer();
+        // Если в списке нет Drag'n'drop'а записей, то сразу начинаем скроллирование при движении мышки.
+        const distanceToStartDragNDrop = this._options.startDragNDropCallback ? DISTANCE_TO_START_DRAG_N_DROP : 0;
+        if (this._maxMouseMoveDistance.x > distanceToStartDragNDrop) {
+            if (!this._isOverlayShown) {
+                this._showOverlay();
+            }
         }
 
         // Новая позиция скролла лежит в диапазоне от 0 до максимально возможной прокрутке в списке.
@@ -140,6 +149,17 @@ export class DragScroll extends Control<IDragScrollOptions> {
     }
 
     /**
+     * Активирует overlay сколлирования перетаскиванием. Overlay - растянутый на все окно браузера блок,
+     * необходимый для возможности скроллирования даже за пределами таблицы.
+     * Если overlay активен, Drag'N'Drop записей невозможен.
+     * @private
+     */
+    private _showOverlay(): void {
+        this._isOverlayShown = true;
+        this._clearDragNDropTimer();
+    }
+
+    /**
      * Сбросить таймер отложенного старта Drag'N'Drop'а записей.
      * Происходит например, если указатель увели достаточно далеко или Drag'N'Drop записей уже начался из-за
      * перемещения указателя вертикально.
@@ -166,6 +186,7 @@ export class DragScroll extends Control<IDragScrollOptions> {
      */
     private _shouldInitDragNDropByVerticalMovement(): boolean {
         return !!this._options.startDragNDropCallback &&
+            !this._isOverlayShown &&
             typeof this._startItemsDragNDropTimer === 'number' &&
             this._maxMouseMoveDistance.x < DISTANCE_TO_START_DRAG_N_DROP &&
             this._maxMouseMoveDistance.y > DISTANCE_TO_START_DRAG_N_DROP &&
