@@ -210,20 +210,7 @@ var _private = {
                         listModel.setCompatibleReset(false);
                         self._items = listModel.getCollection();
                     } else {
-                        const curKey = listModel.getMarkedKey();
                         listModel.setItems(list);
-                        const nextKey = listModel.getMarkedKey();
-                        // При загрузке вверх и нахождении снизу списка могут сделать релоад и нужно сделать подскролл вниз списка
-                        // Сделать сами по drawItems они не могут, т.к. это слишком поздно, уже произошла отрисовка и уже стрельнет
-                        // триггер загрузки следующей страницы (при загрузке вверх - предыдущей).
-                        // мы должны предоставить функционал автоматического подскрола вниз
-                        // TODO remove self._options.task1178907511 after https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
-                        if (nextKey !== null && (nextKey !== curKey || self._options.task1178907511)
-                            && self._listViewModel.getCount()
-                            && !self._options.task46390860 && !self._options.task1177182277 && !cfg.task1178786918
-                        ) {
-                            self._markedKeyForRestoredScroll = nextKey;
-                        }
                         self._items = listModel.getItems();
                     }
 
@@ -394,12 +381,6 @@ var _private = {
                 model.setMarkedKey(key);
             }
             _private.scrollToItem(self, key);
-        }
-    },
-    restoreScrollPosition: function (self) {
-        if (self._markedKeyForRestoredScroll !== null && self._isScrollShown) {
-            _private.scrollToItem(self, self._markedKeyForRestoredScroll);
-            self._markedKeyForRestoredScroll = null;
         }
     },
     moveMarker: function(self, newMarkedKey) {
@@ -1741,8 +1722,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _template: BaseControlTpl,
     iWantVDOM: true,
     _isActiveByClick: false,
-    _markedKeyForRestoredScroll: null,
-    _restoredScroll: null,
 
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -2298,15 +2277,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // todo 2 Фантастически, но свежеиспеченный afterRender НЕ ПОДХОДИТ! Падают тесты. ХФ на носу, разбираться
         // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
         if (this._shouldRestoreScrollPosition) {
-            _private.restoreScrollPosition(this);
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._children.scrollController.checkTriggerVisibilityWithTimeout();
-        }
-
-        if (this._restoredScroll !== null) {
-            _private.scrollToItem(this, this._restoredScroll.key, this._restoredScroll.toBottom);
-            this._restoredScroll = null;
         }
     },
 
