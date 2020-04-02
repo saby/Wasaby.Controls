@@ -1231,6 +1231,8 @@ var _private = {
 
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         const context = event.type === 'itemcontextmenu';
+        const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
+                                      || self._options.contextMenuConfig?.headerTemplate);
         const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
         if ((context && self._isTouch) || !itemActions) {
             return false;
@@ -1247,7 +1249,7 @@ var _private = {
          * But popups don't work with ClientRect, so we have to wrap it in an object with getBoundingClientRect method.
          */
         const target = context ? null : _private.mockTarget(childEvent.target);
-        if (showActions && showActions.length) {
+        if (showActions && showActions.length || hasMenuFooterOrHeader) {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             if (self._options.useNewModel) {
