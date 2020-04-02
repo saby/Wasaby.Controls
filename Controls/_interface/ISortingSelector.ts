@@ -94,8 +94,8 @@ export interface ISortingSelectorOptions extends IControlOptions {
     * 
     * <pre class="brush: html; highlight: [2,4]">
     * <Controls.grid:SortingSelector
-    *   bind:value="_sortingValue" />
-    *   sortingParams="{{_sortingParam}}"
+    *   bind:value="_sortingValue" 
+    *   sortingParams="{{_sortingParam}}" />
     * </pre>
     */
    value: [object];
