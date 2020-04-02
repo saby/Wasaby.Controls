@@ -134,7 +134,7 @@ var _private = {
       return expandedItems;
    },
 
-   itemOpenHandler: function(root:string|number|null, items:object):void {
+   itemOpenHandler: function(root:string|number|null, items:object, dataRoot = null):void {
       if (this._viewMode === 'search' && this._options.searchNavigationMode === 'expand') {
          this._notifiedMarkedKey = root;
          this._notify('expandedItemsChanged', [_private.prepareExpandedItems(this._options.root, root, items, this._options.parentProperty)]);
@@ -144,7 +144,7 @@ var _private = {
       } else {
          this._root = root;
       }
-      if (root !== null) {
+      if (root !== dataRoot) {
          _private.getSearchController(this).abort(true);
          _private.setInputSearchValue(this, '');
       }
