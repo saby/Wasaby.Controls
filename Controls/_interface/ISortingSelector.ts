@@ -55,8 +55,8 @@ export interface ISortingSelectorOptions extends IControlOptions {
     *          title: 'По умолчанию'
     *       },
     *       {
-    *          paramName: 'FirstParam',
-    *          title: 'По первому параметру'
+    *          paramName: 'Name',
+    *          title: 'По имени'
     *       }
     *    ]
     * }
@@ -74,17 +74,17 @@ export interface ISortingSelectorOptions extends IControlOptions {
     * _beforeMount: function(options) {
     *    this._sortingParam = [
     *       {
-    *          paramName: 'FirstParam',
-    *          title: 'По первому параметру'
+    *          paramName: 'Name',
+    *          title: 'По имени'
     *       },
     *       {
-    *          paramName: 'SecondParam',
-    *          title: 'По второму параметру'
+    *          paramName: 'Surname',
+    *          title: 'По фамилии'
     *       }
     *    ]
     *    this._sortingValue = [
     *       {
-    *          price: 'DESC'
+    *          Name: 'DESC'
     *       }
     *    ];
     * }
