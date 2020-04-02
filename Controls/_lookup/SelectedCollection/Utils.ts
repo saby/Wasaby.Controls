@@ -37,10 +37,10 @@ export = {
      * В IE flex-end не срабатывает с overflow:hidden, поэтому показываем коллекцию наоборот,
      * чтобы поле в однострочном режиме могло сокращаться при ограниченной ширине
      * @param {number} index
+     * @param {number} visibleItemsCount
      * @returns {number}
-     * @private
      */
-    getItemOrder(index: number): number {
-        return detection.isIE && this._options.itemsLayout === 'oneRow' ? this._visibleItems.length - index : index;
+    getItemOrder(index: number, visibleItemsCount: number): number {
+        return detection.isIE && this._options.itemsLayout === 'oneRow' ? visibleItemsCount - index : index;
     }
 };
