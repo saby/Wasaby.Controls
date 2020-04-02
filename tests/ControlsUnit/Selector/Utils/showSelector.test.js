@@ -87,7 +87,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
          const baseController = getBaseController();
          const sandbox = sinon.createSandbox();
          const stub = sandbox.stub(baseController, '_selectCallback');
-
+         baseController._children.selectorOpener.close = () => {};
          baseController._options.isCompoundTemplate = false;
          showSelector.default(baseController, undefined, true);
          lastPopupOptions.templateOptions.handlers.onSelectComplete();
