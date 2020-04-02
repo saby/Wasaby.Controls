@@ -317,7 +317,8 @@ interface IPosition {
          if (Env.detection.isMobileIOS && window?.visualViewport) {
             return _private.getVisualViewport().height;
          }
-         return window.pageYOffset + document.body.clientHeight;
+         let height = document.body.clientHeight >= window?.pageYOffset ? document.body.clientHeight : window?.pageYOffset + document.body.clientHeight;
+         return height;
       },
 
       getVisualViewport(): object {
