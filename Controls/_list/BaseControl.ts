@@ -2584,10 +2584,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (self._options.useNewModel) {
             displayLib.ItemActionsController.setActiveItem(
                 self._listViewModel,
-                itemData.getContents().getId()
+                null
             );
         } else {
-            self._listViewModel.setActiveItem(itemData);
+            self._listViewModel.setActiveItem(null);
         }
         this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
