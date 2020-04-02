@@ -84,7 +84,7 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       const historyItems = filterObject ? filterObject.historyItems : null;
       const sorting = sortingObject ? sortingObject.sorting : cfg.sorting;
 
-      return sourceController.load(filter, sorting).then((data: RecordSet) => {
+      return sourceController.load(filter, sorting).finally((data: RecordSet | Error) => {
          return {
             data,
             filter,
