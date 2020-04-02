@@ -3881,7 +3881,64 @@ define([
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
+         it('showActionsMenu context without actions, with footer', function(done) {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  contextMenuConfig: {
+                     footerTemplate: 'footer'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  }
+               },
+               itemData = {
+                  itemActions: { all: [] }
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function(args) {
+                     callBackCount++;
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
+                     assert.equal(args.templateOptions.items.getKeyProperty(), 'id');
+                     assert.equal(args.templateOptions.keyProperty, 'id');
+                     assert.equal(args.templateOptions.parentProperty, 'parent');
+                     assert.equal(args.templateOptions.nodeProperty, 'parent@');
+                     assert.equal(itemData, instance._listViewModel._activeItem);
+                     assert.equal(instance._listViewModel._menuState, 'shown');
+                     assert.equal(callBackCount, 3);
+                     done();
+                  }
+               }
+            };
 
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+         });
          it('_onItemContextMenu', function() {
             var callBackCount = 0;
             var cfg = {
