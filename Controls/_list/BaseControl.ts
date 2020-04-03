@@ -1874,6 +1874,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
+                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+
                     if (newOptions.useNewModel) {
                         self._items = self._listViewModel.getCollection();
                     } else {
@@ -1916,6 +1918,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             viewModelConfig,
                             newOptions.viewModelConstructor
                         );
+                        
+                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                         }
