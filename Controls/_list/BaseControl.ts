@@ -2347,9 +2347,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
 
-    _onCheckBoxClick: function(e, key, status) {
-        this._children.selectionController.onCheckBoxClick(key, status);
-        this._notify('checkboxClick', [key, status]);
+    _onCheckBoxClick: function(e, key, status, readOnly) {
+        if (!readOnly) {
+            this._children.selectionController.onCheckBoxClick(key, status);
+            this._notify('checkboxClick', [key, status]);
+        }
     },
 
     _listSwipe: function(event, itemData, childEvent) {
@@ -2855,7 +2857,7 @@ BaseControl.contextTypes = function contextTypes() {
     };
 };
 
-BaseControl._theme = ['Controls/Classes'];
+BaseControl._theme = ['Controls/Classes', 'Controls/list_multi'];
 
 BaseControl.getDefaultOptions = function() {
     return {
