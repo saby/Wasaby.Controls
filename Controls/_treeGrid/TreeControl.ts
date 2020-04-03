@@ -585,9 +585,11 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         _private.toggleExpanded(this, item);
     },
     _onExpanderMouseDown: function(e, dispItem) {
-        _private.toggleExpanded(this, dispItem);
-        if (this._options.markItemByExpanderClick) {
-            this._children.baseControl.getViewModel().setMarkedKey(dispItem.getContents().getId());
+        if (e.nativeEvent.buttons === 1) {
+            _private.toggleExpanded(this, dispItem);
+            if (this._options.markItemByExpanderClick) {
+                this._children.baseControl.getViewModel().setMarkedKey(dispItem.getContents().getId());
+            }
         }
         e.stopImmediatePropagation();
     },
