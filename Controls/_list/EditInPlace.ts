@@ -294,7 +294,7 @@ var
             } else if (_private.hasParentInItems(editingItem, listModel)) {
                 parentId = editingItem.get(listModel._options.parentProperty);
                 parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
-                index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listModel.getChildren(parentId).length) + 1;
+                index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listModel.getDisplayChildrenCount(parentId)) + 1;
             } else if (listModel._options.groupingKeyCallback || groupProperty) {
                 const groupId = groupProperty ? editingItem.get(groupProperty) : listModel._options.groupingKeyCallback(editingItem);
                 const isAddInTop = self._options.editingConfig && self._options.editingConfig.addPosition === 'top';
