@@ -419,6 +419,13 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
     },
 
+    _afterMount(): void {
+        // Пендинг регистрируется через событие, которые нельзя генерировать до полного построения контрола.
+        if (this._editingItem) {
+            _private.registerPending(this);
+        }
+    },
+
     beginEdit(options): Promise<{ cancelled: true } | { item: entity.Record } | void> {
         var self = this;
         if (this._editingItem && !this._editingItem.isChanged()) {
