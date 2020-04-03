@@ -1,6 +1,6 @@
 /**
  * Интерфейс для перемещения элементов списка с помощью drag'n'drop.
- * Больше информации можно прочитать <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">здесь</a>.
+ * Больше информации можно прочитать <a href="/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/">здесь</a>.
  *
  * @interface Controls/interface/IDraggable
  * @public
@@ -18,27 +18,16 @@
 
 /**
  * @name Controls/interface/IDraggable#itemsDragNDrop
- * @cfg {String} Определяет, может ли пользователь перемещать элементы в списке с помощью drag'n'drop.
- * @variant none Перемещение запрещено.
- * @variant allow Перемещение разрешено.
- * @default none
+ * @cfg {Boolean} Определяет, может ли пользователь перемещать элементы в списке с помощью drag'n'drop.
+ * @variant false Перемещение запрещено.
+ * @variant true Перемещение разрешено.
+ * @default false
  * @example
- * В следующем примере показано, как включить возможность перемещения элементов с помощью drag'n'drop.
- * <pre>
- *    <Controls.list:View source="{{_viewSource}}"
- *                   keyProperty="id"
- *                   itemsDragNDrop="allow">
- *     </Controls.list:View>
- * </pre>
- *
- * <pre>
- *    Control.extend({
- *       ...
- *       _beforeMount: function() {
- *          this._viewSource = new Source({...});
- *       }
- *       ...
- *    });
+ * <pre class="brush: html; highlight: [4]">
+ * <Controls.list:View
+ *     source="{{_viewSource}}"
+ *     keyProperty="id"
+ *     itemsDragNDrop="{{true}}" />
  * </pre>
  */
 
