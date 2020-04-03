@@ -2,6 +2,7 @@
  * Библиотека контролов, которые служат для организации преобразования данных для нескольких элементов списка.
  * @library Controls/operations
  * @includes Panel Controls/_operations/Panel
+ * @includes PanelContainer Controls/_operations/Panel/Container
  * @includes Button Controls/_operations/Button
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
@@ -14,6 +15,7 @@
  * operations library
  * @library Controls/operations
  * @includes Panel Controls/_operations/Panel
+ * @includes PanelContainer Controls/_operations/Panel/Container
  * @includes Button Controls/_operations/Button
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
@@ -31,6 +33,7 @@ import FilterController from 'Controls/_operations/FilterController';
 
 export {default as HierarchySelection} from 'Controls/_operations/MultiSelector/HierarchySelection';
 export {default as Selection} from 'Controls/_operations/MultiSelector/Selection';
+export {default as PanelContainer} from 'Controls/_operations/Panel/Container';
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
 import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
 

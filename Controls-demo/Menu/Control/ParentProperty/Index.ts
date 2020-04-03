@@ -67,6 +67,12 @@ class ParentProperty extends Control {
         });
     }
 
+    protected _itemClickHandler(event, item): boolean {
+        if (item.get('@parent')) {
+            return false;
+        }
+    }
+
     static _theme: string[] = ['Controls/Classes'];
 
 }

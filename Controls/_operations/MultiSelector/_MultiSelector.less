@@ -10,15 +10,15 @@
   background-color: #ccc;
 }
 
-.controls-operationsPanelV__loadingIndicatorImg-wrapper {
-  margin-left: @loadingIndicator_offset-left_multiSelectorButton;
+//TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=24d818b6-3e4d-45d9-9647-0128ae573cd2
+.controls-operationsPanelV__loadingIndicatorImg-wrapper .controls-loading-indicator_theme-@{themeName} {
+  position: relative;
 }
-
-.controls-operationsPanelV__loadingIndicatorImg {
-  background: @background-url_LoadingIndicator-s 0 0 no-repeat;
+//TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=24d818b6-3e4d-45d9-9647-0128ae573cd2
+.controls-operationsPanelV__loadingIndicatorImg-wrapper .controls-loading-indicator-in_theme-@{themeName} {
+  margin-left: @loadingIndicator_offset-left_multiSelectorButton;
   width: @size_LoadingIndicator-s;
   height: @size_LoadingIndicator-s;
-  background-size: @size_LoadingIndicator-s;
 }
 
 .controls-operationsPanelV__container {

@@ -1,6 +1,7 @@
 import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
 import {default as IMenuControl, IMenuOptions, TKeys} from 'Controls/_menu/interface/IMenuControl';
+import {Sticky as StickyOpener} from 'Controls/popup';
 import {Controller as SourceController} from 'Controls/source';
 import {RecordSet, List} from 'Types/collection';
 import {ICrud, PrefetchProxy} from 'Types/source';
@@ -37,7 +38,12 @@ const SUB_DROPDOWN_OPEN_DELAY = 100;
 
 class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     protected _template: TemplateFunction = ViewTemplate;
-    protected _listModel: Tree;
+
+    _children: {
+        Sticky: StickyOpener
+    };
+
+    protected _listModel: Tree<Model>;
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
     protected _applyButtonVisible: boolean = false;
@@ -177,8 +183,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         if (eventName === 'menuOpened') {
             this.subMenu = eventResult;
         } else {
-            this._notify(eventName, [eventResult]);
-            if (eventName === 'pinClick') {
+            const notifyResult = this._notify(eventName, [eventResult]);
+            if (eventName === 'pinClick' || eventName === 'itemClick' && notifyResult !== false) {
                 this._closeSubMenu();
             }
         }
