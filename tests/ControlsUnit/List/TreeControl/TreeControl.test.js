@@ -1838,16 +1838,12 @@ define([
             return {
                hasMoreData: () => false,
                load: function() {
-                  return {
-                     addCallback: (func) => {
-                        func(new collection.RecordSet({
-                           rawData: [],
-                           keyProperty: 'id'
-                        }));
-                     }
-                  }
+                  return Deferred.success(new collection.RecordSet({
+                     rawData: [],
+                     keyProperty: 'id'
+                  }));
                }
-            }
+            };
          };
 
          // Initial

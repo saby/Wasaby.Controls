@@ -11,6 +11,7 @@ import {isEqual} from 'Types/object';
 import {saveConfig} from 'Controls/Application/SettingsController';
 import {Map} from 'Types/shim';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import { error as dataSourceError } from 'Controls/dataSource';
 
 var
     HOT_KEYS = {
@@ -25,6 +26,20 @@ var DRAG_MAX_OFFSET = 15,
 type TNodeSourceControllers = Map<string, SourceController>;
 
 var _private = {
+    /**
+     * @param {Controls/_treeGrid/TreeControl} self
+     * @param {Error} error
+     * @returns {Promise.<CrudResult>}
+     */
+    processError(self, error: Error): Promise<void> {
+        return self._errorController.process({
+            error,
+            theme: self._options.theme,
+            mode: dataSourceError.Mode.dialog
+        }).then((viewConfig) => {
+            self._errorViewConfig = viewConfig;
+        });
+    },
     clearNodeSourceController(self, node: string|number): void {
         const nodeSourceControllers = _private.getNodesSourceControllers(self);
 
@@ -119,7 +134,7 @@ var _private = {
             filter[options.parentProperty] = nodeKey;
             _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
                 .load(filter, options.sorting)
-                .addCallback((list) => {
+                .addCallbacks((list) => {
                     listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
                     if (options.uniqueKeys) {
                         listViewModel.mergeItems(list);
@@ -130,6 +145,14 @@ var _private = {
                     if (options.nodeLoadCallback) {
                         options.nodeLoadCallback(list, nodeKey);
                     }
+                }, (error) => {
+                    _private.processError(self, error);
+                    // Нужно удалить sourceController для узла, чтоб содержимое узла считалось незагруженным.
+                    _private.clearNodeSourceController(self, nodeKey);
+                    // Вернуть элемент модели в предыдущее состояние, т.к. раскрытие не состоялось.
+                    _private.toggleExpandedOnModel(self, listViewModel, dispItem, !expanded);
+                })
+                .addCallback(() => {
                     self._children.baseControl.hideIndicator();
                 });
         } else {
@@ -188,7 +211,7 @@ var _private = {
 
         filter[self._options.parentProperty] = nodeKey;
         self._children.baseControl.showIndicator();
-        nodeSourceControllers.get(nodeKey).load(filter, self._options.sorting, 'down').addCallback(function(list) {
+        nodeSourceControllers.get(nodeKey).load(filter, self._options.sorting, 'down').addCallbacks((list) => {
             listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
             if (self._options.uniqueKeys) {
                 listViewModel.mergeItems(list);
@@ -198,6 +221,12 @@ var _private = {
             if (self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(list);
             }
+        }, (error) => {
+            if (typeof self._options.dataLoadErrback === 'function') {
+                self._options.dataLoadErrback(error);
+            }
+            _private.processError(self, error);
+        }).addCallback(() => {
             self._children.baseControl.hideIndicator();
         });
     },
@@ -455,6 +484,8 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _expandOnDragData: null,
     _updateExpandedItemsAfterReload: false,
     _notifyHandler: tmplNotify,
+    _errorController: null,
+    _errorViewConfig: null,
     constructor: function(cfg) {
         this._nodesSourceControllers = _private.getNodesSourceControllers(this);
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -468,6 +499,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
         this._beforeLoadToDirectionCallback = _private.beforeLoadToDirectionCallback.bind(null, this);
         this._getHasMoreData = _private.getHasMoreData.bind(null, this);
+        this._errorController = cfg.errorController || new dataSourceError.Controller({});
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
     _afterMount: function() {
