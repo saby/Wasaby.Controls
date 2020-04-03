@@ -31,10 +31,8 @@
 
 /*
  * @name Controls/interface/IDraggable#itemsDragNDrop
- * @cfg {String} Determines whether the user can move entries in the list using drag'n'drop.
- * @variant none Dragging items is not allowed.
- * @variant allow Dragging items is allowed.
- * @default none
+ * @cfg {Boolean} Determines whether the user can move entries in the list using drag'n'drop.
+ * @default false
  * @example
  * The following example shows how to enable the ability to move items using drag'n'drop.
  * <pre class="brush: html; highlight: [4]">
