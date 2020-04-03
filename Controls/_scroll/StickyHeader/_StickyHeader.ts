@@ -28,6 +28,9 @@ export interface IStickyHeaderOptions extends IControlOptions {
     fixedZIndex: number;
     shadowVisibility: SHADOW_VISIBILITY;
     backgroundVisible: boolean;
+    // Этот костыль позволяет в IOS13 вместо расчёта offsetWidth установить жёсткую ширину определённой колонке.
+    // см. https://online.sbis.ru/opendoc.html?guid=b11076d6-7b06-4803-bab3-d27b7f92b5be
+    width?: number;
 }
 
 /**
@@ -452,14 +455,16 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
             // There's no container at first building of template.
             if (container) {
-                const offsetWidth = container.offsetWidth;
                 let offsetHeight = container.offsetHeight;
+                // Этот костыль позволяет в IOS13 вместо расчёта offsetWidth установить жёсткую ширину определённой колонке.
+                // см. https://online.sbis.ru/opendoc.html?guid=b11076d6-7b06-4803-bab3-d27b7f92b5be
+                const width = this._options.width !== undefined ? this._options.width : container.offsetWidth;
                 if (this._options.position.indexOf('bottom') !== -1) {
                     offsetHeight -= MOBILE_GAP_FIX_OFFSET;
                 }
                 this._bottomShadowStyle =
-                     `bottom: unset; right: unset; top:${offsetHeight}px; width:${offsetWidth}px;`;
-                this._topShadowStyle = `right: unset; width:${offsetWidth}px;`;
+                     `bottom: unset; right: unset; top:${offsetHeight}px; width:${width}px;`;
+                this._topShadowStyle = `right: unset; width:${width}px;`;
             }
         }
     }
