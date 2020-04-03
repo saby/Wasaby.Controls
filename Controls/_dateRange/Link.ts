@@ -11,6 +11,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/interface/ILinkView
  * @mixes Controls/_interface/IOpenPopup
+ * @mixes Controls/_interface/IFontColorStyle
  * @control
  * @public
  * @category Input
