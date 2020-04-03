@@ -423,10 +423,8 @@ import {SyntheticEvent} from "Vdom/Vdom"
                const cachedScrollTop = scrollTop;
                const sizeCache = _private.getSizeCache(self, container);
                const realScrollTop = scrollTop - this._topPlaceholderSize;
-               const triggerOffset = sizeCache.clientHeight / 3;
-               if (realScrollTop >= triggerOffset &&
-                  (sizeCache.scrollHeight === realScrollTop ||
-                  sizeCache.scrollHeight - realScrollTop - sizeCache.clientHeight > triggerOffset)) {
+               if (realScrollTop >= 0 &&
+                  (sizeCache.scrollHeight - realScrollTop - sizeCache.clientHeight >= 0)) {
                   container.scrollTop = scrollTop - self._topPlaceholderSize;
                } else {
                   _private.sendByRegistrar(self, 'virtualScrollMove', {
