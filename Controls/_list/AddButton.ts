@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_list/AddButton/AddButton');
 import entity = require('Types/entity');
+import 'css!theme?Controls/list';
 
 /**
  * Специализированный тип кнопки.
@@ -55,6 +56,5 @@ AddButton.getOptionTypes = function getOptionTypes() {
         caption: entity.descriptor(String)
     };
 };
-AddButton._theme = ['Controls/list'];
 
 export = AddButton;

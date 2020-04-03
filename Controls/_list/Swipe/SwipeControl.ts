@@ -3,6 +3,7 @@ import Control = require('Core/Control');
 import * as template from 'wml!Controls/_list/Swipe/SwipeControl';
 import {TouchContextField} from 'Controls/context';
 import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
+import 'css!theme?Controls/list';
 import { IMeasurer } from './interface/IMeasurer';
 import { IItemAction, ShowType } from './interface/IItemAction';
 import { ISwipeConfig } from './interface/ISwipeConfig';
@@ -317,8 +318,6 @@ export default class SwipeControl extends Control {
          }
       }
    }
-
-   static _theme: string[] = ['Controls/list'];
 
    static getOptionTypes(): Record<keyof ISwipeControlOptions, object> {
       return {

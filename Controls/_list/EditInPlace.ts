@@ -6,6 +6,7 @@ import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import {editing as constEditing} from 'Controls/Constants';
 import { error as dataSourceError } from 'Controls/dataSource';
+import 'css!theme?Controls/list';
 
 let displayLib: typeof import('Controls/display');
 
@@ -723,6 +724,5 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
 });
 
 EditInPlace._private = _private;
-EditInPlace._theme = ['Controls/list'];
 
 export = EditInPlace;
