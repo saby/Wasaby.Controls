@@ -1093,15 +1093,17 @@ var _private = {
 
     loadToDirectionWithSearchValueEnded(self, loadedItems: RecordSet): void {
         const portionedSearch = _private.getPortionedSearch(self);
-        if (!_private.hasMoreData(self, self._sourceController, 'down')) {
+        const isPortionedLoad = _private.isPortionedLoad(self, loadedItems);
+
+        if (!_private.hasMoreDataInAnyDirection(self, self._sourceController) || !isPortionedLoad) {
             portionedSearch.reset();
         } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
         }
     },
 
-    isPortionedLoad(self): boolean {
-        const loadByMetaData = self._items && self._items.getMetaData()[PORTIONED_LOAD_META_FIELD];
+    isPortionedLoad(self, items = self._items): boolean {
+        const loadByMetaData = items && items.getMetaData()[PORTIONED_LOAD_META_FIELD];
         const loadBySearchValue = !!self._options.searchValue;
         return loadByMetaData || loadBySearchValue;
     },
@@ -1253,6 +1255,8 @@ var _private = {
 
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         const context = event.type === 'itemcontextmenu';
+        const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
+                                      || self._options.contextMenuConfig?.headerTemplate);
         const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
         if ((context && self._isTouch) || !itemActions) {
             return false;
@@ -1270,7 +1274,7 @@ var _private = {
          */
         self._menuTarget = _private.mockTarget(childEvent.target);
         const target = context ? null : self._menuTarget;
-        if (showActions && showActions.length) {
+        if (showActions && showActions.length || hasMenuFooterOrHeader) {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             if (self._options.useNewModel) {
