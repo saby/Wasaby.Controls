@@ -810,6 +810,13 @@ define([
             assert.deepEqual(goodResultNode, checkResultNode);
          });
 
+         it('long link', () => {
+            const goodStr = 'https://ya.ru/' + 'a'.repeat(500);
+            const parentNode = ['p', goodStr];
+            const checkStr = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
+            assert.equal(goodStr, checkStr);
+         });
+
          it('with protocol - 2', function() {
             var parentNode = ['p', 'http://localhost:1025'];
             var goodResultNode = [[], ['a',
