@@ -20,8 +20,6 @@ class Footer extends Control<IFooterOptions> implements IConfirmationFooter {
     protected _template: TemplateFunction = template;
     protected _tmplNotify: Function = tmplNotify;
 
-    static _theme: string[] = ['Controls/popupConfirmation'];
-
     static getDefaultOptions() {
         return {
             type: 'yesno',

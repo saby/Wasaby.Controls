@@ -199,7 +199,6 @@ Submit.getOptionTypes = function () {
       ])
    };
 };
-Submit._theme = ['Controls/popupConfirmation'];
 
 export default Submit;
 
