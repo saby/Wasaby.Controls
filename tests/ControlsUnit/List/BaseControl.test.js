@@ -717,9 +717,14 @@ define([
             keyProperty: 'id',
             data: data
          });
-
-         let metaData;
          let isIterativeSearch = false;
+         const setIterativeMetaData = (items) => {
+            if (items) {
+               let metaData = items.getMetaData();
+               metaData.iterative = isIterativeSearch;
+               items.setMetaData(metaData);
+            }
+         };
 
          const cfg = {
             viewName: 'Controls/List/ListView',
@@ -729,10 +734,9 @@ define([
             beforeLoadToDirectionCallback: function() {
                beforeLoadToDirectionCalled = true;
             },
-            serviceDataLoadCallback: function(currentItems, items) {
-               metaData = items.getMetaData();
-               metaData.iterative = isIterativeSearch;
-               items.setMetaData(metaData);
+            serviceDataLoadCallback: function(currentItems, loadedItems) {
+               setIterativeMetaData(currentItems);
+               setIterativeMetaData(loadedItems);
             },
             source: source,
             viewConfig: {
@@ -761,6 +765,7 @@ define([
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
          isIterativeSearch = true;
+         setIterativeMetaData(ctrl._items);
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.isTrue(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
