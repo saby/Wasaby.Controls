@@ -95,7 +95,7 @@ interface IPosition {
                // }
             }
          }
-         let overflow = position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'];
+         let overflow = position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - _private.getVisualViewport()[isHorizontal ? 'pageLeft' : 'pageTop'];
          if (_private.isIOS12()) {
             overflow -= targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
          }
@@ -314,17 +314,10 @@ interface IPosition {
       },
 
       getBodyHeight(): number {
-         const pageYOffset = window?.pageYOffset;
-         const clientHeight = document.body.clientHeight;
          if (window?.visualViewport) {
-            const visualViewportHeight = _private.getVisualViewport().height;
-            // учитываем скролл
-            const height = visualViewportHeight >= pageYOffset ? visualViewportHeight : visualViewportHeight + pageYOffset;
-            return height;
+            return _private.getVisualViewport().height;
          }
-         // учитываем скролл
-         const height = clientHeight >= pageYOffset ? clientHeight : pageYOffset + clientHeight;
-         return height;
+         return document.body.clientHeight;
       },
 
       getVisualViewport(): object {
