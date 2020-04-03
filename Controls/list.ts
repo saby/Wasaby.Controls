@@ -158,6 +158,3 @@ export {
     IList,
     IItemAction
 };
-
-export {default as ColumnsView} from './_columns/Columns';
-

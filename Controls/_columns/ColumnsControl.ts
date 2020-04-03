@@ -1,8 +1,7 @@
 import {TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
-// todo change this to import {ListControl} from 'Controls/list';
-import {default as ListControl} from 'Controls/_list/ListControl';
+import {ListControl} from 'Controls/list';
 
 import ListControlTpl = require('wml!Controls/_columns/ColumnsControl');
 

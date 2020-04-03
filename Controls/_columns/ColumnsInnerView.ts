@@ -10,8 +10,7 @@ import {
 } from 'Controls/display';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 
-// todo change this to import {IList} from 'Controls/list';
-import {IList} from 'Controls/_list/interface/IList';
+import {IList} from 'Controls/list';
 
 import ColumnsController from './controllers/ColumnsController';
 import * as template from 'wml!Controls/_columns/ColumnsInnerView';
