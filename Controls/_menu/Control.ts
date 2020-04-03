@@ -124,18 +124,22 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): void {
-        this.handleCurrentItem(item, sourceEvent.target, sourceEvent.nativeEvent);
+        if (item.getContents() instanceof Model) {
+            this.handleCurrentItem(item, sourceEvent.target, sourceEvent.nativeEvent);
+        }
     }
 
     protected _itemSwipe(e: SyntheticEvent<null>, item: TreeItem<Model>, swipeEvent: SyntheticEvent<TouchEvent>, swipeContainerHeight: number): void {
-        if (swipeEvent.nativeEvent.direction === 'left') {
-            ItemActionsController.activateSwipe(
-                this._listModel,
-                item.getContents().getKey(),
-                swipeContainerHeight
-            );
-        } else {
-            ItemActionsController.deactivateSwipe(this._listModel);
+        if (this._options.itemActions) {
+            if (swipeEvent.nativeEvent.direction === 'left') {
+                ItemActionsController.activateSwipe(
+                    this._listModel,
+                    item.getContents().getKey(),
+                    swipeContainerHeight
+                );
+            } else {
+                ItemActionsController.deactivateSwipe(this._listModel);
+            }
         }
     }
 

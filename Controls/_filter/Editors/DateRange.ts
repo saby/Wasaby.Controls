@@ -21,9 +21,11 @@ class DateRangeEditor extends Control<IControlOptions> {
     protected _templateName: string;
     protected _emptyCaption: string;
     protected _reseted: boolean = false;
+    protected _fontColorStyle: string;
 
     protected _beforeMount(options: IControlOptions): Promise<void>|void {
         this._templateName = 'Controls/dateRange:' + (options.editorMode === 'Selector' ? 'Selector' : 'LiteSelector');
+        this._fontColorStyle = options.readOnly ? 'label' : options.fontColorStyle;
         if (options.emptyCaption) {
             this._emptyCaption = options.emptyCaption;
         } else if (options.resetValue) {
@@ -63,7 +65,8 @@ class DateRangeEditor extends Control<IControlOptions> {
 
     static getDefaultOptions() {
         return {
-            editorMode: 'Lite'
+            editorMode: 'Lite',
+            fontColorStyle: 'secondary'
         };
     }
 }
