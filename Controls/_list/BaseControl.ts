@@ -1233,6 +1233,8 @@ var _private = {
 
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         const context = event.type === 'itemcontextmenu';
+        const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
+                                      || self._options.contextMenuConfig?.headerTemplate);
         const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
         if ((context && self._isTouch) || !itemActions) {
             return false;
@@ -1250,7 +1252,7 @@ var _private = {
          */
         self._menuTarget = _private.mockTarget(childEvent.target);
         const target = context ? null : self._menuTarget;
-        if (showActions && showActions.length) {
+        if (showActions && showActions.length || hasMenuFooterOrHeader) {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             if (self._options.useNewModel) {
