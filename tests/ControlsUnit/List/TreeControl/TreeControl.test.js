@@ -1656,10 +1656,10 @@ define([
 
          treeGrid.TreeControl._private.toggleExpanded = function(){};
 
-         treeControl._onExpanderClick(e, treeGridViewModel.at(0));
+         treeControl._onExpanderMouseDown(e, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
-         treeControl._onExpanderClick(e, treeGridViewModel.at(1));
+         treeControl._onExpanderMouseDown(e, treeGridViewModel.at(1));
          assert.deepEqual(2, treeGridViewModel._model._markedKey);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
@@ -1709,10 +1709,10 @@ define([
 
          treeGrid.TreeControl._private.toggleExpanded = function(){};
 
-         treeControl._onExpanderClick(e, treeGridViewModel.at(0));
+         treeControl._onExpanderMouseDown(e, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
-         treeControl._onExpanderClick(e, treeGridViewModel.at(1));
+         treeControl._onExpanderMouseDown(e, treeGridViewModel.at(1));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
@@ -1838,16 +1838,12 @@ define([
             return {
                hasMoreData: () => false,
                load: function() {
-                  return {
-                     addCallback: (func) => {
-                        func(new collection.RecordSet({
-                           rawData: [],
-                           keyProperty: 'id'
-                        }));
-                     }
-                  }
+                  return Deferred.success(new collection.RecordSet({
+                     rawData: [],
+                     keyProperty: 'id'
+                  }));
                }
-            }
+            };
          };
 
          // Initial

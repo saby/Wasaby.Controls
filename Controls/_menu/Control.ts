@@ -2,6 +2,7 @@ import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
 import {TSelectedKeys} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
+import {Sticky as StickyOpener} from 'Controls/popup';
 import {Controller as SourceController} from 'Controls/source';
 import {RecordSet, List} from 'Types/collection';
 import {ICrud, PrefetchProxy} from 'Types/source';
@@ -28,7 +29,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilter
- * @mixes Controls/_menu/IMenuControl
+ * @mixes Controls/_menu/interface/IMenuControl
  * @demo Controls-demo/Menu/Control/Source/Index
  * @control
  * @category Popup
@@ -39,6 +40,11 @@ const SUB_DROPDOWN_OPEN_DELAY = 100;
 
 class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     protected _template: TemplateFunction = ViewTemplate;
+
+    _children: {
+        Sticky: StickyOpener
+    };
+
     protected _listModel: Tree<Model>;
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
@@ -118,18 +124,22 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): void {
-        this.handleCurrentItem(item, sourceEvent.target, sourceEvent.nativeEvent);
+        if (item.getContents() instanceof Model) {
+            this.handleCurrentItem(item, sourceEvent.target, sourceEvent.nativeEvent);
+        }
     }
 
     protected _itemSwipe(e: SyntheticEvent<null>, item: TreeItem<Model>, swipeEvent: SyntheticEvent<TouchEvent>, swipeContainerHeight: number): void {
-        if (swipeEvent.nativeEvent.direction === 'left') {
-            ItemActionsController.activateSwipe(
-                this._listModel,
-                item.getContents().getKey(),
-                swipeContainerHeight
-            );
-        } else {
-            ItemActionsController.deactivateSwipe(this._listModel);
+        if (this._options.itemActions) {
+            if (swipeEvent.nativeEvent.direction === 'left') {
+                ItemActionsController.activateSwipe(
+                    this._listModel,
+                    item.getContents().getKey(),
+                    swipeContainerHeight
+                );
+            } else {
+                ItemActionsController.deactivateSwipe(this._listModel);
+            }
         }
     }
 
@@ -220,8 +230,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         if (eventName === 'menuOpened') {
             this.subMenu = eventResult;
         } else {
-            this._notify(eventName, [eventResult]);
-            if (eventName === 'pinClick') {
+            const notifyResult = this._notify(eventName, [eventResult]);
+            if (eventName === 'pinClick' || eventName === 'itemClick' && notifyResult !== false) {
                 this._closeSubMenu();
             }
         }
