@@ -36,13 +36,13 @@ var
          table: TreeGridViewModel
       },
       _private = {
-         setRoot: function(self, root) {
+         setRoot: function(self, root, dataRoot = null) {
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
-               self._options.itemOpenHandler(root, self._items);
+               self._options.itemOpenHandler(root, self._items, dataRoot);
             }
             self._forceUpdate();
          },
@@ -190,7 +190,7 @@ var
             if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
                self._breadCrumbsItems = null;
                if (dataRoot !== currentRoot) {
-                  _private.setRoot(self, dataRoot);
+                  _private.setRoot(self, dataRoot, dataRoot);
                }
             }
 

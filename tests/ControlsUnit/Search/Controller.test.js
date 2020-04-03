@@ -739,6 +739,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.isFalse(searchAborted);
          assert.equal(searchController._root, null);
 
+         searchController._root = 'test';
+         searchController._itemOpenHandler('dataRoot', {}, 'dataRoot');
+         assert.isFalse(searchAborted);
+         assert.equal(searchController._root, 'dataRoot');
+
          searchController._itemOpenHandler('test');
          assert.isTrue(searchAborted);
          assert.isTrue(abortForced);
