@@ -3916,6 +3916,9 @@ define([
                   },
                   stopImmediatePropagation: function() {
                      callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{}
                   }
                },
                itemData = {
