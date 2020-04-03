@@ -314,10 +314,16 @@ interface IPosition {
       },
 
       getBodyHeight(): number {
-         if (Env.detection.isMobileIOS && window?.visualViewport) {
-            return _private.getVisualViewport().height;
+         const pageYOffset = window?.pageYOffset;
+         const clientHeight = document.body.clientHeight;
+         if (window?.visualViewport) {
+            const visualViewportHeight = _private.getVisualViewport().height;
+            // учитываем скролл
+            const height = visualViewportHeight >= pageYOffset ? visualViewportHeight : visualViewportHeight + pageYOffset;
+            return height;
          }
-         let height = document.body.clientHeight >= window?.pageYOffset ? document.body.clientHeight : window?.pageYOffset + document.body.clientHeight;
+         // учитываем скролл
+         const height = clientHeight >= pageYOffset ? clientHeight : pageYOffset + clientHeight;
          return height;
       },
 
