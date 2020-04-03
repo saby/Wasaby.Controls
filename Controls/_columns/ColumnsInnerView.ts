@@ -34,7 +34,7 @@ const DEFAULT_COLUMNS_COUNT = 2;
 export default class ColumnsInnerView extends Control {
     _template: TemplateFunction = template;
     private _itemsContainer: HTMLDivElement;
-    private _columnsCount: number = DEFAULT_COLUMNS_COUNT;
+    private _columnsCount: number;
     private _columnsController: ColumnsController;
     private _columnsIndexes: number[][];
     private _model: Collection<Model>;
@@ -51,9 +51,11 @@ export default class ColumnsInnerView extends Control {
         } else {
             if (options.columnsCount) {
                 this._columnsCount = options.columnsCount;
+            } else {
+                this._columnsCount = DEFAULT_COLUMNS_COUNT;
             }
         this.updateColumns();
-    }
+        }
     }
 
     protected _afterMount(): void {
