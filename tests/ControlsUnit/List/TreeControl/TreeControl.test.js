@@ -1636,6 +1636,9 @@ define([
                markItemByExpanderClick: true
             },
             e = {
+               nativeEvent: {
+                  buttons: 1
+               },
                stopImmediatePropagation: function(){}
             },
             treeControl = new treeGrid.TreeControl(cfg),
@@ -1689,6 +1692,9 @@ define([
                markItemByExpanderClick: false
             },
             e = {
+               nativeEvent: {
+                  buttons: 1
+               },
                stopImmediatePropagation: function(){}
             },
             treeControl = new treeGrid.TreeControl(cfg),

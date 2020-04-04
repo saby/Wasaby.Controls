@@ -721,8 +721,14 @@ define([
             keyProperty: 'id',
             data: data
          });
-
-         let metaData;
+         let isIterativeSearch = false;
+         const setIterativeMetaData = (items) => {
+            if (items) {
+               let metaData = items.getMetaData();
+               metaData.iterative = isIterativeSearch;
+               items.setMetaData(metaData);
+            }
+         };
 
          const cfg = {
             viewName: 'Controls/List/ListView',
@@ -731,6 +737,10 @@ define([
             },
             beforeLoadToDirectionCallback: function() {
                beforeLoadToDirectionCalled = true;
+            },
+            serviceDataLoadCallback: function(currentItems, loadedItems) {
+               setIterativeMetaData(currentItems);
+               setIterativeMetaData(loadedItems);
             },
             source: source,
             viewConfig: {
@@ -758,13 +768,18 @@ define([
          ctrl._afterMount(cfg);
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
-         metaData = ctrl._items.getMetaData();
-         metaData.iterative = true;
-         ctrl._items.setMetaData(metaData);
-
+         isIterativeSearch = true;
+         setIterativeMetaData(ctrl._items);
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          assert.isTrue(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
+
+         await lists.BaseControl._private.loadToDirection(ctrl, 'up');
+         assert.isTrue(ctrl._portionedSearchInProgress);
+
+         isIterativeSearch = false;
+         await lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         assert.isFalse(ctrl._portionedSearchInProgress);
       });
 
       it('loadToDirection down with getHasMoreData option', async function() {
@@ -2927,6 +2942,32 @@ define([
          assert.isTrue(ctrl._needBottomPadding);
 
       });
+      it('setHasMoreData after reload in beforeMount', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'id',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            useNewModel: true,
+            viewModelConstructor: 'Controls/display:Collection',
+            source: source,
+         };
+         let ctrl = new lists.BaseControl(cfg);
+         let setHasMoreDataCalled = false;
+         let origSHMD = lists.BaseControl._private.setHasMoreData;
+         lists.BaseControl._private.setHasMoreData = () => {
+            setHasMoreDataCalled = true;
+         }
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         assert.isTrue(setHasMoreDataCalled);
+
+      });
       it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
@@ -3884,7 +3925,67 @@ define([
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
+         it('showActionsMenu context without actions, with footer', function(done) {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  contextMenuConfig: {
+                     footerTemplate: 'footer'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{}
+                  }
+               },
+               itemData = {
+                  itemActions: { all: [] }
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function(args) {
+                     callBackCount++;
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
+                     assert.equal(args.templateOptions.items.getKeyProperty(), 'id');
+                     assert.equal(args.templateOptions.keyProperty, 'id');
+                     assert.equal(args.templateOptions.parentProperty, 'parent');
+                     assert.equal(args.templateOptions.nodeProperty, 'parent@');
+                     assert.equal(itemData, instance._listViewModel._activeItem);
+                     assert.equal(instance._listViewModel._menuState, 'shown');
+                     assert.equal(callBackCount, 3);
+                     done();
+                  }
+               }
+            };
 
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+         });
          it('_onItemContextMenu', function() {
             var callBackCount = 0;
             var cfg = {

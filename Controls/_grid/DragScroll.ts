@@ -73,11 +73,9 @@ export class DragScroll extends Control<IDragScrollOptions> {
 
         // Если в списке доступен DragNDrop, то он запускается отложенно и только в том случае, если пользователь
         // не начал водить мышью.
-        // Если недоступен, то ничего не ждем и начинаем скроллирование.
+        // Если недоступен, то overlay по клину не поднимаем, иначе не сработают события click, mouseup по записи.
         if (hasDragNDrop && isTargetDraggable) {
             this._initDelayedDragNDrop();
-        } else {
-            this._showOverlay();
         }
     }
 

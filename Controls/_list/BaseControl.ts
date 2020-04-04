@@ -1093,15 +1093,17 @@ var _private = {
 
     loadToDirectionWithSearchValueEnded(self, loadedItems: RecordSet): void {
         const portionedSearch = _private.getPortionedSearch(self);
-        if (!_private.hasMoreData(self, self._sourceController, 'down')) {
+        const isPortionedLoad = _private.isPortionedLoad(self, loadedItems);
+
+        if (!_private.hasMoreDataInAnyDirection(self, self._sourceController) || !isPortionedLoad) {
             portionedSearch.reset();
         } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
         }
     },
 
-    isPortionedLoad(self): boolean {
-        const loadByMetaData = self._items && self._items.getMetaData()[PORTIONED_LOAD_META_FIELD];
+    isPortionedLoad(self, items = self._items): boolean {
+        const loadByMetaData = items && items.getMetaData()[PORTIONED_LOAD_META_FIELD];
         const loadBySearchValue = !!self._options.searchValue;
         return loadByMetaData || loadBySearchValue;
     },
@@ -1253,6 +1255,8 @@ var _private = {
 
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         const context = event.type === 'itemcontextmenu';
+        const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
+                                      || self._options.contextMenuConfig?.headerTemplate);
         const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
         if ((context && self._isTouch) || !itemActions) {
             return false;
@@ -1270,7 +1274,7 @@ var _private = {
          */
         self._menuTarget = _private.mockTarget(childEvent.target);
         const target = context ? null : self._menuTarget;
-        if (showActions && showActions.length) {
+        if (showActions && showActions.length || hasMenuFooterOrHeader) {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             if (self._options.useNewModel) {
@@ -1870,6 +1874,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
+                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+
                     if (newOptions.useNewModel) {
                         self._items = self._listViewModel.getCollection();
                     } else {
@@ -1912,6 +1918,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             viewModelConfig,
                             newOptions.viewModelConstructor
                         );
+                        
+                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                         }
@@ -2343,9 +2352,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
 
-    _onCheckBoxClick: function(e, key, status) {
-        this._children.selectionController.onCheckBoxClick(key, status);
-        this._notify('checkboxClick', [key, status]);
+    _onCheckBoxClick: function(e, key, status, readOnly) {
+        if (!readOnly) {
+            this._children.selectionController.onCheckBoxClick(key, status);
+            this._notify('checkboxClick', [key, status]);
+        }
     },
 
     _listSwipe: function(event, itemData, childEvent) {
@@ -2851,7 +2862,7 @@ BaseControl.contextTypes = function contextTypes() {
     };
 };
 
-BaseControl._theme = ['Controls/Classes'];
+BaseControl._theme = ['Controls/Classes', 'Controls/list_multi'];
 
 BaseControl.getDefaultOptions = function() {
     return {
