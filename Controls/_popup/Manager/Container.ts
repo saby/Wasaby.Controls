@@ -80,6 +80,7 @@ class Container extends Control<IControlOptions> {
         event.stopPropagation();
     }
 
+    static theme: string[] = ['Controls/popup'];
     // To calculate the zIndex in a compatible notification Manager
     static POPUP_ZINDEX_STEP: number = POPUP_ZINDEX_STEP;
 }
