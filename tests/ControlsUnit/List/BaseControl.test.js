@@ -2942,6 +2942,32 @@ define([
          assert.isTrue(ctrl._needBottomPadding);
 
       });
+      it('setHasMoreData after reload in beforeMount', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'id',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            useNewModel: true,
+            viewModelConstructor: 'Controls/display:Collection',
+            source: source,
+         };
+         let ctrl = new lists.BaseControl(cfg);
+         let setHasMoreDataCalled = false;
+         let origSHMD = lists.BaseControl._private.setHasMoreData;
+         lists.BaseControl._private.setHasMoreData = () => {
+            setHasMoreDataCalled = true;
+         }
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         assert.isTrue(setHasMoreDataCalled);
+
+      });
       it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
