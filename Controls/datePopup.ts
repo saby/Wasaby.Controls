@@ -6,6 +6,7 @@ import {descriptor, Date as WSDate} from 'Types/entity';
 import {dateMaskConstants} from 'Controls/interface';
 import {IRangeSelectable} from 'Controls/dateRange';
 import {DateRangeModel, IDateRangeSelectable} from 'Controls/dateRange';
+import {getRangeValueValidators} from 'Controls/Utils/DateControlsUtils';
 import EventProxyMixin from './_datePopup/Mixin/EventProxy';
 import periodDialogUtils from './_datePopup/Utils';
 import dateUtils = require('Controls/Utils/Date');
@@ -25,6 +26,7 @@ import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/interface/IDateMask
  * @mixes Controls/_datePopup/interfaces/IDatePopup
+ * @mixes Controls/_interface/IDateRangeValidators
  * @control
  * @public
  * @author Красильников А.С.
@@ -40,6 +42,7 @@ import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/interface/IDateMask
  * @mixes Controls/datePopup/interfaces/IDatePopup
+ * @mixes Controls/_interface/IDateRangeValidators
  * @control
  * @public
  * @author Красильников А.С.
@@ -110,6 +113,21 @@ var _private = {
             return self._children.formController.submit().then((results: object) => {
                 return !Object.keys(results).find((key) => Array.isArray(results[key]));
             });
+        },
+
+        updateValidators: function (self, options?): void {
+            _private.updateStartValueValidators(self, options?.startValueValidators);
+            _private.updateEndValueValidators(self, options?.endValueValidators);
+        },
+
+        updateStartValueValidators(self, validators?: Function[]): void {
+            const startValueValidators: Function[] = validators || self._options.startValueValidators;
+            self._startValueValidators = getRangeValueValidators(startValueValidators, self._rangeModel, self._rangeModel.startValue);;
+        },
+
+        updateEndValueValidators(self, validators?: Function[]): void {
+            const endValueValidators: Function[] = validators || self._options.endValueValidators;
+            self._endValueValidators = getRangeValueValidators(endValueValidators, self._rangeModel, self._rangeModel.endValue);
         }
     },
     HEADER_TYPES = {
@@ -155,6 +173,9 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _mask: null,
 
+    _startValueValidators: null,
+    _endValueValidators: null,
+
     _beforeMount: function (options) {
         /* Опция _displayDate используется только(!) в тестах, чтобы иметь возможность перемотать
          календарь в нужный период, если startValue endValue не заданы. */
@@ -166,6 +187,12 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
         this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         this._rangeModel.update(options);
+
+        this._startValueValidators = [];
+        this._endValueValidators = [];
+        _private.updateValidators(this, options);
+        this._rangeModel.subscribe('rangeChanged', () => { _private.updateValidators(this); });
+
         this._prepareTheme();
         this._headerRangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         this._headerRangeModel.update(options);
@@ -391,6 +418,9 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _inputFocusOutHandler: function(event): Promise<boolean> {
+        if (this._headerType === this._options.headerType) {
+            return;
+        }
         return new Promise((resolve) => {
             if (!this._children.inputs.contains(event.nativeEvent.relatedTarget)) {
                 return _private.isInputsValid(this).then((valid: boolean) => {
@@ -446,7 +476,10 @@ Component.getDefaultOptions = function () {
 
         dateConstructor: WSDate,
 
-        dayTemplate: MonthViewDayTemplate
+        dayTemplate: MonthViewDayTemplate,
+
+        startValueValidators: [],
+        endValueValidators: [],
 
     }, IRangeSelectable.getDefaultOptions());
 };
