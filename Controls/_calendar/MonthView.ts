@@ -12,6 +12,8 @@ import captionTemplate = require("wml!Controls/_calendar/MonthView/captionTempla
 
 import IMonth from './interfaces/IMonth';
 
+import {Logger} from 'UI/Utils';
+
 var _private = {
    _updateView: function(self, options) {
       var newMonth = options.month || new options.dateConstructor();
@@ -68,6 +70,10 @@ var MonthView = BaseControl.extend({
    _beforeMount: function(options) {
       _private._updateView(this, options);
       this._monthViewModel = options.monthViewModel ? new options.monthViewModel(options) : new MonthViewModel(options);
+
+      if (!options.newMode) {
+         Logger.warn('MonthView: Используется устаревшая верстка, используйте newMode=true для перехода на новую');
+      }
    },
 
    _beforeUpdate: function(newOptions) {

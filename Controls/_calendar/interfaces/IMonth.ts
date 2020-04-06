@@ -75,7 +75,7 @@ export default {
 
             /**
              * @name Controls/_calendar/interfaces/IMonth#newMode
-             * cfg {Boolean} Опция, позволяющая перейти на новую верстку контрола
+             * @cfg {Boolean} Опция, позволяющая перейти на новую верстку контрола
              */
         };
     },

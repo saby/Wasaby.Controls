@@ -1213,14 +1213,6 @@ var _private = {
         });
     },
 
-    mockTarget(target: HTMLElement): {
-        getBoundingClientRect: () => ClientRect
-    } {
-        const clientRect = target.getBoundingClientRect();
-        return {
-            getBoundingClientRect: () => clientRect
-        };
-    },
     getMenuConfig(items: IItemAction[], contextMenuConfig: object, action?: IItemAction): object {
         let defaultMenuConfig: object = {
             items: new RecordSet({ rawData: items, keyProperty: 'id' }),
@@ -1272,7 +1264,7 @@ var _private = {
          * So, we have to save target's ClientRect here in order to work around it.
          * But popups don't work with ClientRect, so we have to wrap it in an object with getBoundingClientRect method.
          */
-        self._menuTarget = _private.mockTarget(childEvent.target);
+        self._menuTarget = childEvent.target;
         const target = context ? null : self._menuTarget;
         if (showActions && showActions.length || hasMenuFooterOrHeader) {
             childEvent.nativeEvent.preventDefault();
