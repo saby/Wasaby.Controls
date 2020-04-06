@@ -177,6 +177,37 @@ define(
                emptyMenuControl._itemClick('itemClick', item, {});
                assert.equal(selectedKeys[0], 1);
             });
+
+            describe('check touch event', function() {
+               beforeEach(() => {
+                  selectedItem = null;
+               });
+
+               it('not hierarchy', function() {
+                  menuControl._itemClick('itemClick', item, {});
+                  assert.equal(selectedItem.getKey(), 1);
+               });
+
+               it('not hierarchy, touchItemId = 1', function() {
+                  menuControl._touchedItemId = 1;
+                  menuControl._itemClick('itemClick', item, {});
+                  assert.equal(selectedItem.getKey(), 1);
+               });
+
+               it('with hierarchy, touchItemId = 1', function() {
+                  menuControl._touchedItemId = 1;
+                  menuControl._options.nodeProperty = 'node';
+                  item.set('node', true);
+                  menuControl._itemClick('itemClick', item, {});
+                  assert.isNull(selectedItem);
+               });
+
+               it('with hierarchy, touchItemId = null', function() {
+                  menuControl._touchedItemId = null;
+                  menuControl._itemClick('itemClick', item, {});
+                  assert.equal(selectedItem.getKey(), 1);
+               });
+            });
          });
 
          describe('_itemMouseEnter', function() {
@@ -201,6 +232,31 @@ define(
             });
 
             sinon.restore();
+         });
+
+         describe('_itemTouchStart', function() {
+            let menuControl = getMenu();
+            let treeItem = new display.TreeItem({
+               contents: new entity.Model({
+                  rawData: { key: 1 },
+                  keyProperty: 'key'
+               })
+            });
+            it('click on item 1', function() {
+               menuControl._itemTouchStart('touch', treeItem);
+               assert.equal(menuControl._touchedItemId, 1);
+            });
+
+            it('click on item 2', function() {
+               treeItem.getContents().set('key', 2);
+               menuControl._itemTouchStart('touch', treeItem);
+               assert.equal(menuControl._touchedItemId, 2);
+            });
+
+            it('second click on item 2', function() {
+               menuControl._itemTouchStart('touch', treeItem);
+               assert.isNull(menuControl._touchedItemId);
+            });
          });
 
          it('getTemplateOptions', function() {
