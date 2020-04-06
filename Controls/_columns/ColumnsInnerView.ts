@@ -82,8 +82,11 @@ export default class ColumnsInnerView extends Control {
         }
     }
     protected _resizeHandler(): void {
-        if (this._options.columnsMode === 'auto') {
-            this._recalculateColumnsCountByWidth(this._container.getBoundingClientRect().width);
+        const currentWidth = this._itemsContainer.getBoundingClientRect().width;
+
+        // если currentWidth === 0, значит контрол скрыт (на вкладке switchbleArea), и не нужно пересчитывать
+        if (this._options.columnsMode === 'auto' && currentWidth > 0) {
+            this._recalculateColumnsCountByWidth(currentWidth);
         }
     }
 
