@@ -1,5 +1,5 @@
 /**
- * Интерфейс для перезагрузки древа узлов.
+ * Интерфейс для перезагрузки узлов дерева.
  * @interface Controls/_treeGrid/interface/IReloadableTreeGrid
  * @public
  * @author Авраменко А.С.
