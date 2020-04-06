@@ -13,16 +13,16 @@ define('Controls-demo/Container/Scroll',
          _scrollbarVisible: true,
          _shadowVisible: true,
          _numberOfRecords: 50,
-         _selectedStyle: 'normal',
+         _selectedStyle: 'default',
          _scrollStyleSource: null,
 
          _beforeMount: function() {
             this._scrollStyleSource = new source.Memory({
                keyProperty: 'title',
                data: [{
-                  title: 'normal'
+                  title: 'default'
                }, {
-                  title: 'inverted'
+                  title: 'onlinenavigation'
                }]
             });
          },
