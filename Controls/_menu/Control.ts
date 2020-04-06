@@ -169,7 +169,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
                 this._notify('selectedKeysChanged', [this.getSelectedKeys()]);
             } else {
-                this._notify('itemClick', [item]);
+                this._notify('itemClick', [item, nativeEvent]);
             }
         }
     }
@@ -237,8 +237,18 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
-    protected _footerMouseEnter(): void {
-        this._closeSubMenu();
+    protected _footerMouseEnter(event): void {
+        if (!this._isNeedKeepMenuOpen(this.subMenu, event.nativeEvent) && this._subDropdownItem) {
+            this._closeSubMenu();
+        }
+    }
+
+    private _isNeedKeepMenuOpen(needCloseDropDown, nativeEvent): boolean {
+        if (needCloseDropDown) {
+            this.setSubMenuPosition();
+        }
+        this._isMouseInOpenedItemArea = needCloseDropDown ? this.isMouseInOpenedItemArea(nativeEvent) : false;
+        return this._isMouseInOpenedItemArea;
     }
 
     private _closeSubMenu(needOpenDropDown: boolean = false): void {
@@ -268,19 +278,14 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         const needCloseDropDown = this.subMenu && this._subDropdownItem && this._subDropdownItem !== item;
         this.setItemParamsOnHandle(item, target, nativeEvent);
 
-        if (needCloseDropDown) {
-            this.setSubMenuPosition();
-            this._isMouseInOpenedItemArea = this.isMouseInOpenedItemArea(nativeEvent);
-        } else {
-            this._isMouseInOpenedItemArea = false;
-        }
+        const needKeepMenuOpen = this._isNeedKeepMenuOpen(needCloseDropDown, nativeEvent);
 
         // Close the already opened sub menu. Installation of new data sets new size of the container.
         // If you change the size of the update, you will see the container twitch.
-        if (needCloseDropDown && !this._isMouseInOpenedItemArea) {
+        if (needCloseDropDown && !needKeepMenuOpen) {
             this._closeSubMenu(needOpenDropDown);
         }
-        if (needOpenDropDown && !this._isMouseInOpenedItemArea) {
+        if (needOpenDropDown && !needKeepMenuOpen) {
             this._openSubMenuEvent = nativeEvent;
             this._subDropdownItem = item;
             this._openSubDropdown(target, item);
