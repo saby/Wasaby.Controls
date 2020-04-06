@@ -71,9 +71,9 @@ export interface IMonthListSource {
  * </pre>
  */
 
-/*Eng
+/*
  * @name Controls/_calendar/interfaces/IMonthListSource#dayTemplate
- * @cfg {Function} Day template.
+ * @cfg {Function} Шаблон дня.
  * @remark Шаблон имеет опции позволяющие кастомизировать контрол:
  * fontColorStyle - опция добавляет постфикс к следующим классам. (Для примера возьмем fontColorStyle = 'secondary')
  * <ul>
@@ -115,7 +115,7 @@ export interface IMonthListSource {
 
 /*
  * @name Controls/_calendar/interfaces/IMonthListSource#dayHeaderTemplate
- * cfg {Function} Day header template
+ * @cfg {Function} Шаблон заголовка дня.
  * @remark В шаблоне можно использовать объект value, в котором хранятся caption (Сокращенное название дня недели) day (Индекс дня) и
  * weekend (Буллевое значение, является ли день выходным)
  * @example
@@ -133,7 +133,7 @@ export interface IMonthListSource {
 
 /*
  * @name Controls/_calendar/interfaces/IMonthListSource#captionTemplate
- * cfg {Function} Caption template
+ * @cfg {Function} Шаблон заголовка.
  * @remark В шаблоне можно использовать date (Дата месяца) caption (Заголовок месяца)
  * @example
  *  <Controls.calendar:MonthView bind:month="_month" newMode="{{true}}">
