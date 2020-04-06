@@ -3,6 +3,7 @@ import { IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig } from '../Col
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
+import {PrefetchProxy, Memory} from 'Types/source';
 
 // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
 const showType = {
@@ -240,6 +241,15 @@ export function prepareActionsMenuConfig(
             rawData: menuActions,
             keyProperty: 'id'
         });
+        const menuSource = new PrefetchProxy({
+            target: new Memory({
+                data: menuActions,
+                keyProperty: 'id'
+            }),
+            data: {
+                query: menuRecordSet.clone()
+            }
+        });
         const headConfig = hasParentAction ? {
             caption: parentAction.title,
             icon: parentAction.icon
@@ -247,13 +257,14 @@ export function prepareActionsMenuConfig(
         const contextMenuConfig = collection.getContextMenuConfig();
         const menuConfig = {
             items: menuRecordSet,
+            source:menuSource,
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
             dropdownClassName: 'controls-itemActionsV__popup',
-            showClose: true,
+            closeButtonVisibility: true,
             ...contextMenuConfig,
-            rootKey: parentAction && parentAction.id,
+            root: parentAction && parentAction.id,
             showHeader: hasParentAction,
             headConfig
         };
@@ -417,20 +428,20 @@ function _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
 function _processActionsMenuClose(
     collection: IItemActionsCollection,
     actionClickCallback: Function,
-    args?: { action: string, event: SyntheticEvent<MouseEvent>, data: any[] },
+    action: string, data: any[], event: SyntheticEvent<MouseEvent>
 ): void {
     // Actions dropdown can start closing after the view itself was unmounted already, in which case
     // the model would be destroyed and there would be no need to process the action itself
     if (collection && !collection.destroyed) {
         // If menu needs to close because one of the actions was clicked, process
         // the action handler first
-        if (args && args.action === 'itemClick') {
-            const action = args.data && args.data[0] && args.data[0].getRawData();
+        if (action === 'itemClick') {
+            const action = data && data.getRawData();
             processActionClick(
                 collection,
                 getActiveItem(collection)?.getContents()?.getKey(),
                 action,
-                args.event,
+                event,
                 true,
                 actionClickCallback
             );
@@ -441,10 +452,12 @@ function _processActionsMenuClose(
             }
         }
 
-        setActiveItem(collection, null);
-        collection.setActionsMenuConfig(null);
-        deactivateSwipe(collection);
-        collection.nextVersion();
+        if (action !== 'menuOpened') {
+            setActiveItem(collection, null);
+            collection.setActionsMenuConfig(null);
+            deactivateSwipe(collection);
+            collection.nextVersion();
+        }
     }
 }
 
