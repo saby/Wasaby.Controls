@@ -1,0 +1,18 @@
+<Controls.list:DataContainer
+   keyProperty="id"
+   source="{{ _source }}"
+   bind:filter="_filter"
+   attr:class="controlsDemo_fixedWidth500"
+>
+   <Controls.search:Controller searchParam="title">
+      <div>
+         <Controls.search:InputContainer>
+            <Controls.search:Input />
+         </Controls.search:InputContainer>
+         <Controls.list:Container itemActions="{{_itemActions}}">
+            <Controls.list:View />
+         </Controls.list:Container>
+         <Controls.list:Remover name="listRemover" on:afterItemsRemove="_afterItemsRemove()" />
+      </div>
+   </Controls.search:Controller>
+</Controls.list:DataContainer>
