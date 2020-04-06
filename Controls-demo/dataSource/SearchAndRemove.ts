@@ -1,7 +1,7 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import { Memory, Query, DataSet } from 'Types/source';
 import { adapter, Model } from 'Types/entity';
-import { fetch, RPC } from 'Browser/Transport';
+import { fetch } from 'Browser/Transport';
 import * as template from 'wml!Controls-demo/dataSource/SearchAndRemove';
 import { IItemAction, Remover } from 'Controls/list';
 import { Confirmation } from 'Controls/popup';
@@ -19,17 +19,8 @@ class TestSource extends Memory {
     query(filter: Query<IFilter>): Promise<DataSet> {
         const where = filter.getWhere() as unknown as IFilter;
 
-        if (where.title === 'error_standard') {
+        if (where.title === 'error') {
             return getStandardError();
-        }
-
-        if (where.title === 'error_custom') {
-            return Promise.reject(
-                new RPC.Error({
-                    url: '',
-                    message: 'Неверный запрос'
-                })
-            );
         }
 
         return super.query(filter);
