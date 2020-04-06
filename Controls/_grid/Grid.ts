@@ -22,7 +22,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_grid/interface/IItemClick
     * @mixes Controls/interface/IGridItemTemplate
     * @mixes Controls/_grid/interface/IPropStorage
-    * @mixes Controls/_grid/interface/IReloadableGrid
+    * @mixes Controls/_list/interface/IReloadableList
     *
     * @control
     * @public
