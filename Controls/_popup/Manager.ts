@@ -80,16 +80,10 @@ class Manager extends Control<IManagerOptions> {
             return options.id;
         }
         const item: IPopupItem = this._createItemConfig(options, controller);
-        const defaultConfigResult: null | Promise<void> = controller.getDefaultConfig(item);
-        if (defaultConfigResult instanceof Promise) {
-            defaultConfigResult.then(() => {
-                this._addElement(item);
-                this._redrawItems();
-            });
-        } else {
+        Promise.resolve(controller.getDefaultConfig(item)).then(() => {
             this._addElement(item);
             this._redrawItems();
-        }
+        });
         return item.id;
     }
 
