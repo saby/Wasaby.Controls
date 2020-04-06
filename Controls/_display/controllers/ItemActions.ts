@@ -1,9 +1,8 @@
 import { IBaseCollection, TItemKey } from '../interface';
 import { IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig } from '../Collection';
 import { SyntheticEvent } from 'Vdom/Vdom';
-import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
-import {PrefetchProxy, Memory} from 'Types/source';
+import {Memory} from 'Types/source';
 
 // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
 const showType = {
@@ -237,18 +236,9 @@ export function prepareActionsMenuConfig(
         // there was a fake target before, check if it is needed
         const menuTarget = isContext ? null : getFakeMenuTarget(clickEvent.target as HTMLElement);
         const closeHandler = _processActionsMenuClose.bind(null, collection, actionClickCallback);
-        const menuRecordSet = new RecordSet({
-            rawData: menuActions,
+        const menuSource = new Memory({
+            data: menuActions,
             keyProperty: 'id'
-        });
-        const menuSource = new PrefetchProxy({
-            target: new Memory({
-                data: menuActions,
-                keyProperty: 'id'
-            }),
-            data: {
-                query: menuRecordSet.clone()
-            }
         });
         const headConfig = hasParentAction ? {
             caption: parentAction.title,
@@ -256,8 +246,7 @@ export function prepareActionsMenuConfig(
         } : null;
         const contextMenuConfig = collection.getContextMenuConfig();
         const menuConfig = {
-            items: menuRecordSet,
-            source:menuSource,
+            source: menuSource,
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
