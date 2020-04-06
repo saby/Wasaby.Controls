@@ -22,7 +22,6 @@ define('Controls/Application',
     * @class Controls/Application
     * @extends Core/Control
     *
-    * @mixes Controls/Application/BlockLayout/Styles
     * @mixes Controls/_interface/IApplication
     * @mixes UI/_base/interface/IHTML
     * @mixes Controls/_interface/IRUM
