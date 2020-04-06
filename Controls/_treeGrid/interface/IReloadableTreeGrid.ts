@@ -1,13 +1,13 @@
 /**
- * Интерфейс Интерфейс для перезагрузки древа узлов.
- * @interface Controls/_grid/interface/IReloadableTreeGrid
+ * Интерфейс Интерфейс для перезагрузки узлов дерева.
+ * @interface Controls/_treeGrid/interface/IReloadableTreeGrid
  * @public
  * @author Авраменко А.С.
  */
 
  /**
  * Перезагружает данные дерева.
- * @function Controls/_treeGrid/interface/ITreeControl#reload
+ * @function Controls/_treeGrid/interface/IReloadableTreeGrid#reload
  * @remark
  * Перезагрузка выполняется с сохранением раскрытых узлов.
  * При этом в поле фильтра, указанное в parentProperty будет отправлен массив раскрытых узлов.
