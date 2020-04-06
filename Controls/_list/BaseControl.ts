@@ -920,17 +920,7 @@ var _private = {
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
         }
-        if (!self._loadingIndicatorTimer) {
-            self._loadingIndicatorTimer = setTimeout(function() {
-                self._loadingIndicatorTimer = null;
-                if (self._loadingState) {
-                    self._loadingIndicatorState = self._loadingState;
-                    self._showLoadingIndicatorImage = true;
-                    self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
-                    self._notify('controlResize');
-                }
-            }, 2000);
-        }
+        _private.startShowLoadingIndicatorTimer(self);
     },
 
     hideIndicator(self): void {
@@ -941,14 +931,41 @@ var _private = {
         self._showLoadingIndicatorImage = false;
         self._loadingIndicatorContainerOffsetTop = 0;
         self._hideIndicatorOnTriggerHideDirection = null;
-        if (self._loadingIndicatorTimer) {
-            clearTimeout(self._loadingIndicatorTimer);
-            self._loadingIndicatorTimer = null;
-        }
+        _private.clearShowLoadingIndicatorTimer(self);
         if (self._loadingIndicatorState !== null) {
             self._loadingIndicatorState = self._loadingState;
             self._notify('controlResize');
         }
+    },
+
+    startShowLoadingIndicatorTimer(self): void {
+        if (!self._loadingIndicatorTimer) {
+            self._loadingIndicatorTimer = setTimeout(() => {
+                self._loadingIndicatorTimer = null;
+                if (self._loadingState) {
+                    self._loadingIndicatorState = self._loadingState;
+                    self._showLoadingIndicatorImage = true;
+                    self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
+                    self._notify('controlResize');
+                }
+            }, INDICATOR_DELAY);
+        }
+    },
+
+    clearShowLoadingIndicatorTimer(self): void {
+        if (self._loadingIndicatorTimer) {
+            clearTimeout(self._loadingIndicatorTimer);
+            self._loadingIndicatorTimer = null;
+        }
+    },
+
+    resetShowLoadingIndicatorTimer(self): void {
+        _private.clearShowLoadingIndicatorTimer(self);
+        _private.startShowLoadingIndicatorTimer(self);
+    },
+
+    isLoadingIndicatorVisible(self): boolean {
+        return !!self._showLoadingIndicatorImage;
     },
 
     /**
@@ -1099,6 +1116,10 @@ var _private = {
             portionedSearch.reset();
         } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
+
+            if (!_private.isLoadingIndicatorVisible(self)) {
+                _private.resetShowLoadingIndicatorTimer(self);
+            }
         }
     },
 
