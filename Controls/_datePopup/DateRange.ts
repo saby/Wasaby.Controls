@@ -11,6 +11,7 @@ import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/DateRange');
 import 'wml!Controls/_datePopup/DateRangeItem';
 import 'css!theme?Controls/datePopup';
+import 'css!Controls/_datePopup/2.d41dc3a3.chunk'
 
 /**
  * Component that allows you to select periods of multiple days.

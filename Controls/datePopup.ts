@@ -236,7 +236,13 @@ var _private = {
         },
 
         toggleState: function(self, date?: Date): void {
-            self._state = self._state === STATES.year ? STATES.month : STATES.year;
+            if (self._state === STATES.year) {
+                self._state = STATES.month;
+            } else if (self._state === STATES.month) {
+                self._state = STATES.react;
+            } else {
+                self._state = STATES.year;
+            }
 
             const displayedDate = date || self._options.startValue || self._options.endValue || new Date();
             self._displayedDate = self._state === STATES.year ?
@@ -259,7 +265,8 @@ var _private = {
     },
     STATES = {
         year: 'year',
-        month: 'month'
+        month: 'month',
+        react: 'react'
     },
     MONTH_STATE_SELECTION_DAYS = 30,
     popupMask = coreMerge({auto: 'auto'}, dateMaskConstants);

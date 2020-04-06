@@ -4,21 +4,21 @@
          observerName="datePopup"
          on:intersect="_currentDayIntersectHandler()">
       <div class="controls-PeriodDialog">
-      <ws:partial
-         template="{{_headerTmpl}}"
-         _options="{{_options}}"
-         theme="{{_headerTheme}}"
-         _homeButtonVisible="{{_homeButtonVisible}}"
-         _HEADER_TYPES="{{_HEADER_TYPES}}"
-         _headerType="{{_headerType}}"
-         _rangeModel="{{_rangeModel}}"
-         _headerRangeModel="{{_headerRangeModel}}"
-         _yearStateEnabled="{{_yearStateEnabled}}"
-         _monthStateEnabled="{{_monthStateEnabled}}"
-         _state="{{_state}}"
-         _mask="{{_mask}}"
-         dateConstructor="{{_options.dateConstructor}}"
-      />
+         <ws:partial
+            template="{{_headerTmpl}}"
+            _options="{{_options}}"
+            theme="{{_headerTheme}}"
+            _homeButtonVisible="{{_homeButtonVisible}}"
+            _HEADER_TYPES="{{_HEADER_TYPES}}"
+            _headerType="{{_headerType}}"
+            _rangeModel="{{_rangeModel}}"
+            _headerRangeModel="{{_headerRangeModel}}"
+            _yearStateEnabled="{{_yearStateEnabled}}"
+            _monthStateEnabled="{{_monthStateEnabled}}"
+            _state="{{_state}}"
+            _mask="{{_mask}}"
+            dateConstructor="{{_options.dateConstructor}}"
+         />
 
          <div if="{{ _state === _STATES.year }}" class="controls-PeriodDialog__months controls-PeriodDialog__body">
             <Controls.dateRange:DateRangeSelectionController
@@ -33,12 +33,12 @@
                   on:selectionEnded="_yearsRangeSelectionEnded()"
                   on:selectionHoveredValueChanged="_onYearsSelectionHoveredValueChanged()">
 
-            <Controls._datePopup.YearsRange
-               year="{{_displayedDate}}"
-               dateConstructor="{{_options.dateConstructor}}"
-               on:itemClick="_onYearsItemClick()"
-            />
-         </Controls.dateRange:DateRangeSelectionController>
+               <Controls._datePopup.YearsRange
+                  year="{{_displayedDate}}"
+                  dateConstructor="{{_options.dateConstructor}}"
+                  on:itemClick="_onYearsItemClick()"
+               />
+            </Controls.dateRange:DateRangeSelectionController>
 
             <Controls.dateRange:DateRangeSelectionController
                startValue="{{_rangeModel.startValue}}"
@@ -50,14 +50,14 @@
                on:selectionChanged="_monthsSelectionChanged()"
                on:selectionEnded="_monthsRangeSelectionEnded()">
 
-            <Controls._datePopup.MonthsRange
-               attr:class="controls-DateRangeBigChoose__months-month-wrapper"
-               monthClickable="{{_monthStateEnabled}}"
-               bind:position="_displayedDate"
-               dateConstructor="{{_options.dateConstructor}}"
-               quantum="{{_options.quantum}}"
-               on:monthClick="_monthRangeMonthClick()"
-               on:fixedPeriodClick="_monthRangeFixedPeriodClick()">
+               <Controls._datePopup.MonthsRange
+                  attr:class="controls-DateRangeBigChoose__months-month-wrapper"
+                  monthClickable="{{_monthStateEnabled}}"
+                  bind:position="_displayedDate"
+                  dateConstructor="{{_options.dateConstructor}}"
+                  quantum="{{_options.quantum}}"
+                  on:monthClick="_monthRangeMonthClick()"
+                  on:fixedPeriodClick="_monthRangeFixedPeriodClick()">
                   <ws:dayTemplate>
                      <ws:partial
                            template="{{_dayTmpl}}"
@@ -94,6 +94,73 @@
                </ws:dayTemplate>
             </Controls._datePopup.DateRange>
          </Controls.dateRange:DateRangeSelectionController>
+            <div id="calendar" style="height: 200px;"></div>
+         <div if="{{ _state === _STATES.react }}" class="controls-PeriodDialog__react">
+<!--            <link rel="stylesheet" href="/Controls/_datePopup/styles.css"/>-->
+<!--            <script src="/Controls/_datePopup/react-infinite-calendar.js"></script>-->
+
+            <script>!function (e) {
+                function r(r) {
+                    for (var n, p, l = r[0], a = r[1], f = r[2], c = 0, s = []; c < l.length; c++) p = l[c], Object.prototype.hasOwnProperty.call(o, p) && o[p] && s.push(o[p][0]), o[p] = 0;
+                    for (n in a) Object.prototype.hasOwnProperty.call(a, n) && (e[n] = a[n]);
+                    for (i && i(r); s.length;) s.shift()();
+                    return u.push.apply(u, f || []), t()
+                }
+
+                function t() {
+                    for (var e, r = 0; r < u.length; r++) {
+                        for (var t = u[r], n = !0, l = 1; l < t.length; l++) {
+                            var a = t[l];
+                            0 !== o[a] && (n = !1)
+                        }
+                        n && (u.splice(r--, 1), e = p(p.s = t[0]))
+                    }
+                    return e
+                }
+
+                var n = {}, o = {1: 0}, u = [];
+
+                function p(r) {
+                    if (n[r]) return n[r].exports;
+                    var t = n[r] = {i: r, l: !1, exports: {}};
+                    return e[r].call(t.exports, t, t.exports, p), t.l = !0, t.exports
+                }
+
+                p.m = e, p.c = n, p.d = function (e, r, t) {
+                    p.o(e, r) || Object.defineProperty(e, r, {enumerable: !0, get: t})
+                }, p.r = function (e) {
+                    "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, {value: "Module"}), Object.defineProperty(e, "__esModule", {value: !0})
+                }, p.t = function (e, r) {
+                    if (1 & r && (e = p(e)), 8 & r) return e;
+                    if (4 & r && "object" == typeof e && e && e.__esModule) return e;
+                    var t = Object.create(null);
+                    if (p.r(t), Object.defineProperty(t, "default", {
+                        enumerable: !0,
+                        value: e
+                    }), 2 & r && "string" != typeof e) for (var n in e) p.d(t, n, function (r) {
+                        return e[r]
+                    }.bind(null, n));
+                    return t
+                }, p.n = function (e) {
+                    var r = e && e.__esModule ? function () {
+                        return e.default
+                    } : function () {
+                        return e
+                    };
+                    return p.d(r, "a", r), r
+                }, p.o = function (e, r) {
+                    return Object.prototype.hasOwnProperty.call(e, r)
+                }, p.p = "/";
+                var l = this["webpackJsonpmy-app"] = this["webpackJsonpmy-app"] || [], a = l.push.bind(l);
+                l.push = r, l = l.slice();
+                for (var f = 0; f < l.length; f++) r(l[f]);
+                var i = a;
+                t()
+            }([])</script>
+             <div><script src="/Controls/_datePopup/2.e8e257fc.chunk.js"></script></div>
+
+             <div><script src="/Controls/_datePopup/main.84adcc2e.chunk.js"></script></div>
+         </div>
       </div>
    </Controls.scroll:IntersectionObserverController>
 </Controls.validate:Controller>
