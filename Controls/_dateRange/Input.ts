@@ -18,15 +18,6 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/interface/IDateMask
  * @mixes Controls/_interface/IOpenPopup
- *
- * @css @width_DateRange-dash Width of dash between input fields.
- * @css @spacing_DateRange-between-dash-date Spacing between dash and input fields.
- * @css @thickness_DateRange-dash Thickness of dash between input fields.
- * @css @color_DateRange-dash Color of dash between input fields.
- * @css @spacing_DateRange-between-input-button Spacing between input field and button.
- * @css @size_DateRange-icon Size of calendar icon.
- * @css @font-family_DateRange Font-family of calendar icon.
- *
  * @control
  * @public
  * @demo Controls-demo/Input/Date/RangePG
@@ -43,14 +34,6 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/interface/IDateMask
- *
- * @css @width_DateRange-dash Width of dash between input fields.
- * @css @spacing_DateRange-between-dash-date Spacing between dash and input fields.
- * @css @thickness_DateRange-dash Thickness of dash between input fields.
- * @css @color_DateRange-dash Color of dash between input fields.
- * @css @spacing_DateRange-between-input-button Spacing between input field and button.
- * @css @size_DateRange-icon Size of calendar icon.
- * @css @font-family_DateRange Font-family of calendar icon.
  *
  * @control
  * @public
