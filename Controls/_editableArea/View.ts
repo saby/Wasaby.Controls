@@ -117,7 +117,9 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _afterUpdate: function () {
       if (this._beginEditTarget) {
          // search closest input and focus
-         this._beginEditTarget.getElementsByTagName('input')[0].focus();
+         if (this._beginEditTarget.getElementsByTagName('input')[0]) {
+            this._beginEditTarget.getElementsByTagName('input')[0].focus();
+         }
          this._beginEditTarget = null;
       }
    },
