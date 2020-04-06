@@ -176,7 +176,7 @@ var _private = {
 
    searchErrback: function (self, error: Error):void {
       if (self._options.dataLoadErrback) {
-         self._errbackResult = self._options.dataLoadErrback(error);
+         self._options.dataLoadErrback(error);
       }
       self._loading = false;
    },
@@ -202,11 +202,10 @@ var _private = {
 
          if (shouldSearch) {
             const searchResult = _private.getSearchController(self).search(searchValue, force);
-            self._errbackResult = undefined;
 
             if (searchResult instanceof Promise) {
                searchResult.then((result) => {
-                   if (self._errbackResult !== false && result instanceof Error) {
+                   if (result instanceof Error) {
                       self._notify('dataError', [{
                          error: result,
                          mode: dataSourceError.Mode.include
