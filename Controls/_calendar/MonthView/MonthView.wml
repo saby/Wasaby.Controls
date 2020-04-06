@@ -1,5 +1,5 @@
 <div attr:class="controls-MonthViewVDOM controls-MonthViewVDOM_theme-{{_options.theme}} {{_options.newMode !== true? 'controls-MonthViewVDOM-old'}} {{rangeselect ? ' controls-RangeSelectable__rangeselect'}} {{_themeCssClass}}">
-   <div attr:class="controls-MonthViewVDOM__caption {{_themeCssClass}}" if="{{_options.showCaption || _options.captionTemplate}}">
+   <div attr:class="controls-MonthViewVDOM__caption {{_themeCssClass}}" if="{{_options.showCaption}}">
       <ws:partial
               template="{{_options.captionTemplate}}"
               caption="{{_caption}}"
