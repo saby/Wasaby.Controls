@@ -3949,6 +3949,9 @@ define([
                      contextMenuStopped = true;
                   }
                },
+               target = {
+                  getBoundingClientRect: ()=>{}
+               },
                childEvent = {
                   nativeEvent: {
                      preventDefault: function() {
@@ -3958,9 +3961,7 @@ define([
                   stopImmediatePropagation: function() {
                      callBackCount++;
                   },
-                  target: {
-                     getBoundingClientRect: ()=>{}
-                  }
+                  target: target
                },
                itemData = {
                   itemActions: { all: [] }
@@ -3976,6 +3977,7 @@ define([
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
                      assert.equal(itemData, instance._listViewModel._activeItem);
                      assert.equal(instance._listViewModel._menuState, 'shown');
+                     assert.strictEqual(instance._menuTarget, target);
                      assert.equal(callBackCount, 3);
                      done();
                   }
