@@ -1007,10 +1007,10 @@ var CompoundArea = CompoundContainer.extend([
       }], { bubbling: true });
    },
    close: function(arg) {
-      // Если из обработчика на onBeforeClose вызвали повторное закрытие с новыми аргументами,
-      // То защита не даст повторно запустить закрытие окна, но актуальные аргументы обработать нужно.
-      this._closeArgs = arg;
       if (!this.isDestroyed()) {
+         // Если из обработчика на onBeforeClose вызвали повторное закрытие с новыми аргументами,
+         // То защита не даст повторно запустить закрытие окна, но актуальные аргументы обработать нужно.
+         this._closeArgs = arg;
          if (this._logicParent.waitForPopupCreated) {
             this._waitClose = true;
             return;
