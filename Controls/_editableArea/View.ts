@@ -117,6 +117,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _afterUpdate: function () {
       if (this._beginEditTarget) {
          // search closest input and focus
+         // В Controls.lookup:Input/Controls.Suggest:Input может не быть внутри инпута. Чтобы не падала ошибка, при отсутствии инпута фокус не ставим.
          this._beginEditTarget.getElementsByTagName('input')[0]?.focus();
          this._beginEditTarget = null;
       }
