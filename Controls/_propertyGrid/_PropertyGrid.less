@@ -1,24 +1,21 @@
 .controls-PropertyGrid_theme-@{themeName} {
-  padding: @spacing_PropertyGrid-between-top-border-content
-           @spacing_PropertyGrid-between-right-border-content
-           @spacing_PropertyGrid-between-bottom-border-content
-           @spacing_PropertyGrid-between-left-border-content;
+  padding: @content_padding_propertyGrid @content_padding_propertyGrid @content_padding_propertyGrid @content_padding_propertyGrid;
 }
 
 .controls-PropertyGrid__editor_theme-@{themeName} {
-  margin-bottom: @spacing_PropertyGrid-between-editors;
+  margin-bottom: @editor_offset_propertyGrid;
 }
 
 .controls-PropertyGrid__editor-caption_theme-@{themeName} {
   display: inline-flex;
-  width: @width-PropertyGrid_editor-caption;
-  color: @color_PropertyGrid-editor-label;
+  width: @label_width_propertyGrid;
+  color: @label_text-color;
   cursor: default;
 }
 
 .controls-PropertyGrid__group_theme-@{themeName} {
-  margin-top: @spacing_PropertyGrid-group-between-top-border-content;
-  margin-bottom: @spacing_PropertyGrid-group-between-bottom-border-content;
+  margin-top: @group_padding-vertical_propertyGrid;
+  margin-bottom: @group_padding-vertical_propertyGrid;
 }
 
 .controls-PropertyGrid__group {
