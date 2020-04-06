@@ -10,6 +10,35 @@
     </div>
 </ws:template>
 
+<ws:template name="paggingTpl">
+    <ws:if data="{{_pagingLabelData}}">
+        <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
+            <div class="controls-BaseControl_paging-label"><div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} {{rk('из')}} {{_pagingLabelData.totalItemsCount}}, {{rk('по')}} </div>
+            <Controls.dropdown:Button
+                    attr:class="controls-BaseControl_paging-pageSizeChooser"
+                    keyProperty="id"
+                    style="secondary"
+                    viewMode="link"
+                    fontSize="s"
+                    on:menuItemActivate="_changePageSize()"
+                    caption="{{_pagingLabelData.pageSize}}"
+                    source="{{_pageSizeSource}}">
+            </Controls.dropdown:Button>
+            </div>
+        </ws:if>
+        <ws:else>
+            <div class="controls-BaseControl_paging-label">{{rk('Всего')}} {{_pagingLabelData.totalItemsCount}}</div>
+        </ws:else>
+    </ws:if>
+    <Controls.paging:Paging
+        attr:class="controls-BaseControl__footerPaging"
+        showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
+        showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
+        pagesCount = "{{_knownPagesCount}}"
+        selectedPage = "{{_currentPage}}"
+        on:selectedPageChanged="__pagingChangePage()" />
+</ws:template>
+
 <ws:template name="footerTemplateIf">
     <ws:if data="{{_loadingIndicatorState && _loadingIndicatorState !== 'up'}}">
         <ws:partial template="loadingIndicator"/>
@@ -21,32 +50,14 @@
     </ws:if>
     <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
         <div class="controls-BaseControl__footerPaging_wrapper">
-            <ws:if data="{{_pagingLabelData}}">
-                <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
-                    <div class="controls-BaseControl_paging-label"><div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} {{rk('из')}} {{_pagingLabelData.totalItemsCount}}, {{rk('по')}} </div>
-                    <Controls.dropdown:Button
-                            attr:class="controls-BaseControl_paging-pageSizeChooser"
-                            keyProperty="id"
-                            style="secondary"
-                            viewMode="link"
-                            fontSize="s"
-                            on:menuItemActivate="_changePageSize()"
-                            caption="{{_pagingLabelData.pageSize}}"
-                            source="{{_pageSizeSource}}">
-                    </Controls.dropdown:Button>
-                    </div>
-                </ws:if>
-                <ws:else>
-                    <div class="controls-BaseControl_paging-label">{{rk('Всего')}} {{_pagingLabelData.totalItemsCount}}</div>
-                </ws:else>
+            <ws:if data="{{_options.columnScroll}}">
+                <div class="controls-BaseControl_pagging-wrapper">
+                    <ws:partial template="paggingTpl" />
+                </div>
             </ws:if>
-            <Controls.paging:Paging
-                attr:class="controls-BaseControl__footerPaging"
-                showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
-                showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
-                pagesCount = "{{_knownPagesCount}}"
-                selectedPage = "{{_currentPage}}"
-                on:selectedPageChanged="__pagingChangePage()" />
+            <ws:else>
+                <ws:partial template="paggingTpl" />
+            </ws:else>
         </div>
     </ws:if>
     <ws:if data="{{_shouldDrawFooter}}">
