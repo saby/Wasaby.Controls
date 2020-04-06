@@ -253,11 +253,27 @@ define(
          it('_footerMouseEnter', function() {
             let isClosed = false;
             let menuControl = getMenu();
+            let event = {
+               nativeEvent: {}
+            };
+
             menuControl._children = {
                Sticky: { close: () => { isClosed = true; } }
             };
-            menuControl._footerMouseEnter();
+            menuControl.isMouseInOpenedItemArea = function() {
+               return false;
+            };
+            menuControl.setSubMenuPosition = function() {};
+            menuControl._subDropdownItem = true;
+            menuControl._footerMouseEnter(event);
             assert.isTrue(isClosed);
+
+            menuControl.isMouseInOpenedItemArea = function() {
+               return true;
+            };
+            isClosed = false;
+            menuControl._footerMouseEnter(event);
+            assert.isFalse(isClosed);
          });
 
          it('getSelectedItemsByKeys', function() {
