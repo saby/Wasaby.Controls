@@ -1,6 +1,6 @@
 import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
-import {TSelectedKeys} from 'Controls/interface';
+import {TSelectedKeys, TSelectedKey} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {Sticky as StickyOpener} from 'Controls/popup';
 import {Controller as SourceController} from 'Controls/source';
@@ -58,6 +58,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _isMouseInOpenedItemArea: boolean = false;
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
+    private _touchedItemId: TSelectedKey;
 
     protected _beforeMount(options: IMenuControlOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
@@ -153,6 +154,16 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         );
     }
 
+    protected _itemTouchStart(event: SyntheticEvent<TouchEvent>, item: TreeItem<Model>): void {
+        // Для элементов с ирерархией. На первый тач откроется поменю, на второй: пункт с иерархией будет выбран.
+        const id = item.getContents().getId();
+        if (!this._touchedItemId || this._touchedItemId !== id) {
+            this._touchedItemId = id;
+        } else {
+            this._touchedItemId = null;
+        }
+    }
+
     protected _itemClick(event: SyntheticEvent<MouseEvent>, item: Model, nativeEvent: MouseEvent): void {
         if (item.get('readOnly')) {
             return;
@@ -169,7 +180,9 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
                 this._notify('selectedKeysChanged', [this.getSelectedKeys()]);
             } else {
-                this._notify('itemClick', [item, nativeEvent]);
+                if (!(item.get(this._options.nodeProperty) && this._touchedItemId)) {
+                    this._notify('itemClick', [item, nativeEvent]);
+                }
             }
         }
     }

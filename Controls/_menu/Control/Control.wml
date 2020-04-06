@@ -11,6 +11,7 @@
                              on:itemClick="_itemClick()"
                              on:itemSwipe="_itemSwipe()"
                              on:itemActionClick="_itemActionClick()"
+                             on:itemTouchStart="_itemTouchStart()"
                              on:itemMouseEnter="_itemMouseEnter()"
                              on:checkBoxClick="_checkBoxClick()"
 
