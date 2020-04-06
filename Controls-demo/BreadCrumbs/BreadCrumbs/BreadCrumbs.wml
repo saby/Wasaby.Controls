@@ -14,7 +14,7 @@
                                on:arrowActivated="_onArrowActivated()"
                                on:itemClick="_onItemClick()" />
     <h2>Path with content back button</h2>
-    <Controls.breadcrumbs:HeadingPath attr:id="path"
+    <Controls.breadcrumbs:HeadingPath attr:id="pathContent"
                                       items="{{items}}"
                                       parentProperty="parent"
                                       keyProperty="id"
@@ -24,7 +24,7 @@
         </ws:afterBackButtonTemplate>
     </Controls.breadcrumbs:HeadingPath>
     <h2>HeadingPath with heading only</h2>
-    <Controls.breadcrumbs:HeadingPath attr:id="path"
+    <Controls.breadcrumbs:HeadingPath attr:id="pathHeadingOnly"
                                       items="{{items4}}"
                                       parentProperty="parent"
                                       keyProperty="id"
