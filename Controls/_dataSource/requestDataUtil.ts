@@ -73,14 +73,12 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       const filter = filterObject ? filterObject.filter : cfg.filter;
       const historyItems = filterObject ? filterObject.historyItems : null;
       const sorting = sortingObject ? sortingObject.sorting : cfg.sorting;
+      const result = {filter, sorting, historyItems};
 
       return sourceController.load(filter, sorting).then((data: RecordSet) => {
-         return {
-            data,
-            filter,
-            sorting,
-            historyItems
-         };
+         return {...result, data};
+      }).catch((data: Error) => {
+         return {...result, data};
       });
    });
 }
