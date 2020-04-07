@@ -35,8 +35,8 @@ export default class extends Control {
             keyProperty: 'id',
             data: getTasks().getData()
         });
-        // this._columns[0].stickyProperty = 'photo';
-        // this._columns[1].resultTemplate = ResultsTpl;
+        this._columns[0].stickyProperty = 'photo';
+        this._columns[1].resultTemplate = ResultsTpl;
         this._columns[2].stickyProperty = 'date';
     }
 
