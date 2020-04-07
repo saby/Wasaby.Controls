@@ -35,12 +35,12 @@ function getConstants() {
 
 // todo: https://online.sbis.ru/opendoc.html?guid=b385bef8-31dd-4601-9716-f3593dfc9d41
 let constants: IInfoBoxThemeConstants = {};
-const constantsInit: Promise<IInfoBoxThemeConstants> = new Promise((resolve) => {
-    if (!document) { return resolve({}); }
+const constantsInit = new Promise<void>((resolve, reject) => {
+    if (!document) { return resolve(); }
     import('Controls/_popupTemplate/InfoBox')
         .then((InfoboxTemplate) => InfoboxTemplate.default.loadCSS())
         .then(() => { constants = getConstants(); })
-        .then(resolve);
+        .then(resolve, reject);
 });
 
 const SIDES: IInfoBoxSide = {
