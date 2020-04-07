@@ -1266,6 +1266,12 @@ var _private = {
         return defaultMenuConfig;
     },
 
+    mockElem(elem) {
+        const rect = elem.getBoundingClientRect();
+        return {
+            getBoundingClientRect: () => rect
+        }
+    },
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         const context = event.type === 'itemcontextmenu';
         const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
@@ -1284,7 +1290,12 @@ var _private = {
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         self._targetItem = childEvent.target.closest('.controls-ListView__itemV');
-        const target = context ? null : childEvent.target;
+
+        /** 
+         * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
+         * Поэтому сохраняем объект, с методом getBoundingClientRect
+         */
+        const target = context ? null : _private.mockElem(childEvent.target);
         if (showActions && showActions.length || hasMenuFooterOrHeader) {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
