@@ -117,7 +117,9 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _afterUpdate: function () {
       if (this._beginEditTarget) {
          // search closest input and focus
-         this._beginEditTarget.getElementsByTagName('input')[0].focus();
+         // Внутрь редактирования по месту могут положить контрол, который не содержит input например Controls.lookup:Input/Controls.Suggest:Input
+         const input = this._beginEditTarget.getElementsByTagName('input')[0];
+         input?.focus();
          this._beginEditTarget = null;
       }
    },
