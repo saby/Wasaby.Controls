@@ -32,7 +32,7 @@ import {descriptor} from 'Types/entity';
  * @remark
  * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
  * Для корректной работы внутри WS3 необходимо поместить контрол в контроллер Controls/dragnDrop:Compound, который обеспечит работу функционала Drag-n-Drop.
- * @demo Controls-demo/Container/Scroll
+ * @demo Controls-demo/Scroll/Default/Index
  *
  */
 
@@ -98,11 +98,13 @@ import {descriptor} from 'Types/entity';
  * @name Controls/_scroll/Container#topShadowVisibility
  * @cfg {shadowVisibility} Устанавливает режим отображения тени сверху.
  * @default auto
+ * @demo Controls-demo/Scroll/ShadowVisibility/TopShadowVisibility/Index
  */
 
 /**
  * @name Controls/_scroll/Container#bottomShadowVisibility
  * @cfg {shadowVisibility} Устанавливает режим отображения тени снизу.
+ * @demo Controls-demo/Scroll/ShadowVisibility/BottomShadowVisibility/Index
  */
 
 /**
@@ -110,11 +112,13 @@ import {descriptor} from 'Types/entity';
  * @cfg {Boolean} Режим скроллирования.
  * @variant vertical Вертикальный скролл.
  * @variant verticalHorizontal Вертикальный и горизонтальный скролл.
+ * @demo Controls-demo/Scroll/ScrollMode/Index
  */
 
 /**
  * @name Controls/_scroll/Container#scrollbarVisible
  * @cfg {Boolean} Следует ли отображать скролл.
+ * @demo Controls-demo/Scroll/ScrollbarVisible/Index
  */
 
 /*
