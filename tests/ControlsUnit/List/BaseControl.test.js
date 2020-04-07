@@ -5548,6 +5548,30 @@ define([
          assert.isTrue(portionSearchReseted);
       });
 
+      it('_beforeUpdate with new groupingLoader', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source
+         };
+         let instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         assert.isFalse(!!instance._groupingLoader);
+         instance._beforeUpdate({ ...cfg, groupProperty: 'NewProp' });
+         instance._options.groupProperty = 'NewProp';
+         assert.isTrue(!!instance._groupingLoader);
+         instance._beforeUpdate({ ...cfg, groupProperty: undefined });
+         assert.isTrue(instance._groupingLoader._destroyed);
+
+      })
+
       it('_beforeMount with PrefetchProxy in source', function() {
          let prefetchSource = new sourceLib.PrefetchProxy({
             target: source,
