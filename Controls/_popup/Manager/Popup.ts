@@ -44,6 +44,8 @@ class Popup extends Control<IPopupControlOptions> {
     protected waitForPopupCreated: boolean; // TODO: COMPATBILE
     protected callbackCreated: Function|null; // TODO: COMPATBILE
 
+    private _isPopupMounted: boolean = false;
+
     // Register the openers that initializing inside current popup
     // After updating the position of the current popup, calls the repositioning of popup from child openers
     protected _openersUpdateCallback: UpdateCallback[] = [];
@@ -71,6 +73,9 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _afterMount(): void {
+
+        this._isPopupMounted = true;
+
         /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
          * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
         this._controlResizeHandler = debounce(this._controlResizeHandler.bind(this), RESIZE_DELAY, true);
@@ -193,7 +198,10 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _controlResizeHandler(): void {
-        this._notify('popupResizeInner', [this._options.id], {bubbling: true});
+        //don't handle children's resize before mounted
+        if (this._isPopupMounted) {
+            this._notify('popupResizeInner', [this._options.id], {bubbling: true});
+        }
     }
 
     /**
