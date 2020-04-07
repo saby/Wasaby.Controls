@@ -8,6 +8,7 @@ import template = require('wml!Controls/_compatiblePopup/ManagerWrapper/ManagerW
 import {Controller as ControllerPopup} from 'Controls/popup';
 import {setController, IPopupSettingsController} from 'Controls/Application/SettingsController';
 import { SyntheticEvent } from 'Vdom/Vdom';
+import {Bus} from 'Env/Event';
 
 var ManagerWrapper = Control.extend({
    _template: template,
@@ -148,6 +149,14 @@ var ManagerWrapper = Control.extend({
       if (!this._destroyed) {
          this.closePopups(scrollContainer);
       }
+   },
+
+   _documentDragStart: function() {
+      Bus.globalChannel().notify('_compoundDragStart');
+   },
+
+   _documentDragEnd: function() {
+      Bus.globalChannel().notify('_compoundDragEnd');
    },
 
    closePopups: function(scrollContainer) {
