@@ -3919,7 +3919,8 @@ define([
                      callBackCount++;
                   },
                   target: {
-                     getBoundingClientRect: ()=>{}
+                     getBoundingClientRect: ()=>{},
+                     closest: () => 'elem'
                   }
                },
                itemData = {
@@ -3971,7 +3972,8 @@ define([
                   }
                },
                target = {
-                  getBoundingClientRect: ()=>{}
+                  getBoundingClientRect: ()=>{},
+                  closest: () => 'elem'
                },
                childEvent = {
                   nativeEvent: {
@@ -3998,7 +4000,7 @@ define([
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
                      assert.equal(itemData, instance._listViewModel._activeItem);
                      assert.equal(instance._listViewModel._menuState, 'shown');
-                     assert.strictEqual(instance._menuTarget, target);
+                     assert.strictEqual(instance._targetItem, 'elem');
                      assert.equal(callBackCount, 3);
                      done();
                   }
@@ -4054,7 +4056,8 @@ define([
                      callBackCount++;
                   },
                   target: {
-                     getBoundingClientRect: ()=>{}
+                     getBoundingClientRect: ()=>{},
+                     closest: () => 'elem'
                   }
                },
                itemData = {
@@ -4225,7 +4228,8 @@ define([
                      callBackCount++;
                   },
                   target: {
-                     getBoundingClientRect: ()=>{}
+                     getBoundingClientRect: ()=>{},
+                     closest: () => 'elem'
                   }
                },
                itemData = {};
@@ -4274,7 +4278,8 @@ define([
                      callBackCount++;
                   },
                   target: {
-                     getBoundingClientRect: ()=>{}
+                     getBoundingClientRect: ()=>{},
+                     closest: () => 'elem'
                   }
                },
                itemData = {
@@ -4320,7 +4325,8 @@ define([
                         top: 5,
                         width: 6
                      };
-                  }
+                  },
+                  closest: () => 'elem'
                },
                fakeEvent = {
                   type: 'click'
