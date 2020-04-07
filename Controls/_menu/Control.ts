@@ -59,7 +59,6 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _isMouseInOpenedItemArea: boolean = false;
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
-    private _openedMenuItem: TreeItem<Model>;
 
     protected _beforeMount(options: IMenuControlOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
@@ -544,7 +543,6 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             let popupOptions = this.getPopupOptions(target, item);
             this._notify('beforeSubMenuOpen', [popupOptions]);
             this._children.Sticky.open(popupOptions, this);
-            this._openedMenuItem = item;
         }
     }
 
