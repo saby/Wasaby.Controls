@@ -19,14 +19,5 @@
         <Controls-demo.grid.Ladder.Sticky.Index/>
     </div>
 
-    <div class="controlsDemo__cell controlsDemo__ladder_no-bind">
-        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
-                                 state="/Controls-demo/app/:app"
-                                 app="{{ 'Controls-demo/grid/Ladder/Basic/Index' }}">
-            <a href="{{content.href}}">Упрощённый шалбон</a>
-        </Router.router:Reference>
-        <Controls-demo.grid.Ladder.Basic.Index/>
-    </div>
-
 </div>
 
