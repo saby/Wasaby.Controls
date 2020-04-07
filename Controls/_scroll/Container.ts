@@ -504,7 +504,7 @@ let
              left: SHADOW_VISIBILITY.AUTO,
              right: SHADOW_VISIBILITY.AUTO
          };
-         this.calcStyleOverflow();
+         this.calcStyleOverflow(options.scrollMode);
          this._displayState = {};
          this._stickyHeaderContext = new StickyHeaderContext({
             shadowPosition: options.topShadowVisibility !== SHADOW_VISIBILITY.HIDDEN ? 'bottom' : '',
@@ -768,8 +768,8 @@ let
          }
       },
 
-       calcStyleOverflow(): void {
-           this._classTypeScroll = this._options.scrollMode === SCROLL_MODE.VERTICAL ?
+       calcStyleOverflow(scrollMode: string): void {
+           this._classTypeScroll = scrollMode === SCROLL_MODE.VERTICAL ?
                'controls-Scroll__scroll_vertical' :
                'controls-Scroll__scroll_verticalHorizontal';
        },
