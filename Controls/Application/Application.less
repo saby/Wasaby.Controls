@@ -60,8 +60,11 @@ img {
 }
 
 //в сафари на macOS выделяется страница синим при dnd
-.ws-is-desktop-safari.ws-is-drag {
-   user-select: none;
+.ws-is-drag {
+   &.ws-is-desktop-safari,
+   & input {
+      user-select: none;
+   }
 }
 
 //Скрытие иконки автозаполнения в полях ввода в браузере Safari на MacOS
