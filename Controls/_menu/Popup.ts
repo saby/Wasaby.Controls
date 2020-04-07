@@ -69,8 +69,9 @@ class Popup extends Control<IControlOptions> {
         }
     }
 
-    protected _sendResult(event, action, data): void {
+    protected _sendResult(event, action, data): boolean {
         this._notify('sendResult', [action, data], {bubbling: true});
+        return false; // Чтобы подменю не закрывалось после клика на пункт https://wi.sbis.ru/docs/js/Controls/menu/Control/events/itemClick/
     }
 
     protected  _afterMount(options?: IControlOptions): void {

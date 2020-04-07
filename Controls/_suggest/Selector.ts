@@ -5,6 +5,7 @@ import {Controller} from 'Controls/source';
 import {Service, Source} from 'Controls/history';
 import {object} from 'Types/util';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Поле ввода с выпадающим списком с возможностью автодополнения.
@@ -143,6 +144,11 @@ var Suggest = Control.extend({
          this._suggestState = false;
       }
       this.activate();
+   },
+
+   // Delete after https://online.sbis.ru/opendoc.html?guid=f5eab044-4da2-4e85-b066-5be0641d8caf
+   _mouseDown(event: SyntheticEvent): void {
+      event.stopPropagation();
    },
 
    _suggestStateChanged: function(event, value) {

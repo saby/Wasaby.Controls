@@ -1072,15 +1072,17 @@ var _private = {
 
     loadToDirectionWithSearchValueEnded(self, loadedItems: RecordSet): void {
         const portionedSearch = _private.getPortionedSearch(self);
-        if (!_private.hasMoreData(self, self._sourceController, 'down')) {
+        const isPortionedLoad = _private.isPortionedLoad(self, loadedItems);
+
+        if (!_private.hasMoreDataInAnyDirection(self, self._sourceController) || !isPortionedLoad) {
             portionedSearch.reset();
         } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
         }
     },
 
-    isPortionedLoad(self): boolean {
-        const loadByMetaData = self._items && self._items.getMetaData()[PORTIONED_LOAD_META_FIELD];
+    isPortionedLoad(self, items = self._items): boolean {
+        const loadByMetaData = items && items.getMetaData()[PORTIONED_LOAD_META_FIELD];
         const loadBySearchValue = !!self._options.searchValue;
         return loadByMetaData || loadBySearchValue;
     },
@@ -1190,14 +1192,6 @@ var _private = {
         });
     },
 
-    mockTarget(target: HTMLElement): {
-        getBoundingClientRect: () => ClientRect
-    } {
-        const clientRect = target.getBoundingClientRect();
-        return {
-            getBoundingClientRect: () => clientRect
-        };
-    },
     getMenuConfig(items: IItemAction[], contextMenuConfig: object, action?: IItemAction): object {
         let defaultMenuConfig: object = {
             items: new RecordSet({ rawData: items, keyProperty: 'id' }),
@@ -1231,6 +1225,8 @@ var _private = {
 
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         const context = event.type === 'itemcontextmenu';
+        const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
+                                      || self._options.contextMenuConfig?.headerTemplate);
         const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
         if ((context && self._isTouch) || !itemActions) {
             return false;
@@ -1246,8 +1242,9 @@ var _private = {
          * So, we have to save target's ClientRect here in order to work around it.
          * But popups don't work with ClientRect, so we have to wrap it in an object with getBoundingClientRect method.
          */
-        const target = context ? null : _private.mockTarget(childEvent.target);
-        if (showActions && showActions.length) {
+        self._menuTarget = childEvent.target;
+        const target = context ? null : self._menuTarget;
+        if (showActions && showActions.length || hasMenuFooterOrHeader) {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             if (self._options.useNewModel) {
@@ -1352,7 +1349,7 @@ var _private = {
                 self._options.useNewModel
                     ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
                     : self._listViewModel.getActiveItem();
-            aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel);
+            aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._menuTarget);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
                 _private.closeActionsMenu(self);
@@ -1635,7 +1632,7 @@ var _private = {
 
     /**
      * Запускает расчёт опций для шаблона Действий над записью.
-     * Когда используется newModel с контролом из Controls.list (например Controls.list:View или Controls.list:ColumnsView),
+     * Когда используется newModel с контролом из Controls.list (например Controls.list:View или Controls.columns:View),
      * в шаблон itemActions опции задаются из метода getActionsTemplateConfig()
      * (см Controls/_listRender/Render/resources/ForItemTemplate.wml) и их необходимо рассчитывать
      * на основе текущей модели viewModel.
@@ -1720,6 +1717,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _viewPortSize: null,
     _scrollTop: 0,
     _popupOptions: null,
+    _menuTarget: null,
 
     //Variables for paging navigation
     _knownPagesCount: INITIAL_PAGES_COUNT,
@@ -1831,6 +1829,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
+                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+
                     if (newOptions.useNewModel) {
                         self._items = self._listViewModel.getCollection();
                     } else {
@@ -1873,6 +1873,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             viewModelConfig,
                             newOptions.viewModelConstructor
                         );
+                        
+                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                         }
@@ -2344,11 +2347,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (this._options.useNewModel) {
                 const markCommand = new displayLib.MarkerCommands.Mark(key);
                 markCommand.execute(this._listViewModel);
-                displayLib.ItemActionsController.setActiveItem(this._listViewModel, key);
             } else {
                 var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
                 this._listViewModel.setMarkedKey(newKey);
-                this._listViewModel.setActiveItem(itemData);
             }
         }
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;

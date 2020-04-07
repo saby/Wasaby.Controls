@@ -97,7 +97,8 @@
             on:changeIndicatorState="changeIndicatorStateHandler()"
             collection="{{_listViewModel}}"
             needScrollCalculation="{{_needScrollCalculation}}"
-            scope="{{_options}}">
+            scope="{{_options}}"
+            fixedHeadersHeights="{{undefined}}">
         <Controls._list.EditInPlace
                 name="editInPlace"
                 editingConfig="{{_options.editingConfig}}"
@@ -147,9 +148,9 @@
                 name="{{name}}"
                 template="{{ _options.content }}"
                 scope="{{_options}}"
+                fixedHeadersHeights="{{undefined}}"
                 loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
                 dragNDropControl="{{_children.dragNDropController}}"
-                _pagingVisible="{{_pagingVisible}}"
                 _needBottomPadding="{{_needBottomPadding}}"
                 multiSelectReady="{{_multiSelectReady}}"
                 listModel="{{_listViewModel}}"
