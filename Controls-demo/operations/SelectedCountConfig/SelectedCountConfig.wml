@@ -4,7 +4,7 @@
             bind:excludedKeys="_excludedKeys">
         <div>
             <Controls.operations:Panel selectedCountConfig="{{_selectedCountConfig}}" source="{{null}}"/>
-            <Controls.operations:Container>
+            <Controls.operations:Container scope="{{content}}">
                 <Controls.list:Container>
                     <Controls.treeGrid:View
                             keyProperty="id"
