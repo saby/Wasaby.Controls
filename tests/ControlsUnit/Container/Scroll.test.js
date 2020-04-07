@@ -509,12 +509,11 @@ define(
                scrollMode: 'vertical'
             },{
                class: 'controls-Scroll__scroll_verticalHorizontal',
-               scrollMode: 'vereticalHorizontal'
+               scrollMode: 'verticalHorizontal'
             }].forEach(function(test) {
                it(`Should set ${test.class} class if options scrollMode = ${test.scrollMode}`, function() {
                   const sandbox = sinon.sandbox.create();
-                  scroll._options.scrollMode = test.scrollMode;
-                  scroll.calcStyleOverflow();
+                  scroll.calcStyleOverflow(test.scrollMode);
                   assert.equal(test.class, scroll._classTypeScroll);
                   sandbox.restore();
                });
