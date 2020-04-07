@@ -2,7 +2,7 @@
      class="controls-VScrollbar{{_dragging ? ' controls-VScrollbar_' + _options.direction + '_dragging controls-VScrollbar_' + _options.direction + '_dragging_size-' + _thumbThickness}}
          {{!_thumbSize ? ' ws-invisible'}}
          controls-VScrollbar_{{_options.direction}} controls-VScrollbar_{{_options.direction}}_size-{{_thumbThickness}}
-         {{_options.direction === 'horizontal' && _options.gridSupport === 'full' ? ' controls-VScrollbar_horizontal_margin-top_size-' + _thumbThickness}}
+         {{_options.shouldSetMarginTop ? ' controls-VScrollbar_horizontal_margin-top_size-' + _thumbThickness}}
          {{ _trackVisible ? ' controls-VScrollbar_horizontal-track controls-VScrollbar_horizontal-track_size-' + _thumbThickness}}"
      on:wheel="_wheelHandler()"
      on:mousedown="_scrollbarMouseDownHandler()"
