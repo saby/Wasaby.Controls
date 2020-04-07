@@ -10,7 +10,7 @@
     </div>
 </ws:template>
 
-<ws:template name="paggingTpl">
+<ws:template name="pagingTpl">
     <ws:if data="{{_pagingLabelData}}">
         <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
             <div class="controls-BaseControl_paging-label"><div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} {{rk('из')}} {{_pagingLabelData.totalItemsCount}}, {{rk('по')}} </div>
@@ -51,12 +51,12 @@
     <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
         <div class="controls-BaseControl__footerPaging_wrapper">
             <ws:if data="{{_options.columnScroll}}">
-                <div class="controls-BaseControl_pagging-wrapper">
-                    <ws:partial template="paggingTpl" />
+                <div class="controls-BaseControl_paging-wrapper">
+                    <ws:partial template="pagingTpl" />
                 </div>
             </ws:if>
             <ws:else>
-                <ws:partial template="paggingTpl" />
+                <ws:partial template="pagingTpl" />
             </ws:else>
         </div>
     </ws:if>
