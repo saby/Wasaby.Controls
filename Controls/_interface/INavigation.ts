@@ -115,7 +115,7 @@ export interface INavigationPageSourceConfig {
 
 /**
  * @typedef {Object} INavigationSourceConfig
- * @description Конфигурация навигации (по курсору или постраничная).
+ * @description Конфигурация навигации ({@link Controls/_interface/INavigation/INavigationPositionSourceConfig.typedef по курсору} или {@link Controls/_interface/INavigation/INavigationPageSourceConfig.typedef постраничная}).
  */
 /**
  * @typedef {Object} INavigationSourceConfig

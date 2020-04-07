@@ -14,8 +14,6 @@ import IMonth from './interfaces/IMonth';
 
 import {Logger} from 'UI/Utils';
 
-import 'css!theme?Controls/calendar'
-
 var _private = {
    _updateView: function(self, options) {
       var newMonth = options.month || new options.dateConstructor();
@@ -70,12 +68,6 @@ var MonthView = BaseControl.extend({
    _themeCssClass: '',
 
    _beforeMount: function(options) {
-
-      // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
-      if (options.theme === 'accordion') {
-         this._themeCssClass = 'controls-MonthView__accordionTheme';
-      }
-
       _private._updateView(this, options);
       this._monthViewModel = options.monthViewModel ? new options.monthViewModel(options) : new MonthViewModel(options);
 
@@ -133,5 +125,7 @@ MonthView.getDefaultOptions = function() {
 MonthView.getOptionTypes = function() {
    return IMonth.getOptionTypes();
 };
+
+MonthView._theme = ['Controls/calendar'];
 
 export default MonthView;
