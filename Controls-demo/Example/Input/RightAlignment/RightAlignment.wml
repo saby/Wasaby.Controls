@@ -28,7 +28,7 @@
                                           textAlign="right"
                                           placeholder="Tooltip"
                                           bind:value="_filledValue
-                                          scope="{{template}}""/>
+                                          scope="{{template}}"/>
                   </div>
                </ws:template>
             </ws:Object>
