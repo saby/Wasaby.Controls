@@ -2170,6 +2170,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
+        if (newOptions.groupProperty && !this._options.groupProperty) {
+            this._groupingLoader = new GroupingLoader({});
+        } else if (!newOptions.groupProperty && this._options.groupProperty) {
+            this._groupingLoader.destroy();
+        }
+
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             if (this._menuIsShown) {
