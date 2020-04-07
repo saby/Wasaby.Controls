@@ -152,29 +152,25 @@
 }
 
 //thumbStyle
-.controls-VScrollbar__thumb_accented {
+.controls-VScrollbar__thumb_accented_theme-@{themeName} {
    background-color: @accented_thumb_background-color_scrollbar;
 }
 
-.controls-VScrollbar__thumb_unaccented {
+.controls-VScrollbar__thumb_unaccented_theme-@{themeName} {
    background-color: @unaccented_thumb_background-color_scrollbar;
 }
 
-.controls-VScrollbar__thumb_inverted {
-   background-color: @inverted_accented_thumb_background-color_scrollbar;
-}
-
-.controls-VScrollbar__thumb_inverted:hover,
-.controls-VScrollbar__thumb_dragging_inverted {
-   background-color: @inverted_accented_thumb_hover_background-color_scrollbar;
-}
-
 .ws-is-hover {
-   .controls-VScrollbar__thumb_accented:hover {
+   .controls-VScrollbar__thumb_accented_theme-@{themeName}:hover {
       background-color: @accented_thumb_hover_background-color_scrollbar;
    }
 
-   .controls-VScrollbar__thumb_unaccented:hover {
+   .controls-VScrollbar__thumb_unaccented_theme-@{themeName}:hover {
       background-color: @unaccented_thumb_hover_background-color_scrollbar;
    }
+}
+
+.controls-VScrollbar__thumb_accented_theme-@{themeName}:hover,
+.controls-VScrollbar__thumb_dragging_accented_theme-@{themeName} {
+   background-color: @accented_thumb_hover_background-color_scrollbar;
 }
