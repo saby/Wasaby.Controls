@@ -4,17 +4,12 @@ import 'css!Controls-demo/Controls-demo';
 
 import {getTasks} from '../../DemoHelpers/DataCatalog';
 
-import * as Template from 'wml!Controls-demo/grid/Ladder/NoSticky/NoSticky';
-
-interface INoStickyLadderColumn {
-    template: string;
-    width: string;
-}
+import * as Template from 'wml!Controls-demo/grid/Ladder/Basic/Basic';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: INoStickyLadderColumn[] = getTasks().getColumns();
+
     protected _ladderProperties: string[] = ['photo', 'date'];
 
     protected _beforeMount(options?: {}, contexts?: object, receivedState?: void): Promise<void> | void {
@@ -23,4 +18,5 @@ export default class extends Control {
             data: getTasks().getData()
         });
     }
+
 }

@@ -1,0 +1,36 @@
+<div class="controlsDemo__wrapper">
+    <Controls.scroll:Container attr:class="controlsDemo__height400">
+        <Controls.grid:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                ladderProperties="{{_ladderProperties}}">
+            <ws:columns>
+                <ws:Array>
+                    <ws:Object width="100px" stickyProperty="photo">
+                        <ws:template>
+                            <ws:partial template="Controls/grid:ColumnTemplate">
+                                <ws:contentTemplate>
+                                    <ws:partial template="{{template.ladderWrapper}}" ladderProperty="photo">
+                                        <img src="{{contentTemplate.itemData.item['photo']}}"/>
+                                    </ws:partial>
+                                </ws:contentTemplate>
+                            </ws:partial>
+                        </ws:template>
+                    </ws:Object>
+                    <ws:Object width="100px" stickyProperty="date">
+                        <ws:template>
+                            <ws:partial template="Controls/grid:ColumnTemplate">
+                                <ws:contentTemplate>
+                                    <ws:partial template="{{template.ladderWrapper}}" ladderProperty="date">
+                                        <div>{{contentTemplate.itemData.item['date']}}</div>
+                                    </ws:partial>
+                                </ws:contentTemplate>
+                            </ws:partial>
+                        </ws:template>
+                    </ws:Object>
+                    <ws:Object width="1fr" displayProperty="message"/>
+                </ws:Array>
+            </ws:columns>
+        </Controls.grid:View>
+    </Controls.scroll:Container>
+</div>
