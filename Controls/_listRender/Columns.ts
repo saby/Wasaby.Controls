@@ -34,10 +34,16 @@ export default class Columns extends BaseRender {
     }
 
     protected _getItemsContainerStyle(): string {
-        return  `grid-template-columns: repeat(${this._options.columnsCount}, minmax(${this._options.columnMinWidth}px, ${this._options.columnMaxWidth}px)); `;
+        const minmax = `minmax(${this._options.columnMinWidth}px, ${this._options.columnMaxWidth}px) `;
+        const gridTemplate = minmax.repeat(this._options.columnsCount);
+        return  `grid-template-columns: ${gridTemplate};
+                 -ms-grid-columns: ${gridTemplate};`;
     }
     protected _getPlaceholderStyle(): string {
         return  `min-width:${this._options.columnMinWidth}px; max-width:${this._options.columnMaxWidth}px; `;
+    }
+    protected _getColumnStyle(index: number): string {
+        return this._getPlaceholderStyle() + `-ms-grid-column: ${index + 1};`
     }
     static getDefaultOptions(): Partial<IRenderOptions> {
         return {
