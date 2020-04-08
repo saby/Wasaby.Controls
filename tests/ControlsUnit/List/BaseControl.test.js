@@ -775,10 +775,13 @@ define([
          ladingIndicatorTimer = ctrl._loadingIndicatorTimer;
          assert.isTrue(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._loadingIndicatorTimer);
 
+         let loadingIndicatorTimer = setTimeout(() => {});
+         ctrl._loadingIndicatorTimer = loadingIndicatorTimer;
          await lists.BaseControl._private.loadToDirection(ctrl, 'up');
          assert.isTrue(ctrl._portionedSearchInProgress);
-         assert.isTrue(ladingIndicatorTimer !== ctrl._loadingIndicatorTimer, 'loading indicator timer did not reset');
+         assert.isTrue(loadingIndicatorTimer !== ctrl._loadingIndicatorTimer, 'loading indicator timer did not reset');
 
          isIterativeSearch = false;
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
