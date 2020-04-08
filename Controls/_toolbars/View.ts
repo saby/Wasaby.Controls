@@ -175,7 +175,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 groupingKeyCallback: options.groupingKeyCallback,
                 additionalProperty: options.additionalProperty,
                 itemTemplateProperty: options.itemTemplateProperty,
-                footerTemplate: options.popupFooterTemplate
+                footerContentTemplate: options.popupFooterTemplate
             },
             target: this._children.menuTarget
         };
