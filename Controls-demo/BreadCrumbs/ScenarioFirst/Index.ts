@@ -121,30 +121,30 @@ class ScenarioFirst extends Control<IControlOptions> {
         });
         this._columns1 = [{
             displayProperty: 'title',
-            width: '300px'
+            width: '3fr'
         }, {
             displayProperty: 'price',
-            width: '72px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'remainder',
-            width: '70px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'free',
-            width: '80px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'costPrice',
-            width: '107px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'amountOfBalance',
-            width: '110px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }];
@@ -239,51 +239,51 @@ class ScenarioFirst extends Control<IControlOptions> {
         }];
         this._columns2 = [{
             displayProperty: 'department',
-            width: '400px',
+            width: '9fr',
             template: this._firstColumnTemplate,
             resultTemplate: this._thirdResultTemplate
         }, {
             displayProperty: 'overdueStart',
-            width: '70px',
+            width: '2fr',
             template: this._thirdColumnTemplate,
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 5662
         }, {
             displayProperty: 'start',
-            width: '70px',
+            width: '2fr',
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 38770
         }, {
             displayProperty: 'received',
-            width: '70px',
+            width: '2fr',
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 579213
         }, {
             displayProperty: 'overdueCompleted',
-            width: '70px',
+            width: '2fr',
             template: this._thirdColumnTemplate,
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 26277
         }, {
             displayProperty: 'completed',
-            width: '75px',
+            width: '2fr',
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 578386
         }, {
             displayProperty: 'overdueLeft',
-            width: '70px',
+            width: '2fr',
             template: this._thirdColumnTemplate,
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 2325
         }, {
             displayProperty: 'left',
-            width: '70px',
+            width: '2fr',
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 39597
