@@ -1378,6 +1378,10 @@ var
                         tableCellStyles: ''
                     };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme);
+                currentColumn.getColspanedPaddingClassList = () => {
+                    currentColumn.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${self._options.theme}`;
+                    return currentColumn.classList.padding;
+                };
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
                 if (self._isSupportLadder(self._options.ladderProperties)) {
