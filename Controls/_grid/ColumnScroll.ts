@@ -9,6 +9,12 @@ import {isFullGridSupport} from './utils/GridLayoutUtil';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
+interface IColumnScroll {
+    _children: {
+        content: HTMLElement
+    };
+}
+
 const DELAY_UPDATE_SIZES = 16;
 
 const
@@ -43,7 +49,7 @@ const
               return;
           }
           // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
-         _private.setDispalyNoneForScroll(self._children.content);
+          _private.hideColumnScrollWrapper(self._children.content);
          _private.drawTransform(self, 0);
          const isFullSupport = isFullGridSupport();
          let
@@ -76,7 +82,7 @@ const
          self._contentSizeForHScroll = isFullSupport ? self._contentSize - self._fixedColumnsWidth : self._contentSize;
          _private.drawTransform(self, self._scrollPosition);
          // после расчетов убираем display: none
-         _private.removeDisplayFromScroll(self._children.content);
+         _private.showColumnScrollWrapper(self._children.content);
       },
       updateFixedColumnWidth(self) {
          self._fixedColumnsWidth = _private.calculateFixedColumnWidth(
@@ -142,18 +148,29 @@ const
 
       },
 
-      removeDisplayFromScroll: function(container) {
-         const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
-         if (scroll) {
-            scroll.style.removeProperty('display');
-         }
+       /**
+        * Возвращает видимость скроллбара
+        * @param container
+        */
+      showColumnScrollWrapper(container: HTMLElement): void {
+           const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
+           if (scroll) {
+               (scroll as HTMLElement).style.removeProperty('display');
+           }
       },
 
-      setDispalyNoneForScroll: function(container) {
-         const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
-         if (scroll) {
-            scroll.style.display = 'none';
-         }
+       /**
+        * Скрывает горизонтальный скролл (display: none),
+        * чтобы, из-за особенностей grid-layout, он не распирал таблицу при изменении шириныи
+        * @param container
+        */
+      hideColumnScrollWrapper(container: HTMLElement): void {
+          const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
+          if (scroll) {
+              (scroll as HTMLElement).style.display = 'none';
+              // safari 13 учитывает ширину скрытого скролла
+              (scroll as HTMLElement).style.width = '0px';
+          }
       },
 
       prepareDebouncedUpdateSizes: function() {
@@ -205,7 +222,7 @@ const
          /*
          * TODO: Kingo
          * Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
-         * */
+         */
          if (
              !isEqualWithSkip(this._options.columns, oldOptions.columns, { template: true, resultTemplate: true })
              || this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility
@@ -232,9 +249,13 @@ const
           this._debouncedUpdateSizes(this);
       },
 
-       _isDisplayColumnScroll: function() {
+       /**
+        * Определяет видимость горизонтального скроллбара.
+        * @private
+        */
+       _isDisplayColumnScroll(): boolean {
          const items = this._options.listModel.getItems();
-         return items && !!items.getCount() && (this._contentSize > this._contentContainerSize) ? true : false;
+         return !!items && !!items.getCount() && (this._contentSize > this._contentContainerSize);
       },
 
       _calculateShadowClasses(position: string): string {
