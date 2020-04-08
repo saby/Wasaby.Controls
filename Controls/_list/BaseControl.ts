@@ -899,17 +899,7 @@ var _private = {
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
         }
-        if (!self._loadingIndicatorTimer) {
-            self._loadingIndicatorTimer = setTimeout(function() {
-                self._loadingIndicatorTimer = null;
-                if (self._loadingState) {
-                    self._loadingIndicatorState = self._loadingState;
-                    self._showLoadingIndicatorImage = true;
-                    self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
-                    self._notify('controlResize');
-                }
-            }, 2000);
-        }
+        _private.startShowLoadingIndicatorTimer(self);
     },
 
     hideIndicator(self): void {
@@ -920,14 +910,41 @@ var _private = {
         self._showLoadingIndicatorImage = false;
         self._loadingIndicatorContainerOffsetTop = 0;
         self._hideIndicatorOnTriggerHideDirection = null;
-        if (self._loadingIndicatorTimer) {
-            clearTimeout(self._loadingIndicatorTimer);
-            self._loadingIndicatorTimer = null;
-        }
+        _private.clearShowLoadingIndicatorTimer(self);
         if (self._loadingIndicatorState !== null) {
             self._loadingIndicatorState = self._loadingState;
             self._notify('controlResize');
         }
+    },
+
+    startShowLoadingIndicatorTimer(self): void {
+        if (!self._loadingIndicatorTimer) {
+            self._loadingIndicatorTimer = setTimeout(() => {
+                self._loadingIndicatorTimer = null;
+                if (self._loadingState) {
+                    self._loadingIndicatorState = self._loadingState;
+                    self._showLoadingIndicatorImage = true;
+                    self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
+                    self._notify('controlResize');
+                }
+            }, INDICATOR_DELAY);
+        }
+    },
+
+    clearShowLoadingIndicatorTimer(self): void {
+        if (self._loadingIndicatorTimer) {
+            clearTimeout(self._loadingIndicatorTimer);
+            self._loadingIndicatorTimer = null;
+        }
+    },
+
+    resetShowLoadingIndicatorTimer(self): void {
+        _private.clearShowLoadingIndicatorTimer(self);
+        _private.startShowLoadingIndicatorTimer(self);
+    },
+
+    isLoadingIndicatorVisible(self): boolean {
+        return !!self._showLoadingIndicatorImage;
     },
 
     /**
@@ -1078,6 +1095,10 @@ var _private = {
             portionedSearch.reset();
         } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
+
+            if (!_private.isLoadingIndicatorVisible(self) && self._loadingIndicatorTimer) {
+                _private.resetShowLoadingIndicatorTimer(self);
+            }
         }
     },
 
@@ -1223,6 +1244,12 @@ var _private = {
         return defaultMenuConfig;
     },
 
+    mockElem(elem) {
+        const rect = elem.getBoundingClientRect();
+        return {
+            getBoundingClientRect: () => rect
+        }
+    },
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         const context = event.type === 'itemcontextmenu';
         const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
@@ -1237,13 +1264,16 @@ var _private = {
             (action) => action.showType !== showType.TOOLBAR
         );
         /**
-         * During an opening of a menu, a row can get wrapped in a HoC and it would cause a full redraw of the row,
-         * which would remove the target from the DOM.
-         * So, we have to save target's ClientRect here in order to work around it.
-         * But popups don't work with ClientRect, so we have to wrap it in an object with getBoundingClientRect method.
+         * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
+         * у которого открываем меню. Потом передадим его для события actionClick.
          */
-        self._menuTarget = childEvent.target;
-        const target = context ? null : self._menuTarget;
+        self._targetItem = childEvent.target.closest('.controls-ListView__itemV');
+
+        /** 
+         * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
+         * Поэтому сохраняем объект, с методом getBoundingClientRect
+         */
+        const target = context ? null : _private.mockElem(childEvent.target);
         if (showActions && showActions.length || hasMenuFooterOrHeader) {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
@@ -1349,7 +1379,7 @@ var _private = {
                 self._options.useNewModel
                     ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
                     : self._listViewModel.getActiveItem();
-            aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._menuTarget);
+            aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._targetItem);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
                 _private.closeActionsMenu(self);
@@ -1715,7 +1745,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _viewPortSize: null,
     _scrollTop: 0,
     _popupOptions: null,
-    _menuTarget: null,
+    _targetItem: null,
 
     //Variables for paging navigation
     _knownPagesCount: INITIAL_PAGES_COUNT,

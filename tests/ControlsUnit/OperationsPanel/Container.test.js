@@ -1,8 +1,8 @@
-define(['Controls/operationsPanel'], function(operationsPanel) {
+define(['Controls/operations'], function(operations) {
    'use strict';
-   describe('Controls/_operationsPanel/Container', function() {
+   describe('Controls/_operations/Panel/Container', function() {
       describe('_getSelectedKeys', function() {
-         let containerInstance = new operationsPanel.Container();
+         let containerInstance = new operations.PanelContainer();
 
          assert.deepEqual(containerInstance._getSelectedKeys({
             listMarkedKey: null,
@@ -21,7 +21,7 @@ define(['Controls/operationsPanel'], function(operationsPanel) {
       });
 
       describe('_beforeUpdate', function() {
-         let containerInstance = new operationsPanel.Container();
+         let containerInstance = new operations.PanelContainer();
 
          containerInstance._options.listMarkedKey = null;
          containerInstance._options.selectedKeys = [];
