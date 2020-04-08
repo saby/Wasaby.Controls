@@ -33,7 +33,7 @@
 /*
  * List library
  * @library Controls/input
- * @includes Base Controls/_input/Baseы
+ * @includes Base Controls/_input/Base
  * @includes Area Controls/_input/Area
  * @includes Number Controls/_input/Number
  * @includes Text Controls/_input/Text
@@ -95,6 +95,15 @@ export {default as INumberLength, INumberLengthOptions} from 'Controls/_input/in
 export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
 export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocusController';
 export {default as AdapterMask} from 'Controls/_input/Adapter/Mask';
+
+/**
+ * ПРИВАТНЫЕ МОДУЛИ.
+ * ЭКСПОРТИРУЮТСЯ ДЛЯ UNIT-ТЕСТИРОВАНИЯ.
+ * НЕ ИСПОЛЬЗОВАТЬ НА ПРИКЛАДНОЙ СТРОНЕ!!!
+ */
+export {FixBugs as __FixBugs} from 'Controls/_input/FixBugs';
+export {InsertFromDrop as __InsertFromDrop} from 'Controls/_input/FixBugs/InsertFromDrop';
+export {CarriagePositionWhenFocus as __CarriagePositionWhenFocus} from 'Controls/_input/FixBugs/CarriagePositionWhenFocus';
 
 /**
  * Объект с набором методов для опции {@link Controls/_input/interface/IValue#inputCallback}

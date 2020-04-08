@@ -19,6 +19,7 @@ import {
     ISplitValue
 } from 'Controls/_input/Base/InputUtil';
 import MobileFocusController from 'Controls/_input/Base/MobileFocusController';
+import {FixBugs} from './FixBugs';
 
 import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
@@ -413,8 +414,6 @@ var Base = Control.extend({
 
     _wasActionUser: true,
 
-    _firstFocus: true,
-
     /**
      * @type {Controls/Utils/tmplNotify}
      * @protected
@@ -486,7 +485,9 @@ var Base = Control.extend({
                 this._numberSkippedSaveSelection++;
             }
             field.setSelectionRange(selection.start, selection.end);
+            return true;
         }
+        return false;
     },
 
     /**
@@ -541,6 +542,11 @@ var Base = Control.extend({
      * @private
      */
     _isEdge: null,
+
+    /**
+     * Содержит методы для исправления багов полей ввода связанных с нативным поведением в браузерах.
+     */
+    _fixBugs: null,
 
     /**
      * @type {Controls/_input/Render#style}
@@ -612,6 +618,11 @@ var Base = Control.extend({
             }
         }
 
+        this._fixBugs = new FixBugs({
+            updatePositionCallback: () => {
+                return this._updateSelection(this._viewModel.selection);
+            }
+        });
         this._fixedDisplayValue = this._viewModel.displayValue;
         /**
          * Placeholder is displayed in an empty field. To learn about the emptiness of the field
@@ -633,16 +644,7 @@ var Base = Control.extend({
 
         _private.updateViewModel(this, newViewModelOptions, _private.getValue(this, newOptions));
 
-        /**
-         * Когда опция readOnly меняется, тогда перестраивается верстка. В режиме чтения рисуется <div>, в режиме
-         * редактирования <input>. Элемент <input> при создании может иметь позицию каретки отличную от позиции в модели.
-         * Начальная позиция управляется браузером. Поэтому при фокусировке происходит обновление позиции каретки в соответствии с моделью.
-         * Так происходит только при первой фокусировке. Потому что в дальнейшем позиция управляется только контролом, а значит позиция
-         * уже будет соответствать модели. Будем считать, что пересоздавая <input>, работа с фокусом начинается заново.
-         */
-        if (this._options.readOnly === false && newOptions.readOnly === true) {
-            this._firstFocus = true;
-        } else if (this._options.readOnly === true && newOptions.readOnly === false) {
+        if (this._options.readOnly === true && newOptions.readOnly === false) {
             // oldDisplayValue запоминается при клике на поле ввода. Если контрол был задизаблен и прикладной разработчик по
             // клику на поле ввода меняет опцию readonly с true на false, то обработчик на клик не вызовется, т.к. в режиме
             // readOnly поле ввода не отображается. Подробнее:
@@ -654,6 +656,8 @@ var Base = Control.extend({
         if (displayValueChangedByParent) {
             this._fixedDisplayValue = this._viewModel.displayValue;
         }
+
+        this._fixBugs.update(this._options, newOptions);
     },
 
     /**
@@ -779,7 +783,6 @@ var Base = Control.extend({
              */
             self._viewModel.changesHaveBeenApplied();
         });
-
         this._firstClick = false;
     },
 
@@ -796,12 +799,21 @@ var Base = Control.extend({
     },
 
     _inputHandler: function (event) {
-        var field = this._getField();
-        var model = this._viewModel;
-        var value = model.oldDisplayValue;
-        var selection = model.oldSelection;
-        var newValue = field.value;
-        var position = field.selectionEnd;
+        const field = this._getField();
+        const model = this._viewModel;
+        const data = this._fixBugs.positionForInputProcessing({
+            oldPosition: model.oldSelection.end,
+            newPosition: field.selectionEnd,
+            newValue: field.value,
+            oldValue: model.oldDisplayValue
+        });
+        const value = data.oldValue;
+        const newValue = data.newValue;
+        const selection = {
+            start: data.oldPosition,
+            end: data.oldPosition
+        };
+        const position = data.newPosition;
 
         const inputType: IInputType = _private.calculateInputType(
             this, value, newValue, position,
@@ -895,29 +907,17 @@ var Base = Control.extend({
     },
 
     _focusInHandler: function (event) {
-        let firstFocusByTab = this._firstFocus;
-
         if (this._options.selectOnClick) {
             this._viewModel.select();
         }
 
         if (this._focusByMouseDown) {
-            firstFocusByTab = false;
             this._firstClick = true;
+            this._focusByMouseDown = false;
         }
 
-        this._focusByMouseDown = false;
-
+        this._fixBugs.focusHandler(event);
         MobileFocusController.focusHandler(event);
-
-        /**
-         * When a filled field was mounted, its carriage is placed at the beginning of the text. For example, in chrome, firefox,
-         * IE10-11, can still where. The carriage needs to have a position in accordance with the model. So we change it to first focus and tab.
-         */
-        if (firstFocusByTab) {
-            this._firstFocus = false;
-            this._updateSelection(this._viewModel.selection);
-        }
     },
 
     /**
@@ -949,6 +949,8 @@ var Base = Control.extend({
     },
 
     _mouseDownHandler: function () {
+        this._fixBugs.mouseDownHandler();
+
         if (!_private.isFieldFocused(this)) {
             this._focusByMouseDown = true;
         }
