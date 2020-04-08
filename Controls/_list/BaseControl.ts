@@ -1096,7 +1096,7 @@ var _private = {
         } else if (loadedItems.getCount()) {
             portionedSearch.resetTimer();
 
-            if (!_private.isLoadingIndicatorVisible(self)) {
+            if (!_private.isLoadingIndicatorVisible(self) && self._loadingIndicatorTimer) {
                 _private.resetShowLoadingIndicatorTimer(self);
             }
         }
