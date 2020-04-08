@@ -160,7 +160,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             this._actionOnScroll = baseConfig.actionOnScroll;
         }
 
-        if (this._isPopupDestroyed()) {
+        if (ManagerController.isDestroying(this._getCurrentPopupId())) {
             this._popupId = null;
         }
         if (!this._popupId) {
@@ -247,14 +247,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     protected _getCurrentPopupId(): string {
         return this._popupId;
-    }
-
-    private _isPopupDestroyed(): boolean {
-        const popupItem = ManagerController.find(this._getCurrentPopupId());
-        return popupItem &&
-            (popupItem.popupState === popupItem.controller.POPUP_STATE_DESTROYING ||
-             popupItem.popupState === popupItem.controller.POPUP_STATE_DESTROYED ||
-             popupItem.startRemove === true);
     }
 
     private _compatibleOpen(cfg: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
