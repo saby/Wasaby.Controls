@@ -127,15 +127,15 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * @example
  * Кнопка в режиме отображения 'link'.
  * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Кнопка в режиме отображения 'toolButton'.
  * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.buttons:Button caption="Send document" style="danger" viewMode="toolButton"/>
  * </pre>
  * Кнопка в режиме отображения 'button'.
  * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="success" viewMode="button"/>
+ *    <Controls.buttons:Button caption="Send document" style="success" viewMode="button"/>
  * </pre>
  * @see Size
  */
@@ -150,15 +150,15 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * @example
  * Button with 'link' viewMode.
  * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="link" size="xl"/>
  * </pre>
  * Button with 'toolButton' viewMode.
  * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.buttons:Button caption="Send document" style="danger" viewMode="toolButton"/>
  * </pre>
  * Button with 'button' viewMode.
  * <pre>
- *    <Controls.breadcrumbs:Path caption="Send document" style="success" viewMode="button"/>
+ *    <Controls.buttons:Button caption="Send document" style="success" viewMode="button"/>
  * </pre>
  * @see Size
  */
