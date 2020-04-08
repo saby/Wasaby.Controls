@@ -27,7 +27,7 @@
                      <Controls.input:Text fontStyle="default"
                                           textAlign="right"
                                           placeholder="Tooltip"
-                                          bind:value="_filledValue
+                                          bind:value="_filledValue"
                                           scope="{{template}}"/>
                   </div>
                </ws:template>
