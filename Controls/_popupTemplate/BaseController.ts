@@ -17,13 +17,13 @@ export interface IDragOffset {
  */
 abstract class BaseController {
 
-    POPUP_STATE_INITIALIZING: string = 'initializing';
-    POPUP_STATE_CREATING: string = 'creating';
-    POPUP_STATE_CREATED: string = 'created';
-    POPUP_STATE_UPDATING: string = 'updating';
-    POPUP_STATE_UPDATED: string = 'updated';
-    POPUP_STATE_DESTROYING: string = 'destroying';
-    POPUP_STATE_DESTROYED: string = 'destroyed';
+    POPUP_STATE_INITIALIZING: string = 'initializing'; // До того как окно замаунтилось
+    POPUP_STATE_CREATED: string = 'created'; // Окно замаунтилось
+    POPUP_STATE_UPDATING: string = 'updating'; // Перед обновлением опций окна
+    POPUP_STATE_UPDATED: string = 'updated'; // После обновления опций окна
+    POPUP_STATE_START_DESTROYING: string = 'startDestroying'; // Окно начало удаление, перед всеми операциями по закрытию детей и пендингов
+    POPUP_STATE_DESTROYING: string = 'destroying'; // Окно в процессе удаления (используется где есть операции перед удалением, например анимация)
+    POPUP_STATE_DESTROYED: string = 'destroyed'; // Окно удалено из верстки
 
     abstract elementCreated(item: IPopupItem, container: HTMLDivElement): boolean;
 
@@ -76,6 +76,10 @@ abstract class BaseController {
             }
         }
         return false;
+    }
+
+    _beforeElementDestroyed(item: IPopupItem, container: HTMLDivElement): void {
+        item.popupState = this.POPUP_STATE_START_DESTROYING;
     }
 
     _elementDestroyed(item: IPopupItem, container: HTMLDivElement): Promise<undefined> {

@@ -159,7 +159,8 @@ define(
                assert.equal(Manager._popupItems.getCount(), 0);
                done();
             });
-
+            const item = Manager.find(id);
+            assert.equal(item.popupState, 'lolkek');
          });
 
          it('remove popup with pendings', function(done) {
