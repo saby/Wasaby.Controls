@@ -396,10 +396,14 @@ var
                 return {};
             }
             self.resetCachedItemData();
+
+            const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
+            const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
+
             return prepareLadder({
                 ladderProperties: self._options.ladderProperties,
                 startIndex: self.getStartIndex(),
-                stopIndex: self.getStopIndex(),
+                stopIndex: hasVirtualScroll ? self.getStopIndex() : displayStopIndex,
                 display: self.getDisplay(),
                 columns: self._options.columns,
                 stickyColumn: self._options.stickyColumn
