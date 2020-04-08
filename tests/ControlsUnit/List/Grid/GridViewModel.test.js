@@ -1181,6 +1181,46 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          ladderViewModel.setLadderProperties(['date']);
          assert.equal(curLadderViewModelVersion, ladderViewModel.getVersion());
          });
+
+         it('prepareLadder should use virtualScroll indexes', function () {
+            const date1 = new Date(2017, 0, 1);
+            const date2 = new Date(2017, 0, 3);
+            const ladderViewModel = new gridMod.GridViewModel({
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', date: date1, photo: '1.png' },
+                     { id: 1, title: 'i1', date: date2, photo: '1.png' },
+                     { id: 2, title: 'i2', date: date2, photo: '1.png' },
+                     { id: 3, title: 'i3', date: date2, photo: '2.png' }
+                  ]
+               }),
+               keyProperty: 'id',
+               columns: [{
+                  width: '1fr',
+                  displayProperty: 'title'
+               }, {
+                  width: '1fr',
+                  template: 'wml!MyTestDir/Photo',
+                  stickyProperty: 'photo'
+               }],
+               ladderProperties: ['date']
+            });
+
+            ladderViewModel._model._stopIndex = 2;
+
+            // Without vs uses display stop index;
+            let ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
+            assert.equal(4, Object.keys(ladder.stickyLadder).length);
+            assert.equal(4, Object.keys(ladder.ladder).length);
+
+            ladderViewModel._options.virtualScrolling = true;
+
+            // With vs uses its' stopIndex;
+            ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
+            assert.equal(2, Object.keys(ladder.stickyLadder).length);
+            assert.equal(2, Object.keys(ladder.ladder).length);
+         });
       });
       describe('other methods of the class', function() {
          var
