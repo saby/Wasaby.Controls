@@ -66,7 +66,7 @@ class DateRangeEditor extends Control<IControlOptions> {
     static getDefaultOptions() {
         return {
             editorMode: 'Lite',
-            fontColorStyle: 'secondary'
+            fontColorStyle: 'filterPanelItem'
         };
     }
 }
