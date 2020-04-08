@@ -677,7 +677,10 @@ define(
 
          it ('_open menuPopupOptions', () => {
             let expectedMenuOptions = {
-               fittingMode: 'fixed',
+               fittingMode: {
+                  vertical: 'adaptive',
+                  horizontal: 'overflow'
+               },
                direction: 'top',
                target: 'testTarget'
             };
@@ -689,7 +692,7 @@ define(
                hasMoreData: () => {}
             };
             const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
-            assert.equal(resultPopupConfig.fittingMode, expectedMenuOptions.fittingMode);
+            assert.deepEqual(resultPopupConfig.fittingMode, expectedMenuOptions.fittingMode);
             assert.equal(resultPopupConfig.direction, expectedMenuOptions.direction);
             assert.equal(resultPopupConfig.target, expectedMenuOptions.target);
          });
