@@ -10,7 +10,7 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
  * @class Controls/_lookup/Lookup/Link
  * @extends Core/Control
  * @mixes Controls/_interface/ICaption
- * @mixes Controls/_lookup/Lookup/Link/LookupLinkStyles
+ * @mixes Controls/_interface/IHeight
  * @control
  * @public
  * @author Герасимов А.М.
@@ -21,7 +21,7 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
  * @class Controls/_lookup/Lookup/Link
  * @extends Core/Control
  * @mixes Controls/_interface/ICaption
- * @mixes Controls/_lookup/Lookup/Link/LookupLinkStyles
+ * @mixes Controls/_interface/IHeight
  * @control
  * @public
  * @author Герасимов А.М.
