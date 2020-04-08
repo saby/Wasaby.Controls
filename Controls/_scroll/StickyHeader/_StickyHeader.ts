@@ -28,9 +28,6 @@ export interface IStickyHeaderOptions extends IControlOptions {
     fixedZIndex: number;
     shadowVisibility: SHADOW_VISIBILITY;
     backgroundVisible: boolean;
-    // Этот костыль позволяет в IOS13 вместо расчёта offsetWidth установить жёсткую ширину определённой колонке.
-    // см. https://online.sbis.ru/opendoc.html?guid=b11076d6-7b06-4803-bab3-d27b7f92b5be
-    width?: number;
 }
 
 /**
@@ -127,6 +124,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     protected _afterUpdate(): void {
         this._updateBottomShadowStyle();
+    }
+
+    protected _beforeUpdate(): void {
+        // При каждом обновлении контента необходимо также обновлять значения тени.
+        // Иначе это приводит к ошибкас в расчётах на iOS/Safari 13
+        this._bottomShadowStyle = '';
+        this._topShadowStyle = '';
     }
 
     protected _afterMount(): void {
@@ -448,19 +452,20 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _updateBottomShadowStyle(): void {
         if (this._isSafari13) {
             const container: HTMLElement = this._getNormalizedContainer();
+            // Зануляем shadowStyle, чтобы исключить их влияние на расчёт container.offsetWidth
+            this._bottomShadowStyle = '';
+            this._topShadowStyle = '';
             // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
             // There's no container at first building of template.
             if (container) {
+                const offsetWidth = container.offsetWidth;
                 let offsetHeight = container.offsetHeight;
-                // Этот костыль позволяет в IOS13 вместо расчёта offsetWidth установить жёсткую ширину определённой колонке.
-                // см. https://online.sbis.ru/opendoc.html?guid=b11076d6-7b06-4803-bab3-d27b7f92b5be
-                const width = this._options.width !== undefined ? this._options.width : container.offsetWidth;
                 if (this._options.position.indexOf('bottom') !== -1) {
                     offsetHeight -= MOBILE_GAP_FIX_OFFSET;
                 }
                 this._bottomShadowStyle =
-                     `bottom: unset; right: unset; top:${offsetHeight}px; width:${width}px;`;
-                this._topShadowStyle = `right: unset; width:${width}px;`;
+                     `bottom: unset; right: unset; top:${offsetHeight}px; width:${offsetWidth}px;`;
+                this._topShadowStyle = `right: unset; width:${offsetWidth}px;`;
             }
         }
     }
@@ -478,9 +483,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
 
         return !! ((this._context.stickyHeader?.shadowPosition &&
-               this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
+            this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
             (this._model && this._model.fixedPosition === fixedPosition) &&
-          this._options.shadowVisibility === SHADOW_VISIBILITY.visible &&
+            this._options.shadowVisibility === SHADOW_VISIBILITY.visible &&
             (this._options.mode === MODE.stackable || this._shadowVisible));
     }
 
