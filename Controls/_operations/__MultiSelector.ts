@@ -143,13 +143,8 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       if (this._isCorrectCount(count) || !this._options.selectedCountConfig) {
          countResult = count === undefined ? selection.selected.length : count;
       } else {
-         if (this._menuCaption !== DEFAULT_CAPTION) {
-            this._menuCaption = rk('Отмечено') + ':';
-         }
-         this._countLoading = true;
          this._children.countIndicator.show();
          countResult = getCountUtil.getCount(selection, this._options.selectedCountConfig).then((count) => {
-            this._countLoading = false;
             this._children.countIndicator.hide();
             return count;
          });
