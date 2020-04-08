@@ -84,6 +84,7 @@ define([
                stopImmediatePropagation: sinon.fake()
             };
             component._afterMount({});
+            sinon.stub(component, '_updateTopBottom');
             return component._stickyRegisterHandler(event, data, true).then(function() {
                sinon.assert.calledOnce(event.stopImmediatePropagation);
             });
@@ -103,6 +104,7 @@ define([
                   },
                   data = getRegisterObject(test);
                component._afterMount({});
+               sinon.stub(component, '_updateTopBottom');
                return component._stickyRegisterHandler(event, data, true).then(function() {
                   assert.deepOwnInclude(component._headers[data.id], data);
                   if (test.position === 'topbottom') {
@@ -132,6 +134,7 @@ define([
                   component._stickyRegisterHandler(event, data, true),
                   component._stickyRegisterHandler(event, data, true)
                ]).then(function() {
+                  sinon.stub(component, '_updateTopBottom');
                   assert.equal(component._delayedHeaders.length, 2);
                   component._afterMount({});
                   assert.equal(component._delayedHeaders.length, 0);
