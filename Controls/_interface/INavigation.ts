@@ -74,7 +74,7 @@ export type TNavigationDirection = 'before' | 'after' | 'both';
  * @property {String|Array.<String>} position Начальная позиция для курсора.
  * Относительно этой позиции будет создаваться выборка при навигации.
  * Позиция определяется по значению поля или по массиву значений полей, имена которых заданы в опции field.
- * @property {Direction} direction Направление выборки.
+ * @property {TNavigationDirection} direction Направление выборки.
  * @property {Number} limit Количество записей, которые запрашиваются при выборке.
  */
 /*
@@ -136,7 +136,7 @@ export type TNavigationTotalInfo = 'basic' | 'extended';
  * @typedef {Object} INavigationViewConfig
  * @property {String} [pagingMode=direct] Режим отображения постраничной навигации.
  * В настоящий момент поддерживается навигация только в прямом направлении: от первой страницы до последней.
- * @property {totalInfo} [totalInfo=basic] Режим отображения информационной подписи.
+ * @property {TNavigationTotalInfo} [totalInfo=basic] Режим отображения информационной подписи.
  * @property {Number} maxCountValue Количество записей, когда необходимо прекратить загрузку в режиме навигации maxCount.
  * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/Navigation.typedef здесь}.
  * @property {Boolean} [showEndButton=false] Видимость кнопки перехода в конец списка.

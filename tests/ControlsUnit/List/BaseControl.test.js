@@ -722,6 +722,7 @@ define([
             data: data
          });
          let isIterativeSearch = false;
+         let ladingIndicatorTimer;
          const setIterativeMetaData = (items) => {
             if (items) {
                let metaData = items.getMetaData();
@@ -771,11 +772,13 @@ define([
          isIterativeSearch = true;
          setIterativeMetaData(ctrl._items);
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
+         ladingIndicatorTimer = ctrl._loadingIndicatorTimer;
          assert.isTrue(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
 
          await lists.BaseControl._private.loadToDirection(ctrl, 'up');
          assert.isTrue(ctrl._portionedSearchInProgress);
+         assert.isTrue(ladingIndicatorTimer !== ctrl._loadingIndicatorTimer, 'loading indicator timer did not reset');
 
          isIterativeSearch = false;
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -3949,6 +3952,9 @@ define([
                      contextMenuStopped = true;
                   }
                },
+               target = {
+                  getBoundingClientRect: ()=>{}
+               },
                childEvent = {
                   nativeEvent: {
                      preventDefault: function() {
@@ -3958,9 +3964,7 @@ define([
                   stopImmediatePropagation: function() {
                      callBackCount++;
                   },
-                  target: {
-                     getBoundingClientRect: ()=>{}
-                  }
+                  target: target
                },
                itemData = {
                   itemActions: { all: [] }
@@ -3976,6 +3980,7 @@ define([
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
                      assert.equal(itemData, instance._listViewModel._activeItem);
                      assert.equal(instance._listViewModel._menuState, 'shown');
+                     assert.strictEqual(instance._menuTarget, target);
                      assert.equal(callBackCount, 3);
                      done();
                   }

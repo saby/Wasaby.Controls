@@ -51,8 +51,7 @@
               minSearchLength="{{_options.minSearchLength}}"
               searchDelay="{{_options.searchDelay}}"
               searchValueTrim="{{_options.searchValueTrim}}"
-              emptyTemplate="{{_options.emptyTemplate}}"
-              theme="{{_options.theme}}"/>
+              emptyTemplate="{{_options.emptyTemplate}}"/>
    </Controls.popup:Sticky>
    <ws:if data="{{_options.selectorTemplate}}">
       <Controls.popup:Stack name="selectorOpener" on:result="_onSelectorTemplateResult()" />
