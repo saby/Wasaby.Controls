@@ -45,30 +45,30 @@ class ScenarioSecond extends Control<IControlOptions> {
         }];
         this._columns1 = [{
             displayProperty: 'title',
-            width: '300px'
+            width: '3fr'
         }, {
             displayProperty: 'price',
-            width: '72px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'remainder',
-            width: '70px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'free',
-            width: '80px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'costPrice',
-            width: '107px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'amountOfBalance',
-            width: '110px',
+            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }];
@@ -135,31 +135,31 @@ class ScenarioSecond extends Control<IControlOptions> {
         this._columns4 = [{
             displayProperty: 'department',
             template: this._firstColumnTemplate,
-            width: '550px',
+            width: '10fr',
             resultTemplate: this._fifthResultTemplate
         }, {
             displayProperty: 'employeeOwes',
             align: 'right',
-            width: '100px',
+            width: '2fr',
             template: this._fifthColumnTemplate,
             resultTemplate: this._fifthResultTemplate,
             result: 2862396.00
         }, {
             displayProperty: 'orgOwes',
             align: 'right',
-            width: '100px',
+            width: '2fr',
             template:  this._fifthColumnTemplate,
             resultTemplate:  this._fifthResultTemplate,
             result: 4203146.00
         }, {
             displayProperty: 'termInDays',
             align: 'right',
-            width: '50px',
+            width: '1fr',
             resultTemplate: this._fifthResultTemplate
         }, {
             displayProperty: 'date',
             align: 'right',
-            width: '100px',
+            width: '2fr',
             resultTemplate: this._fifthResultTemplate
         }];
         this._viewSource4 = new HierarchicalMemory({
