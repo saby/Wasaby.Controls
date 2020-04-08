@@ -15,7 +15,6 @@ import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import 'css!theme?Controls/scroll';
 
 export const enum SHADOW_VISIBILITY {
     visible = 'visible',
@@ -220,6 +219,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set top(value: number) {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
+            // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
+            this._container.style.top = `${value}px`;
             this._forceUpdate();
         }
     }
@@ -231,6 +232,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set bottom(value: number) {
         if (this._stickyHeadersHeight.bottom !== value) {
             this._stickyHeadersHeight.bottom = value;
+            // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
+            this._container.style.bottom = `${value}px`;
             this._forceUpdate();
         }
     }
@@ -553,5 +556,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             ])
         };
     }
+
+    static _theme: string[] = ['Controls/scroll'];
 
 }

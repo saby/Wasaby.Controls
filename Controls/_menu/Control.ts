@@ -20,6 +20,7 @@ import {isEqual} from 'Types/object';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
+import {TouchContextField} from 'Controls/context';
 
 /**
  * Контрол меню.
@@ -124,7 +125,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): void {
-        if (item.getContents() instanceof Model) {
+        if (item.getContents() instanceof Model && !this.isTouch()) {
             this.handleCurrentItem(item, sourceEvent.target, sourceEvent.nativeEvent);
         }
     }
@@ -153,14 +154,14 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         );
     }
 
-    protected _itemClick(event: SyntheticEvent<MouseEvent>, item: Model, nativeEvent: MouseEvent): void {
+    protected _itemClick(event: SyntheticEvent<MouseEvent>, item: Model, sourceEvent: MouseEvent): void {
         if (item.get('readOnly')) {
             return;
         }
         const key = item.getKey();
         const treeItem = this._listModel.getItemBySourceKey(key);
 
-        if (this._isPinIcon(nativeEvent.target)) {
+        if (this._isPinIcon(sourceEvent.target)) {
             this._pinClick(event, item);
         } else {
             if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem)) {
@@ -169,7 +170,11 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
                 this._notify('selectedKeysChanged', [this.getSelectedKeys()]);
             } else {
-                this._notify('itemClick', [item]);
+                if (this.isTouch() && this._subDropdownItem !== treeItem) {
+                    this.handleCurrentItem(treeItem, sourceEvent.currentTarget, sourceEvent.nativeEvent);
+                } else {
+                    this._notify('itemClick', [item, sourceEvent]);
+                }
             }
         }
     }
@@ -180,6 +185,10 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
     private _pinClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
         this._notify('pinClick', [item]);
+    }
+
+    private isTouch(): boolean {
+        return this._context.isTouch.isTouch;
     }
 
     protected _checkBoxClick(event: SyntheticEvent<MouseEvent>): void {
@@ -237,8 +246,18 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
-    protected _footerMouseEnter(): void {
-        this._closeSubMenu();
+    protected _footerMouseEnter(event): void {
+        if (!this._isNeedKeepMenuOpen(this.subMenu, event.nativeEvent) && this._subDropdownItem) {
+            this._closeSubMenu();
+        }
+    }
+
+    private _isNeedKeepMenuOpen(needCloseDropDown, nativeEvent): boolean {
+        if (needCloseDropDown) {
+            this.setSubMenuPosition();
+        }
+        this._isMouseInOpenedItemArea = needCloseDropDown ? this.isMouseInOpenedItemArea(nativeEvent) : false;
+        return this._isMouseInOpenedItemArea;
     }
 
     private _closeSubMenu(needOpenDropDown: boolean = false): void {
@@ -268,19 +287,14 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         const needCloseDropDown = this.subMenu && this._subDropdownItem && this._subDropdownItem !== item;
         this.setItemParamsOnHandle(item, target, nativeEvent);
 
-        if (needCloseDropDown) {
-            this.setSubMenuPosition();
-            this._isMouseInOpenedItemArea = this.isMouseInOpenedItemArea(nativeEvent);
-        } else {
-            this._isMouseInOpenedItemArea = false;
-        }
+        const needKeepMenuOpen = this._isNeedKeepMenuOpen(needCloseDropDown, nativeEvent);
 
         // Close the already opened sub menu. Installation of new data sets new size of the container.
         // If you change the size of the update, you will see the container twitch.
-        if (needCloseDropDown && !this._isMouseInOpenedItemArea) {
+        if (needCloseDropDown && !needKeepMenuOpen) {
             this._closeSubMenu(needOpenDropDown);
         }
-        if (needOpenDropDown && !this._isMouseInOpenedItemArea) {
+        if (needOpenDropDown && !needKeepMenuOpen) {
             this._openSubMenuEvent = nativeEvent;
             this._subDropdownItem = item;
             this._openSubDropdown(target, item);
@@ -332,7 +346,6 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private getSelectorDialogOptions(options: IMenuControlOptions, selectedItems: List<Model>): object {
-        const self = this;
         const selectorTemplate = options.selectorTemplate;
         const selectorDialogResult = options.selectorDialogResult;
         const selectorOpener = options.selectorOpener;
@@ -626,6 +639,12 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             emptyKey: null,
             moreButtonCaption: rk('Еще') + '...',
             groupTemplate
+        };
+    }
+
+    static contextTypes() {
+        return {
+            isTouch: TouchContextField
         };
     }
 }

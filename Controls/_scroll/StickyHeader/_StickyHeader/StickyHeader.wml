@@ -5,7 +5,7 @@
    {{_options.backgroundVisible ? 'controls-StickyHeader__background'}}
    controls-StickyHeader_position" style="{{_getStyle() + (_options.style || '')}}">
    <!--We use visibility style instead of "if" statement to prevent jumps when scrolling on iPad-->
-   <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-top
+   <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal
                {{ !_isShadowVisible('top') ? ' ws-invisible' }}"
          style="{{_topShadowStyle}}"></div>
    <Controls.event:Listener event="updateStickyShadow" on:updateStickyShadow="_updateStickyShadow()"/>
@@ -20,7 +20,7 @@
                on:controlResize="_selfResizeHandler()"/>
    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom" style="{{_getObserverStyle('bottom')}}"></div>
    <!--We use visibility style insted of "if" statement to prevent jumps when scrolling on iPad-->
-   <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-bottom
+   <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal
                {{ !_isShadowVisible('bottom') ? ' ws-invisible' }}"
        style="{{_bottomShadowStyle}}"></div>
 </div>

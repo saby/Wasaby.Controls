@@ -433,7 +433,8 @@ define(['Controls/treeGrid',
          ladderViewModel.getDisplay = () => ({
             getRoot: () => ({
                getContents: () => null
-            })
+            }),
+            getCount: () => undefined
          });
          assert.isTrue(ladderViewModel.isDrawResults());
          ladderViewModel.getItems().removeAt(4);

@@ -158,6 +158,7 @@ var _private = {
          _private.updateHistory(self, chain.factory(selectedItems).toArray());
       } else {
          self._items.prepend(newItems);
+         self._setItems(self._items);
       }
    },
 
@@ -297,6 +298,10 @@ var _private = {
          target: self._container,
          targetPoint: self._options.targetPoint,
          opener: self,
+         fittingMode: {
+            vertical: 'adaptive',
+            horizontal: 'overflow'
+         },
          autofocus: false,
          closeOnOutsideClick: true
       };

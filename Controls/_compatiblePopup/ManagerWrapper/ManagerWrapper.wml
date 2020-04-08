@@ -11,7 +11,8 @@
                            <Controls.Application.TouchDetector name="touchDetector">
                               <Controls.dragnDrop:Controller name="dragNDropContainer">
                                  <div>
-                                    <Controls.popup:Container name="PopupContainer" attr:id="popup"/>
+                                    <Controls.popup:Container name="PopupContainer" attr:id="popup" on:_documentDragStart="_documentDragStart()"
+                                                              on:_documentDragEnd="_documentDragEnd()"/>
                                     <ws:if data="{{ content.draggingTemplate }}">
                                        <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
                                                    draggingTemplateOptions="{{content.draggingTemplateOptions}}"

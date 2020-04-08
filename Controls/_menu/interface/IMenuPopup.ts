@@ -37,7 +37,7 @@ export default interface IMenuPopup {
  *       source="{{_source}}">
  *    <ws:headerContentTemplate>
  *        <span>{[Выберите город]}</span>
- *    <ws:headerContentTemplate>
+ *    </ws:headerContentTemplate>
  * </Controls.menu:Popup>
  * </pre>
  * JS:
@@ -93,7 +93,7 @@ export default interface IMenuPopup {
  *       source="{{_source}}">
  *    <ws:headerContentTemplate>
  *        <span>{[Выберите город]}</span>
- *    <ws:headerContentTemplate>
+ *    </ws:headerContentTemplate>
  * </Controls.menu:Popup>
  * </pre>
  * JS:
