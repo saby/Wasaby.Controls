@@ -1315,6 +1315,7 @@ var
             }
 
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
+                current.rowSeparatorSize = this._options.rowSeparatorSize;
 
             current.itemActionsDrawPosition =
                 this._options.columnScroll ? 'after' : 'before';
