@@ -180,6 +180,57 @@ export default interface IMenuControl {
  */
 
 /**
+ * @name Controls/_menu/interface/IMenuControl#itemTemplate
+ * @cfg {Function} Устанавливает шаблон отображения элемента в выпадающем списке. Подробнее про найстройку шаблона {@link Controls/menu:ItemTemplate здесь}.
+ * Для контролов из библиотеки dropdown используйте в качестве шаблона Controls/dropdown:ItemTemplate для ленивой загрузки библиотеки menu.
+ * @default Controls/menu:ItemTemplate
+ * @see itemTemplateProperty
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#itemTemplateProperty
+ * @cfg {String} Устанавливает имя поля, которое содержит имя шаблона отображения элемента. Подробнее про найстройку шаблона {@link Controls/menu:ItemTemplate здесь}.
+ * Для контролов из библиотеки dropdown используйте в качестве шаблона Controls/dropdown:ItemTemplate для ленивой загрузки библиотеки menu.
+ * @example
+ *  <pre class="brush: html">
+ *    <Controls.menu:Control
+ *          keyProperty="id"
+ *          displayProperty="title"
+ *          source="{{_source)}}"
+ *          itemTemplateProperty="myTemplate"/>
+ * </pre>
+ * myItemTemplate.wml
+ * <pre class="brush: html">
+ *    <ws:partial template="Controls/menu:ItemTemplate"
+ *                scope="{{_options}}">
+ *       <ws:contentTemplate>
+ *          <div class="demo-item">
+ *             <div class="demo-title">{{itemTemplate.itemData.item.get('title')}}</div>
+ *             <div class="demo-comment">{{itemTemplate.itemData.item.get('comment')}}</div>
+ *          </div>
+ *       </ws:contentTemplate>
+ *    </ws:partial>
+ * </pre>
+ * <pre class="brush: js">
+ *    this._source = new Memory ({
+ *       data: [
+ *           { id: 1,
+ *             title: 'Discussion' },
+ *           { id: 2,
+ *             title: 'Idea/suggestion',
+ *             comment: 'Offer your idea, which others can not only discuss, but also evaluate.
+ *             The best ideas will not go unnoticed and will be realized',
+ *            myItemTemplate='myItemTemplate.wml' },
+ *           { id: 3,
+ *             title: 'Problem' }
+ *       ],
+ *       keyProperty: 'id'
+ *    });
+ * </pre>
+ * @see itemTemplate
+ */
+
+/**
  * @event Controls/_menu/interface/IMenuControl#itemClick Происходит при выборе элемента
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Выбранный элемент.
