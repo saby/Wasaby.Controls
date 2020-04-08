@@ -179,6 +179,9 @@ export interface IStackOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IStack#minWidth
  * @cfg {Number} Минимально допустимая ширина стековой панели.
+ * @remark
+ * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
+ * Приоритетнее то, которое задано на Controls/popup:Stack.
  */
 
 /*
@@ -189,6 +192,9 @@ export interface IStackOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IStack#maxWidth
  * @cfg {Number} Максимально допустимая ширина стековой панели.
+ * @remark
+ * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
+ * Приоритетнее то, которое задано на Controls/popup:Stack.
  */
 
 /*
@@ -199,6 +205,9 @@ export interface IStackOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IStack#width
  * @cfg {Number} Текущая ширина стековой панели.
+ * @remark
+ * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
+ * Приоритетнее то, которое задано на Controls/popup:Stack.
  */
 
 /*
