@@ -30,6 +30,7 @@ class Component extends Control {
     // Учтем эти заголовки после ближайшего события ресайза.
     private _delayedHeaders: TRegisterEventData[] = [];
     private _stickyControllerMounted: boolean = false;
+    private _updateTopBottomInitialized: boolean = false;
 
     _beforeMount(options) {
         this._headersStack = {
@@ -310,23 +311,30 @@ class Component extends Control {
     }
 
     private _updateTopBottom() {
-        let offset = 0,
-            header;
-        for (let headerId of this._headersStack['top']) {
-            header = this._headers[headerId];
-            header.inst.top = offset;
-            if (header.mode === 'stackable' && Component._isVisible(header.container)) {
-                offset += header.inst.height;
-            }
+        // Обновляем положение заголовков один раз в микротаске
+        if (this._updateTopBottomInitialized) {
+            return;
         }
-        offset = 0;
-        for (let headerId of this._headersStack['bottom']) {
-            header = this._headers[headerId];
-            header.inst.bottom = offset;
-            if (header.mode === 'stackable' && Component._isVisible(header.container)) {
-                offset += header.inst.height;
+        this._updateTopBottomInitialized = true;
+        return Promise.resolve().then(() => {
+            let offset = 0,
+                header;
+            for (let headerId of this._headersStack['top']) {
+                header = this._headers[headerId];
+                header.inst.top = offset;
+                if (header.mode === 'stackable' && Component._isVisible(header.container)) {
+                    offset += header.inst.height;
+                }
             }
-        }
+            offset = 0;
+            for (let headerId of this._headersStack['bottom']) {
+                header = this._headers[headerId];
+                header.inst.bottom = offset;
+                if (header.mode === 'stackable' && Component._isVisible(header.container)) {
+                    offset += header.inst.height;
+                }
+            }
+        });
     }
 
     static _isVisible(element: HTMLElement): boolean {
