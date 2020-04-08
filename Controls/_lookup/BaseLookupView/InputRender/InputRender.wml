@@ -25,7 +25,7 @@
             </div>
          </ws:if>
          <ws:else>
-            <ws:partial template="{{_options.placeholder}}" scope="{{ _options }}"/>
+            <ws:partial template="{{_options.placeholder}}"/>
          </ws:else>
       </ws:if>
    </ws:placeholder>
