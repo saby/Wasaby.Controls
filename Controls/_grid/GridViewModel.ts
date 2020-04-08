@@ -1314,7 +1314,7 @@ var
                 return current;
             }
 
-                current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
+            current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
 
             current.itemActionsDrawPosition =
                 this._options.columnScroll ? 'after' : 'before';
