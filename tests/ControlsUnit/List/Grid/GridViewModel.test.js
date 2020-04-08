@@ -968,6 +968,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                    'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default'
             });
          });
+
+         it('getColspanedPaddingClassList', function() {
+            // Skip checkbox column
+            current.resetColumnIndex();
+            current.goToNextColumn();
+
+            assert.equal(current.getCurrentColumn().getColspanedPaddingClassList().right, 'controls-Grid__cell_spacingLastCol_l_theme-default');
+         });
       });
       describe('methods for processing with items', function() {
          var
