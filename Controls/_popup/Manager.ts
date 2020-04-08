@@ -97,8 +97,9 @@ class Manager extends Control<IManagerOptions> {
         const item = this.find(id);
         if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
             item.popupOptions = options;
-            item.controller.getDefaultConfig(item);
-            this._popupItems._nextVersion();
+            Promise.resolve(item.controller.getDefaultConfig(item)).then(() => {
+                this._popupItems._nextVersion();
+            });
         }
     }
 
