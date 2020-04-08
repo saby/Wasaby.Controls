@@ -298,6 +298,10 @@ var _private = {
          target: self._container,
          targetPoint: self._options.targetPoint,
          opener: self,
+         fittingMode: {
+            vertical: 'adaptive',
+            horizontal: 'overflow'
+         },
          autofocus: false,
          closeOnOutsideClick: true
       };
