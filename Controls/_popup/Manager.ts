@@ -135,12 +135,13 @@ class Manager extends Control<IManagerOptions> {
     remove(id: string): Promise<void> {
         const item = this.find(id);
         if (item) {
+            const itemContainer = this._getItemContainer(id);
             // TODO: https://online.sbis.ru/opendoc.html?guid=7a963eb8-1566-494f-903d-f2228b98f25c
-            item.startRemove = true;
+            item.controller._beforeElementDestroyed(item, itemContainer);
             return new Promise((resolve) => {
                 this._closeChilds(item).then(() => {
                     this._finishPendings(id, null, null, () => {
-                        this._removeElement(item, this._getItemContainer(id), id).then(() => {
+                        this._removeElement(item, itemContainer, id).then(() => {
                             resolve();
                             const parentItem = this.find(item.parentId);
                             this._closeChildHandler(parentItem);
@@ -168,6 +169,14 @@ class Manager extends Control<IManagerOptions> {
         }
 
         return item;
+    }
+
+    isDestroying(id: string): boolean {
+        const item = this.find(id);
+        return item &&
+            (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
+             item.popupState === item.controller.POPUP_STATE_DESTROYING ||
+             item.popupState === item.controller.POPUP_STATE_DESTROYED);
     }
 
     /**
