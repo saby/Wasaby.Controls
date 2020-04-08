@@ -46,7 +46,7 @@ import {descriptor} from 'Types/entity';
  * @public
  * @author Красильников А.С.
  * @category Container
- * @demo Controls-demo/Container/Scroll
+ * @demo Controls-demo/Scroll/Default/Index
  *
  */
 
@@ -98,11 +98,13 @@ import {descriptor} from 'Types/entity';
  * @name Controls/_scroll/Container#topShadowVisibility
  * @cfg {shadowVisibility} Устанавливает режим отображения тени сверху.
  * @default auto
+ * @demo Controls-demo/Scroll/ShadowVisibility/TopShadowVisibility/Index
  */
 
 /**
  * @name Controls/_scroll/Container#bottomShadowVisibility
  * @cfg {shadowVisibility} Устанавливает режим отображения тени снизу.
+ * @demo Controls-demo/Scroll/ShadowVisibility/BottomShadowVisibility/Index
  */
 
 /**
@@ -110,11 +112,13 @@ import {descriptor} from 'Types/entity';
  * @cfg {Boolean} Режим скроллирования.
  * @variant vertical Вертикальный скролл.
  * @variant verticalHorizontal Вертикальный и горизонтальный скролл.
+ * @demo Controls-demo/Scroll/ScrollMode/Index
  */
 
 /**
  * @name Controls/_scroll/Container#scrollbarVisible
  * @cfg {Boolean} Следует ли отображать скролл.
+ * @demo Controls-demo/Scroll/ScrollbarVisible/Index
  */
 
 /*
