@@ -13,6 +13,7 @@ export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions
  * Счетчик с поддержкой различных стилей отображения и размеров.
  * @remark
  * Используется в составе сложных заголовков, состоящих из {@link Controls/heading:Separator} и {@link Controls/heading:Counter}.
+ * Для подсветки всего сложного заголовка используйте класс controls-Header_all__clickable на контейнере.
  *
  * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Демо-пример</a>.
  *
