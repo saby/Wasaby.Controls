@@ -335,9 +335,13 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                     controller: result[1]
                 });
             }).catch((error: RequireError) => {
-                requirejs.onError(error);
-                Logger.error('Controls/popup' + ': ' + error.message, undefined, error);
-                reject(error);
+                // requirejs.onError бросает ошибку, из-за чего код ниже не выполняется.
+                try {
+                    requirejs.onError(error);
+                } finally {
+                    Logger.error('Controls/popup' + ': ' + error.message, undefined, error);
+                    reject(error);
+                }
             });
         });
     }
