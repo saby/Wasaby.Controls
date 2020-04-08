@@ -4,6 +4,14 @@
    height: 100%;
 }
 
+.controls-InfoBoxTemplate__content_theme-@{themeName} {
+   max-width: @max-width_infobox;
+   background: @background-color_infobox;
+   border-radius: @border-radius_infobox;
+   box-shadow: @box-shadow-color_infobox @box-shadow-offset_infobox;
+   border: @border-thickness_infobox solid @border-color_infobox;
+}
+
 // Класс для установки фона контрола через backgroundStyle (infoBox)
 .controls-background-infoBox_theme-@{themeName} {
   background-color: @background-color_infobox;
@@ -69,39 +77,26 @@
     border-right-color: @secondary_border-color_infobox;
     border-bottom-color: @secondary_border-color_infobox;
   }
-  &-default_theme-@{themeName}{
-    border-right-color: @border-color_infobox;
-    border-bottom-color: @border-color_infobox;
-  }
   &-info_theme-@{themeName}{
     background-color: @info_background-color_infobox;
     border-right-color: @info_border-color_infobox;
     border-bottom-color: @info_border-color_infobox;
   }
+  &-invalid_theme-@{themeName},
+  &-invalidAccent_theme-@{themeName}{
+    border-width: @border-thickness_infobox;
+    border-right-color: @danger_color;
+    border-bottom-color: @danger_color;
+  }
 }
 
-.controls-InfoBoxTemplate_style_outline_danger_theme-@{themeName} {
-  background: @background-color_infobox;
-  border-radius: @border-radius_infobox;
+.controls-InfoBoxTemplate_style_invalid_theme-@{themeName},
+.controls-InfoBoxTemplate_style_invalidAccent_theme-@{themeName} {
   box-shadow: @invalid_box-shadow-color_infobox @box-shadow-offset_infobox;
   border: @border-thickness_infobox solid @danger_color;
 }
 
-.controls-InfoBoxTemplate_style_outline_default_theme-@{themeName} {
-  background: @background-color_infobox;
-  border-radius: @border-radius_infobox;
-  box-shadow: @box-shadow-color_infobox @box-shadow-offset_infobox;
-  border: @border-thickness_infobox solid @border-color_infobox;
-}
-
-.controls-InfoBoxTemplate_style_marker_theme-@{themeName} {
-  background: @background-color_infobox;
-  border-radius: @border-radius_infobox;
-  box-shadow: @box-shadow-color_infobox @box-shadow-offset_infobox;
-  border: @border-thickness_infobox solid @border-color_infobox;
-}
-
-.controls-InfoBoxTemplate_style_marker-top_ {
+.controls-InfoBoxTemplate_style-top_ {
    &danger_theme-@{themeName}{
      border-top: @marker-thickness_infobox solid @danger_color;
    }
@@ -120,16 +115,13 @@
    &secondary_theme-@{themeName}{
      border-top: @marker-thickness_infobox solid @secondary_border-color_infobox;
    }
-   &default_theme-@{themeName}{
-     border-top: @marker-thickness_infobox solid @border-color_infobox;
-   }
    &info_theme-@{themeName}{
      border-top: @marker-thickness_infobox solid @info_border-color_infobox;
      background-color: @info_background-color_infobox;
    }
  }
 
-.controls-InfoBoxTemplate_style_marker-bottom_ {
+.controls-InfoBoxTemplate_style-bottom_ {
   &danger_theme-@{themeName}{
     border-bottom: @marker-thickness_infobox solid @danger_color;
   }
@@ -148,16 +140,13 @@
   &secondary_theme-@{themeName}{
     border-bottom: @marker-thickness_infobox solid @secondary_border-color_infobox;
   }
-  &default_theme-@{themeName}{
-    border-bottom: @marker-thickness_infobox solid @border-color_infobox;
-  }
   &info_theme-@{themeName}{
     border-bottom: @marker-thickness_infobox solid @info_border-color_infobox;
     background-color: @info_background-color_infobox;
   }
 }
 
-.controls-InfoBoxTemplate_style_marker-left_ {
+.controls-InfoBoxTemplate_style-left_ {
   &danger_theme-@{themeName}{
     border-left: @marker-thickness_infobox solid @danger_color;
   }
@@ -176,16 +165,13 @@
   &secondary_theme-@{themeName}{
     border-left: @marker-thickness_infobox solid @secondary_border-color_infobox;
   }
-  &default_theme-@{themeName}{
-    border-left: @marker-thickness_infobox solid @border-color_infobox;
-  }
   &info_theme-@{themeName}{
     border-left: @marker-thickness_infobox solid @info_border-color_infobox;
     background-color: @info_background-color_infobox;
   }
 }
 
-.controls-InfoBoxTemplate_style_marker-right_ {
+.controls-InfoBoxTemplate_style-right_ {
   &danger_theme-@{themeName}{
     border-right: @marker-thickness_infobox solid @danger_color;
   }
@@ -204,15 +190,11 @@
   &secondary_theme-@{themeName}{
     border-right: @marker-thickness_infobox solid @secondary_border-color_infobox;
   }
-  &default_theme-@{themeName}{
-    border-right: @marker-thickness_infobox solid @border-color_infobox;
-  }
   &info_theme-@{themeName}{
     border-right: @marker-thickness_infobox solid @info_border-color_infobox;
     background-color: @info_background-color_infobox;
   }
 }
-
 
 .controls-InfoBoxTemplate__content {
    position: relative;
@@ -221,10 +203,6 @@
    height: 100%;
    width: 100%;
    overflow: hidden;
-}
-
-.controls-InfoBoxTemplate__content_theme-@{themeName} {
-   max-width: @max-width_infobox;
 }
 
 .controls-InfoBoxTemplate__closeButton {
