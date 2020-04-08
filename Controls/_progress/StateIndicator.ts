@@ -104,6 +104,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /**
  * @event Controls/_progress/StateIndicator#itemEnter Происходит при наведении курсора мыши на диаграмму.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Node} target Элемент, на котоорый навели курсор мыши
  *
  */
 
