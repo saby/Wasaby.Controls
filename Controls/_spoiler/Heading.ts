@@ -4,6 +4,7 @@ import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IExpandable, IExpandableOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
+import {View} from 'Controls/spoiler';
 
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
@@ -65,6 +66,7 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     protected _icon: TIcon;
     protected _view: TView;
     protected _caption: string;
+    protected _defaultExpanded: boolean = false;
 
     protected _template: TemplateFunction = template;
 
@@ -88,10 +90,13 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     }
 
     protected _beforeMount(options?: IHeadingOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+        const expanded = this._getExpanded(this, options);
         this._caption = Heading._calcCaption(options);
-        this._icon = Heading._calcIcon(options.expanded);
-        this._view = Heading._calcView(options.expanded);
-        return super._beforeMount(options, contexts, receivedState);
+        this._icon = Heading._calcIcon(expanded);
+        this._view = Heading._calcView(expanded);
+        const optionsModify = options;
+        optionsModify.expanded = expanded;
+        return super._beforeMount(optionsModify, contexts, receivedState);
     }
 
     protected _beforeUpdate(options?: IHeadingOptions, contexts?: any): void {
@@ -105,8 +110,18 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         super._beforeUpdate(options, contexts);
     }
 
+    private _getExpanded(self, options: IHeadingOptions): boolean {
+        if (options.hasOwnProperty('expanded')) {
+            return options.expanded === undefined ? self._defaultExpanded : options.expanded;
+        }
+        return self._defaultExpanded;
+    }
+
     protected _clickHandler(event: SyntheticEvent<MouseEvent>): void {
         this._notify('expandedChanged', [!this._options.expanded]);
+       const optionsNew = this._options;
+        optionsNew.expanded = !this._options.expanded;
+        this._logicParent._beforeUpdate(optionsNew);
     }
 
     static _theme: string[] = ['Controls/spoiler', 'Controls/Classes'];
@@ -145,7 +160,6 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         return {
             captions: '',
             fontSize: 'm',
-            expanded: true,
             captionPosition: 'right'
         };
     }
@@ -153,7 +167,6 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     static getOptionTypes(): Partial<IHeadingOptions> {
         return {
             fontSize: descriptor(String),
-            expanded: descriptor(Boolean),
             captions: descriptor(String, Array),
             captionPosition: descriptor(String).oneOf(['left', 'right'])
         };

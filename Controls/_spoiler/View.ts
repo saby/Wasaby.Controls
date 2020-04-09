@@ -44,6 +44,8 @@ export interface IView extends IHeading {
  */
 class View extends Control<IViewOptions> implements IView {
     protected _notifyHandler: Function = tmplNotify;
+    protected _defaultExpanded: boolean = false;
+    protected _expanded: boolean;
 
     protected _template: TemplateFunction = template;
 
@@ -51,6 +53,12 @@ class View extends Control<IViewOptions> implements IView {
     readonly '[Controls/_spoiler/IHeading]': boolean = true;
     readonly '[Controls/_interface/IFontSize]': boolean = true;
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
+    protected _beforeUpdate(options?: IViewOptions, contexts?: any): void {
+        this._expanded = this._getExpanded(this, options);
+    }
+    protected _beforeMount(options?: IViewOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+        this._expanded = this._getExpanded(this, options);
+    }
 
     static getDefaultOptions(): Partial<IViewOptions> {
         return Heading.getDefaultOptions();
@@ -58,6 +66,12 @@ class View extends Control<IViewOptions> implements IView {
 
     static getOptionTypes(): Partial<IViewOptions> {
         return Heading.getOptionTypes();
+    }
+    private _getExpanded(self, options: IHeadingOptions): boolean {
+        if (options.hasOwnProperty('expanded')) {
+            return options.expanded === undefined ? self._defaultExpanded : options.expanded;
+        }
+        return self._defaultExpanded;
     }
 }
 
