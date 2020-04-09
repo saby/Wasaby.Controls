@@ -44,31 +44,25 @@ class ScenarioSecond extends Control<IControlOptions> {
             width: 'auto'
         }];
         this._columns1 = [{
-            displayProperty: 'title',
-            width: '3fr'
+            displayProperty: 'title'
         }, {
             displayProperty: 'price',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'remainder',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'free',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'costPrice',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'amountOfBalance',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }];
@@ -135,31 +129,26 @@ class ScenarioSecond extends Control<IControlOptions> {
         this._columns4 = [{
             displayProperty: 'department',
             template: this._firstColumnTemplate,
-            width: '10fr',
             resultTemplate: this._fifthResultTemplate
         }, {
             displayProperty: 'employeeOwes',
             align: 'right',
-            width: '2fr',
             template: this._fifthColumnTemplate,
             resultTemplate: this._fifthResultTemplate,
             result: 2862396.00
         }, {
             displayProperty: 'orgOwes',
             align: 'right',
-            width: '2fr',
             template:  this._fifthColumnTemplate,
             resultTemplate:  this._fifthResultTemplate,
             result: 4203146.00
         }, {
             displayProperty: 'termInDays',
             align: 'right',
-            width: '1fr',
             resultTemplate: this._fifthResultTemplate
         }, {
             displayProperty: 'date',
             align: 'right',
-            width: '2fr',
             resultTemplate: this._fifthResultTemplate
         }];
         this._viewSource4 = new HierarchicalMemory({
