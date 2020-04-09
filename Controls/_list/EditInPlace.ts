@@ -32,6 +32,7 @@ var
 
         afterBeginEdit: function (self, options, isAdd) {
             self._editingItem = options.item.clone();
+            self._editingItem.acceptChanges();
             self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
             self._notify('afterBeginEdit', [self._editingItem, isAdd]);
             return options;
