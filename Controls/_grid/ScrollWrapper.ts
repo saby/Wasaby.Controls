@@ -3,6 +3,7 @@ import * as template from 'wml!Controls/_grid/ScrollWrapperTemplate';
 import Scrollbar from 'Controls/_scroll/Scroll/Scrollbar';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {isFullGridSupport} from './utils/GridLayoutUtil';
+import {Logger} from 'UI/Utils';
 
 export interface IHorizontalScrollWrapperOptions extends IControlOptions {
     positionChangeHandler: (e: SyntheticEvent<null>, position: number) => void;
@@ -23,10 +24,17 @@ export default class HorizontalScrollWrapper extends Control<IControlOptions> {
     private _gridStyle: string = null;
     protected _localPositionHandler: IHorizontalScrollWrapperOptions['positionChangeHandler'];
     private _needNotifyResize: boolean = false;
+    private _shouldSetMarginTop: boolean = false;
 
     protected _beforeMount(options: IHorizontalScrollWrapperOptions): void {
         this._localPositionHandler = options.positionChangeHandler;
         this._gridStyle = this._getGridStyles(options);
+        const listModel = options.listModel;
+        const hasHeaderOrTopResults = listModel.getHeader() || listModel.getResultsPosition() === 'top';
+        this._shouldSetMarginTop = !!(options.gridSupport === 'full' && hasHeaderOrTopResults);
+        if (!hasHeaderOrTopResults) {
+            Logger.warn("ScrollWrapper: Don't use columnScroll without header or results rows");
+        }
     }
 
     protected _afterRender(): void {
@@ -50,6 +58,7 @@ export default class HorizontalScrollWrapper extends Control<IControlOptions> {
         }
         let style = '';
         let offset = 0;
+        let lastCellOffset = 1;
         const listModel = options.listModel;
         // Учёт колонки с чекбоксами для выбора записей
         if (listModel.getMultiSelectVisibility() !== 'hidden') {
@@ -59,11 +68,13 @@ export default class HorizontalScrollWrapper extends Control<IControlOptions> {
         if (listModel.shouldAddStickyLadderCell()) {
             offset += 1;
         }
-        const maxEndColumn = listModel.getHeaderMaxEndColumn();
+        if (listModel._shouldAddActionsCell()) {
+            lastCellOffset += 1;
+        }
         const stickyColumnsCount = listModel.getStickyColumnsCount();
-        const header = listModel.getHeader();
+        const columns = listModel.getColumns();
         // В случае !multiHeader добавление offset к grid-column-end не нужно, т.к. оно уже учтено в maxEndColumn
-        style += `grid-column: ${stickyColumnsCount + 1 + offset} / ${(maxEndColumn ? maxEndColumn : header.length + 1) + offset};`;
+        style += `grid-column: ${stickyColumnsCount + 1 + offset} / ${(columns.length + lastCellOffset) + offset};`;
         style += `width: ${options.scrollWidth}px`;
         return style;
     }
