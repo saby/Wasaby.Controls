@@ -1,3 +1,5 @@
-<div class="controls-MonthViewVDOM__item controls-MonthViewVDOM__item_theme-{{theme}} {{_themeCssClass}}">
+<div class="controls-MonthViewVDOM__item
+            {{newMode !== true? 'controls-MonthViewVDOM__item-old' : 'controls-MonthViewVDOM__item_theme-' + theme}}
+            {{_themeCssClass}}">
     {{ value.caption }}
 </div>
