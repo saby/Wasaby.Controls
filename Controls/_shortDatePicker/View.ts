@@ -144,32 +144,48 @@ var Component = BaseControl.extend({
         }
     },
 
-    _canBeDisplayed: function (year) {
+    _getDisplayedYear: function (year, delta, onlyYearsYear?) {
         if (!this._displayedRanges) {
-            return true;
+            return onlyYearsYear + delta || year + delta;
         }
+        let index;
         for (let i = 0; i < this._displayedRanges.length; i++) {
-            if (this._displayedRanges[i][0].getFullYear() <= year &&
-                this._displayedRanges[i][1].getFullYear() >= year) {
-                return true;
+            //Проверяем второй элемент массива на null. Если задан null в опции displayedRanges
+            //то лента будет отображаться бесконечно.
+            if (this._displayedRanges[i][0] <= new Date(year, 0) &&
+                (this._displayedRanges[i][1] === null || this._displayedRanges[i][1] >= new Date(year, 0))) {
+                index = i;
+                break;
             }
         }
-        return false;
+        if (this._displayedRanges[index][0] <= new Date(year + delta, 0) &&
+            (this._displayedRanges[index][1] === null || this._displayedRanges[index][1] >= new Date(year + delta, 0))) {
+            return year + delta;
+        } else {
+            if (delta) {
+                if (this._displayedRanges[index + delta][0]) {
+                    return this._displayedRanges[index + delta][0].getFullYear();
+                }
+            } else {
+                if (this._displayedRanges[index + delta][1]) {
+                    return this._displayedRanges[index + delta][0].getFullYear();
+                }
+            }
+        }
+        return year;
     },
 
     _changeYear : function(event, delta) {
-        const year = this._position.getFullYear() + delta;
-        let checkedYear = year;
+        const year = this._position.getFullYear();
         //_position определяется первым отображаемым годом в списке. Всего у нас отображается
         //onlyYearsElementsVisible записей. Для перехода на предыдущий элемент, нужно проверить, доступен ли он
         //для отображения. Для этого выбираем самый нижний элемент
         if (delta === -1 && !this._options.chooseMonths &&
             !this._options.chooseHalfyears && !this._options.chooseQuarters) {
-            checkedYear = this._position.getFullYear() - ONLY_YEARS_ELEMENTS_VISIBLE;
+            let onlyYearsYear = this._position.getFullYear() - ONLY_YEARS_ELEMENTS_VISIBLE + 1;
+            this.setYear(this._getDisplayedYear(year, delta, onlyYearsYear));
         }
-        if (this._canBeDisplayed(checkedYear)) {
-            this.setYear(year);
-        }
+        this.setYear(this._getDisplayedYear(year, delta));
     },
 
     _onYearMouseLeave: function () {
