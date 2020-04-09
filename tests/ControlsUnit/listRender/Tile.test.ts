@@ -17,7 +17,7 @@ describe('Controls/_listRender/Tile', () => {
         const anotherTile = new Tile(defaultCfg);
         anotherTile._beforeMount(defaultCfg);
 
-        assert.notStrictEqual(tile._templateKeyPrefix, anotherTile._templateKeyPrefix);
+        assert.strictEqual(tile._templateKeyPrefix, anotherTile._templateKeyPrefix);
     });
 
     it('_afterMount()', () => {
