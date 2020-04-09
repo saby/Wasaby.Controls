@@ -36,7 +36,9 @@ define([
                start: 10,
                end: 10
             };
-            component._focusInHandler();
+            component._focusInHandler({
+                  target: {}
+               });
             assert.deepEqual(
                component._viewModel.selection,
                {
@@ -53,7 +55,9 @@ define([
                end: 1
             };
             component._mouseDownHandler();
-            component._focusInHandler();
+            component._focusInHandler({
+                  target: {}
+               });
             assert.deepEqual(component._viewModel.selection, { start: 1, end: 1 });
          });
       });
