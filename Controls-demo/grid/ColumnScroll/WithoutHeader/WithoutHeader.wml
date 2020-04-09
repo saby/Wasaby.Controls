@@ -7,7 +7,6 @@
                 columnScroll="{{true}}"
                 backgroundStyle="default"
                 resultsPosition="top"
-                header="{{_header}}"
                 stickyColumnsCount="{{2}}"/>
     </Controls.scroll:Container>
 </div>
