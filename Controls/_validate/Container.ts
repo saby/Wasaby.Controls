@@ -32,8 +32,7 @@ const _private = {
             self._isOpened = true;
             const cfg = {
                 target: self._container,
-                style: 'danger',
-                styleType: 'outline',
+                validationStatus: 'invalid',
                 template: errorMessage,
                 templateOptions: {content: self._validationResult},
                 eventHandlers: {
