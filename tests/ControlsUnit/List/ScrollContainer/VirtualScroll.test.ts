@@ -110,7 +110,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
                 instance.insertItems(3, 1, {up: false, down: false}));
         });
         it('with up predictive direction', () => {
-            assert.deepEqual({range: {start: 2, stop: 7}, placeholders: {top: 60, bottom: 0}},
+            assert.deepEqual({range: {start: 2, stop: 7}, placeholders: {top: 0, bottom: 0}},
                 instance.insertItems(0, 2, {up: false, down: false}, 'up'));
         });
         it('with down predictive direction', () => {
