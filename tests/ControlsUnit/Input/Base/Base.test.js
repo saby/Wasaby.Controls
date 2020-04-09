@@ -129,7 +129,9 @@ define(
 
             InputUtility.init(ctrl);
 
-            ctrl._focusInHandler();
+            ctrl._focusInHandler({
+                  target: {}
+               });
             InputUtility.insert(ctrl, 'test');
             InputUtility.triggerInput(ctrl);
 
@@ -481,7 +483,9 @@ define(
                });
 
                ctrl._firstFocus = true;
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
 
                assert.equal(ctrl._getField().selectionStart, 4);
                assert.equal(ctrl._getField().selectionEnd, 4);
@@ -499,7 +503,9 @@ define(
                ctrl._getActiveElement = function() {
                   return ctrl._getField();
                };
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
 
                assert.equal(ctrl._getField().selectionStart, 0);
                assert.equal(ctrl._getField().selectionEnd, 0);
@@ -726,7 +732,9 @@ define(
             it('Pressing the key enter.', function() {
                InputUtility.init(ctrl);
 
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
                   keyCode: Env.constants.key.enter
                }));
@@ -736,7 +744,9 @@ define(
             it('Pressing the key enter and enter "test".', function() {
                InputUtility.init(ctrl);
 
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                InputUtility.insert(ctrl, 'test');
                InputUtility.triggerInput(ctrl);
                ctrl._keyDownHandler(new Vdom.SyntheticEvent({
@@ -758,7 +768,9 @@ define(
                InputUtility.init(ctrl);
                ctrl._isTriggeredChangeEventByEnterKey = block;
 
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
                   keyCode: Env.constants.key.enter
                }));
@@ -769,7 +781,9 @@ define(
                InputUtility.init(ctrl);
                ctrl._isTriggeredChangeEventByEnterKey = block;
 
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                InputUtility.insert(ctrl, 'test');
                InputUtility.triggerInput(ctrl);
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({

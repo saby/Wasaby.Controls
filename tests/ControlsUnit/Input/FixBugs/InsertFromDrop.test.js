@@ -9,7 +9,10 @@ define(
       describe('Controls/input:InsertFromDrop', function() {
          let inst;
          const data = {
-            oldPosition: 5,
+            oldSelection: {
+               start: 5,
+               end: 5
+            },
             newPosition: 10,
             oldValue: 'my my',
             newValue: 'my my test'
@@ -27,7 +30,10 @@ define(
             inst.focusHandler(event);
             const res = inst.positionForInputProcessing(data);
             assert.deepEqual(res, {
-               oldPosition: 0,
+               oldSelection: {
+                  start: 0,
+                  end: 0
+               },
                newPosition: 5,
                oldValue: 'my my',
                newValue: ' testmy my'

@@ -802,17 +802,14 @@ var Base = Control.extend({
         const field = this._getField();
         const model = this._viewModel;
         const data = this._fixBugs.positionForInputProcessing({
-            oldPosition: model.oldSelection.end,
+            oldSelection: model.oldSelection,
             newPosition: field.selectionEnd,
             newValue: field.value,
             oldValue: model.oldDisplayValue
         });
         const value = data.oldValue;
         const newValue = data.newValue;
-        const selection = {
-            start: data.oldPosition,
-            end: data.oldPosition
-        };
+        const selection = data.oldSelection;
         const position = data.newPosition;
 
         const inputType: IInputType = _private.calculateInputType(
