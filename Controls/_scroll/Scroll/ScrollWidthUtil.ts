@@ -22,11 +22,11 @@ var _private = {
      * @param compatibility
      * @return {string}
      */
-    calcStyleHideScrollbar: function (scrollbarWidth) {
+    calcStyleHideScrollbar: function (scrollbarWidth, scrollMode) {
         var style;
 
         if (scrollbarWidth) {
-            style = `margin: 0 -${scrollbarWidth}px -${scrollbarWidth}px 0;`;
+            style =  `margin: 0 -${scrollbarWidth}px -${scrollMode === 'vertical' ? 0 : scrollbarWidth}px 0;`;
         } else if (scrollbarWidth === 0) {
             style = '';
         }
@@ -38,14 +38,14 @@ var _private = {
 export = {
     _private: _private,
 
-    calcStyleHideScrollbar: function () {
+    calcStyleHideScrollbar: function (scrollMode) {
         var scrollbarWidth, styleHideScrollbar;
 
         if (typeof _private.styleHideScrollbar === 'string') {
             styleHideScrollbar = _private.styleHideScrollbar;
         } else {
             scrollbarWidth = _private.calcScrollbarWidth(Env.detection);
-            styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth);
+            styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, scrollMode);
         }
 
         /**
