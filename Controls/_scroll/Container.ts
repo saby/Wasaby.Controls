@@ -535,7 +535,7 @@ let
 
          if (receivedState) {
             _private.updateDisplayState(this, receivedState.displayState);
-            this._styleHideScrollbar = receivedState.styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar();
+            this._styleHideScrollbar = receivedState.styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode);
             this._useNativeScrollbar = receivedState.useNativeScrollbar;
             this._contentStyles = receivedState.contentStyles;
          } else {
@@ -566,8 +566,7 @@ let
                         right: rightShadowVisible
                      }
                   },
-                   styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
-                   styleHideHorizontalScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
+                   styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode),
 
                   // На мобильных устройствах используется нативный скролл, на других платформенный.
                   useNativeScrollbar = Env.detection.isMobileIOS || Env.detection.isMobileAndroid;
