@@ -775,10 +775,13 @@ define([
          ladingIndicatorTimer = ctrl._loadingIndicatorTimer;
          assert.isTrue(ctrl._portionedSearchInProgress);
          assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._loadingIndicatorTimer);
 
+         let loadingIndicatorTimer = setTimeout(() => {});
+         ctrl._loadingIndicatorTimer = loadingIndicatorTimer;
          await lists.BaseControl._private.loadToDirection(ctrl, 'up');
          assert.isTrue(ctrl._portionedSearchInProgress);
-         assert.isTrue(ladingIndicatorTimer !== ctrl._loadingIndicatorTimer, 'loading indicator timer did not reset');
+         assert.isTrue(loadingIndicatorTimer !== ctrl._loadingIndicatorTimer, 'loading indicator timer did not reset');
 
          isIterativeSearch = false;
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -2373,6 +2376,42 @@ define([
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
+      it('close edit in place before reload', async function() {
+         let baseControlOptions = {
+            viewModelConstructor: lists.ListViewModel,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewName: 'Controls/List/ListView',
+            source: source,
+            emptyTemplate: {}
+         };
+
+         let baseControl = new lists.BaseControl(baseControlOptions);
+         baseControl.saveOptions(baseControlOptions);
+
+         await baseControl._beforeMount(baseControlOptions);
+
+         let isEditingCanceled = false;
+
+         baseControl._children = {
+            editInPlace: {
+               cancelEdit() {
+                  isEditingCanceled = true;
+               }
+            }
+         };
+
+         baseControl._listViewModel.getEditingItemData = () => ({});
+
+         await baseControl.reload();
+         assert.isTrue(isEditingCanceled);
+      });
+
       it('reload with changing source/navig/filter should call scroll to start', function() {
 
          var
@@ -2551,6 +2590,35 @@ define([
             baseControl._updateItemActions();
             assert.equal(actionsUpdateCount, 0);
          });
+      });
+      it('itemActionVisibilityCallbackChanged', () => {
+         var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            callback1 = () => true,
+            callback2 = () => false,
+            cfg1 = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               itemActions: [
+                  {
+                     id: 1,
+                     title: '123'
+                  }
+               ],
+               itemActionVisibilityCallback: callback1,
+               viewModelConstructor: lists.ListViewModel
+            },
+            cfg2 = {...cfg1, itemActionVisibilityCallback: callback2};
+         baseControl = new lists.BaseControl(cfg1);
+         baseControl.saveOptions(cfg1);
+         baseControl._beforeMount(cfg1);
+         baseControl._beforeUpdate(cfg1);
+         assert.isNotOk(baseControl._shouldUpdateItemActions);
+         baseControl._beforeUpdate(cfg2);
+         assert.isTrue(baseControl._shouldUpdateItemActions);
       });
 
       describe('resetScrollAfterReload', function() {
