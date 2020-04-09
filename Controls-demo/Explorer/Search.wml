@@ -31,7 +31,7 @@
                      </div>
                   </div>
                </div>
-               <Controls.list:Container>
+               <Controls.list:Container scope="{{content}}">
                   <Controls.operations:Container>
                      <Controls.explorer:View
                         attr:class="demo-Explorer ControlsDemo-Explorer_search"

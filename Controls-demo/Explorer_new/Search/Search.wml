@@ -5,7 +5,7 @@
                                 <Controls.search:InputContainer>
                                         <Controls.search:Input/>
                                 </Controls.search:InputContainer>
-                                <Controls.list:Container>
+                                <Controls.list:Container scope="{{content}}">
                                         <Controls.operations:Container>
                                                 <Controls.explorer:View
                                                     source="{{_viewSource}}"
