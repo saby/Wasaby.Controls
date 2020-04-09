@@ -45,7 +45,7 @@ export interface IView extends IHeading {
 class View extends Control<IViewOptions> implements IView {
     protected _notifyHandler: Function = tmplNotify;
     protected _defaultExpanded: boolean = false;
-    protected _expanded: boolean;
+    protected _expanded: boolean = false;
 
     protected _template: TemplateFunction = template;
 
@@ -69,9 +69,13 @@ class View extends Control<IViewOptions> implements IView {
     }
     private _getExpanded(self, options: IHeadingOptions): boolean {
         if (options.hasOwnProperty('expanded')) {
-            return options.expanded === undefined ? self._defaultExpanded : options.expanded;
+            return options.expanded === undefined ? self._expanded : options.expanded;
         }
-        return self._defaultExpanded;
+        return self._expanded;
+    }
+    protected _changeState(e, state): void {
+        this._notify('expandedChanged', [state]);
+        this._expanded = state;
     }
 }
 

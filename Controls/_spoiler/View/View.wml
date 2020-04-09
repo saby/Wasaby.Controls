@@ -4,7 +4,7 @@
                               captions="{{_options.captions}}"
                               captionPosition="{{_options.captionPosition}}"
                               fontSize="{{_options.fontSize}}"
-                              on:expandedChanged="_notifyHandler('expandedChanged')"/>
+                              on:expandedChanged="_changeState()"/>
    <ws:if data="{{_expanded}}">
       <ws:partial attr:class="controls-SpoilerView__area" template="{{_options.content}}"/>
    </ws:if>
