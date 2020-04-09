@@ -168,8 +168,6 @@ const
           const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
           if (scroll) {
               (scroll as HTMLElement).style.display = 'none';
-              // safari 13 учитывает ширину скрытого скролла
-              (scroll as HTMLElement).style.width = '0px';
           }
       },
 
