@@ -2095,6 +2095,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
+        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback 
+                                                !== newOptions.itemActionVisibilityCallback;
+        this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
@@ -2156,10 +2159,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (recreateSource) {
             this.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
-
-            //Нужно обновлять опции записи не только при наведении мыши,
-            //так как запись может поменяться в то время, как курсор находится на ней
-            this._shouldUpdateItemActions = true;
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
