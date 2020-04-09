@@ -73,6 +73,16 @@ var Component = BaseControl.extend({
         _private._setMonth(this, options.month, true, options.dateConstructor);
     },
 
+    _wheelHandler(event) {
+        event.preventDefault();
+        if (event.nativeEvent.deltaY < 0) {
+            this._slideMonth(null, 1);
+        }
+        else if (event.nativeEvent.deltaY > 0) {
+            this._slideMonth(null, -1);
+        }
+    },
+
     _slideMonth: function (event, delta) {
         _private._setMonth(this,
             new this._options.dateConstructor(this._month.getFullYear(), this._month.getMonth() + delta, 1), false, this._options.dateConstructor);
