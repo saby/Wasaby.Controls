@@ -465,6 +465,31 @@ define([
             });
          });
 
+         it('adding item was changed before begin add', function(done) {
+            var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: treeModel._items
+            });
+
+            eip.saveOptions({
+               listModel: treeModel,
+               source: source
+            });
+            treeModel.setExpandedItems([1]);
+
+            source.create().addCallback(function(model) {
+               model.set('parent', 1);
+               model.set('parent@', false);
+               eip.beginAdd({
+                  item: model
+               }).addCallback(function() {
+                  assert.isTrue(model.isChanged());
+                  assert.isFalse(eip._editingItem.isChanged());
+                  done();
+               });
+            });
+         });
+
          it('add item to a folder', function(done) {
             var source = new sourceLib.Memory({
                keyProperty: 'id',
@@ -1151,6 +1176,28 @@ define([
                };
 
                eip.commitEdit();
+            });
+
+            it('accept changes on recordset', function(done) {
+               var source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
+
+               eip.saveOptions({
+                  listModel: listModel,
+                  source: source
+               });
+
+               eip.beginEdit({
+                  item: listModel.at(0).getContents()
+               });
+               eip._editingItem.set('title', '1234');
+
+               eip.commitEdit().then(() => {
+                  assert.isFalse(listModel._items.isChanged());
+                  done();
+               });
             });
          });
 
