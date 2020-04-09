@@ -2591,6 +2591,35 @@ define([
             assert.equal(actionsUpdateCount, 0);
          });
       });
+      it('itemActionVisibilityCallbackChanged', () => {
+         var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            callback1 = () => true,
+            callback2 = () => false,
+            cfg1 = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               itemActions: [
+                  {
+                     id: 1,
+                     title: '123'
+                  }
+               ],
+               itemActionVisibilityCallback: callback1,
+               viewModelConstructor: lists.ListViewModel
+            },
+            cfg2 = {...cfg1, itemActionVisibilityCallback: callback2};
+         baseControl = new lists.BaseControl(cfg1);
+         baseControl.saveOptions(cfg1);
+         baseControl._beforeMount(cfg1);
+         baseControl._beforeUpdate(cfg1);
+         assert.isNotOk(baseControl._shouldUpdateItemActions);
+         baseControl._beforeUpdate(cfg2);
+         assert.isTrue(baseControl._shouldUpdateItemActions);
+      });
 
       describe('resetScrollAfterReload', function() {
          var source = new sourceLib.Memory({
