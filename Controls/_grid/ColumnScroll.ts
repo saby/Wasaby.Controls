@@ -19,7 +19,7 @@ const DELAY_UPDATE_SIZES = 16;
 
 const
    _private = {
-      calculateFixedColumnWidth(container, multiSelectVisibility, stickyColumnsCount, firstCell) {
+      calculateFixedColumnWidth(container, multiSelectVisibility, stickyColumnsCount) {
          if (!stickyColumnsCount) {
             return 0;
          }
@@ -89,7 +89,6 @@ const
             self._children.content.getElementsByClassName('controls-Grid_columnScroll')[0],
             self._options.multiSelectVisibility,
             self._options.stickyColumnsCount,
-            self._options.header[0]
          );
          self._scrollWidth = isFullGridSupport() ?
               self._children.content.offsetWidth - self._fixedColumnsWidth :
