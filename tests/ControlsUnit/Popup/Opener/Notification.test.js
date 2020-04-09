@@ -112,6 +112,12 @@ define(
             zIndex = popup.Notification.zIndexCallback({}, list);
             assert.equal(zIndex, 19);
 
+            list.at(1).popupOptions.maximize = false;
+            list.at(1).popupOptions.modal = true;
+
+            zIndex = popup.Notification.zIndexCallback({}, list);
+            assert.equal(zIndex, 19);
+
             let item = {
                id: 3,
                parentId: 2,
