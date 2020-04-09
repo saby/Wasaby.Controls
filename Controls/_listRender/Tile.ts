@@ -28,7 +28,7 @@ export default class TileRender extends BaseRender {
 
     protected _beforeMount(options: ITileRenderOptions): void {
         super._beforeMount(options);
-        this._templateKeyPrefix = `tile-render-${this.getInstanceId()}`;
+        this._templateKeyPrefix = 'tile-render';
 
         this._debouncedSetHoveredItem = debounce(
             this._setHoveredItem.bind(this),

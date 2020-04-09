@@ -20,7 +20,7 @@ export default class Columns extends BaseRender {
 
     protected _beforeMount(options: IColumnsRenderOptions): void {
         super._beforeMount(options);
-        this._templateKeyPrefix = `columns-render-${this.getInstanceId()}`;
+        this._templateKeyPrefix = 'columns-render';
     }
     protected _beforeUnmount(): void {
         this._unsubscribeFromModelChanges(this._options.listModel);
