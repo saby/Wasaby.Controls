@@ -38,7 +38,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _beforeMount(options: IRenderOptions): void {
-        this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
+        this._templateKeyPrefix = 'list-render';
         this._onCollectionChange = this._onCollectionChange.bind(this);
         this._subscribeToModelChanges(options.listModel);
     }
