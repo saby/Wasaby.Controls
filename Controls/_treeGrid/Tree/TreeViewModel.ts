@@ -292,6 +292,15 @@ var
                     if (!current.hasMultiSelect) {
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
                     }
+                    if (self._options.rowSeparatorVisibility) {
+                        const separatorSize = self._options.rowSeparatorSize;
+                        const isWideSeparator = separatorSize && separatorSize.toLowerCase() === 'l';
+                        classes += ` controls-TreeGrid__nodeFooterContent_withRowSeparator${isWideSeparator ? '-l' : ''}_theme-${theme}`;
+                        classes += ` controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${isWideSeparator ? 'l' : 's'}_theme-${theme}`;
+                        classes += ` controls-TreeGrid__nodeFooterContent_padding-top-${isWideSeparator ? 'l' : 's'}_theme-${theme}`;
+                    } else {
+                        classes += ` controls-TreeGrid__nodeFooterContent_withoutRowSeparator_theme-${theme} controls-TreeGrid__nodeFooterContent_padding-top-s_theme-${theme} controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s_theme${theme}`;
+                    }
                     return classes;
                 };
 
