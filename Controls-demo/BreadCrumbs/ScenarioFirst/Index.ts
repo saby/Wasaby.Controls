@@ -120,31 +120,25 @@ class ScenarioFirst extends Control<IControlOptions> {
             }]
         });
         this._columns1 = [{
-            displayProperty: 'title',
-            width: '3fr'
+            displayProperty: 'title'
         }, {
             displayProperty: 'price',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'remainder',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'free',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'costPrice',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }, {
             displayProperty: 'amountOfBalance',
-            width: '1fr',
             align: 'right',
             template: this._secondColumnTemplate
         }];
@@ -239,51 +233,43 @@ class ScenarioFirst extends Control<IControlOptions> {
         }];
         this._columns2 = [{
             displayProperty: 'department',
-            width: '9fr',
             template: this._firstColumnTemplate,
             resultTemplate: this._thirdResultTemplate
         }, {
             displayProperty: 'overdueStart',
-            width: '2fr',
             template: this._thirdColumnTemplate,
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 5662
         }, {
             displayProperty: 'start',
-            width: '2fr',
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 38770
         }, {
             displayProperty: 'received',
-            width: '2fr',
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 579213
         }, {
             displayProperty: 'overdueCompleted',
-            width: '2fr',
             template: this._thirdColumnTemplate,
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 26277
         }, {
             displayProperty: 'completed',
-            width: '2fr',
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 578386
         }, {
             displayProperty: 'overdueLeft',
-            width: '2fr',
             template: this._thirdColumnTemplate,
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 2325
         }, {
             displayProperty: 'left',
-            width: '2fr',
             align: 'right',
             resultTemplate: this._thirdResultTemplate,
             result: 39597
@@ -418,7 +404,6 @@ class ScenarioFirst extends Control<IControlOptions> {
         }];
         this._columns3 = [{
             displayProperty: 'title',
-            width: '500px',
             resultTemplate: this._thirdResultTemplate
         }, {
             displayProperty: 'amount',
