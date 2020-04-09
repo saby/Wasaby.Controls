@@ -1,18 +1,4 @@
 <div class="controls-InfoboxButton">
-    <ws:if data="{{_options.iconSize === 's'}}">
-        <svg class="controls-InfoboxButton__icon_theme-{{_options.theme}}
-                controls-icon_size-{{_options.iconSize}}_theme-{{_options.theme}}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-             viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-            <path d="M10.3,4.9c0.2,0.4,0.3,1.4-0.3,2c-0.3,0.3-1.2,1-1.3,1.3C8.5,8.6,8.5,9.1,8.5,9.1H7.3c0,0,0-0.8,0.1-1s0.2-0.4,0.4-0.6
-	c0.1-0.2,1-0.9,1.3-1.3C9.3,6,9.4,4.8,8.3,4.6C8,4.5,7.2,4.6,6.9,5.1C6.6,5.5,6.5,6.2,6.5,6.2H5.4c0,0,0.2-2.3,2.1-2.5
-	C9.3,3.5,10,4.2,10.3,4.9z"/>
-            <rect x="7.3" y="9.8" width="1.3" height="1.2"/>
-            <path d="M8,1.7c3.9,0,7.1,2.5,7.1,5.6s-3.2,5.6-7.1,5.6c-1.3,0-2.3-0.2-3.2-0.6c-0.1-0.1-0.2-0.1-0.4-0.1c-0.2,0-0.3,0-0.5,0.1
-	l-1.9,1.1l0.4-2.1c0.1-0.3,0-0.6-0.2-0.8c-0.9-1-1.4-2.1-1.4-3.3C0.9,4.2,4.1,1.7,8,1.7 M8,0.8c-4.4,0-8,2.9-8,6.5
-	c0,1.5,0.6,2.8,1.6,3.9l-0.8,4.1l3.6-2.2c1.1,0.5,2.3,0.7,3.6,0.7c4.4,0,8-2.9,8-6.5S12.4,0.8,8,0.8L8,0.8z"/>
-</svg>
-    </ws:if>
-    <ws:else>
     <svg class="controls-InfoboxButton__icon_theme-{{_options.theme}}
                 controls-icon_size-{{_options.iconSize}}_theme-{{_options.theme}}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
          viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
@@ -24,5 +10,4 @@
 	c0.1-0.3,0-0.7-0.2-0.9C2.6,14.2,2,12.7,2,11C2,6.6,6.5,3,12,3 M12,2C5.9,2,1,6,1,11c0,2,0.8,3.8,2.2,5.3L2,22l5-3
 	c1.5,0.6,3.2,1,5,1c6.1,0,11-4,11-9S18.1,2,12,2L12,2z"/>
 </svg>
-    </ws:else>
 </div>
