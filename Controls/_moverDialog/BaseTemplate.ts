@@ -25,4 +25,6 @@ const
         _template: template
     });
 
+BaseTemplate._theme = ['Controls/moverDialog'];
+
 export default BaseTemplate;
