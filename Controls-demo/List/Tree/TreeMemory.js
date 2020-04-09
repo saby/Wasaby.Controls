@@ -21,11 +21,16 @@ define('Controls-demo/List/Tree/TreeMemory', [
                filter = query.getWhere(),
                selection = filter.selection;
             query.where(function(item) {
-               var
-                  itemKey = item.get('id'),
-                  folderId = filter['Раздел'] !== undefined ? filter['Раздел'] : null,
-                  correct = item.get('Раздел') === folderId;
-
+               var itemKey = item.get('id');
+               var folderId;
+               var correct;
+               
+               if (filter['Раздел'] !== undefined && !(filter['Раздел'] instanceof Array)) {
+                  folderId = filter['Раздел'];
+               } else {
+                  folderId = null;
+               }
+               correct = item.get('Раздел') === folderId;
                if (selection) {
                   correct = itemIsSelected(self, itemKey, selection.get('marked'), selection.get('excluded'));
                }
