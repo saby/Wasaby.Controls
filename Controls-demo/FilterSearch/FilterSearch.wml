@@ -127,11 +127,11 @@
                                         attr:class="demo__filterSearch-tabs">
                                     <ws:tabSpaceTemplate>
                                         <div class="controls-demo__filterSearch-filters">
-                                            <Controls.filter:ButtonContainer>
+                                            <Controls.filter:ButtonContainer scope="{{tabSpaceTemplate}}">
                                                 <Controls.filter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel" alignment="left"/>
                                             </Controls.filter:ButtonContainer>
 
-                                            <Controls.filter:FastContainer>
+                                            <Controls.filter:FastContainer scope="{{tabSpaceTemplate}}">
                                                 <Controls.filter:Fast attr:class="controls-demo__filterSearch-fastFilter"/>
                                             </Controls.filter:FastContainer>
                                         </div>

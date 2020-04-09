@@ -16,7 +16,7 @@
                                 <Controls.search:Input/>
                             </Controls.search:InputContainer>
                         </div>
-                        <Controls.lookupPopup:Container multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
+                        <Controls.lookupPopup:Container scope="{{content}}" multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
                             <Controls.operations:Controller>
                                 <Controls.operations:Container>
                                     <Controls.lookupPopup:ListContainer multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
