@@ -69,15 +69,45 @@
 
 .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
   left: @spacing_BreadCrumbs-menu;
-  background: @background-color_BreadCrumbs-menu;
-
-  //тень подобрана так, чтобы она не залезала на крошки, когда точки не видны.
-  box-shadow: @dots_shadow-offset_breadcrumbsView  @dots_shadow-color_breadcrumbsView;
   height: @height_breadcrumbsView;
   color: @item_text-color_default_breadcrumbsView;
   &:before {
     font-size: @line-height_breadcrumbsView;
   }
+}
+// Набор классов для установки фона точек через backgroundStyle
+.controls-BreadCrumbsView__menu__dots-background-default_theme-@{themeName} {
+   background: @background-color;
+   box-shadow: @dots_shadow-offset_breadcrumbsView @background-color;
+}
+.controls-BreadCrumbsView__menu__dots-background-stackHeader_theme-@{themeName} {
+   background: @header_background-color_stack;
+   box-shadow: @dots_shadow-offset_breadcrumbsView @header_background-color_stack;
+}
+.controls-BreadCrumbsView__menu__dots-background-stack_theme-@{themeName} {
+   background: @background-color_stack;
+   box-shadow: @dots_shadow-offset_breadcrumbsView @background-color_stack;
+}
+.controls-BreadCrumbsView__menu__dots-background-masterDetail-master_theme-@{themeName} {
+   background: @master_item_background-color_list;
+   box-shadow: @dots_shadow-offset_breadcrumbsView @master_item_background-color_list;
+}
+@defaultThemeName: default;
+.controls-BreadCrumbsView__menu__dots-background-masterDetail-details_theme-@{themeName} when not (@themeName = @defaultThemeName) {
+   background: @detail_background-color_masterDetail;
+   box-shadow: @dots_shadow-offset_breadcrumbsView @detail_background-color_masterDetail;
+}
+.controls-BreadCrumbsView__menu__dots-background-masterDetail-details_theme-@{themeName} when (@themeName = @defaultThemeName) {
+   background: @background-color;
+   box-shadow: @dots_shadow-offset_breadcrumbsView @background-color;
+}
+.controls-BreadCrumbsView__menu__dots-background-blockLayout__block {
+   .for(6, {
+      &_style_@{_i}_theme-@{themeName} {
+         background: ~"@{background-color_@{_i}_block}";
+         box-shadow: @dots_shadow-offset_breadcrumbsView  ~"@{background-color_@{_i}_block}";
+      }
+   });
 }
 
 .controls-BreadCrumbsView__max-width {
