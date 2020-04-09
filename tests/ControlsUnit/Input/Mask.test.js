@@ -103,7 +103,9 @@ define(
                sandbox.replace(component, '_getField', function() {
                   return { selectionStart: 0 };
                });
-               component._focusInHandler();
+               component._focusInHandler({
+                  target: {}
+               });
                assert.deepEqual(
                   component._viewModel.selection,
                   {
@@ -125,7 +127,9 @@ define(
                   return { selectionStart: 0 };
                });
                component._mouseDownHandler();
-               component._focusInHandler();
+               component._focusInHandler({
+                  target: {}
+               });
                assert.deepEqual(component._viewModel.selection, { start: 3, end: 3 });
                sandbox.restore();
             });
@@ -148,7 +152,9 @@ define(
                });
                sandbox.replace(input.Mask.superclass, '_clickHandler', function() {});
                component._mouseDownHandler();
-               component._focusInHandler();
+               component._focusInHandler({
+                  target: {}
+               });
                component._clickHandler();
                assert.deepEqual(component._viewModel.selection, { start: 0, end: 0 });
                sandbox.restore();

@@ -1,4 +1,14 @@
 /**
+ * @typedef {Object} Selection
+ * @property {Number} start The beginning of the selected portion of the field's text. The value specifies the index of the first selected character.
+ * @property {Number} end The end of the selected portion of the field's text. The value specifies the index of the character after the selection.
+ * If this value is equal to the value of the start property, no text is selected, but the value indicates the position of the caret (cursor) within the field.
+ */
+export interface ISelection {
+   start: number;
+   end: number;
+}
+/**
  * @type {Object} SplitValue
  * @property {String} before Substring preceding the value entered.
  * @property {String} insert Entered value.

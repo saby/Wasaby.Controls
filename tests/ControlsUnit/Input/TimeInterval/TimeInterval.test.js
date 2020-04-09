@@ -33,7 +33,9 @@ define(
                });
                ctrl._viewModel.selection = 10;
                ctrl._focusByMouseDown = false;
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                assert.equal(ctrl._viewModel.selection.start, 0);
                assert.equal(ctrl._viewModel.selection.end, 0);
             });
@@ -43,7 +45,9 @@ define(
                });
                ctrl._viewModel.selection = 10;
                ctrl._focusByMouseDown = true;
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                assert.equal(ctrl._viewModel.selection.start, 10);
                assert.equal(ctrl._viewModel.selection.end, 10);
             });
