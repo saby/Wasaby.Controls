@@ -96,7 +96,8 @@ export interface IPopupItemInfo {
    parentId: string;
    parentZIndex: null|number;
    popupOptions: {
-      maximize: boolean
+      maximize: boolean,
+      modal: boolean
    };
 }
 
