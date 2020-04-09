@@ -5,7 +5,7 @@
         <div>
             <ws:partial template="{{ladderWrapper}}" data="{{contentTemplate}}" ladderProperty="date" itemData="{{contentTemplate.itemData}}">
                 <div>
-                    {{content.itemData.item['date']}}
+                    {{contentTemplate.itemData.item['date']}}
                 </div>
             </ws:partial>
             <div>{{contentTemplate.itemData.item['state']}}</div>
