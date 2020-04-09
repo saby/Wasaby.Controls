@@ -9,7 +9,10 @@ define(
       describe('Controls/input:InsertFromDrop', function() {
          let inst;
          const data = {
-            oldPosition: 5,
+            oldSelection: {
+               start: 5,
+               end: 5
+            },
             newPosition: 10,
             oldValue: 'my my',
             newValue: 'my my test'

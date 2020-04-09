@@ -1,6 +1,8 @@
+import {ISelection} from '../Base/InputUtil';
+
 export interface IInputData {
     oldValue: string;
-    oldPosition: number;
+    oldSelection: ISelection;
     newValue: string;
     newPosition: number;
 }
@@ -36,8 +38,8 @@ export class InsertFromDrop {
             return data;
         }
 
-        const insertLength: number = data.newPosition - data.oldPosition;
-        const dropValue: string = data.newValue.substr(data.oldPosition, insertLength);
+        const insertLength: number = data.newPosition - data.oldSelection.end;
+        const dropValue: string = data.newValue.substr(data.oldSelection.end, insertLength);
         const oldPosition = this._position;
         const newPosition = this._position + insertLength;
         const newValue: string =
@@ -46,7 +48,10 @@ export class InsertFromDrop {
             data.oldValue.substring(oldPosition);
         return {
             oldValue: data.oldValue,
-            oldPosition, newPosition, newValue
+            oldSelection: {
+                start: oldPosition,
+                end: oldPosition
+            }, newPosition, newValue
         };
     }
 }
