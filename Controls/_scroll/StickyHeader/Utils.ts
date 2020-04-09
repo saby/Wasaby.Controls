@@ -90,3 +90,17 @@ export function validateIntersectionEntries(entries: IntersectionObserverEntry[]
     }
     return newEntries;
 }
+
+const CONTENTS_STYLE: string = 'contents';
+
+export function isDisplayed(element: HTMLElement): boolean {
+    if (element.offsetParent !== null) {
+        return true;
+    } else {
+        const styles = getComputedStyle(element);
+        if (styles.display === CONTENTS_STYLE) {
+            return isDisplayed(element.parentElement);
+        }
+    }
+    return false;
+}

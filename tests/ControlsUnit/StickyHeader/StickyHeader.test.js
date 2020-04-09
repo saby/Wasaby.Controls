@@ -74,6 +74,20 @@ define([
          });
       });
 
+      describe('_observeHandler', function() {
+         it('should not update state if control is hidden', function() {
+            const component = createComponent(StickyHeader, {});
+            component._container = {
+               offsetParent: null
+            };
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            sinon.stub(component._model, 'update');
+
+            component._observeHandler();
+
+            sinon.assert.notCalled(component._model.update);
+      });
+
       describe('_getStyle', function() {
          it('should set correct z-index', function() {
             const component = createComponent(StickyHeader, {fixedZIndex: 2});
