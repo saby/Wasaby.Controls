@@ -154,7 +154,10 @@ var _private = {
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
         }
 
-        if (self._listViewModel && self._listViewModel.getEditingItemData() && self._children.editInPlace) {
+        const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
+            self._options.useNewModel ? displayLib.EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
+        );
+        if (isEditing) {
             self._children.editInPlace.cancelEdit();
         }
 
@@ -1296,7 +1299,7 @@ var _private = {
          */
         self._targetItem = childEvent.target.closest('.controls-ListView__itemV');
 
-        /** 
+        /**
          * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
          * Поэтому сохраняем объект, с методом getBoundingClientRect
          */
@@ -1945,7 +1948,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             viewModelConfig,
                             newOptions.viewModelConstructor
                         );
-                        
+
                         _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
 
                         if (newOptions.itemsReadyCallback) {

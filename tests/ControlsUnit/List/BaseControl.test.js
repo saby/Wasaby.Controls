@@ -2410,6 +2410,12 @@ define([
 
          await baseControl.reload();
          assert.isTrue(isEditingCanceled);
+
+         isEditingCanceled = false;
+         baseControl._children = {};
+
+         await baseControl.reload();
+         assert.isFalse(isEditingCanceled);
       });
 
       it('reload with changing source/navig/filter should call scroll to start', function() {
