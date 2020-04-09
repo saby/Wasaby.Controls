@@ -12,7 +12,7 @@
                 <Controls.search:Controller searchParam="title" minSearchLength="{{3}}">
                     <div class="ws-fragment">
                         <div class="controlsDemo__wrapper">
-                            <Controls.search:InputContainer>
+                            <Controls.search:InputContainer scope="{{content}}">
                                 <Controls.search:Input/>
                             </Controls.search:InputContainer>
                         </div>

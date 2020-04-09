@@ -7,11 +7,11 @@
                     <Controls.search:Controller searchParam="department">
                         <div>
                             <div class="controls-demo__filterSearch-topWrapper">
-                                <Controls.search:InputContainer>
+                                <Controls.search:InputContainer scope="{{content}}">
                                     <Controls.search:Input bind:value="_searchValue" attr:class="controls-demo__filterSearch-search" placeholder="Укажите подразделение..."/>
                                 </Controls.search:InputContainer>
                             </div>
-                            <Controls.list:Container>
+                            <Controls.list:Container scope="{{content}}">
                                 <Controls.list:View emptyTemplate="Не найдено">
                                     <ws:itemTemplate>
                                         <ws:partial template="Controls/list:ItemTemplate">
@@ -42,7 +42,7 @@
                                     <div class="controls-demo__filterSearch-topWrapper">
                                         <Controls.search:InputContainer scope="{{content}}">
                                             <Controls.search:Input bind:value="_searchValueWithFilters" attr:class="controls-demo__filterSearch-search" placeholder="Укажите подразделение..."/>
-                                        </Controls.search:InputContainer scope="{{content}}">
+                                        </Controls.search:InputContainer>
                                         <div class="controls-demo__filterSearch-filters">
                                             <Controls.filter:FastContainer scope="{{content}}">
                                                 <Controls.filter:Fast attr:class="controls-demo__filterSearch-fastFilter"/>
