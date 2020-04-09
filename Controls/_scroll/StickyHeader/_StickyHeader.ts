@@ -9,7 +9,8 @@ import {
     POSITION,
     MODE,
     IOffset,
-    validateIntersectionEntries
+    validateIntersectionEntries,
+    isDisplayed
 } from 'Controls/_scroll/StickyHeader/Utils';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
@@ -310,13 +311,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (this._stickyDestroy) {
             return;
         }
-        const popupContainer: HTMLElement = this._container.closest('.controls-Popup__template');
-
-        // Stack popups can be hidden when child popup has a large width.
-        // In this case don't start observable handler.
-        if (popupContainer && popupContainer.classList.contains('ws-hidden')) {
+        // При скрытии родителя всегда стреляет событие о невидимости заголовков. При обратном отображении стреляет
+        // событие о видимости. Но представление обновляется асинхронно.
+        // Сцеарий 1. В области есть скрол контэйнер с проскроленым контентом. Его скрывают. Если этого условия нет,
+        // то все заголовки считают себя не зафиксированными. Затем контент заново отображают.
+        // Заголовки не зафиксированы, z-index у них не проставлен, их закрывает идущий за ними контент.
+        // Через мгновение они появляются. Проблема есть в SwitchableArea и в стэковых окнах.
+        // Сценарий 2. Области создаются скрытыми. а после загрузки данных отбражаются.
+        if (!isDisplayed(this._container)) {
             return;
         }
+
         const fixedPosition: POSITION = this._model.fixedPosition;
 
         this._model.update(validateIntersectionEntries(entries, this._scroll));
