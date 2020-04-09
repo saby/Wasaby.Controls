@@ -2376,6 +2376,42 @@ define([
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
+      it('close edit in place before reload', async function() {
+         let baseControlOptions = {
+            viewModelConstructor: lists.ListViewModel,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewName: 'Controls/List/ListView',
+            source: source,
+            emptyTemplate: {}
+         };
+
+         let baseControl = new lists.BaseControl(baseControlOptions);
+         baseControl.saveOptions(baseControlOptions);
+
+         await baseControl._beforeMount(baseControlOptions);
+
+         let isEditingCanceled = false;
+
+         baseControl._children = {
+            editInPlace: {
+               cancelEdit() {
+                  isEditingCanceled = true;
+               }
+            }
+         };
+
+         baseControl._listViewModel.getEditingItemData = () => ({});
+
+         await baseControl.reload();
+         assert.isTrue(isEditingCanceled);
+      });
+
       it('reload with changing source/navig/filter should call scroll to start', function() {
 
          var
