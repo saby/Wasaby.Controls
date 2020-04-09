@@ -30,7 +30,10 @@ define(
             inst.focusHandler(event);
             const res = inst.positionForInputProcessing(data);
             assert.deepEqual(res, {
-               oldPosition: 0,
+               oldSelection: {
+                  start: 0,
+                  end: 0
+               },
                newPosition: 5,
                oldValue: 'my my',
                newValue: ' testmy my'
