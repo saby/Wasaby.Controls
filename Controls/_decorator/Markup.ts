@@ -98,9 +98,6 @@ import {delay} from 'Types/function';
     * @name Controls/_decorator/Markup#validHtml
     * @cfg {ValidHtml} Опция для переопределения разрешённых тегов и атрибутов. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>.
     */
-   <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/operations/'>здесь</a>.
-
-
 
    class MarkupDecorator extends Control<IControlOptions> {
       _template: TemplateFunction = template;
