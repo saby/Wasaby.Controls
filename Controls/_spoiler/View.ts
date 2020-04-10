@@ -44,7 +44,6 @@ export interface IView extends IHeading {
  */
 class View extends Control<IViewOptions> implements IView {
     protected _notifyHandler: Function = tmplNotify;
-    protected _defaultExpanded: boolean = false;
     protected _expanded: boolean = false;
 
     protected _template: TemplateFunction = template;
