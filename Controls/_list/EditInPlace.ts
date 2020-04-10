@@ -32,6 +32,7 @@ var
 
         afterBeginEdit: function (self, options, isAdd) {
             self._editingItem = options.item.clone();
+            self._editingItem.acceptChanges();
             self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
             self._notify('afterBeginEdit', [self._editingItem, isAdd]);
             return options;
@@ -112,6 +113,7 @@ var
             if (self._isAdd && commit && self._options.listModel.getCount() > 1) {
                 self._options.listModel.setMarkedKey(self._editingItem.getId());
             }
+            self._options.listModel.acceptChanges();
             _private.resetVariables(self);
             if (!self._destroyed) {
                 self._setEditingItemData(null, self._options.listModel, self._options);
