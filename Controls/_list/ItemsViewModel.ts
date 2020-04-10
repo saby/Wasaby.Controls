@@ -555,6 +555,12 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
+    acceptChanges(): void {
+        if (this._items && this._items.isChanged()) {
+            this._items.acceptChanges();
+        }
+    },
+
     mergeItems: function(items, options) {
         options = Object.assign({ remove: false }, options || {});
         this._items.merge(items, options);

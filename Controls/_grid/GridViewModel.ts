@@ -1480,6 +1480,10 @@ var
             this._model.appendItems(items);
         },
 
+        acceptChanges(): void {
+            this._model.acceptChanges();
+        },
+
         prependItems: function(items) {
             this._model.prependItems(items);
         },
