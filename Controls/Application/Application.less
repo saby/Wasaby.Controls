@@ -59,8 +59,11 @@ img {
    }
 }
 
-//в сафари на macOS выделяется страница синим при dnd
-.ws-is-desktop-safari.ws-is-drag {
+// 1)в Safari на macOS и yandex на XP выделяется страница при dnd
+// 2)в Safari в input'ах по умолчанию user-select='text', поэтому для них задаем стиль отдельно
+.ws-is-desktop-safari.ws-is-drag,
+.ws-is-chrome-xp.ws-is-drag,
+.ws-is-desktop-safari.ws-is-drag input {
    user-select: none;
 }
 
