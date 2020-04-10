@@ -6006,7 +6006,7 @@ define([
                         sourceConfig: {
                            field: 'id',
                            position: 0,
-                           direction: 'after',
+                           direction: 'forward,
                            limit: 20
                         }
                      }

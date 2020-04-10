@@ -49,20 +49,24 @@ export type TNavigationSource = 'position' | 'page';
 export type TNavigationView = 'infinity' | 'pages' | 'demand' | 'maxCount';
 
 /**
- * @typedef {String} TNavigationDirection
+ * @typedef {Enum} CursorDirection
  * @description Направление выборки при навигации по курсору.
- * @variant after Вниз.
- * @variant before Вверх.
- * @variant both В обоих направлениях.
+ * @variant forward Вниз.
+ * @variant backward Вверх.
+ * @variant bothways В обоих направлениях.
  */
 
 /*
- * @typedef {String} TNavigationDirection
- * @variant after loading data after positional record.
- * @variant before loading data before positional record.
- * @variant both loading data in both directions relative to the positional record.
+ * @typedef {Enum} CursorDirection
+ * @variant forward loading data after positional record.
+ * @variant backward loading data before positional record.
+ * @variant bothways loading data in both directions relative to the positional record.
  */
-export type TNavigationDirection = 'before' | 'after' | 'both';
+export enum CursorDirection {
+    backward = 'backward',
+    forward = 'forward',
+    bothways = 'bothways'
+}
 
 /**
  * @typedef {Object} INavigationPositionSourceConfig
@@ -74,7 +78,7 @@ export type TNavigationDirection = 'before' | 'after' | 'both';
  * @property {String|Array.<String>} position Начальная позиция для курсора.
  * Относительно этой позиции будет создаваться выборка при навигации.
  * Позиция определяется по значению поля или по массиву значений полей, имена которых заданы в опции field.
- * @property {TNavigationDirection} direction Направление выборки.
+ * @property {CursorDirection} direction Направление выборки.
  * @property {Number} limit Количество записей, которые запрашиваются при выборке.
  */
 /*
@@ -89,7 +93,7 @@ export type TNavigationDirection = 'before' | 'after' | 'both';
 export interface INavigationPositionSourceConfig {
     field: string[] | string;
     position?: unknown[] | unknown;
-    direction?: TNavigationDirection;
+    direction?: CursorDirection;
     limit?: number;
 }
 
