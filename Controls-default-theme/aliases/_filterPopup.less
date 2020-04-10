@@ -3,9 +3,9 @@
 // Размеры и отступы
 
 @max-width_filterSimplePanel:                                               300px;
-@apply-button_offset-left_filterSimplePanel:                                8px;
-@apply-button_offset-right_filterSimplePanel:                               16px;
-@apply-button_offset-top_filterSimplePanel:                                 4px;
+@apply-button_offset-left_filterSimplePanel:                                @offset_s;
+@apply-button_offset-right_filterSimplePanel:                               @offset_l;
+@apply-button_offset-top_filterSimplePanel:                                 @offset_2xs;
 
 // Пустое значение
 @empty-item_text-color_filterSimplePanel:                                   @primary_text-color;
@@ -34,12 +34,12 @@
 @history_width_s_filterPanel:                                               350px;
 @history_width_l_filterPanel:                                               400px;
 
-@padding-bottom_filterPanel:                                                12px;
-@header-content_padding-right_filterPanel:                                  16px;
-@reset-button_offset-right_filterPanel:                                     16px;
+@padding-bottom_filterPanel:                                                @offset_m;
+@header-content_padding-right_filterPanel:                                  @offset_l;
+@reset-button_offset-right_filterPanel:                                     @offset_l;
 
 @popup_offset-vertical_filterPanel:                                         -11px;
-@popup_offset-horizontal_filterPanel:                                       8px;
+@popup_offset-horizontal_filterPanel:                                       @offset_s;
 
 
 
@@ -58,8 +58,8 @@
 // Размеры и отступы
 
 @basic_content_padding-top_filterPanel:                                     0;
-@basic_content_padding-left_filterPanel:                                    24px;
-@basic_content_padding-right_filterPanel:                                   12px;
+@basic_content_padding-left_filterPanel:                                    @offset_3xl;
+@basic_content_padding-right_filterPanel:                                   @offset_m;
 @basic_offset_filterPanel:                                                  0;
 
 // Элементы фильтра
@@ -67,7 +67,7 @@
 @basic_item_text-color_filterPanel:                                         @item_text-color_filterPanel;
 @basic_item_font-size_filterPanel:                                          @item_font-size_filterPanel;
 @basic_item_height_filterPanel:                                             @item_height_filterPanel;
-@basic_item_padding-bottom_filterPanel:                                     4px;
+@basic_item_padding-bottom_filterPanel:                                     @offset_2xs;
 
 @basic_item_reset-button_icon-size_filterPanel:                             @icon-size_s;
 @basic_item_reset-button_icon-color_filterPanel:                            #CCC;
@@ -82,7 +82,7 @@
 
 @extended_content_padding-left_filterPanel:                                 @basic_content_padding-left_filterPanel;
 @extended_content_padding-right_filterPanel:                                @basic_content_padding-right_filterPanel;
-@extended_offset_filterPanel:                                               12px;
+@extended_offset_filterPanel:                                               @offset_m;
 @extended_max-height_filterPanel:                                           @inline_height_default * 5;
 
 // Заголовок блока
@@ -90,13 +90,13 @@
 @extended_heading_font-size_filterPanel:                                    @font-size_l;
 @extended_heading_text-color_filterPanel:                                   @secondary_text-color_heading;
 @extended_heading_height_filterPanel:                                       @inline_height_default;
-@extended_heading_padding-left_filterPanel:                                 12px;
+@extended_heading_padding-left_filterPanel:                                 @offset_m;
 
 // Элементы фильтра
 
 @extended_item_text-color_filterPanel:                                      @item_text-color_filterPanel;
 @extended_item_font-size_filterPanel:                                       @item_font-size_filterPanel;
-@extended_item_padding-right_filterPanel:                                   12px;
+@extended_item_padding-right_filterPanel:                                   @offset_m;
 @extended_item_height_filterPanel:                                          @item_height_filterPanel;
 
 
@@ -110,7 +110,7 @@
 // Размеры и отступы
 
 @history_max-height_filterPanel:                                            @inline_height_default * 5;
-@history_offset_filterPanel:                                                12px;
+@history_offset_filterPanel:                                                @offset_m;
 @history_content_padding-right_filterPanel:                                 @basic_content_padding-right_filterPanel;
 @history_content_padding-left_filterPanel:                                  @basic_content_padding-left_filterPanel;
 
@@ -127,7 +127,7 @@
 @history_item_font-size_filterPanel:                                        @item_font-size_filterPanel;
 @history_horizontal_item_text-color_filterPanel:                            @unaccented_text-color;
 @history_vertical_item_text-color_filterPanel:                              @item_text-color_filterPanel;
-@history_horizontal_item_padding-vertical_filterPanel:                      8px;
+@history_horizontal_item_padding-vertical_filterPanel:                      @offset_s;
 @history_horizontal_item_max-height_filterPanel:                            @history_item_height_filterPanel * 2;
 @history_horizontal_item_line-height_filterPanel:                           16px;
 
@@ -139,7 +139,7 @@
 // Кнопка закрепления
 
 @history_item_pin-button_icon-size_filterPanel:                             @icon-size_s;
-@history_item_pin-button_padding-left_filterPanel:                          12px;
+@history_item_pin-button_padding-left_filterPanel:                          @offset_m;
 @history_item_pin-button_icon-color_filterPanel:                            @unaccented_icon-color;
 @history_item_pin-button_hover_icon-color_filterPanel:                      @secondary_hover_icon-color;
 @history_item_pin-button_toggled_icon-color_filterPanel:                    @secondary_hover_icon-color;
@@ -151,15 +151,15 @@
 @width_filterFavoriteDialog:                                                400px;
 
 @content-padding-top_filterFavoriteDialog:                                  0;
-@content-padding-right_filterFavoriteDialog:                                12px;
-@content-padding-bottom_filterFavoriteDialog:                               12px;
+@content-padding-right_filterFavoriteDialog:                                @offset_m;
+@content-padding-bottom_filterFavoriteDialog:                               @offset_m;
 @content-padding-left_filterFavoriteDialog:                                 @header_padding-left_stack;
 
-@checkbox-group_offset-top_filterFavoriteDialog:                            8px;
-@selector_padding-right_filterFavoriteDialog:                               16px;
-@deleteButton_offset-right_filterFavoriteDialog:                            16px;
+@checkbox-group_offset-top_filterFavoriteDialog:                            @offset_s;
+@selector_padding-right_filterFavoriteDialog:                               @offset_l;
+@deleteButton_offset-right_filterFavoriteDialog:                            @offset_l;
 
 
 
 // Переменные для отдельных элементов панели фильтрации
-@link_offset-right_filterPopupLookup:                                       8px;
+@link_offset-right_filterPopupLookup:                                       @offset_s;
