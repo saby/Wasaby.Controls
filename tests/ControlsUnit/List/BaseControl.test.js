@@ -151,6 +151,7 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             ctrl._beforeUpdate(cfg);
+            await ctrl._afterUpdate(cfg);
 
             // check saving loaded items after new viewModelConstructor
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
@@ -179,7 +180,7 @@ define([
                ctrl._beforeUnmount();
                done();
             }, 100);
-         }, 1);
+         }, 10);
       });
 
       it('beforeMount: right indexes with virtual scroll and receivedState', function() {
@@ -2462,12 +2463,14 @@ define([
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;
-                  lnBaseControl._beforeUpdate(lnCfg)
+                  lnBaseControl._beforeUpdate(lnCfg);
+                  lnBaseControl._afterUpdate(lnCfg)
                      .addCallback(function() {
 
                         lnCfg = clone(lnCfg);
                         lnCfg.source = lnSource3;
-                        lnBaseControl._beforeUpdate(lnCfg)
+                        lnBaseControl._beforeUpdate(lnCfg);
+                        lnBaseControl._afterUpdate(lnCfg)
                            .addCallback(function(res) {
                               resolve();
                               return res;
@@ -2558,8 +2561,8 @@ define([
                ],
                viewModelConstructor: lists.ListViewModel
             };
-            await baseControl._beforeUpdate(newCfg);
-            baseControl._afterUpdate(cfg);
+            baseControl._beforeUpdate(newCfg);
+            await baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 2);
          });
          it('updates on afterUpdate if model was recreated', function() {
@@ -2828,6 +2831,7 @@ define([
 
                // reload with new source (first item with id "firstItem")
                lnBaseControl._beforeUpdate(lnCfg2);
+               lnBaseControl._afterUpdate(lnCfg2);
 
                setTimeout(function() {
                   assert.equal(lnBaseControl.getViewModel()
@@ -5579,6 +5583,7 @@ define([
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.sorting = [{ title: 'ASC' }];
          instance._beforeUpdate(cfgClone);
+         await instance._afterUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
@@ -5588,6 +5593,7 @@ define([
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          instance._beforeUpdate(cfgClone);
+         await instance._afterUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
@@ -6190,7 +6196,8 @@ define([
                   up: true,
                   down: true
                };
-               await bc._beforeUpdate(cfg);
+               bc._beforeUpdate(cfg);
+               await bc._afterUpdate(cfg);
                assert.deepEqual(bc._loadTriggerVisibility, {
                   up: true,
                   down: true
@@ -6210,7 +6217,8 @@ define([
                   },
                   viewModelConstructor: lists.ListViewModel,
                };
-               await bc._beforeUpdate(cfg);
+               bc._beforeUpdate(cfg);
+               await bc._afterUpdate(cfg);
                assert.deepEqual(bc._loadTriggerVisibility, {
                   up: true,
                   down: true
