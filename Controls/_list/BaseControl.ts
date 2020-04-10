@@ -1629,12 +1629,13 @@ var _private = {
     getLoadingIndicatorClasses(cfg: {
         hasItems: boolean,
         hasPaging: boolean,
-        loadingIndicatorState: 'all' | 'down' | 'up'
+        loadingIndicatorState: 'all' | 'down' | 'up',
+        theme: string,
     }): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${cfg.loadingIndicatorState}`)
-            .add('controls-BaseControl_empty__loadingIndicator__state-down', !cfg.hasItems && cfg.loadingIndicatorState === 'down')
-            .add('controls-BaseControl_withPaging__loadingIndicator__state-down', cfg.loadingIndicatorState === 'down' && cfg.hasPaging && cfg.hasItems)
+            .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${cfg.theme}`, !cfg.hasItems && cfg.loadingIndicatorState === 'down')
+            .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${cfg.theme}`, cfg.loadingIndicatorState === 'down' && cfg.hasPaging && cfg.hasItems)
             .compile();
     },
     hasItemActions: function(itemActions, itemActionsProperty) {
@@ -2459,7 +2460,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _onGroupClick: function(e, groupId, baseEvent) {
-        if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
+        if (baseEvent.target.closest(`.controls-ListView__groupExpander_theme-${this._options.theme}`)) {
             const collection = this._listViewModel;
             if (this._options.groupProperty) {
                 const groupingLoader = this._groupingLoader;
@@ -2845,7 +2846,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.getLoadingIndicatorClasses({
             hasItems,
             hasPaging: !!this._pagingVisible,
-            loadingIndicatorState: state || this._loadingIndicatorState
+            loadingIndicatorState: state || this._loadingIndicatorState,
+            theme: this._options.theme
         });
     },
 

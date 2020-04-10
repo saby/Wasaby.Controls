@@ -283,7 +283,7 @@ export default class CollectionItem<T> extends mixin<
     }
 
     getMultiSelectClasses(): string {
-        let classes = 'controls-ListView__checkbox controls-ListView__notEditable';
+        let classes = `controls-ListView__checkbox controls-ListView__notEditable`; // need theme
         if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += ' controls-ListView__checkbox-onhover';
         }
@@ -408,7 +408,7 @@ export default class CollectionItem<T> extends mixin<
             js-controls-SwipeControl__actionsContainer
             ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
             ${this.isEditing() ? 'controls-ListView__item_editing' : ''}
-            ${this.isDragged() ? 'controls-ListView__item_dragging' : ''}`;
+            ${this.isDragged() ? 'controls-ListView__item_dragging' : ''}`; // need theme
     }
 
     getItemActionClasses(itemActionsPosition: string): string {
@@ -429,12 +429,12 @@ export default class CollectionItem<T> extends mixin<
         const rowSpacing = this.getOwner().getRowSpacing().toLowerCase();
         const rightSpacing = this.getOwner().getRightSpacing().toLowerCase();
 
-        classes += ` controls-ListView__item-topPadding_${rowSpacing}`;
-        classes += ` controls-ListView__item-bottomPadding_${rowSpacing}`;
-        classes += ` controls-ListView__item-rightPadding_${rightSpacing}`;
+        classes += ` controls-ListView__item-topPadding_${rowSpacing}`; // need theme
+        classes += ` controls-ListView__item-bottomPadding_${rowSpacing}`; // need theme
+        classes += ` controls-ListView__item-rightPadding_${rightSpacing}`; // need theme
 
         if (this.getOwner().getMultiSelectVisibility() !== 'hidden') {
-           classes += ' controls-ListView__itemContent_withCheckboxes';
+           classes += ' controls-ListView__itemContent_withCheckboxes'; // need theme
         } else {
            classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftSpacing().toLowerCase()}`;
         }

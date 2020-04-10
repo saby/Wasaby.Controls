@@ -176,12 +176,12 @@ var _private = {
 
        return children;
     },
-    getContainerPaddingClass(classes: string, itemPadding: object):string {
+    getContainerPaddingClass(classes: string, itemPadding: object, theme: string): string {
        let paddingClass = ' ';
        if (classes.indexOf(POSITION_CLASSES.topRight) !== -1) {
-           paddingClass += 'controls-itemActionsV_padding-top_' + (itemPadding && itemPadding.top === 'null' ? 'null ' : 'default ');
+           paddingClass += 'controls-itemActionsV_padding-top_' + (itemPadding && itemPadding.top === 'null' ? 'null ' : 'default ') + `_theme-${theme}`;
        } else  if (classes.indexOf(POSITION_CLASSES.bottomRight) !== -1) {
-           paddingClass += 'controls-itemActionsV_padding-bottom_' + (itemPadding && itemPadding.bottom === 'null' ? 'null ' : 'default ');
+           paddingClass += 'controls-itemActionsV_padding-bottom_' + (itemPadding && itemPadding.bottom === 'null' ? 'null ' : 'default ') + `_theme-${theme}`;
        }
        return paddingClass;
     }
