@@ -10,7 +10,7 @@ export default class extends Control {
     protected _sortingParams: object[] = [];
     private _sorting: object[] = [];
     protected _viewSource: Memory;
-    protected _menuHeader: string = 'Сортировка';
+    protected _menuHeader: string = 'Сортировать';
     protected _columns: object[] = getCountriesStats().getColumnsWithWidths();
 
     protected _beforeMount(): void {

@@ -153,6 +153,14 @@ var _private = {
             // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
         }
+
+        const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
+            self._options.useNewModel ? displayLib.EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
+        );
+        if (isEditing) {
+            self._children.editInPlace.cancelEdit();
+        }
+
         if (self._sourceController) {
             _private.showIndicator(self);
             _private.hideError(self);
@@ -1291,7 +1299,7 @@ var _private = {
          */
         self._targetItem = childEvent.target.closest('.controls-ListView__itemV');
 
-        /** 
+        /**
          * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
          * Поэтому сохраняем объект, с методом getBoundingClientRect
          */
@@ -1841,8 +1849,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
         this._multiSelectReadyCallback = this._multiSelectReadyCallbackFn.bind(this);
 
-        let receivedError = receivedState.errorConfig;
-        let receivedData = receivedState.data;
+        const receivedError = receivedState.errorConfig;
+        const receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
         _private.checkRequiredOptions(newOptions);
@@ -1893,7 +1901,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions);
 
-
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
                     _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -1940,7 +1947,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             viewModelConfig,
                             newOptions.viewModelConstructor
                         );
-                        
+
                         _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
 
                         if (newOptions.itemsReadyCallback) {
@@ -2090,6 +2097,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
+        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback 
+                                                !== newOptions.itemActionVisibilityCallback;
+        this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
@@ -2151,10 +2161,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (recreateSource) {
             this.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
-
-            //Нужно обновлять опции записи не только при наведении мыши,
-            //так как запись может поменяться в то время, как курсор находится на ней
-            this._shouldUpdateItemActions = true;
         }
 
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
