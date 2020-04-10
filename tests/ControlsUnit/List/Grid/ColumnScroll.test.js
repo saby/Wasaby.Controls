@@ -580,9 +580,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             contentStyle: {},
             content: {
                querySelectorAll: () => [{
-                  style: {},
-                  removeProperty: () => {
-                     isStickyElementsToggled = true;
+                  style: {
+                     removeProperty: () => {
+                        isStickyElementsToggled = true;
+                     }
                   }
                }],
                getClientRects: () => [{x: 200}],
