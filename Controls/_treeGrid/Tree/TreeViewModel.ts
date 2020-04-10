@@ -155,8 +155,8 @@ var
                 return !expanderSize && expanderIcon !== 'none';
             }
         },
-        getExpanderPaddingClasses: function(expanderSize, theme) {
-            let expanderPaddingClasses = 'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding' + `_theme-${theme}`;
+        getExpanderPaddingClasses: function(expanderSize, theme, isNodeFooter) {
+            let expanderPaddingClasses = `controls-TreeGrid__row-expanderPadding controls-TreeGrid__${isNodeFooter ? 'node-footer' : 'row'}-expanderPadding` + `_theme-${theme}`;
             expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${theme}`;
             return expanderPaddingClasses;
         },
@@ -291,6 +291,15 @@ var
                         `controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
                     if (!current.hasMultiSelect) {
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
+                    }
+                    if (self._options.rowSeparatorVisibility) {
+                        const separatorSize = self._options.rowSeparatorSize;
+                        const isWideSeparator = separatorSize && separatorSize.toLowerCase() === 'l';
+                        classes += ` controls-TreeGrid__nodeFooterContent_withRowSeparator${isWideSeparator ? '-l' : ''}_theme-${theme}`;
+                        classes += ` controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${isWideSeparator ? 'l' : 's'}_theme-${theme}`;
+                        classes += ` controls-TreeGrid__nodeFooterContent_padding-top-${isWideSeparator ? 'l' : 's'}_theme-${theme}`;
+                    } else {
+                        classes += ` controls-TreeGrid__nodeFooterContent_withoutRowSeparator_theme-${theme} controls-TreeGrid__nodeFooterContent_padding-top-s_theme-${theme} controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s_theme${theme}`;
                     }
                     return classes;
                 };

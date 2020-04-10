@@ -271,7 +271,7 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
                     // the selection is saved to the model asynchronously. Sometimes the preservation
                     // of the selection will erase the previously established selection in the model.
                     // To prevent this, immediately apply the selection set in the model to the input field.
-                    this._getField().setSelectionRange(this._viewModel.selection.start, this._viewModel.selection.end);
+                    this._updateSelection(this._viewModel.selection);
                 }
                 Mask.superclass._clickHandler.apply(this, arguments);
             }

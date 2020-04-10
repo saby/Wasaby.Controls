@@ -19,7 +19,7 @@
 
 // Кнопка подтверждения в списке с мультивыбором
 
-@apply-button_offset_menuPopup:                     8px;
+@apply-button_offset_menuPopup:                     @offset_s;
 @apply-button_inline-height_menuPopup:              @inline_height_l_button;
 @apply-button_border-radius_menuPopup:              @apply-button_inline-height_menuPopup / 2;
 
@@ -27,8 +27,8 @@
 
 // Параметры для поиска
 @search_width_menuPopup:                            184px;
-@search_offset-right_menuPopup:                     12px;
-@search_item_padding-left_menu:                     24px;
+@search_offset-right_menuPopup:                     @offset_m;
+@search_item_padding-left_menu:                     @offset_3xl;
 
 
 
@@ -56,11 +56,11 @@
 // Размеры и отступы
 
 @item_height_menu:                                 32px;
-@item_padding-horizontal_s_menu:                   4px;
-@item_padding-horizontal_l_menu:                   12px;
-@item_padding-top_menu:                            6px;
-@item_padding-bottom_menu:                         6px;
-@item_icon_offset_menu:                            6px;
+@item_padding-horizontal_s_menu:                   @offset_2xs;
+@item_padding-horizontal_l_menu:                   @offset_m;
+@item_padding-top_menu:                            @offset_xs;
+@item_padding-bottom_menu:                         @offset_xs;
+@item_icon_offset_menu:                            @offset_xs;
 
 
 
@@ -70,13 +70,13 @@
 @hierarchy_icon-size_menu:                         @icon-size_s;
 @hierarchy_icon-color_menu:                        @secondary_icon-color;
 @readonly_hierarchy_icon-color_menu:               @readonly_color;
-@hierarchy_icon_offset-right_menu:                 6px;
-@hierarchy_icon_offset-left_menu:                  6px;
+@hierarchy_icon_offset-right_menu:                 @offset_xs;
+@hierarchy_icon_offset-left_menu:                  @offset_xs;
 
 // Кнопка "закрепить"
 @pin-button_icon-size_menu:                        @icon-size_s;
-@pin-button_offset-right_menu:                     12px;
-@pin-button_offset-left_menu:                      6px;
+@pin-button_offset-right_menu:                     @offset_m;
+@pin-button_offset-left_menu:                      @offset_xs;
 @pin-button_icon-color_menu:                       @unaccented_icon-color;
 @pin-button_hover_icon-color_menu:                 @secondary_hover_icon-color;
 
@@ -92,8 +92,8 @@
 
 //Параметры для группировки
 
-@grouping_padding-vertical_menu:                   8px;
-@grouping_padding-horizontal_menu:                 12px;
+@grouping_padding-vertical_menu:                   @offset_s;
+@grouping_padding-horizontal_menu:                 @offset_m;
 @grouping_separator_thickness_menu:                1px;
 @grouping_separator_color_menu:                    #EAEAEA;
 @grouping_text-color_menu:                         @label_text-color;

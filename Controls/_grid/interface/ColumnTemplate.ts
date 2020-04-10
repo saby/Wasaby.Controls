@@ -158,3 +158,14 @@ export type TCursor = 'default' | 'pointer' | 'right';
      */
     cursor?: TCursor;
 }
+
+    /**
+     * @name Controls/grid:ColumnTemplate#tagStyle
+     * @cfg {String} Позволяет задать стиль для цветных индикаторов в ячейке.
+     * @variant info
+     * @variant danger
+     * @variant primary
+     * @variant success
+     * @variant warning
+     * @variant secondary
+     */
