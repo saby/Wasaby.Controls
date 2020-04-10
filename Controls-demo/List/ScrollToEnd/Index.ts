@@ -15,7 +15,7 @@ export default class ScrollToEnd extends Control {
         view: 'infinity',
         sourceConfig: {
             pageSize: PAGE_SIZE,
-            direction: 'bothways',
+            direction: CursorDirection.bothways,
             page: 0,
             hasMore: false
         },
