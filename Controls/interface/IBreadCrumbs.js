@@ -52,11 +52,10 @@ define('Controls/interface/IBreadCrumbs', [
     * @name Controls/interface/IBreadCrumbs#backgroundStyle
     * @cfg {string} Префикс стиля для настройки фона внутренних компонентов хлебных крошек с абсолютным позиционированием.
     * @variant default (фон цвета темы)
-    * @variant stackHeader
-    * @variant stack
-    * @variant masterDetail-master
-    * @variant masterDetail-details
-    * @variant blockLayout__block_style_(number) Подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/containers/blocks/ здесь}
+    * @variant stackHeader  Используется когда крошки располагаются в шапке стекового окна
+    * @variant masterDetail-master Используется, когда крошки располагаются в контенте master контрола masterDetail
+    * @variant masterDetail-details Используется, когда крошки располагаются в контенте detail контрола masterDetail
+    * @variant blockLayout__block_style_(number) Используется, когда крошки располагаются в области блоков controls-BlockLayout__block. Подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/containers/blocks/ здесь}
     * @variant другое - вы сами можете задать значение опции и определить класс с необходимым цветом
     * @default default (фон цвета темы)
     * @example
@@ -73,14 +72,12 @@ define('Controls/interface/IBreadCrumbs', [
    /*
     * @name Controls/interface/IBreadCrumbs#backgroundStyle
     * @cfg {string} Style prefix to configure background for breadcrumbs components with absolute positioning.
-    * @variant default (фон цвета темы)
-    * @variant stackHeader
-    * @variant stack
-    * @variant masterDetail-master
-    * @variant masterDetail-details
-    * @variant blockLayout__block_style_(number) Подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/containers/blocks/ здесь}
+    * @variant default (theme background)
+    * @variant stackHeader Used when breadcrumbs are in the header of the stack.
+    * @variant masterDetail-master  Used when breadcrumbs are in "master" of masterDetail
+    * @variant masterDetail-details Used when breadcrumbs are in "detail" of masterDetail
+    * @variant blockLayout__block_style_(number) More details {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/containers/blocks/ here}
     * @variant other - you can set your option value and define a class with the desired color
-    * @default default (фон цвета темы)
     * @default default (theme background)
     * @example
     * <pre>
