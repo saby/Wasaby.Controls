@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_moverDialog/Template/Template');
-import 'css!theme?Controls/moverDialog';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TColumns} from 'Controls/grid';
@@ -140,6 +139,8 @@ export default class extends Control {
         this._notify('sendResult', [item], {bubbling: true});
         this._notify('close', [], {bubbling: true});
     }
+
+    static _theme: string[] = ['Controls/moverDialog'];
 
     static getDefaultOptions = (): object => {
         return {
