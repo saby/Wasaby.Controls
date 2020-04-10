@@ -155,7 +155,10 @@ const
         * @param {Boolean} visible Определяет, будут ли отображены sticky элементы
         */
       toggleStickyElementsForScrollCalculation(container: HTMLElement, visible: boolean): void {
-          const stickyElements = container.querySelectorAll('.controls-Grid_columnScroll_wrapper, .controls-Grid__header');
+          const stickyElements =
+              container.querySelectorAll(
+                  '.controls-Grid_columnScroll_wrapper, .controls-Grid__header, .controls-Grid__results'
+              );
 
           stickyElements.forEach((element: HTMLElement) => {
              if (visible) {
