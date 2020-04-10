@@ -12,6 +12,7 @@
    selectionHoveredValue="{{_options.selectionHoveredValue}}"
 
    on:rangeChanged="_onRangeChangedHandler()"
+   on:itemClick="_itemClickHandler()"
 >
    <Controls._calendar.MonthView
       month="{{_options.month}}"
