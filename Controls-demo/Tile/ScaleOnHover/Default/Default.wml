@@ -1,5 +1,6 @@
 <div class="controlsDemo__wrapper controlDemo_Tile_scale-default">
 <Controls.tile:View
+        attr:class="demo-ScaleOnHover__default"
         tileMode="dynamic"
         displayProperty="title"
         imageProperty="image"
