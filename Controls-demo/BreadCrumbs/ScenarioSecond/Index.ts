@@ -18,7 +18,7 @@ import 'css!Controls-demo/BreadCrumbs/Scenarios/Scenarios';
 class ScenarioSecond extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
     protected _root4: number = 11;
-    protected _root5: number = 121111;
+    protected _root5: number = 11;
     protected _firstColumnTemplate: TemplateFunction = firstColumnTemplate; //
     protected _secondColumnTemplate: TemplateFunction = secondColumnTemplate;
     protected _secondHeaderTemplate: TemplateFunction = secondHeaderTemplate;
@@ -73,35 +73,60 @@ class ScenarioSecond extends Control<IControlOptions> {
                 id: 1,
                 'parent': null,
                 'parent@': true,
-                title: '05. Торговое оборудование'
+                title: 'Оборудование'
             }, {
-                id: 12,
+                id: 2,
                 'parent': 1,
                 'parent@': true,
-                title: '02. Онлайн-кассы для 54-ФЗ'
+                title: '05. Торговое оборудование '
             }, {
-                id: 121,
-                'parent': 12,
+                id: 3,
+                'parent': 2,
+                'parent@': true,
+                title: 'Кассовые аппараты'
+            }, {
+                id: 4,
+                'parent': 3,
+                'parent@': true,
+                title: 'Контрольно кассовые машины'
+            }, {
+                id: 5,
+                'parent': 4,
+                'parent@': true,
+                title: 'Онлайн кассы'
+            }, {
+                id: 6,
+                'parent': 5,
+                'parent@': true,
+                title: '02. Онлайн-кассы в соответствии с 54-ФЗ '
+            }, {
+                id: 7,
+                'parent': 6,
                 'parent@': true,
                 title: '10. Комплекты модернизации'
             }, {
-                id: 1211,
-                'parent': 121,
+                id: 8,
+                'parent': 7,
                 'parent@': true,
                 title: 'Под заказ'
             }, {
-                id: 12111,
-                'parent': 1211,
+                id: 9,
+                'parent': 8,
+                'parent@': true,
+                title: 'С фискальным накопителем '
+            }, {
+                id: 10,
+                'parent': 9,
                 'parent@': true,
                 title: '01. Фискальные регистраторы Viki Print'
             }, {
-                id: 121111,
-                'parent': 12111,
+                id: 11,
+                'parent': 10,
                 'parent@': true,
                 title: 'С фискальным накопителем на 36 мес.'
             }, {
-                id: 1211111,
-                'parent': 121111,
+                id: 12,
+                'parent': 11,
                 'parent@': null,
                 title: 'Фискальный регистратор Viki Print 57 Plus Ф',
                 price: 28490,
