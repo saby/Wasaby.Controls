@@ -109,6 +109,15 @@ const _private = {
         cfg.popupOptions.className = (cfg.popupOptions.className || '') + ' ' + _private.getOrientationClasses(popupCfg);
     },
 
+    updateSizes(positionCfg, popupOptions) {
+        const properties = ['width', 'maxWidth', 'minWidth', 'height', 'maxHeight', 'minHeight'];
+        properties.forEach((prop) => {
+            if (popupOptions[prop]) {
+                positionCfg.config[prop] = popupOptions[prop];
+            }
+        });
+    },
+
     getOrientationClasses(cfg) {
         let className = 'controls-Popup-corner-vertical-' + cfg.targetPoint.vertical;
         className += ' controls-Popup-corner-horizontal-' + cfg.targetPoint.horizontal;
@@ -237,6 +246,7 @@ class StickyController extends BaseController {
         item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
         if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
+            _private.updateSizes(item.positionConfig, item.popupOptions);
             item.position = StickyStrategy.getPosition(item.positionConfig, this._getTargetCoords(item, item.positionConfig.sizes));
 
             // In landscape orientation, the height of the screen is low when the keyboard is opened.
