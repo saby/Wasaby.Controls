@@ -38,17 +38,6 @@ const Component = BaseControl.extend({
         }
     },
 
-    _isIconChecked: function(periods, date) {
-        for (let i = 0; i < periods.length; i++) {
-            //Проверяем второй элемент массива на null. Если задан null в опции periods, то лента будет бесконечно
-            //отображать зеленые галки.
-            if (periods[i][0] < date && (periods[i][1] > date || periods[i][1] === null)) {
-                return true;
-            }
-        }
-        return false;
-    },
-
     _getYearModel: function (year, dateConstructor) {
         const numerals = ['I', 'II', 'III', 'IV'];
         const halfYearsList = [];
