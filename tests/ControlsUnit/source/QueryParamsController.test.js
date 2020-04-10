@@ -173,7 +173,7 @@ define(
                var pNav = new PositionQueryParamsController.default({
                   field: 'field',
                   limit: 100,
-                  direction: 'after',
+                  direction: 'forward',
                   position: 1
                });
 
@@ -210,7 +210,7 @@ define(
             it('should calculate hasMoreData() with load to direction query', function () {
                var pNav = new PositionQueryParamsController.default({
                   field: 'field',
-                  direction: 'after',
+                  direction: 'forward',
                   position: 1,
                   limit: 100
                });
@@ -229,7 +229,7 @@ define(
 
                pNav = new PositionQueryParamsController.default({
                   field: ['field', 'id'],
-                  direction: 'both',
+                  direction: 'bothways',
                   position: 1,
                   limit: 100
                });
@@ -252,7 +252,7 @@ define(
                pNav = new PositionQueryParamsController.default({
                   field: 'field',
                   limit: 100,
-                  direction: 'after',
+                  direction: 'forward',
                   position: 1
                });
 
@@ -263,7 +263,7 @@ define(
                pNav = new PositionQueryParamsController.default({
                   field: ['field', 'id'],
                   limit: 50,
-                  direction: 'before',
+                  direction: 'backward',
                   position: [2, 1]
                });
 
@@ -274,7 +274,7 @@ define(
                pNav = new PositionQueryParamsController.default({
                   field: ['field'],
                   limit: 100,
-                  direction: 'both',
+                  direction: 'bothways',
                   position: [3]
                });
 
@@ -287,7 +287,7 @@ define(
                   const positionNav = new PositionQueryParamsController.default({
                      field: ['field'],
                      limit: 100,
-                     direction: 'both',
+                     direction: 'bothways',
                      position: [3]
                   });
                   positionNav.setEdgeState('up');
@@ -308,7 +308,7 @@ define(
                   const positionNav = new PositionQueryParamsController.default({
                      field: ['field'],
                      limit: 100,
-                     direction: 'both',
+                     direction: 'bothways',
                      position: [3]
                   });
                   positionNav.setEdgeState('down');

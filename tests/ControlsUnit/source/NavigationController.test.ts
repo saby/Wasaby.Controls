@@ -6,7 +6,7 @@ import {INavigationOptionValue} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {
     INavigationPageSourceConfig, INavigationPositionSourceConfig, INavigationSourceConfig,
-    TNavigationDirection
+    CursorDirection
 } from 'Controls/_interface/INavigation';
 import {
     Direction,
@@ -26,13 +26,13 @@ const fakePageNavigationConfig = (hasMore?: boolean, page: number = 0): INavigat
     };
 };
 
-const fakePositionNavigationConfig = (direction?: TNavigationDirection): INavigationOptionValue<INavigationPositionSourceConfig> => {
+const fakePositionNavigationConfig = (direction?: CursorDirection): INavigationOptionValue<INavigationPositionSourceConfig> => {
     return {
         source: 'position',
         sourceConfig: {
             limit: 5,
             position: 55,
-            direction: direction ? direction : 'after',
+            direction: direction ? direction : CursorDirection.forward,
             field: 'key'
         } as INavigationPositionSourceConfig
     };
@@ -264,13 +264,13 @@ describe('Controls/_source/NavigationController', () => {
         });
     });
 
-    describe('getQueryParams with source="position" and direction="after"', () => {
+    describe('getQueryParams with source="position" and direction="forward"', () => {
         let navigation: INavigationOptionValue<INavigationPositionSourceConfig>;
         let controller: NavigationController;
         let query: IAdditionalQueryParams;
 
         beforeEach(() => {
-            navigation = fakePositionNavigationConfig('after');
+            navigation = fakePositionNavigationConfig('forward');
             controller = new NavigationController({navigation});
         });
 
@@ -286,7 +286,7 @@ describe('Controls/_source/NavigationController', () => {
         it('should correctly build params for first query', () => {
             recordSet.setMetaData({
                 /*
-                 * valid when INavigationOptionValue.direction !== 'both'
+                 * valid when INavigationOptionValue.direction !== 'bothways'
                  * OR updateQueryProperties.direction is set
                  */
                 more: true
@@ -311,13 +311,13 @@ describe('Controls/_source/NavigationController', () => {
         });
     });
 
-    describe('getQueryParams with source="position" and direction="both"', () => {
+    describe('getQueryParams with source="position" and direction="bothways"', () => {
         let navigation: INavigationOptionValue<INavigationPositionSourceConfig>;
         let controller: NavigationController;
         let query: IAdditionalQueryParams;
 
         beforeEach(() => {
-            navigation = fakePositionNavigationConfig('both');
+            navigation = fakePositionNavigationConfig('bothways');
             controller = new NavigationController({navigation});
         });
 
@@ -326,7 +326,7 @@ describe('Controls/_source/NavigationController', () => {
             moreRecordSet.setMetaData({
                 more: {
                     /*
-                     * valid when INavigationOptionValue.direction === 'both'
+                     * valid when INavigationOptionValue.direction === 'bothways'
                      * and updateQueryProperties.direction isn't set
                      */
                     after: true, before: true
@@ -354,7 +354,7 @@ describe('Controls/_source/NavigationController', () => {
             moreRecordSet.setMetaData({
                 more: {
                     /*
-                     * valid when INavigationOptionValue.direction === 'both'
+                     * valid when INavigationOptionValue.direction === 'bothways'
                      * and updateQueryProperties.direction isn't set
                      */
                     after: true, before: true
@@ -363,7 +363,7 @@ describe('Controls/_source/NavigationController', () => {
             controller.updateQueryProperties(moreRecordSet, null);
             more2RecordSet.setMetaData({
                 /*
-                 * valid when INavigationOptionValue.direction !== 'both'
+                 * valid when INavigationOptionValue.direction !== 'bothways'
                  * OR updateQueryProperties.direction is set
                  */
                 more: true
@@ -380,12 +380,12 @@ describe('Controls/_source/NavigationController', () => {
         let controller: NavigationController;
         let query: IAdditionalQueryParams;
 
-        it('Should correctly merge query params + source="position" + direction="after"', () => {
-            navigation = fakePositionNavigationConfig('after');
+        it('Should correctly merge query params + source="position" + direction="forward"', () => {
+            navigation = fakePositionNavigationConfig('forward');
             controller = new NavigationController({navigation});
             recordSet.setMetaData({
                 /*
-                 * valid when INavigationOptionValue.direction !== 'both'
+                 * valid when INavigationOptionValue.direction !== 'bothways'
                  * OR updateQueryProperties.direction is set
                  */
                 more: true
