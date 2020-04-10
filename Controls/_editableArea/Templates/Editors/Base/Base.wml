@@ -11,7 +11,7 @@
       <div
          class="controls-EditableArea__Text
                 controls-EditableArea__Text_style_{{_options.style ? _options.style  : 'default'}}
-                controls-EditingTemplateText_size_{{_options.size ? _options.size : 'default'}}"
+                controls-EditingTemplateText_size_{{_options.size ? _options.size : 'default'}}_theme-{{theme}}"
       >
          <div class="controls-EditingTemplateText__inner">{{_prepareValueForEditor(_options.value)}}</div>
       </div>
