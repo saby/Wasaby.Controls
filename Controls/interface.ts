@@ -34,6 +34,7 @@
  * @includes IOpenPopup Controls/_interface/IOpenPopup
  * @includes ISearch Controls/_interface/ISearch
  * @includes ISelectorDialog Controls/_interface/ISelectorDialog
+ * @includes ISelectionObject Controls/_interface/ISelectionObject
  * @public
  * @author Крайнов Д.О.
  */

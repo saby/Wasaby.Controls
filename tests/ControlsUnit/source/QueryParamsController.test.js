@@ -235,7 +235,7 @@ define(
                });
 
                //first query with direction: both
-               dataRs.setMetaData({more: {after: true, before: true}});
+               dataRs.setMetaData({more: {forward: true, backward: true}});
                pNav.updateQueryProperties(dataRs, null);
                assert.isTrue(pNav.hasMoreData('up'), 'Wrong hasMoreData result');
                assert.isUndefined(pNav.hasMoreData('up', 'testId'), 'Wrong hasMoredata for root');

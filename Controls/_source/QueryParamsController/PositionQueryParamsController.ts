@@ -10,8 +10,10 @@ import {CursorDirection} from 'Controls/interface';
 import { Collection } from 'Controls/display';
 
 interface IPositionHasMore {
-    before: boolean;
-    after: boolean;
+    backward: boolean;
+    forward: boolean;
+    before?: boolean;
+    after?: boolean;
 }
 
 declare type FieldCfg = any;
@@ -25,8 +27,10 @@ declare type PositionCfg = any;
 declare type Position = any[];
 
 interface IPositionBoth {
-    before: Position;
-    after: Position;
+    backward: Position;
+    forward: Position;
+    before?: Position;
+    after?: Position;
 }
 
 declare type PositionBoth = Position | IPositionBoth;
@@ -114,6 +118,8 @@ class PositionQueryParamsController implements IQueryParamsController {
 
     private _getDefaultMoreMeta(): IPositionHasMore {
         return {
+            backward: false,
+            forward: false,
             before: false,
             after: false
         };
@@ -126,7 +132,7 @@ class PositionQueryParamsController implements IQueryParamsController {
             if (typeof more === 'boolean') {
                 if (loadDirection || this._getDirection() !== CursorDirection.bothways) {
                     navDirection = this._resolveDirection(loadDirection, this._getDirection());
-                    let newMore = this._getMore().getMoreMeta(key);
+                    let newMore = this._getMoreMeta(key);
 
                     if (!newMore) {
                         newMore = this._getDefaultMoreMeta();
@@ -308,6 +314,11 @@ class PositionQueryParamsController implements IQueryParamsController {
                         this._beforePosition = metaNextPosition.before;
                         this._afterPosition = metaNextPosition.after;
                         this._positionByMeta = true;
+                    } else if (metaNextPosition.backward && metaNextPosition.backward instanceof Array
+                        && metaNextPosition.forward && metaNextPosition.forward instanceof Array) {
+                        this._beforePosition = metaNextPosition.backward;
+                        this._afterPosition = metaNextPosition.forward;
+                        this._positionByMeta = true;
                     } else {
                         Logger.error('QueryParamsController/Position: ' +
                             'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties.' +
@@ -354,7 +365,7 @@ class PositionQueryParamsController implements IQueryParamsController {
         }
 
         if (this._isMoreCreated()) {
-            moreData = this._getMore().getMoreMeta(rootKey);
+            moreData = this._getMoreMeta(rootKey);
         }
 
         // moreData can be undefined for root with rootKey, if method does not support multi-navigation.
@@ -395,8 +406,25 @@ class PositionQueryParamsController implements IQueryParamsController {
     }
 
     /**
+     * Получает moreMeta, совместимый с CursorDirection
+     * TODO Необходимо убрать этот метод, когда своместимость более не понадобится
+     * @param key
+     * @private
+     */
+    private _getMoreMeta(key: string | number): IPositionHasMore {
+        const meta: IPositionHasMore = this._getMore().getMoreMeta(key) as IPositionHasMore;
+        if (meta && meta.backward === undefined) {
+            meta.backward = meta.before;
+        }
+        if (meta && meta.forward === undefined) {
+            meta.forward = meta.after;
+        }
+        return meta;
+    }
+
+    /**
      * Конвертор старых и новых названий направления.
-     * TODO Необходимо убрать его, когда своместимость более не понадобится
+     * TODO Необходимо убрать этот метод, когда своместимость более не понадобится
      * @param position
      */
     private static _convertDirection(position: CursorDirection | 'before' | 'after' | 'both'): CursorDirection {
