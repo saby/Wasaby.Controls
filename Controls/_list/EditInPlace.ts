@@ -104,8 +104,8 @@ var
             }
         },
 
-        afterEndEdit: function (self, commit) {
-            self._notify('afterEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
+        afterEndEdit: function(self, commit) {
+            const afterEndEditArgs = [self._isAdd ? self._editingItem : self._originalItem, self._isAdd];
 
             // При редактировании по месту маркер появляется только если в списке больше одной записи.
             // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
@@ -116,6 +116,13 @@ var
             if (!self._destroyed) {
                 self._setEditingItemData(null, self._options.listModel, self._options);
             }
+
+            // Нотифицировать о событии "После завершения редактирования" нужно после очистки editingItemData,
+            // т.к. все остальные контролы проверяют наличие запущенного редактирования именно по ней.
+            // Нотификация до очистки приводит к проблемам. Например, в обработчике события afterEndEdit ожидается,
+            // что завершено редактирование и можно позвать перезагрузку списка для обновления результатов каждой строки.
+            // Однако сам список считает что редактирование еще активно и падает при перезагрузке.
+            self._notify('afterEndEdit', afterEndEditArgs);
         },
 
         createModel: function (self, options) {
