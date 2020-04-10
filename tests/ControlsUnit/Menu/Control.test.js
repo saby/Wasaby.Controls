@@ -187,8 +187,16 @@ define(
                   selectedItem = null;
                });
 
-               it('submenu is not open', function() {
+               it('submenu is not open, item is list', function() {
                   sinon.stub(menuControl, 'handleCurrentItem');
+                  menuControl._itemClick('itemClick', item, {});
+                  assert.equal(selectedItem.getKey(), 1);
+               });
+
+               it('submenu is not open, item is node', function() {
+                  sinon.stub(menuControl, 'handleCurrentItem');
+                  item.set('node', true);
+                  menuControl._options.nodeProperty = 'node';
                   menuControl._itemClick('itemClick', item, {});
                   sinon.assert.calledOnce(menuControl.handleCurrentItem);
                   assert.isNull(selectedItem);
