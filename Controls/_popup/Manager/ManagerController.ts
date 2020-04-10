@@ -47,6 +47,10 @@ export default {
         this._manager._eventHandler(null, 'popupUpdated', id);
     },
 
+    isDestroying(id: string): boolean {
+        return this._callManager('isDestroying', arguments);
+    },
+
     /**
      * Найти popup
      */

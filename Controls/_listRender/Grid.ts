@@ -21,7 +21,7 @@ export default class GridRender extends BaseRender {
     protected async _beforeMount(options): Promise<void> {
         super._beforeMount(options);
 
-        this._templateKeyPrefix = `grid-render-${this.getInstanceId()}`;
+        this._templateKeyPrefix = 'grid-render';
 
         return new Promise((resolve) => {
             const layout = this._isFullGridSupport() ? 'grid' : 'table';

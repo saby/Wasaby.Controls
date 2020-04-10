@@ -403,7 +403,7 @@ define(
                         groupTemplate: 'groupTemplate',
                         groupingKeyCallback: 'groupingKeyCallback',
                         groupProperty: undefined,
-                        footerTemplate: undefined
+                        footerContentTemplate: undefined
                      }
                   };
                assert.deepEqual((new toolbars.View())._getMenuConfig.call(testSelf), config);

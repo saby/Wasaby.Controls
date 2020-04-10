@@ -33,7 +33,10 @@
        </ws:else>
    </ws:if>
    <ws:if data="{{colspan}}">
-       <div class="controls-Grid__row-cell_colspaned {{currentColumn.classList.padding.top}} {{currentColumn.classList.padding.bottom}} {{currentColumn.classList.padding.right}}">
+       <div class="controls-Grid__row-cell_colspaned
+       {{currentColumn.getColspanedPaddingClassList().top}}
+       {{currentColumn.getColspanedPaddingClassList().bottom}}
+       {{currentColumn.getColspanedPaddingClassList().right}}">
            <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
        </div>
    </ws:if>

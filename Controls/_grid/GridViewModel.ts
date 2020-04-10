@@ -1315,6 +1315,7 @@ var
             }
 
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
+                current.rowSeparatorSize = this._options.rowSeparatorSize;
 
             current.itemActionsDrawPosition =
                 this._options.columnScroll ? 'after' : 'before';
@@ -1378,6 +1379,10 @@ var
                         tableCellStyles: ''
                     };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme);
+                currentColumn.getColspanedPaddingClassList = () => {
+                    currentColumn.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${self._options.theme}`;
+                    return currentColumn.classList.padding;
+                };
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
                 if (self._isSupportLadder(self._options.ladderProperties)) {
@@ -1474,6 +1479,10 @@ var
 
         appendItems: function(items) {
             this._model.appendItems(items);
+        },
+
+        acceptChanges(): void {
+            this._model.acceptChanges();
         },
 
         prependItems: function(items) {

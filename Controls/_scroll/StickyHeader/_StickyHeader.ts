@@ -9,7 +9,8 @@ import {
     POSITION,
     MODE,
     IOffset,
-    validateIntersectionEntries
+    validateIntersectionEntries,
+    isDisplayed
 } from 'Controls/_scroll/StickyHeader/Utils';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
@@ -135,6 +136,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._updateBottomShadowStyle();
     }
 
+    protected _beforeUpdate(): void {
+        // При каждом обновлении контента необходимо также обновлять значения тени.
+        // Иначе это приводит к ошибкас в расчётах на iOS/Safari 13
+        this._bottomShadowStyle = '';
+        this._topShadowStyle = '';
+    }
+
     protected _afterMount(): void {
         const children = this._children;
 
@@ -216,6 +224,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set top(value: number) {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
+            // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
+            this._container.style.top = `${value}px`;
             this._forceUpdate();
         }
     }
@@ -227,6 +237,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set bottom(value: number) {
         if (this._stickyHeadersHeight.bottom !== value) {
             this._stickyHeadersHeight.bottom = value;
+            // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
+            this._container.style.bottom = `${value}px`;
             this._forceUpdate();
         }
     }
@@ -299,13 +311,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (this._stickyDestroy) {
             return;
         }
-        const popupContainer: HTMLElement = this._container.closest('.controls-Popup__template');
-
-        // Stack popups can be hidden when child popup has a large width.
-        // In this case don't start observable handler.
-        if (popupContainer && popupContainer.classList.contains('ws-hidden')) {
+        // При скрытии родителя всегда стреляет событие о невидимости заголовков. При обратном отображении стреляет
+        // событие о видимости. Но представление обновляется асинхронно.
+        // Сцеарий 1. В области есть скрол контэйнер с проскроленым контентом. Его скрывают. Если этого условия нет,
+        // то все заголовки считают себя не зафиксированными. Затем контент заново отображают.
+        // Заголовки не зафиксированы, z-index у них не проставлен, их закрывает идущий за ними контент.
+        // Через мгновение они появляются. Проблема есть в SwitchableArea и в стэковых окнах.
+        // Сценарий 2. Области создаются скрытыми. а после загрузки данных отбражаются.
+        if (!isDisplayed(this._container)) {
             return;
         }
+
         const fixedPosition: POSITION = this._model.fixedPosition;
 
         this._model.update(validateIntersectionEntries(entries, this._scroll));
@@ -452,6 +468,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _updateBottomShadowStyle(): void {
         if (this._isSafari13) {
             const container: HTMLElement = this._getNormalizedContainer();
+            // Зануляем shadowStyle, чтобы исключить их влияние на расчёт container.offsetWidth
+            this._bottomShadowStyle = '';
+            this._topShadowStyle = '';
             // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
             // There's no container at first building of template.
             if (container) {
@@ -475,14 +494,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _isShadowVisible(shadowPosition: POSITION): void {
+    protected _isShadowVisible(shadowPosition: POSITION): boolean {
         //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
 
-        return !! ((this._context.stickyHeader?.shadowPosition &&
-               this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
+        return !!((this._context.stickyHeader?.shadowPosition &&
+            this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
             (this._model && this._model.fixedPosition === fixedPosition) &&
-          this._options.shadowVisibility === SHADOW_VISIBILITY.visible &&
+            this._options.shadowVisibility === SHADOW_VISIBILITY.visible &&
             (this._options.mode === MODE.stackable || this._shadowVisible));
     }
 

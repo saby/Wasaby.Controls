@@ -72,15 +72,16 @@ export interface IPopupOptions extends IBasePopupOptions {
 export interface IPopupController {
    TYPE: string;
    POPUP_STATE_INITIALIZING: string;
-   POPUP_STATE_CREATING: string;
    POPUP_STATE_CREATED: string;
    POPUP_STATE_UPDATING: string;
    POPUP_STATE_UPDATED: string;
+   POPUP_STATE_START_DESTROYING: string;
    POPUP_STATE_DESTROYING: string;
    POPUP_STATE_DESTROYED: string;
    _elementCreated(item: IPopupItem, container: HTMLElement): boolean;
    _elementUpdated(item: IPopupItem, container: HTMLElement): boolean;
    _elementAfterUpdated(item: IPopupItem, container: HTMLElement): boolean;
+   _beforeElementDestroyed(item: IPopupItem, container: HTMLElement): Promise<undefined>;
    _elementDestroyed(item: IPopupItem, container: HTMLElement): Promise<undefined>;
    getDefaultConfig(item: IPopupItem): null|Promise<void>;
    _popupDragEnd(item: IPopupItem): boolean;
@@ -95,7 +96,8 @@ export interface IPopupItemInfo {
    parentId: string;
    parentZIndex: null|number;
    popupOptions: {
-      maximize: boolean
+      maximize: boolean,
+      modal: boolean
    };
 }
 
