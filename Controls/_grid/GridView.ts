@@ -40,7 +40,7 @@ var
                 Logger.error('IGridControl: Option "showRowSeparator" is deprecated and was removed in 20.4000. Use option "rowSeparatorSize={ none | s | l }".', self);
             }
             if (cfg.rowSeparatorVisibility !== undefined) {
-                Logger.warn('IGridControl: Option "rowSeparatorVisibility" is deprecated and will be removed in 20.4000. Use option "rowSeparatorSize={ none | s | l }".', self);
+                Logger.warn('IGridControl: Option "rowSeparatorVisibility" is deprecated and will be removed in 20.5000. Use option "rowSeparatorSize={ none | s | l }".', self);
             }
             if (cfg.stickyColumn !== undefined) {
                 Logger.warn('IGridControl: Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.', self);
