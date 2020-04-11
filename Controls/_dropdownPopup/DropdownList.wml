@@ -1,5 +1,4 @@
-<div class="controls-DropdownList__popup controls-Popup__i
-latedFocusingContext
+<div class="controls-DropdownList__popup controls-Popup__isolatedFocusingContext
             {{_dropdownClass}}
             {{_options.dropdownClassName}}
             theme_{{_options.theme}}"
