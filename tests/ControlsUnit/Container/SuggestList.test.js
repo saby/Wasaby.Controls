@@ -137,11 +137,14 @@ define(
                items = [1, 2, 3],
                suggestList = new suggestPopup.ListContainer();
 
-            suggestList._suggestListOptions = {};
+            suggestList._suggestListOptions = {
+               searchValue: 'test'
+            };
             suggestList._searchEndCallback({
                data: items
             });
 
+            assert.equal(suggestList._markerVisibility, 'visible');
             assert.equal(suggestList._items, items);
          });
 
