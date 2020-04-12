@@ -89,7 +89,7 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         return expanded !== this._options.expanded;
     }
 
-    private _getExpanded(options: IViewOptions): boolean {
+    private _getExpanded(options: IHeadingOptions): boolean {
         if (options.hasOwnProperty('expanded')) {
             return options.expanded === undefined ? this._expanded : options.expanded;
         }
@@ -97,9 +97,10 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     }
 
     protected _beforeMount(options?: IHeadingOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+        this._expanded = this._getExpanded(options);
         this._caption = Heading._calcCaption(options);
-        this._icon = Heading._calcIcon(options.expanded);
-        this._view = Heading._calcView(options.expanded);
+        this._icon = Heading._calcIcon(this._expanded);
+        this._view = Heading._calcView(this._expanded);
         return super._beforeMount(options, contexts, receivedState);
     }
 
@@ -115,7 +116,12 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     }
 
     protected _clickHandler(event: SyntheticEvent<MouseEvent>): void {
+        this._expanded = !this._getExpanded(this._options);
         this._notify('expandedChanged', [!this._options.expanded]);
+        if (this._options.expanded === undefined) {
+            const newOptions = {...this._options, expanded: this._expanded};
+            this._beforeUpdate(newOptions);
+        }
     }
 
     static _theme: string[] = ['Controls/spoiler', 'Controls/Classes'];
