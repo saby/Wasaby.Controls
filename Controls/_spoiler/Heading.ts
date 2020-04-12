@@ -8,6 +8,7 @@ import {IExpandable, IExpandableOptions, IFontSize, IFontSizeOptions} from 'Cont
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as template from 'wml!Controls/_spoiler/Heading/Heading';
+import {IViewOptions} from "./View";
 
 type TCaptions = string | string[];
 type TView = 'expanded' | 'collapsed';
@@ -65,6 +66,7 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     protected _icon: TIcon;
     protected _view: TView;
     protected _caption: string;
+    protected _expanded: boolean = false;
 
     protected _template: TemplateFunction = template;
 
@@ -85,6 +87,13 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
 
     private _needChangeStateByExpanded(expanded: boolean): boolean {
         return expanded !== this._options.expanded;
+    }
+
+    private _getExpanded(options: IViewOptions): boolean {
+        if (options.hasOwnProperty('expanded')) {
+            return options.expanded === undefined ? this._expanded : options.expanded;
+        }
+        return this._expanded;
     }
 
     protected _beforeMount(options?: IHeadingOptions, contexts?: object, receivedState?: void): Promise<void> | void {
@@ -145,7 +154,6 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         return {
             captions: '',
             fontSize: 'm',
-            expanded: true,
             captionPosition: 'right'
         };
     }
