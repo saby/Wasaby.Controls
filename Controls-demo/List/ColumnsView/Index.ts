@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-
+// todo На момент 13.04.2020 SourceControl не экспортируется из list
 import {default as SourceControl} from 'Controls/_list/SourceControl';
 
 import * as Template from 'wml!Controls-demo/List/ColumnsView/ColumnsView';
