@@ -14,6 +14,7 @@ define(
          let Container = new popupMod.Container();
          Manager._afterMount();
          Container._afterMount();
+         popupMod.Controller.setManager(Manager);
          return Manager;
       }
 
