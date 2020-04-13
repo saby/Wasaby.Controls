@@ -1,5 +1,5 @@
-<div class="demo-Tile">
-   <Controls.scroll:Container attr:class="demo_Tile__scroll">
+<Controls.scroll:Container attr:class="demo_Tile__scroll">
+   <div class="demo-Tile">
       <h1>Плитка</h1>
       <h2>Плитка с одинаковой шириной</h2>
       <Controls.explorer:View
@@ -110,5 +110,5 @@
                         hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
          </ws:itemTemplate>
       </Controls.tile:View>
-   </Controls.scroll:Container>
-</div>
+   </div>
+</Controls.scroll:Container>

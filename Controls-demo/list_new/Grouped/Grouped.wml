@@ -1,5 +1,5 @@
-<div class="controlsDemo__wrapper controlsDemo__flexRow controlsDemo__childMinWidth400">
-    <Controls.scroll:Container>
+<Controls.scroll:Container attr:class="controlsDemo__wrapper">
+    <div class="controlsDemo__flexRow controlsDemo__childMinWidth400">
         <div class="controlsDemo__cell controlsDemo__mr2 demo-ListGrouped__base">
             <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                      state="/Controls-demo/app/:app"
@@ -71,5 +71,5 @@
             </Router.router:Reference>
             <Controls-demo.list_new.Grouped.RightTemplate.Index />
         </div>
-    </Controls.scroll:Container>
-</div>
+    </div>
+</Controls.scroll:Container>
