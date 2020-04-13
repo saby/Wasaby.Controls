@@ -33,9 +33,9 @@
    </ws:if>
    <ws:if data="{{colspan}}" >
          <div class="controls-Grid__row-cell_colspaned
-         {{currentColumn.getColspanedPaddingClassList().top}}
-         {{currentColumn.getColspanedPaddingClassList().bottom}}
-         {{currentColumn.getColspanedPaddingClassList().right}}">
+         {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).top}}
+         {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).bottom}}
+         {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).right}}">
             <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
          </div>
    </ws:if>
