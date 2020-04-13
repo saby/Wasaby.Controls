@@ -2097,7 +2097,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
-        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback 
+        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback
                                                 !== newOptions.itemActionVisibilityCallback;
         this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
@@ -2588,20 +2588,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {
-        const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
-
-        // При редактировании по месту маркер появляется только если в списке больше одной записи.
-        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        if (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1)) {
-            if (this._options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
-                markCommand.execute(this._listViewModel);
-            } else {
-                this._listViewModel.setMarkedKey(key);
-            }
-        }
-
         let hasDragScrolling = false;
+        this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {
             hasDragScrolling = typeof this._options.dragScrolling === 'boolean' ? this._options.dragScrolling : !this._options.itemsDragNDrop;
         }
@@ -2612,6 +2600,31 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._savedItemMouseDownEventArgs = {event, itemData, domEvent};
         }
         this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
+    },
+
+    _itemMouseUp(e, itemData, domEvent): void {
+        const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+
+        // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
+        // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.
+        // Например, записи в мастере или запись в списке с dragScrolling'ом.
+        // При таких сценариях нельзя устанавливать маркер по событию itemClick, т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
+        // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет.
+
+        // При редактировании по месту маркер появляется только если в списке больше одной записи.
+        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
+        const canBeMarked = this._mouseDownItemKey === key && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
+
+        if (canBeMarked) {
+            if (this._options.useNewModel) {
+                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                markCommand.execute(this._listViewModel);
+            } else {
+                this._listViewModel.setMarkedKey(key);
+            }
+        }
+        this._mouseDownItemKey = undefined;
+        this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
     },
 
     _startDragNDropCallback(): void {
