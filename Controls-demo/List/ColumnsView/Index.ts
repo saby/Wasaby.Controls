@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import {ICrud} from 'Types/source';
-import {SourceControl} from 'Controls/list';
+
+import {default as SourceControl} from 'Controls/_list/SourceControl';
 
 import * as Template from 'wml!Controls-demo/List/ColumnsView/ColumnsView';
 import {SourceFaker} from '../Utils/listDataGenerator';
