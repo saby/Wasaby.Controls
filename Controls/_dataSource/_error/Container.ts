@@ -39,17 +39,18 @@ const getTemplate = (template: string | Control): Promise<Control> => {
 };
 
 /**
- * Компонент для отображения шаблона ошибки по данным контрола {@link Controls/_dataSource/_error/Controller}
+ * Компонент для отображения сообщения об ошибки на основе данных, полученных от контроллера {@link Controls/_dataSource/_error/Controller}.
+ * Может отображать сообщение об ошибке разными способами:
+ * - в диалоговом окне;
+ * - вместо своего содержимого;
+ * - в заглушке, которая растягивается во всю страницу поверх всего остального.
  * @class Controls/_dataSource/_error/Container
  * @extends Core/Control
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  *
  */
 export default class Container extends Control<IContainerConfig> implements IContainer {
-    /**
-     * @cfg {Controls/_dataSource/_error/Container/Config} Режим отображения
-     */
     private __viewConfig: Config; // tslint:disable-line:variable-name
     private __lastShowedId: number; // tslint:disable-line:variable-name
     private _popupHelper: Popup = new Popup();
@@ -61,7 +62,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
     private _popupId: string;
 
     /**
-     * Скрыть компонент, отображающий данные об ошибке
+     * Скрыть сообщение об ошибке.
      * @method
      * @public
      */
@@ -75,7 +76,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     /**
-     * Показать парковочный компонент, отображающий данные об ошибке
+     * Показать сообщение об ошибке.
      * @param {Controls/_dataSource/_error/ViewConfig} viewConfig
      * @method
      * @public

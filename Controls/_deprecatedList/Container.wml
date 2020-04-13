@@ -6,4 +6,5 @@
             footerTemplate="{{_options.footerTemplate}}"
             searchMode="{{_searchMode}}"
             markedKey="{{_options.markedKey}}"
+            markerVisibility="{{_options.markerVisibility}}"
             searchValue="{{_searchValue}}"/>

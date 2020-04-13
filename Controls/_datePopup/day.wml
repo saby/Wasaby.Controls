@@ -1,4 +1,4 @@
-<ws:if data="{{value.today}}">
+<ws:if data="{{value.today && value.isCurrentMonth}}">
    <Controls.scroll:IntersectionObserverContainer observerName="datePopup">
       <div>
          <ws:partial template="{{_dayTemplate}}" scope="{{_options}}"/>
