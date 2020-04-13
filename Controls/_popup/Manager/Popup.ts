@@ -182,19 +182,11 @@ class Popup extends Control<IPopupControlOptions> {
         this._notify('pageScrolled', [this._options.id], {bubbling: true});
     }
 
-    /**
-     * Update popup
-     * @function Controls/_popup/Manager/Popup#_close
-     */
-    protected _update(): void {
-        this._notify('popupUpdated', [this._options.id], {bubbling: true});
+    protected _controlResizeOuterHandler(): void {
+        this._notify('popupResizeOuter', [this._options.id], {bubbling: true});
 
         // After updating popup position we will updating the position of the popups open with it.
         runDelayed(this._callOpenersUpdate.bind(this));
-    }
-
-    protected _controlResizeOuterHandler(): void {
-        this._notify('popupResizeOuter', [this._options.id], {bubbling: true});
     }
 
     protected _controlResizeHandler(): void {

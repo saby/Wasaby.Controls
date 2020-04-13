@@ -33,14 +33,14 @@ define('Controls/interface/IEditableArea', [
     */    
 
    /**
-    * @typedef {String|Core/Deferred} BeforeEndEditResult
-    * @variant {Core/Deferred} Deferred Deferred используется для сохранения с пользовательской логикой.
+    * @typedef {String|Promise} BeforeEndEditResult
+    * @variant {Promise} Deferred Используется для сохранения с пользовательской логикой.
     * @variant {String} Cancel Отменяет окончание редактирования.
     */
 
    /*
-    * @typedef {String|Core/Deferred} BeforeEndEditResult
-    * @variant {Core/Deferred} Deferred Deferred is used for saving with custom logic.
+    * @typedef {String|Promise} BeforeEndEditResult
+    * @variant {Promise} Deferred Deferred is used for saving with custom logic.
     * @variant {String} Cancel Cancel ending of editing.
     */    
 
@@ -52,20 +52,22 @@ define('Controls/interface/IEditableArea', [
     * @returns {BeforeBeginEditResult}
     * @example
     * В следующем примере показано, как обрабатывать событие.
-    * WML:
-    * <pre>
-    *    <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
+    * 
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
     * </pre>
-    * JS:
-    * <pre>
-    *    define('ModuleName', ['Controls/Constants'], function(constants) {
-    *       ...
-    *       beforeBeginEditHandler: function(e, options, isAdd) {
-    *          if (!isAdd) { // Редактирование разрешено только в определенных ситуациях.
-    *             return constants.editing.CANCEL;
-    *          }
+    * 
+    * <pre class="brush: js">
+    * // JavaScript
+    * define('ModuleName', ['Controls/Constants'], function(constants) {
+    *    ...
+    *    beforeBeginEditHandler: function(e, options, isAdd) {
+    *       if (!isAdd) { // Редактирование разрешено только в определенных ситуациях.
+    *          return constants.editing.CANCEL;
     *       }
-    *    });
+    *    }
+    * });
     * </pre>
     * @see beforeEndEdit
     * @see afterEndEdit
@@ -105,40 +107,29 @@ define('Controls/interface/IEditableArea', [
     * @event Controls/interface/IEditableArea#beforeEndEdit Происходит до окончания редактирования.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Record} editObject Редактируемая запись.
-    * @param {Boolean} commit Если значение опции true, редактирование закончится сохранением.
+    * @param {Boolean} commit Если значение параметра true, редактирование закончится сохранением.
     * @returns {BeforeEndEditResult}
     * @remark
     * Событие срабатывает только в случае, если проверка прошла успешно. Если вы вернете Core/Deferred из обработчика событий, редактирование закончится только в случае, если отложенное решение будет успешно выполнено.
     * @example
     * В следующем примере показано, как отменить завершение редактирования при выполнении определенного условия.
-    * WML:
-    * <pre>
-    *    <Controls.editableArea:View on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
+    * 
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
     * </pre>
-    * JS:
-    * <pre>
-    *    define('ModuleName', ['Controls/Constants'], function(constants) {
-    *       ...
-    *       beforeEndEditHandler: function(e, record, commit) {
-    *          //Let's say that we want to allow saving only if the field "text" is not empty (in this example the exact same effect can be achieved through validation mechanism, but sometimes condition is more complicated).
-    *          if (commit && record.get("text").length === 0) {
-    *             return constants.editing.CANCEL;
-    *          }
-    *       }
-    *    });
-    * </pre>
-    * The following example shows how to handle the event asynchronously.
-    * WML:
-    * <pre>
-    *    <Controls.editableArea:View on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
-    * </pre>
-    * JS:
-    * <pre>
+    * 
+    * <pre class="brush: js">
+    * // JavaScript
+    * define('ModuleName', ['Controls/Constants'], function(constants) {
+    *    ...
     *    beforeEndEditHandler: function(e, record, commit) {
-    *       if (commit) {
-    *          return this._source.update(record);
+    *       //Let's say that we want to allow saving only if the field "text" is not empty (in this example the exact same effect can be achieved through validation mechanism, but sometimes condition is more complicated).
+    *       if (commit && record.get("text").length === 0) {
+    *          return constants.editing.CANCEL;
     *       }
     *    }
+    * });
     * </pre>
     * @see beforeBeginEdit
     * @see afterEndEdit
@@ -195,21 +186,23 @@ define('Controls/interface/IEditableArea', [
     * @param {Types/entity:Record} editObject Редактируемая запись.
     * @example
     * В следующем примере показано, как скрыть и показать изображение в зависимости от состояния редактирования.
-    * WML:
-    * <pre>
-    *    <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
-    *    <ws:if data="{{_imgVisible}}">
-    *       <img src="/media/examples/frog.png" alt="Frog"/>
-    *    </ws:if>
+    * 
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View on:beforeBeginEdit="beforeBeginEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
+    * <ws:if data="{{_imgVisible}}">
+    *    <img src="/media/examples/frog.png" alt="Frog"/>
+    * </ws:if>
     * </pre>
-    * JS:
-    * <pre>
-    *    beforeBeginEditHandler: function(e, record) {
-    *       this._imgVisible = false;
-    *    },
-    *    afterEndEditHandler: function(e, record) {
-    *       this._imgVisible = true;
-    *    }
+    * 
+    * <pre class="brush: js">
+    * // JavaScript
+    * beforeBeginEditHandler: function(e, record) {
+    *    this._imgVisible = false;
+    * },
+    * afterEndEditHandler: function(e, record) {
+    *    this._imgVisible = true;
+    * }
     * </pre>
     * @see beforeBeginEdit
     * @see beforeEndEdit
@@ -248,8 +241,11 @@ define('Controls/interface/IEditableArea', [
     * @cfg {Boolean} Определяет, должны ли отображаться кнопки 'Сохранить' и 'Отмена'. 
     * @default false
     * @example
-    * <pre>
-    *    <Controls.editableArea:View toolbarVisibility="{{true}}" editObject="{{_editObject}}" />
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View
+    *     toolbarVisibility="{{true}}"
+    *     editObject="{{_editObject}}" />
     * </pre>
     */
 
@@ -263,18 +259,25 @@ define('Controls/interface/IEditableArea', [
     * </pre>
     */
 
+    /**
+     * @typedef {String} Style
+     * @variant withBackground Во время редактирования будет показан фон.
+     * @variant withoutBackground Во время редактирования фон не будет показан.
+     */
+
    /**
     * @name Controls/interface/IEditableArea#style
-    * @cfg {String} Стиль отображения контрола.
+    * @cfg {Style} Стиль отображения контрола.
     * @default withoutBackground
-    * @variant withBackground Во время редактирования будет показан фон.
-    * @variant withoutBackground Во время редактирования фон не будет показан.
     * @remark
     * Также, вы можете задать свой собственный стиль, передав строку.
     * Затем будет установлен класс 'controls-EditableArea_isEditing_style_<your_class>' на контейнере EditableArea и вы сможете использовать его для написания собственного CSS.
     * @example
-    * <pre>
-    *    <Controls.editableArea:View style="withBackground" editObject="{{_editObject}}" />
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View
+    *     style="withBackground"
+    *     editObject="{{_editObject}}" />
     * </pre>
     */
 
@@ -296,8 +299,9 @@ define('Controls/interface/IEditableArea', [
     * @name Controls/interface/IEditableArea#editObject
     * @cfg {Types/entity:Record} Запись с исходными данными.
     * @example
-    * <pre>
-    *    <Controls.editableArea:View editObject="{{_editObject}}" />
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View editObject="{{_editObject}}" />
     * </pre>
     * @see editObjectChanged
     */
@@ -320,8 +324,11 @@ define('Controls/interface/IEditableArea', [
     * Используйте эту опцию, если необходимо начать редактирование немедленно, не дожидаясь полного построения контрола.
     * Например, если вы хотите открыть модальное окно и что-то изменить в нем, опция позволит вам избежать моргания.
     * @example
-    * <pre>
-    *    <Controls.editableArea:View editWhenFirstRendered="{{true}}" editObject="{{_editObject}}" />
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View
+    *     editWhenFirstRendered="{{true}}"
+    *     editObject="{{_editObject}}" />
     * </pre>
     */
 
@@ -345,30 +352,35 @@ define('Controls/interface/IEditableArea', [
     * Если по какой-то причине это не подходит, то вы можете использовать свой собственный шаблон.
     * @example
     * Использование {@link Controls/editableArea:Base}:
-    * <pre>
-    *     <Controls.editableArea:View editObject="{{_editObject}}">
-    *        <Controls.editableArea:Base bind:value="content.editObject.text">
-    *           <ws:editorTemplate>
-    *              <Controls.input:Text />
-    *           </ws:editorTemplate>
-    *        </Controls.editableArea:Base>
-    *     </Controls.editableArea:View>
+    * 
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View editObject="{{_editObject}}">
+    *     <Controls.editableArea:Base bind:value="content.editObject.text">
+    *         <ws:editorTemplate>
+    *             <Controls.input:Text />
+    *         </ws:editorTemplate>
+    *     </Controls.editableArea:Base>
+    * </Controls.editableArea:View>
     * </pre>
+    * 
     * Использование собственного шаблона:
-    * <pre>
-    *    <ws:template name="editingTemplate">
-    *       <div class="myEditingTemplate">
-    *          <ws:if data="{{isEditing}}">
+    * 
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <ws:template name="editingTemplate">
+    *     <div class="myEditingTemplate">
+    *         <ws:if data="{{isEditing}}">
     *             <Controls.input:Text value="{{editObject.text}}" />
-    *          </ws:if>
-    *          <ws:else>
+    *         </ws:if>
+    *         <ws:else>
     *             <span>{{editObject.text}}</span>
-    *          </ws:else>
-    *       </div>
-    *    </ws:template>
-    *    <Controls.editableArea:View editObject="{{_editObject}}">
-    *       <ws:partial template="editingTemplate" scope="{{content}}" />
-    *    </Controls.editableArea:View>
+    *         </ws:else>
+    *     </div>
+    * </ws:template>
+    * <Controls.editableArea:View editObject="{{_editObject}}">
+    *     <ws:partial template="editingTemplate" scope="{{content}}" />
+    * </Controls.editableArea:View>
     * </pre>
     * @see Controls/editableArea:Base
     */
@@ -413,15 +425,18 @@ define('Controls/interface/IEditableArea', [
     * @function Controls/interface/IEditableArea#beginEdit
     * @example
     * В следующем примере создается EditableArea и показано, как начать редактирование.
-    * WML:
-    * <pre>
-    *    <Controls.editableArea:View name="editableArea" editObject="{{_editObject}}" />
+    * 
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View
+    *     name="editableArea"
+    *     editObject="{{_editObject}}" />
     * </pre>
-    * JS:
-    * <pre>
-    *    foo: function() {
-    *       this._children.editableArea.beginEdit();
-    *    }
+    * 
+    * <pre class="brush: js">
+    * foo: function() {
+    *    this._children.editableArea.beginEdit();
+    * }
     * </pre>
     * @see commitEdit
     * @see cancelEdit
@@ -451,15 +466,19 @@ define('Controls/interface/IEditableArea', [
     * @function Controls/interface/IEditableArea#cancelEdit
     * @example
     * В следующем примере создается EditableArea и показано, как завершить редактирование и отменить изменения.
-    * WML:
-    * <pre>
-    *    <Controls.editableArea:View name="editableArea" editObject="{{_editObject}}" />
+    * 
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View
+    *     name="editableArea"
+    *     editObject="{{_editObject}}" />
     * </pre>
-    * JS:
-    * <pre>
-    *    foo: function() {
-    *       this._children.editableArea.cancelEdit();
-    *    }
+    * 
+    * <pre class="brush: js">
+    * // JavaScript
+    * foo: function() {
+    *    this._children.editableArea.cancelEdit();
+    * }
     * </pre>
     * @see beginEdit
     * @see commitEdit
@@ -489,15 +508,19 @@ define('Controls/interface/IEditableArea', [
     * @function Controls/interface/IEditableArea#commitEdit
     * @example
     * В следующем примере создается EditableArea и показано, как завершить редактирование и сохранить изменения.
-    * WML:
-    * <pre>
-    *    <Controls.editableArea:View name="editableArea" editObject="{{_editObject}}" />
+    * 
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.editableArea:View
+    *     name="editableArea"
+    *     editObject="{{_editObject}}" />
     * </pre>
-    * JS:
-    * <pre>
-    *    foo: function() {
-    *       this._children.editableArea.commitEdit();
-    *    }
+    *
+    * <pre class="brush: js">
+    * // JavaScript
+    * foo: function() {
+    *    this._children.editableArea.commitEdit();
+    * }
     * </pre>
     * @see beginEdit
     * @see cancelEdit
