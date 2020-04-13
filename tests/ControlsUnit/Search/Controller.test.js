@@ -97,13 +97,6 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(value, 'test');
          assert.isTrue(wasSearch);
 
-         // does not notify 'dataError' when dataLoadErrback returns false
-         searchController._errbackResult = false;
-         searchMod.Controller._private.startSearch(searchController, 'test').then(() => {
-            searchController._notify.reset();
-            assert.isFalse(searchController._notify.called);
-         });
-
          searchController._isSearchControllerLoading = function() {
             return true;
          }
@@ -738,6 +731,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          searchController._itemOpenHandler(null);
          assert.isFalse(searchAborted);
          assert.equal(searchController._root, null);
+
+         searchController._root = 'test';
+         searchController._itemOpenHandler('dataRoot', {}, 'dataRoot');
+         assert.isFalse(searchAborted);
+         assert.equal(searchController._root, 'dataRoot');
 
          searchController._itemOpenHandler('test');
          assert.isTrue(searchAborted);

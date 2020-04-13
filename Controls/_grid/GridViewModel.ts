@@ -401,10 +401,14 @@ var
                 return {};
             }
             self.resetCachedItemData();
+
+            const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
+            const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
+
             return prepareLadder({
                 ladderProperties: self._options.ladderProperties,
                 startIndex: self.getStartIndex(),
-                stopIndex: self.getStopIndex(),
+                stopIndex: hasVirtualScroll ? self.getStopIndex() : displayStopIndex,
                 display: self.getDisplay(),
                 columns: self._options.columns,
                 stickyColumn: self._options.stickyColumn
@@ -424,7 +428,7 @@ var
          * @param options
          */
         getStylePrefix(options: {theme: string, style?: string, backgroundStyle?: string}): string {
-            return options.style || options.backgroundStyle || 'default';
+            return options.backgroundStyle || options.style || 'default';
         },
 
         /**
@@ -731,12 +735,13 @@ var
             const cell = this._headerRows[rowIndex][columnIndex];
             const theme = this._options.theme;
             const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
-            let
-                cellClasses = 'controls-Grid__header-cell controls-Grid__header-cell' + `_theme-${theme}` + (this._isMultiHeader ? ' controls-Grid__multi-header-cell_min-height' : ' controls-Grid__header-cell_min-height') + `_theme-${theme}`,
-                headerColumn = {
-                    column: cell,
-                    index: columnIndex
-                };
+            const headerColumn = {
+                column: cell,
+                index: columnIndex
+            };
+            let cellClasses = `controls-Grid__header-cell controls-Grid__header-cell_theme-${theme}` +
+                ` controls-Grid__${this._isMultiHeader ? 'multi-' : ''}header-cell_min-height_theme-${theme}` +
+                _private.getBackgroundStyle(this._options, true);
 
             if (this.isStickyHeader()) {
                headerColumn.zIndex = _private.getHeaderZIndex({
@@ -761,7 +766,6 @@ var
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
                 }, this._options.theme);
-                cellClasses += _private.getBackgroundStyle(this._options, true);
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
@@ -1311,6 +1315,7 @@ var
             }
 
                 current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
+                current.rowSeparatorSize = this._options.rowSeparatorSize;
 
             current.itemActionsDrawPosition =
                 this._options.columnScroll ? 'after' : 'before';
@@ -1374,6 +1379,10 @@ var
                         tableCellStyles: ''
                     };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme);
+                currentColumn.getColspanedPaddingClassList = () => {
+                    currentColumn.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${self._options.theme}`;
+                    return currentColumn.classList.padding;
+                };
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
                 if (self._isSupportLadder(self._options.ladderProperties)) {
@@ -1470,6 +1479,10 @@ var
 
         appendItems: function(items) {
             this._model.appendItems(items);
+        },
+
+        acceptChanges(): void {
+            this._model.acceptChanges();
         },
 
         prependItems: function(items) {

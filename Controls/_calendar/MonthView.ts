@@ -12,7 +12,7 @@ import captionTemplate = require("wml!Controls/_calendar/MonthView/captionTempla
 
 import IMonth from './interfaces/IMonth';
 
-import 'css!theme?Controls/calendar'
+import {Logger} from 'UI/Utils';
 
 var _private = {
    _updateView: function(self, options) {
@@ -68,14 +68,12 @@ var MonthView = BaseControl.extend({
    _themeCssClass: '',
 
    _beforeMount: function(options) {
-
-      // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
-      if (options.theme === 'accordion') {
-         this._themeCssClass = 'controls-MonthView__accordionTheme';
-      }
-
       _private._updateView(this, options);
       this._monthViewModel = options.monthViewModel ? new options.monthViewModel(options) : new MonthViewModel(options);
+
+      if (!options.newMode) {
+         Logger.warn('MonthView: Используется устаревшая верстка, используйте newMode=true для перехода на новую');
+      }
    },
 
    _beforeUpdate: function(newOptions) {
@@ -127,5 +125,7 @@ MonthView.getDefaultOptions = function() {
 MonthView.getOptionTypes = function() {
    return IMonth.getOptionTypes();
 };
+
+MonthView._theme = ['Controls/calendar'];
 
 export default MonthView;

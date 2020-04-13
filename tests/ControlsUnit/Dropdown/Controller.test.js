@@ -677,7 +677,10 @@ define(
 
          it ('_open menuPopupOptions', () => {
             let expectedMenuOptions = {
-               fittingMode: 'fixed',
+               fittingMode: {
+                  vertical: 'adaptive',
+                  horizontal: 'overflow'
+               },
                direction: 'top',
                target: 'testTarget'
             };
@@ -689,7 +692,7 @@ define(
                hasMoreData: () => {}
             };
             const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
-            assert.equal(resultPopupConfig.fittingMode, expectedMenuOptions.fittingMode);
+            assert.deepEqual(resultPopupConfig.fittingMode, expectedMenuOptions.fittingMode);
             assert.equal(resultPopupConfig.direction, expectedMenuOptions.direction);
             assert.equal(resultPopupConfig.target, expectedMenuOptions.target);
          });
@@ -745,6 +748,7 @@ define(
                   }]
                });
             dropdownController._items = curItems;
+            dropdownController._source = config.source;
             let newItems = [ {
                id: '9',
                title: 'Запись 9'
@@ -816,6 +820,7 @@ define(
                      }]
                });
             dropdownController._items = curItems;
+            dropdownController._source = config.source;
             let newItems = [
                { id: '11', title: 'Запись 11' },
                { id: '9', title: 'Запись 9' },
@@ -998,9 +1003,10 @@ define(
                title: 'Запись 3'
             }
             ];
-
+            dropdownController._source = config.source;
             dropdown._Controller._private.onSelectorResult(dropdownController, selectedItems);
             assert.deepEqual(newItems, dropdownController._items.getRawData());
+            assert.isOk(dropdownController._menuSource);
          });
 
          it('_private::getSourceController', function() {

@@ -6,12 +6,8 @@
 
 .controls-ColumnsView_column {
    height: 100%;
-   max-width: @item_max-width_columns;
-}
-
-.controls-ColumnsView__itemsContainer {
-   margin: 0 @item_offset-horizontal_columns / 2;
-   column-gap: @item_offset-horizontal_columns;
+   padding: 0 @item_offset-horizontal_columns;
+   box-sizing: border-box;
 }
 
 .controls-ColumnsView__itemV {
@@ -53,8 +49,4 @@
    box-sizing: border-box;
    border: 1px solid @item_marked_border-color_columns;
    pointer-events: none;
-}
-
-.ws-is-hover .controls-BaseControl_showActions {
-
 }

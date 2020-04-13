@@ -32,6 +32,7 @@ var
 
         afterBeginEdit: function (self, options, isAdd) {
             self._editingItem = options.item.clone();
+            self._editingItem.acceptChanges();
             self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
             self._notify('afterBeginEdit', [self._editingItem, isAdd]);
             return options;
@@ -104,18 +105,26 @@ var
             }
         },
 
-        afterEndEdit: function (self, commit) {
-            self._notify('afterEndEdit', [self._isAdd ? self._editingItem : self._originalItem, self._isAdd]);
+        afterEndEdit: function(self, commit) {
+            const afterEndEditArgs = [self._isAdd ? self._editingItem : self._originalItem, self._isAdd];
 
             // При редактировании по месту маркер появляется только если в списке больше одной записи.
             // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
             if (self._isAdd && commit && self._options.listModel.getCount() > 1) {
                 self._options.listModel.setMarkedKey(self._editingItem.getId());
             }
+            self._options.listModel.acceptChanges();
             _private.resetVariables(self);
             if (!self._destroyed) {
                 self._setEditingItemData(null, self._options.listModel, self._options);
             }
+
+            // Нотифицировать о событии "После завершения редактирования" нужно после очистки editingItemData,
+            // т.к. все остальные контролы проверяют наличие запущенного редактирования именно по ней.
+            // Нотификация до очистки приводит к проблемам. Например, в обработчике события afterEndEdit ожидается,
+            // что завершено редактирование и можно позвать перезагрузку списка для обновления результатов каждой строки.
+            // Однако сам список считает что редактирование еще активно и падает при перезагрузке.
+            self._notify('afterEndEdit', afterEndEditArgs);
         },
 
         createModel: function (self, options) {
@@ -294,7 +303,7 @@ var
             } else if (_private.hasParentInItems(editingItem, listModel)) {
                 parentId = editingItem.get(listModel._options.parentProperty);
                 parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
-                index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listModel.getChildren(parentId).length) + 1;
+                index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listModel.getDisplayChildrenCount(parentId)) + 1;
             } else if (listModel._options.groupingKeyCallback || groupProperty) {
                 const groupId = groupProperty ? editingItem.get(groupProperty) : listModel._options.groupingKeyCallback(editingItem);
                 const isAddInTop = self._options.editingConfig && self._options.editingConfig.addPosition === 'top';
@@ -417,6 +426,13 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             displayLib = require('Controls/display');
         }
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
+    },
+
+    _afterMount(): void {
+        // Пендинг регистрируется через событие, которые нельзя генерировать до полного построения контрола.
+        if (this._editingItem) {
+            _private.registerPending(this);
+        }
     },
 
     beginEdit(options): Promise<{ cancelled: true } | { item: entity.Record } | void> {

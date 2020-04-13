@@ -4,6 +4,7 @@
                     itemData="{{itemData}}"
                     itemActionsTemplate="{{itemActionsTemplate}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
+                    attr:class="js-controls-ColumnScroll__notDraggable"
                     highlightOnHover="{{highlightOnHover}}"/>
     </ws:if>
     <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
@@ -11,7 +12,7 @@
                     itemActionsClass="{{itemActionsClass}}"
                     itemData="{{itemData}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                    attr:class="controls-Grid__itemAction"
+                    attr:class="controls-Grid__itemAction js-controls-ColumnScroll__notDraggable"
                     highlightOnHover="{{highlightOnHover}}"/>
     </ws:else>
 </ws:template>
@@ -24,7 +25,7 @@
     </ws:if>
     <ws:else>
         <ws:if data="{{colspan}}">
-            <div class="controls-Grid__row-cell_colspaned {{ currentColumn.classList.padding.getAll() }}">
+            <div class="controls-Grid__row-cell_colspaned {{ currentColumn.getColspanedPaddingClassList().getAll() }}">
                 <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
             </div>
         </ws:if>

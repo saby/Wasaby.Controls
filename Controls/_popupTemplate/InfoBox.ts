@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/InfoBox/InfoBox');
 import {IStickyPopupPosition, TVertical, THorizontal} from './Sticky/StickyController';
+import {ValidationStatus, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
 
 /**
  * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
@@ -9,18 +10,16 @@ import {IStickyPopupPosition, TVertical, THorizontal} from './Sticky/StickyContr
  * @control
  * @public
  * @author Красильников А.С.
+ * @mixes Controls/_interface/IValidationStatus
  */
 
 type TArrowPosition = 'start' | 'end' | 'center';
-type TStyle = 'default' | 'danger' | 'secondary' | 'warning' | 'success' | 'info' | 'primary' | 'unaccented';
-type TStyleType = 'marker' | 'outline';
+type TStyle = 'danger' | 'secondary' | 'warning' | 'success' | 'info' | 'primary' | 'unaccented' | ValidationStatus;
 
-export interface IInfoboxTemplateOptions extends IControlOptions {
+export interface IInfoboxTemplateOptions extends IControlOptions, IValidationStatusOptions {
     stickyPosition?: IStickyPopupPosition;
     template?: TemplateFunction;
     templateOptions?: object;
-    styleType: TStyleType;
-    //TODO: https://online.sbis.ru/opendoc.html?guid=04f68286-535f-4002-9e11-5b6343016edd
     style: TStyle;
     floatCloseButton?: boolean;
     closeButtonVisibility: boolean;
@@ -30,12 +29,15 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     protected _template: TemplateFunction = template;
     protected _arrowSide: THorizontal | TVertical;
     protected _arrowPosition: TArrowPosition;
+    protected _borderStyle: TStyle;
     protected _beforeMount(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
+        this._borderStyle = this._setBorderStyle(newOptions.style, newOptions.validationStatus);
     }
 
     protected _beforeUpdate(newOptions: IInfoboxTemplateOptions): void {
         this._setPositionSide(newOptions.stickyPosition);
+        this._borderStyle = this._setBorderStyle(newOptions.style, newOptions.validationStatus);
     }
     _setPositionSide(stickyPosition: IStickyPopupPosition): void {
         if (stickyPosition.direction.horizontal === 'left' && stickyPosition.targetPoint.horizontal === 'left') {
@@ -63,6 +65,14 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
         return 'center';
     }
 
+    private _setBorderStyle(style: TStyle, validationStatus: ValidationStatus): TStyle {
+        if (validationStatus !== 'valid') {
+            return validationStatus;
+        } else {
+            return style;
+        }
+    }
+
     protected _close(): void {
         this._notify('close', [], { bubbling: true });
     }
@@ -70,8 +80,8 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     static getDefaultOptions(): IInfoboxTemplateOptions {
         return {
             closeButtonVisibility: true,
-            styleType: 'marker',
-            style: 'default'
+            validationStatus: 'valid',
+            style: 'secondary'
         };
     }
 

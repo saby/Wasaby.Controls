@@ -34,6 +34,14 @@
 @border-style_focus_inputText:                                              solid;
 @invalid_border-style_inputText:                                            solid;
 
+@border-radius_xs_inputText:                                                0;
+@border-radius_s_inputText:                                                 0;
+@border-radius_m_inputText:                                                 0;
+@border-radius_l_inputText:                                                 0;
+@border-radius_xl_inputText:                                                0;
+@border-radius_2xl_inputText:                                               0;
+@border-radius_default_inputText:                                           0;
+
 @border-color_inputText:                                                    #EAEAEA #EAEAEA #CCCCCC #EAEAEA;
 @border-color_hover_inputText:                                              #EAEAEA #EAEAEA #AAB0C1 #EAEAEA;
 @border-color_focus_inputText:                                              #EAEAEA #EAEAEA #AAB0C1 #EAEAEA;
@@ -57,7 +65,7 @@
 
 // Отступы
 
-@padding-horizontal_inputText:                                              4px;
+@padding-horizontal_inputText:                                              @offset_2xs;
 
 
 
@@ -65,7 +73,7 @@
 //
 // Отступы
 
-@padding-vertical_inputArea:                                                2px;
+@padding-vertical_inputArea:                                                @offset_3xs;
 
 // Высоты строк
 
@@ -87,7 +95,7 @@
 
 @trigger-color_inputPassword:                                               @unaccented_icon-color;
 @trigger_icon-size_inputPassword:                                           @icon-size_m;
-@trigger-offset_inputPassword:                                              4px;
+@trigger-offset_inputPassword:                                              @offset_2xs;
 
 
 
@@ -95,7 +103,7 @@
 //
 // Иконка "календарь"
 
-@trigger-offset_inputDate:                                                  8px;
+@trigger-offset_inputDate:                                                  @offset_s;
 @trigger_icon-size_inputDate:                                               @icon-size_s;
 @trigger_icon-color_inputDate:                                              @secondary_icon-color;
 @trigger_hover_icon-color_inputDate:                                        @secondary_hover_icon-color;
@@ -105,7 +113,7 @@
 //
 // Размеры и отступы
 @inline_height_default_label:                                               @inline_height_m;
-@offset-horizontal_label:                                                   8px;
+@offset-horizontal_label:                                                   @offset_s;
 @font-size_default_label:                                                   @font-size_m;
 
 // Цвета

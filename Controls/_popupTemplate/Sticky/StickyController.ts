@@ -109,6 +109,15 @@ const _private = {
         cfg.popupOptions.className = (cfg.popupOptions.className || '') + ' ' + _private.getOrientationClasses(popupCfg);
     },
 
+    updateSizes(positionCfg, popupOptions) {
+        const properties = ['width', 'maxWidth', 'minWidth', 'height', 'maxHeight', 'minHeight'];
+        properties.forEach((prop) => {
+            if (popupOptions[prop]) {
+                positionCfg.config[prop] = popupOptions[prop];
+            }
+        });
+    },
+
     getOrientationClasses(cfg) {
         let className = 'controls-Popup-corner-vertical-' + cfg.targetPoint.vertical;
         className += ' controls-Popup-corner-horizontal-' + cfg.targetPoint.horizontal;
@@ -150,6 +159,9 @@ const _private = {
 
     getWindowWidth() {
         return window && window.innerWidth;
+    },
+    getWindowHeight() {
+        return window && window.innerHeight;
     },
     setStickyContent(item) {
         item.popupOptions.content = StickyContent;
@@ -234,6 +246,11 @@ class StickyController extends BaseController {
         item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
         if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
+
+            //If popupOptions has new sizes, calculate position using them.
+            //Else calculate position using current container sizes.
+            _private.updateSizes(item.positionConfig, item.popupOptions);
+
             item.position = StickyStrategy.getPosition(item.positionConfig, this._getTargetCoords(item, item.positionConfig.sizes));
 
             // In landscape orientation, the height of the screen is low when the keyboard is opened.
@@ -303,6 +320,9 @@ class StickyController extends BaseController {
             top: -10000,
             left: -10000,
             maxWidth: item.popupOptions.maxWidth || _private.getWindowWidth(),
+            maxHeight: item.popupOptions.maxHeight || _private.getWindowHeight(),
+            width: item.popupOptions.width,
+            height: item.popupOptions.height,
 
             // Error on ios when position: absolute container is created outside the screen and stretches the page
             // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing

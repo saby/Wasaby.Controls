@@ -19,9 +19,6 @@ import getOptions from 'Controls/Utils/datePopupUtils';
     * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
     * @mixes Controls/_interface/IOpenPopup
-    *
-    * @css @spacing_DatePicker-between-input-button Расстояние между полем ввода и кнопкой календаря.
-    *
     * @control
     * @public
     * @demo Controls-demo/Input/Date/PickerPG
@@ -40,9 +37,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
     * @mixes Controls/interface/IInputTag
     * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
-    *
-    * @css @spacing_DatePicker-between-input-button Spacing between input field and button.
-    *
+    * @mixes Controls/_input/interface/IValueValidators
     * @control
     * @public
     * @demo Controls-demo/Input/Date/PickerPG
@@ -74,7 +69,8 @@ import getOptions from 'Controls/Utils/datePopupUtils';
                selectionType: 'single',
                headerType: 'input',
                closeButtonEnabled: true,
-               range: this._options.range
+               range: this._options.range,
+               startValueValidators: this._options.valueValidators
             }
          };
          this._children.opener.open(cfg);
@@ -99,7 +95,10 @@ import getOptions from 'Controls/Utils/datePopupUtils';
    });
 
    Component.getDefaultOptions = function() {
-      return IDateTimeMask.getDefaultOptions();
+      return {
+          ...IDateTimeMask.getDefaultOptions(),
+          valueValidators: []
+      };
    };
 
    Component.getOptionTypes = function() {

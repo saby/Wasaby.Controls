@@ -109,6 +109,9 @@ define(
             beforeEach(function() {
                menuControl = getMenu();
                menuControl._listModel = getListModel();
+               menuControl._context = {
+                  isTouch: { isTouch: false }
+               };
 
                menuControl._notify = (e, data) => {
                   if (e === 'selectedKeysChanged') {
@@ -177,6 +180,70 @@ define(
                emptyMenuControl._itemClick('itemClick', item, {});
                assert.equal(selectedKeys[0], 1);
             });
+
+            describe('check touch devices', function() {
+               beforeEach(() => {
+                  menuControl._context.isTouch.isTouch = true;
+                  selectedItem = null;
+               });
+
+               it('submenu is not open, item is list', function() {
+                  sinon.stub(menuControl, 'handleCurrentItem');
+                  menuControl._itemClick('itemClick', item, {});
+                  assert.equal(selectedItem.getKey(), 1);
+               });
+
+               it('submenu is not open, item is node', function() {
+                  sinon.stub(menuControl, 'handleCurrentItem');
+                  item.set('node', true);
+                  menuControl._options.nodeProperty = 'node';
+                  menuControl._itemClick('itemClick', item, {});
+                  sinon.assert.calledOnce(menuControl.handleCurrentItem);
+                  assert.isNull(selectedItem);
+                  sinon.restore();
+               });
+
+               it('submenu is open', function() {
+                  menuControl._subDropdownItem = menuControl._listModel.at(1);
+                  menuControl._itemClick('itemClick', menuControl._listModel.at(1).getContents(), {});
+                  assert.equal(selectedItem.getKey(), 1);
+               });
+            });
+         });
+
+         describe('_itemMouseEnter', function() {
+            let menuControl, handleStub;
+            let sandbox = sinon.createSandbox();
+
+            beforeEach(() => {
+               menuControl = getMenu();
+               menuControl._context = {
+                  isTouch: { isTouch: false }
+               };
+               handleStub = sandbox.stub(menuControl, 'handleCurrentItem');
+            });
+
+            it('on groupItem', function() {
+               menuControl._itemMouseEnter('mouseenter', new display.GroupItem());
+               assert.isTrue(handleStub.notCalled);
+            });
+
+            it('on collectionItem', function() {
+               menuControl._itemMouseEnter('mouseenter', new display.CollectionItem({
+                  contents: new entity.Model()
+               }), {});
+               assert.isTrue(handleStub.calledOnce);
+            });
+
+            it('on touch devices', function() {
+               menuControl._context.isTouch.isTouch = true;
+               menuControl._itemMouseEnter('mouseenter', new display.CollectionItem({
+                  contents: new entity.Model()
+               }), {});
+               assert.isTrue(handleStub.notCalled);
+            });
+
+            sinon.restore();
          });
 
          it('getTemplateOptions', function() {
@@ -229,11 +296,27 @@ define(
          it('_footerMouseEnter', function() {
             let isClosed = false;
             let menuControl = getMenu();
+            let event = {
+               nativeEvent: {}
+            };
+
             menuControl._children = {
                Sticky: { close: () => { isClosed = true; } }
             };
-            menuControl._footerMouseEnter();
+            menuControl.isMouseInOpenedItemArea = function() {
+               return false;
+            };
+            menuControl.setSubMenuPosition = function() {};
+            menuControl._subDropdownItem = true;
+            menuControl._footerMouseEnter(event);
             assert.isTrue(isClosed);
+
+            menuControl.isMouseInOpenedItemArea = function() {
+               return true;
+            };
+            isClosed = false;
+            menuControl._footerMouseEnter(event);
+            assert.isFalse(isClosed);
          });
 
          it('getSelectedItemsByKeys', function() {

@@ -94,6 +94,21 @@
 
 
 
+// Линейка стандартных отступов
+// Примечание: на эти переменные лучше делать ссылки из других переменных, а не ссылаться из стилей
+
+@offset_3xs:                        2px;
+@offset_2xs:                        4px;
+@offset_xs:                         6px;
+@offset_s:                          8px;
+@offset_m:                          12px;
+@offset_l:                          16px;
+@offset_2xl:                        20px;
+@offset_3xl:                        24px;
+
+
+
+
 // Толщина обводки контролов.
 
 @border-thickness:                  1px;
@@ -103,11 +118,11 @@
 //
 // отступ от контрола до обводки валидации сверху и снизу
 
-@invalid_padding-vertical:          2px;
+@invalid_padding-vertical:          @offset_3xs;
 
 // отступ от контрола до обводки валидации справа и слева
 
-@invalid_padding-horizontal:        4px;
+@invalid_padding-horizontal:        @offset_2xs;
 
 
 
@@ -123,7 +138,14 @@
 
 //Размер тэга.
 //Примечание: тэг - это цветной индикатор, использующийся для информации о состоянии поля.
-@tag-size:                                                                  8px;
+@tag-size:                          8px;
+
+
+
+// Отображение картинок
+
+@border-radius_s_image:             4px;
+@border-radius_m_image:             8px;
 
 @import "aliases/_controls";
 

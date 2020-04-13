@@ -177,7 +177,7 @@
                <ws:partial template="Controls/dropdownPopup:Template" caption="Add" icon=""/>
             </ws:headerTemplate>
             <ws:itemTemplate>
-               <ws:partial template="Controls/history:itemTemplate" iconPadding=""/>
+               <ws:partial template="Controls/dropdown:ItemTemplate" iconPadding=""/>
             </ws:itemTemplate>
          </Controls.dropdown:Button>
       </div>
@@ -192,6 +192,7 @@
                  iconSize="s"
                  source="{{_createMemory(_iconButtonItems)}}"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconButton"
+                 headerTemplate="{{null}}"
                  tooltip="All documents to disk" >
          </Controls.dropdown:Button>
          <Controls.dropdown:Button
@@ -202,6 +203,7 @@
                  icon="icon-Save"
                  source="{{_createMemory(_iconButtonItems)}}"
                  attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconButtonBig"
+                 headerTemplate="{{null}}"
                  tooltip="All documents to disk">
          </Controls.dropdown:Button>
       </div>

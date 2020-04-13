@@ -36,13 +36,13 @@ var
          table: TreeGridViewModel
       },
       _private = {
-         setRoot: function(self, root) {
+         setRoot: function(self, root, dataRoot = null) {
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
-               self._options.itemOpenHandler(root, self._items);
+               self._options.itemOpenHandler(root, self._items, dataRoot);
             }
             self._forceUpdate();
          },
@@ -152,7 +152,9 @@ var
             if (self._isGoingBack) {
                const curRoot = _private.getRoot(self, self._options.root);
                if (self._restoredMarkedKeys[curRoot]) {
-                  self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[curRoot].markedKey);
+                  const { markedKey } = self._restoredMarkedKeys[curRoot];
+                  self._children.treeControl.setMarkedKey(markedKey);
+                  self._markerForRestoredScroll = markedKey;
                }
                self._isGoingBack = false;
             }
@@ -188,7 +190,7 @@ var
             if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
                self._breadCrumbsItems = null;
                if (dataRoot !== currentRoot) {
-                  _private.setRoot(self, dataRoot);
+                  _private.setRoot(self, dataRoot, dataRoot);
                }
             }
 
@@ -387,6 +389,7 @@ var
       _firstLoad: true,
       _itemsPromise: null,
       _itemsResolver: null,
+      _markerForRestoredScroll: null,
 
       _resolveItemsPromise() {
          this._itemsResolver();
@@ -438,6 +441,12 @@ var
 
          if (cfg.virtualScrollConfig !== this._options.virtualScrollConfig) {
             _private.setVirtualScrolling(this, this._viewMode, cfg);
+         }
+      },
+      _beforePaint: function() {
+         if (this._markerForRestoredScroll !== null) {
+            this.scrollToItem(this._markerForRestoredScroll);
+            this._markerForRestoredScroll = null;
          }
       },
       _getRoot: function() {

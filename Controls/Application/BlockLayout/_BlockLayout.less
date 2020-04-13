@@ -1,15 +1,15 @@
 //TODO: https://online.sbis.ru/opendoc.html?guid=99fae5d6-81af-4515-b0a4-c2567901456d
 .controls-BlockLayout {
    overflow: hidden;
-   background-color: @background_BlockLayout_between_blocks;
+   background-color: @separator_color_block;
 
    &_detached {
-      padding-top: @spacing_BlockLayout_between_blocks;
+      padding-top: @separator_thickness_block;
    }
 }
 
 .controls-BlockLayout > .controls-BlockLayout__blockGroup {
-   @margin: -@spacing_BlockLayout_between_blocks / 2;
+   @margin: -@separator_thickness_block / 2;
 
    margin-left: @margin;
    margin-right: @margin;
@@ -25,7 +25,7 @@
    .controls-BlockLayout__block {
       position: relative;
       border-style: solid;
-      border-width: @spacing_BlockLayout_between_blocks / 2 + @border-width_BlockLayout-block;
+      border-width: @separator_thickness_block / 2 + @border-thickness_block;
       .box-sizing();
 
       /**
@@ -38,12 +38,12 @@
 
       .ws-is-mobile-platform & {
          border-color: transparent;
-         outline: @spacing_BlockLayout_between_blocks / 2 + @border-width_BlockLayout-block + 1 solid @background_BlockLayout_between_blocks;
-         outline-offset: -(@spacing_BlockLayout_between_blocks / 2 + @border-width_BlockLayout-block);
+         outline: @separator_thickness_block / 2 + @border-thickness_block + 1 solid @separator_color_block;
+         outline-offset: -(@separator_thickness_block / 2 + @border-thickness_block);
       }
 
       .ws-is-desktop-platform & {
-         border-color: @background_BlockLayout_between_blocks;
+         border-color: @separator_color_block;
       }
    }
 }
@@ -51,7 +51,7 @@
 .controls-BlockLayout__block {
    .for(6, {
       &_style_@{_i} {
-         background-color: ~"@{background_BlockLayout_block_style_@{_i}}";
+         background-color: ~"@{background-color_@{_i}_block}";
       }
    });
 }
@@ -65,13 +65,13 @@ body:not(.ws-is-ie10) .controls-BlockLayout__block:after {
    content: '';
    position: absolute;
    pointer-events: none;
-   top: -@border-width_BlockLayout-block;
-   right: -@border-width_BlockLayout-block;
-   bottom: -@border-width_BlockLayout-block;
-   left: -@border-width_BlockLayout-block;
-   border: @border-width_BlockLayout-block solid @border-color_BlockLayout-block;
-   border-radius: @border-radius_BlockLayout-block;
-   box-shadow: @box-shadow_BlockLayout-block;
+   top: -@border-thickness_block;
+   right: -@border-thickness_block;
+   bottom: -@border-thickness_block;
+   left: -@border-thickness_block;
+   border: @border-thickness_block solid @border-color_block;
+   border-radius: @border-radius_block;
+   box-shadow: @shadow_block;
 
    /**
     * Область между блоками реализуется через border. Тень рисуется поверх каждого блока.
@@ -85,11 +85,11 @@ body:not(.ws-is-ie10) .controls-BlockLayout__block:after {
    @variants: top, right, bottom, left;
    .for(@variants, {
       &@{_item} {
-         border-@{_item}: @spacing_BlockLayout_between_blocks solid @background_BlockLayout_between_blocks;
+         border-@{_item}: @separator_thickness_block solid @separator_color_block;
       }
    });
 }
 
 .controls-BlockLayout_background {
-   background-color: @background_BlockLayout_between_blocks;
+   background-color: @separator_color_block;
 }

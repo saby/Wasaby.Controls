@@ -4,7 +4,6 @@ import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/re
 import cMerge = require('Core/core-merge');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
 import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/popup';
-import * as ThemesController from 'Core/Themes/ThemesControllerNew';
 
 import collection = require('Types/collection');
 
@@ -36,22 +35,13 @@ function getConstants() {
 
 // todo: https://online.sbis.ru/opendoc.html?guid=b385bef8-31dd-4601-9716-f3593dfc9d41
 let constants: IInfoBoxThemeConstants = {};
-
-function initConstants(): Promise<any> {
-    return ThemesController.getInstance().loadCssWithAppTheme('Controls/popupTemplate').then(() => {
-        constants = getConstants();
-    });
-}
-
-if (document) {
-    if (document.body) {
-        initConstants();
-    } else {
-        document.addEventListener('DOMContentLoaded', () => {
-            initConstants();
-        });
-    }
-}
+const constantsInit = new Promise<void>((resolve, reject) => {
+    if (!document) { return resolve(); }
+    import('Controls/_popupTemplate/InfoBox')
+        .then((InfoboxTemplate) => InfoboxTemplate.default.loadCSS())
+        .then(() => { constants = getConstants(); })
+        .then(resolve, reject);
+});
 
 const SIDES: IInfoBoxSide = {
     t: 'top',
@@ -116,7 +106,7 @@ class InfoBoxController extends StickyController.constructor {
         return isActive;
     }
 
-    getDefaultConfig(item: IPopupItem): void {
+    getDefaultConfig(item: IPopupItem): Promise<void> {
         super.getDefaultConfig.apply(this, arguments);
         const defaultPosition: IPopupPosition = {
             left: -10000,
@@ -124,16 +114,18 @@ class InfoBoxController extends StickyController.constructor {
             right: undefined,
             bottom: undefined
         };
-        if (item.popupOptions.target) {
-            // Calculate the width of the infobox before its positioning.
-            // It is impossible to count both the size and the position at the same time, because the position is related to the size.
-            cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
+        return constantsInit.then(() => {
+            if (item.popupOptions.target) {
+                // Calculate the width of the infobox before its positioning.
+                // It is impossible to count both the size and the position at the same time, because the position is related to the size.
+                cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
             const sizes: IPopupSizes = {width: constants.MAX_WIDTH, height: 1, margins: {left: 0, top: 0}};
-            const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), this._getTargetCoords(item));
-            this.prepareConfig(item, sizes);
-            item.position.maxWidth = position.width;
-        }
-        item.position = {...item.position, ...defaultPosition};
+                const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), this._getTargetCoords(item));
+                this.prepareConfig(item, sizes);
+                item.position.maxWidth = position.width;
+            }
+            item.position = {...item.position, ...defaultPosition};
+        });
     }
 
     _getPopupConfig(item: IPopupItem, sizes: IPopupSizes): IPopupItem {

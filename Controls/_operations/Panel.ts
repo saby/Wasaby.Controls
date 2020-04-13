@@ -75,9 +75,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому произвели клик.
  * @param {Object} nativeEvent Объект нативного события браузера
- * @param {Object} selection Объект, который содержит свойства selected и excluded.
- * selected - это массив идентификаторов отмеченных записей.
- * excluded - это массив идентификаторов исключённых записей
+ * @param {Controls/interface:ISelectionObject} selection Объект, который содержит идентификаторы отмеченных и исключённых записей.
  * @example
  * <pre class="brush: html">
  * <!-- WML -->

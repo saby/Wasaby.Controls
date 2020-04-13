@@ -1,11 +1,13 @@
 /// <amd-module name="Controls/dataSource" />
 /**
+ * Библиотека компонентов для упрощения загрузки данных: формирования запросов, обработки ошибок.
  * @library Controls/dataSource
  * @includes parking Controls/_dataSource/parking
  * @includes error Controls/_dataSource/error
  * @includes requestDataUtil Controls/_dataSource/requestDataUtil
+ * @includes SourceCrudInterlayer Controls/dataSource/SourceCrudInterlayer
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  */
 import * as parking from 'Controls/_dataSource/parking';
 import * as error from 'Controls/_dataSource/error';

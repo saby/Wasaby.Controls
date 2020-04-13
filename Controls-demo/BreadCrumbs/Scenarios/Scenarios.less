@@ -1,5 +1,5 @@
 .demo-BreadCrumbs__wrapper {
-   width: 890px;
+   width: 1700px;
 }
 .demo-PersonInfo__name {
    font-weight: bold;
@@ -23,7 +23,7 @@
 }
 
 .demo-Overdue {
-   color: @color_danger;
+   color: @danger_color;
 }
 
 .demo-PersonInfo__head {
@@ -43,8 +43,10 @@
    align-self: center;
    margin-right: 6px;
    border-radius: 6px;
-   width: 40px;
-   height: 40px;
+   max-width: 40px;
+   min-width: 40px;
+   max-height: 40px;
+   min-height: 40px;
 }
 
 .demo-PersonInfo__row {
@@ -56,10 +58,6 @@
    display: flex;
    align-items: baseline;
    width: 100%;
-}
-
-.demo-FourthExample {
-   width: 890px;
 }
 
 .demo-SeventhExample__headerWrapper {
@@ -91,4 +89,8 @@
    width: 250px;
    outline: 1px dotted #000;
    padding: 5px 0;
+}
+
+.controlsDemo-BreadCrumbs__withoutHeaders {
+   width: 800px;
 }

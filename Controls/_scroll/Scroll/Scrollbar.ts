@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {detection} from 'Env/Env';
 import * as ScrollBarTemplate from 'wml!Controls/_scroll/Scroll/Scrollbar/Scrollbar';
 import 'Controls/event';
-import 'css!theme?Controls/scroll';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as newEnv from 'Core/helpers/isNewEnvironment';
 
@@ -130,9 +129,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _getThumbStyle(options: IScrollBarOptions): string {
         if (options.thumbStyle) {
             return options.thumbStyle;
-        }
-        if (options.theme === 'inverted') {
-            return 'inverted';
         }
         return (options.direction === 'vertical' ? 'accented' : 'unaccented');
     }
@@ -442,5 +438,7 @@ Scrollbar.getDefaultOptions = function () {
         direction: 'vertical'
     };
 };
+
+Scrollbar._theme = ['Controls/scroll'];
 
 export default Scrollbar;

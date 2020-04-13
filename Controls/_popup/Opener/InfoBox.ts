@@ -127,9 +127,9 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
                 template: newCfg.template,
                 templateOptions: newCfg.templateOptions, // for user template: newCfg.template
                 message: newCfg.message,
-                styleType: newCfg.styleType || 'marker',
                 style: newCfg.style || 'secondary',
-                floatCloseButton: newCfg.floatCloseButton
+                floatCloseButton: newCfg.floatCloseButton,
+                validationStatus: newCfg.validationStatus
             },
             template: 'Controls/popupTemplate:templateInfoBox',
             showDelay: newCfg.showDelay

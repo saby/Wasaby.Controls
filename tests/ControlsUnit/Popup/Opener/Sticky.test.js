@@ -279,6 +279,25 @@ define(
             assert.equal(Object.keys(position).length, 4);
          });
 
+         it('Sticky default Config', () => {
+            let item = {
+               popupOptions: {
+                  maxWidth: 100,
+                  maxHeight: 110,
+                  width: 50,
+                  height: 60
+               }
+            };
+            StickyController.getDefaultConfig(item);
+            assert.equal(item.position.width, item.popupOptions.width);
+            assert.equal(item.position.height, item.popupOptions.height);
+            assert.equal(item.position.maxWidth, item.popupOptions.maxWidth);
+            assert.equal(item.position.maxHeight, item.popupOptions.maxHeight);
+            assert.equal(item.position.left, -10000);
+            assert.equal(item.position.top, -10000);
+            assert.equal(item.position.position, 'fixed');
+         });
+
 
          it('Sticky with margins', () => {
             StickyStrategy._private.getWindowSizes = () => ({
@@ -770,6 +789,32 @@ define(
             StickyStrategy._private.getMargins = getMargins;
             StickyStrategy._private.getTargetCoords = getTargetCoords;
             StickyStrategy._private.invertPosition = invertPosition;
+         });
+
+         it('update sizes from options', () => {
+            let popupCfg = {
+               config: {
+                  width: 100,
+                  maxWidth: 300,
+                  minWidth: 100
+               }
+            };
+            let popupOptions = {
+               height: 200,
+               minHeight: 200,
+               maxHeight: 500,
+               minWidth: 200
+            };
+            let resultConfig = {
+               height: 200,
+               minHeight: 200,
+               maxHeight: 500,
+               minWidth: 200,
+               width: 100,
+               maxWidth: 300
+            };
+            StickyController._private.updateSizes(popupCfg, popupOptions);
+            assert.deepEqual(popupCfg.config, resultConfig);
          });
       });
    }

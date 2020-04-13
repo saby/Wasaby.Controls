@@ -135,7 +135,7 @@ var _private = {
       return expandedItems;
    },
 
-   itemOpenHandler: function(root:string|number|null, items:object):void {
+   itemOpenHandler: function(root:string|number|null, items:object, dataRoot = null):void {
       if (this._viewMode === 'search' && this._options.searchNavigationMode === 'expand') {
          this._notifiedMarkedKey = root;
          this._notify('expandedItemsChanged', [_private.prepareExpandedItems(this._options.root, root, items, this._options.parentProperty)]);
@@ -145,7 +145,7 @@ var _private = {
       } else {
          this._root = root;
       }
-      if (root !== null) {
+      if (root !== dataRoot) {
          _private.getSearchController(this).abort(true);
          _private.setInputSearchValue(this, '');
       }
@@ -176,7 +176,7 @@ var _private = {
 
    searchErrback: function (self, error: Error):void {
       if (self._options.dataLoadErrback) {
-         self._errbackResult = self._options.dataLoadErrback(error);
+         self._options.dataLoadErrback(error);
       }
       self._loading = false;
    },
@@ -202,11 +202,10 @@ var _private = {
 
          if (shouldSearch) {
             const searchResult = _private.getSearchController(self).search(searchValue, force);
-            self._errbackResult = undefined;
 
             if (searchResult instanceof Promise) {
                searchResult.then((result) => {
-                   if (self._errbackResult !== false && result instanceof Error) {
+                   if (result instanceof Error) {
                       self._notify('dataError', [{
                          error: result,
                          mode: dataSourceError.Mode.include

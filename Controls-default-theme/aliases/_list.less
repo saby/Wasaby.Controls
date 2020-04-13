@@ -5,7 +5,7 @@
 @icon_background-image_listAddButton:                               url('../../Controls-default-theme/img/AddButtonEnable.svg');
 @readonly_icon_background-image_listAddButton:                      url('../../Controls-default-theme/img/AddButtonDisable.svg');
 @icon-size_listAddButton:                                           8px;
-@icon_offset_listAddButton:                                         4px;
+@icon_offset_listAddButton:                                         @offset_2xs;
 
 // Текст
 
@@ -32,7 +32,7 @@
 
 @pagesCounter_text-color_list:                                      @label_text-color;
 @pagesCounter_font-size_list:                                       @font-size_s;
-@pagesSelector_offset-left_list:                                    4px;
+@pagesSelector_offset-left_list:                                    @offset_2xs;
 
 // Кнопка сброса поиска
 
@@ -47,10 +47,10 @@
 @continueSearch_hover_text-color_list:                              @link_hover_text-color;
 @continueSearch_active_text-color_list:                             @continueSearch_hover_text-color_list;
 @continueSearch_font-size_list:                                     @font-size_default;
-@continueSearch_icon-offset_list:                                   8px;
+@continueSearch_icon-offset_list:                                   @offset_s;
 @continueSearch_icon-color_list:                                    @secondary_icon-color;
 @continueSearch_hover_icon-color_list:                              @secondary_hover_icon-color;
-@continueSearch_padding-top_list:                                   8px;
+@continueSearch_padding-top_list:                                   @offset_s;
 
 // Переменные для плоского списка
 //
@@ -71,34 +71,35 @@
 
 @checkbox_offset-top_list:                                          3px;
 @checkbox_offset-left_list:                                         0;
+@checkbox_height_list:                                              @height_checkbox;
 
 // Отступы в элементах списка
 
 @item_padding-top_default_list:                                     @item_padding-top_s_list;
 @item_padding-bottom_default_list:                                  @item_padding-bottom_s_list;
-@item_padding-top_s_list:                                           6px;
-@item_padding-bottom_s_list:                                        6px;
+@item_padding-top_s_list:                                           @offset_xs;
+@item_padding-bottom_s_list:                                        @offset_xs;
 
 @item_padding-left_xs_list:                                         0;
 @item_padding-right_xs_list:                                        0;
-@item_padding-left_s_list:                                          8px;
-@item_padding-right_s_list:                                         8px;
-@item_padding-left_s_old_list:                                      6px;   //TODO REMOVE
-@item_padding-right_s_old_list:                                     6px;   //TODO REMOVE
-@item_padding-left_m_list:                                          12px;
-@item_padding-right_m_list:                                         12px;
-@item_padding-left_m_old_list:                                      8px;   //TODO REMOVE
-@item_padding-right_m_old_list:                                     8px;   //TODO REMOVE
-@item_padding-left_l_list:                                          16px;
-@item_padding-right_l_list:                                         16px;
-@item_padding-left_l_old_list:                                      12px;   //TODO REMOVE
-@item_padding-right_l_old_list:                                     12px;   //TODO REMOVE
-@item_padding-left_xl_list:                                         20px;
-@item_padding-right_xl_list:                                        20px;
-@item_padding-left_xl_old_list:                                     16px;   //TODO REMOVE
-@item_padding-right_xl_old_list:                                    16px;   //TODO REMOVE
-@item_padding-left_2xl_list:                                        24px;
-@item_padding-right_2xl_list:                                       24px;
+@item_padding-left_s_list:                                          @offset_s;
+@item_padding-right_s_list:                                         @offset_s;
+@item_padding-left_s_old_list:                                      @offset_xs;   //TODO REMOVE
+@item_padding-right_s_old_list:                                     @offset_xs;   //TODO REMOVE
+@item_padding-left_m_list:                                          @offset_m;
+@item_padding-right_m_list:                                         @offset_m;
+@item_padding-left_m_old_list:                                      @offset_s;   //TODO REMOVE
+@item_padding-right_m_old_list:                                     @offset_s;   //TODO REMOVE
+@item_padding-left_l_list:                                          @offset_l;
+@item_padding-right_l_list:                                         @offset_l;
+@item_padding-left_l_old_list:                                      @offset_m;   //TODO REMOVE
+@item_padding-right_l_old_list:                                     @offset_m;   //TODO REMOVE
+@item_padding-left_xl_list:                                         @offset_2xl;
+@item_padding-right_xl_list:                                        @offset_2xl;
+@item_padding-left_xl_old_list:                                     @offset_l;   //TODO REMOVE
+@item_padding-right_xl_old_list:                                    @offset_l;   //TODO REMOVE
+@item_padding-left_2xl_list:                                        @offset_3xl;
+@item_padding-right_2xl_list:                                       @offset_3xl;
 @item_padding-left_default_list:                                    @item_padding-left_m_list;
 @item_padding-right_default_list:                                   @item_padding-right_m_list;
 
@@ -108,33 +109,33 @@
 @grouping_separator_thickness_list:                                 1px;
 @grouping_separator_color_list:                                     #EAEAEA;
 
-@grouping_expander_padding-left_list:                               12px;
-@grouping_expander_padding-right_list:                              12px;
+@grouping_expander_padding-left_list:                               @offset_m;
+@grouping_expander_padding-right_list:                              @offset_m;
 @grouping_expander_font-size_list:                                  @font-size_xs;
 @grouping_expander_text-color_list:                                 @unaccented_text-color;
 @grouping_expander_hover_text-color_list:                           @link_hover_text-color;
 @grouping_expander_active_text-color_list:                          @link_hover_text-color;
 @grouping_expander_icon-size_list:                                  @icon-size_s;
-@grouping_expander_icon_offset_list:                                6px;
+@grouping_expander_icon_offset_list:                                @offset_xs;
 
-@grouping_right-template_padding-left_list:                         12px;
-@grouping_right-template_padding-right_list:                        12px;
+@grouping_right-template_padding-left_list:                         @offset_m;
+@grouping_right-template_padding-right_list:                        @offset_m;
 
 // Заглушка "нет данных"
 
 @placeholder_text-color_list:                                       @unaccented_text-color;
 @placeholder_font-size_list:                                        @font-size_l;
 @placeholder_padding-top_xs_list:                                   0;
-@placeholder_padding-top_s_list:                                    6px;
-@placeholder_padding-top_m_list:                                    12px;
-@placeholder_padding-top_l_list:                                    16px;
-@placeholder_padding-top_xl_list:                                   24px;
+@placeholder_padding-top_s_list:                                    @offset_xs;
+@placeholder_padding-top_m_list:                                    @offset_m;
+@placeholder_padding-top_l_list:                                    @offset_l;
+@placeholder_padding-top_xl_list:                                   @offset_3xl;
 @placeholder_padding-top_2xl_list:                                  44px;
 @placeholder_padding-bottom_xs_list:                                0;
-@placeholder_padding-bottom_s_list:                                 6px;
-@placeholder_padding-bottom_m_list:                                 12px;
-@placeholder_padding-bottom_l_list:                                 16px;
-@placeholder_padding-bottom_xl_list:                                24px;
+@placeholder_padding-bottom_s_list:                                 @offset_xs;
+@placeholder_padding-bottom_m_list:                                 @offset_m;
+@placeholder_padding-bottom_l_list:                                 @offset_l;
+@placeholder_padding-bottom_xl_list:                                @offset_3xl;
 @placeholder_padding-bottom_2xl_list:                               44px;
 
 // Список в стиле Мастер - деталь
@@ -150,7 +151,7 @@
 @master_item_selected_box-shadow_list:                              6px 0 6px rgba(0, 0, 0, 0.15);
 
 @detail_background-color_masterDetail:                              transparent;
-@editing-toolbar_offset-left_listEditInPlace:                       6px;
+@editing-toolbar_offset-left_listEditInPlace:                       @offset_xs;
 
 // Разделители между элементами
 
@@ -174,7 +175,7 @@
 
 // Размеры и отступы
 
-@offset-right_itemActions:                                          6px;
+@offset-right_itemActions:                                          @offset_xs;
 @offset-top_itemActions:                                            3px;
 @offset-bottom_itemActions:                                         3px;
 @height_itemActions:                                                @inline_height_m;
@@ -182,15 +183,15 @@
 @height_outside_itemActions:                                        31px;
 @offset-right_outside_itemActions:                                  @offset-right_itemActions;
 @offset-bottom_outside_itemActions:                                 @offset-bottom_itemActions;
-@offset-top_outside_itemActions:                                    4px;
+@offset-top_outside_itemActions:                                    @offset_2xs;
 @corner_width_outside_itemActions:                                  24px;
 
-@item_offset_itemActions:                                           6px;
+@item_offset_itemActions:                                           @offset_xs;
 
 // Иконки
 
 @item_icon-size_itemActions:                                        @icon-size_m;
-@item_icon-offset_itemActions:                                      6px;
+@item_icon-offset_itemActions:                                      @offset_xs;
 @item_icon-size_editing_itemActions:                                @icon-size_s;
 @item_icon_font-family_itemsActions:                                @icon_font-family_m;
 @item_icon_font-family_editing_itemsActions:                        @icon_font-family_s;
@@ -216,12 +217,12 @@
 
 // Иконки
 
-@item_icon_offset-horizontal_swipe:                                 6px;
+@item_icon_offset-horizontal_swipe:                                 @offset_xs;
 @item_s_icon-size_swipe:                                            @icon-size_m;
 @item_l_icon-size_swipe:                                            @icon-size_l;
 @item_s_icon_font-family_swipe:                                     @icon_font-family_m;
 @item_l_icon_font-family_swipe:                                     @icon_font-family_m;
-@secondary_icon-color_swipe:                                        @secondary_color;
+@secondary_icon-color_swipe:                                        @secondary_hover_icon-color;
 
 // Текст
 
@@ -236,14 +237,14 @@
 @separator_color_swipe:                                             #EBF1F6;
 @separator_thickness_swipe:                                         1px;
 @separator_padding-horizontal_swipe:                                3px;
-@separator_edge_padding-horizontal_swipe:                           6px;
+@separator_edge_padding-horizontal_swipe:                           @offset_xs;
 @separator_edge_padding-vertical_swipe:                             3px;
 
 // Отступы в элементах
 
-@item_horizontal_padding-horizontal_swipe:                          6px;
+@item_horizontal_padding-horizontal_swipe:                          @offset_xs;
 @item_horizontal_padding-vertical_swipe:                            3px;
-@item_vertical_padding-horizontal_swipe:                            6px;
-@item_s_vertical_padding-vertical_swipe:                            2px;
-@item_l_vertical_padding-vertical_swipe:                            6px;
-@item_edge_padding-horizontal_swipe:                                12px;
+@item_vertical_padding-horizontal_swipe:                            @offset_xs;
+@item_s_vertical_padding-vertical_swipe:                            @offset_3xs;
+@item_l_vertical_padding-vertical_swipe:                            @offset_xs;
+@item_edge_padding-horizontal_swipe:                                @offset_m;

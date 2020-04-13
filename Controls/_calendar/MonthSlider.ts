@@ -64,10 +64,6 @@ var Component = BaseControl.extend({
     _formatDate: formatDate,
 
     _beforeMount: function (options) {
-        // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
-        if (options.theme === 'accordion') {
-            this._themeCssClass = 'controls-MonthSlider__accordionTheme';
-        }
         this._days = calendarUtils.getWeekdaysCaptions();
         _private._setMonth(this, options.month, true, options.dateConstructor);
     },
@@ -75,6 +71,16 @@ var Component = BaseControl.extend({
     _beforeUpdate: function (options) {
         this._days = calendarUtils.getWeekdaysCaptions();
         _private._setMonth(this, options.month, true, options.dateConstructor);
+    },
+
+    _wheelHandler(event) {
+        event.preventDefault();
+        if (event.nativeEvent.deltaY < 0) {
+            this._slideMonth(null, 1);
+        }
+        else if (event.nativeEvent.deltaY > 0) {
+            this._slideMonth(null, -1);
+        }
     },
 
     _slideMonth: function (event, delta) {

@@ -13,11 +13,15 @@
       <ws:partial template="iconTemplate" iconAlign="left"/>
    </ws:if>
    <div class="controls-Menu__content-wrapper">
-      <ws:partial template="wml!Controls/_menu/Render/searchDecoratorTemplate"
-                  item="{{item}}"
-                  displayProperty="{{displayProperty}}"
-                  searchValue="{{searchValue}}" />
-
+      <ws:if data="{{searchValue}}">
+         <ws:partial template="wml!Controls/_menu/Render/searchDecoratorTemplate"
+                     item="{{item}}"
+                     displayProperty="{{displayProperty}}"
+                     searchValue="{{searchValue}}" />
+      </ws:if>
+      <ws:else>
+         {{item.get(displayProperty || 'title')}}
+      </ws:else>
       <ws:if data="{{iconAlign === 'right'}}">
          <ws:partial template="iconTemplate" iconAlign="right" />
       </ws:if>

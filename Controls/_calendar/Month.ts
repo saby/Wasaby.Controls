@@ -36,6 +36,10 @@ var Component = BaseControl.extend({
     _onRangeChangedHandler: function (event, startValue, endValue) {
         this._notify('startValueChanged', [startValue]);
         this._notify('endValueChanged', [endValue]);
+    },
+
+    _itemClickHandler(event, item) {
+        this._notify('itemClick', [item]);
     }
 
     // _startValueChangedHandler: function(event, value) {

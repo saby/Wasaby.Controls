@@ -371,7 +371,7 @@ var _private = {
             return false;
          }
       }
-      self.historySource.saveHistory(self._history);
+      self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
       return _private.getSourceByMeta(self, meta).update(item, meta);
    },
 

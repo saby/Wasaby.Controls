@@ -60,7 +60,9 @@ define(
                ctrl._getField().selectionStart = 5;
                ctrl._getField().selectionEnd = 5;
                ctrl._mouseDownHandler();
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                ctrl._clickHandler();
 
                setTimeout(function() {
@@ -80,7 +82,9 @@ define(
                ctrl._getField().selectionStart = 5;
                ctrl._getField().selectionEnd = 5;
                ctrl._mouseDownHandler();
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                ctrl._clickHandler();
 
                assert.deepEqual(calls, [{
