@@ -65,45 +65,30 @@
    top: 0;
    .baseline-fix();
    padding-right: 1px;
+   align-items: baseline;
+   display: inline-flex;
 }
 
 .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
-  left: @spacing_BreadCrumbs-menu;
+  right: 0;
   height: @height_breadcrumbsView;
   color: @item_text-color_default_breadcrumbsView;
   &:before {
     font-size: @line-height_breadcrumbsView;
   }
 }
-// Набор классов для установки фона точек через backgroundStyle
-.controls-BreadCrumbsView__menu__dots-background-default_theme-@{themeName} {
-   background: @background-color;
-   box-shadow: @dots_shadow-offset_breadcrumbsView @background-color;
+.controls-BreadCrumbsView__menu__dots__shadow {
+   position: absolute;
+   top: 0;
 }
-.controls-BreadCrumbsView__menu__dots-background-stackHeader_theme-@{themeName} {
-   background: @header_background-color_stack;
-   box-shadow: @dots_shadow-offset_breadcrumbsView @header_background-color_stack;
-}
-.controls-BreadCrumbsView__menu__dots-background-masterDetail-master_theme-@{themeName} {
-   background: @master_item_background-color_list;
-   box-shadow: @dots_shadow-offset_breadcrumbsView @master_item_background-color_list;
-}
-@defaultThemeName: default;
-.controls-BreadCrumbsView__menu__dots-background-masterDetail-details_theme-@{themeName} when not (@themeName = @defaultThemeName) {
-   background: @detail_background-color_masterDetail;
-   box-shadow: @dots_shadow-offset_breadcrumbsView @detail_background-color_masterDetail;
-}
-.controls-BreadCrumbsView__menu__dots-background-masterDetail-details_theme-@{themeName} when (@themeName = @defaultThemeName) {
-   background: @background-color;
-   box-shadow: @dots_shadow-offset_breadcrumbsView @background-color;
-}
-.controls-BreadCrumbsView__menu__dots-background-blockLayout__block {
-   .for(6, {
-      &_style_@{_i}_theme-@{themeName} {
-         background: ~"@{background-color_@{_i}_block}";
-         box-shadow: @dots_shadow-offset_breadcrumbsView  ~"@{background-color_@{_i}_block}";
-      }
-   });
+.controls-BreadCrumbsView__menu__dots__shadow_theme-@{themeName} {
+   // уменьшаем высоту тени, чтобы из-за блюра, когда точки не видны, тень не нависала сверху.
+   height: @height_breadcrumbsView - 2*@dots_shadow-blur_breadcrumbsView;
+   filter: blur(@dots_shadow-blur_breadcrumbsView);
+   background-color: inherit;
+   padding-left: @dots_shadow-offset_breadcrumbsView;
+   // отодвигаем тень на ее ширину за исключением заблюренной правой области, чтобы не было пропуска.
+   margin-left: -@dots_shadow-offset_breadcrumbsView + @dots_shadow-blur_breadcrumbsView;
 }
 
 .controls-BreadCrumbsView__max-width {
