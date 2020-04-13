@@ -30,6 +30,12 @@ export const Gadgets = {
             {
                 id: 22, title: 'Node8', Раздел: 2, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
             },
+            {
+                id: 222, title: 'Node9', Раздел: 22, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+            },
+            {
+                id: 2222, title: 'Node10', Раздел: 222, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+            },
         ];
     },
 

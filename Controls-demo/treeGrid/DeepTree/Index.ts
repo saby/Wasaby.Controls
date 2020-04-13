@@ -12,6 +12,7 @@ export default class extends Control {
     protected _columns = Gadgets.getColumnsWithFixedWidth().map((cur) => ({
         ...cur, template: elipsisTpl
     }));
+    protected _expandedItems: number[] = [1, 11, 111, 1111, 11111, 111111, 2, 22, 222, 2222];
 
     protected _beforeMount() {
         this._viewSource = new Memory({
