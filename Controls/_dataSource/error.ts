@@ -1,6 +1,6 @@
 /// <amd-module name="Controls/_dataSource/error" />
 /**
- * Набор модулей необходимых для обработки и отображения ошибок
+ * Компоненты для обработки и отображения ошибок.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/handling-errors/}
  * @library Controls/_dataSource/error
  * @includes Controller Controls/_dataSource/_error/Controller
@@ -13,7 +13,7 @@
  * @includes IContainerConfig Controls/_dataSource/_error/IContainer.IContainerConfig
  * @includes IContainerConstructor Controls/_dataSource/_error/IContainer.IContainerConstructor
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  */
 
 export {

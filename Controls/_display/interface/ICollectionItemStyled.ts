@@ -15,7 +15,7 @@
 export interface ICollectionItemStyled {
     getMultiSelectClasses(): string;
     getWrapperClasses(templateHighlightOnHover?: boolean, marker?: boolean): string;
-    getContentClasses(): string;
+    getContentClasses(theme: string): string;
 
     /**
      * Классы CSS для отображения действий над записью (в Controls/listRender:itemActionsTemplate)

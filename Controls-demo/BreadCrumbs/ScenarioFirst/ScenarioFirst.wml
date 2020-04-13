@@ -9,6 +9,7 @@
                 nodeProperty="parent@"
                 displayProperty="department"
                 columns="{{_columns}}"
+                showActionButton="{{true}}"
                 source="{{_viewSource}}">
         </Controls.explorer:View>
     </div>
@@ -25,6 +26,7 @@
                 nodeProperty="parent@"
                 displayProperty="title"
                 columns="{{_columns1}}"
+                showActionButton="{{true}}"
                 header="{{_header1}}"
                 rowSeparatorVisibility="{{true}}"
                 source="{{_viewSource1}}">
@@ -40,6 +42,7 @@
                 parentProperty="parent"
                 nodeProperty="parent@"
                 displayProperty="department"
+                showActionButton="{{true}}"
                 rowSeparatorVisibility="{{true}}"
                 columns="{{_columns2}}"
                 header="{{_header2}}"
@@ -66,6 +69,7 @@
                     <Controls.scroll:Container>
                         <Controls.explorer:View
                                 keyProperty="id"
+                                showActionButton="{{true}}"
                                 parentProperty="parent"
                                 nodeProperty="parent@"
                                 displayProperty="title"

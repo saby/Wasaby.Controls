@@ -6,6 +6,7 @@
                 keyProperty="id"
                 bind:root="_root4"
                 parentProperty="parent"
+                showActionButton="{{true}}"
                 nodeProperty="parent@"
                 displayProperty="department"
                 columns="{{_columns4}}"
@@ -65,6 +66,7 @@
                                 displayProperty="department"
                                 parentProperty="parent"
                                 nodeProperty="@parent"
+                                showActionButton="{{true}}"
                                 columns="{{_columns}}">
                         </Controls.explorer:View>
                     </Controls.list:Container>
@@ -83,6 +85,7 @@
                 columns="{{_columns1}}"
                 header="{{_header5}}"
                 bind:root="_root5"
+                showActionButton="{{true}}"
                 rowSeparatorVisibility="{{true}}"
                 source="{{_viewSource1}}">
         </Controls.explorer:View>

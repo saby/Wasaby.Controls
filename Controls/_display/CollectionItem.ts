@@ -415,28 +415,28 @@ export default class CollectionItem<T> extends mixin<
         return `controls-itemActionsV_${itemActionsPosition}`;
     }
 
-    getContentClasses(): string {
-        return `controls-ListView__itemContent ${this._getSpacingClasses()}`;
+    getContentClasses(theme: string): string {
+        return `controls-ListView__itemContent ${this._getSpacingClasses(theme)}`;
     }
 
     getItemTemplate(userTemplate: TemplateFunction|string): TemplateFunction|string {
         return userTemplate;
     }
 
-    protected _getSpacingClasses(): string {
+    protected _getSpacingClasses(theme: string): string {
         let classes = '';
 
         const rowSpacing = this.getOwner().getRowSpacing().toLowerCase();
         const rightSpacing = this.getOwner().getRightSpacing().toLowerCase();
 
-        classes += ` controls-ListView__item-topPadding_${rowSpacing}`; // need theme
-        classes += ` controls-ListView__item-bottomPadding_${rowSpacing}`; // need theme
-        classes += ` controls-ListView__item-rightPadding_${rightSpacing}`; // need theme
+        classes += ` controls-ListView__item-topPadding_${rowSpacing}_theme-${theme}`;
+        classes += ` controls-ListView__item-bottomPadding_${rowSpacing}_theme-${theme}`;
+        classes += ` controls-ListView__item-rightPadding_${rightSpacing}_theme-${theme}`;
 
         if (this.getOwner().getMultiSelectVisibility() !== 'hidden') {
-           classes += ' controls-ListView__itemContent_withCheckboxes'; // need theme
+           classes += ` controls-ListView__itemContent_withCheckboxes_theme-${theme}`;
         } else {
-           classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftSpacing().toLowerCase()}`;
+           classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftSpacing().toLowerCase()}_theme-${theme}`;
         }
 
         return classes;

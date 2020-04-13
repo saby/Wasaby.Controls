@@ -40,14 +40,14 @@ var _private = {
             itemPadding = _private.getItemPadding(cfg);
 
         classList += ' controls-ListView__itemContent';
-        classList += ' controls-ListView__item-topPadding_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${this._options.theme}`;
-        classList += ' controls-ListView__item-bottomPadding_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${this._options.theme}`;
-        classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase() + `_theme-${this._options.theme}`;
+        classList += ' controls-ListView__item-topPadding_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${cfg.theme}`;
+        classList += ' controls-ListView__item-bottomPadding_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${cfg.theme}`;
+        classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase() + `_theme-${cfg.theme}`;
 
         if (cfg.multiSelectVisibility !== 'hidden') {
-            classList += ' controls-ListView__itemContent_withCheckboxes' + `_theme-${this._options.theme}`;
+            classList += ' controls-ListView__itemContent_withCheckboxes' + `_theme-${cfg.theme}`;
         } else {
-            classList += ' controls-ListView__item-leftPadding_' + (itemPadding.left || 'default').toLowerCase();
+            classList += ' controls-ListView__item-leftPadding_' + (itemPadding.left || 'default').toLowerCase() + `_theme-${cfg.theme}`;
         }
 
         return classList;

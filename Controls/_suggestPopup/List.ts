@@ -10,6 +10,8 @@ import { constants } from 'Env/Env';
 
 
 const DIALOG_PAGE_SIZE = 25;
+const MARKER_VISIBILITY_DEFAULT = 'onactivated';
+const MARKER_VISIBILITY_AFTER_SEARCH = 'visible';
 
 var _private = {
    checkContext: function(self, context) {
@@ -102,6 +104,7 @@ var List = Control.extend({
    _markedKey: null,
    _items: null,
    _layerName: null,
+   _markerVisibility: MARKER_VISIBILITY_DEFAULT,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
@@ -156,6 +159,10 @@ var List = Control.extend({
    _searchEndCallback: function(result, filter) {
       if (this._suggestListOptions.searchEndCallback instanceof Function) {
          this._suggestListOptions.searchEndCallback(result, filter);
+      }
+
+      if (this._suggestListOptions.searchValue && this._markerVisibility !== MARKER_VISIBILITY_AFTER_SEARCH) {
+         this._markerVisibility = MARKER_VISIBILITY_AFTER_SEARCH;
       }
 
       if (result) {

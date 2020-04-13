@@ -1,5 +1,4 @@
-<!-- TODO переделать на Controls.list:BaseControl -->
-<Controls._list.BaseControl scope="{{_options}}"
+<Controls.list:BaseControl scope="{{_options}}"
                             moveMarkerOnScrollPaging="{{false}}"
                             _keyDownHandler="{{_keyDownHandler}}"
                             name="baseControl">
@@ -7,4 +6,4 @@
     <Controls._columns.ColumnsInnerView scope="{{_options}}" name="innerView">
         <ws:partial template="{{_options.viewName}}" itemTemplate="{{_options.itemTemplate}}"/>
     </Controls._columns.ColumnsInnerView>
-</Controls._list.BaseControl>
+</Controls.list:BaseControl>
