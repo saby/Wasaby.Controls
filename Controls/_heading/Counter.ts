@@ -12,10 +12,12 @@ export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions
 /**
  * Счетчик с поддержкой различных стилей отображения и размеров.
  * @remark
- * Используется в составе сложных заголовков, состоящих из {@link Controls/heading:Separator} и {@link Controls/heading:Counter}.
+ * Используется в составе сложных заголовков, состоящих из {@link Controls/heading:Separator} и {@link Controls/heading:Title}.
  * Для одновременной подсветки всех частей сложного заголовка при наведении используйте класс controls-Header_all__clickable на контейнере.
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Демо-пример</a>.
+ * Дополнительно о работе с заголовками читайте <a href="/doc/platform/developmentapl/interface-development/controls/content-managment/heading/">здесь</a>.
+ * 
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">демо-пример</a>
  *
  * @class Controls/_heading/Counter
  * @extends Core/Control
@@ -50,7 +52,7 @@ export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions
  * @variant m Средний счетчик.
  * @variant s Маленький счетчик.
  * @default m
- * @deprecated Опция устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_heading/Counter#fontSize}.
+ * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена. Используйте {@link Controls/_heading/Counter#fontSize}.
  */
 
 /*
@@ -70,7 +72,7 @@ export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions
  * @variant secondary
  * @variant disabled
  * @default primary
- * @deprecated Опция устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_heading/Counter#fontColorStyle}.
+ * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена. Используйте {@link Controls/_heading/Counter#fontColorStyle}.
  */
 
 /*
