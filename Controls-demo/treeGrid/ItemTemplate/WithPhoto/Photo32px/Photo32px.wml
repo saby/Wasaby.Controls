@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth1700">
+    <Controls.treeGrid:View
+        attr:class="demoTreeWithProto__treeGrid32"
+        keyProperty="id"
+        source="{{_viewSource}}"
+        columns="{{_columns}}"
+        parentProperty="parent"
+        nodeProperty="type"
+        expandedItems="{{_expandedItems}}">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/treeGrid:ItemTemplate" expanderSize="l" itemData="{{itemData}}"/>
+        </ws:itemTemplate>
+    </Controls.treeGrid:View>
+</div>

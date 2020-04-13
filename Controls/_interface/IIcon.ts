@@ -28,7 +28,7 @@ export default interface IIcon {
  * @example
  * Кнопка со стилем primary и иконкой Add.
  * <pre>
- *    <Controls.buttons:Button icon="icon-Add" style="primary" viewMode="button"/>
+ *    <Controls.buttons:Button icon="icon-Add" buttonStyle="primary" viewMode="button"/>
  * </pre>
  * @see Controls/interface/IIconSize
  * @see Controls/interface/IIconStyle
@@ -43,7 +43,7 @@ export default interface IIcon {
  * @example
  * Button with style buttonPrimary and icon Add.
  * <pre>
- *    <Controls.buttons:Button icon="icon-Add" style="primary" viewMode="button"/>
+ *    <Controls.buttons:Button icon="icon-Add" buttonStyle="primary" viewMode="button"/>
  * </pre>
  * @see iconStyle
  */
