@@ -49,7 +49,7 @@ export type TNavigationSource = 'position' | 'page';
 export type TNavigationView = 'infinity' | 'pages' | 'demand' | 'maxCount';
 
 /**
- * @typedef {Enum} CursorDirection
+ * @typedef {String} TNavigationDirection
  * @description Направление выборки при навигации по курсору.
  * @variant forward Вниз.
  * @variant backward Вверх.
@@ -57,16 +57,12 @@ export type TNavigationView = 'infinity' | 'pages' | 'demand' | 'maxCount';
  */
 
 /*
- * @typedef {Enum} CursorDirection
+ * @typedef {String} TNavigationDirection
  * @variant forward loading data after positional record.
  * @variant backward loading data before positional record.
  * @variant bothways loading data in both directions relative to the positional record.
  */
-export enum CursorDirection {
-    backward = 'backward',
-    forward = 'forward',
-    bothways = 'bothways'
-}
+export type TNavigationDirection = 'backward' | 'forward' | 'bothways';
 
 /**
  * @typedef {Object} INavigationPositionSourceConfig
@@ -78,7 +74,7 @@ export enum CursorDirection {
  * @property {String|Array.<String>} position Начальная позиция для курсора.
  * Относительно этой позиции будет создаваться выборка при навигации.
  * Позиция определяется по значению поля или по массиву значений полей, имена которых заданы в опции field.
- * @property {CursorDirection} direction Направление выборки.
+ * @property {TNavigationDirection} direction Направление выборки.
  * @property {Number} limit Количество записей, которые запрашиваются при выборке.
  */
 /*
@@ -93,7 +89,7 @@ export enum CursorDirection {
 export interface INavigationPositionSourceConfig {
     field: string[] | string;
     position?: unknown[] | unknown;
-    direction?: CursorDirection;
+    direction?: TNavigationDirection;
     limit?: number;
 }
 

@@ -5,9 +5,9 @@ import {NavigationController} from 'Controls/source';
 import {INavigationOptionValue} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {
-    INavigationPageSourceConfig, INavigationPositionSourceConfig, INavigationSourceConfig,
-    CursorDirection
+    INavigationPageSourceConfig, INavigationPositionSourceConfig, INavigationSourceConfig, TNavigationDirection
 } from 'Controls/_interface/INavigation';
+import {CursorDirection} from 'Controls/Constants';
 import {
     Direction,
     IAdditionalQueryParams,
@@ -26,7 +26,7 @@ const fakePageNavigationConfig = (hasMore?: boolean, page: number = 0): INavigat
     };
 };
 
-const fakePositionNavigationConfig = (direction?: CursorDirection): INavigationOptionValue<INavigationPositionSourceConfig> => {
+const fakePositionNavigationConfig = (direction?: TNavigationDirection | CursorDirection): INavigationOptionValue<INavigationPositionSourceConfig> => {
     return {
         source: 'position',
         sourceConfig: {
@@ -270,7 +270,7 @@ describe('Controls/_source/NavigationController', () => {
         let query: IAdditionalQueryParams;
 
         beforeEach(() => {
-            navigation = fakePositionNavigationConfig('forward');
+            navigation = fakePositionNavigationConfig(CursorDirection.forward);
             controller = new NavigationController({navigation});
         });
 
@@ -317,7 +317,7 @@ describe('Controls/_source/NavigationController', () => {
         let query: IAdditionalQueryParams;
 
         beforeEach(() => {
-            navigation = fakePositionNavigationConfig('bothways');
+            navigation = fakePositionNavigationConfig(CursorDirection.bothways);
             controller = new NavigationController({navigation});
         });
 
@@ -381,7 +381,7 @@ describe('Controls/_source/NavigationController', () => {
         let query: IAdditionalQueryParams;
 
         it('Should correctly merge query params + source="position" + direction="forward"', () => {
-            navigation = fakePositionNavigationConfig('forward');
+            navigation = fakePositionNavigationConfig(CursorDirection.forward);
             controller = new NavigationController({navigation});
             recordSet.setMetaData({
                 /*

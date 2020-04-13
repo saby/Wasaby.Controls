@@ -5,7 +5,7 @@ import {IAdditionalQueryParams, Direction} from '../interface/IAdditionalQueryPa
 import {IQueryParamsController} from '../interface/IQueryParamsController';
 import {default as More} from './More';
 import {Logger} from 'UI/Utils';
-import {CursorDirection} from 'Controls/interface';
+import {CursorDirection} from 'Controls/Constants';
 
 import { Collection } from 'Controls/display';
 

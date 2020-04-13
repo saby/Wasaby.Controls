@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/VirtualScroll/NavigationSwitcher/NavigationSwitcher';
-import { CursorDirection } from 'Controls/interface';
+import {CursorDirection} from 'Controls/Constants';
 
 export interface INavigationSwitcherOptions extends IControlOptions {
     content?: TemplateFunction;
