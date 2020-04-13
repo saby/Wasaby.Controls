@@ -64,6 +64,11 @@ export default {
      */
 
     remove(id: string): Promise<void> {
+        const managerResult = this._callManager('remove', arguments);
+        // todo: https://online.sbis.ru/opendoc.html?guid=6c5ce49a-db79-4fb0-af28-5b50ff688b2e
+        if (managerResult === false) { // вызвали метод до маунта Manager'a.
+            return Promise.resolve();
+        }
         return this._callManager('remove', arguments);
     },
 
