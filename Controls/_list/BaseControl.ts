@@ -2460,7 +2460,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _onGroupClick: function(e, groupId, baseEvent) {
-        if (baseEvent.target.closest(`.controls-ListView__groupExpander_theme-${this._options.theme}`)) {
+        if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
             if (this._options.groupProperty) {
                 const groupingLoader = this._groupingLoader;
