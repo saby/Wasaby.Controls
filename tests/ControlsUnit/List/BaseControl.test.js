@@ -5694,7 +5694,8 @@ define([
             return lists.BaseControl._private.getLoadingIndicatorClasses({
                hasItems: true,
                hasPaging: hasPaging,
-               loadingIndicatorState: indicatorState
+               loadingIndicatorState: indicatorState,
+               theme
             });
          }
 
