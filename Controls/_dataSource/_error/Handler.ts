@@ -7,12 +7,12 @@ import { IVersionable } from 'Types/entity';
 import { HTTPStatus } from 'Browser/Transport';
 
 /**
- * Возвращаемый обработчиком ошибки результат
+ * Данные для отображения сообщения об ошибке.
  * @interface Controls/_dataSource/_error/ViewConfig
  * @extends Types/entity:IVersionable
  * @extends Controls/_dataSource/_parking/ViewConfig
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  */
 export interface ViewConfig<TOptions = object> extends ParkingViewConfig<TOptions>, Partial<IVersionable> {
     /**
@@ -24,10 +24,10 @@ export interface ViewConfig<TOptions = object> extends ParkingViewConfig<TOption
 }
 
 /**
- * Передаваемые в обработчик параметры
+ * Параметры для функции-обработчика ошибки
  * @interface Controls/_dataSource/_error/HandlerConfig
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  */
 export interface HandlerConfig<T extends Error = Error> {
     /**
@@ -49,12 +49,11 @@ export interface HandlerConfig<T extends Error = Error> {
 }
 
 /**
- * Обработчик ошибки
- * @remark
- * Функциональный интерфейс.
+ * Тип функции-обработчика ошибки.
+ * Анализирует ошибку и определяет, какой парковочный шаблон нужно отобразить.
  * @interface Controls/_dataSource/_error/Handler
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  */
 export type Handler<
     TError extends Error = Error,
