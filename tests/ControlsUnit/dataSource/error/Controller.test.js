@@ -33,19 +33,19 @@ define([
       describe('addHandler()', function() {
          createController();
 
-         it('adds to __handlers', function() {
+         it('adds to _handlers', function() {
             const handler = () => undefined;
             controller.addHandler(handler);
-            assert.include(controller.__controller.__handlers, handler);
+            assert.include(controller.__controller._handlers, handler);
          });
 
-         it('doesn\'t add to __handlers twice', function() {
+         it('doesn\'t add to _handlers twice', function() {
             const handler = () => undefined;
             controller.addHandler(handler);
             controller.addHandler(handler);
             assert.equal(
-               controller.__controller.__handlers.indexOf(handler),
-               controller.__controller.__handlers.lastIndexOf(handler)
+               controller.__controller._handlers.indexOf(handler),
+               controller.__controller._handlers.lastIndexOf(handler)
             );
          });
       });
@@ -57,11 +57,11 @@ define([
             assert.isFunction(controller.removeHandler);
          });
 
-         it('removes from __handlers', function() {
+         it('removes from _handlers', function() {
             const handler = () => undefined;
             controller.addHandler(handler);
             controller.removeHandler(handler);
-            assert.notInclude(controller.__controller.__handlers, handler);
+            assert.notInclude(controller.__controller._handlers, handler);
          });
 
          it('doesn\'t remove other handlers', function() {
@@ -70,7 +70,7 @@ define([
             controller.addHandler(handler1);
             controller.addHandler(handler2);
             controller.removeHandler(handler1);
-            assert.include(controller.__controller.__handlers, handler2);
+            assert.include(controller.__controller._handlers, handler2);
          });
       });
 
