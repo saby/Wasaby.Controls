@@ -522,14 +522,12 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
     private hasAdditionalItems(items: RecordSet, options: IMenuControlOptions): boolean {
         let hasAdditional = false;
-        if (options.root === null) {
-            if (options.additionalProperty) {
-                items.each((item) => {
-                    if (!hasAdditional) {
-                        hasAdditional = item.get(options.additionalProperty) && !this.isHistoryItem(item);
-                    }
-                });
-            }
+        if (options.root === null && options.additionalProperty) {
+            items.each((item) => {
+                if (!hasAdditional) {
+                    hasAdditional = item.get(options.additionalProperty) && !this.isHistoryItem(item);
+                }
+            });
         }
         return hasAdditional;
     }
