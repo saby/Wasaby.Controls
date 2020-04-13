@@ -1,0 +1,17 @@
+<div class="controlsDemo__wrapper controlsDemo__maxWidth800">
+    <Controls.Configuration.ListEditor
+            bind:selectedKey="_selectedKey"
+            tileTemplate="{{_tileTemplate}}"
+            listTemplate="{{_listTemplate}}"
+            tableTemplate="{{_tableTemplate}}">
+        <ws:rightTemplate>
+            <Controls.buttons:Button
+                    caption="Настроить"
+                    viewMode="linkButton"
+                    icon="icon-Settings"
+                    fontColorStyle="secondary"
+                    iconSize="s"
+                    on:click="_customizeClick()"/>
+        </ws:rightTemplate>
+    </Controls.Configuration.ListEditor>
+</div>

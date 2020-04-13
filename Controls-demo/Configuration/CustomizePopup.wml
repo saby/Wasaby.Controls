@@ -1,0 +1,13 @@
+<Controls.Configuration.ListEditorPopup.Popup>
+    <ws:bodyContentTemplate>
+        <div class="controlsDemo__wrapper controlsDemo__maxWidth800">
+            <Controls.Configuration.ListEditor
+                    bind:selectedKey="_selectedKey"
+                    tileTemplate="{{_tileTemplate}}"
+                    listTemplate="{{_listTemplate}}"
+                    tableTemplate="{{_tableTemplate}}">
+            </Controls.Configuration.ListEditor>
+        </div>
+
+    </ws:bodyContentTemplate>
+</Controls.Configuration.ListEditorPopup.Popup>
