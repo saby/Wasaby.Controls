@@ -115,7 +115,7 @@ export class NavigationOptionsResolver {
         return {
             position,
             limit,
-            direction: 'after',
+            direction: 'forward',
             field: this._keyProperty
         };
     }
