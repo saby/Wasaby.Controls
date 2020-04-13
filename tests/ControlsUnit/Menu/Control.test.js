@@ -231,7 +231,9 @@ define(
             it('on collectionItem', function() {
                menuControl._itemMouseEnter('mouseenter', new display.CollectionItem({
                   contents: new entity.Model()
-               }), {});
+               }), {target: 'testTarget', nativeEvent: 'testNativeEvent'});
+               assert.equal(menuControl._hoveredTarget, 'testTarget');
+               assert.equal(menuControl._enterEvent, 'testNativeEvent');
                assert.isTrue(handleStub.calledOnce);
             });
 
