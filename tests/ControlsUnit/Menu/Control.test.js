@@ -458,7 +458,7 @@ define(
          });
 
          describe('_subMenuResult', function() {
-            let menuControl, stubClose, eventResult, sandbox;
+            let menuControl, stubClose, eventResult, nativeEvent, sandbox;
             beforeEach(() => {
                menuControl = getMenu();
                menuControl._notify = (event, data) => {
@@ -489,9 +489,11 @@ define(
             it('itemClick event return false', function() {
                menuControl._notify = (event, data) => {
                   eventResult = data[0];
+                  nativeEvent = data[1];
                   return false;
                };
-               menuControl._subMenuResult('click', 'itemClick', { item: 'item2' });
+               menuControl._subMenuResult('click', 'itemClick', { item: 'item2' }, 'testEvent');
+               assert.equal(nativeEvent, 'testEvent');
                assert.deepEqual(eventResult, { item: 'item2' });
                assert.isTrue(stubClose.notCalled);
             });
