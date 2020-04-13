@@ -105,6 +105,11 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     }
 
     protected _beforeUpdate(options?: IHeadingOptions, contexts?: any): void {
+        this._updateOptions(options);
+        super._beforeUpdate(options, contexts);
+    }
+
+    protected _updateOptions(options: IHeadingOptions): void {
         if (this._needChangeCaption(options)) {
             this._caption = Heading._calcCaption(options);
         }
@@ -112,7 +117,6 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
             this._icon = Heading._calcIcon(options.expanded);
             this._view = Heading._calcView(options.expanded);
         }
-        super._beforeUpdate(options, contexts);
     }
 
     protected _clickHandler(event: SyntheticEvent<MouseEvent>): void {
@@ -120,7 +124,7 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         this._notify('expandedChanged', [!this._options.expanded]);
         if (this._options.expanded === undefined) {
             const newOptions = {...this._options, expanded: this._expanded};
-            this._beforeUpdate(newOptions);
+            this._updateOptions(newOptions);
         }
     }
 
