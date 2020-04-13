@@ -252,32 +252,38 @@ define([
          });
       });
 
-      describe('_onNextPrevYearBtnClick', function() {
+      describe('_changeYear', function() {
          [{
             year: new Date(2000, 0),
-            index: 1,
+            delta: 1,
             result: 2001
          }, {
             year: new Date(2000, 0),
-            index: -1,
+            delta: -1,
             result: 1999
          }, {
             year: new Date(2000, 0),
-            index: 1,
+            delta: 1,
             result: 2001
          }, {
             year: new Date(2000, 0),
-            index: -1,
-            result: 1999
-         }].forEach(function(test) {
+            delta: 1,
+            displayedRanges: [[null, new Date(2000, 0)], [new Date(2005, 0), null]],
+            result: 2005
+         }, {
+            year: new Date(2005, 0),
+            delta: -1,
+            displayedRanges: [[null, new Date(2000, 0)], [new Date(2005, 0), null]],
+            result: 2000
+         }].forEach(function(options) {
             it('should update year', function() {
                const sandbox = sinon.sandbox.create(),
-                  component = calendarTestUtils.createComponent(PeriodLiteDialog.View, { year: test.year });
+                  component = calendarTestUtils.createComponent(PeriodLiteDialog.View, options);
                sandbox.stub(component, '_notify');
-               component._changeYear('event', test.index);
+               component._changeYear('event', options.delta);
 
-               assert.equal(component._position.getFullYear(), test.result);
-               sinon.assert.calledWith(component._notify, 'yearChanged', [test.result]);
+               assert.equal(component._position.getFullYear(), options.result);
+               sinon.assert.calledWith(component._notify, 'yearChanged', [options.result]);
                sandbox.restore();
             });
          });
@@ -285,33 +291,24 @@ define([
          [{
             year: new Date(2018, 0),
             displayedRanges: [[new Date(2016, 0), new Date(2018, 0)]],
-            index: 1
+            delta: 1
          }, {
-            year: new Date(2000, 0),
+            year: new Date(2018, 0),
             chooseHalfyears: false,
             chooseMonths: false,
             chooseQuarters: false,
             displayedRanges: [[new Date(2016, 0), new Date(2018, 0)]],
-            index: 1
+            delta: 1
          }, {
             year: new Date(2018, 0),
             displayedRanges: [[new Date(2018, 0), new Date(2020, 0)]],
-            index: -1
-         }, {
-            year: new Date(2022, 0),
-            chooseHalfyears: false,
-            chooseMonths: false,
-            chooseQuarters: false,
-            displayedRanges: [[new Date(2018, 0), new Date(2025, 0)]],
-            index: -1
+            delta: -1
          }].forEach(function(options) {
             it('should not update year', function () {
-               const component = calendarTestUtils.createComponent(PeriodLiteDialog.View,
-                  options);
+              const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, options);
                component._position = options.year;
-               component._changeYear('event', options.index);
-
-               assert.equal(options.year, component._position);
+               component._changeYear('event', options.delta);
+               assert.equal(options.year.getFullYear(), component._position.getFullYear());
             });
          });
       });
