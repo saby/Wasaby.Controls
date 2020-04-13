@@ -1,7 +1,7 @@
 import {IHTMLOptions, IHTML} from 'UI/Base';
 
 /**
- * Интерефейс для контролов, поддерживающих конфигурацию мета-тегов html-страницы.
+ * Интерефейс для контролов, поддерживающих конфигурацию метатегов html-документа.
  * @interface Controls/_interface/IApplication
  * @public
  * @author Санников К.А.
