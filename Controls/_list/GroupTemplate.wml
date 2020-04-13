@@ -7,7 +7,7 @@
       <ws:if data="{{separator !== false && separatorVisibility !== false && textAlign !== 'left'}}">
          <div class="controls-ListView__groupSeparator-left_theme-{{itemData.theme}}">&nbsp;</div>
       </ws:if>
-      <div class="
+      <div class="controls-ListView__groupContent-text 
          controls-ListView__groupContent-text_theme-{{itemData.theme}}
          {{expanderVisible !== false ? (' controls-ListView__groupExpander controls-ListView__groupExpander_theme-' + itemData.theme) +
          (expanderAlign === 'right' ? ' controls-ListView__groupExpander_right_theme-' + itemData.theme : ' controls-ListView__groupExpander_left_theme-' + itemData.theme) +
