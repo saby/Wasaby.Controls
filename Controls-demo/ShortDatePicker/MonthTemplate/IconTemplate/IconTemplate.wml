@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper">
     <Controls.shortDatePicker:View>
         <ws:monthTemplate>
-            <ws:partial periods="{{_periods}}" template="Controls/shortDatePicker:MonthTemplate">
+            <ws:partial template="Controls/shortDatePicker:MonthTemplate">
                 <ws:iconTemplate>
                     <ws:if data="{{_getState()}}">
                         <div class="controls-PeriodLiteDialog-item__checkBox" title="{[Красный]}">
