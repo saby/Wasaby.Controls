@@ -3,7 +3,7 @@
                {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
                {{ itemData.groupPaddingClasses.left }}
                {{ !rightTemplate ? itemData.groupPaddingClasses.right }}
-               controls-ListView__groupContent_align-{{textAlign || 'left'}}">
+               controls-ListView__groupContent_align-{{textAlign || 'center'}}">
       <ws:if data="{{separator !== false && separatorVisibility !== false && textAlign !== 'left'}}">
          <div class="controls-ListView__groupSeparator-left">&nbsp;</div>
       </ws:if>
