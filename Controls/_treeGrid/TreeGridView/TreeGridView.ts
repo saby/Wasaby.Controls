@@ -21,6 +21,12 @@ var
         },
         _onLoadMoreClick(e, dispItem): void {
             this._notify('loadMoreClick', [dispItem]);
+        },
+        // protected
+        _getFooterClasses(): string {
+            const expanderPadding = (this._options.expanderSize || 'default').toLowerCase();
+            const classes = ` controls-TreeGridView__footer controls-TreeGridView__footer__expanderPadding-${expanderPadding}_theme-${this._options.theme}`;
+            return TreeGridView.superclass._getFooterClasses.apply(this, arguments) + classes;
         }
     });
 

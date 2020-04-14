@@ -171,8 +171,8 @@ var ListView = BaseControl.extend(
         _resolveItemTemplate(options) {
            return options.itemTemplate || this._defaultItemTemplate;
         },
-
-        protected resizeNotifyOnListChanged: function() {
+        // protected
+        resizeNotifyOnListChanged: function() {
             _private.resizeNotifyOnListChanged(this);
         },
 
@@ -287,6 +287,18 @@ var ListView = BaseControl.extend(
 
         getHoveredItem: function () {
             return this._listModel.getHoveredItem();
+        },
+
+        // protected
+        _getFooterClasses(): string {
+            let classes = 'controls-ListView__footer__paddingLeft_';
+
+            if (this._options.multiSelectVisibility !== 'hidden') {
+                classes += 'withCheckboxes';
+            } else {
+                classes += (this._options.itemPadding && this._options.itemPadding.left || 'default').toLowerCase();
+            }
+            return classes;
         }
     });
 
@@ -294,7 +306,7 @@ ListView.getDefaultOptions = function() {
     return {
         contextMenuVisibility: true,
         markerVisibility: 'onactivated',
-        headerInEmptyListVisible: true,
+        headerInEmptyListVisible: true
     };
 };
 
