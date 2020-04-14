@@ -81,11 +81,25 @@ define(
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
             });
-            it('Test8', function() {
+            it('Heading with expanded=true', function() {
                options.expanded = true;
                options.captions = ['Заголовок1', 'Заголовок2'];
                ctrl._beforeMount(options);
 
+               assert.equal(ctrl._icon, 'CollapseLight');
+               assert.equal(ctrl._view, 'expanded');
+               assert.equal(ctrl._caption, 'Заголовок1');
+            });
+            it('Heading without option expanded', function() {
+               options.captions = ['Заголовок1', 'Заголовок2'];
+               ctrl._beforeMount(options);
+               assert.equal(ctrl._expanded, false);
+               assert.equal(ctrl._icon, 'ExpandLight');
+               assert.equal(ctrl._view, 'collapsed');
+               assert.equal(ctrl._caption, 'Заголовок2');
+
+               ctrl._clickHandler();
+               assert.equal(ctrl._expanded, true);
                assert.equal(ctrl._icon, 'CollapseLight');
                assert.equal(ctrl._view, 'expanded');
                assert.equal(ctrl._caption, 'Заголовок1');
