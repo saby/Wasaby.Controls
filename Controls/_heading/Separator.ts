@@ -21,6 +21,7 @@ export interface ISeparatorOptions extends IControlOptions {
  * @control
  * @public
  * @author Красильников А.С.
+ * @implements Controls/_interface/ICaption
  *
  * @demo Controls-demo/Heading/Separators/Index
  */
