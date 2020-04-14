@@ -39,7 +39,8 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
 
 interface IStackOpenerOptions extends IStackPopupOptions, IBaseOpenerOptions {}
 
-const getStackConfig = (config: IStackOpenerOptions = {}, popupId?: string) => {
+const getStackConfig = (stackOptions: IStackOpenerOptions = {}, popupId?: string) => {
+    const config = {...stackOptions};
     // The stack is isDefaultOpener by default.
     // For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
     config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
