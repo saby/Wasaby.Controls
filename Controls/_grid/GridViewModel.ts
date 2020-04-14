@@ -142,19 +142,22 @@ var
             if (params.cell.isActionCell) {
                 return preparedClasses;
             }
+            const { cellPadding } = columns[columnIndex];
             const actionCellOffset = params.hasActionCell ? 1 : 0;
             const maxEndColumn = params.maxEndColumn - actionCellOffset;
             const columnsLengthExcludedActionCell = columns.length - actionCellOffset;
+
+            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side]}` : '';
             if (rowIndex === 0) {
                 if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
-                    preparedClasses += ' controls-Grid__cell_spacingLeft' + `_theme-${theme}`;
+                    preparedClasses += ` controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme}`;
                 }
             } else {
-                preparedClasses += ' controls-Grid__cell_spacingLeft' + `_theme-${theme}`;
+                preparedClasses += ` controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme}`;
             }
 
             if (columnIndex < (columnsLengthExcludedActionCell - 1) || (maxEndColumn && endColumn < maxEndColumn)) {
-                preparedClasses += ' controls-Grid__cell_spacingRight' + `_theme-${theme}`;
+                preparedClasses += ` controls-Grid__cell_spacingRight${getCellPadding('right')}_theme-${theme}`;
             }
             // Отступ для последней колонки
             const lastColClass = ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase() + `_theme-${theme}`;

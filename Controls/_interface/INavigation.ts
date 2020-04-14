@@ -51,18 +51,18 @@ export type TNavigationView = 'infinity' | 'pages' | 'demand' | 'maxCount';
 /**
  * @typedef {String} TNavigationDirection
  * @description Направление выборки при навигации по курсору.
- * @variant after Вниз.
- * @variant before Вверх.
- * @variant both В обоих направлениях.
+ * @variant forward Вниз.
+ * @variant backward Вверх.
+ * @variant bothways В обоих направлениях.
  */
 
 /*
  * @typedef {String} TNavigationDirection
- * @variant after loading data after positional record.
- * @variant before loading data before positional record.
- * @variant both loading data in both directions relative to the positional record.
+ * @variant forward loading data after positional record.
+ * @variant backward loading data before positional record.
+ * @variant bothways loading data in both directions relative to the positional record.
  */
-export type TNavigationDirection = 'before' | 'after' | 'both';
+export type TNavigationDirection = 'backward' | 'forward' | 'bothways';
 
 /**
  * @typedef {Object} INavigationPositionSourceConfig

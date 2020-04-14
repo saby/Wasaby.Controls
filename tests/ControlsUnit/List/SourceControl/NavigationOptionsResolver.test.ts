@@ -46,7 +46,7 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
             result = instance.resolve(['2015-03-07T21:00:00.000Z'], 100) as INavigationOptionValue<INavigationPositionSourceConfig>;
             assert.equal(result.source, 'position');
             assert.equal(result.sourceConfig.field, 'date');
-            assert.equal(result.sourceConfig.direction, 'after');
+            assert.equal(result.sourceConfig.direction, 'forward');
             assert.equal(result.sourceConfig.limit, 100);
             assert.equal(result.sourceConfig.position[0], '2015-03-07T21:00:00.000Z');
         });
@@ -56,7 +56,7 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
                 source: 'position',
                 sourceConfig: <INavigationPositionSourceConfig> {
                     field: 'date',
-                    direction: 'after',
+                    direction: 'forward',
                     limit: 5,
                     position: ['2015-03-07T21:00:00.000Z']
                 }
@@ -64,7 +64,7 @@ describe('Controls/_list/SourceControl/ListSourceLoadingController', () => {
             result = instance.resolve(['2015-03-08T23:59:59.000Z'], 10) as INavigationOptionValue<INavigationPositionSourceConfig>;
             assert.equal(result.source, 'position');
             assert.equal(result.sourceConfig.field, 'date');
-            assert.equal(result.sourceConfig.direction, 'after');
+            assert.equal(result.sourceConfig.direction, 'forward');
             assert.equal(result.sourceConfig.limit, 10);
             assert.equal(result.sourceConfig.position[0], '2015-03-08T23:59:59.000Z');
         });

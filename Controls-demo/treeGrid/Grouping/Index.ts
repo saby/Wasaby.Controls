@@ -23,7 +23,7 @@ export default class extends Control {
                 limit: 20,
                 field: 'key',
                 position: 'key_0',
-                direction: 'after'
+                direction: 'forward'
             },
             viewConfig: {
                 pagingMode: 'direct'
