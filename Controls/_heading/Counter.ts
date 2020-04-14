@@ -21,9 +21,9 @@ export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions
  *
  * @class Controls/_heading/Counter
  * @extends Core/Control
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_interface/IFontSize
+ * @implements Controls/_interface/ICaption
+ * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/_interface/IFontSize
  * @control
  * @public
  * @author Красильников А.С.
