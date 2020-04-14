@@ -9,6 +9,7 @@ import {Logger} from 'UI/Utils';
 import collection = require('Types/collection');
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {RecordSet} from 'Types/collection';
+import {Record} from 'Types/entity';
 import {isEqual} from 'Types/object';
 
 /**
@@ -196,6 +197,11 @@ var ItemsViewModel = BaseViewModel.extend({
     getCurrent: function() {
         var dispItem = this._display.at(this._curIndex);
         return this.getItemDataByItem(dispItem);
+    },
+
+    // New Model compatibility
+    each(callback: collection.EnumeratorCallback<Record>, context?: object): void {
+        this._display.each(callback, context);
     },
 
     setKeyProperty(keyProperty: string): void {

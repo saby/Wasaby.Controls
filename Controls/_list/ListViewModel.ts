@@ -126,6 +126,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _menuState: '',
     _reloadedKeys: null,
     _singleItemReloadCount: 0,
+    _actionsAssigned: false,
 
     constructor: function(cfg) {
         var self = this;
@@ -253,6 +254,11 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 itemsModelCurrent.draggingItemData = this._draggingItemData;
             }
         }
+
+        // New Model compatibility
+        itemsModelCurrent.getActions = () => itemsModelCurrent.itemActions;
+        itemsModelCurrent.getContents = () => itemsModelCurrent.actionsItem;
+
         return itemsModelCurrent;
     },
 
@@ -362,6 +368,22 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             item = this.getItemById(key, this._options.keyProperty);
         return this._display.getIndex(item);
     },
+
+    /**
+     * New Model compatibility
+     * @param key
+     */
+    getItemBySourceKey(key) {
+        return this.getItemById(key, this._options.keyProperty);
+    },
+
+    /**
+     * New Model compatibility
+     */
+    nextVersion() {
+        this._nextVersion();
+    },
+
     getNextItemKey: function(key) {
         var
             itemIdx = this.getIndexByKey(key),
@@ -648,6 +670,16 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     getItemActions: function(item) {
         const id = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
         return this._actions[id];
+    },
+
+    // New Model compatibility
+    areActionsAssigned(): boolean {
+        return this._actionsAssigned === true;
+    },
+
+    // New Model compatibility
+    setActionsAssigned(assigned: boolean): void {
+        this._actionsAssigned = assigned;
     },
 
     updateSelection: function(selectedKeys) {
