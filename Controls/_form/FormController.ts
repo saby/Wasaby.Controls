@@ -1,5 +1,5 @@
 import rk = require('i18n!Controls');
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction, getMetaStack, IMetaState} from 'UI/Base';
 import * as cInstance from 'Core/core-instance';
 import tmpl = require('wml!Controls/_form/FormController/FormController');
 import {readWithAdditionalFields} from './crudProgression';
@@ -148,6 +148,7 @@ interface IUpdateConfig {
  */
 
 class FormController extends Control<IFormController, IReceivedState> {
+    private metaStates: IMetaState[] = [];
     protected _template: TemplateFunction = tmpl;
     protected _record: Model = null;
     protected _isNewRecord: boolean = false;
@@ -382,6 +383,9 @@ class FormController extends Control<IFormController, IReceivedState> {
         if (!record || this._checkRecordType(record)) {
             this._record = record;
         }
+        if (record) {
+            this.metaStates.push(getMetaStack().push({ title: record.get('title') }));
+        }
     }
 
     private _getRecordId(): number | string {
@@ -394,6 +398,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _tryDeleteNewRecord(): Promise<undefined> {
+        this.metaStates.forEach(getMetaStack().remove);
         if (this._needDestroyRecord()) {
             return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
         }
