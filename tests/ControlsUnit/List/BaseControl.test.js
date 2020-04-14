@@ -6012,7 +6012,7 @@ define([
                         sourceConfig: {
                            field: 'id',
                            position: 0,
-                           direction: 'forward,
+                           direction: 'forward',
                            limit: 20
                         }
                      }
