@@ -9,8 +9,8 @@ export type BorderStyle = 'success' | 'secondary' | 'warning';
  */
 export interface IBorderStyleOptions {
     /**
-     * @name Controls/interface#borderStyle
-     * @cfg {Enum} Цвет обводки контрола
+     * @name Controls/interface/IBorderStyle#borderStyle
+     * @cfg {Enum} Цвет обводки контрола.
      * @variant success
      * @variant secondary
      * @variant warning
