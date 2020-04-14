@@ -1,6 +1,6 @@
-<div attr:class="{{ item.getWrapperClasses(highlightOnHover) }}">
+<div attr:class="{{ item.getWrapperClasses(highlightOnHover, theme) }}">
    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
-      <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses() }}">
+      <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses(theme) }}">
          <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
       </ws:partial>
    </ws:if>

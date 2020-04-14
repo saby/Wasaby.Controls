@@ -13,8 +13,8 @@
  * @author Аверкиев П.А.
  */
 export interface ICollectionItemStyled {
-    getMultiSelectClasses(): string;
-    getWrapperClasses(templateHighlightOnHover?: boolean, marker?: boolean): string;
+    getMultiSelectClasses(theme: string): string;
+    getWrapperClasses(templateHighlightOnHover?: boolean, theme?: string, marker?: boolean): string;
     getContentClasses(theme: string): string;
 
     /**
