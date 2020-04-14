@@ -15,16 +15,6 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
  * @author Авраменко А.С.
  * @public
  *
- * @css @width_OperationsButton Width of the button.
- * @css @height_OperationsButton Height of the button.
- * @css @thickness_OperationsButton-separator Thickness of the separator between the button and the rest of the content.
- * @css @height_OperationsButton-separator Height of the separator between the button and the rest of the content.
- * @css @color_OperationsButton-icon Color of the icon.
- * @css @color_OperationsButton-icon_hovered Color of the hovered icon.
- * @css @color_OperationsButton-icon_active Color of the active icon.
- * @css @color_OperationsButton-separator Color of the separator between the button and the rest of the content.
- * @css @font-size_OpконфerationsButton-icon Font size of the icon.
- * @css @font-family_OperationsButton-icon Font family of the icon.
  */
 
 /*
@@ -38,16 +28,6 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
  * @author Авраменко А.С.
  * @public
  *
- * @css @width_OperationsButton Width of the button.
- * @css @height_OperationsButton Height of the button.
- * @css @thickness_OperationsButton-separator Thickness of the separator between the button and the rest of the content.
- * @css @height_OperationsButton-separator Height of the separator between the button and the rest of the content.
- * @css @color_OperationsButton-icon Color of the icon.
- * @css @color_OperationsButton-icon_hovered Color of the hovered icon.
- * @css @color_OperationsButton-icon_active Color of the active icon.
- * @css @color_OperationsButton-separator Color of the separator between the button and the rest of the content.
- * @css @font-size_OperationsButton-icon Font size of the icon.
- * @css @font-family_OperationsButton-icon Font family of the icon.
  */
 
 class OperationsButton extends Control<IOperationsButtonOptions> implements IExpandable {
