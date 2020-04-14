@@ -4,7 +4,7 @@
                     showLoadingIndicator="{{_showLoadingIndicatorImage}}"
                     portionedSearchInProgress="{{_portionedSearchInProgress}}">
             <ws:contentTemplate>
-                <div class="controls-BaseControl__abortSearch_theme-{{_options.theme}}" on:click="_abortSearch()">{[Прервать поиск]}</div>
+                <div class="controls-BaseControl__abortSearch controls-BaseControl__abortSearch_theme-{{_options.theme}}" on:click="_abortSearch()">{[Прервать поиск]}</div>
             </ws:contentTemplate>
         </ws:partial>
     </div>
@@ -16,7 +16,7 @@
             <div class="controls-BaseControl_paging-label_theme-{{_options.theme}}">
                 <div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} {{rk('из')}} {{_pagingLabelData.totalItemsCount}}, {{rk('по')}} </div>
                 <Controls.dropdown:Button
-                        attr:class="controls-BaseControl_paging-pageSizeChooser_theme-{{_options.theme}}"
+                        attr:class="controls-BaseControl_paging-pageSizeChooser controls-BaseControl_paging-pageSizeChooser_theme-{{_options.theme}}"
                         keyProperty="id"
                         style="secondary"
                         viewMode="link"

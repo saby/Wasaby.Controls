@@ -1,4 +1,4 @@
-<span class="controls-AddButton_theme-{{_options.theme}}" on:click="clickHandler()">
+<span class="controls-AddButton controls-AddButton_theme-{{_options.theme}}" on:click="clickHandler()">
    <span attr:class="controls-AddButton_state-{{_options.readOnly ? 'disable': 'enable'}} controls-AddButton-wrapper">
       <span class="controls-AddButton__svgWrapper_theme-{{_options.theme}}">
          <div class="controls-AddButton__icon_theme-{{_options.theme}} controls-AddButton_icon-{{_options.readOnly ? 'disable': 'enable'}}_theme-{{_options.theme}}"></div>
