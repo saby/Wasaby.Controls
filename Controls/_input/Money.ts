@@ -167,8 +167,8 @@ class Money extends Base implements INumberLength {
     _options: IMoneyOptions;
     readonly '[Controls/_input/interface/INumberLength]' = true;
 
-    protected _initProperties(): void {
-        super._initProperties();
+    protected _initProperties(options: IMoneyOptions): void {
+        super._initProperties(options);
 
         this._readOnlyField.template = readOnlyFieldTemplate;
         this._readOnlyField.scope.integerPart = Money.integerPart;
