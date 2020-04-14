@@ -288,6 +288,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             this._pendingPromise.callback();
             this._pendingPromise = null;
         }
+        this.metaStates.forEach(getMetaStack().remove);
         // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
         // Текущая реализация не подходит, завершать пендинги могут как сверху(при закрытии окна), так и
         // снизу (редактирование закрывает пендинг).
@@ -398,7 +399,6 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _tryDeleteNewRecord(): Promise<undefined> {
-        this.metaStates.forEach(getMetaStack().remove);
         if (this._needDestroyRecord()) {
             return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
         }
