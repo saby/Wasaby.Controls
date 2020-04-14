@@ -47,6 +47,7 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
     needScrollCalculation: boolean;
     collection: Collection<Record>;
     activeElement: string | number;
+    _triggerPositionCoefficient: number;
 }
 
 export default class ScrollContainer extends Control<IOptions> {
@@ -669,7 +670,9 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     private _updateTriggerOffset(scrollHeight: number, viewportHeight: number): void {
-        this._triggerOffset = (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) * 0.3;
+        this._triggerOffset =
+            (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
+            this._options._triggerPositionCoefficient;
         this._children.topVirtualScrollTrigger.style.top = `${this._triggerOffset}px`;
         this._children.bottomVirtualScrollTrigger.style.bottom = `${this._triggerOffset}px`;
         this._notify('triggerOffsetChanged', [this._triggerOffset, this._triggerOffset]);
@@ -692,7 +695,8 @@ export default class ScrollContainer extends Control<IOptions> {
         return {
             virtualScrollConfig: {
                 mode: 'remove'
-            }
+            },
+            _triggerPositionCoefficient: 0.3
         };
     }
 }

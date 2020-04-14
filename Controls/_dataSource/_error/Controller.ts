@@ -65,10 +65,12 @@ function getPopupHelper(): Popup {
 /// endregion helpers
 
 /**
- * Модуль для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
+ * Класс для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
+ * Передаёт ошибку по цепочке функций-обработчиков.
+ * Обработчики предоставляются пользователем или берутся из настроек приложения.
  * @class Controls/_dataSource/_error/Controller
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  * @example
  * <pre>
  *     let handler = ({ error, mode }) => {
@@ -112,7 +114,7 @@ export default class ErrorController {
     }
 
     /**
-     * Добавить обработчик ошибки
+     * Добавить обработчик ошибки.
      * @method
      * @name Controls/_dataSource/_error/Controller#addHandler
      * @public
@@ -124,7 +126,7 @@ export default class ErrorController {
     }
 
     /**
-     * Убрать обработчик ошибки
+     * Убрать обработчик ошибки.
      * @method
      * @name Controls/_dataSource/_error/Controller#removeHandler
      * @public
@@ -136,12 +138,15 @@ export default class ErrorController {
     }
 
     /**
-     * Запуск обработки ошибки для формирования объекта с данными для шаблона ошибки.
+     * Обработать ошибку и получить данные для шаблона ошибки.
+     * Передаёт ошибку по цепочке функций-обработчиков, пока какой-нибудь обработчик не вернёт результат.
+     * @remark
+     * Если ни один обработчик не вернёт результат, будет показан диалог с сообщением об ошибке.
      * @method
      * @name Controls/_dataSource/_error/Controller#process
      * @public
-     * @param {Error | Controls/_dataSource/_error/HandlerConfig} config Объект, содержащий обрабатываемую ошибку и предпочитаемый режим отображения, лио обрабатываемая ошибка
-     * @return {void | Controls/_dataSource/_error/ViewConfig} Данные для отображения шаблона
+     * @param {Error | Controls/_dataSource/_error/HandlerConfig} config Обрабатываемая ошибки или объект, содержащий обрабатываемую ошибку и предпочитаемый режим отображения.
+     * @return {void | Controls/_dataSource/_error/ViewConfig} Данные для отображения сообщения об ошибке.
      */
     process<T extends Error = Error>(config: HandlerConfig<T> | T): Promise<ViewConfig | void> {
         const _config = prepareConfig<T>(config);

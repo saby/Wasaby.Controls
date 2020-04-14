@@ -17,7 +17,6 @@ import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {showType} from 'Controls/Utils/Toolbar';
 import 'wml!Controls/_list/BaseControl/Footer';
-import 'css!theme?Controls/list';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {constants, detection} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
@@ -1850,8 +1849,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
         this._multiSelectReadyCallback = this._multiSelectReadyCallbackFn.bind(this);
 
-        let receivedError = receivedState.errorConfig;
-        let receivedData = receivedState.data;
+        const receivedError = receivedState.errorConfig;
+        const receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
         _private.checkRequiredOptions(newOptions);
@@ -1901,7 +1900,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions);
-
 
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
@@ -2460,7 +2458,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _onGroupClick: function(e, groupId, baseEvent) {
-        if (baseEvent.target.closest(`.controls-ListView__groupExpander_theme-${this._options.theme}`)) {
+        if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
             if (this._options.groupProperty) {
                 const groupingLoader = this._groupingLoader;
@@ -2899,7 +2897,7 @@ BaseControl.contextTypes = function contextTypes() {
     };
 };
 
-BaseControl._theme = ['Controls/Classes', 'Controls/list_multi'];
+BaseControl._theme = ['Controls/Classes', 'Controls/list_multi', 'Controls/list'];
 
 BaseControl.getDefaultOptions = function() {
     return {

@@ -92,7 +92,11 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
             /**
              * @name Controls/shortDatePicker/IDateLitePopup#monthTemplate
-             * @remark Шаблон может принимать 3 опции contentTemplate, iconTemplate и periods.
+             * @remark Шаблон может принимать 2 опции:
+             * <ul>
+             *     <li>contentTemplate : В шаблон передается value, где хранится дата месяца.</li>
+             *     <li>iconTemplate: в качестве опций получает value (Дату) и extData(данные загруженные через источник данных source).</li>
+             * </ul>
              * @cfg {HTMLElement} Шаблон месяца
              * @example
              * <pre>
@@ -106,78 +110,6 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
              *                <ws:iconTemplate>
              *                   <div class="{{_getIconIconClass(iconTemplate.date)}}"  title="{{_getIconTitle(iconTemplate.date)}}"></div>
              *                </ws:iconTemplate>
-             *             </ws:partial>
-             *         <ws:monthTemplate>
-             *     </Controls.shortDatePicker:View>
-             * </pre>
-             * @see Controls/shortDatePicker/IDateLitePopup#periods
-             * @see Controls/shortDatePicker/IDateLitePopup#iconTemplate
-             * @see Controls/shortDatePicker/IDateLitePopup#contentTemplate
-             */
-
-            /**
-             * @name Controls/shortDatePicker/IDateLitePopup#periods
-             * @cfg {Array} Массив периодов, в котором отметки месяца будут помечены как 'положительные'.
-             * Каждый элемент — это массив, который содержит начало и конец периода.
-             * @remark Может помечать только месяца. Все месяца, которые не попадают в период periods, будут помечены как 'отрицательные'
-             * @example
-             * <pre>
-             *     <Controls.shortDatePicker:View>
-             *       <ws:monthTemplate>
-             *         <ws:partial
-             *           template='Controls.shortDatePicker:MonthTemplate'
-             *           periods={{ _periods }}>
-             *         </ws:partial>
-             *       <ws:monthTemplate>
-             *     </Controls.shortDatePicker:View>
-             * </pre>
-             * <pre>
-             *     _periods: [[new Date(2018, 1), new Date(2019, 3)],[new Date(2019, 6), new Date(2022, 3)]]
-             * </pre>
-             */
-
-            /**
-             * @name Controls/shortDatePicker/IDateLitePopup#iconTemplate
-             * @cfg {HTMLElement} Шаблон для отметок
-             * @remark В качестве опций получает value (Дату) и extData(данные загруженные через источник данных source).
-             * extData представляет из себя массив, содержащий данные месяца загруженные через источник данных source.
-             * @example
-             * <pre>
-             *     <Controls.shortDatePicker:View>
-             *         <ws:monthTemplate>
-             *             <ws:iconTemplate>
-             *                 <ws:if data={{iconTemplate.value.getMonth() % 2}}>
-             *                      <div class="controls-PeriodLiteDialog-item__checkBox" title="{[Месяц закрыт]}">
-             *                         <div class="icon-16 icon-Yes icon-done"></div>
-             *                      </div>
-             *                 </ws:if>
-             *                 <ws:else>
-             *                      <div class="controls-PeriodLiteDialog-item__checkBox" title="{[Месяц не закрыт]}">
-             *                         <div class="icon-16 icon-Yes icon-disabled"></div>
-             *                      </div>
-             *                 </ws:else>
-             *                 <div>
-             *                 </div>
-             *             </ws:iconTemplate>
-             *         <ws:monthTemplate>
-             *     </Controls.shortDatePicker:View>
-             * </pre>
-             */
-
-            /**
-             * @name Controls/shortDatePicker/IDateLitePopup#contentTemplate
-             * @cfg {HTMLElement} Шаблон отображения месяцев
-             * @remark Шаблон, который отвечает за визуальное отображение месяца. В шабл он передается value, где хранится
-             * дата месяца.
-             * @example
-             * <pre>
-             *     <Controls.shortDatePicker:View>
-             *         <ws:monthTemplate>
-             *             <ws:partial
-             *             template='Controls.dateLitePopup:MonthTemplate'>
-             *                <ws:contentTemplate>
-             *                   <div>contentTemplate.date</div>
-             *                </ws:contentTemplate>
              *             </ws:partial>
              *         <ws:monthTemplate>
              *     </Controls.shortDatePicker:View>

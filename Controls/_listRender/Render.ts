@@ -84,7 +84,7 @@ export default class Render extends Control<IRenderOptions> {
         item: CollectionItem<unknown>
     ): void {
         if (item instanceof GroupItem) {
-            if (e.target?.closest('.controls-ListView__groupExpander')) { // need theme
+            if (e.target?.closest('.controls-ListView__groupExpander')) {
                 item.toggleExpanded();
             }
         } else {

@@ -231,7 +231,7 @@
    text-overflow: ellipsis;
 }
 
-.controls-ListView__groupExpander_theme-@{themeName} {
+.controls-ListView__groupExpander {
    cursor: pointer;
 }
 
@@ -249,7 +249,7 @@
    content: '\e000';
 }
 
-.controls-ListView__groupExpander_theme-@{themeName}:hover {
+.ws-is-hover .controls-ListView__groupExpander_theme-@{themeName}:hover {
    color: @grouping_expander_hover_text-color_list;
 }
 
@@ -273,8 +273,6 @@
    padding-left: @grouping_right-template_padding-left_list;
    flex-shrink: 0;
 }
-
-// need theme
 
 .controls-ListView__empty {
    color: @placeholder_text-color_list;
@@ -339,7 +337,6 @@
 }
 
 //MasterList styles
-// need theme
 
 .controls-ListView_master {
    padding-right: @master_separator_thickness_list;
@@ -355,7 +352,7 @@
    // начинают сроиться относительно родителя уровнем выше
    transform: translateZ(0);
 }
-// need theme
+
 .controls-ListView__item__marked_master {
    //z-index 1 is needed to overlap the right line of master
    z-index: 1;
