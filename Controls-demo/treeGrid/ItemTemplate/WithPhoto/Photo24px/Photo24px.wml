@@ -7,10 +7,7 @@
         parentProperty="parent"
         nodeProperty="type"
         expanderSize="m"
-        expandedItems="{{_expandedItems}}">
-        <ws:itemTemplate>
-            <ws:partial template="Controls/treeGrid:ItemTemplate" expanderSize="m" itemData="{{itemData}}"/>
-        </ws:itemTemplate>
+        bind:expandedItems="_expandedItems">
         <ws:footerTemplate>
             <div class="controlsDemo__hor-padding__list__footerContent">Подвал списка</div>
         </ws:footerTemplate>

@@ -12,6 +12,12 @@ var
     TreeGridView = GridView.extend({
         _itemOutputWrapper: ItemOutputWrapper,
         _defaultItemTemplate: GridItemTemplate,
+        _beforeUpdate(newCfg) {
+            TreeGridView.superclass._beforeUpdate.apply(this, arguments);
+            if (this._options.expanderSize !== newCfg.expanderSize) {
+                this._listModel.setExpanderSize(newCfg.expanderSize);
+            }
+        },
         _resolveBaseItemTemplate(): TemplateFunction {
             return isFullGridSupport() ? GridItemTemplate : TableItemTemplate;
         },

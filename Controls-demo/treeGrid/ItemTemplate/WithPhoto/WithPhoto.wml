@@ -6,7 +6,7 @@
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/Photo16px/Index' }}">
             <a href="{{content.href}}">16px image</a>
         </Router.router:Reference>
-        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo16px.Index/>
+        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo16px.Index collapseNodes/>
     </div>
 
     <div class="controlsDemo__cell">
@@ -15,7 +15,7 @@
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/Photo24px/Index' }}">
             <a href="{{content.href}}">24px image</a>
         </Router.router:Reference>
-        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo24px.Index/>
+        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo24px.Index collapseNodes/>
     </div>
 
     <div class="controlsDemo__cell">
@@ -24,7 +24,7 @@
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/Photo32px/Index' }}">
             <a href="{{content.href}}">32px image</a>
         </Router.router:Reference>
-        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo32px.Index/>
+        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo32px.Index collapseNodes/>
     </div>
 
     <div class="controlsDemo__cell">
@@ -33,7 +33,7 @@
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/Photo40px/Index' }}">
             <a href="{{content.href}}">40px image</a>
         </Router.router:Reference>
-        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo40px.Index/>
+        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo40px.Index collapseNodes/>
     </div>
 
     <div class="controlsDemo__cell">
@@ -42,7 +42,7 @@
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/TwoLevelsWithPhoto/Index' }}">
             <a href="{{content.href}}">Two levels tree</a>
         </Router.router:Reference>
-        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.TwoLevelsWithPhoto.Index/>
+        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.TwoLevelsWithPhoto.Index collapseNodes/>
     </div>
 
     <div class="controlsDemo__cell">
@@ -51,7 +51,7 @@
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/TwoLevelsWithoutPhoto/Index' }}">
             <a href="{{content.href}}">Two levels tree without photo</a>
         </Router.router:Reference>
-        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.TwoLevelsWithoutPhoto.Index/>
+        <Controls-demo.treeGrid.ItemTemplate.WithPhoto.TwoLevelsWithoutPhoto.Index collapseNodes/>
     </div>
 
 </div>
