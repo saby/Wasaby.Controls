@@ -33,7 +33,7 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {CollectionItem, ItemActionsController} from 'Controls/display';
+import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, ItemActionsController} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
@@ -41,11 +41,8 @@ import {IHashMap} from 'Types/declarations';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
-var
-    defaultSelectedKeys = [],
-    defaultExcludedKeys = [];
-
-let displayLib: typeof import('Controls/display');
+let defaultSelectedKeys = [];
+let defaultExcludedKeys = [];
 
 const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 2, title: '10', pageSize: 10},
@@ -155,7 +152,7 @@ var _private = {
         }
 
         const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
-            self._options.useNewModel ? displayLib.EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
+            self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
         );
         if (isEditing) {
             self._children.editInPlace.cancelEdit();
@@ -383,7 +380,7 @@ var _private = {
         if (key !== undefined) {
             const model = self.getViewModel();
             if (self._options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                const markCommand = new MarkerCommands.Mark(key);
                 markCommand.execute(model);
             } else {
                 model.setMarkedKey(key);
@@ -1029,7 +1026,7 @@ var _private = {
     setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
         let firstItemIndex =
             self._options.useNewModel
-            ? displayLib.VirtualScrollController.getStartIndex(self._listViewModel)
+            ? VirtualScrollController.getStartIndex(self._listViewModel)
             : self._listViewModel.getStartIndex();
         firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
         firstItemIndex = Math.min(firstItemIndex, self._listViewModel.getStopIndex());
@@ -1037,7 +1034,7 @@ var _private = {
             const item = self._listViewModel.at(firstItemIndex);
             if (item) {
                 const key = item.getContents().getId();
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                const markCommand = new MarkerCommands.Mark(key);
                 markCommand.execute(self._listViewModel);
             }
         } else {
@@ -1308,7 +1305,7 @@ var _private = {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             if (self._options.useNewModel) {
-                displayLib.ItemActionsController.setActiveItem(
+                ItemActionsController.setActiveItem(
                     self._listViewModel,
                     itemData.getContents().getId()
                 );
@@ -1341,21 +1338,20 @@ var _private = {
         }
     },
 
+    /**
+     * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because we'd get 2 root nodes.
+     * When we get fragments or something similar, it would be possible to move this code where it really belongs.
+     */
     showActionMenu(
         self: Control,
         itemData,
         childEvent: Event,
         action: IItemAction
     ): void {
-        /**
-         * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because we'd get 2 root nodes.
-         * When we get fragments or something similar, it would be possible to move this code where it really belongs.
-         */
-        const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
-        const children = self._children.itemActions.getChildren(action, itemActions.all);
+        const children = ItemActionsController.getChildActions(itemData, action);
         if (children.length) {
             if (self._options.useNewModel) {
-                displayLib.ItemActionsController.setActiveItem(
+                ItemActionsController.setActiveItem(
                     self._listViewModel,
                     itemData.getContents().getId()
                 );
@@ -1385,7 +1381,7 @@ var _private = {
 
     closeActionsMenu(self): void {
         if (self._options.useNewModel) {
-            displayLib.ItemActionsController.setActiveItem(
+            ItemActionsController.setActiveItem(
                 self._listViewModel,
                 null
             );
@@ -1407,7 +1403,7 @@ var _private = {
             const action = args.data && args.data[0] && args.data[0].getRawData();
             const activeItem =
                 self._options.useNewModel
-                    ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
+                    ? ItemActionsController.getActiveItem(self._listViewModel)
                     : self._listViewModel.getActiveItem();
             aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._targetItem);
             if (!action['parent@']) {
@@ -1573,7 +1569,7 @@ var _private = {
     needBottomPadding: function(options, items, listViewModel) {
         const isEditing =
             options.useNewModel
-            ? displayLib.EditInPlaceController.isEditing(listViewModel)
+            ? EditInPlaceController.isEditing(listViewModel)
             : !!listViewModel.getEditingItemData();
         return (
             !!items &&
@@ -1722,6 +1718,12 @@ var _private = {
             actionCaptionPosition: options.actionCaptionPosition,
             itemActionsClass: options.itemActionsClass
         });
+    },
+
+    getActionsGetter(self: any): (item?: CollectionItem<Model>) => IItemAction[] {
+        return self._options.itemActionsProperty
+            ? (item) => (item.getContents().get(self._options.itemActionsProperty) as IItemAction[])
+            : () => (self._options.itemActions as IItemAction[]);
     }
 };
 
@@ -2097,7 +2099,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
-        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback 
+        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback
                                                 !== newOptions.itemActionVisibilityCallback;
         this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
@@ -2141,7 +2143,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (newOptions.markedKey !== this._options.markedKey) {
             if (newOptions.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(newOptions.markedKey);
+                const markCommand = new MarkerCommands.Mark(newOptions.markedKey);
                 markCommand.execute(this._listViewModel);
             } else {
                 this._listViewModel.setMarkedKey(newOptions.markedKey, true);
@@ -2378,7 +2380,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const noData = !listViewModel.getCount();
         const noEdit =
             this._options.useNewModel
-            ? !displayLib.EditInPlaceController.isEditing(listViewModel)
+            ? !EditInPlaceController.isEditing(listViewModel)
             : !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
@@ -2420,7 +2422,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (direction === 'right' || direction === 'left') {
             if (this._options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                const markCommand = new MarkerCommands.Mark(key);
                 markCommand.execute(this._listViewModel);
             } else {
                 var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
@@ -2428,8 +2430,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
+
         if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
-            this._children.itemActions.updateItemActions(actionsItem);
+            const itemActions = ItemActionsController.getActionsForItem(
+                itemData,
+                _private.getActionsGetter(this),
+                this._options.itemActionVisibilityCallback
+            );
+            ItemActionsController.setActionsToItem(this._listViewModel, itemData.key, itemActions);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
@@ -2509,7 +2517,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _notifyHandler: tmplNotify,
 
     _closeSwipe: function(event, item) {
-        this._children.itemActions.updateItemActions(item);
+        const itemActions = ItemActionsController.getActionsForItem(
+            item,
+            _private.getActionsGetter(this),
+            this._options.itemActionVisibilityCallback
+        );
+        ItemActionsController.setActionsToItem(this._listViewModel, item.key, itemActions);
+        // todo ???
+        // ItemActionsController.deactivateSwipe(this._listViewModel);
     },
 
     _commitEditActionHandler: function() {
@@ -2537,8 +2552,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
-        if (this._listViewModel && this._hasItemActions && this._children.itemActions) {
-            this._children.itemActions.updateActions();
+        if (this._listViewModel && this._hasItemActions) {
+            ItemActionsController.assignActions(
+                this._listViewModel,
+                _private.getActionsGetter(this),
+                this._options.itemActionVisibilityCallback
+            );
         }
     },
     _onAfterEndEdit: function(event, item, isAdd) {
@@ -2555,7 +2574,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
         * _canUpdateItemsActions  приведет к показу неактуальных операций.
         */
-        this._children.itemActions.updateItemActions(item);
+        const itemActions = ItemActionsController.getActionsForItem(
+            item,
+            _private.getActionsGetter(this),
+            this._options.itemActionVisibilityCallback
+        );
+        ItemActionsController.setActionsToItem(this._listViewModel, item.key, itemActions);
         return result;
     },
 
@@ -2572,7 +2596,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._showActionsMenu.apply(this, arguments);
         event.stopPropagation();
         if (this._options.useNewModel) {
-            const markCommand = new displayLib.MarkerCommands.Mark(itemData.getContents().getId());
+            const markCommand = new MarkerCommands.Mark(itemData.getContents().getId());
             markCommand.execute(this._listViewModel);
         } else {
             this._listViewModel.setMarkedKey(itemData.key);
@@ -2594,7 +2618,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
         if (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1)) {
             if (this._options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                const markCommand = new MarkerCommands.Mark(key);
                 markCommand.execute(this._listViewModel);
             } else {
                 this._listViewModel.setMarkedKey(key);
@@ -2873,9 +2897,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // библиотеки Controls/listRender
         if (typeof modelName !== 'string') {
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
-        }
-        if (typeof displayLib === 'undefined') {
-            displayLib = require('Controls/display');
         }
         return diCreate(modelName, { ...modelConfig, collection: items });
     }
