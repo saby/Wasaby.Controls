@@ -19,6 +19,7 @@
                     searchDelay="{{_searchDelay}}"
                     tabsSelectedKeyChangedCallback="{{_tabsSelectedKeyChanged}}"
                     name="suggestListWrapper"
+                    searchValue="{{_searchValue}}"
         />
     </ws:template>
 

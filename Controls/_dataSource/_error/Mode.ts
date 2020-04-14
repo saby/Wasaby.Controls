@@ -1,25 +1,25 @@
 /// <amd-module name="Controls/_dataSource/_error/Mode" />
 /**
- * [enum] Перечисляемое множество возможных способов отображения парковочного шаблона ошибки
+ * Перечисление. Способы отображения шаблона с сообщением об ошибке.
  * @class Controls/_dataSource/_error/Mode
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  * @todo Переписать как typedef, как появится возможность автодоки прогружать из библиотек тайпдефы
  */
 enum Mode {
     /**
      * @name Controls/_dataSource/_error/Mode#dialog
-     * @cfg {string} в диалоговом окне
+     * @cfg {string} В диалоговом окне.
      */
     dialog = 'dialog',
     /**
      * @name Controls/_dataSource/_error/Mode#page
-     * @cfg {string} во всю страницу
+     * @cfg {string} Во всю страницу.
      */
     page = 'page',
     /**
      * @name Controls/_dataSource/_error/Mode#include
-     * @cfg {string} в области контрола
+     * @cfg {string} В области контрола (вместо содержимого).
      */
     include = 'include'
 }

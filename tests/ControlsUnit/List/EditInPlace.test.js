@@ -465,6 +465,31 @@ define([
             });
          });
 
+         it('adding item was changed before begin add', function(done) {
+            var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: treeModel._items
+            });
+
+            eip.saveOptions({
+               listModel: treeModel,
+               source: source
+            });
+            treeModel.setExpandedItems([1]);
+
+            source.create().addCallback(function(model) {
+               model.set('parent', 1);
+               model.set('parent@', false);
+               eip.beginAdd({
+                  item: model
+               }).addCallback(function() {
+                  assert.isTrue(model.isChanged());
+                  assert.isFalse(eip._editingItem.isChanged());
+                  done();
+               });
+            });
+         });
+
          it('add item to a folder', function(done) {
             var source = new sourceLib.Memory({
                keyProperty: 'id',
@@ -1077,17 +1102,22 @@ define([
 
                eip._editingItem.set('title', '1234');
 
+               let editingItem;
                eip._notify = function(event, args) {
-                  if (event === 'afterEndEdit') {
-                     assert.equal(eip._editingItem, args[0]);
-                     assert.isTrue(args[1]);
+                  if (event === 'beforeEndEdit') {
+                     editingItem = eip._editingItem;
                      assert.equal(listModel.getMarkedKey(), 1);
+                     assert.isNotNull(listModel.getEditingItemData());
+                  }
+                  if (event === 'afterEndEdit') {
+                     assert.equal(editingItem, args[0]);
+                     assert.isTrue(args[1]);
+                     assert.equal(listModel.getMarkedKey(), 4);
+                     assert.isNull(listModel.getEditingItemData());
                      done();
                   }
                };
-               await eip.commitEdit().then(() => {
-                  assert.equal(listModel.getMarkedKey(), 4);
-               });
+               await eip.commitEdit();
             });
 
             it('edit item', function(done) {
@@ -1116,7 +1146,7 @@ define([
                eip.commitEdit();
             });
 
-            it('destroyed immediately after edit item', function(done) {
+            it('destroyed in process of end edit item (stack closed for ex.)', function(done) {
                var source = new sourceLib.Memory({
                   keyProperty: 'id',
                   data: data
@@ -1145,12 +1175,34 @@ define([
                };
 
                eip._notify = function(event, args) {
-                  if (event === 'afterEndEdit') {
+                  if (event === 'beforeEndEdit') {
                      eip._destroyed = true;
                   }
                };
 
                eip.commitEdit();
+            });
+
+            it('accept changes on recordset', function(done) {
+               var source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
+
+               eip.saveOptions({
+                  listModel: listModel,
+                  source: source
+               });
+
+               eip.beginEdit({
+                  item: listModel.at(0).getContents()
+               });
+               eip._editingItem.set('title', '1234');
+
+               eip.commitEdit().then(() => {
+                  assert.isFalse(listModel._items.isChanged());
+                  done();
+               });
             });
          });
 

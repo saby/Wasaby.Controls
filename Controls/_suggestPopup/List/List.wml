@@ -18,6 +18,7 @@
                                        reverseList="{{_reverseList}}"
                                        navigation="{{_navigation}}"
                                        searchEndCallback="{{_searchEndCallback}}"
+                                       markerVisibility="{{_markerVisibility}}"
                                        on:markedKeyChanged="_markedKeyChanged()">
     </Controls.deprecatedList:Container>
 

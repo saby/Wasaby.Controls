@@ -161,11 +161,8 @@ var Component = Control.extend([], {
 
    _inputCompletedHandler: function(event, value, textValue) {
       event.stopImmediatePropagation();
-      const oldValue: string = this._model.value;
       this._model.autocomplete(textValue, this._options.autocompleteType);
-      if (this._model.value !== oldValue) {
-         this._notify('inputCompleted', [this._model.value, textValue]);
-      }
+      this._notify('inputCompleted', [this._model.value, textValue]);
    },
 
    _valueChangedHandler: function(e, value, textValue) {

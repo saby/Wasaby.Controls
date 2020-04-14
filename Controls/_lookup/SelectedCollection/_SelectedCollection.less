@@ -17,7 +17,7 @@
     line-height: @counter_height_lookupSelectedCollection;
 }
 
-.controls-SelectedCollection__InfoBox_fixed {
+.controls-SelectedCollection__InfoBox_fixed_theme-@{themeName} {
     .inline-flexbox();
     position: absolute;
     left: 0;
@@ -25,7 +25,7 @@
     background: @counter_background-color_lookupSelectedCollection;
 }
 
-.controls-SelectedCollection__InfoBox_fixed:after {
+.controls-SelectedCollection__InfoBox_fixed_theme-@{themeName}:after {
     content: '';
     position: absolute;
     right: -@counter_shadow-blur_lookupSelectedCollection;
@@ -109,23 +109,23 @@
 
 .controls-SelectedCollection__item__caption-size-default_theme-@{themeName},
 .controls-SelectedCollection__item__caption-size-m_theme-@{themeName} {
-    font-size: @font-size_m;
+    font-size: @font-size_m_input;
 }
 
 .controls-SelectedCollection__item__caption-size-l_theme-@{themeName} {
-    font-size: @font-size_l;
+    font-size: @font-size_l_input;
 }
 
 .controls-SelectedCollection__item__caption-size-xl_theme-@{themeName} {
-    font-size: @font-size_xl;
+    font-size: @font-size_xl_input;
 }
 
 .controls-SelectedCollection__item__caption-size-2xl_theme-@{themeName} {
-    font-size: @font-size_2xl;
+    font-size: @font-size_2xl_input;
 }
 
 .controls-SelectedCollection__item__caption-size-3xl_theme-@{themeName} {
-    font-size: @font-size_3xl;
+    font-size: @font-size_3xl_input;
 }
 
 .controls-SelectedCollection__item__caption-style-bold_theme-@{themeName},

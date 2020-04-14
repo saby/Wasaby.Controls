@@ -17,7 +17,6 @@ import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {showType} from 'Controls/Utils/Toolbar';
 import 'wml!Controls/_list/BaseControl/Footer';
-import 'css!theme?Controls/list';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {constants, detection} from 'Env/Env';
 import ListViewModel from 'Controls/_list/ListViewModel';
@@ -1629,12 +1628,13 @@ var _private = {
     getLoadingIndicatorClasses(cfg: {
         hasItems: boolean,
         hasPaging: boolean,
-        loadingIndicatorState: 'all' | 'down' | 'up'
+        loadingIndicatorState: 'all' | 'down' | 'up',
+        theme: string,
     }): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${cfg.loadingIndicatorState}`)
-            .add('controls-BaseControl_empty__loadingIndicator__state-down', !cfg.hasItems && cfg.loadingIndicatorState === 'down')
-            .add('controls-BaseControl_withPaging__loadingIndicator__state-down', cfg.loadingIndicatorState === 'down' && cfg.hasPaging && cfg.hasItems)
+            .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${cfg.theme}`, !cfg.hasItems && cfg.loadingIndicatorState === 'down')
+            .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${cfg.theme}`, cfg.loadingIndicatorState === 'down' && cfg.hasPaging && cfg.hasItems)
             .compile();
     },
     hasItemActions: function(itemActions, itemActionsProperty) {
@@ -1849,8 +1849,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
         this._multiSelectReadyCallback = this._multiSelectReadyCallbackFn.bind(this);
 
-        let receivedError = receivedState.errorConfig;
-        let receivedData = receivedState.data;
+        const receivedError = receivedState.errorConfig;
+        const receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
         _private.checkRequiredOptions(newOptions);
@@ -1900,7 +1900,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions);
-
 
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
@@ -2845,7 +2844,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.getLoadingIndicatorClasses({
             hasItems,
             hasPaging: !!this._pagingVisible,
-            loadingIndicatorState: state || this._loadingIndicatorState
+            loadingIndicatorState: state || this._loadingIndicatorState,
+            theme: this._options.theme
         });
     },
 
@@ -2897,7 +2897,7 @@ BaseControl.contextTypes = function contextTypes() {
     };
 };
 
-BaseControl._theme = ['Controls/Classes', 'Controls/list_multi'];
+BaseControl._theme = ['Controls/Classes', 'Controls/list_multi', 'Controls/list'];
 
 BaseControl.getDefaultOptions = function() {
     return {
