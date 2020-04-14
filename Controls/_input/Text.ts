@@ -13,7 +13,6 @@ import {Logger} from 'UI/Utils';
  * @extends Controls/_input/Base
  *
  * @mixes Controls/_input/interface/IText
- * @mixes Controls/interface/IBorderStyle
  *
  * @public
  * @demo Controls-demo/Input/Text/Base/Index
