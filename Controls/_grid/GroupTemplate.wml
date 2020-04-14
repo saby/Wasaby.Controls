@@ -92,11 +92,11 @@
 </ws:if>
 <ws:else>
    <tr key="group-{{itemData.item}}" class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}">
-      <td class="controls-ListView__groupCellContent {{itemData.groupPaddingClasses.left}}" colspan="{{columnAlignGroup ? columnAlignGroup : itemData.columns.length}}">
+      <td class="controls-ListView__groupCellContent {{itemData.groupPaddingClasses.left}} {{ !rightTemplate && columnAlignGroup === undefined ? itemData.groupPaddingClasses.right }}" colspan="{{columnAlignGroup ? columnAlignGroup : itemData.columns.length}}">
          <ws:partial template="groupContentWrapper"/>
       </td>
       <ws:if data="{{columnAlignGroup !== undefined}}">
-         <td class="controls-ListView__groupCellContent" colspan="{{itemData.columns.length - columnAlignGroup}}">
+         <td class="controls-ListView__groupCellContent {{itemData.groupPaddingClasses.right}}" colspan="{{itemData.columns.length - columnAlignGroup}}">
             <ws:partial template="groupRightTemplate"/>
          </td>
       </ws:if>
