@@ -73,19 +73,17 @@ define('Controls/interface/IGroupedList', [
     */
 
    /**
-    * @event Происходит при развертывании группы.
-    * @name Controls/interface/IGroupedList#groupExpanded
+    * @event Controls/interface/IGroupedList#groupExpanded Происходит при развертывании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Array.<String>} changes Массив с идентификаторами групп.
+    * @param {Array.<String>} changes Идентификаторы групп.
     * @remark
     * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FGroupPG">демо-пример</a>.
     */
 
    /**
-    * @event Происходит при сворачивании группы.
-    * @name Controls/interface/IGroupedList#groupCollapsed
+    * @event Controls/interface/IGroupedList#groupCollapsed Происходит при сворачивании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Array.<String>} changes Массив с идентификаторами групп.
+    * @param {Array.<String>} changes Идентификаторы групп.
     * @remark
     * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FGroupPG">демо-пример</a>.
     */
