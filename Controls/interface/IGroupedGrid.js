@@ -13,7 +13,7 @@ define('Controls/interface/IGroupedGrid', [
    /**
     * @name Controls/interface/IGroupedGrid#groupProperty
     * @cfg {String} Имя свойства, содержащего идентификатор группы элемента списка.
-    * Примечание: Для отображения элементов вне группы необходмо передавать в качестве значений поля, по которому производится группировка CONTROLS_HIDDEN_GROUP
+    * Примечание: Для отображения элементов вне группы необходимо передавать в качестве значений поля, по которому производится группировка CONTROLS_HIDDEN_GROUP
     * @demo Controls-demo/List/List/GroupPG
     * @see groupTemplate
     * @see collapsedGroups
@@ -59,10 +59,9 @@ define('Controls/interface/IGroupedGrid', [
     */
 
    /**
-    * @event Происходит при развертывании группы.
-    * @name Controls/interface/IGroupedGrid#groupExpanded
+    * @event Controls/interface/IGroupedGrid#groupExpanded Происходит при развертывании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Array.<String>} changes Массив с идентификаторами групп, которые развернуты.
+    * @param {Array.<String>} changes Идентификаторы групп.
     * @demo Controls-demo/List/Grid/GroupPG
     * @see groupTemplate
     * @see collapsedGroups
@@ -72,10 +71,9 @@ define('Controls/interface/IGroupedGrid', [
     */
 
    /**
-    * @event Происходит при сворачивании группы.
-    * @name Controls/interface/IGroupedGrid#groupCollapsed
+    * @event Controls/interface/IGroupedGrid#groupCollapsed Происходит при сворачивании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Array.<String>} changes Массив с идентификаторами групп, которые свернуты.
+    * @param {Array.<String>} changes Идентификаторы групп.
     * @demo Controls-demo/List/Grid/GroupPG
     * @see groupTemplate
     * @see collapsedGroups

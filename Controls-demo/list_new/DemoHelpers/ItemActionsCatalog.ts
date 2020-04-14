@@ -57,7 +57,7 @@ function getActionsWithDisplayMode(): IItemAction[] {
             id: 1,
             icon: 'icon-Email',
             title: 'Email',
-            displayMode: 'both',
+            displayMode: 'bothways',
             tooltip: 'Электронная почта',
             showType: showType.TOOLBAR
         },

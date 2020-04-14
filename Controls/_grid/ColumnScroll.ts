@@ -50,6 +50,7 @@ const
           }
           // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
           _private.toggleStickyElementsForScrollCalculation(self._children.content, false);
+          _private.forceReflowForSafari(self._children.content);
          _private.drawTransform(self, 0);
          const isFullSupport = isFullGridSupport();
          let
@@ -154,18 +155,30 @@ const
         * @param {Boolean} visible Определяет, будут ли отображены sticky элементы
         */
       toggleStickyElementsForScrollCalculation(container: HTMLElement, visible: boolean): void {
-          const stickyElements =
-              container.querySelectorAll(
-                  '.controls-Grid_columnScroll_wrapper, .controls-Grid__header, .controls-Grid__results'
-              );
+          const stickyElements = container.querySelectorAll('.controls-Grid_columnScroll_wrapper');
+          let stickyElement;
 
-          stickyElements.forEach((element: HTMLElement) => {
-             if (visible) {
-                 element.style.removeProperty('display');
-             } else {
-                 element.style.display = 'none';
-             }
-          });
+          for (let i = 0; i < stickyElements.length; i++) {
+              stickyElement = stickyElements[i] as HTMLElement;
+              if (visible) {
+                  stickyElement.style.removeProperty('display');
+              } else {
+                  stickyElement.style.display = 'none';
+              }
+          }
+      },
+
+      forceReflowForSafari(container: HTMLElement): void {
+          if (detection.safari) {
+              const header = container.getElementsByClassName('controls-Grid__header')[0] as HTMLElement;
+
+              if (header) {
+                  header.style.display = 'none';
+                  // tslint:disable-next-line:no-unused-expression
+                  container.offsetWidth;
+                  header.style.removeProperty('display');
+              }
+          }
       },
 
       prepareDebouncedUpdateSizes: function() {

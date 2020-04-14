@@ -1,29 +1,32 @@
 /// <amd-module name="Controls/_dataSource/_parking/Handler" />
+import { TemplateFunction } from 'UI/Base';
 
 /**
- * Возвращаемый обработчиком парковочной результат
+ * Данные для отображения парковочного шаблона.
  * @interface Controls/_dataSource/_parking/ViewConfig
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  */
-export interface ViewConfig<TOptions = object> {
+export interface ViewConfig<TOptions = object> { // tslint:disable-line:interface-name
     /**
      * @name Controls/_dataSource/_parking/ViewConfig#template
-     * @cfg {Function | String} Шаблон отображения ошибки
+     * @cfg {Function | String} Шаблон для отображения ошибки.
      */
-    template: any;
+    template: TemplateFunction | string;
     /**
      * @name Controls/_dataSource/_parking/ViewConfig#options
-     * @cfg {Object} параметры построяния шаблона ошибки
+     * @cfg {Object} Параметры построяния шаблона ошибки.
      */
     options?: Partial<TOptions>;
 }
 
 /**
- * Обработчик парковочной
+ * Обработчик ошибки.
+ * Анализирует ошибку и определяет, какой парковочный шаблон нужно отобразить.
+ * Принимает объект с параметрами ошибки и возвращет {Controls/_dataSource/_parking/ViewConfig}, если ошибка распознана.
  * @interface Controls/_dataSource/_parking/Handler
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  */
 export type Handler<TOptions = object> = (config: any) => ViewConfig<TOptions> | void;
 

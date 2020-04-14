@@ -1,16 +1,19 @@
 import {QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
-import {IAdditionalQueryParams, Direction, DirectionCfg} from '../interface/IAdditionalQueryParams';
+import {IAdditionalQueryParams, Direction} from '../interface/IAdditionalQueryParams';
 import {IQueryParamsController} from '../interface/IQueryParamsController';
 import {default as More} from './More';
 import {Logger} from 'UI/Utils';
+import {CursorDirection} from 'Controls/Constants';
 
 import { Collection } from 'Controls/display';
 
 interface IPositionHasMore {
-    before: boolean;
-    after: boolean;
+    backward: boolean;
+    forward: boolean;
+    before?: boolean;
+    after?: boolean;
 }
 
 declare type FieldCfg = any;
@@ -24,8 +27,10 @@ declare type PositionCfg = any;
 declare type Position = any[];
 
 interface IPositionBoth {
-    before: Position;
-    after: Position;
+    backward: Position;
+    forward: Position;
+    before?: Position;
+    after?: Position;
 }
 
 declare type PositionBoth = Position | IPositionBoth;
@@ -34,7 +39,7 @@ declare type HasMore = boolean | IPositionHasMore | RecordSet;
 export interface IPositionQueryParamsControllerOptions {
     field: FieldCfg;
     position: PositionCfg;
-    direction: DirectionCfg;
+    direction: CursorDirection;
     limit: number;
 }
 
@@ -81,12 +86,12 @@ class PositionQueryParamsController implements IQueryParamsController {
         return this._more;
     }
 
-    private _resolveDirection(loadDirection: Direction, optDirection: DirectionCfg): DirectionCfg {
-        let navDirection;
+    private _resolveDirection(loadDirection: Direction, optDirection: CursorDirection): CursorDirection {
+        let navDirection: CursorDirection;
         if (loadDirection === 'down') {
-            navDirection = 'after';
+            navDirection = CursorDirection.forward;
         } else if (loadDirection === 'up') {
-            navDirection = 'before';
+            navDirection = CursorDirection.backward;
         } else {
             navDirection = optDirection;
         }
@@ -113,19 +118,21 @@ class PositionQueryParamsController implements IQueryParamsController {
 
     private _getDefaultMoreMeta(): IPositionHasMore {
         return {
+            backward: false,
+            forward: false,
             before: false,
             after: false
         };
     }
 
     private _processMoreByType(navResult: HasMore, loadDirection?: Direction): void {
-        let navDirection: DirectionCfg;
+        let navDirection: CursorDirection;
 
         const process = (more, key?) => {
             if (typeof more === 'boolean') {
-                if (loadDirection || this._options.direction !== 'both') {
-                    navDirection = this._resolveDirection(loadDirection, this._options.direction);
-                    let newMore = this._getMore().getMoreMeta(key);
+                if (loadDirection || this._getDirection() !== CursorDirection.bothways) {
+                    navDirection = this._resolveDirection(loadDirection, this._getDirection());
+                    let newMore = this._getMoreMeta(key);
 
                     if (!newMore) {
                         newMore = this._getDefaultMoreMeta();
@@ -137,7 +144,7 @@ class PositionQueryParamsController implements IQueryParamsController {
                     Logger.error('Wrong type of \"more\" value. Must be Object', 'Controls/_source/QueryParamsController/PositionQueryParamsController');
                 }
             } else if (more instanceof Object) {
-                if (!loadDirection && this._options.direction === 'both') {
+                if (!loadDirection && this._getDirection() === CursorDirection.bothways) {
                     this._getMore().setMoreMeta({...more}, key);
                 } else {
                     Logger.error('Wrong type of \"more\" value. Must be boolean', 'Controls/_source/QueryParamsController/PositionQueryParamsController');
@@ -173,13 +180,13 @@ class PositionQueryParamsController implements IQueryParamsController {
     }
 
     prepareQueryParams(loadDirection: Direction): IAdditionalQueryParams {
-        let navDirection: DirectionCfg;
+        let navDirection: CursorDirection;
         let navPosition: Position;
         let sign: string = '';
         let additionalFilter: object;
         let navField: Field;
 
-        navDirection = this._resolveDirection(loadDirection, this._options.direction);
+        navDirection = this._resolveDirection(loadDirection, this._getDirection());
         if (loadDirection === 'up') {
             navPosition = this._beforePosition;
         } else if (loadDirection === 'down') {
@@ -194,13 +201,13 @@ class PositionQueryParamsController implements IQueryParamsController {
 
         navField = this._resolveField(this._options.field);
         switch (navDirection) {
-            case 'after':
+            case CursorDirection.forward:
                 sign = '>=';
                 break;
-            case 'before':
+            case CursorDirection.backward:
                 sign = '<=';
                 break;
-            case 'both':
+            case CursorDirection.bothways:
                 sign = '~';
                 break;
         }
@@ -289,11 +296,11 @@ class PositionQueryParamsController implements IQueryParamsController {
         this._positionByMeta = null;
         if (metaNextPosition) {
             if (metaNextPosition instanceof Array) {
-                if (loadDirection || this._options.direction !== 'both') {
-                    if (loadDirection === 'down' || this._options.direction === 'after') {
+                if (loadDirection || this._getDirection() !== CursorDirection.bothways) {
+                    if (loadDirection === 'down' || this._getDirection() === CursorDirection.forward) {
                         this._afterPosition = metaNextPosition;
                         this._positionByMeta = true;
-                    } else if (loadDirection === 'up' || this._options.direction === 'before') {
+                    } else if (loadDirection === 'up' || this._getDirection() === CursorDirection.backward) {
                         this._beforePosition = metaNextPosition;
                         this._positionByMeta = true;
                     }
@@ -301,11 +308,16 @@ class PositionQueryParamsController implements IQueryParamsController {
                     Logger.error('QueryParamsController/Position: Wrong type of \"nextPosition\" value. Must be object');
                 }
             } else {
-                if (!loadDirection && this._options.direction === 'both') {
+                if (!loadDirection && this._getDirection() === CursorDirection.bothways) {
                     if (metaNextPosition.before && metaNextPosition.before instanceof Array
                         && metaNextPosition.after && metaNextPosition.after instanceof Array) {
                         this._beforePosition = metaNextPosition.before;
                         this._afterPosition = metaNextPosition.after;
+                        this._positionByMeta = true;
+                    } else if (metaNextPosition.backward && metaNextPosition.backward instanceof Array
+                        && metaNextPosition.forward && metaNextPosition.forward instanceof Array) {
+                        this._beforePosition = metaNextPosition.backward;
+                        this._afterPosition = metaNextPosition.forward;
                         this._positionByMeta = true;
                     } else {
                         Logger.error('QueryParamsController/Position: ' +
@@ -342,18 +354,18 @@ class PositionQueryParamsController implements IQueryParamsController {
     }
 
     hasMoreData(loadDirection: Direction, rootKey: string | number): boolean | undefined {
-        let navDirection: DirectionCfg;
+        let navDirection: CursorDirection;
         let moreData: HasMore | unknown;
         let navigationResult: boolean | undefined;
 
         if (loadDirection === 'up') {
-            navDirection = 'before';
+            navDirection = CursorDirection.backward;
         } else if (loadDirection === 'down') {
-            navDirection = 'after';
+            navDirection = CursorDirection.forward;
         }
 
         if (this._isMoreCreated()) {
-            moreData = this._getMore().getMoreMeta(rootKey);
+            moreData = this._getMoreMeta(rootKey);
         }
 
         // moreData can be undefined for root with rootKey, if method does not support multi-navigation.
@@ -383,6 +395,45 @@ class PositionQueryParamsController implements IQueryParamsController {
         this._afterPosition = null;
         this._beforePosition = null;
         this._positionByMeta = null;
+    }
+
+    /**
+     * Возвращает название напрвыления
+     * @private
+     */
+    private _getDirection(): CursorDirection {
+        return PositionQueryParamsController._convertDirection(this._options.direction);
+    }
+
+    /**
+     * Получает moreMeta, совместимый с CursorDirection
+     * TODO Необходимо убрать этот метод, когда своместимость более не понадобится
+     * @param key
+     * @private
+     */
+    private _getMoreMeta(key: string | number): IPositionHasMore {
+        const meta: IPositionHasMore = this._getMore().getMoreMeta(key) as IPositionHasMore;
+        if (meta && meta.backward === undefined) {
+            meta.backward = meta.before;
+        }
+        if (meta && meta.forward === undefined) {
+            meta.forward = meta.after;
+        }
+        return meta;
+    }
+
+    /**
+     * Конвертор старых и новых названий направления.
+     * TODO Необходимо убрать этот метод, когда своместимость более не понадобится
+     * @param position
+     */
+    private static _convertDirection(position: CursorDirection | 'before' | 'after' | 'both'): CursorDirection {
+        const map = {
+            before: CursorDirection.backward,
+            after: CursorDirection.forward,
+            both: CursorDirection.bothways
+        };
+        return map[position] ? map[position] : position;
     }
 }
 

@@ -17,13 +17,15 @@ const MODERN_IE_VERSION = 11;
 /**
  * Специализированный заголовок-кнопка для перехода на предыдущий уровень.
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Демо-пример</a>.
+ * Дополнительно о работе с заголовками читайте <a href="/doc/platform/developmentapl/interface-development/controls/content-managment/heading/">здесь</a>.
+ * 
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">демо-пример</a>
  *
  * @class Controls/_heading/Back
  * @extends Core/Control
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_buttons/interface/IClick
- * @mixes Controls/_interface/ITooltip
+ * @implements Controls/_interface/ICaption
+ * @implements Controls/_buttons/interface/IClick
+ * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
  * @implements Controls/_interface/IIconSize
@@ -62,12 +64,12 @@ const MODERN_IE_VERSION = 11;
  * @default primary
  * @example
  * Заголовок-кнопка со стилем по умолчанию.
- * <pre>
- *    <Controls.heading:Back/>
+ * <pre class="brush: html">
+ *    <Controls.heading:Back />
  * </pre>
  * Заголовок-кнопка со стилем "secondary".
- * <pre>
- *    <Controls.heading:Back style="secondary"/>
+ * <pre class="brush: html">
+ *    <Controls.heading:Back style="secondary" />
  * </pre>
  */
 
@@ -96,12 +98,10 @@ const MODERN_IE_VERSION = 11;
  * @variant l Большой заголовок.
  * @default m
  * @example
- * Back heading has default size.
- * <pre>
- *    <Controls.heading:Back/>
+ * <pre class="brush: html">
+ *    <Controls.heading:Back />
  * </pre>
- * Back heading has 'l' size.
- * <pre>
+ * <pre class="brush: html">
  *    <Controls.heading:Back size="l"/>
  * </pre>
  */

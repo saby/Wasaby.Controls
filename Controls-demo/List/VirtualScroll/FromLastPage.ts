@@ -18,7 +18,7 @@ class FromLastPage extends Control {
         view: 'infinity',
         sourceConfig: {
             pageSize: 40,
-            direction: 'before',
+            direction: 'backward',
             page: 25,
             hasMore: false
         }

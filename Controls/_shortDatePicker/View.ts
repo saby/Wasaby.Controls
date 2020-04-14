@@ -27,7 +27,6 @@ import {Logger} from 'UI/Utils';
  * @demo Controls-demo/ShortDatePicker/Source/Index
  * @demo Controls-demo/ShortDatePicker/DisplayedRanges/Index
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/ContentTemplate/Index
- * @demo Controls-demo/ShortDatePicker/MonthTemplate/Periods/Index
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/Index
  */
 
@@ -44,7 +43,6 @@ import {Logger} from 'UI/Utils';
  * @demo Controls-demo/ShortDatePicker/Source/Index
  * @demo Controls-demo/ShortDatePicker/DisplayedRanges/Index
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/ContentTemplate/Index
- * @demo Controls-demo/ShortDatePicker/MonthTemplate/Periods/Index
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/Index
  *
  */

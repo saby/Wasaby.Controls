@@ -360,40 +360,5 @@ define([
             });
          });
       });
-
-      describe('_isIconChecked', function () {
-         [{
-            periods: [[null, new Date(2018, 1)]],
-            date: new Date(2017, 5),
-            result: true
-         }, {
-            periods: [[null, new Date(2018, 1)]],
-            date: new Date(2019, 1),
-            result: false
-         }, {
-            periods: [[new Date(2019, 4), new Date(2019, 9)]],
-            date: new Date(2019, 6),
-            result: true
-         }, {
-            periods: [[new Date(2019, 4), new Date(2019, 9)]],
-            date: new Date(2019, 1),
-            result: false
-         }, {
-            periods: [[new Date(2019, 5), null]],
-            date: new Date(2019, 5),
-            result: false
-         }, {
-            periods: [[new Date(2019, 5), null]],
-            date: new Date(2020, 1),
-            result: true
-         }].forEach(function(test) {
-            it('should define correctly the range of icons period', function () {
-               const component = calendarTestUtils.createComponent(bodyItem, {});
-               let result = component._isIconChecked(test.periods, test.date);
-
-               assert.equal(result, test.result);
-            });
-         });
-      });
    });
 });
