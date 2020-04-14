@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/Tile/ItemPadding/PaddingStandard/PaddingStandard';
+import * as Template from 'wml!Controls-demo/Tile/ItemPadding/PaddingDefault/PaddingDefault';
 import {Gadgets} from '../../DataHelpers/DataCatalog';
 import {HierarchicalMemory} from 'Types/source';
 import 'css!Controls-demo/Controls-demo';
