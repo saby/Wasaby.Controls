@@ -8,7 +8,6 @@ import {ICrud, PrefetchProxy} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
 import {Collection, Tree, TreeItem, SelectionController} from 'Controls/display';
-import {debounce} from 'Types/function';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
@@ -34,7 +33,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
  * @category Popup
  * @author Герасимов А.М.
  */
-const SUB_DROPDOWN_OPEN_DELAY = 100;
+const SUB_DROPDOWN_OPEN_DELAY = 400;
 
 class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     protected _template: TemplateFunction = ViewTemplate;
@@ -60,7 +59,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     protected _beforeMount(options: IMenuOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
         this._additionalFilter = this.additionalFilter.bind(this, options);
-        this._openSubDropdown = debounce(this.openSubDropdown.bind(this), SUB_DROPDOWN_OPEN_DELAY);
 
         if (options.source) {
             return this.loadItems(options);
@@ -103,7 +101,8 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     }
 
     private _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): void {
-        this.handleCurrentItem(item, sourceEvent.target, sourceEvent.nativeEvent);
+        this.setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
+        this.startHandleItemTimeout();
     }
 
     protected _itemClick(event: SyntheticEvent<MouseEvent>, item: Model, nativeEvent: MouseEvent): void {
@@ -219,7 +218,6 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
     private handleCurrentItem(item: TreeItem<Model>, target, nativeEvent): void {
         const needOpenDropDown = item.getContents().get(this._options.nodeProperty) && !item.getContents().get('readOnly');
         const needCloseDropDown = this.subMenu && this._subDropdownItem && this._subDropdownItem !== item;
-        this.setItemParamsOnHandle(item, target, nativeEvent);
 
         if (needCloseDropDown) {
             this.setSubMenuPosition();
@@ -250,7 +248,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         clearTimeout(this._handleCurrentItemTimeout);
         this._handleCurrentItemTimeout = setTimeout(() => {
             this.handleItemTimeoutCallback();
-        }, 200);
+        }, SUB_DROPDOWN_OPEN_DELAY);
     }
 
     private isMouseInOpenedItemArea(curMouseEvent): boolean {
@@ -458,7 +456,7 @@ class MenuControl extends Control<IMenuOptions> implements IMenuControl {
         return hasAdditional;
     }
 
-    private openSubDropdown(target: EventTarget, item: TreeItem<Model>): void {
+    private _openSubDropdown(target: EventTarget, item: TreeItem<Model>): void {
         // openSubDropdown is called by debounce and a function call can occur when the control is destroyed,
         // just check _children to make sure, that the control isnt destroyed
         if (item && this._children.Sticky && this._subDropdownItem) {
