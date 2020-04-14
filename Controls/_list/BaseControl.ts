@@ -1091,6 +1091,7 @@ var _private = {
             },
             searchAbortCallback: () => {
                 self._portionedSearchInProgress = false;
+                self._showContinueSearchButton = true;
                 self._sourceController.cancelLoading();
                 _private.hideIndicator(self);
 
