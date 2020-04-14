@@ -68,12 +68,13 @@ const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
  * @param collection Коллекция элементов, содержащих операции над записью
  * @param actionsGetter callback-функция, возвращающая список операций по модели элемента коллекции
  * @param visibilityCallback callback-функция, возвращающая видимость операции над записью
+ * TODO обнови тесты. Было return void стало return boolean
  */
 export function assignActions(
     collection: IItemActionsCollection,
     actionsGetter: TActionsGetterFunction,
     visibilityCallback: TItemActionVisibilityCallback = () => true
-): void {
+): boolean {
     if (collection.areActionsAssigned()) {
         return;
     }
@@ -102,6 +103,8 @@ export function assignActions(
     if (hasChanges) {
         collection.nextVersion();
     }
+
+    return hasChanges;
 }
 
 /**

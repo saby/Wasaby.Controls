@@ -8,7 +8,8 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
-import { CollectionItem } from 'Controls/display';
+import { CollectionItem, IItemActionsContainer } from 'Controls/display';
+import {Model} from 'types/entity';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
@@ -640,25 +641,32 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return !!this.getItemById(id, keyProperty);
     },
 
-    setItemActions: function(item, actions) {
+    /**
+     * Устанавливает набор операций над записью для каждой записи
+     * @param item
+     * @param actions
+     */
+    setItemActions(item: Model, actions: IItemActionsContainer): string {
+        let result = 'none';
         if (item.get) {
             const id = item.get(this._options.keyProperty);
             if (this.hasItemById(id, this._options.keyProperty)) {
                if (isEqual(this._actions[id], actions)) {
-                   return 'none';
+                   result = 'none';
+               } else {
+                   result = Object.keys(this._actions).length ? 'partial' : 'all';
+                   this._actions[id] = actions;
+                   this._actionsVersions[id] = this._actionsVersions[id] ? ++this._actionsVersions[id] : 1;
+                   this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
                }
-               const result = Object.keys(this._actions).length ? 'partial' : 'all';
-               this._actions[id] = actions;
-               this._actionsVersions[id] = this._actionsVersions[id] ? ++this._actionsVersions[id] : 1;
-               this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
-               return result;
             } else if (this._editingItemData && this._editingItemData.key === id) {
                 this._editingItemData.itemActions = actions;
                 this._editingItemData.drawActions = !!(actions && actions.all.length) ||
                    !!(this._options.editingConfig && this._options.editingConfig.toolbarVisibility);
-                return 'all';
+                result = 'all';
             }
         }
+        return result;
     },
 
     _prepareDisplayItemForAdd: function(item) {

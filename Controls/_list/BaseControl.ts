@@ -72,6 +72,7 @@ const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_PROPORTION = 2;
+const ItemActionsUpdatedEvent = 'itemActionsUpdated';
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -1720,10 +1721,14 @@ var _private = {
         });
     },
 
+    /**
+     * Возвращает функцию получения операций над записью для элемента коллекции
+     * @param self
+     */
     getActionsGetter(self: any): (item?: CollectionItem<Model>) => IItemAction[] {
-        return self._options.itemActionsProperty
-            ? (item) => (item.getContents().get(self._options.itemActionsProperty) as IItemAction[])
-            : () => (self._options.itemActions as IItemAction[]);
+        return self._options.itemActionsProperty ?
+            (item) => item.getContents().get(self._options.itemActionsProperty) as IItemAction[] :
+            () => self._options.itemActions as IItemAction[];
     }
 };
 
@@ -2545,7 +2550,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldUpdateItemActions = false;
         }
     },
-    _updateItemActions: function() {
+    _updateItemActions(): void {
         if (this.__error) {
             return;
         }
@@ -2553,11 +2558,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this._listViewModel && this._hasItemActions) {
-            ItemActionsController.assignActions(
+            const hasChanges = ItemActionsController.assignActions(
                 this._listViewModel,
                 _private.getActionsGetter(this),
                 this._options.itemActionVisibilityCallback
             );
+            // Набираем список операций над записью в старой модели
+            // и возвращаем для каждой записи, какие записи обновились - 'all'|'partial'|'none'
+            if (hasChanges && !this._options.useNewModel) {
+                let updateRecords: string;
+                this._listViewModel.each((item) => {
+                    updateRecords = this._listViewModel.setItemActions(item.getContents(), item.getActions());
+                });
+                this._listViewModel.nextModelVersion(updateRecords !== 'all', ItemActionsUpdatedEvent);
+            }
         }
     },
     _onAfterEndEdit: function(event, item, isAdd) {
