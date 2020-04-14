@@ -49,6 +49,19 @@ define('Controls/interface/IBreadCrumbs', [
     */
 
    /**
+    * @name Controls/interface/IBreadCrumbs#backgroundStyle
+    * @cfg {string} Префикс стиля для настройки фона внутренних компонентов хлебных крошек с абсолютным позиционированием.
+    * @default default (фон цвета темы)
+    */
+
+   /*
+    * @name Controls/interface/IBreadCrumbs#backgroundStyle
+    * @cfg {string} Style prefix to configure background for breadcrumbs components with absolute positioning.
+    * @default default (theme background)
+    */
+
+
+   /**
     * @name Controls/interface/IBreadCrumbs#displayProperty
     * @cfg {String} Имя свойства элемента, содержимое которого будет отображаться.
     * @default title
