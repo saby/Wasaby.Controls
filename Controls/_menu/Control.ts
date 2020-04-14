@@ -235,11 +235,11 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         this._notify('moreButtonClick', [selectedItems]);
     }
 
-    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventName: string, eventResult: Model|Node) {
+    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventName: string, eventResult: Model|Node, nativeEvent: SyntheticEvent<MouseEvent>) {
         if (eventName === 'menuOpened') {
             this.subMenu = eventResult;
         } else {
-            const notifyResult = this._notify(eventName, [eventResult]);
+            const notifyResult = this._notify(eventName, [eventResult, nativeEvent]);
             if (eventName === 'pinClick' || eventName === 'itemClick' && notifyResult !== false) {
                 this._closeSubMenu();
             }

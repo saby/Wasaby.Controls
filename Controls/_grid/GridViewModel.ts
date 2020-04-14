@@ -1379,9 +1379,14 @@ var
                         tableCellStyles: ''
                     };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme);
-                currentColumn.getColspanedPaddingClassList = () => {
-                    currentColumn.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${self._options.theme}`;
-                    return currentColumn.classList.padding;
+                currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
+                    /**
+                     * isColspaned добавлена как костыль для временного лечения ошибки.
+                     * После закрытия можно удалить здесь и из шаблонов.
+                     * https://online.sbis.ru/opendoc.html?guid=4230f8f0-7fd1-4018-bd8c-08d703af3899
+                     */
+                    columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${self._options.theme}`;
+                    return columnData.classList.padding;
                 };
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;

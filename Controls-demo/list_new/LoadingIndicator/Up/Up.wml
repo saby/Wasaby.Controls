@@ -1,8 +1,8 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth800">
     <Controls.scroll:Container attr:class="controlsDemo__height300">
         <Controls.list:View keyProperty="id" source="{{_viewSource}}">
             <ws:navigation source="page" view="infinity">
-                <ws:sourceConfig direction="both" pageSize="{{20}}" page="{{4}}" hasMore="{{false}}"/>
+                <ws:sourceConfig direction="bothways" pageSize="{{20}}" page="{{4}}" hasMore="{{false}}"/>
                 <ws:viewConfig pagingMode="direct"/>
             </ws:navigation>
         </Controls.list:View>
