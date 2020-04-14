@@ -48,17 +48,16 @@
 
 .controls-Notification__simpleTemplate {
   display: flex;
+  align-items: center;
 }
 
 .controls-Notification__simpleTemplate-icon_theme-@{themeName} {
   margin-right: @icon_offset_notification;
 }
 
-.controls-Notification__simpleTemplate-message_theme-@{themeName} {
-  &:before {
-    content: '\200b';
-    font-size: @text_line-height_notification;
-  }
+//height of notification message mustn't be less then height of icon
+.controls-Notification__simpleTemplate_theme-@{themeName} {
+  min-height: @icon-size_notification;
 }
 
 .controls-Notification__content-spacing_theme-@{themeName} {
