@@ -8,22 +8,19 @@ export interface IOptions {
     replacer: string;
     formatMaskChars: object;
 }
+
 export function formattedValueToValue(formattedValue, options: IOptions): string {
     const format = FormatBuilder.getFormat(options.mask, options.formatMaskChars, options.replacer);
 
     if (formattedValue.match(format.searchingGroups)) {
-        try {
-            return Formatter.getClearData(format, formattedValue).value;
-        } catch (e) {
-            Logger.error('Некорректные данные. Проверьте значение на соответствие маске.');
-            if (options.replacer === '') {
-                return '';
-            } else {
-                const keys = Object.keys(options.formatMaskChars).join('');
-                return options.mask.replace(new RegExp(`[${keys}]`, 'g'), options.replacer);
-            }
-        }
+        return Formatter.getClearData(format, formattedValue).value;
     }
 
-    return formattedValue;
+    Logger.error('Некорректные данные. Проверьте значение на соответствие маске.');
+    if (options.replacer === '') {
+        return '';
+    } else {
+        const keys = Object.keys(options.formatMaskChars).join('');
+        return options.mask.replace(new RegExp(`[${keys}]`, 'g'), options.replacer);
+    }
 }

@@ -1,6 +1,6 @@
 import RegExpUtil = require('Controls/Utils/RegExp');
 
-      
+
 
       var
          _private = {
@@ -141,7 +141,7 @@ import RegExpUtil = require('Controls/Utils/RegExp');
             getFormat: function(mask, searchingGroupChar, getReplacingKey) {
                var
                   keysGroup = '',
-                  searchingGroups = '',
+                  searchingGroups = '^',
                   singlingDelimitersGroup = '',
                   positionGroup = 0,
                   groupInPairingDelimiter = 0,
@@ -212,6 +212,8 @@ import RegExpUtil = require('Controls/Utils/RegExp');
                   execSearchingGroupChar = searchingGroupChar.exec(mask);
                }
 
+               searchingGroups += '$';
+
                return {
                   searchingGroups: searchingGroups,
                   delimiterGroups: delimiterGroups
@@ -244,4 +246,4 @@ import RegExpUtil = require('Controls/Utils/RegExp');
       FormatBuilder._private = _private;
 
       export = FormatBuilder;
-   
+
