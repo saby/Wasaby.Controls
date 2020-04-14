@@ -282,8 +282,8 @@ export default class CollectionItem<T> extends mixin<
         return this._counters;
     }
 
-    getMultiSelectClasses(): string {
-        let classes = `controls-ListView__checkbox controls-ListView__notEditable`; // need theme
+    getMultiSelectClasses(theme): string {
+        let classes = `controls-ListView__checkbox controls-ListView__notEditable_theme-${theme}`;
         if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += ' controls-ListView__checkbox-onhover';
         }
@@ -401,14 +401,14 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
-    getWrapperClasses(templateHighlightOnHover: boolean = true): string {
+    getWrapperClasses(templateHighlightOnHover: boolean = true, theme?: string): string {
         return `controls-ListView__itemV
             controls-ListView__item_default
             controls-ListView__item_showActions
             js-controls-SwipeControl__actionsContainer
             ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
             ${this.isEditing() ? 'controls-ListView__item_editing' : ''}
-            ${this.isDragged() ? 'controls-ListView__item_dragging' : ''}`; // need theme
+            ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}`;
     }
 
     getItemActionClasses(itemActionsPosition: string): string {
