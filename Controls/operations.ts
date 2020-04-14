@@ -36,6 +36,7 @@ export {default as Selection} from 'Controls/_operations/MultiSelector/Selection
 export {default as PanelContainer} from 'Controls/_operations/Panel/Container';
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
 import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';
+import {default as ISelectionStrategy} from 'Controls/_operations/MultiSelector/SelectionStrategy/ISelectionStrategy';
 
 export {
    Panel,
@@ -46,5 +47,6 @@ export {
    MultiSelector as SimpleMultiSelector,
    FilterController,
    FlatSelectionStrategy,
-   TreeSelectionStrategy
+   TreeSelectionStrategy,
+   ISelectionStrategy
 };

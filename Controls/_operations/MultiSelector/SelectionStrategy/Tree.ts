@@ -26,6 +26,7 @@ interface ITreeSelectionStrategyOptions {
    selectAncestors: boolean;
    selectDescendants: boolean;
    nodesSourceControllers?: Object;
+   hierarchyRelation: relation.Hierarchy;
 }
 
 interface IEntryPath {
@@ -46,12 +47,12 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       selection = clone(selection);
 
       keys.forEach((key) => {
-         let item: Record = getItems(model).getRecordById(key);
+         const item: Record = getItems(model).getRecordById(key);
 
          if (!item || isNode(item, model, hierarchyRelation)) {
             this._selectNode(selection, key, model, hierarchyRelation);
          } else {
-            this._selectLeaf(selection, key, model, hierarchyRelation);
+            this._selectLeaf(selection, key);
          }
       });
 

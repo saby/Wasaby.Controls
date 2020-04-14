@@ -38,6 +38,7 @@ import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {IHashMap} from 'Types/declarations';
+import { SelectionController } from 'Controls/_list/BaseControl/SelectionController';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -479,7 +480,7 @@ var _private = {
     },
     toggleSelection: function(self, event) {
         const allowToggleSelection = !_private.isBlockedForLoading(self._loadingIndicatorState) &&
-            self._children.selectionController;
+            self._selectionController;
 
         if (allowToggleSelection) {
             const model = self.getViewModel();
@@ -490,7 +491,7 @@ var _private = {
             }
 
             if (toggledItemId) {
-                self._children.selectionController.onCheckBoxClick(toggledItemId, model.getSelectionStatus(toggledItemId));
+                self._selectionController.toggleItem(toggledItemId, model.getSelectionStatus(toggledItemId));
                 _private.moveMarkerToNext(self, event);
             }
         }
@@ -1722,6 +1723,37 @@ var _private = {
             actionCaptionPosition: options.actionCaptionPosition,
             itemActionsClass: options.itemActionsClass
         });
+    },
+
+    createSelectionController(self: any): SelectionController {
+        return new SelectionController({
+            listModel: self._listViewModel,
+            keyProperty: self._options.keyProperty,
+            filter: self._options.filter,
+            root: self._options.root,
+            selectedKeys: self._options.selectedKeys,
+            excludedKeys: self._options.excludedKeys
+        });
+    },
+
+    updateSelectionController(self: any): void {
+        self._selectionController.update({
+            listModel: self._listViewModel,
+            keyProperty: self._options.keyProperty,
+            filter: self._options.filter,
+            root: self._options.root,
+            selectedKeys: self._options.selectedKeys,
+            excludedKeys: self._options.excludedKeys
+        });
+    },
+
+    isNeedUpdateSelectionController(self: any, oldOptions: any, newOptions: any): boolean {
+        return self._viewModelConstructor !== newOptions.viewModelConstructor
+            || oldOptions.keyProperty !== newOptions.keyProperty
+            || oldOptions.filter !== newOptions.field
+            || oldOptions.root !== newOptions.root
+            || oldOptions.selectedKeys !== newOptions.selectedKeys
+            || oldOptions.excludedKeys !== newOptions.excludedKeys;
     }
 };
 
@@ -1826,6 +1858,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _isMobileIOS: detection.isMobileIOS,
 
+    _selectionController: null,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1844,12 +1878,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
 
         this._inertialScrolling = new InertialScrolling();
-
-        // todo Костыль, т.к. построение ListView зависит от SelectionController.
-        // Будет удалено при выполнении одного из пунктов:
-        // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
-        // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
-        this._multiSelectReadyCallback = this._multiSelectReadyCallbackFn.bind(this);
 
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
@@ -2059,14 +2087,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
     },
 
-    // todo Костыль, т.к. построение ListView зависит от SelectionController.
-    // Будет удалено при выполнении одного из пунктов:
-    // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
-    // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
-    _multiSelectReadyCallbackFn: function(multiSelectReady) {
-        this._multiSelectReady = multiSelectReady;
-    },
-
     getViewModel: function() {
         return this._listViewModel;
     },
@@ -2090,6 +2110,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             container.addEventListener('dragstart', this._nativeDragStart);
         }
         this._loadedItems = null;
+
+        if (this._items && this._needSelectionController) {
+            this._selectionController = _private.createSelectionController(this);
+        }
     },
 
     _beforeUpdate: function(newOptions) {
@@ -2099,8 +2123,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
-        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback 
+        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback
                                                 !== newOptions.itemActionVisibilityCallback;
+        const needUpdateSelectionController = _private.isNeedUpdateSelectionController(this, this._options, newOptions);
         this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
@@ -2199,6 +2224,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._loadedItems) {
             this._shouldRestoreScrollPosition = true;
+        }
+
+        if (needUpdateSelectionController) {
+            _private.updateSelectionController(this);
         }
     },
 
@@ -2338,8 +2367,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
         }
-        if (this._delayedSelect && this._children.selectionController) {
-            this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
+        if (this._delayedSelect && this._selectionController) {
+            this._selectionController.toggleItem(this._delayedSelect.key, this._delayedSelect.status);
             this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);
             this._delayedSelect = null;
         }
@@ -2404,7 +2433,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onCheckBoxClick: function(e, key, status, readOnly) {
         if (!readOnly) {
-            this._children.selectionController.onCheckBoxClick(key, status);
+            this._selectionController.toggleItem(key, status);
             this._notify('checkboxClick', [key, status]);
         }
     },

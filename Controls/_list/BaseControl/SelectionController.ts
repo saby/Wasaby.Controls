@@ -1,9 +1,13 @@
 import Control = require('Core/Control');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import collection = require('Types/collection');
-import Deferred = require('Core/Deferred');
-import template = require('wml!Controls/_list/BaseControl/SelectionController');
 import {isEqual} from 'Types/object';
+import { ListViewModel } from 'Controls/list';
+import { Collection, SelectionController as Selection } from "Controls/display";
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
+import {ISelectionStrategy, FlatSelectionStrategy, TreeSelectionStrategy} from 'Controls/operations';
+import { relation } from 'Types/entity';
+import cInstance = require('Core/core-instance');
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -15,95 +19,240 @@ import {isEqual} from 'Types/object';
 
 type TChangeSelectionType = 'selectAll'|'unselectAll'|'toggleAll';
 
-var _private = {
-    notifyAndUpdateSelection: function(self, options) {
-        const
-            selectionCount = self._multiselection.getCount(),
-            oldSelectedKeys = options.selectedKeys,
-            oldExcludedKeys = options.excludedKeys,
-            // selectionCount будет равен нулю, если в списке не отмечено ни одного элемента
-            // или после выделения всех записей через "отметить всё", пользователь руками снял чекбоксы со всех записей
-            newSelectedKeys = selectionCount === 0 ? [] : self._multiselection.selectedKeys,
-            newExcludedKeys = selectionCount === 0 ? [] : self._multiselection.excludedKeys,
-            selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
-            excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
+export interface ISelectionControllerOptions {
+    listModel: Collection|ListViewModel;
+    keyProperty: string;
+    selectedKeys?: TKeys;
+    excludedKeys?: TKeys;
+    filter: object;
+    root: object;
+}
 
-        if (selectedKeysDiff.added.length || selectedKeysDiff.removed.length) {
-            self._notify('selectedKeysChanged', [newSelectedKeys, selectedKeysDiff.added, selectedKeysDiff.removed]);
+export class SelectionController {
+    private _resetSelection: boolean = false;
+    private _model: Collection|ListViewModel;
+    private _keyProperty: string;
+    private _selectedKeys: TKeys = [];
+    private _excludedKeys: TKeys = [];
+    private _limit: number = 0;
+    private _multiselection: ISelectionStrategy;
+    private _filter: object;
+    private _root: object;
+
+    constructor(options: ISelectionControllerOptions) {
+        this._model = options.listModel;
+        this._keyProperty = options.keyProperty;
+        this._selectedKeys = options.selectedKeys.slice();
+        this._excludedKeys = options.excludedKeys.slice();
+
+        this._multiselection = this._getMultiselection(options);
+        this._updateSelectionForRender();
+        // TODO
+        // this._notify('register', ['selectedTypeChanged', this, _private.selectedTypeChangedHandler], {bubbling: true});
+        this._notifySelectedCountChangedEvent(options.selectedKeys, options.excludedKeys);
+
+        this._onCollectionChange = this._onCollectionChange.bind(this);
+        this._model.getItems().subscribe('onCollectionChange', this._onCollectionChange);
+    }
+
+    toggleItem(key: string, status: boolean): void {
+        let selection;
+        if (status === true || status === null) {
+            selection = this._multiselection.unSelect(this._getSelection(), [key], this._model);
+        } else {
+            selection = this._multiselection.select(this._getSelection(), [key], this._model);
+        }
+        this._notifyAndUpdateSelection(selection);
+    }
+
+    update(options: ISelectionControllerOptions): void {
+        const itemsChanged = options.listModel.getItems() !== this._model.getItems();
+        const modelChanged = options.listModel !== this._model;
+        const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
+
+        if (this._keyProperty !== options.keyProperty) {
+            this._keyProperty = options.keyProperty;
         }
 
-        if (excludedKeysDiff.added.length || excludedKeysDiff.removed.length) {
-            self._notify('excludedKeysChanged', [newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed]);
+        if (modelChanged) {
+            this._model = options.listModel;
         }
 
-        /*
-         TODO: удалить это после того, как количество отмеченных записей будет рассчитываться на БЛ: https://online.sbis.ru/opendoc.html?guid=d9b840ba-8c99-49a5-98d3-78715d10d540
-         Такие костыли из-за ситуации, когда прикладники в браузер кладут список, обёрнутый в Container/Scroll, и события перестают всплывать по всем нашим обёрткам, лежащим внутри браузера.
-         С большинством событий нет проблем, т.к. наши обёртки ничего с ними не делают, и всё работает по опциям, которые приходят сверху.
+        if (itemsChanged) {
+            this._model.getItems().unsubscribe('onCollectionChange', this._onCollectionChange);
+            options.listModel.getItems().subscribe('onCollectionChange', this._onCollectionChange);
+        }
 
-         Но в данном случае, событие существует только для связи ПМО и списка, оно должно полностью обрабатываться в браузере.
+        if (this._shouldResetSelection(options.filter, options.root)) {
+            this._resetSelection = true;
+        } else if (selectionChanged) {
+            this._selectedKeys = options.selectedKeys;
+            this._excludedKeys = options.excludedKeys;
+            this._notifyAndUpdateSelection(this._getSelection());
+        } else if (itemsChanged || modelChanged) {
+            this._updateSelectionForRender();
+        }
+    }
 
-         Были такие альтернативы:
-         1) Заставить прикладников убрать Container/Scroll, чтобы исключить вообще все подобные проблемы.
-         Это решение не сработает, т.к. тогда начнут скроллиться поиск, пмо и т.д.
+    clear(): void {
+        this._clearSelection();
+        // this._notify('listSelectedKeysCountChanged', [0], {bubbling: true});
+        this._multiselection = null;
+        this._model.getItems().unsubscribe('onCollectionChange', this._onCollectionChange);
+        this._onCollectionChange = null;
+        // this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
+    }
 
-         2) Сделать какую-нибудь обёртку для прикладников, в которую они должны будут заворачивать список, а она будет прокидывать все такие события.
-         По идее браузер и есть такая обёртка, так что это решение не очень.
+    private _getMultiselection(options: any): ISelectionStrategy {
+        if (options.parentProperty) {
+            return new TreeSelectionStrategy({
+                nodesSourceControllers: options.nodesSourceControllers,
+                selectDescendants: options.selectDescendants,
+                selectAncestors: options.selectAncestors,
+                hierarchyRelation: new relation.Hierarchy({
+                    keyProperty: options.keyProperty || 'id',
+                    parentProperty: options.parentProperty || 'Раздел',
+                    nodeProperty: options.nodeProperty || 'Раздел@',
+                    declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
+                })
+            });
+        } else {
+            return new FlatSelectionStrategy();
+        }
+    }
 
-         3) Заставить прикладников прокидывать это событие.
-         Они не смогут это правильно сделать, т.к. сейчас на браузере даже нет опции selectedKeysCount.
+    private _clearSelection(): void {
+        this._selectedKeys = [];
+        this._excludedKeys = [];
 
-         4) Прокидывать событие в Container/Scroll.
-         Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
-         */
-        _private.notifySelectedCountChangedEvent(self, newSelectedKeys, newExcludedKeys);
-       self._multiselection.updateSelectionForRender();
-    },
+        if (this._model.getCount()) {
+            this._updateSelectionForRender();
+        }
+    }
 
-    getItemsKeys: function (items) {
-        var keys = [];
-        items.forEach(function (item) {
+    private _updateSelection(selection: ISelection): void {
+        this._selectedKeys = selection.selected;
+        this._excludedKeys = selection.excluded;
+    }
+
+    private _remove(keys: TKeys): void {
+        this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
+        this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
+    }
+
+    private _getSelection(): ISelection {
+        return {
+            selected: this._selectedKeys,
+            excluded: this._excludedKeys
+        };
+    }
+
+    private _getRoot(): object|null {
+        return this._model.getRoot && this._model.getRoot()
+           ? this._model.getRoot().getContents()
+           : null;
+    }
+
+    private _getCount(selection?: ISelection): number|null {
+        return this._multiselection.getCount(selection || this._getSelection(), this._model, this._limit);
+    }
+
+    private _getItemsKeys(items: TKeys): TKeys {
+        const keys = [];
+        items.forEach((item) => {
             keys.push(item.getId());
         });
         return keys;
-    },
+    }
 
-    isAllSelected(self, selectedKeys, excludedKeys): boolean {
-        const model = self._options.listModel;
-        const selectedCount = self._multiselection.getCount();
-        const selectionCountEqualsItemsCount = !model.getHasMoreData() && selectedCount && selectedCount === model.getCount();
-        const root = _private.getRoot(self);
+    private _getSelectionForModel(): Map<TKey, boolean> {
+        return this._multiselection.getSelectionForModel(this._getSelection(), this._model, this._limit, this._keyProperty);
+    }
 
-        return !model.getHasMoreData() && selectionCountEqualsItemsCount ||
-            selectedKeys.includes(root) && (excludedKeys.length === 0 || excludedKeys.length === 1 && excludedKeys[0] === root);
-    },
+    /**
+     * Transforms selection to single array of selectedKeys and set it to model. Used for rendering checkboxes in lists.
+     */
+    private _updateSelectionForRender(): void {
+        const selectionForModel: Map<TKey, boolean> = this._getSelectionForModel();
 
-    isAllSelectedInRoot(self, root): boolean {
-        const selectedKeys = self._multiselection.selectedKeys;
-        const excludedKeys = self._multiselection.excludedKeys;
-        const isAllSelected = _private.isAllSelected(self, selectedKeys, excludedKeys);
+        if (cInstance.instanceOfModule(this._model, 'Controls/display:Collection')) {
+            Selection.selectItems(this._model, selectionForModel);
+        } else {
+            const selectionForOldModel: Object = {};
 
-        return isAllSelected && selectedKeys.includes(root);
-    },
+            selectionForModel.forEach((stateSelection, itemId) => {
+                selectionForOldModel[itemId] = stateSelection;
+            });
+            this._model.updateSelection(selectionForOldModel);
+        }
+    }
 
-    getRoot(self): number|string|null {
-        const model = self._options.listModel;
-        return model.getRoot && model.getRoot() ? model.getRoot().getContents() : null;
-    },
+    private _isAllSelectedInRoot(root: object): boolean {
+        const isAllSelected = this._isAllSelected(this._selectedKeys, this._excludedKeys);
+        return isAllSelected && this._selectedKeys.includes(root);
+    }
 
-    notifySelectedCountChangedEvent(self, selectedKeys, excludedKeys): void {
-        const count = self._multiselection.getCount();
-        const isAllSelected = _private.isAllSelected(self, selectedKeys, excludedKeys);
-        self._notify('listSelectedKeysCountChanged', [count, isAllSelected], {bubbling: true});
-    },
+    private _isAllSelected(selectedKeys: TKeys, excludedKeys: TKeys): boolean {
+        const selectedCount = this._getCount();
+        const selectionCountEqualsItemsCount = !this._model.getHasMoreData() && selectedCount && selectedCount === this._model.getCount();
+        const root = this._getRoot();
 
-    onCollectionChange: function (event, action, newItems, newItemsIndex, removedItems) {
+        return !this._model.getHasMoreData() && selectionCountEqualsItemsCount || selectedKeys.includes(root)
+           && (excludedKeys.length === 0 || excludedKeys.length === 1 && excludedKeys[0] === root);
+    }
+
+    private _isSelectionChanged(selectedKeys: TKeys, excludedKeys: TKeys): boolean {
+        return !isEqual(selectedKeys, this._selectedKeys) || !isEqual(excludedKeys, this._excludedKeys);
+    }
+
+    private _shouldResetSelection(filter: object, root: object): boolean {
+        const listFilterChanged = !isEqual(this._filter, filter);
+        const rootChanged = this._root !== root;
+        const isAllSelected = this._isAllSelectedInRoot(this._getRoot());
+
+        return isAllSelected && (rootChanged || listFilterChanged);
+    }
+
+    private _notifyAndUpdateSelection(newSelection: ISelection): void {
+        const
+           selectionCount = this._getCount(),
+           oldSelectedKeys = this._selectedKeys,
+           oldExcludedKeys = this._excludedKeys,
+           // selectionCount будет равен нулю, если в списке не отмечено ни одного элемента
+           // или после выделения всех записей через "отметить всё", пользователь руками снял чекбоксы со всех записей
+           newSelectedKeys = selectionCount === 0 ? [] : newSelection.selected,
+           newExcludedKeys = selectionCount === 0 ? [] : newSelection.excluded,
+           selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
+           excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
+
+        if (selectedKeysDiff.added.length || selectedKeysDiff.removed.length) {
+            // TODO
+            // self._notify('selectedKeysChanged', [newSelectedKeys, selectedKeysDiff.added, selectedKeysDiff.removed]);
+        }
+
+        if (excludedKeysDiff.added.length || excludedKeysDiff.removed.length) {
+            // TODO
+            // self._notify('excludedKeysChanged', [newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed]);
+        }
+
+        this._updateSelection(newSelection);
+        this._updateSelectionForRender();
+    }
+
+    private _notifySelectedCountChangedEvent(selectedKeys: TKeys, excludedKeys: TKeys): void {
+        const count = this._getCount();
+        const isAllSelected = this._isAllSelected(selectedKeys, excludedKeys);
+        // TODO
+        // self._notify('listSelectedKeysCountChanged', [count, isAllSelected], {bubbling: true});
+    }
+
+    private _onCollectionChange(action: string, newItems: [], newItemsIndex: number, removedItems: []): void {
         // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
         // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
-        if (this._options.listModel.getItems()) {
-            const countItems = this._options.listModel.getItems().getCount();
+        if (this._model.getItems()) {
+            const countItems = this._model.getItems().getCount();
             if (action === collection.IObservable.ACTION_REMOVE) {
-                this._multiselection.remove(_private.getItemsKeys(removedItems));
+                this._remove(this._getItemsKeys(removedItems));
             }
             // Выделение надо сбросить только после вставки новых данных в модель
             // Это необходимо, чтобы чекбоксы сбросились только после отрисовки новых данных,
@@ -111,162 +260,25 @@ var _private = {
             // а данные отрисуются только после загрузки
             if (this._resetSelection && action === collection.IObservable.ACTION_RESET || !countItems) {
                 this._resetSelection = false;
-                this._multiselection.selectedKeys = [];
-                this._multiselection.excludedKeys = [];
+                this._selectedKeys = [];
+                this._excludedKeys = [];
             }
-            _private.notifyAndUpdateSelection(this, this._options);
+            this._notifyAndUpdateSelection(this._getSelection());
         }
-    },
+    }
 
-    selectedTypeChangedHandler(typeName: TChangeSelectionType, limit?: number|void): void {
-        const selectedKeys = this._options.selectedKeys;
-        const excludedKeys = this._options.excludedKeys;
-        const items = this._options.items;
+    private _selectedTypeChangedHandler(typeName: TChangeSelectionType, limit?: number): void {
+        const items = this._model.getItems();
         let needChangeSelection = true;
 
-        if (typeName === 'selectAll' && !selectedKeys.length && !excludedKeys.length && !items.getCount()) {
+        if (typeName === 'selectAll' && !this._selectedKeys.length && !this._excludedKeys.length && !items.getCount()) {
             needChangeSelection = false;
         }
 
         if (needChangeSelection) {
-            this._multiselection.setLimit(limit);
+            this._limit = limit;
             this._multiselection[typeName]();
-            _private.notifyAndUpdateSelection(this, this._options);
-        }
-    },
-
-    getMultiselection: function(options): Promise {
-        return new Promise((resolve) => {
-           require(['Controls/operations'], (operations) => {
-              if (options.parentProperty) {
-                 resolve(new operations.HierarchySelection({
-                    selectedKeys: options.selectedKeys,
-                    excludedKeys: options.excludedKeys,
-                    keyProperty: options.keyProperty,
-                    parentProperty: options.parentProperty,
-                    nodeProperty: options.nodeProperty,
-                    hasChildrenProperty: options.hasChildrenProperty,
-                    listModel: options.listModel,
-                    selectionStrategy: new operations.TreeSelectionStrategy({
-                       nodesSourceControllers: options.nodesSourceControllers,
-                       selectDescendants: options.selectDescendants,
-                       selectAncestors: options.selectAncestors
-                    })
-                 }));
-              } else {
-                 resolve(new operations.Selection({
-                    selectedKeys: options.selectedKeys,
-                    excludedKeys: options.excludedKeys,
-                    keyProperty: options.keyProperty,
-                    listModel: options.listModel,
-                    selectionStrategy: new operations.FlatSelectionStrategy()
-                 }));
-              }
-           });
-        });
-    },
-
-    isSelectionChanged(self, newOptions): boolean {
-        return !isEqual(newOptions.selectedKeys, self._multiselection.selectedKeys) ||
-               !isEqual(newOptions.excludedKeys, self._multiselection.excludedKeys);
-    },
-
-    shouldResetSelection(self, newOptions): boolean {
-        const listFilterChanged = !isEqual(self._options.filter, newOptions.filter);
-        const rootChanged = self._options.root !== newOptions.root;
-        const isAllSelected = _private.isAllSelectedInRoot(self, _private.getRoot(self));
-
-        return isAllSelected && (rootChanged || listFilterChanged);
-    },
-
-    clearSelection(self): void {
-        self._multiselection.selectedKeys = [];
-        self._multiselection.excludedKeys = [];
-
-        if (self._options.listModel.getCount()) {
-            self._multiselection.updateSelectionForRender();
+            this._notifyAndUpdateSelection(this._getSelection());
         }
     }
-};
-
-var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/SelectionController.prototype */{
-    _template: template,
-    _resetSelection: false,
-    _beforeMount: function (options) {
-        // todo Костыль, т.к. построение ListView зависит от SelectionController.
-        // Будет удалено при выполнении одного из пунктов:
-        // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
-        // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
-        const multiSelectReady = new Deferred();
-        if (options.multiSelectReadyCallback) {
-            options.multiSelectReadyCallback(multiSelectReady);
-        }
-
-        return _private.getMultiselection(options).then((multiselectionInstance) => {
-            this._multiselection = multiselectionInstance;
-            this._multiselection.updateSelectionForRender();
-            multiSelectReady.callback();
-        });
-    },
-
-    _afterMount(): void {
-        const options = this._options;
-
-        this._notify('register', ['selectedTypeChanged', this, _private.selectedTypeChangedHandler], {bubbling: true});
-        _private.notifySelectedCountChangedEvent(this, options.selectedKeys, options.excludedKeys);
-
-        this._onCollectionChangeHandler = _private.onCollectionChange.bind(this);
-        options.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
-    },
-
-    _beforeUpdate: function (newOptions) {
-        const itemsChanged = newOptions.items !== this._options.items;
-        const modelChanged = this._options.listModel !== newOptions.listModel;
-        const selectionChanged = _private.isSelectionChanged(this, newOptions);
-
-        if (this._options.keyProperty !== newOptions.keyProperty) {
-           this._multiselection.setKeyProperty(newOptions.keyProperty);
-        }
-
-        if (modelChanged) {
-            this._multiselection.setListModel(newOptions.listModel);
-        }
-
-        if (itemsChanged) {
-            this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
-            newOptions.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);
-        }
-
-        if (_private.shouldResetSelection(this, newOptions)) {
-            this._resetSelection = true;
-        } else if (selectionChanged) {
-            this._multiselection.selectedKeys = newOptions.selectedKeys;
-            this._multiselection.excludedKeys = newOptions.excludedKeys;
-            _private.notifyAndUpdateSelection(this, newOptions);
-        } else if (itemsChanged || modelChanged) {
-           this._multiselection.updateSelectionForRender();
-        }
-    },
-
-    onCheckBoxClick: function (key, status) {
-        if (status === true || status === null) {
-            this._multiselection.unselect([key]);
-        } else {
-            this._multiselection.select([key]);
-        }
-        _private.notifyAndUpdateSelection(this, this._options);
-    },
-
-    _beforeUnmount: function () {
-        _private.clearSelection(this);
-        this._notify('listSelectedKeysCountChanged', [0], {bubbling: true});
-        this._multiselection = null;
-        this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
-        this._onCollectionChangeHandler = null;
-        this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
-    }
-});
-
-SelectionController._private = _private;
-
-export = SelectionController;
+}
