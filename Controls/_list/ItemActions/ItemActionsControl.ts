@@ -9,7 +9,6 @@ import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { constants } from 'Env/Env';
 import cClone = require('Core/core-clone');
-import 'css!theme?Controls/list';
 
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 import {IItemAction} from 'Controls/_list/interface/IList';
@@ -294,6 +293,7 @@ ItemActionsControl.getDefaultOptions = function() {
         itemActions: []
     };
 };
+ItemActionsControl._theme = ['Controls/list'];
 ItemActionsControl._private = _private;
 ItemActionsControl._isUnitTesting = false;
 
