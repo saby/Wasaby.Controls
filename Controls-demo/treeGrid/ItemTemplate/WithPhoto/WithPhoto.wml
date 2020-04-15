@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper_fixed_width">
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell demo-TreeWithProto__wrapper16">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/Photo16px/Index' }}">
@@ -9,7 +9,7 @@
         <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo16px.Index collapseNodes/>
     </div>
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell demo-TreeWithProto__wrapper24">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/Photo24px/Index' }}">
@@ -18,7 +18,7 @@
         <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo24px.Index collapseNodes/>
     </div>
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell demo-TreeWithProto__wrapper32">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/Photo32px/Index' }}">
@@ -27,7 +27,7 @@
         <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo32px.Index collapseNodes/>
     </div>
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell demo-TreeWithProto__wrapper40">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/Photo40px/Index' }}">
@@ -36,7 +36,7 @@
         <Controls-demo.treeGrid.ItemTemplate.WithPhoto.Photo40px.Index collapseNodes/>
     </div>
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell demo-TreeWithProto__wrapperTwoLevels">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/TwoLevelsWithPhoto/Index' }}">
@@ -45,7 +45,7 @@
         <Controls-demo.treeGrid.ItemTemplate.WithPhoto.TwoLevelsWithPhoto.Index collapseNodes/>
     </div>
 
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell demo-TreeWithProto__wrapperTwoLevelsNoPhoto">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/ItemTemplate/WithPhoto/TwoLevelsWithoutPhoto/Index' }}">
