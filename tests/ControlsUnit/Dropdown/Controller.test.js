@@ -675,26 +675,43 @@ define(
             dropdownController._open();
          });
 
-         it ('_open menuPopupOptions', () => {
-            let expectedMenuOptions = {
-               fittingMode: {
+         describe ('menuPopupOptions', () => {
+            let newConfig, dropdownController;
+            beforeEach(() => {
+               newConfig = clone(config);
+               newConfig.menuPopupOptions = {
+                  fittingMode: {
+                     vertical: 'adaptive',
+                     horizontal: 'overflow'
+                  },
+                  direction: 'top',
+                  target: 'testTarget',
+                  templateOptions: {
+                     closeButtonVisibility: true
+                  }
+               };
+               dropdownController = getDropdownController(newConfig);
+               dropdownController._sourceController = {
+                  hasMoreData: () => {}
+               };
+            });
+            it ('only popupOptions', () => {
+               const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
+               assert.deepEqual(resultPopupConfig.fittingMode,  {
                   vertical: 'adaptive',
                   horizontal: 'overflow'
-               },
-               direction: 'top',
-               target: 'testTarget'
-            };
-            let newConfig = clone(config);
-            newConfig.menuPopupOptions = expectedMenuOptions;
-            let dropdownController = getDropdownController(newConfig);
+               });
+               assert.equal(resultPopupConfig.direction, 'top');
+               assert.equal(resultPopupConfig.target, 'testTarget');
+            });
 
-            dropdownController._sourceController = {
-               hasMoreData: () => {}
-            };
-            const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
-            assert.deepEqual(resultPopupConfig.fittingMode, expectedMenuOptions.fittingMode);
-            assert.equal(resultPopupConfig.direction, expectedMenuOptions.direction);
-            assert.equal(resultPopupConfig.target, expectedMenuOptions.target);
+            it('templateOptions', () => {
+               dropdownController._menuSource = 'testSource';
+               const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
+
+               assert.isTrue(resultPopupConfig.templateOptions.closeButtonVisibility);
+               assert.equal(resultPopupConfig.templateOptions.source, 'testSource');
+            });
          });
 
          it('events on open/close', async () => {

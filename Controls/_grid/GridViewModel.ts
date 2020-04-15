@@ -211,8 +211,21 @@ var
             }
         },
         prepareSeparatorClasses(separatorOptions: Partial<IGridSeparatorOptions & IGridSeparatorOptionsDeprecated>, classLists, theme): void {
-            classLists.base += ` controls-Grid__row-cell_withRowSeparator_size-${separatorOptions.rowSeparatorSize}_theme-${theme}`;
-            classLists.base += ` controls-Grid__rowSeparator_size-${separatorOptions.rowSeparatorSize}_theme-${theme}`;
+
+            if (separatorOptions.rowSeparatorSize === null) {
+
+                // Вспомогательный класс, вешается на ячейку. Через него задаются правильные отступы ячейке
+                // обеспечивает отсутствие "скачков" при динамической смене размера границы.
+                classLists.base += ` controls-Grid__row-cell_withRowSeparator_size-${separatorOptions.rowSeparatorSize}`;
+            } else {
+                classLists.base += ` controls-Grid__row-cell_withRowSeparator_size-${separatorOptions.rowSeparatorSize}_theme-${theme}`;
+                classLists.columnContent += ` controls-Grid__rowSeparator_size-${separatorOptions.rowSeparatorSize}_theme-${theme}`;
+            }
+
+            if (separatorOptions.columnSeparatorSize !== null) {
+                classLists.base += ' controls-Grid__row-cell_withColumnSeparator';
+                classLists.base += ` controls-Grid__columnSeparator_size-${separatorOptions.columnSeparatorSize}_theme-${theme}`;
+            }
         },
 
         isFixedCell: function(params) {
@@ -1313,18 +1326,17 @@ var
             current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
                 return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
             };
-            const superGetMarkerClasses = current.getMarkerClasses;
             current.getMarkerClasses = (): string => {
-                let classes = ' controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-' + self._options.theme;
+                let classes = `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}`;
 
-                if (self.rowSeparatorSize) {
+                if (self._options.rowSeparatorSize) {
                     classes += ' controls-GridView-with-rowSeparator_item_marker';
                 } else {
                     classes += ' controls-GridView-without-rowSeparator_item_marker';
                 }
                 classes += '_theme-' + self._options.theme;
 
-                return superGetMarkerClasses.apply(this) + classes;
+                return classes;
             }
 
             if (current.multiSelectVisibility !== 'hidden') {

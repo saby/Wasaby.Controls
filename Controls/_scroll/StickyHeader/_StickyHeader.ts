@@ -136,13 +136,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._updateBottomShadowStyle();
     }
 
-    protected _beforeUpdate(): void {
-        // При каждом обновлении контента необходимо также обновлять значения тени.
-        // Иначе это приводит к ошибкас в расчётах на iOS/Safari 13
-        this._bottomShadowStyle = '';
-        this._topShadowStyle = '';
-    }
-
     protected _afterMount(): void {
         const children = this._children;
 
