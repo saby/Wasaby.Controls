@@ -328,8 +328,11 @@ interface IPosition {
          }
       },
 
-      getBody(): number {
-         return document.body.clientHeight;
+      getBody(): object {
+         return {
+            height: document.body.clientHeight,
+            width: document.body.clientWidth
+         };
       },
 
       getViewportHeight(): number {
