@@ -2114,6 +2114,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._items && this._needSelectionController) {
             this._selectionController = _private.createSelectionController(this);
         }
+
+        this._notify('register', ['selectedTypeChanged', this, this._selectionController.selectedTypeChangedHandler], {bubbling: true});
+        this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
     },
 
     _beforeUpdate: function(newOptions) {
@@ -2308,6 +2311,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (this._sourceController) {
             this._sourceController.destroy();
+        }
+
+        if (this._selectionController) {
+            this._selectionController.clear();
         }
 
         if (this._groupingLoader) {

@@ -31,8 +31,6 @@ import {default as Button} from './_operations/Button';
 import MultiSelector from 'Controls/_operations/__MultiSelector';
 import FilterController from 'Controls/_operations/FilterController';
 
-export {default as HierarchySelection} from 'Controls/_operations/MultiSelector/HierarchySelection';
-export {default as Selection} from 'Controls/_operations/MultiSelector/Selection';
 export {default as PanelContainer} from 'Controls/_operations/Panel/Container';
 import FlatSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Flat';
 import TreeSelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/Tree';

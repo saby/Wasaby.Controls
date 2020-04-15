@@ -1,18 +1,18 @@
-import { Collection } from 'Controls/display';
-import { ListViewModel } from 'Controls/list';
-import { relation } from 'Types/entity';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection} from 'Controls/interface/';
+import { ISelectionModel } from 'Controls/list';
 
 /**
  * Интерфейс базового класс стратегий выбора
  */
-// параметры hierarchyRelation и keyProperty нужен для поддержки старой модели, с полным переходом на новую они уйдут
+// параметры keyProperty нужен для поддержки старой модели, с полным переходом на новую они уйдут
 interface ISelectionStrategy {
-   select(selection: ISelection, keys: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): ISelection;
-   unSelect(selection: ISelection, keys: TKeys, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): ISelection;
-   getCount(selection: ISelection, model: Collection|ListViewModel, limit: number, hierarchyRelation?: relation.Hierarchy): number|null;
-   getSelectionForModel(selection: ISelection, model: Collection|ListViewModel, limit?: number, keyProperty?: string, hierarchyRelation?: relation.Hierarchy): Map<TKey, boolean|null>;
-   isAllSelected(selection: ISelection, folderId: TKey, model?: Collection|ListViewModel, hierarchyRelation?: relation.Hierarchy): boolean;
+   select(selection: ISelection, keys: TKeys, model: ISelectionModel): void;
+   unSelect(selection: ISelection, keys: TKeys, model: ISelectionModel): void;
+   selectAll(selection: ISelection, model: ISelectionModel, limit: number): void;
+   toggleAll(selection: ISelection, model: ISelectionModel, limit: number): void;
+   unselectAll(selection: ISelection, model: ISelectionModel): void;
+   getCount(selection: ISelection, model: ISelectionModel, limit: number): number|null;
+   getSelectionForModel(selection: ISelection, model: ISelectionModel, limit: number, keyProperty: string): Map<TKey, boolean|null>;
 }
 
 export default ISelectionStrategy;

@@ -105,7 +105,7 @@ import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling'
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {IList} from './_list/interface/IList';
 import {IItemAction} from './_list/interface/IList';
-import {SelectionController} from './_list/BaseControl/SelectionController';
+import {SelectionController, ISelectionModel} from './_list/BaseControl/SelectionController';
 
 export {
     AddButton,
@@ -153,5 +153,6 @@ export {
     IVirtualScrollConfig,
     IList,
     IItemAction,
-    SelectionController
+    SelectionController,
+    ISelectionModel
 };

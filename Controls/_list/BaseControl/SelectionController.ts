@@ -2,12 +2,12 @@ import Control = require('Core/Control');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import collection = require('Types/collection');
 import {isEqual} from 'Types/object';
-import { ListViewModel } from 'Controls/list';
-import { Collection, SelectionController as Selection } from "Controls/display";
+import { SelectionController as Selection } from "Controls/display";
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
 import {ISelectionStrategy, FlatSelectionStrategy, TreeSelectionStrategy} from 'Controls/operations';
 import { relation } from 'Types/entity';
 import cInstance = require('Core/core-instance');
+import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -19,8 +19,16 @@ import cInstance = require('Core/core-instance');
 
 type TChangeSelectionType = 'selectAll'|'unselectAll'|'toggleAll';
 
+export interface ISelectionModel extends Selection.ISelectionCollection {
+    getHasMoreData(): boolean;
+    getCount(): number;
+    getRoot(): any;
+    getItems(): collection.RecordSet;
+    updateSelection(selection: object): void;
+}
+
 export interface ISelectionControllerOptions {
-    listModel: Collection|ListViewModel;
+    listModel: ISelectionModel;
     keyProperty: string;
     selectedKeys?: TKeys;
     excludedKeys?: TKeys;
@@ -30,7 +38,7 @@ export interface ISelectionControllerOptions {
 
 export class SelectionController {
     private _resetSelection: boolean = false;
-    private _model: Collection|ListViewModel;
+    private _model: ISelectionModel;
     private _keyProperty: string;
     private _selectedKeys: TKeys = [];
     private _excludedKeys: TKeys = [];
@@ -38,6 +46,12 @@ export class SelectionController {
     private _multiselection: ISelectionStrategy;
     private _filter: object;
     private _root: object;
+    private get _selection(): ISelection {
+        return {
+            selected: this._selectedKeys,
+            excluded: this._excludedKeys
+        };
+    }
 
     constructor(options: ISelectionControllerOptions) {
         this._model = options.listModel;
@@ -48,25 +62,23 @@ export class SelectionController {
         this._multiselection = this._getMultiselection(options);
         this._updateSelectionForRender();
         // TODO
-        // this._notify('register', ['selectedTypeChanged', this, _private.selectedTypeChangedHandler], {bubbling: true});
         this._notifySelectedCountChangedEvent(options.selectedKeys, options.excludedKeys);
 
         this._onCollectionChange = this._onCollectionChange.bind(this);
-        this._model.getItems().subscribe('onCollectionChange', this._onCollectionChange);
+        getItems(this._model).subscribe('onCollectionChange', this._onCollectionChange);
     }
 
-    toggleItem(key: string, status: boolean): void {
-        let selection;
+    toggleItem(key: TKey, status: boolean): void {
         if (status === true || status === null) {
-            selection = this._multiselection.unSelect(this._getSelection(), [key], this._model);
+            this._unselect([key]);
         } else {
-            selection = this._multiselection.select(this._getSelection(), [key], this._model);
+            this._select([key]);
         }
-        this._notifyAndUpdateSelection(selection);
+        this._notifyAndUpdateSelection(this._selection);
     }
 
     update(options: ISelectionControllerOptions): void {
-        const itemsChanged = options.listModel.getItems() !== this._model.getItems();
+        const itemsChanged = getItems(options.listModel) !== getItems(this._model);
         const modelChanged = options.listModel !== this._model;
         const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
 
@@ -79,8 +91,8 @@ export class SelectionController {
         }
 
         if (itemsChanged) {
-            this._model.getItems().unsubscribe('onCollectionChange', this._onCollectionChange);
-            options.listModel.getItems().subscribe('onCollectionChange', this._onCollectionChange);
+            getItems(this._model).unsubscribe('onCollectionChange', this._onCollectionChange);
+            getItems(options.listModel).subscribe('onCollectionChange', this._onCollectionChange);
         }
 
         if (this._shouldResetSelection(options.filter, options.root)) {
@@ -88,7 +100,7 @@ export class SelectionController {
         } else if (selectionChanged) {
             this._selectedKeys = options.selectedKeys;
             this._excludedKeys = options.excludedKeys;
-            this._notifyAndUpdateSelection(this._getSelection());
+            this._notifyAndUpdateSelection(this._selection);
         } else if (itemsChanged || modelChanged) {
             this._updateSelectionForRender();
         }
@@ -98,9 +110,74 @@ export class SelectionController {
         this._clearSelection();
         // this._notify('listSelectedKeysCountChanged', [0], {bubbling: true});
         this._multiselection = null;
-        this._model.getItems().unsubscribe('onCollectionChange', this._onCollectionChange);
+        getItems(this._model).unsubscribe('onCollectionChange', this._onCollectionChange);
         this._onCollectionChange = null;
-        // this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
+    }
+
+    selectedTypeChangedHandler(typeName: TChangeSelectionType, limit?: number): void {
+        const items = getItems(this._model);
+        let needChangeSelection = true;
+
+        if (typeName === 'selectAll' && !this._selectedKeys.length && !this._excludedKeys.length && !items.getCount()) {
+            needChangeSelection = false;
+        }
+
+        if (needChangeSelection) {
+            this._limit = limit;
+            this._multiselection[typeName](this._selection, this._model, limit);
+            this._notifyAndUpdateSelection(this._selection);
+        }
+    }
+
+    private _select(keys: TKeys): void {
+        if (this._limit && keys.length === 1 && !this._excludedKeys.includes(keys[0])) {
+            this._increaseLimit(keys.slice());
+        }
+
+        this._multiselection.select(this._selection, keys, this._model);
+    }
+
+    private _unselect(keys: TKeys): void {
+        this._multiselection.unSelect(this._selection, keys, this._model);
+    }
+
+    private _clearSelection(): void {
+        this._selectedKeys = [];
+        this._excludedKeys = [];
+    }
+
+    private _remove(keys: TKeys): void {
+        this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
+        this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
+    }
+
+    /**
+     * Increases the limit on the number of selected items, placing all other unselected in excluded list
+     * Увеличивает лимит на количество выбранных записей, все предыдущие невыбранные записи при этом попадают в исключение
+     * @param {Array} keys
+     * @private
+     */
+    private _increaseLimit(keys: TKeys): void {
+        const limit: number = this._limit ? this._limit - this._excludedKeys.length : 0;
+        const selectionForModel: Map<TKey, boolean> = this._getSelectionForModel();
+        let selectedItemsCount: number = 0;
+
+        getItems(this._model).forEach((item) => {
+            const key: TKey = item.get(this._keyProperty);
+
+            if (selectedItemsCount < limit && selectionForModel.get(key) !== false) {
+                selectedItemsCount++;
+            } else if (selectedItemsCount >= limit && keys.length) {
+                selectedItemsCount++;
+                this._limit++;
+
+                if (keys.includes(key)) {
+                    keys.splice(keys.indexOf(key), 1);
+                } else {
+                    this._excludedKeys.push(key);
+                }
+            }
+        });
     }
 
     private _getMultiselection(options: any): ISelectionStrategy {
@@ -121,32 +198,6 @@ export class SelectionController {
         }
     }
 
-    private _clearSelection(): void {
-        this._selectedKeys = [];
-        this._excludedKeys = [];
-
-        if (this._model.getCount()) {
-            this._updateSelectionForRender();
-        }
-    }
-
-    private _updateSelection(selection: ISelection): void {
-        this._selectedKeys = selection.selected;
-        this._excludedKeys = selection.excluded;
-    }
-
-    private _remove(keys: TKeys): void {
-        this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
-        this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
-    }
-
-    private _getSelection(): ISelection {
-        return {
-            selected: this._selectedKeys,
-            excluded: this._excludedKeys
-        };
-    }
-
     private _getRoot(): object|null {
         return this._model.getRoot && this._model.getRoot()
            ? this._model.getRoot().getContents()
@@ -154,7 +205,7 @@ export class SelectionController {
     }
 
     private _getCount(selection?: ISelection): number|null {
-        return this._multiselection.getCount(selection || this._getSelection(), this._model, this._limit);
+        return this._multiselection.getCount(selection || this._selection, this._model, this._limit);
     }
 
     private _getItemsKeys(items: TKeys): TKeys {
@@ -166,7 +217,7 @@ export class SelectionController {
     }
 
     private _getSelectionForModel(): Map<TKey, boolean> {
-        return this._multiselection.getSelectionForModel(this._getSelection(), this._model, this._limit, this._keyProperty);
+        return this._multiselection.getSelectionForModel(this._selection, this._model, this._limit, this._keyProperty);
     }
 
     /**
@@ -213,7 +264,7 @@ export class SelectionController {
         return isAllSelected && (rootChanged || listFilterChanged);
     }
 
-    private _notifyAndUpdateSelection(newSelection: ISelection): void {
+    private _notifyAndUpdateSelection(newSelection: ISelection, model: ISelectionModel): void {
         const
            selectionCount = this._getCount(),
            oldSelectedKeys = this._selectedKeys,
@@ -235,7 +286,6 @@ export class SelectionController {
             // self._notify('excludedKeysChanged', [newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed]);
         }
 
-        this._updateSelection(newSelection);
         this._updateSelectionForRender();
     }
 
@@ -249,8 +299,8 @@ export class SelectionController {
     private _onCollectionChange(action: string, newItems: [], newItemsIndex: number, removedItems: []): void {
         // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
         // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
-        if (this._model.getItems()) {
-            const countItems = this._model.getItems().getCount();
+        if (getItems(this._model)) {
+            const countItems = getItems(this._model).getCount();
             if (action === collection.IObservable.ACTION_REMOVE) {
                 this._remove(this._getItemsKeys(removedItems));
             }
@@ -260,25 +310,9 @@ export class SelectionController {
             // а данные отрисуются только после загрузки
             if (this._resetSelection && action === collection.IObservable.ACTION_RESET || !countItems) {
                 this._resetSelection = false;
-                this._selectedKeys = [];
-                this._excludedKeys = [];
+                this._clearSelection();
             }
-            this._notifyAndUpdateSelection(this._getSelection());
-        }
-    }
-
-    private _selectedTypeChangedHandler(typeName: TChangeSelectionType, limit?: number): void {
-        const items = this._model.getItems();
-        let needChangeSelection = true;
-
-        if (typeName === 'selectAll' && !this._selectedKeys.length && !this._excludedKeys.length && !items.getCount()) {
-            needChangeSelection = false;
-        }
-
-        if (needChangeSelection) {
-            this._limit = limit;
-            this._multiselection[typeName]();
-            this._notifyAndUpdateSelection(this._getSelection());
+            this._notifyAndUpdateSelection(this._selection);
         }
     }
 }
