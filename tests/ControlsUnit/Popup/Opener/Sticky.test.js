@@ -816,6 +816,32 @@ define(
             StickyStrategy._private.getTargetCoords = getTargetCoords;
             StickyStrategy._private.invertPosition = invertPosition;
          });
+
+         it('update sizes from options', () => {
+            let popupCfg = {
+               config: {
+                  width: 100,
+                  maxWidth: 300,
+                  minWidth: 100
+               }
+            };
+            let popupOptions = {
+               height: 200,
+               minHeight: 200,
+               maxHeight: 500,
+               minWidth: 200
+            };
+            let resultConfig = {
+               height: 200,
+               minHeight: 200,
+               maxHeight: 500,
+               minWidth: 200,
+               width: 100,
+               maxWidth: 300
+            };
+            StickyController._private.updateSizes(popupCfg, popupOptions);
+            assert.deepEqual(popupCfg.config, resultConfig);
+         });
       });
    }
 );

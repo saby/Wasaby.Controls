@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth1700">
+    <Controls.treeGrid:View
+        attr:class="demoTreeWithProto__treeGridTwoLevels"
+        keyProperty="id"
+        parentProperty="Раздел"
+        nodeProperty="Раздел@"
+        source="{{_viewSourceTwo}}"
+        columns="{{_twoLvlColumns}}"
+        bind:expandedItems="_expandedItems">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/treeGrid:ItemTemplate" withoutLevelPadding="{{true}}" itemData="{{itemData}}"/>
+        </ws:itemTemplate>
+    </Controls.treeGrid:View>
+</div>

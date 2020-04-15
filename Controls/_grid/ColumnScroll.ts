@@ -49,7 +49,8 @@ const
               return;
           }
           // горизонтальный сколл имеет position: sticky и из-за особенностей grid-layout скрываем скролл (display: none), что-бы он не распирал таблицу при изменении ширины
-          _private.hideColumnScrollWrapper(self._children.content);
+          _private.toggleStickyElementsForScrollCalculation(self._children.content, false);
+          _private.forceReflowForSafari(self._children.content);
          _private.drawTransform(self, 0);
          const isFullSupport = isFullGridSupport();
          let
@@ -82,7 +83,7 @@ const
          self._contentSizeForHScroll = isFullSupport ? self._contentSize - self._fixedColumnsWidth : self._contentSize;
          _private.drawTransform(self, self._scrollPosition);
          // после расчетов убираем display: none
-         _private.showColumnScrollWrapper(self._children.content);
+          _private.toggleStickyElementsForScrollCalculation(self._children.content, true);
       },
       updateFixedColumnWidth(self) {
          self._fixedColumnsWidth = _private.calculateFixedColumnWidth(
@@ -146,27 +147,37 @@ const
          }
 
       },
-
        /**
-        * Возвращает видимость скроллбара
-        * @param container
+        * Скрывает/показывает горизонтальный скролл и шапку таблицы (display: none),
+        * чтобы, из-за особенностей sticky элементов, которые лежат внутри grid-layout,
+        * они не распирали таблицу при изменении ширины.
+        * @param {HTMLElement} container
+        * @param {Boolean} visible Определяет, будут ли отображены sticky элементы
         */
-      showColumnScrollWrapper(container: HTMLElement): void {
-           const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
-           if (scroll) {
-               (scroll as HTMLElement).style.removeProperty('display');
-           }
+      toggleStickyElementsForScrollCalculation(container: HTMLElement, visible: boolean): void {
+          const stickyElements = container.querySelectorAll('.controls-Grid_columnScroll_wrapper');
+          let stickyElement;
+
+          for (let i = 0; i < stickyElements.length; i++) {
+              stickyElement = stickyElements[i] as HTMLElement;
+              if (visible) {
+                  stickyElement.style.removeProperty('display');
+              } else {
+                  stickyElement.style.display = 'none';
+              }
+          }
       },
 
-       /**
-        * Скрывает горизонтальный скролл (display: none),
-        * чтобы, из-за особенностей grid-layout, он не распирал таблицу при изменении шириныи
-        * @param container
-        */
-      hideColumnScrollWrapper(container: HTMLElement): void {
-          const scroll = container.getElementsByClassName('controls-Grid_columnScroll_wrapper')[0];
-          if (scroll) {
-              (scroll as HTMLElement).style.display = 'none';
+      forceReflowForSafari(container: HTMLElement): void {
+          if (detection.safari) {
+              const header = container.getElementsByClassName('controls-Grid__header')[0] as HTMLElement;
+
+              if (header) {
+                  header.style.display = 'none';
+                  // tslint:disable-next-line:no-unused-expression
+                  container.offsetWidth;
+                  header.style.removeProperty('display');
+              }
           }
       },
 

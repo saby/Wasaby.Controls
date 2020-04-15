@@ -17,9 +17,6 @@ export interface IBarOptions extends IControlOptions {
  *
  * @demo Controls-demo/Indicator/ProgressBar/ProgressBar
  *
- * @css @color-ProgressBar__bar Progress bar background color
- * @css @height-ProgressBar_bar Progress bar height
- * @css @color-ProgressBar__progress Progress bar fill color
  */
 
 /*
@@ -32,9 +29,6 @@ export interface IBarOptions extends IControlOptions {
  *
  * @demo Controls-demo/Indicator/ProgressBar/ProgressBar
  *
- * @css @color-ProgressBar__bar Progress bar background color
- * @css @height-ProgressBar_bar Progress bar height
- * @css @color-ProgressBar__progress Progress bar fill color
  */
 
 /**

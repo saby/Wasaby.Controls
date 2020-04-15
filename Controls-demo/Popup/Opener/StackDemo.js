@@ -33,6 +33,9 @@ define('Controls-demo/Popup/Opener/StackDemo',
             this._children.dialog.open({
                opener: this._children.button3,
                closeOnOutsideClick: true,
+               templateOptions: {
+                  draggable: true
+               },
                maxHeight: 700,
                maxWidth: 700,
                minWidth: 450

@@ -10,10 +10,12 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
    /**
     * Простой заголовок с поддержкой различных стилей отображения и размеров.
     * @remark
-    * Может использоваться самостоятельно или в составе сложных заголовков, состоящих из {@link Controls/heading:Separator} и {@link Controls/heading:Counter}.
+    * Может использоваться самостоятельно или в составе сложных заголовков, состоящих из {@link Controls/heading:Separator}, {@link Controls/heading:Counter} и {@link Controls/heading:Title}.
     * Для одновременной подсветки всех частей сложного заголовка при наведении используйте класс controls-Header_all__clickable на контейнере.
+    * 
+    * Дополнительно о работе с заголовками читайте <a href="/doc/platform/developmentapl/interface-development/controls/content-managment/heading/">здесь</a>.
     *
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Демо-пример</a>.
+    * См. <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">демо-пример</a>
     *
     *
     * @class Controls/_heading/Heading
@@ -23,10 +25,10 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @author Красильников А.С.
     * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
     *
-    * @mixes Controls/_interface/ITooltip
-    * @mixes Controls/_interface/ICaption
-    * @mixes Controls/_interface/IFontColorStyle
-    * @mixes Controls/_interface/IFontSize
+    * @implements Controls/_interface/ITooltip
+    * @implements Controls/_interface/ICaption
+    * @implements Controls/_interface/IFontColorStyle
+    * @implements Controls/_interface/IFontSize
     */
 
    /*

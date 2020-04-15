@@ -208,10 +208,18 @@ class ValidateContainer extends Control {
 
         return resultDeferred;
     }
+
+    /**
+     * @typedef {Object} IValidateConfig
+     * @description Конфигурация метода validate для контейнеров валидации.
+     * @property {Boolean} hideInfobox Позволяет скрыть всплывающую подсказку при проваленной валидации.
+     */
+
     /**
      * Запускает валидацию.
      * @function
      * @name Controls/_validate/Container#validate
+     * @param {IValidateConfig} validateConfig
      * @see setValidationResult
      * @see isValid
      */

@@ -172,7 +172,8 @@ var ListView = BaseControl.extend(
            return options.itemTemplate || this._defaultItemTemplate;
         },
 
-        protected resizeNotifyOnListChanged: function() {
+        // protected
+        resizeNotifyOnListChanged: function() {
             _private.resizeNotifyOnListChanged(this);
         },
 
@@ -256,6 +257,10 @@ var ListView = BaseControl.extend(
             if (!event.preventItemEvent) {
                 this._notify('itemMouseDown', [itemData, event]);
             }
+        },
+
+        _onItemMouseUp(e, itemData) {
+            this._notify('itemMouseUp', [itemData, e]);
         },
 
         _onItemMouseEnter: function(event, itemData) {
