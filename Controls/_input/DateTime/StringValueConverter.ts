@@ -48,7 +48,7 @@ var _private = {
 
    parseString: function(self, str) {
       var valueModel = {
-            year: { str: null, value: 1900, valid: false },
+            year: { str: null, value: 1904, valid: false },
             month: { str: null, value: 0, valid: false },
             date: { str: null, value: 1, valid: false },
             hours: { str: null, value: 0, valid: false },
@@ -116,7 +116,7 @@ var _private = {
    },
 
    fillFromBaseValue: function(self, valueModel, baseValue) {
-      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 1);
+      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1904, 0, 1);
 
       if (valueModel.year.str === null) {
          valueModel.year.value = baseValue.getFullYear();
@@ -381,7 +381,7 @@ var ModuleClass = cExtend.extend({
       return new this._dateConstructor('Invalid');
    },
    getCurrentDate: function(baseValue, mask) {
-      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 1)
+      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1904, 0, 1)
       let
           year = baseValue.getFullYear(),
           month = baseValue.getMonth(),

@@ -54,6 +54,15 @@
       }
    });
 }
+// Набор классов для установки фона контрола через backgroundStyle
+.controls-background-BlockLayout__block {
+   .for(6, {
+      &_style_@{_i}_theme-@{themeName} {
+         background-color: ~"@{background-color_@{_i}_block}";
+      }
+   });
+}
+
 
 /**
  * TODO: pointer-events работает в ie начиная с 11 версии.

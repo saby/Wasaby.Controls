@@ -65,19 +65,30 @@
    top: 0;
    .baseline-fix();
    padding-right: 1px;
+   align-items: baseline;
+   display: inline-flex;
 }
 
 .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
-  left: @spacing_BreadCrumbs-menu;
-  background: @background-color_BreadCrumbs-menu;
-
-  //тень подобрана так, чтобы она не залезала на крошки, когда точки не видны.
-  box-shadow: @dots_shadow-offset_breadcrumbsView  @dots_shadow-color_breadcrumbsView;
+  right: 0;
   height: @height_breadcrumbsView;
   color: @item_text-color_default_breadcrumbsView;
   &:before {
     font-size: @line-height_breadcrumbsView;
   }
+}
+.controls-BreadCrumbsView__menu__dots__shadow {
+   position: absolute;
+   top: 0;
+}
+.controls-BreadCrumbsView__menu__dots__shadow_theme-@{themeName} {
+   // уменьшаем высоту тени, чтобы из-за блюра, когда точки не видны, тень не нависала сверху.
+   height: @height_breadcrumbsView - 2*@dots_shadow-blur_breadcrumbsView;
+   filter: blur(@dots_shadow-blur_breadcrumbsView);
+   background-color: inherit;
+   padding-left: @dots_shadow-offset_breadcrumbsView;
+   // отодвигаем тень на ее ширину за исключением заблюренной правой области, чтобы не было пропуска.
+   margin-left: -@dots_shadow-offset_breadcrumbsView + @dots_shadow-blur_breadcrumbsView;
 }
 
 .controls-BreadCrumbsView__max-width {
