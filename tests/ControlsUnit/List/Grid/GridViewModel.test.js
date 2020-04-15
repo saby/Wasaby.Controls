@@ -973,8 +973,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // Skip checkbox column
             current.resetColumnIndex();
             current.goToNextColumn();
-
-            assert.equal(current.getCurrentColumn().getColspanedPaddingClassList().right, 'controls-Grid__cell_spacingLastCol_l_theme-default');
+            const currColumn = current.getCurrentColumn();
+            assert.equal(currColumn.getColspanedPaddingClassList(currColumn).right, 'controls-Grid__cell_spacingLastCol_l_theme-default');
          });
       });
       describe('methods for processing with items', function() {

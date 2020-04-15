@@ -1746,6 +1746,8 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _reloadInAfterUpdate: false,
+
     _groupingLoader: null,
 
     _isMounted: false,
@@ -2097,7 +2099,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
-        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback 
+        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback
                                                 !== newOptions.itemActionVisibilityCallback;
         this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
@@ -2128,7 +2130,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.groupMethod !== this._options.groupMethod) {
-            _private.reload(this, newOptions);
+            this._reloadInAfterUpdate = true;
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
@@ -2188,9 +2190,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 this._children.itemActionsOpener.close();
                 this._closeActionsMenu();
             }
-
-            // return result here is for unit tests
-            return _private.reload(self, newOptions);
+            this._reloadInAfterUpdate = true;
         }
 
         if (this._itemsChanged) {
@@ -2362,6 +2362,22 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._scrollPageLocked = false;
         this._modelRecreated = false;
+
+        // Выполняем перезагрузку именно в afterUpdate, т.к. в случае, когда source instanceof Source.Memory
+        // загрузка данных выполнится СИНХРОННО и получается следующая цепочка вызовов:
+        // beforeUpdate -> reload -> afterReload -> afterUpdate
+        // а должна быть:
+        // beforeUpdate -> reload -> afterUpdate -> afterReload
+        // примеры ошибок: https://online.sbis.ru/opendoc.html?guid=60338bd3-1afd-4b7e-9f58-0a5c0cfeec48
+        // https://online.sbis.ru/opendoc.html?guid=cd314194-5c10-4a50-9a6d-f7faa1eb2d5f
+        // https://online.sbis.ru/opendoc.html?guid=8a839900-ebc0-4dad-9b53-225f0c337580
+        if (this._reloadInAfterUpdate) {
+            this._reloadInAfterUpdate = false;
+            // return result here is for unit tests
+            return _private.reload(this, this._options);
+        }
+        // return result here is for unit tests
+        return Promise.resolve();
     },
 
     __onPagingArrowClick: function(e, arrow) {
@@ -2588,20 +2604,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {
-        const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
-
-        // При редактировании по месту маркер появляется только если в списке больше одной записи.
-        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        if (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1)) {
-            if (this._options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
-                markCommand.execute(this._listViewModel);
-            } else {
-                this._listViewModel.setMarkedKey(key);
-            }
-        }
-
         let hasDragScrolling = false;
+        this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {
             hasDragScrolling = typeof this._options.dragScrolling === 'boolean' ? this._options.dragScrolling : !this._options.itemsDragNDrop;
         }
@@ -2612,6 +2616,31 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._savedItemMouseDownEventArgs = {event, itemData, domEvent};
         }
         this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
+    },
+
+    _itemMouseUp(e, itemData, domEvent): void {
+        const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+
+        // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
+        // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.
+        // Например, записи в мастере или запись в списке с dragScrolling'ом.
+        // При таких сценариях нельзя устанавливать маркер по событию itemClick, т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
+        // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет.
+
+        // При редактировании по месту маркер появляется только если в списке больше одной записи.
+        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
+        const canBeMarked = this._mouseDownItemKey === key && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
+
+        if (canBeMarked) {
+            if (this._options.useNewModel) {
+                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                markCommand.execute(this._listViewModel);
+            } else {
+                this._listViewModel.setMarkedKey(key);
+            }
+        }
+        this._mouseDownItemKey = undefined;
+        this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
     },
 
     _startDragNDropCallback(): void {

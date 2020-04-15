@@ -41,6 +41,7 @@ export default interface IBaseGroupTemplateOptions {
     * @description Горизонтальное выравнивание названия группы.
     * @variant right По правому краю.
     * @variant left По левому краю.
+    * @variant center По центру.
     */
 
    /**

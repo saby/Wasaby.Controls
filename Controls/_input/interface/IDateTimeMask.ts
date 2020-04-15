@@ -63,7 +63,7 @@ export default {
              * </ol>
              * @example
              * В этом примере маска задана таким образом, что в поле ввода можно ввести только время.
-             * После ввода пользователем “09:30”, значение _inputValue будет равно 01.01.1900 09:30.000.
+             * После ввода пользователем “09:30”, значение _inputValue будет равно 01.01.1904 09:30.000.
              * <pre>
              *    <Controls.input:DateBase bind:value="_inputValue" mask=”HH:mm”/>
              * </pre>
@@ -126,7 +126,7 @@ export default {
              * </ol>
              * @example
              * In this example, the mask is set so that only the time can be entered in the input field.
-             * After a user has entered a “09:30”, the value of the _inputValue will be equal 01.01.1900 09:30.000.
+             * After a user has entered a “09:30”, the value of the _inputValue will be equal 01.01.1904 09:30.000.
              * <pre>
              *    <Controls.input:DateBase bind:value="_inputValue" mask=”HH:mm”/>
              * </pre>

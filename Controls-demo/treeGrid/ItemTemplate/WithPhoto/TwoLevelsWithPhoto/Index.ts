@@ -1,0 +1,25 @@
+import {Control, TemplateFunction} from "UI/Base"
+import * as Template from "wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/TwoLevelsWithPhoto/TwoLevelsWithPhoto";
+import {Memory} from "Types/source"
+import {Gadgets} from "../../../DemoHelpers/DataCatalog"
+
+import "css!Controls-demo/treeGrid/ItemTemplate/WithPhoto/styles";
+
+import 'css!Controls-demo/Controls-demo'
+
+export default class extends Control {
+   protected _template: TemplateFunction = Template;
+   protected _viewSourceTwo: Memory;
+   protected _columns = Gadgets.getGridColumnsWithPhoto();
+   protected _twoLvlColumns = Gadgets.getGridTwoLevelColumnsWithPhoto();
+   protected _expandedItems = [1, 2, 4];
+
+
+   protected _beforeMount() {
+      this._viewSourceTwo = new Memory({
+         keyProperty: 'id',
+         data: Gadgets.getDataTwoLvl()
+      });
+
+   }
+}

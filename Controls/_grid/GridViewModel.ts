@@ -142,19 +142,22 @@ var
             if (params.cell.isActionCell) {
                 return preparedClasses;
             }
+            const { cellPadding } = columns[columnIndex];
             const actionCellOffset = params.hasActionCell ? 1 : 0;
             const maxEndColumn = params.maxEndColumn - actionCellOffset;
             const columnsLengthExcludedActionCell = columns.length - actionCellOffset;
+
+            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side]}` : '';
             if (rowIndex === 0) {
                 if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
-                    preparedClasses += ' controls-Grid__cell_spacingLeft' + `_theme-${theme}`;
+                    preparedClasses += ` controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme}`;
                 }
             } else {
-                preparedClasses += ' controls-Grid__cell_spacingLeft' + `_theme-${theme}`;
+                preparedClasses += ` controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme}`;
             }
 
             if (columnIndex < (columnsLengthExcludedActionCell - 1) || (maxEndColumn && endColumn < maxEndColumn)) {
-                preparedClasses += ' controls-Grid__cell_spacingRight' + `_theme-${theme}`;
+                preparedClasses += ` controls-Grid__cell_spacingRight${getCellPadding('right')}_theme-${theme}`;
             }
             // Отступ для последней колонки
             const lastColClass = ' controls-Grid__cell_spacingLastCol_' + (itemPadding.right || 'default').toLowerCase() + `_theme-${theme}`;
@@ -1379,9 +1382,14 @@ var
                         tableCellStyles: ''
                     };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme);
-                currentColumn.getColspanedPaddingClassList = () => {
-                    currentColumn.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${self._options.theme}`;
-                    return currentColumn.classList.padding;
+                currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
+                    /**
+                     * isColspaned добавлена как костыль для временного лечения ошибки.
+                     * После закрытия можно удалить здесь и из шаблонов.
+                     * https://online.sbis.ru/opendoc.html?guid=4230f8f0-7fd1-4018-bd8c-08d703af3899
+                     */
+                    columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${self._options.theme}`;
+                    return columnData.classList.padding;
                 };
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;

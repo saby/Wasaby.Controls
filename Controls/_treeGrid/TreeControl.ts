@@ -10,8 +10,8 @@ import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {saveConfig} from 'Controls/Application/SettingsController';
 import {Map} from 'Types/shim';
-import {SyntheticEvent} from 'Vdom/Vdom';
-import { error as dataSourceError } from 'Controls/dataSource';
+import {error as dataSourceError} from 'Controls/dataSource';
+import {MouseButtons, MouseUp} from './../Utils/MouseEventHelper';
 
 var
     HOT_KEYS = {
@@ -584,13 +584,19 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             item = this._children.baseControl.getViewModel().getItemById(key, this._options.keyProperty);
         _private.toggleExpanded(this, item);
     },
-    _onExpanderMouseDown: function(e, dispItem) {
-        if (e.nativeEvent.buttons === 1) {
+    _onExpanderMouseDown(e, key, dispItem) {
+        if (MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
+            this._mouseDownExpanderKey = key;
+        }
+    },
+    _onExpanderMouseUp: function(e, key, dispItem) {
+        if (this._mouseDownExpanderKey === key && MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
             _private.toggleExpanded(this, dispItem);
             if (this._options.markItemByExpanderClick) {
-                this._children.baseControl.getViewModel().setMarkedKey(dispItem.getContents().getId());
+                this._children.baseControl.getViewModel().setMarkedKey(key);
             }
         }
+        this._mouseDownExpanderKey = undefined;
         e.stopImmediatePropagation();
     },
     _onExpanderClick(e) {

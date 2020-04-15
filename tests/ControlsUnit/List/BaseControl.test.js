@@ -151,6 +151,7 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             ctrl._beforeUpdate(cfg);
+            await ctrl._afterUpdate(cfg);
 
             // check saving loaded items after new viewModelConstructor
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
@@ -179,7 +180,7 @@ define([
                ctrl._beforeUnmount();
                done();
             }, 100);
-         }, 1);
+         }, 10);
       });
 
       it('beforeMount: right indexes with virtual scroll and receivedState', function() {
@@ -2462,12 +2463,14 @@ define([
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._isScrollShown = true;
-                  lnBaseControl._beforeUpdate(lnCfg)
+                  lnBaseControl._beforeUpdate(lnCfg);
+                  lnBaseControl._afterUpdate(lnCfg)
                      .addCallback(function() {
 
                         lnCfg = clone(lnCfg);
                         lnCfg.source = lnSource3;
-                        lnBaseControl._beforeUpdate(lnCfg)
+                        lnBaseControl._beforeUpdate(lnCfg);
+                        lnBaseControl._afterUpdate(lnCfg)
                            .addCallback(function(res) {
                               resolve();
                               return res;
@@ -2558,8 +2561,8 @@ define([
                ],
                viewModelConstructor: lists.ListViewModel
             };
-            await baseControl._beforeUpdate(newCfg);
-            baseControl._afterUpdate(cfg);
+            baseControl._beforeUpdate(newCfg);
+            await baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 2);
          });
          it('updates on afterUpdate if model was recreated', function() {
@@ -2828,6 +2831,7 @@ define([
 
                // reload with new source (first item with id "firstItem")
                lnBaseControl._beforeUpdate(lnCfg2);
+               lnBaseControl._afterUpdate(lnCfg2);
 
                setTimeout(function() {
                   assert.equal(lnBaseControl.getViewModel()
@@ -2936,66 +2940,6 @@ define([
          await ctrl._beforeMount(cfg);
          ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
          assert.isTrue(stopPropagationCalled);
-      });
-
-      it('_itemMouseDown', async function() {
-         var cfg = {
-            keyProperty: 'id',
-            viewName: 'Controls/List/ListView',
-            source: source,
-            viewModelConstructor: lists.ListViewModel
-         };
-         var originalEvent = {
-            target: {
-            }
-         };
-         var event = {
-            stopPropagation: function() {
-            }
-         };
-         var ctrl = new lists.BaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-         ctrl._itemMouseDown(event, {key: 3}, originalEvent);
-         assert.equal(
-            ctrl._listViewModel.getItems().at(2),
-            ctrl._listViewModel.getMarkedItem().getContents()
-         );
-      });
-
-      it('_onItemClick: should not mark single item', async function() {
-         var cfg = {
-            keyProperty: 'id',
-            viewName: 'Controls/List/ListView',
-            source: source,
-            editingConfig: {},
-            markerVisibility: 'onactivated',
-            viewModelConstructor: lists.ListViewModel
-         };
-         var originalEvent = {
-            target: {
-               closest: function(selector) {
-                  return selector === '.js-controls-ListView__checkbox';
-               },
-               getAttribute: function(attrName) {
-                  return attrName === 'contenteditable' ? 'true' : '';
-               }
-            }
-         };
-         var stopPropagationCalled = false;
-         var event = {
-            stopPropagation: function() {
-               stopPropagationCalled = true;
-            }
-         };
-         var ctrl = new lists.BaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-         ctrl._listViewModel.setMarkedKey(null);
-         ctrl._items.getCount = () => 1;
-         ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(0), originalEvent);
-         assert.isTrue(stopPropagationCalled);
-         assert.isUndefined(ctrl._listViewModel.getMarkedItem());
       });
 
       it('_needBottomPadding after reload in beforeMount', async function() {
@@ -5579,6 +5523,7 @@ define([
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.sorting = [{ title: 'ASC' }];
          instance._beforeUpdate(cfgClone);
+         await instance._afterUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
@@ -5588,6 +5533,7 @@ define([
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          instance._beforeUpdate(cfgClone);
+         await instance._afterUpdate(cfgClone);
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
@@ -6007,7 +5953,7 @@ define([
                         sourceConfig: {
                            field: 'id',
                            position: 0,
-                           direction: 'after',
+                           direction: 'forward',
                            limit: 20
                         }
                      }
@@ -6191,7 +6137,8 @@ define([
                   up: true,
                   down: true
                };
-               await bc._beforeUpdate(cfg);
+               bc._beforeUpdate(cfg);
+               await bc._afterUpdate(cfg);
                assert.deepEqual(bc._loadTriggerVisibility, {
                   up: true,
                   down: true
@@ -6211,7 +6158,8 @@ define([
                   },
                   viewModelConstructor: lists.ListViewModel,
                };
-               await bc._beforeUpdate(cfg);
+               bc._beforeUpdate(cfg);
+               await bc._afterUpdate(cfg);
                assert.deepEqual(bc._loadTriggerVisibility, {
                   up: true,
                   down: true
@@ -6226,6 +6174,190 @@ define([
             lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:1, pageSize: 5}});
             assert.deepEqual(instance, {_currentPage: 2, _knownPagesCount: 1, _currentPageSize: 5});
 
+         });
+      });
+
+      describe('event handlers', function() {
+
+         let
+            baseControlOptions,
+            baseControl;
+
+         async function mountBaseControl(control, options) {
+            control.saveOptions(options);
+            await control._beforeMount(options);
+            control._container = {clientHeight: 0};
+            await control._afterMount(options);
+         }
+
+         beforeEach(async () => {
+            baseControlOptions = {
+               keyProperty: 'id',
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewModelConstructor: lists.ListViewModel,
+               markedKey: null
+            };
+            const _baseControl = new lists.BaseControl(baseControlOptions);
+            await mountBaseControl(_baseControl, baseControlOptions);
+            baseControl = _baseControl;
+         });
+
+         afterEach(async () => {
+            await baseControl._beforeUnmount();
+            baseControl = null;
+         });
+
+         describe('_onItemMouseDown', () => {
+            it('notify parent', () => {
+               const originalEvent = {
+                  target: {},
+                  nativeEvent: {}
+               };
+               const event = { stopPropagation: () => {} };
+               const itemData = { item: {} };
+
+               baseControl._notify = (eName, args) => {
+                  if (eName === 'itemMouseDown') {
+                     isNotified = true;
+                     assert.equal(args[0], itemData.item);
+                     assert.equal(args[1], originalEvent.nativeEvent);
+                  }
+               };
+
+               let isNotified = false;
+               baseControl._itemMouseDown(event, itemData, originalEvent);
+               assert.isTrue(isNotified);
+            });
+
+            it('should not mark item. Marked key changes only on mouse up', function() {
+               const originalEvent = { target: {} };
+               const event = { stopPropagation: () => {} };
+
+               baseControl._itemMouseDown(event, { key: 3 }, originalEvent);
+
+               assert.equal(
+                  baseControl._listViewModel.getItems().at(0),
+                  baseControl._listViewModel.getMarkedItem().getContents()
+               );
+            });
+         });
+
+         describe('_onItemMouseUp', () => {
+
+            it('notify parent', () => {
+               const originalEvent = {
+                  target: {},
+                  nativeEvent: {}
+               };
+               const event = { stopPropagation: () => {} };
+               const itemData = { item: {} };
+
+               baseControl._items.getCount = () => 1;
+
+               baseControl._notify = (eName, args) => {
+                  if (eName === 'itemMouseUp') {
+                     isNotified = true;
+                     assert.equal(args[0], itemData.item);
+                     assert.equal(args[1], originalEvent.nativeEvent);
+                  }
+               };
+
+               let isNotified = false;
+               baseControl._itemMouseUp(event, itemData, originalEvent);
+               assert.isTrue(isNotified);
+            });
+
+            it('should mark single item if not editing', async function() {
+               baseControlOptions.markerVisibility = 'onactivated';
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               const originalEvent = { target: {} };
+               const event = {};
+
+               baseControl._items.getCount = () => 1;
+               baseControl._mouseDownItemKey = 1;
+
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+
+               assert.equal(
+                  baseControl._listViewModel.getItems().at(0),
+                  baseControl._listViewModel.getMarkedItem().getContents()
+               );
+            });
+
+            it('should not mark single item if editing', async function() {
+               baseControlOptions.markerVisibility = 'onactivated';
+               baseControlOptions.editingConfig = {};
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               const originalEvent = { target: {} };
+               const event = {};
+
+               baseControl._items.getCount = () => 1;
+               baseControl._mouseDownItemKey = 1;
+
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+            });
+
+            it('should mark item if there are more then one item in list', async function() {
+               baseControlOptions.markerVisibility = 'onactivated';
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               const originalEvent = { target: {} };
+               const event = {};
+               baseControl._mouseDownItemKey = 1;
+
+               // No editing
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+               assert.equal(
+                  baseControl._listViewModel.getItems().at(0),
+                  baseControl._listViewModel.getMarkedItem().getContents()
+               );
+
+               // With editing
+               baseControl._listViewModel.setMarkedKey(null);
+               baseControlOptions.editingConfig = {};
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               baseControl._mouseDownItemKey = 1;
+
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+               assert.equal(
+                  baseControl._listViewModel.getItems().at(0),
+                  baseControl._listViewModel.getMarkedItem().getContents()
+               );
+            });
+         });
+
+
+         describe('_onItemClick', () => {
+            it('click on checkbox should not notifies itemClick, but other clicks should', function() {
+               let isStopped = false;
+               let isCheckbox = false;
+
+               const e = { stopPropagation() { isStopped = true; } };
+
+               const originalEvent = {
+                  target: {
+                     closest: () => isCheckbox
+                  }
+               };
+
+               // click not on checkbox
+               baseControl._onItemClick(e, {}, originalEvent);
+               assert.isFalse(isStopped);
+
+               // click on checkbox
+               isCheckbox = true;
+               baseControl._onItemClick(e, {}, originalEvent);
+               assert.isTrue(isStopped);
+            });
          });
       });
    });
