@@ -124,85 +124,79 @@
                 errorController="{{ __errorController }}"
                 source="{{_sourceController}}"
                 useNewModel="{{ _options.useNewModel }}">
-        <Controls._list.ItemActions.ItemActionsControl
-                on:commitActionClick="_commitEditActionHandler()"
-                on:cancelActionClick="_cancelEditActionHandler()"
-                on:menuActionsClick="_showActionsMenu()"
-                on:menuActionClick="_showActionMenu()"
-                on:actionClick="_notifyHandler('actionClick')"
-                toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
-                name="itemActions"
-                style="{{_options.style}}"
-                listModel="{{_listViewModel}}"
-                menuIsShown="{{_menuIsShown}}"
-                fix1177894367="{{_options.fix1177894367}}"
-                actionMenuIsShown="{{_actionMenuIsShown}}"
-                itemPadding="{{_options.itemPadding}}"
-                itemActions="{{_options.itemActions}}"
-                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
-                itemActionsProperty="{{_options.itemActionsProperty}}"
-                itemActionsPosition="{{_options.itemActionsPosition}}"
-                useNewModel="{{ _options.useNewModel }}">
-        <Controls._list.Swipe.SwipeControl
-                on:menuActionsClick="_showActionsMenu()"
-                on:closeSwipe="_closeSwipe()"
-                showEditArrow="{{_options.showEditArrow}}"
-                contextMenuConfig="{{_options.contextMenuConfig}}"
-                editArrowVisibilityCallback="{{_options.editArrowVisibilityCallback}}"
-                actionAlignment="{{_options.actionAlignment}}"
-                actionCaptionPosition="{{_options.actionCaptionPosition}}"
-                viewName="{{ _options.viewName }}"
-                listModel="{{_listViewModel}}"
-                itemActions="{{_options.itemActions}}"
-                name="swipeControl"
-                useNewModel="{{ _options.useNewModel }}">
-        <ws:partial
-                name="{{name}}"
-                template="{{ _options.content }}"
-                scope="{{_options}}"
-                fixedHeadersHeights="{{undefined}}"
-                loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
-                dragNDropControl="{{_children.dragNDropController}}"
-                _needBottomPadding="{{_needBottomPadding}}"
-                multiSelectReady="{{_multiSelectReady}}"
-                listModel="{{_listViewModel}}"
-                startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
-                on:deactivated="_listDeactivated()"
-                on:animationend="_onAnimationEnd()"
-                on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
-                on:itemClick="_onItemClick()"
-                on:groupClick="_onGroupClick()"
-                on:editArrowClick="_notifyHandler('editArrowClick')"
-                on:itemContextMenu="_onItemContextMenu()"
-                on:itemMouseDown="_itemMouseDown()"
-                on:itemMouseEnter="_itemMouseEnter()"
-                on:itemMouseMove="_itemMouseMove()"
-                on:itemMouseLeave="_itemMouseLeave()"
-                on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
-                on:itemSwipe="_listSwipe()"
-                on:dragStart="_notifyHandler('dragStart')"
-        >
-           <ws:tagTemplate>
-              <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
-                          on:click="_onTagClickHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"
-                          on:mouseenter="_onTagHoverHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"/>
-           </ws:tagTemplate>
-            <ws:viewTemplate>
-                <ws:partial template="{{_options.viewName}}"/>
-            </ws:viewTemplate>
-            <ws:footerTemplate>
-                <ws:partial template="footerTemplateIf"/>
-            </ws:footerTemplate>
-            <ws:multiSelectTpl>
-                <ws:partial template="multiSelectTplIf"/>
-            </ws:multiSelectTpl>
-            <ws:emptyTemplate>
-                <ws:partial template="emptyTemplateIf"/>
-            </ws:emptyTemplate>
-        </ws:partial>
-        </Controls._list.Swipe.SwipeControl>
-        </Controls._list.ItemActions.ItemActionsControl>
+            <ws:partial
+                    name="{{name}}"
+                    template="{{ _options.content }}"
+                    scope="{{_options}}"
+                    fixedHeadersHeights="{{undefined}}"
+                    loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
+                    dragNDropControl="{{_children.dragNDropController}}"
+                    _needBottomPadding="{{_needBottomPadding}}"
+                    multiSelectReady="{{_multiSelectReady}}"
+                    listModel="{{_listViewModel}}"
+                    startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
+                    on:deactivated="_listDeactivated()"
+                    on:animationend="_onAnimationEnd()"
+                    on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+                    on:itemClick="_onItemClick()"
+                    on:groupClick="_onGroupClick()"
+                    on:editArrowClick="_notifyHandler('editArrowClick')"
+                    on:itemContextMenu="_onItemContextMenu()"
+                    on:itemMouseDown="_itemMouseDown()"
+                    on:itemMouseEnter="_itemMouseEnter()"
+                    on:itemMouseMove="_itemMouseMove()"
+                    on:itemMouseLeave="_itemMouseLeave()"
+                    on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                    on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
+                    on:itemSwipe="_listSwipe()"
+                    on:dragStart="_notifyHandler('dragStart')"
+            >
+                <ws:itemActionsTemplate>
+                    {{ '' }}
+                    <ws:partial
+                            toolbarVisibility="{{_options.toolbarVisibility}}"
+                            style="{{_options.style}}"
+                            size="{{_options.editingConfig ? 's' : 'm'}}"
+                            template="{{ _itemActionsTemplate }}"
+                            itemPadding="{{_options.itemPadding}}"
+                            getContainerPaddingClass="{{_getItemActionsContainerPaddingClass}}"
+                            needShowTitle="{{_needShowTitle}}"
+                            needShowIcon="{{_needShowIcon}}"
+                            itemActionsPosition="{{_options.itemActionsPosition}}"
+                            actionMenuIsShown="{{_options.actionMenuIsShown}}"
+                            scope="{{itemActionsTemplate}}"/>
+                </ws:itemActionsTemplate>
+<!--                <ws:swipeTemplate>-->
+<!--                    <ws:partial-->
+<!--                            template="{{ _swipeTemplate }}"-->
+<!--                            scope="{{itemActionsTemplate}}"-->
+<!--                            swipeConfig="{{_swipeConfig}}"-->
+<!--                            needIcon="{{_needIcon}}"-->
+<!--                            needTitle="{{_needTitle}}"-->
+<!--                            needSeparator="{{_needSeparator}}"-->
+<!--                            actionAlignment="{{ _actionAlignment }}"-->
+<!--                            actionCaptionPosition="{{ _options.actionCaptionPosition }}"-->
+<!--                            animationState="{{_animationState}}"-->
+<!--                            itemActionsPosition="{{_options.itemActionsPosition}}"/>-->
+<!--                </ws:swipeTemplate>-->
+               <ws:tagTemplate>
+                  <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
+                              on:click="_onTagClickHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"
+                              on:mouseenter="_onTagHoverHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"/>
+               </ws:tagTemplate>
+                <ws:viewTemplate>
+                    <ws:partial template="{{_options.viewName}}"/>
+                </ws:viewTemplate>
+                <ws:footerTemplate>
+                    <ws:partial template="footerTemplateIf"/>
+                </ws:footerTemplate>
+                <ws:multiSelectTpl>
+                    <ws:partial template="multiSelectTplIf"/>
+                </ws:multiSelectTpl>
+                <ws:emptyTemplate>
+                    <ws:partial template="emptyTemplateIf"/>
+                </ws:emptyTemplate>
+            </ws:partial>
         </Controls._list.EditInPlace>
     </Controls._list.ScrollContainer>
 </ws:template>

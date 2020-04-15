@@ -81,7 +81,6 @@ import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/
 import NumberEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/NumberChooser');
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 import BaseViewModel = require('Controls/_list/BaseViewModel');
-import ItemActionsControl = require('Controls/_list/ItemActions/ItemActionsControl');
 import ListViewModel = require('Controls/_list/ListViewModel');
 import {default as ListControl} from 'Controls/_list/ListControl';
 import ListView = require('Controls/_list/ListView');

@@ -49,9 +49,14 @@ export default class View extends Control<IViewOptions> {
 
     protected _collection: Collection<Model>;
 
+    private _itemActionsController: ItemActionsController;
+
+    private _actionClickCallbackFn: (clickEvent, action, contents) => void;
+
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
         this._actionClickCallbackFn = this._actionClickCallback.bind(this);
+        this._itemActionsController = new ItemActionsController();
 
         ItemActionsController.calculateActionsTemplateConfig(
             this._collection,
@@ -88,7 +93,7 @@ export default class View extends Control<IViewOptions> {
             (options.itemActions || options.itemActionsProperty) && collectionRecreated ||
             options.itemActionsProperty
         ) {
-            ItemActionsController.resetActionsAssignment(this._collection);
+            this._itemActionsController.resetActionsAssignment(this._collection);
 
             // TODO Only reassign actions if Render is hovered. Otherwise wait
             // for mouseenter or touchstart to recalc the items
@@ -99,7 +104,7 @@ export default class View extends Control<IViewOptions> {
             );
         }
 
-        ItemActionsController.calculateActionsTemplateConfig(
+        this._itemActionsController.calculateActionsTemplateConfig(
             this._collection,
             {
                 itemActionsPosition: options.itemActionsPosition,
@@ -152,7 +157,7 @@ export default class View extends Control<IViewOptions> {
     ): void {
         switch (swipeEvent.nativeEvent.direction) {
         case 'left':
-            ItemActionsController.activateSwipe(
+            this._itemActionsController.activateSwipe(
                 this._collection,
                 item.getContents().getKey(),
                 swipeContainerHeight
@@ -160,7 +165,7 @@ export default class View extends Control<IViewOptions> {
             break;
         default:
             // TODO How to close swipe with animation
-            ItemActionsController.deactivateSwipe(this._collection);
+            this._itemActionsController.deactivateSwipe(this._collection);
             break;
         }
     }
@@ -181,7 +186,7 @@ export default class View extends Control<IViewOptions> {
         this._executeCommands([moveMarker]);
         // TODO fire 'markedKeyChanged' event
 
-        ItemActionsController.processActionClick(
+        this._itemActionsController.processActionClick(
             this._collection,
             item.getContents().getKey(),
             action,
@@ -196,7 +201,7 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        ItemActionsController.prepareActionsMenuConfig(
+        this._itemActionsController.prepareActionsMenuConfig(
             this._collection,
             item.getContents().getKey(),
             clickEvent,
@@ -248,7 +253,7 @@ export default class View extends Control<IViewOptions> {
             itemActionsProperty
             ? (item) => item.getContents().get(itemActionsProperty)
             : () => itemActions;
-        ItemActionsController.assignActions(
+        this._itemActionsController.assignActions(
             this._collection,
             actionsGetter,
             itemActionsVisibilityCallback

@@ -68,8 +68,7 @@ export { EditInPlaceController };
 import * as SelectionController from './_display/controllers/Selection';
 export { SelectionController };
 
-import * as ItemActionsController from './_display/controllers/ItemActions';
-export { ItemActionsController };
+export {ItemActionsController, TItemActionVisibilityCallback, IItemActionsItem, IItemActionsCollection} from './_display/controllers/ItemActionsController';
 
 import * as VirtualScrollController from './_display/controllers/VirtualScroll';
 export { VirtualScrollController };

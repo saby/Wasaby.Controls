@@ -1,9 +1,11 @@
 import { assert } from 'chai';
 
-import * as ItemActionsController from 'Controls/_display/controllers/ItemActions';
-import { showType } from 'Controls/Utils/Toolbar';
+import {ItemActionsController} from 'Controls/_display/controllers/ItemActionsController';
+import {showType} from 'Controls/Utils/Toolbar';
 
-describe('Controls/_display/controllers/ItemActions', () => {
+describe('Controls/_display/controllers/ItemActionsController', () => {
+    let itemActionsController: ItemActionsController;
+
     function makeActionsItem() {
         const item = {
             _$swiped: false,
@@ -39,6 +41,10 @@ describe('Controls/_display/controllers/ItemActions', () => {
         };
         return collection;
     }
+
+    beforeEach(() => {
+        itemActionsController = new ItemActionsController();
+    });
 
     describe('assignActions()', () => {
         it('uses visibility callback');
@@ -107,7 +113,7 @@ describe('Controls/_display/controllers/ItemActions', () => {
             let actionsMenuConfig = null;
             collection.setActionsMenuConfig = (config) => actionsMenuConfig = config;
 
-            ItemActionsController.prepareActionsMenuConfig(
+            itemActionsController.prepareActionsMenuConfig(
                 collection,
                 'test',
                 {
@@ -134,7 +140,7 @@ describe('Controls/_display/controllers/ItemActions', () => {
             const collection = makeCollection();
             collection.getItemBySourceKey = () => item;
 
-            ItemActionsController.activateSwipe(collection, 'test', 0);
+            itemActionsController.activateSwipe(collection, 'test', 0);
 
             assert.isTrue(item.isSwiped());
             assert.isTrue(item.isActive());
@@ -151,7 +157,7 @@ describe('Controls/_display/controllers/ItemActions', () => {
             const collection = makeCollection();
             collection.find = () => item;
 
-            ItemActionsController.deactivateSwipe(collection);
+            itemActionsController.deactivateSwipe(collection);
 
             assert.isFalse(item.isSwiped());
             assert.isFalse(item.isActive());
@@ -167,7 +173,7 @@ describe('Controls/_display/controllers/ItemActions', () => {
             const collection = makeCollection();
             collection.find = () => item;
 
-            ItemActionsController.setSwipeItem(collection, null);
+            itemActionsController.setSwipeItem(collection, null);
 
             assert.isFalse(item.isSwiped());
             assert.isAbove(collection.getVersion(), 0);
@@ -178,7 +184,7 @@ describe('Controls/_display/controllers/ItemActions', () => {
             const collection = makeCollection();
             collection.getItemBySourceKey = () => item;
 
-            ItemActionsController.setSwipeItem(collection, 'test');
+            itemActionsController.setSwipeItem(collection, 'test');
 
             assert.isTrue(item.isSwiped());
             assert.isAbove(collection.getVersion(), 0);
@@ -191,11 +197,11 @@ describe('Controls/_display/controllers/ItemActions', () => {
 
             const collection = makeCollection();
 
-            assert.isNull(ItemActionsController.getSwipeItem(collection));
+            assert.isNull(itemActionsController.getSwipeItem(collection));
 
             collection.find = () => item;
             assert.strictEqual(
-                ItemActionsController.getSwipeItem(collection),
+                itemActionsController.getSwipeItem(collection),
                 item
             );
         });

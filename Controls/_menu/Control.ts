@@ -59,7 +59,10 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
 
+    private _itemActionsController: ItemActionsController;
+
     protected _beforeMount(options: IMenuControlOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
+        this._itemActionsController = new ItemActionsController();
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
         this._additionalFilter = this.additionalFilter.bind(this, options);
 
@@ -132,19 +135,19 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     protected _itemSwipe(e: SyntheticEvent<null>, item: TreeItem<Model>, swipeEvent: SyntheticEvent<TouchEvent>, swipeContainerHeight: number): void {
         if (this._options.itemActions) {
             if (swipeEvent.nativeEvent.direction === 'left') {
-                ItemActionsController.activateSwipe(
+                this._itemActionsController.activateSwipe(
                     this._listModel,
                     item.getContents().getKey(),
                     swipeContainerHeight
                 );
             } else {
-                ItemActionsController.deactivateSwipe(this._listModel);
+                this._itemActionsController.deactivateSwipe(this._listModel);
             }
         }
     }
 
     protected _itemActionClick(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, action: object, clickEvent: MouseEvent): void {
-        ItemActionsController.processActionClick(
+        this._itemActionsController.processActionClick(
             this._listModel,
             item.getContents().getKey(),
             action,
@@ -596,7 +599,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private _calculateActionsConfig(listModel: Tree<Model>, options: IMenuControlOptions): void {
-        ItemActionsController.calculateActionsTemplateConfig(
+        this._itemActionsController.calculateActionsTemplateConfig(
             listModel,
             {
                 itemActionsPosition: 'inside',
@@ -616,7 +619,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
         const actionsGetter = () => itemActions;
 
-        ItemActionsController.assignActions(
+        this._itemActionsController.assignActions(
             this._listModel,
             actionsGetter
         );

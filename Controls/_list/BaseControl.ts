@@ -39,6 +39,9 @@ import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {IHashMap} from 'Types/declarations';
 
+import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
+import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
+
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 let defaultSelectedKeys = [];
@@ -73,6 +76,19 @@ const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_PROPORTION = 2;
 const ItemActionsUpdatedEvent = 'itemActionsUpdated';
+
+const ITEMACTIONS_POSITION_CLASSES = {
+    bottomRight: 'controls-itemActionsV_position_bottomRight',
+    topRight: 'controls-itemActionsV_position_topRight'
+};
+
+export const ITEMACTIONS_DISPLAY_MODE = {
+    ICON: 'icon',
+    TITLE: 'title',
+    BOTH: 'both',
+    AUTO: 'auto'
+};
+
 /**
  * Object with state from server side rendering
  * @typedef {Object}
@@ -1306,7 +1322,7 @@ var _private = {
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             if (self._options.useNewModel) {
-                ItemActionsController.setActiveItem(
+                self._itemActionsController.setActiveItem(
                     self._listViewModel,
                     itemData.getContents().getId()
                 );
@@ -1349,10 +1365,10 @@ var _private = {
         childEvent: Event,
         action: IItemAction
     ): void {
-        const children = ItemActionsController.getChildActions(itemData, action);
+        const children = self._itemActionsController.getChildActions(itemData, action);
         if (children.length) {
             if (self._options.useNewModel) {
-                ItemActionsController.setActiveItem(
+                self._itemActionsController.setActiveItem(
                     self._listViewModel,
                     itemData.getContents().getId()
                 );
@@ -1382,7 +1398,7 @@ var _private = {
 
     closeActionsMenu(self): void {
         if (self._options.useNewModel) {
-            ItemActionsController.setActiveItem(
+            self._itemActionsController.setActiveItem(
                 self._listViewModel,
                 null
             );
@@ -1404,7 +1420,7 @@ var _private = {
             const action = args.data && args.data[0] && args.data[0].getRawData();
             const activeItem =
                 self._options.useNewModel
-                    ? ItemActionsController.getActiveItem(self._listViewModel)
+                    ? self._itemActionsController.getActiveItem(self._listViewModel)
                     : self._listViewModel.getActiveItem();
             aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._targetItem);
             if (!action['parent@']) {
@@ -1712,7 +1728,7 @@ var _private = {
      * @param options
      */
     calculateActionsTemplateConfig(self: any, options: any): void {
-        ItemActionsController.calculateActionsTemplateConfig(self.getViewModel(), {
+        self._itemActionsController.calculateActionsTemplateConfig(self.getViewModel(), {
             itemActionsPosition: options.itemActionsPosition,
             style: options.style,
             actionAlignment: options.actionAlignment,
@@ -1833,6 +1849,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _isMobileIOS: detection.isMobileIOS,
 
+    _itemActionsController: ItemActionsController,
+
+    /**
+     * Шаблон операций с записью
+     */
+    _itemActionsTemplate: itemActionsTemplate,
+
+    /**
+     * Шаблон операций с записью для swipe
+     */
+    _swipeTemplate: swipeTemplate,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1851,6 +1879,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
 
         this._inertialScrolling = new InertialScrolling();
+
+        this._itemActionsController = new ItemActionsController();
 
         // todo Костыль, т.к. построение ListView зависит от SelectionController.
         // Будет удалено при выполнении одного из пунктов:
@@ -2453,12 +2483,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
 
         if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
-            const itemActions = ItemActionsController.getActionsForItem(
+            const itemActions = this._itemActionsController.getActionsForItem(
                 itemData,
                 _private.getActionsGetter(this),
                 this._options.itemActionVisibilityCallback
             );
-            ItemActionsController.setActionsToItem(this._listViewModel, itemData.key, itemActions);
+            this._itemActionsController.setActionsToItem(this._listViewModel, itemData.key, itemActions);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
@@ -2538,12 +2568,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _notifyHandler: tmplNotify,
 
     _closeSwipe: function(event, item) {
-        const itemActions = ItemActionsController.getActionsForItem(
+        const itemActions = this._itemActionsController.getActionsForItem(
             item,
             _private.getActionsGetter(this),
             this._options.itemActionVisibilityCallback
         );
-        ItemActionsController.setActionsToItem(this._listViewModel, item.key, itemActions);
+        this._itemActionsController.setActionsToItem(this._listViewModel, item.key, itemActions);
         // todo ???
         // ItemActionsController.deactivateSwipe(this._listViewModel);
     },
@@ -2574,7 +2604,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this._listViewModel && this._hasItemActions) {
-            const hasChanges = ItemActionsController.assignActions(
+            const hasChanges = this._itemActionsController.assignActions(
                 this._listViewModel,
                 _private.getActionsGetter(this),
                 this._options.itemActionVisibilityCallback
@@ -2604,12 +2634,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
         * _canUpdateItemsActions  приведет к показу неактуальных операций.
         */
-        const itemActions = ItemActionsController.getActionsForItem(
+        const itemActions = this._itemActionsController.getActionsForItem(
             item,
             _private.getActionsGetter(this),
             this._options.itemActionVisibilityCallback
         );
-        ItemActionsController.setActionsToItem(this._listViewModel, item.key, itemActions);
+        this._itemActionsController.setActionsToItem(this._listViewModel, item.key, itemActions);
         return result;
     },
 
@@ -2631,6 +2661,27 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else {
             this._listViewModel.setMarkedKey(itemData.key);
         }
+    },
+
+    _getItemActionsContainerPaddingClass(classes: string[], itemPadding?: {top?: string, bottom?: string}):string {
+        let paddingClass = ' ';
+        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+            paddingClass += 'controls-itemActionsV_padding-top_' + (itemPadding && itemPadding.top === 'null' ? 'null ' : 'default ');
+        } else  if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+            paddingClass += 'controls-itemActionsV_padding-bottom_' + (itemPadding && itemPadding.bottom === 'null' ? 'null ' : 'default ');
+        }
+        return paddingClass;
+    },
+
+    _needShowIcon(action: IItemAction): boolean {
+        return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
+    },
+
+    _needShowTitle(action: IItemAction): boolean {
+        return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
+            action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
+            (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
+                !action.displayMode) && !action.icon);
     },
 
     _closeActionsMenu: function(args) {
