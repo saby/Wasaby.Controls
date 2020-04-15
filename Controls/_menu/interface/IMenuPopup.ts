@@ -69,7 +69,7 @@ export default interface IMenuPopup {
  * </Controls.menu:Popup>
  * </pre>
  * <pre class="brush: js">
- * //JS
+ * // JS
  * this._source = new Memory({
  *    keyProperty: 'key',
  *    data: [
