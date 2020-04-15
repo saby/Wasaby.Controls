@@ -22,7 +22,6 @@ export interface IPopupItem {
    activeControlAfterDestroy: Control;
    activeNodeAfterDestroy: HTMLElement;
    popupState: string;
-   hasMaximizePopup: boolean;
    childs: IPopupItem[];
    parentId?: string;
    position?: IPopupPosition;
