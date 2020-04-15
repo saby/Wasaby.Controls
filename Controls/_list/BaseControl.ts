@@ -1727,33 +1727,50 @@ var _private = {
 
     createSelectionController(self: any): SelectionController {
         return new SelectionController({
-            listModel: self._listViewModel,
-            keyProperty: self._options.keyProperty,
+            model: self._listViewModel,
+            selectedKeys: self._options.selectedKeys,
+            excludedKeys: self._options.excludedKeys,
             filter: self._options.filter,
             root: self._options.root,
-            selectedKeys: self._options.selectedKeys,
-            excludedKeys: self._options.excludedKeys
+            keyProperty: self._options.keyProperty,
+            nodeProperty: self._options.nodeProperty,
+            parentProperty: self._options.parentProperty,
+            hasChildrenProperty: self._options.hasChildrenProperty,
+            nodesSourceControllers: self._options.nodesSourceControllers,
+            selectDescendants: self._options.selectDescendants,
+            selectAncestors: self._options.selectAncestors,
+            notifySelectionKeysChanged: this.notifySelectionKeysChanged.bind(self),
+            notifySelectedKeysCountChanged: this.notifySelectedKeysCountChanged.bind(self)
         });
     },
 
-    updateSelectionController(self: any): void {
+    updateSelectionController(self: any, newOptions: any): void {
         self._selectionController.update({
-            listModel: self._listViewModel,
+            model: self._listViewModel,
+            selectedKeys: newOptions.selectedKeys,
+            excludedKeys: newOptions.excludedKeys,
+            filter: newOptions.filter,
+            root: newOptions.root,
             keyProperty: self._options.keyProperty,
-            filter: self._options.filter,
-            root: self._options.root,
-            selectedKeys: self._options.selectedKeys,
-            excludedKeys: self._options.excludedKeys
+            nodeProperty: self._options.nodeProperty,
+            parentProperty: self._options.parentProperty,
+            hasChildrenProperty: self._options.hasChildrenProperty,
+            nodesSourceControllers: self._options.nodesSourceControllers,
+            selectDescendants: self._options.selectDescendants,
+            selectAncestors: self._options.selectAncestors
         });
     },
 
-    isNeedUpdateSelectionController(self: any, oldOptions: any, newOptions: any): boolean {
-        return self._viewModelConstructor !== newOptions.viewModelConstructor
-            || oldOptions.keyProperty !== newOptions.keyProperty
-            || oldOptions.filter !== newOptions.field
-            || oldOptions.root !== newOptions.root
-            || oldOptions.selectedKeys !== newOptions.selectedKeys
-            || oldOptions.excludedKeys !== newOptions.excludedKeys;
+    notifySelectionKeysChanged(type: string, keys: [], addedKeys: [], removedKeys: []): void {
+        if (type === 'selected') {
+            this._notify('selectedKeysChanged', [keys, addedKeys, removedKeys]);
+        } else {
+            this._notify('excludedKeysChanged', [keys, addedKeys, removedKeys]);
+        }
+    },
+
+    notifySelectedKeysCountChanged(count: number, isAllSelected: boolean): void {
+        this._notify('listSelectedKeysCountChanged', [count, isAllSelected], {bubbling: true});
     }
 };
 
@@ -1890,7 +1907,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.initializeNavigation(this, newOptions);
         _private.updateNavigation(this);
 
-        this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
         this._loadTriggerVisibility = {};
 
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
@@ -2111,7 +2127,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         this._loadedItems = null;
 
-        if (this._items && this._needSelectionController) {
+        if (this._items && this._options.multiSelectVisibility !== 'hidden') {
             this._selectionController = _private.createSelectionController(this);
         }
 
@@ -2128,7 +2144,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
         let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback
                                                 !== newOptions.itemActionVisibilityCallback;
-        const needUpdateSelectionController = _private.isNeedUpdateSelectionController(this, this._options, newOptions);
         this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
@@ -2196,7 +2211,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }
-        this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden' || this._delayedSelect;
 
         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
@@ -2229,8 +2243,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldRestoreScrollPosition = true;
         }
 
-        if (needUpdateSelectionController) {
-            _private.updateSelectionController(this);
+        if (this._selectionController) {
+            _private.updateSelectionController(this, newOptions);
         }
     },
 
@@ -2374,11 +2388,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
         }
-        if (this._delayedSelect && this._selectionController) {
-            this._selectionController.toggleItem(this._delayedSelect.key, this._delayedSelect.status);
-            this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);
-            this._delayedSelect = null;
-        }
 
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
@@ -2454,15 +2463,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (direction === 'right' && !isSwiped && _private.isItemsSelectionAllowed(this._options)) {
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
-            /**
-             * After the right swipe the item should get selected.
-             * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
-             */
-            this._needSelectionController = true;
-            this._delayedSelect = {
-                key,
-                status: multiSelectStatus
-            };
+
+            this._selectionController.toggleItem(key, multiSelectStatus);
+            this._notify('checkboxClick', [key, multiSelectStatus]);
 
             // TODO Right swiping for new model
             //Animation should be played only if checkboxes are visible.

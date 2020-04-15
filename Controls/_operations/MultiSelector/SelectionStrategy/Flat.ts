@@ -3,7 +3,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
 import { Map } from 'Types/shim';
 
-import { RecordSet, List } from 'Types/collection';
+import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
 import { ISelectionModel } from 'Controls/list';
 

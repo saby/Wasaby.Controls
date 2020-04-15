@@ -6,7 +6,6 @@ import { isNode, getParentProperty, getItems, getChildren } from 'Controls/_oper
 import { Map } from 'Types/shim';
 
 import { relation, Record } from 'Types/entity';
-import { ViewModel } from 'Controls/treeGrid';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
 import getChildrenIds from 'Controls/_operations/MultiSelector/getChildrenIds';
@@ -42,6 +41,10 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
    constructor(options: ITreeSelectionStrategyOptions) {
       this._options = options;
       this._hierarchyRelation = this._options.hierarchyRelation;
+   }
+
+   setHierarchy(hierarchy: relation.Hierarchy): void {
+      this._hierarchyRelation = hierarchy;
    }
 
    select(selection: ISelection, keys: TKeys, model: ISelectionModel): void {
