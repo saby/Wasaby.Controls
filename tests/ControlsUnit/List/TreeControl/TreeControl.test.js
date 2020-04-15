@@ -1637,7 +1637,8 @@ define([
             },
             e = {
                nativeEvent: {
-                  buttons: 1
+                  buttons: 1,
+                  button: 0
                },
                stopImmediatePropagation: function(){}
             },
@@ -1659,10 +1660,12 @@ define([
 
          treeGrid.TreeControl._private.toggleExpanded = function(){};
 
-         treeControl._onExpanderMouseDown(e, treeGridViewModel.at(0));
+         treeControl._mouseDownExpanderKey = 1;
+         treeControl._onExpanderMouseUp(e, 1, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
-         treeControl._onExpanderMouseDown(e, treeGridViewModel.at(1));
+         treeControl._mouseDownExpanderKey = 2;
+         treeControl._onExpanderMouseUp(e, 2, treeGridViewModel.at(1));
          assert.deepEqual(2, treeGridViewModel._model._markedKey);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
@@ -1693,7 +1696,8 @@ define([
             },
             e = {
                nativeEvent: {
-                  buttons: 1
+                  buttons: 1,
+                  button: 0
                },
                stopImmediatePropagation: function(){}
             },
@@ -1715,10 +1719,12 @@ define([
 
          treeGrid.TreeControl._private.toggleExpanded = function(){};
 
-         treeControl._onExpanderMouseDown(e, treeGridViewModel.at(0));
+         treeControl._mouseDownExpanderKey = 0;
+         treeControl._onExpanderMouseUp(e, 0, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
-         treeControl._onExpanderMouseDown(e, treeGridViewModel.at(1));
+         treeControl._mouseDownExpanderKey = 1;
+         treeControl._onExpanderMouseUp(e, 1, treeGridViewModel.at(1));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
