@@ -28,6 +28,16 @@ import {IHeaderCell} from './interface/IHeaderCell';
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
 
+
+interface IGridSeparatorOptions {
+    rowSeparatorSize?: null | 's' | 'l';
+    columnSeparatorSize?: null | 's';
+}
+
+interface IGridSeparatorOptionsDeprecated {
+    rowSeparatorVisibility?: 'visible' | 'hidden' | boolean;
+}
+
 interface IGridColumn {
     displayProperty?: string;
     template?: string | TemplateFunction;
@@ -35,7 +45,7 @@ interface IGridColumn {
     compatibleWidth?: string;
 }
 
-interface IGridItemData {
+interface IGridItemData extends Partial<IGridSeparatorOptions> {
     hasMultiSelect: boolean;
     columns: any[];
 }
@@ -200,14 +210,9 @@ var
                 return itemIndex === rowCount - 1;
             }
         },
-        prepareRowSeparatorClasses: function (current, theme) {
-            let result = '';
-            if (current.rowSeparatorVisibility) {
-                result += ` controls-Grid__row-cell_withRowSeparator${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? '-l' : ''}_theme-${theme} `;
-            } else {
-                result += `controls-Grid__row-cell_withoutRowSeparator_theme-${theme}`;
-            }
-            return result;
+        prepareSeparatorClasses(separatorOptions: Partial<IGridSeparatorOptions & IGridSeparatorOptionsDeprecated>, classLists, theme): void {
+            classLists.base += ` controls-Grid__row-cell_withRowSeparator_size-${separatorOptions.rowSeparatorSize}_theme-${theme}`;
+            classLists.base += ` controls-Grid__rowSeparator_size-${separatorOptions.rowSeparatorSize}_theme-${theme}`;
         },
 
         isFixedCell: function(params) {
@@ -240,14 +245,13 @@ var
 
         getItemColumnCellClasses: function(current, theme) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
-            const classLists = createClassListCollection('base', 'padding', 'columnScroll');
+            const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
             const style = current.style || 'default';
             const backgroundStyle = current.backgroundStyle || current.style || 'default';
 
             // Стиль колонки
-            const rowSeparatorSize = ` controls-Grid__row-cell_rowSeparatorSize-${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? 'l' : 's'}_theme-${theme} `;
-            classLists.base += `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme} controls-Grid__cell_${style} ${rowSeparatorSize}`;
-            classLists.base += ` ${_private.prepareRowSeparatorClasses(current, theme)}`;
+            classLists.base += `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme} controls-Grid__cell_${style}`;
+            _private.prepareSeparatorClasses(current, classLists, theme);
 
             if (current.columnScroll) {
                 classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
@@ -266,7 +270,7 @@ var
             if (checkBoxCell) {
                 classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
                 classLists.padding = createClassListCollection('top', 'bottom');
-                classLists.padding.top = `controls-Grid__row-cell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
+                classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
                 classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;
             } else {
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
@@ -452,6 +456,37 @@ var
                 stickyColumn: self._options.stickyColumn,
                 columns: self._options.columns
             });
+        },
+
+        getSeparatorSizes(options: Partial<IGridSeparatorOptions & IGridSeparatorOptionsDeprecated>): {
+            row: IGridSeparatorOptions['rowSeparatorSize'],
+            column: IGridSeparatorOptions['columnSeparatorSize']
+        } {
+            let row: IGridSeparatorOptions['rowSeparatorSize'];
+
+            // Поддерживаем старое поведение. Чтобы не отвалилось, делаю его приоритетным. Кидаю варнинг.
+            // Условие сложное: если Visibility задано, надо брать size(только строки, потому что могли смешать
+            // старое и новое), если нет, то устанавливать null.
+            // Все условие удаляется в 20.5000
+            if (typeof options.rowSeparatorVisibility !== 'undefined') {
+                if (options.rowSeparatorVisibility === 'visible' || options.rowSeparatorVisibility === true) {
+                    if (typeof options.rowSeparatorSize === 'string') {
+                        row = options.rowSeparatorSize.toLowerCase();
+                    } else {
+                        // Старое дефолтное значение.
+                        row = 's';
+                    }
+                } else {
+                    row = null;
+                }
+            } else {
+                row = options.rowSeparatorSize ? options.rowSeparatorSize.toLowerCase() : options.rowSeparatorSize || null;
+            }
+
+            return {
+                row,
+                column:  options.columnSeparatorSize ? options.columnSeparatorSize.toLowerCase() : options.columnSeparatorSize || null
+            };
         }
     },
 
@@ -527,6 +562,9 @@ var
             this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
+            const separatorSizes = _private.getSeparatorSizes(this._options);
+            this._options.rowSeparatorSize = separatorSizes.row;
+            this._options.columnSeparatorSize = separatorSizes.column;
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
             if (this._options.header && this._options.header.length) {
@@ -1263,6 +1301,8 @@ var
             current.stickyColumnsCount = this._options.stickyColumnsCount;
 
             current.style = this._options.style;
+            current.rowSeparatorSize = this._options.rowSeparatorSize;
+            current.columnSeparatorSize = this._options.columnSeparatorSize;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
@@ -1274,10 +1314,10 @@ var
                 return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
             };
             const superGetMarkerClasses = current.getMarkerClasses;
-            current.getMarkerClasses = (rowSeparatorVisibility): string => {
+            current.getMarkerClasses = (): string => {
                 let classes = ' controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-' + self._options.theme;
 
-                if (rowSeparatorVisibility) {
+                if (self.rowSeparatorSize) {
                     classes += ' controls-GridView-with-rowSeparator_item_marker';
                 } else {
                     classes += ' controls-GridView-without-rowSeparator_item_marker';
@@ -1316,9 +1356,6 @@ var
                 };
                 return current;
             }
-
-                current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
-                current.rowSeparatorSize = this._options.rowSeparatorSize;
 
             current.itemActionsDrawPosition =
                 this._options.columnScroll ? 'after' : 'before';
@@ -1572,13 +1609,23 @@ var
             this._model.setRightSwipedItem(itemData);
         },
 
-        setShowRowSeparator: function(showRowSeparator) {
-            this._options.showRowSeparator = showRowSeparator;
+        setRowSeparatorVisibility: function(rowSeparatorVisibility) {
+            this._options.rowSeparatorVisibility = rowSeparatorVisibility;
             this._nextModelVersion();
         },
 
-        setRowSeparatorVisibility: function(rowSeparatorVisibility) {
-            this._options.rowSeparatorVisibility = rowSeparatorVisibility;
+        setRowSeparatorSize(rowSeparatorSize: IGridSeparatorOptions['rowSeparatorSize']): void {
+            this._options.rowSeparatorSize = _private.getSeparatorSizes({
+                rowSeparatorSize,
+                rowSeparatorVisibility: this._options.rowSeparatorVisibility
+            }).row;
+            this._nextModelVersion();
+        },
+
+        setColumnSeparatorSize(columnSeparatorSize: IGridSeparatorOptions['columnSeparatorSize']): void {
+            this._options.columnSeparatorSize = _private.getSeparatorSizes({
+                columnSeparatorSize
+            }).column;
             this._nextModelVersion();
         },
 

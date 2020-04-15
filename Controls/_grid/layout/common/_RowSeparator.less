@@ -1,66 +1,63 @@
-// Разделитель задается верхней границей, которая присутствует всегда (чтобы при включении разделителя таблица не скакала).
-// При выключенном разделителе она прозрачная.
-.controls-Grid__row-cell_rowSeparatorSize-s_theme-@{themeName} {
+.controls-Grid__row-cell {
+   border: 0 solid transparent;
+}
+
+// Вспомогательный класс, вешается на ячейку.
+.controls-Grid__row-cell_withRowSeparator_size-null_theme-@{themeName} {}
+.controls-Grid__row-cell_withRowSeparator_size-s_theme-@{themeName} {}
+.controls-Grid__row-cell_withRowSeparator_size-l_theme-@{themeName} {}
+
+
+// Сам сепаратор, его главный класс, дает границы. Вешается либо на ячейку, либо на контент в зависимости от
+// наличия разделителя колонок.
+.controls-Grid__rowSeparator_size-null_theme-@{themeName} {}
+
+.controls-Grid__rowSeparator_size-s_theme-@{themeName} {
    border-top-width: @item-separator_s_thickness_list;
-}
-
-.controls-Grid__row-cell_rowSeparatorSize-l_theme-@{themeName} {
-   border-top-width: @item-separator_l_thickness_list;
-}
-
-.controls-Grid__row-cell_theme-@{themeName} {
-   border-top-style: solid;
-}
-
-.controls-Grid__row-cell_withoutRowSeparator_theme-@{themeName} {
-   border-top-color: transparent;
-   border-bottom-color: transparent;
-   min-height: @cell_min-height_grid;
-}
-
-.controls-Grid__row-cell_withRowSeparator_theme-@{themeName} {
    border-top-color: @item_separator_s_color_list;
-   min-height: @cell_min-height_grid;
 }
 
-.controls-Grid__row-cell_withRowSeparator-l_theme-@{themeName} {
-   border-top-color: @item_separator_l_color_list;
-   min-height: @cell_min-height_grid;
-}
-
-// Первая строка в таблице с включенным разделителем
-.controls-GridViewV__itemsContainer .controls-Grid__row:first-child .controls-Grid__row-cell_withRowSeparator_theme-@{themeName} {
-   border-top-color: @item_edge_separator_s_color_list;
-}
-// Последняя строка в таблице с включенным разделителем
-.controls-GridViewV__itemsContainer .controls-Grid__row:last-child .controls-Grid__row-cell_withRowSeparator_theme-@{themeName} {
-   border-bottom-width: @item-separator_s_thickness_list;
-   border-bottom-style: solid;
-   border-bottom-color: @item_edge_separator_s_color_list;
-   min-height: @cell_min-height_grid + @item-separator_s_thickness_list;
-}
-
-// Первая строка в таблице с включенным разделителем
-.controls-GridViewV__itemsContainer .controls-Grid__row:first-child .controls-Grid__row-cell_withRowSeparator-l_theme-@{themeName} {
+.controls-Grid__rowSeparator_size-l_theme-@{themeName} {
+   border-top-width: @item-separator_l_thickness_list;
    border-top-color: @item_separator_l_color_list;
 }
-// Последняя строка в таблице с включенным разделителем
-.controls-GridViewV__itemsContainer .controls-Grid__row:last-child .controls-Grid__row-cell_withRowSeparator-l_theme-@{themeName} {
-   border-bottom-width: @item-separator_l_thickness_list;
-   border-bottom-style: solid;
-   border-bottom-color: @item_separator_l_color_list;
-   min-height: @cell_min-height_grid + @item-separator_l_thickness_list;
-}
 
+// Первая граница списка, самая верхняя
+.controls-Grid__row:first-child {
+   .controls-Grid__rowSeparator_size-null_theme-@{themeName} {}
 
-.controls-Grid_table-layout {
-   // В таблицах функцию min-height выполняет height
-   .controls-Grid__row-cell_withoutRowSeparator_theme-@{themeName},
-   .controls-Grid__row-cell_withRowSeparator_theme-@{themeName}{
-      height: @cell_min-height_grid;
+   .controls-Grid__rowSeparator_size-s_theme-@{themeName} {
+      border-top-color: @item_edge_separator_s_color_list;
    }
 
-   .controls-GridViewV__itemsContainer .controls-Grid__row:last-child .controls-Grid__row-cell_withRowSeparator_theme-@{themeName} {
+   .controls-Grid__rowSeparator_size-l_theme-@{themeName} {
+      border-top-color: @item_edge_separator_l_color_list;
+   }
+}
+
+// Последняя граница списка, самая нижняя
+.controls-Grid__row:last-child {
+   .controls-Grid__rowSeparator_size-null_theme-@{themeName} {
+   }
+
+   .controls-Grid__rowSeparator_size-s_theme-@{themeName} {
+      border-bottom: @item-separator_s_thickness_list solid @item_edge_separator_s_color_list;
+      min-height: @cell_min-height_grid + @item-separator_s_thickness_list;
+   }
+
+   .controls-Grid__rowSeparator_size-l_theme-@{themeName} {
+      border-bottom: @item-separator_l_thickness_list solid @item_edge_separator_l_color_list;
+      min-height: @cell_min-height_grid + @item-separator_l_thickness_list;
+   }
+}
+
+// В таблицах IE(table-layout) функцию min-height выполняет height
+.controls-Grid_table-layout .controls-Grid__row:last-child {
+   .controls-Grid__rowSeparator_size-s_theme-@{themeName} {
       height: @cell_min-height_grid + @item-separator_s_thickness_list;
+   }
+
+   .controls-Grid__rowSeparator_size-l_theme-@{themeName} {
+      height: @cell_min-height_grid + @item-separator_l_thickness_list;
    }
 }
