@@ -118,7 +118,6 @@
 .controls-Menu__content_singleLine_theme-@{themeName} {
    display: flex;
    align-items: center;
-   .text-overflow();
 }
 
 .controls-Menu__content_padding_theme-@{themeName} {
@@ -128,8 +127,9 @@
 }
 
 .controls-Menu__content-wrapper {
-   overflow: hidden;
-   text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .controls-Menu__content-readOnly {
