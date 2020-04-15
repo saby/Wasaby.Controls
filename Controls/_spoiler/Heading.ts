@@ -4,11 +4,11 @@ import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IExpandable, IExpandableOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
+import Util from './Util';
 
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as template from 'wml!Controls/_spoiler/Heading/Heading';
-import {IViewOptions} from "./View";
 
 type TCaptions = string | string[];
 type TView = 'expanded' | 'collapsed';
@@ -89,18 +89,9 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         return expanded !== this._options.expanded;
     }
 
-    private _getExpanded(options: IHeadingOptions): boolean {
-        if (options.hasOwnProperty('expanded')) {
-            return options.expanded === undefined ? this._expanded : options.expanded;
-        }
-        return this._expanded;
-    }
-
     protected _beforeMount(options?: IHeadingOptions, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._expanded = this._getExpanded(options);
-        this._caption = Heading._calcCaption(options.captions, this._expanded);
-        this._icon = Heading._calcIcon(this._expanded);
-        this._view = Heading._calcView(this._expanded);
+        this._expanded = Util._getExpanded(options, this._expanded);
+        this._updateStates(options, this._expanded);
         return super._beforeMount(options, contexts, receivedState);
     }
 
@@ -120,7 +111,7 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     }
 
     protected _clickHandler(event: SyntheticEvent<MouseEvent>): void {
-        this._expanded = !this._getExpanded(this._options);
+        this._expanded = !Util._getExpanded(this._options, this._expanded);
         this._notify('expandedChanged', [this._expanded]);
         this._updateStates(this._options, this._expanded);
 

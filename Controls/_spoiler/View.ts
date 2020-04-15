@@ -7,6 +7,7 @@ import {IHeading, IHeadingOptions, default as Heading} from 'Controls/_spoiler/H
 // @ts-ignore
 import * as template from 'wml!Controls/_spoiler/View/View';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import Util from './Util';
 
 /**
  * Интерфейс опций контрола {@link Controls/spoiler:View}.
@@ -55,23 +56,16 @@ class View extends Control<IViewOptions> implements IView {
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
 
     protected _beforeMount(options?: IViewOptions, contexts?: object, receivedState?: void): void {
-        this._expanded = this._getExpanded(options);
+        this._expanded = Util._getExpanded(options, this._expanded);
     }
 
     protected _beforeUpdate(options?: IViewOptions, contexts?: any): void {
-        this._expanded = this._getExpanded(options);
+        this._expanded = Util._getExpanded(options, this._expanded);
     }
 
-    private _expandedHandler(e: SyntheticEvent, state: boolean) {
+    private _expandedHandler(e: SyntheticEvent, state: boolean): void {
         this._notify('expandedChanged', [state]);
         this._expanded = state;
-    }
-
-    private _getExpanded(options: IViewOptions): boolean {
-        if (options.hasOwnProperty('expanded')) {
-            return options.expanded === undefined ? this._expanded : options.expanded;
-        }
-        return this._expanded;
     }
 
     static getDefaultOptions(): Partial<IViewOptions> {
