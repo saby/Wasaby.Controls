@@ -54,8 +54,8 @@ export interface IPositionQueryParamsControllerOptions {
  */
 class PositionQueryParamsController implements IQueryParamsController {
     protected _more: More;
-    protected _beforePosition: Position = null;
-    protected _afterPosition: Position = null;
+    protected _beforePosition: Position = [null];
+    protected _afterPosition: Position = [null];
     protected _shouldLoadLastPage: boolean = false;
     protected _options: IPositionQueryParamsControllerOptions;
 
