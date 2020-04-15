@@ -1,9 +1,11 @@
 define([
    'Controls/_scroll/StickyHeader/_StickyHeader',
+   'Controls/_scroll/StickyHeader/Utils',
    'Controls/scroll',
    'Core/core-merge'
 ], function(
    StickyHeaderLib,
+   StickyHeaderUtils,
    scroll,
    coreMerge
 ) {
@@ -78,14 +80,19 @@ define([
          it('should not update state if control is hidden', function() {
             const component = createComponent(StickyHeader, {});
             component._container = {
-               offsetParent: null
+               closest: sinon.stub().returns(true)
             };
+            sinon.stub(component, '_initResizeObserver');
+            sinon.stub(component, '_createObserver');
+            sinon.stub(StickyHeaderUtils, 'isDisplayed').returns(false);
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             sinon.stub(component._model, 'update');
 
             component._observeHandler();
 
             sinon.assert.notCalled(component._model.update);
+            sinon.restore();
+         });
       });
 
       describe('_getStyle', function() {
