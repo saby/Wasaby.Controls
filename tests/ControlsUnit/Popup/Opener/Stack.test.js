@@ -10,6 +10,7 @@ define(
    (StackStrategy, popupMod, popupTemplate, TestMaximizedStack, BaseController, StackContent) => {
       'use strict';
       BaseController = new BaseController.default();
+      StackStrategy._goUpByControlTree = () => [];
 
       describe('Controls/_popupTemplate/Stack/Opener/StackContent', () => {
          it('canResize', () => {
@@ -265,18 +266,23 @@ define(
          });
 
          it('stack maximized popup position', () => {
-            let item = {
-               popupOptions: {
-                  minWidth: 600,
-                  maxWidth: 800
-               },
-               hasMaximizePopup: true
+            let hasMaximizePopup = StackStrategy._hasMaximizePopup({});
+            assert.equal(hasMaximizePopup, false);
+
+            StackStrategy._goUpByControlTree = () => {
+               return [
+                  {
+                     _moduleName: 'Controls/_popup/Manager/Popup',
+                     _options: {
+                        maximize: true
+                     }
+                  }
+               ];
             };
-            let position = StackStrategy.getPosition({
-               top: 0,
-               right: 100
-            }, item);
-            assert.equal(position.right, 0);
+
+            hasMaximizePopup = StackStrategy._hasMaximizePopup({});
+            assert.equal(hasMaximizePopup, true);
+            StackStrategy._goUpByControlTree = () => [];
          });
 
          it('stack maximized default options', () => {

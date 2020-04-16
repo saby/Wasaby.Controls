@@ -136,13 +136,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._updateBottomShadowStyle();
     }
 
-    protected _beforeUpdate(): void {
-        // При каждом обновлении контента необходимо также обновлять значения тени.
-        // Иначе это приводит к ошибкас в расчётах на iOS/Safari 13
-        this._bottomShadowStyle = '';
-        this._topShadowStyle = '';
-    }
-
     protected _afterMount(): void {
         const children = this._children;
 
@@ -437,6 +430,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
          */
         if (style.indexOf('top') === -1 && style.indexOf('bottom') === -1 && this._context?.stickyHeader && !this._container) {
             style += `top: ${this._context.stickyHeader.top}px;`;
+            style += `bottom: ${this._context.stickyHeader.bottom}px;`;
         }
 
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274

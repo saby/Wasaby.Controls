@@ -1,12 +1,21 @@
 <div class="controls-PagingV">
-   <div class="controls-Paging__wrapper">
+   <div class="controls-Paging__wrapper controls-Paging__wrapper_theme-{{_options.theme}}">
       <ws:if data="{{!_options.showDigits}}">
-         <span class="controls-Paging__btn controls-Paging__btn_first controls-Paging__arrow controls-Paging__arrow__state-{{_stateBegin}}" attr:title="{[В начало]}" on:click="_arrowClick('Begin')">
-            <i class="icon-First controls-Paging__icon"></i>
+         <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
+                        controls-Paging__btn_first controls-Paging__btn_first_theme-{{_options.theme}}
+                        controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
+                        controls-Paging__arrow__state-{{_stateBegin}}
+                        controls-Paging__arrow__state-{{_stateBegin}}_theme-{{_options.theme}}"
+                        attr:title="{[В начало]}" on:click="_arrowClick('Begin')">
+            <i class="icon-First controls-Paging__icon_theme-{{_options.theme}}"></i>
          </span>
       </ws:if>
-      <span class="controls-Paging__btn controls-Paging__arrow controls-Paging__arrow__state-{{_statePrev}}" attr:title="{[Назад]}" on:click="_arrowClick('Prev')">
-         <i class="icon-Back2 controls-Paging__icon"></i>
+      <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
+                     controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
+                     controls-Paging__arrow__state-{{_statePrev}}
+                     controls-Paging__arrow__state-{{_statePrev}}_theme-{{_options.theme}}"
+                     attr:title="{[Назад]}" on:click="_arrowClick('Prev')">
+         <i class="icon-Back2 controls-Paging__icon_theme-{{_options.theme}}"></i>
       </span>
       <ws:if data="{{_options.showDigits}}">
          <Controls._paging.Paging.DigitButtons
@@ -15,12 +24,21 @@
                selectedKey="{{_options.selectedPage}}"
                count="{{_options.pagesCount}}"></Controls._paging.Paging.DigitButtons>
       </ws:if>
-      <span class="controls-Paging__btn controls-Paging__btn_last controls-Paging__arrow controls-Paging__arrow__state-{{_stateNext}}" attr:title="{[Вперёд]}" on:click="_arrowClick('Next')">
-         <i class="icon-Forward controls-Paging__icon"></i>
+      <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
+                     controls-Paging__btn_last controls-Paging__btn_last_theme-{{_options.theme}}
+                     controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
+                     controls-Paging__arrow__state-{{_stateNext}}
+                     controls-Paging__arrow__state-{{_stateNext}}_theme-{{_options.theme}}"
+                     attr:title="{[Вперёд]}" on:click="_arrowClick('Next')">
+         <i class="icon-Forward controls-Paging__icon_theme-{{_options.theme}}"></i>
       </span>
       <ws:if data="{{_options.showEndButton}}">
-         <span class="controls-Paging__btn controls-Paging__arrow controls-Paging__arrow__state-{{_stateEnd}}" attr:title="{[В конец]}" on:click="_arrowClick('End')">
-            <i class="icon-Last controls-Paging__icon"></i>
+         <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
+                        controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
+                        controls-Paging__arrow__state-{{_stateEnd}}
+                        controls-Paging__arrow__state-{{_stateEnd}}_theme-{{_options.theme}}"
+                        attr:title="{[В конец]}" on:click="_arrowClick('End')">
+            <i class="icon-Last controls-Paging__icon_theme-{{_options.theme}}"></i>
          </span>
       </ws:if>
    </div>
