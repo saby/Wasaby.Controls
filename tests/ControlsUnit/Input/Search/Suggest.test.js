@@ -1,4 +1,4 @@
-define(['Controls/suggest', 'Types/entity'], function(suggest, entity) {
+define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity, Env) {
    'use strict';
 
    describe('Controls/_suggest/Input/Search/Suggest', function() {
@@ -62,12 +62,20 @@ define(['Controls/suggest', 'Types/entity'], function(suggest, entity) {
          };
 
          searchSuggest._suggestMarkedKeyChanged(null, 'test');
-         searchSuggest._searchClick();
+         searchSuggest._searchClick(null,{
+            nativeEvent: {
+               which: Env.constants.key.enter
+            }
+         });
          assert.isFalse(searchClickNotifyed);
          assert.isTrue(searchSuggest._suggestState);
 
          searchSuggest._suggestMarkedKeyChanged(null, null);
-         searchSuggest._searchClick();
+         searchSuggest._searchClick(null,{
+            nativeEvent: {
+               which: 'any'
+            }
+         });
          assert.isTrue(searchClickNotifyed);
          assert.isFalse(searchSuggest._suggestState);
          assert.isTrue(suggestStateChangedNotifyed);
