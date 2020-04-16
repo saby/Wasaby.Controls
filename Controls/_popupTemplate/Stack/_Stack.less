@@ -49,12 +49,10 @@
 
 .controls-StackTemplate__top-area-background_theme_@{themeName} {
    background: @header_background-color_stack;
-
-   //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
-   .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
-      background-color: @header_background-color_stack;
-      box-shadow: -15px 2px 4px -6px @header_background-color_stack;
-   }
+}
+// Класс для установки фона шапки контрола через backgroundStyle (stackHeader)
+.controls-background-stackHeader_theme-@{themeName} {
+   background-color: @header_background-color_stack;
 }
 
 .controls-StackTemplate__top-area-border_theme_@{themeName} {
@@ -77,12 +75,6 @@
 
 .controls-StackTemplate__content-area_theme_@{themeName} {
    background: @background-color_stack;
-
-   //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
-   .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
-      background-color: @background-color_stack;
-      box-shadow: -15px 2px 4px -6px @background-color_stack;
-   }
 }
 
 .controls-StackTemplate__top-area-content {
@@ -163,7 +155,7 @@
    height: @header_min-height_stack;
    min-width: @header_min-width_stack;
    margin-left: @header_padding-left_stack;
-   padding-right: @header-content_padding-right_stack;
+   padding-right: @header_caption_offset-right_stack;
 }
 
 .controls-StackTemplate__caption_text {

@@ -251,12 +251,6 @@
          }
       }
       /** Общая проблема с background'ом у контролов, которые лежат в списке, решается через background: inherit **/
-      //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
-      .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
-         background-color: @item_hover_background-color_list;
-         box-shadow: -15px 2px 4px -6px @item_hover_background-color_list;
-      }
-
       .controls-SelectedCollection__InfoBox_fixed {
          background-color: @item_hover_background-color_list;
       }
@@ -609,12 +603,6 @@
 .ws-is-hover {
    .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
       background-color: @master_item_hover_background-color_list;
-   }
-
-   //TODO: will be deleted after https://online.sbis.ru/opendoc.html?guid=08925c8d-d7d1-4588-989f-3279e0675557
-   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} .controls-BreadCrumbsView__menu__dots_theme-@{themeName} {
-      background-color: @master_item_hover_background-color_list;
-      box-shadow: -15px 2px 4px -6px @master_item_hover_background-color_list;
    }
 }
 

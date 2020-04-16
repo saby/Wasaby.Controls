@@ -365,13 +365,14 @@ var _private = {
  * @class Controls/_input/Base
  * @extends UI/_base/Control
  *
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_input/interface/IBase
- * @mixes Controls/_input/interface/ITag
- * @mixes Controls/_input/interface/IValue
- * @mixes Controls/_interface/IValidationStatus
+ * @implements Controls/_interface/IHeight
+ * @implements Controls/_interface/IFontSize
+ * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/_input/interface/IBase
+ * @implements Controls/_input/interface/ITag
+ * @implements Controls/_input/interface/IValue
+ * @implements Controls/_interface/IValidationStatus
+ * @implements Controls/interface/IBorderStyle
  *
  * @public
  *

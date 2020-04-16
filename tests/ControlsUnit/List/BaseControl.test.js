@@ -2942,66 +2942,6 @@ define([
          assert.isTrue(stopPropagationCalled);
       });
 
-      it('_itemMouseDown', async function() {
-         var cfg = {
-            keyProperty: 'id',
-            viewName: 'Controls/List/ListView',
-            source: source,
-            viewModelConstructor: lists.ListViewModel
-         };
-         var originalEvent = {
-            target: {
-            }
-         };
-         var event = {
-            stopPropagation: function() {
-            }
-         };
-         var ctrl = new lists.BaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-         ctrl._itemMouseDown(event, {key: 3}, originalEvent);
-         assert.equal(
-            ctrl._listViewModel.getItems().at(2),
-            ctrl._listViewModel.getMarkedItem().getContents()
-         );
-      });
-
-      it('_onItemClick: should not mark single item', async function() {
-         var cfg = {
-            keyProperty: 'id',
-            viewName: 'Controls/List/ListView',
-            source: source,
-            editingConfig: {},
-            markerVisibility: 'onactivated',
-            viewModelConstructor: lists.ListViewModel
-         };
-         var originalEvent = {
-            target: {
-               closest: function(selector) {
-                  return selector === '.js-controls-ListView__checkbox';
-               },
-               getAttribute: function(attrName) {
-                  return attrName === 'contenteditable' ? 'true' : '';
-               }
-            }
-         };
-         var stopPropagationCalled = false;
-         var event = {
-            stopPropagation: function() {
-               stopPropagationCalled = true;
-            }
-         };
-         var ctrl = new lists.BaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-         ctrl._listViewModel.setMarkedKey(null);
-         ctrl._items.getCount = () => 1;
-         ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(0), originalEvent);
-         assert.isTrue(stopPropagationCalled);
-         assert.isUndefined(ctrl._listViewModel.getMarkedItem());
-      });
-
       it('_needBottomPadding after reload in beforeMount', async function() {
          var cfg = {
             viewName: 'Controls/List/ListView',
@@ -6233,6 +6173,190 @@ define([
             lists.BaseControl._private.resetPagingNavigation(instance, {sourceConfig: {page:1, pageSize: 5}});
             assert.deepEqual(instance, {_currentPage: 2, _knownPagesCount: 1, _currentPageSize: 5});
 
+         });
+      });
+
+      describe('event handlers', function() {
+
+         let
+            baseControlOptions,
+            baseControl;
+
+         async function mountBaseControl(control, options) {
+            control.saveOptions(options);
+            await control._beforeMount(options);
+            control._container = {clientHeight: 0};
+            await control._afterMount(options);
+         }
+
+         beforeEach(async () => {
+            baseControlOptions = {
+               keyProperty: 'id',
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewModelConstructor: lists.ListViewModel,
+               markedKey: null
+            };
+            const _baseControl = new lists.BaseControl(baseControlOptions);
+            await mountBaseControl(_baseControl, baseControlOptions);
+            baseControl = _baseControl;
+         });
+
+         afterEach(async () => {
+            await baseControl._beforeUnmount();
+            baseControl = null;
+         });
+
+         describe('_onItemMouseDown', () => {
+            it('notify parent', () => {
+               const originalEvent = {
+                  target: {},
+                  nativeEvent: {}
+               };
+               const event = { stopPropagation: () => {} };
+               const itemData = { item: {} };
+
+               baseControl._notify = (eName, args) => {
+                  if (eName === 'itemMouseDown') {
+                     isNotified = true;
+                     assert.equal(args[0], itemData.item);
+                     assert.equal(args[1], originalEvent.nativeEvent);
+                  }
+               };
+
+               let isNotified = false;
+               baseControl._itemMouseDown(event, itemData, originalEvent);
+               assert.isTrue(isNotified);
+            });
+
+            it('should not mark item. Marked key changes only on mouse up', function() {
+               const originalEvent = { target: {} };
+               const event = { stopPropagation: () => {} };
+
+               baseControl._itemMouseDown(event, { key: 3 }, originalEvent);
+
+               assert.equal(
+                  baseControl._listViewModel.getItems().at(0),
+                  baseControl._listViewModel.getMarkedItem().getContents()
+               );
+            });
+         });
+
+         describe('_onItemMouseUp', () => {
+
+            it('notify parent', () => {
+               const originalEvent = {
+                  target: {},
+                  nativeEvent: {}
+               };
+               const event = { stopPropagation: () => {} };
+               const itemData = { item: {} };
+
+               baseControl._items.getCount = () => 1;
+
+               baseControl._notify = (eName, args) => {
+                  if (eName === 'itemMouseUp') {
+                     isNotified = true;
+                     assert.equal(args[0], itemData.item);
+                     assert.equal(args[1], originalEvent.nativeEvent);
+                  }
+               };
+
+               let isNotified = false;
+               baseControl._itemMouseUp(event, itemData, originalEvent);
+               assert.isTrue(isNotified);
+            });
+
+            it('should mark single item if not editing', async function() {
+               baseControlOptions.markerVisibility = 'onactivated';
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               const originalEvent = { target: {} };
+               const event = {};
+
+               baseControl._items.getCount = () => 1;
+               baseControl._mouseDownItemKey = 1;
+
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+
+               assert.equal(
+                  baseControl._listViewModel.getItems().at(0),
+                  baseControl._listViewModel.getMarkedItem().getContents()
+               );
+            });
+
+            it('should not mark single item if editing', async function() {
+               baseControlOptions.markerVisibility = 'onactivated';
+               baseControlOptions.editingConfig = {};
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               const originalEvent = { target: {} };
+               const event = {};
+
+               baseControl._items.getCount = () => 1;
+               baseControl._mouseDownItemKey = 1;
+
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+            });
+
+            it('should mark item if there are more then one item in list', async function() {
+               baseControlOptions.markerVisibility = 'onactivated';
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               const originalEvent = { target: {} };
+               const event = {};
+               baseControl._mouseDownItemKey = 1;
+
+               // No editing
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+               assert.equal(
+                  baseControl._listViewModel.getItems().at(0),
+                  baseControl._listViewModel.getMarkedItem().getContents()
+               );
+
+               // With editing
+               baseControl._listViewModel.setMarkedKey(null);
+               baseControlOptions.editingConfig = {};
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               baseControl._mouseDownItemKey = 1;
+
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+               assert.equal(
+                  baseControl._listViewModel.getItems().at(0),
+                  baseControl._listViewModel.getMarkedItem().getContents()
+               );
+            });
+         });
+
+
+         describe('_onItemClick', () => {
+            it('click on checkbox should not notifies itemClick, but other clicks should', function() {
+               let isStopped = false;
+               let isCheckbox = false;
+
+               const e = { stopPropagation() { isStopped = true; } };
+
+               const originalEvent = {
+                  target: {
+                     closest: () => isCheckbox
+                  }
+               };
+
+               // click not on checkbox
+               baseControl._onItemClick(e, {}, originalEvent);
+               assert.isFalse(isStopped);
+
+               // click on checkbox
+               isCheckbox = true;
+               baseControl._onItemClick(e, {}, originalEvent);
+               assert.isTrue(isStopped);
+            });
          });
       });
    });

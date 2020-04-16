@@ -270,7 +270,7 @@ var Area = Text.extend({
         Area.superclass._beforeUpdate.apply(this, arguments);
 
         if (this._options.minLines !== newOptions.minLines || this._options.maxLines !== newOptions.maxLines) {
-            _private.validateLines(newOptions.minLines, newOptions.maxLines);
+            _private.validateLines(newOptions.minLines, newOptions.maxLines, this);
         }
         this._heightLine = ActualAPI.heightLine(newOptions.size, newOptions.fontSize);
     },

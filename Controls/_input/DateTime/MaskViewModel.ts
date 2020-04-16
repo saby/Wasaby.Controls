@@ -2,8 +2,12 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import dateUtils = require('Controls/Utils/Date');
 import ViewModel = require('Controls/_input/Mask/ViewModel');
 
-const DEFAULT_YEAR_NUM = 1900;
-const DEFAULT_YEAR_STR = '1900';
+// new Date, без указания года, использует по умолчанию 1900 год. В некоторых контроллах ввода даты
+// можно задать только день и месяц. В некоторых случаях может быть необходимо выбрать 29 февраля.
+// 1900 год високосным не является, поэтому валидатор такую дату не пропустит,
+// поэтому испольуем близжающий к нему високосный 1904 год
+const DEFAULT_YEAR_NUM = 1904;
+const DEFAULT_YEAR_STR = '1904';
 
 class ModuleClass extends ViewModel {
     protected handleInput(splitValue, inputType) {

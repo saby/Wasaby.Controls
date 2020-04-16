@@ -143,6 +143,7 @@
                     on:editArrowClick="_notifyHandler('editArrowClick')"
                     on:itemContextMenu="_onItemContextMenu()"
                     on:itemMouseDown="_itemMouseDown()"
+                on:itemMouseUp="_itemMouseUp()"
                     on:itemMouseEnter="_itemMouseEnter()"
                     on:itemMouseMove="_itemMouseMove()"
                     on:itemMouseLeave="_itemMouseLeave()"

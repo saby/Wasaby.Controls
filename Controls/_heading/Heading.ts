@@ -25,10 +25,10 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @author Красильников А.С.
     * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
     *
-    * @mixes Controls/_interface/ITooltip
-    * @mixes Controls/_interface/ICaption
-    * @mixes Controls/_interface/IFontColorStyle
-    * @mixes Controls/_interface/IFontSize
+    * @implements Controls/_interface/ITooltip
+    * @implements Controls/_interface/ICaption
+    * @implements Controls/_interface/IFontColorStyle
+    * @implements Controls/_interface/IFontSize
     */
 
    /*

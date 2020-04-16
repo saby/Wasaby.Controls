@@ -1,5 +1,5 @@
 /**
- * Интерфейс для плоских списков, которые поддерживают событие клика по элементу.
+ * Интерфейс для списков, которые поддерживают событие клика по элементу.
  * @interface Controls/_list/interface/IClickableView
  * @public
  * @author Авраменко А.С.
@@ -17,6 +17,7 @@
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Record} item Элемент, по которому кликнули.
  * @param {Object} nativeEvent Объект нативного события браузера.
+ * @param {Number} columnIndex Индекс колонки, по которой кликнули. Параметр актуален только для {@link Controls/grid:View} и {@link Controls/treeGrid:View}.
  */
 
 /*

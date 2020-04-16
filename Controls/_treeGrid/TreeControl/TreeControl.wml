@@ -15,7 +15,8 @@
                            nodeConfig="{{_options.nodeConfig}}"
                            nodesSourceControllers="{{_nodesSourceControllers}}">
    <ws:expanderTemplate>
-      <div on:mousedown="_onExpanderMouseDown(expanderTemplate.itemData.dispItem)"
+      <div on:mousedown="_onExpanderMouseDown(expanderTemplate.itemData.key, expanderTemplate.itemData.dispItem)"
+           on:mouseup="_onExpanderMouseUp(expanderTemplate.itemData.key, expanderTemplate.itemData.dispItem)"
            on:click="_onExpanderClick()"
            class="{{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize, _options.theme)}}"></div>
    </ws:expanderTemplate>

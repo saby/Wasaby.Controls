@@ -23,9 +23,9 @@ const MODERN_IE_VERSION = 11;
  *
  * @class Controls/_heading/Back
  * @extends Core/Control
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_buttons/interface/IClick
- * @mixes Controls/_interface/ITooltip
+ * @implements Controls/_interface/ICaption
+ * @implements Controls/_buttons/interface/IClick
+ * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
  * @implements Controls/_interface/IIconSize

@@ -15,7 +15,7 @@
  *              <ws:partial template="Controls/list:BaseEditingTemplate" value="{{ itemData.item.price }}" enabled="{{true}}">
  *                  <ws:viewTemplate>
  *                      Total price: {{ _countTotalPrice() }}$
- *                  </viewTemplate>
+ *                  </ws:viewTemplate>
  *                  <ws:editorTemplate>
  *                      <Controls.input:Money bind:value="contentTemplate.itemData.item.price" selectOnClick="{{ false }}" />
  *                  </ws:editorTemplate>
