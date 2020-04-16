@@ -999,5 +999,25 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(450, columnScroll._contentSize); // previous value
          assert.equal(200, columnScroll._contentContainerSize); //previous value
       })
+
+      it('_isDragScrollingEnabled', function() {
+         columnScroll._options.listModel.getItems = () => ({
+            getCount: () => 21
+         });
+         columnScroll._contentSize = 100;
+         columnScroll._contentContainerSize = 200;
+
+         // Column scroll is not visible now
+         assert.isFalse(columnScroll._isDragScrollingEnabled());
+
+         // Column scroll is visible
+         columnScroll._contentSize = 200;
+         columnScroll._contentContainerSize = 100;
+         assert.isTrue(columnScroll._isDragScrollingEnabled());
+
+         // No content, not mounted
+         columnScroll._children.content = null;
+         assert.isFalse(columnScroll._isDragScrollingEnabled());
+      });
    });
 });
