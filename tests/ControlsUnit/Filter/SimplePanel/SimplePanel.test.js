@@ -1,12 +1,12 @@
 define(
    [
       'Controls/filterPopup',
-      'Core/core-clone',
+      'Types/util',
       'Types/collection',
       'Core/Deferred',
       'Controls/_filter/HistoryUtils'
    ],
-   function(filterPopup, Clone, collection, Deferred, HistoryUtils) {
+   function(filterPopup, util, collection, Deferred, HistoryUtils) {
       describe('Filter:SimplePanel', function() {
 
          let defaultItems = [
@@ -64,11 +64,11 @@ define(
 
          describe('_private.getItems', () => {
             it('returns items only with 2 and more elements in collection', (done) => {
-               const itemsConfig = Clone(defaultItemsConfig);
+               const itemsConfig = util.object.clone(defaultItemsConfig);
                itemsConfig[0].items.clear();
                const items = new collection.RecordSet({
                   keyProperty: 'id',
-                  rawData: defaultItemsConfig
+                  rawData: itemsConfig
                });
                filterPopup.SimplePanel._private.getItems({}, items).then((resultItems) => {
                   const itemWithEmptyCollection = resultItems.find((resultItem) => {
@@ -105,7 +105,7 @@ define(
             let panel = getPanel(defaultConfig);
             panel._beforeMount(defaultConfig);
 
-            let items = Clone(defaultItemsConfig);
+            let items = util.object.clone(defaultItemsConfig);
             items[0].selectedKeys = [1];
             let newConfig = {...defaultConfig, items: new collection.RecordSet({
                keyProperty: 'id',
@@ -133,7 +133,7 @@ define(
             let panel = getPanel(defaultConfig);
             panel._beforeMount(defaultConfig);
 
-            let items = Clone(defaultItemsConfig);
+            let items = util.object.clone(defaultItemsConfig);
             items[0].loadDeferred = Deferred.success(items[0].items);
             items[0].sourceController = { hasMoreData: () => true };
             items[0].source = { prepareItems: loadItems => loadItems };
