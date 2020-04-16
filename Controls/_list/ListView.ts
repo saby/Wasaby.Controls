@@ -295,14 +295,13 @@ var ListView = BaseControl.extend(
 
         // protected
         _getFooterClasses(): string {
-            let classes = 'controls-ListView__footer__paddingLeft_';
-
+            let leftPadding: string;
             if (this._options.multiSelectVisibility !== 'hidden') {
-                classes += 'withCheckboxes';
+                leftPadding = 'withCheckboxes';
             } else {
-                classes += (this._options.itemPadding && this._options.itemPadding.left || 'default').toLowerCase();
+                leftPadding = (this._options.itemPadding && this._options.itemPadding.left || 'default').toLowerCase();
             }
-            return classes;
+            return `controls-ListView__footer__paddingLeft_${leftPadding}_theme-${this._options.theme}`;
         }
     });
 

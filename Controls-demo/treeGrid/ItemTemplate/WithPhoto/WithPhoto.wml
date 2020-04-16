@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper_fixed_width">
+<div class="controlsDemo__wrapper controlsDemo__wrapper_fixed_width">
 
     <div class="controlsDemo__cell demo-TreeWithProto__wrapper16">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
