@@ -388,6 +388,18 @@ define([
          containerMock.scrollTop = 1000;
          scrollMod.Watcher._private.doScroll(ins, 'pageUp', containerMock);
          assert.deepEqual(700, containerMock.scrollTop);
+
+         containerMock.scrollTop = 200;
+         ins._topPlaceholderSize = 0;
+         scrollMod.Watcher._private.doScroll(ins, 'pageUp', containerMock);
+         assert.deepEqual(-100, containerMock.scrollTop);
+
+         
+         containerMock.scrollTop = 2500;
+         ins._bottomPlaceholderSize = 0;
+         scrollMod.Watcher._private.doScroll(ins, 'pageDown', containerMock);
+         assert.deepEqual(2800, containerMock.scrollTop);
+
       });
 
       it('observers', function () {
