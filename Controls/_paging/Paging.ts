@@ -2,9 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import pagingTemplate = require('wml!Controls/_paging/Paging/Paging');
 import {SyntheticEvent} from 'Vdom/Vdom';
 
-// TODO перевести на честную тему мешает наличие опции theme на scroll/Container
-import 'css!theme?Controls/paging';
-
 type TButtonState = 'normal' | 'disabled';
 
 export interface IPagingOptions extends IControlOptions {
@@ -12,7 +9,7 @@ export interface IPagingOptions extends IControlOptions {
      * @cfg {Boolean} Отображать кнопки с номерами страницы.
      */
     showDigits: boolean;
-    
+
     /**
      * @cfg {Number} Размер страницы.
      */
@@ -34,7 +31,7 @@ export interface IPagingOptions extends IControlOptions {
  * @extends UI/Base:Control
  * @public
  * @author Авраменко А.С.
- * 
+ *
  * @mixes Controls/_paging/Paging/Styles
  * @mixes Controls/_paging/Paging/DigitButtons/Styles
  *
@@ -123,6 +120,8 @@ class Paging extends Control<IPagingOptions> {
         }
         this._notify('onArrowClick', [btnName]);
     }
+
+    static _theme: string[] = ['Controls/paging'];
 }
 
 export default Paging;
@@ -136,7 +135,7 @@ export default Paging;
  * @param {ButtonName} btnName Имя нажатой кнопки.
  */
 
- /**
+/**
  * @typedef {String} ButtonName
  * @variant Begin Кнопка "В начало".
  * @variant End Кнопка "В конец".
