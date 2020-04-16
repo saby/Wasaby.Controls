@@ -4,7 +4,7 @@
       <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}} controls-DigitButtons__ellipsis controls-DigitButtons__ellipsis_theme-{{_options.theme}}">{{digit}}</span>
    </ws:if>
    <ws:else>
-      <span on:click="_digitClick(digit)" class="controls-Paging__btn
+      <span on:click="_digitClick(digit)" class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
                   controls-DigitButtons__digit controls-DigitButtons__digit_theme-{{_options.theme}}
                   {{digit == _options.selectedKey ? ' controls-DigitButtons__digit__selected controls-DigitButtons__digit__selected_theme-' + _options.theme}}"
       >{{digit}}</span>
