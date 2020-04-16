@@ -1,9 +1,9 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
+import {Control} from 'UI/Base';
 import {detection} from 'Env/Env';
 import {goUpByControlTree} from 'UI/Focus';
-import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
 interface IPosition {
     right: number;
@@ -94,9 +94,7 @@ export = {
     getPosition(tCoords, item): IPosition {
         const maxPanelWidth = this.getMaxPanelWidth();
         const width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
-        // todo Оставить только метод, т.к. он универсальный для обоих окружений и позволяет избавиться от передачи
-        // hasMaximizePopup по конфину окон. https://online.sbis.ru/opendoc.html?guid=19962a29-0597-4b7d-a2c8-c0461f83392b
-        const hasMaximizePopup: boolean = item.hasMaximizePopup || this.hasMaximizePopup(item);
+        const hasMaximizePopup: boolean = this._hasMaximizePopup(item);
         const position: IPosition = {
             width,
             right: hasMaximizePopup ? 0 : tCoords.right,
@@ -110,7 +108,7 @@ export = {
         }
 
         if (item.popupOptions.minWidth) {
-            // todo: Удалить minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+            // todo: Delete minimizedWidth https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
             position.minWidth = item.popupOptions.minimizedWidth || item.popupOptions.minWidth;
         }
         position.maxWidth = _private.calculateMaxWidth(this, item.popupOptions, tCoords);
@@ -118,17 +116,16 @@ export = {
         return position;
     },
 
-    hasMaximizePopup(item): boolean {
-        // Сделал пока только для старого окружения
-        // https://online.sbis.ru/opendoc.html?guid=19962a29-0597-4b7d-a2c8-c0461f83392b
-        if (!isNewEnvironment()) {
-            const openerContainer = item.popupOptions?.opener?._container;
-            const parents = goUpByControlTree(openerContainer);
-            for (let i = 0; i < parents.length; i++) {
-                if (parents[i]._moduleName === 'Controls/_popup/Manager/Popup' || 'Lib/Control/Dialog/Dialog') {
-                    if (parents[i]._options.maximize) {
-                        return true;
-                    }
+    _hasMaximizePopup(item): boolean {
+        const openerContainer: HTMLElement = item.popupOptions?.opener?._container;
+        const parents: Control[] = this._goUpByControlTree(openerContainer);
+        const popupModuleName: string = 'Controls/_popup/Manager/Popup';
+        const oldPopupModuleName: string = 'Lib/Control/Dialog/Dialog'; // Compatible
+
+        for (let i = 0; i < parents.length; i++) {
+            if (parents[i]._moduleName ===  popupModuleName || parents[i]._moduleName === oldPopupModuleName) {
+                if (parents[i]._options.maximize) {
+                    return true;
                 }
             }
         }
@@ -136,12 +133,16 @@ export = {
 
     },
 
+    _goUpByControlTree(container: HTMLElement): Control[] {
+        return goUpByControlTree(container);
+    },
+
     /**
      * Returns the maximum possible width of popup
      * @function Controls/_popupTemplate/Stack/Opener/StackController#getMaxPanelWidth
      */
-    getMaxPanelWidth() {
-        // window.innerWidth брать нельзя, при масштабировании на ios это значение меняется, что влияет на ширину панелей.
+    getMaxPanelWidth(): number {
+        // window.innerWidth брать нельзя, при масштабировании на ios значение меняется, что влияет на ширину панелей.
         return document.body.clientWidth - MINIMAL_PANEL_DISTANCE;
     },
 

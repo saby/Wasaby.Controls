@@ -1277,7 +1277,7 @@ var
             current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
                 return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
             };
-            const superGetMarkerClasses = current.getMarkerClasses;
+
             current.getMarkerClasses = (rowSeparatorVisibility): string => {
                 let classes = ' controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-' + self._options.theme;
 
@@ -1288,7 +1288,7 @@ var
                 }
                 classes += '_theme-' + self._options.theme;
 
-                return superGetMarkerClasses.apply(this) + classes;
+                return classes;
             }
 
             if (current.multiSelectVisibility !== 'hidden') {

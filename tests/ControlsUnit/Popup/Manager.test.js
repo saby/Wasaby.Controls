@@ -259,36 +259,6 @@ define(
             });
          });
 
-         it('add maximized popup', function(done) {
-            let Manager = getManager();
-            let id0 = Manager.show({
-               modal: false,
-               maximize: true,
-               testOption: 'created'
-            }, new BaseController());
-
-            assert.equal(Manager._hasMaximizePopup, true);
-
-            let id1 = Manager.show({
-               modal: true,
-               testOption: 'created'
-            }, new BaseController());
-
-            assert.equal(Manager._popupItems.at(1).hasMaximizePopup, true);
-
-            Manager.remove(id0).then(() => {
-               assert.equal(Manager._hasMaximizePopup, false);
-
-               let id2 = Manager.show({
-                  modal: true,
-                  testOption: 'created'
-               }, new BaseController());
-
-               assert.equal(Manager._popupItems.at(1).hasMaximizePopup, false);
-               done();
-            });
-         });
-
          it('popup deactivated', () => {
             let Manager = getManager();
             let isDeactivated = false;

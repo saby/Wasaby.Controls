@@ -3,6 +3,7 @@ import {IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig} from '../Colle
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
+import { isEqual } from 'Types/object';
 
 // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
 const showType = {
@@ -103,7 +104,7 @@ export class ItemActionsController {
 
     init(options: IItemActionsControllerOptions): boolean {
         let hasChanges = false;
-        if (this._commonItemActions !== options.itemActions ||
+        if (!isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
             this._visibilityCallback !== options.visibilityCallback
         ) {
