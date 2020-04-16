@@ -1,0 +1,17 @@
+<div class="layout-listEditor">
+    <div class="layout-listEditor_previewContainer">
+        <ws:partial template="{{_options.previewTemplate}}"
+                    scope="{{_options.editorValue}}"/>
+    </div>
+    <div class="layout-listEditor_editorContainer">
+        <ws:if data="{{_options.editorSource}}">
+            <Controls.Container.Async
+                    templateName="Controls/Configuration/_list/OptionsEditor">
+                <ws:partial
+                        template="{{content.resolvedTemplate}}"
+                        source="{{_options.editorSource}}"
+                        editorValue="{{_options.editorValue}}"/>
+            </Controls.Container.Async>
+        </ws:if>
+    </div>
+</div>

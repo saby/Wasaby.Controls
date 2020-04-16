@@ -1,0 +1,26 @@
+<div class="layout-listEditorArea">
+    <div class="layout-listEditorArea_header">
+        <ws:if data="{{_options.items.length > 1}}">
+            <Controls.tabs:Buttons
+                    selectedKey="{{_options.selectedKey}}"
+                    on:selectedKeyChanged="_notifyHandler('viewModeChanged')"
+                    keyProperty="name"
+                    style="secondary"
+                    itemTemplate="{{_tabItemTemplate}}"
+                    source="{{_tabSource}}"
+            />
+        </ws:if>
+        <ws:if data="{{_options.afterTabsTemplate}}">
+            <ws:partial template="{{_options.afterTabsTemplate}}"
+                        editorValue="{{_options.editorValue}}"
+                        on:editorValueChanged="_notifyHandler('editorValueChanged')"/>
+        </ws:if>
+    </div>
+    <div class="layout-listEditorArea_separator"></div>
+    <Controls.Container.Async
+            templateName="{{_currentTemplate.templateName}}">
+        <ws:partial
+                template="{{content.resolvedTemplate}}"
+                scope="{{_currentTemplate.templateOptions}}"/>
+    </Controls.Container.Async>
+</div>

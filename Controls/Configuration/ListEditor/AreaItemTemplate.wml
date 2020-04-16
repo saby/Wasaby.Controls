@@ -1,5 +1,0 @@
-<Controls.Container.Async
-        templateName="{{_options.itemTemplate}}">
-    <ws:partial template="{{content.resolvedTemplate}}"
-                scope="{{_options.templateOptions}}"/>
-</Controls.Container.Async>

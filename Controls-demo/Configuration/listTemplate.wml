@@ -1,8 +1,0 @@
-<ws:partial template="wml!Controls/Configuration/ListEditor/ItemTemplate">
-    <ws:editorTemplate>
-        Тут будет editorTemplate {{_options.name}}
-    </ws:editorTemplate>
-    <ws:previewTemplate>
-        Тут будет previewTemplate {{_options.name}}
-    </ws:previewTemplate>
-</ws:partial>

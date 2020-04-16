@@ -1,0 +1,7 @@
+<Controls.Configuration._list.Editor
+    editorSource="{{_options.editorSource}}"
+    editorValue="{{_options.editorValue}}">
+    <ws:previewTemplate>
+        Здесь будет список {{_options.name}}
+    </ws:previewTemplate>
+</Controls.Configuration._list.Editor>

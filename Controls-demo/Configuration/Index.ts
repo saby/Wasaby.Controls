@@ -1,7 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls-demo/Configuration/ListEditor';
 import 'css!Controls-demo/Controls-demo';
-import "wml!Controls/Configuration/ListEditor/ItemTemplate";
+import {getEditingObject, getSource} from 'Controls-demo/PropertyGridNew/resources/Data';
 
 interface IListEditorOptions extends IControlOptions {
     selectedKey: string;
@@ -10,24 +10,41 @@ interface IListEditorOptions extends IControlOptions {
 export default class ListEditorDemo extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = template;
     protected _selectedKey: string = 'tile';
-    protected _tileTemplate = {
-        templateName: 'wml!Controls-demo/Configuration/tileTemplate',
-        templateOptions: {
-            name: 'tile'
+    protected _items = [
+        {
+            name: 'tile',
+            caption: 'Плитка',
+            icon: 'ArrangePreview',
+            templateName: 'wml!Controls-demo/Configuration/TabTemplate',
+            templateOptions: {
+                name: 'tile',
+                editorValue: getEditingObject(),
+                editorSource: getSource()
+            }
+        },
+        {
+            name: 'tree',
+            caption: 'Таблица',
+            icon: 'TableCreate',
+            templateName: 'wml!Controls-demo/Configuration/TabTemplate',
+            templateOptions: {
+                name: 'tree',
+                editorValue: getEditingObject(),
+                editorSource: getSource()
+            }
+        },
+        {
+            name: 'list',
+            caption: 'Список',
+            icon: 'InputHistory',
+            templateName: 'wml!Controls-demo/Configuration/TabTemplate',
+            templateOptions: {
+                name: 'list',
+                editorValue: getEditingObject(),
+                editorSource: getSource()
+            }
         }
-    };
-    protected _tableTemplate = {
-        templateName: 'wml!Controls-demo/Configuration/tableTemplate',
-        templateOptions: {
-            name: 'table'
-        }
-    };
-    protected _listTemplate = {
-        templateName: 'wml!Controls-demo/Configuration/listTemplate',
-        templateOptions: {
-            name: 'list'
-        }
-    };
+    ];
 
     protected async _customizeClick(): Promise<string> {
         const popup = await import('Controls/popup');

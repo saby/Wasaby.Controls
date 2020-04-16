@@ -1,0 +1,4 @@
+<div class="layout-listEditorArea_tabItem">
+    <div class="icon-{{item.get('icon')}} icon-small controls-icon_style-secondary_theme-{{_options.theme}}"></div>
+    <div class="layout-listEditorArea_tabItem-caption">{{item.get('caption')}}</div>
+</div>

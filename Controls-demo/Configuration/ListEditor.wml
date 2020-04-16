@@ -1,10 +1,8 @@
 <div class="controlsDemo__wrapper controlsDemo__maxWidth800">
-    <Controls.Configuration.ListEditor
+    <Controls.Configuration._list.EditorArea
             bind:selectedKey="_selectedKey"
-            tileTemplate="{{_tileTemplate}}"
-            listTemplate="{{_listTemplate}}"
-            tableTemplate="{{_tableTemplate}}">
-        <ws:rightTemplate>
+            items="{{_items}}">
+        <ws:afterTabsTemplate>
             <Controls.buttons:Button
                     caption="Настроить"
                     viewMode="linkButton"
@@ -12,6 +10,6 @@
                     fontColorStyle="secondary"
                     iconSize="s"
                     on:click="_customizeClick()"/>
-        </ws:rightTemplate>
-    </Controls.Configuration.ListEditor>
+        </ws:afterTabsTemplate>
+    </Controls.Configuration._list.EditorArea>
 </div>
