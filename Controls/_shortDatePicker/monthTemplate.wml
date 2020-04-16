@@ -10,19 +10,5 @@
         <ws:if data="{{!!iconTemplate}}">
             <ws:partial template="{{iconTemplate}}" value="{{month.date}}" extData="{{extData}}"/>
         </ws:if>
-        <ws:else>
-            <ws:if data="{{!!periods}}">
-                <ws:if data="{{_isIconChecked(periods, month.date)}}">
-                    <div class="controls-PeriodLiteDialog-item__checkBox">
-                        <div class="icon-16 icon-Yes icon-done"></div>
-                    </div>
-                </ws:if>
-                <ws:else>
-                    <div class="controls-PeriodLiteDialog-item__checkBox">
-                        <div class="icon-16 icon-Yes icon-disabled"></div>
-                    </div>
-                </ws:else>
-            </ws:if>
-        </ws:else>
     </div>
 </div>

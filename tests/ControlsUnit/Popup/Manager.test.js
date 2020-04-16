@@ -159,7 +159,8 @@ define(
                assert.equal(Manager._popupItems.getCount(), 0);
                done();
             });
-
+            const item = Manager.find(id);
+            assert.equal(item.popupState, 'startDestroying');
          });
 
          it('remove popup with pendings', function(done) {
@@ -401,12 +402,13 @@ define(
             assert.equal(secondResult, false);
          });
          it('mousedownHandler', function() {
-            let Manager = getManager();
+            let Manager =
+               getManager();
             let deactivatedCount = 0;
             Manager.remove = () => deactivatedCount++;
             Manager._isIgnoreActivationArea = () => false;
             Manager._isNewEnvironment = () => true;
-            Manager._needClosePopupByOutsideClick = () => true;
+            Manager._needClosePopupByOutsideClick = (item) => item.popupOptions.closeOnOutsideClick;
             let id1 = Manager.show({
                testOption: 'created',
                autofocus: false,

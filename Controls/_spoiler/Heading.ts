@@ -4,6 +4,7 @@ import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IExpandable, IExpandableOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
+import Util from './Util';
 
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
@@ -65,6 +66,7 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     protected _icon: TIcon;
     protected _view: TView;
     protected _caption: string;
+    protected _expanded: boolean = false;
 
     protected _template: TemplateFunction = template;
 
@@ -72,8 +74,8 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     readonly '[Controls/_interface/IFontSize]': boolean = true;
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
 
-    private _needChangeCaption(options: IHeadingOptions): boolean {
-        const {captions, expanded} = options;
+    private _needChangeCaption(options: IHeadingOptions, expanded: boolean): boolean {
+        const captions = options.captions;
         const {captions: oldCaptions} = this._options;
 
         if (captions instanceof Array && oldCaptions instanceof Array) {
@@ -88,25 +90,31 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     }
 
     protected _beforeMount(options?: IHeadingOptions, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._caption = Heading._calcCaption(options);
-        this._icon = Heading._calcIcon(options.expanded);
-        this._view = Heading._calcView(options.expanded);
+        this._expanded = Util._getExpanded(options, this._expanded);
+        this._updateStates(options, this._expanded);
         return super._beforeMount(options, contexts, receivedState);
     }
 
     protected _beforeUpdate(options?: IHeadingOptions, contexts?: any): void {
-        if (this._needChangeCaption(options)) {
-            this._caption = Heading._calcCaption(options);
-        }
-        if (this._needChangeStateByExpanded(options.expanded)) {
-            this._icon = Heading._calcIcon(options.expanded);
-            this._view = Heading._calcView(options.expanded);
-        }
+        this._updateStates(options, options.expanded);
         super._beforeUpdate(options, contexts);
     }
 
+    protected _updateStates(options: IHeadingOptions, expanded: boolean): void {
+        if (this._needChangeCaption(options, expanded)) {
+            this._caption = Heading._calcCaption(options.captions, expanded);
+        }
+        if (this._needChangeStateByExpanded(expanded)) {
+            this._icon = Heading._calcIcon(expanded);
+            this._view = Heading._calcView(expanded);
+        }
+    }
+
     protected _clickHandler(event: SyntheticEvent<MouseEvent>): void {
-        this._notify('expandedChanged', [!this._options.expanded]);
+        this._expanded = !Util._getExpanded(this._options, this._expanded);
+        this._notify('expandedChanged', [this._expanded]);
+        this._updateStates(this._options, this._expanded);
+
     }
 
     static _theme: string[] = ['Controls/spoiler', 'Controls/Classes'];
@@ -119,7 +127,7 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         return '';
     }
 
-    private static _calcCaption({captions, expanded}: IHeadingOptions): string {
+    private static _calcCaption(captions: TCaptions, expanded: boolean): string {
         if (captions instanceof Array) {
             const requiredCountCaptions: number = 2;
 
@@ -145,7 +153,6 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
         return {
             captions: '',
             fontSize: 'm',
-            expanded: true,
             captionPosition: 'right'
         };
     }

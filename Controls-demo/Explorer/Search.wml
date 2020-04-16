@@ -1,5 +1,6 @@
 <div>
    <div>Demo Controls/Explorer</div>
+   <Controls.scroll:Container>
    <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id" bind:filter="_filter">
       <Controls.operations:Controller bind:selectedKeys="_selectedKeys"
                                         bind:excludedKeys="_excludedKeys">
@@ -53,4 +54,5 @@
          </Controls.search:Controller>
       </Controls.operations:Controller>
    </Controls.list:DataContainer>
+   </Controls.scroll:Container>
 </div>

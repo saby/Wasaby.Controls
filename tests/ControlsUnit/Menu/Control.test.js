@@ -109,6 +109,9 @@ define(
             beforeEach(function() {
                menuControl = getMenu();
                menuControl._listModel = getListModel();
+               menuControl._context = {
+                  isTouch: { isTouch: false }
+               };
 
                menuControl._notify = (e, data) => {
                   if (e === 'selectedKeysChanged') {
@@ -177,6 +180,35 @@ define(
                emptyMenuControl._itemClick('itemClick', item, {});
                assert.equal(selectedKeys[0], 1);
             });
+
+            describe('check touch devices', function() {
+               beforeEach(() => {
+                  menuControl._context.isTouch.isTouch = true;
+                  selectedItem = null;
+               });
+
+               it('submenu is not open, item is list', function() {
+                  sinon.stub(menuControl, 'handleCurrentItem');
+                  menuControl._itemClick('itemClick', item, {});
+                  assert.equal(selectedItem.getKey(), 1);
+               });
+
+               it('submenu is not open, item is node', function() {
+                  sinon.stub(menuControl, 'handleCurrentItem');
+                  item.set('node', true);
+                  menuControl._options.nodeProperty = 'node';
+                  menuControl._itemClick('itemClick', item, {});
+                  sinon.assert.calledOnce(menuControl.handleCurrentItem);
+                  assert.isNull(selectedItem);
+                  sinon.restore();
+               });
+
+               it('submenu is open', function() {
+                  menuControl._subDropdownItem = menuControl._listModel.at(1);
+                  menuControl._itemClick('itemClick', menuControl._listModel.at(1).getContents(), {});
+                  assert.equal(selectedItem.getKey(), 1);
+               });
+            });
          });
 
          describe('_itemMouseEnter', function() {
@@ -185,7 +217,10 @@ define(
 
             beforeEach(() => {
                menuControl = getMenu();
-               handleStub = sandbox.stub(menuControl, 'handleCurrentItem');
+               menuControl._context = {
+                  isTouch: { isTouch: false }
+               };
+               handleStub = sandbox.stub(menuControl, 'startHandleItemTimeout');
             });
 
             it('on groupItem', function() {
@@ -196,8 +231,18 @@ define(
             it('on collectionItem', function() {
                menuControl._itemMouseEnter('mouseenter', new display.CollectionItem({
                   contents: new entity.Model()
-               }), {});
+               }), { target: 'targetTest', nativeEvent: 'nativeEvent' });
                assert.isTrue(handleStub.calledOnce);
+               assert.equal(menuControl._hoveredTarget, 'targetTest');
+               assert.equal(menuControl._enterEvent, 'nativeEvent');
+            });
+
+            it('on touch devices', function() {
+               menuControl._context.isTouch.isTouch = true;
+               menuControl._itemMouseEnter('mouseenter', new display.CollectionItem({
+                  contents: new entity.Model()
+               }), {});
+               assert.isTrue(handleStub.notCalled);
             });
 
             sinon.restore();
@@ -413,7 +458,7 @@ define(
          });
 
          describe('_subMenuResult', function() {
-            let menuControl, stubClose, eventResult, sandbox;
+            let menuControl, stubClose, eventResult, nativeEvent, sandbox;
             beforeEach(() => {
                menuControl = getMenu();
                menuControl._notify = (event, data) => {
@@ -444,9 +489,11 @@ define(
             it('itemClick event return false', function() {
                menuControl._notify = (event, data) => {
                   eventResult = data[0];
+                  nativeEvent = data[1];
                   return false;
                };
-               menuControl._subMenuResult('click', 'itemClick', { item: 'item2' });
+               menuControl._subMenuResult('click', 'itemClick', { item: 'item2' }, 'testEvent');
+               assert.equal(nativeEvent, 'testEvent');
                assert.deepEqual(eventResult, { item: 'item2' });
                assert.isTrue(stubClose.notCalled);
             });

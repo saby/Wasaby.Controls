@@ -1,15 +1,15 @@
 /**
  * Библиотека контролов, которые реализуют колонки плоского списка.
- * @library Controls/listColumns
- * @includes Columns Controls/_listColumns/Columns
+ * @library Controls/columns
+ * @includes Columns Controls/_columns/Columns
  * @public
  * @author Аверкиев П.А.
  */
 
 /*
  * List Columns library
- * @library Controls/listColumns
- * @includes Columns Controls/_listColumns/Columns
+ * @library Controls/columns
+ * @includes Columns Controls/_columns/Columns
  * @public
  * @author Аверкиев П.А.
  */

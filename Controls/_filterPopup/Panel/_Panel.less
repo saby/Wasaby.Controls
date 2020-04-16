@@ -152,9 +152,18 @@
    display: flex;
    align-items: center;
    height: @item_height_filterPanel;
+}
 
-   // TODO remove after https://online.sbis.ru/doc/a4b1e32b-4cfa-4b80-be2a-b763b580293a
-   .controls-DateLinkView__style-secondary_clickable_theme-@{themeName} {
-      color: @color_FilterPanel-DateRange;
+.controls-text-filterPanelItem_theme-@{themeName} {
+   color: @item_text-color_filterPanel;
+}
+
+.ws-is-hover {
+   .controls-text-filterPanelItem_theme-@{themeName}:hover {
+      color: @item_hover_text-color_filterPanel;
    }
+}
+
+.controls-text-filterPanelItem_theme-@{themeName}:active {
+   color: @item_active_text-color_filterPanel;
 }

@@ -84,10 +84,6 @@ var _private = {
  * @author Авраменко А.С.
  * @demo Controls-demo/OperationsPanel/Panel
  *
- * @css @background-color_OperationsPanel Background color of the panel.
- * @css @height_OperationsPanel Height of the panel.
- * @css @spacing_OperationsPanel-between-items Spacing between items.
- * @css @margin_OperationsPanel__rightTemplate Margin of rightTemplate.
  */
 
 /*
@@ -105,10 +101,6 @@ var _private = {
  * @author Авраменко А.С.
  * @demo Controls-demo/OperationsPanel/Panel
  *
- * @css @background-color_OperationsPanel Background color of the panel.
- * @css @height_OperationsPanel Height of the panel.
- * @css @spacing_OperationsPanel-between-items Spacing between items.
- * @css @margin_OperationsPanel__rightTemplate Margin of rightTemplate.
  */
 
 /**

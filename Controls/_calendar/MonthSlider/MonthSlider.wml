@@ -16,6 +16,7 @@
       data="{{_month}}"
       animation="{{_animation}}"
       attr:class="controls-MonthSlider__slider"
+      on:wheel="_wheelHandler()"
    >
       <Controls._calendar.Month
          attr:class="controls-MonthSlider__month"

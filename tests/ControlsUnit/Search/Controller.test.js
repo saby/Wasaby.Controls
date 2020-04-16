@@ -97,13 +97,6 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(value, 'test');
          assert.isTrue(wasSearch);
 
-         // does not notify 'dataError' when dataLoadErrback returns false
-         searchController._errbackResult = false;
-         searchMod.Controller._private.startSearch(searchController, 'test').then(() => {
-            searchController._notify.reset();
-            assert.isFalse(searchController._notify.called);
-         });
-
          searchController._isSearchControllerLoading = function() {
             return true;
          }

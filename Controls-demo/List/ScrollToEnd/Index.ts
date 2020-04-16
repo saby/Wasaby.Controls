@@ -1,6 +1,7 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls-demo/List/ScrollToEnd/ScrollToEnd');
 import { Memory } from 'Types/source';
+import {CursorDirection} from 'Controls/Constants';
 
 const ITEMS_COUNT = 1000;
 const PAGE_SIZE = 40;
@@ -14,7 +15,7 @@ export default class ScrollToEnd extends Control {
         view: 'infinity',
         sourceConfig: {
             pageSize: PAGE_SIZE,
-            direction: 'both',
+            direction: CursorDirection.bothways,
             page: 0,
             hasMore: false
         },
@@ -32,7 +33,7 @@ export default class ScrollToEnd extends Control {
             limit: PAGE_SIZE,
             field: 'id',
             position: 0,
-            direction: 'both'
+            direction: CursorDirection.bothways
         },
         viewConfig: {
             pagingMode: 'direct',

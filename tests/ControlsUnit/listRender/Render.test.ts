@@ -19,10 +19,10 @@ describe('Controls/_listRender/Render', () => {
             const anotherRender = new Render(defaultCfg);
             anotherRender._beforeMount(defaultCfg);
 
-            assert.notStrictEqual(
+            assert.strictEqual(
                 anotherRender._templateKeyPrefix,
                 render._templateKeyPrefix,
-                'key prefixes should be unique'
+                'key prefixes should not be unique'
             );
         });
 

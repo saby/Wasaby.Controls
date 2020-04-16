@@ -474,9 +474,9 @@ export default class VirtualScroll {
     }
 
     private _insertItemHeights(insertIndex: number, length: number): void {
-        const topItemsHeight = this._itemsHeightData.itemsHeights.slice(0, insertIndex + 1);
+        const topItemsHeight = this._itemsHeightData.itemsHeights.slice(0, insertIndex);
         const insertedItemsHeights = [];
-        const bottomItemsHeight = this._itemsHeightData.itemsHeights.slice(insertIndex + 1);
+        const bottomItemsHeight = this._itemsHeightData.itemsHeights.slice(insertIndex);
 
         for (let i = 0; i < length; i++) {
             insertedItemsHeights[i] = 0;

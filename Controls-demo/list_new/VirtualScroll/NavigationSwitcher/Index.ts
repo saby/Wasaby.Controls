@@ -1,12 +1,13 @@
-import {Control, TemplateFunction, IControlOptions} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/VirtualScroll/NavigationSwitcher/NavigationSwitcher"
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/list_new/VirtualScroll/NavigationSwitcher/NavigationSwitcher';
+import {CursorDirection} from 'Controls/Constants';
 
 export interface INavigationSwitcherOptions extends IControlOptions {
-    content?: TemplateFunction
-    pageSize?: number
-    page?: number
-    totalCount: number
-    direction?: 'before' | 'after' | 'both'
+    content?: TemplateFunction;
+    pageSize?: number;
+    page?: number;
+    totalCount: number;
+    direction?: CursorDirection;
 }
 
 export class NavigationSwitcher extends Control<INavigationSwitcherOptions> {

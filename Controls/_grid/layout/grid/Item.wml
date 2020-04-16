@@ -26,7 +26,7 @@
    </ws:if>
    <ws:else>
       <ws:if data="{{colspan}}">
-            <div class="controls-Grid__row-cell_colspaned {{ currentColumn.classList.padding.getAll() }}">
+            <div class="controls-Grid__row-cell_colspaned {{ currentColumn.getColspanedPaddingClassList(currentColumn, colspan).getAll() }}">
                <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
             </div>
       </ws:if>

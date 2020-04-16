@@ -1,4 +1,4 @@
-<div class="controls-DateLinkView">
+<div class="controls-DateLinkView controls-DateLinkView_theme-{{_options.theme}}">
     <div class="controls-DateLinkView-wrapper">
         <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
            <span

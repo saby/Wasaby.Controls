@@ -93,7 +93,7 @@ define([
                sourceConfig: {
                   limit: 10,
                   field: 'id',
-                  direction: 'after',
+                  direction: 'forward',
                   position: 2
                }
             }

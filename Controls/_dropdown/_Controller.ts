@@ -14,6 +14,7 @@ import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
+import * as Merge from 'Core/core-merge';
 
 var _private = {
    createSourceController: function(self, options) {
@@ -298,11 +299,15 @@ var _private = {
          target: self._container,
          targetPoint: self._options.targetPoint,
          opener: self,
+         fittingMode: {
+            vertical: 'adaptive',
+            horizontal: 'overflow'
+         },
          autofocus: false,
          closeOnOutsideClick: true
       };
       const popupConfig = popupOptions || self._options.menuPopupOptions;
-      return {...config, ...popupConfig};
+      return Merge(config, popupConfig || {});
    }
 };
 

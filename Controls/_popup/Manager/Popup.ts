@@ -44,6 +44,8 @@ class Popup extends Control<IPopupControlOptions> {
     protected waitForPopupCreated: boolean; // TODO: COMPATBILE
     protected callbackCreated: Function|null; // TODO: COMPATBILE
 
+    private _isPopupMounted: boolean = false;
+
     // Register the openers that initializing inside current popup
     // After updating the position of the current popup, calls the repositioning of popup from child openers
     protected _openersUpdateCallback: UpdateCallback[] = [];
@@ -71,6 +73,9 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _afterMount(): void {
+
+        this._isPopupMounted = true;
+
         /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
          * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
         this._controlResizeHandler = debounce(this._controlResizeHandler.bind(this), RESIZE_DELAY, true);
@@ -177,23 +182,19 @@ class Popup extends Control<IPopupControlOptions> {
         this._notify('pageScrolled', [this._options.id], {bubbling: true});
     }
 
-    /**
-     * Update popup
-     * @function Controls/_popup/Manager/Popup#_close
-     */
-    protected _update(): void {
-        this._notify('popupUpdated', [this._options.id], {bubbling: true});
+    protected _controlResizeOuterHandler(): void {
+        this._notify('popupResizeOuter', [this._options.id], {bubbling: true});
 
         // After updating popup position we will updating the position of the popups open with it.
         runDelayed(this._callOpenersUpdate.bind(this));
     }
 
-    protected _controlResizeOuterHandler(): void {
-        this._notify('popupResizeOuter', [this._options.id], {bubbling: true});
-    }
-
     protected _controlResizeHandler(): void {
-        this._notify('popupResizeInner', [this._options.id], {bubbling: true});
+        // Children controls can notify events while parent control isn't mounted
+        // Because children's afterMount happens before parent afterMount
+        if (this._isPopupMounted) {
+            this._notify('popupResizeInner', [this._options.id], {bubbling: true});
+        }
     }
 
     /**

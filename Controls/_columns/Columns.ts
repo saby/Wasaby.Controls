@@ -1,5 +1,4 @@
-// todo change this to import {View} from 'Controls/list';
-import {default as View} from 'Controls/_list/List';
+import {View} from 'Controls/list';
 import {Logger} from 'UI/Utils';
 import {default as viewTemplate} from 'Controls/_columns/ColumnsControl';
 

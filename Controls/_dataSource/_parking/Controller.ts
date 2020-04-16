@@ -1,15 +1,13 @@
 /// <amd-module name="Controls/_dataSource/_parking/Controller" />
 import { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';
-// @ts-ignore
 import { constants } from 'Env/Env';
-// @ts-ignore
 import { load } from 'Core/library';
-import {Logger} from 'UI/Utils';
+import { Logger } from 'UI/Utils';
 
-export type Config = {
+interface IParkingControllerPotions {
     handlers: Handler[];
     configField: string;
-};
+}
 
 /**
  * Загружает модули обработчиков обшибок.
@@ -22,7 +20,7 @@ export const loadHandlers = (handlersField: string): Array<Promise<Handler>> => 
     return getApplicationHandlers(handlersField).map(getHandler);
 };
 
-const getDefaultConfig = (): Partial<Config> => {
+const getDefaultConfig = (): Partial<IParkingControllerPotions> => {
     return {
         handlers: [],
         configField: 'parkingHandlers'
@@ -32,7 +30,7 @@ const getDefaultConfig = (): Partial<Config> => {
 /// region helpers
 const log = (message) => {
     Logger.info(
-        "Controls/_dataSource/_parking/Controller: " + message
+        'Controls/_dataSource/_parking/Controller: ' + message
     );
 };
 
@@ -60,6 +58,11 @@ const getHandler = (handler: Handler | string): Promise<Handler> => {
     return Promise.reject(new Error('handler must be string|function'));
 };
 
+/**
+ * Выполнять по очереди обработчики ошибок, пока какой-нибудь из них не вернёт результат.
+ * @param handlers Обработчики ошибок
+ * @param config
+ */
 const findTemplate = (
     handlers: Array<Handler | string>,
     config: any
@@ -87,11 +90,13 @@ const findTemplate = (
 /// endregion helpers
 
 /**
- * Модуль для выбора обработчика и формирования объекта с данными для шаблона парковочного компонента.
+ * Класс для выбора обработчика ошибки и формирования опций для парковочного компонента.
+ * Передаёт ошибку по цепочке функций-обработчиков. Обработчики предоставляются пользователем
+ * или берутся из настроек приложения.
  * @class
  * @name Controls/_dataSource/_parking/Controller
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  * @example
  * <pre>
  *     let handler = (config) => {
@@ -118,60 +123,58 @@ const findTemplate = (
  *     });
  * </pre>
  */
-export default class ParkingController {
-    private __handlers: Array<Handler>;
-    private __configField: string;
-    constructor(config: Partial<Config> = {}) {
+export default class ParkingController /** @lends Controls/_dataSource/_parking/Controller.prototype */{
+    private _handlers: Handler[];
+    private readonly _configField: string;
+
+    constructor(config: Partial<IParkingControllerPotions> = {}) {
         const cfg = { ...getDefaultConfig(), ...config };
-        this.__handlers = cfg.handlers;
-        this.__configField = cfg.configField;
+        this._handlers = cfg.handlers;
+        this._configField = cfg.configField;
     }
-    destroy() {
-        delete this.__handlers;
+
+    destroy(): void {
+        delete this._handlers;
     }
 
     /**
-     * @method
-     * @name Controls/_dataSource/_parking/Controller#addHandler
-     * @public
+     * Добавить обработчик ошибки.
      * @param {Controls/_dataSource/_parking/Handler} handler
-     * @void
+     * @public
      */
     addHandler(handler: Handler): void {
-        if (this.__handlers.indexOf(handler) >= 0) {
+        if (this._handlers.indexOf(handler) >= 0) {
             return;
         }
-        this.__handlers.push(handler);
+        this._handlers.push(handler);
     }
 
     /**
-     * @method
-     * @name Controls/_dataSource/_parking/Controller#removeHandler
-     * @public
+     * Удалить обработчик ошибки.
      * @param {Controls/_dataSource/_parking/Handler} handler
+     * @public
      * @void
      */
     removeHandler(handler: Handler): void {
-        this.__handlers = this.__handlers.filter((_handler) => {
+        this._handlers = this._handlers.filter((_handler) => {
             return handler !== _handler;
         });
     }
 
     /**
-     * @method
-     * @name Controls/_dataSource/_parking/Controller#process
-     * @public
+     * Получить опции для парковочной заглушки.
      * @param {*} config
-     * @return {Promise.<void | Controls/_dataSource/_parking/ViewConfig>}
+     * @public
+     * @returns {Promise.<void | Controls/_dataSource/_parking/ViewConfig>}
      */
     process(config: any): Promise<ViewConfig | void> {
         // find in own handlers
-        return findTemplate(this.__handlers, config).then((result: ViewConfig | void) => {
+        return findTemplate(this._handlers, config).then((result: ViewConfig | void) => {
             if (result) {
                 return result;
             }
             // find in Application  handlers
-            return findTemplate(getApplicationHandlers(this.__configField), config);
+            return findTemplate(getApplicationHandlers(this._configField), config);
         });
     }
 }

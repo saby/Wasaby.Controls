@@ -9,15 +9,20 @@
       </div>
    </ws:if>
    <div attr:class="controls-MonthViewVDOM__table">
-      <div if="{{_options.showWeekdays}}" attr:class="controls-MonthViewVDOM__tableRow controls-MonthViewVDOM_tableHead {{_themeCssClass}}">
-         <ws:for data="value in _days">
-            <ws:partial
-                    template="{{_options.dayHeaderTemplate}}"
-                    value="{{value}}"
-                    _themeCssClass="{{_themeCssClass}}"
-            />
-         </ws:for>
-      </div>
+      <ws:if data="{{_options.showWeekdays}}">
+         <div class="controls-MonthViewVDOM__tableRow
+               {{_options.newMode !== true? 'controls-MonthViewVDOM__tableRow-old'}}
+               controls-MonthViewVDOM_tableHead {{_themeCssClass}}">
+            <ws:for data="value in _days">
+               <ws:partial
+                       newMode="{{_options.newMode}}"
+                       template="{{_options.dayHeaderTemplate}}"
+                       value="{{value}}"
+                       _themeCssClass="{{_themeCssClass}}"
+               />
+            </ws:for>
+         </div>
+      </ws:if>
       <ws:partial
          template="wml!Controls/_calendar/MonthView/MonthViewTableBody"
          dayTemplate="{{_options.dayTemplate}}"

@@ -9,7 +9,6 @@ import {ICrud, PrefetchProxy} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
 import {Collection, Tree, Search, TreeItem, SelectionController, ItemActionsController} from 'Controls/display';
-import {debounce} from 'Types/function';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
@@ -20,6 +19,7 @@ import {isEqual} from 'Types/object';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
+import {TouchContextField} from 'Controls/context';
 
 /**
  * Контрол меню.
@@ -36,7 +36,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
  * @author Герасимов А.М.
  */
 
-const SUB_DROPDOWN_OPEN_DELAY = 100;
+const SUB_DROPDOWN_OPEN_DELAY = 400;
 
 class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     protected _template: TemplateFunction = ViewTemplate;
@@ -62,7 +62,6 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     protected _beforeMount(options: IMenuControlOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
         this._additionalFilter = this.additionalFilter.bind(this, options);
-        this._openSubDropdown = debounce(this.openSubDropdown.bind(this), SUB_DROPDOWN_OPEN_DELAY);
 
         if (options.source) {
             return this.loadItems(options);
@@ -124,8 +123,9 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): void {
-        if (item.getContents() instanceof Model) {
-            this.handleCurrentItem(item, sourceEvent.target, sourceEvent.nativeEvent);
+        if (item.getContents() instanceof Model && !this.isTouch()) {
+            this.setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
+            this.startHandleItemTimeout();
         }
     }
 
@@ -153,14 +153,14 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         );
     }
 
-    protected _itemClick(event: SyntheticEvent<MouseEvent>, item: Model, nativeEvent: MouseEvent): void {
+    protected _itemClick(event: SyntheticEvent<MouseEvent>, item: Model, sourceEvent: MouseEvent): void {
         if (item.get('readOnly')) {
             return;
         }
         const key = item.getKey();
         const treeItem = this._listModel.getItemBySourceKey(key);
 
-        if (this._isPinIcon(nativeEvent.target)) {
+        if (this._isPinIcon(sourceEvent.target)) {
             this._pinClick(event, item);
         } else {
             if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem)) {
@@ -169,7 +169,11 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
                 this._notify('selectedKeysChanged', [this.getSelectedKeys()]);
             } else {
-                this._notify('itemClick', [item, nativeEvent]);
+                if (this.isTouch() && item.get(this._options.nodeProperty) && this._subDropdownItem !== treeItem) {
+                    this.handleCurrentItem(treeItem, sourceEvent.currentTarget, sourceEvent.nativeEvent);
+                } else {
+                    this._notify('itemClick', [item, sourceEvent]);
+                }
             }
         }
     }
@@ -180,6 +184,10 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
     private _pinClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
         this._notify('pinClick', [item]);
+    }
+
+    private isTouch(): boolean {
+        return this._context.isTouch.isTouch;
     }
 
     protected _checkBoxClick(event: SyntheticEvent<MouseEvent>): void {
@@ -226,11 +234,11 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         this._notify('moreButtonClick', [selectedItems]);
     }
 
-    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventName: string, eventResult: Model|Node) {
+    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventName: string, eventResult: Model|Node, nativeEvent: SyntheticEvent<MouseEvent>) {
         if (eventName === 'menuOpened') {
             this.subMenu = eventResult;
         } else {
-            const notifyResult = this._notify(eventName, [eventResult]);
+            const notifyResult = this._notify(eventName, [eventResult, nativeEvent]);
             if (eventName === 'pinClick' || eventName === 'itemClick' && notifyResult !== false) {
                 this._closeSubMenu();
             }
@@ -276,7 +284,6 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private handleCurrentItem(item: TreeItem<Model>, target, nativeEvent): void {
         const needOpenDropDown = item.getContents().get(this._options.nodeProperty) && !item.getContents().get('readOnly');
         const needCloseDropDown = this.subMenu && this._subDropdownItem && this._subDropdownItem !== item;
-        this.setItemParamsOnHandle(item, target, nativeEvent);
 
         const needKeepMenuOpen = this._isNeedKeepMenuOpen(needCloseDropDown, nativeEvent);
 
@@ -304,7 +311,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         clearTimeout(this._handleCurrentItemTimeout);
         this._handleCurrentItemTimeout = setTimeout(() => {
             this.handleItemTimeoutCallback();
-        }, 200);
+        }, SUB_DROPDOWN_OPEN_DELAY);
     }
 
     private isMouseInOpenedItemArea(curMouseEvent): boolean {
@@ -337,7 +344,6 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private getSelectorDialogOptions(options: IMenuControlOptions, selectedItems: List<Model>): object {
-        const self = this;
         const selectorTemplate = options.selectorTemplate;
         const selectorDialogResult = options.selectorDialogResult;
         const selectorOpener = options.selectorOpener;
@@ -528,7 +534,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         return hasAdditional;
     }
 
-    private openSubDropdown(target: EventTarget, item: TreeItem<Model>): void {
+    private _openSubDropdown(target: EventTarget, item: TreeItem<Model>): void {
         // openSubDropdown is called by debounce and a function call can occur when the control is destroyed,
         // just check _children to make sure, that the control isnt destroyed
         if (item && this._children.Sticky && this._subDropdownItem) {
@@ -631,6 +637,12 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             emptyKey: null,
             moreButtonCaption: rk('Еще') + '...',
             groupTemplate
+        };
+    }
+
+    static contextTypes() {
+        return {
+            isTouch: TouchContextField
         };
     }
 }

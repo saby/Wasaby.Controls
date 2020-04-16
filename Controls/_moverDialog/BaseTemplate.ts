@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_moverDialog/BaseTemplate/BaseTemplate');
-import 'css!theme?Controls/moverDialog';
 
 /**
  * Базовый шаблон диалогового окна, используемый в списках при перемещении элементов для выбора целевой папки.
@@ -24,5 +23,7 @@ const
     BaseTemplate = Control.extend({
         _template: template
     });
+
+BaseTemplate._theme = ['Controls/moverDialog'];
 
 export default BaseTemplate;

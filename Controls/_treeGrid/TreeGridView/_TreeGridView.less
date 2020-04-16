@@ -50,6 +50,7 @@
       padding-bottom: @item_padding-bottom_s_grid - 1;
    }
 }
+
 .controls-TreeGrid__row-expander_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_theme-@{themeName} {
    line-height: 1;
    display: inline-block;
@@ -57,6 +58,15 @@
    min-height: @expander_height_treeGrid;
    min-width: @expander_width_treeGrid;
 }
+
+.controls-TreeGrid__node-footer-expanderPadding_theme-@{themeName} {
+   line-height: 1;
+   display: inline-block;
+   position: relative;
+   min-height: 0;
+   min-width: @expander_width_treeGrid;
+}
+
 .controls-TreeGridView__dragTargetNode_theme-@{themeName} {
    border-top: @item_droppable_border_thickness_treeGrid solid @item_droppable_border_color_treeGrid;
    border-bottom: @item_droppable_border_thickness_treeGrid solid @item_droppable_border_color_treeGrid;
@@ -166,15 +176,21 @@
 }
 .controls-TreeGrid__nodeFooterContent_theme-@{themeName} {
    display: inline-flex;
-   align-items: center;
+   align-items: baseline;
+   min-height: @node-footer_min-heght;
+   box-sizing: border-box;
+   border-top-style: solid;
+}
+.controls-TreeGrid__nodeFooterContent_padding-top-s_theme-@{themeName} {
+   padding-top: @node-footer_padding-top-s;
+}
+.controls-TreeGrid__nodeFooterContent_padding-top-l_theme-@{themeName} {
+   padding-top: 0;
 }
 .controls-TreeGrid__nodeFooterContent_theme-@{themeName}:before {
     content: '\200b';
     font-size: @node-footer_max-font-size_treeGrid;
  }
-.controls-TreeGrid__nodeFooterLoadMore_theme-@{themeName} {
-   font-size: @node-footer_more_font-size_treeGrid;
-}
 .controls-TreeGrid__row-levelPadding_size_default_theme-@{themeName} {
    width: @_hierarchy_offset_s_treeGrid;
 }
@@ -201,6 +217,25 @@
 .controls-TreeGrid__row-cell_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName},
 .controls-TreeGrid__row-cell__item_theme-@{themeName} .controls-EditingTemplateText {
   font-size: @item_font-size_m_grid;
+}
+
+.controls-TreeGrid__nodeFooterContent_withRowSeparator_theme-@{themeName} {
+   border-top-color: @item_separator_s_color_list;
+}
+
+.controls-TreeGrid__nodeFooterContent_withRowSeparator-l_theme-@{themeName} {
+   border-top-color: @item_separator_l_color_list;
+}
+.controls-TreeGrid__nodeFooterContent_withoutRowSeparator_theme-@{themeName} {
+   border-top-color: transparent;
+}
+
+.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s_theme-@{themeName} {
+   border-top-width: @item-separator_s_thickness_list;
+}
+
+.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-l_theme-@{themeName} {
+   border-top-width: @item-separator_l_thickness_list;
 }
 
 // Отступы подвала слева

@@ -86,14 +86,17 @@ define(
                }
                restoreEnv('firefox');
             });
-         });
 
-         describe('calcStyleHideScrollbar', function() {
-            result = ScrollWidthUtil._private.calcStyleHideScrollbar(0, {}, {});
-            assert.equal(result, '');
+            it('calcStyleHideScrollbar', () => {
+               result = ScrollWidthUtil._private.calcStyleHideScrollbar(0, {}, {});
+               assert.equal(result, '');
 
-            result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, {}, {});
-            assert.equal(result, 'margin: 0 -17px -17px 0;');
+               result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, 'vertical', {}, {});
+               assert.equal(result, 'margin: 0 -17px -0px 0;');
+
+               result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, 'verticalHorizontal', {}, {});
+               assert.equal(result, 'margin: 0 -17px -17px 0;');
+            });
          });
       });
    }
