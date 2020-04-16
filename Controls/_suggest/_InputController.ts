@@ -146,7 +146,7 @@ var _private = {
       }
    },
    shouldSearch: function(self, value) {
-      return self._inputActive && value.length >= self._options.minSearchLength;
+      return self._inputActive && value && value.length >= self._options.minSearchLength;
    },
 
    prepareValue: function(self, value) {
