@@ -5,6 +5,6 @@
             hasTitle="{{(!needShowTitle && !action.icon) || needShowTitle && needShowTitle(action)}}"
             hasIcon="{{(!needShowIcon && action.icon) || needShowIcon && needShowIcon(action)}}"
             tooltip="{{(action.tooltip || action.title)}}"
-            size="{{action._isMenu ? 'm' : size}}"
+            size="{{size}}"
             action="{{action}}"/>
 </ws:for>

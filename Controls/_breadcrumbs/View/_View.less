@@ -20,7 +20,7 @@
 }
 
 .controls-BreadCrumbsView__crumb__last {
-   min-width: @item_icon-size_default_breadcrumbsView + @text_min-width_breadcrumbs;
+   min-width: @item_icon-size_default_breadcrumbsView + @item_text_min-width_breadcrumbs;
 }
 
 .controls-BreadCrumbsView__items__middle {
@@ -44,10 +44,10 @@
   &:before {
     font-size: @line-height_breadcrumbsView;
   }
-   padding-right: @spacing_breadcrumbsView;
+   padding-right: @droppable_border-thickness_breadcrumbsView;
 }
 .controls-BreadCrumbsView__crumb__left_edge {
-   padding: 0 @spacing_breadcrumbsView;
+   padding: 0 @droppable_border-thickness_breadcrumbsView;
 }
 .controls-BreadCrumbsView__menu {
    float: right;
@@ -106,7 +106,7 @@
 
 //Так как мы добавляем отступы у крошек, чтобы обводка dragNDrop не обрезалась за счет overflow-hidden, появляется лишний левый отступ. Делаем отрицательный margin на такое же значение, как левый отступ у первой крошки.
 .controls-BreadCrumbsView_theme-@{themeName} {
-    margin-left: -@spacing_breadcrumbsView;
+    margin-left: -@droppable_border-thickness_breadcrumbsView;
  }
 
 .controls-BreadCrumbsView__dropTarget_withArrow, .controls-BreadCrumbsView__dropTarget_withoutArrow {

@@ -1,7 +1,7 @@
 export type BorderStyle = 'success' | 'secondary' | 'warning';
 
 /**
- * Интерфейс для контролов, которые поддерживают разные цвета границы
+ * Интерфейс для контролов, которые поддерживают разные цвета границы.
  *
  * @interface Controls/interface/IBorderStyle
  * @public
@@ -9,11 +9,14 @@ export type BorderStyle = 'success' | 'secondary' | 'warning';
  */
 export interface IBorderStyleOptions {
     /**
-     * @name Controls/interface#borderStyle
-     * @cfg {Enum} Цвет обводки контрола
+     * @typedef {String} BorderStyle
      * @variant success
      * @variant secondary
      * @variant warning
+     */
+    /**
+     * @name Controls/interface/IBorderStyle#borderStyle
+     * @cfg {BorderStyle} Цвет обводки контрола.
      * @demo Controls-demo/Input/BorderStyles/Index
      */
     borderStyle: BorderStyle;

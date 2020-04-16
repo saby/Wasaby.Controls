@@ -2,4 +2,7 @@
    <div class="controlsDemo__cell">
       <Controls.spoiler:Heading captions="{{['Свернуть', 'Развернуть']}}" bind:expanded="_expanded"/>
    </div>
+   <div class="controlsDemo__cell">
+      <Controls.spoiler:Heading captions="{{['Свернуть', 'Развернуть']}}"/>
+   </div>
 </div>

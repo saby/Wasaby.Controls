@@ -35,7 +35,6 @@ interface IManagerTouchContext {
 
 class Manager extends Control<IManagerOptions> {
     _template: TemplateFunction = template;
-    _hasMaximizePopup: boolean = false;
     _contextIsTouch: boolean = false;
     _popupItems: List<IPopupItem> = new List();
 
@@ -203,12 +202,8 @@ class Manager extends Control<IManagerOptions> {
             activeControlAfterDestroy: this._getActiveControl(),
             activeNodeAfterDestroy: this._getActiveElement(), // TODO: COMPATIBLE
             popupState: controller.POPUP_STATE_INITIALIZING,
-            hasMaximizePopup: this._hasMaximizePopup,
             childs: []
         };
-        if (!this._hasMaximizePopup && options.maximize) {
-            this._hasMaximizePopup = true;
-        }
 
         this._registerPopupLink(popupConfig);
         return popupConfig;
@@ -271,10 +266,6 @@ class Manager extends Control<IManagerOptions> {
     private _removeElement(item: IPopupItem, container: HTMLElement, id: string): Promise<void> {
         const removeDeferred = item.controller._elementDestroyed(item, container);
         this._redrawItems();
-
-        if (item.popupOptions.maximize) {
-            this._hasMaximizePopup = false;
-        }
 
         this._notify('managerPopupBeforeDestroyed', [item, this._popupItems, container], {bubbling: true});
         return removeDeferred.addCallback(() => {
