@@ -18,25 +18,25 @@ define(
             it('Test1', function() {
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'CollapseLight');
-               assert.equal(ctrl._view, 'expanded');
+               assert.equal(ctrl._icon, 'ExpandLight');
+               assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
             });
             it('Test2', function() {
                options.captions = 'Заголовок';
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'CollapseLight');
-               assert.equal(ctrl._view, 'expanded');
+               assert.equal(ctrl._icon, 'ExpandLight');
+               assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, 'Заголовок');
             });
             it('Test3', function() {
                options.captions = ['Заголовок1', 'Заголовок2'];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'CollapseLight');
-               assert.equal(ctrl._view, 'expanded');
-               assert.equal(ctrl._caption, 'Заголовок1');
+               assert.equal(ctrl._icon, 'ExpandLight');
+               assert.equal(ctrl._view, 'collapsed');
+               assert.equal(ctrl._caption, 'Заголовок2');
             });
             it('Test4', function() {
                options.expanded = false;
@@ -51,8 +51,8 @@ define(
                options.captions = [];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'CollapseLight');
-               assert.equal(ctrl._view, 'expanded');
+               assert.equal(ctrl._icon, 'ExpandLight');
+               assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
             });
             it('Test6', function() {
@@ -68,9 +68,9 @@ define(
                options.captions = ['Заголовок1'];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'CollapseLight');
-               assert.equal(ctrl._view, 'expanded');
-               assert.equal(ctrl._caption, 'Заголовок1');
+               assert.equal(ctrl._icon, 'ExpandLight');
+               assert.equal(ctrl._view, 'collapsed');
+               assert.equal(ctrl._caption, '');
             });
             it('Test7', function() {
                options.expanded = false;
@@ -80,6 +80,28 @@ define(
                assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
+            });
+            it('Heading with expanded=true', function() {
+               options.expanded = true;
+               options.captions = ['Заголовок1', 'Заголовок2'];
+               ctrl._beforeMount(options);
+
+               assert.equal(ctrl._icon, 'CollapseLight');
+               assert.equal(ctrl._view, 'expanded');
+               assert.equal(ctrl._caption, 'Заголовок1');
+            });
+            it('updateStates', function() {
+               options.captions = ['Заголовок1', 'Заголовок2'];
+               ctrl._beforeMount(options);
+               assert.equal(ctrl._expanded, false);
+               assert.equal(ctrl._icon, 'ExpandLight');
+               assert.equal(ctrl._view, 'collapsed');
+               assert.equal(ctrl._caption, 'Заголовок2');
+               ctrl._expanded = true;
+               ctrl._updateStates(options, ctrl._expanded);
+               assert.equal(ctrl._icon, 'CollapseLight');
+               assert.equal(ctrl._view, 'expanded');
+               assert.equal(ctrl._caption, 'Заголовок1');
             });
          });
       });

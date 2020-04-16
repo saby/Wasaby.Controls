@@ -33,10 +33,13 @@ type TypeItem = 'toolButton' | 'icon' | 'link' | 'list';
 export type TItemsSpacing = 'medium' | 'big';
 
 export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: IControlOptions = {}): IButtonOptions {
-    const size = 'm';
     const icon = item.get('icon');
     const style = item.get('buttonStyle');
     const viewMode = item.get('viewMode');
+
+    // todo: https://online.sbis.ru/opendoc.html?guid=244a5058-47c1-4896-a494-318ba2422497
+    const size = viewMode === 'functionalButton' ? 's' : 'm';
+
     const iconStyle = item.get('iconStyle');
     const transparent = item.get('buttonTransparent');
     const caption = item.get('caption');
@@ -151,7 +154,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IIconSize]': boolean = true;
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
     readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
-
 
     constructor(...args) {
         super(args);
@@ -409,6 +411,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return true;
     }
 
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
+
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {
             return 'icon';
@@ -432,7 +436,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private static _loadItems(source: ICrudPlus): Promise<TItems> {
         const sourceController = new SourceController({
-            source: source
+            source
         });
 
         return sourceController.load();
@@ -471,8 +475,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             ])
         };
     }
-
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
 }
 
 /**

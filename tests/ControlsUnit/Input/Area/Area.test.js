@@ -265,7 +265,7 @@ define(
             afterEach(function() {
                stubLogger.restore();
             });
-            it('min > max', function() {
+            it('min > max in beforeMount', function() {
                ctrl._beforeMount({
                   minLines: 10,
                   maxLines: 1
@@ -275,7 +275,18 @@ define(
                assert.equal(ctrl._maxLines, 10);
             });
 
-            it('min < 1 and max < 1', function() {
+            it('min > max in beforeUpdate', function() {
+               ctrl._beforeMount({});
+               ctrl._beforeUpdate({
+                  minLines: 10,
+                  maxLines: 1
+               });
+
+               assert.equal(ctrl._minLines, 1);
+               assert.equal(ctrl._maxLines, 10);
+            });
+
+            it('min < 1 and max < 1 in beforeMount', function() {
                ctrl._beforeMount({
                   minLines: -5,
                   maxLines: -5
@@ -285,8 +296,30 @@ define(
                assert.equal(ctrl._maxLines, 1);
             });
 
-            it('min > 10 and max > 10', function() {
+            it('min < 1 and max < 1 in beforeUpdate', function() {
+               ctrl._beforeMount({});
+               ctrl._beforeUpdate({
+                  minLines: -5,
+                  maxLines: -5
+               });
+
+               assert.equal(ctrl._minLines, 1);
+               assert.equal(ctrl._maxLines, 1);
+            });
+
+            it('min > 10 and max > 10 in beforeMount', function() {
                ctrl._beforeMount({
+                  minLines: 15,
+                  maxLines: 15
+               });
+
+               assert.equal(ctrl._minLines, 10);
+               assert.equal(ctrl._maxLines, 10);
+            });
+
+            it('min > 10 and max > 10 in beforeUpdate', function() {
+               ctrl._beforeMount({});
+               ctrl._beforeUpdate({
                   minLines: 15,
                   maxLines: 15
                });
