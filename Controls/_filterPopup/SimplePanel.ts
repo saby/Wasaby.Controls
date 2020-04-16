@@ -58,7 +58,10 @@ var _private = {
             items.push(curItem);
         });
         return pDef.done().getResult().addCallback(() => {
-            return items;
+            const displayItems = items.filter((item) => {
+                return item.items?.getCount() > 1;
+            });
+            return displayItems.length ? displayItems : [items[0]];
         });
     },
 
