@@ -73,7 +73,7 @@ var _private = {
 
    abortCallback: function (self, filter) {
       self._loading = false;
-      if (self._viewMode === 'search' && self._searchValue) {
+      if (_private.isSearchViewMode(self) && self._searchValue) {
          self._searchValue = '';
          self._misspellValue = '';
 
@@ -135,7 +135,7 @@ var _private = {
    },
 
    itemOpenHandler: function(root:string|number|null, items:object, dataRoot = null):void {
-      if (this._viewMode === 'search' && this._options.searchNavigationMode === 'expand') {
+      if (_private.isSearchViewMode(this) && this._options.searchNavigationMode === 'expand') {
          this._notifiedMarkedKey = root;
          this._notify('expandedItemsChanged', [_private.prepareExpandedItems(this._options.root, root, items, this._options.parentProperty)]);
          if (!this._options.deepReload) {
@@ -157,7 +157,7 @@ var _private = {
 
       self._path = data.getMetaData().path;
 
-      if (self._viewMode === 'search' && !self._searchValue) {
+      if (_private.isSearchViewMode(self) && !self._searchValue) {
          self._viewMode = self._previousViewMode;
          self._previousViewMode = null;
       }
@@ -229,8 +229,20 @@ var _private = {
    },
 
    needStartSearch(self, options, needUpdateRoot, needRecreateSearchController, searchValue: string): boolean {
-      return _private.isSearchValueChanged(self, searchValue) && !_private.isSearchValueShort(options.minSearchLength, searchValue)
-          && !needUpdateRoot || searchValue && needRecreateSearchController;
+      const isSearchValueChanged = _private.isSearchValueChanged(self, searchValue);
+      const isSearchValueShorterThenMinLength = _private.isSearchValueShort(options.minSearchLength, searchValue);
+      const startSearchWithNewSourceController = searchValue && needRecreateSearchController;
+      const needStartSearchBySearchValueChanged =
+          isSearchValueChanged &&
+          (!isSearchValueShorterThenMinLength || _private.isSearchViewMode(self) && !searchValue);
+
+      return needStartSearchBySearchValueChanged &&
+             !needUpdateRoot ||
+             startSearchWithNewSourceController;
+   },
+
+   isSearchViewMode(self): boolean {
+      return self._viewMode === 'search';
    },
 
    needUpdateViewMode(self, newViewMode: string): boolean {
@@ -331,14 +343,16 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    },
 
    _beforeUpdate: function (newOptions, context) {
-      var currentOptions = this._dataOptions;
-      var filter;
-
+      const currentOptions = this._dataOptions;
+      let filter;
       this._dataOptions = context.dataOptions;
-      const needRecreateSearchController = _private.isNeedRecreateSearchControllerOnOptionsChanged(currentOptions, this._dataOptions) ||
+
+      const needRecreateSearchController =
+          _private.isNeedRecreateSearchControllerOnOptionsChanged(currentOptions, this._dataOptions) ||
           _private.isNeedRecreateSearchControllerOnOptionsChanged(this._options, newOptions);
       const searchValue = needRecreateSearchController && newOptions.searchValue === undefined ? this._inputSearchValue : newOptions.searchValue;
       const needUpdateRoot = this._options.root !== newOptions.root;
+
       if (!isEqual(this._options.filter, newOptions.filter)) {
          filter = newOptions.filter;
       }
