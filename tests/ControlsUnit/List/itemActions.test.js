@@ -131,7 +131,7 @@ define([
             }
          };
          var ctrl = new lists.ItemActionsControl(cfg);
-         ctrl._options.model = {
+         ctrl._options.listModel = {
             unsubscribe: function() {
 
             }};
@@ -187,7 +187,7 @@ define([
                itemActionsProperty: 'test'
             };
          var ctrl = new lists.ItemActionsControl(cfg);
-         ctrl._options.model = {
+         ctrl._options.listModel = {
             unsubscribe: function() {
             }
          };
@@ -305,7 +305,7 @@ define([
                  return 0;
               }
            }
-           instance._options.model = listModel;
+           instance._options.listModel = listModel;
            instance._destroyed = true;
            instance._onItemActionsClick(fakeEvent, action, fakeItemData);
            assert.isFalse(setMarkedKeyCalled);
