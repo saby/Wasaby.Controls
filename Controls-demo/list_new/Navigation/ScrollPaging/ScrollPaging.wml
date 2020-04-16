@@ -3,6 +3,7 @@
             <Controls.list:HotKeysContainer>
                 <Controls.list:View
                         keyProperty="id"
+                        attr:class="controlsDemo_line-height18"
                         moveMarkerOnScrollPaging="{{true}}"
                         source="{{_viewSource}}">
                     <ws:navigation source="page" view="infinity">
