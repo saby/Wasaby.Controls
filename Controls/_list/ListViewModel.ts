@@ -8,11 +8,12 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
-import { CollectionItem, IItemActionsContainer } from 'Controls/display';
+import { CollectionItem, IItemActionsContainer, IEditingConfig } from 'Controls/display';
 import {Model} from 'types/entity';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
+import {IItemActionsTemplateConfig} from "../_display/Collection";
 
 /**
  *
@@ -128,6 +129,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _reloadedKeys: null,
     _singleItemReloadCount: 0,
     _actionsAssigned: false,
+    _actionsTemplateConfig: null,
 
     constructor: function(cfg) {
         var self = this;
@@ -688,6 +690,24 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     // New Model compatibility
     setActionsAssigned(assigned: boolean): void {
         this._actionsAssigned = assigned;
+    },
+
+    // New Model compatibility
+    getEditingConfig(): IEditingConfig {
+        return this._options.editingConfig;
+    },
+
+    // New Model compatibility
+    getActionsTemplateConfig(): IItemActionsTemplateConfig {
+        return this._actionsTemplateConfig;
+    },
+
+    // New Model compatibility
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void {
+        if (!isEqual(this._actionsTemplateConfig, config)) {
+            this._actionsTemplateConfig = config;
+            this._nextVersion();
+        }
     },
 
     updateSelection: function(selectedKeys) {

@@ -14,37 +14,7 @@ const showType = {
 // TODO Написать реальный тип для action'ов
 type TItemAction = any;
 
-/**
- * Опции для методов обновления операций с записью
- */
-interface IActionsUpdateOptions {
-    /**
-     * Коллекция элементов, содержащих операции с записью
-     */
-    collection: IItemActionsCollection;
-    /**
-     * Действия с записью
-     */
-    itemActions: TItemAction[];
-    /**
-     * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
-     */
-    itemActionsProperty?: string;
-    /**
-     * Callback для определения видимости операции
-     */
-    visibilityCallback?: TItemActionVisibilityCallback;
-}
-
-/**
- * Опции для методов обновления операций с записью
- */
-interface IActionsUpdateItemOptions extends IActionsUpdateOptions {
-    /**
-     * Ключ элемента при обновлении операций с записью конкретного элемента
-     */
-    key: TItemKey;
-}
+export type TActionClickCallback = (clickEvent: SyntheticEvent<MouseEvent>, action: TItemAction, contents: Model) => void;
 
 export type TItemActionVisibilityCallback = (
     action: TItemAction,
@@ -62,7 +32,7 @@ export interface IItemActionsTemplateOptions {
     actionAlignment?: string;
     actionCaptionPosition: 'right'|'bottom'|'none';
     itemActionsClass?: string;
-    actionClickCallback?: Function;
+    actionClickCallback?: TActionClickCallback;
 }
 
 export interface IItemActionsItem {
@@ -91,6 +61,30 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     getEditingConfig(): IEditingConfig;
 }
 
+export interface IItemActionsControllerOptions {
+    /**
+     * Коллекция элементов, содержащих операции с записью
+     */
+    collection: IItemActionsCollection;
+    /**
+     * Действия с записью
+     */
+    itemActions: TItemAction[];
+    /**
+     * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
+     */
+    itemActionsProperty?: string;
+    /**
+     * Callback для определения видимости операции
+     */
+    visibilityCallback?: TItemActionVisibilityCallback;
+    itemActionsPosition?: string;
+    style?: string;
+    itemActionsClass?: string;
+    actionAlignment?: string;
+    actionCaptionPosition?: 'right'|'bottom'|'none';
+}
+
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
 
 /**
@@ -98,39 +92,66 @@ const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
  * @Author Пуханов В, Аверкиев П.А
  */
 export class ItemActionsController {
+    private readonly _collection: IItemActionsCollection;
+    private _commonItemActions: TItemAction[];
+    private _itemActionsProperty?: string;
+    private _visibilityCallback?: TItemActionVisibilityCallback;
+
+    constructor(collection: IItemActionsCollection) {
+        this._collection = collection;
+    }
+
+    init(options: IItemActionsControllerOptions): boolean {
+        let hasChanges = false;
+        if (this._commonItemActions !== options.itemActions ||
+            this._itemActionsProperty !== options.itemActionsProperty ||
+            this._visibilityCallback !== options.visibilityCallback
+        ) {
+            this._commonItemActions = options.itemActions;
+            this._itemActionsProperty = options.itemActionsProperty;
+            this._visibilityCallback = options.visibilityCallback;
+            this._collection.setActionsAssigned(false);
+        }
+        if (!this._collection.areActionsAssigned()) {
+            hasChanges = this.assignActions();
+            this._calculateActionsTemplateConfig({
+                itemActionsPosition: options.itemActionsPosition,
+                style: options.style,
+                actionAlignment: options.actionAlignment,
+                actionCaptionPosition: options.actionCaptionPosition,
+                itemActionsClass: options.itemActionsClass
+            });
+        }
+        return hasChanges;
+    }
+
     /**
      * Вычисляет операции над записью для каждого элемента коллекции
-     * @param options IActionsUpdateOptions
-     * TODO обнови тесты. Было return void стало return boolean; была другая сигнатура!
      */
-    assignActions(options: IActionsUpdateOptions): boolean {
-        if (options.collection.areActionsAssigned()) {
-            return;
-        }
-
-        const supportsEventRaising = typeof options.collection.setEventRaising === 'function';
+    assignActions(): boolean {
+        const supportsEventRaising = typeof this._collection.setEventRaising === 'function';
         let hasChanges = false;
 
         if (supportsEventRaising) {
-            options.collection.setEventRaising(false, true);
+            this._collection.setEventRaising(false, true);
         }
 
-        options.collection.each((item) => {
+        this._collection.each((item) => {
             if (!item.isActive()) {
-                const actionsForItem = this._collectActionsForItem(item, options);
+                const actionsForItem = this._collectActionsForItem(item);
                 const itemChanged = this._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
                 hasChanges = hasChanges || itemChanged;
             }
         });
 
         if (supportsEventRaising) {
-            options.collection.setEventRaising(true, true);
+            this._collection.setEventRaising(true, true);
         }
 
-        options.collection.setActionsAssigned(true);
+        this._collection.setActionsAssigned(true);
 
         if (hasChanges) {
-            options.collection.nextVersion();
+            this._collection.nextVersion();
         }
 
         return hasChanges;
@@ -138,63 +159,15 @@ export class ItemActionsController {
 
     /**
      * Обновляет операции с записью элемента коллекции по его ключу
-     * @param options IActionsUpdateItemOptions
-     * TODO напиши тесты.
+     * @param key TItemKey
      */
-    updateActionsForItem(options: IActionsUpdateItemOptions): void {
-            const item = options.collection.getItemBySourceKey(options.key);
+    updateActionsForItem(key: TItemKey): void {
+            const item = this._collection.getItemBySourceKey(options.key);
             if (item) {
-                const itemActions = this._collectActionsForItem(item, options);
+                const itemActions = this._collectActionsForItem(item);
                 this._setItemActions(item, this._wrapActionsInContainer(itemActions));
-                options.collection.nextVersion();
+                this._collection.nextVersion();
             }
-    }
-
-    /**
-     * Сбрасывавет у коллекции значение флага ActionsAssignment на false
-     * @param collection Коллекция элементов, содержащих операции с записью
-     */
-    resetActionsAssignment(collection: IItemActionsCollection): void {
-        collection.setActionsAssigned(false);
-    }
-
-    /**
-     * Обновляет операции с записью элемента коллекции по его ключу
-     * @param collection Коллекция элементов, содержащих операции с записью
-     * @param key Ключ элемента коллекции, для которого нужно обновить операции с записью
-     * @param actions объект, содержащий список всех (all) и только показанных (showed) операций с записью
-     */
-    setActionsToItem(
-        collection: IItemActionsCollection,
-        key: TItemKey,
-        actions: IItemActionsContainer
-    ): void {
-        const item = collection.getItemBySourceKey(key);
-        if (item) {
-            this._setItemActions(item, actions);
-        }
-        collection.nextVersion();
-    }
-
-    /**
-     * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
-     * @param collection Коллекция элементов, содержащих операции с записью
-     * @param options
-     */
-    calculateActionsTemplateConfig(
-        collection: IItemActionsCollection,
-        options: IItemActionsTemplateOptions
-    ): void {
-        const editingConfig = collection.getEditingConfig();
-        collection.setActionsTemplateConfig({
-            toolbarVisibility: editingConfig?.toolbarVisibility,
-            style: options.style,
-            size: editingConfig ? 's' : 'm',
-            itemActionsPosition: options.itemActionsPosition,
-            actionAlignment: options.actionAlignment,
-            actionCaptionPosition: options.actionCaptionPosition,
-            itemActionsClass: options.itemActionsClass
-        });
     }
 
     /**
@@ -206,8 +179,8 @@ export class ItemActionsController {
         collection: IItemActionsCollection,
         key: TItemKey
     ): void {
-        const oldActiveItem = this.getActiveItem(collection);
-        const newActiveItem = collection.getItemBySourceKey(key);
+        const oldActiveItem = this._getActiveItem(this._collection);
+        const newActiveItem = this._collection.getItemBySourceKey(key);
 
         if (oldActiveItem) {
             oldActiveItem.setActive(false);
@@ -216,30 +189,7 @@ export class ItemActionsController {
             newActiveItem.setActive(true);
         }
 
-        collection.nextVersion();
-    }
-
-    /**
-     * Получает текущий активный элемент коллекции
-     * @param collection Коллекция элементов, содержащих операции с записью
-     */
-    getActiveItem(
-        collection: IItemActionsCollection
-    ): IItemActionsItem {
-        return collection.find((item) => item.isActive());
-    }
-
-    /**
-     * Получает список операций с записью для указанного элемента коллекции
-     * @param item
-     */
-    getMenuActions(item: IItemActionsItem): TItemAction[] {
-        const actions = item.getActions();
-        return (
-            actions &&
-            actions.all &&
-            actions.all.filter((action) => action.showType !== showType.TOOLBAR)
-        );
+        this._collection.nextVersion();
     }
 
     /**
@@ -275,17 +225,17 @@ export class ItemActionsController {
         action: TItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         fromDropdown: boolean,
-        actionClickCallback: Function
+        actionClickCallback: TActionClickCallback
     ): void {
         clickEvent.stopPropagation();
         if (action._isMenu) {
-            this.prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false, actionClickCallback);
+            this.prepareActionsMenuConfig(this._collection, itemKey, clickEvent, null, false, actionClickCallback);
         } else if (action['parent@']) {
             if (!fromDropdown) {
-                this.prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false, actionClickCallback);
+                this.prepareActionsMenuConfig(this._collection, itemKey, clickEvent, action, false, actionClickCallback);
             }
         } else {
-            const item = collection.getItemBySourceKey(itemKey);
+            const item = this._collection.getItemBySourceKey(itemKey);
             if (item) {
                 const contents = item.getContents();
 
@@ -305,7 +255,7 @@ export class ItemActionsController {
     }
 
     /**
-     * Подготавливает конфиг выпадающего меню операции с записью
+     * Собирает конфиг выпадающего меню операций
      * @param collection Коллекция элементов, содержащих операции над записью
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
      * @param clickEvent событие клика
@@ -319,9 +269,9 @@ export class ItemActionsController {
         clickEvent: SyntheticEvent<MouseEvent>,
         parentAction: TItemAction,
         isContext: boolean,
-        actionClickCallback: Function
+        actionClickCallback: TActionClickCallback
     ): void {
-        const item = collection.getItemBySourceKey(itemKey);
+        const item = this._collection.getItemBySourceKey(itemKey);
         if (!item) {
             return;
         }
@@ -329,14 +279,14 @@ export class ItemActionsController {
         const hasParentAction = parentAction !== null && parentAction !== undefined;
         const menuActions = hasParentAction
             ? this.getChildActions(item, parentAction.id)
-            : this.getMenuActions(item);
+            : this._getMenuActions(item);
 
         if (menuActions && menuActions.length > 0) {
             clickEvent.preventDefault();
 
             // there was a fake target before, check if it is needed
-            const menuTarget = isContext ? null : this.getFakeMenuTarget(clickEvent.target as HTMLElement);
-            const closeHandler = this._processActionsMenuClose.bind(null, collection, actionClickCallback);
+            const menuTarget = isContext ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
+            const closeHandler = this._processActionsMenuClose.bind(null, this._collection, actionClickCallback);
             const menuSource = new Memory({
                 data: menuActions,
                 keyProperty: 'id'
@@ -345,7 +295,7 @@ export class ItemActionsController {
                 caption: parentAction.title,
                 icon: parentAction.icon
             } : null;
-            const contextMenuConfig = collection.getContextMenuConfig();
+            const contextMenuConfig = this._collection.getContextMenuConfig();
             const menuConfig = {
                 source: menuSource,
                 keyProperty: 'id',
@@ -379,26 +329,11 @@ export class ItemActionsController {
                 autofocus: false
             };
 
-            this.setActiveItem(collection, itemKey);
-            collection.setActionsMenuConfig(dropdownConfig);
+            this.setActiveItem(this._collection, itemKey);
+            this._collection.setActionsMenuConfig(dropdownConfig);
 
-            collection.nextVersion();
+            this._collection.nextVersion();
         }
-    }
-
-    /**
-     * Запоминает измерения для HTML элемента, к которому привязано выпадающее меню
-     * @param realTarget
-     */
-    getFakeMenuTarget(realTarget: HTMLElement): {
-        getBoundingClientRect(): ClientRect;
-    } {
-        const rect = realTarget.getBoundingClientRect();
-        return {
-            getBoundingClientRect(): ClientRect {
-                return rect;
-            }
-        };
     }
 
     /**
@@ -412,14 +347,14 @@ export class ItemActionsController {
         itemKey: TItemKey,
         actionsContainerHeight: number
     ): void {
-        this.setSwipeItem(collection, itemKey);
-        this.setActiveItem(collection, itemKey);
+        this._setSwipeItem(this._collection, itemKey);
+        this.setActiveItem(this._collection, itemKey);
 
-        if (collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
-            this._updateSwipeConfig(collection, actionsContainerHeight);
+        if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
+            this._updateSwipeConfig(this._collection, actionsContainerHeight);
         }
 
-        collection.nextVersion();
+        this._collection.nextVersion();
     }
 
     /**
@@ -427,10 +362,33 @@ export class ItemActionsController {
      * @param collection Коллекция элементов, содержащих операции с записью
      */
     deactivateSwipe(collection: IItemActionsCollection): void {
-        this.setSwipeItem(collection, null);
-        this.setActiveItem(collection, null);
-        collection.setSwipeConfig(null);
-        collection.nextVersion();
+        this._setSwipeItem(this._collection, null);
+        this.setActiveItem(this._collection, null);
+        this._collection.setSwipeConfig(null);
+        this._collection.nextVersion();
+    }
+
+    /**
+     * Получает список операций с записью для указанного элемента коллекции
+     * @param item
+     */
+    private _getMenuActions(item: IItemActionsItem): TItemAction[] {
+        const actions = item.getActions();
+        return (
+            actions &&
+            actions.all &&
+            actions.all.filter((action) => action.showType !== showType.TOOLBAR)
+        );
+    }
+
+    /**
+     * Получает текущий активный элемент коллекции
+     * @param collection Коллекция элементов, содержащих операции с записью
+     */
+    private _getActiveItem(
+        collection: IItemActionsCollection
+    ): IItemActionsItem {
+        return this._collection.find((item) => item.isActive());
     }
 
     /**
@@ -438,12 +396,12 @@ export class ItemActionsController {
      * @param collection Коллекция элементов, содержащих операции с записью
      * @param key Ключ элемента коллекции, на котором был выполнен swipe
      */
-    setSwipeItem(
+    private _setSwipeItem(
         collection: IItemActionsCollection,
         key: TItemKey
     ): void {
-        const oldSwipeItem = this.getSwipeItem(collection);
-        const newSwipeItem = collection.getItemBySourceKey(key);
+        const oldSwipeItem = this._getSwipeItem(this._collection);
+        const newSwipeItem = this._collection.getItemBySourceKey(key);
 
         if (oldSwipeItem) {
             oldSwipeItem.setSwiped(false);
@@ -452,30 +410,60 @@ export class ItemActionsController {
             newSwipeItem.setSwiped(true);
         }
 
-        collection.nextVersion();
+        this._collection.nextVersion();
     }
 
     /**
      * Получает последний swiped элемент
      * @param collection Коллекция элементов, содержащих операции с записью
      */
-    getSwipeItem(collection: IItemActionsCollection): IItemActionsItem {
-        return collection.find((item) => item.isSwiped());
+    private _getSwipeItem(collection: IItemActionsCollection): IItemActionsItem {
+        return this._collection.find((item) => item.isSwiped());
+    }
+
+    /**
+     * Запоминает измерения для HTML элемента, к которому привязано выпадающее меню
+     * @param realTarget
+     */
+    private _getFakeMenuTarget(realTarget: HTMLElement): {
+        getBoundingClientRect(): ClientRect;
+    } {
+        const rect = realTarget.getBoundingClientRect();
+        return {
+            getBoundingClientRect(): ClientRect {
+                return rect;
+            }
+        };
+    }
+
+    /**
+     * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
+     */
+    private _calculateActionsTemplateConfig(options: IItemActionsTemplateOptions): void {
+        const editingConfig = this._collection.getEditingConfig();
+        this._collection.setActionsTemplateConfig({
+            toolbarVisibility: editingConfig?.toolbarVisibility,
+            style: options.style,
+            size: editingConfig ? 's' : 'm',
+            itemActionsPosition: options.itemActionsPosition,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass
+        });
     }
 
     /**
      * Набирает операции с записью для указанного элемента коллекции
      * @param item IItemActionsItem
-     * @param options IActionsUpdateOptions
      * @private
      */
-    private _collectActionsForItem(item: IItemActionsItem, options: IActionsUpdateOptions): TItemAction[] {
-        const itemActions: TItemAction[] = options.itemActionsProperty
-                ? item.getContents().get(options.itemActionsProperty)
-                : options.itemActions;
+    private _collectActionsForItem(item: IItemActionsItem): TItemAction[] {
+        const itemActions: TItemAction[] = this._itemActionsProperty
+                ? item.getContents().get(this._itemActionsProperty)
+                : this._commonItemActions;
         const fixedActions = itemActions.map(this._fixActionIcon);
         return fixedActions.filter((action) =>
-            options.visibilityCallback(action, item.getContents())
+            this._visibilityCallback(action, item.getContents())
         );
     }
 
@@ -483,7 +471,7 @@ export class ItemActionsController {
         collection: IItemActionsCollection,
         actionsContainerHeight: number
     ): void {
-        const item = this.getSwipeItem(collection);
+        const item = this._getSwipeItem(collection);
         if (!item) {
             return;
         }
@@ -558,7 +546,7 @@ export class ItemActionsController {
 
     private _processActionsMenuClose(
         collection: IItemActionsCollection,
-        actionClickCallback: Function,
+        actionClickCallback: TActionClickCallback,
         action: string, data: Model, event: SyntheticEvent<MouseEvent>
     ): void {
         // Actions dropdown can start closing after the view itself was unmounted already, in which case
@@ -570,7 +558,7 @@ export class ItemActionsController {
                 const actionRawData = data && data.getRawData();
                 this.processActionClick(
                     collection,
-                    this.getActiveItem(collection)?.getContents()?.getKey(),
+                    this._getActiveItem(collection)?.getContents()?.getKey(),
                     actionRawData,
                     event,
                     true,

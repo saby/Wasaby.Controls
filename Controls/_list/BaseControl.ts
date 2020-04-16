@@ -82,6 +82,8 @@ const ITEMACTIONS_POSITION_CLASSES = {
     topRight: 'controls-itemActionsV_position_topRight'
 };
 
+const ITEMACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
+
 export const ITEMACTIONS_DISPLAY_MODE = {
     ICON: 'icon',
     TITLE: 'title',
@@ -1220,7 +1222,7 @@ var _private = {
             self._itemsChanged = true;
             if (self._itemActionsInitialized && !self._modelRecreated) {
                 // If actions were already initialized update them in place
-                self._updateItemActions();
+                self._assignItemActions();
             } else {
                 // If model was recreated or actions have not been initialized
                 // yet, postpone item actions update until the new model is
@@ -1356,8 +1358,8 @@ var _private = {
     },
 
     /**
-     * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because we'd get 2 root nodes.
-     * When we get fragments or something similar, it would be possible to move this code where it really belongs.
+     * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because get 2 root nodes.
+     * When we will get fragments or something similar, it would be possible to move this code where it really belongs.
      */
     showActionMenu(
         self: Control,
@@ -1376,23 +1378,24 @@ var _private = {
                 self._listViewModel.setActiveItem(itemData);
                 self._listViewModel.setMenuState('shown');
             }
-            require(['css!theme?Controls/input'], () => {
-                const menuConfig = _private.getMenuConfig(children, self._options.contextMenuConfig, action);
+            Control.getStyles(['css!theme?Controls/input'])
+                .then(() => {
+                    const menuConfig = _private.getMenuConfig(children, self._options.contextMenuConfig, action);
 
-                self._children.itemActionsOpener.open({
-                    opener: self._children.listView,
-                    target: childEvent.target,
-                    templateOptions: menuConfig,
-                    eventHandlers: {
-                        onResult: self._actionsMenuResultHandler,
-                        onClose: self._closeActionsMenu
-                    },
-                    className: 'controls-DropdownList__margin-head',
-                    autofocus: false
+                    self._children.itemActionsOpener.open({
+                        opener: self._children.listView,
+                        target: childEvent.target,
+                        templateOptions: menuConfig,
+                        eventHandlers: {
+                            onResult: self._actionsMenuResultHandler,
+                            onClose: self._closeActionsMenu
+                        },
+                        className: 'controls-DropdownList__margin-head',
+                        autofocus: false
+                    });
+                    self._actionMenuIsShown = true;
+                    self._forceUpdate();
                 });
-                self._actionMenuIsShown = true;
-                self._forceUpdate();
-            });
         }
     },
 
@@ -1716,26 +1719,7 @@ var _private = {
             // прокрутить отступ пейджинга и скрыть тень
             self._notify('doScroll', ['pageDown'], { bubbling: true });
         });
-    },
-
-    /**
-     * Запускает расчёт опций для шаблона Действий над записью.
-     * Когда используется newModel с контролом из Controls.list (например Controls.list:View или Controls.columns:View),
-     * в шаблон itemActions опции задаются из метода getActionsTemplateConfig()
-     * (см Controls/_listRender/Render/resources/ForItemTemplate.wml) и их необходимо рассчитывать
-     * на основе текущей модели viewModel.
-     * @param self
-     * @param options
-     */
-    calculateActionsTemplateConfig(self: any, options: any): void {
-        self._itemActionsController.calculateActionsTemplateConfig(self.getViewModel(), {
-            itemActionsPosition: options.itemActionsPosition,
-            style: options.style,
-            actionAlignment: options.actionAlignment,
-            actionCaptionPosition: options.actionCaptionPosition,
-            itemActionsClass: options.itemActionsClass
-        });
-    },
+    }
 };
 
 /**
@@ -1839,7 +1823,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _isMobileIOS: detection.isMobileIOS,
 
-    _itemActionsController: ItemActionsController,
+    _itemActionsController: null,
 
     /**
      * Шаблон операций с записью
@@ -1869,8 +1853,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var self = this;
 
         this._inertialScrolling = new InertialScrolling();
-
-        this._itemActionsController = new ItemActionsController();
 
         // todo Костыль, т.к. построение ListView зависит от SelectionController.
         // Будет удалено при выполнении одного из пунктов:
@@ -2358,7 +2340,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _afterUpdate: function(oldOptions) {
         if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
             this._shouldUpdateItemActions = false;
-            this._updateItemActions();
+            this._assignItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
@@ -2436,8 +2418,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _listSwipe: function(event, itemData, childEvent) {
-        var direction = childEvent.nativeEvent.direction;
+    _listSwipe(event: SyntheticEvent, itemData: CollectionItem<Model>, childEvent: SyntheticEvent): void {
+        const direction = childEvent.nativeEvent.direction;
         this._children.itemActionsOpener.close();
 
         const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
@@ -2472,22 +2454,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
 
+        const itemContainer =
+            (event.target as HTMLElement)
+                .closest('.controls-ListView__itemV');
+
+        const swipeContainer =
+            itemContainer.classList.contains(ITEMACTIONS_SWIPE_CONTAINER_SELECTOR)
+                ? itemContainer
+                : itemContainer.getElementsByClassName(ITEMACTIONS_SWIPE_CONTAINER_SELECTOR)[0];
+
         if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
-            // TODO ???
-            // ItemActionsController.activateSwipe(this._listViewModel);
-            this._itemActionsController.updateActionsForItem({
-                collection: this._listViewModel,
-                itemActions: this._options.itemActions,
-                itemActionsProperty: this._options.itemActionsProperty,
-                visibilityCallback: this._options.itemActionVisibilityCallback,
-                key: itemData.key
-            });
+            // todo
+            this._itemActionsController.activateSwipe(this._listViewModel, itemData.key, swipeContainer?.clientHeight);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
         }
         if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
-            this._notify('itemSwipe', [actionsItem, childEvent]);
+            this._notify('itemSwipe', [actionsItem, childEvent, swipeContainer?.clientHeight]);
         }
     },
 
@@ -2561,15 +2545,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _notifyHandler: tmplNotify,
 
     _closeSwipe: function(event, item) {
-        this._itemActionsController.updateActionsForItem({
-            collection: this._listViewModel,
-            itemActions: this._options.itemActions,
-            itemActionsProperty: this._options.itemActionsProperty,
-            visibilityCallback: this._options.itemActionVisibilityCallback,
-            key: item.key
-        });
-        // todo ???
-        // ItemActionsController.deactivateSwipe(this._listViewModel);
+        this._itemActionsController.deactivateSwipe(this._listViewModel);
     },
 
     _commitEditActionHandler: function() {
@@ -2585,38 +2561,42 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
     _initItemActions(): void {
         if (!this._itemActionsInitialized) {
-            this._updateItemActions();
+            this._assignItemActions();
             this._itemActionsInitialized = true;
             this._shouldUpdateItemActions = false;
         }
     },
-    _updateItemActions(): void {
-        if (this.__error) {
-            return;
-        }
-
+    _assignItemActions(): void {
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
-        if (this._listViewModel && this._hasItemActions) {
-            const hasChanges = this._itemActionsController.assignActions({
-                collection: this._listViewModel,
-                itemActions: this._options.itemActions,
-                itemActionsProperty: this._options.itemActionsProperty,
-                visibilityCallback: this._options.itemActionVisibilityCallback
+        if (this.__error || !this._listViewModel || !this._hasItemActions) {
+            return;
+        }
+        if (!this._itemActionsController) {
+            this._itemActionsController = new ItemActionsController(this._listViewModel);
+        }
+        const hasChanges = this._itemActionsController.init({
+            itemActions: this._options.itemActions,
+            itemActionsProperty: this._options.itemActionsProperty,
+            visibilityCallback: this._options.itemActionVisibilityCallback,
+            itemActionsPosition: this._options.itemActionsPosition,
+            style: this._options.style,
+            actionAlignment: this._options.actionAlignment,
+            actionCaptionPosition: this._options.actionCaptionPosition,
+            itemActionsClass: this._options.itemActionsClass
+        });
+        // Набираем список операций над записью в старой модели
+        // и возвращаем для каждой записи, какие записи обновились - 'all'|'partial'|'none'
+        if (hasChanges && !this._options.useNewModel) {
+            let updateRecords: string;
+            this._listViewModel.each((item) => {
+                updateRecords = this._listViewModel.setItemActions(item.getContents(), item.getActions());
             });
-            // Набираем список операций над записью в старой модели
-            // и возвращаем для каждой записи, какие записи обновились - 'all'|'partial'|'none'
-            if (hasChanges && !this._options.useNewModel) {
-                let updateRecords: string;
-                this._listViewModel.each((item) => {
-                    updateRecords = this._listViewModel.setItemActions(item.getContents(), item.getActions());
-                });
-                this._listViewModel.nextModelVersion(updateRecords !== 'all', ItemActionsUpdatedEvent);
-            }
+            this._listViewModel.nextModelVersion(updateRecords !== 'all', ItemActionsUpdatedEvent);
         }
     },
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._updateItemActions();
+        this._assignItemActions();
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {

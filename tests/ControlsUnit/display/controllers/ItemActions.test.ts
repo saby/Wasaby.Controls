@@ -57,6 +57,7 @@ describe('Controls/_display/controllers/ItemActionsController', () => {
         it('resets actions assignment flag');
     });
 
+    // TODO INEXISTS
     describe('setActionsToItem()', () => {
         it('sets actions');
         describe('checks difference between old and new actions', () => {
@@ -124,7 +125,8 @@ describe('Controls/_display/controllers/ItemActionsController', () => {
                     }
                 },
                 null,
-                false
+                false,
+                (clickEvent, action, contents) => null
             );
 
             assert.isTrue(actionsItem.isActive());
@@ -173,7 +175,7 @@ describe('Controls/_display/controllers/ItemActionsController', () => {
             const collection = makeCollection();
             collection.find = () => item;
 
-            itemActionsController.setSwipeItem(collection, null);
+            itemActionsController._setSwipeItem(collection, null);
 
             assert.isFalse(item.isSwiped());
             assert.isAbove(collection.getVersion(), 0);
@@ -184,7 +186,7 @@ describe('Controls/_display/controllers/ItemActionsController', () => {
             const collection = makeCollection();
             collection.getItemBySourceKey = () => item;
 
-            itemActionsController.setSwipeItem(collection, 'test');
+            itemActionsController._setSwipeItem(collection, 'test');
 
             assert.isTrue(item.isSwiped());
             assert.isAbove(collection.getVersion(), 0);
@@ -197,11 +199,11 @@ describe('Controls/_display/controllers/ItemActionsController', () => {
 
             const collection = makeCollection();
 
-            assert.isNull(itemActionsController.getSwipeItem(collection));
+            assert.isNull(itemActionsController._getSwipeItem(collection));
 
             collection.find = () => item;
             assert.strictEqual(
-                itemActionsController.getSwipeItem(collection),
+                itemActionsController._getSwipeItem(collection),
                 item
             );
         });

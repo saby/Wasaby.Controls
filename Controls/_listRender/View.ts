@@ -11,7 +11,9 @@ import {
     CollectionItem,
     ItemActionsController,
     MarkerCommands,
-    ICollectionCommand
+    ICollectionCommand,
+    TActionClickCallback,
+    TItemActionVisibilityCallback
 } from 'Controls/display';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -27,7 +29,7 @@ export interface IViewOptions extends IControlOptions {
     render: string;
 
     itemActions?: any[];
-    itemActionVisibilityCallback?: (action, item) => boolean;
+    itemActionVisibilityCallback?: TItemActionVisibilityCallback;
     itemActionsPosition?: string;
     itemActionsProperty?: string;
     style?: string;
@@ -51,24 +53,11 @@ export default class View extends Control<IViewOptions> {
 
     private _itemActionsController: ItemActionsController;
 
-    private _actionClickCallbackFn: (clickEvent, action, contents) => void;
+    private _actionClickCallbackFn: TActionClickCallback;
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
         this._actionClickCallbackFn = this._actionClickCallback.bind(this);
-        this._itemActionsController = new ItemActionsController();
-
-        ItemActionsController.calculateActionsTemplateConfig(
-            this._collection,
-            {
-                itemActionsPosition: options.itemActionsPosition,
-                style: options.style,
-                actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition,
-                itemActionsClass: options.itemActionsClass
-            }
-        );
-
         return libraryLoad(options.render).then(() => null);
     }
 
@@ -93,27 +82,10 @@ export default class View extends Control<IViewOptions> {
             (options.itemActions || options.itemActionsProperty) && collectionRecreated ||
             options.itemActionsProperty
         ) {
-            this._itemActionsController.resetActionsAssignment(this._collection);
-
             // TODO Only reassign actions if Render is hovered. Otherwise wait
-            // for mouseenter or touchstart to recalc the items
-            this._assignItemActions(
-                options.itemActions,
-                options.itemActionsProperty,
-                options.itemActionVisibilityCallback
-            );
+            //  for mouseenter or touchstart to recalc the items
+            this._assignItemActions();
         }
-
-        this._itemActionsController.calculateActionsTemplateConfig(
-            this._collection,
-            {
-                itemActionsPosition: options.itemActionsPosition,
-                style: options.style,
-                actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition,
-                itemActionsClass: options.itemActionsClass
-            }
-        );
     }
 
     protected _beforeUnmount(): void {
@@ -124,19 +96,11 @@ export default class View extends Control<IViewOptions> {
     }
 
     protected _onRenderMouseEnter(e: SyntheticEvent<MouseEvent>): void {
-        this._assignItemActions(
-            this._options.itemActions,
-            this._options.itemActionsProperty,
-            this._options.itemActionVisibilityCallback
-        );
+        this._assignItemActions();
     }
 
     protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
-        this._assignItemActions(
-            this._options.itemActions,
-            this._options.itemActionsProperty,
-            this._options.itemActionVisibilityCallback
-        );
+        this._assignItemActions();
     }
 
     protected _onItemClick(
@@ -170,7 +134,7 @@ export default class View extends Control<IViewOptions> {
         }
     }
 
-    protected _actionClickCallback(clickEvent, action, contents) {
+    protected _actionClickCallback(clickEvent: SyntheticEvent<MouseEvent>, action: any, contents: Model): void {
         // How to calculate itemContainer?
         // this._notify('actionClick', [action, contents, itemContainer]);
         this._notify('actionClick', [action, contents]);
@@ -241,19 +205,22 @@ export default class View extends Control<IViewOptions> {
         return diCreate(module, { ...collectionOptions, collection: items });
     }
 
-    protected _assignItemActions(
-        itemActions: any[],
-        itemActionsProperty: string,
-        visibilityCallback: (action, item) => boolean
-    ): void {
-        if (!itemActions && !itemActionsProperty) {
+    protected _assignItemActions(): void {
+        if (!this._options.itemActions && !this._options.itemActionsProperty) {
             return;
         }
-        this._itemActionsController.assignActions({
-            collection: this._collection,
-            itemActions,
-            itemActionsProperty,
-            visibilityCallback
+        if (!this._itemActionsController) {
+            this._itemActionsController = new ItemActionsController(this._collection);
+        }
+        this._itemActionsController.init({
+            itemActions: this._options.itemActions,
+            itemActionsProperty: this._options.itemActionsProperty,
+            visibilityCallback: this._options.itemActionVisibilityCallback,
+            itemActionsPosition: this._options.itemActionsPosition,
+            style: this._options.style,
+            actionAlignment: this._options.actionAlignment,
+            actionCaptionPosition: this._options.actionCaptionPosition,
+            itemActionsClass: this._options.itemActionsClass
         });
     }
 

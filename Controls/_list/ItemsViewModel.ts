@@ -9,8 +9,9 @@ import {Logger} from 'UI/Utils';
 import collection = require('Types/collection');
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {RecordSet} from 'Types/collection';
-import {Record} from 'Types/entity';
+import {Record, Model} from 'Types/entity';
 import {isEqual} from 'Types/object';
+import {CollectionItem} from 'Controls/display';
 
 /**
  *
@@ -19,7 +20,7 @@ import {isEqual} from 'Types/object';
  */
 
 var _private = {
-    isFullCacheResetAction: function(action) {
+    isFullCacheResetAction(action: string) {
         return (
             action === collection.IObservable.ACTION_REMOVE ||
             action === collection.IObservable.ACTION_ADD ||
@@ -208,7 +209,14 @@ var ItemsViewModel = BaseViewModel.extend({
         this._options.keyProperty = keyProperty;
     },
 
-    _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+    _nextModelVersion(
+        notUpdatePrefixItemVersion?: boolean,
+        changesType?: string | string[],
+        action?: string,
+        newItems?: [CollectionItem<Model>],
+        newItemsIndex?: number,
+        removedItems?: [CollectionItem<Model>],
+        removedItemsIndex?: number): void {
         let changedItems = [];
 
         if (!notUpdatePrefixItemVersion) {
