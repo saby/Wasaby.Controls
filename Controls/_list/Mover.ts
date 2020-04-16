@@ -207,12 +207,12 @@ var _private = {
         return result;
     },
 
-    updateDataOptions: function (self, dataOptions) {
-        if (dataOptions) {
-            self._items = dataOptions.items;
-            self._source = self._options.source || dataOptions.source;
-            self._keyProperty = self._options.keyProperty || dataOptions.keyProperty;
-            self._filter = dataOptions.filter;
+    updateDataOptions: function (self, newOptions, contextDataOptions) {
+        if (contextDataOptions) {
+            self._items = contextDataOptions.items;
+            self._source = newOptions.source || contextDataOptions.source;
+            self._keyProperty = newOptions.keyProperty || contextDataOptions.keyProperty;
+            self._filter = contextDataOptions.filter;
         }
     },
 
@@ -352,7 +352,7 @@ var Mover = BaseAction.extend({
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
     _beforeMount: function (options, context) {
-        _private.updateDataOptions(this, context.dataOptions);
+        _private.updateDataOptions(this, options, context.dataOptions);
 
         if (options.moveDialogTemplate) {
             if (options.moveDialogTemplate.templateName) {
@@ -366,7 +366,7 @@ var Mover = BaseAction.extend({
     },
 
     _beforeUpdate: function (options, context) {
-        _private.updateDataOptions(this, context.dataOptions);
+        _private.updateDataOptions(this, options, context.dataOptions);
         if (options.moveDialogTemplate && options.moveDialogTemplate.templateOptions && !isEqual(this._moveDialogOptions, options.moveDialogTemplate.templateOptions)) {
            this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
         }
