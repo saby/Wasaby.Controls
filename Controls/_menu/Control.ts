@@ -62,7 +62,6 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _itemActionsController: ItemActionsController;
 
     protected _beforeMount(options: IMenuControlOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
-        this._itemActionsController = new ItemActionsController();
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
         this._additionalFilter = this.additionalFilter.bind(this, options);
 
@@ -108,11 +107,11 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     protected _mouseEnterHandler(): void {
-        this._assignItemActions(this._options);
+        this._assignItemActions(this._listModel, this._options);
     }
 
     protected _touchStartHandler(): void {
-        this._assignItemActions(this._options);
+        this._assignItemActions(this._listModel, this._options);
     }
 
     private _mouseOutHandler(event: SyntheticEvent<MouseEvent>): void {
@@ -448,7 +447,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
 
         if (options.itemActions) {
-            this._calculateActionsConfig(listModel, options);
+            this._assignItemActions(listModel, options);
         }
 
         if (options.groupProperty) {
@@ -598,29 +597,28 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         return source;
     }
 
-    private _calculateActionsConfig(listModel: Tree<Model>, options: IMenuControlOptions): void {
-        this._itemActionsController.calculateActionsTemplateConfig(
-            listModel,
-            {
-                itemActionsPosition: 'inside',
-                actionCaptionPosition: 'none',
-                actionAlignment: 'horizontal',
-                style: 'default',
-                itemActionsClass: 'controls-Menu__itemActions_position_rightCenter_theme-' + options.theme
-            }
-        );
-    }
-
-    private _assignItemActions(options: IMenuControlOptions): void {
+    private _assignItemActions(listModel: Tree<Model>, options: IMenuControlOptions): void {
         const itemActions = options.itemActions;
 
         if (!itemActions) {
             return;
         }
 
+        if (!this._itemActionsController) {
+            this._itemActionsController = new ItemActionsController(listModel);
+        }
+        this._itemActionsController.init({
+            itemActions,
+            itemActionsPosition: 'inside',
+            style: 'default',
+            actionAlignment: 'horizontal',
+            actionCaptionPosition: 'none',
+            itemActionsClass: 'controls-Menu__itemActions_position_rightCenter_theme-' + options.theme
+        });
+
         this._itemActionsController.assignActions({
             collection: this._listModel,
-            itemActions
+
         });
     }
 

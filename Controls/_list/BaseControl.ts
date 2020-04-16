@@ -1222,7 +1222,7 @@ var _private = {
             self._itemsChanged = true;
             if (self._itemActionsInitialized && !self._modelRecreated) {
                 // If actions were already initialized update them in place
-                self._assignItemActions();
+                self._assignItemActions(newModelChanged);
             } else {
                 // If model was recreated or actions have not been initialized
                 // yet, postpone item actions update until the new model is
@@ -2566,13 +2566,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldUpdateItemActions = false;
         }
     },
-    _assignItemActions(): void {
+    _assignItemActions(forceInitialize?: boolean): void {
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this.__error || !this._listViewModel || !this._hasItemActions) {
             return;
         }
-        if (!this._itemActionsController) {
+        if (!this._itemActionsController || forceInitialize) {
             this._itemActionsController = new ItemActionsController(this._listViewModel);
         }
         const hasChanges = this._itemActionsController.init({

@@ -84,7 +84,7 @@ export default class View extends Control<IViewOptions> {
         ) {
             // TODO Only reassign actions if Render is hovered. Otherwise wait
             //  for mouseenter or touchstart to recalc the items
-            this._assignItemActions();
+            this._assignItemActions(collectionRecreated);
         }
     }
 
@@ -205,11 +205,11 @@ export default class View extends Control<IViewOptions> {
         return diCreate(module, { ...collectionOptions, collection: items });
     }
 
-    protected _assignItemActions(): void {
+    protected _assignItemActions(forceInitialize?: boolean): void {
         if (!this._options.itemActions && !this._options.itemActionsProperty) {
             return;
         }
-        if (!this._itemActionsController) {
+        if (!this._itemActionsController || forceInitialize) {
             this._itemActionsController = new ItemActionsController(this._collection);
         }
         this._itemActionsController.init({

@@ -113,7 +113,7 @@ export class ItemActionsController {
             this._collection.setActionsAssigned(false);
         }
         if (!this._collection.areActionsAssigned()) {
-            hasChanges = this.assignActions();
+            hasChanges = this._assignActions();
             this._calculateActionsTemplateConfig({
                 itemActionsPosition: options.itemActionsPosition,
                 style: options.style,
@@ -122,38 +122,6 @@ export class ItemActionsController {
                 itemActionsClass: options.itemActionsClass
             });
         }
-        return hasChanges;
-    }
-
-    /**
-     * Вычисляет операции над записью для каждого элемента коллекции
-     */
-    assignActions(): boolean {
-        const supportsEventRaising = typeof this._collection.setEventRaising === 'function';
-        let hasChanges = false;
-
-        if (supportsEventRaising) {
-            this._collection.setEventRaising(false, true);
-        }
-
-        this._collection.each((item) => {
-            if (!item.isActive()) {
-                const actionsForItem = this._collectActionsForItem(item);
-                const itemChanged = this._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
-                hasChanges = hasChanges || itemChanged;
-            }
-        });
-
-        if (supportsEventRaising) {
-            this._collection.setEventRaising(true, true);
-        }
-
-        this._collection.setActionsAssigned(true);
-
-        if (hasChanges) {
-            this._collection.nextVersion();
-        }
-
         return hasChanges;
     }
 
@@ -366,6 +334,38 @@ export class ItemActionsController {
         this.setActiveItem(this._collection, null);
         this._collection.setSwipeConfig(null);
         this._collection.nextVersion();
+    }
+
+    /**
+     * Вычисляет операции над записью для каждого элемента коллекции
+     */
+    private _assignActions(): boolean {
+        const supportsEventRaising = typeof this._collection.setEventRaising === 'function';
+        let hasChanges = false;
+
+        if (supportsEventRaising) {
+            this._collection.setEventRaising(false, true);
+        }
+
+        this._collection.each((item) => {
+            if (!item.isActive()) {
+                const actionsForItem = this._collectActionsForItem(item);
+                const itemChanged = this._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
+                hasChanges = hasChanges || itemChanged;
+            }
+        });
+
+        if (supportsEventRaising) {
+            this._collection.setEventRaising(true, true);
+        }
+
+        this._collection.setActionsAssigned(true);
+
+        if (hasChanges) {
+            this._collection.nextVersion();
+        }
+
+        return hasChanges;
     }
 
     /**

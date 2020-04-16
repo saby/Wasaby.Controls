@@ -115,7 +115,7 @@ var _private = {
     }
 };
 
-var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
+const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _markedItem: null,
     _dragEntity: null,
     _draggingItemData: null,
@@ -131,8 +131,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _actionsAssigned: false,
     _actionsTemplateConfig: null,
 
-    constructor: function(cfg) {
-        var self = this;
+    constructor(cfg): void {
+        const self = this;
         this._actions = {};
         this._actionsVersions = {};
         ListViewModel.superclass.constructor.apply(this, arguments);
