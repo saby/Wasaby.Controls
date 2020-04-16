@@ -81,9 +81,7 @@ var _private = {
     isAllSelectedInRoot(self, root): boolean {
         const selectedKeys = self._multiselection.selectedKeys;
         const excludedKeys = self._multiselection.excludedKeys;
-        const isAllSelected = _private.isAllSelected(self, selectedKeys, excludedKeys);
-
-        return isAllSelected && selectedKeys.includes(root);
+        return selectedKeys.includes(root) && excludedKeys.includes(root);
     },
 
     getRoot(self): number|string|null {
