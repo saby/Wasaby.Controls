@@ -73,6 +73,7 @@ export interface IItemAction {
     handler?: (item) => void;
     parent?: string;
     'parent@'?: boolean|null;
+    _isMenu?: boolean;
 }
 
 interface IItemPadding {

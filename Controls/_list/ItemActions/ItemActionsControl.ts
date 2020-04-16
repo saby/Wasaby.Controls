@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_list/ItemActions/ItemActionsControl');
 import {showType} from 'Controls/Utils/Toolbar';
-import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import {view as constView} from 'Controls/Constants';
 import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');

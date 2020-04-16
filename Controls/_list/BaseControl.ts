@@ -6,7 +6,6 @@ import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import Deferred = require('Core/Deferred');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
-import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
@@ -32,7 +31,7 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, ItemActionsController} from 'Controls/display';
+import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, ItemActionsController, Collection} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
@@ -1398,6 +1397,61 @@ var _private = {
         }
     },
 
+    itemActionsClick(
+        self: any,
+        event: SyntheticEvent,
+        action: IItemAction,
+        itemData: CollectionItem<Model>,
+        listModel: Collection<Model>,
+        showAll?: boolean,
+        target?: HTMLElement): void {
+        event.stopPropagation();
+        if (action._isMenu) {
+            self._notify('menuActionsClick', [itemData, event, showAll]);
+        } else if (action['parent@']) {
+            self._notify('menuActionClick', [itemData, event, action]);
+        } else {
+            // TODO: self._container может быть не HTMLElement, а jQuery-элементом,
+            //  убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            const container = self._container.get ? self._container.get(0) : self._container;
+            const isNewModel = !!listModel.getSourceIndexByItem;
+
+            let contents;
+            if (isNewModel) {
+                // TODO breadcrumbs for new model
+                contents = itemData.getContents();
+            } else {
+                contents = itemData.item;
+                if (itemData.breadCrumbs) {
+                    contents = contents[contents.length - 1];
+                }
+            }
+
+            const itemIndex = isNewModel ? listModel.getSourceIndexByItem(itemData) : itemData.index;
+
+            // Если используется новая модель, Controls/display уже подгружен. Когда переедем
+            // с BaseControl, этот код останется работать только со старой моделью.
+            const startIndex = isNewModel
+                ? require('Controls/display').VirtualScrollController.getStartIndex(listModel)
+                : listModel.getStartIndex();
+
+            const targetContainer = target || Array.prototype.filter.call(
+                container.querySelector('.controls-ListView__itemV').parentNode.children,
+                (item: HTMLElement) => item.className.includes('controls-ListView__itemV')
+            )[itemIndex - startIndex];
+
+            const args = [
+                action,
+                contents,
+                targetContainer
+            ];
+            self._notify('actionClick', args);
+            if (action.handler) {
+                action.handler(args[1]);
+            }
+        }
+    },
+
     closeActionsMenu(self): void {
         if (self._options.useNewModel) {
             self._itemActionsController.setActiveItem(
@@ -1424,7 +1478,7 @@ var _private = {
                 self._options.useNewModel
                     ? self._itemActionsController.getActiveItem(self._listViewModel)
                     : self._listViewModel.getActiveItem();
-            aUtil.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._targetItem);
+            _private.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._targetItem);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
                 _private.closeActionsMenu(self);
@@ -2631,6 +2685,30 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
         event.stopPropagation();
+        if (this._options.useNewModel) {
+            const markCommand = new MarkerCommands.Mark(itemData.getContents().getId());
+            markCommand.execute(this._listViewModel);
+        } else {
+            this._listViewModel.setMarkedKey(itemData.key);
+        }
+    },
+
+    /**
+     * Обработчик клика по операции
+     * @param event
+     * @param action
+     * @param itemData
+     * @private
+     */
+    _onItemActionsClick(event: SyntheticEvent, action: IItemAction, itemData: CollectionItem<Model>): void {
+        _private.itemActionsClick(this, event, action, itemData, this._listViewModel);
+        this._itemActionsController.updateActionsForItem({ // TODO actionsItem only in Search in SearchGrid
+            collection: this._listViewModel,
+            itemActions: this._options.itemActions,
+            itemActionsProperty: this._options.itemActionsProperty,
+            visibilityCallback: this._options.itemActionVisibilityCallback,
+            key: itemData.getContents().getId()
+        });
         if (this._options.useNewModel) {
             const markCommand = new MarkerCommands.Mark(itemData.getContents().getId());
             markCommand.execute(this._listViewModel);

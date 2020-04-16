@@ -131,7 +131,7 @@ export class ItemActionsController {
      * @param key TItemKey
      */
     updateActionsForItem(key: TItemKey): void {
-            const item = this._collection.getItemBySourceKey(options.key);
+            const item = this._collection.getItemBySourceKey(key);
             if (item) {
                 const itemActions = this._collectActionsForItem(item);
                 this._setItemActions(item, this._wrapActionsInContainer(itemActions));
