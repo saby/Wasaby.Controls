@@ -1420,7 +1420,7 @@ define([
          assert.isFalse(notified);
       });
 
-      it('toggleSelection', async function() {
+      it('spaceHandler', async function() {
 
          var
              cfg = {
@@ -1464,11 +1464,11 @@ define([
 
          baseControl._loadingIndicatorState = null;
          sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
-         lists.BaseControl._private.toggleSelection(baseControl, event);
+         lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
 
          baseControl.getViewModel()._markedKey = 5;
-         lists.BaseControl._private.toggleSelection(baseControl, event);
+         lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.deepEqual([1, 1], baseControl._listViewModel._selectedKeys);
 
 

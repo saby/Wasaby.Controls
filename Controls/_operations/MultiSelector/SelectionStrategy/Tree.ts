@@ -59,7 +59,7 @@ export default class TreeSelectionStrategy implements ISelectionStrategy {
       });
    }
 
-   unSelect(selection: ISelection, keys: TKeys, model: ISelectionModel): void {
+   unselect(selection: ISelection, keys: TKeys, model: ISelectionModel): void {
       keys.forEach((key) => {
          const item = getItems(model).getRecordById(key);
          const isRoot = key === this._getRoot(model);

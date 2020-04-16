@@ -4,8 +4,7 @@ import collection = require('Types/collection');
 import { isEqual } from 'Types/object';
 import { SelectionController as Selection } from 'Controls/display';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
-import { ISelectionStrategy, FlatSelectionStrategy, TreeSelectionStrategy } from 'Controls/operations';
-import { relation } from 'Types/entity';
+import { ISelectionStrategy, TreeSelectionStrategy } from 'Controls/operations';
 import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
 import cInstance = require('Core/core-instance');
 import clone = require('Core/core-clone');
@@ -29,24 +28,17 @@ export interface ISelectionModel extends Selection.ISelectionCollection {
 
    getItems(): collection.RecordSet;
 
-   updateSelection(selection: object): void;
+   updateSelection(selection: Map<number, boolean>|[number]): void;
 }
 
 export interface ISelectionControllerOptions {
    model: ISelectionModel;
    selectedKeys: TKeys;
    excludedKeys: TKeys;
+   strategy: ISelectionStrategy;
+   keyProperty: string;
    filter: object;
    root: object;
-
-   // TreeSelection options
-   keyProperty: string;
-   nodeProperty: string;
-   parentProperty: string;
-   hasChildrenProperty: string;
-   nodesSourceControllers: object;
-   selectDescendants: boolean;
-   selectAncestors: boolean;
 
    // callbacks
    notifySelectionKeysChanged: Function;
@@ -60,7 +52,7 @@ export class SelectionController {
    private _selectedKeys: TKeys = [];
    private _excludedKeys: TKeys = [];
    private _limit: number = 0;
-   private _multiselection: ISelectionStrategy;
+   private _strategy: ISelectionStrategy;
    private _filter: object;
    private _root: object;
 
@@ -79,10 +71,11 @@ export class SelectionController {
       this._keyProperty = options.keyProperty;
       this._selectedKeys = options.selectedKeys.slice();
       this._excludedKeys = options.excludedKeys.slice();
+      this._strategy = options.strategy;
+
       this._notifySelectionKeysChanged = options.notifySelectionKeysChanged;
       this._notifySelectedKeysCountChanged = options.notifySelectedKeysCountChanged;
 
-      this._multiselection = this._getMultiselection(options);
       this._updateSelectionForRender();
       this._notifySelectedCountChangedEvent(options.selectedKeys, options.excludedKeys);
 
@@ -90,8 +83,9 @@ export class SelectionController {
       getItems(this._model).subscribe('onCollectionChange', this._onCollectionChange);
    }
 
-   toggleItem(key: TKey, status: boolean): void {
+   toggleItem(key: TKey): void {
       const oldSelection = clone(this._selection);
+      const status = this._getItemStatus(key);
       if (status === true || status === null) {
          this._unselect([key]);
       } else {
@@ -115,13 +109,8 @@ export class SelectionController {
          this._model = options.model;
       }
 
-      if (this._multiselection instanceof TreeSelectionStrategy) {
-         this._multiselection.setHierarchy(new relation.Hierarchy({
-            keyProperty: options.keyProperty || 'id',
-            parentProperty: options.parentProperty || 'Раздел',
-            nodeProperty: options.nodeProperty || 'Раздел@',
-            declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
-         }));
+      if (this._strategy instanceof TreeSelectionStrategy) {
+         this._strategy = options.strategy;
       }
 
       if (this._shouldResetSelection(options.filter, options.root)) {
@@ -139,12 +128,12 @@ export class SelectionController {
    clear(): void {
       this._clearSelection();
       // this._notify('listSelectedKeysCountChanged', [0], {bubbling: true});
-      this._multiselection = null;
+      this._strategy = null;
       getItems(this._model).unsubscribe('onCollectionChange', this._onCollectionChange);
       this._onCollectionChange = null;
    }
 
-   selectedTypeChangedHandler(typeName: TChangeSelectionType, limit?: number): void {
+   handleAllItems(typeName: TChangeSelectionType, limit?: number): void {
       const items = getItems(this._model);
       let needChangeSelection = true;
 
@@ -155,7 +144,7 @@ export class SelectionController {
       if (needChangeSelection) {
          const oldSelection = clone(this._selection);
          this._limit = limit;
-         this._multiselection[typeName](this._selection, this._model, limit);
+         this._strategy[typeName](this._selection, this._model, limit);
          this._notifyAndUpdateSelection(oldSelection, this._selection);
       }
    }
@@ -165,11 +154,11 @@ export class SelectionController {
          this._increaseLimit(keys.slice());
       }
 
-      this._multiselection.select(this._selection, keys, this._model);
+      this._strategy.select(this._selection, keys, this._model);
    }
 
    private _unselect(keys: TKeys): void {
-      this._multiselection.unSelect(this._selection, keys, this._model);
+      this._strategy.unselect(this._selection, keys, this._model);
    }
 
    private _clearSelection(): void {
@@ -211,22 +200,8 @@ export class SelectionController {
       });
    }
 
-   private _getMultiselection(options: ISelectionControllerOptions): ISelectionStrategy {
-      if (options.parentProperty) {
-         return new TreeSelectionStrategy({
-            nodesSourceControllers: options.nodesSourceControllers,
-            selectDescendants: options.selectDescendants,
-            selectAncestors: options.selectAncestors,
-            hierarchyRelation: new relation.Hierarchy({
-               keyProperty: options.keyProperty || 'id',
-               parentProperty: options.parentProperty || 'Раздел',
-               nodeProperty: options.nodeProperty || 'Раздел@',
-               declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
-            })
-         });
-      } else {
-         return new FlatSelectionStrategy();
-      }
+   private _getItemStatus(key: TKey): boolean {
+      return this._selectedKeys.includes(key) && !this._excludedKeys.includes(key);
    }
 
    private _getRoot(): object | null {
@@ -236,7 +211,7 @@ export class SelectionController {
    }
 
    private _getCount(selection?: ISelection): number | null {
-      return this._multiselection.getCount(selection || this._selection, this._model, this._limit);
+      return this._strategy.getCount(selection || this._selection, this._model, this._limit);
    }
 
    private _getItemsKeys(items: TKeys): TKeys {
@@ -248,7 +223,7 @@ export class SelectionController {
    }
 
    private _getSelectionForModel(): Map<TKey, boolean> {
-      return this._multiselection.getSelectionForModel(this._selection, this._model, this._limit, this._keyProperty);
+      return this._strategy.getSelectionForModel(this._selection, this._model, this._limit, this._keyProperty);
    }
 
    /**
@@ -260,7 +235,7 @@ export class SelectionController {
       if (cInstance.instanceOfModule(this._model, 'Controls/display:Collection')) {
          Selection.selectItems(this._model, selectionForModel);
       } else {
-         const selectionForOldModel: Object = {};
+         const selectionForOldModel = {};
 
          selectionForModel.forEach((stateSelection, itemId) => {
             selectionForOldModel[itemId] = stateSelection;
@@ -270,8 +245,7 @@ export class SelectionController {
    }
 
    private _isAllSelectedInRoot(root: object): boolean {
-      const isAllSelected = this._isAllSelected(this._selectedKeys, this._excludedKeys);
-      return isAllSelected && this._selectedKeys.includes(root);
+      return this._selectedKeys.includes(root) && this._excludedKeys.includes(root);
    }
 
    private _isAllSelected(selectedKeys: TKeys, excludedKeys: TKeys): boolean {
@@ -308,11 +282,11 @@ export class SelectionController {
          excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
 
       if (selectedKeysDiff.added.length || selectedKeysDiff.removed.length) {
-         this._notifySelectionKeysChanged('selected', newSelectedKeys, selectedKeysDiff.added, selectedKeysDiff.removed);
+         this._notifySelectionKeysChanged('selectedKeysChanged', newSelectedKeys, selectedKeysDiff.added, selectedKeysDiff.removed);
       }
 
       if (excludedKeysDiff.added.length || excludedKeysDiff.removed.length) {
-         this._notifySelectionKeysChanged('excluded', newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed);
+         this._notifySelectionKeysChanged('excludedKeysChanged', newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed);
       }
 
       this._updateSelectionForRender();

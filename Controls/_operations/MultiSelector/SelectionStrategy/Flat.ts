@@ -25,7 +25,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   unSelect(selection: ISelection, keys: TKeys): void {
+   unselect(selection: ISelection, keys: TKeys): void {
       if (this._isAllSelected(selection)) {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, keys);
       } else {
@@ -33,7 +33,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   selectAll(selection: ISelection, model: ISelectionModel,  limit: number): void {
+   selectAll(selection: ISelection, model: ISelectionModel, limit: number): void {
       selection.selected = [ALL_SELECTION_VALUE];
 
       // При выборе "Отметить все" лимит не передается, а предыдущий установленный сбрасывается раньше вызова selectAll,
@@ -62,7 +62,7 @@ export default class FlatSelectionStrategy implements ISelectionStrategy {
       } else {
          const selectedKeys: TKeys = selection.selected.slice();
          this.selectAll(selection, model, limit);
-         this.unSelect(selection, selectedKeys);
+         this.unselect(selection, selectedKeys);
       }
    }
 
