@@ -62,6 +62,24 @@ define(
             return panel;
          };
 
+         describe('_private.getItems', () => {
+            it('returns items only with 2 and more elements in collection', (done) => {
+               const itemsConfig = Clone(defaultItemsConfig);
+               itemsConfig[0].items.clear();
+               const items = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: defaultItemsConfig
+               });
+               filterPopup.SimplePanel._private.getItems({}, items).then((resultItems) => {
+                  const itemWithEmptyCollection = resultItems.find((resultItem) => {
+                     return resultItem.id === defaultItemsConfig[0].id;
+                  });
+                  assert.isUndefined(itemWithEmptyCollection);
+                  done();
+               });
+            });
+         });
+
          it('_beforeMount', function() {
             let expectedItems = defaultConfig.items.getRawData();
             for (var i in expectedItems) {
@@ -118,7 +136,7 @@ define(
             let items = Clone(defaultItemsConfig);
             items[0].loadDeferred = Deferred.success(items[0].items);
             items[0].sourceController = { hasMoreData: () => true };
-            items[0].source = { prepareItems: () => {} };
+            items[0].source = { prepareItems: loadItems => loadItems };
             const sandBox = sinon.createSandbox();
             sandBox.stub(HistoryUtils, 'isHistorySource').returns(true);
 
