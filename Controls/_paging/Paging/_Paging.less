@@ -5,7 +5,7 @@
 
 .controls-Paging__wrapper_theme-@{themeName} {
    background-color: @background-color_paging;
-   padding: @padding-vertical_paging @padding-horizontal_paging;
+   padding: @padding-vertical_paging 0;
 }
 
 .controls-Paging__btn {
@@ -24,6 +24,14 @@
    height: @item_height_paging;
    margin-left: @item_offset_paging;
    box-shadow: @item_box-shadow_paging;
+}
+
+.controls-Paging__btn_first_theme-@{themeName} {
+  margin-left: @padding-horizontal_paging;
+}
+
+.controls-Paging__btn_last_theme-@{themeName} {
+  margin-right: @padding-horizontal_paging;
 }
 
 .controls-Paging__digitButtons {

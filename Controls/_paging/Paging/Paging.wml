@@ -2,6 +2,7 @@
    <div class="controls-Paging__wrapper controls-Paging__wrapper_theme-{{_options.theme}}">
       <ws:if data="{{!_options.showDigits}}">
          <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
+                        controls-Paging__btn_first controls-Paging__btn_first_theme-{{_options.theme}}
                         controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
                         controls-Paging__arrow__state-{{_stateBegin}}
                         controls-Paging__arrow__state-{{_stateBegin}}_theme-{{_options.theme}}"
@@ -24,6 +25,7 @@
                count="{{_options.pagesCount}}"></Controls._paging.Paging.DigitButtons>
       </ws:if>
       <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
+                     controls-Paging__btn_last controls-Paging__btn_last_theme-{{_options.theme}}
                      controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
                      controls-Paging__arrow__state-{{_stateNext}}
                      controls-Paging__arrow__state-{{_stateNext}}_theme-{{_options.theme}}"
