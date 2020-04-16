@@ -1736,16 +1736,6 @@ var _private = {
             itemActionsClass: options.itemActionsClass
         });
     },
-
-    /**
-     * Возвращает функцию получения операций над записью для элемента коллекции
-     * @param self
-     */
-    getActionsGetter(self: any): (item?: CollectionItem<Model>) => IItemAction[] {
-        return self._options.itemActionsProperty ?
-            (item) => item.getContents().get(self._options.itemActionsProperty) as IItemAction[] :
-            () => self._options.itemActions as IItemAction[];
-    }
 };
 
 /**
@@ -2483,12 +2473,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
 
         if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
-            const itemActions = this._itemActionsController.getActionsForItem(
-                itemData,
-                _private.getActionsGetter(this),
-                this._options.itemActionVisibilityCallback
-            );
-            this._itemActionsController.setActionsToItem(this._listViewModel, itemData.key, itemActions);
+            // TODO ???
+            // ItemActionsController.activateSwipe(this._listViewModel);
+            this._itemActionsController.updateActionsForItem({
+                collection: this._listViewModel,
+                itemActions: this._options.itemActions,
+                itemActionsProperty: this._options.itemActionsProperty,
+                visibilityCallback: this._options.itemActionVisibilityCallback,
+                key: itemData.key
+            });
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
@@ -2568,12 +2561,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _notifyHandler: tmplNotify,
 
     _closeSwipe: function(event, item) {
-        const itemActions = this._itemActionsController.getActionsForItem(
-            item,
-            _private.getActionsGetter(this),
-            this._options.itemActionVisibilityCallback
-        );
-        this._itemActionsController.setActionsToItem(this._listViewModel, item.key, itemActions);
+        this._itemActionsController.updateActionsForItem({
+            collection: this._listViewModel,
+            itemActions: this._options.itemActions,
+            itemActionsProperty: this._options.itemActionsProperty,
+            visibilityCallback: this._options.itemActionVisibilityCallback,
+            key: item.key
+        });
         // todo ???
         // ItemActionsController.deactivateSwipe(this._listViewModel);
     },
@@ -2604,11 +2598,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this._listViewModel && this._hasItemActions) {
-            const hasChanges = this._itemActionsController.assignActions(
-                this._listViewModel,
-                _private.getActionsGetter(this),
-                this._options.itemActionVisibilityCallback
-            );
+            const hasChanges = this._itemActionsController.assignActions({
+                collection: this._listViewModel,
+                itemActions: this._options.itemActions,
+                itemActionsProperty: this._options.itemActionsProperty,
+                visibilityCallback: this._options.itemActionVisibilityCallback
+            });
             // Набираем список операций над записью в старой модели
             // и возвращаем для каждой записи, какие записи обновились - 'all'|'partial'|'none'
             if (hasChanges && !this._options.useNewModel) {
@@ -2634,12 +2629,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
         * _canUpdateItemsActions  приведет к показу неактуальных операций.
         */
-        const itemActions = this._itemActionsController.getActionsForItem(
-            item,
-            _private.getActionsGetter(this),
-            this._options.itemActionVisibilityCallback
-        );
-        this._itemActionsController.setActionsToItem(this._listViewModel, item.key, itemActions);
+        this._itemActionsController.updateActionsForItem({
+            collection: this._listViewModel,
+            itemActions: this._options.itemActions,
+            itemActionsProperty: this._options.itemActionsProperty,
+            visibilityCallback: this._options.itemActionVisibilityCallback,
+            key: item.key
+        });
         return result;
     },
 

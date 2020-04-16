@@ -1,7 +1,7 @@
-import { IBaseCollection, TItemKey } from '../interface';
-import { IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig } from '../Collection';
-import { SyntheticEvent } from 'Vdom/Vdom';
-import { Model } from 'Types/entity';
+import {IBaseCollection, TItemKey} from '../interface';
+import {IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig} from '../Collection';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
 
 // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
@@ -14,7 +14,37 @@ const showType = {
 // TODO Написать реальный тип для action'ов
 type TItemAction = any;
 
-type TActionsGetterFunction = (item) => TItemAction[];
+/**
+ * Опции для методов обновления операций с записью
+ */
+interface IActionsUpdateOptions {
+    /**
+     * Коллекция элементов, содержащих операции с записью
+     */
+    collection: IItemActionsCollection;
+    /**
+     * Действия с записью
+     */
+    itemActions: TItemAction[];
+    /**
+     * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
+     */
+    itemActionsProperty?: string;
+    /**
+     * Callback для определения видимости операции
+     */
+    visibilityCallback?: TItemActionVisibilityCallback;
+}
+
+/**
+ * Опции для методов обновления операций с записью
+ */
+interface IActionsUpdateItemOptions extends IActionsUpdateOptions {
+    /**
+     * Ключ элемента при обновлении операций с записью конкретного элемента
+     */
+    key: TItemKey;
+}
 
 export type TItemActionVisibilityCallback = (
     action: TItemAction,
@@ -70,63 +100,54 @@ const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
 export class ItemActionsController {
     /**
      * Вычисляет операции над записью для каждого элемента коллекции
-     * @param collection Коллекция элементов, содержащих операции над записью
-     * @param actionsGetter callback-функция, возвращающая список операций по модели элемента коллекции
-     * @param visibilityCallback callback-функция, возвращающая видимость операции над записью
-     * TODO обнови тесты. Было return void стало return boolean
+     * @param options IActionsUpdateOptions
+     * TODO обнови тесты. Было return void стало return boolean; была другая сигнатура!
      */
-    assignActions(
-        collection: IItemActionsCollection,
-        actionsGetter: TActionsGetterFunction,
-        visibilityCallback: TItemActionVisibilityCallback = () => true
-    ): boolean {
-        if (collection.areActionsAssigned()) {
+    assignActions(options: IActionsUpdateOptions): boolean {
+        if (options.collection.areActionsAssigned()) {
             return;
         }
 
-        const supportsEventRaising = typeof collection.setEventRaising === 'function';
+        const supportsEventRaising = typeof options.collection.setEventRaising === 'function';
         let hasChanges = false;
 
         if (supportsEventRaising) {
-            collection.setEventRaising(false, true);
+            options.collection.setEventRaising(false, true);
         }
 
-        collection.each((item) => {
+        options.collection.each((item) => {
             if (!item.isActive()) {
-                const actionsForItem = this.getActionsForItem(item, actionsGetter, visibilityCallback);
+                const actionsForItem = this._collectActionsForItem(item, options);
                 const itemChanged = this._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
                 hasChanges = hasChanges || itemChanged;
             }
         });
 
         if (supportsEventRaising) {
-            collection.setEventRaising(true, true);
+            options.collection.setEventRaising(true, true);
         }
 
-        collection.setActionsAssigned(true);
+        options.collection.setActionsAssigned(true);
 
         if (hasChanges) {
-            collection.nextVersion();
+            options.collection.nextVersion();
         }
 
         return hasChanges;
     }
 
     /**
-     * Получает операции с сзаписью для указанного элемента коллекции
-     * @param item
-     * @param actionsGetter
-     * @param visibilityCallback
-     * todo write test!
+     * Обновляет операции с записью элемента коллекции по его ключу
+     * @param options IActionsUpdateItemOptions
+     * TODO напиши тесты.
      */
-    getActionsForItem(
-        item: IItemActionsItem,
-        actionsGetter: TActionsGetterFunction,
-        visibilityCallback: TItemActionVisibilityCallback = () => true): TItemAction[] {
-        const fixedActions = actionsGetter(item).map(this._fixActionIcon);
-        return fixedActions.filter((action) =>
-            visibilityCallback(action, item.getContents())
-        );
+    updateActionsForItem(options: IActionsUpdateItemOptions): void {
+            const item = options.collection.getItemBySourceKey(options.key);
+            if (item) {
+                const itemActions = this._collectActionsForItem(item, options);
+                this._setItemActions(item, this._wrapActionsInContainer(itemActions));
+                options.collection.nextVersion();
+            }
     }
 
     /**
@@ -440,6 +461,22 @@ export class ItemActionsController {
      */
     getSwipeItem(collection: IItemActionsCollection): IItemActionsItem {
         return collection.find((item) => item.isSwiped());
+    }
+
+    /**
+     * Набирает операции с записью для указанного элемента коллекции
+     * @param item IItemActionsItem
+     * @param options IActionsUpdateOptions
+     * @private
+     */
+    private _collectActionsForItem(item: IItemActionsItem, options: IActionsUpdateOptions): TItemAction[] {
+        const itemActions: TItemAction[] = options.itemActionsProperty
+                ? item.getContents().get(options.itemActionsProperty)
+                : options.itemActions;
+        const fixedActions = itemActions.map(this._fixActionIcon);
+        return fixedActions.filter((action) =>
+            options.visibilityCallback(action, item.getContents())
+        );
     }
 
     private _updateSwipeConfig(

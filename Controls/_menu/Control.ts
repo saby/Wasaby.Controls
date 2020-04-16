@@ -617,12 +617,11 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         if (!itemActions) {
             return;
         }
-        const actionsGetter = () => itemActions;
 
-        this._itemActionsController.assignActions(
-            this._listModel,
-            actionsGetter
-        );
+        this._itemActionsController.assignActions({
+            collection: this._listModel,
+            itemActions
+        });
     }
 
     private _getChildContext(): object {

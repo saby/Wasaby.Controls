@@ -244,20 +244,17 @@ export default class View extends Control<IViewOptions> {
     protected _assignItemActions(
         itemActions: any[],
         itemActionsProperty: string,
-        itemActionsVisibilityCallback: (action, item) => boolean
+        visibilityCallback: (action, item) => boolean
     ): void {
         if (!itemActions && !itemActionsProperty) {
             return;
         }
-        const actionsGetter =
-            itemActionsProperty
-            ? (item) => item.getContents().get(itemActionsProperty)
-            : () => itemActions;
-        this._itemActionsController.assignActions(
-            this._collection,
-            actionsGetter,
-            itemActionsVisibilityCallback
-        );
+        this._itemActionsController.assignActions({
+            collection: this._collection,
+            itemActions,
+            itemActionsProperty,
+            visibilityCallback
+        });
     }
 
     static getDefaultOptions(): Partial<IViewOptions> {
