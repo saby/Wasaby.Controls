@@ -515,7 +515,9 @@
       position: absolute;
       left: 0;
       pointer-events: none;
-      top: -@master_item_selected_border-thickness_list;
+
+      // Верхняя граница входят в высоту строки и отображаются внутри строки
+      top: 0;
       bottom: -@master_item_selected_border-thickness_list;
    }
 }
