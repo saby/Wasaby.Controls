@@ -435,7 +435,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                   container.scrollTop = cachedScrollTop - self._topPlaceholderSize;
                };
                if (realScrollTop >= 0 && !scrollTopOverflow) {
-                  container.scrollTop = scrollTop - self._topPlaceholderSize;
+                  container.scrollTop = realScrollTop;
                } else if (this._topPlaceholderSize === 0 && realScrollTop < 0 || scrollTopOverflow && this._bottomPlaceholderSize === 0) {
                   applyScrollTop();
                } else {
