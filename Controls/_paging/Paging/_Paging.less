@@ -1,50 +1,63 @@
 .controls-Paging__wrapper {
    display: flex;
    justify-content: flex-end;
+}
+
+.controls-Paging__wrapper_theme-@{themeName} {
    background-color: @background-color_paging;
    padding: @padding-vertical_paging 0;
 }
+
 .controls-Paging__btn {
-   height: @item_height_paging;
    display: inline-flex;
    align-items: center;
    justify-content: center;
    user-select: none;
    margin: 0;
-   margin-left: @item_offset_paging;
-   box-shadow: @item_box-shadow_paging;
 
    &:active {
       box-shadow: none;
    }
 }
-.controls-Paging__btn_first {
-   margin-left: @padding-horizontal_paging;
+
+.controls-Paging__btn_theme-@{themeName} {
+   height: @item_height_paging;
+   margin-left: @item_offset_paging;
+   box-shadow: @item_box-shadow_paging;
 }
-.controls-Paging__btn_last {
-   margin-right: @padding-horizontal_paging;
+
+.controls-Paging__btn_first_theme-@{themeName} {
+  margin-left: @padding-horizontal_paging;
 }
+
+.controls-Paging__btn_last_theme-@{themeName} {
+  margin-right: @padding-horizontal_paging;
+}
+
 .controls-Paging__digitButtons {
    display: inline-flex;
 }
-.controls-Paging__arrow {
+
+.controls-Paging__arrow_theme-@{themeName} {
    width: @arrow_width_paging;
    background-color: @arrow_background-color_paging;
 }
-.controls-Paging__arrow__state-normal {
+
+.controls-Paging__arrow__state-normal_theme-@{themeName} {
    color: @arrow_icon-color_paging;
    cursor: pointer;
 }
 
-.ws-is-hover .controls-Paging__arrow__state-normal:hover {
+.ws-is-hover .controls-Paging__arrow__state-normal_theme-@{themeName}:hover {
    background-color: @arrow_hover_background-color_paging;
    color: @arrow_hover_icon-color_paging;
 }
 
-.controls-Paging__arrow__state-disabled {
+.controls-Paging__arrow__state-disabled_theme-@{themeName} {
    color: @readonly_icon-color_paging;
 }
-.controls-Paging__icon {
+
+.controls-Paging__icon_theme-@{themeName} {
    font-family: @arrow_icon_font-family_paging;
    font-size: @arrow_icon-size_paging;
    font-style: normal;
