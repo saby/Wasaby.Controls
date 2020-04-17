@@ -552,7 +552,6 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             options.searchValue = '';
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
             assert.equal(searchController._searchValue, '');
-            assert.isTrue(searchStarted);
          });
 
          it('filter is changed', function() {
