@@ -21,6 +21,7 @@ import {
     ITooltip,
     ITooltipOptions
 } from 'Controls/interface';
+
 import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
 import 'wml!Controls/_buttons/ButtonBase';
