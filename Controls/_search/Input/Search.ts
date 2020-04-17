@@ -4,6 +4,7 @@ import {Base, TextViewModel as ViewModel} from 'Controls/input';
 import {throttle} from 'Types/function';
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
+import {SyntheticEvent} from "Vdom/Vdom";
 
 // timer for search, when user click on search button or pressed enter.
 // protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
@@ -108,6 +109,7 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
 /**
  * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Object} nativeEvent Объект нативного события браузера.
  */
 
 /**
@@ -217,24 +219,24 @@ var Search = Base.extend({
       this.activate();
    },
 
-   _searchClick: function() {
+   _searchClick(event: SyntheticEvent): void {
       if (this._options.readOnly) {
          return;
       }
 
-      this._notifySearchClick();
+      this._notifySearchClick(event);
 
       // move focus from search button to input
       this.activate();
    },
 
-   _notifySearchClick(): void {
-      this._notify('searchClick');
+   _notifySearchClick(event): void {
+      this._notify('searchClick', [event.nativeEvent]);
    },
 
-   _keyUpHandler: function(event) {
+   _keyUpHandler(event: SyntheticEvent<KeyboardEvent>): void {
       if (event.nativeEvent.which === constants.key.enter) {
-         this._searchClick();
+         this._searchClick(event);
       }
 
       Search.superclass._keyUpHandler.apply(this, arguments);

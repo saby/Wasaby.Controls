@@ -1,6 +1,8 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_suggest/Input/Search/Suggest');
+import * as Control from 'Core/Control';
+import * as template from 'wml!Controls/_suggest/Input/Search/Suggest';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
+import {constants} from 'Env/Env';
+import {SyntheticEvent} from "Vdom/Vdom";
 import 'Controls/search';
 
 
@@ -81,36 +83,25 @@ var Suggest = Control.extend({
    },
 
    _suggestStateChanged: function(event, value) {
-      /**
-       * Всплытие будет удалено по задаче.
-       * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
-       */
-      this._notify('suggestStateChanged', [value], {bubbling: true});
+      this._notify('suggestStateChanged', [value]);
    },
 
    _deactivated: function() {
-      /**
-       * Всплытие будет удалено по задаче.
-       * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
-       */
       this._suggestState = false;
-      this._notify('suggestStateChanged', [false], {bubbling: true});
+      this._notify('suggestStateChanged', [false]);
    },
 
-   _suggestMarkedKeyChanged: function(event, key) {
+   _suggestMarkedKeyChanged(event, key: string|null) {
       this._markedKeyChanged = key !== null;
    },
 
-   _searchClick: function() {
-      /* the search should not fire an event if marked key in suggstions list was changed,
-         because enter should activate marked item */
-      if (!this._markedKeyChanged) {
+   _searchClick: function(event: SyntheticEvent, nativeEvent: Event) {
+      if (!this._markedKeyChanged || nativeEvent.which !== constants.key.enter) {
          const eventResult = this._notify('searchClick');
 
          if (eventResult !== false) {
             this._suggestState = false;
-            // Всплытие будет удалено по задаче. https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
-            this._notify('suggestStateChanged', [false], {bubbling: true});
+            this._notify('suggestStateChanged', [false]);
          }
       }
    },
