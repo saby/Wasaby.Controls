@@ -27,8 +27,21 @@ define(
          });
 
          const BODY_HEIGHT = 999;
+         const BASE_VIEWPORT = {
+            width: 1000,
+            height: 1000,
+            offsetLeft: 0,
+            offsetTop: 0,
+            pageLeft: 0,
+            pageTop: 0
+         };
 
-         StickyStrategy._private.getBodyHeight = () => BODY_HEIGHT;
+         StickyStrategy._private.getBody = () => ({
+            width: 1000,
+            height: 1000
+         });
+         StickyStrategy._private.getViewportHeight = () => BODY_HEIGHT;
+         StickyStrategy._private.getVisualViewport = () => BASE_VIEWPORT;
 
          function getPositionConfig() {
             return {
@@ -202,10 +215,11 @@ define(
             assert.equal(position.left, 1520);
          });
 
-         it('Sticky position', () => {StickyStrategy._private.getWindowSizes = () => ({
-            width: 1000,
-            height: 1000
-         });
+         it('Sticky position', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
             let cfg = getPositionConfig();
 
             // 1 position
@@ -523,9 +537,15 @@ define(
          });
 
          it('Centered sticky', () => {
+            const height = 1040;
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1920,
-               height: 1040
+               height: height
+            });
+            StickyStrategy._private.getVisualViewport = () => ({...BASE_VIEWPORT, ...{height}});
+            StickyStrategy._private.getBody = () => ({
+               width: 1000,
+               height
             });
             let popupCfg = { ...getPositionConfig() };
             popupCfg.direction.horizontal = 'center';
@@ -780,6 +800,12 @@ define(
             let invertPosition = StickyStrategy._private.invertPosition;
             StickyStrategy._private.invertPosition = () => { popupCfg.direction.horizontal = 'left' };
 
+            const width = 1920;
+            StickyStrategy._private.getVisualViewport = () => ({...BASE_VIEWPORT, ...{width}});
+            StickyStrategy._private.getBody = () => ({
+               width,
+               height: 1000
+            });
 
             let result = StickyStrategy._private.calculatePosition(popupCfg, {leftScroll: 0},'horizontal');
             //проверяем, что окно позиционируется с правого края и его ширина не обрезается
