@@ -248,7 +248,8 @@ var _private = {
                     // При полной перезагрузке данных нужно сбросить состояние скролла
                     // и вернуться к началу списка, иначе браузер будет пытаться восстановить
                     // scrollTop, догружая новые записи после сброса.
-                    self._resetScrollAfterReload = true;
+                    self._resetScrollAfterReload = !self._keepScrollAfterReload;
+                    self._keepScrollAfterReload = false;
                 }
 
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
@@ -1809,6 +1810,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _intertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
 
+    _keepScrollAfterReload: false,
     _resetScrollAfterReload: false,
     _scrollPageLocked: false,
 
@@ -2469,7 +2471,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.hideIndicator(this);
     },
 
-    reload: function() {
+    reload: function(keepScroll: boolean, sourceConfig: INavigationSourceConfig) {
+        if (keepScroll) {
+            this._keepScrollAfterReload = true;
+        }
+        if (sourceConfig) {
+            let navigation = cClone(this._options.navigation);
+            navigation.sourceConfig = sourceConfig;
+            this.recreateSourceController(this._options.source, navigation, this._options.keyProperty);
+        }
         return _private.reload(this, this._options).addCallback(getData);
     },
 
