@@ -31,7 +31,8 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, ItemActionsController, Collection} from 'Controls/display';
+import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, Collection} from 'Controls/display';
+import {ItemActionsController} from 'Controls/itemActions';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
@@ -1294,7 +1295,7 @@ var _private = {
             getBoundingClientRect: () => rect
         }
     },
-    showActionsMenu: function(self, event, itemData, childEvent, showAll) {
+    showActionsMenu(self, event, itemData?, childEvent?, showAll?) {
         const context = event.type === 'itemcontextmenu';
         const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
                                       || self._options.contextMenuConfig?.headerTemplate);
@@ -1397,6 +1398,16 @@ var _private = {
         }
     },
 
+    /**
+     * Временная мера, переделываем на ItemActionsContoller.processActionClick
+     * @param self
+     * @param event
+     * @param action
+     * @param itemData
+     * @param listModel
+     * @param showAll
+     * @param target
+     */
     itemActionsClick(
         self: any,
         event: SyntheticEvent,
@@ -1407,9 +1418,9 @@ var _private = {
         target?: HTMLElement): void {
         event.stopPropagation();
         if (action._isMenu) {
-            self._notify('menuActionsClick', [itemData, event, showAll]);
+            self.showActionsMenu(self, itemData, event, showAll);
         } else if (action['parent@']) {
-            self._notify('menuActionClick', [itemData, event, action]);
+            _private.showActionMenu(self, itemData, event, action);
         } else {
             // TODO: self._container может быть не HTMLElement, а jQuery-элементом,
             //  убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
@@ -1478,6 +1489,7 @@ var _private = {
                 self._options.useNewModel
                     ? self._itemActionsController.getActiveItem(self._listViewModel)
                     : self._listViewModel.getActiveItem();
+            // TODO Переделываем на ItemActionsContoller.processActionClick
             _private.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._targetItem);
             if (!action['parent@']) {
                 self._children.itemActionsOpener.close();
@@ -2610,9 +2622,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.editInPlace.cancelEdit();
     },
 
-    _showActionsMenu: function(event, itemData, childEvent, showAll) {
-        _private.showActionsMenu(this, event, itemData, childEvent, showAll);
-    },
     _initItemActions(): void {
         if (!this._itemActionsInitialized) {
             this._assignItemActions();
@@ -2673,17 +2682,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return result;
     },
 
-    _showActionMenu(
-        event: Event,
-        itemData: object,
-        childEvent: Event,
-        action: object
-    ): void {
-        _private.showActionMenu(this, itemData, childEvent, action);
-    },
-
     _onItemContextMenu: function(event, itemData) {
-        this._showActionsMenu.apply(this, arguments);
+        _private.showActionsMenu(event, itemData);
         event.stopPropagation();
         if (this._options.useNewModel) {
             const markCommand = new MarkerCommands.Mark(itemData.getContents().getId());
@@ -2695,6 +2695,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     /**
      * Обработчик клика по операции
+     * // TODO Переделываем на ItemActionsContoller.processActionClick
      * @param event
      * @param action
      * @param itemData

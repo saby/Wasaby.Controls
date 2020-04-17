@@ -8,12 +8,12 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
-import { CollectionItem, IItemActionsContainer, IEditingConfig } from 'Controls/display';
+import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig } from 'Controls/display';
+import {IItemActionsContainer} from 'Controls/itemActions';
 import {Model} from 'types/entity';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
-import {IItemActionsTemplateConfig} from "../_display/Collection";
 
 /**
  *

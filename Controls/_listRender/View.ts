@@ -9,12 +9,10 @@ import { create as diCreate } from 'Types/di';
 import {
     Collection,
     CollectionItem,
-    ItemActionsController,
     MarkerCommands,
-    ICollectionCommand,
-    TActionClickCallback,
-    TItemActionVisibilityCallback
+    ICollectionCommand
 } from 'Controls/display';
+import {ItemActionsController, TActionClickCallback, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import { load as libraryLoad } from 'Core/library';

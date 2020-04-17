@@ -1,5 +1,4 @@
-import {IBaseCollection, TItemKey} from '../interface';
-import {IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig} from '../Collection';
+import {IBaseCollection, TItemKey, IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig} from 'Controls/display';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
@@ -520,7 +519,7 @@ export class ItemActionsController {
     ): ISwipeConfig {
         // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
         // TODO Move these measurers to listRender, maybe rewrite them
-        const {SwipeVerticalMeasurer, SwipeHorizontalMeasurer} = require('Controls/list');
+        const {SwipeVerticalMeasurer, SwipeHorizontalMeasurer} = require('../Controls/list');
 
         const measurer =
             actionAlignment === 'vertical'

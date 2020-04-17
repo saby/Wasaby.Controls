@@ -1,9 +1,9 @@
 import { assert } from 'chai';
 
-import {ItemActionsController} from 'Controls/_display/controllers/ItemActionsController';
+import {ItemActionsController} from 'Controls/_itemActions/ItemActionsController';
 import {showType} from 'Controls/Utils/Toolbar';
 
-describe('Controls/_display/controllers/ItemActionsController', () => {
+describe('Controls/_itemActions/ItemActionsController', () => {
     let itemActionsController: ItemActionsController;
 
     function makeActionsItem() {

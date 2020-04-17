@@ -39,7 +39,7 @@
 export {default as IBind} from './_display/IBind';
 export {default as TreeChildren} from './_display/TreeChildren';
 export {default as Abstract} from './_display/Abstract';
-export {default as Collection, IEditingConfig} from './_display/Collection';
+export {default as Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig} from './_display/Collection';
 export {default as CollectionItem} from './_display/CollectionItem';
 export {default as Enum} from './_display/Enum';
 export {default as Flags} from './_display/Flags';
@@ -68,15 +68,13 @@ export { EditInPlaceController };
 import * as SelectionController from './_display/controllers/Selection';
 export { SelectionController };
 
-export {ItemActionsController, TItemActionVisibilityCallback, IItemActionsItem, IItemActionsCollection, TActionClickCallback, IItemActionsContainer} from './_display/controllers/ItemActionsController';
-
 import * as VirtualScrollController from './_display/controllers/VirtualScroll';
 export { VirtualScrollController };
 
 import * as VirtualScrollHideController from './_display/controllers/VirtualScrollHide';
 export { VirtualScrollHideController };
 
-export { ICollectionCommand } from './_display/interface';
+export { ICollectionCommand, IBaseCollection, TItemKey } from './_display/interface';
 
 import * as MarkerCommands from './_display/commands/Marker';
 export { MarkerCommands };
