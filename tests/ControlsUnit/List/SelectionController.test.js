@@ -203,6 +203,19 @@ define([
             assert.deepEqual(instance._multiselection.selectedKeys, newCfg.selectedKeys);
             assert.deepEqual(instance._multiselection.excludedKeys, newCfg.excludedKeys);
             assert.isFalse(instance._resetSelection);
+
+            newCfg.root = 1;
+            instance._options.listModel.getRoot = () => {
+               return {
+                  getContents: function() {
+                     return 4;
+                  }
+               };
+            };
+            instance._multiselection.selectedKeys = [4];
+            instance._multiselection.excludedKeys = [];
+            instance._beforeUpdate(newCfg);
+            assert.isFalse(instance._resetSelection);
          });
       });
 

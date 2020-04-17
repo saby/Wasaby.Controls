@@ -22,6 +22,7 @@ export default interface IDropdownSource {
  * @property {String} [item.iconStyle] Определяет цвет иконки элемента.{@link Controls/_interface/IIconStyle#iconStyle Подробнее}
  * @property {String} [item.icon] Определяет иконку элемента. {@link Controls/_interface/IIcon#icon Подробнее}
  * @property {String} [item.title] Определеяет текст элемента.
+ * @property {String} [item.tooltip] Определеяет текст всплывающей подсказки, появляющейся при наведении на элемент, если он отличается от title.
  *
  */
 
