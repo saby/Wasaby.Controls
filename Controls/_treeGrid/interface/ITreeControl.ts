@@ -255,6 +255,19 @@
  */
 
 /**
+ * @name Controls/_treeGrid/interface/ITreeControl#expanderSize
+ * @cfg {String} Размер области, который отведён под иконку узла или скрытого узла.
+ * @variant s
+ * @variant m
+ * @variant l
+ * @variant xl
+ * @default s
+ * @remark
+ * Если установлена опция на Controls.treeGrid:View, не требуется устанавливать ее на Controls.treeGrid:ItemTemplate.
+ * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
+ */
+
+/**
  * @event Controls/_treeGrid/interface/ITreeControl#itemExpanded Происходит после развертывания узла.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Развёрнутый узел.
