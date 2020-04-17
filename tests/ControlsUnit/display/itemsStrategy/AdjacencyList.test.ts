@@ -102,6 +102,47 @@ describe('Controls/_display/itemsStrategy/AdjacencyList', () => {
             assert.strictEqual(strategy.items.length, items.length);
         });
 
+        it('should return unique children instances with the same contents for repeat nodes', () => {
+            const rootNode1 = {id: 1, pid: null};
+            const rootNode2 = {id: 2, pid: null};
+            const innerNode = {id: 3, pid: rootNode1.id};
+            const innerNodeDuplicate = {id: 3, pid: rootNode2.id};
+            const leaf1 = {id: 21, pid: innerNode.id};
+            const leaf2 = {id: 32, pid: innerNode.id};
+            const items = [
+                rootNode1,
+                rootNode2,
+                innerNode,
+                innerNodeDuplicate,
+                leaf1,
+                leaf2
+            ];
+            const source = getSource(items, null);
+            const strategy = new AdjacencyList({
+                source,
+                keyProperty: 'id',
+                parentProperty: 'pid'
+            });
+
+            const treeItems = strategy.items;
+            const expectedContents = [
+                rootNode1,
+                    innerNode,
+                        leaf1,
+                        leaf2,
+                rootNode2,
+                    innerNodeDuplicate,
+                        leaf1,
+                        leaf2
+            ];
+
+            treeItems.forEach((item, index) => {
+                assert.strictEqual(item.getContents(), expectedContents[index], `at ${index}`);
+                assert.strictEqual(treeItems.indexOf(item), index, 'items shouldn\'t repeat');
+            });
+            assert.strictEqual(treeItems.length, expectedContents.length);
+        });
+
         it('should keep groups order', () => {
             const items = [
                 new GroupItem({contents: 'a'}),
