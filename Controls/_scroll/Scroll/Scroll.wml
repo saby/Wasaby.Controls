@@ -23,7 +23,6 @@
                  on:scroll="_scrollHandler()">
                <ws:partial template="{{_options.content}}"
                            scope="{{_options}}"
-                           fixedHeadersHeights="{{_headersHeight.top}}"
                            attr:class="controls-Scroll__userContent"
                            on:saveScrollPosition="_saveScrollPosition()"
                            on:scrollToElement="_scrollToElement()"

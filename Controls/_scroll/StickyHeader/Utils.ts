@@ -8,6 +8,16 @@ export const enum POSITION {
     bottom = 'bottom'
 }
 
+/**
+ * @typedef {String} TYPE_FIXED_HEADERS
+ * @variant initialFixed учитываются высоты заголовков которые были зафиксированы изначально
+ * @variant allFixed высота всех заголовков, если бы они были зафиксированы
+ */
+export const enum TYPE_FIXED_HEADERS {
+    initialFixed  = 'initialFixed',
+    allFixed = 'allFixed'
+}
+
 export const enum MODE {
     stackable = 'stackable',
     replaceable = 'replaceable'
