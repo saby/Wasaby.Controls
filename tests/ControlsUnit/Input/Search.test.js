@@ -27,17 +27,16 @@ define(
                };
 
                search._options.readOnly = true;
-               search._searchClick();
+               search._searchClick({});
                assert.isFalse(searched);
                assert.isFalse(activated);
 
                search._options.readOnly = false;
-               search._searchClick();
-               assert.isTrue(searched);
+               search._searchClick({});
                assert.isTrue(activated);
 
                searched = activated = false;
-               search._searchClick();
+               search._searchClick({});
                assert.isFalse(searched);
                assert.isTrue(activated);
 
