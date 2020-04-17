@@ -33,7 +33,7 @@ define('Controls-demo/Popup/PopupPage',
          },
          openStickyInScroll: function () {
             this._children.stickyInScroll.open({
-               target: this._children.stickyInScrollButton,
+               target: this._children.scrollContainer,
                opener: this._children.stickyInScrollButton,
                templateOptions: {
                   template: 'Controls-demo/Popup/TestDialog',

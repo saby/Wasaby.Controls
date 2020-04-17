@@ -126,14 +126,13 @@
    </div>
    <Controls.scroll:Container attr:class="ControlsDemo-PopupPage__external-scroll-container">
       <p>scroll</p>
-      <Controls.scroll:Container  attr:class="ControlsDemo-PopupPage__internal-scroll-container">
+      <Controls.scroll:Container attr:class="ControlsDemo-PopupPage__internal-scroll-container" name="scrollContainer">
          <Controls.popup:Sticky name="stickyInScroll"
                                 onResult="{{_onResult}}"
                                 actionOnScroll="close"
                                 template="Controls-demo/Popup/TestDialog"
          >
             <ws:direction vertical="bottom" horizontal="left"/>
-            <ws:targetPoint vertical="bottom" horizontal="left"/>
          </Controls.popup:Sticky>
       </Controls.scroll:Container>
    </Controls.scroll:Container>
