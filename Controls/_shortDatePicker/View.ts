@@ -68,8 +68,9 @@ var _private = {
         }
     }
 };
-
-const ONLY_YEARS_ELEMENTS_VISIBLE = 5;
+//В режиме 'Только года' одновременно отобржается 5 элементов.
+//Таким образом последний отображаемый элемент имеет индекс 4.
+const ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX = 4;
 
 var Component = BaseControl.extend({
     _template: componentTmpl,
@@ -142,32 +143,57 @@ var Component = BaseControl.extend({
         }
     },
 
-    _canBeDisplayed: function (year) {
+    _hitsDiplayedRange: function (year, index) {
+        const date = new Date(year, 0);
+        //Проверяем второй элемент массива на null. Если задан null в опции displayedRanges
+        //то лента будет отображаться бесконечно.
+        return this._displayedRanges[index][0] <= date &&
+            (this._displayedRanges[index][1] === null || this._displayedRanges[index][1] >= date);
+    },
+
+    _getDisplayedYear: function (year, delta) {
         if (!this._displayedRanges) {
-            return true;
+            return year + delta;
         }
+        let index;
+        //Ищем массив в котором находится year.
         for (let i = 0; i < this._displayedRanges.length; i++) {
-            if (this._displayedRanges[i][0].getFullYear() <= year &&
-                this._displayedRanges[i][1].getFullYear() >= year) {
-                return true;
+            if (this._hitsDiplayedRange(year, i)) {
+                index = i;
+                break;
             }
         }
-        return false;
+        //Проверяем год, на который переходим. Если оне не попадает в тот же массив что и year - ищем ближайших год на
+        //который можно перейти в следующем массиве
+        if (this._hitsDiplayedRange(year + delta, index)) {
+            return year + delta;
+        } else {
+            if (this._displayedRanges[index + delta]) {
+                if (delta === 1) {
+                    return this._displayedRanges[index + delta][0].getFullYear();
+                } else {
+                    return this._displayedRanges[index + delta][1].getFullYear();
+                }
+            }
+        }
+        return year;
     },
 
     _changeYear : function(event, delta) {
-        const year = this._position.getFullYear() + delta;
-        let checkedYear = year;
+        let year = this._position.getFullYear();
         //_position определяется первым отображаемым годом в списке. Всего у нас отображается
-        //onlyYearsElementsVisible записей. Для перехода на предыдущий элемент, нужно проверить, доступен ли он
-        //для отображения. Для этого выбираем самый нижний элемент
+        //5 записей. Для перехода на предыдущий элемент, нужно проверить, возможно ли это.
+        //Для этого проверям самый нижний элемент списка.
         if (delta === -1 && !this._options.chooseMonths &&
             !this._options.chooseHalfyears && !this._options.chooseQuarters) {
-            checkedYear = this._position.getFullYear() - ONLY_YEARS_ELEMENTS_VISIBLE;
+            //Нижний отображаемый год в списке из 5 элементов.
+            const yearToCheck = year - ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX;
+            //_getDisplayedYear вернет нижний отображаемый год. Нам нужен первый отображаемый год в списке,
+            //для того чтобы установить _position
+            const yearToSet = this._getDisplayedYear(yearToCheck, delta) + ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX;
+            this.setYear(yearToSet);
         }
-        if (this._canBeDisplayed(checkedYear)) {
-            this.setYear(year);
-        }
+        this.setYear(this._getDisplayedYear(year, delta));
     },
 
     _onYearMouseLeave: function () {
