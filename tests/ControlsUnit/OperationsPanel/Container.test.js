@@ -31,12 +31,14 @@ define(['Controls/operations'], function(operations) {
             selectedKeys: []
          });
          assert.deepEqual(containerInstance._selectedKeys, [1]);
+         assert.deepEqual(containerInstance._selectedKeysCount, 0);
 
          containerInstance._beforeUpdate({
             listMarkedKey: 1,
             selectedKeys: [2]
          });
          assert.deepEqual(containerInstance._selectedKeys, [2]);
+         assert.deepEqual(containerInstance._selectedKeysCount, 1);
       });
    });
 });
