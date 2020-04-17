@@ -10,6 +10,7 @@
                    toolbarVisibility="{{true}}">
                <Controls.editableArea:Base
                        bind:value="content.editObject.text1"
+                       attr:class="ControlsDemo-EditableArea__firstExample__editor_wrapper"
                        style="asLink"
                >
                    <ws:editorTemplate>
