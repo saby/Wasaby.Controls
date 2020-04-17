@@ -1,11 +1,20 @@
 <div class="controls-SpoilerView">
-   <Controls._spoiler.Heading attr:class="controls-SpoilerView__heading"
-                              expanded="{{_expanded}}"
-                              captions="{{_options.captions}}"
-                              captionPosition="{{_options.captionPosition}}"
-                              fontSize="{{_options.fontSize}}"
-                              on:expandedChanged="_expandedHandler()"/>
-   <ws:if data="{{_expanded}}">
-      <ws:partial attr:class="controls-SpoilerView__area" template="{{_options.content}}"/>
-   </ws:if>
+    <div class="controls-SpoilerView__header ws-flexbox ws-align-items-baseline">
+        <Controls._spoiler.Heading attr:class="controls-SpoilerView__heading"
+                                   expanded="{{_expanded}}"
+                                   captions="{{_options.captions}}"
+                                   captionPosition="{{_options.captionPosition}}"
+                                   fontSize="{{_options.fontSize}}"
+                                   on:expandedChanged="_expandedHandler()"/>
+        <ws:if data="{{_options.headerContentTemplate}}" >
+            <div class="controls-SpoilerView__header__headerContentTemplate">
+                <ws:partial template="{{_options.headerContentTemplate}}">
+                </ws:partial>
+            </div>
+        </ws:if>
+    </div>
+
+    <ws:if data="{{_expanded}}">
+        <ws:partial attr:class="controls-SpoilerView__area" template="{{_options.content}}"/>
+    </ws:if>
 </div>

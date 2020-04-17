@@ -21,6 +21,7 @@ export interface IViewOptions extends IHeadingOptions {
      * @demo Controls-demo/Spoiler/View/Content/Index
      */
     content: TemplateFunction;
+    headerContentTemplate?: TemplateFunction;
 }
 
 export interface IView extends IHeading {
