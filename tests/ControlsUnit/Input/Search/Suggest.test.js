@@ -63,18 +63,14 @@ define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity
 
          searchSuggest._suggestMarkedKeyChanged(null, 'test');
          searchSuggest._searchClick(null,{
-            nativeEvent: {
-               which: Env.constants.key.enter
-            }
+            which: Env.constants.key.enter
          });
          assert.isFalse(searchClickNotifyed);
          assert.isTrue(searchSuggest._suggestState);
 
          searchSuggest._suggestMarkedKeyChanged(null, null);
-         searchSuggest._searchClick(null,{
-            nativeEvent: {
-               which: 'any'
-            }
+         searchSuggest._searchClick(null, {
+            which: 'any'
          });
          assert.isTrue(searchClickNotifyed);
          assert.isFalse(searchSuggest._suggestState);
