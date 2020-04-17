@@ -109,10 +109,10 @@
    }
 }
 .controls-Tabs__item_align_left_theme_@{themeName} {
-   margin-left: -@border-thickness_tabs;
+   margin-left: -@border-thickness_tabs + @item_offset_tabs;
 }
 .controls-Tabs__item_align_right_theme_@{themeName} {
-   margin-right: -@border-thickness_tabs;
+   margin-right: -@border-thickness_tabs + @item_offset_tabs;
 }
 .controls-Tabs__item_extreme_theme_@{themeName} {
    margin-right:0;
@@ -182,7 +182,4 @@
    top: 0;
    right: 0;
    bottom: 0;
-}
-.controls-Tabs_withOffset_theme_@{themeName} {
-   margin-right: @item_offset-right_tabs;
 }
