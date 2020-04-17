@@ -13,7 +13,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @extends Core/Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
- * @mixes Controls/interface/ISelectorDialog
+ * @mixes Controls/_interface/ISelectorDialog
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
