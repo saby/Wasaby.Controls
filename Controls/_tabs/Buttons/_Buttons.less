@@ -93,13 +93,16 @@
 .ws-is-hover {
    .controls-Tabs__item_state_default_theme_@{themeName}:hover {
       &:after {
-         height: @marker_thickness_tabs;
+         height: @marker_hover_thickness_tabs;
          background: @marker_hover_color_tabs;
+      }
+      .controls-Tabs__item_theme_@{themeName} {
+         color: @unselected_item_hover_text-color_tabs;
       }
    }
 }
 .controls-Tabs__item_state_selected_theme_@{themeName} {
-   font-weight: bold;
+   font-weight: @item_selected_font-weight_tabs;
    font-size: @secondary_item_font-size_tabs;
    &:after {
       z-index: 1;
@@ -179,4 +182,7 @@
    top: 0;
    right: 0;
    bottom: 0;
+}
+.controls-Tabs_withOffset_theme_@{themeName} {
+   margin-right: @item_offset-right_tabs;
 }
