@@ -2686,7 +2686,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onCollectionChanged(event, action, newItems, newItemsIndex, removedItems): void {
         _private.onCollectionChanged(this, action, removedItems);
-    }
+    },
 
     _itemMouseDown(event, itemData, domEvent) {
         let hasDragScrolling = false;
