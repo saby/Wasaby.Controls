@@ -477,9 +477,11 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
       });
 
       describe('_beforeUpdate', function() {
-         var searchController = getSearchController(defaultOptions);
-
-         searchController._beforeMount({}, {dataOptions: defaultOptions});
+         let searchController;
+         beforeEach(() => {
+            searchController = getSearchController(defaultOptions);
+            searchController._beforeMount({}, {dataOptions: defaultOptions});
+         });
 
          it('default options', function() {
             searchMod.Controller._private.getSearchController(searchController);
@@ -539,10 +541,17 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
                canceled = true;
             };
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+            searchController.saveOptions(options);
 
             assert.equal(searchController._inputSearchValue, 'test');
             assert.isTrue(searchStarted);
             assert.isTrue(canceled);
+
+            searchStarted = false;
+            options = {...options};
+            options.searchValue = '';
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+            assert.equal(searchController._searchValue, '');
          });
 
          it('filter is changed', function() {
