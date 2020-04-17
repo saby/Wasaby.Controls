@@ -2,6 +2,7 @@
    display: grid;
    flex-direction: row;
    justify-content: flex-start;
+   padding: 0 @item_offset-horizontal_columns;
 }
 
 .controls-ColumnsView_column {
@@ -15,7 +16,7 @@
    box-sizing: border-box;
    box-shadow: @item_shadow-size_columns @item_shadow-color_columns;
    display: inline-block;
-   margin: @item_offset-horizontal_columns / 2 0;
+   margin: @item_offset-vertical_columns 0;
    overflow: hidden;
    vertical-align: top;
    width: 100%;
