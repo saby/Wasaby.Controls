@@ -124,7 +124,7 @@ define([
          assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
          // создаем новый сорс
-         var oldSourceCtrl = ctrl._sourceController;
+         const oldSourceCtrl = ctrl._sourceController;
 
          source = new sourceLib.Memory({
             keyProperty: 'id',
@@ -146,41 +146,40 @@ define([
             filter: filter2
          };
 
-         // сорс грузит асинхронно
-         setTimeout(function() {
-            assert.equal(ctrl._items, ctrl.getViewModel().getItems());
-            const prevModel = ctrl._listViewModel;
-            ctrl._beforeUpdate(cfg);
-            await ctrl._afterUpdate(cfg);
+         assert.equal(ctrl._items, ctrl.getViewModel().getItems());
+         const prevModel = ctrl._listViewModel;
 
-            // check saving loaded items after new viewModelConstructor
-            // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
-            assert.equal(ctrl._items, ctrl.getViewModel()
-               .getItems());
-            assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
-            assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
-            ctrl.saveOptions(cfg);
-            assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
-            assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
-            assert.equal(prevModel._display, null);
-            assert.isTrue(
-               cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
-               cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
-            );
-            setTimeout(function() {
-               assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-               ctrl._children.listView = {
-                  getItemsContainer: function() {
-                     return {
-                        children: []
-                     };
-                  }
-               };
-               ctrl._afterUpdate({});
-               ctrl._beforeUnmount();
-               done();
+         ctrl._beforeUpdate(cfg);
+         assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
+         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
+         ctrl.saveOptions(cfg);
+
+         // сорс грузит асинхронно
+         ctrl._afterUpdate(cfg).then(() => {
+               // check saving loaded items after new viewModelConstructor
+               // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
+               assert.equal(ctrl._items, ctrl.getViewModel().getItems());
+               assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
+               assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
+               assert.equal(prevModel._display, null);
+               assert.isTrue(
+                  cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
+                  cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
+               );
+               setTimeout(function() {
+                  assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+                  ctrl._children.listView = {
+                     getItemsContainer: function() {
+                        return {
+                           children: []
+                        };
+                     }
+                  };
+                  ctrl._afterUpdate({});
+                  ctrl._beforeUnmount();
+                  done();
+               });
             }, 100);
-         }, 10);
       });
 
       it('beforeMount: right indexes with virtual scroll and receivedState', function() {
@@ -5514,13 +5513,11 @@ define([
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
 
-         let clock = sandbox.useFakeTimers();
-
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.sorting = [{ title: 'ASC' }];
          instance._beforeUpdate(cfgClone);
+         instance.saveOptions(cfgClone);
          await instance._afterUpdate(cfgClone);
-         clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
 
@@ -5529,8 +5526,8 @@ define([
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          instance._beforeUpdate(cfgClone);
+         instance.saveOptions(cfgClone);
          await instance._afterUpdate(cfgClone);
-         clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
       });
