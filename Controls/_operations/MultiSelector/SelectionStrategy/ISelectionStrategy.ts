@@ -1,4 +1,4 @@
-import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection} from 'Controls/interface';
+import { TKeysSelection as TKeys, ISelectionObject as ISelection} from 'Controls/interface';
 import { ISelectionModel } from 'Controls/list';
 import { ITreeSelectionStrategyOptions } from './Tree';
 import { IFlatSelectionStrategyOptions } from './Flat';
@@ -14,7 +14,7 @@ interface ISelectionStrategy {
    toggleAll(selection: ISelection, model: ISelectionModel): void;
    unselectAll(selection: ISelection, model: ISelectionModel): void;
    getCount(selection: ISelection, model: ISelectionModel): number|null;
-   getSelectionForModel(selection: ISelection, model: ISelectionModel, keyProperty: string): Map<TKey, boolean>;
+   getSelectedItems(selection: ISelection, model: ISelectionModel): any[];
    update(options: ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions): void;
 }
 

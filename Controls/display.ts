@@ -65,9 +65,6 @@ export {default as GridColumn} from './_display/GridColumn';
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
 export { EditInPlaceController };
 
-import * as SelectionController from './_display/controllers/Selection';
-export { SelectionController };
-
 import * as ItemActionsController from './_display/controllers/ItemActions';
 export { ItemActionsController };
 

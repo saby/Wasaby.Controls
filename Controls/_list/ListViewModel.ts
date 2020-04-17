@@ -655,6 +655,14 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true);
     },
 
+    setSelectedItems(items: any[], selected: boolean): void {
+        if (selected) {
+            const selectedKeys = {};
+            items.forEach((item) => selectedKeys[item.getId()] = selected);
+            this.updateSelection(selectedKeys);
+        }
+    },
+
     getActiveItem: function() {
         return this._activeItem;
     },

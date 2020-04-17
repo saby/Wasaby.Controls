@@ -1,7 +1,6 @@
 import ISelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/ISelectionStrategy';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
-import { Map } from 'Types/shim';
 
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
@@ -64,26 +63,22 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   getSelectionForModel(selection: ISelection, model: ISelectionModel, keyProperty: string): Map<TKey, boolean> {
-      const selectionResult: Map<TKey, boolean> = new Map();
+   getSelectedItems(selection: ISelection, model: ISelectionModel): any[] {
+      const selectedItems: any[] = [];
       const isAllSelected: boolean = this._isAllSelected(selection);
-      let selectedItemsCount: number = 0;
 
       if (selection.selected.length || selection.excluded.length) {
          getItems(model).forEach((item) => {
-            const itemId: TKey = item.get(keyProperty);
+            const itemId: TKey = item.getId();
             const isSelected = selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId);
 
             if (isSelected) {
-               selectedItemsCount++;
-            }
-            if (isSelected !== false) {
-               selectionResult.set(itemId, isSelected);
+               selectedItems.push(item);
             }
          });
       }
 
-      return selectionResult;
+      return selectedItems;
    }
 
    getCount(selection: ISelection, model: ISelectionModel): number|null {

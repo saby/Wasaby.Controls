@@ -48,10 +48,6 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._nodesSourceControllers = options.nodesSourceControllers;
    }
 
-   setHierarchy(hierarchy: relation.Hierarchy): void {
-      this._hierarchyRelation = hierarchy;
-   }
-
    select(selection: ISelection, keys: TKeys, model: ISelectionModel): void {
       keys.forEach((key) => {
          const item: Record = getItems(model).getRecordById(key);
@@ -173,8 +169,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   getSelectionForModel(selection: ISelection, model: ISelectionModel, keyProperty: string): Map<TKey, boolean> {
-      const selectionResult = new Map();
+   getSelectedItems(selection: ISelection, model: ISelectionModel): any[] {
+      const selectedItems: any[] = [];
       const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, getItems(model));
 
       if (selection.selected.length || selection.excluded.length) {
@@ -195,13 +191,13 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                }
             }
 
-            if (isSelected !== false) {
-               selectionResult.set(item.getId(), isSelected);
+            if (isSelected) {
+               selectedItems.push(item);
             }
          });
       }
 
-      return selectionResult;
+      return selectedItems;
    }
 
    update(options: ITreeSelectionStrategyOptions): void {

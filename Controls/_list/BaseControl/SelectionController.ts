@@ -2,11 +2,9 @@ import Control = require('Core/Control');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import collection = require('Types/collection');
 import { isEqual } from 'Types/object';
-import { SelectionController as Selection } from 'Controls/display';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
 import { ISelectionStrategy, ITreeSelectionStrategyOptions } from 'Controls/operations';
 import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
-import cInstance = require('Core/core-instance');
 import clone = require('Core/core-clone');
 
 /**
@@ -17,9 +15,7 @@ import clone = require('Core/core-clone');
  * @private
  */
 
-type TChangeSelectionType = 'selectAll' | 'unselectAll' | 'toggleAll';
-
-export interface ISelectionModel extends Selection.ISelectionCollection {
+export interface ISelectionModel {
    getHasMoreData(): boolean;
 
    getCount(): number;
@@ -28,7 +24,7 @@ export interface ISelectionModel extends Selection.ISelectionCollection {
 
    getItems(): collection.RecordSet;
 
-   updateSelection(selection: Map<number, boolean>|[number]): void;
+   setSelectedItems(items: any[], selected: boolean): void;
 }
 
 export interface ISelectionControllerOptions {
@@ -37,9 +33,7 @@ export interface ISelectionControllerOptions {
    excludedKeys: TKeys;
    strategy?: ISelectionStrategy;
    strategyOptions?: ITreeSelectionStrategyOptions;
-   keyProperty: string;
    filter: object;
-   root: object;
 
    // callbacks
    notifySelectionKeysChanged: Function;
@@ -49,12 +43,10 @@ export interface ISelectionControllerOptions {
 export class SelectionController {
    private _resetSelection: boolean = false;
    private _model: ISelectionModel;
-   private _keyProperty: string;
    private _selectedKeys: TKeys = [];
    private _excludedKeys: TKeys = [];
    private _strategy: ISelectionStrategy;
    private _filter: object;
-   private _root: object;
 
    private _notifySelectionKeysChanged: Function;
    private _notifySelectedKeysCountChanged: Function;
@@ -68,7 +60,6 @@ export class SelectionController {
 
    constructor(options: ISelectionControllerOptions) {
       this._model = options.model;
-      this._keyProperty = options.keyProperty;
       this._selectedKeys = options.selectedKeys.slice();
       this._excludedKeys = options.excludedKeys.slice();
       this._strategy = options.strategy;
@@ -95,14 +86,13 @@ export class SelectionController {
       const itemsChanged = getItems(options.model) !== getItems(this._model);
       const modelChanged = options.model !== this._model;
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
-      this._keyProperty = options.keyProperty;
       this._strategy.update(options.strategyOptions);
 
       if (modelChanged) {
          this._model = options.model;
       }
 
-      if (this._shouldResetSelection(options.filter, options.root)) {
+      if (this._shouldResetSelection(options.filter)) {
          this._resetSelection = true;
       } else if (selectionChanged) {
          const oldSelection = clone(this._selection);
@@ -187,7 +177,7 @@ export class SelectionController {
    }
 
    private _getRoot(): object | null {
-      return this._model.getRoot && this._model.getRoot()
+      return this._model.getRoot
          ? this._model.getRoot().getContents()
          : null;
    }
@@ -204,26 +194,13 @@ export class SelectionController {
       return keys;
    }
 
-   private _getSelectionForModel(): Map<TKey, boolean> {
-      return this._strategy.getSelectionForModel(this._selection, this._model, this._keyProperty);
+   private _getSelectedItems(): any[] {
+      return this._strategy.getSelectedItems(this._selection, this._model);
    }
 
-   /**
-    * Transforms selection to single array of selectedKeys and set it to model. Used for rendering checkboxes in lists.
-    */
    private _updateSelectionForRender(): void {
-      const selectionForModel: Map<TKey, boolean> = this._getSelectionForModel();
-
-      if (cInstance.instanceOfModule(this._model, 'Controls/display:Collection')) {
-         Selection.selectItems(this._model, selectionForModel);
-      } else {
-         const selectionForOldModel = {};
-
-         selectionForModel.forEach((stateSelection, itemId) => {
-            selectionForOldModel[itemId] = stateSelection;
-         });
-         this._model.updateSelection(selectionForOldModel);
-      }
+      const items = this._getSelectedItems();
+      this._model.setSelectedItems(items, true);
    }
 
    private _isAllSelectedInRoot(root: object): boolean {
@@ -243,12 +220,11 @@ export class SelectionController {
       return !isEqual(selectedKeys, this._selectedKeys) || !isEqual(excludedKeys, this._excludedKeys);
    }
 
-   private _shouldResetSelection(filter: object, root: object): boolean {
+   private _shouldResetSelection(filter: object): boolean {
       const listFilterChanged = !isEqual(this._filter, filter);
-      const rootChanged = this._root !== root;
       const isAllSelected = this._isAllSelectedInRoot(this._getRoot());
 
-      return isAllSelected && (rootChanged || listFilterChanged);
+      return isAllSelected && listFilterChanged;
    }
 
    private _notifyAndUpdateSelection(oldSelection: ISelection, newSelection: ISelection): void {

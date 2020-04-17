@@ -1734,7 +1734,6 @@ const _private = {
             excludedKeys: options.excludedKeys,
             filter: options.filter,
             root: options.root,
-            keyProperty: options.keyProperty,
             strategy,
             notifySelectionKeysChanged: this.notifySelectionKeysChanged.bind(self),
             notifySelectedKeysCountChanged: this.notifySelectedKeysCountChanged.bind(self)
@@ -1748,7 +1747,6 @@ const _private = {
             excludedKeys: newOptions.excludedKeys,
             filter: newOptions.filter,
             root: newOptions.root,
-            keyProperty: self._options.keyProperty,
             strategyOptions: this.getSelectionStrategyOptions(newOptions)
         });
     },
