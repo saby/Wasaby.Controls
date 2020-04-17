@@ -31,13 +31,25 @@ export type TRegisterEventData = {
    mode?: string;
 };
 
-export interface IFixedEventData {
+export type IFixedEventData = {
+   // Id заголовка
    id: number;
+   // Позиция фиксации: сверху или снизу
    fixedPosition: POSITION;
+   // Предыдущая позиция фиксации: сверху или снизу
    prevPosition: POSITION;
+   // Высота заголовка
    offsetHeight: number;
+   // Режим прилипания заголовка
    mode: MODE;
-}
+   // Отображение тени у заголовка
+   shadowVisible: boolean;
+    // Заголовок при прикреплении и откреплении стреляет событием fixed. При прикреплении (откреплении)
+    // предыдущий заголовок по факту не открепляется (прикрепляется), а перекрывается заголовком сверху,
+    // но нужно инициировать событие fixed, чтобы пользовательские контролы могли обработать случившееся.
+    // Флаг устанавливается дабы исключить обработку этого события в StickyHeader/Group и StickyHeader/Controller.
+   isFakeFixed: boolean;
+};
 
 export interface IOffset {
     top: number;

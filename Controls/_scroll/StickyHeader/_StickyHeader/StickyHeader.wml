@@ -8,7 +8,7 @@
    <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal
                {{ !_isShadowVisible('top') ? ' ws-invisible' }}"
          style="{{_topShadowStyle}}"></div>
-   <Controls.event:Listener event="updateStickyShadow" on:updateStickyShadow="_updateStickyShadow()"/>
+   <Controls.event:Listener event="updateFixed" on:updateFixed="_updateFixed()"/>
    <Controls.event:Listener event="updateStickyHeight" on:updateStickyHeight="_updateStickyHeight()"/>
    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop" style="{{_getObserverStyle('top')}}"></div>

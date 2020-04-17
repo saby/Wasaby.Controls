@@ -160,11 +160,15 @@ export default class Group extends Control<IControlOptions> {
         }
 
         if (!!fixedHeaderData.fixedPosition && !this._fixed) {
-            this._fixed = true;
+            if (!fixedHeaderData.isFakeFixed) {
+                this._fixed = true;
+            }
             this._notifyFixed(fixedHeaderData);
         } else if (!fixedHeaderData.fixedPosition && this._fixed &&
                 this._stickyHeadersIds.top.length === 0 && this._stickyHeadersIds.bottom.length === 0) {
-            this._fixed = false;
+            if (!fixedHeaderData.isFakeFixed) {
+                this._fixed = false;
+            }
             this._notifyFixed(fixedHeaderData);
         }
     }
