@@ -2377,48 +2377,6 @@ define([
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
-      it('close edit in place before reload', async function() {
-         let baseControlOptions = {
-            viewModelConstructor: lists.ListViewModel,
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               items: rs,
-               keyProperty: 'id'
-            },
-            viewName: 'Controls/List/ListView',
-            source: source,
-            emptyTemplate: {}
-         };
-
-         let baseControl = new lists.BaseControl(baseControlOptions);
-         baseControl.saveOptions(baseControlOptions);
-
-         await baseControl._beforeMount(baseControlOptions);
-
-         let isEditingCanceled = false;
-
-         baseControl._children = {
-            editInPlace: {
-               cancelEdit() {
-                  isEditingCanceled = true;
-               }
-            }
-         };
-
-         baseControl._listViewModel.getEditingItemData = () => ({});
-
-         await baseControl.reload();
-         assert.isTrue(isEditingCanceled);
-
-         isEditingCanceled = false;
-         baseControl._children = {};
-
-         await baseControl.reload();
-         assert.isFalse(isEditingCanceled);
-      });
-
       it('reload with changing source/navig/filter should call scroll to start', function() {
 
          var
@@ -3440,6 +3398,44 @@ define([
             var result = ctrl.beginAdd(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
+         });
+
+         it('close editing if page has been changed', function() {
+            let isCanceled = false;
+            const fakeCtrl = {
+               _listViewModel: {
+                  getEditingItemData: () => ({})
+               },
+               _options: {},
+               _children: {
+                  editInPlace: {
+                     cancelEdit: function() {
+                        isCanceled = true;
+                     }
+                  }
+               }
+            };
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, null, null);
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, null, {});
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {}, null);
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {}, {});
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {sourceConfig: {}}, {sourceConfig: {}});
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {sourceConfig: {page: 1}}, {sourceConfig: {page: 1}});
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {sourceConfig: {page: 1}}, {sourceConfig: {page: 2}});
+            assert.isTrue(isCanceled);
          });
       });
 
