@@ -1,6 +1,6 @@
 <div class="controls-Tabs controls-Tabs_theme_{{_options.theme}}">
     <ws:for data="index, item in _items">
-        <div attr:class="{{_prepareItemClass(item, index)}}"
+        <div attr:class="{{_prepareItemClass(item, index)}} {{index!==(_items.getCount()-1) ? ' controls-Tabs_withOffset_theme_' + _options.theme}}"
              attr:style="{{_prepareItemOrder(index)}}"
              attr:title="{{ item[_options.displayProperty] }}"
              on:click="_onItemClick(item.get(_options.keyProperty))">
