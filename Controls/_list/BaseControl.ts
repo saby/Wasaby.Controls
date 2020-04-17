@@ -153,13 +153,6 @@ var _private = {
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
         }
 
-        const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
-            self._options.useNewModel ? displayLib.EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
-        );
-        if (isEditing) {
-            self._children.editInPlace.cancelEdit();
-        }
-
         if (self._sourceController) {
             _private.showIndicator(self);
             _private.hideError(self);
@@ -1622,6 +1615,18 @@ var _private = {
     updateNavigation: function(self) {
         self._pagingNavigationVisible = self._pagingNavigation;
     },
+    closeEditingIfPageChanged(self, oldNavigation, newNavigation) {
+        const oldSourceCfg = oldNavigation && oldNavigation.sourceConfig ? oldNavigation.sourceConfig : {};
+        const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
+        if (oldSourceCfg.page !== newSourceCfg.page) {
+            const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
+                self._options.useNewModel ? displayLib.EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
+            );
+            if (isEditing) {
+                self._children.editInPlace.cancelEdit();
+            }
+        }
+    },
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
     },
@@ -2105,6 +2110,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
+
+            // При смене страницы, должно закрыться редактирование записи.
+            _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
         }
         _private.updateNavigation(this);
