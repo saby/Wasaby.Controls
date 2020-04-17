@@ -4006,7 +4006,7 @@ define([
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
-         it('_onItemContextMenu', function() {
+         it('_onItemContextMenu', async () => {
             var callBackCount = 0;
             var cfg = {
                   items: new collection.RecordSet({
@@ -4056,7 +4056,7 @@ define([
                   }
                },
                itemData = {
-                  key: 1
+                  key: 2
                };
             instance._children = {
                itemActionsOpener: {
@@ -4067,10 +4067,10 @@ define([
             };
 
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
-            assert.equal(instance.getViewModel()._markedKey, undefined);
-            instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
+            await instance._beforeMount(cfg);
             assert.equal(instance.getViewModel()._markedKey, 1);
+            instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
+            assert.equal(instance.getViewModel()._markedKey, 2);
             assert.equal(callBackCount, 0);
          });
 
