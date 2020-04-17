@@ -1,5 +1,7 @@
-import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection} from 'Controls/interface/';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection} from 'Controls/interface';
 import { ISelectionModel } from 'Controls/list';
+import { ITreeSelectionStrategyOptions } from './Tree';
+import { IFlatSelectionStrategyOptions } from './Flat';
 
 /**
  * Интерфейс базового класс стратегий выбора
@@ -8,11 +10,12 @@ import { ISelectionModel } from 'Controls/list';
 interface ISelectionStrategy {
    select(selection: ISelection, keys: TKeys, model: ISelectionModel): void;
    unselect(selection: ISelection, keys: TKeys, model: ISelectionModel): void;
-   selectAll(selection: ISelection, model: ISelectionModel, limit: number): void;
-   toggleAll(selection: ISelection, model: ISelectionModel, limit: number): void;
+   selectAll(selection: ISelection, model: ISelectionModel): void;
+   toggleAll(selection: ISelection, model: ISelectionModel): void;
    unselectAll(selection: ISelection, model: ISelectionModel): void;
-   getCount(selection: ISelection, model: ISelectionModel, limit: number): number|null;
-   getSelectionForModel(selection: ISelection, model: ISelectionModel, limit: number, keyProperty: string): Map<TKey, boolean>;
+   getCount(selection: ISelection, model: ISelectionModel): number|null;
+   getSelectionForModel(selection: ISelection, model: ISelectionModel, keyProperty: string): Map<TKey, boolean>;
+   update(options: ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions): void;
 }
 
 export default ISelectionStrategy;

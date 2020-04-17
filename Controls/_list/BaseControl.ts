@@ -38,7 +38,13 @@ import {IItemAction} from './interface/IList';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {IHashMap} from 'Types/declarations';
 import { SelectionController } from 'Controls/_list/BaseControl/SelectionController';
-import { FlatSelectionStrategy, TreeSelectionStrategy, ISelectionStrategy } from 'Controls/operations';
+import {
+    FlatSelectionStrategy,
+    TreeSelectionStrategy,
+    ISelectionStrategy,
+    ITreeSelectionStrategyOptions,
+    IFlatSelectionStrategyOptions
+} from 'Controls/operations';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 // Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -222,6 +228,9 @@ const _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
+
+                    self._items.unsubscribe('onCollectionChange', self._onCollectionChanged);
+                    self._items.subscribe('onCollectionChange', self._onCollectionChanged);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -1409,6 +1418,8 @@ const _private = {
     bindHandlers(self) {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
         self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
+        self._onCollectionChanged = self._onCollectionChanged.bind(self);
+        this.onSelectedTypeChanged = this.onSelectedTypeChanged.bind(self);
     },
 
     groupsExpandChangeHandler(self, changes) {
@@ -1731,11 +1742,6 @@ const _private = {
     },
 
     updateSelectionController(self: any, newOptions: any): void {
-        let strategy;
-        if (newOptions.parentProperty) {
-            strategy = this.createSelectionStrategy(newOptions);
-        }
-
         self._selectionController.update({
             model: self._listViewModel,
             selectedKeys: newOptions.selectedKeys,
@@ -1743,13 +1749,22 @@ const _private = {
             filter: newOptions.filter,
             root: newOptions.root,
             keyProperty: self._options.keyProperty,
-            strategy
+            strategyOptions: this.getSelectionStrategyOptions(newOptions)
         });
     },
 
     createSelectionStrategy(options: any): ISelectionStrategy {
+        const strategyOptions = this.getSelectionStrategyOptions(options);
         if (options.parentProperty) {
-            return new TreeSelectionStrategy({
+            return new TreeSelectionStrategy(strategyOptions);
+        } else {
+            return new FlatSelectionStrategy();
+        }
+    },
+
+    getSelectionStrategyOptions(options: any): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+        if (options.parentProperty) {
+            return {
                 nodesSourceControllers: options.nodesSourceControllers,
                 selectDescendants: options.selectDescendants,
                 selectAncestors: options.selectAncestors,
@@ -1759,11 +1774,9 @@ const _private = {
                     nodeProperty: options.nodeProperty || 'Раздел@',
                     declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
                 })
-            });
-        } else {
-            return new FlatSelectionStrategy();
+            };
         }
-    }
+    },
 
     notifySelectionKeysChanged(eventName: string, keys: [], addedKeys: [], removedKeys: []): void {
         this._notify(eventName, [keys, addedKeys, removedKeys]);
@@ -1771,6 +1784,31 @@ const _private = {
 
     notifySelectedKeysCountChanged(count: number, isAllSelected: boolean): void {
         this._notify('listSelectedKeysCountChanged', [count, isAllSelected], {bubbling: true});
+    },
+
+    onCollectionChanged(self: any, action: string, removedItems: []): void {
+        switch (action) {
+            case IObservable.ACTION_REMOVE:
+                self._selectionController.removeKeys(removedItems);
+                break;
+            case IObservable.ACTION_RESET:
+                self._selectionController.reset();
+                break;
+        }
+    },
+
+    onSelectedTypeChanged(typeName: string): void {
+        switch (typeName) {
+            case 'selectAll':
+                this._selectionController.selectAll();
+                break;
+            case 'unselectAll':
+                this._selectionController.toggleAll();
+                break;
+            case 'toggleAll':
+                this._selectionController.toggleAll();
+                break;
+        }
     }
 };
 
@@ -2131,7 +2169,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._loadedItems = null;
 
-        this._notify('register', ['selectedTypeChanged', this, this._selectionController.handleAllItems], {bubbling: true});
+        this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
     },
 
@@ -2325,10 +2363,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._sourceController) {
             this._sourceController.destroy();
-        }
-
-        if (this._selectionController) {
-            this._selectionController.clear();
         }
 
         if (this._groupingLoader) {
@@ -2649,6 +2683,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _actionsMenuResultHandler(args): void {
         _private.actionsMenuResultHandler(this, args);
     },
+
+    _onCollectionChanged(event, action, newItems, newItemsIndex, removedItems): void {
+        _private.onCollectionChanged(this, action, removedItems);
+    }
 
     _itemMouseDown(event, itemData, domEvent) {
         let hasDragScrolling = false;

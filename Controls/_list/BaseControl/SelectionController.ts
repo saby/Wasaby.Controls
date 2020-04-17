@@ -4,7 +4,7 @@ import collection = require('Types/collection');
 import { isEqual } from 'Types/object';
 import { SelectionController as Selection } from 'Controls/display';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
-import { ISelectionStrategy, TreeSelectionStrategy } from 'Controls/operations';
+import { ISelectionStrategy, ITreeSelectionStrategyOptions } from 'Controls/operations';
 import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
 import cInstance = require('Core/core-instance');
 import clone = require('Core/core-clone');
@@ -35,7 +35,8 @@ export interface ISelectionControllerOptions {
    model: ISelectionModel;
    selectedKeys: TKeys;
    excludedKeys: TKeys;
-   strategy: ISelectionStrategy;
+   strategy?: ISelectionStrategy;
+   strategyOptions?: ITreeSelectionStrategyOptions;
    keyProperty: string;
    filter: object;
    root: object;
@@ -51,7 +52,6 @@ export class SelectionController {
    private _keyProperty: string;
    private _selectedKeys: TKeys = [];
    private _excludedKeys: TKeys = [];
-   private _limit: number = 0;
    private _strategy: ISelectionStrategy;
    private _filter: object;
    private _root: object;
@@ -78,9 +78,6 @@ export class SelectionController {
 
       this._updateSelectionForRender();
       this._notifySelectedCountChangedEvent(options.selectedKeys, options.excludedKeys);
-
-      this._onCollectionChange = this._onCollectionChange.bind(this);
-      getItems(this._model).subscribe('onCollectionChange', this._onCollectionChange);
    }
 
    toggleItem(key: TKey): void {
@@ -99,18 +96,10 @@ export class SelectionController {
       const modelChanged = options.model !== this._model;
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._keyProperty = options.keyProperty;
-
-      if (itemsChanged) {
-         getItems(this._model).unsubscribe('onCollectionChange', this._onCollectionChange);
-         getItems(options.model).subscribe('onCollectionChange', this._onCollectionChange);
-      }
+      this._strategy.update(options.strategyOptions);
 
       if (modelChanged) {
          this._model = options.model;
-      }
-
-      if (this._strategy instanceof TreeSelectionStrategy) {
-         this._strategy = options.strategy;
       }
 
       if (this._shouldResetSelection(options.filter, options.root)) {
@@ -125,35 +114,57 @@ export class SelectionController {
       }
    }
 
-   clear(): void {
-      this._clearSelection();
-      // this._notify('listSelectedKeysCountChanged', [0], {bubbling: true});
-      this._strategy = null;
-      getItems(this._model).unsubscribe('onCollectionChange', this._onCollectionChange);
-      this._onCollectionChange = null;
+   selectAll(): void {
+      const items = getItems(this._model);
+      if (this._selectedKeys.length && this._excludedKeys.length && items.getCount()) {
+         const oldSelection = clone(this._selection);
+         this._strategy.selectAll(this._selection, this._model);
+         this._notifyAndUpdateSelection(oldSelection, this._selection);
+      }
    }
 
-   handleAllItems(typeName: TChangeSelectionType, limit?: number): void {
-      const items = getItems(this._model);
-      let needChangeSelection = true;
+   toggleAll(): void {
+      const oldSelection = clone(this._selection);
+      this._strategy.toggleAll(this._selection, this._model);
+      this._notifyAndUpdateSelection(oldSelection, this._selection);
+   }
 
-      if (typeName === 'selectAll' && !this._selectedKeys.length && !this._excludedKeys.length && !items.getCount()) {
-         needChangeSelection = false;
-      }
+   unselectAll(): void {
+      const oldSelection = clone(this._selection);
+      this._strategy.unselectAll(this._selection, this._model);
+      this._notifyAndUpdateSelection(oldSelection, this._selection);
+   }
 
-      if (needChangeSelection) {
+   removeKeys(removedItems: []): void {
+      // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
+      // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
+      if (getItems(this._model)) {
          const oldSelection = clone(this._selection);
-         this._limit = limit;
-         this._strategy[typeName](this._selection, this._model, limit);
+         this._remove(this._getItemsKeys(removedItems));
+         this._notifyAndUpdateSelection(oldSelection, this._selection);
+      }
+   }
+
+   reset(): void {
+      // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
+      // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
+      if (getItems(this._model)) {
+         const oldSelection = clone(this._selection);
+         const countItems = getItems(this._model).getCount();
+
+         // Выделение надо сбросить только после вставки новых данных в модель
+         // Это необходимо, чтобы чекбоксы сбросились только после отрисовки новых данных,
+         // Иначе при проваливании в узел или при смене фильтрации сначала сбросятся чекбоксы,
+         // а данные отрисуются только после загрузки
+         if (this._resetSelection || !countItems) {
+            this._resetSelection = false;
+            this._clearSelection();
+         }
          this._notifyAndUpdateSelection(oldSelection, this._selection);
       }
    }
 
    private _select(keys: TKeys): void {
-      if (this._limit && keys.length === 1 && !this._excludedKeys.includes(keys[0])) {
-         this._increaseLimit(keys.slice());
-      }
-
       this._strategy.select(this._selection, keys, this._model);
    }
 
@@ -171,35 +182,6 @@ export class SelectionController {
       this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
    }
 
-   /**
-    * Increases the limit on the number of selected items, placing all other unselected in excluded list
-    * Увеличивает лимит на количество выбранных записей, все предыдущие невыбранные записи при этом попадают в исключение
-    * @param {Array} keys
-    * @private
-    */
-   private _increaseLimit(keys: TKeys): void {
-      const limit: number = this._limit ? this._limit - this._excludedKeys.length : 0;
-      const selectionForModel: Map<TKey, boolean> = this._getSelectionForModel();
-      let selectedItemsCount: number = 0;
-
-      getItems(this._model).forEach((item) => {
-         const key: TKey = item.get(this._keyProperty);
-
-         if (selectedItemsCount < limit && selectionForModel.get(key) !== false) {
-            selectedItemsCount++;
-         } else if (selectedItemsCount >= limit && keys.length) {
-            selectedItemsCount++;
-            this._limit++;
-
-            if (keys.includes(key)) {
-               keys.splice(keys.indexOf(key), 1);
-            } else {
-               this._excludedKeys.push(key);
-            }
-         }
-      });
-   }
-
    private _getItemStatus(key: TKey): boolean {
       return this._selectedKeys.includes(key) && !this._excludedKeys.includes(key);
    }
@@ -211,7 +193,7 @@ export class SelectionController {
    }
 
    private _getCount(selection?: ISelection): number | null {
-      return this._strategy.getCount(selection || this._selection, this._model, this._limit);
+      return this._strategy.getCount(selection || this._selection, this._model);
    }
 
    private _getItemsKeys(items: TKeys): TKeys {
@@ -223,7 +205,7 @@ export class SelectionController {
    }
 
    private _getSelectionForModel(): Map<TKey, boolean> {
-      return this._strategy.getSelectionForModel(this._selection, this._model, this._limit, this._keyProperty);
+      return this._strategy.getSelectionForModel(this._selection, this._model, this._keyProperty);
    }
 
    /**
@@ -296,26 +278,5 @@ export class SelectionController {
       const count = this._getCount();
       const isAllSelected = this._isAllSelected(selectedKeys, excludedKeys);
       this._notifySelectedKeysCountChanged(count, isAllSelected);
-   }
-
-   private _onCollectionChange(action: string, newItems: [], newItemsIndex: number, removedItems: []): void {
-      // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
-      // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
-      if (getItems(this._model)) {
-         const oldSelection = clone(this._selection);
-         const countItems = getItems(this._model).getCount();
-         if (action === collection.IObservable.ACTION_REMOVE) {
-            this._remove(this._getItemsKeys(removedItems));
-         }
-         // Выделение надо сбросить только после вставки новых данных в модель
-         // Это необходимо, чтобы чекбоксы сбросились только после отрисовки новых данных,
-         // Иначе при проваливании в узел или при смене фильтрации сначала сбросятся чекбоксы,
-         // а данные отрисуются только после загрузки
-         if (this._resetSelection && action === collection.IObservable.ACTION_RESET || !countItems) {
-            this._resetSelection = false;
-            this._clearSelection();
-         }
-         this._notifyAndUpdateSelection(oldSelection, this._selection);
-      }
    }
 }
