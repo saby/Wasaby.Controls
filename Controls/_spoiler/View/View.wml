@@ -5,6 +5,7 @@
                                    captions="{{_options.captions}}"
                                    captionPosition="{{_options.captionPosition}}"
                                    fontSize="{{_options.fontSize}}"
+                                   tooltip="{{_options.tooltip}}"
                                    on:expandedChanged="_expandedHandler()"/>
         <ws:if data="{{_options.headerContentTemplate}}" >
             <div class="controls-SpoilerView__header__headerContentTemplate">
