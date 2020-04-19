@@ -14,4 +14,14 @@
  * @author Аверкиев П.А.
  */
 
-export {ItemActionsController, TItemActionVisibilityCallback, IItemActionsItem, IItemActionsCollection, TActionClickCallback, IItemActionsContainer} from './_itemActions/ItemActionsController';
+export {
+    TItemActionVisibilityCallback,
+    IItemActionsItem,
+    IItemActionsCollection,
+    TActionClickCallback,
+    IItemActionsContainer,
+    IDropdownActionHandler,
+    IDropdownConfig,
+    IItemAction
+} from './_itemActions/interface/IItemActions';
+export {ItemActionsController} from './_itemActions/ItemActionsController';

@@ -108,11 +108,11 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     protected _mouseEnterHandler(): void {
-        this._assignItemActions(this._listModel, this._options);
+        this._updateItemActions(this._listModel, this._options);
     }
 
     protected _touchStartHandler(): void {
-        this._assignItemActions(this._listModel, this._options);
+        this._updateItemActions(this._listModel, this._options);
     }
 
     private _mouseOutHandler(event: SyntheticEvent<MouseEvent>): void {
@@ -448,7 +448,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
 
         if (options.itemActions) {
-            this._assignItemActions(listModel, options);
+            this._updateItemActions(listModel, options);
         }
 
         if (options.groupProperty) {
@@ -598,7 +598,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         return source;
     }
 
-    private _assignItemActions(listModel: Tree<Model>, options: IMenuControlOptions): void {
+    private _updateItemActions(listModel: Tree<Model>, options: IMenuControlOptions): void {
         const itemActions = options.itemActions;
 
         if (!itemActions) {
@@ -606,20 +606,16 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
 
         if (!this._itemActionsController) {
-            this._itemActionsController = new ItemActionsController(listModel);
+            this._itemActionsController = new ItemActionsController();
         }
-        this._itemActionsController.init({
+        this._itemActionsController.update({
+            collection: listModel,
             itemActions,
             itemActionsPosition: 'inside',
             style: 'default',
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
             itemActionsClass: 'controls-Menu__itemActions_position_rightCenter_theme-' + options.theme
-        });
-
-        this._itemActionsController.assignActions({
-            collection: this._listModel,
-
         });
     }
 

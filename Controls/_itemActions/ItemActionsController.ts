@@ -1,8 +1,18 @@
-import {IBaseCollection, TItemKey, IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig} from 'Controls/display';
+import {TItemKey, ISwipeConfig} from 'Controls/display';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
 import { isEqual } from 'Types/object';
+import {
+    IItemActionsCollection,
+    TItemActionVisibilityCallback,
+    IItemActionsControllerOptions,
+    IItemActionsItem,
+    IItemActionsTemplateOptions,
+    IItemActionsContainer,
+    IDropdownTemplateOptions,
+    IDropdownConfig,
+    IItemAction
+} from './interafce/IItemActions';
 
 // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
 const showType = {
@@ -11,80 +21,6 @@ const showType = {
     TOOLBAR: 2
 };
 
-// TODO Написать реальный тип для action'ов
-type TItemAction = any;
-
-export type TActionClickCallback = (clickEvent: SyntheticEvent<MouseEvent>, action: TItemAction, contents: Model) => void;
-
-export type TItemActionVisibilityCallback = (
-    action: TItemAction,
-    item: unknown
-) => boolean;
-
-export interface IItemActionsContainer {
-    all: TItemAction[];
-    showed: TItemAction[];
-}
-
-export interface IItemActionsTemplateOptions {
-    style?: string;
-    itemActionsPosition: string;
-    actionAlignment?: string;
-    actionCaptionPosition: 'right'|'bottom'|'none';
-    itemActionsClass?: string;
-    actionClickCallback?: TActionClickCallback;
-}
-
-export interface IItemActionsItem {
-    getActions(): IItemActionsContainer;
-    getContents(): Model;
-    setActions(actions: IItemActionsContainer): void;
-    setActive(active: boolean): void;
-    isActive(): boolean;
-    setSwiped(swiped: boolean): void;
-    isSwiped(): boolean;
-}
-
-export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
-    destroyed: boolean;
-    each(cb: (item: IItemActionsItem) => void): void;
-    setEventRaising?(raising: boolean, analyze?: boolean): void;
-    areActionsAssigned(): boolean;
-    setActionsAssigned(assigned: boolean): void;
-    setActionsMenuConfig(config: any): void;
-    getActionsMenuConfig(): any;
-    getContextMenuConfig(): any;
-    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void;
-    getActionsTemplateConfig(): IItemActionsTemplateConfig;
-    setSwipeConfig(config: ISwipeConfig): void;
-    getSwipeConfig(): ISwipeConfig;
-    getEditingConfig(): IEditingConfig;
-}
-
-export interface IItemActionsControllerOptions {
-    /**
-     * Коллекция элементов, содержащих операции с записью
-     */
-    collection: IItemActionsCollection;
-    /**
-     * Действия с записью
-     */
-    itemActions: TItemAction[];
-    /**
-     * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
-     */
-    itemActionsProperty?: string;
-    /**
-     * Callback для определения видимости операции
-     */
-    visibilityCallback?: TItemActionVisibilityCallback;
-    itemActionsPosition?: string;
-    style?: string;
-    itemActionsClass?: string;
-    actionAlignment?: string;
-    actionCaptionPosition?: 'right'|'bottom'|'none';
-}
-
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
 
 /**
@@ -92,28 +28,24 @@ const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
  * @Author Пуханов В, Аверкиев П.А
  */
 export class ItemActionsController {
-    private readonly _collection: IItemActionsCollection;
-    private _commonItemActions: TItemAction[];
+    private _collection: IItemActionsCollection;
+    private _commonItemActions: IItemAction[];
     private _itemActionsProperty?: string;
     private _visibilityCallback?: TItemActionVisibilityCallback;
 
-    constructor(collection: IItemActionsCollection) {
-        this._collection = collection;
-    }
-
-    init(options: IItemActionsControllerOptions): boolean {
-        let hasChanges = false;
+    update(options: IItemActionsControllerOptions): void {
         if (!isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
             this._visibilityCallback !== options.visibilityCallback
         ) {
+            this._collection = options.collection;
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
             this._visibilityCallback = options.visibilityCallback;
             this._collection.setActionsAssigned(false);
         }
         if (!this._collection.areActionsAssigned()) {
-            hasChanges = this._assignActions();
+            this._assignActions();
             this._calculateActionsTemplateConfig({
                 itemActionsPosition: options.itemActionsPosition,
                 style: options.style,
@@ -122,7 +54,6 @@ export class ItemActionsController {
                 itemActionsClass: options.itemActionsClass
             });
         }
-        return hasChanges;
     }
 
     /**
@@ -147,7 +78,7 @@ export class ItemActionsController {
         collection: IItemActionsCollection,
         key: TItemKey
     ): void {
-        const oldActiveItem = this._getActiveItem(this._collection);
+        const oldActiveItem = this.getActiveItem();
         const newActiveItem = this._collection.getItemBySourceKey(key);
 
         if (oldActiveItem) {
@@ -168,8 +99,8 @@ export class ItemActionsController {
      */
     getChildActions(
         item: IItemActionsItem,
-        parentActionKey: TItemAction
-    ): TItemAction[] {
+        parentActionKey: IItemAction
+    ): IItemAction[] {
         const actions = item.getActions();
         const allActions = actions && actions.all;
         if (allActions) {
@@ -179,66 +110,18 @@ export class ItemActionsController {
     }
 
     /**
-     * Обработка клика по операции записи
-     * @param collection Коллекция элементов, содержащих операции с записью
-     * @param itemKey Ключ элемента коллекции, для которого выполняется действие
-     * @param action Операция с записью
-     * @param clickEvent событие клика
-     * @param fromDropdown флаг, определяющий, произошёл ли клик в выпадающем меню
-     * @param actionClickCallback callback-функция, выполняемая после клика
-     */
-    processActionClick(
-        collection: IItemActionsCollection,
-        itemKey: TItemKey,
-        action: TItemAction,
-        clickEvent: SyntheticEvent<MouseEvent>,
-        fromDropdown: boolean,
-        actionClickCallback: TActionClickCallback
-    ): void {
-        clickEvent.stopPropagation();
-        if (action._isMenu) {
-            this.prepareActionsMenuConfig(this._collection, itemKey, clickEvent, null, false, actionClickCallback);
-        } else if (action['parent@']) {
-            if (!fromDropdown) {
-                this.prepareActionsMenuConfig(this._collection, itemKey, clickEvent, action, false, actionClickCallback);
-            }
-        } else {
-            const item = this._collection.getItemBySourceKey(itemKey);
-            if (item) {
-                const contents = item.getContents();
-
-                // How to calculate itemContainer?
-                // this._notify('actionClick', [action, contents, itemContainer]);
-                if (actionClickCallback) {
-                    actionClickCallback(clickEvent, action, contents);
-                }
-
-                if (action.handler) {
-                    action.handler(contents);
-                }
-            }
-        }
-        // TODO update some item actions
-        // TODO move the marker
-    }
-
-    /**
      * Собирает конфиг выпадающего меню операций
-     * @param collection Коллекция элементов, содержащих операции над записью
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
      * @param clickEvent событие клика
      * @param parentAction Родительская операция с записью
-     * @param isContext Флаг, указывающий на то, что расчёты производятся для контекстного меню
-     * @param actionClickCallback
+     * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
      */
     prepareActionsMenuConfig(
-        collection: IItemActionsCollection,
         itemKey: TItemKey,
         clickEvent: SyntheticEvent<MouseEvent>,
-        parentAction: TItemAction,
-        isContext: boolean,
-        actionClickCallback: TActionClickCallback
-    ): void {
+        parentAction: IItemAction,
+        isContextMenu: boolean
+    ): IDropdownConfig {
         const item = this._collection.getItemBySourceKey(itemKey);
         if (!item) {
             return;
@@ -249,59 +132,52 @@ export class ItemActionsController {
             ? this.getChildActions(item, parentAction.id)
             : this._getMenuActions(item);
 
-        if (menuActions && menuActions.length > 0) {
-            clickEvent.preventDefault();
-
-            // there was a fake target before, check if it is needed
-            const menuTarget = isContext ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
-            const closeHandler = this._processActionsMenuClose.bind(null, this._collection, actionClickCallback);
-            const menuSource = new Memory({
-                data: menuActions,
-                keyProperty: 'id'
-            });
-            const headConfig = hasParentAction ? {
-                caption: parentAction.title,
-                icon: parentAction.icon
-            } : null;
-            const contextMenuConfig = this._collection.getContextMenuConfig();
-            const menuConfig = {
-                source: menuSource,
-                keyProperty: 'id',
-                parentProperty: 'parent',
-                nodeProperty: 'parent@',
-                dropdownClassName: 'controls-itemActionsV__popup',
-                closeButtonVisibility: true,
-                ...contextMenuConfig,
-                root: parentAction && parentAction.id,
-                showHeader: hasParentAction,
-                headConfig
-            };
-            const dropdownConfig = {
-                // opener: this,
-                target: menuTarget,
-                templateOptions: menuConfig,
-                eventHandlers: {
-                    onResult: closeHandler,
-                    onClose: closeHandler
-                },
-                closeOnOutsideClick: true,
-                targetPoint: {
-                    vertical: 'top',
-                    horizontal: 'right'
-                },
-                direction: {
-                    horizontal: isContext ? 'right' : 'left'
-                },
-                className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list',
-                nativeEvent: isContext ? clickEvent.nativeEvent : null,
-                autofocus: false
-            };
-
-            this.setActiveItem(this._collection, itemKey);
-            this._collection.setActionsMenuConfig(dropdownConfig);
-
-            this._collection.nextVersion();
+        if (!menuActions || menuActions.length === 0) {
+            return;
         }
+
+        // there was a fake target before, check if it is needed
+        const menuTarget = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
+        const menuSource = new Memory({
+            data: menuActions,
+            keyProperty: 'id'
+        });
+        const headConfig = hasParentAction ? {
+            caption: parentAction.title,
+            icon: parentAction.icon
+        } : null;
+        const contextMenuConfig = this._collection.getContextMenuConfig();
+        const menuConfig: IDropdownTemplateOptions = {
+            source: menuSource,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'parent@',
+            dropdownClassName: 'controls-itemActionsV__popup',
+            closeButtonVisibility: true,
+            ...contextMenuConfig,
+            root: parentAction && parentAction.id,
+            showHeader: hasParentAction,
+            headConfig
+        };
+        const dropdownConfig: IDropdownConfig = {
+            // opener: this,
+            target: menuTarget,
+            templateOptions: menuConfig,
+            closeOnOutsideClick: true,
+            targetPoint: {
+                vertical: 'top',
+                horizontal: 'right'
+            },
+            direction: {
+                horizontal: isContextMenu ? 'right' : 'left'
+            },
+            className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list',
+            nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
+            autofocus: false
+        };
+
+        this.setActiveItem(this._collection, itemKey);
+        return dropdownConfig;
     }
 
     /**
@@ -337,9 +213,16 @@ export class ItemActionsController {
     }
 
     /**
+     * Получает текущий активный элемент коллекции
+     */
+    getActiveItem(): IItemActionsItem {
+        return this._collection.find((item) => item.isActive());
+    }
+
+    /**
      * Вычисляет операции над записью для каждого элемента коллекции
      */
-    private _assignActions(): boolean {
+    private _assignActions(): void {
         const supportsEventRaising = typeof this._collection.setEventRaising === 'function';
         let hasChanges = false;
 
@@ -364,31 +247,19 @@ export class ItemActionsController {
         if (hasChanges) {
             this._collection.nextVersion();
         }
-
-        return hasChanges;
     }
 
     /**
      * Получает список операций с записью для указанного элемента коллекции
      * @param item
      */
-    private _getMenuActions(item: IItemActionsItem): TItemAction[] {
+    private _getMenuActions(item: IItemActionsItem): IItemAction[] {
         const actions = item.getActions();
         return (
             actions &&
             actions.all &&
             actions.all.filter((action) => action.showType !== showType.TOOLBAR)
         );
-    }
-
-    /**
-     * Получает текущий активный элемент коллекции
-     * @param collection Коллекция элементов, содержащих операции с записью
-     */
-    private _getActiveItem(
-        collection: IItemActionsCollection
-    ): IItemActionsItem {
-        return this._collection.find((item) => item.isActive());
     }
 
     /**
@@ -457,8 +328,8 @@ export class ItemActionsController {
      * @param item IItemActionsItem
      * @private
      */
-    private _collectActionsForItem(item: IItemActionsItem): TItemAction[] {
-        const itemActions: TItemAction[] = this._itemActionsProperty
+    private _collectActionsForItem(item: IItemActionsItem): IItemAction[] {
+        const itemActions: IItemAction[] = this._itemActionsProperty
                 ? item.getContents().get(this._itemActionsProperty)
                 : this._commonItemActions;
         const fixedActions = itemActions.map(this._fixActionIcon);
@@ -512,7 +383,7 @@ export class ItemActionsController {
     }
 
     private _calculateSwipeConfig(
-        actions: TItemAction[],
+        actions: IItemAction[],
         actionAlignment: string,
         actionsContainerHeight: number,
         actionCaptionPosition: 'right'|'bottom'|'none'
@@ -544,42 +415,6 @@ export class ItemActionsController {
         );
     }
 
-    private _processActionsMenuClose(
-        collection: IItemActionsCollection,
-        actionClickCallback: TActionClickCallback,
-        action: string, data: Model, event: SyntheticEvent<MouseEvent>
-    ): void {
-        // Actions dropdown can start closing after the view itself was unmounted already, in which case
-        // the model would be destroyed and there would be no need to process the action itself
-        if (collection && !collection.destroyed) {
-            // If menu needs to close because one of the actions was clicked, process
-            // the action handler first
-            if (action === 'itemClick') {
-                const actionRawData = data && data.getRawData();
-                this.processActionClick(
-                    collection,
-                    this._getActiveItem(collection)?.getContents()?.getKey(),
-                    actionRawData,
-                    event,
-                    true,
-                    actionClickCallback
-                );
-
-                // If this action has children, don't close the menu if it was clicked
-                if (actionRawData['parent@']) {
-                    return;
-                }
-            }
-
-            if (action !== 'menuOpened') {
-                this.setActiveItem(collection, null);
-                collection.setActionsMenuConfig(null);
-                this.deactivateSwipe(collection);
-                collection.nextVersion();
-            }
-        }
-    }
-
     private _setItemActions(
         item: IItemActionsItem,
         actions: IItemActionsContainer
@@ -592,7 +427,7 @@ export class ItemActionsController {
         return false;
     }
 
-    private _fixActionIcon(action: TItemAction): TItemAction {
+    private _fixActionIcon(action: IItemAction): IItemAction {
         if (!action.icon || action.icon.includes(ITEM_ACTION_ICON_CLASS)) {
             return action;
         }
@@ -603,7 +438,7 @@ export class ItemActionsController {
     }
 
     private _wrapActionsInContainer(
-        actions: TItemAction[]
+        actions: IItemAction[]
     ): IItemActionsContainer {
         let showed = actions;
         if (showed.length > 1) {
@@ -627,7 +462,7 @@ export class ItemActionsController {
         };
     }
 
-    private _isMenuButtonRequired(actions: TItemAction[]): boolean {
+    private _isMenuButtonRequired(actions: IItemAction[]): boolean {
         return actions.some(
             (action) =>
                 !action.parent &&
@@ -648,8 +483,8 @@ export class ItemActionsController {
     }
 
     private _isMatchingActionLists(
-        aActions: TItemAction[],
-        bActions: TItemAction[]
+        aActions: IItemAction[],
+        bActions: IItemAction[]
     ): boolean {
         if (!aActions || !bActions) {
             return false;

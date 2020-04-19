@@ -31,8 +31,7 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import {create as diCreate} from 'Types/di';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, Collection} from 'Controls/display';
-import {ItemActionsController} from 'Controls/itemActions';
+import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, ItemActionsController, Collection} from 'Controls/display';
 import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
@@ -1221,7 +1220,7 @@ var _private = {
             self._itemsChanged = true;
             if (self._itemActionsInitialized && !self._modelRecreated) {
                 // If actions were already initialized update them in place
-                self._assignItemActions(newModelChanged);
+                self._updateItemActions();
             } else {
                 // If model was recreated or actions have not been initialized
                 // yet, postpone item actions update until the new model is
@@ -1395,71 +1394,6 @@ var _private = {
                     self._actionMenuIsShown = true;
                     self._forceUpdate();
                 });
-        }
-    },
-
-    /**
-     * Временная мера, переделываем на ItemActionsContoller.processActionClick
-     * @param self
-     * @param event
-     * @param action
-     * @param itemData
-     * @param listModel
-     * @param showAll
-     * @param target
-     */
-    itemActionsClick(
-        self: any,
-        event: SyntheticEvent,
-        action: IItemAction,
-        itemData: CollectionItem<Model>,
-        listModel: Collection<Model>,
-        showAll?: boolean,
-        target?: HTMLElement): void {
-        event.stopPropagation();
-        if (action._isMenu) {
-            self.showActionsMenu(self, itemData, event, showAll);
-        } else if (action['parent@']) {
-            _private.showActionMenu(self, itemData, event, action);
-        } else {
-            // TODO: self._container может быть не HTMLElement, а jQuery-элементом,
-            //  убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            const container = self._container.get ? self._container.get(0) : self._container;
-            const isNewModel = !!listModel.getSourceIndexByItem;
-
-            let contents;
-            if (isNewModel) {
-                // TODO breadcrumbs for new model
-                contents = itemData.getContents();
-            } else {
-                contents = itemData.item;
-                if (itemData.breadCrumbs) {
-                    contents = contents[contents.length - 1];
-                }
-            }
-
-            const itemIndex = isNewModel ? listModel.getSourceIndexByItem(itemData) : itemData.index;
-
-            // Если используется новая модель, Controls/display уже подгружен. Когда переедем
-            // с BaseControl, этот код останется работать только со старой моделью.
-            const startIndex = isNewModel
-                ? require('Controls/display').VirtualScrollController.getStartIndex(listModel)
-                : listModel.getStartIndex();
-
-            const targetContainer = target || Array.prototype.filter.call(
-                container.querySelector('.controls-ListView__itemV').parentNode.children,
-                (item: HTMLElement) => item.className.includes('controls-ListView__itemV')
-            )[itemIndex - startIndex];
-
-            const args = [
-                action,
-                contents,
-                targetContainer
-            ];
-            self._notify('actionClick', args);
-            if (action.handler) {
-                action.handler(args[1]);
-            }
         }
     },
 
@@ -2406,7 +2340,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _afterUpdate: function(oldOptions) {
         if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
             this._shouldUpdateItemActions = false;
-            this._assignItemActions();
+            this._updateItemActions();
         }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
@@ -2622,23 +2556,27 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.editInPlace.cancelEdit();
     },
 
+    _showActionsMenu: function(event, itemData, childEvent, showAll) {
+        _private.showActionsMenu(this, event, itemData, childEvent, showAll);
+    },
     _initItemActions(): void {
         if (!this._itemActionsInitialized) {
-            this._assignItemActions();
+            this._updateItemActions();
             this._itemActionsInitialized = true;
             this._shouldUpdateItemActions = false;
         }
     },
-    _assignItemActions(forceInitialize?: boolean): void {
+    _updateItemActions(): void {
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this.__error || !this._listViewModel || !this._hasItemActions) {
             return;
         }
-        if (!this._itemActionsController || forceInitialize) {
-            this._itemActionsController = new ItemActionsController(this._listViewModel);
+        if (!this._itemActionsController) {
+            this._itemActionsController = new ItemActionsController();
         }
-        const hasChanges = this._itemActionsController.init({
+        this._itemActionsController.init({
+            collection: this._listViewModel,
             itemActions: this._options.itemActions,
             itemActionsProperty: this._options.itemActionsProperty,
             visibilityCallback: this._options.itemActionVisibilityCallback,
@@ -2650,16 +2588,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
         // Набираем список операций над записью в старой модели
         // и возвращаем для каждой записи, какие записи обновились - 'all'|'partial'|'none'
-        if (hasChanges && !this._options.useNewModel) {
-            let updateRecords: string;
-            this._listViewModel.each((item) => {
-                updateRecords = this._listViewModel.setItemActions(item.getContents(), item.getActions());
-            });
-            this._listViewModel.nextModelVersion(updateRecords !== 'all', ItemActionsUpdatedEvent);
-        }
+        // TODO разобраться как работает в новой модели
+        // if (hasChanges && !this._options.useNewModel) {
+        //     let updateRecords: string;
+        //     this._listViewModel.each((item) => {
+        //         updateRecords = this._listViewModel.setItemActions(item.getContents(), item.getActions());
+        //     });
+        //     this._listViewModel.nextModelVersion(updateRecords !== 'all', ItemActionsUpdatedEvent);
+        // }
     },
     _onAfterEndEdit: function(event, item, isAdd) {
-        this._assignItemActions();
+        this._updateItemActions();
         return this._notify('afterEndEdit', [item, isAdd]);
     },
     _onAfterBeginEdit: function (event, item, isAdd) {
@@ -2682,8 +2621,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return result;
     },
 
+    // TODO сделать так же, как на новых списках
+    _showActionMenu(
+        event: Event,
+        itemData: object,
+        childEvent: Event,
+        action: object
+    ): void {
+        _private.showActionMenu(this, itemData, childEvent, action);
+    },
+
     _onItemContextMenu: function(event, itemData) {
-        _private.showActionsMenu(event, itemData);
+        this._showActionsMenu.apply(this, arguments);
         event.stopPropagation();
         if (this._options.useNewModel) {
             const markCommand = new MarkerCommands.Mark(itemData.getContents().getId());
@@ -2718,6 +2667,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
+    // todo это перенести в модель (как и всё, что каксается отрисовки эл-в. А звать это должен контрол)
     _getItemActionsContainerPaddingClass(classes: string[], itemPadding?: {top?: string, bottom?: string}):string {
         let paddingClass = ' ';
         if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {

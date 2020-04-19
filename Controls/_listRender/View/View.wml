@@ -12,4 +12,8 @@
       on:itemActionClick="_onItemActionClick()"
       on:itemContextMenu="_onItemContextMenu()"
       on:itemKeyDown="_onItemKeyDown()"/>
+   <Controls.popup:Sticky name="menuOpener"
+                          template="Controls/menu:Popup"
+                          closeOnOutsideClick="{{true}}"
+                          actionOnScroll="close" />
 </div>
