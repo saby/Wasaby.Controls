@@ -6,6 +6,7 @@
       <ws:templateOptions type="dialog"/>
    </Controls.popup:Dialog>
    <Controls.popup:Sticky name="sticky"
+                          actionOnScroll="close"
                                  onResult="{{_onResult}}"
                                  template="Controls-demo/Popup/TestDialog"
                                  autoHide="{{true}}"
