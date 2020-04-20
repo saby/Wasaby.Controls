@@ -149,19 +149,30 @@ export default class View extends Control<IViewOptions> {
         }
     }
 
-    _onItemActionsMenuResult(e: SyntheticEvent<MouseEvent>, eventName: string, data: Model, clickEvent: SyntheticEvent<MouseEvent>) {
+    /**
+     * Обработчик клика по операции в выпадающем/контекстном меню
+     * @param e
+     * @param eventName
+     * @param data
+     * @param clickEvent
+     * @private
+     */
+    _onItemActionsMenuResult(
+        e: SyntheticEvent<MouseEvent>,
+        eventName: string,
+        data: Model,
+        clickEvent: SyntheticEvent<MouseEvent>) {
         this._dropdownMenuEventsHandler(eventName, data, clickEvent);
     }
 
+    /**
+     * Обработчик закрытия выпадающего/контекстного меню
+     * @param e
+     * @param clickEvent
+     * @private
+     */
     _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>) {
         this._dropdownMenuEventsHandler('menuClosed', null, clickEvent);
-    }
-
-    // TODO неявный вызов notify, не надо так делать.
-    protected _actionClickCallback(clickEvent: SyntheticEvent<MouseEvent>, action: any, contents: Model): void {
-        // How to calculate itemContainer?
-        // this._notify('actionClick', [action, contents, itemContainer]);
-        this._notify('actionClick', [action, contents]);
     }
 
     /**
@@ -180,12 +191,11 @@ export default class View extends Control<IViewOptions> {
     ): void {
         const moveMarker = new MarkerCommands.Mark(item.getContents().getKey());
         const contents = item.getContents();
-        const itemKey = item.getContents().getKey();
 
         this._executeCommands([moveMarker]);
         // TODO fire 'markedKeyChanged' event
 
-        this._processItemActionClick(itemKey, contents, action, clickEvent);
+        this._processItemActionClick(contents, action, clickEvent, false);
     }
 
     /**
@@ -201,11 +211,7 @@ export default class View extends Control<IViewOptions> {
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         const contents = item.getContents();
-        this._processItemActionClick(
-            contents,
-            clickEvent,
-            null,
-            true);
+        this._processItemActionClick(contents, null, clickEvent, true);
     }
 
     /**
@@ -235,22 +241,6 @@ export default class View extends Control<IViewOptions> {
 
     protected _executeCommands(commands: Array<ICollectionCommand<unknown>>): void {
         commands.forEach((command) => command.execute(this._collection));
-    }
-
-    /**
-     * Обработка клика по ItemAction
-     * @param contents
-     * @param action
-     * @param clickEvent
-     * @param contextMenu
-     * @private
-     */
-    private _processItemActionClick(contents: Model, action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, contextMenu: boolean): void {
-        if (!action._isMenu && !action['parent@']) {
-            this._itemActionsController.processItemActionClick(action, contents);
-        } else {
-            this._itemActionsController.processDropDownMenuClick(contents?.getKey(), clickEvent, action, false);
-        }
     }
 
     /**
@@ -292,6 +282,29 @@ export default class View extends Control<IViewOptions> {
                 this._itemActionsController.deactivateSwipe(this._collection);
                 this._collection.nextVersion();
             }
+        }
+    }
+
+    /**
+     * Обработка клика по ItemAction
+     * @param contents
+     * @param action
+     * @param clickEvent
+     * @param contextMenu
+     * @private
+     */
+    private _processItemActionClick(
+        contents: Model,
+        action: IItemAction,
+        clickEvent: SyntheticEvent<MouseEvent>,
+        contextMenu: boolean): void {
+        if (action && !action._isMenu && !action['parent@']) {
+            this._itemActionsController.processItemActionClick(action, contents);
+            // How to calculate itemContainer?
+            // this._notify('actionClick', [action, contents, itemContainer]);
+            this._notify('actionClick', [action, contents]);
+        } else {
+            this._itemActionsController.processDropDownMenuClick(contents?.getKey(), clickEvent, action, contextMenu);
         }
     }
 

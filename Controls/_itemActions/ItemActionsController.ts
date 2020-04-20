@@ -235,8 +235,7 @@ export class ItemActionsController {
     }
 
     /**
-     * Формирует конфиг для контекстного меню и меню, открываемого по клику на _isMenu,
-     * задавая коллбек для обработки событий меню,
+     * Формирует конфиг для контекстного меню и меню, открываемого по клику на _isMenu
      * затем изменяет версию модели для того, чтобы показать меню
      * @param itemKey
      * @param clickEvent
@@ -244,7 +243,7 @@ export class ItemActionsController {
      * @param isContextMenu
      */
     processDropDownMenuClick(itemKey: string, clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, isContextMenu: boolean): void {
-        const menuConfig: IDropdownConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, !action._isMenu, isContextMenu);
+        const menuConfig: IDropdownConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, action, isContextMenu);
         this._collection.setActionsMenuConfig(menuConfig);
         this._collection.nextVersion();
     }

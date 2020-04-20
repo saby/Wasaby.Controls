@@ -21,6 +21,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
 import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {TouchContextField} from 'Controls/context';
+import {IItemAction} from 'Controls/itemActions';
 
 /**
  * Контрол меню.
@@ -146,15 +147,13 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
-    protected _itemActionClick(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, action: object, clickEvent: MouseEvent): void {
+    protected _itemActionClick(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>): void {
         const contents = item.getContents();
-        const itemKey = contents.getKey();
-        this._itemActionsController.processItemActionClick(
-            itemKey,
-            contents,
-            action,
-            clickEvent
-        );
+        if (action && !action._isMenu && !action['parent@']) {
+            this._itemActionsController.processItemActionClick(action, contents);
+        } else {
+            this._itemActionsController.processDropDownMenuClick(contents?.getKey(), clickEvent, action, false);
+        }
     }
 
     protected _itemClick(event: SyntheticEvent<MouseEvent>, item: Model, sourceEvent: MouseEvent): void {
