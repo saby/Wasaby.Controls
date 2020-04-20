@@ -10,10 +10,8 @@
       on:itemClick="_onItemClick()"
       on:itemSwipe="_onItemSwipe()"
       on:itemActionClick="_onItemActionClick()"
+      on:itemActionsResult="_onItemActionsMenuResult()"
+      on:itemActionsClose="_onItemActionsMenuClose()"
       on:itemContextMenu="_onItemContextMenu()"
       on:itemKeyDown="_onItemKeyDown()"/>
-   <Controls.popup:Sticky name="menuOpener"
-                          template="Controls/menu:Popup"
-                          closeOnOutsideClick="{{true}}"
-                          actionOnScroll="close" />
 </div>

@@ -147,12 +147,13 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     protected _itemActionClick(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, action: object, clickEvent: MouseEvent): void {
-        this._itemActionsController.processActionClick(
-            this._listModel,
-            item.getContents().getKey(),
+        const contents = item.getContents();
+        const itemKey = contents.getKey();
+        this._itemActionsController.processItemActionClick(
+            itemKey,
+            contents,
             action,
-            clickEvent,
-            false
+            clickEvent
         );
     }
 

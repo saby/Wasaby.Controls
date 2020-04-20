@@ -7,6 +7,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection, EditInPlaceController, GroupItem } from 'Controls/display';
 import { constants } from 'Env/Env';
 import { Opener as DropdownOpener } from 'Controls/dropdown';
+import {Model} from 'types/entity';
 
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
@@ -92,6 +93,16 @@ export default class Render extends Control<IRenderOptions> {
                 this._notify('itemClick', [item.getContents(), e], { bubbling: true });
             }
         }
+    }
+
+    protected _onItemActionsMenuResult(e: SyntheticEvent<MouseEvent>, eventName: string, eventResult: Model|Node, nativeEvent: SyntheticEvent<MouseEvent>) {
+        e.stopPropagation();
+        this._notify('itemActionsResult', [eventName, eventResult, e], { bubbling: true });
+    }
+
+    protected _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>): void {
+        e.stopPropagation();
+        this._notify('itemActionsClose', [e] , { bubbling: true });
     }
 
     protected _onItemContextMenu(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {

@@ -1,7 +1,8 @@
 import {TItemKey, ISwipeConfig} from 'Controls/display';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Memory} from 'Types/source';
-import { isEqual } from 'Types/object';
+import {Model} from 'Types/entity';
+import {isEqual} from 'Types/object';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
@@ -11,7 +12,8 @@ import {
     IItemActionsContainer,
     IDropdownTemplateOptions,
     IDropdownConfig,
-    IItemAction
+    IItemAction,
+    IDropdownActionHandler
 } from './interafce/IItemActions';
 
 // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
@@ -107,6 +109,14 @@ export class ItemActionsController {
             return allActions.filter((action) => action.parent === parentActionKey);
         }
         return [];
+    }
+
+    processItemActionClick(itemKey: string, contents: Model, action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>): void {
+        if (!action._isMenu && !action['parent@']) {
+            this._processItemActionClick(action, contents);
+        } else {
+            this._processDropDownMenuClick(itemKey, clickEvent, action, false);
+        }
     }
 
     /**
@@ -217,6 +227,40 @@ export class ItemActionsController {
      */
     getActiveItem(): IItemActionsItem {
         return this._collection.find((item) => item.isActive());
+    }
+
+    /**
+     * Исполняет handler callback у операции, а затем бросает событие actionClick
+     * @param action
+     * @param contents
+     * @private
+     */
+    private _processItemActionClick(action: IItemAction, contents: Model): void {
+        if (action.handler) {
+            action.handler(contents);
+        }
+        // How to calculate itemContainer?
+        // this._notify('actionClick', [action, contents, itemContainer]);
+        this._notify('actionClick', [action, contents]);
+
+        // TODO update some item actions
+        // TODO move the marker
+    }
+
+    /**
+     * Формирует конфиг для контекстного меню и меню, открываемого по клику на _isMenu,
+     * задавая коллбек для обработки событий меню,
+     * затем изменяет версию модели для того, чтобы показать меню
+     * @param itemKey
+     * @param clickEvent
+     * @param action
+     * @param isContextMenu
+     * @private
+     */
+    private _processDropDownMenuClick(itemKey: string, clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, isContextMenu: boolean): void {
+        const menuConfig: IDropdownConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, !action._isMenu, isContextMenu);
+        this._collection.setActionsMenuConfig(menuConfig);
+        this._collection.nextVersion();
     }
 
     /**

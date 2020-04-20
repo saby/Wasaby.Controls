@@ -18,6 +18,7 @@ import {
     TItemActionVisibilityCallback,
     IDropdownConfig,
     IDropdownActionHandler,
+    IItemActionsCollection,
     IItemAction} from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -100,14 +101,31 @@ export default class View extends Control<IViewOptions> {
         }
     }
 
+    /**
+     * При наведении на запись в списке мы должны показать операции
+     * @param e
+     * @private
+     */
     protected _onRenderMouseEnter(e: SyntheticEvent<MouseEvent>): void {
         this._updateItemActions();
     }
 
+    /**
+     * По событию youch мы должны показать операции
+     * @param e
+     * @private
+     */
     protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
         this._updateItemActions();
     }
 
+    /**
+     * По клику на запись в списке нужно переместить маркер
+     * @param e
+     * @param item
+     * @param clickEvent
+     * @private
+     */
     protected _onItemClick(
         e: SyntheticEvent<null>,
         item: Model,
@@ -139,6 +157,14 @@ export default class View extends Control<IViewOptions> {
         }
     }
 
+    _onItemActionsMenuResult(e: SyntheticEvent<MouseEvent>, eventName: string, data: Model, clickEvent: SyntheticEvent<MouseEvent>) {
+        this._dropdownMenuEventsHandler(eventName, data, clickEvent);
+    }
+
+    _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>) {
+        this._dropdownMenuEventsHandler('menuClosed', null, clickEvent);
+    }
+
     // TODO неявный вызов notify, не надо так делать.
     protected _actionClickCallback(clickEvent: SyntheticEvent<MouseEvent>, action: any, contents: Model): void {
         // How to calculate itemContainer?
@@ -146,34 +172,19 @@ export default class View extends Control<IViewOptions> {
         this._notify('actionClick', [action, contents]);
     }
 
-
-
-    /**
-     * Открывает меню действий с записью
-     * @param menuConfig
-     */
-    openItemActionsMenu(menuConfig: unknown): void {
-
-    }
-
-    /**
-     * Закрывает меню действий с записью
-     */
-    closeItemActionsMenu(): void {
-        this._children.menuOpener.close();
-    }
-
     /**
      * Обрабатывает событие клика по записи и бросает событие actionClick
-     * @param clickEvent
+     * @param e
      * @param item
      * @param action
+     * @param clickEvent
      * @private
      */
     protected _onItemActionClick(
-        clickEvent: SyntheticEvent<null>,
+        e: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
-        action: IItemAction
+        action: IItemAction,
+        clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         const moveMarker = new MarkerCommands.Mark(item.getContents().getKey());
         const contents = item.getContents();
@@ -182,11 +193,7 @@ export default class View extends Control<IViewOptions> {
         this._executeCommands([moveMarker]);
         // TODO fire 'markedKeyChanged' event
 
-        if (!action._isMenu && !action['parent@']) {
-            this._processItemActionClick(action, contents);
-        } else {
-
-        }
+        this._itemActionsController.processItemActionClick(itemKey, contents, action, clickEvent);
     }
 
     /**
@@ -208,6 +215,13 @@ export default class View extends Control<IViewOptions> {
             true);
     }
 
+    /**
+     * Обработка события клика по элементу списка
+     * @param e
+     * @param item
+     * @param keyDownEvent
+     * @private
+     */
     protected _onItemKeyDown(
         e: SyntheticEvent<null>,
         item: CollectionItem<Model>,
@@ -231,63 +245,34 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Исполняет handler callback у операции, а затем бросает событие actionClick
-     * @param action
-     * @param contents
-     * @private
-     */
-    private _processItemActionClick(action: IItemAction, contents: Model): void {
-        if (action.handler) {
-            action.handler(contents);
-        }
-        // How to calculate itemContainer?
-        // this._notify('actionClick', [action, contents, itemContainer]);
-        this._notify('actionClick', [action, contents]);
-
-        // TODO update some item actions
-        // TODO move the marker
-    }
-
-    /**
-     * Формирует конфиг для контекстного меню и меню, открываемого по клику на _isMenu,
-     * задавая коллбек для обработки событий меню,
-     * затем изменяет версию модели для того, чтобы показать меню
-     * @param itemKey
-     * @param clickEvent
-     * @param action
-     * @param isContextMenu
-     * @private
-     */
-    _processDropDownMenuClick(itemKey: string, clickEvent: SyntheticEvent, action: IItemAction, isContextMenu: boolean): void {
-        const menuConfig: IDropdownConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, !action._isMenu, isContextMenu);
-        const eventHandler: IDropdownActionHandler = this._dropdownMenuEventsHandler.bind(this);
-        menuConfig.eventHandlers = {
-            onResult: eventHandler,
-            onClose: eventHandler
-        };
-        this._collection.setActionsMenuConfig(menuConfig);
-        this._collection.nextVersion();
-    }
-
-    /**
-     * Обработчик событий контекстного меню и меню, открываемого по клмку на _isMenu
+     * Обработчики событий для выпадающего/контекстного меню
      * @param eventName
      * @param data
+     * @param event
      * @private
      */
-    private _dropdownMenuEventsHandler(eventName: string, data: Model): void {
+    private _dropdownMenuEventsHandler(
+        eventName: string,
+        data: Model,
+        event: SyntheticEvent<MouseEvent>
+    ): void {
         // Actions dropdown can start closing after the view itself was unmounted already, in which case
         // the model would be destroyed and there would be no need to process the action itself
         if (this._collection && !this._collection.destroyed) {
             // If menu needs to close because one of the actions was clicked, process
             // the action handler first
             if (eventName === 'itemClick') {
-                const action = data && data.getRawData();
-                const contents = this._itemActionsController.getActiveItem()?.getContents();
-                this._processItemActionClick(action, contents);
+                const actionRawData = data && data.getRawData();
+                this._itemActionsController.processActionClick(
+                    this._collection,
+                    this._itemActionsController.getActiveItem()?.getContents()?.getKey(),
+                    actionRawData,
+                    event,
+                    true
+                );
 
                 // If this action has children, don't close the menu if it was clicked
-                if (action['parent@']) {
+                if (actionRawData['parent@']) {
                     return;
                 }
             }
