@@ -4760,8 +4760,8 @@ define([
                };
                instance._listSwipe({}, itemData, childEvent);
                assert.isTrue(notifyCalled);
-            });
-         });*/
+            });*/
+         });
 
          it('_onAfterBeginEdit parametrs', function() {
             var
