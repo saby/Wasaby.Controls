@@ -1,6 +1,6 @@
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import Template = require('wml!Controls/_popup/Opener/Confirmation');
+import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {IConfirmationOpener, IConfirmationOptions} from 'Controls/_popup/interface/IConfirmation';
 
