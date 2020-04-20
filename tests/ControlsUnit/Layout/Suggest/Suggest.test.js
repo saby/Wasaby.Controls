@@ -167,6 +167,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          self._inputActive = true;
          assert.isTrue(suggestMod._InputController._private.shouldSearch(self, 'test'));
          assert.isFalse(suggestMod._InputController._private.shouldSearch(self, 't'));
+         assert.isFalse(!!suggestMod._InputController._private.shouldSearch(self, null));
 
          self._inputActive = false;
          assert.isFalse(suggestMod._InputController._private.shouldSearch(self, 'test'));

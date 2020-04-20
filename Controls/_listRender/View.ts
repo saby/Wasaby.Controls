@@ -14,11 +14,7 @@ import {
 } from 'Controls/display';
 import {
     ItemActionsController,
-    TActionClickCallback,
     TItemActionVisibilityCallback,
-    IDropdownConfig,
-    IDropdownActionHandler,
-    IItemActionsCollection,
     IItemAction} from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -26,7 +22,6 @@ import { load as libraryLoad } from 'Core/library';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
 import { constants } from 'Env/Env';
-import Mode from "../_dataSource/_error/Mode";
 
 export interface IViewOptions extends IControlOptions {
     items: RecordSet;
@@ -59,11 +54,8 @@ export default class View extends Control<IViewOptions> {
 
     private _itemActionsController: ItemActionsController;
 
-    private _actionClickCallbackFn: TActionClickCallback;
-
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
-        this._actionClickCallbackFn = this._actionClickCallback.bind(this);
         return libraryLoad(options.render).then(() => null);
     }
 
@@ -193,7 +185,7 @@ export default class View extends Control<IViewOptions> {
         this._executeCommands([moveMarker]);
         // TODO fire 'markedKeyChanged' event
 
-        this._itemActionsController.processItemActionClick(itemKey, contents, action, clickEvent);
+        this._processItemActionClick(itemKey, contents, action, clickEvent);
     }
 
     /**
@@ -208,8 +200,9 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        this._processDropDownMenuClick(
-            item.getContents().getKey(),
+        const contents = item.getContents();
+        this._processItemActionClick(
+            contents,
             clickEvent,
             null,
             true);
@@ -245,6 +238,22 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
+     * Обработка клика по ItemAction
+     * @param contents
+     * @param action
+     * @param clickEvent
+     * @param contextMenu
+     * @private
+     */
+    private _processItemActionClick(contents: Model, action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, contextMenu: boolean): void {
+        if (!action._isMenu && !action['parent@']) {
+            this._itemActionsController.processItemActionClick(action, contents);
+        } else {
+            this._itemActionsController.processDropDownMenuClick(contents?.getKey(), clickEvent, action, false);
+        }
+    }
+
+    /**
      * Обработчики событий для выпадающего/контекстного меню
      * @param eventName
      * @param data
@@ -263,9 +272,9 @@ export default class View extends Control<IViewOptions> {
             // the action handler first
             if (eventName === 'itemClick') {
                 const actionRawData = data && data.getRawData();
-                this._itemActionsController.processActionClick(
-                    this._collection,
-                    this._itemActionsController.getActiveItem()?.getContents()?.getKey(),
+                const contents = this._itemActionsController.getActiveItem()?.getContents();
+                this._processItemActionClick(
+                    contents,
                     actionRawData,
                     event,
                     true

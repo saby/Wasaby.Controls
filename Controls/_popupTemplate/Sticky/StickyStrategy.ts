@@ -23,7 +23,7 @@ interface IPosition {
       getWindowSizes: function() {
          // Ширина берется по body специально. В случае, когда уменьшили окно браузера и появился горизонтальный скролл
          // надо правильно вычислить координату right. Для высоты аналогично.
-         let height = _private.getBodyHeight();
+         let height = _private.getViewportHeight();
          if (_private.isIOS12()) {
             height -= TouchKeyboardHelper.getKeyboardHeight(true);
          }
@@ -38,16 +38,33 @@ interface IPosition {
       },
 
       getPosition: function(popupCfg, targetCoords, direction) {
-         var position = {};
-         var isHorizontal = direction === 'horizontal';
+         const position = {};
+         const isHorizontal = direction === 'horizontal';
          if (popupCfg.direction[direction] === 'center') {
-            position[isHorizontal ? 'left' : 'top'] = targetCoords[isHorizontal ? 'left' : 'top'] + targetCoords[isHorizontal ? 'width' : 'height'] / 2 - popupCfg.sizes[isHorizontal ? 'width' : 'height'] / 2 + _private.getMargins(popupCfg, direction) ;
+            const coord: string = isHorizontal ? 'left' : 'top';
+            const targetCoord: number = targetCoords[coord];
+            const targetSize: number = targetCoords[isHorizontal ? 'width' : 'height'];
+            const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
+            const margins: number = _private.getMargins(popupCfg, direction);
+            const middleCoef: number = 2;
+            position[coord] = targetCoord + targetSize / middleCoef - popupSize / middleCoef + margins;
          } else {
-            if (popupCfg.direction[direction] === (isHorizontal ? 'left' : 'top')) {
-               position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] + _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'] -
-                   _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - _private.getMargins(popupCfg, direction);
+            let coord: string = isHorizontal ? 'left' : 'top';
+            if (popupCfg.direction[direction] === coord) {
+               coord = isHorizontal ? 'right' : 'bottom';
+               const viewportOffset: number = _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'];
+               const viewportPage: number = _private.getVisualViewport()[isHorizontal ? 'pageLeft' : 'pageTop'];
+               const viewportSize: number = _private.getVisualViewport()[isHorizontal ? 'width' : 'height'];
+               const topSpacing: number = viewportSize + viewportPage + viewportOffset;
+               const bottomSpacing: number = _private.getBody()[isHorizontal ? 'width' : 'height'] - topSpacing;
+               const targetCoord: number = _private.getTargetCoords(popupCfg, targetCoords, coord, direction);
+               const margins: number = _private.getMargins(popupCfg, direction);
+               position[coord] = bottomSpacing + (topSpacing - targetCoord) - margins;
             } else {
-               position[isHorizontal ? 'left' : 'top'] = _private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'left' : 'top', direction) + _private.getMargins(popupCfg, direction);
+               const targetCoord: number = _private.getTargetCoords(popupCfg, targetCoords, coord, direction);
+               const margins: number = _private.getMargins(popupCfg, direction);
+               position[coord] = targetCoord + margins;
+
                if (_private.isIOS12()) {
                   position[isHorizontal ? 'left' : 'top'] += targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
                }
@@ -95,7 +112,12 @@ interface IPosition {
                // }
             }
          }
-         let overflow = position[isHorizontal ? 'left' : 'top'] + taskBarKeyboardIosHeight + popupCfg.sizes[isHorizontal ? 'width' : 'height'] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'];
+         const viewportOffset: number = _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'];
+         const viewportPage: number = _private.getVisualViewport()[isHorizontal ? 'pageLeft' : 'pageTop'];
+         const positionValue: number = position[isHorizontal ? 'left' : 'top'];
+         const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
+         const windowSize: number = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
+         let overflow = positionValue + taskBarKeyboardIosHeight + popupSize - windowSize - viewportOffset - viewportPage;
          if (_private.isIOS12()) {
             overflow -= targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
          }
@@ -222,14 +244,7 @@ interface IPosition {
 
       _fixBottomPositionForIos: function(position, targetCoords) {
          if (position.bottom) {
-            if (_private.isIOS13()) {
-               // bottomSpace - расстояние он низа страницы(откуда начинает отсчет координата bottom),скрытая под клавой
-               // чем больше проскроллена страница вниз, тем это значение меньше. Если доскроллили до низа, то страница
-               // полностью располагается над клавиатурой (соответственно bottomSpace в этом случае 0).
-               const viewPort = _private.getVisualViewport();
-               const bottomSpace = document.body.clientHeight - (viewPort.height + viewPort.offsetTop);
-               position.bottom += bottomSpace;
-            } else { // ios12
+            if (_private.isIOS12()) {
                const keyboardHeight = _private.getKeyboardHeight();
                if (!_private.isPortrait()) {
                   position.bottom += keyboardHeight;
@@ -297,7 +312,7 @@ interface IPosition {
          } else {
             // На ios возвращается неверная высота страницы, из-за чего накладывая maxWidth === windowSizes.height
             // окно визуально обрезается. Делаю по body, у него высота правильная
-            position.maxHeight = _private.getBodyHeight();
+            position.maxHeight = _private.getViewportHeight();
             // position.maxHeight = windowSizes.height;
          }
 
@@ -313,11 +328,18 @@ interface IPosition {
          }
       },
 
-      getBodyHeight(): number {
-         if (window?.visualViewport) {
-            return _private.getVisualViewport().height;
-         }
-         return document.body.clientHeight;
+      getBody(): object {
+         return {
+            height: document.body.clientHeight,
+            width: document.body.clientWidth
+         };
+      },
+
+      getViewportHeight(): number {
+          if (window?.visualViewport) {
+              return _private.getVisualViewport().height;
+          }
+          return document.body.clientHeight;
       },
 
       getVisualViewport(): object {
@@ -326,7 +348,9 @@ interface IPosition {
          }
          return {
             offsetLeft: 0,
-            offsetTop: 0
+            offsetTop: 0,
+            pageLeft: 0,
+            pageTop: 0
          };
       }
    };

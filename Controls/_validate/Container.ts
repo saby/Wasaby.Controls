@@ -263,6 +263,11 @@ class ValidateContainer extends Control {
         return this._validationResult;
     }
 
+    //todo: временный метод для корректного перехода у прикладников на isValid(): boolean
+    isValidOld(): boolean {
+        return !this._validationResult;
+    }
+
     _hoverHandler(): void {
         clearTimeout(this._closeId);
         if (!this._isOpened) {

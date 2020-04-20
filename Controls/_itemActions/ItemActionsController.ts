@@ -111,14 +111,6 @@ export class ItemActionsController {
         return [];
     }
 
-    processItemActionClick(itemKey: string, contents: Model, action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>): void {
-        if (!action._isMenu && !action['parent@']) {
-            this._processItemActionClick(action, contents);
-        } else {
-            this._processDropDownMenuClick(itemKey, clickEvent, action, false);
-        }
-    }
-
     /**
      * Собирает конфиг выпадающего меню операций
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
@@ -233,16 +225,11 @@ export class ItemActionsController {
      * Исполняет handler callback у операции, а затем бросает событие actionClick
      * @param action
      * @param contents
-     * @private
      */
-    private _processItemActionClick(action: IItemAction, contents: Model): void {
+    processItemActionClick(action: IItemAction, contents: Model): void {
         if (action.handler) {
             action.handler(contents);
         }
-        // How to calculate itemContainer?
-        // this._notify('actionClick', [action, contents, itemContainer]);
-        this._notify('actionClick', [action, contents]);
-
         // TODO update some item actions
         // TODO move the marker
     }
@@ -255,9 +242,8 @@ export class ItemActionsController {
      * @param clickEvent
      * @param action
      * @param isContextMenu
-     * @private
      */
-    private _processDropDownMenuClick(itemKey: string, clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, isContextMenu: boolean): void {
+    processDropDownMenuClick(itemKey: string, clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, isContextMenu: boolean): void {
         const menuConfig: IDropdownConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, !action._isMenu, isContextMenu);
         this._collection.setActionsMenuConfig(menuConfig);
         this._collection.nextVersion();
