@@ -1,3 +1,4 @@
+/*
 define([
    'Controls/operations',
    'Controls/treeGrid',
@@ -44,26 +45,26 @@ define([
          assert.deepEqual(selection.excluded, [6]);
       });
 
-      it('unSelect', function() {
-         flatStrategy.unSelect(selection, [3, 4], model);
+      it('unselect', function() {
+         flatStrategy.unselect(selection, [3, 4], model);
          assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
 
          // 2 - родитедль 3 и 4
          selection.selected = [2];
-         flatStrategy.unSelect(selection, [3, 4], model);
+         flatStrategy.unselect(selection, [3, 4], model);
          assert.deepEqual(selection.selected, [2]);
          assert.deepEqual(selection.excluded, []);
 
          selection.excluded = [2];
-         flatStrategy.unSelect(selection, [3, 4], model);
+         flatStrategy.unselect(selection, [3, 4], model);
          assert.deepEqual(selection.selected, [2]);
          assert.deepEqual(selection.excluded, [2, 3, 4]);
 
 
          selection.selected = [1, 2, 3, 4];
          selection.excluded = [9];
-         flatStrategy.unSelect(selection, [3, 4, 5], model);
+         flatStrategy.unselect(selection, [3, 4, 5], model);
          assert.deepEqual(selection.selected, [1, 2]);
          assert.deepEqual(selection.excluded, [9]);
       });
@@ -148,3 +149,4 @@ define([
       });
    });
 });
+*/

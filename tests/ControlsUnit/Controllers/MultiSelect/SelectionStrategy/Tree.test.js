@@ -1,3 +1,4 @@
+/*
 define([
    'Controls/operations',
    'Controls/treeGrid',
@@ -63,26 +64,26 @@ define([
          assert.deepEqual(selection.excluded, [6]);
       });
 
-      it('unSelect', function() {
-         treeStrategy.unSelect(selection, [3, 4], model);
+      it('unselect', function() {
+         treeStrategy.unselect(selection, [3, 4], model);
          assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
 
          // 2 - родитедль 3 и 4
          selection.selected = [2];
-         treeStrategy.unSelect(selection, [3, 4], model);
+         treeStrategy.unselect(selection, [3, 4], model);
          assert.deepEqual(selection.selected, [2]);
          assert.deepEqual(selection.excluded, []);
 
          selection.excluded = [2];
-         treeStrategy.unSelect(selection, [3, 4], model);
+         treeStrategy.unselect(selection, [3, 4], model);
          assert.deepEqual(selection.selected, [2]);
          assert.deepEqual(selection.excluded, [2, 3, 4]);
 
 
          selection.selected = [1, 2, 3, 4];
          selection.excluded = [9];
-         treeStrategy.unSelect(selection, [3, 4, 5], model);
+         treeStrategy.unselect(selection, [3, 4, 5], model);
          assert.deepEqual(selection.selected, [1, 2]);
          assert.deepEqual(selection.excluded, [9]);
       });
@@ -140,20 +141,20 @@ define([
                );
             });
 
-            it('unSelect', function() {
-               treeStrategyWithDescendantsAndAncestors.unSelect(selection, [3, 4], model);
+            it('unselect', function() {
+               treeStrategyWithDescendantsAndAncestors.unselect(selection, [3, 4], model);
                assert.deepEqual(selection.selected, []);
                assert.deepEqual(selection.excluded, []);
 
                // 2 - родитедль 3 и 4
                selection.selected = [2];
-               treeStrategyWithDescendantsAndAncestors.unSelect(selection, [3, 4], model);
+               treeStrategyWithDescendantsAndAncestors.unselect(selection, [3, 4], model);
                assert.deepEqual(selection.selected, []);
                assert.deepEqual(selection.excluded, []);
 
                selection.selected = [2];
                selection.excluded = [2];
-               treeStrategyWithDescendantsAndAncestors.unSelect(selection, [3, 4], model);
+               treeStrategyWithDescendantsAndAncestors.unselect(selection, [3, 4], model);
                assert.deepEqual(selection.selected, []);
                assert.deepEqual(selection.excluded, [2]);
             });
@@ -195,3 +196,4 @@ define([
       });
    });
 });
+*/

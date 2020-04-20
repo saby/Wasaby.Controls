@@ -119,15 +119,13 @@ define(['Controls/grid'], function(gridMod) {
                columns: [],
                multiSelectReady: function(){}
             },
-            gridView = new gridMod.GridView(cfg),
-            mountResult;
+            gridView = new gridMod.GridView(cfg);
          gridView._listModel = {
             setHandlersForPartialSupport: function(){},
             setColumnTemplate: function(){},
             setBaseItemTemplateResolver: () => {}
          };
-         mountResult = gridView._beforeMount(cfg);
-         assert.equal(mountResult, cfg.multiSelectReady);
+         gridView._beforeMount(cfg);
       });
       it('beforeUpdate', function() {
          var
