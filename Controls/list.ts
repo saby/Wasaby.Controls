@@ -127,7 +127,6 @@ export {
     NumberEditingTemplate,
     ItemActionsHelpers,
     BaseViewModel,
-    ItemActionsControl,
     ListViewModel,
     ListControl,
     ListView,

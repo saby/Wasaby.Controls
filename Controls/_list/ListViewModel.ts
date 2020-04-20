@@ -14,7 +14,13 @@ import {Model} from 'types/entity';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
-import {IItemAction} from "../itemActions";
+import {IItemAction} from 'Controls/itemActions';
+import {ISwipeConfig} from 'Controls/display';
+
+const ITEMACTIONS_POSITION_CLASSES = {
+    bottomRight: 'controls-itemActionsV_position_bottomRight',
+    topRight: 'controls-itemActionsV_position_topRight'
+};
 
 /**
  *
@@ -110,7 +116,7 @@ var _private = {
         return classList;
     },
     getItemActionsWrapperClasses(itemData, itemActionsPosition, highlightOnHover, style,
-        getContainerPaddingClass, itemActionsClass, itemPadding, toolbarVisibility, theme): string {
+        itemActionsClass, itemPadding, toolbarVisibility, theme): string {
         const th = `_theme-${theme}`;
         let classList = 'controls-itemActionsV__wrapper';
         classList += '  controls-itemActionsV__wrapper_absolute';
@@ -119,8 +125,18 @@ var _private = {
         classList += ` controls-itemActionsV_${itemActionsPosition}${th}`;
         classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
         classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') : '';
-        classList += getContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding, theme);
+        classList += _private.getItemActionsContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding);
         return classList;
+    },
+
+    getItemActionsContainerPaddingClass(classes: string[], itemPadding?: {top?: string, bottom?: string}): string {
+        let paddingClass = ' ';
+        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+            paddingClass += 'controls-itemActionsV_padding-top_' + (itemPadding && itemPadding.top === 'null' ? 'null ' : 'default ');
+        } else  if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+            paddingClass += 'controls-itemActionsV_padding-bottom_' + (itemPadding && itemPadding.bottom === 'null' ? 'null ' : 'default ');
+        }
+        return paddingClass;
     }
 };
 
@@ -139,6 +155,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _singleItemReloadCount: 0,
     _actionsAssigned: false,
     _actionsTemplateConfig: null,
+    _swipeConfig: null,
 
     constructor(cfg): void {
         const self = this;
@@ -236,6 +253,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.isIE12 = detection.isIE12;
         itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
         itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
+        itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
 
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
             itemsModelCurrent._isEditing = true;
@@ -279,7 +297,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent._isEditing;
         itemsModelCurrent.getContents = () => itemsModelCurrent.actionsItem;
         itemsModelCurrent.hasVisibleActions = (): boolean => itemsModelCurrent.itemActions?.showed?.length > 0;
-        itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing;
+        itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing();
         itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.hasVisibleActions() && itemsModelCurrent.itemActions?.showed?.some((action: any) => !!action.icon);
 
         return itemsModelCurrent;
@@ -399,21 +417,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         var
             item = this.getItemById(key, this._options.keyProperty);
         return this._display.getIndex(item);
-    },
-
-    /**
-     * New Model compatibility
-     * @param key
-     */
-    getItemBySourceKey(key) {
-        return this.getItemById(key, this._options.keyProperty);
-    },
-
-    /**
-     * New Model compatibility
-     */
-    nextVersion() {
-        this._nextVersion();
     },
 
     getNextItemKey: function(key) {
@@ -719,6 +722,21 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return this._actions[id];
     },
 
+    /**
+     * New Model compatibility
+     * @param key
+     */
+    getItemBySourceKey(key) {
+        return this.getItemById(key, this._options.keyProperty);
+    },
+
+    /**
+     * New Model compatibility
+     */
+    nextVersion() {
+        this._nextVersion();
+    },
+
     // New Model compatibility
     areActionsAssigned(): boolean {
         return this._actionsAssigned === true;
@@ -745,6 +763,19 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             this._actionsTemplateConfig = config;
             this._nextVersion();
         }
+    },
+
+    // New Model compatibility
+    setSwipeConfig(config: ISwipeConfig): void {
+        if (!isEqual(this._swipeConfig, config)) {
+            this._swipeConfig = config;
+            this._nextVersion();
+        }
+    },
+
+    // New Model compatibility
+    getSwipeConfig(): ISwipeConfig {
+        return this._swipeConfig;
     },
 
     updateSelection: function(selectedKeys) {

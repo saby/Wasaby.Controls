@@ -35,18 +35,18 @@
     </ws:else>
 
     <ws:if data="{{itemData.shouldDisplayActions()}}">
-        <ws:if data="{{itemData.isSwiped}}">
+        <ws:if data="{{itemData.isSwiped()}}">
             <ws:partial template="{{swipeTemplate}}"
                         itemData="{{itemData}}"
                         itemActionsTemplate="{{itemActionsTemplate}}"
                         highlightOnHover="{{highlightOnHover}}"/>
         </ws:if>
-        <ws:if data="itemData.itemActionsPosition !== 'custom'">
+        <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
             <ws:partial template="{{itemActionsTemplate}}"
                         itemActionsClass="{{itemActionsClass}}"
                         itemData="{{itemData}}"
                         highlightOnHover="{{highlightOnHover}}"/>
-        </ws:if>
+        </ws:else>
     </ws:if>
 </ws:template>
 <ws:if data="{{itemData.isSticky}}">

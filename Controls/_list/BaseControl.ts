@@ -84,12 +84,6 @@ const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_PROPORTION = 2;
-const ItemActionsUpdatedEvent = 'itemActionsUpdated';
-
-const ITEMACTIONS_POSITION_CLASSES = {
-    bottomRight: 'controls-itemActionsV_position_bottomRight',
-    topRight: 'controls-itemActionsV_position_topRight'
-};
 
 const ITEMACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
 
@@ -2728,16 +2722,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return result;
     },
 
-    // TODO сделать так же, как на новых списках
-    _showActionMenu(
-        event: Event,
-        itemData: object,
-        childEvent: Event,
-        action: object
-    ): void {
-        _private.showActionMenu(this, itemData, childEvent, action);
-    },
-
     /**
      * Обработчик показа контекстного меню
      * @param clickEvent
@@ -2762,17 +2746,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const contents: Model = itemData.getContents();
         _private.setMarkedKey(this, contents.getKey());
         _private.processItemActionClick(this, contents, action, event, false);
-    },
-
-    // todo это перенести в модель (как и всё, что каксается отрисовки эл-в. А звать это должен контрол)
-    _getItemActionsContainerPaddingClass(classes: string[], itemPadding?: {top?: string, bottom?: string}):string {
-        let paddingClass = ' ';
-        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
-            paddingClass += 'controls-itemActionsV_padding-top_' + (itemPadding && itemPadding.top === 'null' ? 'null ' : 'default ');
-        } else  if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
-            paddingClass += 'controls-itemActionsV_padding-bottom_' + (itemPadding && itemPadding.bottom === 'null' ? 'null ' : 'default ');
-        }
-        return paddingClass;
     },
 
     _needShowIcon(action: IItemAction): boolean {

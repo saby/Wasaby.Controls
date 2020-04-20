@@ -83,7 +83,7 @@
          <ws:itemActionsTemplate>
             <ws:partial
                     template="{{itemActionsTemplate.itemActionsTemplate}}"
-                    scope="{{ collection.getActionsTemplateConfig() }}"
+                    scope="{{ listModel.getActionsTemplateConfig() }}"
                     itemActionsClass="{{itemActionsClass}}"
                     item="{{ item }}" />
             <!-- using || instead of ws:if because template is constantly being updated otherwise -->
@@ -91,8 +91,8 @@
          <ws:swipeTemplate>
             <ws:partial
                     template="{{swipeTemplate.swipeTemplate}}"
-                    scope="{{ collection.getActionsTemplateConfig() }}"
-                    swipeConfig="{{ collection.getSwipeConfig() }}"
+                    scope="{{ listModel.getActionsTemplateConfig() }}"
+                    swipeConfig="{{ listModel.getSwipeConfig() }}"
                     animationState="open"
                     item="{{ item }}" />
             <!-- using || instead of ws:if because template is constantly being updated otherwise -->

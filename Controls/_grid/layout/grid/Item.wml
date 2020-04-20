@@ -1,5 +1,5 @@
 <ws:template name="itemActionsTemplateChooser">
-   <ws:if data="{{itemData.isSwiped}}">
+   <ws:if data="{{itemData.isSwiped()}}">
       <ws:partial template="{{swipeTemplate}}"
                   itemData="{{itemData}}"
                   itemActionsTemplate="{{itemActionsTemplate}}"

@@ -1,7 +1,7 @@
 <ws:template name="localItemActionsTemplateForEdge">
     <div attr:class="{{itemData.getItemActionsClasses(itemData, itemActionsPosition, actionMenuIsShown, theme)}}">
         <div attr:class="{{itemData.getItemActionsWrapperClasses(itemData, itemActionsPosition, highlightOnHover, style,
-            getContainerPaddingClass, itemActionsClass, itemPadding, toolbarVisibility, theme)}}">
+        itemActionsClass, itemPadding, toolbarVisibility, theme)}}">
             <ws:partial
                     template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"
                     itemData="{{itemData}}"
@@ -20,12 +20,13 @@
         </div>
     </div>
 </ws:template>
+
 <ws:template name="localItemActionsTemplate">
 <div attr:class="controls-itemActionsV
             {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') }}
             {{itemActionsPosition !== 'outside' ? (itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight') : ''}}
             controls-itemActionsV_{{itemActionsPosition}}_theme-{{theme}}
-            {{getContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding, theme)}}
+            {{itemData.getContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding)}}
             {{itemData.isEditing() ? 'controls-itemActionsV_editing_theme-' + theme}}
             {{itemData.isEditing() && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
             {{itemData.isActive() && actionMenuIsShown ? 'controls-itemActionsV_visible'}}
