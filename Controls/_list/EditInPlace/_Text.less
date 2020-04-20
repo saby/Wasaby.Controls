@@ -1,6 +1,11 @@
 .ws-is-hover .controls-ListView__itemV:hover .controls-EditingTemplateText_enabled_theme-@{themeName} {
    background-color: @background-color_inputText;
-   cursor: text;
+
+   // Курсор должен меняться только при наведении на текст, аналогично полям ввода. Он не должен меняться при
+   // наведении на отступы от текста до границ.
+   .controls-EditingTemplateText__inner {
+      cursor: text;
+   }
 }
 
 .controls-EditingTemplateText_active_theme-@{themeName} {
