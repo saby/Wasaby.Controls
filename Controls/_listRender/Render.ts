@@ -208,7 +208,7 @@ export default class Render extends Control<IRenderOptions> {
         }
     }
 
-    static _theme: string[] = ['Controls/list_multi'];
+    static _theme: string[] = ['Controls/list'];
 
     static getDefaultOptions(): Partial<IRenderOptions> {
         return {

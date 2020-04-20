@@ -327,11 +327,15 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             return;
         }
 
+        const isMarkedItemInRecordSet = _private.getItemByMarkedKey(this, markedKey);
         // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
-        if (!_private.getItemByMarkedKey(this, markedKey) && this.getCount()) {
-            this._markedKey = this._items.at(0).getId();
+        if (!isMarkedItemInRecordSet) {
+            if (this.getCount()) {
+                this._markedKey = this._items.at(0).getId();
+            } else {
+                this._markedKey = null;
+            }
         }
-
     },
 
     updateMarker: function(markedKey):void {

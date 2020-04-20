@@ -3,7 +3,7 @@ define([
    'Types/entity',
    'Types/collection',
    'Types/source'
-], function(scroll, entity, collection, sourceLib) {
+], function(lookup, entity, collection, sourceLib) {
 
    function getBaseSelectedCollection() {
       return {
@@ -25,10 +25,10 @@ define([
 
       // Убираем работу с вертской
       if (typeof window === 'undefined') {
-         scroll._CollectionController._private.getCounterWidth = function() {};
+         lookup._CollectionController._private.getCounterWidth = function() {};
       }
 
-      scroll._CollectionController._private.getHistoryService = function() {
+      lookup._CollectionController._private.getHistoryService = function() {
          return {
             addCallback: function(func) {
                func({
@@ -43,7 +43,7 @@ define([
       it('setSelectedKeys', function() {
          var self = getBaseSelectedCollection();
 
-         scroll._CollectionController._private.setSelectedKeys(self, [1]);
+         lookup._CollectionController._private.setSelectedKeys(self, [1]);
 
          assert.deepEqual(self._selectedKeys, [1]);
       });
@@ -69,7 +69,7 @@ define([
                keyProperty: 'id'
             }
          };
-         scroll._CollectionController._private.loadItems(self, self._options, self._options.selectedKeys).addCallback(function(result) {
+         lookup._CollectionController._private.loadItems(self, self._options, self._options.selectedKeys).addCallback(function(result) {
             assert.equal(selectedItems, result);
             assert.equal(result.at(0).getId(), 1);
             assert.equal(result.at(1).getId(), 2);
@@ -81,7 +81,7 @@ define([
       it('getItems', function() {
          var self = {};
 
-         var items = scroll._CollectionController._private.getItems(self);
+         var items = lookup._CollectionController._private.getItems(self);
 
          assert.isTrue(items['[Types/_collection/List]']);
          assert.isTrue(self._items['[Types/_collection/List]']);
@@ -114,21 +114,21 @@ define([
             }
          };
 
-         scroll._CollectionController._private.addItem(self, item);
+         lookup._CollectionController._private.addItem(self, item);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isTrue(keysChanged);
          assert.equal(self._items.at(0), item);
          assert.equal(textValue, 'Roman');
 
          keysChanged = false;
-         scroll._CollectionController._private.addItem(self, item);
+         lookup._CollectionController._private.addItem(self, item);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
          assert.equal(self._items.at(0), item);
 
          selectedItems = self._items;
          self._options.multiSelect = true;
-         scroll._CollectionController._private.addItem(self, item2);
+         lookup._CollectionController._private.addItem(self, item2);
          assert.deepEqual(self._selectedKeys, [1, 2]);
          assert.isTrue(keysChanged);
          assert.equal(self._items.at(0), item);
@@ -165,14 +165,14 @@ define([
             }
          };
 
-         scroll._CollectionController._private.addItem(self, item);
+         lookup._CollectionController._private.addItem(self, item);
 
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isTrue(keysChanged);
          assert.equal(self._items.getCount(), 1);
 
          keysChanged = false;
-         scroll._CollectionController._private.removeItem(self, fakeItem);
+         lookup._CollectionController._private.removeItem(self, fakeItem);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
          assert.equal(self._items.getCount(), 1);
@@ -180,7 +180,7 @@ define([
 
 
          selectedItems = self._items;
-         scroll._CollectionController._private.removeItem(self, item.clone());
+         lookup._CollectionController._private.removeItem(self, item.clone());
          assert.deepEqual(self._selectedKeys, []);
          assert.isTrue(keysChanged);
          assert.notEqual(selectedItems, self._items);
@@ -189,7 +189,7 @@ define([
       });
 
       it('_beforeMount', function() {
-         var selectedCollection = new scroll._CollectionController();
+         var selectedCollection = new lookup._CollectionController();
          var selectedKeys = [1];
 
          selectedCollection._beforeMount({
@@ -203,7 +203,7 @@ define([
          assert.deepEqual(selectedCollection._selectedKeys, selectedKeys);
          assert.notEqual(selectedCollection._selectedKeys, selectedKeys);
 
-         var collectionWithReceivedState = new scroll._CollectionController();
+         var collectionWithReceivedState = new lookup._CollectionController();
          collectionWithReceivedState._beforeMount({
             selectedKeys: selectedKeys,
             source: new sourceLib.Memory({
@@ -221,7 +221,7 @@ define([
       });
 
       it('_beforeUpdate', function(done) {
-         var selectedCollection = new scroll._CollectionController();
+         var selectedCollection = new lookup._CollectionController();
          var selectedKeysLink;
          var selectedKeys = [];
          var textValue = '';
@@ -325,7 +325,7 @@ define([
       it('_setItems', function() {
          var
             selectedItems,
-            selectedCollection = new scroll._CollectionController(),
+            selectedCollection = new lookup._CollectionController(),
             items = [
                new entity.Model({
                   rawData: {id: 1}
@@ -359,11 +359,17 @@ define([
       });
 
       it('_selectCallback', function() {
-         var
-            selectedCollection = new scroll._CollectionController(),
-            item = new entity.Model({
-               rawData: {id: 1}
-            });
+         const selectedCollection = new lookup._CollectionController();
+         const item = new entity.Model({
+            rawData: {id: 1}
+         });
+         let valueCleared = false;
+
+         selectedCollection._notify = (event, value) => {
+            if (event === 'valueChanged' && !value[0]) {
+               valueCleared = true;
+            }
+         };
 
          selectedCollection._options.keyProperty = 'id';
          selectedCollection._options.historyId = 'historyField';
@@ -377,6 +383,7 @@ define([
          assert.deepEqual(dataHistory, {
             ids: [1]
          });
+         assert.isTrue(valueCleared);
       });
    });
 });
