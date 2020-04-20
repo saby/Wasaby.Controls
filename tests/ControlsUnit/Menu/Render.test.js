@@ -81,7 +81,7 @@ define(
                itemPadding: {}
             };
             let leftSpacing = menuRender.getLeftSpacing(renderOptions);
-            assert.equal(leftSpacing, 'l');
+            assert.equal(leftSpacing, 'm');
 
             renderOptions.multiSelect = true;
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
@@ -100,7 +100,7 @@ define(
                nodeProperty: 'node'
             };
             let rightSpacing = menuRender.getRightSpacing(renderOptions);
-            assert.equal(rightSpacing, 'l');
+            assert.equal(rightSpacing, 'm');
 
             let items = Clone(defaultItems);
             items[0].node = true;
