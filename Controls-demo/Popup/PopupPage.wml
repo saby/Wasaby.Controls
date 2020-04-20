@@ -121,11 +121,8 @@
    <div>
       <Controls.buttons:Button name="helperButton6" caption="open Dialog by popupHelper" on:click="openDialogByHelper()" attr:class="ControlsDemo-PopupPage__helperDialogButton"/>
    </div>
-   <div>
-      <Controls.buttons:Button name="stickyInScrollButton" caption="stickyInScroll" on:click="openStickyInScroll()" attr:class="ControlsDemo-PopupPage__stickyButton"/>
-   </div>
    <Controls.scroll:Container attr:class="ControlsDemo-PopupPage__external-scroll-container">
-      <p>scroll</p>
+      <Controls.buttons:Button name="stickyInScrollButton" caption="stickyInScroll" on:click="openStickyInScroll()" attr:class="ControlsDemo-PopupPage__stickyButton"/>
       <Controls.scroll:Container attr:class="ControlsDemo-PopupPage__internal-scroll-container" name="scrollContainer">
          <Controls.popup:Sticky name="stickyInScroll"
                                 onResult="{{_onResult}}"
