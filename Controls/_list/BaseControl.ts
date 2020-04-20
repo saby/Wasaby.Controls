@@ -1789,13 +1789,15 @@ const _private = {
     },
 
     onCollectionChanged(self: any, action: string, removedItems: []): void {
-        switch (action) {
-            case IObservable.ACTION_REMOVE:
-                self._selectionController.removeKeys(removedItems);
-                break;
-            case IObservable.ACTION_RESET:
-                self._selectionController.reset();
-                break;
+        if (self._selectionController) {
+            switch (action) {
+                case IObservable.ACTION_REMOVE:
+                    self._selectionController.removeKeys(removedItems);
+                    break;
+                case IObservable.ACTION_RESET:
+                    self._selectionController.reset();
+                    break;
+            }
         }
     },
 
