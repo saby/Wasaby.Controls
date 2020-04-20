@@ -1,8 +1,9 @@
-<div class="controls-Popup"
+<div class="controls-Popup ws-float-area-show-complete"
      on:animationend="_animated()"
      on:transitionend="_animated()"
      on:keyup="_keyUp()"
      on:keydown="_keyDown()"
+     templateName="{{ _compatibleTemplateName}}"
      template="{{ _stringTemplate ? _options.template}}">
    <Controls.event:Register name="resizeDetect" register="controlResize">
       <ws:partial
