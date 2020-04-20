@@ -1093,6 +1093,10 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
+        getItemBySourceKey: function(id) {
+            return this._model.getItemById(id);
+        },
+
         setMarkedKey: function(key, byOptions) {
             this._model.setMarkedKey(key, byOptions);
         },
@@ -1586,6 +1590,14 @@ var
 
         updateSelection: function(selectedKeys) {
             this._model.updateSelection(selectedKeys);
+        },
+
+        setSelectedItems(items: any[], selected: boolean): void {
+            if (selected) {
+                const selectedKeys = {};
+                items.forEach((item) => selectedKeys[item.getId()] = selected);
+                this.updateSelection(selectedKeys);
+            }
         },
 
         setDragTargetPosition: function(position) {

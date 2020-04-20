@@ -5,12 +5,13 @@ import removeSelectionChildren from 'Controls/_operations/MultiSelector/removeSe
 import { isNode, getParentProperty, getItems, getChildren } from 'Controls/_operations/MultiSelector/ModelCompability';
 import { Map } from 'Types/shim';
 
-import { relation, Record } from 'Types/entity';
+import { relation, Record, Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import getChildrenIds from 'Controls/_operations/MultiSelector/getChildrenIds';
 import { ISelectionModel } from 'Controls/list';
 import { Controller as SourceController } from 'Controls/source';
+import { CollectionItem } from 'Controls/display';
 
 /**
  * Стратегия выбора для иерархического списка, для работы с ним как с плоским.
@@ -169,8 +170,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   getSelectedItems(selection: ISelection, model: ISelectionModel): any[] {
-      const selectedItems: any[] = [];
+   getSelectedItems(selection: ISelection, model: ISelectionModel): Array<CollectionItem<Model>> {
+      const selectedItems = [];
       const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, getItems(model));
 
       if (selection.selected.length || selection.excluded.length) {

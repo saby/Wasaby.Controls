@@ -2,6 +2,8 @@ import { TKeysSelection as TKeys, ISelectionObject as ISelection} from 'Controls
 import { ISelectionModel } from 'Controls/list';
 import { ITreeSelectionStrategyOptions } from './Tree';
 import { IFlatSelectionStrategyOptions } from './Flat';
+import { CollectionItem } from 'Controls/display';
+import { Model } from 'Types/entity';
 
 /**
  * Интерфейс базового класс стратегий выбора
@@ -14,7 +16,7 @@ interface ISelectionStrategy {
    toggleAll(selection: ISelection, model: ISelectionModel): void;
    unselectAll(selection: ISelection, model: ISelectionModel): void;
    getCount(selection: ISelection, model: ISelectionModel): number|null;
-   getSelectedItems(selection: ISelection, model: ISelectionModel): any[];
+   getSelectedItems(selection: ISelection, model: ISelectionModel): Array<CollectionItem<Model>>;
    update(options: ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions): void;
 }
 

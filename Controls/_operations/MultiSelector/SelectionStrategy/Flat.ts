@@ -5,6 +5,8 @@ import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import { ISelectionModel } from 'Controls/list';
+import { CollectionItem } from 'Controls/display';
+import { Model } from 'Types/entity';
 
 const ALL_SELECTION_VALUE = null;
 
@@ -63,8 +65,8 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   getSelectedItems(selection: ISelection, model: ISelectionModel): any[] {
-      const selectedItems: any[] = [];
+   getSelectedItems(selection: ISelection, model: ISelectionModel): Array<CollectionItem<Model>> {
+      const selectedItems = [];
       const isAllSelected: boolean = this._isAllSelected(selection);
 
       if (selection.selected.length || selection.excluded.length) {

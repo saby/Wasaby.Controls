@@ -2,10 +2,12 @@ import Control = require('Core/Control');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import collection = require('Types/collection');
 import { isEqual } from 'Types/object';
-import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface/';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import { ISelectionStrategy, ITreeSelectionStrategyOptions } from 'Controls/operations';
 import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
 import clone = require('Core/core-clone');
+import { CollectionItem } from 'Controls/display';
+import { Model } from 'Types/entity';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -24,7 +26,9 @@ export interface ISelectionModel {
 
    getItems(): collection.RecordSet;
 
-   setSelectedItems(items: any[], selected: boolean): void;
+   setSelectedItems(items: Array<CollectionItem<Model>>, selected: boolean): void;
+
+   getItemBySourceKey(key: string | number): CollectionItem<Model>;
 }
 
 export interface ISelectionControllerOptions {
@@ -63,6 +67,7 @@ export class SelectionController {
       this._selectedKeys = options.selectedKeys.slice();
       this._excludedKeys = options.excludedKeys.slice();
       this._strategy = options.strategy;
+      this._filter = options.filter;
 
       this._notifySelectionKeysChanged = options.notifySelectionKeysChanged;
       this._notifySelectedKeysCountChanged = options.notifySelectedKeysCountChanged;
@@ -85,11 +90,16 @@ export class SelectionController {
    update(options: ISelectionControllerOptions): void {
       const itemsChanged = getItems(options.model) !== getItems(this._model);
       const modelChanged = options.model !== this._model;
+      const filterChanged = options.filter !== this._filter;
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
 
       if (modelChanged) {
          this._model = options.model;
+      }
+
+      if (filterChanged) {
+         this._filter = options.filter;
       }
 
       if (this._shouldResetSelection(options.filter)) {
@@ -99,7 +109,7 @@ export class SelectionController {
          this._selectedKeys = options.selectedKeys;
          this._excludedKeys = options.excludedKeys;
          this._notifyAndUpdateSelection(oldSelection, this._selection);
-      } else if (itemsChanged || modelChanged) {
+      } else if (itemsChanged || modelChanged || filterChanged) {
          this._updateSelectionForRender();
       }
    }
@@ -154,6 +164,13 @@ export class SelectionController {
       }
    }
 
+   updateItems(): void {
+      const oldSelection = clone(this._selection);
+      this._select(this._selectedKeys);
+      this._unselect(this._excludedKeys);
+      this._notifyAndUpdateSelection(oldSelection, this._selection);
+   }
+
    private _select(keys: TKeys): void {
       this._strategy.select(this._selection, keys, this._model);
    }
@@ -173,7 +190,7 @@ export class SelectionController {
    }
 
    private _getItemStatus(key: TKey): boolean {
-      return this._selectedKeys.includes(key) && !this._excludedKeys.includes(key);
+      return this._model.getItemBySourceKey(key).isSelected();
    }
 
    private _getRoot(): object | null {
@@ -194,12 +211,12 @@ export class SelectionController {
       return keys;
    }
 
-   private _getSelectedItems(): any[] {
-      return this._strategy.getSelectedItems(this._selection, this._model);
-   }
+   private _updateSelectionForRender(unselectedItems?: Array<CollectionItem<Model>>): void {
+      if (unselectedItems) {
+         this._model.setSelectedItems(unselectedItems, false);
+      }
 
-   private _updateSelectionForRender(): void {
-      const items = this._getSelectedItems();
+      const items = this._strategy.getSelectedItems(this._selection, this._model);
       this._model.setSelectedItems(items, true);
    }
 
@@ -247,7 +264,14 @@ export class SelectionController {
          this._notifySelectionKeysChanged('excludedKeysChanged', newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed);
       }
 
-      this._updateSelectionForRender();
+      const unselectedItems = this._strategy.getSelectedItems(
+         {
+            selected: selectedKeysDiff.removed,
+            excluded: newSelection.excluded
+         },
+         this._model);
+
+      this._updateSelectionForRender(unselectedItems);
    }
 
    private _notifySelectedCountChangedEvent(selectedKeys: TKeys, excludedKeys: TKeys): void {

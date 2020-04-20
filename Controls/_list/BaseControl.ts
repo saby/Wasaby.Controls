@@ -209,7 +209,7 @@ const _private = {
                     }
 
                     if (self._items) {
-                        self._items.unsubscribe('onCollectionChange', self._onCollectionChanged);
+                        self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
                     }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
@@ -225,7 +225,7 @@ const _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
-                    self._items.subscribe('onCollectionChange', self._onCollectionChanged);
+                    self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -1183,6 +1183,9 @@ const _private = {
                     self._children.itemActionsOpener.close();
                 }
             }
+            if (self._selectionController) {
+               self._selectionController.updateItems(newItems);
+            }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
         // for example if Controls.explorer:View is switched from list to tile mode. The controller
@@ -1410,7 +1413,7 @@ const _private = {
     bindHandlers(self) {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
         self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
-        self._onCollectionChanged = self._onCollectionChanged.bind(self);
+        self._onItemsChanged = self._onItemsChanged.bind(self);
         this.onSelectedTypeChanged = this.onSelectedTypeChanged.bind(self);
     },
 
@@ -1788,7 +1791,7 @@ const _private = {
         this._notify('listSelectedKeysCountChanged', [count, isAllSelected], {bubbling: true});
     },
 
-    onCollectionChanged(self: any, action: string, removedItems: []): void {
+    onItemsChanged(self: any, action: string, removedItems: []): void {
         if (self._selectionController) {
             switch (action) {
                 case IObservable.ACTION_REMOVE:
@@ -2691,8 +2694,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.actionsMenuResultHandler(this, args);
     },
 
-    _onCollectionChanged(event, action, newItems, newItemsIndex, removedItems): void {
-        _private.onCollectionChanged(this, action, removedItems);
+    _onItemsChanged(event, action, newItems, newItemsIndex, removedItems): void {
+        _private.onItemsChanged(this, action, removedItems);
     },
 
     _itemMouseDown(event, itemData, domEvent) {
