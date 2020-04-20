@@ -320,26 +320,28 @@ define([
       });
 
       it('set marker after setting items', function() {
-         var
-             items = new collection.RecordSet({
-                rawData: [
-                   { id: 1, title: 'item 1' }
-                ],
-                keyProperty: 'id'
-             }),
-             model = new lists.ListViewModel({
-                keyProperty: 'id',
-                items: new collection.RecordSet({
-                   rawData: [],
-                   keyProperty: 'id'
-                }),
-                markedKey: null
-             }),
-            modelWithoutItems = new lists.ListViewModel({
-               markerVisibility: 'visible',
-               keyProperty: 'id',
-               markedKey: 1
-            });
+         const items = new collection.RecordSet({
+            rawData: [
+               {id: 1, title: 'item 1'}
+            ],
+            keyProperty: 'id'
+         });
+         const emptyItems = new collection.RecordSet({
+            keyProperty: 'id'
+         });
+         const model = new lists.ListViewModel({
+            keyProperty: 'id',
+            items: new collection.RecordSet({
+               rawData: [],
+               keyProperty: 'id'
+            }),
+            markedKey: null
+         });
+         const modelWithoutItems = new lists.ListViewModel({
+            markerVisibility: 'visible',
+            keyProperty: 'id',
+            markedKey: 1
+         });
 
          // Should not set marker
          model._options.markerVisibility = 'hidden';
@@ -359,6 +361,9 @@ define([
          model._options.markerVisibility = 'always';
          model.setItems(items);
          assert.equal(1, model._markedKey);
+
+         model.setItems(emptyItems);
+         assert.isNull(model._markedKey);
 
          var
             markedKeyChangedCalled = false,

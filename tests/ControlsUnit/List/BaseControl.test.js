@@ -124,7 +124,7 @@ define([
          assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
          // создаем новый сорс
-         var oldSourceCtrl = ctrl._sourceController;
+         const oldSourceCtrl = ctrl._sourceController;
 
          source = new sourceLib.Memory({
             keyProperty: 'id',
@@ -146,41 +146,40 @@ define([
             filter: filter2
          };
 
-         // сорс грузит асинхронно
-         setTimeout(function() {
-            assert.equal(ctrl._items, ctrl.getViewModel().getItems());
-            const prevModel = ctrl._listViewModel;
-            ctrl._beforeUpdate(cfg);
-            await ctrl._afterUpdate(cfg);
+         assert.equal(ctrl._items, ctrl.getViewModel().getItems());
+         const prevModel = ctrl._listViewModel;
 
-            // check saving loaded items after new viewModelConstructor
-            // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
-            assert.equal(ctrl._items, ctrl.getViewModel()
-               .getItems());
-            assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
-            assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
-            ctrl.saveOptions(cfg);
-            assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
-            assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
-            assert.equal(prevModel._display, null);
-            assert.isTrue(
-               cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
-               cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
-            );
-            setTimeout(function() {
-               assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-               ctrl._children.listView = {
-                  getItemsContainer: function() {
-                     return {
-                        children: []
-                     };
-                  }
-               };
-               ctrl._afterUpdate({});
-               ctrl._beforeUnmount();
-               done();
+         ctrl._beforeUpdate(cfg);
+         assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
+         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
+         ctrl.saveOptions(cfg);
+
+         // сорс грузит асинхронно
+         ctrl._afterUpdate(cfg).then(() => {
+               // check saving loaded items after new viewModelConstructor
+               // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
+               assert.equal(ctrl._items, ctrl.getViewModel().getItems());
+               assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
+               assert.equal(ctrl._viewModelConstructor, treeGrid.TreeViewModel);
+               assert.equal(prevModel._display, null);
+               assert.isTrue(
+                  cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/treeGrid:TreeViewModel') ||
+                  cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
+               );
+               setTimeout(function() {
+                  assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+                  ctrl._children.listView = {
+                     getItemsContainer: function() {
+                        return {
+                           children: []
+                        };
+                     }
+                  };
+                  ctrl._afterUpdate({});
+                  ctrl._beforeUnmount();
+                  done();
+               });
             }, 100);
-         }, 10);
       });
 
       it('beforeMount: right indexes with virtual scroll and receivedState', function() {
@@ -2377,48 +2376,6 @@ define([
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
       });
 
-      it('close edit in place before reload', async function() {
-         let baseControlOptions = {
-            viewModelConstructor: lists.ListViewModel,
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               items: rs,
-               keyProperty: 'id'
-            },
-            viewName: 'Controls/List/ListView',
-            source: source,
-            emptyTemplate: {}
-         };
-
-         let baseControl = new lists.BaseControl(baseControlOptions);
-         baseControl.saveOptions(baseControlOptions);
-
-         await baseControl._beforeMount(baseControlOptions);
-
-         let isEditingCanceled = false;
-
-         baseControl._children = {
-            editInPlace: {
-               cancelEdit() {
-                  isEditingCanceled = true;
-               }
-            }
-         };
-
-         baseControl._listViewModel.getEditingItemData = () => ({});
-
-         await baseControl.reload();
-         assert.isTrue(isEditingCanceled);
-
-         isEditingCanceled = false;
-         baseControl._children = {};
-
-         await baseControl.reload();
-         assert.isFalse(isEditingCanceled);
-      });
-
       it('reload with changing source/navig/filter should call scroll to start', function() {
 
          var
@@ -3441,6 +3398,44 @@ define([
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });
+
+         it('close editing if page has been changed', function() {
+            let isCanceled = false;
+            const fakeCtrl = {
+               _listViewModel: {
+                  getEditingItemData: () => ({})
+               },
+               _options: {},
+               _children: {
+                  editInPlace: {
+                     cancelEdit: function() {
+                        isCanceled = true;
+                     }
+                  }
+               }
+            };
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, null, null);
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, null, {});
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {}, null);
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {}, {});
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {sourceConfig: {}}, {sourceConfig: {}});
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {sourceConfig: {page: 1}}, {sourceConfig: {page: 1}});
+            assert.isFalse(isCanceled);
+
+            lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {sourceConfig: {page: 1}}, {sourceConfig: {page: 2}});
+            assert.isTrue(isCanceled);
+         });
       });
 
       it('_onAnimationEnd', function() {
@@ -4011,7 +4006,7 @@ define([
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
-         it('_onItemContextMenu', function() {
+         it('_onItemContextMenu', async () => {
             var callBackCount = 0;
             var cfg = {
                   items: new collection.RecordSet({
@@ -4061,7 +4056,7 @@ define([
                   }
                },
                itemData = {
-                  key: 1
+                  key: 2
                };
             instance._children = {
                itemActionsOpener: {
@@ -4072,10 +4067,10 @@ define([
             };
 
             instance.saveOptions(cfg);
-            instance._beforeMount(cfg);
-            assert.equal(instance.getViewModel()._markedKey, undefined);
-            instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
+            await instance._beforeMount(cfg);
             assert.equal(instance.getViewModel()._markedKey, 1);
+            instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
+            assert.equal(instance.getViewModel()._markedKey, 2);
             assert.equal(callBackCount, 0);
          });
 
@@ -5518,13 +5513,11 @@ define([
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
 
-         let clock = sandbox.useFakeTimers();
-
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.sorting = [{ title: 'ASC' }];
          instance._beforeUpdate(cfgClone);
+         instance.saveOptions(cfgClone);
          await instance._afterUpdate(cfgClone);
-         clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
 
@@ -5533,8 +5526,8 @@ define([
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          instance._beforeUpdate(cfgClone);
+         instance.saveOptions(cfgClone);
          await instance._afterUpdate(cfgClone);
-         clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
       });
