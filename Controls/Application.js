@@ -158,7 +158,7 @@ define('Controls/Application',
          },
 
          _scrollPage: function(ev) {
-            this._children.scrollDetect.start(ev, 'application');
+            this._children.scrollDetect.start(ev);
          },
 
          _resizeBody: function(ev) {
