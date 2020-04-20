@@ -34,7 +34,7 @@ define('Controls/interface/IEditableArea', [
 
    /**
     * @typedef {String|Promise} BeforeEndEditResult
-    * @variant {Promise} Deferred Используется для сохранения с пользовательской логикой.
+    * @variant {Promise} Используется для сохранения с пользовательской логикой.
     * @variant {String} Cancel Отменяет окончание редактирования.
     */
 
