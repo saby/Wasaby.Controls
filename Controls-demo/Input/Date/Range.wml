@@ -7,7 +7,7 @@
                {{mask}}
             </div>
             <div class="controlsDemo-Input-DateRange__row-item">
-               <Controls.dateRange:Input attr:ws-autofocus="{{index === 0}}" attr:class="hello"
+               <Controls.dateRange:Input name="input{{index}}" attr:class="hello"
                        mask="{{mask}}"/>
             </div>
             <div class="controlsDemo-Input-DateRange__row-item">

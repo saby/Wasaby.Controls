@@ -48,7 +48,7 @@
             <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-s">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру S</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
-                    <ws:itemPadding left="M" right="M"/>
+                    <ws:itemPadding left="S" right="S"/>
                     <ws:footerTemplate>
                         <div class="controlsDemo__hor-padding__list__footerContent">Подвал списка</div>
                     </ws:footerTemplate>
@@ -58,7 +58,7 @@
             <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-m">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру M</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
-                    <ws:itemPadding left="L" right="L"/>
+                    <ws:itemPadding left="M" right="M"/>
                     <ws:footerTemplate>
                         <div class="controlsDemo__hor-padding__list__footerContent">Подвал списка</div>
                     </ws:footerTemplate>
@@ -67,6 +67,13 @@
 
             <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-l">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру L</div>
+                <Controls.list:View keyProperty="id" source="{{_viewSource}}">
+                    <ws:itemPadding left="L" right="L"/>
+                </Controls.list:View>
+            </div>
+
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-l">
+                <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру XL</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}">
                     <ws:itemPadding left="XL" right="XL"/>
                     <ws:footerTemplate>

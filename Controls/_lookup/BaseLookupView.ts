@@ -87,18 +87,19 @@ var BaseLookupView = Control.extend({
     },
 
     _beforeUpdate: function (newOptions) {
-        var
-            currentOptions = this._options,
-            isNeedUpdate = !isEqual(newOptions.selectedKeys, this._options.selectedKeys);
+        const currentOptions = this._options;
+        let isNeedUpdate = !isEqual(newOptions.selectedKeys, this._options.selectedKeys);
+        const valueChanged = currentOptions.value !== newOptions.value;
+        const itemsChanged = currentOptions.items !== newOptions.items;
 
-        if (newOptions.value !== this._options.value) {
+        if (valueChanged) {
             this._inputValue = newOptions.value;
-        } else if (currentOptions.items !== newOptions.items) {
+        } else if (itemsChanged && !newOptions.comment) {
             _private.resetInputValue(this);
         }
 
         if (!isNeedUpdate) {
-            this._listOfDependentOptions.forEach(function (optName) {
+            this._listOfDependentOptions.forEach((optName) => {
                 if (newOptions[optName] !== currentOptions[optName]) {
                     isNeedUpdate = true;
                 }
@@ -150,6 +151,7 @@ var BaseLookupView = Control.extend({
             _private.activate(this, false);
         }
         this._notify('removeItem', [item]);
+        _private.resetInputValue(this);
     },
 
     _getFieldWrapperWidth: function (recount) {

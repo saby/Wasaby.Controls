@@ -79,7 +79,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
     protected _viewModelConstructor = null;
     protected _children: { listControl: unknown };
 
-    static _theme = ['Controls/list_multi'];
+    static _theme = ['Controls/list'];
 
     _beforeMount(options) {
         this._viewModelConstructor = this._getModelConstructor(options.useNewModel);
