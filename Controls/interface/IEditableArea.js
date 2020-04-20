@@ -39,7 +39,7 @@ define('Controls/interface/IEditableArea', [
     */
 
    /*
-    * @typedef {String|Promise|undefined} BeforeEndEditResult - результат, возвращаемый обработчиком события beforeBeginEdit.
+    * @typedef {String|Promise|undefined} BeforeEndEditResult Результат, возвращаемый обработчиком события beforeBeginEdit.
     * @variant Promise - Используется для сохранения с пользовательской логикой.
     * @variant Cancel - Отменяет окончание редактирования.
     * @variant undefined - Стандартное завершение редактирования. Сохранение происходит на стороне платформы.
