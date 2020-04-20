@@ -1,6 +1,9 @@
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {Logger} from 'UI/Utils';
 import {IStickyOpener, IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
+import {TemplateFunction} from 'UI/Base';
+import Template = require('wml!Controls/_popup/Opener/Sticky');
+import {detection} from 'Env/Env';
 
 const getStickyConfig = (config) => {
     config = config || {};
@@ -43,10 +46,41 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
 interface IStickyOpenerOptions extends IStickyPopupOptions, IBaseOpenerOptions {}
 
 class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
+    protected _template: TemplateFunction = Template;
     readonly '[Controls/_popup/interface/IStickyOpener]': boolean;
+    private _actionOnScroll: string = 'none';
 
     open(popupOptions: IStickyPopupOptions): Promise<string | undefined> {
         return super.open(getStickyConfig(popupOptions), POPUP_CONTROLLER);
+    }
+
+    protected _getConfig(popupOptions: IStickyOpenerOptions = {}): IStickyOpenerOptions {
+        const baseConfig = super._getConfig(popupOptions);
+        if (baseConfig.actionOnScroll) {
+            this._actionOnScroll = baseConfig.actionOnScroll;
+        }
+        return baseConfig;
+    }
+
+    protected _scrollHandler(event: Event, scrollEvent: Event, initiator: string): void {
+        if (this.isOpened() && event.type === 'scroll') {
+            // Из-за флага listenAll на listener'e, подписка доходит до application'a всегда.
+            // На ios при показе клавиатуры стреляет событие скролла, что приводит к вызову текущего обработчика
+            // и закрытию окна. Для ios отключаю реакцию на скролл, событие скролла стрельнуло на body.
+            if (detection.isMobileIOS && initiator === 'application') {
+                return;
+            } else if (this._actionOnScroll === 'close') {
+                this.close();
+            } else if (this._actionOnScroll === 'track') {
+                this._updatePopup();
+            }
+        }
+    }
+
+    static getDefaultOptions(): IStickyOpenerOptions {
+        const baseConfig: IStickyPopupOptions = BaseOpener.getDefaultOptions();
+        baseConfig.actionOnScroll = 'none';
+        return baseConfig;
     }
 
     static openPopup(config: IStickyPopupOptions): Promise<string> {

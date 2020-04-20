@@ -40,7 +40,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     readonly '[Controls/_popup/interface/IBaseOpener]': boolean;
     protected _template: TemplateFunction = Template;
-    private _actionOnScroll: string = 'none';
     private _popupId: string = '';
     private _openerUnmounted: boolean = false;
     private _indicatorId: string = '';
@@ -68,7 +67,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     open(popupOptions: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
             this._toggleIndicator(true);
-            const cfg: TBaseOpenerOptions = this._getConfig(popupOptions || {});
+            const cfg: TBaseOpenerOptions = this._getConfig(popupOptions);
             // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
             if (cfg.isCompoundTemplate) {
                 this._compatibleOpen(cfg, controller);
@@ -150,14 +149,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         return this._loadModulesPromise;
     }
 
-    private _getConfig(popupOptions: IBaseOpenerOptions = {}): TBaseOpenerOptions {
+    protected _getConfig(popupOptions: IBaseOpenerOptions = {}): TBaseOpenerOptions {
         const baseConfig = BaseOpener.getConfig(this._options, popupOptions);
         // if the .opener property is not set, then set the defaultOpener or the current control
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = DefaultOpenerFinder.find(this) || this;
-        }
-        if (baseConfig.actionOnScroll) {
-            this._actionOnScroll = baseConfig.actionOnScroll;
         }
 
         if (ManagerController.isDestroying(this._getCurrentPopupId())) {
@@ -227,17 +223,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         };
     }
 
-    protected _scrollHandler(event: Event): void {
-        if (this.isOpened() && event.type === 'scroll') {
-            if (this._actionOnScroll === 'close') {
-                this._closeOnTargetScroll();
-            } else if (this._actionOnScroll === 'track') {
-                this._updatePopup();
-            }
-        }
-    }
-
-    private _updatePopup(): void {
+    protected _updatePopup(): void {
         ManagerController.popupUpdated(this._getCurrentPopupId());
     }
 
@@ -472,8 +458,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     static getDefaultOptions(): IBaseOpenerOptions {
         return {
-            closePopupBeforeUnmount: true,
-            actionOnScroll: 'none'
+            closePopupBeforeUnmount: true
         };
     }
 
