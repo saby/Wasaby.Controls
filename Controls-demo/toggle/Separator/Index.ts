@@ -7,6 +7,7 @@ class ViewModes extends Control<IControlOptions> {
     protected _expanded1: boolean = false;
     protected _expanded2: boolean = false;
     protected _expanded3: boolean = false;
+    protected _expanded4: boolean = false;
 
     protected _headingClick(): void {
         this._expanded3 = !this._expanded3;
