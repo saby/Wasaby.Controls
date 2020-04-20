@@ -123,6 +123,15 @@ define([
          });
          assert.equal(lookup._inputValue, '');
 
+         lookup._inputValue = 'not reset value';
+         lookup._beforeUpdate({
+            items: new collection.List(),
+            readOnly: !lookup._options.readOnly,
+            value: lookup._options.value,
+            comment: 'testComment'
+         });
+         assert.equal(lookup._inputValue, 'not reset value');
+
          // Если передали новое value, то применится оно и сбоса не будет
          lookup._inputValue = 'not reset value';
          lookup._beforeUpdate({

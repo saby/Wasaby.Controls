@@ -69,7 +69,9 @@
                 </div>
              </ws:if>
              <ws:else>
-                <ws:partial template="filtersContent"/>
+                <div class="controls-FilterPanel__content-vertical">
+                    <ws:partial template="filtersContent"/>
+                </div>
                 <ws:partial template="history"/>
              </ws:else>
           </Controls.scroll:Container>
