@@ -97,12 +97,12 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _onItemActionsMenuResult(e: SyntheticEvent<MouseEvent>, eventName: string, eventResult: Model|Node, nativeEvent: SyntheticEvent<MouseEvent>) {
         e.stopPropagation();
-        this._notify('itemActionsResult', [eventName, eventResult, e], { bubbling: true });
+        this._notify('itemActionsMenuResult', [eventName, eventResult, e], { bubbling: false });
     }
 
     protected _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
-        this._notify('itemActionsClose', [e] , { bubbling: true });
+        this._notify('itemActionsMenuClose', [e] , { bubbling: false });
     }
 
     protected _onItemContextMenu(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {

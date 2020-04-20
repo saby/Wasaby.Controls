@@ -2,7 +2,7 @@
          {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility)}}
          controls-ListView__item_showActions
          {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
-         {{!!itemData.isActive ? ' controls-TreeTileView__item_active'}}
+         {{!!itemData.isActive() ? ' controls-TreeTileView__item_active'}}
          {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
          {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme' + itemData.theme}}"
      attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultFolderWidth) + 'px; flex-basis: ' + (width || itemData.defaultFolderWidth)+ 'px;'}}">
@@ -19,13 +19,13 @@
      <div attr:class="controls-TreeTileView__dragTargetNode"></div>
   </ws:if>
   <div attr:class="controls-TreeTileView__title" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
-  <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
+  <ws:partial if="{{itemData.isSwiped() && itemData.shouldDisplayActions()}}"
               highlightOnHover="{{highlightOnHover}}"
               template="{{swipeTemplate}}"
               itemData="{{itemData}}"
               isTile="{{true}}"
               itemActionsTemplate="{{itemActionsTemplate}}"/>
-  <ws:partial if="{{!itemData.isSwiped && itemData.drawActions && itemData.itemActionsPosition !== 'custom'}}"
+  <ws:partial if="{{!itemData.isSwiped() && itemData.shouldDisplayActions() && itemData.itemActionsPosition !== 'custom'}}"
               template="{{itemActionsTemplate}}"
               highlightOnHover="{{highlightOnHover}}"
               itemData="{{itemData}}"

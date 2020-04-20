@@ -15,6 +15,7 @@
       backgroundStyle="{{backgroundStyle}}"
       tagTemplate="{{tagTemplate}}"/>
 </ws:template>
+
 <ws:template name="addItem">
    <ws:partial
            on:click="_onItemClick(editingItemData.dispItem)"
@@ -50,6 +51,7 @@
       </ws:for>
    </ws:if>
 </ws:template>
+
 <ws:template name="itemTemplate">
    <ws:if data="{{currentItem.beforeItemTemplate}}">
       <ws:partial template="{{currentItem.beforeItemTemplate}}"
@@ -77,15 +79,35 @@
 
 <ws:template name="drawItemsTemplate">
    <ws:if data="{{listModel.isShouldBeDrawnItem(currentItem)}}">
-      <ws:partial template="itemTemplate" currentItem="{{currentItem}}" />
+      <ws:partial template="itemTemplate" currentItem="{{currentItem}}">
+         <ws:itemActionsTemplate>
+            <ws:partial
+                    template="{{itemActionsTemplate.itemActionsTemplate}}"
+                    scope="{{ collection.getActionsTemplateConfig() }}"
+                    itemActionsClass="{{itemActionsClass}}"
+                    item="{{ item }}" />
+            <!-- using || instead of ws:if because template is constantly being updated otherwise -->
+         </ws:itemActionsTemplate>
+         <ws:swipeTemplate>
+            <ws:partial
+                    template="{{swipeTemplate.swipeTemplate}}"
+                    scope="{{ collection.getActionsTemplateConfig() }}"
+                    swipeConfig="{{ collection.getSwipeConfig() }}"
+                    animationState="open"
+                    item="{{ item }}" />
+            <!-- using || instead of ws:if because template is constantly being updated otherwise -->
+         </ws:swipeTemplate>
+      </ws:partial>
    </ws:if>
    <ws:else>
       {{listModel.goToNext()}}
    </ws:else>
 </ws:template>
+
 <ws:for data="listModel.reset(); listModel.isEnd();">
    <ws:partial template="drawItemsTemplate" currentItem="{{listModel.getCurrent()}}"/>
 </ws:for>
+
 <ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">
    <ws:partial template="addItem" currentItem="{{currentItem}}"/>
 </ws:if>

@@ -157,7 +157,7 @@ export default class View extends Control<IViewOptions> {
      * @param clickEvent
      * @private
      */
-    _onItemActionsMenuResult(
+    protected _onItemActionsMenuResult(
         e: SyntheticEvent<MouseEvent>,
         eventName: string,
         data: Model,
@@ -171,7 +171,7 @@ export default class View extends Control<IViewOptions> {
      * @param clickEvent
      * @private
      */
-    _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>) {
+    protected _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>) {
         this._dropdownMenuEventsHandler('menuClosed', null, clickEvent);
     }
 

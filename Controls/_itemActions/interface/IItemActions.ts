@@ -124,27 +124,3 @@ export interface IDropdownConfig {
          onClose: IDropdownActionHandler;
     };
 }
-
-export interface IItemActionsControllerOptions {
-    /**
-     * Коллекция элементов, содержащих операции с записью
-     */
-    collection: IItemActionsCollection;
-    /**
-     * Действия с записью
-     */
-    itemActions: IItemAction[];
-    /**
-     * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
-     */
-    itemActionsProperty?: string;
-    /**
-     * Callback для определения видимости операции
-     */
-    visibilityCallback?: TItemActionVisibilityCallback;
-    itemActionsPosition?: string;
-    style?: string;
-    itemActionsClass?: string;
-    actionAlignment?: string;
-    actionCaptionPosition?: 'right'|'bottom'|'none';
-}

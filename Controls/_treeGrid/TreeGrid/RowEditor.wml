@@ -1,5 +1,5 @@
 <ws:partial
    template="{{itemData.resolveBaseItemTemplate()}}"
    scope="{{_options}}"
-   colspanTemplate="{{itemData.isEditing ? content}}"
-   colspan="{{itemData.isEditing}}"/>
+   colspanTemplate="{{itemData.isEditing() ? content}}"
+   colspan="{{itemData.isEditing()}}"/>

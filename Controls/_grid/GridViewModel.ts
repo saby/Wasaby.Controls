@@ -77,7 +77,7 @@ var
             );
         },
         isDrawActions: function(itemData, currentColumn, colspan) {
-            return itemData.drawActions && _private.isActionsColumn(itemData, currentColumn, colspan);
+            return itemData.shouldDisplayActions() && _private.isActionsColumn(itemData, currentColumn, colspan);
         },
         getCellStyle: function(self, itemData, currentColumn, colspan) {
            var
@@ -256,7 +256,7 @@ var
                 classLists.base += ' controls-Grid__cell_fit';
             }
 
-            if (current.isEditing) {
+            if (current.isEditing()) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
                 classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;

@@ -14,6 +14,7 @@ import {Model} from 'types/entity';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
+import {IItemAction} from "../itemActions";
 
 /**
  *
@@ -78,13 +79,21 @@ var _private = {
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !isSelected)
                            .compile();
     },
+    /**
+     * TODO REMOVE!
+     * @param editingItemData
+     * @param currentItem
+     * @param editingConfig
+     * @param drawnActions
+     * @deprecated
+     */
     needToDrawActions: function (editingItemData, currentItem, editingConfig, drawnActions) {
-        if (editingItemData) {
-            return !!(currentItem.key === editingItemData.key &&
-                (drawnActions && drawnActions.length || editingConfig.toolbarVisibility));
-        } else {
-            return !!(drawnActions && drawnActions.length);
-        }
+        // if (editingItemData) {
+        //     return !!(currentItem.key === editingItemData.key &&
+        //         (drawnActions && drawnActions.length || editingConfig.toolbarVisibility));
+        // } else {
+        //     return !!(drawnActions && drawnActions.length);
+        // }
     },
     getGroupPaddingClasses(current, theme: string): { left: string; right: string } {
         const right = `controls-ListView__groupContent__rightPadding_${current.itemPadding.right}_theme-${theme}`;
@@ -95,8 +104,8 @@ var _private = {
     getItemActionsClasses(itemData, itemActionsPosition, actionMenuIsShown, theme): string {
         const th = `_theme-${theme}`;
         let classList = 'controls-itemActionsV' + ' controls-itemActionsV_full_item_size';
-        classList += itemData.isActive && actionMenuIsShown ? ' controls-itemActionsV_visible' : '';
-        classList += itemData.isSwiped ? ' controls-itemActionsV_swiped' : '';
+        classList += itemData.isActive() && actionMenuIsShown ? ' controls-itemActionsV_visible' : '';
+        classList += itemData.isSwiped() ? ' controls-itemActionsV_swiped' : '';
         classList += itemData.itemActionsColumnScrollDraw ? ' controls-itemActionsV_columnScrollDraw' : '';
         return classList;
     },
@@ -105,8 +114,8 @@ var _private = {
         const th = `_theme-${theme}`;
         let classList = 'controls-itemActionsV__wrapper';
         classList += '  controls-itemActionsV__wrapper_absolute';
-        classList += itemData.isEditing ? ` controls-itemActionsV_editing${th}` : '';
-        classList += itemData.isEditing && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
+        classList += itemData.isEditing() ? ` controls-itemActionsV_editing${th}` : '';
+        classList += itemData.isEditing() && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
         classList += ` controls-itemActionsV_${itemActionsPosition}${th}`;
         classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
         classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') : '';
@@ -168,11 +177,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._menuState = state;
     },
     getItemDataByItem: function() {
-        var
-            self = this,
-            itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
-            dragItems,
-            drawnActions;
+        const self = this;
+        const itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments);
+        let dragItems;
+        let drawnActions;
 
         if (itemsModelCurrent._listViewModelCached) {
             return itemsModelCurrent;
@@ -180,13 +188,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent._listViewModelCached = true;
         }
 
-        itemsModelCurrent.isMenuShown = this._menuState === 'shown';
+        itemsModelCurrent.itemActions = {};
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
+        itemsModelCurrent.isMenuShown = this._menuState === 'shown';
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         itemsModelCurrent.isSelected = _private.isSelected(this, itemsModelCurrent);
-        itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
-        itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
-        itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.actionsItem === this._swipeItem.actionsItem;
+        itemsModelCurrent._isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
+        itemsModelCurrent._isSwiped = this._swipeItem && itemsModelCurrent.actionsItem === this._swipeItem.actionsItem;
         itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
         itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
         itemsModelCurrent.searchValue = this._options.searchValue;
@@ -201,6 +209,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle;
+        itemsModelCurrent._isEditing = false;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrollConfig = Boolean(this._options.virtualScrollConfig);
@@ -223,24 +232,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
 
-        itemsModelCurrent.drawActions = _private.needToDrawActions(this._editingItemData, itemsModelCurrent, this._options.editingConfig, drawnActions);
-
         // itemActionsClassesForEdge
         itemsModelCurrent.isIE12 = detection.isIE12;
         itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
         itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
 
-        if (itemsModelCurrent.drawActions && drawnActions) {
-            itemsModelCurrent.hasActionWithIcon = false;
-            for (var i = 0; i < drawnActions.length; i++) {
-                if (drawnActions[i].icon) {
-                    itemsModelCurrent.hasActionWithIcon = true;
-                    break;
-                }
-            }
-        }
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
-            itemsModelCurrent.isEditing = true;
+            itemsModelCurrent._isEditing = true;
             itemsModelCurrent.item = this._editingItemData.item;
         }
 
@@ -258,9 +256,31 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
         }
 
+        // TODO REMOVE. itemsModelCurrent.hasActionWithIcon && itemsModelCurrent.drawActions are deprecated!!!
+        // itemsModelCurrent.drawActions = _private.needToDrawActions(this._editingItemData, itemsModelCurrent, this._options.editingConfig, drawnActions);
+        // if (itemsModelCurrent.drawActions && drawnActions) {
+        //     itemsModelCurrent.hasActionWithIcon = false;
+        //     for (let i = 0; i < drawnActions.length; i++) {
+        //         if (drawnActions[i].icon) {
+        //             itemsModelCurrent.hasActionWithIcon = true;
+        //             break;
+        //         }
+        //     }
+        // }
+
         // New Model compatibility
-        itemsModelCurrent.getActions = () => itemsModelCurrent.itemActions;
+        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}): void => { itemsModelCurrent.itemActions = actions; };
+        itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => itemsModelCurrent.itemActions;
+        itemsModelCurrent.setActive = (state: boolean): void => { itemsModelCurrent._isActive = state; };
+        itemsModelCurrent.isActive = (): boolean => itemsModelCurrent._isActive;
+        itemsModelCurrent.setSwiped = (state: boolean): void => { itemsModelCurrent._isSwiped = state; };
+        itemsModelCurrent.isSwiped = (): boolean => itemsModelCurrent._isSwiped;
+        itemsModelCurrent.setEditing = (state: boolean): void => { itemsModelCurrent._isEditing = state; };
+        itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent._isEditing;
         itemsModelCurrent.getContents = () => itemsModelCurrent.actionsItem;
+        itemsModelCurrent.hasVisibleActions = (): boolean => itemsModelCurrent.itemActions?.showed?.length > 0;
+        itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing;
+        itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.hasVisibleActions() && itemsModelCurrent.itemActions?.showed?.some((action: any) => !!action.icon);
 
         return itemsModelCurrent;
     },
@@ -315,6 +335,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
+    /**
+     * @param key
+     * @param byOptions
+     * @deprecated
+     */
     setMarkedKey: function(key, byOptions) {
         if (byOptions) {
             this._options.markedKey = key;
@@ -648,39 +673,47 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     /**
+     * @TODO REMOVE!!!
      * Устанавливает набор операций над записью для каждой записи
      * @param item
      * @param actions
+     * @deprecated
      */
     setItemActions(item: Model, actions: IItemActionsContainer): string {
-        let result = 'none';
-        if (item.get) {
-            const id = item.get(this._options.keyProperty);
-            if (this.hasItemById(id, this._options.keyProperty)) {
-               if (isEqual(this._actions[id], actions)) {
-                   result = 'none';
-               } else {
-                   result = Object.keys(this._actions).length ? 'partial' : 'all';
-                   this._actions[id] = actions;
-                   this._actionsVersions[id] = this._actionsVersions[id] ? ++this._actionsVersions[id] : 1;
-                   this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
-               }
-            } else if (this._editingItemData && this._editingItemData.key === id) {
-                this._editingItemData.itemActions = actions;
-                this._editingItemData.drawActions = !!(actions && actions.all.length) ||
-                   !!(this._options.editingConfig && this._options.editingConfig.toolbarVisibility);
-                result = 'all';
-            }
-        }
-        return result;
+        // let result = 'none';
+        // if (item.get) {
+        //     const id = item.get(this._options.keyProperty);
+        //     if (this.hasItemById(id, this._options.keyProperty)) {
+        //        if (isEqual(this._actions[id], actions)) {
+        //            result = 'none';
+        //        } else {
+        //            result = Object.keys(this._actions).length ? 'partial' : 'all';
+        //            this._actions[id] = actions;
+        //            this._actionsVersions[id] = this._actionsVersions[id] ? ++this._actionsVersions[id] : 1;
+        //            this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
+        //        }
+        //     } else if (this._editingItemData && this._editingItemData.key === id) {
+        //         this._editingItemData.itemActions = actions;
+        //         this._editingItemData.drawActions = !!(actions && actions.all.length) ||
+        //            !!(this._options.editingConfig && this._options.editingConfig.toolbarVisibility);
+        //         result = 'all';
+        //     }
+        // }
+        // return result;
     },
 
     _prepareDisplayItemForAdd: function(item) {
         return ItemsUtil.getDefaultDisplayItem(this._display, item);
     },
+
     getActionsItem: function(item) {
       return item;
     },
+
+    /**
+     * @deprecated
+     * @param item
+     */
     getItemActions: function(item) {
         const id = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
         return this._actions[id];

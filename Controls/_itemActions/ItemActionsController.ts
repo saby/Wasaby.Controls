@@ -6,14 +6,12 @@ import {isEqual} from 'Types/object';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
-    IItemActionsControllerOptions,
     IItemActionsItem,
     IItemActionsTemplateOptions,
     IItemActionsContainer,
     IDropdownTemplateOptions,
     IDropdownConfig,
-    IItemAction,
-    IDropdownActionHandler
+    IItemAction
 } from './interafce/IItemActions';
 
 // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
@@ -24,6 +22,30 @@ const showType = {
 };
 
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
+
+export interface IItemActionsControllerOptions {
+    /**
+     * Коллекция элементов, содержащих операции с записью
+     */
+    collection: IItemActionsCollection;
+    /**
+     * Действия с записью
+     */
+    itemActions: IItemAction[];
+    /**
+     * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
+     */
+    itemActionsProperty?: string;
+    /**
+     * Callback для определения видимости операции
+     */
+    visibilityCallback?: TItemActionVisibilityCallback;
+    itemActionsPosition?: string;
+    style?: string;
+    itemActionsClass?: string;
+    actionAlignment?: string;
+    actionCaptionPosition?: 'right'|'bottom'|'none';
+}
 
 /**
  * Контроллер, управляющий состоянием ItemActions в коллекции
@@ -63,12 +85,12 @@ export class ItemActionsController {
      * @param key TItemKey
      */
     updateActionsForItem(key: TItemKey): void {
-            const item = this._collection.getItemBySourceKey(key);
-            if (item) {
-                const itemActions = this._collectActionsForItem(item);
-                this._setItemActions(item, this._wrapActionsInContainer(itemActions));
-                this._collection.nextVersion();
-            }
+        const item = this._collection.getItemBySourceKey(key);
+        if (item) {
+            const itemActions = this._collectActionsForItem(item);
+            ItemActionsController._setItemActions(item, this._wrapActionsInContainer(itemActions));
+            this._collection.nextVersion();
+        }
     }
 
     /**
@@ -178,6 +200,7 @@ export class ItemActionsController {
             autofocus: false
         };
 
+        // TODO убрать отсюда
         this.setActiveItem(this._collection, itemKey);
         return dropdownConfig;
     }
@@ -262,7 +285,7 @@ export class ItemActionsController {
         this._collection.each((item) => {
             if (!item.isActive()) {
                 const actionsForItem = this._collectActionsForItem(item);
-                const itemChanged = this._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
+                const itemChanged = ItemActionsController._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
                 hasChanges = hasChanges || itemChanged;
             }
         });
@@ -361,7 +384,7 @@ export class ItemActionsController {
         const itemActions: IItemAction[] = this._itemActionsProperty
                 ? item.getContents().get(this._itemActionsProperty)
                 : this._commonItemActions;
-        const fixedActions = itemActions.map(this._fixActionIcon);
+        const fixedActions = itemActions.map(ItemActionsController._fixActionIcon);
         return fixedActions.filter((action) =>
             this._visibilityCallback(action, item.getContents())
         );
@@ -379,7 +402,7 @@ export class ItemActionsController {
         const actions = item.getActions().all;
         const actionsTemplateConfig = collection.getActionsTemplateConfig();
 
-        let swipeConfig = this._calculateSwipeConfig(
+        let swipeConfig = ItemActionsController._calculateSwipeConfig(
             actions,
             actionsTemplateConfig.actionAlignment,
             actionsContainerHeight,
@@ -388,9 +411,9 @@ export class ItemActionsController {
 
         if (
             actionsTemplateConfig.actionAlignment !== 'horizontal' &&
-            this._needsHorizontalMeasurement(swipeConfig)
+            ItemActionsController._needsHorizontalMeasurement(swipeConfig)
         ) {
-            swipeConfig = this._calculateSwipeConfig(
+            swipeConfig = ItemActionsController._calculateSwipeConfig(
                 actions,
                 'horizontal',
                 actionsContainerHeight,
@@ -398,7 +421,7 @@ export class ItemActionsController {
             );
         }
 
-        this._setItemActions(item, swipeConfig.itemActions);
+        ItemActionsController._setItemActions(item, swipeConfig.itemActions);
 
         if (swipeConfig.twoColumns) {
             const visibleActions = swipeConfig.itemActions.showed;
@@ -409,61 +432,6 @@ export class ItemActionsController {
         }
 
         collection.setSwipeConfig(swipeConfig);
-    }
-
-    private _calculateSwipeConfig(
-        actions: IItemAction[],
-        actionAlignment: string,
-        actionsContainerHeight: number,
-        actionCaptionPosition: 'right'|'bottom'|'none'
-    ): ISwipeConfig {
-        // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
-        // TODO Move these measurers to listRender, maybe rewrite them
-        const {SwipeVerticalMeasurer, SwipeHorizontalMeasurer} = require('../Controls/list');
-
-        const measurer =
-            actionAlignment === 'vertical'
-                ? SwipeVerticalMeasurer.default
-                : SwipeHorizontalMeasurer.default;
-        const config: ISwipeConfig = measurer.getSwipeConfig(
-            actions,
-            actionsContainerHeight,
-            actionCaptionPosition
-        );
-        config.needTitle = measurer.needTitle;
-        config.needIcon = measurer.needIcon;
-        return config;
-    }
-
-    private _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
-        const actions = config.itemActions;
-        return (
-            actions &&
-            actions.showed?.length === 1 &&
-            actions.all?.length > 1
-        );
-    }
-
-    private _setItemActions(
-        item: IItemActionsItem,
-        actions: IItemActionsContainer
-    ): boolean {
-        const oldActions = item.getActions();
-        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions))) {
-            item.setActions(actions);
-            return true;
-        }
-        return false;
-    }
-
-    private _fixActionIcon(action: IItemAction): IItemAction {
-        if (!action.icon || action.icon.includes(ITEM_ACTION_ICON_CLASS)) {
-            return action;
-        }
-        return {
-            ...action,
-            icon: `${action.icon} ${ITEM_ACTION_ICON_CLASS}`
-        };
     }
 
     private _wrapActionsInContainer(
@@ -501,17 +469,72 @@ export class ItemActionsController {
         );
     }
 
-    private _isMatchingActions(
+    private static _setItemActions(
+        item: IItemActionsItem,
+        actions: IItemActionsContainer
+    ): boolean {
+        const oldActions = item.getActions();
+        if (!oldActions || (actions && !ItemActionsController._isMatchingActions(oldActions, actions))) {
+            item.setActions(actions);
+            return true;
+        }
+        return false;
+    }
+
+    private static _isMatchingActions(
         oldContainer: IItemActionsContainer,
         newContainer: IItemActionsContainer
     ): boolean {
         return (
-            this._isMatchingActionLists(oldContainer.all, newContainer.all) &&
-            this._isMatchingActionLists(oldContainer.showed, newContainer.showed)
+            ItemActionsController._isMatchingActionLists(oldContainer.all, newContainer.all) &&
+            ItemActionsController._isMatchingActionLists(oldContainer.showed, newContainer.showed)
         );
     }
 
-    private _isMatchingActionLists(
+    private static _calculateSwipeConfig(
+        actions: IItemAction[],
+        actionAlignment: string,
+        actionsContainerHeight: number,
+        actionCaptionPosition: 'right'|'bottom'|'none'
+    ): ISwipeConfig {
+        // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
+        // TODO Move these measurers to listRender, maybe rewrite them
+        const {SwipeVerticalMeasurer, SwipeHorizontalMeasurer} = require('../Controls/list');
+
+        const measurer =
+            actionAlignment === 'vertical'
+                ? SwipeVerticalMeasurer.default
+                : SwipeHorizontalMeasurer.default;
+        const config: ISwipeConfig = measurer.getSwipeConfig(
+            actions,
+            actionsContainerHeight,
+            actionCaptionPosition
+        );
+        config.needTitle = measurer.needTitle;
+        config.needIcon = measurer.needIcon;
+        return config;
+    }
+
+    private static _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
+        const actions = config.itemActions;
+        return (
+            actions &&
+            actions.showed?.length === 1 &&
+            actions.all?.length > 1
+        );
+    }
+
+    private static _fixActionIcon(action: IItemAction): IItemAction {
+        if (!action.icon || action.icon.includes(ITEM_ACTION_ICON_CLASS)) {
+            return action;
+        }
+        return {
+            ...action,
+            icon: `${action.icon} ${ITEM_ACTION_ICON_CLASS}`
+        };
+    }
+
+    private static _isMatchingActionLists(
         aActions: IItemAction[],
         bActions: IItemAction[]
     ): boolean {

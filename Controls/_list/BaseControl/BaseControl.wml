@@ -136,6 +136,8 @@
                     multiSelectReady="{{_multiSelectReady}}"
                     listModel="{{_listViewModel}}"
                     startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
+                    itemActionsTemplate="{{ _itemActionsTemplate }}"
+                    swipeTemplate="{{ _itemActionsTemplate }}"
                     on:deactivated="_listDeactivated()"
                     on:animationend="_onAnimationEnd()"
                     on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
@@ -144,7 +146,7 @@
                     on:editArrowClick="_notifyHandler('editArrowClick')"
                     on:itemContextMenu="_onItemContextMenu()"
                     on:itemMouseDown="_itemMouseDown()"
-                on:itemMouseUp="_itemMouseUp()"
+                    on:itemMouseUp="_itemMouseUp()"
                     on:itemMouseEnter="_itemMouseEnter()"
                     on:itemMouseMove="_itemMouseMove()"
                     on:itemMouseLeave="_itemMouseLeave()"
@@ -153,21 +155,20 @@
                     on:itemSwipe="_listSwipe()"
                     on:dragStart="_notifyHandler('dragStart')"
             >
-                <ws:itemActionsTemplate>
-                    {{ '' }}
-                    <ws:partial
-                            toolbarVisibility="{{_options.toolbarVisibility}}"
-                            style="{{_options.style}}"
-                            size="{{_options.editingConfig ? 's' : 'm'}}"
-                            template="{{ _itemActionsTemplate }}"
-                            itemPadding="{{_options.itemPadding}}"
-                            getContainerPaddingClass="{{_getItemActionsContainerPaddingClass}}"
-                            needShowTitle="{{_needShowTitle}}"
-                            needShowIcon="{{_needShowIcon}}"
-                            itemActionsPosition="{{_options.itemActionsPosition}}"
-                            actionMenuIsShown="{{_options.actionMenuIsShown}}"
-                            scope="{{itemActionsTemplate}}"/>
-                </ws:itemActionsTemplate>
+<!--                <ws:itemActionsTemplate>-->
+<!--                    {{ '' }}-->
+<!--                    <ws:partial-->
+<!--                            toolbarVisibility="{{_options.toolbarVisibility}}"-->
+<!--                            style="{{_options.style}}"-->
+<!--                            size="{{_options.editingConfig ? 's' : 'm'}}"-->
+<!--                            itemPadding="{{_options.itemPadding}}"-->
+<!--                            getContainerPaddingClass="{{_getItemActionsContainerPaddingClass}}"-->
+<!--                            needShowTitle="{{_needShowTitle}}"-->
+<!--                            needShowIcon="{{_needShowIcon}}"-->
+<!--                            itemActionsPosition="{{_options.itemActionsPosition}}"-->
+<!--                            actionMenuIsShown="{{_options.actionMenuIsShown}}"-->
+<!--                            scope="{{itemActionsTemplate}}"/>-->
+<!--                </ws:itemActionsTemplate>-->
 <!--                <ws:swipeTemplate>-->
 <!--                    <ws:partial-->
 <!--                            template="{{ _swipeTemplate }}"-->

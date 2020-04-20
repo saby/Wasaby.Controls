@@ -9,8 +9,8 @@
    <div attr:class="controls-TileView__itemContent {{titleStyle === 'accent' ? 'controls-TileView__itemContent_accent'}}
                {{highlightOnHover === true ? ' controls-TileView__itemContent_highlightOnHover'}}
                js-controls-SwipeControl__actionsContainer
-               {{!!itemData.isActive ? ' controls-TileView__item_active'}}
-               {{!!itemData.isSwiped ? ' controls-TileView__item_swiped'}}
+               {{!!itemData.isActive() ? ' controls-TileView__item_active'}}
+               {{!!itemData.isSwiped() ? ' controls-TileView__item_swiped'}}
                {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
                {{itemData.isUnfixed ? ' controls-TileView__item_unfixed' }}
                {{itemData.isUnscaleable ? ' controls-TileView__item_unscaleable'}}
@@ -38,7 +38,7 @@
       </ws:if>
       <ws:else>
          <ws:partial template="{{imageWrapper}}"/>
-         <ws:if data="{{itemData.item[itemData.displayProperty] || itemData.drawActions}}">
+         <ws:if data="{{itemData.item[itemData.displayProperty] || itemData.shouldDisplayActions()}}">
             <ws:if data="{{titleStyle === 'accent'}}">
                <div class="controls-TileView__title_accent"
                     title="{{itemData.item[itemData.displayProperty]}}">
@@ -52,13 +52,13 @@
 
          </ws:if>
       </ws:else>
-      <ws:partial if="{{!itemData.isSwiped && itemData.drawActions && itemData.itemActionsPosition !== 'custom'}}"
+      <ws:partial if="{{!itemData.isSwiped() && itemData.shouldDisplayActions() && itemData.itemActionsPosition !== 'custom'}}"
                   template="{{itemActionsTemplate}}"
                   highlightOnHover="{{highlightOnHover}}"
                   itemData="{{itemData}}"
                   isTile="{{true}}"
                   itemActionsClass="{{itemActionsClass ? itemActionsClass : 'controls-TileView__itemActions controls-TileView__itemActions_bottomRight'}}"/>
-      <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
+      <ws:partial if="{{itemData.isSwiped() && itemData.shouldDisplayActions()}}"
                   template="{{swipeTemplate}}"
                   itemData="{{itemData}}"
                   isTile="{{true}}"

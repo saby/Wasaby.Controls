@@ -10,8 +10,8 @@
       on:itemClick="_onItemClick()"
       on:itemSwipe="_onItemSwipe()"
       on:itemActionClick="_onItemActionClick()"
-      on:itemActionsResult="_onItemActionsMenuResult()"
-      on:itemActionsClose="_onItemActionsMenuClose()"
+      on:itemActionsMenuResult="_onItemActionsMenuResult()"
+      on:itemActionsMenuClose="_onItemActionsMenuClose()"
       on:itemContextMenu="_onItemContextMenu()"
       on:itemKeyDown="_onItemKeyDown()"/>
 </div>

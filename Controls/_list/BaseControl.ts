@@ -1,47 +1,58 @@
+// Core imports
 import Control = require('Core/Control');
 import cClone = require('Core/core-clone');
 import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
-import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
-import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import Deferred = require('Core/Deferred');
+
+import {constants, detection} from 'Env/Env';
+
+import {IObservable, RecordSet} from 'Types/collection';
+import {isEqual} from 'Types/object';
+import {ICrud, Memory} from 'Types/source';
+import {debounce} from 'Types/function';
+import {create as diCreate} from 'Types/di';
+import {Model} from 'Types/entity';
+import {IHashMap} from 'Types/declarations';
+
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Logger} from 'UI/Utils';
+
+import {TouchContextField} from 'Controls/context';
+import {Controller as SourceController} from 'Controls/source';
+import {error as dataSourceError} from 'Controls/dataSource';
+import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+
+// Utils imports
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
-import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
-import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
-import uDimension = require("Controls/Utils/getDimensions");
-import {IObservable, RecordSet} from 'Types/collection';
-import {Controller as SourceController} from 'Controls/source';
-import {isEqual} from 'Types/object';
+import uDimension = require('Controls/Utils/getDimensions');
 import {showType} from 'Controls/Utils/Toolbar';
-import 'wml!Controls/_list/BaseControl/Footer';
-import {error as dataSourceError} from 'Controls/dataSource';
-import {constants, detection} from 'Env/Env';
-import ListViewModel from 'Controls/_list/ListViewModel';
-import {ICrud, Memory} from "Types/source";
-import {TouchContextField} from 'Controls/context';
-import {SyntheticEvent} from 'Vdom/Vdom';
-import {IDirection} from './interface/IVirtualScroll';
-import {debounce} from 'Types/function';
-import {CssClassList} from "../Utils/CssClassList";
-import {Logger} from 'UI/Utils';
-import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
-import * as GroupingController from 'Controls/_list/Controllers/Grouping';
-import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
-import {create as diCreate} from 'Types/di';
-import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
-import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, ItemActionsController, Collection} from 'Controls/display';
-import {Model} from 'saby-types/Types/entity';
-import {IItemAction} from "./interface/IList";
-import InertialScrolling from './resources/utils/InertialScrolling';
-import {IHashMap} from 'Types/declarations';
+import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController} from 'Controls/display';
+import {ItemActionsController} from 'Controls/itemActions';
 
+import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
+import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
+import ListViewModel from 'Controls/_list/ListViewModel';
+import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
+import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
+import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
+import * as GroupingController from 'Controls/_list/Controllers/Grouping';
+
+import {IDirection} from './interface/IVirtualScroll';
+import {IItemAction} from './interface/IList';
+import InertialScrolling from './resources/utils/InertialScrolling';
+import {CssClassList} from '../Utils/CssClassList';
+
+import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
+import 'wml!Controls/_list/BaseControl/Footer';
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
 
-//TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
-//Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
+// TODO: getDefaultOptions зовётся при каждой перерисовке,
+//  соответственно если в опции передаётся не примитив, то они каждый раз новые.
+//  Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
 let defaultSelectedKeys = [];
 let defaultExcludedKeys = [];
 
@@ -386,7 +397,8 @@ var _private = {
     scrollToItem: function(self, key, toBottom, force) {
         return self._children.scrollController.scrollToItem(key, toBottom, force);
     },
-    setMarkedKey: function(self, key) {
+
+    setMarkedKey(self, key) {
         if (key !== undefined) {
             const model = self.getViewModel();
             if (self._options.useNewModel) {
@@ -398,6 +410,7 @@ var _private = {
             _private.scrollToItem(self, key);
         }
     },
+
     moveMarker: function(self, newMarkedKey) {
         // activate list when marker is moving. It let us press enter and open current row
         // must check mounted to avoid fails on unit tests
@@ -1287,140 +1300,222 @@ var _private = {
             getBoundingClientRect: () => rect
         }
     },
-    showActionsMenu(self, event, itemData?, childEvent?, showAll?) {
-        const context = event.type === 'itemcontextmenu';
-        const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
-                                      || self._options.contextMenuConfig?.headerTemplate);
-        const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
-        if ((context && self._isTouch) || !itemActions) {
-            return false;
-        }
-        const showActions = showAll && itemActions.all
-            ? itemActions.all
-            : itemActions && itemActions.all.filter(
-            (action) => action.showType !== showType.TOOLBAR
-        );
-        /**
-         * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
-         * у которого открываем меню. Потом передадим его для события actionClick.
-         */
-        self._targetItem = childEvent.target.closest('.controls-ListView__itemV');
 
-        /**
-         * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
-         * Поэтому сохраняем объект, с методом getBoundingClientRect
-         */
-        const target = context ? null : _private.mockElem(childEvent.target);
-        if (showActions && showActions.length || hasMenuFooterOrHeader) {
-            childEvent.nativeEvent.preventDefault();
-            childEvent.stopImmediatePropagation();
-            if (self._options.useNewModel) {
-                self._itemActionsController.setActiveItem(
-                    self._listViewModel,
-                    itemData.getContents().getId()
-                );
-            } else {
-                self._listViewModel.setActiveItem(itemData);
+    /**
+     * TODO REMOVE!!!
+     * @param self
+     * @param event
+     * @param itemData
+     * @param childEvent
+     * @param showAll
+     * @deprecated
+     */
+    showActionsMenu(self, event, itemData?, childEvent?, showAll?) {
+        // const context = event.type === 'itemcontextmenu';
+        // const hasMenuFooterOrHeader = !!(self._options.contextMenuConfig?.footerTemplate
+        //                               || self._options.contextMenuConfig?.headerTemplate);
+        // const itemActions = self._options.useNewModel ? itemData.getActions() : itemData.itemActions;
+        // if ((context && self._isTouch) || !itemActions) {
+        //     return false;
+        // }
+        // const showActions = showAll && itemActions.all
+        //     ? itemActions.all
+        //     : itemActions && itemActions.all.filter(
+        //     (action) => action.showType !== showType.TOOLBAR
+        // );
+        // /**
+        //  * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
+        //  * у которого открываем меню. Потом передадим его для события actionClick.
+        //  */
+        // self._targetItem = childEvent.target.closest('.controls-ListView__itemV');
+        //
+        // /**
+        //  * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
+        //  * Поэтому сохраняем объект, с методом getBoundingClientRect
+        //  */
+        // const target = context ? null : _private.mockElem(childEvent.target);
+        // if (showActions && showActions.length || hasMenuFooterOrHeader) {
+        //     childEvent.nativeEvent.preventDefault();
+        //     childEvent.stopImmediatePropagation();
+        //     self._itemActionsController.setActiveItem(
+        //         self._listViewModel,
+        //         itemData.getContents().getId()
+        //     );
+        //
+        //     if (!self._options.useNewModel) {
+        //         self._listViewModel.setMenuState('shown');
+        //     }
+        //
+        //     self._itemWithShownMenu = itemData.getContents();
+        //     Control.getTheme(self._options.theme, ['Controls/toolbars'])
+        //         .then( () => {
+        //             const menuConfig = _private.getMenuConfig(showActions, self._options.contextMenuConfig);
+        //
+        //             self._children.itemActionsOpener.open({
+        //                 opener: self._children.listView,
+        //                 target,
+        //                 templateOptions: menuConfig,
+        //                 eventHandlers: {
+        //                     onResult: self._actionsMenuResultHandler,
+        //                     onClose: self._closeActionsMenu
+        //                 },
+        //                 closeOnOutsideClick: true,
+        //                 targetPoint: {vertical: 'top', horizontal: 'right'},
+        //                 direction: {horizontal: context ? 'right' : 'left'},
+        //                 className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
+        //                 nativeEvent: context ? childEvent.nativeEvent : false,
+        //                 autofocus: false
+        //             });
+        //             self._menuIsShown = true;
+        //             self._forceUpdate();
+        //         });
+        // }
+    },
+
+    /**
+     * TODO REMOVE!!!
+     * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because get 2 root nodes.
+     * When we will get fragments or something similar, it would be possible to move this code where it really belongs.
+     * @param self
+     * @param itemData
+     * @param childEvent
+     * @param action
+     * @deprecated
+     */
+    showActionMenu(
+        self: Control,
+        itemData: CollectionItem<Model>,
+        childEvent: Event,
+        action: IItemAction
+    ): void {
+        // const children = self._itemActionsController.getChildActions(itemData, action);
+        // if (children.length) {
+        //     self._itemActionsController.setActiveItem(
+        //         self._listViewModel,
+        //         itemData.getContents().getKey()
+        //     );
+        //
+        //     if (!self._options.useNewModel) {
+        //         self._listViewModel.setMenuState('shown');
+        //     }
+        //     Control.getTheme(self._options.theme, ['Controls/input'])
+        //         .then(() => {
+        //             const menuConfig = _private.getMenuConfig(children, self._options.contextMenuConfig, action);
+        //
+        //             self._children.itemActionsOpener.open({
+        //                 opener: self._children.listView,
+        //                 target: childEvent.target,
+        //                 templateOptions: menuConfig,
+        //                 eventHandlers: {
+        //                     onResult: self._actionsMenuResultHandler,
+        //                     onClose: self._closeActionsMenu
+        //                 },
+        //                 className: 'controls-DropdownList__margin-head',
+        //                 autofocus: false
+        //             });
+        //             self._actionMenuIsShown = true;
+        //             self._forceUpdate();
+        //         });
+        // }
+    },
+
+    /**
+     * @TODO REMOVE!!!
+     * @param self
+     * @deprecated
+     */
+    closeActionsMenu(self): void {
+        // self._itemActionsController.setActiveItem(
+        //     self._listViewModel,
+        //     null
+        // );
+        //
+        // if (!self._options.useNewModel) {
+        //     self._listViewModel.setMenuState('hidden');
+        // }
+        // self._children.swipeControl?.closeSwipe();
+        // self._menuIsShown = false;
+        // self._itemWithShownMenu = null;
+        // self._actionMenuIsShown = false;
+    },
+
+    /**
+     * Обработка клика по ItemAction
+     * @param self
+     * @param contents
+     * @param action
+     * @param clickEvent
+     * @param contextMenu
+     * @private
+     */
+    processItemActionClick(
+        self: any,
+        contents: Model,
+        action: IItemAction,
+        clickEvent: SyntheticEvent<MouseEvent>,
+        contextMenu: boolean): void {
+        if (action && !action._isMenu && !action['parent@']) {
+            self._itemActionsController.processItemActionClick(action, contents);
+            // How to calculate itemContainer?
+            // const startIndex = isNewModel
+            //     ? require('Controls/display').VirtualScrollController.getStartIndex(listModel)
+            //     : listModel.getStartIndex();
+            //
+            // const targetContainer = target || Array.prototype.filter.call(
+            //     container.querySelector('.controls-ListView__itemV').parentNode.children,
+            //     (item: HTMLElement) => item.className.includes('controls-ListView__itemV')
+            // )[itemIndex - startIndex];
+            // this._notify('actionClick', [action, contents, itemContainer]);
+            self._notify('actionClick', [action, contents]);
+        } else {
+            self._itemActionsController.processDropDownMenuClick(contents?.getKey(), clickEvent, action, contextMenu);
+            // menuState используется, чтобы засетить isMenuShown, используемый в baseEditingTemplate. В новых списках не реализовано
+            if (!self._options.useNewModel) {
                 self._listViewModel.setMenuState('shown');
             }
-            self._itemWithShownMenu = self._options.useNewModel ? itemData.getContents() : itemData.item;
-            require(['css!theme?Controls/toolbars'], function() {
-                const menuConfig = _private.getMenuConfig(showActions, self._options.contextMenuConfig);
-
-                self._children.itemActionsOpener.open({
-                    opener: self._children.listView,
-                    target,
-                    templateOptions: menuConfig,
-                    eventHandlers: {
-                        onResult: self._actionsMenuResultHandler,
-                        onClose: self._closeActionsMenu
-                    },
-                    closeOnOutsideClick: true,
-                    targetPoint: {vertical: 'top', horizontal: 'right'},
-                    direction: {horizontal: context ? 'right' : 'left'},
-                    className: 'controls-Toolbar__popup__list_theme-' + self._options.theme,
-                    nativeEvent: context ? childEvent.nativeEvent : false,
-                    autofocus: false
-                });
-                self._menuIsShown = true;
-                self._forceUpdate();
-            });
         }
     },
 
     /**
-     * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because get 2 root nodes.
-     * When we will get fragments or something similar, it would be possible to move this code where it really belongs.
+     * Обработчики событий для выпадающего/контекстного меню
+     * @param self
+     * @param eventName
+     * @param data
+     * @param event
+     * @private
      */
-    showActionMenu(
-        self: Control,
-        itemData,
-        childEvent: Event,
-        action: IItemAction
-    ): void {
-        const children = self._itemActionsController.getChildActions(itemData, action);
-        if (children.length) {
-            if (self._options.useNewModel) {
-                self._itemActionsController.setActiveItem(
-                    self._listViewModel,
-                    itemData.getContents().getId()
+    dropdownMenuEventsHandler(self: any, eventName: string, data: Model, event: SyntheticEvent<MouseEvent>): void {
+        // Actions dropdown can start closing after the view itself was unmounted already, in which case
+        // the model would be destroyed and there would be no need to process the action itself
+        if (self._listViewModel && !self._listViewModel.destroyed) {
+            // If menu needs to close because one of the actions was clicked, process
+            // the action handler first
+            if (eventName === 'itemClick') {
+                const actionRawData = data && data.getRawData();
+                const contents = self._itemActionsController.getActiveItem()?.getContents();
+                _private.processItemActionClick(
+                    self,
+                    contents,
+                    actionRawData,
+                    event,
+                    true
                 );
-            } else {
-                self._listViewModel.setActiveItem(itemData);
-                self._listViewModel.setMenuState('shown');
+
+                // If this action has children, don't close the menu if it was clicked
+                if (actionRawData['parent@']) {
+                    return;
+                }
             }
-            Control.getStyles(['css!theme?Controls/input'])
-                .then(() => {
-                    const menuConfig = _private.getMenuConfig(children, self._options.contextMenuConfig, action);
 
-                    self._children.itemActionsOpener.open({
-                        opener: self._children.listView,
-                        target: childEvent.target,
-                        templateOptions: menuConfig,
-                        eventHandlers: {
-                            onResult: self._actionsMenuResultHandler,
-                            onClose: self._closeActionsMenu
-                        },
-                        className: 'controls-DropdownList__margin-head',
-                        autofocus: false
-                    });
-                    self._actionMenuIsShown = true;
-                    self._forceUpdate();
-                });
-        }
-    },
-
-    closeActionsMenu(self): void {
-        if (self._options.useNewModel) {
-            self._itemActionsController.setActiveItem(
-                self._listViewModel,
-                null
-            );
-        } else {
-            self._listViewModel.setActiveItem(null);
-            self._listViewModel.setMenuState('hidden');
-        }
-        self._children.swipeControl?.closeSwipe();
-        self._menuIsShown = false;
-        self._itemWithShownMenu = null;
-        self._actionMenuIsShown = false;
-    },
-
-    actionsMenuResultHandler(self, args): void {
-        const actionName = args && args.action;
-        const event = args && args.event;
-
-        if (actionName === 'itemClick') {
-            const action = args.data && args.data[0] && args.data[0].getRawData();
-            const activeItem =
-                self._options.useNewModel
-                    ? self._itemActionsController.getActiveItem(self._listViewModel)
-                    : self._listViewModel.getActiveItem();
-            // TODO Переделываем на ItemActionsContoller.processActionClick
-            _private.itemActionsClick(self, event, action, activeItem, self._listViewModel, false, self._targetItem);
-            if (!action['parent@']) {
-                self._children.itemActionsOpener.close();
-                _private.closeActionsMenu(self);
+            if (eventName !== 'menuOpened') {
+                self._itemActionsController.setActiveItem(self._listViewModel, null);
+                self._listViewModel.setActionsMenuConfig(null);
+                self._itemActionsController.deactivateSwipe(self._listViewModel);
+                self._listViewModel.nextVersion();
+                // menuState используется, чтобы засетить isMenuShown, используемый в baseEditingTemplate. В новых списках не реализовано
+                if (!self._options.useNewModel) {
+                    self._listViewModel.setMenuState('hidden');
+                }
             }
         }
     },
@@ -1636,7 +1731,7 @@ var _private = {
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
             const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
-                self._options.useNewModel ? displayLib.EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
+                self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
             );
             if (isEditing) {
                 self._children.editInPlace.cancelEdit();
@@ -2081,7 +2176,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._multiSelectReady = multiSelectReady;
     },
 
-    getViewModel: function() {
+    getViewModel() {
         return this._listViewModel;
     },
 
@@ -2430,10 +2525,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const direction = childEvent.nativeEvent.direction;
         this._children.itemActionsOpener.close();
 
-        const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
         const key = this._options.useNewModel ? itemData.getContents().getId() : itemData.key;
 
-        if (direction === 'right' && !isSwiped && _private.isItemsSelectionAllowed(this._options)) {
+        if (direction === 'right' && !itemData.isSwiped() && _private.isItemsSelectionAllowed(this._options)) {
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
             /**
              * After the right swipe the item should get selected.
@@ -2564,9 +2658,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._children.editInPlace.cancelEdit();
     },
 
-    _showActionsMenu: function(event, itemData, childEvent, showAll) {
-        _private.showActionsMenu(this, event, itemData, childEvent, showAll);
-    },
     _initItemActions(): void {
         if (!this._itemActionsInitialized) {
             this._updateItemActions();
@@ -2583,7 +2674,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (!this._itemActionsController) {
             this._itemActionsController = new ItemActionsController();
         }
-        this._itemActionsController.init({
+        this._itemActionsController.update({
             collection: this._listViewModel,
             itemActions: this._options.itemActions,
             itemActionsProperty: this._options.itemActionsProperty,
@@ -2609,6 +2700,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._updateItemActions();
         return this._notify('afterEndEdit', [item, isAdd]);
     },
+
+    /**
+     * Обработчик создания/редактирования записи
+     * @param event
+     * @param item
+     * @param isAdd
+     * @private
+     */
     _onAfterBeginEdit: function (event, item, isAdd) {
         var result = this._notify('afterBeginEdit', [item, isAdd]);
 
@@ -2639,40 +2738,30 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.showActionMenu(this, itemData, childEvent, action);
     },
 
-    _onItemContextMenu: function(event, itemData) {
-        this._showActionsMenu.apply(this, arguments);
-        event.stopPropagation();
-        if (this._options.useNewModel) {
-            const markCommand = new MarkerCommands.Mark(itemData.getContents().getId());
-            markCommand.execute(this._listViewModel);
-        } else {
-            this._listViewModel.setMarkedKey(itemData.key);
-        }
+    /**
+     * Обработчик показа контекстного меню
+     * @param clickEvent
+     * @param item
+     * @private
+     */
+    _onItemContextMenu(clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
+        clickEvent.stopPropagation();
+        const contents = item.getContents();
+        _private.processItemActionClick(this, contents, null, clickEvent, true);
+        _private.setMarkedKey(this, contents.getKey());
     },
 
     /**
      * Обработчик клика по операции
-     * // TODO Переделываем на ItemActionsContoller.processActionClick
      * @param event
      * @param action
      * @param itemData
      * @private
      */
-    _onItemActionsClick(event: SyntheticEvent, action: IItemAction, itemData: CollectionItem<Model>): void {
-        _private.itemActionsClick(this, event, action, itemData, this._listViewModel);
-        this._itemActionsController.updateActionsForItem({ // TODO actionsItem only in Search in SearchGrid
-            collection: this._listViewModel,
-            itemActions: this._options.itemActions,
-            itemActionsProperty: this._options.itemActionsProperty,
-            visibilityCallback: this._options.itemActionVisibilityCallback,
-            key: itemData.getContents().getId()
-        });
-        if (this._options.useNewModel) {
-            const markCommand = new MarkerCommands.Mark(itemData.getContents().getId());
-            markCommand.execute(this._listViewModel);
-        } else {
-            this._listViewModel.setMarkedKey(itemData.key);
-        }
+    _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
+        const contents: Model = itemData.getContents();
+        _private.setMarkedKey(this, contents.getKey());
+        _private.processItemActionClick(this, contents, action, event, false);
     },
 
     // todo это перенести в модель (как и всё, что каксается отрисовки эл-в. А звать это должен контрол)
@@ -2697,12 +2786,27 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 !action.displayMode) && !action.icon);
     },
 
-    _closeActionsMenu: function(args) {
-        _private.closeActionsMenu(this, args);
+    /**
+     * Обработчик закрытия меню операций
+     * @param args
+     * @private
+     */
+    _closeActionsMenu(args): void {
+        const clickEvent = args && args.event;
+        _private.dropdownMenuEventsHandler(this, 'menuClosed', null, clickEvent);
     },
 
+    /**
+     * Обработчик клика внутри меню операций
+     * @param args
+     * @private
+     */
     _actionsMenuResultHandler(args): void {
-        _private.actionsMenuResultHandler(this, args);
+        const eventName = args && args.action;
+        const event = args && args.event;
+        const data = args && args.data;
+
+        _private.dropdownMenuEventsHandler(this, eventName, data, event);
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {
@@ -2735,7 +2839,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (canBeMarked) {
             if (this._options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
+                const markCommand = new MarkerCommands.Mark(key);
                 markCommand.execute(this._listViewModel);
             } else {
                 this._listViewModel.setMarkedKey(key);
