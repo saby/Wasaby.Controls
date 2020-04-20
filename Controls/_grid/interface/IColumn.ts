@@ -49,7 +49,7 @@ export type TCellVerticalAlign = 'top' | 'center' | 'bottom' | 'baseline';
 /**
  * @typedef {String} TOverflow
  * @description Обрезается или не обрезается строка
- * @variant ellipsis По верхнему краю.
+ * @variant ellipsis Текст обрезается многоточием.
  * @variant none Текст разбивается на несколько строк.
  */
 export type TOverflow = 'ellipsis' | 'none';

@@ -22,6 +22,17 @@ export interface IHeaderCell extends IControlOptions {
      */
     caption?: string;
     /**
+     * @typedef {String} TOverflow
+     * @description Обрезается или не обрезается строка
+     * @variant ellipsis Текст обрезается многоточием.
+     * @variant none Текст разбивается на несколько строк.
+     */
+    /**
+     * @name Controls/_grid/interface/IHeaderCell#textOverflow
+     * @cfg {TOverflow} Обрезается или не обрезается строка
+     * @default none
+     */
+    /**
      * @typedef {String} TCellAlign
      * @variant left По левому краю.
      * @variant center По центру.
