@@ -164,7 +164,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
     }
 
     private getLeftSpacing(options: IMenuRenderOptions): string {
-        let leftSpacing = 'l';
+        let leftSpacing = 'm';
         if (options.itemPadding.left) {
             leftSpacing = options.itemPadding.left;
         } else if (options.multiSelect) {
@@ -174,7 +174,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
     }
 
     private getRightSpacing(options: IMenuRenderOptions): string {
-        let rightSpacing = 'l';
+        let rightSpacing = 'm';
         if (!options.itemPadding.right) {
             factory(options.listModel).each((item) => {
                 if (item.getContents().get && item.getContents().get(options.nodeProperty)) {
