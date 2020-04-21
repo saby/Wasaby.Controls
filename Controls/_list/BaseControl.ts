@@ -2174,7 +2174,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadedItems = null;
 
         if (this._options.selectedKeys && this._options.selectedKeys.length !== 0) {
-            this._selectionController = _private.createSelectionController(self, this._options);
+            this._selectionController = _private.createSelectionController(this, this._options);
         }
 
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
