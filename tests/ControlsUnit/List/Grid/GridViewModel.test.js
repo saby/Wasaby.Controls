@@ -593,32 +593,33 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(gridMod.GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
          });
 
-         // it('getItemColumnCellClasses for old browsers', function() {
-         //    var
-         //       gridViewModel = new gridMod.GridViewModel(cfg),
-         //       current = gridViewModel.getCurrent(),
-         //       topSpacingClasses = ' controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ',
-         //       expected = {
-         //          withMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default controls-Grid__row-cell-background-hover_theme-default ' +
-         //              'controls-Grid__row-cell_withRowSeparator_theme-default controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses +
-         //              'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default',
-         //          withoutMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default controls-Grid__row-cell-background-hover_theme-default ' +
-         //              'controls-Grid__row-cell_withRowSeparator_theme-default controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses +
-         //              'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default'
-         //       };
-         //    current.isNotFullGridSupport = true;
-         //
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(),
-         //        expected.withMarker,
-         //       'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
-         //
-         //    current.markerVisibility = 'hidden';
-         //    current.resetColumnIndex();
-         //
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(),
-         //        expected.withoutMarker,
-         //       'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
-         // });
+         it('getItemColumnCellClasses for old browsers', function() {
+            var
+               gridViewModel = new gridMod.GridViewModel(cfg),
+               current = gridViewModel.getCurrent(),
+               expected = {
+                  withMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default controls-Grid__row-cell-background-hover_theme-default ' +
+                      'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__row-cell-checkbox_theme-default ' +
+                      'controls-Grid__row-checkboxCell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ' +
+                      'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default',
+                  withoutMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default controls-Grid__row-cell-background-hover_theme-default ' +
+                      'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__row-cell-checkbox_theme-default ' +
+                      'controls-Grid__row-checkboxCell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ' +
+                      'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default'
+               };
+            current.isNotFullGridSupport = true;
+
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(),
+                expected.withMarker,
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+
+            current.markerVisibility = 'hidden';
+            current.resetColumnIndex();
+
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(),
+                expected.withoutMarker,
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+         });
          it('should update last item after append items', function () {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
@@ -718,131 +719,72 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._options.multiSelectVisibility = 'visible';
          });
 
-         // it('getItemColumnCellClasses', function() {
-         //    var
-         //       gridViewModel = new gridMod.GridViewModel(cfg),
-         //       current = gridViewModel.getCurrent(),
-         //       topSpacingClasses = ' controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ',
-         //       expectedResult = [
-         //          'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default ' +
-         //          'controls-Grid__row-cell_withRowSeparator_theme-default controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses +
-         //          'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default',
-         //
-         //          'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
-         //          'controls-Grid__row-cell_withRowSeparator_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default ' +
-         //          'controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected ' +
-         //          'controls-Grid__row-cell_selected-default_theme-default',
-         //
-         //          'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
-         //          ' controls-Grid__row-cell_withRowSeparator_theme-default controls-Grid__cell_spacingLeft_theme-default ' +
-         //          'controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default ' +
-         //          'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default',
-         //
-         //          'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
-         //          'controls-Grid__row-cell_withRowSeparator_theme-default controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_default ' +
-         //          'controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__row-cell_rowSpacingTop_l_theme-default ' +
-         //          'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
-         //          'controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default_theme-default',
-         //
-         //          'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
-         //          'controls-Grid__row-cell_withRowSeparator_theme-default controls-Grid__cell_spacingLeft_theme-default ' +
-         //          'controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__row-cell_rowSpacingTop_l_theme-default ' +
-         //          'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell__last controls-Grid__row-cell__last-default_theme-default'
-         //       ];
-         //
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[0]);
-         //    current.goToNextColumn();
-         //
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[1]);
-         //    current.goToNextColumn();
-         //
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[2]);
-         //    current.goToNextColumn();
-         //
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[3]);
-         //
-         //    current.isSelected = false;
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[4]);
-         //
-         // });
+         it('getItemColumnCellClasses', function() {
+            var
+               gridViewModel = new gridMod.GridViewModel(cfg),
+               current = gridViewModel.getCurrent(),
+               expectedResult = [
+                  'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__row-cell-checkbox_theme-default ' +
+                  'controls-Grid__row-checkboxCell_rowSpacingTop_l_theme-default ' +
+                  'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default',
+
+                  'controls-Grid__row-cell controls-Grid__row-cell_theme-default controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default ' +
+                  'controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected ' +
+                  'controls-Grid__row-cell_selected-default_theme-default',
+
+                  'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__cell_spacingLeft_theme-default ' +
+                  'controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default ' +
+                  'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default',
+
+                  'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_default ' +
+                  'controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__row-cell_rowSpacingTop_l_theme-default ' +
+                  'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
+                  'controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default_theme-default',
+
+                  'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__cell_spacingLeft_theme-default ' +
+                  'controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__row-cell_rowSpacingTop_l_theme-default ' +
+                  'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell__last controls-Grid__row-cell__last-default_theme-default'
+               ];
+
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[0]);
+            current.goToNextColumn();
+
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[1]);
+            current.goToNextColumn();
+
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[2]);
+            current.goToNextColumn();
+
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[3]);
+
+            current.isSelected = false;
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[4]);
+
+         });
       });
-
-      describe('separators', function() {
-         // it('prepareSeparatorClasses', function() {
-         //    const expectedResultWithRowSeparator = [
-         //       'controls-Grid__row-cell_withRowSeparator_theme-default',
-         //       'controls-Grid__row-cell_withRowSeparator_theme-default',
-         //       'controls-Grid__row-cell_withRowSeparator_theme-default',
-         //    ];
-         //
-         //    const expectedResultWithoutRowSeparator = [
-         //       'controls-Grid__row-cell_withoutRowSeparator_theme-default',
-         //       'controls-Grid__row-cell_withoutRowSeparator_theme-default',
-         //       'controls-Grid__row-cell_withoutRowSeparator_theme-default'
-         //    ];
-         //    const expectedResultForFirstItemInGroup = 'controls-Grid__row-cell_withRowSeparator_theme-default';
-         //    const expectedResultForFirstItemInHiddenGroup = 'controls-Grid__row-cell_withRowSeparator_theme-default';
-         //    const expectedResultForOnlyItemInHiddenGroup = 'controls-Grid__row-cell_withRowSeparator_theme-default';
-         //
-         //    let listItemsCount = 3;
-         //    const itemData = {
-         //       rowSeparatorVisibility: true,
-         //       rowSeparatorSize: 's',
-         //       isFirstInGroup: false,
-         //       index: 0,
-         //       dispItem: {
-         //          getOwner: function () {
-         //             return {
-         //                getCount: function () {
-         //                   return listItemsCount;
-         //                }
-         //             }
-         //          }
-         //       }
-         //    };
-         //
-         //    expectedResultWithRowSeparator.forEach((classes, index) => {
-         //       itemData.index = index;
-         //       cAssert.isClassesEqual(gridMod.GridViewModel._private.prepareSeparatorClasses(itemData, theme), classes);
-         //    });
-         //
-         //    itemData.rowSeparatorVisibility = false;
-         //    expectedResultWithoutRowSeparator.forEach((classes, index) => {
-         //       itemData.index = index;
-         //       cAssert.isClassesEqual(gridMod.GridViewModel._private.prepareSeparatorClasses(itemData, theme), classes);
-         //    });
-         //
-         //    itemData.rowSeparatorVisibility = true;
-         //    itemData.isFirstInGroup = true;
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.prepareSeparatorClasses(itemData, theme), expectedResultForFirstItemInGroup);
-         //
-         //    itemData.isInHiddenGroup = true;
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.prepareSeparatorClasses(itemData, theme), expectedResultForFirstItemInHiddenGroup);
-         //
-         //    listItemsCount = 1;
-         //    cAssert.isClassesEqual(gridMod.GridViewModel._private.prepareSeparatorClasses(itemData, theme), expectedResultForOnlyItemInHiddenGroup);
-         // });
-
-      });
-
       describe('getCurrent', function() {
          var
             gridViewModel = new gridMod.GridViewModel(cfg),
             current = gridViewModel.getCurrent();
 
-         // it('configuration', function() {
-         //    assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
-         //    assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
-         //    assert.isTrue(current.multiSelectVisibility === 'visible');
-         //    assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
-         //    assert.deepEqual({
-         //       left: 'xl',
-         //       right: 'l',
-         //       top: 'l',
-         //       bottom: 'l'
-         //    }, current.itemPadding, 'Incorrect value "current.itemPadding".');
-         //    assert.isTrue(current.rowSeparatorVisibility, 'Incorrect value "current.rowSeparatorVisibility".');
-         // });
+         it('configuration', function() {
+            assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
+            assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
+            assert.isTrue(current.multiSelectVisibility === 'visible');
+            assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
+            assert.deepEqual({
+               left: 'xl',
+               right: 'l',
+               top: 'l',
+               bottom: 'l'
+            }, current.itemPadding, 'Incorrect value "current.itemPadding".');
+            assert.equal(current.rowSeparatorSize, 's', 'Incorrect value "current.rowSeparatorSize".');
+         });
 
          it('item', function() {
             assert.equal(gridData[0][cfg.keyProperty], current.key, 'Incorrect value "current.keyProperty".');
@@ -859,120 +801,120 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
          });
 
-         // it('columns', function() {
-         //    function checkBaseProperties(checkedColumn, expectedData) {
-         //       assert.equal(expectedData.columnIndex, checkedColumn.columnIndex, 'Incorrect value "columnIndex" when checking columns.');
-         //       assert.deepEqual(expectedData.column, checkedColumn.column, 'Incorrect value "column" when checking columns.');
-         //       assert.deepEqual(expectedData.item, checkedColumn.item.getRawData(), 'Incorrect value "item" when checking columns.');
-         //       assert.deepEqual(expectedData.item, checkedColumn.dispItem.getContents().getRawData(), 'Incorrect value "dispItem" when checking columns.');
-         //       assert.equal(expectedData.keyProperty, checkedColumn.keyProperty, 'Incorrect value "keyProperty" when checking columns.');
-         //       assert.equal(expectedData.displayProperty, checkedColumn.displayProperty, 'Incorrect value "displayProperty" when checking columns.');
-         //       assert.equal(expectedData.item[expectedData.keyProperty], checkedColumn.key, 'Incorrect value "getPropValue(item, displayProperty)" when checking columns.');
-         //       assert.equal(expectedData.item[expectedData.displayProperty],
-         //          checkedColumn.getPropValue(checkedColumn.item, expectedData.displayProperty), 'Incorrect value "" when checking columns.');
-         //       assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
-         //       cAssert.isClassesEqual(checkedColumn.classList.getAll(), expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
-         //    }
-         //
-         //    var gridColumn;
-         //    const topSpacingClasses = ' controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ';
-         //
-         //    // check first column (multiselect checkbox column)
-         //    assert.equal(0, current.columnIndex, 'Incorrect value "current.columnIndex".');
-         //    assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex".');
-         //    checkBaseProperties(current.getCurrentColumn(), {
-         //       columnIndex: 0,
-         //       keyProperty: cfg.keyProperty,
-         //       displayProperty: cfg.displayProperty,
-         //       column: {needSearchHighlight: false},
-         //       item: gridData[0],
-         //       template: null,
-         //       cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_withRowSeparator_theme-default ' +
-         //          'controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses + 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
-         //          'controls-Grid__row-cell_selected__first-default_theme-default'
-         //    });
-         //
-         //    // check next column
-         //    current.goToNextColumn();
-         //    gridColumn = clone(gridColumns[0]);
-         //    cMerge(gridColumn, {needSearchHighlight: false});
-         //    assert.equal(1, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
-         //    assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "goToNextColumn()".');
-         //    assert.isTrue(gridColumn.textOverflow === 'ellipsis', 'Incorrect value "current.textOverflow".');
-         //    checkBaseProperties(current.getCurrentColumn(), {
-         //       columnIndex: 1,
-         //       keyProperty: cfg.keyProperty,
-         //       displayProperty: cfg.displayProperty,
-         //       column: gridColumn,
-         //       item: gridData[0],
-         //       template: null,
-         //       cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
-         //          'controls-Grid__row-cell_withRowSeparator_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default ' +
-         //           'controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected ' +
-         //           'controls-Grid__row-cell_selected-default_theme-default'
-         //    });
-         //
-         //    // check next column
-         //    current.goToNextColumn();
-         //    gridColumn = clone(gridColumns[1]);
-         //    cMerge(gridColumn, {needSearchHighlight: false});
-         //    assert.equal(2, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
-         //    assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after goToNextColumn().');
-         //    checkBaseProperties(current.getCurrentColumn(), {
-         //       columnIndex: 2,
-         //       keyProperty: cfg.keyProperty,
-         //       displayProperty: cfg.displayProperty,
-         //       column: gridColumn,
-         //       item: gridData[0],
-         //       template: null,
-         //       cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
-         //          'controls-Grid__row-cell_withRowSeparator_theme-default ' +
-         //          'controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default ' +
-         //          'controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected ' +
-         //          'controls-Grid__row-cell_selected-default_theme-default'
-         //    });
-         //
-         //    // check last column
-         //    current.goToNextColumn();
-         //    gridColumn = clone(gridColumns[2]);
-         //    cMerge(gridColumn, {needSearchHighlight: false});
-         //    assert.equal(3, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
-         //    assert.isTrue(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "gotToNextColumn()".');
-         //    checkBaseProperties(current.getCurrentColumn(), {
-         //       columnIndex: 3,
-         //       keyProperty: cfg.keyProperty,
-         //       displayProperty: cfg.displayProperty,
-         //       column: gridColumn,
-         //       item: gridData[0],
-         //       template: null,
-         //       cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
-         //          'controls-Grid__row-cell_withRowSeparator_theme-default ' +
-         //          'controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l_theme-default ' +
-         //          'controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected ' +
-         //          'controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default_theme-default'
-         //    });
-         //
-         //    // check the absence of other columns
-         //    current.goToNextColumn();
-         //    assert.equal(4, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
-         //
-         //    // check reset column index and retest first column
-         //    current.resetColumnIndex();
-         //
-         //    assert.equal(0, current.columnIndex, 'Incorrect value "current.columnIndex" after "resetColumnIndex()".');
-         //    assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "resetColumnIndex()".');
-         //    checkBaseProperties(current.getCurrentColumn(), {
-         //       columnIndex: 0,
-         //       keyProperty: cfg.keyProperty,
-         //       displayProperty: cfg.displayProperty,
-         //       column: {needSearchHighlight: false},
-         //       item: gridData[0],
-         //       template: null,
-         //       cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default ' +
-         //          'controls-Grid__row-cell_withRowSeparator_theme-default controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses +
-         //           'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default'
-         //    });
-         // });
+         it('columns', function() {
+            function checkBaseProperties(checkedColumn, expectedData) {
+               assert.equal(expectedData.columnIndex, checkedColumn.columnIndex, 'Incorrect value "columnIndex" when checking columns.');
+               assert.deepEqual(expectedData.column, checkedColumn.column, 'Incorrect value "column" when checking columns.');
+               assert.deepEqual(expectedData.item, checkedColumn.item.getRawData(), 'Incorrect value "item" when checking columns.');
+               assert.deepEqual(expectedData.item, checkedColumn.dispItem.getContents().getRawData(), 'Incorrect value "dispItem" when checking columns.');
+               assert.equal(expectedData.keyProperty, checkedColumn.keyProperty, 'Incorrect value "keyProperty" when checking columns.');
+               assert.equal(expectedData.displayProperty, checkedColumn.displayProperty, 'Incorrect value "displayProperty" when checking columns.');
+               assert.equal(expectedData.item[expectedData.keyProperty], checkedColumn.key, 'Incorrect value "getPropValue(item, displayProperty)" when checking columns.');
+               assert.equal(expectedData.item[expectedData.displayProperty],
+                  checkedColumn.getPropValue(checkedColumn.item, expectedData.displayProperty), 'Incorrect value "" when checking columns.');
+               assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
+               cAssert.isClassesEqual(checkedColumn.classList.getAll(), expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
+            }
+
+            var gridColumn;
+            const topSpacingClasses = ' controls-Grid__row-checkboxCell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ';
+
+            // check first column (multiselect checkbox column)
+            assert.equal(0, current.columnIndex, 'Incorrect value "current.columnIndex".');
+            assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex".');
+            checkBaseProperties(current.getCurrentColumn(), {
+               columnIndex: 0,
+               keyProperty: cfg.keyProperty,
+               displayProperty: cfg.displayProperty,
+               column: {needSearchHighlight: false},
+               item: gridData[0],
+               template: null,
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_withRowSeparator_size-s_theme-default ' +
+                  'controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses + 'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default ' +
+                  'controls-Grid__row-cell_selected__first-default_theme-default controls-Grid__row-cell_withRowSeparator_size-s_theme-default'
+            });
+
+            // check next column
+            current.goToNextColumn();
+            gridColumn = clone(gridColumns[0]);
+            cMerge(gridColumn, {needSearchHighlight: false});
+            assert.equal(1, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
+            assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "goToNextColumn()".');
+            assert.isTrue(gridColumn.textOverflow === 'ellipsis', 'Incorrect value "current.textOverflow".');
+            checkBaseProperties(current.getCurrentColumn(), {
+               columnIndex: 1,
+               keyProperty: cfg.keyProperty,
+               displayProperty: cfg.displayProperty,
+               column: gridColumn,
+               item: gridData[0],
+               template: null,
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default ' +
+                   'controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected ' +
+                   'controls-Grid__row-cell_selected-default_theme-default'
+            });
+
+            // check next column
+            current.goToNextColumn();
+            gridColumn = clone(gridColumns[1]);
+            cMerge(gridColumn, {needSearchHighlight: false});
+            assert.equal(2, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
+            assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after goToNextColumn().');
+            checkBaseProperties(current.getCurrentColumn(), {
+               columnIndex: 2,
+               keyProperty: cfg.keyProperty,
+               displayProperty: cfg.displayProperty,
+               column: gridColumn,
+               item: gridData[0],
+               template: null,
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__row-cell_withRowSeparator_size-s_theme-default ' +
+                  'controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default ' +
+                  'controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected ' +
+                  'controls-Grid__row-cell_selected-default_theme-default'
+            });
+
+            // check last column
+            current.goToNextColumn();
+            gridColumn = clone(gridColumns[2]);
+            cMerge(gridColumn, {needSearchHighlight: false});
+            assert.equal(3, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
+            assert.isTrue(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "gotToNextColumn()".');
+            checkBaseProperties(current.getCurrentColumn(), {
+               columnIndex: 3,
+               keyProperty: cfg.keyProperty,
+               displayProperty: cfg.displayProperty,
+               column: gridColumn,
+               item: gridData[0],
+               template: null,
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__row-cell_withRowSeparator_size-s_theme-default ' +
+                  'controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l_theme-default ' +
+                  'controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell_selected ' +
+                  'controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default_theme-default'
+            });
+
+            // check the absence of other columns
+            current.goToNextColumn();
+            assert.equal(4, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
+
+            // check reset column index and retest first column
+            current.resetColumnIndex();
+
+            assert.equal(0, current.columnIndex, 'Incorrect value "current.columnIndex" after "resetColumnIndex()".');
+            assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "resetColumnIndex()".');
+            checkBaseProperties(current.getCurrentColumn(), {
+               columnIndex: 0,
+               keyProperty: cfg.keyProperty,
+               displayProperty: cfg.displayProperty,
+               column: {needSearchHighlight: false},
+               item: gridData[0],
+               template: null,
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__row-cell-checkbox_theme-default' + topSpacingClasses +
+                   'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default'
+            });
+         });
 
          it('getColspanedPaddingClassList', function() {
             // Skip checkbox column
@@ -1760,33 +1702,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.setItemActions(current.item, [{}, {}, {}]);
             assert.isTrue(gridViewModel.getCurrent().isHovered);
          });
-         // it('getItemDataByItem: in list one item and it\'s in group. Should draw separator bottom', function () {
-         //    const groupedVM = new gridMod.GridViewModel({
-         //       ...cfg,
-         //       items: new collection.RecordSet({
-         //          rawData: [
-         //             {
-         //                id: 1,
-         //                group: 'once'
-         //             }
-         //          ],
-         //          keyProperty: 'id'
-         //       }),
-         //       groupingKeyCallback: (item) => {
-         //          return item.get('group')
-         //       },
-         //       rowSeparatorVisibility: true
-         //    });
-         //
-         //    groupedVM.goToNext();
-         //    const soloItem = groupedVM.getCurrent();
-         //    assert.isTrue(soloItem.rowSeparatorVisibility);
-         //    cAssert.isClassesEqual(
-         //        gridMod.GridViewModel._private.prepareSeparatorClasses(soloItem, theme),
-         //        ' controls-Grid__row-cell_withRowSeparator_theme-default'
-         //    );
-         //
-         // });
 
          it('getItemDataByItem: groupPaddingClasses', function () {
             const groupedVM = new gridMod.GridViewModel({
@@ -2158,6 +2073,163 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
       });
+
+      describe('grid separators', () => {
+
+         describe('rowSeparators', () => {
+
+            it('without row separators', () => {
+               const classList = {base: '', columnContent: ''};
+               const current = {
+                  rowSeparatorSize: null,
+                  columnSeparatorSize: null,
+                  columnIndex: 0
+               };
+               gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
+               cAssert.isClassesEqual(classList.base, 'controls-Grid__row-cell_withRowSeparator_size-null');
+            });
+
+            it('with row separators s', () => {
+               const classList = {base: '', columnContent: ''};
+               const current = {
+                  rowSeparatorSize: 's',
+                  columnSeparatorSize: null,
+                  columnIndex: 0
+               };
+               gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
+               cAssert.isClassesEqual(classList.base, 'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default');
+            });
+
+            it('with row separators l', () => {
+               const classList = {base: '', columnContent: ''};
+               const current = {
+                  rowSeparatorSize: 'l',
+                  columnSeparatorSize: null,
+                  columnIndex: 0
+               };
+               gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
+               cAssert.isClassesEqual(classList.base, 'controls-Grid__row-cell_withRowSeparator_size-l_theme-default controls-Grid__rowSeparator_size-l_theme-default');
+            });
+
+         });
+
+         describe('column separator', () => {
+            it('without column separators, no multiselect', () => {
+               const classList = {base: '', columnContent: ''};
+               const current = {
+                  rowSeparatorSize: null,
+                  columnSeparatorSize: null,
+                  columnIndex: 0
+               };
+               [
+                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null', '']
+               ].forEach((expectedClasses, index) => {
+                  current.columnIndex = index;
+
+                  gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
+                  assert.equal(classList.base, expectedClasses[0]);
+                  assert.equal(classList.columnContent, expectedClasses[1]);
+
+                  // go to next column
+                  classList.base = '';
+                  classList.columnContent = '';
+               });
+            });
+
+            it('without column separators size s, has multiselect', () => {
+               const classList = {base: '', columnContent: ''};
+               const current = {
+                  columns: [
+                     {/*first, shouldnt left border by standart*/},
+                     {/*second, need border*/},
+                     {/* also need*/}
+                  ],
+                  rowSeparatorSize: null,
+                  columnSeparatorSize: null,
+                  columnIndex: 0,
+                  hasMultiSelect: false
+               };
+               [
+                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null', '']
+               ].forEach((expectedClasses, index) => {
+                  current.columnIndex = index;
+
+                  gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
+                  assert.equal(classList.base, expectedClasses[0]);
+                  assert.equal(classList.columnContent, expectedClasses[1]);
+
+                  // go to next column
+                  classList.base = '';
+                  classList.columnContent = '';
+               });
+            });
+
+            it('with column separators size s, no multiselect', () => {
+               const classList = {base: '', columnContent: ''};
+               const current = {
+                  columns: [
+                     {/*first, shouldnt left border by standart*/},
+                     {/*second, need border*/},
+                     {/* also need*/}
+                  ],
+                  rowSeparatorSize: null,
+                  columnSeparatorSize: 's',
+                  columnIndex: 0,
+                  hasMultiSelect: false
+               };
+               [
+                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default'],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
+               ].forEach((expectedClasses, index) => {
+                  current.columnIndex = index;
+
+                  gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
+                  assert.equal(classList.base, expectedClasses[0]);
+                  assert.equal(classList.columnContent, expectedClasses[1]);
+
+                  // go to next column
+                  classList.base = '';
+                  classList.columnContent = '';
+               });
+            });
+
+            it('with column separators size s, has multiselect', () => {
+               const classList = {base: '', columnContent: ''};
+               const current = {
+                  columns: [
+                     {/*multiselect*/},
+                     {/*first, shouldnt left border by standart*/},
+                     {/*second, need border*/}
+                  ],
+                  rowSeparatorSize: null,
+                  columnSeparatorSize: 's',
+                  columnIndex: 0,
+                  hasMultiSelect: true
+               };
+               [
+                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
+               ].forEach((expectedClasses, index) => {
+                  current.columnIndex = index;
+
+                  gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
+                  assert.equal(classList.base, expectedClasses[0]);
+                  assert.equal(classList.columnContent, expectedClasses[1]);
+
+                  // go to next column
+                  classList.base = '';
+                  classList.columnContent = '';
+               });
+            });
+         });
+      });
+
       describe('_onCollectionChangeFn prefix update', () => {
          it('does not update prefix version without ladder', () => {
             const model = new gridMod.GridViewModel({
