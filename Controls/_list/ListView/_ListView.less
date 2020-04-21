@@ -7,7 +7,7 @@
                @content_l_padding_loadingIndicator * 2;
 }
 
-.controls-ListView__itemV_marker {
+.controls-ListView__itemV_marker_theme-@{themeName} {
    position: absolute;
    width: @marker_thickness_list;
    background-color: @marker_color_list;
@@ -34,7 +34,7 @@
 }
 
 .controls-ListView__footer__paddingLeft_default_theme-@{themeName} {
-   padding-left: @item_padding-left_l_old_list;
+   padding-left: @item_padding-left_m_list;
 }
 
 .controls-ListView__item-topPadding_null_theme-@{themeName} {
@@ -44,6 +44,14 @@
 .controls-ListView__item-bottomPadding_null_theme-@{themeName} {
   padding-bottom: 0;
 }
+
+.controls-ListView__item-topPadding_l_theme-@{themeName} {
+   padding-top: @item_padding-top_l_list;
+ }
+ 
+ .controls-ListView__item-bottomPadding_l_theme-@{themeName} {
+   padding-bottom: @item_padding-bottom_l_list;
+ }
 
 .controls-ListView__item-topPadding_default_theme-@{themeName} {
   padding-top: @item_padding-top_default_list;
@@ -70,7 +78,7 @@
 .controls-ListView__item-leftPadding_default_theme-@{themeName},
 .controls-ListView__groupContent__leftPadding_default_theme-@{themeName},
 .controls-ListView__footer__paddingLeft_default_theme-@{themeName} {
-   padding-left: @item_padding-left_l_old_list;
+   padding-left: @item_padding-left_default_list;
 }
 
 .controls-ListView__item-leftPadding_null_theme-@{themeName},
@@ -88,25 +96,25 @@
 .controls-ListView__item-leftPadding_s_theme-@{themeName},
 .controls-ListView__groupContent__leftPadding_s_theme-@{themeName},
 .controls-ListView__footer__paddingLeft_s_theme-@{themeName} {
-   padding-left: @item_padding-left_s_old_list;
+   padding-left: @item_padding-left_s_list;
 }
 
 .controls-ListView__item-leftPadding_m_theme-@{themeName},
 .controls-ListView__groupContent__leftPadding_m_theme-@{themeName},
 .controls-ListView__footer__paddingLeft_m_theme-@{themeName} {
-   padding-left: @item_padding-left_m_old_list;
+   padding-left: @item_padding-left_m_list;
 }
 
 .controls-ListView__item-leftPadding_l_theme-@{themeName},
 .controls-ListView__groupContent__leftPadding_l_theme-@{themeName},
 .controls-ListView__footer__paddingLeft_l_theme-@{themeName} {
-   padding-left: @item_padding-left_l_old_list;
+   padding-left: @item_padding-left_l_list;
 }
 
 .controls-ListView__item-leftPadding_xl_theme-@{themeName},
 .controls-ListView__groupContent__leftPadding_xl_theme-@{themeName},
 .controls-ListView__footer__paddingLeft_xl_theme-@{themeName} {
-   padding-left: @item_padding-left_xl_old_list;
+   padding-left: @item_padding-left_xl_list;
 }
 
 .controls-ListView__item-leftPadding_xxl_theme-@{themeName},
@@ -117,7 +125,7 @@
 
 .controls-ListView__item-rightPadding_default_theme-@{themeName},
 .controls-ListView__groupContent__rightPadding_default_theme-@{themeName} {
-   padding-right: @item_padding-right_l_old_list;
+   padding-right: @item_padding-right_default_list;
 }
 
 .controls-ListView__item-rightPadding_null_theme-@{themeName},
@@ -132,22 +140,22 @@
 
 .controls-ListView__item-rightPadding_s_theme-@{themeName},
 .controls-ListView__groupContent__rightPadding_s_theme-@{themeName} {
-   padding-right: @item_padding-right_s_old_list;
+   padding-right: @item_padding-right_s_list;
 }
 
 .controls-ListView__item-rightPadding_m_theme-@{themeName},
 .controls-ListView__groupContent__rightPadding_m_theme-@{themeName} {
-   padding-right: @item_padding-right_m_old_list;
+   padding-right: @item_padding-right_m_list;
 }
 
 .controls-ListView__item-rightPadding_l_theme-@{themeName},
 .controls-ListView__groupContent__rightPadding_l_theme-@{themeName} {
-   padding-right: @item_padding-right_l_old_list;
+   padding-right: @item_padding-right_l_list;
 }
 
 .controls-ListView__item-rightPadding_xl_theme-@{themeName},
 .controls-ListView__groupContent__rightPadding_xl_theme-@{themeName} {
-   padding-right: @item_padding-right_xl_old_list;
+   padding-right: @item_padding-right_xl_list;
 }
 
 .controls-ListView__item-rightPadding_xxl_theme-@{themeName},
@@ -283,78 +291,78 @@
    flex-shrink: 0;
 }
 
-.controls-ListView__empty {
+.controls-ListView__empty_theme-@{themeName} {
    color: @placeholder_text-color_list;
    text-align: center;
    font-size: @placeholder_font-size_list;
 }
 
-.controls-ListView__empty_topSpacing_null {
+.controls-ListView__empty_topSpacing_null_theme-@{themeName} {
    margin-top: 0;
 }
 
-.controls-ListView__empty_topSpacing_xs {
+.controls-ListView__empty_topSpacing_xs_theme-@{themeName} {
    margin-top: @placeholder_padding-top_xs_list;
 }
 
-.controls-ListView__empty_topSpacing_s {
+.controls-ListView__empty_topSpacing_s_theme-@{themeName} {
    margin-top: @placeholder_padding-top_s_list;
 }
 
-.controls-ListView__empty_topSpacing_m {
+.controls-ListView__empty_topSpacing_m_theme-@{themeName} {
    margin-top: @placeholder_padding-top_m_list;
 }
 
-.controls-ListView__empty_topSpacing_l {
+.controls-ListView__empty_topSpacing_l_theme-@{themeName} {
    margin-top: @placeholder_padding-top_l_list;
 }
 
-.controls-ListView__empty_topSpacing_xl {
+.controls-ListView__empty_topSpacing_xl_theme-@{themeName} {
    margin-top: @placeholder_padding-top_xl_list;
 }
 
-.controls-ListView__empty_topSpacing_xxl {
+.controls-ListView__empty_topSpacing_xxl_theme-@{themeName} {
    margin-top: @placeholder_padding-top_2xl_list;
 }
 
-.controls-ListView__empty_bottomSpacing_null{
+.controls-ListView__empty_bottomSpacing_null_theme-@{themeName} {
    margin-bottom: 0;
 }
 
-.controls-ListView__empty_bottomSpacing_xs {
+.controls-ListView__empty_bottomSpacing_xs_theme-@{themeName} {
    margin-bottom: @placeholder_padding-bottom_xs_list;
 }
 
-.controls-ListView__empty_bottomSpacing_s {
+.controls-ListView__empty_bottomSpacing_s_theme-@{themeName} {
    margin-bottom: @placeholder_padding-bottom_s_list;
 }
 
-.controls-ListView__empty_bottomSpacing_m {
+.controls-ListView__empty_bottomSpacing_m_theme-@{themeName} {
    margin-bottom: @placeholder_padding-bottom_m_list;
 }
 
-.controls-ListView__empty_bottomSpacing_l {
+.controls-ListView__empty_bottomSpacing_l_theme-@{themeName} {
    margin-bottom: @placeholder_padding-bottom_l_list;
 }
 
-.controls-ListView__empty_bottomSpacing_xl {
+.controls-ListView__empty_bottomSpacing_xl_theme-@{themeName} {
    margin-bottom: @placeholder_padding-bottom_xl_list;
 }
 
-.controls-ListView__empty_bottomSpacing_xxl {
+.controls-ListView__empty_bottomSpacing_xxl_theme-@{themeName} {
    margin-bottom: @placeholder_padding-bottom_2xl_list;
 }
 
 //MasterList styles
 
-.controls-ListView_master {
+.controls-ListView_master_theme-@{themeName} {
    padding-right: @master_separator_thickness_list;
    box-sizing: border-box;
 }
 
-.ws-is-mobile-chrome-ios .controls-ListView__item__marked_master,
-.ws-is-desktop-safari .controls-ListView__item__marked_master,
-.ws-is-mobile-safari .controls-ListView__item__marked_master {
+.ws-is-mobile-chrome-ios .controls-ListView__item__marked_master_theme-@{themeName},
+.ws-is-desktop-safari .controls-ListView__item__marked_master_theme-@{themeName},
+.ws-is-mobile-safari .controls-ListView__item__marked_master_theme-@{themeName} {
    // ave safari 13
    // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
    // иначе все position: absolute элементы внутри position: sticky
@@ -362,7 +370,7 @@
    transform: translateZ(0);
 }
 
-.controls-ListView__item__marked_master {
+.controls-ListView__item__marked_master_theme-@{themeName} {
    //z-index 1 is needed to overlap the right line of master
    z-index: 1;
    &:before {
@@ -407,7 +415,7 @@
 //Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
 //TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
 .ws-is-hover:not(.ws-is-mobile-platform) {
-   .controls-ListView__item_master {
+   .controls-ListView__item_master_theme-@{themeName} {
       &:hover {
          background-color: @master_item_hover_background-color_list;
       }

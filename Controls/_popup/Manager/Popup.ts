@@ -70,6 +70,16 @@ class Popup extends Control<IPopupControlOptions> {
 
     protected _beforeMount(options: IPopupControlOptions): void {
         this._stringTemplate = typeof options.template === 'string';
+        this._compatibleTemplateName = this._getCompatibleTemplateName(options);
+    }
+
+    //TODO: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
+    private _getCompatibleTemplateName(options: IPopupOptions): string {
+        if (options.isCompoundTemplate) {
+            return options.templateOptions.template;
+        } else if (typeof options.template === 'string') {
+            return options.template;
+        }
     }
 
     protected _afterMount(): void {

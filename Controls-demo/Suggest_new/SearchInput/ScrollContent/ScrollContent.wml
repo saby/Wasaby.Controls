@@ -11,7 +11,7 @@
                 navigation="{{_navigation}}"
                 source="{{_source}}">
             <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/ScrollContent/resources/SuggestTemplate">
-                <ws:templateOptions demoClass="controlsDemo_fixedWidth300" dialogMode="{{true}}"/>
+                <ws:templateOptions demoClass="controlsDemo_fixedWidth400" dialogMode="{{true}}"/>
             </ws:suggestTemplate>
         </Controls.suggest:SearchInput>
      </div>

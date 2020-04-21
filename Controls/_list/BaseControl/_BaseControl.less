@@ -20,6 +20,21 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 .controls-BaseControl__loadMore_theme-@{themeName} {
    height: @more_height_list;
 }
+
+.controls-text-listMore_theme-@{themeName} {
+   color: @more_text-color_list;
+}
+
+.controls-BaseButton:active .controls-text-listMore_theme-@{themeName} {
+   color: @more_active_text-color_list;
+}
+
+.ws-is-hover {
+   .controls-BaseButton:hover .controls-text-listMore_theme-@{themeName} {
+      color: @more_hover_text-color_list;
+   }
+}
+
 .controls-BaseControl__pagingContainer {
    pointer-events: none;
    position: absolute;
