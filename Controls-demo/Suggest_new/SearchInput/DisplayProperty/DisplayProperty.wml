@@ -10,7 +10,7 @@
              navigation="{{_navigation}}"
              source="{{_source}}">
          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/DisplayProperty/resources/SuggestTemplate">
-             <ws:templateOptions demoClass="controlsDemo_fixedWidth300"/>
+             <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
          </ws:suggestTemplate>
      </Controls.suggest:SearchInput>
   </div>
