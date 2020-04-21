@@ -169,7 +169,7 @@ export class ItemActionsController {
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
      * @param clickEvent событие клика
      * @param parentAction Родительская операция с записью
-     * @param opener: any,
+     * @param opener: контрол или элемент - опенер для работы системы автофокусов
      * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
      */
     prepareActionsMenuConfig(
@@ -218,7 +218,9 @@ export class ItemActionsController {
             headConfig
         };
         return {
-            opener: this,
+            opener,
+            template: 'Controls/menu:Popup',
+            actionOnScroll: 'close',
             target: menuTarget,
             templateOptions: menuConfig,
             closeOnOutsideClick: true,

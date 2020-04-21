@@ -1230,16 +1230,6 @@ var _private = {
             }
         }
 
-        const menuConfig = self._listViewModel.getActionsMenuConfig();
-        if (menuConfig !== self._currentMenuConfig) {
-            if (menuConfig) {
-                self._children.menuOpener.open(menuConfig, this);
-            } else {
-                self._children.menuOpener.close();
-            }
-            self._currentMenuConfig = menuConfig;
-        }
-
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
             self._forceUpdate();
@@ -2534,22 +2524,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
         * _canUpdateItemsActions  приведет к показу неактуальных операций.
         */
-        this._itemActionsController.updateActionsForItem({
-            itemActions: this._options.itemActions,
-            itemActionsProperty: this._options.itemActionsProperty,
-            visibilityCallback: this._options.itemActionVisibilityCallback,
-            key: item.key
-        });
+        this._itemActionsController.updateActionsForItem(item.key);
         return result;
     },
 
     /**
      * Обработчик показа контекстного меню
-     * @param clickEvent
+     * @param e
      * @param item
+     * @param clickEvent
      * @private
      */
-    _onItemContextMenu(clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
+    _onItemContextMenu(e: SyntheticEvent<Event>, item: CollectionItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
+        clickEvent.preventDefault();
         clickEvent.stopPropagation();
         const contents = item.getContents();
         _private.openItemActionsMenu(this, contents, null, clickEvent, true);
