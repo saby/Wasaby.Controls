@@ -5,6 +5,7 @@ import template = require('wml!Controls/_listRender/View/View');
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { create as diCreate } from 'Types/di';
+import { Sticky } from 'Controls/popup';
 
 import {
     Collection,
@@ -53,6 +54,8 @@ export default class View extends Control<IViewOptions> {
     protected _collection: Collection<Model>;
 
     private _itemActionsController: ItemActionsController;
+
+    private _popupId: string;
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
@@ -153,16 +156,38 @@ export default class View extends Control<IViewOptions> {
      * Обработчик клика по операции в выпадающем/контекстном меню
      * @param e
      * @param eventName
-     * @param data
+     * @param actionData
      * @param clickEvent
      * @private
      */
     protected _onItemActionsMenuResult(
         e: SyntheticEvent<MouseEvent>,
         eventName: string,
-        data: Model,
+        actionData: Model,
         clickEvent: SyntheticEvent<MouseEvent>) {
-        this._dropdownMenuEventsHandler(eventName, data, clickEvent);
+        // Actions dropdown can start closing after the view itself was unmounted already, in which case
+        // the model would be destroyed and there would be no need to process the action itself
+        if (this._collection && !this._collection.destroyed) {
+            if (eventName === 'itemClick') {
+                const actionRawData = actionData && actionData.getRawData();
+                const contents = this._itemActionsController.getActiveItem()?.getContents();
+
+                // Если кликнули по экшну, и он не должен открывать меню
+                if (actionRawData && !actionRawData['parent@']) {
+                    this._itemActionsController.processItemActionClick(actionRawData, contents);
+                    // How to calculate itemContainer?
+                    // this._notify('actionClick', [action, contents, itemContainer]);
+                    this._notify('actionClick', [actionRawData, contents]);
+
+                    this._closeActionsMenu();
+
+                    // Если экшн должен открывать меню. Проверь, бывают ли меню третьего уровня
+                } else {
+                    const opener = this._children.renderer;
+                    this._openItemActionsMenu(contents, null, clickEvent, opener, true);
+                }
+            }
+        }
     }
 
     /**
@@ -171,8 +196,8 @@ export default class View extends Control<IViewOptions> {
      * @param clickEvent
      * @private
      */
-    protected _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>) {
-        this._dropdownMenuEventsHandler('menuClosed', null, clickEvent);
+    protected _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>): void {
+        this._onCloseActionsMenuHandler();
     }
 
     /**
@@ -195,11 +220,22 @@ export default class View extends Control<IViewOptions> {
         this._executeCommands([moveMarker]);
         // TODO fire 'markedKeyChanged' event
 
-        this._processItemActionClick(contents, action, clickEvent, false);
+        // Если кликнули по экшну, и он не должен открывать меню
+        if (action && !action._isMenu && !action['parent@']) {
+            this._itemActionsController.processItemActionClick(action, contents);
+            // How to calculate itemContainer?
+            // this._notify('actionClick', [action, contents, itemContainer]);
+            this._notify('actionClick', [action, contents]);
+
+        // Если экшн должен открывать меню
+        } else {
+            const opener = this._children.renderer;
+            this._openItemActionsMenu(contents, null, clickEvent, opener, false);
+        }
     }
 
     /**
-     * Обработка события возникновения контекстногом еню/
+     * Обработка события возникновения контекстного меню
      * @param e
      * @param item
      * @param clickEvent
@@ -211,7 +247,8 @@ export default class View extends Control<IViewOptions> {
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         const contents = item.getContents();
-        this._itemActionsController.processItemActionsMenu(contents?.getKey(), clickEvent, true);
+        const opener = this._children.renderer;
+        this._openItemActionsMenu(contents, null, clickEvent, opener, true);
     }
 
     /**
@@ -244,68 +281,47 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обработчики событий для выпадающего/контекстного меню
-     * @param eventName
-     * @param data
-     * @param event
-     * @private
-     */
-    private _dropdownMenuEventsHandler(
-        eventName: string,
-        data: Model,
-        event: SyntheticEvent<MouseEvent>
-    ): void {
-        // Actions dropdown can start closing after the view itself was unmounted already, in which case
-        // the model would be destroyed and there would be no need to process the action itself
-        if (this._collection && !this._collection.destroyed) {
-            // If menu needs to close because one of the actions was clicked, process
-            // the action handler first
-            if (eventName === 'itemClick') {
-                const actionRawData = data && data.getRawData();
-                const contents = this._itemActionsController.getActiveItem()?.getContents();
-                this._processItemActionClick(
-                    contents,
-                    actionRawData,
-                    event,
-                    true
-                );
-
-                // If this action has children, don't close the menu if it was clicked
-                if (actionRawData['parent@']) {
-                    return;
-                }
-            }
-
-            if (eventName !== 'menuOpened') {
-                this._itemActionsController.setActiveItem(this._collection, null);
-                this._collection.setActionsMenuConfig(null);
-                this._itemActionsController.deactivateSwipe(this._collection);
-                this._collection.nextVersion();
-            }
-        }
-    }
-
-    /**
-     * Обработка клика по ItemAction
+     * TODO переедет в контроллер
+     * открывает меню операций
      * @param contents
      * @param action
      * @param clickEvent
+     * @param opener
      * @param isContextMenu
-     * @private
      */
-    private _processItemActionClick(
+    private _openItemActionsMenu(
         contents: Model,
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
+        opener: Element | Control<{}, void>,
         isContextMenu: boolean): void {
-        if (action && !action._isMenu && !action['parent@']) {
-            this._itemActionsController.processItemActionClick(action, contents);
-            // How to calculate itemContainer?
-            // this._notify('actionClick', [action, contents, itemContainer]);
-            this._notify('actionClick', [action, contents]);
-        } else {
-            this._itemActionsController.processItemActionsMenu(contents?.getKey(), clickEvent, action, isContextMenu);
-        }
+        const itemKey = contents?.getKey();
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
+        this._itemActionsController.setActiveItem(this._collection, itemKey);
+        Sticky.openPopup(menuConfig).then((popupId) => {
+            this._popupId = popupId;
+        });
+    }
+
+    /**
+     * TODO переедет в контроллер
+     * Метод, который должен отработать после закрытия меню
+     * @private
+     */
+    private _onCloseActionsMenuHandler(): void {
+        this._itemActionsController.setActiveItem(this._collection, null);
+        this._collection.setActionsMenuConfig(null);
+        this._itemActionsController.deactivateSwipe(this._collection);
+    }
+
+    /**
+     * TODO переедет в контроллер
+     * Метод, который закрывает меню
+     * @private
+     */
+    private _closeActionsMenu(): void {
+        this._onCloseActionsMenuHandler();
+        Sticky.closePopup(this._popupId);
     }
 
     private _createCollection(

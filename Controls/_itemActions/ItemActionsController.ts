@@ -186,31 +186,18 @@ export class ItemActionsController {
     }
 
     /**
-     * Формирует конфиг для контекстного меню и меню, открываемого по клику на _isMenu
-     * затем изменяет версию модели для того, чтобы показать меню
-     * @param itemKey
-     * @param clickEvent
-     * @param action
-     * @param isContextMenu
-     */
-    processItemActionsMenu(itemKey: string, clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, isContextMenu: boolean): void {
-        const menuConfig: IDropdownConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, action, isContextMenu);
-        this.setActiveItem(this._collection, itemKey);
-        this._collection.setActionsMenuConfig(menuConfig);
-        this._collection.nextVersion();
-    }
-
-    /**
      * Собирает конфиг выпадающего меню операций
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
      * @param clickEvent событие клика
      * @param parentAction Родительская операция с записью
+     * @param opener: any,
      * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
      */
     prepareActionsMenuConfig(
         itemKey: TItemKey,
         clickEvent: SyntheticEvent<MouseEvent>,
         parentAction: IItemAction,
+        opener: any,
         isContextMenu: boolean
     ): IDropdownConfig {
         const item = this._collection.getItemBySourceKey(itemKey);
@@ -251,7 +238,7 @@ export class ItemActionsController {
             headConfig
         };
         const dropdownConfig: IDropdownConfig = {
-            // opener: this,
+            opener: this,
             target: menuTarget,
             templateOptions: menuConfig,
             closeOnOutsideClick: true,

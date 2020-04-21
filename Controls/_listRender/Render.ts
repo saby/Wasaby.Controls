@@ -48,16 +48,6 @@ export default class Render extends Control<IRenderOptions> {
         if (newOptions.listModel !== this._options.listModel) {
             this._subscribeToModelChanges(newOptions.listModel);
         }
-
-        const menuConfig = newOptions.listModel.getActionsMenuConfig();
-        if (menuConfig !== this._currentMenuConfig) {
-            if (menuConfig) {
-                this._children.menuOpener.open(menuConfig, this);
-            } else {
-                this._children.menuOpener.close();
-            }
-            this._currentMenuConfig = menuConfig;
-        }
     }
 
     protected _afterRender(): void {
