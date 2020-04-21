@@ -689,12 +689,12 @@ var Base = Control.extend({
                 controlName: CONTROL_NAME
             }
         };
-        this._beforeFieldWrapper = {
-            template: options.beforeFieldTemplate,
+        this._leftFieldWrapper = {
+            template: options.leftFieldTemplate,
             scope: {}
         };
-        this._afterFieldWrapper = {
-            template: options.afterFieldTemplate,
+        this._rightFieldWrapper = {
+            template: options.rightFieldTemplate,
             scope: {}
         };
 

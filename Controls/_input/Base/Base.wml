@@ -18,13 +18,13 @@
                         on:mouseenter="_mouseEnterHandler()"
                         on:tagClick="_notifyHandler('tagClick')"
                         on:tagHover="_notifyHandler('tagHover')">
-   <ws:beforeFieldWrapper>
-      <ws:if data="{{_beforeFieldWrapper.template}}">
+   <ws:leftFieldWrapper>
+      <ws:if data="{{_leftFieldWrapper.template}}">
          <ws:partial options="{{_options}}"
-                     scope="{{_beforeFieldWrapper.scope}}"
-                     template="{{_beforeFieldWrapper.template}}"/>
+                     scope="{{_leftFieldWrapper.scope}}"
+                     template="{{_leftFieldWrapper.template}}"/>
       </ws:if>
-   </ws:beforeFieldWrapper>
+   </ws:leftFieldWrapper>
    <ws:content>
       <ws:if data="{{_options.readOnly}}">
          <ws:partial options="{{_options}}"
@@ -47,11 +47,11 @@
                      isEdge="{{_isEdge}}"/>
       </ws:else>
    </ws:content>
-   <ws:afterFieldWrapper>
-      <ws:if data="{{_afterFieldWrapper.template}}">
+   <ws:rightFieldWrapper>
+      <ws:if data="{{_rightFieldWrapper.template}}">
          <ws:partial options="{{_options}}"
-                     scope="{{_afterFieldWrapper.scope}}"
-                     template="{{_afterFieldWrapper.template}}"/>
+                     scope="{{_rightFieldWrapper.scope}}"
+                     template="{{_rightFieldWrapper.template}}"/>
       </ws:if>
-   </ws:afterFieldWrapper>
+   </ws:rightFieldWrapper>
 </Controls._input.Render>

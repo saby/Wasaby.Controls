@@ -69,17 +69,17 @@ export interface IBaseOptions {
      */
     placeholder: string | TemplateFunction;
     /**
-     * @name Controls/_input/interface/IBase#beforeFieldTemplate
-     * @cfg {String|TemplateFunction} Строка или шаблон, содержащие прикладной контент, который будет отображаться в начале поля.
+     * @name Controls/_input/interface/IBase#leftFieldTemplate
+     * @cfg {String|TemplateFunction} Строка или шаблон, содержащие прикладной контент, который будет отображаться слева от текста в поле ввода.
      * @demo Controls-demo/Input/FieldTemplate/Index
      */
-    beforeFieldTemplate: TemplateFunction;
+    leftFieldTemplate: TemplateFunction;
     /**
-     * @name Controls/_input/interface/IBase#afterFieldTemplate
-     * @cfg {String|TemplateFunction} Строка или шаблон, содержащие прикладной контент, который будет отображаться в конце поля.
+     * @name Controls/_input/interface/IBase#rightFieldTemplate
+     * @cfg {String|TemplateFunction} Строка или шаблон, содержащие прикладной контент, который будет отображаться справа от текста в поле ввода.
      * @demo Controls-demo/Input/FieldTemplate/Index
      */
-    afterFieldTemplate: TemplateFunction;
+    rightFieldTemplate: TemplateFunction;
     /**
      * @name Controls/_input/interface/IBase#tooltip
      * @cfg {String} Текст всплывающей подсказки, отображаемой при наведении указателя мыши на элемент.

@@ -185,9 +185,9 @@ var Search = Base.extend({
       this._field.scope.controlName = CONTROL_NAME;
       this._readOnlyField.scope.controlName = CONTROL_NAME;
 
-      this._afterFieldWrapper.template = buttonsTemplate;
-      this._afterFieldWrapper.scope.isVisibleReset = _private.isVisibleResetButton.bind(this);
-      this._afterFieldWrapper.scope.calculateState = _private.calculateStateButton.bind(this);
+      this._rightFieldWrapper.template = buttonsTemplate;
+      this._rightFieldWrapper.scope.isVisibleReset = _private.isVisibleResetButton.bind(this);
+      this._rightFieldWrapper.scope.calculateState = _private.calculateStateButton.bind(this);
    },
 
    _changeHandler: function() {

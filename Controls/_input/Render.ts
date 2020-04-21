@@ -49,15 +49,15 @@ interface IRenderOptions extends IControlOptions, IHeightOptions,
      */
     content: TemplateFunction;
     /**
-     * @name Controls/_input/Render#beforeFieldWrapper
+     * @name Controls/_input/Render#leftFieldWrapper
      * @cfg {HTMLElement}
      */
-    beforeFieldWrapper?: TemplateFunction;
+    leftFieldWrapper?: TemplateFunction;
     /**
-     * @name Controls/_input/Render#afterFieldWrapper
+     * @name Controls/_input/Render#rightFieldWrapper
      * @cfg {HTMLElement}
      */
-    afterFieldWrapper?: TemplateFunction;
+    rightFieldWrapper?: TemplateFunction;
     state: string;
 }
 
@@ -159,8 +159,8 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     static getDefaultTypes() {
         return {
             content: descriptor(Function).required(),
-            afterFieldWrapper: descriptor(Function),
-            beforeFieldWrapper: descriptor(Function),
+            rightFieldWrapper: descriptor(Function),
+            leftFieldWrapper: descriptor(Function),
             multiline: descriptor(Boolean).required(),
             roundBorder: descriptor(Boolean).required()
         };
