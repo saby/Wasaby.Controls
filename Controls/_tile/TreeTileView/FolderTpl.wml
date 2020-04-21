@@ -20,7 +20,7 @@
   <ws:if data="{{!!itemData.dragTargetNode}}">
      <div attr:class="controls-TreeTileView__dragTargetNode_theme-{{itemData.theme}}"></div>
   </ws:if>
-  <div attr:class="controls-TreeTileView__title_theme-{{itemData.theme}}" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
+  <div attr:class=" controls-TreeTileView__title controls-TreeTileView__title_theme-{{itemData.theme}}" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
   <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
               highlightOnHover="{{highlightOnHover}}"
               template="{{swipeTemplate}}"
