@@ -31,6 +31,16 @@ define('Controls-demo/Popup/PopupPage',
                }
             });
          },
+         openStickyInScroll: function () {
+            this._children.stickyInScroll.open({
+               target: this._children.stickyInScrollButton,
+               opener: this._children.stickyInScrollButton,
+               templateOptions: {
+                  template: 'Controls-demo/Popup/TestDialog',
+                  type: 'sticky'
+               }
+            });
+         },
 
          openNotification: function () {
             this._children.notification.open({

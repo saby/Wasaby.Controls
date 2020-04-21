@@ -98,6 +98,16 @@ class Form extends Control<IControlOptions> {
         });
         return results;
     }
+
+    //todo: удалить после перевода прикладников на новую сигнатуру метода isValid()
+    isValidOld(): boolean {
+        for (const item in this._validates) {
+           if (!this._validates[item].isValidOld()) {
+               return false;
+           }
+        }
+        return true;
+    }
 }
 
 export default Form;
@@ -186,7 +196,7 @@ export default Form;
  * @returns {Array}
  */
 /*
- * Возвращает результат валидации. 
+ * Возвращает результат валидации.
  * @name Controls/_validate/Controller#isValid
  * @function
  * @returns {Array}

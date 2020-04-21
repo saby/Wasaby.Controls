@@ -83,6 +83,17 @@ define(
             assert.equal(destroyDef.isReady(), true);
          });
 
+         it('Sticky action on scroll', () => {
+            const StickyOpener = new popupLib.Sticky();
+            const config = {};
+            StickyOpener._getConfig(config);
+            assert.equal(StickyOpener._actionOnScroll, 'none');
+
+            config.actionOnScroll = 'close';
+            StickyOpener._getConfig(config);
+            assert.equal(StickyOpener._actionOnScroll, 'close');
+         });
+
          it('Sticky gets target node', () => {
             //Тестируем: передаем в опцию target платформенный Control
             let cfg = {};
