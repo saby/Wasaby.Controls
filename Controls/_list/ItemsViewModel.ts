@@ -205,6 +205,11 @@ var ItemsViewModel = BaseViewModel.extend({
         this._display.each(callback, context);
     },
 
+    // New Model compatibility
+    find(predicate: (item: Model) => boolean): Model {
+        return this._display.find(predicate);
+    },
+
     setKeyProperty(keyProperty: string): void {
         this._options.keyProperty = keyProperty;
     },

@@ -8,7 +8,7 @@
        itemActionsSize="{{swipeConfig.itemActionsSize}}"
        paddingSize="{{swipeConfig.paddingSize}}"
        actionCaptionPosition="{{actionCaptionPosition}}"
-       hasActionWithIcon="{{itemData.hasActionWithIcon}}"
+       hasActionWithIcon="{{itemData.hasActionWithIcon()}}"
        on:click="_onItemActionsClick(action, itemData)"/>
     <ws:if data="{{actionIndex !== showedActions.length - 1}}">
         <div class="controls-Swipe__separator

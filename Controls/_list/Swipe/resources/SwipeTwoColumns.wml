@@ -10,7 +10,7 @@
                     itemActionsSize="{{swipeConfig.itemActionsSize}}"
                     paddingSize="{{swipeConfig.paddingSize}}"
                     actionCaptionPosition="{{actionCaptionPosition}}"
-                    hasActionWithIcon="{{itemData.hasActionWithIcon}}"
+                    hasActionWithIcon="{{itemData.hasActionWithIcon()}}"
                     on:click="_onItemActionsClick(action, itemData)"/>
             <div if="{{actionIndex === 0}}" class="controls-Swipe__separator
                 controls-Swipe__separator_columns_{{columnIndex === 0 ? 'first' : 'second'}}"></div>

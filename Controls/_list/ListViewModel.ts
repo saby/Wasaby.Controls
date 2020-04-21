@@ -156,6 +156,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _actionsAssigned: false,
     _actionsTemplateConfig: null,
     _swipeConfig: null,
+    _actionsMenuConfig: null,
 
     constructor(cfg): void {
         const self = this;
@@ -197,7 +198,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         const self = this;
         const itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments);
         let dragItems;
-        let drawnActions;
 
         if (itemsModelCurrent._listViewModelCached) {
             return itemsModelCurrent;
@@ -241,10 +241,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             return 'controls-ListView__itemV_marker ';
         };
 
-        if (itemsModelCurrent.itemActions) {
-           drawnActions = itemsModelCurrent.itemActions.showed;
-        }
-
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
@@ -274,31 +270,29 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
         }
 
-        // TODO REMOVE. itemsModelCurrent.hasActionWithIcon && itemsModelCurrent.drawActions are deprecated!!!
-        // itemsModelCurrent.drawActions = _private.needToDrawActions(this._editingItemData, itemsModelCurrent, this._options.editingConfig, drawnActions);
-        // if (itemsModelCurrent.drawActions && drawnActions) {
-        //     itemsModelCurrent.hasActionWithIcon = false;
-        //     for (let i = 0; i < drawnActions.length; i++) {
-        //         if (drawnActions[i].icon) {
-        //             itemsModelCurrent.hasActionWithIcon = true;
-        //             break;
-        //         }
-        //     }
-        // }
-
         // New Model compatibility
-        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}): void => { itemsModelCurrent.itemActions = actions; };
-        itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => itemsModelCurrent.itemActions;
-        itemsModelCurrent.setActive = (state: boolean): void => { itemsModelCurrent._isActive = state; };
-        itemsModelCurrent.isActive = (): boolean => itemsModelCurrent._isActive;
-        itemsModelCurrent.setSwiped = (state: boolean): void => { itemsModelCurrent._isSwiped = state; };
-        itemsModelCurrent.isSwiped = (): boolean => itemsModelCurrent._isSwiped;
-        itemsModelCurrent.setEditing = (state: boolean): void => { itemsModelCurrent._isEditing = state; };
-        itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent._isEditing;
-        itemsModelCurrent.getContents = () => itemsModelCurrent.actionsItem;
-        itemsModelCurrent.hasVisibleActions = (): boolean => itemsModelCurrent.itemActions?.showed?.length > 0;
-        itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing();
-        itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.hasVisibleActions() && itemsModelCurrent.itemActions?.showed?.some((action: any) => !!action.icon);
+        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}): void => {
+            itemsModelCurrent.dispItem.setActions(actions);
+        };
+        itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
+            itemsModelCurrent.dispItem.getActions()
+        );
+        itemsModelCurrent.setActive = (state: boolean): void => {
+            itemsModelCurrent.dispItem.setActive(state);
+        };
+        itemsModelCurrent.isActive = (): boolean => itemsModelCurrent.dispItem.isActive();
+        itemsModelCurrent.setSwiped = (state: boolean): void => {
+            itemsModelCurrent.dispItem.setSwiped(state);
+        };
+        itemsModelCurrent.isSwiped = (): boolean => itemsModelCurrent.dispItem.isSwiped();
+        itemsModelCurrent.setEditing = (state: boolean): void => {
+            itemsModelCurrent.dispItem.setEditing(state);
+        };
+        itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent.dispItem.isEditing();
+        itemsModelCurrent.getContents = () => itemsModelCurrent.dispItem.getContents();
+        itemsModelCurrent.hasVisibleActions = (): boolean => itemsModelCurrent.dispItem.hasVisibleActions();
+        itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.dispItem.shouldDisplayActions();
+        itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.dispItem.hasActionWithIcon();
 
         return itemsModelCurrent;
     },
@@ -763,6 +757,16 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             this._actionsTemplateConfig = config;
             this._nextVersion();
         }
+    },
+
+    // New Model compatibility
+    getActionsMenuConfig(): any {
+        return this._actionsMenuConfig;
+    },
+
+    // New Model compatibility
+    setActionsMenuConfig(config: any): void {
+        this._actionsMenuConfig = config;
     },
 
     // New Model compatibility

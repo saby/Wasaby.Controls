@@ -2142,6 +2142,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$compatibleReset = compatible;
     }
 
+    // yet not used anywhere
     getContextMenuConfig(): unknown {
         return this._$contextMenuConfig;
     }

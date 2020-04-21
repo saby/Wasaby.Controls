@@ -85,7 +85,7 @@
                     template="{{itemActionsTemplate.itemActionsTemplate}}"
                     scope="{{ listModel.getActionsTemplateConfig() }}"
                     itemActionsClass="{{itemActionsClass}}"
-                    item="{{ item }}" />
+                    itemData="{{ currentItem }}" />
             <!-- using || instead of ws:if because template is constantly being updated otherwise -->
          </ws:itemActionsTemplate>
          <ws:swipeTemplate>
@@ -94,7 +94,7 @@
                     scope="{{ listModel.getActionsTemplateConfig() }}"
                     swipeConfig="{{ listModel.getSwipeConfig() }}"
                     animationState="open"
-                    item="{{ item }}" />
+                    itemData="{{ currentItem }}" />
             <!-- using || instead of ws:if because template is constantly being updated otherwise -->
          </ws:swipeTemplate>
       </ws:partial>

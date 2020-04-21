@@ -35,9 +35,7 @@ describe('Controls/_itemActions/ItemActionsController', () => {
             getSwipeConfig: () => ({}),
             setSwipeConfig: () => null,
             getActionsTemplateConfig: () => ({}),
-            setActionsTemplateConfig: () => null,
-            getContextMenuConfig: () => ({}),
-            setContextMenuConfig: () => null
+            setActionsTemplateConfig: () => null
         };
         return collection;
     }

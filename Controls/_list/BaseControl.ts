@@ -2186,9 +2186,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // при создании списка с редактируемой записью, нужно проинициализировать itemActions.
         // это нельзя сделать до afterMount из-за того, что ItemActionsControl является ребенком BaseControl и
         // мы не можем к нему обратиться до того, как контролы будут построены.
-        if (this._options.editingConfig && this._options.editingConfig.item) {
-            this._initItemActions();
-        }
+        // if (this._options.editingConfig && this._options.editingConfig.item) {
+        //     this._initItemActions();
+        // }
         if (this._options.itemsDragNDrop) {
             container.addEventListener('dragstart', this._nativeDragStart);
         }
@@ -2949,14 +2949,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _itemMouseEnter: function(event, itemData, nativeEvent) {
+    _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
+        this._initItemActions();
         if (this._options.itemsDragNDrop) {
-            var
-                dragPosition,
-                dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
+            const dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
+            let dragPosition;
 
             if (dragEntity) {
-                dragPosition = this._options.useNewModel ? {position: 'before', item: itemData.getContents()} : this._listViewModel.calculateDragTargetPosition(itemData);
+                dragPosition = this._options.useNewModel ?
+                    {position: 'before', item: itemData.getContents()} :
+                    this._listViewModel.calculateDragTargetPosition(itemData);
 
                 if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false)
                     if (this._options.useNewModel) {

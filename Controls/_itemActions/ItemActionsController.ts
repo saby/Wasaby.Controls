@@ -170,7 +170,8 @@ export class ItemActionsController {
             caption: parentAction.title,
             icon: parentAction.icon
         } : null;
-        const contextMenuConfig = this._collection.getContextMenuConfig();
+        // const contextMenuConfig = this._collection.getContextMenuConfig();
+        // ...contextMenuConfig,
         const menuConfig: IDropdownTemplateOptions = {
             source: menuSource,
             keyProperty: 'id',
@@ -178,7 +179,6 @@ export class ItemActionsController {
             nodeProperty: 'parent@',
             dropdownClassName: 'controls-itemActionsV__popup',
             closeButtonVisibility: true,
-            ...contextMenuConfig,
             root: parentAction && parentAction.id,
             showHeader: hasParentAction,
             headConfig

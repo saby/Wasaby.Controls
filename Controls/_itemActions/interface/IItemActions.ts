@@ -80,7 +80,6 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     setActionsAssigned(assigned: boolean): void;
     setActionsMenuConfig(config: any): void;
     getActionsMenuConfig(): any;
-    getContextMenuConfig(): any;
     setActionsTemplateConfig(config: IItemActionsTemplateConfig): void;
     getActionsTemplateConfig(): IItemActionsTemplateConfig;
     setSwipeConfig(config: ISwipeConfig): void;
