@@ -251,7 +251,9 @@
             name="menuOpener"
             template="Controls/menu:Popup"
             closeOnOutsideClick="{{true}}"
-            actionOnScroll="{{ _isMobileIOS ? 'track' : 'close' }}">
+            actionOnScroll="{{ _isMobileIOS ? 'track' : 'close' }}"
+            on:result="_onItemActionsMenuResult()"
+            on:close="_onItemActionsMenuClose()">
             <ws:fittingMode vertical="overflow"/>
         </Controls.popup:Sticky>
         <ws:if data="{{ _items && _needSelectionController }}">

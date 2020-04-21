@@ -294,6 +294,18 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.dispItem.shouldDisplayActions();
         itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.dispItem.hasActionWithIcon();
 
+        // // TODO REMOVE!!!
+        // _needShowIcon(action: IItemAction): boolean {
+        //     // return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
+        // },
+        //
+        // // TODO REMOVE!!!
+        // _needShowTitle(action: IItemAction): boolean {
+        //     // return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
+        //     //     action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
+        //     //     (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
+        //     //         !action.displayMode) && !action.icon);
+        // },
         return itemsModelCurrent;
     },
 

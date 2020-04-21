@@ -2,6 +2,7 @@ import {TItemKey, ISwipeConfig} from 'Controls/display';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
+import {Control} from 'UI/Base';
 import {isEqual} from 'Types/object';
 import {
     IItemActionsCollection,
@@ -116,24 +117,6 @@ export class ItemActionsController {
     }
 
     /**
-     * Получает список операций с записью для указанного элемента коллекции,
-     * дочерних по отношению операции, для которой передан строковый ключ
-     * @param item
-     * @param parentActionKey
-     */
-    getChildActions(
-        item: IItemActionsItem,
-        parentActionKey: IItemAction
-    ): IItemAction[] {
-        const actions = item.getActions();
-        const allActions = actions && actions.all;
-        if (allActions) {
-            return allActions.filter((action) => action.parent === parentActionKey);
-        }
-        return [];
-    }
-
-    /**
      * Активирует Swipe для меню операций с записью
      * @param collection Коллекция элементов, содержащих операции с записью
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
@@ -173,16 +156,12 @@ export class ItemActionsController {
     }
 
     /**
-     * Исполняет handler callback у операции, а затем бросает событие actionClick
-     * @param action
-     * @param contents
+     * Метод, который должен отработать после закрытия меню
+     * @private
      */
-    processItemActionClick(action: IItemAction, contents: Model): void {
-        if (action.handler) {
-            action.handler(contents);
-        }
-        // TODO update some item actions
-        // TODO move the marker
+    afterCloseActionsMenu(): void {
+        this.setActiveItem(this._collection, null);
+        this.deactivateSwipe(this._collection);
     }
 
     /**
@@ -197,7 +176,7 @@ export class ItemActionsController {
         itemKey: TItemKey,
         clickEvent: SyntheticEvent<MouseEvent>,
         parentAction: IItemAction,
-        opener: any,
+        opener: Element | Control<object, unknown>,
         isContextMenu: boolean
     ): IDropdownConfig {
         const item = this._collection.getItemBySourceKey(itemKey);
@@ -207,7 +186,7 @@ export class ItemActionsController {
 
         const hasParentAction = parentAction !== null && parentAction !== undefined;
         const menuActions = hasParentAction
-            ? this.getChildActions(item, parentAction.id)
+            ? this._getChildActions(item, parentAction.id)
             : this._getMenuActions(item);
 
         if (!menuActions || menuActions.length === 0) {
@@ -224,6 +203,7 @@ export class ItemActionsController {
             caption: parentAction.title,
             icon: parentAction.icon
         } : null;
+        // Не реализовано в модели
         // const contextMenuConfig = this._collection.getContextMenuConfig();
         // ...contextMenuConfig,
         const menuConfig: IDropdownTemplateOptions = {
@@ -237,7 +217,7 @@ export class ItemActionsController {
             showHeader: hasParentAction,
             headConfig
         };
-        const dropdownConfig: IDropdownConfig = {
+        return {
             opener: this,
             target: menuTarget,
             templateOptions: menuConfig,
@@ -253,7 +233,45 @@ export class ItemActionsController {
             nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
             autofocus: false
         };
-        return dropdownConfig;
+    }
+
+    // Оставил на случай, если придётся откатиться к варианту работы с popup из Render
+    // resetItemActionsConfig() {
+    //     // afterCloseActionsMenu();
+    //     this.setActiveItem(this._collection, null);
+    //     this.deactivateSwipe(this._collection);
+    //     this._collection.setActionsMenuConfig(null);
+    //     this._collection.nextVersion();
+    // }
+
+    // Оставил на случай, если придётся откатиться к варианту работы с popup из Render
+    // updateItemActionsConfig(contents: Model,
+    //                         action: IItemAction,
+    //                         clickEvent: SyntheticEvent<MouseEvent>,
+    //                         isContextMenu: boolean): void {
+    //     const itemKey = contents?.getKey();
+    //     const menuConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
+    //     this.setActiveItem(this._collection, itemKey);
+    //     this._collection.setActionsMenuConfig(menuConfig);
+    //     this._collection.nextVersion();
+    // }
+
+    /**
+     * Получает список операций с записью для указанного элемента коллекции,
+     * дочерних по отношению операции, для которой передан строковый ключ
+     * @param item
+     * @param parentActionKey
+     */
+    private _getChildActions(
+        item: IItemActionsItem,
+        parentActionKey: IItemAction
+    ): IItemAction[] {
+        const actions = item.getActions();
+        const allActions = actions && actions.all;
+        if (allActions) {
+            return allActions.filter((action) => action.parent === parentActionKey);
+        }
+        return [];
     }
 
     /**

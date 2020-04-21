@@ -22,6 +22,7 @@ import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {TouchContextField} from 'Controls/context';
 import {IItemAction} from 'Controls/itemActions';
+import { Sticky } from 'Controls/popup';
 
 /**
  * Контрол меню.
@@ -41,6 +42,7 @@ import {IItemAction} from 'Controls/itemActions';
 const SUB_DROPDOWN_OPEN_DELAY = 400;
 
 class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
+    readonly '[Controls/_menu/interface/IMenuControl]': boolean = true;
     protected _template: TemplateFunction = ViewTemplate;
 
     _children: {
@@ -62,6 +64,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _additionalFilter: Function;
 
     private _itemActionsController: ItemActionsController;
+
+    private _popupId: string;
 
     protected _beforeMount(options: IMenuControlOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
@@ -147,12 +151,26 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
+    /**
+     * Проверяет, обработать клик или открыть подменю. Подменю может быть многоуровневым
+     * @param event
+     * @param item
+     * @param action
+     * @param clickEvent
+     * @private
+     */
     protected _itemActionClick(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>): void {
         const contents = item.getContents();
+        // Если кликнули по экшну, и он не должен открывать меню
         if (action && !action._isMenu && !action['parent@']) {
-            this._itemActionsController.processItemActionClick(action, contents);
+            if (action.handler) {
+                action.handler(contents);
+            }
+            this._closeActionsMenu();
+        // Если экшн должен открывать меню
+        // В контекстном меню и выпадающем меню могут быть подуровни (напр, страница контакты->группы на онлайне)
         } else {
-            this._itemActionsController.processDropDownMenuClick(contents?.getKey(), clickEvent, action, false);
+            this._openItemActionsMenu(contents, action, clickEvent, this, false);
         }
     }
 
@@ -179,6 +197,37 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                 }
             }
         }
+    }
+
+    /**
+     * Открывает меню операций
+     * @param contents
+     * @param action
+     * @param clickEvent
+     * @param opener
+     * @param isContextMenu
+     */
+    private _openItemActionsMenu(
+        contents: Model,
+        action: IItemAction,
+        clickEvent: SyntheticEvent<MouseEvent>,
+        opener: Element | Control<{}, unknown>,
+        isContextMenu: boolean): void {
+        const itemKey = contents?.getKey();
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
+        this._itemActionsController.setActiveItem(this._listModel, itemKey);
+        Sticky.openPopup(menuConfig).then((popupId) => {
+            this._popupId = popupId;
+        });
+    }
+
+    /**
+     * Метод, который закрывает меню
+     * @private
+     */
+    private _closeActionsMenu(): void {
+        this._itemActionsController.afterCloseActionsMenu();
+        Sticky.closePopup(this._popupId);
     }
 
     private _isPinIcon(target: EventTarget): boolean {

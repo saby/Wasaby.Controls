@@ -22,6 +22,7 @@ import {TouchContextField} from 'Controls/context';
 import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+import { Sticky } from 'Controls/popup';
 
 // Utils imports
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
@@ -1203,7 +1204,7 @@ var _private = {
             }
             if (action === IObservable.ACTION_REMOVE && self._menuIsShown) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
-                    self._closeActionsMenu();
+                    self._onItemActionsMenuClose();
                     self._children.menuOpener.close();
                 }
             }
@@ -1268,22 +1269,19 @@ var _private = {
     },
 
     /**
-     * Обработка клика по ItemAction
-     * @param self
-     * @param contents
-     * @param action
-     * @param clickEvent
-     * @param contextMenu Клик по операии произошёл в контекстном меню
+     * Обрабатывает клик по конкретной операции
      * @private
      */
-    processItemActionClick(
+    handleItemActionClick(
         self: any,
-        contents: Model,
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
-        contextMenu: boolean): void {
+        contents: Model): void {
+        // Если кликнули по экшну, и он не должен открывать меню
         if (action && !action._isMenu && !action['parent@']) {
-            self._itemActionsController.processItemActionClick(action, contents);
+            if (action.handler) {
+                action.handler(contents);
+            }
             // How to calculate itemContainer?
             // const startIndex = isNewModel
             //     ? require('Controls/display').VirtualScrollController.getStartIndex(listModel)
@@ -1295,13 +1293,43 @@ var _private = {
             // )[itemIndex - startIndex];
             // this._notify('actionClick', [action, contents, itemContainer]);
             self._notify('actionClick', [action, contents]);
+            _private.closeActionsMenu(self);
+            // Если экшн должен открывать меню
+            // В контекстном меню и выпадающем меню могут быть подуровни (напр, страница контакты->группы на онлайне)
         } else {
-            self._itemActionsController.processItemActionsMenu(contents?.getKey(), clickEvent, action, contextMenu);
-            // menuState используется, чтобы засетить isMenuShown, используемый в baseEditingTemplate. В новых списках не реализовано
-            if (!self._options.useNewModel) {
-                self._listViewModel.setMenuState('shown');
-            }
+            _private.openItemActionsMenu(self, contents, action, clickEvent, false);
         }
+    },
+
+    /**
+     * Открывает меню операций
+     * @param self
+     * @param contents
+     * @param action
+     * @param clickEvent
+     * @param isContextMenu
+     */
+    openItemActionsMenu(
+        self: any,
+        contents: Model,
+        action: IItemAction,
+        clickEvent: SyntheticEvent<MouseEvent>,
+        isContextMenu: boolean): void {
+        const itemKey = contents?.getKey();
+        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
+        self._itemActionsController.setActiveItem(this._collection, itemKey);
+        Sticky.openPopup(menuConfig).then((popupId) => {
+            self._popupId = popupId;
+        });
+    },
+
+    /**
+     * Метод, который закрывает меню
+     * @private
+     */
+    closeActionsMenu(self: any): void {
+        self._itemActionsController.afterCloseActionsMenu();
+        Sticky.closePopup(self._popupId);
     },
 
     /**
@@ -1348,9 +1376,9 @@ var _private = {
         }
     },
 
-    bindHandlers: function(self) {
-        self._closeActionsMenu = self._closeActionsMenu.bind(self);
-        self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
+    bindHandlers(self): void {
+        self._onItemActionsMenuClose = self._onItemActionsMenuClose.bind(self);
+        self._onItemActionsMenuResult = self._onItemActionsMenuResult.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -1755,6 +1783,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _currentMenuConfig: null,
 
+    _popupId: null,
+
     /**
      * Шаблон операций с записью
      */
@@ -2130,7 +2160,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.resetPagingNavigation(this, newOptions.navigation);
             if (this._menuIsShown) {
                 this._children.menuOpener.close();
-                this._closeActionsMenu();
+                this._onItemActionsMenuClose();
             }
             this._reloadInAfterUpdate = true;
         }
@@ -2566,7 +2596,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemContextMenu(clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
         clickEvent.stopPropagation();
         const contents = item.getContents();
-        this._itemActionsController.processItemActionsMenu(contents?.getKey(), clickEvent, null, true);
+        _private.openItemActionsMenu(this, contents, null, clickEvent, true);
         _private.setMarkedKey(this, contents.getKey());
     },
 
@@ -2580,43 +2610,35 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
         const contents: Model = itemData.getContents();
         _private.setMarkedKey(this, contents.getKey());
-        _private.processItemActionClick(this, contents, action, event, false);
-    },
-
-    // TODO REMOVE!!!
-    _needShowIcon(action: IItemAction): boolean {
-        // return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
-    },
-
-    // TODO REMOVE!!!
-    _needShowTitle(action: IItemAction): boolean {
-        // return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
-        //     action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
-        //     (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
-        //         !action.displayMode) && !action.icon);
+        _private.handleItemActionClick(this, action, event, contents);
     },
 
     /**
-     * Обработчик закрытия меню операций
-     * @param args
+     * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
+     * @param e событие onResult
+     * @param eventName название события, брошенного из Controls/menu:Popup.
+     * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
+     * @param actionModel
+     * @param clickEvent
      * @private
      */
-    _closeActionsMenu(args): void {
-        const clickEvent = args && args.event;
-        _private.dropdownMenuEventsHandler(this, 'menuClosed', null, clickEvent);
+    _onItemActionsMenuResult(e: SyntheticEvent<MouseEvent>,
+                             eventName: string,
+                             actionModel: Model,
+                             clickEvent: SyntheticEvent<MouseEvent>): void {
+        if (eventName === 'itemClick') {
+            const action = actionModel && actionModel.getRawData();
+            const contents = this._itemActionsController.getActiveItem()?.getContents();
+            _private.handleItemActionClick(this, action, clickEvent, contents);
+        }
     },
 
     /**
-     * Обработчик клика внутри меню операций
-     * @param args
+     * Обработчик закрытия выпадающего/контекстного меню
      * @private
      */
-    _actionsMenuResultHandler(args): void {
-        const eventName = args && args.action;
-        const event = args && args.event;
-        const data = args && args.data;
-
-        _private.dropdownMenuEventsHandler(this, eventName, data, event);
+    _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>): void {
+        this._itemActionsController.afterCloseActionsMenu();
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {
