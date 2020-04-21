@@ -1733,7 +1733,93 @@ var _private = {
             actionCaptionPosition: options.actionCaptionPosition,
             itemActionsClass: options.itemActionsClass
         });
-    }
+    },
+
+   createSelectionController(self: any, options: any): SelectionController {
+      const strategy = this.createSelectionStrategy(options);
+
+      return new SelectionController({
+         model: self._listViewModel,
+         selectedKeys: options.selectedKeys,
+         excludedKeys: options.excludedKeys,
+         filter: options.filter,
+         root: options.root,
+         strategy,
+         notifySelectionKeysChanged: this.notifySelectionKeysChanged.bind(self),
+         notifySelectedKeysCountChanged: this.notifySelectedKeysCountChanged.bind(self)
+      });
+   },
+
+   updateSelectionController(self: any, newOptions: any): void {
+      self._selectionController.update({
+         model: self._listViewModel,
+         selectedKeys: newOptions.selectedKeys,
+         excludedKeys: newOptions.excludedKeys,
+         filter: newOptions.filter,
+         root: newOptions.root,
+         strategyOptions: this.getSelectionStrategyOptions(newOptions)
+      });
+   },
+
+   createSelectionStrategy(options: any): ISelectionStrategy {
+      const strategyOptions = this.getSelectionStrategyOptions(options);
+      if (options.parentProperty) {
+         return new TreeSelectionStrategy(strategyOptions);
+      } else {
+         return new FlatSelectionStrategy();
+      }
+   },
+
+   getSelectionStrategyOptions(options: any): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+      if (options.parentProperty) {
+         return {
+            nodesSourceControllers: options.nodesSourceControllers,
+            selectDescendants: options.selectDescendants,
+            selectAncestors: options.selectAncestors,
+            hierarchyRelation: new relation.Hierarchy({
+               keyProperty: options.keyProperty || 'id',
+               parentProperty: options.parentProperty || 'Раздел',
+               nodeProperty: options.nodeProperty || 'Раздел@',
+               declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
+            })
+         };
+      }
+   },
+
+   notifySelectionKeysChanged(eventName: string, keys: [], addedKeys: [], removedKeys: []): void {
+      this._notify(eventName, [keys, addedKeys, removedKeys]);
+   },
+
+   notifySelectedKeysCountChanged(count: number, isAllSelected: boolean): void {
+      this._notify('listSelectedKeysCountChanged', [count, isAllSelected], {bubbling: true});
+   },
+
+   onItemsChanged(self: any, action: string, removedItems: []): void {
+      if (self._selectionController) {
+         switch (action) {
+            case IObservable.ACTION_REMOVE:
+               self._selectionController.removeKeys(removedItems);
+               break;
+            case IObservable.ACTION_RESET:
+               self._selectionController.reset();
+               break;
+         }
+      }
+   },
+
+   onSelectedTypeChanged(typeName: string): void {
+      switch (typeName) {
+         case 'selectAll':
+            this._selectionController.selectAll();
+            break;
+         case 'unselectAll':
+            this._selectionController.unselectAll();
+            break;
+         case 'toggleAll':
+            this._selectionController.toggleAll();
+            break;
+      }
+   }
 };
 
 /**
