@@ -136,8 +136,6 @@
                     multiSelectReady="{{_multiSelectReady}}"
                     listModel="{{_listViewModel}}"
                     startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
-                    itemActionsTemplate="{{ _itemActionsTemplate }}"
-                    swipeTemplate="{{ _itemActionsTemplate }}"
                     on:deactivated="_listDeactivated()"
                     on:animationend="_onAnimationEnd()"
                     on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
@@ -155,6 +153,23 @@
                     on:itemSwipe="_listSwipe()"
                     on:dragStart="_notifyHandler('dragStart')"
             >
+                <ws:itemActionsTemplate>
+                    <ws:partial
+                            template="{{_itemActionsTemplate}}"
+                            scope="{{ _listViewModel.getActionsTemplateConfig() }}"
+                            itemActionsClass="{{_options.itemActionsClass}}"
+                            itemData="{{ itemActionsTemplate.currentItem }}" />
+                    <!-- using || instead of ws:if because template is constantly being updated otherwise -->
+                </ws:itemActionsTemplate>
+                <ws:swipeTemplate>
+                    <ws:partial
+                            template="{{_swipeTemplate}}"
+                            scope="{{ _listViewModel.getActionsTemplateConfig() }}"
+                            swipeConfig="{{ _listViewModel.getSwipeConfig() }}"
+                            animationState="open"
+                            itemData="{{ swipeTemplate.currentItem }}" />
+                    <!-- using || instead of ws:if because template is constantly being updated otherwise -->
+                </ws:swipeTemplate>
 <!--                <ws:itemActionsTemplate>-->
 <!--                    {{ '' }}-->
 <!--                    <ws:partial-->
