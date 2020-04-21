@@ -16,17 +16,6 @@ define('Controls-demo/Container/Scroll',
          _selectedStyle: 'default',
          _scrollStyleSource: null,
 
-         _beforeMount: function() {
-            this._scrollStyleSource = new source.Memory({
-               keyProperty: 'title',
-               data: [{
-                  title: 'default'
-               }, {
-                  title: 'onlinenavigation'
-               }]
-            });
-         },
-
          _getChildContext: function() {
             return {
                ScrollData: new scroll._scrollContext({
