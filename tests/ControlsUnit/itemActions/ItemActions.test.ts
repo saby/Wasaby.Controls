@@ -96,6 +96,7 @@ describe('Controls/_itemActions/ItemActionsController', () => {
         it('executes handler');
     });
 
+    // todo incorrect
     describe('prepareActionsMenuConfig()', () => {
         it('prepares actions menu config', () => {
             const actionsItem = makeActionsItem();

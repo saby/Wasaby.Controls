@@ -1204,7 +1204,7 @@ var _private = {
             if (action === IObservable.ACTION_REMOVE && self._menuIsShown) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
                     self._closeActionsMenu();
-                    self._children.itemActionsOpener.close();
+                    self._children.menuOpener.close();
                 }
             }
         }
@@ -1228,6 +1228,17 @@ var _private = {
                 self._shouldUpdateItemActions = true;
             }
         }
+
+        const menuConfig = self._listViewModel.getActionsMenuConfig();
+        if (menuConfig !== self._currentMenuConfig) {
+            if (menuConfig) {
+                self._children.menuOpener.open(menuConfig, this);
+            } else {
+                self._children.menuOpener.close();
+            }
+            self._currentMenuConfig = menuConfig;
+        }
+
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
             self._forceUpdate();
@@ -1256,6 +1267,13 @@ var _private = {
         });
     },
 
+    /**
+     * TODO REMOVE!!!
+     * @param items
+     * @param contextMenuConfig
+     * @param action
+     * @deprecated
+     */
     getMenuConfig(items: IItemAction[], contextMenuConfig: object, action?: IItemAction): object {
         let defaultMenuConfig: object = {
             items: new RecordSet({ rawData: items, keyProperty: 'id' }),
@@ -1288,6 +1306,11 @@ var _private = {
         return defaultMenuConfig;
     },
 
+    /**
+     * TODO REMOVE!!!
+     * @param elem
+     * @deprecated
+     */
     mockElem(elem) {
         const rect = elem.getBoundingClientRect();
         return {
@@ -1345,7 +1368,7 @@ var _private = {
         //         .then( () => {
         //             const menuConfig = _private.getMenuConfig(showActions, self._options.contextMenuConfig);
         //
-        //             self._children.itemActionsOpener.open({
+        //             self._children.menuOpener.open({
         //                 opener: self._children.listView,
         //                 target,
         //                 templateOptions: menuConfig,
@@ -1396,7 +1419,7 @@ var _private = {
         //         .then(() => {
         //             const menuConfig = _private.getMenuConfig(children, self._options.contextMenuConfig, action);
         //
-        //             self._children.itemActionsOpener.open({
+        //             self._children.menuOpener.open({
         //                 opener: self._children.listView,
         //                 target: childEvent.target,
         //                 templateOptions: menuConfig,
@@ -1439,7 +1462,7 @@ var _private = {
      * @param contents
      * @param action
      * @param clickEvent
-     * @param contextMenu
+     * @param contextMenu Клик по операии произошёл в контекстном меню
      * @private
      */
     processItemActionClick(
@@ -1462,7 +1485,7 @@ var _private = {
             // this._notify('actionClick', [action, contents, itemContainer]);
             self._notify('actionClick', [action, contents]);
         } else {
-            self._itemActionsController.processDropDownMenuClick(contents?.getKey(), clickEvent, action, contextMenu);
+            self._itemActionsController.processItemActionsMenu(contents?.getKey(), clickEvent, action, contextMenu);
             // menuState используется, чтобы засетить isMenuShown, используемый в baseEditingTemplate. В новых списках не реализовано
             if (!self._options.useNewModel) {
                 self._listViewModel.setMenuState('shown');
@@ -1919,6 +1942,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemActionsController: null,
 
+    _currentMenuConfig: null,
+
     /**
      * Шаблон операций с записью
      */
@@ -2293,7 +2318,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             if (this._menuIsShown) {
-                this._children.itemActionsOpener.close();
+                this._children.menuOpener.close();
                 this._closeActionsMenu();
             }
             this._reloadInAfterUpdate = true;
@@ -2517,7 +2542,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _listSwipe(event: SyntheticEvent, itemData: CollectionItem<Model>, childEvent: SyntheticEvent): void {
         const direction = childEvent.nativeEvent.direction;
-        this._children.itemActionsOpener.close();
+        this._children.menuOpener.close();
 
         const key = this._options.useNewModel ? itemData.getContents().getId() : itemData.key;
 
@@ -2713,7 +2738,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         * _canUpdateItemsActions  приведет к показу неактуальных операций.
         */
         this._itemActionsController.updateActionsForItem({
-            collection: this._listViewModel,
             itemActions: this._options.itemActions,
             itemActionsProperty: this._options.itemActionsProperty,
             visibilityCallback: this._options.itemActionVisibilityCallback,
@@ -2731,7 +2755,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemContextMenu(clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
         clickEvent.stopPropagation();
         const contents = item.getContents();
-        _private.processItemActionClick(this, contents, null, clickEvent, true);
+        this._itemActionsController.processItemActionsMenu(contents?.getKey(), clickEvent, null, true);
         _private.setMarkedKey(this, contents.getKey());
     },
 
@@ -2748,15 +2772,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.processItemActionClick(this, contents, action, event, false);
     },
 
+    // TODO REMOVE!!!
     _needShowIcon(action: IItemAction): boolean {
-        return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
+        // return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
     },
 
+    // TODO REMOVE!!!
     _needShowTitle(action: IItemAction): boolean {
-        return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
-            action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
-            (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
-                !action.displayMode) && !action.icon);
+        // return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
+        //     action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
+        //     (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
+        //         !action.displayMode) && !action.icon);
     },
 
     /**

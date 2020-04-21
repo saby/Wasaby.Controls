@@ -170,33 +170,6 @@
                             itemData="{{ swipeTemplate.currentItem }}" />
                     <!-- using || instead of ws:if because template is constantly being updated otherwise -->
                 </ws:swipeTemplate>
-<!--                <ws:itemActionsTemplate>-->
-<!--                    {{ '' }}-->
-<!--                    <ws:partial-->
-<!--                            toolbarVisibility="{{_options.toolbarVisibility}}"-->
-<!--                            style="{{_options.style}}"-->
-<!--                            size="{{_options.editingConfig ? 's' : 'm'}}"-->
-<!--                            itemPadding="{{_options.itemPadding}}"-->
-<!--                            getContainerPaddingClass="{{_getItemActionsContainerPaddingClass}}"-->
-<!--                            needShowTitle="{{_needShowTitle}}"-->
-<!--                            needShowIcon="{{_needShowIcon}}"-->
-<!--                            itemActionsPosition="{{_options.itemActionsPosition}}"-->
-<!--                            actionMenuIsShown="{{_options.actionMenuIsShown}}"-->
-<!--                            scope="{{itemActionsTemplate}}"/>-->
-<!--                </ws:itemActionsTemplate>-->
-<!--                <ws:swipeTemplate>-->
-<!--                    <ws:partial-->
-<!--                            template="{{ _swipeTemplate }}"-->
-<!--                            scope="{{itemActionsTemplate}}"-->
-<!--                            swipeConfig="{{_swipeConfig}}"-->
-<!--                            needIcon="{{_needIcon}}"-->
-<!--                            needTitle="{{_needTitle}}"-->
-<!--                            needSeparator="{{_needSeparator}}"-->
-<!--                            actionAlignment="{{ _actionAlignment }}"-->
-<!--                            actionCaptionPosition="{{ _options.actionCaptionPosition }}"-->
-<!--                            animationState="{{_animationState}}"-->
-<!--                            itemActionsPosition="{{_options.itemActionsPosition}}"/>-->
-<!--                </ws:swipeTemplate>-->
                <ws:tagTemplate>
                   <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
                               on:click="_onTagClickHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"
@@ -275,8 +248,8 @@
             </div>
         </ws:if>
         <Controls.popup:Sticky
-            name="itemActionsOpener"
-            template="Controls/dropdownPopup:List"
+            name="menuOpener"
+            template="Controls/menu:Popup"
             closeOnOutsideClick="{{true}}"
             actionOnScroll="{{ _isMobileIOS ? 'track' : 'close' }}">
             <ws:fittingMode vertical="overflow"/>

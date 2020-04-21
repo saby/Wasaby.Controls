@@ -211,7 +211,7 @@ export default class View extends Control<IViewOptions> {
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         const contents = item.getContents();
-        this._processItemActionClick(contents, null, clickEvent, true);
+        this._itemActionsController.processItemActionsMenu(contents?.getKey(), clickEvent, true);
     }
 
     /**
@@ -290,21 +290,21 @@ export default class View extends Control<IViewOptions> {
      * @param contents
      * @param action
      * @param clickEvent
-     * @param contextMenu
+     * @param isContextMenu
      * @private
      */
     private _processItemActionClick(
         contents: Model,
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
-        contextMenu: boolean): void {
+        isContextMenu: boolean): void {
         if (action && !action._isMenu && !action['parent@']) {
             this._itemActionsController.processItemActionClick(action, contents);
             // How to calculate itemContainer?
             // this._notify('actionClick', [action, contents, itemContainer]);
             this._notify('actionClick', [action, contents]);
         } else {
-            this._itemActionsController.processDropDownMenuClick(contents?.getKey(), clickEvent, action, contextMenu);
+            this._itemActionsController.processItemActionsMenu(contents?.getKey(), clickEvent, action, isContextMenu);
         }
     }
 

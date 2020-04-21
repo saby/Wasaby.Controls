@@ -193,8 +193,8 @@ export class ItemActionsController {
      * @param action
      * @param isContextMenu
      */
-    processDropDownMenuClick(itemKey: string, clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, isContextMenu: boolean): void {
-        const menuConfig: IDropdownConfig = this._prepareActionsMenuConfig(itemKey, clickEvent, action, isContextMenu);
+    processItemActionsMenu(itemKey: string, clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, isContextMenu: boolean): void {
+        const menuConfig: IDropdownConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, action, isContextMenu);
         this.setActiveItem(this._collection, itemKey);
         this._collection.setActionsMenuConfig(menuConfig);
         this._collection.nextVersion();
@@ -207,7 +207,7 @@ export class ItemActionsController {
      * @param parentAction Родительская операция с записью
      * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
      */
-    private _prepareActionsMenuConfig(
+    prepareActionsMenuConfig(
         itemKey: TItemKey,
         clickEvent: SyntheticEvent<MouseEvent>,
         parentAction: IItemAction,
