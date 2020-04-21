@@ -5,18 +5,69 @@
  * @extends Core/Control
  * @author Авраменко А.С.
  * @public
+ * @example
+ * Пример базовой конфигурации:
+ * <pre>
+ * <Controls.columns:View
+ *    keyProperty="id"
+ *    useNewModel="{{true}}"
+ *    source="{{ _viewSource }}">
+ * </Controls.columns:View>
+ * </pre>
+ * 
+ * @demo Controls-demo/list_new/ColumnsView
+ */
+
+/**
+ * @name Controls/columns:View#itemTemplate
+ * @cfg {Number} Шаблон записи. 
+ * @example
+ * <pre>
+ * <Controls.columns:View
+ *    keyProperty="id"
+ *    useNewModel="{{true}}"
+ *    source="{{ _viewSource }}">
+ *    <ws:itemTemplate>
+ *       <ws:partial template="Controls/listRender:ColumnsItemTemplate">
+ *          <ws:contentTemplate>
+ *             {{itemTemplate.item.getContents().get('title')}}
+ *          </ws:contentTemplate>
+ *       </ws:partial>
+ *    </ws:itemTemplate>
+ * </Controls.columns:View>
+ * </pre>
  */
 
 /**
  * @name Controls/columns:View#columnMinWidth
  * @cfg {Number} Минимальная ширина колонки. 
  * @default 270 
+ * @example
+ * <pre>
+ * <Controls.columns:View
+ *    keyProperty="id"
+ *    useNewModel="{{true}}"
+ *    columnMinWidth="{{300}}"
+ *    columnMaxWidth="{{500}}"
+ *    source="{{ _viewSource }}">
+ * </Controls.columns:View>
+ * </pre>
  */
 
 /**
  * @name Controls/columns:View#columnMaxWidth
  * @cfg {Number} Максимальная ширина колонки. 
  * @default 400
+ * @example
+ * <pre>
+ * <Controls.columns:View
+ *    keyProperty="id"
+ *    useNewModel="{{true}}"
+ *    columnMinWidth="{{300}}"
+ *    columnMaxWidth="{{500}}"
+ *    source="{{ _viewSource }}">
+ * </Controls.columns:View>
+ * </pre>
  */
 
 /**

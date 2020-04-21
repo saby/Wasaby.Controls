@@ -7,18 +7,20 @@
       {{_isEditing ? 'controls-EditableArea_isEditing_style_' + (_options.style)}}
       controls-EditableArea_{{_options.readOnly ? 'readonly' : 'clickable'}}"
    >
-      <ws:partial
-         template="{{_options.content}}"
-         editObject="{{_editObject}}"
-         on:click="_onClickHandler()"
-         on:keyDown="_onKeyDown()"
-         isEditing="{{_isEditing}}"
-      />
-      <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
-          <ws:partial template="{{_buttonsTemplate}}"
-                      attr:class="controls-EditableArea_isEditing_wrapper"
-                      on:applyButtonClick="commitEdit()"
-                      on:closeButtonClick="cancelEdit()" />
-      </ws:if>
+      <div class="controls-EditableArea__wrapper">
+         <ws:partial
+            template="{{_options.content}}"
+            editObject="{{_editObject}}"
+            on:click="_onClickHandler()"
+            on:keyDown="_onKeyDown()"
+            isEditing="{{_isEditing}}"
+         />
+         <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
+             <ws:partial template="{{_buttonsTemplate}}"
+                         attr:class="controls-EditableArea_isEditing_wrapper"
+                         on:applyButtonClick="commitEdit()"
+                         on:closeButtonClick="cancelEdit()" />
+         </ws:if>
+      </div>
    </div>
 </Controls.validate:Controller>
