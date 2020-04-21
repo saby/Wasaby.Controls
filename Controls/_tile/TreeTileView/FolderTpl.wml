@@ -1,7 +1,7 @@
-<div attr:class="controls-TileView__item js-controls-TileView__withoutZoom controls-ListView__itemV controls-ListView__itemV_cursor-{{cursor || 'pointer'}} controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
-         {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility)}}
+<div attr:class="controls-TileView__item controls-TileView__item_theme-{{itemData.theme}}  js-controls-TileView__withoutZoom controls-ListView__itemV controls-ListView__itemV_cursor-{{cursor || 'pointer'}} controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
+         {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility) + '_theme-' + itemData.theme}}
          controls-ListView__item_showActions
-         {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
+         {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker_theme-' + itemData.theme : ' controls-TileView__item_withoutMarker_theme-' + itemData.theme}}
          {{!!itemData.isActive ? ' controls-TreeTileView__item_active'}}
          {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
          {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme' + itemData.theme}}"
@@ -30,5 +30,5 @@
               highlightOnHover="{{highlightOnHover}}"
               itemData="{{itemData}}"
               isTile="{{true}}"
-              itemActionsClass="{{itemActionsClass ? itemActionsClass : 'controls-TileView__itemActions controls-TreeTileView__itemActions_center'}}"/>
+              itemActionsClass="{{itemActionsClass ? itemActionsClass : 'controls-TileView__itemActions_theme-' + itemData.theme + ' controls-TreeTileView__itemActions_center'}}"/>
 </div>

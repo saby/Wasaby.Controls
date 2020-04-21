@@ -10,47 +10,47 @@
    }
 }
 
-.controls-TileView__itemPaddingContainer_spacingLeft_default {
+.controls-TileView__itemPaddingContainer_spacingLeft_default_theme-@{themeName} {
    margin-left: -@item_offset_tile / 2 + @padding-left_default_tile;
 }
 
-.controls-TileView__itemPaddingContainer_spacingLeft_null {
+.controls-TileView__itemPaddingContainer_spacingLeft_null_theme-@{themeName} {
    margin-left: -@item_offset_tile / 2;
 }
 
-.controls-TileView__itemPaddingContainer_spacingLeft_s {
+.controls-TileView__itemPaddingContainer_spacingLeft_s_theme-@{themeName} {
    margin-left: -@item_offset_tile / 2 + @padding-left_s_tile;
 }
 
-.controls-TileView__itemPaddingContainer_spacingLeft_m {
+.controls-TileView__itemPaddingContainer_spacingLeft_m_theme-@{themeName} {
    margin-left: -@item_offset_tile / 2 + @padding-left_m_tile;
 }
 
-.controls-TileView__itemPaddingContainer_spacingLeft_l {
+.controls-TileView__itemPaddingContainer_spacingLeft_l_theme-@{themeName} {
    margin-left: -@item_offset_tile / 2 + @padding-left_l_tile;
 }
 
-.controls-TileView__itemPaddingContainer_spacingRight_default {
+.controls-TileView__itemPaddingContainer_spacingRight_default_theme-@{themeName} {
    margin-right: -@item_offset_tile / 2 + @padding-right_default_tile;
 }
 
-.controls-TileView__itemPaddingContainer_spacingRight_null {
+.controls-TileView__itemPaddingContainer_spacingRight_null_theme-@{themeName} {
    margin-right: -@item_offset_tile / 2;
 }
 
-.controls-TileView__itemPaddingContainer_spacingRight_s {
+.controls-TileView__itemPaddingContainer_spacingRight_s_theme-@{themeName} {
    margin-right: -@item_offset_tile / 2 + @padding-right_s_tile;
 }
 
-.controls-TileView__itemPaddingContainer_spacingRight_m {
+.controls-TileView__itemPaddingContainer_spacingRight_m_theme-@{themeName} {
    margin-right: -@item_offset_tile / 2 + @padding-right_m_tile;
 }
 
-.controls-TileView__itemPaddingContainer_spacingRight_l {
+.controls-TileView__itemPaddingContainer_spacingRight_l_theme-@{themeName} {
    margin-right: -@item_offset_tile / 2 + @padding-right_l_tile;
 }
 
-.controls-TileView__item {
+.controls-TileView__item_theme-@{themeName} {
    position: relative;
    flex-grow: 1;
    margin: @item_offset_tile / 2;
@@ -61,7 +61,7 @@
    opacity: 0;
 }
 
-.controls-TileView__itemContent {
+.controls-TileView__itemContent_theme-@{themeName} {
    background-color: @item_backgorund-color_tile;
    box-sizing: border-box;
    overflow: hidden;
@@ -75,7 +75,7 @@
    max-height: 100%;
 }
 
-.controls-TileView__item_active.controls-TileView__item_unscaleable,
+.controls-TileView__item_active_theme-@{themeName}.controls-TileView__item_unscaleable,
 .controls-TileView__item:hover > .controls-TileView__item_unscaleable {
    max-height: none;
 }
@@ -88,7 +88,7 @@
    transition-duration: 0.05s;
 }
 
-.controls-TileView__title {
+.controls-TileView__title_theme-@{themeName} {
    border-top: @item_caption_separator-thickness_tile solid @item_caption_separator-color_tile;
    max-height: @unaccented_item_caption_max-height_tile;
    min-height: @unaccented_item_caption_min-height_tile;
@@ -121,17 +121,17 @@
    }
 }
 
-.controls-ListView__item_shadow_visible {
+.controls-ListView__item_shadow_visible_theme-@{themeName} {
    box-shadow: @item_shadow-size_tile @item_shadow-color_tile;
 }
 
 .ws-is-hover {
-   .controls-TileView__itemContent_highlightOnHover:hover {
+   .controls-TileView__itemContent_highlightOnHover_theme-@{themeName}:hover {
       background-color: @item_hover_background-color_tile;
    }
 
-   .controls-ListView__item_shadow_visible, .controls-ListView__item_shadow_onhover {
-      &:hover, &.controls-TileView__item_active, &.controls-TileView__item_swiped {
+   .controls-ListView__item_shadow_visible_theme-@{themeName}, .controls-ListView__item_shadow_onhover_theme-@{themeName} {
+      &:hover, &.controls-TileView__item_active_theme-@{themeName}, &.controls-TileView__item_swiped_theme-@{themeName} {
          box-shadow: @item_shadow-size_tile @item_hover_shadow-color_tile;
       }
    }
@@ -141,7 +141,7 @@
    // if the parent container limits through overflow: hidden.
    // Turn on the display of the caption only for the desktop, so tile does not change the size by swipe on ios .
    .controls-TileView__item_hovered,
-   .controls-TileView__item_active,
+   .controls-TileView__item_active_theme-@{themeName},
    .controls-TileView__item:hover > .controls-TileView__item_unscaleable {
       .controls-TileView__title_invisible {
          display: block;
@@ -150,9 +150,9 @@
    // On ios, the caption should not be resized. The reason is described above.
    // By hover, activation or swipe caption do not fit in one line are transferred to the next line.
    // Because of this, its size changes. Do the word break on the desktop.
-   .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped,
+   .controls-TileView__item_hovered, .controls-TileView__item_active_theme-@{themeName}, .controls-TileView__item_swiped_theme-@{themeName},
    .controls-TileView__item:hover > .controls-TileView__item_unscaleable {
-      .controls-TileView__title {
+      .controls-TileView__title_theme-@{themeName} {
          white-space: normal;
          word-break: break-all;
       }
@@ -167,17 +167,17 @@
    // Поэтому нужно установить для активной плитки z-index больше чем у чекбоксов
    z-index: 2;
 }
-.controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped,
+.controls-TileView__item_hovered, .controls-TileView__item_active_theme-@{themeName}, .controls-TileView__item_swiped_theme-@{themeName},
 .controls-TileView__item:hover > .controls-TileView__item_unscaleable {
-   .controls-TileView__title, .controls-TileView__title_accent {
+   .controls-TileView__title_theme-@{themeName}, .controls-TileView__title_accent_theme-@{themeName} {
       background-color: @item_caption_background-color_tile;
    }
-   .controls-TileView__title_accent {
+   .controls-TileView__title_accent_theme-@{themeName} {
       text-decoration: underline;
    }
 }
 
-.controls-TileView__item_fixed {
+.controls-TileView__item_fixed_theme-@{themeName} {
    //Set the value to more than scrollContainer, so that when you increase the tiles appear above the shadows and scrollbar.
    z-index: @z-index_Scroll-contentEnvironment + 1;
    position: fixed;
@@ -203,34 +203,34 @@
    left: 0;
 }
 
-.controls-TileView__item_withoutMarker {
+.controls-TileView__item_withoutMarker_theme-@{themeName} {
    border: @item_border-thickness_tile solid @item_border-color_tile;
 }
 
-.controls-TileView__item_withMarker {
+.controls-TileView__item_withMarker_theme-@{themeName} {
    border: @item_border-thickness_tile solid @item_marked_border-color_tile;
 }
 
 //TODO: Убрать перебитие, сделать отдельные классы в плитке и других списках
-.controls-itemActionsV.controls-TileView__itemActions {
+.controls-itemActionsV.controls-TileView__itemActions_theme-@{themeName} {
    padding: 0 @itemActions_offset-right_tile @itemActions_offset-bottom_tile 0;
 }
 //TODO: end
 
-.controls-itemActionsV.controls-TileView__itemActions {
+.controls-itemActionsV.controls-TileView__itemActions_theme-@{themeName} {
    background-color: @item_caption_background-color_tile;
 }
 
-.controls-TileView__footer {
+.controls-TileView__footer_theme-@{themeName} {
    width: 100%;
    margin-left: @item_offset_tile / 2;
 }
 // FIXME: https://online.sbis.ru/opendoc.html?guid=8b2c991d-05d9-4513-be30-350a1b16fed9
-.controls-TileView__footer:empty {
+.controls-TileView__footer_theme-@{themeName}:empty {
    margin-left: 0;
 }
 
-.controls-TileView__itemActions:before {
+.controls-TileView__itemActions_theme-@{themeName}:before {
    content: '';
    width: @itemActions_gradient_width_tile;
    height: 100%;
@@ -244,11 +244,11 @@
 
 //Internal variable required to reduce the height of the image under the title.
 @height_TileView-title: @unaccented_item_caption_min-height_tile + @item_caption_separator-thickness_tile + @unaccented_item_caption_padding-top_tile + @unaccented_item_caption_padding-bottom_tile;
-.controls-TileView__resizer {
+.controls-TileView__resizer_theme-@{themeName} {
    margin-bottom: -@height_TileView-title;
 }
 
-.controls-TileView__imageWrapper_reduced {
+.controls-TileView__imageWrapper_reduced_theme-@{themeName} {
    border-bottom: @height_TileView-title solid transparent;
    margin-bottom: -@height_TileView-title;
    box-sizing: border-box;
@@ -282,7 +282,7 @@
    flex-grow: 1;
 }
 
-.controls-TileView__title_accent {
+.controls-TileView__title_accent_theme-@{themeName} {
    font-weight: bold;
    display: flex;
    align-items: center;
