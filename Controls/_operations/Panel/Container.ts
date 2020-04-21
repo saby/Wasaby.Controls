@@ -6,6 +6,7 @@ import { TKeysSelection as TKeys, TKeySelection as TKey } from 'Controls/interfa
 export interface IOperationsPanelContainerOptions extends IControlOptions {
     selectedKeys: TKeys;
     listMarkedKey: TKey;
+    selectedKeysCount: number;
 }
 
 /**
@@ -23,16 +24,25 @@ export interface IOperationsPanelContainerOptions extends IControlOptions {
 export default class OperationsPanelContainer extends Control<IOperationsPanelContainerOptions> {
     protected _template: TemplateFunction = template;
     protected _selectedKeys: TKeys = [];
+    protected _selectedKeysCount: number;
 
     protected _beforeMount(options: IOperationsPanelContainerOptions): void {
         this._selectedKeys = this._getSelectedKeys(options);
+        this._selectedKeysCount = this._getSelectedKeysCount(options, this._selectedKeys);
     }
 
     protected _beforeUpdate(newOptions: IOperationsPanelContainerOptions): void {
         if (!isEqual(this._options.selectedKeys, newOptions.selectedKeys) ||
             this._options.listMarkedKey !== newOptions.listMarkedKey) {
             this._selectedKeys = this._getSelectedKeys(newOptions);
+            this._selectedKeysCount = this._getSelectedKeysCount(newOptions, this._selectedKeys);
         }
+    }
+
+    private _getSelectedKeysCount(options: IOperationsPanelContainerOptions, selectedKeys: number[]|string[]): number {
+        return options.selectedKeys.length ?
+            options.selectedKeysCount :
+            0;
     }
 
     private _getSelectedKeys(options: IOperationsPanelContainerOptions): TKeys {
