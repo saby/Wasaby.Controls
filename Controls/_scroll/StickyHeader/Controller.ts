@@ -1,9 +1,8 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_scroll/StickyHeader/Controller/Controller');
-import {TRegisterEventData} from './Utils';
+import {POSITION, TRegisterEventData, TYPE_FIXED_HEADERS} from './Utils';
 import StickyHeader, {SHADOW_VISIBILITY} from 'Controls/_scroll/StickyHeader/_StickyHeader';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
-import {POSITION} from 'Controls/_scroll/StickyHeader/Utils';
 
 // @ts-ignore
 
@@ -31,6 +30,8 @@ class Component extends Control {
     private _delayedHeaders: TRegisterEventData[] = [];
     private _stickyControllerMounted: boolean = false;
     private _updateTopBottomInitialized: boolean = false;
+
+    private _headersHeight;
 
     _beforeMount(options) {
         this._headersStack = {
@@ -77,20 +78,31 @@ class Component extends Control {
         return false;
     }
 
-    getHeadersHeight(position: string): number {
+    /**
+     * Возвращает высоты заголовков.
+     * @function
+     * @param {POSITION} [position] Высоты заголовков сверху/снизу
+     * @param {TYPE_FIXED_HEADERS} [type]
+     * @returns {Number}
+     */
+    getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
+        // type, предпологается, в будущем будет иметь еще одно значение, при котором будет высчитываться
+        // высота всех зафиксированных на текущий момент заголовков.
         let
             height: number = 0,
             replaceableHeight: number = 0,
             header;
-        for (let headerId of this._fixedHeadersStack[position]) {
-            const ignoreHeight: boolean = !this._shadowVisibleStack[position][headerId];
+        const headers = type === TYPE_FIXED_HEADERS.allFixed ? this._headersStack : this._fixedHeadersStack;
+        for (let headerId of headers[position]) {
+            const ignoreHeight: boolean = type === TYPE_FIXED_HEADERS.initialFixed &&
+                !this._shadowVisibleStack[position][headerId];
             if (ignoreHeight) {
                 continue;
             }
             header = this._headers[headerId];
             // If the header is "replaceable", we take into account the last one after all "stackable" headers.
             if (header.mode === 'stackable') {
-                if (header.fixedInitially) {
+                if (header.fixedInitially || type === TYPE_FIXED_HEADERS.allFixed) {
                     height += header.inst.height;
                 }
                 replaceableHeight = 0;
@@ -148,7 +160,7 @@ class Component extends Control {
         } else if (fixedHeaderData.prevPosition) {
             delete this._shadowVisibleStack[fixedHeaderData.prevPosition][fixedHeaderData.id];
         }
-        this._notify('fixed', [this.getHeadersHeight('top'), this.getHeadersHeight('bottom')]);
+        this._notify('fixed', [this.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.initialFixed), this.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.initialFixed)]);
 
         // If the header is single, then it makes no sense to send notifications.
         // Thus, we prevent unnecessary force updates on receiving messages.
@@ -209,6 +221,7 @@ class Component extends Control {
             this._updateFixedInitially('top');
             this._updateFixedInitially('bottom');
             this._updateTopBottom();
+            this._headersHeight = this.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.allFixed);
             this._clearOffsetCache();
         }
 
