@@ -1,1 +1,0 @@
-<Controls.buttons:Button fontSize="xs" attr:class="controls-BaseControl__loadMore" viewMode="link" caption="{{rk('Еще') + '...'}}" on:click="_loadMore()"/>
