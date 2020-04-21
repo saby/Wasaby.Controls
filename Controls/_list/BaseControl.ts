@@ -1332,50 +1332,6 @@ var _private = {
         Sticky.closePopup(self._popupId);
     },
 
-    /**
-     * Обработчики событий для выпадающего/контекстного меню
-     * @param self
-     * @param eventName
-     * @param data
-     * @param event
-     * @private
-     */
-    dropdownMenuEventsHandler(self: any, eventName: string, data: Model, event: SyntheticEvent<MouseEvent>): void {
-        // Actions dropdown can start closing after the view itself was unmounted already, in which case
-        // the model would be destroyed and there would be no need to process the action itself
-        if (self._listViewModel && !self._listViewModel.destroyed) {
-            // If menu needs to close because one of the actions was clicked, process
-            // the action handler first
-            if (eventName === 'itemClick') {
-                const actionRawData = data && data.getRawData();
-                const contents = self._itemActionsController.getActiveItem()?.getContents();
-                _private.processItemActionClick(
-                    self,
-                    contents,
-                    actionRawData,
-                    event,
-                    true
-                );
-
-                // If this action has children, don't close the menu if it was clicked
-                if (actionRawData['parent@']) {
-                    return;
-                }
-            }
-
-            if (eventName !== 'menuOpened') {
-                self._itemActionsController.setActiveItem(self._listViewModel, null);
-                self._listViewModel.setActionsMenuConfig(null);
-                self._itemActionsController.deactivateSwipe(self._listViewModel);
-                self._listViewModel.nextVersion();
-                // menuState используется, чтобы засетить isMenuShown, используемый в baseEditingTemplate. В новых списках не реализовано
-                if (!self._options.useNewModel) {
-                    self._listViewModel.setMenuState('hidden');
-                }
-            }
-        }
-    },
-
     bindHandlers(self): void {
         self._onItemActionsMenuClose = self._onItemActionsMenuClose.bind(self);
         self._onItemActionsMenuResult = self._onItemActionsMenuResult.bind(self);
