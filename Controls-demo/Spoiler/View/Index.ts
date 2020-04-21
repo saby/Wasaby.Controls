@@ -6,7 +6,6 @@ import headerTemplate = require('wml!Controls-demo/Spoiler/View/headerContentTem
 class View extends Control<IControlOptions> {
     protected _expanded: boolean = true;
     protected _headerTemplate: TemplateFunction = headerTemplate;
-
     protected _template: TemplateFunction = controlTemplate;
     static _theme: string[] = ['Controls/Classes'];
 }
