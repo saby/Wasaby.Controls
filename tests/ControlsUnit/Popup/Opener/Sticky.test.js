@@ -853,6 +853,56 @@ define(
             StickyController._private.updateSizes(popupCfg, popupOptions);
             assert.deepEqual(popupCfg.config, resultConfig);
          });
+
+         it('restrictive container', () => {
+            let getBody = StickyStrategy._private.getBody;
+
+            StickyStrategy._private.getBody = () => ({
+               clientHeight: 100,
+               clientWidth: 100
+            });
+
+
+            let popupCfg = {
+               restrictiveContainerCoords: {
+                  bottom: 50,
+                  right: 60
+               },
+               config: {
+                  maxWidth: 300,
+                  minWidth: 100
+               },
+               sizes: {
+                  width: 5,
+                  height: 5
+               }
+            };
+
+            let position = {
+               top: 60,
+               left: 60
+            };
+
+            StickyStrategy._private.calculateRestrictionContainerCoords(popupCfg, position);
+            assert.equal(position.top, 45);
+            assert.equal(position.left, 55);
+
+            popupCfg.restrictiveContainerCoords = {
+               top: 20,
+               left: 30
+            };
+
+            position = {
+               bottom: 80,
+               right: 80
+            };
+
+            StickyStrategy._private.calculateRestrictionContainerCoords(popupCfg, position);
+            assert.equal(position.bottom, 75);
+            assert.equal(position.right, 65);
+
+            StickyStrategy._private.getBody = getBody;
+         });
       });
    }
 );

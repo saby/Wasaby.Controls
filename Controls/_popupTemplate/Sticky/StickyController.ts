@@ -247,8 +247,8 @@ class StickyController extends BaseController {
         if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
 
-            //If popupOptions has new sizes, calculate position using them.
-            //Else calculate position using current container sizes.
+            // If popupOptions has new sizes, calculate position using them.
+            // Else calculate position using current container sizes.
             _private.updateSizes(item.positionConfig, item.popupOptions);
 
             item.position = StickyStrategy.getPosition(item.positionConfig, this._getTargetCoords(item, item.positionConfig.sizes));
@@ -349,8 +349,10 @@ class StickyController extends BaseController {
     }
 
     _getPopupConfig(cfg, sizes) {
+        const restrictiveContainerCoords = this._getRestrictiveContainerCoords(cfg);
         return {
             targetPoint: cMerge(cClone(DEFAULT_OPTIONS.targetPoint), cfg.popupOptions.targetPoint || {}),
+            restrictiveContainerCoords,
             direction: cMerge(cClone(DEFAULT_OPTIONS.direction), cfg.popupOptions.direction || {}),
             offset: cMerge(cClone(DEFAULT_OPTIONS.offset), cfg.popupOptions.offset || {}),
             config: {
@@ -365,6 +367,23 @@ class StickyController extends BaseController {
             fittingMode: cfg.popupOptions.fittingMode
         };
     }
+
+    private _getRestrictiveContainerCoords(item) {
+        if (item.popupOptions.restrictiveContainer) {
+            let restrictiveContainer;
+            if (cInstance.instanceOfModule(item.popupOptions.restrictiveContainer, 'UI/Base:Control')) {
+                restrictiveContainer = item.popupOptions.restrictiveContainer._container;
+            } else if (item.popupOptions.restrictiveContainer instanceof HTMLElement) {
+                restrictiveContainer = item.popupOptions.restrictiveContainer;
+            } else if (typeof item.popupOptions.restrictiveContainer === 'string') {
+                restrictiveContainer = document.querySelector(item.popupOptions.restrictiveContainer);
+            }
+
+            if (restrictiveContainer) {
+                return TargetCoords.get(restrictiveContainer);
+            }
+        }
+    },
 
     private _getTargetCoords(cfg, sizes) {
         if (cfg.popupOptions.nativeEvent) {
