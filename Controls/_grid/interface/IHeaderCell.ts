@@ -133,6 +133,25 @@ export interface IHeaderCell extends IControlOptions {
      * <!-- file2.wml -->
      * {{contentTemplate.colData.column.title}}
      * </pre>
+     * 
+     * **Пример 4.** Конфигурация колонки для выравнивания контента по копейкам. На шаблон добавлен CSS-класс "controls-Grid__header-cell_spacing_money".
+     * 
+     * <pre class="brush: html">
+     * <!-- file1.wml -->
+     * <Controls.grid:View>
+     *    <ws:header>
+     *       <ws:Array>
+     *          <ws:Object title="City">
+     *             <ws:template>
+     *                <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money">
+     *                   ...
+     *                </ws:partial>
+     *             </ws:template>
+     *          </ws:Object>
+     *       </ws:Array>
+     *    </ws:header>
+     * </Controls.grid:View>
+     * </pre>
      */
     template?: TemplateFunction;
     /**

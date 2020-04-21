@@ -25,6 +25,7 @@ export default interface IErrorController {
 /**
  * @name Controls/_interface/IErrorController#errorController
  * @cfg {Controls/dataSource:error.Controller} Модуль для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
+ * @remark
  * Более подробно об обработке ошибок вы можете почитать <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/handling-errors/'>в статье</a>
  * @example
  * <pre>
