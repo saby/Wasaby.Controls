@@ -115,7 +115,7 @@ export default class GridColumn<T> extends mixin<
 
     getMarkerClasses(): string {
         return `
-        controls-ListView__itemV_marker
+        controls-ListView__itemV_marker controls-ListView__itemV_marker_theme-default
         controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-default
         controls-GridView-without-rowSeparator_item_marker_theme-default
         `;
