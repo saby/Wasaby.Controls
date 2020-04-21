@@ -73,7 +73,6 @@ export class SelectionController {
       this._notifySelectedKeysCountChanged = options.notifySelectedKeysCountChanged;
 
       this._updateSelectionForRender();
-      this._notifySelectedCountChangedEvent(options.selectedKeys, options.excludedKeys);
    }
 
    toggleItem(key: TKey): void {
