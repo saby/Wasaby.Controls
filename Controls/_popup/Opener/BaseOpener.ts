@@ -265,7 +265,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                         if (!cfg.topPopup) {
                             cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
                         }
-                        cfg.theme = popupOpener._options.theme;
                     }
                     if (!BaseOpener.isVDOMTemplate(rootTpl)) {
                         requirejs(['Controls/compatiblePopup'], (compatiblePopup) => {
