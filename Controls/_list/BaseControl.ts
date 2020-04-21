@@ -1645,8 +1645,6 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
-    _reloadInAfterUpdate: false,
-
     _groupingLoader: null,
 
     _isMounted: false,
@@ -2048,7 +2046,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.groupMethod !== this._options.groupMethod) {
-            this._reloadInAfterUpdate = true;
+            _private.reload(this, newOptions);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
@@ -2108,7 +2106,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 this._children.menuOpener.close();
                 this._onItemActionsMenuClose();
             }
-            this._reloadInAfterUpdate = true;
+
+            // return result here is for unit tests
+            return _private.reload(self, newOptions);
         }
 
         if (this._itemsChanged) {
@@ -2280,22 +2280,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._scrollPageLocked = false;
         this._modelRecreated = false;
-
-        // Выполняем перезагрузку именно в afterUpdate, т.к. в случае, когда source instanceof Source.Memory
-        // загрузка данных выполнится СИНХРОННО и получается следующая цепочка вызовов:
-        // beforeUpdate -> reload -> afterReload -> afterUpdate
-        // а должна быть:
-        // beforeUpdate -> reload -> afterUpdate -> afterReload
-        // примеры ошибок: https://online.sbis.ru/opendoc.html?guid=60338bd3-1afd-4b7e-9f58-0a5c0cfeec48
-        // https://online.sbis.ru/opendoc.html?guid=cd314194-5c10-4a50-9a6d-f7faa1eb2d5f
-        // https://online.sbis.ru/opendoc.html?guid=8a839900-ebc0-4dad-9b53-225f0c337580
-        if (this._reloadInAfterUpdate) {
-            this._reloadInAfterUpdate = false;
-            // return result here is for unit tests
-            return _private.reload(this, this._options);
-        }
-        // return result here is for unit tests
-        return Promise.resolve();
     },
 
     __onPagingArrowClick: function(e, arrow) {
