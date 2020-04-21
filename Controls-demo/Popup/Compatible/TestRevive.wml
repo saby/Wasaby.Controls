@@ -1,7 +1,6 @@
 <div style="height: 100%; min-width: 500px; max-width: 700px;">
     <h1>Opened Revive</h1>
     <SBIS3.CONTROLS.Button
-          attr:class="outerContainer"
           className="innerComponent"
           caption="TestButton"/>
 </div>
