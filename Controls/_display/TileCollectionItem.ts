@@ -147,21 +147,21 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
             classes += ' controls-TileView__item_animated';
         }
         if (this.shouldDisplayMarker(templateMarker)) {
-            classes += ` controls-TileView__item_withMarker${theme}`;
+            classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker${theme}`;
         } else {
-            classes += ` controls-TileView__item_withoutMarker${theme}`;
+            classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker${theme}`;
         }
         return classes;
     }
 
     getImageWrapperClasses(templateHasTitle?: boolean, theme: string): string {
-        const theme = `_theme-${theme}`;
+        const th = `_theme-${theme}`;
         let classes = 'controls-TileView__imageWrapper';
         if (this.isAnimated()) {
             classes += ' controls-TileView__item_animated';
         }
         if (templateHasTitle) {
-            classes += ` controls-TileView__imageWrapper_reduced${theme}`;
+            classes += ` controls-TileView__imageWrapper_reduced${th}`;
         }
         return classes;
     }
