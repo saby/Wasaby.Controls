@@ -134,78 +134,6 @@ export class ItemActionsController {
     }
 
     /**
-     * Собирает конфиг выпадающего меню операций
-     * @param itemKey Ключ элемента коллекции, для которого выполняется действие
-     * @param clickEvent событие клика
-     * @param parentAction Родительская операция с записью
-     * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
-     */
-    prepareActionsMenuConfig(
-        itemKey: TItemKey,
-        clickEvent: SyntheticEvent<MouseEvent>,
-        parentAction: IItemAction,
-        isContextMenu: boolean
-    ): IDropdownConfig {
-        const item = this._collection.getItemBySourceKey(itemKey);
-        if (!item) {
-            return;
-        }
-
-        const hasParentAction = parentAction !== null && parentAction !== undefined;
-        const menuActions = hasParentAction
-            ? this.getChildActions(item, parentAction.id)
-            : this._getMenuActions(item);
-
-        if (!menuActions || menuActions.length === 0) {
-            return;
-        }
-
-        // there was a fake target before, check if it is needed
-        const menuTarget = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
-        const menuSource = new Memory({
-            data: menuActions,
-            keyProperty: 'id'
-        });
-        const headConfig = hasParentAction ? {
-            caption: parentAction.title,
-            icon: parentAction.icon
-        } : null;
-        // const contextMenuConfig = this._collection.getContextMenuConfig();
-        // ...contextMenuConfig,
-        const menuConfig: IDropdownTemplateOptions = {
-            source: menuSource,
-            keyProperty: 'id',
-            parentProperty: 'parent',
-            nodeProperty: 'parent@',
-            dropdownClassName: 'controls-itemActionsV__popup',
-            closeButtonVisibility: true,
-            root: parentAction && parentAction.id,
-            showHeader: hasParentAction,
-            headConfig
-        };
-        const dropdownConfig: IDropdownConfig = {
-            // opener: this,
-            target: menuTarget,
-            templateOptions: menuConfig,
-            closeOnOutsideClick: true,
-            targetPoint: {
-                vertical: 'top',
-                horizontal: 'right'
-            },
-            direction: {
-                horizontal: isContextMenu ? 'right' : 'left'
-            },
-            className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list',
-            nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
-            autofocus: false
-        };
-
-        // TODO убрать отсюда
-        this.setActiveItem(this._collection, itemKey);
-        return dropdownConfig;
-    }
-
-    /**
      * Активирует Swipe для меню операций с записью
      * @param collection Коллекция элементов, содержащих операции с записью
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
@@ -266,9 +194,79 @@ export class ItemActionsController {
      * @param isContextMenu
      */
     processDropDownMenuClick(itemKey: string, clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, isContextMenu: boolean): void {
-        const menuConfig: IDropdownConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, action, isContextMenu);
+        const menuConfig: IDropdownConfig = this._prepareActionsMenuConfig(itemKey, clickEvent, action, isContextMenu);
+        this.setActiveItem(this._collection, itemKey);
         this._collection.setActionsMenuConfig(menuConfig);
         this._collection.nextVersion();
+    }
+
+    /**
+     * Собирает конфиг выпадающего меню операций
+     * @param itemKey Ключ элемента коллекции, для которого выполняется действие
+     * @param clickEvent событие клика
+     * @param parentAction Родительская операция с записью
+     * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
+     */
+    private _prepareActionsMenuConfig(
+        itemKey: TItemKey,
+        clickEvent: SyntheticEvent<MouseEvent>,
+        parentAction: IItemAction,
+        isContextMenu: boolean
+    ): IDropdownConfig {
+        const item = this._collection.getItemBySourceKey(itemKey);
+        if (!item) {
+            return;
+        }
+
+        const hasParentAction = parentAction !== null && parentAction !== undefined;
+        const menuActions = hasParentAction
+            ? this.getChildActions(item, parentAction.id)
+            : this._getMenuActions(item);
+
+        if (!menuActions || menuActions.length === 0) {
+            return;
+        }
+
+        // there was a fake target before, check if it is needed
+        const menuTarget = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
+        const menuSource = new Memory({
+            data: menuActions,
+            keyProperty: 'id'
+        });
+        const headConfig = hasParentAction ? {
+            caption: parentAction.title,
+            icon: parentAction.icon
+        } : null;
+        // const contextMenuConfig = this._collection.getContextMenuConfig();
+        // ...contextMenuConfig,
+        const menuConfig: IDropdownTemplateOptions = {
+            source: menuSource,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'parent@',
+            dropdownClassName: 'controls-itemActionsV__popup',
+            closeButtonVisibility: true,
+            root: parentAction && parentAction.id,
+            showHeader: hasParentAction,
+            headConfig
+        };
+        const dropdownConfig: IDropdownConfig = {
+            // opener: this,
+            target: menuTarget,
+            templateOptions: menuConfig,
+            closeOnOutsideClick: true,
+            targetPoint: {
+                vertical: 'top',
+                horizontal: 'right'
+            },
+            direction: {
+                horizontal: isContextMenu ? 'right' : 'left'
+            },
+            className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list',
+            nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
+            autofocus: false
+        };
+        return dropdownConfig;
     }
 
     /**
