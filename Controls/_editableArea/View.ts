@@ -109,7 +109,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
 
    _beforeMount: function (newOptions) {
       this._isEditing = newOptions.editWhenFirstRendered;
-      this._editObject = newOptions.editObject.clone();
+      this._editObject = newOptions.editObject;
    },
 
    _afterUpdate: function () {
