@@ -8,6 +8,7 @@ interface IChangedData<T> {
 }
 
 describe('Controls/_display/TileCollectionItem', () => {
+    const theme = 'default';
     describe('.getTileWidth()', () => {
         const owner = {
             getTileWidth(): number {
@@ -242,8 +243,8 @@ describe('Controls/_display/TileCollectionItem', () => {
     it('.getTitleClasses()', () => {
         const item = new TileCollectionItem();
 
-        assert.strictEqual(item.getTitleClasses(true), 'controls-TileView__title');
-        assert.include(item.getTitleClasses(false), 'controls-TileView__title_invisible');
+        assert.strictEqual(item.getTitleClasses(true, theme), `controls-TileView__title controls-TileView__title_theme-${theme}`);
+        assert.include(item.getTitleClasses(false, theme), 'controls-TileView__title_invisible');
     });
 
     it('.getMultiSelectClasses() (override)', () => {
