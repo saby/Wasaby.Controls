@@ -24,6 +24,8 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 
 import { constants } from 'Env/Env';
 
+import {ISwipeEvent} from './Render';
+
 export interface IViewOptions extends IControlOptions {
     items: RecordSet;
 
@@ -41,10 +43,6 @@ export interface IViewOptions extends IControlOptions {
     actionCaptionPosition?: 'right'|'bottom'|'none';
 
     editingConfig?: any;
-}
-
-interface ISwipeEvent extends Event {
-    direction: string;
 }
 
 export default class View extends Control<IViewOptions> {
@@ -131,6 +129,14 @@ export default class View extends Control<IViewOptions> {
         // TODO fire 'markedKeyChanged' event
     }
 
+    /**
+     * Обработчик свайпа по записи. Показывает операции по свайпу
+     * @param e
+     * @param item
+     * @param swipeEvent
+     * @param swipeContainerHeight
+     * @private
+     */
     protected _onItemSwipe(
         e: SyntheticEvent<null>,
         item: CollectionItem<Model>,

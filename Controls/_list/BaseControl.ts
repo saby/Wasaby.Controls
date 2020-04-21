@@ -29,8 +29,7 @@ import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
-import {showType} from 'Controls/Utils/Toolbar';
-import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController} from 'Controls/display';
+import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, GroupItem} from 'Controls/display';
 import {ItemActionsController} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
@@ -40,6 +39,7 @@ import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
+import {ISwipeEvent} from 'Controls/listRender';
 
 import {IDirection} from './interface/IVirtualScroll';
 import {IItemAction} from './interface/IList';
@@ -1205,7 +1205,7 @@ var _private = {
             if (action === IObservable.ACTION_REMOVE && self._menuIsShown) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
                     self._onItemActionsMenuClose();
-                    self._children.menuOpener.close();
+                    Sticky.closePopup(self._popupId);
                 }
             }
         }
@@ -1729,6 +1729,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _popupId: null,
 
+    _notifyHandler: tmplNotify,
+
     /**
      * Шаблон операций с записью
      */
@@ -2103,7 +2105,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             if (this._menuIsShown) {
-                this._children.menuOpener.close();
+                Sticky.closePopup(this._popupId);
                 this._onItemActionsMenuClose();
             }
 
@@ -2311,62 +2313,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _listSwipe(event: SyntheticEvent, itemData: CollectionItem<Model>, childEvent: SyntheticEvent): void {
-        const direction = childEvent.nativeEvent.direction;
-        this._children.menuOpener.close();
-
-        const key = this._options.useNewModel ? itemData.getContents().getId() : itemData.key;
-
-        if (direction === 'right' && !itemData.isSwiped() && _private.isItemsSelectionAllowed(this._options)) {
-            const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
-            /**
-             * After the right swipe the item should get selected.
-             * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
-             */
-            this._needSelectionController = true;
-            this._delayedSelect = {
-                key,
-                status: multiSelectStatus
-            };
-
-            // TODO Right swiping for new model
-            //Animation should be played only if checkboxes are visible.
-            if (this._options.multiSelectVisibility !== 'hidden') {
-                this.getViewModel().setRightSwipedItem(itemData);
-            }
-        }
-        if (direction === 'right' || direction === 'left') {
-            if (this._options.useNewModel) {
-                const markCommand = new MarkerCommands.Mark(key);
-                markCommand.execute(this._listViewModel);
-            } else {
-                var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
-                this._listViewModel.setMarkedKey(newKey);
-            }
-        }
-        const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
-
-        const itemContainer =
-            (event.target as HTMLElement)
-                .closest('.controls-ListView__itemV');
-
-        const swipeContainer =
-            itemContainer.classList.contains(ITEMACTIONS_SWIPE_CONTAINER_SELECTOR)
-                ? itemContainer
-                : itemContainer.getElementsByClassName(ITEMACTIONS_SWIPE_CONTAINER_SELECTOR)[0];
-
-        if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
-            // todo
-            this._itemActionsController.activateSwipe(this._listViewModel, itemData.key, swipeContainer?.clientHeight);
-
-            // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
-            itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
-        }
-        if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
-            this._notify('itemSwipe', [actionsItem, childEvent, swipeContainer?.clientHeight]);
-        }
-    },
-
     _onAnimationEnd: function(e) {
         if (e.nativeEvent.animationName === 'rightSwipe') {
             this.getViewModel().setRightSwipedItem(null);
@@ -2432,12 +2378,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     commitEdit: function() {
         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.commitEdit();
-    },
-
-    _notifyHandler: tmplNotify,
-
-    _closeSwipe: function(event, item) {
-        this._itemActionsController.deactivateSwipe(this._listViewModel);
     },
 
     _commitEditActionHandler: function() {
@@ -2859,13 +2799,106 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         return styles;
     },
-    _listDeactivated: function() {
-        if (!this._menuIsShown) {
-            this._children.swipeControl?.closeSwipe();
+
+    /**
+     * Обработчик свайпа по записи. Показывает операции по свайпу
+     * @param e
+     * @param item
+     * @param swipeEvent
+     * @private
+     */
+    _onItemSwipe(e: SyntheticEvent<Event>, item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
+        if (item instanceof GroupItem) {
+            return;
+        }
+
+        swipeEvent.stopPropagation();
+
+        const itemContainer =
+            (swipeEvent.target as HTMLElement)
+                .closest('.controls-ListView__itemV');
+
+        const swipeContainer =
+            itemContainer.classList.contains('js-controls-SwipeControl__actionsContainer')
+                ? itemContainer
+                : itemContainer.querySelector('.js-controls-SwipeControl__actionsContainer');
+
+        switch (swipeEvent.nativeEvent.direction) {
+            case 'left':
+                this._itemActionsController.activateSwipe(
+                    this._collection,
+                    item.getContents().getKey(),
+                    swipeContainer?.clientHeight
+                );
+                break;
+            default:
+                // TODO How to close swipe with animation
+                this._itemActionsController.deactivateSwipe(this._collection);
+                break;
         }
     },
 
-    _createNewModel(items, modelConfig, modelName) {
+    _listDeactivated(): void {
+        if (!this._menuIsShown) {
+            this._itemActionsController.deactivateSwipe(this._collection);
+        }
+    },
+
+    // TODO SWIPE
+    // TODO Этот метод надо удалить
+    // TODO Новые списки не умеют с 'right' Swipe. Это надо, наверное, реализовать, типа как в методе ниже
+    _listSwipe(event: SyntheticEvent, itemData: CollectionItem<Model>, childEvent: SyntheticEvent): void {
+        const direction = childEvent.nativeEvent.direction;
+        Sticky.closePopup(this._popupId);
+
+        const key = itemData.getContents().getKey();
+
+        if (direction === 'right' && !itemData.isSwiped() && _private.isItemsSelectionAllowed(this._options)) {
+            const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
+            /**
+             * After the right swipe the item should get selected.
+             * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
+             */
+            this._needSelectionController = true;
+            this._delayedSelect = {
+                key,
+                status: multiSelectStatus
+            };
+
+            // TODO Right swiping for new model
+            //Animation should be played only if checkboxes are visible.
+            if (this._options.multiSelectVisibility !== 'hidden') {
+                this.getViewModel().setRightSwipedItem(itemData);
+            }
+        }
+        if (direction === 'right' || direction === 'left') {
+            const newKey = ItemsUtil.getPropertyValue(itemData.getContents(), this._options.keyProperty);
+            this.setMarkedKey(this, newKey);
+        }
+        const actionsItem = itemData.getContents();
+
+        const itemContainer =
+            (event.target as HTMLElement)
+                .closest('.controls-ListView__itemV');
+
+        const swipeContainer =
+            itemContainer.classList.contains(ITEMACTIONS_SWIPE_CONTAINER_SELECTOR)
+                ? itemContainer
+                : itemContainer.getElementsByClassName(ITEMACTIONS_SWIPE_CONTAINER_SELECTOR)[0];
+
+        if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
+            // todo
+            this._itemActionsController.activateSwipe(this._listViewModel, itemData.key, swipeContainer?.clientHeight);
+
+            // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
+            itemData.itemActions = this._listViewModel.getItemActions(actionsItem);
+        }
+        if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
+            this._notify('itemSwipe', [actionsItem, childEvent, swipeContainer?.clientHeight]);
+        }
+    },
+
+    _createNewModel(items, modelConfig, modelName): void {
         // Подразумеваем, что Controls/display уже загружен. Он загружается при подключении
         // библиотеки Controls/listRender
         if (typeof modelName !== 'string') {

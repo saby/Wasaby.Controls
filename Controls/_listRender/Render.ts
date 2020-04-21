@@ -22,6 +22,10 @@ export interface IRenderChildren {
     menuOpener?: DropdownOpener;
 }
 
+export interface ISwipeEvent extends Event {
+    direction: string;
+}
+
 export default class Render extends Control<IRenderOptions> {
     protected _template: TemplateFunction = template;
     protected _children: IRenderChildren;
@@ -109,7 +113,7 @@ export default class Render extends Control<IRenderOptions> {
         }
     }
 
-    protected _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>): void {
+    protected _onItemSwipe(e: SyntheticEvent<ISwipeEvent>, item: CollectionItem<unknown>): void {
         if (item instanceof GroupItem) {
             return;
         }
