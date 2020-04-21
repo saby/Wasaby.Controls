@@ -13,7 +13,7 @@
                     value="{{colData.sortingDirection}}"/>
         </ws:if>
         <ws:else>
-            <div class="controls-Grid__header-cell__content__innerWrapper controls-Grid__header-cell__content-{{colData.column.textOverflow}}">
+            <div title="{{colData.column.caption || colData.column.title}}" class="controls-Grid__header-cell__content__innerWrapper controls-Grid__header-cell__content-{{colData.column.textOverflow}}">
                 {{colData.column.caption || colData.column.title}}
             </div>
         </ws:else>

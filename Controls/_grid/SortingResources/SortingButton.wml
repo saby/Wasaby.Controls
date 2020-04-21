@@ -7,7 +7,7 @@
 </ws:template>
 
 <div class="controls-SortingButton">
-    <div class="controls-SortingButton__content">
+    <div class="controls-SortingButton__content" title="{{_options.caption}}">
         
         <div class="controls-SortingButton__caption controls-SortingButton__caption_theme-{{_options.theme}} 
         controls-Grid__header-cell__content-{{_options.textOverflow}}" 

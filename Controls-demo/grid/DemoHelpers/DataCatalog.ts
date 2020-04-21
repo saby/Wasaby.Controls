@@ -459,7 +459,7 @@ function getCountriesStats() {
                 title: 'Плотность населения чел/км2'
             }
         ],
-        getLongHeader: () => [
+        getLongHeader: (textOverflow) => [
             {
                 title: '#'
             },
@@ -467,16 +467,20 @@ function getCountriesStats() {
                 title: 'Страна'
             },
             {
-                title: 'Столица строны из рейтинга'
+                title: 'Столица строны из рейтинга',
+                textOverflow: textOverflow
             },
             {
-                title: 'Население страны по данным на 2018г.'
+                title: 'Население страны по данным на 2018г.',
+                textOverflow: textOverflow
             },
             {
-                title: 'Площадь км2'
+                title: 'Площадь км2',
+                textOverflow: textOverflow
             },
             {
-                title: 'Плотность населения чел/км2'
+                title: 'Плотность населения чел/км2',
+                textOverflow: textOverflow
             }
         ],
         getMultiHeader: () => [
@@ -652,7 +656,7 @@ function getCountriesStats() {
                 endColumn: 6
             }
         ],
-        getHeaderWithSorting: () => [
+        getHeaderWithSorting: (textOverflow) => [
             {
                 title: '#'
             },
@@ -661,6 +665,7 @@ function getCountriesStats() {
             },
             {
                 title: 'Название столицы страны',
+                textOverflow: textOverflow,
                 sortingProperty: 'capital',
                 align: 'left'
             },
@@ -676,6 +681,7 @@ function getCountriesStats() {
             },
             {
                 title: 'Плотность населения чел/км2',
+                textOverflow: textOverflow,
                 sortingProperty: 'populationDensity',
                 align: 'right'
             }

@@ -48,7 +48,7 @@ export type TCellVerticalAlign = 'top' | 'center' | 'bottom' | 'baseline';
 
 /**
  * @typedef {String} TOverflow
- * @description Обрезается или не обрезается строка
+ * @description Поведение текста, если он не умещается в ячейке
  * @variant ellipsis Текст обрезается многоточием.
  * @variant none Текст разбивается на несколько строк.
  */
@@ -130,7 +130,7 @@ export interface IColumn {
     stickyProperty?: string;
     /**
      * @name Controls/grid:IColumn#textOverflow
-     * @cfg {TOverflow} Определяет параметры видимости текста в блоке, если текст целиком не помещается в заданную область.
+     * @cfg {TOverflow} Поведение текста, если он не умещается в ячейке.
      * @default none
      */
     textOverflow?: TOverflow;
