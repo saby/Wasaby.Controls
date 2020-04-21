@@ -12,7 +12,8 @@ define('Controls/Application',
       'Core/helpers/getResourceUrl',
       'Controls/decorator',
       'Controls/Application/SettingsController',
-      'Controls/Utils/DOMUtil'
+      'Controls/Utils/DOMUtil',
+      'css!theme?Controls/Application/oldCss'
    ],
 
    /**
@@ -395,7 +396,7 @@ define('Controls/Application',
          };
       };
 
-      Page._theme = ['Controls/Application/oldCss', 'Controls/application'];
+      Page._theme = ['Controls/application'];
 
       return Page;
    });
