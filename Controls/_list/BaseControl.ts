@@ -2023,6 +2023,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     }
                     return _private.showError(self, receivedError);
                 }
+
                 return _private.reload(self, newOptions).addCallback((result) => {
 
                     // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
@@ -2030,10 +2031,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         keyProperty: self._options.keyProperty,
                         rawData: []
                     }));
-
-                    if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
-                        self._selectionController = _private.createSelectionController(self, newOptions);
-                    }
 
                     if (newOptions.useNewModel && !self._listViewModel) {
                         self._items = data;
@@ -2176,8 +2173,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._loadedItems = null;
 
+        if (this._options.selectedKeys && this._options.selectedKeys.length !== 0) {
+            this._selectionController = _private.createSelectionController(self, this._options);
+        }
+
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
-        this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
     },
 
     _beforeUpdate(newOptions) {
@@ -2387,6 +2387,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.destroy();
         }
         this._loadTriggerVisibility = null;
+
+        this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
 
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },

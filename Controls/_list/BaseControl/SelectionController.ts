@@ -71,8 +71,6 @@ export class SelectionController {
 
       this._notifySelectionKeysChanged = options.notifySelectionKeysChanged;
       this._notifySelectedKeysCountChanged = options.notifySelectedKeysCountChanged;
-
-      this._updateSelectionForRender();
    }
 
    toggleItem(key: TKey): void {
@@ -87,8 +85,8 @@ export class SelectionController {
    }
 
    update(options: ISelectionControllerOptions): void {
-      const itemsChanged = getItems(options.model) !== getItems(this._model);
       const modelChanged = options.model !== this._model;
+      const itemsChanged = modelChanged ? true : getItems(options.model) !== getItems(this._model);
       const filterChanged = options.filter !== this._filter;
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);

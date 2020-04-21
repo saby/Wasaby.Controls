@@ -46,8 +46,8 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
     * Remove selection from all items.
     */
    unselectAll(selection: ISelection): void {
-      selection.selected = [];
-      selection.excluded = [];
+      selection.selected.length = 0;
+      selection.excluded.length = 0;
    }
 
    /**

@@ -92,8 +92,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       if (this._withEntryPath(model)) {
          this._unselectAllInRoot(selection, model);
       } else {
-         selection.selected = [];
-         selection.excluded = [];
+         selection.selected.length = 0;
+         selection.excluded.length = 0;
       }
    }
 
