@@ -1,4 +1,4 @@
-.controls-TreeTileView__item {
+.controls-TreeTileView__item_theme-@{themeName} {
    height: @node_height_tile;
    box-sizing: border-box;
    display: flex;
@@ -7,7 +7,7 @@
    min-width: 0;
 }
 
-.controls-TreeTileView__dragTargetNode {
+.controls-TreeTileView__dragTargetNode_theme-@{themeName} {
    border: @item_droppable_border_thickness_treeGrid solid @item_droppable_border_color_treeGrid;
    position: absolute;
    top: 0;
@@ -28,12 +28,12 @@
    }
 }
 
-.controls-TreeTileView__item:hover, .controls-TreeTileView__item_active {
+.controls-TreeTileView__item_theme-@{themeName}:hover, .controls-TreeTileView__item_active_theme-@{themeName} {
    background-color: @node_hover_background-color_tile;
    box-shadow: @node_shadow-size_tile @node_shadow-color_tile;
 }
 
-.controls-TreeTileView__title {
+.controls-TreeTileView__title_theme-@{themeName} {
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;
@@ -43,7 +43,7 @@
    flex-shrink: 1;
 }
 
-.controls-TreeTileView__nodeIcon {
+.controls-TreeTileView__nodeIcon_theme-@{themeName} {
    margin-left: @node_caption_padding-left_tile;
    flex-shrink: 0;
 }

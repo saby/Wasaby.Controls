@@ -106,9 +106,10 @@ var TileViewModel = ListViewModel.extend({
     getItemPaddingClasses(): string {
         const leftSpacing = this._options.itemPadding && this._options.itemPadding.left || 'default';
         const rightSpacing = this._options.itemPadding && this._options.itemPadding.right || 'default';
+        const theme = `_theme-${this._options.theme}`;
 
-        const leftSpacingClass = `controls-TileView__itemPaddingContainer_spacingLeft_${leftSpacing}`;
-        const rightSpacingClass = `controls-TileView__itemPaddingContainer_spacingRight_${rightSpacing}`;
+        const leftSpacingClass = `controls-TileView__itemPaddingContainer_spacingLeft_${leftSpacing}${theme}`;
+        const rightSpacingClass = `controls-TileView__itemPaddingContainer_spacingRight_${rightSpacing}${theme}`;
 
         return `${leftSpacingClass} ${rightSpacingClass}`;
     }

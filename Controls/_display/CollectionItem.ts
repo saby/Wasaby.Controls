@@ -407,7 +407,7 @@ export default class CollectionItem<T> extends mixin<
             controls-ListView__item_showActions
             js-controls-SwipeControl__actionsContainer
             ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
-            ${this.isEditing() ? 'controls-ListView__item_editing' : ''}
+            ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
             ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}`;
     }
 

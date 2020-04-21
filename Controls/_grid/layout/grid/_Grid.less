@@ -34,7 +34,6 @@
 .controls-Grid__header-cell_min-width {
    min-width: 0;
 }
-
 .controls-Grid__header-cell_theme-@{themeName} {
    font-size: @header_font-size_grid;
    z-index: 1;
@@ -195,6 +194,7 @@
    position: relative;
 }
 
+.controls-Grid__header-cell__content-ellipsis,
 .controls-Grid__cell_ellipsis {
    overflow: hidden;
    text-overflow: ellipsis;
@@ -237,6 +237,9 @@
 }
 .ws-is-hover {
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName}:not(.controls-Grid__row-ladder-cell) {
+      background-color: @item_hover_background-color_list;
+   }
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-listItem_theme-@{themeName} {
       background-color: @item_hover_background-color_list;
    }
    .controls-BaseControl_showActions .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row:hover {
@@ -550,7 +553,9 @@
       background-color: @master_item_hover_background-color_list;
    }
 }
-
+.controls-background-listItem_theme-@{themeName} {
+   background-color: @background-color;
+}
 .controls-itemActionsV__container {
    position: sticky;
    right: 0;

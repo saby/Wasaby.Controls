@@ -8,6 +8,7 @@ import suggestTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/Foot
 import footerTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/FooterTemplate/resources/FooterTemplate');
 import standartFooterTemplate = require('wml!Controls-demo/Suggest_new/Input/FooterTemplate/resources/StandartFooterTemplate');
 import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/Suggest_new/Index';
 
 export default class extends Control{
    protected _template: TemplateFunction = controlTemplate;

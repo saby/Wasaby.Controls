@@ -3,14 +3,6 @@
         <div class="ControlsDemo-options_block">
             <h3>Options</h3>
             <div class="ControlsDemo-options_wrapper">
-                <Controls.input:Label caption="theme:"/>
-                <Controls.dropdown:Combobox
-						attr:class="ControlsDemo-scrollStyleSource"
-                        source="{{_scrollStyleSource}}"
-                        keyProperty="title"
-                        displayProperty="title"
-                        bind:selectedKey="_selectedStyle"/>
-
                 <Controls.toggle:Checkbox bind:value="_scrollbarVisible" caption="scrollbarVisible" attr:class="ControlsDemo-scrollbarVisible"/>
                 <Controls.toggle:Checkbox bind:value="_shadowVisible" caption="shadowVisible" attr:class="ControlsDemo-shadowVisible"/>
             </div>

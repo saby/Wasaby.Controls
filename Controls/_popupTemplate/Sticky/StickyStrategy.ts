@@ -350,7 +350,9 @@ interface IPosition {
             offsetLeft: 0,
             offsetTop: 0,
             pageLeft: 0,
-            pageTop: 0
+            pageTop: 0,
+            width: document && document.body.clientWidth,
+            height: document && document.body.clientHeight
          };
       }
    };

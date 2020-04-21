@@ -235,7 +235,7 @@ define([
             assert.equal(eventQueue[0].eventArgs[0], instance._editObject);
             assert.equal(instance._editObject.get('text'), 'changed');
             assert.isTrue(instance._editObject.isChanged());
-            assert.isFalse(instance._options.editObject.isChanged());
+            assert.isTrue(instance._options.editObject.isChanged());
          });
 
          it ('clone in begitedit', async function() {
@@ -310,7 +310,7 @@ define([
             assert.equal(eventQueue[1].eventArgs[0], instance._editObject);
             assert.equal(cfg.editObject.get('text'), 'asdf');
             assert.isFalse(instance._editObject.isChanged());
-            assert.isTrue(instance._options.editObject.isChanged());
+            assert.isFalse(instance._options.editObject.isChanged());
             assert.isFalse(instance._isEditing);
          });
 
@@ -332,7 +332,7 @@ define([
             assert.equal(eventQueue[0].eventArgs[0], instance._editObject);
             assert.equal(instance._editObject.get('text'), 'asdf');
             assert.isTrue(instance._editObject.isChanged());
-            assert.isFalse(instance._options.editObject.isChanged());
+            assert.isTrue(instance._options.editObject.isChanged());
             assert.isTrue(instance._isEditing);
          });
 
@@ -355,7 +355,7 @@ define([
             assert.isTrue(instance._isEditing);
             assert.equal(instance._editObject.get('text'), 'asdf');
             assert.isTrue(instance._editObject.isChanged());
-            assert.isFalse(instance._options.editObject.isChanged());
+            assert.isTrue(instance._options.editObject.isChanged());
          });
 
          it('deferred', async function() {
@@ -379,7 +379,7 @@ define([
             assert.equal(cfg.editObject.get('text'), 'asdf');
             assert.isFalse(instance._isEditing);
             assert.isFalse(instance._editObject.isChanged());
-            assert.isTrue(instance._options.editObject.isChanged());
+            assert.isFalse(instance._options.editObject.isChanged());
          });
       });
    });

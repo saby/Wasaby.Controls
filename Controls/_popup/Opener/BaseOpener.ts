@@ -40,7 +40,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     readonly '[Controls/_popup/interface/IBaseOpener]': boolean;
     protected _template: TemplateFunction = Template;
-    private _actionOnScroll: string = 'none';
     private _popupId: string = '';
     private _openerUnmounted: boolean = false;
     private _indicatorId: string = '';
@@ -68,7 +67,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     open(popupOptions: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
             this._toggleIndicator(true);
-            const cfg: TBaseOpenerOptions = this._getConfig(popupOptions || {});
+            const cfg: TBaseOpenerOptions = this._getConfig(popupOptions);
             // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
             if (cfg.isCompoundTemplate) {
                 this._compatibleOpen(cfg, controller);
@@ -150,14 +149,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         return this._loadModulesPromise;
     }
 
-    private _getConfig(popupOptions: IBaseOpenerOptions = {}): TBaseOpenerOptions {
+    protected _getConfig(popupOptions: IBaseOpenerOptions = {}): TBaseOpenerOptions {
         const baseConfig = BaseOpener.getConfig(this._options, popupOptions);
         // if the .opener property is not set, then set the defaultOpener or the current control
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = DefaultOpenerFinder.find(this) || this;
-        }
-        if (baseConfig.actionOnScroll) {
-            this._actionOnScroll = baseConfig.actionOnScroll;
         }
 
         if (ManagerController.isDestroying(this._getCurrentPopupId())) {
@@ -227,17 +223,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         };
     }
 
-    protected _scrollHandler(event: Event): void {
-        if (this.isOpened() && event.type === 'scroll') {
-            if (this._actionOnScroll === 'close') {
-                this._closeOnTargetScroll();
-            } else if (this._actionOnScroll === 'track') {
-                this._updatePopup();
-            }
-        }
-    }
-
-    private _updatePopup(): void {
+    protected _updatePopup(): void {
         ManagerController.popupUpdated(this._getCurrentPopupId());
     }
 
@@ -279,7 +265,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                         if (!cfg.topPopup) {
                             cfg.zIndex = cfg.zIndex || getZIndex(popupOpener);
                         }
-                        cfg.theme = popupOpener._options.theme;
                     }
                     if (!BaseOpener.isVDOMTemplate(rootTpl)) {
                         requirejs(['Controls/compatiblePopup'], (compatiblePopup) => {
@@ -370,71 +355,25 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     static getConfig(options: IBaseOpenerOptions, popupOptions: IBaseOpenerOptions): IBaseOpenerOptions {
-        // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
-        // Возвращаю правки.usedOptions - набор опций, которые мы берем с opener'a (с opener._options) и передаем в окно
-        // Все опции опенера брать нельзя,т.к. ядро добавляет свои опции опенеру (в режиме совместимости),
+        // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости),
         // которые на окно попасть не должны.
-        const baseConfig = {};
-        const usedOptions = [
-            'id',
-            'closeByExternalClick',
-            'isCompoundTemplate',
-            'eventHandlers',
-            'autoCloseOnHide',
-            'autoClose',
-            'type',
-            'style',
-            'message',
-            'details',
-            'yesCaption',
-            'noCaption',
-            'cancelCaption',
-            'okCaption',
-            'autofocus',
-            'isModal',
-            'modal',
-            'closeOnOutsideClick',
-            'closeOnDeactivated',
-            'closeOnTargetScroll',
-            'className',
-            'template',
-            'templateOptions',
-            'minWidth',
-            'maxWidth',
-            'maximize',
-            'width',
-            'propStorageId',
-            'resizable',
-            'top',
-            'autoHide',
-            'left',
-            'maxHeight',
-            'minHeight',
-            'draggable',
-            'horizontalAlign',
-            'verticalAlign',
-            'offset',
-            'direction',
-            'corner',
-            'targetPoint',
-            'targetTracking',
-            'topPopup',
-            'locationStrategy',
-            'fittingMode',
-            'actionOnScroll',
-            'isWS3Compatible',
-            'zIndexCallback'
+        const baseConfig = {...options};
+        const ignoreOptions = [
+            'iWantBeWS3',
+            '_$createdFromCode',
+            '_logicParent',
+            'theme',
+            'vdomCORE',
+            'name',
+            'esc'
         ];
 
-        // merge _options to popupOptions
-        for (let i = 0; i < usedOptions.length; i++) {
-            const option = usedOptions[i];
+        for (let i = 0; i < ignoreOptions.length; i++) {
+            const option = ignoreOptions[i];
             if (options[option] !== undefined) {
-                baseConfig[option] = options[option];
+                delete baseConfig[option];
             }
         }
-
-        delete baseConfig.theme; // todo fix?
 
         const templateOptions = {};
         CoreMerge(templateOptions, baseConfig.templateOptions || {});
@@ -472,8 +411,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     static getDefaultOptions(): IBaseOpenerOptions {
         return {
-            closePopupBeforeUnmount: true,
-            actionOnScroll: 'none'
+            closePopupBeforeUnmount: true
         };
     }
 
