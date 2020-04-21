@@ -24,6 +24,7 @@ import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil'
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
+import { Model } from 'Types/entity';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -1592,12 +1593,8 @@ var
             this._model.updateSelection(selectedKeys);
         },
 
-        setSelectedItems(items: any[], selected: boolean): void {
-            if (selected) {
-                const selectedKeys = {};
-                items.forEach((item) => selectedKeys[item.getId()] = selected);
-                this.updateSelection(selectedKeys);
-            }
+        setSelectedItems(items: Model[], selected: boolean): void {
+            this._model.setSelectedItems(items, selected);
         },
 
         setDragTargetPosition: function(position) {

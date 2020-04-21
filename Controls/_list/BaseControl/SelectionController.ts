@@ -164,11 +164,8 @@ export class SelectionController {
       }
    }
 
-   updateItems(): void {
-      const oldSelection = clone(this._selection);
-      this._select(this._selectedKeys);
-      this._unselect(this._excludedKeys);
-      this._notifyAndUpdateSelection(oldSelection, this._selection);
+   updateSelectedItems(): void {
+      this._notifyAndUpdateSelection(this._selection, this._selection);
    }
 
    private _select(keys: TKeys): void {
@@ -212,12 +209,12 @@ export class SelectionController {
    }
 
    private _updateSelectionForRender(unselectedItems?: Array<CollectionItem<Model>>): void {
+      const items = this._strategy.getSelectedItems(this._selection, this._model);
+      this._model.setSelectedItems(items, true);
+
       if (unselectedItems) {
          this._model.setSelectedItems(unselectedItems, false);
       }
-
-      const items = this._strategy.getSelectedItems(this._selection, this._model);
-      this._model.setSelectedItems(items, true);
    }
 
    private _isAllSelectedInRoot(root: object): boolean {
@@ -264,12 +261,21 @@ export class SelectionController {
          this._notifySelectionKeysChanged('excludedKeysChanged', newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed);
       }
 
+      // выбираем элементы, с которых сняли выбор
       const unselectedItems = this._strategy.getSelectedItems(
          {
             selected: selectedKeysDiff.removed,
             excluded: newSelection.excluded
-         },
-         this._model);
+         }, this._model);
+         // добавляем невыбранные элементы, добавленные в excluded
+      ArraySimpleValuesUtil.addSubArray(
+         unselectedItems,
+         this._strategy.getSelectedItems(
+         {
+            selected: newSelection.excluded,
+            excluded: []
+         }, this._model)
+      );
 
       this._updateSelectionForRender(unselectedItems);
    }

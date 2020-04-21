@@ -1184,7 +1184,7 @@ const _private = {
                 }
             }
             if (self._selectionController) {
-               self._selectionController.updateItems(newItems);
+               self._selectionController.updateSelectedItems();
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
