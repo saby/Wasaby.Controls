@@ -71,6 +71,8 @@ export class SelectionController {
 
       this._notifySelectionKeysChanged = options.notifySelectionKeysChanged;
       this._notifySelectedKeysCountChanged = options.notifySelectedKeysCountChanged;
+
+      this._updateSelectionForRender();
    }
 
    toggleItem(key: TKey): void {
