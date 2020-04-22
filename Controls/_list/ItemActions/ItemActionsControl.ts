@@ -9,6 +9,7 @@ import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { constants } from 'Env/Env';
 import cClone = require('Core/core-clone');
+import rk = require('i18n!Controls');
 
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 import {IItemAction} from 'Controls/_list/interface/IList';
@@ -80,6 +81,7 @@ var _private = {
                 icon: 'icon-ExpandDown ' + ACTION_ICON_CLASS,
                 style: 'secondary',
                 iconStyle: 'secondary',
+                title: rk('Ещё'),
                 _isMenu: true
             });
         }
