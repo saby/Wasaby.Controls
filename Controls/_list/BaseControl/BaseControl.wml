@@ -136,8 +136,6 @@
                     multiSelectReady="{{_multiSelectReady}}"
                     listModel="{{_listViewModel}}"
                     startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
-                    on:deactivated="_listDeactivated()"
-                    on:animationend="_onAnimationEnd()"
                     on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
                     on:itemClick="_onItemClick()"
                     on:groupClick="_onGroupClick()"
@@ -151,8 +149,7 @@
                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                     on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
                     on:itemSwipe="_onItemSwipe()"
-                    on:dragStart="_notifyHandler('dragStart')"
-            >
+                    on:dragStart="_notifyHandler('dragStart')">
                 <ws:itemActionsTemplate>
                     <ws:partial
                             template="{{_itemActionsTemplate}}"
@@ -163,10 +160,10 @@
                 </ws:itemActionsTemplate>
                 <ws:swipeTemplate>
                     <ws:partial
-                            template="{{_swipeTemplate}}"
+                            template="{{ _swipeTemplate }}"
                             scope="{{ _listViewModel.getActionsTemplateConfig() }}"
                             swipeConfig="{{ _listViewModel.getSwipeConfig() }}"
-                            animationState="open"
+                            animationState="{{ _listViewModel.getSwipeAnimation() }}"
                             itemData="{{ swipeTemplate.currentItem }}" />
                     <!-- using || instead of ws:if because template is constantly being updated otherwise -->
                 </ws:swipeTemplate>

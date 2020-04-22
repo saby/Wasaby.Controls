@@ -1,4 +1,4 @@
-import {IBaseCollection, IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig} from 'Controls/display';
+import {IBaseCollection, IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig, ANIMATION_STATE} from 'Controls/display';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {ISource} from 'Controls/interface';
@@ -85,6 +85,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     setSwipeConfig(config: ISwipeConfig): void;
     getSwipeConfig(): ISwipeConfig;
     getEditingConfig(): IEditingConfig;
+    setSwipeAnimation(state: ANIMATION_STATE): void;
 }
 
 export interface IDropdownTemplateOptions {

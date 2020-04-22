@@ -39,7 +39,7 @@
 export {default as IBind} from './_display/IBind';
 export {default as TreeChildren} from './_display/TreeChildren';
 export {default as Abstract} from './_display/Abstract';
-export {default as Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig} from './_display/Collection';
+export {default as Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE} from './_display/Collection';
 export {default as CollectionItem} from './_display/CollectionItem';
 export {default as Enum} from './_display/Enum';
 export {default as Flags} from './_display/Flags';

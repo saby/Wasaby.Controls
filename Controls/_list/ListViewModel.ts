@@ -8,14 +8,11 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
-import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig } from 'Controls/display';
-import {IItemActionsContainer} from 'Controls/itemActions';
-import {Model} from 'types/entity';
+import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
 import {IItemAction} from 'Controls/itemActions';
-import {ISwipeConfig} from 'Controls/display';
 
 const ITEMACTIONS_POSITION_CLASSES = {
     bottomRight: 'controls-itemActionsV_position_bottomRight',
@@ -138,10 +135,14 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _menuState: '',
     _reloadedKeys: null,
     _singleItemReloadCount: 0,
+
+    // New model compatibility
     _actionsAssigned: false,
     _actionsTemplateConfig: null,
     _swipeConfig: null,
     _actionsMenuConfig: null,
+    _getActionsSwipeAnimation: null,
+    // New model compatibility end
 
     constructor(cfg): void {
         const self = this;
@@ -280,17 +281,21 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.dispItem.hasActionWithIcon();
 
         // // TODO REMOVE!!!
+        // export const ITEMACTIONS_DISPLAY_MODE = {
+        //     ICON: 'icon',
+        //     TITLE: 'title',
+        //     BOTH: 'both',
+        //     AUTO: 'auto'
+        // };
         // _needShowIcon(action: IItemAction): boolean {
         //     // return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
-        // },
-        //
-        // // TODO REMOVE!!!
+        // }
         // _needShowTitle(action: IItemAction): boolean {
         //     // return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
         //     //     action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
         //     //     (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
         //     //         !action.displayMode) && !action.icon);
-        // },
+        // }
         return itemsModelCurrent;
     },
 
@@ -740,6 +745,16 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     // New Model compatibility
     getSwipeConfig(): ISwipeConfig {
         return this._swipeConfig;
+    },
+
+    // New Model compatibility
+    setSwipeAnimation(animation: ANIMATION_STATE): void {
+        this._getActionsSwipeAnimation = animation;
+    },
+
+    // New Model compatibility
+    getSwipeAnimation(): ANIMATION_STATE {
+        return this._getActionsSwipeAnimation;
     },
 
     updateSelection: function(selectedKeys) {

@@ -44,6 +44,11 @@ export interface ISplicedArray<T> extends Array<T> {
     start?: number;
 }
 
+export enum ANIMATION_STATE {
+    CLOSE = 'close',
+    OPEN = 'open'
+}
+
 type FilterFunction<S> = (
     item: S,
     index: number,
@@ -668,6 +673,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _actionsMenuConfig: any;
     protected _actionsTemplateConfig: IItemActionsTemplateConfig;
     protected _swipeConfig: ISwipeConfig;
+
+    /**
+     * Анимация свайпа: открытие или закрытие меню опций
+     */
+    protected _getActionsSwipeAnimation: ANIMATION_STATE;
 
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
@@ -2213,6 +2223,22 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._swipeConfig = config;
             this._nextVersion();
         }
+    }
+
+    /**
+     * Устанавливает текущую анимацию для свайпа.
+     * Может быть, стоит объединить с _swipeConfig
+     */
+    setSwipeAnimation(animation: ANIMATION_STATE): void {
+        this._getActionsSwipeAnimation = animation;
+    }
+
+    /**
+     * Получает еткущую анимацию для свайпа.
+     * Может быть, стоит объединить с _swipeConfig
+     */
+    getSwipeAnimation(): ANIMATION_STATE {
+        return this._getActionsSwipeAnimation;
     }
 
     appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object): void {

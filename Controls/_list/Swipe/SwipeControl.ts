@@ -79,7 +79,7 @@ export default class SwipeControl extends Control {
    }
 
    private _notifyAndResetSwipe(): void {
-      this._notify('closeSwipe', [this._options.useNewModel ? this. _currentItemData : this._options.listModel.getSwipeItem()]);
+      this._notify('closeSwipe', [this._options.useNewModel ? this._currentItemData : this._options.listModel.getSwipeItem()]);
       this._swipeConfig = null;
       this._currentItemData = null;
       if (this._options.useNewModel) {

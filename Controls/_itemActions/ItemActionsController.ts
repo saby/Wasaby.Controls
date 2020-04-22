@@ -1,7 +1,6 @@
-import {TItemKey, ISwipeConfig} from 'Controls/display';
+import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Memory} from 'Types/source';
-import {Model} from 'Types/entity';
 import {Control} from 'UI/Base';
 import {isEqual} from 'Types/object';
 import {
@@ -59,8 +58,8 @@ export interface IItemActionsControllerOptions {
 export class ItemActionsController {
     private _collection: IItemActionsCollection;
     private _commonItemActions: IItemAction[];
-    private _itemActionsProperty?: string;
-    private _visibilityCallback?: TItemActionVisibilityCallback;
+    private _itemActionsProperty: string;
+    private _visibilityCallback: TItemActionVisibilityCallback;
 
     update(options: IItemActionsControllerOptions): void {
         if (!isEqual(this._commonItemActions, options.itemActions) ||
@@ -135,9 +134,10 @@ export class ItemActionsController {
         this.setActiveItem(this._collection, itemKey);
 
         if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
-            this._updateSwipeConfig(this._collection, actionsContainerHeight);
+            this._updateSwipeConfig(actionsContainerHeight);
         }
 
+        this._collection.setSwipeAnimation(ANIMATION_STATE.OPEN);
         this._collection.nextVersion();
     }
 
@@ -157,6 +157,14 @@ export class ItemActionsController {
      */
     getActiveItem(): IItemActionsItem {
         return this._collection.find((item) => item.isActive());
+    }
+
+    /**
+     * Получает последний swiped элемент
+     * @param collection Коллекция элементов, содержащих операции с записью
+     */
+    getSwipeItem(collection: IItemActionsCollection): IItemActionsItem {
+        return this._collection.find((item) => item.isSwiped());
     }
 
     /**
@@ -332,7 +340,7 @@ export class ItemActionsController {
         collection: IItemActionsCollection,
         key: TItemKey
     ): void {
-        const oldSwipeItem = this._getSwipeItem(this._collection);
+        const oldSwipeItem = this.getSwipeItem(this._collection);
         const newSwipeItem = this._collection.getItemBySourceKey(key);
 
         if (oldSwipeItem) {
@@ -343,14 +351,6 @@ export class ItemActionsController {
         }
 
         this._collection.nextVersion();
-    }
-
-    /**
-     * Получает последний swiped элемент
-     * @param collection Коллекция элементов, содержащих операции с записью
-     */
-    private _getSwipeItem(collection: IItemActionsCollection): IItemActionsItem {
-        return this._collection.find((item) => item.isSwiped());
     }
 
     /**
@@ -399,17 +399,14 @@ export class ItemActionsController {
         );
     }
 
-    private _updateSwipeConfig(
-        collection: IItemActionsCollection,
-        actionsContainerHeight: number
-    ): void {
-        const item = this._getSwipeItem(collection);
+    private _updateSwipeConfig(actionsContainerHeight: number): void {
+        const item = this.getSwipeItem(this._collection);
         if (!item) {
             return;
         }
 
         const actions = item.getActions().all;
-        const actionsTemplateConfig = collection.getActionsTemplateConfig();
+        const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
 
         let swipeConfig = ItemActionsController._calculateSwipeConfig(
             actions,
@@ -440,7 +437,7 @@ export class ItemActionsController {
             ];
         }
 
-        collection.setSwipeConfig(swipeConfig);
+        this._collection.setSwipeConfig(swipeConfig);
     }
 
     private _wrapActionsInContainer(

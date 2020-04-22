@@ -11,7 +11,8 @@ import {
     Collection,
     CollectionItem,
     MarkerCommands,
-    ICollectionCommand
+    ICollectionCommand,
+    ANIMATION_STATE
 } from 'Controls/display';
 import {
     ItemActionsController,
@@ -152,10 +153,19 @@ export default class View extends Control<IViewOptions> {
             );
             break;
         default:
-            // TODO How to close swipe with animation
-            this._itemActionsController.deactivateSwipe(this._collection);
+            this._collection.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            this._collection.nextVersion();
             break;
         }
+    }
+
+    /**
+     * Обработчик события окончания анимации свайпа по записи
+     * @param e
+     * @private
+     */
+    _onCloseSwipe(e: SyntheticEvent<null>): void {
+        this._itemActionsController.deactivateSwipe(this._collection);
     }
 
     /**

@@ -29,7 +29,7 @@ import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
-import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, GroupItem} from 'Controls/display';
+import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
 import {ItemActionsController} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
@@ -88,12 +88,9 @@ const MIN_SCROLL_PAGING_PROPORTION = 2;
 
 const ITEMACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
 
-export const ITEMACTIONS_DISPLAY_MODE = {
-    ICON: 'icon',
-    TITLE: 'title',
-    BOTH: 'both',
-    AUTO: 'auto'
-};
+interface IAnimationEvent extends Event {
+    animationName: string;
+}
 
 /**
  * Object with state from server side rendering
@@ -2311,12 +2308,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _onAnimationEnd: function(e) {
-        if (e.nativeEvent.animationName === 'rightSwipe') {
-            this.getViewModel().setRightSwipedItem(null);
-        }
-    },
-
     showIndicator(direction: 'down' | 'up' | 'all' = 'all'): void {
         _private.showIndicator(this, direction);
     },
@@ -2814,23 +2805,41 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         switch (swipeEvent.nativeEvent.direction) {
             case 'left':
                 this._itemActionsController.activateSwipe(
-                    this._collection,
+                    this._listViewModel,
                     item.getContents().getKey(),
                     swipeContainer?.clientHeight
                 );
                 break;
-            case 'right':
-
             default:
-                // TODO How to close swipe with animation
-                this._itemActionsController.deactivateSwipe(this._collection);
+                /**
+                 * After the right swipe the item should get selected.
+                 * Animation should be played only if checkboxes are visible.
+                 */
+                this._listViewModel.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+                this._listViewModel.nextVersion();
                 break;
+        }
+        if (swipeEvent.nativeEvent.direction === 'right' || swipeEvent.nativeEvent.direction === 'left') {
+            const newKey = ItemsUtil.getPropertyValue(item.getContents(), this._options.keyProperty);
+            _private.setMarkedKey(this, newKey);
+        }
+        if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
+            this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
         }
     },
 
-    _listDeactivated(): void {
-        if (!this._menuIsShown) {
-            this._itemActionsController.deactivateSwipe(this._collection);
+    /**
+     * Обработчик события окончания анимации свайпа по записи
+     * @param e
+     * @private
+     */
+    _onSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
+        e.stopPropagation();
+        if (e.nativeEvent.animationName === 'rightSwipe' && this._listViewModel.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
+            if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
+                this._notify('itemSwipe', [this._itemActionsController.getSwipeItem(), e]);
+            }
+            this._itemActionsController.deactivateSwipe(this._listViewModel);
         }
     },
 
@@ -2863,7 +2872,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (direction === 'right' || direction === 'left') {
             const newKey = ItemsUtil.getPropertyValue(itemData.getContents(), this._options.keyProperty);
-            this.setMarkedKey(this, newKey);
+            _private.setMarkedKey(this, newKey);
         }
         const actionsItem = itemData.getContents();
 
@@ -2876,13 +2885,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 ? itemContainer
                 : itemContainer.getElementsByClassName(ITEMACTIONS_SWIPE_CONTAINER_SELECTOR)[0];
 
-        if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
-            // todo
-            this._itemActionsController.activateSwipe(this._listViewModel, itemData.key, swipeContainer?.clientHeight);
-
-            // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
-            // itemData.itemActions = this._listViewModel.getItemActions(actionsItem);
-        }
         if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
             this._notify('itemSwipe', [actionsItem, childEvent, swipeContainer?.clientHeight]);
         }

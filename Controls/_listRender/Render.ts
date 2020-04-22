@@ -133,8 +133,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onAnimationEnd(e: SyntheticEvent<null>): void {
-        // TODO Swipe animation has finished. If this was a close animation,
-        // clear swipe state
+        this._notify('closeSwipe', [e]);
     }
 
     protected _onItemActionsClick(e: SyntheticEvent<MouseEvent>, action: unknown, item: CollectionItem<unknown>): void {

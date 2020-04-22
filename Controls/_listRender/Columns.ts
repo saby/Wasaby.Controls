@@ -28,10 +28,6 @@ export default class Columns extends BaseRender {
     protected _resizeHandler(): void {
         this._notify('resize', []);
     }
-    protected _onItemSwipe(e: SyntheticEvent<null>, item: ColumnsCollectionItem<unknown>): void {
-        e.stopPropagation();
-        this._notify('itemSwipe', [item, e]);
-    }
 
     protected _getItemsContainerStyle(): string {
         const minmax = `minmax(${this._options.columnMinWidth}px, ${this._options.columnMaxWidth}px) `;

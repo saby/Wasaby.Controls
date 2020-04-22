@@ -10,6 +10,7 @@
 
       on:itemClick="_onItemClick()"
       on:itemSwipe="_onItemSwipe()"
+      on:closeSwipe="_onCloseSwipe()"
       on:itemActionClick="_onItemActionClick()"
       on:itemActionsMenuResult="_onItemActionsMenuResult()"
       on:itemActionsMenuClose="_onItemActionsMenuClose()"
