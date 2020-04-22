@@ -277,28 +277,30 @@ define([
       describe('_updateStickyShadow', function() {
          it('should turn on a shadow and generate force update if the corresponding identifier is passed.', function() {
             const component = createComponent(StickyHeader, {});
-            component._shadowVisible = false;
+            component._isFixed = false;
+            component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
-            component._updateStickyShadow(null, [component._index]);
-            assert.isTrue(component._shadowVisible);
+            component._updateFixed(null, [component._index]);
+            assert.isTrue(component._isFixed);
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
          });
          it('should turn off a shadow and generate force update if the corresponding identifier is not passed.', function() {
             const component = createComponent(StickyHeader, {});
-            component._shadowVisible = true;
+            component._isFixed = true;
+            component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
-            component._updateStickyShadow(null, ['someId']);
-            assert.isFalse(component._shadowVisible);
+            component._updateFixed(null, ['someId']);
+            assert.isFalse(component._isFixed);
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
          });
          it('should not apply force update if the shadow has not changed.', function() {
             const component = createComponent(StickyHeader, {});
-            component._shadowVisible = true;
+            component._isFixed = true;
             sinon.stub(component, '_forceUpdate');
-            component._updateStickyShadow(null, [component._index]);
-            assert.isTrue(component._shadowVisible);
+            component._updateFixed(null, [component._index]);
+            assert.isTrue(component._isFixed);
             sinon.assert.notCalled(component._forceUpdate);
             sinon.restore();
          });
@@ -321,7 +323,9 @@ define([
                   id: component._index,
                   mode: "replaceable",
                   offsetHeight: 10,
-                  prevPosition: "top"
+                  prevPosition: "top",
+                  shadowVisible: true,
+                  isFakeFixed: false
                }], {
                   bubbling: true
                }
@@ -345,7 +349,9 @@ define([
                   id: component._index,
                   mode: "replaceable",
                   offsetHeight: 10,
-                  prevPosition: "top"
+                  prevPosition: "top",
+                  shadowVisible: true,
+                  isFakeFixed: false
                }], {
                   bubbling: true
                }
