@@ -2819,6 +2819,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     swipeContainer?.clientHeight
                 );
                 break;
+            case 'right':
+
             default:
                 // TODO How to close swipe with animation
                 this._itemActionsController.deactivateSwipe(this._collection);
@@ -2854,7 +2856,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             };
 
             // TODO Right swiping for new model
-            //Animation should be played only if checkboxes are visible.
+            //  Animation should be played only if checkboxes are visible.
             if (this._options.multiSelectVisibility !== 'hidden') {
                 this.getViewModel().setRightSwipedItem(itemData);
             }

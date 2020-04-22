@@ -20,19 +20,17 @@
                                 actionAlignment="{{actionAlignment}}"
                                 actionCaptionPosition="{{actionCaptionPosition}}"
                                 needSeparator="{{needSeparator}}"
-                                needIcon="{{needIcon}}"
                                 needTitle="{{needTitle}}"/>
                     </ws:if>
                     <ws:else>
                         <ws:partial
                                 template="wml!Controls/_list/Swipe/resources/SwipeFor"
                                 itemData="{{itemData}}"
-                                showedActions="{{itemData.itemActions.showed}}"
+                                showedActions="{{itemData.getActions().showed}}"
                                 swipeConfig="{{swipeConfig}}"
                                 actionAlignment="{{actionAlignment}}"
                                 actionCaptionPosition="{{actionCaptionPosition}}"
                                 needSeparator="{{needSeparator}}"
-                                needIcon="{{needIcon}}"
                                 needTitle="{{needTitle}}"/>
                     </ws:else>
 

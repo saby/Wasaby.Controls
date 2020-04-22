@@ -24,6 +24,10 @@ const showType = {
 
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
 
+const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
+
+const DEFAULT_ACTION_CAPTION_POSITION = 'none';
+
 export interface IItemActionsControllerOptions {
     /**
      * Коллекция элементов, содержащих операции с записью
@@ -74,8 +78,8 @@ export class ItemActionsController {
             this._calculateActionsTemplateConfig({
                 itemActionsPosition: options.itemActionsPosition,
                 style: options.style,
-                actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition,
+                actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
+                actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
                 itemActionsClass: options.itemActionsClass
             });
         }

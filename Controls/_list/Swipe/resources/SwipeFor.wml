@@ -2,8 +2,8 @@
     <ws:partial
        template="wml!Controls/_list/Swipe/resources/SwipeAction"
        action="{{action}}"
-       needIcon="{{needIcon}}"
-       needTitle="{{needTitle}}"
+       needIcon="{{swipeConfig.needIcon}}"
+       needTitle="{{swipeConfig.needTitle}}"
        actionAlignment="{{actionAlignment}}"
        itemActionsSize="{{swipeConfig.itemActionsSize}}"
        paddingSize="{{swipeConfig.paddingSize}}"
