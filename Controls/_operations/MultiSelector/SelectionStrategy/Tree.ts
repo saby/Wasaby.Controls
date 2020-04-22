@@ -2,7 +2,7 @@ import ISelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStra
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import getSelectedChildrenCount from 'Controls/_operations/MultiSelector/getSelectedChildrenCount';
 import removeSelectionChildren from 'Controls/_operations/MultiSelector/removeSelectionChildren';
-import { isNode, getParentProperty, getItems, getChildren } from 'Controls/_operations/MultiSelector/ModelCompability';
+import { isNode, getItems, getChildren } from 'Controls/_operations/MultiSelector/ModelCompability';
 import { Map } from 'Types/shim';
 
 import { relation, Record, Model } from 'Types/entity';
@@ -172,7 +172,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Array<CollectionItem<Model>>> {
       const selectedItems = new Map([[true, []], [false, []], [null, []]]);
-      const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, getItems(model));
+      const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, model.getCollection());
 
       getItems(model).forEach((item) => {
          const itemId: TKey = item.getId();
@@ -288,10 +288,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    private _getParentId(itemId: string|number, model: ISelectionModel): TKey|undefined {
-      const parentProperty: string = getParentProperty(model, this._hierarchyRelation);
-      const item: Record|undefined = getItems(model).getRecordById(itemId);
+      const item = getItems(model).getRecordById(itemId);
 
-      return item && item.get(parentProperty);
+      return item && item.getId();
    }
 
    private _mergeEntryPath(selectedKeys: TKeys, items: RecordSet): TKeys {

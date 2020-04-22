@@ -37,7 +37,7 @@ import {Model, relation} from 'Types/entity';
 import {IItemAction} from './interface/IList';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {IHashMap} from 'Types/declarations';
-import { SelectionController } from 'Controls/_list/BaseControl/SelectionController';
+import { ISelectionControllerResult, SelectionController } from 'Controls/_list/BaseControl/SelectionController';
 import {
     FlatSelectionStrategy,
     TreeSelectionStrategy,
@@ -1187,7 +1187,8 @@ var _private = {
                 }
             }
             if (self._selectionController) {
-               self._selectionController.updateSelectedItems();
+               const result = self._selectionController.updateSelectedItems();
+               self.handleSelectionControllerResult(result);
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -1417,7 +1418,7 @@ var _private = {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
         self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
         self._onItemsChanged = self._onItemsChanged.bind(self);
-        this.onSelectedTypeChanged = this.onSelectedTypeChanged.bind(self);
+        this.handleSelectionControllerResult = this.handleSelectionControllerResult.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -1743,15 +1744,12 @@ var _private = {
          selectedKeys: options.selectedKeys,
          excludedKeys: options.excludedKeys,
          filter: options.filter,
-         root: options.root,
-         strategy,
-         notifySelectionKeysChanged: this.notifySelectionKeysChanged.bind(self),
-         notifySelectedKeysCountChanged: this.notifySelectedKeysCountChanged.bind(self)
+         strategy
       });
    },
 
    updateSelectionController(self: any, newOptions: any): void {
-      self._selectionController.update({
+      const result = self._selectionController.update({
          model: self._listViewModel,
          selectedKeys: newOptions.selectedKeys,
          excludedKeys: newOptions.excludedKeys,
@@ -1759,6 +1757,7 @@ var _private = {
          root: newOptions.root,
          strategyOptions: this.getSelectionStrategyOptions(newOptions)
       });
+      this.handleSelectionControllerResult(result);
    },
 
    createSelectionStrategy(options: any): ISelectionStrategy {
@@ -1786,43 +1785,61 @@ var _private = {
       }
    },
 
-   notifySelectionKeysChanged(eventName: string, keys: [], addedKeys: [], removedKeys: []): void {
-      this._notify(eventName, [keys, addedKeys, removedKeys]);
-   },
-
-   notifySelectedKeysCountChanged(count: number, isAllSelected: boolean): void {
-      this._notify('listSelectedKeysCountChanged', [count, isAllSelected], {bubbling: true});
-   },
-
    onItemsChanged(self: any, action: string, removedItems: []): void {
       if (self._selectionController) {
+         let result;
+
          switch (action) {
             case IObservable.ACTION_REMOVE:
-               self._selectionController.removeKeys(removedItems);
+               result = self._selectionController.removeKeys(removedItems);
+               this.handleSelectionControllerResult(result);
                break;
             case IObservable.ACTION_RESET:
-               self._selectionController.reset();
+               result = self._selectionController.reset();
+               this.handleSelectionControllerResult(result);
                break;
          }
       }
    },
 
    onSelectedTypeChanged(typeName: string): void {
+       let result;
        if (!this._selectionController) {
           this._createSelectionController();
        }
 
        switch (typeName) {
           case 'selectAll':
-             this._selectionController.selectAll();
+             result = this._selectionController.selectAll();
+             this.handleSelectionControllerResult(result);
              break;
           case 'unselectAll':
-             this._selectionController.unselectAll();
+             result = this._selectionController.unselectAll();
+             this.handleSelectionControllerResult(result);
              break;
           case 'toggleAll':
-             this._selectionController.toggleAll();
+             result = this._selectionController.toggleAll();
+             this.handleSelectionControllerResult(result);
              break;
        }
+   },
+
+   handleSelectionControllerResult(result: ISelectionControllerResult): void {
+       if (!result) {
+          return;
+       }
+
+       const selectedDiff = result.selectedKeysDiff;
+       if (selectedDiff.added.length || selectedDiff.removed.length) {
+         this._notify('selectedKeysChanged', [selectedDiff.newKeys, selectedDiff.added, selectedDiff.removed]);
+       }
+
+       const excludedDiff = result.excludedKeysDiff;
+       if (excludedDiff.added.length || excludedDiff.removed.length) {
+         this._notify('excludedKeysChanged', [excludedDiff.newKeys, excludedDiff.added, excludedDiff.removed]);
+       }
+
+       this._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
    }
 };
 
@@ -2489,7 +2506,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                this._createSelectionController();
             }
 
-            this._selectionController.toggleItem(key);
+            const result = this._selectionController.toggleItem(key);
+            _private.handleSelectionControllerResult(result);
             this._notify('checkboxClick', [key, status]);
         }
     },
@@ -2508,7 +2526,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
 
-            this._selectionController.toggleItem(key);
+            const result = this._selectionController.toggleItem(key);
+            _private.handleSelectionControllerResult(result);
             this._notify('checkboxClick', [key, multiSelectStatus]);
 
             // TODO Right swiping for new model
@@ -3000,6 +3019,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             displayLib = require('Controls/display');
         }
         return diCreate(modelName, { ...modelConfig, collection: items });
+    },
+
+    handleSelectionControllerResult(result: ISelectionControllerResult): void {
+       _private.handleSelectionControllerResult(result);
     }
 
 });

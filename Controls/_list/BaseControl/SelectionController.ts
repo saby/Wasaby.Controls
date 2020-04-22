@@ -38,10 +38,19 @@ export interface ISelectionControllerOptions {
    strategy?: ISelectionStrategy;
    strategyOptions?: ITreeSelectionStrategyOptions;
    filter: object;
+}
 
-   // callbacks
-   notifySelectionKeysChanged: Function;
-   notifySelectedKeysCountChanged: Function;
+interface ISelectionDifference {
+   newKeys: TKeys;
+   added: TKeys;
+   removed: TKeys;
+}
+
+export interface ISelectionControllerResult {
+   selectedKeysDiff: ISelectionDifference;
+   excludedKeysDiff: ISelectionDifference;
+   selectedCount: number;
+   isAllSelected: boolean;
 }
 
 export class SelectionController {
@@ -51,9 +60,6 @@ export class SelectionController {
    private _excludedKeys: TKeys = [];
    private _strategy: ISelectionStrategy;
    private _filter: object;
-
-   private _notifySelectionKeysChanged: Function;
-   private _notifySelectedKeysCountChanged: Function;
 
    private get _selection(): ISelection {
       return {
@@ -69,13 +75,10 @@ export class SelectionController {
       this._strategy = options.strategy;
       this._filter = options.filter;
 
-      this._notifySelectionKeysChanged = options.notifySelectionKeysChanged;
-      this._notifySelectedKeysCountChanged = options.notifySelectedKeysCountChanged;
-
       this._updateSelectionForRender();
    }
 
-   toggleItem(key: TKey): void {
+   toggleItem(key: TKey): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       const status = this._getItemStatus(key);
       if (status === true || status === null) {
@@ -83,10 +86,10 @@ export class SelectionController {
       } else {
          this._select([key]);
       }
-      this._notifyAndUpdateSelection(oldSelection, this._selection);
+      return this._updateSelection(oldSelection, this._selection);
    }
 
-   update(options: ISelectionControllerOptions): void {
+   update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
       const itemsChanged = modelChanged ? true : getItems(options.model) !== getItems(this._model);
       const filterChanged = options.filter !== this._filter;
@@ -107,41 +110,41 @@ export class SelectionController {
          const oldSelection = clone(this._selection);
          this._selectedKeys = options.selectedKeys;
          this._excludedKeys = options.excludedKeys;
-         this._notifyAndUpdateSelection(oldSelection, this._selection);
+         return this._updateSelection(oldSelection, this._selection);
       } else if (itemsChanged || modelChanged || filterChanged) {
          this._updateSelectionForRender();
       }
    }
 
-   selectAll(): void {
+   selectAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._strategy.selectAll(this._selection, this._model);
-      this._notifyAndUpdateSelection(oldSelection, this._selection);
+      return this._updateSelection(oldSelection, this._selection);
    }
 
-   toggleAll(): void {
+   toggleAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._strategy.toggleAll(this._selection, this._model);
-      this._notifyAndUpdateSelection(oldSelection, this._selection);
+      return this._updateSelection(oldSelection, this._selection);
    }
 
-   unselectAll(): void {
+   unselectAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._strategy.unselectAll(this._selection, this._model);
-      this._notifyAndUpdateSelection(oldSelection, this._selection);
+      return this._updateSelection(oldSelection, this._selection);
    }
 
-   removeKeys(removedItems: []): void {
+   removeKeys(removedItems: []): ISelectionControllerResult {
       // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
       // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
       if (getItems(this._model)) {
          const oldSelection = clone(this._selection);
          this._remove(this._getItemsKeys(removedItems));
-         this._notifyAndUpdateSelection(oldSelection, this._selection);
+         return this._updateSelection(oldSelection, this._selection);
       }
    }
 
-   reset(): void {
+   reset(): ISelectionControllerResult {
       // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
       // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
       if (getItems(this._model)) {
@@ -156,12 +159,12 @@ export class SelectionController {
             this._resetSelection = false;
             this._clearSelection();
          }
-         this._notifyAndUpdateSelection(oldSelection, this._selection);
+         return this._updateSelection(oldSelection, this._selection);
       }
    }
 
-   updateSelectedItems(): void {
-      this._notifyAndUpdateSelection(this._selection, this._selection);
+   updateSelectedItems(): ISelectionControllerResult {
+      return this._updateSelection(this._selection, this._selection);
    }
 
    private _select(keys: TKeys): void {
@@ -204,24 +207,17 @@ export class SelectionController {
       return keys;
    }
 
-   private _updateSelectionForRender(): void {
-      const selectionForModel = this._strategy.getSelectionForModel(this._selection, this._model);
-      this._model.setSelectedItems(selectionForModel.get(true), true);
-      this._model.setSelectedItems(selectionForModel.get(false), false);
-      this._model.setSelectedItems(selectionForModel.get(null), null);
-   }
-
    private _isAllSelectedInRoot(root: object): boolean {
       return this._selectedKeys.includes(root) && this._excludedKeys.includes(root);
    }
 
-   private _isAllSelected(selectedKeys: TKeys, excludedKeys: TKeys): boolean {
+   private _isAllSelected(selection: ISelection): boolean {
       const selectedCount = this._getCount();
       const selectionCountEqualsItemsCount = !this._model.getHasMoreData() && selectedCount && selectedCount === this._model.getCount();
       const root = this._getRoot();
 
-      return !this._model.getHasMoreData() && selectionCountEqualsItemsCount || selectedKeys.includes(root)
-         && (excludedKeys.length === 0 || excludedKeys.length === 1 && excludedKeys[0] === root);
+      return !this._model.getHasMoreData() && selectionCountEqualsItemsCount || selection.selected.includes(root)
+         && (selection.excluded.length === 0 || selection.excluded.length === 1 && selection.excluded[0] === root);
    }
 
    private _isSelectionChanged(selectedKeys: TKeys, excludedKeys: TKeys): boolean {
@@ -235,7 +231,7 @@ export class SelectionController {
       return isAllSelected && listFilterChanged;
    }
 
-   private _notifyAndUpdateSelection(oldSelection: ISelection, newSelection: ISelection): void {
+   private _updateSelection(oldSelection: ISelection, newSelection: ISelection): ISelectionControllerResult {
       const
          selectionCount = this._getCount(newSelection),
          oldSelectedKeys = oldSelection.selected,
@@ -247,21 +243,32 @@ export class SelectionController {
          selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
          excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
 
-      if (selectedKeysDiff.added.length || selectedKeysDiff.removed.length) {
-         this._notifySelectionKeysChanged('selectedKeysChanged', newSelectedKeys, selectedKeysDiff.added, selectedKeysDiff.removed);
-      }
-
-      if (excludedKeysDiff.added.length || excludedKeysDiff.removed.length) {
-         this._notifySelectionKeysChanged('excludedKeysChanged', newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed);
-      }
-
-      this._notifySelectedCountChangedEvent(newSelection);
       this._updateSelectionForRender();
+
+      const selectedDifference: ISelectionDifference = {
+         newKeys: newSelectedKeys,
+         added: selectedKeysDiff.added,
+         removed: selectedKeysDiff.removed
+      };
+
+      const excludedDifference: ISelectionDifference = {
+         newKeys: newExcludedKeys,
+         added: excludedKeysDiff.added,
+         removed: excludedKeysDiff.removed
+      };
+
+      return {
+         selectedKeysDiff: selectedDifference,
+         excludedKeysDiff: excludedDifference,
+         selectedCount: this._getCount(newSelection),
+         isAllSelected: this._isAllSelected(newSelection)
+      };
    }
 
-   private _notifySelectedCountChangedEvent(selection: ISelection): void {
-      const count = this._getCount(selection);
-      const isAllSelected = this._isAllSelected(selection.selected, selection.excluded);
-      this._notifySelectedKeysCountChanged(count, isAllSelected);
+   private _updateSelectionForRender(): void {
+      const selectionForModel = this._strategy.getSelectionForModel(this._selection, this._model);
+      this._model.setSelectedItems(selectionForModel.get(true), true);
+      this._model.setSelectedItems(selectionForModel.get(false), false);
+      this._model.setSelectedItems(selectionForModel.get(null), null);
    }
 }

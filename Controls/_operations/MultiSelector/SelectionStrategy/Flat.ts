@@ -40,7 +40,8 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    selectAll(selection: ISelection, model: ISelectionModel): void {
-      selection.selected = [ALL_SELECTION_VALUE];
+      selection.selected.length = 0;
+      selection.selected[0] = ALL_SELECTION_VALUE;
    }
 
    /**

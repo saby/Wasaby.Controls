@@ -549,6 +549,10 @@ var ItemsViewModel = BaseViewModel.extend({
         return this._items;
     },
 
+    getCollection: function() {
+        return this.getItems();
+    },
+
     appendItems: function(items) {
         let shouldAppend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
