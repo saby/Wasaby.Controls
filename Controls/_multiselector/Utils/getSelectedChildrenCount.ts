@@ -1,14 +1,14 @@
 import { relation } from 'Types/entity';
 import { TKeySelection as TKey, ISelectionObject as ISelection } from 'Controls/interface';
 import { ISelectionModel } from '../interface';
-import { getChildren, getItems, isHasChildren } from './utils';
+import { getChildren, getItems, isHasChildren, isNode } from './utils';
 
 export default function getSelectedChildrenCount(
    nodeId: TKey,
    selection: ISelection,
    model: ISelectionModel,
    hierarchyRelation: relation.Hierarchy,
-   deep: boolean
+   deep?: boolean
 ): number|null {
    const nodeItem = getItems(model).getRecordById(nodeId);
    const children = getChildren(nodeId, model, hierarchyRelation);

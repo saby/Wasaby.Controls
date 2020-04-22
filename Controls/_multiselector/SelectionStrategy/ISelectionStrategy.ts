@@ -1,7 +1,5 @@
 import { TKeysSelection as TKeys, ISelectionObject as ISelection} from 'Controls/interface';
-import { CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
-import { Map } from 'Types/shim';
 import { IFlatSelectionStrategyOptions, ISelectionModel, ITreeSelectionStrategyOptions } from '../interface';
 
 /**
@@ -14,6 +12,6 @@ export default interface ISelectionStrategy {
    toggleAll(selection: ISelection, model: ISelectionModel): void;
    unselectAll(selection: ISelection, model: ISelectionModel): void;
    getCount(selection: ISelection, model: ISelectionModel): number|null;
-   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Array<CollectionItem<Model>>>;
+   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Model[]>;
    update(options: ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions): void;
 }

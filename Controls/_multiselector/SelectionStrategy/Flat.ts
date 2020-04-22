@@ -3,9 +3,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
-import { CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
-import { Map } from 'Types/shim';
 import { IFlatSelectionStrategyOptions, ISelectionModel } from '../interface';
 import { getItems } from '../Utils/utils';
 
@@ -63,7 +61,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Array<CollectionItem<Model>>> {
+   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Model[]> {
       const selectedItems = new Map([[true, []], [false, []], [null, []]]);
       const isAllSelected: boolean = this._isAllSelected(selection);
 

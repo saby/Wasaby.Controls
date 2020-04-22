@@ -1,14 +1,12 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { Map } from 'Types/shim';
 
 import { relation, Record, Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import { Controller as SourceController } from 'Controls/source';
-import { CollectionItem } from 'Controls/display';
 import ISelectionStrategy from './ISelectionStrategy';
 import { IEntryPath, ISelectionModel, ITreeSelectionStrategyOptions } from '../interface';
-import { getChildren, getItems, isNode } from '../Utils/utils';
+import { getChildren, getItems, getParentProperty, isNode } from '../Utils/utils';
 import getChildrenIds from '../Utils/getChildrenIds';
 import getSelectedChildrenCount from '../Utils/getSelectedChildrenCount';
 import removeSelectionChildren from '../Utils/removeSelectionChildren';
@@ -157,7 +155,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Array<CollectionItem<Model>>> {
+   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Model[]> {
       const selectedItems = new Map([[true, []], [false, []], [null, []]]);
       const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, getItems(model));
 
@@ -275,9 +273,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    private _getParentId(itemId: string|number, model: ISelectionModel): TKey|undefined {
-      const item = getItems(model).getRecordById(itemId);
-
-      return item && item.getId();
+      const parentProperty: string = getParentProperty(model, this._hierarchyRelation);
+      const item: Record|undefined = getItems(model).getRecordById(itemId);
+      return item && item.get(parentProperty);
    }
 
    private _mergeEntryPath(selectedKeys: TKeys, items: RecordSet): TKeys {

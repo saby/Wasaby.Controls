@@ -30,6 +30,14 @@ export function getItems(model: ISelectionModel): RecordSet|List {
    }
 }
 
+export function getParentProperty(model: ISelectionModel, hierarchyRelation: relation.Hierarchy): string {
+   if (cInstance.instanceOfModule(model, 'Controls/display:Tree')) {
+      return model.getParentProperty();
+   } else {
+      return hierarchyRelation && hierarchyRelation.getParentProperty();
+   }
+}
+
 export function getChildren(nodeId: TKey, model: ISelectionModel, hierarchyRelation: relation.Hierarchy): Model[] {
    let children: Model[] = [];
 
