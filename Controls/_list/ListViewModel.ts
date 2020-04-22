@@ -352,9 +352,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._swipeItem && this._swipeItem.key === key) {
             version = 'SWIPE_' + version;
         }
-        if (this._actionsVersions.hasOwnProperty(key)) {
-            version = 'ITEM_ACTION_' + this._actionsVersions[key] + version;
-        }
+
+        // TODO REMOVE OR IMPLEMENT (Not implemented in new lists)
+        // if (this._actionsVersions.hasOwnProperty(key)) {
+        //     version = 'ITEM_ACTION_' + this._actionsVersions[key] + version;
+        // }
 
         return version;
     },

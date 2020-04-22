@@ -105,26 +105,27 @@ define([
          version = model._calcItemVersion(item, key);
          assert.notInclude(version, 'SWIPE');
 
-         model.setItemActions(model._items.at(0), [{
-            id: 0,
-            title: 'first'
-         }]);
-         version = model._calcItemVersion(item, key);
-         assert.include(version, 'ITEM_ACTION_1');
-
-         model.setItemActions(model._items.at(0), [{
-            id: 0,
-            title: 'second'
-         }]);
-         version = model._calcItemVersion(item, key);
-         assert.include(version, 'ITEM_ACTION_2');
-
-         model.setItemActions(model._items.at(0), [{
-            id: 0,
-            title: 'second'
-         }]);
-         version = model._calcItemVersion(item, key);
-         assert.include(version, 'ITEM_ACTION_2');
+         // TODO REMOVE OR IMPLEMENT (Not implemented in new lists)
+         // model.setItemActions(model._items.at(0), [{
+         //    id: 0,
+         //    title: 'first'
+         // }]);
+         // version = model._calcItemVersion(item, key);
+         // assert.include(version, 'ITEM_ACTION_1');
+         //
+         // model.setItemActions(model._items.at(0), [{
+         //    id: 0,
+         //    title: 'second'
+         // }]);
+         // version = model._calcItemVersion(item, key);
+         // assert.include(version, 'ITEM_ACTION_2');
+         //
+         // model.setItemActions(model._items.at(0), [{
+         //    id: 0,
+         //    title: 'second'
+         // }]);
+         // version = model._calcItemVersion(item, key);
+         // assert.include(version, 'ITEM_ACTION_2');
 
          assert.include(version, 'WITHOUT_EDITING');
          model._setEditingItemData({ key: 21, item: {} });
@@ -673,7 +674,7 @@ define([
             all: [],
             showed: []
          });
-         assert.isFalse(editingItem.drawActions, "shoud not draw actions on editing item if actions array is empty");
+         assert.isFalse(editingItem.shouldDisplayActions(), "should not draw actions on editing item if actions array is empty");
          listModel.setItemActions(new entity.Record({
             rawData: {
                id: 'test',
@@ -684,7 +685,7 @@ define([
             all: [1,2,3],
             showed: [1,2,3]
          });
-         assert.isTrue(editingItem.drawActions, "shoud draw actions on editing item if actions array is not empty");
+         assert.isTrue(editingItem.shouldDisplayActions(), "should draw actions on editing item if actions array is not empty");
          listModel.setEditingConfig({
             toolbarVisibility: true
          });
@@ -698,7 +699,7 @@ define([
             all: [],
             showed: []
          });
-         assert.isTrue(editingItem.drawActions, 'should draw actions on editing item if actions array is empty and toolbarVisibility = true');
+         assert.isTrue(editingItem.shouldDisplayActions(), 'should draw actions on editing item if actions array is empty and toolbarVisibility = true');
       });
 
       it('Clear itemActions for removed items', function() {
@@ -921,7 +922,7 @@ define([
                showed: [1]
             });
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
-            assert.isTrue(!!item.drawActions);
+            assert.isTrue(!!item.shouldDisplayActions());
          });
 
          it('getMultiSelectClassList hidden', function() {
