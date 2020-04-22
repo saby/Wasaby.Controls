@@ -321,8 +321,7 @@ define([
                   id: component._index,
                   mode: "replaceable",
                   offsetHeight: 10,
-                  prevPosition: "top",
-                  shadowVisible: true
+                  prevPosition: "top"
                }], {
                   bubbling: true
                }
@@ -346,8 +345,7 @@ define([
                   id: component._index,
                   mode: "replaceable",
                   offsetHeight: 10,
-                  prevPosition: "top",
-                  shadowVisible: true
+                  prevPosition: "top"
                }], {
                   bubbling: true
                }
