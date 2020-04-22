@@ -383,7 +383,7 @@ class StickyController extends BaseController {
                 return TargetCoords.get(restrictiveContainer);
             }
         }
-    },
+    }
 
     private _getTargetCoords(cfg, sizes) {
         if (cfg.popupOptions.nativeEvent) {
