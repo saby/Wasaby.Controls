@@ -71,6 +71,7 @@ class View extends Control<IViewOptions> implements IView {
     }
 
     private _expandedHandler(e: SyntheticEvent, state: boolean): void {
+        e.stopPropagation();
         this._notify('expandedChanged', [state]);
         this._expanded = state;
     }

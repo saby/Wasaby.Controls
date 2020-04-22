@@ -10,7 +10,8 @@
         </ws:if>
         <ws:if data="{{_options.headerContentTemplate}}" >
             <div class="controls-SpoilerView__header__headerContentTemplate" style="width: 100%">
-                <ws:partial template="{{_options.headerContentTemplate}}">
+                <ws:partial template="{{_options.headerContentTemplate}}"
+                            scope="{{_options}}">
                 </ws:partial>
             </div>
         </ws:if>

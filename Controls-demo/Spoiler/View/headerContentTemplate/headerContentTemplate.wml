@@ -1,4 +1,4 @@
 <div class="ws-flexbox ws-align-items-baseline">
-    <Controls.spoiler:Heading captions="{{['Свернуть', 'Развернуть']}}"/>
+    <Controls.spoiler:Heading captions="{{['Свернуть', 'Развернуть']}}" scope="{{_options}}"/>
     <div style="padding: 0 15px" class="controls-text-label_theme-{{_options.theme}}">Шаблон шапки</div>
 </div>
