@@ -47,7 +47,10 @@
 }
 //icon-24 font has a problem with baseline in FF IE
 //important is for cases when non-theme css loads after theme css
-.icon-medium, .icon-24 when not(@icon_font-family_m = 'cbuc-icons') {
+.icon-medium when not(@icon_font-family_m = 'cbuc-icons') {
+   line-height: @icon-size_m - 1 !important;
+}
+.icon-24 when not(@icon_font-family_m = 'cbuc-icons') {
    line-height: @icon-size_m - 1 !important;
 }
 
