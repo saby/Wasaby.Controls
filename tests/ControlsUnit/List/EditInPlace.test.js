@@ -366,13 +366,18 @@ define([
                source: source
             });
 
-            listModel.setItemActions(listModel.at(0).getContents(), [{
-               id: 0,
-               title: 'Удалить'
-            }]);
-
+            listModel.at(0).setActions({
+               all: {
+                  id: 0,
+                  title: 'Удалить'
+               },
+               showed: {
+                  id: 0,
+                  title: 'Удалить'
+               }
+            });
             await eip.beginAdd();
-            assert.isUndefined(eip._editingItemData.itemActions);
+            assert.isNull(eip._editingItemData.getActions());
          });
 
          it('Without handler', function(done) {

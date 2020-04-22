@@ -15,12 +15,5 @@ export interface IListModel {
    nextModelVersion: (notUpdatePrefixItemVersion?: boolean) => void;
    setSwipeItem: (itemData: IItemData) => void;
    setActiveItem: (itemData: IItemData) => void;
-   setItemActions: (
-      item: Model,
-      actions: {
-         all: IItemAction[];
-         showed: IItemAction[];
-      }
-   ) => void;
    subscribe: (eventName: string, handler: Function) => void;
 }

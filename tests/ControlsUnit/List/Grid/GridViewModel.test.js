@@ -259,11 +259,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           drawActions: false,
+                           shouldDisplayActions: () => false,
                            multiSelectVisibility: 'hidden',
                            getLastColumnIndex: function() {
                               return 0;
-                           }
+                           },
+                           isActive: () => true
                         },
                         currentColumn: {
                            columnIndex: 0
@@ -275,11 +276,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           drawActions: true,
+                           shouldDisplayActions: () => true,
                            multiSelectVisibility: 'hidden',
                            getLastColumnIndex: function() {
                               return 0;
-                           }
+                           },
+                           isActive: () => true
                         },
                         currentColumn: {
                            columnIndex: 0
@@ -291,11 +293,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           drawActions: true,
+                           shouldDisplayActions: () => true,
                            multiSelectVisibility: 'hidden',
                            getLastColumnIndex: function() {
                               return 1;
-                           }
+                           },
+                           isActive: () => true
                         },
                         currentColumn: {
                            columnIndex: 0
@@ -307,11 +310,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           drawActions: true,
+                           shouldDisplayActions: () => true,
                            multiSelectVisibility: 'visible',
                            getLastColumnIndex: function() {
                               return 2;
-                           }
+                           },
+                           isActive: () => true
                         },
                         currentColumn: {
                            columnIndex: 1
@@ -323,11 +327,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           drawActions: true,
+                           shouldDisplayActions: () => true,
                            multiSelectVisibility: 'visible',
                            getLastColumnIndex: function() {
                               return 2;
-                           }
+                           },
+                           isActive: () => true
                         },
                         currentColumn: {
                            columnIndex: 1
@@ -849,9 +854,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('state', function() {
             assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
-            assert.equal(undefined, current.isActive, 'Incorrect value "current.isActive".');
+            assert.equal(false, current.isActive(), 'Incorrect value "current.isActive()".');
             assert.isTrue(current.multiSelectVisibility === 'visible');
-            assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
+            assert.equal(false, current.isSwiped(), 'Incorrect value "current.isSwiped()".');
          });
 
          it('columns', function() {
@@ -994,8 +999,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
-                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
-                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getItemActions', 'getCurrentIndex',
+                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'setRightSwipedItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
@@ -1752,7 +1757,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             let current = gridViewModel.getCurrent();
             assert.isFalse(current.isHovered);
             gridViewModel.setHoveredItem(clone(current.item));
-            gridViewModel.setItemActions(current.item, [{}, {}, {}]);
             assert.isTrue(gridViewModel.getCurrent().isHovered);
          });
          it('getItemDataByItem: in list one item and it\'s in group. Should draw separator bottom', function () {

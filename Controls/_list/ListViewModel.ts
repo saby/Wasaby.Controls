@@ -85,22 +85,7 @@ var _private = {
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !isSelected)
                            .compile();
     },
-    /**
-     * TODO REMOVE!
-     * @param editingItemData
-     * @param currentItem
-     * @param editingConfig
-     * @param drawnActions
-     * @deprecated
-     */
-    needToDrawActions: function (editingItemData, currentItem, editingConfig, drawnActions) {
-        // if (editingItemData) {
-        //     return !!(currentItem.key === editingItemData.key &&
-        //         (drawnActions && drawnActions.length || editingConfig.toolbarVisibility));
-        // } else {
-        //     return !!(drawnActions && drawnActions.length);
-        // }
-    },
+
     getGroupPaddingClasses(current, theme: string): { left: string; right: string } {
         const right = `controls-ListView__groupContent__rightPadding_${current.itemPadding.right}_theme-${theme}`;
         const left =  `controls-ListView__groupContent__leftPadding_${current.hasMultiSelect ? 'withCheckboxes' : current.itemPadding.left}_theme-${theme}`;
@@ -683,51 +668,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return !!this.getItemById(id, keyProperty);
     },
 
-    /**
-     * @TODO REMOVE!!!
-     * Устанавливает набор операций над записью для каждой записи
-     * @param item
-     * @param actions
-     * @deprecated
-     */
-    setItemActions(item: Model, actions: IItemActionsContainer): string {
-        // let result = 'none';
-        // if (item.get) {
-        //     const id = item.get(this._options.keyProperty);
-        //     if (this.hasItemById(id, this._options.keyProperty)) {
-        //        if (isEqual(this._actions[id], actions)) {
-        //            result = 'none';
-        //        } else {
-        //            result = Object.keys(this._actions).length ? 'partial' : 'all';
-        //            this._actions[id] = actions;
-        //            this._actionsVersions[id] = this._actionsVersions[id] ? ++this._actionsVersions[id] : 1;
-        //            this.resetCachedItemData(this._convertItemKeyToCacheKey(id));
-        //        }
-        //     } else if (this._editingItemData && this._editingItemData.key === id) {
-        //         this._editingItemData.itemActions = actions;
-        //         this._editingItemData.drawActions = !!(actions && actions.all.length) ||
-        //            !!(this._options.editingConfig && this._options.editingConfig.toolbarVisibility);
-        //         result = 'all';
-        //     }
-        // }
-        // return result;
-    },
-
     _prepareDisplayItemForAdd: function(item) {
         return ItemsUtil.getDefaultDisplayItem(this._display, item);
     },
 
     getActionsItem: function(item) {
       return item;
-    },
-
-    /**
-     * @deprecated
-     * @param item
-     */
-    getItemActions: function(item) {
-        const id = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
-        return this._actions[id];
     },
 
     /**

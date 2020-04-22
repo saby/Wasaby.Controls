@@ -1498,10 +1498,6 @@ var
             this._model.prependItems(items);
         },
 
-        setItemActions: function(item, actions) {
-            return this._model.setItemActions(item, actions);
-        },
-
         nextModelVersion: function() {
             this._model.nextModelVersion.apply(this._model, arguments);
         },
@@ -1547,10 +1543,6 @@ var
 
         getCurrentIndex: function() {
             return this._model.getCurrentIndex();
-        },
-
-        getItemActions: function(item) {
-            return this._model.getItemActions(item);
         },
 
         getIndexBySourceItem: function(item) {

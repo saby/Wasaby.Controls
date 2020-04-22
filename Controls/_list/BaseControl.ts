@@ -1809,7 +1809,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (newOptions.itemsReadyCallback) {
                     newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                 }
-                _private.calculateActionsTemplateConfig(self, newOptions);
             }
             if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
@@ -1873,7 +1872,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         if (self._listViewModel) {
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
-                        _private.calculateActionsTemplateConfig(self, newOptions);
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
@@ -2415,16 +2413,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             actionCaptionPosition: this._options.actionCaptionPosition,
             itemActionsClass: this._options.itemActionsClass
         });
-        // Набираем список операций над записью в старой модели
-        // и возвращаем для каждой записи, какие записи обновились - 'all'|'partial'|'none'
-        // TODO разобраться как работает в новой модели
-        // if (hasChanges && !this._options.useNewModel) {
-        //     let updateRecords: string;
-        //     this._listViewModel.each((item) => {
-        //         updateRecords = this._listViewModel.setItemActions(item.getContents(), item.getActions());
-        //     });
-        //     this._listViewModel.nextModelVersion(updateRecords !== 'all', ItemActionsUpdatedEvent);
-        // }
     },
     _onAfterEndEdit: function(event, item, isAdd) {
         this._updateItemActions();
@@ -2891,7 +2879,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._itemActionsController.activateSwipe(this._listViewModel, itemData.key, swipeContainer?.clientHeight);
 
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
-            itemData.itemActions = this._listViewModel.getItemActions(actionsItem);
+            // itemData.itemActions = this._listViewModel.getItemActions(actionsItem);
         }
         if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
             this._notify('itemSwipe', [actionsItem, childEvent, swipeContainer?.clientHeight]);
