@@ -37,14 +37,15 @@ import {Model, relation} from 'Types/entity';
 import {IItemAction} from './interface/IList';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {IHashMap} from 'Types/declarations';
-import { ISelectionControllerResult, SelectionController } from 'Controls/_list/BaseControl/SelectionController';
 import {
     FlatSelectionStrategy,
     TreeSelectionStrategy,
     ISelectionStrategy,
     ITreeSelectionStrategyOptions,
-    IFlatSelectionStrategyOptions
-} from 'Controls/operations';
+    IFlatSelectionStrategyOptions,
+   ISelectionControllerResult,
+   SelectionController
+} from 'Controls/multiselector';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 // Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18

@@ -1,19 +1,15 @@
-import ISelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/ISelectionStrategy';
+import ISelectionStrategy from 'Controls/_multiselector/SelectionStrategy/ISelectionStrategy';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
 
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
-import { ISelectionModel } from 'Controls/list';
 import { CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { Map } from 'Types/shim';
+import { IFlatSelectionStrategyOptions, ISelectionModel } from '../interface';
+import { getItems } from '../Utils/utils';
 
 const ALL_SELECTION_VALUE = null;
-
-export interface IFlatSelectionStrategyOptions {
-   // is empty
-}
 
 /**
  * Базовая стратегия выбора в плоском списке.

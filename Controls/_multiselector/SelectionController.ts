@@ -1,13 +1,16 @@
 import Control = require('Core/Control');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import collection = require('Types/collection');
 import { isEqual } from 'Types/object';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
-import { ISelectionStrategy, ITreeSelectionStrategyOptions } from 'Controls/operations';
-import { getItems } from 'Controls/_operations/MultiSelector/ModelCompability';
 import clone = require('Core/core-clone');
-import { CollectionItem } from 'Controls/display';
-import { Model } from 'Types/entity';
+import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
+import {
+   ISelectionControllerOptions,
+   ISelectionControllerResult,
+   ISelectionDifference,
+   ISelectionModel
+} from './interface';
+import { getItems } from './Utils/utils';
 
 /**
  * @class Controls/_list/BaseControl/SelectionController
@@ -16,42 +19,6 @@ import { Model } from 'Types/entity';
  * @author Авраменко А.С.
  * @private
  */
-
-export interface ISelectionModel {
-   getHasMoreData(): boolean;
-
-   getCount(): number;
-
-   getRoot(): any;
-
-   getItems(): collection.RecordSet;
-
-   setSelectedItems(items: Array<CollectionItem<Model>>, selected: boolean): void;
-
-   getItemBySourceKey(key: string | number): CollectionItem<Model>;
-}
-
-export interface ISelectionControllerOptions {
-   model: ISelectionModel;
-   selectedKeys: TKeys;
-   excludedKeys: TKeys;
-   strategy?: ISelectionStrategy;
-   strategyOptions?: ITreeSelectionStrategyOptions;
-   filter: object;
-}
-
-interface ISelectionDifference {
-   newKeys: TKeys;
-   added: TKeys;
-   removed: TKeys;
-}
-
-export interface ISelectionControllerResult {
-   selectedKeysDiff: ISelectionDifference;
-   excludedKeysDiff: ISelectionDifference;
-   selectedCount: number;
-   isAllSelected: boolean;
-}
 
 export class SelectionController {
    private _resetSelection: boolean = false;

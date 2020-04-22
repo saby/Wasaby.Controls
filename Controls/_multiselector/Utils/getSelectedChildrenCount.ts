@@ -1,14 +1,15 @@
-import { Tree as TreeCollection } from 'Controls/display';
-import { isNode, isHasChildren, getItems, getChildren } from 'Controls/_operations/MultiSelector/ModelCompability';
+import { relation } from 'Types/entity';
+import { TKeySelection as TKey, ISelectionObject as ISelection } from 'Controls/interface';
+import { ISelectionModel } from '../interface';
+import { getChildren, getItems, isHasChildren } from './utils';
 
-import { relation, Record } from 'Types/entity';
-import { RecordSet, List } from 'Types/collection';
-// @ts-ignore
-import { ViewModel } from 'Controls/treeGrid';
-import {ISelectionObject as ISelection } from 'Controls/interface';
-
-// Возвращает кол-во выбранных записей в папке, идет в глубь(deep !== false) до первого исключения
-export default function getSelectedChildrenCount(nodeId: Tkey, selection: ISelection, model: ViewModel|TreeCollection, hierarchyRelation: relation.Hierarchy, deep: boolean): number|null {
+export default function getSelectedChildrenCount(
+   nodeId: TKey,
+   selection: ISelection,
+   model: ISelectionModel,
+   hierarchyRelation: relation.Hierarchy,
+   deep: boolean
+): number|null {
    const nodeItem = getItems(model).getRecordById(nodeId);
    const children = getChildren(nodeId, model, hierarchyRelation);
    let selectedChildrenCount = 0;
@@ -43,4 +44,4 @@ export default function getSelectedChildrenCount(nodeId: Tkey, selection: ISelec
    }
 
    return selectedChildrenCount;
-};
+}

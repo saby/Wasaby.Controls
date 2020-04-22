@@ -1,17 +1,17 @@
-import ISelectionStrategy from 'Controls/_operations/MultiSelector/SelectionStrategy/ISelectionStrategy';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import getSelectedChildrenCount from 'Controls/_operations/MultiSelector/getSelectedChildrenCount';
-import removeSelectionChildren from 'Controls/_operations/MultiSelector/removeSelectionChildren';
-import { isNode, getItems, getChildren } from 'Controls/_operations/MultiSelector/ModelCompability';
 import { Map } from 'Types/shim';
 
 import { relation, Record, Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
-import getChildrenIds from 'Controls/_operations/MultiSelector/getChildrenIds';
-import { ISelectionModel } from 'Controls/list';
 import { Controller as SourceController } from 'Controls/source';
 import { CollectionItem } from 'Controls/display';
+import ISelectionStrategy from './ISelectionStrategy';
+import { IEntryPath, ISelectionModel, ITreeSelectionStrategyOptions } from '../interface';
+import { getChildren, getItems, isNode } from '../Utils/utils';
+import getChildrenIds from '../Utils/getChildrenIds';
+import getSelectedChildrenCount from '../Utils/getSelectedChildrenCount';
+import removeSelectionChildren from '../Utils/removeSelectionChildren';
 
 /**
  * Стратегия выбора для иерархического списка, для работы с ним как с плоским.
@@ -21,18 +21,6 @@ import { CollectionItem } from 'Controls/display';
  * @private
  * @author Герасимов А.М.
  */
-
-export interface ITreeSelectionStrategyOptions {
-   selectAncestors: boolean;
-   selectDescendants: boolean;
-   nodesSourceControllers?: Object;
-   hierarchyRelation: relation.Hierarchy;
-}
-
-interface IEntryPath {
-   id: string|number|null;
-   parent: string|number|null;
-}
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 
@@ -153,8 +141,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
          for (let index = 0; index < selectedNodes.length; index++) {
             const nodeKey: TKey = selectedNodes[index];
-            const countItemsSelectedInNode: number|null = getSelectedChildrenCount(
-               nodeKey, selection, model, this._hierarchyRelation, this._selectDescendants);
+            const countItemsSelectedInNode: number|null = getSelectedChildrenCount(nodeKey, selection, model, this._hierarchyRelation, this._selectDescendants);
 
             if (countItemsSelectedInNode === null) {
                countItemsSelected = null;
@@ -172,7 +159,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Array<CollectionItem<Model>>> {
       const selectedItems = new Map([[true, []], [false, []], [null, []]]);
-      const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, model.getCollection());
+      const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, getItems(model));
 
       getItems(model).forEach((item) => {
          const itemId: TKey = item.getId();

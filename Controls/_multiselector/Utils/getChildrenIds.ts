@@ -1,10 +1,14 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { isNode, getItems, getChildren } from 'Controls/_operations/MultiSelector/ModelCompability';
+import { relation } from 'Types/entity';
+import { TKeySelection as TKey, TSelectedKeys as TKeys } from 'Controls/interface';
+import { Model } from 'Types/entity';
+import { getChildren, getItems, isNode } from './utils';
+import { IEntryPath, ISelectionModel } from '../interface';
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 
-function getAllChildren(nodeId: Tkey, model: ViewModel|TreeCollection, hierarchyRelation: relation.Hierarchy): Array<T> {
-   let children: Array<Record> = [];
+function getAllChildren(nodeId: TKey, model: ISelectionModel, hierarchyRelation: relation.Hierarchy): Model[] {
+   const children: Model[] = [];
 
    getChildren(nodeId, model, hierarchyRelation).forEach((child) => {
       ArraySimpleValuesUtil.addSubArray(children, [child]);
@@ -15,9 +19,9 @@ function getAllChildren(nodeId: Tkey, model: ViewModel|TreeCollection, hierarchy
    });
 
    return children;
-};
+}
 
-function getChildrenInEntryPath(parentId: Tkey, entriesPath: Array<IEntryPath>): Tkeys {
+function getChildrenInEntryPath(parentId: TKey, entriesPath: IEntryPath[]): TKeys {
    let children = [];
 
    entriesPath.forEach((entryPath: IEntryPath) => {
@@ -28,11 +32,11 @@ function getChildrenInEntryPath(parentId: Tkey, entriesPath: Array<IEntryPath>):
    });
 
    return children;
-};
+}
 
-export default function getChildrenIds(nodeId: Tkey, model: ViewModel|TreeCollection, hierarchyRelation: relation.Hierarchy): Tkeys {
-   let entriesPath: Array<IEntryPath> = getItems(model).getMetaData()[FIELD_ENTRY_PATH];
-   let childrenIds: TKeys = getAllChildren(nodeId, model, hierarchyRelation).map((child) => {
+export default function getChildrenIds(nodeId: TKey, model: ISelectionModel, hierarchyRelation: relation.Hierarchy): TKeys {
+   const entriesPath = getItems(model).getMetaData()[FIELD_ENTRY_PATH];
+   let childrenIds = getAllChildren(nodeId, model, hierarchyRelation).map((child) => {
       return child.getId();
    });
 
@@ -46,4 +50,4 @@ export default function getChildrenIds(nodeId: Tkey, model: ViewModel|TreeCollec
    }
 
    return childrenIds;
-};
+}
