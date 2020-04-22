@@ -240,9 +240,10 @@ var
 
         getItemColumnCellClasses: function(current, theme) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
-            const classLists = createClassListCollection('base', 'padding', 'columnScroll');
+            const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'relativeCellWrapper');
             const style = current.style || 'default';
             const backgroundStyle = current.backgroundStyle || current.style || 'default';
+            const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
             // Стиль колонки
             const rowSeparatorSize = ` controls-Grid__row-cell_rowSeparatorSize-${current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? 'l' : 's'}_theme-${theme} `;
@@ -277,7 +278,7 @@ var
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
-                if (!GridLayoutUtil.isFullGridSupport()) {
+                if (!isFullGridSupport) {
                     classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
@@ -289,6 +290,12 @@ var
                 }
             } else if (current.columnIndex === current.getLastColumnIndex()) {
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
+            }
+
+            if (!isFullGridSupport) {
+                classLists.relativeCellWrapper += 'controls-Grid__table__relative-cell-wrapper';
+                const _rowSeparatorSize = current.rowSeparatorSize && current.rowSeparatorSize.toLowerCase() === 'l' ? 'l' : 's';
+                classLists.relativeCellWrapper += ` controls-Grid__table__relative-cell-wrapper_rowSeparator-${_rowSeparatorSize}_theme-${theme}`;
             }
 
             return classLists;
