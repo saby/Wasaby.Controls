@@ -106,7 +106,7 @@ var _private = {
         classList += itemData.isEditing() && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
         classList += ` controls-itemActionsV_${itemActionsPosition}${th}`;
         classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
-        classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') : '';
+        classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') + th : '';
         classList += _private.getItemActionsContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding);
         return classList;
     },
