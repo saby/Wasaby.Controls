@@ -21,10 +21,6 @@ class Component extends Control {
     private _headersStack: object;
     // The list of headers that are stuck at the moment.
     private _fixedHeadersStack: object;
-    private _shadowVisibleStack: {
-        top: IShadowVisible,
-        bottom: IShadowVisible
-    };
     // Если созданный заголвок невидим, то мы не можем посчитать его позицию.
     // Учтем эти заголовки после ближайшего события ресайза.
     private _delayedHeaders: TRegisterEventData[] = [];
@@ -42,10 +38,6 @@ class Component extends Control {
             top: [],
             bottom: []
         };
-        this._shadowVisibleStack = {
-            top: {},
-            bottom: {}
-        };
         this._headers = {};
     }
 
@@ -60,14 +52,14 @@ class Component extends Control {
     }
 
     /**
-     * Returns the tru if there is at least one fixed header.
+     * Returns the true if there is at least one fixed header.
      * @param position
      */
-    hasFixed(position: string): boolean {
+    hasFixed(position: POSITION): boolean {
         return !!this._fixedHeadersStack[position].length;
     }
 
-    hasShadowVisible(position: string): boolean {
+    hasShadowVisible(position: POSITION): boolean {
         const fixedHeaders = this._fixedHeadersStack[position];
         for (const id of fixedHeaders) {
             if (this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
@@ -94,12 +86,14 @@ class Component extends Control {
             header;
         const headers = type === TYPE_FIXED_HEADERS.allFixed ? this._headersStack : this._fixedHeadersStack;
         for (let headerId of headers[position]) {
+            header = this._headers[headerId];
+
             const ignoreHeight: boolean = type === TYPE_FIXED_HEADERS.initialFixed &&
-                !this._shadowVisibleStack[position][headerId];
+                                            header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden;
             if (ignoreHeight) {
                 continue;
             }
-            header = this._headers[headerId];
+
             // If the header is "replaceable", we take into account the last one after all "stackable" headers.
             if (header.mode === 'stackable') {
                 if (header.fixedInitially || type === TYPE_FIXED_HEADERS.allFixed) {
@@ -155,11 +149,6 @@ class Component extends Control {
     _fixedHandler(event, fixedHeaderData) {
         event.stopImmediatePropagation();
         this._updateFixationState(fixedHeaderData);
-        if (fixedHeaderData.fixedPosition) {
-            this._shadowVisibleStack[fixedHeaderData.fixedPosition][fixedHeaderData.id] = fixedHeaderData.shadowVisible;
-        } else if (fixedHeaderData.prevPosition) {
-            delete this._shadowVisibleStack[fixedHeaderData.prevPosition][fixedHeaderData.id];
-        }
         this._notify('fixed', [this.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.initialFixed), this.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.initialFixed)]);
 
         // If the header is single, then it makes no sense to send notifications.
