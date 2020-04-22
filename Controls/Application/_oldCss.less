@@ -45,6 +45,15 @@
 .icon-large, .icon-32 {
    .icon-size(@icon-size_l, @icon_font-family_l);
 }
+//icon-24 font has a problem with baseline in FF IE
+//important is for cases when non-theme css loads after theme css
+.icon-medium when not(@icon_font-family_m = 'cbuc-icons') {
+   line-height: @icon-size_m - 1 !important;
+}
+.icon-24 when not(@icon_font-family_m = 'cbuc-icons') {
+   line-height: @icon-size_m - 1 !important;
+}
+
 /* ATTENTION styles */
 .icon-attention
 {
