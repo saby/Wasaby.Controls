@@ -64,16 +64,16 @@ var _private = {
       return maxVisibleItems;
    },
 
-   getAvailableCollectionWidth: function(self, afterFieldWrapperWidth, readOnly, multiSelect, comment) {
+   getAvailableCollectionWidth: function(self, rightFieldWrapperWidth, readOnly, multiSelect, comment) {
       var
-         additionalWidth = afterFieldWrapperWidth,
+         additionalWidth = rightFieldWrapperWidth,
 
       // we get the height of a single-line Lookup control, which would then calculate the minimum width of the input
          fieldWrapperMinHeight = _private.getFieldWrapperMinHeight(self),
          fieldWrapperWidth = self._getFieldWrapperWidth();
 
       if (!readOnly && (multiSelect || comment)) {
-         additionalWidth += _private.getInputMinWidth(self._fieldWrapper.offsetWidth, afterFieldWrapperWidth, fieldWrapperMinHeight);
+         additionalWidth += _private.getInputMinWidth(self._fieldWrapper.offsetWidth, rightFieldWrapperWidth, fieldWrapperMinHeight);
       }
 
       return fieldWrapperWidth - additionalWidth;
@@ -90,23 +90,23 @@ var _private = {
       return self._fieldWrapperMinHeight;
    },
 
-   getAfterFieldWrapperWidth: function(itemsCount, multiLine, readOnly) {
-      var afterFieldWrapperWidth = 0;
+   getrightFieldWrapperWidth: function(itemsCount, multiLine, readOnly) {
+      var rightFieldWrapperWidth = 0;
 
       if (!readOnly) {
-         afterFieldWrapperWidth += SHOW_SELECTOR_WIDTH;
+         rightFieldWrapperWidth += SHOW_SELECTOR_WIDTH;
       }
 
       if (!multiLine && itemsCount > 1) {
-         afterFieldWrapperWidth += CLEAR_RECORDS_WIDTH;
+         rightFieldWrapperWidth += CLEAR_RECORDS_WIDTH;
       }
 
-      return afterFieldWrapperWidth;
+      return rightFieldWrapperWidth;
    },
 
-   getInputMinWidth: function(fieldWrapperWidth, afterFieldWrapperWidth, fieldWrapperMinHeight) {
+   getInputMinWidth: function(fieldWrapperWidth, rightFieldWrapperWidth, fieldWrapperMinHeight) {
       /* By the standard, the minimum input field width is 33%, but not more than 4 field wrapper min height */
-      var minWidthFieldWrapper = (fieldWrapperWidth - afterFieldWrapperWidth) / 3;
+      var minWidthFieldWrapper = (fieldWrapperWidth - rightFieldWrapperWidth) / 3;
 
       return Math.min(minWidthFieldWrapper, 4 * fieldWrapperMinHeight);
    },
@@ -222,7 +222,7 @@ var LookupView = BaseLookupView.extend({
          fieldWrapperWidth,
          allItemsInOneRow = false,
          maxVisibleItems = newOptions.maxVisibleItems,
-         afterFieldWrapperWidth = 0,
+         rightFieldWrapperWidth = 0,
          inputWidth, lastRowCollectionWidth,
          itemsSizesLastRow, availableWidth, lastSelectedItems,
          itemsCount = newOptions.items.getCount(),
@@ -239,8 +239,8 @@ var LookupView = BaseLookupView.extend({
          lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
          itemsSizesLastRow = _private.getItemsSizesLastRow(fieldWrapperWidth, lastSelectedItems, newOptions, counterWidth);
          allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
-         afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
-         availableWidth = _private.getAvailableCollectionWidth(this, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect, newOptions.comment);
+         rightFieldWrapperWidth = _private.getrightFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
+         availableWidth = _private.getAvailableCollectionWidth(this, rightFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect, newOptions.comment);
 
          //For multi line define - inputWidth, for single line - maxVisibleItems
          if (newOptions.multiLine) {

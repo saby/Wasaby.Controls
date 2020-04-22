@@ -34,7 +34,7 @@
            on:valueChanged="_changeValueHandler()"
            placeholder="{{_options.placeholder}}"
            class="controls-ComboBox-InputRender">
-      <ws:afterFieldWrapper>
+      <ws:rightFieldWrapper>
          <ws:if data="{{!_options.readOnly}}">
             <span if="{{!_options.readOnly}}" class="controls-SelectorSuggest__arrow-wrapper"
                   on:click="_open()"
@@ -43,6 +43,6 @@
                <span attr:class="controls-SelectorSuggest__iconArrow icon-{{_suggestState ? 'CollapseLight' : 'ExpandLight'}}"></span>
             </span>
          </ws:if>
-      </ws:afterFieldWrapper>
+      </ws:rightFieldWrapper>
    </Controls._suggest.Input.Render>
 </Controls._suggest._InputController>
