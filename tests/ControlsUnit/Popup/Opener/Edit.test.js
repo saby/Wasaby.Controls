@@ -149,7 +149,7 @@ define(
             assert.equal(action, '');
          });
 
-         it('synchronize', () => {
+         it('synchronize', (done) => {
             let baseProcessingResult = popup.Edit.prototype._processingResult;
             let isProcessingResult = false;
             let synchronizer = 'synchronizer';
@@ -174,6 +174,20 @@ define(
             assert.equal(isProcessingResult, false);
             def.callback();
             assert.equal(isProcessingResult, true);
+
+            isProcessingResult = false;
+            editOpener._processingResult = baseProcessingResult;
+            data.formControllerEvent = 'deletestarted';
+            data.additionalData.removePromise = Promise.resolve();
+            let isDeleteCalled = false;
+            editOpener._deleteRecord = () => {
+               isDeleteCalled = true;
+            };
+            editOpener._synchronize(data.formControllerEvent, data, synchronizer);
+            data.additionalData.removePromise.then(() => {
+               assert.equal(isDeleteCalled, true);
+               done();
+            });
          });
       });
    }
