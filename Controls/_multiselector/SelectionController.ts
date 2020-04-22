@@ -21,7 +21,6 @@ import { getItems } from './Utils/utils';
  */
 
 export class SelectionController {
-   private _resetSelection: boolean = false;
    private _model: ISelectionModel;
    private _selectedKeys: TKeys = [];
    private _excludedKeys: TKeys = [];
@@ -71,9 +70,7 @@ export class SelectionController {
          this._filter = options.filter;
       }
 
-      if (this._shouldResetSelection(options.filter)) {
-         this._resetSelection = true;
-      } else if (selectionChanged) {
+      if (selectionChanged) {
          const oldSelection = clone(this._selection);
          this._selectedKeys = options.selectedKeys;
          this._excludedKeys = options.excludedKeys;
@@ -122,8 +119,7 @@ export class SelectionController {
          // Это необходимо, чтобы чекбоксы сбросились только после отрисовки новых данных,
          // Иначе при проваливании в узел или при смене фильтрации сначала сбросятся чекбоксы,
          // а данные отрисуются только после загрузки
-         if (this._resetSelection || !countItems) {
-            this._resetSelection = false;
+         if (this._shouldResetSelection(this._filter) || !countItems) {
             this._clearSelection();
          }
          return this._updateSelection(oldSelection, this._selection);
