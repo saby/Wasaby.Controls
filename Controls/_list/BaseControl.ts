@@ -1808,18 +1808,20 @@ var _private = {
    },
 
    onSelectedTypeChanged(typeName: string): void {
-       if (this._selectionController) {
-          switch (typeName) {
-             case 'selectAll':
-                this._selectionController.selectAll();
-                break;
-             case 'unselectAll':
-                this._selectionController.unselectAll();
-                break;
-             case 'toggleAll':
-                this._selectionController.toggleAll();
-                break;
-          }
+       if (!this._selectionController) {
+          this._createSelectionController();
+       }
+
+       switch (typeName) {
+          case 'selectAll':
+             this._selectionController.selectAll();
+             break;
+          case 'unselectAll':
+             this._selectionController.unselectAll();
+             break;
+          case 'toggleAll':
+             this._selectionController.toggleAll();
+             break;
        }
    }
 };
@@ -2176,7 +2178,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._loadedItems = null;
 
         if (this._options.selectedKeys && this._options.selectedKeys.length !== 0) {
-            this._selectionController = _private.createSelectionController(this, this._options);
+            this._createSelectionController();
         }
 
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
@@ -2484,7 +2486,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onCheckBoxClick: function(e, key, status, readOnly) {
         if (!readOnly) {
             if (!this._selectionController) {
-                this._selectionController = _private.createSelectionController(this, this._options);
+               this._createSelectionController();
             }
 
             this._selectionController.toggleItem(key);
@@ -2501,7 +2503,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (direction === 'right' && !isSwiped) {
             if (!this._selectionController) {
-                this._selectionController = _private.createSelectionController(this, this._options);
+               this._createSelectionController();
             }
 
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
@@ -2952,6 +2954,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             keyProperty: newKeyProperty
         });
 
+    },
+
+    _createSelectionController(): void {
+        this._selectionController = _private.createSelectionController(this, this._options);
     },
 
     _getLoadingIndicatorClasses(state?: string): string {

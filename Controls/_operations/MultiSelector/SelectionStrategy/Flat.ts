@@ -7,6 +7,7 @@ import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISe
 import { ISelectionModel } from 'Controls/list';
 import { CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
+import { Map } from 'Types/shim';
 
 const ALL_SELECTION_VALUE = null;
 
@@ -65,20 +66,16 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   getSelectedItems(selection: ISelection, model: ISelectionModel): Array<CollectionItem<Model>> {
-      const selectedItems = [];
+   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Array<CollectionItem<Model>>> {
+      const selectedItems = new Map([[true, []], [false, []], [null, []]]);
       const isAllSelected: boolean = this._isAllSelected(selection);
 
-      if (selection.selected.length || selection.excluded.length) {
-         getItems(model).forEach((item) => {
-            const itemId: TKey = item.getId();
-            const isSelected = selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId);
+      getItems(model).forEach((item) => {
+         const itemId: TKey = item.getId();
+         const isSelected = selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId);
 
-            if (isSelected) {
-               selectedItems.push(item);
-            }
-         });
-      }
+         selectedItems.get(isSelected).push(item);
+      });
 
       return selectedItems;
    }

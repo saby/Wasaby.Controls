@@ -4,6 +4,7 @@ import { ITreeSelectionStrategyOptions } from './Tree';
 import { IFlatSelectionStrategyOptions } from './Flat';
 import { CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
+import { Map } from 'Types/shim';
 
 /**
  * Интерфейс базового класс стратегий выбора
@@ -16,7 +17,7 @@ interface ISelectionStrategy {
    toggleAll(selection: ISelection, model: ISelectionModel): void;
    unselectAll(selection: ISelection, model: ISelectionModel): void;
    getCount(selection: ISelection, model: ISelectionModel): number|null;
-   getSelectedItems(selection: ISelection, model: ISelectionModel): Array<CollectionItem<Model>>;
+   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Array<CollectionItem<Model>>>;
    update(options: ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions): void;
 }
 

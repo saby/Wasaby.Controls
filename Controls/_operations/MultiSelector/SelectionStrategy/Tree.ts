@@ -170,33 +170,29 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   getSelectedItems(selection: ISelection, model: ISelectionModel): Array<CollectionItem<Model>> {
-      const selectedItems = [];
+   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Array<CollectionItem<Model>>> {
+      const selectedItems = new Map([[true, []], [false, []], [null, []]]);
       const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, getItems(model));
 
-      if (selection.selected.length || selection.excluded.length) {
-         getItems(model).forEach((item) => {
-            const itemId: TKey = item.getId();
-            const parentId = this._getParentId(itemId, model);
-            let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
-                this._isAllSelected(selection, parentId, model));
+      getItems(model).forEach((item) => {
+         const itemId: TKey = item.getId();
+         const parentId = this._getParentId(itemId, model);
+         let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
+             this._isAllSelected(selection, parentId, model));
 
-            if (this._selectAncestors && isNode(item, model, this._hierarchyRelation)) {
-               isSelected = this._getStateNode(itemId, isSelected, {
-                  selected: selectedKeysWithEntryPath,
-                  excluded: selection.excluded
-               }, model);
+         if (this._selectAncestors && isNode(item, model, this._hierarchyRelation)) {
+            isSelected = this._getStateNode(itemId, isSelected, {
+               selected: selectedKeysWithEntryPath,
+               excluded: selection.excluded
+            }, model);
 
-               if (!isSelected && (selectedKeysWithEntryPath.includes(itemId))) {
-                  isSelected = null;
-               }
+            if (!isSelected && (selectedKeysWithEntryPath.includes(itemId))) {
+               isSelected = null;
             }
+         }
 
-            if (isSelected) {
-               selectedItems.push(item);
-            }
-         });
-      }
+         selectedItems.get(isSelected).push(item);
+      });
 
       return selectedItems;
    }

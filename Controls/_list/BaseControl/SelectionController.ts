@@ -112,12 +112,9 @@ export class SelectionController {
    }
 
    selectAll(): void {
-      const items = getItems(this._model);
-      if (this._selectedKeys.length && this._excludedKeys.length && items.getCount()) {
-         const oldSelection = clone(this._selection);
-         this._strategy.selectAll(this._selection, this._model);
-         this._notifyAndUpdateSelection(oldSelection, this._selection);
-      }
+      const oldSelection = clone(this._selection);
+      this._strategy.selectAll(this._selection, this._model);
+      this._notifyAndUpdateSelection(oldSelection, this._selection);
    }
 
    toggleAll(): void {
@@ -205,13 +202,11 @@ export class SelectionController {
       return keys;
    }
 
-   private _updateSelectionForRender(unselectedItems?: Array<CollectionItem<Model>>): void {
-      const items = this._strategy.getSelectedItems(this._selection, this._model);
-      this._model.setSelectedItems(items, true);
-
-      if (unselectedItems) {
-         this._model.setSelectedItems(unselectedItems, false);
-      }
+   private _updateSelectionForRender(): void {
+      const selectionForModel = this._strategy.getSelectionForModel(this._selection, this._model);
+      this._model.setSelectedItems(selectionForModel.get(true), true);
+      this._model.setSelectedItems(selectionForModel.get(false), false);
+      this._model.setSelectedItems(selectionForModel.get(null), null);
    }
 
    private _isAllSelectedInRoot(root: object): boolean {
@@ -258,24 +253,8 @@ export class SelectionController {
          this._notifySelectionKeysChanged('excludedKeysChanged', newExcludedKeys, excludedKeysDiff.added, excludedKeysDiff.removed);
       }
 
-      // выбираем элементы, с которых сняли выбор
-      const unselectedItems = this._strategy.getSelectedItems(
-         {
-            selected: selectedKeysDiff.removed,
-            excluded: newSelection.excluded
-         }, this._model);
-         // добавляем невыбранные элементы, добавленные в excluded
-      ArraySimpleValuesUtil.addSubArray(
-         unselectedItems,
-         this._strategy.getSelectedItems(
-         {
-            selected: newSelection.excluded,
-            excluded: []
-         }, this._model)
-      );
-
       this._notifySelectedCountChangedEvent(newSelection);
-      this._updateSelectionForRender(unselectedItems);
+      this._updateSelectionForRender();
    }
 
    private _notifySelectedCountChangedEvent(selection: ISelection): void {
