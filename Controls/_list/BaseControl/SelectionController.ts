@@ -274,12 +274,13 @@ export class SelectionController {
          }, this._model)
       );
 
+      this._notifySelectedCountChangedEvent(newSelection);
       this._updateSelectionForRender(unselectedItems);
    }
 
-   private _notifySelectedCountChangedEvent(selectedKeys: TKeys, excludedKeys: TKeys): void {
-      const count = this._getCount();
-      const isAllSelected = this._isAllSelected(selectedKeys, excludedKeys);
+   private _notifySelectedCountChangedEvent(selection: ISelection): void {
+      const count = this._getCount(selection);
+      const isAllSelected = this._isAllSelected(selection.selected, selection.excluded);
       this._notifySelectedKeysCountChanged(count, isAllSelected);
    }
 }

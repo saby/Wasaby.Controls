@@ -1808,17 +1808,19 @@ var _private = {
    },
 
    onSelectedTypeChanged(typeName: string): void {
-      switch (typeName) {
-         case 'selectAll':
-            this._selectionController.selectAll();
-            break;
-         case 'unselectAll':
-            this._selectionController.unselectAll();
-            break;
-         case 'toggleAll':
-            this._selectionController.toggleAll();
-            break;
-      }
+       if (this._selectionController) {
+          switch (typeName) {
+             case 'selectAll':
+                this._selectionController.selectAll();
+                break;
+             case 'unselectAll':
+                this._selectionController.unselectAll();
+                break;
+             case 'toggleAll':
+                this._selectionController.toggleAll();
+                break;
+          }
+       }
    }
 };
 
