@@ -195,7 +195,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent.isMenuShown = this._menuState === 'shown';
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
-        itemsModelCurrent.isSelected = _private.isSelected(this, itemsModelCurrent);
+        itemsModelCurrent._isMarked = _private.isSelected(this, itemsModelCurrent);
         itemsModelCurrent._isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
         itemsModelCurrent._isSwiped = this._swipeItem && itemsModelCurrent.actionsItem === this._swipeItem.actionsItem;
         itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
@@ -204,7 +204,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
+        itemsModelCurrent.isSticky = itemsModelCurrent._isMarked && itemsModelCurrent.style === 'master';
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -279,6 +279,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.hasVisibleActions = (): boolean => itemsModelCurrent.dispItem.hasVisibleActions();
         itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.dispItem.shouldDisplayActions();
         itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.dispItem.hasActionWithIcon();
+        itemsModelCurrent.isSelected = (): boolean => itemsModelCurrent.dispItem.isSelected();
+        itemsModelCurrent.setSelected = (selected: boolean|null, silent?: boolean): void => {
+            itemsModelCurrent.dispItem.setSelected(selected, silent);
+        };
 
         // // TODO REMOVE!!!
         // export const ITEMACTIONS_DISPLAY_MODE = {
@@ -534,6 +538,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
+    /**
+     * задаёт Для Item controls-ListView__item_rightSwipeAnimation
+     * для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f
+     * надо понять, надо это или нет.
+     * Если надо, то реализовать в новой модели
+     */
     setRightSwipedItem: function(itemData) {
         this._rightSwipedItem = itemData;
         this._nextModelVersion();

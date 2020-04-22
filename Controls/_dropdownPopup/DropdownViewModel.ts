@@ -92,9 +92,9 @@ var _private = {
          getNewTreeItem(currentItem): object {
             return {
                isNode: () => currentItem.hasChildren,
-               isSelected: () => currentItem.isSelected,
+               isSelected: () => currentItem.isSelected(),
                getContents: () => currentItem.item,
-               isSwiped: () => currentItem.isSwiped,
+               isSwiped: () => currentItem.isSwiped(),
                shouldDisplayActions: () => {return false},
                getLevel: () => {},
                getParent: () => {return {getContents: () => currentItem.hasParent}}
@@ -221,7 +221,7 @@ var _private = {
             }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
-            itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
+            itemsModelCurrent._isMarked = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
             itemsModelCurrent.iconSize = this._options.iconSize;
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem;
@@ -319,7 +319,7 @@ var _private = {
                   rawData: itemData
                });
                emptyItem.item = item;
-               emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
+               emptyItem._isMarked = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
                emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
                emptyItem.hasClose = this._options.hasClose;

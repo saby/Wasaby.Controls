@@ -1,7 +1,7 @@
 <div attr:class="controls-TileView__item controls-TileView__item_theme-{{itemData.theme}}  js-controls-TileView__withoutZoom controls-ListView__itemV controls-ListView__itemV_cursor-{{cursor || 'pointer'}} controls-TreeTileView__item_theme-{{itemData.theme}} js-controls-SwipeControl__actionsContainer
          {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility) + '_theme-' + itemData.theme}}
          controls-ListView__item_showActions
-         {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ?
+         {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isMarked ?
             ' controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-' + itemData.theme
             : ' controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-' + itemData.theme}}
          {{!!itemData.isActive() ? ' controls-TreeTileView__item_active_theme-' + itemData.theme}}

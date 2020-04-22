@@ -597,7 +597,13 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    getIndexBySourceItem: function(item) {
+    // New Model compatibility
+    getSourceIndexByItem(item: Model): number {
+        return this._display ? this._display.getSourceIndexByItem(item) : undefined;
+    },
+
+    // New Model compatibility
+    getIndexBySourceItem(item: Model): number | string {
         return this._display ? this._display.getIndexBySourceItem(item) : undefined;
     },
 

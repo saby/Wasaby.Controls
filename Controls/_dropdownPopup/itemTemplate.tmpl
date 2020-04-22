@@ -1,4 +1,4 @@
-<div attr:class="controls-DropdownList__row {{marker !== false && itemData.isSelected ? 'controls-DropdownList__selected'}}
+<div attr:class="controls-DropdownList__row {{marker !== false && itemData._isMarked ? 'controls-DropdownList__selected'}}
                  controls-DropdownList__item-right_{{showClose ? 'close-padding' : itemData.hasChildren ? 'hierarchy-padding': 'default-padding'}}
                  {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}
                  controls-DropdownList__row_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}">

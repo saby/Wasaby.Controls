@@ -281,9 +281,9 @@ export default class View extends Control<IViewOptions> {
             if (action.handler) {
                 action.handler(contents);
             }
-            // How to calculate itemContainer?
-            // this._notify('actionClick', [action, contents, itemContainer]);
-            this._notify('actionClick', [action, contents]);
+            // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
+            const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
+            this._notify('actionClick', [action, contents, itemContainer]);
             this._closeActionsMenu();
         // Если экшн должен открывать меню
         // В контекстном меню и выпадающем меню могут быть подуровни (напр, страница контакты->группы на онлайне)

@@ -1269,17 +1269,17 @@ var _private = {
             if (action.handler) {
                 action.handler(contents);
             }
-            // How to calculate itemContainer?
-            // const startIndex = isNewModel
-            //     ? require('Controls/display').VirtualScrollController.getStartIndex(listModel)
-            //     : listModel.getStartIndex();
-            //
-            // const targetContainer = target || Array.prototype.filter.call(
-            //     container.querySelector('.controls-ListView__itemV').parentNode.children,
-            //     (item: HTMLElement) => item.className.includes('controls-ListView__itemV')
-            // )[itemIndex - startIndex];
-            // this._notify('actionClick', [action, contents, itemContainer]);
-            self._notify('actionClick', [action, contents]);
+            // TODO Проверить. Похоже, эти сложные расчёты нужны были для того,
+            //  чтобы определить HTML контейнер при клике на экшн в выпадающем меню
+            // self._listViewModel.getSourceIndexByItem(item)
+            // const startIndex = VirtualScrollController.getStartIndex(self._listViewModel);
+            // const itemContainer = clickEvent.target ||
+            //     self._container.querySelector('.controls-ListView__itemV').parentNode.children
+            //         .filter((item: HTMLElement) => item.className.includes('controls-ListView__itemV');
+
+            // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
+            const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
+            self._notify('actionClick', [action, contents, itemContainer]);
             _private.closeActionsMenu(self);
             // Если экшн должен открывать меню
             // В контекстном меню и выпадающем меню могут быть подуровни (напр, страница контакты->группы на онлайне)
@@ -1304,7 +1304,7 @@ var _private = {
         isContextMenu: boolean): void {
         const itemKey = contents?.getKey();
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
-        self._itemActionsController.setActiveItem(this._collection, itemKey);
+        self._itemActionsController.setActiveItem(self._listViewModel, itemKey);
         Sticky.openPopup(menuConfig).then((popupId) => {
             self._popupId = popupId;
         });
@@ -2790,38 +2790,36 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (item instanceof GroupItem) {
             return;
         }
-
         swipeEvent.stopPropagation();
-
-        const itemContainer =
-            (swipeEvent.target as HTMLElement)
-                .closest('.controls-ListView__itemV');
-
+        const key = item.getContents().getKey();
+        const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer =
             itemContainer.classList.contains('js-controls-SwipeControl__actionsContainer')
                 ? itemContainer
                 : itemContainer.querySelector('.js-controls-SwipeControl__actionsContainer');
 
-        switch (swipeEvent.nativeEvent.direction) {
-            case 'left':
-                this._itemActionsController.activateSwipe(
-                    this._listViewModel,
-                    item.getContents().getKey(),
-                    swipeContainer?.clientHeight
-                );
-                break;
-            default:
-                /**
-                 * After the right swipe the item should get selected.
-                 * Animation should be played only if checkboxes are visible.
-                 */
-                this._listViewModel.setSwipeAnimation(ANIMATION_STATE.CLOSE);
-                this._listViewModel.nextVersion();
-                break;
+        if (swipeEvent.nativeEvent.direction === 'left') {
+            this._itemActionsController.activateSwipe(
+                this._listViewModel,
+                item.getContents().getKey(),
+                swipeContainer?.clientHeight
+            );
+            _private.setMarkedKey(this, key);
         }
-        if (swipeEvent.nativeEvent.direction === 'right' || swipeEvent.nativeEvent.direction === 'left') {
-            const newKey = ItemsUtil.getPropertyValue(item.getContents(), this._options.keyProperty);
-            _private.setMarkedKey(this, newKey);
+        if (swipeEvent.nativeEvent.direction === 'right') {
+            // After the right swipe the item should get selected.
+            this._needSelectionController = true;
+            this._delayedSelect = {key, status: item.isSelected()};
+            // TODO код ниже задавал Для Item controls-ListView__item_rightSwipeAnimation
+            //  для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f.
+            //  надо понять, надо это или нет. Если надо, то реализовать в новой модели
+            // Animation should be played only if checkboxes are visible.
+            // if (this._options.multiSelectVisibility !== 'hidden') {
+            //     this._listViewModel.setRightSwipedItem(itemData);
+            // }
+            this._listViewModel.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            this._listViewModel.nextVersion();
+            _private.setMarkedKey(this, key);
         }
         if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
             this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
@@ -2840,53 +2838,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 this._notify('itemSwipe', [this._itemActionsController.getSwipeItem(), e]);
             }
             this._itemActionsController.deactivateSwipe(this._listViewModel);
-        }
-    },
-
-    // TODO SWIPE
-    // TODO Этот метод надо удалить
-    // TODO Новые списки не умеют с 'right' Swipe. Это надо, наверное, реализовать, типа как в методе ниже
-    _listSwipe(event: SyntheticEvent, itemData: CollectionItem<Model>, childEvent: SyntheticEvent): void {
-        const direction = childEvent.nativeEvent.direction;
-        Sticky.closePopup(this._popupId);
-
-        const key = itemData.getContents().getKey();
-
-        if (direction === 'right' && !itemData.isSwiped() && _private.isItemsSelectionAllowed(this._options)) {
-            const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
-            /**
-             * After the right swipe the item should get selected.
-             * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
-             */
-            this._needSelectionController = true;
-            this._delayedSelect = {
-                key,
-                status: multiSelectStatus
-            };
-
-            // TODO Right swiping for new model
-            //  Animation should be played only if checkboxes are visible.
-            if (this._options.multiSelectVisibility !== 'hidden') {
-                this.getViewModel().setRightSwipedItem(itemData);
-            }
-        }
-        if (direction === 'right' || direction === 'left') {
-            const newKey = ItemsUtil.getPropertyValue(itemData.getContents(), this._options.keyProperty);
-            _private.setMarkedKey(this, newKey);
-        }
-        const actionsItem = itemData.getContents();
-
-        const itemContainer =
-            (event.target as HTMLElement)
-                .closest('.controls-ListView__itemV');
-
-        const swipeContainer =
-            itemContainer.classList.contains(ITEMACTIONS_SWIPE_CONTAINER_SELECTOR)
-                ? itemContainer
-                : itemContainer.getElementsByClassName(ITEMACTIONS_SWIPE_CONTAINER_SELECTOR)[0];
-
-        if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
-            this._notify('itemSwipe', [actionsItem, childEvent, swipeContainer?.clientHeight]);
         }
     },
 
