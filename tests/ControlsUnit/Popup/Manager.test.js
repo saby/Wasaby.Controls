@@ -423,7 +423,7 @@ define(
                   element.controller._elementDestroyed = () => removeDeferred2;
                }
                Manager._notify = () => {};
-               return baseRemove.call(Manager, element, container, popupId);
+               return baseRemove.call(Manager, element, container);
             };
             Manager.remove(id1);
             // wait promise timeout
