@@ -134,7 +134,7 @@ export interface IHeaderCell extends IControlOptions {
      * {{contentTemplate.colData.column.title}}
      * </pre>
      * 
-     * **Пример 4.** Конфигурация колонки для выравнивания контента по копейкам. На шаблон добавлен CSS-класс "controls-Grid__header-cell_spacing_money".
+     * **Пример 4.** Конфигурация колонки для выравнивания контента по копейкам. На шаблон добавлен CSS-класс "controls-Grid__cell_spacing_money".
      * 
      * <pre class="brush: html; highlight: [6]">
      * <Controls.grid:View>
@@ -142,7 +142,7 @@ export interface IHeaderCell extends IControlOptions {
      *       <ws:Array>
      *          <ws:Object>
      *             <ws:template>
-     *                <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money">
+     *                <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__cell_spacing_money">
      *                   ...
      *                </ws:partial>
      *             </ws:template>
