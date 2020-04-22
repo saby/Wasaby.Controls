@@ -142,7 +142,7 @@ define(
                }
             });
 
-            Manager._fireEventHandler.call(Manager, id, 'onClose');
+            Manager._fireEventHandler.call(Manager, element, 'onClose');
 
             assert.isTrue(eventCloseFired, 'event is not fired.');
             assert.isTrue(eventOnCloseFired, 'event is not fired.');
@@ -418,12 +418,12 @@ define(
             let item1 = Manager._popupItems.at(0);
             let removeDeferred2 = new Deferred();
             let baseRemove = Manager._removeElement;
-            Manager._removeElement = (element, container, popupId) => {
-               if (popupId === id2) {
+            Manager._removeElement = (element, container) => {
+               if (element.id === id2) {
                   element.controller._elementDestroyed = () => removeDeferred2;
                }
                Manager._notify = () => {};
-               return baseRemove.call(Manager, element, container, popupId);
+               return baseRemove.call(Manager, element, container);
             };
             Manager.remove(id1);
             // wait promise timeout
