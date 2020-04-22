@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_scroll/StickyHeader/Controller/Controller');
-import {POSITION, TRegisterEventData, TYPE_FIXED_HEADERS} from './Utils';
+import {POSITION, TRegisterEventData, TYPE_FIXED_HEADERS, IFixedEventData} from './Utils';
 import StickyHeader, {SHADOW_VISIBILITY} from 'Controls/_scroll/StickyHeader/_StickyHeader';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
@@ -146,17 +146,19 @@ class Component extends Control {
      * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} fixedHeaderData
      * @private
      */
-    _fixedHandler(event, fixedHeaderData) {
+    _fixedHandler(event, fixedHeaderData: IFixedEventData) {
         event.stopImmediatePropagation();
-        this._updateFixationState(fixedHeaderData);
+        const isFixationUpdated = this._updateFixationState(fixedHeaderData);
         this._notify('fixed', [this.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.initialFixed), this.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.initialFixed)]);
-
+        if (!isFixationUpdated) {
+            return;
+        }
         // If the header is single, then it makes no sense to send notifications.
         // Thus, we prevent unnecessary force updates on receiving messages.
         if (fixedHeaderData.fixedPosition && this._fixedHeadersStack[fixedHeaderData.fixedPosition].length === 1) {
             return;
         }
-        this._children.stickyHeaderShadow.start([
+        this._children.stickyFixed.start([
             this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
             this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
         ]);
@@ -221,13 +223,20 @@ class Component extends Control {
      * Update information about the fixation state.
      * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
      */
-    private _updateFixationState(data: TRegisterEventData) {
-        if (!!data.fixedPosition) {
+    private _updateFixationState(data: IFixedEventData) {
+        let isFixationUpdated = false;
+        if (!!data.fixedPosition && !data.isFakeFixed) {
             this._fixedHeadersStack[data.fixedPosition].push(data.id);
+            isFixationUpdated = true;
         }
-        if (!!data.prevPosition && this._fixedHeadersStack[data.prevPosition].indexOf(data.id) !== -1) {
-            this._fixedHeadersStack[data.prevPosition].splice(this._fixedHeadersStack[data.prevPosition].indexOf(data.id), 1);
+        if (!!data.prevPosition) {
+            const positionInGroup = this._fixedHeadersStack[data.prevPosition].indexOf(data.id);
+            if (positionInGroup !== -1 && !data.isFakeFixed) {
+                this._fixedHeadersStack[data.prevPosition].splice(positionInGroup, 1);
+                isFixationUpdated = true;
+            }
         }
+        return isFixationUpdated;
     }
 
     /**
