@@ -143,6 +143,7 @@ class Component extends Control {
         } else {
             delete this._headers[data.id];
             this._removeFromHeadersStack(data.id, data.position);
+            this._removeFromDelayedStack(data.id);
         }
         return Promise.resolve();
     }
@@ -321,6 +322,14 @@ class Component extends Control {
         }
 
         this._updateTopBottom();
+    }
+
+    private _removeFromDelayedStack(id: number): void {
+        this._delayedHeaders.forEach((header, index) => {
+            if (header.id === id) {
+                this._delayedHeaders.splice(index, 1);
+            }
+        });
     }
 
     private _updateTopBottom() {
