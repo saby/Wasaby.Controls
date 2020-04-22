@@ -1,6 +1,6 @@
 <ws:template name="localItemActionsTemplate">
     <div attr:class="controls-itemActionsV
-            {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + style }}
+            {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + style + '_theme-' + theme }}
             {{itemActionsPosition !== 'outside' ? (itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight') : ''}}
             {{item.getItemActionClasses(itemActionsPosition)}}
             {{item.isEditing() ? 'controls-itemActionsV_editing_theme-' + theme}}
