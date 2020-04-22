@@ -19,6 +19,8 @@ import {
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 import cClone = require('Core/core-clone');
 import collection = require('Types/collection');
+import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
+import {Model} from 'Types/entity';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {createClassListCollection} from "../Utils/CssClassList";
@@ -1545,11 +1547,98 @@ var
             return this._model.getCurrentIndex();
         },
 
-        getIndexBySourceItem: function(item) {
-            return this._model.getIndexBySourceItem(item);
+        // New Model compatibility
+        getItemBySourceKey(key: number | string): Model {
+            return this.getItemById(key, this._options.keyProperty);
         },
 
-        at: function(index) {
+        // New Model compatibility
+        nextVersion(): void {
+            this._nextVersion();
+        },
+
+        // New Model compatibility
+        areActionsAssigned(): boolean {
+            return this._actionsAssigned === true;
+        },
+
+        // New Model compatibility
+        setActionsAssigned(assigned: boolean): void {
+            this._actionsAssigned = assigned;
+        },
+
+        // New Model compatibility
+        getEditingConfig(): IEditingConfig {
+            return this._options.editingConfig;
+        },
+
+        // New Model compatibility
+        getActionsTemplateConfig(): IItemActionsTemplateConfig {
+            return this._actionsTemplateConfig;
+        },
+
+        // New Model compatibility
+        setActionsTemplateConfig(config: IItemActionsTemplateConfig): void {
+            if (!isEqual(this._actionsTemplateConfig, config)) {
+                this._actionsTemplateConfig = config;
+                this._nextVersion();
+            }
+        },
+
+        // New Model compatibility
+        getActionsMenuConfig(): any {
+            return this._actionsMenuConfig;
+        },
+
+        // New Model compatibility
+        setActionsMenuConfig(config: any): void {
+            this._actionsMenuConfig = config;
+        },
+
+        // New Model compatibility
+        setSwipeConfig(config: ISwipeConfig): void {
+            if (!isEqual(this._swipeConfig, config)) {
+                this._swipeConfig = config;
+                this._nextVersion();
+            }
+        },
+
+        // New Model compatibility
+        getSwipeConfig(): ISwipeConfig {
+            return this._swipeConfig;
+        },
+
+        // New Model compatibility
+        setSwipeAnimation(animation: ANIMATION_STATE): void {
+            this._getActionsSwipeAnimation = animation;
+        },
+
+        // New Model compatibility
+        getSwipeAnimation(): ANIMATION_STATE {
+            return this._getActionsSwipeAnimation;
+        },
+
+        // New Model compatibility
+        each(callback: collection.EnumeratorCallback<Model>, context?: object): void {
+            this._model.each(callback, context);
+        },
+
+        // New Model compatibility
+        find(predicate: (item: Model) => boolean): Model {
+            return this._model.find(predicate);
+        },
+
+        // New Model compatibility
+        getSourceIndexByItem(item: Model): number {
+            return this._model ? this._model.getSourceIndexByItem(item) : undefined;
+        },
+
+        // New Model compatibility
+        getIndexBySourceItem(item: Model): number | string {
+            return this._model ? this._model.getIndexBySourceItem(item) : undefined;
+        },
+
+        at(index: number): Model {
             return this._model.at(index);
         },
 

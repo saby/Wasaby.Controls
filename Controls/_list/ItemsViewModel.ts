@@ -200,16 +200,6 @@ var ItemsViewModel = BaseViewModel.extend({
         return this.getItemDataByItem(dispItem);
     },
 
-    // New Model compatibility
-    each(callback: collection.EnumeratorCallback<Record>, context?: object): void {
-        this._display.each(callback, context);
-    },
-
-    // New Model compatibility
-    find(predicate: (item: Model) => boolean): Model {
-        return this._display.find(predicate);
-    },
-
     setKeyProperty(keyProperty: string): void {
         this._options.keyProperty = keyProperty;
     },
@@ -598,6 +588,16 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     // New Model compatibility
+    each(callback: collection.EnumeratorCallback<Record>, context?: object): void {
+        this._display.each(callback, context);
+    },
+
+    // New Model compatibility
+    find(predicate: (item: Model) => boolean): Model {
+        return this._display.find(predicate);
+    },
+
+    // New Model compatibility
     getSourceIndexByItem(item: Model): number {
         return this._display ? this._display.getSourceIndexByItem(item) : undefined;
     },
@@ -607,7 +607,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return this._display ? this._display.getIndexBySourceItem(item) : undefined;
     },
 
-    at: function(index) {
+    at(index: number): Model {
         return this._display ? this._display.at(index) : undefined;
     },
 

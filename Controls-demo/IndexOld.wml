@@ -1,6 +1,6 @@
 <div>
    <div class="demo_controls_list_wrapper demo_controls_list_section">
-      <Controls.input:Text attr:class="Controls-demo_router-input" bind:value="_urlToGo" placeholder="Относительный путь роутера:"/>
+      <Controls.input:Text attr:class="Controls-demo_router-input" on:inputCompleted="_openRelativePath()" bind:value="_urlToGo" placeholder="Относительный путь роутера:"/>
       <Controls.buttons:Button on:click="_openRelativePath()" caption="Открыть" />
    </div>
    <div class="demo_controls_list_wrapper">

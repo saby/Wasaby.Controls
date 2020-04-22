@@ -8,6 +8,7 @@ import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
+import { Model } from 'Types/entity';
 import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
@@ -691,18 +692,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
       return item;
     },
 
-    /**
-     * New Model compatibility
-     * @param key
-     */
-    getItemBySourceKey(key) {
+    // New Model compatibility
+    getItemBySourceKey(key: number | string): Model {
         return this.getItemById(key, this._options.keyProperty);
     },
 
-    /**
-     * New Model compatibility
-     */
-    nextVersion() {
+    // New Model compatibility
+    nextVersion(): void {
         this._nextVersion();
     },
 
