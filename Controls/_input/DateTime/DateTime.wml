@@ -14,7 +14,7 @@
                 placeholder="{{_options.placeholder}}"
                 tagStyle="{{ _options.tagStyle }}"
                 style="{{_options.style}}"
-                validationErrors="{{_options.validationErrors}}"
+                validationStatus="{{_options.validationStatus}}"
                 tooltip="{{_options.tooltip}}"
                 formatMaskChars="{{_formatMaskChars}}"
                 on:valueChanged="_valueChangedHandler()"
