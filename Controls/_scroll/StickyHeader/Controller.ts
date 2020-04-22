@@ -1,9 +1,8 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_scroll/StickyHeader/Controller/Controller');
-import {TRegisterEventData} from './Utils';
+import {POSITION, TRegisterEventData, TYPE_FIXED_HEADERS, IFixedEventData} from './Utils';
 import StickyHeader, {SHADOW_VISIBILITY} from 'Controls/_scroll/StickyHeader/_StickyHeader';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
-import {POSITION} from 'Controls/_scroll/StickyHeader/Utils';
 
 // @ts-ignore
 
@@ -22,15 +21,13 @@ class Component extends Control {
     private _headersStack: object;
     // The list of headers that are stuck at the moment.
     private _fixedHeadersStack: object;
-    private _shadowVisibleStack: {
-        top: IShadowVisible,
-        bottom: IShadowVisible
-    };
     // Если созданный заголвок невидим, то мы не можем посчитать его позицию.
     // Учтем эти заголовки после ближайшего события ресайза.
     private _delayedHeaders: TRegisterEventData[] = [];
     private _stickyControllerMounted: boolean = false;
     private _updateTopBottomInitialized: boolean = false;
+
+    private _headersHeight;
 
     _beforeMount(options) {
         this._headersStack = {
@@ -40,10 +37,6 @@ class Component extends Control {
         this._fixedHeadersStack = {
             top: [],
             bottom: []
-        };
-        this._shadowVisibleStack = {
-            top: {},
-            bottom: {}
         };
         this._headers = {};
     }
@@ -59,14 +52,14 @@ class Component extends Control {
     }
 
     /**
-     * Returns the tru if there is at least one fixed header.
+     * Returns the true if there is at least one fixed header.
      * @param position
      */
-    hasFixed(position: string): boolean {
+    hasFixed(position: POSITION): boolean {
         return !!this._fixedHeadersStack[position].length;
     }
 
-    hasShadowVisible(position: string): boolean {
+    hasShadowVisible(position: POSITION): boolean {
         const fixedHeaders = this._fixedHeadersStack[position];
         for (const id of fixedHeaders) {
             if (this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
@@ -77,20 +70,33 @@ class Component extends Control {
         return false;
     }
 
-    getHeadersHeight(position: string): number {
+    /**
+     * Возвращает высоты заголовков.
+     * @function
+     * @param {POSITION} [position] Высоты заголовков сверху/снизу
+     * @param {TYPE_FIXED_HEADERS} [type]
+     * @returns {Number}
+     */
+    getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
+        // type, предпологается, в будущем будет иметь еще одно значение, при котором будет высчитываться
+        // высота всех зафиксированных на текущий момент заголовков.
         let
             height: number = 0,
             replaceableHeight: number = 0,
             header;
-        for (let headerId of this._fixedHeadersStack[position]) {
-            const ignoreHeight: boolean = !this._shadowVisibleStack[position][headerId];
+        const headers = type === TYPE_FIXED_HEADERS.allFixed ? this._headersStack : this._fixedHeadersStack;
+        for (let headerId of headers[position]) {
+            header = this._headers[headerId];
+
+            const ignoreHeight: boolean = type === TYPE_FIXED_HEADERS.initialFixed &&
+                                            header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden;
             if (ignoreHeight) {
                 continue;
             }
-            header = this._headers[headerId];
+
             // If the header is "replaceable", we take into account the last one after all "stackable" headers.
             if (header.mode === 'stackable') {
-                if (header.fixedInitially) {
+                if (header.fixedInitially || type === TYPE_FIXED_HEADERS.allFixed) {
                     height += header.inst.height;
                 }
                 replaceableHeight = 0;
@@ -140,22 +146,19 @@ class Component extends Control {
      * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} fixedHeaderData
      * @private
      */
-    _fixedHandler(event, fixedHeaderData) {
+    _fixedHandler(event, fixedHeaderData: IFixedEventData) {
         event.stopImmediatePropagation();
-        this._updateFixationState(fixedHeaderData);
-        if (fixedHeaderData.fixedPosition) {
-            this._shadowVisibleStack[fixedHeaderData.fixedPosition][fixedHeaderData.id] = fixedHeaderData.shadowVisible;
-        } else if (fixedHeaderData.prevPosition) {
-            delete this._shadowVisibleStack[fixedHeaderData.prevPosition][fixedHeaderData.id];
+        const isFixationUpdated = this._updateFixationState(fixedHeaderData);
+        this._notify('fixed', [this.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.initialFixed), this.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.initialFixed)]);
+        if (!isFixationUpdated) {
+            return;
         }
-        this._notify('fixed', [this.getHeadersHeight('top'), this.getHeadersHeight('bottom')]);
-
         // If the header is single, then it makes no sense to send notifications.
         // Thus, we prevent unnecessary force updates on receiving messages.
         if (fixedHeaderData.fixedPosition && this._fixedHeadersStack[fixedHeaderData.fixedPosition].length === 1) {
             return;
         }
-        this._children.stickyHeaderShadow.start([
+        this._children.stickyFixed.start([
             this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
             this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
         ]);
@@ -209,6 +212,7 @@ class Component extends Control {
             this._updateFixedInitially('top');
             this._updateFixedInitially('bottom');
             this._updateTopBottom();
+            this._headersHeight = this.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.allFixed);
             this._clearOffsetCache();
         }
 
@@ -219,13 +223,20 @@ class Component extends Control {
      * Update information about the fixation state.
      * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
      */
-    private _updateFixationState(data: TRegisterEventData) {
-        if (!!data.fixedPosition) {
+    private _updateFixationState(data: IFixedEventData) {
+        let isFixationUpdated = false;
+        if (!!data.fixedPosition && !data.isFakeFixed) {
             this._fixedHeadersStack[data.fixedPosition].push(data.id);
+            isFixationUpdated = true;
         }
-        if (!!data.prevPosition && this._fixedHeadersStack[data.prevPosition].indexOf(data.id) !== -1) {
-            this._fixedHeadersStack[data.prevPosition].splice(this._fixedHeadersStack[data.prevPosition].indexOf(data.id), 1);
+        if (!!data.prevPosition) {
+            const positionInGroup = this._fixedHeadersStack[data.prevPosition].indexOf(data.id);
+            if (positionInGroup !== -1 && !data.isFakeFixed) {
+                this._fixedHeadersStack[data.prevPosition].splice(positionInGroup, 1);
+                isFixationUpdated = true;
+            }
         }
+        return isFixationUpdated;
     }
 
     /**

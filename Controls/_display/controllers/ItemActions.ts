@@ -3,6 +3,7 @@ import { IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig } from '../Col
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
 import {Memory} from 'Types/source';
+import rk = require('i18n!Controls');
 
 // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
 const showType = {
@@ -487,6 +488,7 @@ function _wrapActionsInContainer(
                 icon: `icon-ExpandDown ${ITEM_ACTION_ICON_CLASS}`,
                 style: 'secondary',
                 iconStyle: 'secondary',
+                title: rk('Ещё'),
                 _isMenu: true
             });
         }

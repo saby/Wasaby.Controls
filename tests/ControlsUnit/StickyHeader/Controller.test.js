@@ -58,7 +58,7 @@ define([
 
       beforeEach(function() {
          component = createComponent(scroll._stickyHeaderController, {});
-         component._children.stickyHeaderShadow = {
+         component._children.stickyFixed = {
             start: sinon.fake()
          };
          component._container = {
@@ -318,13 +318,15 @@ define([
                   id: 'sticky1',
                   fixedPosition: 'top',
                   prevPosition: '',
-                  shadowVisible: true
+                  shadowVisible: true,
+                  isFakeFixed: false
                });
                component._fixedHandler(event, {
                   id: 'sticky1',
                   fixedPosition: 'bottom',
                   prevPosition: 'top',
-                  shadowVisible: true
+                  shadowVisible: true,
+                  isFakeFixed: false
                });
 
                assert.isEmpty(component._fixedHeadersStack.top);
@@ -370,7 +372,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.notCalled(component._children.stickyHeaderShadow.start);
+               sinon.assert.notCalled(component._children.stickyFixed.start);
                component._fixedHandler(event, {
                   id: 'sticky2',
                   fixedPosition: 'top',
@@ -379,7 +381,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.called(component._children.stickyHeaderShadow.start);
+               sinon.assert.called(component._children.stickyFixed.start);
                component._fixedHandler(event, {
                   id: 'sticky3',
                   fixedPosition: 'top',
@@ -388,7 +390,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.called(component._children.stickyHeaderShadow.start);
+               sinon.assert.called(component._children.stickyFixed.start);
             });
             it('Should not notify new state if one header registered', function() {
                component._fixedHandler(event, {
@@ -398,7 +400,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.notCalled(component._children.stickyHeaderShadow.start);
+               sinon.assert.notCalled(component._children.stickyFixed.start);
             });
          });
       });
@@ -410,11 +412,15 @@ define([
          it('should return the correct height without registred headers.', function () {
             assert.equal(component.getHeadersHeight('top'), 0);
             assert.equal(component.getHeadersHeight('bottom'), 0);
+            assert.equal(component.getHeadersHeight('top', 'allFixed'), 0);
+            assert.equal(component.getHeadersHeight('bottom', 'allFixed'), 0);
          });
          it('should return the correct height after a new header has been registered.', function () {
             return component._stickyRegisterHandler(event, data, true).then(function() {
                assert.equal(component.getHeadersHeight('top'), 0);
                assert.equal(component.getHeadersHeight('bottom'), 0);
+               assert.equal(component.getHeadersHeight('top', 'allFixed'), 0);
+               assert.equal(component.getHeadersHeight('bottom', 'allFixed'), 0);
             });
          });
          it('should return the correct height after a new replaceable header has been registered and fixed.', function () {
@@ -429,6 +435,8 @@ define([
                });
                assert.equal(component.getHeadersHeight('top'), 10);
                assert.equal(component.getHeadersHeight('bottom'), 0);
+               assert.equal(component.getHeadersHeight('top', 'allFixed'), 10);
+               assert.equal(component.getHeadersHeight('bottom', 'allFixed'), 0);
             });
          });
 
@@ -453,10 +461,13 @@ define([
                   fixedPosition: 'top',
                   prevPosition: '',
                   height: 10,
-               shadowVisible: true
+                  shadowVisible: true
+               });
+               assert.equal(component.getHeadersHeight('top'), 0);
+               assert.equal(component.getHeadersHeight('bottom'), 0);
+               assert.equal(component.getHeadersHeight('top', 'allFixed'), 10);
+               assert.equal(component.getHeadersHeight('bottom', 'allFixed'), 0);
             });
-            assert.equal(component.getHeadersHeight('top'), 0);
-            assert.equal(component.getHeadersHeight('bottom'), 0);});
          });
 
          it('should return the correct height after a new stackable header has been registered and fixed.', function () {
@@ -471,6 +482,8 @@ define([
                });
                assert.equal(component.getHeadersHeight('top'), 10);
                assert.equal(component.getHeadersHeight('bottom'), 0);
+               assert.equal(component.getHeadersHeight('top', 'allFixed'), 10);
+               assert.equal(component.getHeadersHeight('bottom', 'allFixed'), 0);
             });
          });
       });

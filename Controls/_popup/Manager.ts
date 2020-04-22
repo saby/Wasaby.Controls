@@ -141,7 +141,7 @@ class Manager extends Control<IManagerOptions> {
             return new Promise((resolve) => {
                 this._closeChilds(item).then(() => {
                     this._finishPendings(id, null, null, () => {
-                        this._removeElement(item, itemContainer, id).then(() => {
+                        this._removeElement(item, itemContainer).then(() => {
                             resolve();
                             const parentItem = this.find(item.parentId);
                             this._closeChildHandler(parentItem);
@@ -263,13 +263,13 @@ class Manager extends Control<IManagerOptions> {
         }
     }
 
-    private _removeElement(item: IPopupItem, container: HTMLElement, id: string): Promise<void> {
+    private _removeElement(item: IPopupItem, container: HTMLElement): Promise<void> {
         const removeDeferred = item.controller._elementDestroyed(item, container);
         this._redrawItems();
 
         this._notify('managerPopupBeforeDestroyed', [item, this._popupItems, container], {bubbling: true});
         return removeDeferred.addCallback(() => {
-            this._fireEventHandler(id, 'onClose');
+            this._fireEventHandler(item, 'onClose');
             this._popupItems.remove(item);
             this._removeFromParentConfig(item);
 
@@ -317,7 +317,7 @@ class Manager extends Control<IManagerOptions> {
         const item = this.find(id);
         if (item) {
             // Register new popup
-            this._fireEventHandler(id, 'onOpen');
+            this._fireEventHandler(item, 'onOpen');
             this._prepareIsTouchData(item);
             item.controller._elementCreated(item, this._getItemContainer(id));
             // if it's CompoundTemplate, then compoundArea notify event, when template will ready.
@@ -504,7 +504,13 @@ class Manager extends Control<IManagerOptions> {
 
     protected _popupResult(id: string): boolean {
         const args = Array.prototype.slice.call(arguments, 1);
-        return this._fireEventHandler.apply(this, [id, 'onResult'].concat(args));
+        // Окно уничтожается из верстки за счет удаления конфигурации из массива, по которому строятся окна.
+        // В этом случае вызов unmount дочерних контролов произойдет после того, как конфига с окном в списке не будет.
+        // Поэтому если на beforeUnmount пронотифаят sendResult, то мы его не обработаем, т.к. не найдем конфиг окна.
+        // Поэтому достаю опции не из массива, а из самого инстанса, который в этом случае находится в состоянии
+        // анмаунта, но еще не удален.
+        const popup = this._getPopupContainer().getPopupById(id);
+        this._callEvents(popup?._options, 'onResult', args);
     }
 
     protected _popupClose(id: string): boolean {
@@ -520,19 +526,19 @@ class Manager extends Control<IManagerOptions> {
         return false;
     }
 
-    private _fireEventHandler(id: string, event: string): boolean {
-        const item = this._findItemById(id);
-        const args = Array.prototype.slice.call(arguments, 2);
+    private _fireEventHandler(item: IPopupItem, event: string): boolean {
         if (item) {
-            if (item.popupOptions._events) {
-                item.popupOptions._events[event](event, args);
-            }
-            if (item.popupOptions.eventHandlers && typeof item.popupOptions.eventHandlers[event] === 'function') {
-                item.popupOptions.eventHandlers[event].apply(item.popupOptions, args);
-                return true;
-            }
+            this._callEvents(item.popupOptions, event);
         }
-        return false;
+    }
+
+    private _callEvents(options: IPopupOptions = {}, event: string, args: unknown[] = []): boolean {
+        if (options._events) {
+            options._events[event](event, args);
+        }
+        if (options.eventHandlers && typeof options.eventHandlers[event] === 'function') {
+            options.eventHandlers[event].apply(options, args);
+        }
     }
 
     private _getItemContainer(id: string): HTMLElement {

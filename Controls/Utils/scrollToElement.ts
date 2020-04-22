@@ -1,5 +1,6 @@
 import cInstance = require('Core/core-instance');
 import getDimensions = require('Controls/Utils/getDimensions');
+import {POSITION, TYPE_FIXED_HEADERS} from 'Controls/_scroll/StickyHeader/Utils';
 
 function getScrollableParents(element: HTMLElement): HTMLElement[] {
    let
@@ -43,8 +44,8 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
       for (let component of scrollableElement.controlNodes) {
          if (cInstance.instanceOfModule(component.control, 'Controls/scroll:_stickyHeaderController')) {
             return {
-               top: component.control.getHeadersHeight('top'),
-               bottom: component.control.getHeadersHeight('bottom')
+               top: component.control.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.initialFixed),
+               bottom: component.control.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.initialFixed)
             }
          }
       }

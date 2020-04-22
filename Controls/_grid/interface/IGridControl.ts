@@ -119,7 +119,7 @@
  *       <ws:header>
  *          <ws:Array>
  *              <ws:template>
- *                  <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *                  <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__cell_spacing_money" colData="{{colData}}" />
  *              </ws:template>
  *          </ws: Array>
  *       </ws:header>
@@ -173,7 +173,7 @@
  * @example
  * Add header text spacing for columns with money fields:
  * <pre>
- *    <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}" />
+ *    <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__cell_spacing_money" colData="{{colData}}" />
  * </pre>
  */
 

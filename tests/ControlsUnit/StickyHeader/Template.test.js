@@ -168,7 +168,7 @@ define(
 
             it('The header is fixed, but there should be no shadow', function() {
                inst._context.stickyHeader.shadowPosition = 'top';
-               inst._shadowVisible = true;
+               inst._isFixed = true;
                inst._model.fixedPosition = 'top';
                inst._options.fixedZIndex = 1;
                inst._options.content = TemplateUtil.content;
@@ -188,7 +188,7 @@ define(
 
             it('The header is fixed, the shadow should be', function() {
                inst._context.stickyHeader.shadowPosition = 'bottom';
-               inst._shadowVisible = true;
+               inst._isFixed = true;
                inst._model.fixedPosition = 'bottom';
                inst._options.fixedZIndex = 2;
                inst._options.position = 'bottom';
