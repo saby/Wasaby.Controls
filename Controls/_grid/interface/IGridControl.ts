@@ -327,6 +327,7 @@
  * @default true
  */
 
+// TODO: Удалить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
 /**
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена. Используйте {@link Controls/_heading/Counter#fontColorStyle}.

@@ -34,6 +34,7 @@ interface IGridSeparatorOptions {
     columnSeparatorSize?: null | 's';
 }
 
+// TODO: Удалить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
 interface IGridSeparatorOptionsDeprecated {
     rowSeparatorVisibility?: 'visible' | 'hidden' | boolean;
 }
@@ -454,6 +455,10 @@ var
             });
         },
 
+        // TODO: Исправить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
+        // Оставить просто
+        // options.rowSeparatorSize && options.rowSeparatorSize.toLowerCase() || null,
+        // options.columnSeparatorSize && options.columnSeparatorSize.toLowerCase() || null
         getSeparatorSizes(options: Partial<IGridSeparatorOptions & IGridSeparatorOptionsDeprecated>): {
             row: IGridSeparatorOptions['rowSeparatorSize'],
             column: IGridSeparatorOptions['columnSeparatorSize']
@@ -1646,6 +1651,7 @@ var
             this._model.setRightSwipedItem(itemData);
         },
 
+        // TODO: Исправить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
         setRowSeparatorVisibility: function(rowSeparatorVisibility) {
             this._options.rowSeparatorVisibility = rowSeparatorVisibility;
             this._nextModelVersion();
