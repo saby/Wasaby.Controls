@@ -65,7 +65,7 @@
             <span>Зафиксированный календарь: </span>
             <Controls.dateRange:RangeSelector
                     minRange="month"
-                    attr:test_name="default_range"
+                    attr:test_name="default_range_fix"
                     _displayDate="{{_displayDateBind}}"
             />
          </div>
