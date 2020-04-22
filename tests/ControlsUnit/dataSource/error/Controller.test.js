@@ -3,12 +3,14 @@ define([
    'Controls/dataSource',
    'Env/Env',
    'Browser/Transport',
-   'Types/entity'
+   'Types/entity',
+   'UI/Utils'
 ], function(
    dataSource,
    Env,
    Transport,
-   { PromiseCanceledError }
+   { PromiseCanceledError },
+   { Logger }
 ) {
    describe('Controls/dataSource:error.Controller', function() {
       const Controller = dataSource.error.Controller;
@@ -86,6 +88,7 @@ define([
          beforeEach(function() {
             createController();
             error = new Error('test error');
+            sinon.stub(Logger, 'error');
          });
 
          afterEach(function() {
@@ -226,7 +229,9 @@ define([
                   mode: result.mode,
                   template: result.template,
                   options: result.options
-               });
+               }, 'viewConfig');
+
+               assert.isTrue(Logger.error.calledTwice, 'all handler errors were logged');
 
                return Promise.all(handlerPromises);
             });
