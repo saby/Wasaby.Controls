@@ -509,7 +509,7 @@ const _private = {
       }
 
       /**
-       * Контрол используют в качестве контроллера, который позволяет фильтровать данные в {@link Controls/list:View}, используя {@link Controls/filter:Selector} или {@link Controls/filter:Fast}.
+       * Контрол используют в качестве контроллера, который позволяет фильтровать данные в {@link Controls/list:View}, используя {@link Controls/filter:View}.
        * Контроллер позволяет сохранять историю фильтра и восстанавливать страницу после перезагрузки с последним примененным фильтром.
        * @remark
        * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
@@ -525,7 +525,7 @@ const _private = {
        */
 
       /*
-       * The filter controller allows you to filter data in a {@link Controls/list:View} using {@link Filter/Button} or {@link Filter/Fast}.
+       * The filter controller allows you to filter data in a {@link Controls/list:View} using {@link Controls/filter:View}.
        * The filter controller allows you to save filter history and restore page after reload with last applied filter.
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
