@@ -222,6 +222,20 @@ define([
             });
          });
 
+         it('should remove header from delayedHeaders when its unregister', function () {
+            let event = {
+                   blockUpdate: false,
+                   stopImmediatePropagation: sinon.fake()
+                },
+                data = getRegisterObject({position: 'top'});
+
+            component._headers[data.id] = data;
+            component._delayedHeaders[0] = data;
+            return component._stickyRegisterHandler(event, data, false).then(function() {
+               assert.equal(component._delayedHeaders.length, 0);
+            });
+         });
+
          it('should insert header in proper position', function() {
             component._afterMount({});
             return Promise.all([0, 20, 10].map(function(offset, index) {
