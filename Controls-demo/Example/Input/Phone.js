@@ -11,7 +11,7 @@ define('Controls-demo/Example/Input/Phone',
       'use strict';
 
       return Control.extend([SetValueMixin], {
-         _template: template
+         _template: template,
          _styles: ['Controls-demo/Example/resource/Base'],
       });
    });

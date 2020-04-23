@@ -5,7 +5,7 @@ define('Controls-demo/progress/Barfortest', [
 
    var Index = Control.extend(
       {
-         _template: template
+         _template: template,
          _styles: ['Controls-demo/progress/Barfortest'],
 
       });

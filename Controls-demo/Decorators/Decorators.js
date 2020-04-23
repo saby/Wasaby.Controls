@@ -13,7 +13,7 @@ define('Controls-demo/Decorators/Decorators',
       'use strict';
 
       return Control.extend({
-         _template: template
+         _template: template,
          _styles: ['Controls-demo/Decorators/Decorators'],
       })
    }

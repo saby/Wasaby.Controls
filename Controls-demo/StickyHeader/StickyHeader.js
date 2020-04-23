@@ -10,7 +10,7 @@ define('Controls-demo/StickyHeader/StickyHeader',
       'use strict';
 
       var StickyHeader = Control.extend({
-         _template: template
+         _template: template,
          _styles: ['Controls-demo/StickyHeader/StickyHeader'],
       });
 

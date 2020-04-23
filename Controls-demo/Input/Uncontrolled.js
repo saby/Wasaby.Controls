@@ -9,7 +9,7 @@ define('Controls-demo/Input/Uncontrolled',
       'use strict';
 
       return Base.Control.extend({
-         _template: template
+         _template: template,
          _styles: ['Controls-demo/Input/Uncontrolled/Uncontrolled'],
       });
    });
