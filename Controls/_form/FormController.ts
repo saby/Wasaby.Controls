@@ -292,7 +292,10 @@ class FormController extends Control<IFormController, IReceivedState> {
         // снизу (редактирование закрывает пендинг).
         // надо делать так, чтобы редактирование только на свой пендинг влияло
         // https://online.sbis.ru/opendoc.html?guid=78c34d53-8705-4e25-bbb5-0033e81d6152
-        this._tryDeleteNewRecord();
+        if (this._needDestroyRecord()) {
+            const removePromise = this._tryDeleteNewRecord();
+            this._notifyToOpener('deletestarted', [this._record, this._getRecordId(), {removePromise}]);
+        }
     }
 
 
@@ -566,7 +569,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                 });
             } else {
                 // если были ошибки валидации, уведомим о них
-                const validationErrors = this._children.validation.isValid();
+                const validationErrors = this._children.validation.getValidationResult();
                 this._notify('validationFailed', [validationErrors], {bubbling: true});
                 updateDef.callback({
                     data: {
@@ -675,6 +678,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             'updatesuccessed': '_getUpdateSuccessedData',
             'createsuccessed': '_getCreateSuccessedData',
             'readsuccessed': '_getReadSuccessedData',
+            'deletestarted': '_getDeleteStartedData',
             'deletesuccessed': '_getDeleteSuccessedData',
             'updatefailed': '_getUpdateFailedData'
         };
@@ -699,6 +703,10 @@ class FormController extends Control<IFormController, IReceivedState> {
             ...configData
         };
         return this._getResultData('update', record, additionalData);
+    }
+
+    private _getDeleteStartedData(record: Model, key: string, config: object): IResultData {
+        return this._getResultData('deletestarted', record, config);
     }
 
     private _getDeleteSuccessedData(record: Model): IResultData {

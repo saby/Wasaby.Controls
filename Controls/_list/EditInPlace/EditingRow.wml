@@ -1,7 +1,7 @@
-<ws:partial attr:class="controls-DragNDrop__notDraggable"
+<ws:partial attr:class="controls-DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable"
             template="{{_options.content}}"
             scope="{{_options}}"
-            on:click="_onClickHandler()"
-            on:itemClick="_onClickHandler()"
-            on:mousedown="_onClickHandler()"
+            on:click="_stopMouseEvent()"
+            on:itemClick="_stopMouseEvent()"
+            on:mouseup="_stopMouseEvent()"
             on:keyDown="_onKeyDown()" />

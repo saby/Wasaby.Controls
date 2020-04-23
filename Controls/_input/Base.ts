@@ -665,7 +665,7 @@ var Base = Control.extend({
      * @param {Object} options Control options.
      * @protected
      */
-    _initProperties: function () {
+    _initProperties: function (options) {
         /**
          * Init the name of the control and to pass it to the templates.
          * Depending on it, classes will be generated. An example of class is controls-{{controlsName}}...
@@ -690,12 +690,12 @@ var Base = Control.extend({
                 controlName: CONTROL_NAME
             }
         };
-        this._beforeFieldWrapper = {
-            template: null,
+        this._leftFieldWrapper = {
+            template: options.leftFieldTemplate,
             scope: {}
         };
-        this._afterFieldWrapper = {
-            template: null,
+        this._rightFieldWrapper = {
+            template: options.rightFieldTemplate,
             scope: {}
         };
 

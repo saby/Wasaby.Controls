@@ -259,8 +259,8 @@ class ValidateContainer extends Control {
      * @see setValidationResult
      * @see validate
      */
-    isValid(): ValidResult {
-        return this._validationResult;
+    isValid(): boolean {
+        return !this._validationResult;
     }
 
     //todo: временный метод для корректного перехода у прикладников на isValid(): boolean
@@ -307,7 +307,7 @@ class ValidateContainer extends Control {
     }
 
     _mouseLeaveHandler(): void {
-        if (this.isValid()) {
+        if (!this.isValid()) {
             _private.closeInfoBox(this);
         }
     }

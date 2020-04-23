@@ -94,6 +94,21 @@ export default interface IResultColumnTemplateOptions {
      *    </ws:columns>
      * </Controls.grid:View>
      * </pre>
+     * 
+     * **Пример 4.** Конфигурация ячейки для выравнивания контента по копейкам. На шаблон добавлен CSS-класс "controls-Grid__cell_spacing_money".
+     * <pre class="brush: html; highlight: [6]">
+     * <Controls.grid:View>
+     *    <ws:columns>
+     *       <ws:Array>
+     *          <ws:Object displayProperty="Name">
+     *             <ws:resultsTemplate>
+     *                <ws:partial template="Controls/grid:ResultColumnTemplate" attr:class="controls-Grid__cell_spacing_money" />
+     *             </ws:resultsTemplate>
+     *          </ws:Object>
+     *       </ws:Array>
+     *    </ws:columns>
+     * </Controls.grid:View>
+     * </pre>
      */
     content?: string;
 

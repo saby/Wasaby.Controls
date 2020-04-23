@@ -61,11 +61,7 @@ var _private = {
     },
 
     getItemsKeys: function (items) {
-        var keys = [];
-        items.forEach(function (item) {
-            keys.push(item.getId());
-        });
-        return keys;
+        return items.map((item => item.getId()));
     },
 
     isAllSelected(self, selectedKeys, excludedKeys): boolean {
@@ -120,9 +116,10 @@ var _private = {
         const selectedKeys = this._options.selectedKeys;
         const excludedKeys = this._options.excludedKeys;
         const items = this._options.items;
+        const isEmptySelection = !selectedKeys.length && !excludedKeys.length;
         let needChangeSelection = true;
 
-        if (typeName === 'selectAll' && !selectedKeys.length && !excludedKeys.length && !items.getCount()) {
+        if ((typeName === 'selectAll' || typeName === 'toggleAll') && isEmptySelection && !items.getCount()) {
             needChangeSelection = false;
         }
 

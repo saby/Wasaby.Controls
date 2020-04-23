@@ -98,10 +98,10 @@ var Password = Base.extend({
 
         this._type = _private.calculateType(this._passwordVisible, _private.isAutoComplete(this._autoComplete));
 
-        this._afterFieldWrapper.template = passwordVisibilityButtonTemplate;
-        this._afterFieldWrapper.scope.getTheme = _private.getTheme.bind(this);
-        this._afterFieldWrapper.scope.isVisibleButton = _private.isVisibleButton.bind(this);
-        this._afterFieldWrapper.scope.isVisiblePassword = _private.isVisiblePassword.bind(this);
+        this._rightFieldWrapper.template = passwordVisibilityButtonTemplate;
+        this._rightFieldWrapper.scope.getTheme = _private.getTheme.bind(this);
+        this._rightFieldWrapper.scope.isVisibleButton = _private.isVisibleButton.bind(this);
+        this._rightFieldWrapper.scope.isVisiblePassword = _private.isVisiblePassword.bind(this);
     },
 
     _getTooltip: function () {

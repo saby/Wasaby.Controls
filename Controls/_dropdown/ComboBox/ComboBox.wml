@@ -36,11 +36,11 @@
               on:tagHover="_notifyHandler('tagHover')"
               placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
               attr:class="controls-ComboBox-InputRender {{_isOpen ? 'controls-Popup__isolatedFocusingContext'}}">
-         <ws:afterFieldWrapper>
+         <ws:rightFieldWrapper>
             <span if="{{!_options.readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
                <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_isOpen ? 'CollapseLight' : 'ExpandLight'}}"></span>
             </span>
-         </ws:afterFieldWrapper>
+         </ws:rightFieldWrapper>
 
       </Controls._dropdown.ComboBox.InputRender>
    </ws:content>

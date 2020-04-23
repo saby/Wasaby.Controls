@@ -58,7 +58,7 @@ define([
 
       beforeEach(function() {
          component = createComponent(scroll._stickyHeaderController, {});
-         component._children.stickyHeaderShadow = {
+         component._children.stickyFixed = {
             start: sinon.fake()
          };
          component._container = {
@@ -222,6 +222,20 @@ define([
             });
          });
 
+         it('should remove header from delayedHeaders when its unregister', function () {
+            let event = {
+                   blockUpdate: false,
+                   stopImmediatePropagation: sinon.fake()
+                },
+                data = getRegisterObject({position: 'top'});
+
+            component._headers[data.id] = data;
+            component._delayedHeaders[0] = data;
+            return component._stickyRegisterHandler(event, data, false).then(function() {
+               assert.equal(component._delayedHeaders.length, 0);
+            });
+         });
+
          it('should insert header in proper position', function() {
             component._afterMount({});
             return Promise.all([0, 20, 10].map(function(offset, index) {
@@ -318,13 +332,15 @@ define([
                   id: 'sticky1',
                   fixedPosition: 'top',
                   prevPosition: '',
-                  shadowVisible: true
+                  shadowVisible: true,
+                  isFakeFixed: false
                });
                component._fixedHandler(event, {
                   id: 'sticky1',
                   fixedPosition: 'bottom',
                   prevPosition: 'top',
-                  shadowVisible: true
+                  shadowVisible: true,
+                  isFakeFixed: false
                });
 
                assert.isEmpty(component._fixedHeadersStack.top);
@@ -370,7 +386,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.notCalled(component._children.stickyHeaderShadow.start);
+               sinon.assert.notCalled(component._children.stickyFixed.start);
                component._fixedHandler(event, {
                   id: 'sticky2',
                   fixedPosition: 'top',
@@ -379,7 +395,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.called(component._children.stickyHeaderShadow.start);
+               sinon.assert.called(component._children.stickyFixed.start);
                component._fixedHandler(event, {
                   id: 'sticky3',
                   fixedPosition: 'top',
@@ -388,7 +404,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.called(component._children.stickyHeaderShadow.start);
+               sinon.assert.called(component._children.stickyFixed.start);
             });
             it('Should not notify new state if one header registered', function() {
                component._fixedHandler(event, {
@@ -398,7 +414,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               sinon.assert.notCalled(component._children.stickyHeaderShadow.start);
+               sinon.assert.notCalled(component._children.stickyFixed.start);
             });
          });
       });
