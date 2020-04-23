@@ -46,7 +46,7 @@ export default class ListWithoutMarker extends Control<IControlOptions> {
     protected _panelItemClick(event: SyntheticEvent, item: Model, nativeEvent: Event, selection: object): void {
         const itemId = item.get('id');
 
-        if (itemId !== UNLOAD_OPERATION_KEY || this._children.baseAction.validate(selection)) {
+        if (itemId !== UNLOAD_OPERATION_KEY && this._children.baseAction.validate(selection)) {
             switch (itemId) {
                 case 'PDF':
                 case 'Excel':
