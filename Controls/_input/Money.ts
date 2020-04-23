@@ -191,6 +191,10 @@ class Money extends Base implements INumberLength {
     }
 
     private static calcStartFractionPart(value: string, precision: number): number {
+        if (precision < 1) {
+            return value.length;
+        }
+
         const splitterLength = 1;
 
         return value.length - precision - splitterLength;
