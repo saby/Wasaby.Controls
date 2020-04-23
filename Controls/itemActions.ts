@@ -22,6 +22,7 @@ export {
     IItemActionsContainer,
     IMenuActionHandler,
     IMenuConfig,
-    IItemAction
+    IItemAction,
+    TItemActionShowType
 } from './_itemActions/interface/IItemActions';
 export {ItemActionsController} from './_itemActions/ItemActionsController';

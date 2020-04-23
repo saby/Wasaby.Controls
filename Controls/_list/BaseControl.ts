@@ -2059,12 +2059,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (newOptions.markedKey !== this._options.markedKey) {
-            if (newOptions.useNewModel) {
-                const markCommand = new MarkerCommands.Mark(newOptions.markedKey);
-                markCommand.execute(this._listViewModel);
-            } else {
-                this._listViewModel.setMarkedKey(newOptions.markedKey, true);
-            }
+            _private.setMarkedKey(this, newOptions.markedKey);
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
@@ -2528,12 +2523,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const canBeMarked = this._mouseDownItemKey === key && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
 
         if (canBeMarked) {
-            if (this._options.useNewModel) {
-                const markCommand = new MarkerCommands.Mark(key);
-                markCommand.execute(this._listViewModel);
-            } else {
-                this._listViewModel.setMarkedKey(key);
-            }
+            _private.setMarkedKey(this, key);
         }
         this._mouseDownItemKey = undefined;
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);

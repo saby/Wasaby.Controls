@@ -3,6 +3,15 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {ISource} from 'Controls/interface';
 
+export enum TItemActionShowType {
+    // show only in Menu
+    MENU,
+    // show in Menu and Toolbar
+    MENU_TOOLBAR,
+    // show only in Toolbar
+    TOOLBAR
+}
+
 /**
  * @typedef {String} TIconStyle
  * @variant secondary
@@ -27,18 +36,60 @@ export type TActionDisplayMode = 'title'|'icon'|'both'|'auto';
  * TODO duplicated from IList
  */
 export interface IItemAction {
-    id: string;
+    /**
+     * Identifier of the action.
+     */
+    id: string | number;
+
+    /**
+     * Action's name.
+     */
     title?: string;
+
+    /**
+     * Action's icon.
+     */
     icon?: string;
-    showType?: 0|1|2;
+
+    /**
+     * Location of the action.
+     * @default MENU
+     */
+    showType?: TItemActionShowType;
+
+    /**
+     * Action's style.
+     */
     style?: string;
+
+    /**
+     * Style of the action's icon.
+     * @default secondary
+     */
     iconStyle?: TIconStyle;
+
+    /**
+     * Action's handler.
+     * @param item Corresponding list item.
+     */
+    handler?: (item: Model) => void;
+
+    /**
+     * Determines whether the action opens menu.
+     */
+    _isMenu?: boolean;
+
+    /**
+     * Flag of parent
+     */
+    'parent@'?: boolean|null;
     displayMode?: TActionDisplayMode;
     tooltip?: string;
-    handler?: (item) => void;
-    parent?: string;
-    'parent@'?: boolean|null;
-    _isMenu?: boolean;
+
+    /**
+     * Parent action id
+     */
+    parent?: string | number;
 }
 
 export type TActionClickCallback = (clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, contents: Model) => void;

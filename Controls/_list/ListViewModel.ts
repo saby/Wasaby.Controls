@@ -65,7 +65,8 @@ var _private = {
         }
         return self.getItemById(markedKey, self._options.keyProperty);
     },
-    isSelected(self: ListViewModel, current: IListItemData): boolean {
+
+    isMarked(self: {_markedKey: number | string}, current: {key: number | string}): boolean {
         const markedItem = _private.getItemByMarkedKey(self, self._markedKey);
         if (markedItem) {
             const item = markedItem.getContents ? markedItem.getContents() : markedItem;
@@ -73,6 +74,7 @@ var _private = {
         }
         return false;
     },
+
     getMultiSelectClassList: function (current): string {
         let
             checkboxOnHover = current.multiSelectVisibility === 'onhover',
@@ -196,7 +198,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent.isMenuShown = this._menuState === 'shown';
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
-        itemsModelCurrent._isSelected = _private.isSelected(this, itemsModelCurrent);
+        itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
         itemsModelCurrent._isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
         itemsModelCurrent._isSwiped = this._swipeItem && itemsModelCurrent.actionsItem === this._swipeItem.actionsItem;
         itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
@@ -221,7 +223,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
             const canDrawMarker = marker !== false && itemsModelCurrent.markerVisibility !== 'hidden' && !self._editingItemData;
-            return canDrawMarker && _private.isSelected(self, itemsModelCurrent);
+            return canDrawMarker && _private.isMarked(self, itemsModelCurrent);
         };
 
         itemsModelCurrent.getMarkerClasses = (): string => {
