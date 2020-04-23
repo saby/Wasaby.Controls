@@ -1255,7 +1255,13 @@ var _private = {
         });
     },
 
-    // handleItemActionClick
+    /**
+     * Обрабатывает клик по записи и отправляет событие actionClick наверх
+     * @param self
+     * @param action
+     * @param clickEvent
+     * @param contents
+     */
     handleItemActionClick(
         self: any,
         action: IItemAction,
@@ -2810,7 +2816,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._delayedSelect = {key, status: item.isSelected()};
             // TODO код ниже задавал Для Item controls-ListView__item_rightSwipeAnimation
             //  для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f.
-            //  надо понять, надо это или нет. Если надо, то реализовать в новой модели
+            //  Надо, то реализовать в новой модели.
             // Animation should be played only if checkboxes are visible.
             // if (this._options.multiSelectVisibility !== 'hidden') {
             //     this._listViewModel.setRightSwipedItem(itemData);

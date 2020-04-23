@@ -3356,31 +3356,6 @@ define([
          });
       });
 
-      it('_onSwipeAnimationEnd', function() {
-         var setRightSwipedItemCalled = false;
-         var ctrl = new lists.BaseControl();
-         ctrl._listViewModel = {
-            setRightSwipedItem: function() {
-               setRightSwipedItemCalled = true;
-            },
-            getSwipeAnimation: function() {
-               return 'close';
-            }
-         };
-         ctrl._onSwipeAnimationEnd({
-            nativeEvent: {
-               animationName: 'test'
-            }
-         });
-         assert.isFalse(setRightSwipedItemCalled);
-         ctrl._onSwipeAnimationEnd({
-            nativeEvent: {
-               animationName: 'rightSwipe'
-            }
-         });
-         assert.isTrue(setRightSwipedItemCalled);
-      });
-
       it('can\'t start drag on readonly list', function() {
          let
              cfg = {
