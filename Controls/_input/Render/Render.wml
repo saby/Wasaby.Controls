@@ -29,7 +29,7 @@
          </ws:placeholderTemplate>
       </ws:partial>
       <ws:if data="{{_options.rightFieldWrapper}}">
-         <ws:partial attr:class="controls-Render__afterField" template="{{_options.rightFieldWrapper}}"/>
+         <ws:partial attr:class="controls-Render__afterField" template="{{_options.rightFieldWrapper}}" inlineHeight="{{_inlineHeight}}"/>
       </ws:if>
    </div>
    <ws:if data="{{_options.tagStyle}}">
