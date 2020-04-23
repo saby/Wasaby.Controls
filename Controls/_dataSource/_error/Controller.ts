@@ -1,4 +1,6 @@
 /// <amd-module name="Controls/_dataSource/_error/Controller" />
+import { Logger } from 'UI/Utils';
+import { PromiseCanceledError } from 'Types/entity';
 import { Controller as ParkingController, loadHandlers } from 'Controls/_dataSource/parking';
 import {
     Handler,
@@ -54,6 +56,7 @@ const prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): H
 };
 
 let popupHelper: Popup;
+
 function getPopupHelper(): Popup {
     if (!popupHelper) {
         popupHelper = new Popup();
@@ -166,6 +169,10 @@ export default class ErrorController {
                 options: handlerResult.options,
                 ...getIVersion()
             };
+        }).catch((error: PromiseCanceledError) => {
+            if (!error.isCanceled) {
+                Logger.error('Handler error', null, error);
+            }
         });
     }
 
