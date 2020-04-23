@@ -5,7 +5,6 @@ import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import { Model } from 'Types/entity';
 import { IFlatSelectionStrategyOptions, ISelectionModel } from '../interface';
-import { getItems } from '../Utils/utils';
 
 const ALL_SELECTION_VALUE = null;
 
@@ -65,7 +64,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       const selectedItems = new Map([[true, []], [false, []], [null, []]]);
       const isAllSelected: boolean = this._isAllSelected(selection);
 
-      getItems(model).forEach((item) => {
+      model.getCollection().forEach((item) => {
          const itemId: TKey = item.getId();
          const isSelected = selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId);
 
@@ -77,7 +76,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
    getCount(selection: ISelection, model: ISelectionModel): number|null {
       let countItemsSelected: number|null = null;
-      const items: RecordSet = getItems(model);
+      const items: RecordSet = model.getCollection();
       const itemsCount: number = items.getCount();
 
       if (this._isAllSelected(selection)) {

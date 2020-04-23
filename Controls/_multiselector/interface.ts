@@ -11,7 +11,7 @@ export interface ISelectionModel {
 
    getRoot(): any;
 
-   getItems(): RecordSet;
+   getCollection(): RecordSet;
 
    setSelectedItems(items: Array<CollectionItem<Model>>, selected: boolean): void;
 

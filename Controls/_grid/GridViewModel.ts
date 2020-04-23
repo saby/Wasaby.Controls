@@ -1479,6 +1479,11 @@ var
             return this._model.getItems();
         },
 
+        // для совместимости с новой моделью
+        getCollection: function() {
+            return this.getItems();
+        },
+
         setActiveItem: function(itemData) {
             this._model.setActiveItem(itemData);
         },

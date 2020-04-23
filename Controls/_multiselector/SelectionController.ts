@@ -1,21 +1,18 @@
-import Control = require('Core/Control');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { isEqual } from 'Types/object';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import clone = require('Core/core-clone');
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
+import { Model } from 'Types/entity';
 import {
    ISelectionControllerOptions,
    ISelectionControllerResult,
    ISelectionDifference,
    ISelectionModel
 } from './interface';
-import { getItems } from './Utils/utils';
 
 /**
- * @class Controls/_list/BaseControl/SelectionController
- * @extends Core/Control
- * @control
+ * @class Controls/_multiselector/SelectionController
  * @author Авраменко А.С.
  * @private
  */
@@ -52,12 +49,14 @@ export class SelectionController {
       } else {
          this._select([key]);
       }
-      return this._updateSelection(oldSelection, this._selection);
+
+      this._updateSelectionForRender();
+      return this._getResult(oldSelection, this._selection);
    }
 
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
-      const itemsChanged = modelChanged ? true : getItems(options.model) !== getItems(this._model);
+      const itemsChanged = modelChanged ? true : options.model.getCollection() !== this._model.getCollection();
       const filterChanged = options.filter !== this._filter;
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
@@ -74,7 +73,9 @@ export class SelectionController {
          const oldSelection = clone(this._selection);
          this._selectedKeys = options.selectedKeys;
          this._excludedKeys = options.excludedKeys;
-         return this._updateSelection(oldSelection, this._selection);
+
+         this._updateSelectionForRender();
+         return this._getResult(oldSelection, this._selection);
       } else if (itemsChanged || modelChanged || filterChanged) {
          this._updateSelectionForRender();
       }
@@ -83,37 +84,44 @@ export class SelectionController {
    selectAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._strategy.selectAll(this._selection, this._model);
-      return this._updateSelection(oldSelection, this._selection);
+      this._updateSelectionForRender();
+      return this._getResult(oldSelection, this._selection);
    }
 
    toggleAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._strategy.toggleAll(this._selection, this._model);
-      return this._updateSelection(oldSelection, this._selection);
+
+      this._updateSelectionForRender();
+      return this._getResult(oldSelection, this._selection);
    }
 
    unselectAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._strategy.unselectAll(this._selection, this._model);
-      return this._updateSelection(oldSelection, this._selection);
+
+      this._updateSelectionForRender();
+      return this._getResult(oldSelection, this._selection);
    }
 
-   removeKeys(removedItems: []): ISelectionControllerResult {
+   removeKeys(removedItems: Model[]): ISelectionControllerResult {
       // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
       // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
-      if (getItems(this._model)) {
+      if (this._model.getCollection()) {
          const oldSelection = clone(this._selection);
          this._remove(this._getItemsKeys(removedItems));
-         return this._updateSelection(oldSelection, this._selection);
+
+         this._updateSelectionForRender();
+         return this._getResult(oldSelection, this._selection);
       }
    }
 
    reset(): ISelectionControllerResult {
       // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
       // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
-      if (getItems(this._model)) {
+      if (this._model.getCollection()) {
          const oldSelection = clone(this._selection);
-         const countItems = getItems(this._model).getCount();
+         const countItems = this._model.getCollection().getCount();
 
          // Выделение надо сбросить только после вставки новых данных в модель
          // Это необходимо, чтобы чекбоксы сбросились только после отрисовки новых данных,
@@ -122,12 +130,20 @@ export class SelectionController {
          if (this._shouldResetSelection(this._filter) || !countItems) {
             this._clearSelection();
          }
-         return this._updateSelection(oldSelection, this._selection);
+
+         this._updateSelectionForRender();
+         return this._getResult(oldSelection, this._selection);
       }
    }
 
    updateSelectedItems(): ISelectionControllerResult {
-      return this._updateSelection(this._selection, this._selection);
+      this._updateSelectionForRender();
+      return {
+         selectedKeysDiff: { newKeys: [], added: [], removed: [] },
+         excludedKeysDiff: { newKeys: [], added: [], removed: [] },
+         selectedCount: this._getCount(this._selection),
+         isAllSelected: this._isAllSelected(this._selection)
+      };
    }
 
    private _select(keys: TKeys): void {
@@ -162,12 +178,8 @@ export class SelectionController {
       return this._strategy.getCount(selection || this._selection, this._model);
    }
 
-   private _getItemsKeys(items: TKeys): TKeys {
-      const keys = [];
-      items.forEach((item) => {
-         keys.push(item.getId());
-      });
-      return keys;
+   private _getItemsKeys(items: Model[]): TKeys {
+      return items.map((item) => item.getId());
    }
 
    private _isAllSelectedInRoot(root: object): boolean {
@@ -194,7 +206,7 @@ export class SelectionController {
       return isAllSelected && listFilterChanged;
    }
 
-   private _updateSelection(oldSelection: ISelection, newSelection: ISelection): ISelectionControllerResult {
+   private _getResult(oldSelection: ISelection, newSelection: ISelection): ISelectionControllerResult {
       const
          selectionCount = this._getCount(newSelection),
          oldSelectedKeys = oldSelection.selected,
@@ -205,8 +217,6 @@ export class SelectionController {
          newExcludedKeys = selectionCount === 0 ? [] : newSelection.excluded,
          selectedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldSelectedKeys, newSelectedKeys),
          excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
-
-      this._updateSelectionForRender();
 
       const selectedDifference: ISelectionDifference = {
          newKeys: newSelectedKeys,

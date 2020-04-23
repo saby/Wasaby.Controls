@@ -1,7 +1,6 @@
 import cInstance = require('Core/core-instance');
 import { relation } from 'Types/entity';
 import { Record } from 'Types/entity';
-import { RecordSet, List } from 'Types/collection';
 import { TKeySelection as TKey } from 'Controls/interface';
 import { Model } from 'Types/entity';
 import { ISelectionModel } from '../interface';
@@ -19,14 +18,6 @@ export function isHasChildren(item: Record, model: ISelectionModel, hierarchyRel
       return model.getItemBySourceKey(item.getKey()).isHasChildren();
    } else {
       return hierarchyRelation ? hierarchyRelation.hasDeclaredChildren(item) !== false : false;
-   }
-}
-
-export function getItems(model: ISelectionModel): RecordSet|List {
-   if (cInstance.instanceOfModule(model, 'Controls/display:Collection')) {
-      return model.getCollection();
-   } else {
-      return model.getItems();
    }
 }
 
@@ -51,7 +42,7 @@ export function getChildren(nodeId: TKey, model: ISelectionModel, hierarchyRelat
          }
       });
    } else if (hierarchyRelation) {
-      children = hierarchyRelation.getChildren(nodeId, getItems(model));
+      children = hierarchyRelation.getChildren(nodeId, model.getCollection());
    }
 
    return children;

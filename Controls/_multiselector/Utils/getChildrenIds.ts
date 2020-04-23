@@ -2,7 +2,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
 import { TKeySelection as TKey, TSelectedKeys as TKeys } from 'Controls/interface';
 import { Model } from 'Types/entity';
-import { getChildren, getItems, isNode } from './utils';
+import { getChildren, isNode } from './utils';
 import { IEntryPath, ISelectionModel } from '../interface';
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
@@ -35,7 +35,7 @@ function getChildrenInEntryPath(parentId: TKey, entriesPath: IEntryPath[]): TKey
 }
 
 export default function getChildrenIds(nodeId: TKey, model: ISelectionModel, hierarchyRelation: relation.Hierarchy): TKeys {
-   const entriesPath = getItems(model).getMetaData()[FIELD_ENTRY_PATH];
+   const entriesPath = model.getCollection().getMetaData()[FIELD_ENTRY_PATH];
    let childrenIds = getAllChildren(nodeId, model, hierarchyRelation).map((child) => {
       return child.getId();
    });

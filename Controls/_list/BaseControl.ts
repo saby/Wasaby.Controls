@@ -1419,7 +1419,6 @@ var _private = {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
         self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
         self._onItemsChanged = self._onItemsChanged.bind(self);
-        this.handleSelectionControllerResult = this.handleSelectionControllerResult.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -1758,7 +1757,7 @@ var _private = {
          root: newOptions.root,
          strategyOptions: this.getSelectionStrategyOptions(newOptions)
       });
-      this.handleSelectionControllerResult(result);
+      this.handleSelectionControllerResult(self, result);
    },
 
    createSelectionStrategy(options: any): ISelectionStrategy {
@@ -1793,54 +1792,57 @@ var _private = {
          switch (action) {
             case IObservable.ACTION_REMOVE:
                result = self._selectionController.removeKeys(removedItems);
-               this.handleSelectionControllerResult(result);
                break;
             case IObservable.ACTION_RESET:
                result = self._selectionController.reset();
-               this.handleSelectionControllerResult(result);
+               break;
+            case IObservable.ACTION_ADD:
+               result = self._selectionController.updateSelectedItems();
                break;
          }
+
+         this.handleSelectionControllerResult(self, result);
       }
    },
 
    onSelectedTypeChanged(typeName: string): void {
-       let result;
-       if (!this._selectionController) {
-          this._createSelectionController();
-       }
+      let result;
+      if (!this._selectionController) {
+       this._createSelectionController();
+      }
 
-       switch (typeName) {
-          case 'selectAll':
-             result = this._selectionController.selectAll();
-             this.handleSelectionControllerResult(result);
-             break;
-          case 'unselectAll':
-             result = this._selectionController.unselectAll();
-             this.handleSelectionControllerResult(result);
-             break;
-          case 'toggleAll':
-             result = this._selectionController.toggleAll();
-             this.handleSelectionControllerResult(result);
-             break;
-       }
+      switch (typeName) {
+       case 'selectAll':
+          result = this._selectionController.selectAll();
+          break;
+       case 'unselectAll':
+          result = this._selectionController.unselectAll();
+          break;
+       case 'toggleAll':
+          result = this._selectionController.toggleAll();
+          break;
+      }
+
+      this.handleSelectionControllerResult(this, result);
    },
 
-   handleSelectionControllerResult(result: ISelectionControllerResult): void {
-       if (!result) {
-          return;
-       }
+   handleSelectionControllerResult(self: any, result: ISelectionControllerResult): void {
+      if (!result) {
+         return;
+      }
 
-       const selectedDiff = result.selectedKeysDiff;
-       if (selectedDiff.added.length || selectedDiff.removed.length) {
-         this._notify('selectedKeysChanged', [selectedDiff.newKeys, selectedDiff.added, selectedDiff.removed]);
-       }
+      const selectedDiff = result.selectedKeysDiff;
+      if (selectedDiff.added.length || selectedDiff.removed.length) {
+         self._notify('selectedKeysChanged', [selectedDiff.newKeys, selectedDiff.added, selectedDiff.removed]);
+      }
 
-       const excludedDiff = result.excludedKeysDiff;
-       if (excludedDiff.added.length || excludedDiff.removed.length) {
-         this._notify('excludedKeysChanged', [excludedDiff.newKeys, excludedDiff.added, excludedDiff.removed]);
-       }
+      const excludedDiff = result.excludedKeysDiff;
+      if (excludedDiff.added.length || excludedDiff.removed.length) {
+         self._notify('excludedKeysChanged', [excludedDiff.newKeys, excludedDiff.added, excludedDiff.removed]);
+      }
 
-       this._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
+      // для связи с контроллером ПМО
+      self._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
    }
 };
 
@@ -2199,6 +2201,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._createSelectionController();
         }
 
+        // для связи с контроллером ПМО
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
     },
 
@@ -2412,6 +2415,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         this._loadTriggerVisibility = null;
 
+        // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
 
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
@@ -2508,7 +2512,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
 
             const result = this._selectionController.toggleItem(key);
-            _private.handleSelectionControllerResult(result);
+            _private.handleSelectionControllerResult(this, result);
             this._notify('checkboxClick', [key, status]);
         }
     },
@@ -2528,7 +2532,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             const multiSelectStatus = this._options.useNewModel ? itemData.isSelected() : itemData.multiSelectStatus;
 
             const result = this._selectionController.toggleItem(key);
-            _private.handleSelectionControllerResult(result);
+            _private.handleSelectionControllerResult(this, result);
             this._notify('checkboxClick', [key, multiSelectStatus]);
 
             // TODO Right swiping for new model
@@ -3023,9 +3027,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     handleSelectionControllerResult(result: ISelectionControllerResult): void {
-       _private.handleSelectionControllerResult(result);
+       _private.handleSelectionControllerResult(this, result);
     }
-
 });
 
 // TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757

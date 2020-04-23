@@ -6,7 +6,7 @@ import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISe
 import { Controller as SourceController } from 'Controls/source';
 import ISelectionStrategy from './ISelectionStrategy';
 import { IEntryPath, ISelectionModel, ITreeSelectionStrategyOptions } from '../interface';
-import { getChildren, getItems, getParentProperty, isNode } from '../Utils/utils';
+import { getChildren, getParentProperty, isNode } from '../Utils/utils';
 import getChildrenIds from '../Utils/getChildrenIds';
 import getSelectedChildrenCount from '../Utils/getSelectedChildrenCount';
 import removeSelectionChildren from '../Utils/removeSelectionChildren';
@@ -37,7 +37,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    select(selection: ISelection, keys: TKeys, model: ISelectionModel): void {
       keys.forEach((key) => {
-         const item: Record = getItems(model).getRecordById(key);
+         const item: Record = model.getCollection().getRecordById(key);
 
          if (!item || isNode(item, model, this._hierarchyRelation)) {
             this._selectNode(selection, key, model);
@@ -49,7 +49,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    unselect(selection: ISelection, keys: TKeys, model: ISelectionModel): void {
       keys.forEach((key) => {
-         const item = getItems(model).getRecordById(key);
+         const item = model.getCollection().getRecordById(key);
          const isRoot = key === this._getRoot(model);
          if (!item || isNode(item, model, this._hierarchyRelation)) {
             this._unSelectNode(selection, key, model);
@@ -118,7 +118,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       if (!this._isAllSelected(selection, rootId, model) || !model.getHasMoreData()) {
          if (this._selectDescendants) {
-            const items: RecordSet = getItems(model);
+            const items: RecordSet = model.getCollection();
 
             for (let index = 0; index < selection.selected.length; index++) {
                const itemId: TKey = selection.selected[index];
@@ -157,9 +157,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Model[]> {
       const selectedItems = new Map([[true, []], [false, []], [null, []]]);
-      const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, getItems(model));
+      const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected, model.getCollection());
 
-      getItems(model).forEach((item) => {
+      model.getCollection().forEach((item) => {
          const itemId: TKey = item.getId();
          const parentId = this._getParentId(itemId, model);
          let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
@@ -193,7 +193,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       let allChildrenExcluded = this._isAllChildrenExcluded(selection, parentId, model);
       let currentParentId = parentId;
       while (currentParentId !== this._getRoot(model) && allChildrenExcluded) {
-         const item = getItems(model).getRecordById(currentParentId);
+         const item = model.getCollection().getRecordById(currentParentId);
          this._unSelectNode(selection, currentParentId, model);
          currentParentId = this._getParentId(item.getId(), model);
          allChildrenExcluded = this._isAllChildrenExcluded(selection, currentParentId, model);
@@ -218,7 +218,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    private _withEntryPath(model: ISelectionModel): boolean {
-      return FIELD_ENTRY_PATH in getItems(model).getMetaData();
+      return FIELD_ENTRY_PATH in model.getCollection().getMetaData();
    }
 
    private _isAllSelected(selection: ISelection, nodeId: TKey, model: ISelectionModel): boolean {
@@ -274,7 +274,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _getParentId(itemId: string|number, model: ISelectionModel): TKey|undefined {
       const parentProperty: string = getParentProperty(model, this._hierarchyRelation);
-      const item: Record|undefined = getItems(model).getRecordById(itemId);
+      const item: Record|undefined = model.getCollection().getRecordById(itemId);
       return item && item.get(parentProperty);
    }
 

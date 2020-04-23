@@ -549,6 +549,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return this._items;
     },
 
+    // для совместимости с новой моделью
     getCollection: function() {
         return this.getItems();
     },
