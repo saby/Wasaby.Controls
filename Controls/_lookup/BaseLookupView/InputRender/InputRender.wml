@@ -14,8 +14,8 @@
                        on:mouseenter="_mouseEnterHandler()"
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')"
-                       beforeFieldWrapper="{{_options.beforeFieldWrapper}}"
-                       afterFieldWrapper="{{_options.afterFieldWrapper}}">
+                       leftFieldWrapper="{{_options.leftFieldWrapper}}"
+                       rightFieldWrapper="{{_options.rightFieldWrapper}}">
    <ws:placeholder>
       <ws:if data="{{_options.placeholder && !_options.readOnly}}">
          <ws:if data="{{_options.multiline}}">
