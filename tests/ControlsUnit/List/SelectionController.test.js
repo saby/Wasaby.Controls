@@ -348,6 +348,8 @@ define([
          cfg.items.clear();
          SelectionController._private.selectedTypeChangedHandler.call(instance, 'selectAll');
          assert.isTrue(instance._multiselection.selectAll.calledOnce);
+         SelectionController._private.selectedTypeChangedHandler.call(instance, 'toggleAll');
+         assert.isTrue(instance._multiselection.toggleAll.calledOnce);
       });
 
       describe('_onCollectionChange', function() {
