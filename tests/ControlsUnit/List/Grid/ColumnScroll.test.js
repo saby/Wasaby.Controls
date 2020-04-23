@@ -536,6 +536,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             getCount: () => 0
          });
          assert.isFalse(columnScroll._isDisplayColumnScroll());
+         columnScroll._options.editingItemData = {key: 1};
+         assert.isTrue(columnScroll._isDisplayColumnScroll());
+         columnScroll._options.editingItemData = undefined;
       });
       it('_calculateShadowStyles', function() {
          let cont = columnScroll._container;
