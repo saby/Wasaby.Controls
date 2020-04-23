@@ -2870,7 +2870,7 @@ define([
          assert.isTrue(ctrl._needBottomPadding);
 
       });
-      
+
       it('_needBottomPadding after reload in beforeUpdate', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -3362,6 +3362,9 @@ define([
          ctrl._listViewModel = {
             setRightSwipedItem: function() {
                setRightSwipedItemCalled = true;
+            },
+            getSwipeAnimation: function() {
+               return 'close';
             }
          };
          ctrl._onSwipeAnimationEnd({

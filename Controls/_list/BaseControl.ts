@@ -1304,6 +1304,10 @@ var _private = {
         isContextMenu: boolean): void {
         const itemKey = contents?.getKey();
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
+        menuConfig.eventHandlers = {
+            onResult: self._onItemActionsMenuResult,
+            onClose: self._onItemActionsMenuClose
+        };
         self._itemActionsController.setActiveItem(self._listViewModel, itemKey);
         Sticky.openPopup(menuConfig).then((popupId) => {
             self._popupId = popupId;
@@ -2463,17 +2467,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     /**
      * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
-     * @param e событие onResult
      * @param eventName название события, брошенного из Controls/menu:Popup.
      * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
      * @param actionModel
      * @param clickEvent
      * @private
      */
-    _onItemActionsMenuResult(e: SyntheticEvent<MouseEvent>,
-                             eventName: string,
-                             actionModel: Model,
-                             clickEvent: SyntheticEvent<MouseEvent>): void {
+    _onItemActionsMenuResult(eventName: string, actionModel: Model, clickEvent: SyntheticEvent<MouseEvent>): void {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
             const contents = this._itemActionsController.getActiveItem()?.getContents();
@@ -2485,7 +2485,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Обработчик закрытия выпадающего/контекстного меню
      * @private
      */
-    _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>): void {
+    _onItemActionsMenuClose(clickEvent: SyntheticEvent<MouseEvent>): void {
         this._itemActionsController.afterCloseActionsMenu();
     },
 
