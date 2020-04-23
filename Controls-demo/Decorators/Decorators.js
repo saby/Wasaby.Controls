@@ -7,7 +7,6 @@ define('Controls-demo/Decorators/Decorators',
       'Controls-demo/Decorators/Number/Number',
       'Controls-demo/Decorators/PhoneNumber/PhoneNumber',
       'Controls-demo/Decorators/WrapURLs/WrapURLs',
-      'css!Controls-demo/Decorators/Decorators'
    ],
    function(Control, template) {
 
@@ -15,6 +14,7 @@ define('Controls-demo/Decorators/Decorators',
 
       return Control.extend({
          _template: template
+         _styles: ['Controls-demo/Decorators/Decorators'],
       })
    }
 );
