@@ -39,6 +39,7 @@ export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: ICon
 
     // todo: https://online.sbis.ru/opendoc.html?guid=244a5058-47c1-4896-a494-318ba2422497
     const size = viewMode === 'functionalButton' ? 's' : 'm';
+    const iconSize = viewMode === 'functionalButton' ? 's' : 'm';
 
     const iconStyle = item.get('iconStyle');
     const transparent = item.get('buttonTransparent');
@@ -55,6 +56,7 @@ export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: ICon
         style,
         viewMode,
         iconStyle,
+        iconSize,
         transparent,
         caption,
         captionPosition,
@@ -462,6 +464,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
              * @default 'medium'
              */
             itemsSpacing: 'medium',
+            iconSize: 'm',
             itemTemplate: defaultItemTemplate
         };
     }

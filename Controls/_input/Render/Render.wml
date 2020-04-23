@@ -12,8 +12,8 @@
       <ws:if data="{{!_options.multiline}}">
          <span class="controls-Render__baseline">&#65279;</span>
       </ws:if>
-      <ws:if data="{{_options.beforeFieldWrapper}}">
-         <ws:partial attr:class="controls-Render__beforeField" template="{{_options.beforeFieldWrapper}}"/>
+      <ws:if data="{{_options.leftFieldWrapper}}">
+         <ws:partial attr:class="controls-Render__beforeField" template="{{_options.leftFieldWrapper}}"/>
       </ws:if>
       <ws:partial template="{{_options.content}}"
                   on:focusin="_setContentActive(true)"
@@ -28,8 +28,8 @@
             </ws:if>
          </ws:placeholderTemplate>
       </ws:partial>
-      <ws:if data="{{_options.afterFieldWrapper}}">
-         <ws:partial attr:class="controls-Render__afterField" template="{{_options.afterFieldWrapper}}"/>
+      <ws:if data="{{_options.rightFieldWrapper}}">
+         <ws:partial attr:class="controls-Render__afterField" template="{{_options.rightFieldWrapper}}"/>
       </ws:if>
    </div>
    <ws:if data="{{_options.tagStyle}}">

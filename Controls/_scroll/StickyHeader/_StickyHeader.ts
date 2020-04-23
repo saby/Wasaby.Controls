@@ -10,7 +10,8 @@ import {
     MODE,
     IOffset,
     validateIntersectionEntries,
-    isDisplayed
+    isDisplayed,
+    IFixedEventData
 } from 'Controls/_scroll/StickyHeader/Utils';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
@@ -97,7 +98,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _isMobileAndroid: boolean = detection.isMobileAndroid;
     protected _isSafari13: boolean = StickyHeader._isSafari13();
 
-    private _shadowVisible: boolean = true;
+    private _isFixed: boolean = true;
     private _stickyHeadersHeight: IOffset = {
         top: null,
         bottom: null
@@ -341,15 +342,21 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (this._container.offsetParent !== null) {
             this._height = this._container.offsetHeight;
         }
-        const information = {
+        this._isFixed = !!newPosition;
+        this._fixedNotifier(newPosition, prevPosition);
+    }
+
+    protected _fixedNotifier(newPosition: POSITION, prevPosition: POSITION, isFakeFixed: boolean = false): void {
+        const information: IFixedEventData = {
             id: this._index,
             fixedPosition: newPosition,
             offsetHeight: this._height,
             prevPosition,
-            mode: this._options.mode
+            mode: this._options.mode,
+            shadowVisible: this._options.shadowVisibility === 'visible',
+            isFakeFixed
         };
 
-        this._shadowVisible = !!newPosition;
         this._notify('fixed', [information], {bubbling: true});
     }
 
@@ -467,9 +474,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _updateBottomShadowStyle(): void {
         if (this._isSafari13) {
             const container: HTMLElement = this._getNormalizedContainer();
-            // Зануляем shadowStyle, чтобы исключить их влияние на расчёт container.offsetWidth
-            this._bottomShadowStyle = '';
-            this._topShadowStyle = '';
             // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
             // There's no container at first building of template.
             if (container) {
@@ -485,10 +489,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _updateStickyShadow(e, ids): void {
-        const shadowVisible: boolean = ids.indexOf(this._index) !== -1;
-        if (this._shadowVisible !== shadowVisible) {
-            this._shadowVisible = shadowVisible;
+    protected _updateFixed(e, ids): void {
+        const isFixed: boolean = ids.indexOf(this._index) !== -1;
+        if (this._isFixed !== isFixed) {
+            if (this._model.fixedPosition) {
+                if (isFixed) {
+                    this._fixedNotifier(this._model.fixedPosition, '', true);
+                } else {
+                    this._fixedNotifier('', this._model.fixedPosition, true);
+                }
+            }
+            this._isFixed = isFixed;
             this._forceUpdate();
         }
     }
@@ -501,7 +512,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
             (this._model && this._model.fixedPosition === fixedPosition) &&
             this._options.shadowVisibility === SHADOW_VISIBILITY.visible &&
-            (this._options.mode === MODE.stackable || this._shadowVisible));
+            (this._options.mode === MODE.stackable || this._isFixed));
     }
 
     private _getComputedStyle(): CSSStyleDeclaration {

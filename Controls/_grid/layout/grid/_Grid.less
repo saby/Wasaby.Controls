@@ -69,6 +69,8 @@
    position: sticky;
 }
 
+.controls-Grid__cell_spacing_money:after,
+/* deprecated, remove by https://online.sbis.ru/opendoc.html?guid=eff529b3-eb2a-4171-882d-4ff8e1e7e421 */
 .controls-Grid__header-cell_spacing_money:after {
    content: ".99";
    visibility: hidden;
@@ -391,6 +393,11 @@
 .controls-Grid__header-cell_baseline_XL_theme-@{themeName}:before {
    content: '\200b';
    font-size: @header_max-font-size_grid;
+}
+
+.controls-Grid__row-cell__content_baseline_2XL_theme-@{themeName}:before {
+   content: '\200b';
+   font-size: @item_font-size_2xl_grid;
 }
 
 .controls-Grid__header-cell-content-block:before {

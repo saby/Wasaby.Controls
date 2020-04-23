@@ -8,8 +8,9 @@ define([
    'Types/collection',
    'Controls/display',
    'Controls/_list/ItemActions/Utils/Actions',
-   'Controls/Utils/Toolbar'
-], function(lists, source, entity, collection, display, aUtil, tUtil) {
+   'Controls/Utils/Toolbar',
+   'i18n!Controls'
+], function(lists, source, entity, collection, display, aUtil, tUtil, rk) {
    describe('Controls.List.ItemActions', function() {
       var data, listViewModel, rs, actions, sandbox;
       const theme = 'default';
@@ -641,6 +642,7 @@ define([
             icon: 'icon-ExpandDown controls-itemActionsV__action_icon  icon-size',
             iconStyle: 'secondary',
             style: 'secondary',
+            title: rk('Ещё'),
             _isMenu: true
          }], listViewModel._actions[0].showed);
       });

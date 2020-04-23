@@ -60,8 +60,12 @@
  * TODO: pointer-events работает в ie начиная с 11 версии.
  * Поэтому живем в ie10 без тени на блоках.
  * Убрать body:not(.ws-is-ie10), когда откажемся от e10.
+ * Страницы в IE11 перестали отображаться, проблема комплексная,
+ * удалось выяснить что отключение данных стилей решает проблему,
+ * пока возвращаем работоспособность страниц, далее разберемся по задаче
+ * https://online.sbis.ru/opendoc.html?guid=4d9a55f9-30a8-4731-8528-90cfa38089f3
  */
-body:not(.ws-is-ie10) .controls-BlockLayout__block:after {
+body:not(.ws-is-ie10):not(.ws-is-ie11) .controls-BlockLayout__block:after {
    content: '';
    position: absolute;
    pointer-events: none;

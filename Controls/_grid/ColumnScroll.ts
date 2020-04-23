@@ -263,7 +263,7 @@ const
         */
        _isDisplayColumnScroll(): boolean {
          const items = this._options.listModel.getItems();
-         return !!items && !!items.getCount() && (this._contentSize > this._contentContainerSize);
+         return !!items && (!!items.getCount() || !!this._options.editingItemData) && (this._contentSize > this._contentContainerSize);
       },
 
       _calculateShadowClasses(position: string): string {
