@@ -569,7 +569,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                 });
             } else {
                 // если были ошибки валидации, уведомим о них
-                const validationErrors = this._children.validation.isValid();
+                const validationErrors = this._children.validation.getValidationResult();
                 this._notify('validationFailed', [validationErrors], {bubbling: true});
                 updateDef.callback({
                     data: {
