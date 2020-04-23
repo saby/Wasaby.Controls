@@ -196,7 +196,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent.isMenuShown = this._menuState === 'shown';
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
-        itemsModelCurrent._isMarked = _private.isSelected(this, itemsModelCurrent);
+        itemsModelCurrent._isSelected = _private.isSelected(this, itemsModelCurrent);
         itemsModelCurrent._isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
         itemsModelCurrent._isSwiped = this._swipeItem && itemsModelCurrent.actionsItem === this._swipeItem.actionsItem;
         itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
@@ -205,7 +205,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent._isMarked && itemsModelCurrent.style === 'master';
+        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && itemsModelCurrent.style === 'master';
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';

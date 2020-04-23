@@ -9,8 +9,8 @@ import {
     IItemActionsItem,
     IItemActionsTemplateOptions,
     IItemActionsContainer,
-    IDropdownTemplateOptions,
-    IDropdownConfig,
+    IMenuTemplateOptions,
+    IMenuConfig,
     IItemAction
 } from './interafce/IItemActions';
 
@@ -190,7 +190,7 @@ export class ItemActionsController {
         parentAction: IItemAction,
         opener: Element | Control<object, unknown>,
         isContextMenu: boolean
-    ): IDropdownConfig {
+    ): IMenuConfig {
         const item = this._collection.getItemBySourceKey(itemKey);
         if (!item) {
             return;
@@ -218,7 +218,7 @@ export class ItemActionsController {
         // Не реализовано в модели
         // const contextMenuConfig = this._collection.getContextMenuConfig();
         // ...contextMenuConfig,
-        const menuConfig: IDropdownTemplateOptions = {
+        const menuConfig: IMenuTemplateOptions = {
             source: menuSource,
             keyProperty: 'id',
             parentProperty: 'parent',

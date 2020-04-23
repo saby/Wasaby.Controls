@@ -64,7 +64,7 @@
                     {{itemData.hasMultiSelect && itemData.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
                     {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                     {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + _options.theme}}
-                    {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isMarked && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
+                    {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
                     controls-Grid__cell_valign_{{currentColumn.column.compatibleValign || 'top'}}
                     {{className || ''}}">
         <ws:partial template="{{content}}" />

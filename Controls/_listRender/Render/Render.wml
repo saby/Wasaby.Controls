@@ -37,8 +37,6 @@
       </ws:else>
    </ws:if>
    <Controls.popup:Sticky
-           on:result="_onItemActionsMenuResult()"
-           on:close="_onItemActionsMenuClose()"
            on:open="_onOpen()"
            name="menuOpener"
            template="Controls/menu:Popup"

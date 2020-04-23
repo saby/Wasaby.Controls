@@ -88,7 +88,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     setSwipeAnimation(state: ANIMATION_STATE): void;
 }
 
-export interface IDropdownTemplateOptions {
+export interface IMenuTemplateOptions {
     source: ISource;
     keyProperty: string;
     parentProperty: string;
@@ -103,11 +103,11 @@ export interface IDropdownTemplateOptions {
     };
 }
 
-export type IDropdownActionHandler = (event: SyntheticEvent, action: string, data: Model) => void;
+export type IMenuActionHandler = (event: SyntheticEvent, action: string, data: Model) => void;
 
-export interface IDropdownConfig {
+export interface IMenuConfig {
     target: HTMLElement;
-    templateOptions: IDropdownTemplateOptions;
+    templateOptions: IMenuTemplateOptions;
     closeOnOutsideClick: boolean;
     targetPoint: {
         vertical: string,
@@ -120,7 +120,7 @@ export interface IDropdownConfig {
     nativeEvent: Event;
     autofocus: boolean;
     eventHandlers: {
-         onResult: IDropdownActionHandler;
-         onClose: IDropdownActionHandler;
+         onResult: IMenuActionHandler;
+         onClose: IMenuActionHandler;
     };
 }

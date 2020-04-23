@@ -62,10 +62,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _isMouseInOpenedItemArea: boolean = false;
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
-
     private _itemActionsController: ItemActionsController;
-
-    private _popupId: string;
 
     protected _beforeMount(options: IMenuControlOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
@@ -161,16 +158,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
      */
     protected _itemActionClick(event: SyntheticEvent<MouseEvent>, item: TreeItem<Model>, action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>): void {
         const contents = item.getContents();
-        // Если кликнули по экшну, и он не должен открывать меню
-        if (action && !action._isMenu && !action['parent@']) {
-            if (action.handler) {
-                action.handler(contents);
-            }
-            this._closeActionsMenu();
-        // Если экшн должен открывать меню
-        // В контекстном меню и выпадающем меню могут быть подуровни (напр, страница контакты->группы на онлайне)
-        } else {
-            this._openItemActionsMenu(contents, action, clickEvent, this, false);
+        if (action && !action['parent@'] && action.handler) {
+            action.handler(contents);
         }
     }
 
@@ -197,37 +186,6 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                 }
             }
         }
-    }
-
-    /**
-     * Открывает меню операций
-     * @param contents
-     * @param action
-     * @param clickEvent
-     * @param opener
-     * @param isContextMenu
-     */
-    private _openItemActionsMenu(
-        contents: Model,
-        action: IItemAction,
-        clickEvent: SyntheticEvent<MouseEvent>,
-        opener: Element | Control<{}, unknown>,
-        isContextMenu: boolean): void {
-        const itemKey = contents?.getKey();
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
-        this._itemActionsController.setActiveItem(this._listModel, itemKey);
-        Sticky.openPopup(menuConfig).then((popupId) => {
-            this._popupId = popupId;
-        });
-    }
-
-    /**
-     * Метод, который закрывает меню
-     * @private
-     */
-    private _closeActionsMenu(): void {
-        this._itemActionsController.afterCloseActionsMenu();
-        Sticky.closePopup(this._popupId);
     }
 
     private _isPinIcon(target: EventTarget): boolean {

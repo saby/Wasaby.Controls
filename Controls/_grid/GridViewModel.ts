@@ -275,7 +275,7 @@ var
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
             }
 
-            if (current._isMarked) {
+            if (current._isSelected) {
                 classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,

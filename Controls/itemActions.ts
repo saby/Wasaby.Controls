@@ -20,8 +20,8 @@ export {
     IItemActionsCollection,
     TActionClickCallback,
     IItemActionsContainer,
-    IDropdownActionHandler,
-    IDropdownConfig,
+    IMenuActionHandler,
+    IMenuConfig,
     IItemAction
 } from './_itemActions/interface/IItemActions';
 export {ItemActionsController} from './_itemActions/ItemActionsController';

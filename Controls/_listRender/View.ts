@@ -169,41 +169,6 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
-     * @param e событие onResult
-     * @param eventName название события, брошенного из Controls/menu:Popup.
-     * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
-     * @param actionModel
-     * @param clickEvent
-     * @private
-     */
-    protected _onItemActionsMenuResult(
-        e: SyntheticEvent<MouseEvent>,
-        eventName: string,
-        actionModel: Model,
-        clickEvent: SyntheticEvent<MouseEvent>) {
-        if (eventName === 'itemClick') {
-            const action = actionModel && actionModel.getRawData();
-            const contents = this._itemActionsController.getActiveItem()?.getContents();
-            this._handleItemActionClick(action, clickEvent, contents);
-        }
-    }
-
-    /**
-     * Обработчик закрытия выпадающего/контекстного меню
-     * @param e
-     * @param clickEvent
-     * @private
-     */
-    protected _onItemActionsMenuClose(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>): void {
-        // Actions dropdown can start closing after the view itself was unmounted already, in which case
-        // the model would be destroyed and there would be no need to process the action itself
-        if (this._collection && !this._collection.destroyed) {
-            this._itemActionsController.afterCloseActionsMenu();
-        }
-    }
-
-    /**
      * Обрабатывает событие клика по записи и бросает событие actionClick
      * @param e
      * @param item
@@ -223,7 +188,11 @@ export default class View extends Control<IViewOptions> {
         this._executeCommands([moveMarker]);
         // TODO fire 'markedKeyChanged' event
 
-        this._handleItemActionClick(action, clickEvent, contents);
+        if (action && !action._isMenu && !action['parent@']) {
+            this._handleItemActionClick(action, clickEvent, contents);
+        } else {
+            this._openItemActionsMenu(contents, action, clickEvent, false);
+        }
     }
 
     /**
@@ -276,19 +245,49 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, contents: Model): void {
-        // Если кликнули по экшну, и он не должен открывать меню
-        if (action && !action._isMenu && !action['parent@']) {
-            if (action.handler) {
-                action.handler(contents);
+        if (action.handler) {
+            action.handler(contents);
+        }
+        // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
+        const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
+        this._notify('actionClick', [action, contents, itemContainer]);
+        this._closeActionsMenu();
+    }
+
+    /**
+     * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
+     * @param e событие onResult
+     * @param eventName название события, брошенного из Controls/menu:Popup.
+     * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
+     * @param actionModel
+     * @param clickEvent
+     * @private
+     */
+    private _itemActionsMenuResultHandler(
+        e: SyntheticEvent<MouseEvent>,
+        eventName: string,
+        actionModel: Model,
+        clickEvent: SyntheticEvent<MouseEvent>): void {
+        if (eventName === 'itemClick') {
+            const action = actionModel && actionModel.getRawData();
+            if (action && !action['parent@']) {
+                const contents = this._itemActionsController.getActiveItem()?.getContents();
+                this._handleItemActionClick(action, clickEvent, contents);
             }
-            // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
-            const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
-            this._notify('actionClick', [action, contents, itemContainer]);
-            this._closeActionsMenu();
-        // Если экшн должен открывать меню
-        // В контекстном меню и выпадающем меню могут быть подуровни (напр, страница контакты->группы на онлайне)
-        } else {
-            this._openItemActionsMenu(contents, action, clickEvent, false);
+        }
+    }
+
+    /**
+     * Обработчик закрытия выпадающего/контекстного меню
+     * @param e
+     * @param clickEvent
+     * @private
+     */
+    private _itemActionsMenuCloseHandler(e: SyntheticEvent<MouseEvent>, clickEvent: SyntheticEvent<MouseEvent>): void {
+        // Actions dropdown can start closing after the view itself was unmounted already, in which case
+        // the model would be destroyed and there would be no need to process the action itself
+        if (this._collection && !this._collection.destroyed) {
+            this._itemActionsController.afterCloseActionsMenu();
         }
     }
 
@@ -307,9 +306,12 @@ export default class View extends Control<IViewOptions> {
         const opener = this._children.renderer;
         const itemKey = contents?.getKey();
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
+        const onResult = this._itemActionsMenuResultHandler.bind(this);
+        const onClose = this._itemActionsMenuCloseHandler.bind(this);
         this._itemActionsController.setActiveItem(this._collection, itemKey);
         Sticky.openPopup(menuConfig).then((popupId) => {
             this._popupId = popupId;
+            menuConfig.eventHandlers = {onResult, onClose};
         });
     }
 

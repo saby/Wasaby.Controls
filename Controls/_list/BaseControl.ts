@@ -1255,37 +1255,27 @@ var _private = {
         });
     },
 
-    /**
-     * Обрабатывает клик по конкретной операции
-     * @private
-     */
+    // handleItemActionClick
     handleItemActionClick(
         self: any,
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         contents: Model): void {
-        // Если кликнули по экшну, и он не должен открывать меню
-        if (action && !action._isMenu && !action['parent@']) {
-            if (action.handler) {
-                action.handler(contents);
-            }
-            // TODO Проверить. Похоже, эти сложные расчёты нужны были для того,
-            //  чтобы определить HTML контейнер при клике на экшн в выпадающем меню
-            // self._listViewModel.getSourceIndexByItem(item)
-            // const startIndex = VirtualScrollController.getStartIndex(self._listViewModel);
-            // const itemContainer = clickEvent.target ||
-            //     self._container.querySelector('.controls-ListView__itemV').parentNode.children
-            //         .filter((item: HTMLElement) => item.className.includes('controls-ListView__itemV');
-
-            // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
-            const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
-            self._notify('actionClick', [action, contents, itemContainer]);
-            _private.closeActionsMenu(self);
-            // Если экшн должен открывать меню
-            // В контекстном меню и выпадающем меню могут быть подуровни (напр, страница контакты->группы на онлайне)
-        } else {
-            _private.openItemActionsMenu(self, contents, action, clickEvent, false);
+        if (action.handler) {
+            action.handler(contents);
         }
+        // TODO Проверить. Похоже, эти сложные расчёты нужны были для того,
+        //  чтобы определить HTML контейнер при клике на экшн в выпадающем меню
+        // self._listViewModel.getSourceIndexByItem(item)
+        // const startIndex = VirtualScrollController.getStartIndex(self._listViewModel);
+        // const itemContainer = clickEvent.target ||
+        //     self._container.querySelector('.controls-ListView__itemV').parentNode.children
+        //         .filter((item: HTMLElement) => item.className.includes('controls-ListView__itemV');
+
+        // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
+        const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
+        self._notify('actionClick', [action, contents, itemContainer]);
+        _private.closeActionsMenu(self);
     },
 
     /**
@@ -2462,7 +2452,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
         const contents: Model = itemData.getContents();
         _private.setMarkedKey(this, contents.getKey());
-        _private.handleItemActionClick(this, action, event, contents);
+        if (action && !action._isMenu && !action['parent@']) {
+            _private.handleItemActionClick(this, action, event, contents);
+        } else {
+            _private.openItemActionsMenu(this, contents, action, event, false);
+        }
     },
 
     /**
@@ -2476,8 +2470,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemActionsMenuResult(eventName: string, actionModel: Model, clickEvent: SyntheticEvent<MouseEvent>): void {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
-            const contents = this._itemActionsController.getActiveItem()?.getContents();
-            _private.handleItemActionClick(this, action, clickEvent, contents);
+            if (action && !action['parent@']) {
+                const contents = this._itemActionsController.getActiveItem()?.getContents();
+                _private.handleItemActionClick(this, action, clickEvent, contents);
+            }
         }
     },
 
