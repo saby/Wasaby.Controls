@@ -471,7 +471,8 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @cfg {EditingConfig} Конфигурация редактирования по месту.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FEditableListPG">Example</a>.
+    * @remark
+    * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FEditableListPG">демо-пример</a>
     * @name Controls/interface/IEditableList#editingConfig
     * @example
     * WML:

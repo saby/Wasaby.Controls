@@ -17,7 +17,8 @@
 /**
  * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
- * Работу лесенки можно проверить на <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">демо-примере</a>.
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">демо-пример</a>
  * @example
  * Пример 1. Шаблон лесенки задан в рамках шаблона родительского контрола.
  * <pre class="brush: html">
@@ -106,11 +107,12 @@
 /**
  * @name Controls/_grid/interface/IGridControl#header
  * @cfg {Controls/grid:IHeaderCell} Описывает шапку таблицы.
+ * @remark
  * В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки.
  * Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки.
  * Условно ячейки шапки нумеруются слева направо.
  * Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке.
- * <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">См. руководство разработчика</a>
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">руководство разработчика</a>
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">демо-пример</a>
  * @example
  * Пример 1. Для первой ячейки задаём пользовательский шаблон.
@@ -180,7 +182,8 @@
 /**
  * @name Controls/_grid/interface/IGridControl#columns
  * @cfg {Array.<Controls/grid:IColumn>} Описывает колонки таблицы. Колонки объекты реализующие интерфейс {@link Controls/grid:IColumn IColumn}
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">демо-пример</a>
  * @remark Перед отрисовкой убедитесь, что {@link Controls/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
  * @example
  * <pre>
@@ -242,7 +245,8 @@
 /**
  * @name Controls/_grid/interface/IGridControl#stickyHeader
  * @cfg {Boolean} Закрепляет заголовок таблицы.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">Example</a>
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">демо-пример</a>
  * @default true
  */
 
@@ -332,7 +336,8 @@
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена. Используйте {@link Controls/_heading/Counter#fontColorStyle}.
  * @cfg {Boolean} Позволяет отображать/скрывать разделитель строк.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">демо-пример</a>
  * @default false
  */
 

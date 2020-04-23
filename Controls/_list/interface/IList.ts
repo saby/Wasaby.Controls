@@ -118,7 +118,8 @@ export interface IList {
 /**
  * @name Controls/_list/interface/IList#contextMenuVisibility
  * @cfg {Boolean} Определяет доступность контекстного меню строки при нажатии на правую кнопку мыши.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>
  * @default true
  */
 
@@ -138,6 +139,7 @@ export interface IList {
 /**
  * @name Controls/_list/interface/IList#contextMenuConfig
  * @cfg {Controls/menu:IMenuControlOptions} Конфигурация для меню операций над записью.
+ * @remark
  * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию.
  * В качестве ключей можно использовать следующие свойства:
  * - items - для смены набора элементов.
@@ -198,7 +200,8 @@ export interface IList {
 /**
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Шаблон подвала списка.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-пример</a>
  */
 
 /*
@@ -210,7 +213,7 @@ export interface IList {
 /**
  * @name Controls/_list/interface/IList#multiSelectVisibility
  * @cfg {String} Режим отображения флагов множественного выбора.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">См. демо-пример</a>.
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">демо-пример</a>
  * @variant visible Показать.
  * @variant hidden Скрыть.
  * @variant onhover Показывать при наведении.
@@ -626,7 +629,8 @@ export interface IList {
 /**
  * @name Controls/_list/interface/IList#markerVisibility
  * @cfg {String} Режим отображения маркера строки.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-пример</a>
  * @variant visible Маркер отображается всегда, даже если ключевая запись не указана.
  * @variant hidden Маркер всегда скрыт.
  * @variant onactivated - Маркер отображается при активации списка. Например, когда пользователь отмечает запись.

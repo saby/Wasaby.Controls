@@ -1,21 +1,22 @@
 define(
    [
       'Core/core-instance',
-      'Controls/_input/Money',
+      'Controls/input',
       'ControlsUnit/resources/TemplateUtil',
       'ControlsUnit/Input/Base/InputUtility',
       'wml!ControlsUnit/Input/Money/ZeroValueTest',
       'wml!ControlsUnit/Input/Money/EmptyValueTest'
    ],
-   function(instance, Money, TemplateUtil, InputUtility, zeroValueTemplate, emptyValueTemplate) {
+   function(instance, input, TemplateUtil, InputUtility, zeroValueTemplate, emptyValueTemplate) {
       'use strict';
 
       describe('Controls/_input/Money', function() {
          var ctrl, calls;
+         var Money = input.Money;
 
          beforeEach(function() {
             calls = [];
-            ctrl = new Money.default();
+            ctrl = new Money();
             var beforeMount = ctrl._beforeMount;
 
             ctrl._beforeMount = function() {
@@ -55,6 +56,21 @@ define(
                ctrl._readOnlyField.scope.value = '0.00';
 
                assert.equal(ctrl._readOnlyField.template(ctrl._readOnlyField.scope), zeroValueTemplate({}));
+            });
+         });
+
+         describe('Money part', function() {
+            it('value = 100.00, precision = 2', function() {
+               const value = '100.00';
+               const precision = 2;
+               assert.equal(Money.integerPart(value, precision), '100');
+               assert.equal(Money.fractionPart(value, precision), '.00');
+            });
+            it('value = 100, precision = 0', function() {
+               const value = '100';
+               const precision = 0;
+               assert.equal(Money.integerPart(value, precision), '100');
+               assert.equal(Money.fractionPart(value, precision), '');
             });
          });
 
