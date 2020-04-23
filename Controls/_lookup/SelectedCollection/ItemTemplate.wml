@@ -6,6 +6,7 @@
                   style="{{itemsLayout === 'twoColumns' || !style ? 'default' : style}}"
                   clickable="{{clickable}}"
                   displayProperty="{{displayProperty}}"
+                  attr:class="controls-SelectedCollection__item__caption-{{itemsLayout}}_theme-{{_options.theme}}"
             />
    </span>
    <ws:if data="{{!readOnly}}">
