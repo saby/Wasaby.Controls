@@ -209,9 +209,6 @@ var _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
-                    if (self._items) {
-                        self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
-                    }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
@@ -226,7 +223,6 @@ var _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
-                    self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -1187,8 +1183,22 @@ var _private = {
                     self._children.itemActionsOpener.close();
                 }
             }
+
             if (self._selectionController) {
-               const result = self._selectionController.updateSelectedItems();
+               let result;
+
+               switch (action) {
+                  case IObservable.ACTION_REMOVE:
+                     result = self._selectionController.removeKeys(removedItems);
+                     break;
+                  case IObservable.ACTION_RESET:
+                     result = self._selectionController.reset();
+                     break;
+                  case IObservable.ACTION_ADD:
+                     result = self._selectionController.updateSelectedItems();
+                     break;
+               }
+
                self.handleSelectionControllerResult(result);
             }
         }
@@ -1418,7 +1428,6 @@ var _private = {
     bindHandlers: function(self) {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
         self._actionsMenuResultHandler = self._actionsMenuResultHandler.bind(self);
-        self._onItemsChanged = self._onItemsChanged.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -1782,26 +1791,6 @@ var _private = {
                declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
             })
          };
-      }
-   },
-
-   onItemsChanged(self: any, action: string, removedItems: []): void {
-      if (self._selectionController) {
-         let result;
-
-         switch (action) {
-            case IObservable.ACTION_REMOVE:
-               result = self._selectionController.removeKeys(removedItems);
-               break;
-            case IObservable.ACTION_RESET:
-               result = self._selectionController.reset();
-               break;
-            case IObservable.ACTION_ADD:
-               result = self._selectionController.updateSelectedItems();
-               break;
-         }
-
-         this.handleSelectionControllerResult(self, result);
       }
    },
 
@@ -2710,10 +2699,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _actionsMenuResultHandler(args): void {
         _private.actionsMenuResultHandler(this, args);
-    },
-
-    _onItemsChanged(event, action, newItems, newItemsIndex, removedItems): void {
-        _private.onItemsChanged(this, action, removedItems);
     },
 
     _itemMouseDown(event, itemData, domEvent) {
