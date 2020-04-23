@@ -12,6 +12,7 @@ export interface IColumnsRenderOptions extends IRenderOptions {
     columnMaxWidth: number;
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
+    spacing: number;
 }
 
 export default class Columns extends BaseRender {
@@ -34,16 +35,19 @@ export default class Columns extends BaseRender {
     }
 
     protected _getItemsContainerStyle(): string {
-        const minmax = `minmax(${this._options.columnMinWidth}px, ${this._options.columnMaxWidth}px) `;
+        const minmax = `minmax(${this._options.columnMinWidth + this._options.spacing}px, ${this._options.columnMaxWidth  + this._options.spacing}px) `;
         const gridTemplate = minmax.repeat(this._options.columnsCount);
         return  `grid-template-columns: ${gridTemplate};
                  -ms-grid-columns: ${gridTemplate};`;
     }
+    protected _getMinMaxMidthStyle(min: number, max: number): string {
+        return  `min-width:${min}px; max-width:${max}px; `;
+    }
     protected _getPlaceholderStyle(): string {
-        return  `min-width:${this._options.columnMinWidth}px; max-width:${this._options.columnMaxWidth}px; `;
+        return  this._getMinMaxMidthStyle(this._options.columnMinWidth, this._options.columnMaxWidth);
     }
     protected _getColumnStyle(index: number): string {
-        return this._getPlaceholderStyle() + `-ms-grid-column: ${index + 1};`
+        return this._getMinMaxMidthStyle(this._options.columnMinWidth + this._options.spacing, this._options.columnMaxWidth + this._options.spacing) + `-ms-grid-column: ${index + 1};`
     }
     static getDefaultOptions(): Partial<IRenderOptions> {
         return {
