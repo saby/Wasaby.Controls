@@ -1,15 +1,17 @@
 <div class="controlsDemo__wrapper controlsDemo__maxWidth800">
     <Controls.Configuration._list.EditorArea
-            bind:selectedKey="_selectedKey"
-            items="{{_items}}">
-        <ws:afterTabsTemplate>
-            <Controls.buttons:Button
-                    caption="Настроить"
-                    viewMode="linkButton"
-                    icon="icon-Settings"
-                    fontColorStyle="secondary"
-                    iconSize="s"
-                    on:click="_customizeClick()"/>
-        </ws:afterTabsTemplate>
-    </Controls.Configuration._list.EditorArea>
+            bind:viewMode="_selectedKey"
+            templateName="testTemplate"
+            tileTemplate="{{_tileTemplate}}"
+            tableTemplate="{{_tableTemplate}}"
+            bind:editorValue="_editorValue"
+            listTemplate="{{_listTemplate}}"
+    />
+    <Controls.buttons:Button
+            caption="Настроить"
+            viewMode="linkButton"
+            icon="icon-Settings"
+            fontColorStyle="secondary"
+            iconSize="s"
+            on:click="_customizeClick()"/>
 </div>

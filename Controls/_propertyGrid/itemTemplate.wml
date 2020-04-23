@@ -1,6 +1,10 @@
-<div class="controls-PropertyGrid__editor_theme-{{theme}}" >
-    <ws:if data="{{itemData.item.caption !== ''}}">
-        <span class="controls-PropertyGrid__editor-caption_theme-{{theme}}">{{itemData.item.caption || itemData.item.name}}</span>
-    </ws:if>
-    <Controls.Container.Async templateName="{{itemData.item.editorTemplateName}}" templateOptions="{{itemData.item.editorOptions}}" class="{{itemData.item.editorClass}}"/>
-</div>
+<span class="controls-PropertyGrid__editor-caption_theme-{{theme}}
+            controls-PropertyGrid__editor-caption-{{collectionItem.isNode() ? 'secondary' : 'default'}}_theme-{{theme}}"
+      style="{{getItemStyles(collectionItem, 1)}}">
+            {{item.caption}}
+</span>
+<Controls.Container.Async
+        attr:class="controls-PropertyGrid__editor_theme-{{theme}}"
+        attr:style="{{getItemStyles(collectionItem, 2)}}"
+        templateName="{{item.editorTemplateName}}"
+        templateOptions="{{item.editorOptions}}"/>

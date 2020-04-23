@@ -6,9 +6,4 @@ import 'css!Controls/Configuration/_list/OptionsEditor/OptionsEditor';
 export default class ListEditor extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
-    protected _editingObject: Record<string, any> = {};
-
-    protected _beforeMount(options: any): void {
-        this._editingObject = options.editorValue;
-    }
 }

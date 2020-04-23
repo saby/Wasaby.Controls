@@ -1,19 +1,21 @@
-<div attr:class="controls-PropertyGrid__group
-                 controls-PropertyGrid__group_theme-{{theme}}" attr:key="group-{{itemData.item}}">
-    <div class="controls-PropertyGrid__group-content_theme-{{theme}}">
-        <ws:if data="{{!!contentTemplate}}">
-            <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
-        </ws:if>
-        <ws:else>
-            {{itemData.item}}
-        </ws:else>
-    </div>
-    <ws:if data="{{expanderVisible}}">
-        <div title="{{itemData.isGroupExpanded ? 'Свернуть' : 'Развернуть'}}"
-             class="controls-PropertyGrid__groupExpander
+<ws:if data="{{!collectionItem.isHiddenGroup()}}">
+    <div class="controls-PropertyGrid__group controls-PropertyGrid__group_theme-{{theme}}" attr:key="group-{{item}}"
+        style="{{getItemStyles(collectionItem)}}">
+        <div class="controls-PropertyGrid__group-content_theme-{{theme}}">
+            <ws:if data="{{!!contentTemplate}}">
+                <ws:partial template="{{contentTemplate}}" item="{{item}}" collectionItem="{{collectionItem}}"/>
+            </ws:if>
+            <ws:else>
+                {{item}}
+            </ws:else>
+        </div>
+        <ws:if data="{{expanderVisible}}">
+            <div title="{{collectionItem.isExpanded() ? 'Свернуть' : 'Развернуть'}}"
+                 class="controls-PropertyGrid__groupExpander
                     controls-icon
                     controls-icon_size-s_theme-{{theme}}
-                    {{itemData.isGroupExpanded ? 'icon-MarkCollapseBold' : 'icon-MarkExpandBold'}}
+                    {{collectionItem.isExpanded() ? 'icon-MarkCollapseBold' : 'icon-MarkExpandBold'}}
                     controls-PropertyGrid__groupExpander_theme-{{theme}}"></div>
-    </ws:if>
-</div>
+        </ws:if>
+    </div>
+</ws:if>

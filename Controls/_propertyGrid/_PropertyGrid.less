@@ -8,9 +8,18 @@
 
 .controls-PropertyGrid__editor-caption_theme-@{themeName} {
   display: inline-flex;
-  width: @label_width_propertyGrid;
-  color: @label_text-color;
+  margin-bottom: @editor_offset_propertyGrid;
   cursor: default;
+}
+
+.controls-PropertyGrid__editor-caption-default_theme-@{themeName} {
+  color: @label_text-color;
+}
+
+.controls-PropertyGrid__editor-caption-secondary_theme-@{themeName} {
+  color: @secondary_text-color;
+  font-size: @font-size_3xl;
+  font-weight: bold;
 }
 
 .controls-PropertyGrid__group_theme-@{themeName} {
@@ -27,4 +36,8 @@
   cursor: pointer;
   margin-left: auto;
   align-self: center;
+}
+
+.control-PropertyGrid__itemsContainer {
+  display: grid;
 }

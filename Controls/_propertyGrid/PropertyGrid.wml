@@ -1,6 +1,9 @@
 <div class="controls-PropertyGrid controls-PropertyGrid_theme-{{_options.theme}}">
-    <ws:partial template="wml!Controls/_propertyGrid/for"
-                itemsViewModel="{{itemsViewModel}}"
-                theme="{{_options.theme}}"
-                groupTemplate="{{_options.groupTemplate || _defaultGroupTemplate}}"/>
+    <div class="control-PropertyGrid__itemsContainer" style="grid-template-columns: 50% 1fr">
+        <ws:partial template="wml!Controls/_propertyGrid/for"
+                    getItemStyles="{{_getItemStyles}}"
+                    itemsViewModel="{{itemsViewModel}}"
+                    theme="{{_options.theme}}"
+                    groupTemplate="{{_options.groupTemplate || _defaultGroupTemplate}}"/>
+    </div>
 </div>

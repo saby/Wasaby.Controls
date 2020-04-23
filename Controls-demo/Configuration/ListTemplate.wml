@@ -1,0 +1,1 @@
+<div>{{_options.viewMode + ' ' + _options.name}}</div>

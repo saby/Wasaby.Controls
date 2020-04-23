@@ -1,17 +1,11 @@
-<ws:for data="itemsViewModel.reset(); itemsViewModel.isEnd(); itemsViewModel.goToNext();">
-    <ws:if data="{{itemsViewModel.getCurrent().isGroup}}">
-        <ws:if data="{{!itemsViewModel.getCurrent().isHiddenGroup}}">
-            <ws:partial template="{{groupTemplate}}"
-                        itemData="{{itemsViewModel.getCurrent()}}"
-                        theme="{{theme}}"
-                        on:click="_groupClick(itemsViewModel.getCurrent().dispItem)"/>
-        </ws:if>
-    </ws:if>
-    <ws:else>
-        <ws:partial
-                template="wml!Controls/_propertyGrid/itemTemplate"
-                itemData="{{itemsViewModel.getCurrent()}}"
-                on:propertyValueChanged="_propertyValueChanged(itemsViewModel.getCurrent().item)"/>
-    </ws:else>
+<ws:for data="index, item in itemsViewModel.getViewIterator()">
+    <ws:partial
+            template="{{item.getItemTemplate('wml!Controls/_propertyGrid/itemTemplate', groupTemplate)}}"
+            getItemStyles="{{getItemStyles}}"
+            theme="{{theme}}"
+            collectionItem="{{item}}"
+            item="{{item.getContents()}}"
+            on:propertyValueChanged="_propertyValueChanged(item.getContents())"
+            on:click="_groupClick(item)"/>
 </ws:for>
 

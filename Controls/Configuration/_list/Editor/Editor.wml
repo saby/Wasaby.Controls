@@ -1,16 +1,24 @@
 <div class="layout-listEditor">
     <div class="layout-listEditor_previewContainer">
-        <ws:partial template="{{_options.previewTemplate}}"
-                    scope="{{_options.editorValue}}"/>
+        <Controls.Container.Async
+            templateName="{{_options.previewTemplateName}}">
+            <ws:partial
+                    template="{{content.resolvedTemplate}}"
+                    scope="{{_previewOptions}}"
+                    viewMode="{{_options.viewMode}}"
+            />
+        </Controls.Container.Async>
     </div>
     <div class="layout-listEditor_editorContainer">
-        <ws:if data="{{_options.editorSource}}">
+        <ws:if data="{{_options.editorOptions}}">
             <Controls.Container.Async
                     templateName="Controls/Configuration/_list/OptionsEditor">
                 <ws:partial
                         template="{{content.resolvedTemplate}}"
-                        source="{{_options.editorSource}}"
-                        editorValue="{{_options.editorValue}}"/>
+                        value="{{_options.editorValue}}"
+                        scope="{{_options.editorOptions}}"
+                        on:editorValueChanged="_notifyHandler('editorValueChanged')"
+                />
             </Controls.Container.Async>
         </ws:if>
     </div>

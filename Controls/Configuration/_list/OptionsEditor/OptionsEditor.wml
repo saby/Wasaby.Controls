@@ -1,7 +1,9 @@
-<Controls.propertyGrid:PropertyGrid
-        bind:editingObject="_editingObject"
-        source="{{_options.source}}">
-    <ws:groupTemplate>
-        <ws:partial template="Controls/propertyGrid:GroupTemplate" expanderVisible="{{true}}"/>
-    </ws:groupTemplate>
-</Controls.propertyGrid:PropertyGrid>
+<div class="layout-optionsEditor">
+    <Controls.propertyGrid:PropertyGrid
+            editingObject="{{_options.value}}"
+            parentProperty="{{_options.parentProperty}}"
+            nodeProperty="{{_options.nodeProperty}}"
+            source="{{_options.source}}"
+            on:editingObjectChanged="_notifyHandler('editorValueChanged')"
+    />
+</div>

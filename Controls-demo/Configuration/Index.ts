@@ -10,41 +10,108 @@ interface IListEditorOptions extends IControlOptions {
 export default class ListEditorDemo extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = template;
     protected _selectedKey: string = 'tile';
-    protected _items = [
-        {
-            name: 'tile',
-            caption: 'Плитка',
-            icon: 'ArrangePreview',
-            templateName: 'wml!Controls-demo/Configuration/TabTemplate',
-            templateOptions: {
-                name: 'tile',
-                editorValue: getEditingObject(),
-                editorSource: getSource()
-            }
+    protected _tileTemplate: {
+        templateName: 'wml!Controls-demo/Configuration/TileTemplate',
+        templateOptions: {
+            name: 'tile'
         },
-        {
-            name: 'tree',
-            caption: 'Таблица',
-            icon: 'TableCreate',
-            templateName: 'wml!Controls-demo/Configuration/TabTemplate',
-            templateOptions: {
-                name: 'tree',
-                editorValue: getEditingObject(),
-                editorSource: getSource()
-            }
-        },
-        {
-            name: 'list',
-            caption: 'Список',
-            icon: 'InputHistory',
-            templateName: 'wml!Controls-demo/Configuration/TabTemplate',
-            templateOptions: {
-                name: 'list',
-                editorValue: getEditingObject(),
-                editorSource: getSource()
-            }
+        editorOptions: {
+            editorSource:
         }
-    ];
+    };
+    protected _tableTemplate: {
+        templateName: 'wml!Controls-demo/Configuration/TableTemplate',
+        templateOptions: {
+            name: 'table'
+        }
+    };
+
+    protected _beforeMount(options): void {
+        this._editorValue = {};
+        this._tileTemplate = {
+            templateName: 'wml!Controls-demo/Configuration/TileTemplate',
+            templateOptions: {
+                name: 'tile'
+            },
+            editorOptions: {
+                source: this.getTileEditorSource(),
+                parentProperty: 'Раздел',
+                nodeProperty: 'Раздел@',
+                root: null
+            }
+        };
+        this._listTemplate = {
+            templateName: 'wml!Controls-demo/Configuration/ListTemplate',
+            templateOptions: {
+                name: 'list'
+            },
+            editorOptions: {
+                source: this.getTileEditorSource(),
+                parentProperty: 'Раздел',
+                nodeProperty: 'Раздел@',
+                root: null
+            }
+        };
+        this._tableTemplate = {
+            templateName: 'wml!Controls-demo/Configuration/TableTemplate',
+            templateOptions: {
+                name: 'tableTemplate'
+            },
+            editorOptions: {
+                source: this.getTileEditorSource(),
+                parentProperty: 'Раздел',
+                nodeProperty: 'Раздел@',
+                root: null
+            }
+        };
+    }
+
+    private getTileEditorSource(): any {
+        return [
+            {
+                name: 'description',
+                Раздел: null,
+                'Раздел@': true,
+                caption: 'Описание',
+                editorOptions: {
+                    minLines: 3
+                },
+                editorClass: 'controls-demo-pg-text-editor',
+                type: 'text'
+            },
+            {
+                name: 'tileView',
+                Раздел: 'description',
+                'Раздел@': false,
+                caption: 'Список плиткой'
+            },
+            {
+                name: 'showBackgroundImage',
+                Раздел: 'description',
+                'Раздел@': false,
+                caption: 'Показывать изображение'
+            },
+            {
+                caption: 'URL',
+                name: 'siteUrl',
+                Раздел: 'description',
+                'Раздел@': false
+            },
+            {
+                caption: 'Источник видео',
+                name: 'videoSource',
+                Раздел: 'description',
+                'Раздел@': false
+            },
+            {
+                caption: 'Тип фона',
+                name: 'backgroundType',
+                Раздел: 'description',
+                'Раздел@': false,
+                editorClass: 'controls-demo-pg-enum-editor'
+            }
+        ];
+    }
 
     protected async _customizeClick(): Promise<string> {
         const popup = await import('Controls/popup');

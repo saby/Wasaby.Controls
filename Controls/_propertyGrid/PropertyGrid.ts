@@ -1,8 +1,8 @@
-import Control = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_propertyGrid/PropertyGrid');
 import defaultGroupTemplate = require('wml!Controls/_propertyGrid/groupTemplate');
 import PropertyGridItem = require('Controls/_propertyGrid/PropertyGridItem');
-import {ItemsViewModel} from 'Controls/list';
+import 'wml!Controls/_propertyGrid/itemTemplate';
 
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
@@ -11,6 +11,8 @@ import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
 import IProperty from 'Controls/_propertyGrid/IProperty';
 
 import {view as constView} from 'Controls/Constants';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Tree, GroupItem, TreeItem} from 'Controls/display';
 
 interface IPropertyGridItem extends IProperty {
     propertyValue: any;
@@ -25,7 +27,7 @@ interface IPropertyGridItemDefault extends IPropertyGridItem {
     editorOptions: undefined;
     editorClass: undefined;
     type: undefined;
-    group: undefined;
+    group: string;
     propertyValue: undefined;
 }
 
@@ -52,7 +54,7 @@ function checkRequiredOptions(options: IPropertyGridOptions): void {
     }
 }
 
-function getPropertyGridItems(editingObject: Object, source: IProperty[]): PropertyGridItems {
+function getPropertyGridItems(editingObject: Object, source: IProperty[]): RecordSet<PropertyGridItem> {
     const itemsArray: IPropertyGridItem[] = [];
     let result: RecordSet<Record>;
 
@@ -62,7 +64,7 @@ function getPropertyGridItems(editingObject: Object, source: IProperty[]): Prope
         propertyGridItemDefault = getPropertyItemDefault();
         propertyGridItemDefault.propertyValue = editingObject[config[PROPERTY_NAME_FIELD]];
 
-        Object.assign(propertyGridItemDefault, config);
+        propertyGridItemDefault = {...propertyGridItemDefault, ...config};
         itemsArray.push(propertyGridItemDefault);
     });
 
@@ -99,25 +101,18 @@ function getPropertyGridItems(editingObject: Object, source: IProperty[]): Prope
  * @author Герасимов А.М.
  */
 
-// @ts-ignore
-class PropertyGrid extends Control  {
-    protected _options: IPropertyGridOptions;
-    protected _template: Function = template;
-    protected _defaultGroupTemplate: Function = defaultGroupTemplate;
+class PropertyGrid extends Control<IPropertyGridOptions>  {
+    protected _template: TemplateFunction = template;
+    protected _defaultGroupTemplate: TemplateFunction = defaultGroupTemplate;
 
-    private items: PropertyGridItems;
-    private itemsViewModel: ItemsViewModel;
+    private items: RecordSet<PropertyGridItem>;
+    private itemsViewModel: Tree<PropertyGridItem>;
 
     _beforeMount(options: IPropertyGridOptions): void {
         checkRequiredOptions(options);
-
+        this._getItemStyles = this._getItemStyles.bind(this);
         this.items = getPropertyGridItems(options.editingObject, options.source);
-        this.itemsViewModel = new ItemsViewModel({
-            items: this.items,
-            collapsedGroups: options.collapsedGroups,
-            keyProperty: PROPERTY_NAME_FIELD,
-            groupProperty: PROPERTY_GROUP_FIELD
-        });
+        this.itemsViewModel = this.getViewModel(this.items, options.parentProperty, options.nodeProperty);
     }
 
     _beforeUpdate(newOptions: IPropertyGridOptions): void {
@@ -125,7 +120,7 @@ class PropertyGrid extends Control  {
 
         if (newOptions.editingObject !== this._options.editingObject || newOptions.source !== this._options.source) {
             this.items = getPropertyGridItems(newOptions.editingObject, newOptions.source);
-            this.itemsViewModel.setItems(this.items);
+            this.itemsViewModel = this.getViewModel(this.items, newOptions.parentProperty, newOptions.nodeProperty);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
@@ -141,19 +136,62 @@ class PropertyGrid extends Control  {
         editingObjectClone[name] = value;
         itemClone.set(PROPERTY_VALUE_FIELD, value);
 
-        this.items.getRecordById(name).set(PROPERTY_VALUE_FIELD, value);
+        (this.items.getRecordById(name) as PropertyGridItem).set(PROPERTY_VALUE_FIELD, value);
 
         event.stopPropagation();
         this._notify('editingObjectChanged', [editingObjectClone]);
     }
 
-    private _groupClick(event, displayItem): void {
-        const groupId = displayItem.getContents();
-        const isExpandClick = event.target.closest('.controls-PropertyGrid__groupExpander');
+    private _groupCallback(item: PropertyGridItem): string {
+        return item.get(PROPERTY_GROUP_FIELD);
+    }
 
-        if (isExpandClick) {
-            this.itemsViewModel.toggleGroup(groupId, !this.itemsViewModel.isGroupExpanded(groupId));
+    protected _groupClick(
+        event: SyntheticEvent<Event>,
+        collectionItem: GroupItem<PropertyGridItem> | TreeItem<PropertyGridItem>
+    ): void {
+        if (collectionItem instanceof GroupItem) {
+            const isExpandClick = event.target.closest('.controls-PropertyGrid__groupExpander');
+            if (isExpandClick) {
+                collectionItem.toggleExpanded();
+            }
         }
+    }
+
+    protected _getItemStyles(
+        item: GroupItem<PropertyGridItem> | TreeItem<PropertyGridItem>,
+        columnIndex: number
+    ): string {
+        const itemIndex = this.itemsViewModel.getIndex(item);
+        if (item instanceof GroupItem) {
+            return `-ms-grid-column: 1;
+                    -ms-grid-column-span: 3;
+                    grid-column-start: 1;
+                    grid-column-end: 3;
+                    grid-row: ${itemIndex + 1};`;
+        } else {
+            return `grid-column: ${columnIndex};
+                grid-row: ${itemIndex + 1};
+                -ms-grid-column: ${columnIndex};
+                -ms-grid-row: ${itemIndex + 1};`;
+        }
+    }
+
+    getViewModel(
+        items: RecordSet<PropertyGridItem>,
+        parentProperty: string,
+        nodeProperty: string,
+        collapsedGroups: Array<string | number>
+    ): Tree<PropertyGridItem> {
+        const collection = new Tree({
+            collection: this.items as IEnumerable,
+            keyProperty: PROPERTY_NAME_FIELD,
+            root: null,
+            parentProperty,
+            nodeProperty,
+            group: this._groupCallback
+        });
+        return collection;
     }
 }
 
