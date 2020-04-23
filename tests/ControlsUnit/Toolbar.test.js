@@ -354,6 +354,26 @@ define(
                assert.deepEqual((new toolbars.View())._getButtonTemplateOptionsByItem(item), modifyItem);
 
             });
+            it('get functionalButton template options by item', function() {
+               let item = new entity.Record(
+                  {
+                     rawData: {
+                        id: '0',
+                        icon: 'icon-RoundPlus',
+                        fontColorStyle: 'secondary',
+                        viewMode: 'functionalButton',
+                        iconStyle: 'contrast',
+                        title: 'Добавить',
+                        '@parent': false,
+                        parent: null
+                     }
+                  }
+               );
+               let modifyItem = (new toolbars.View())._getButtonTemplateOptionsByItem(item);
+               assert.strictEqual(modifyItem._iconSize, 's');
+               assert.strictEqual(modifyItem._height, 'default');
+               assert.strictEqual(modifyItem._icon, 'icon-RoundPlus');
+            });
             it('menu popup config generation', function() {
                let itemsForMenu = [
                   {

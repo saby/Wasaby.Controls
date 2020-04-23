@@ -34,20 +34,20 @@ class ToolbarVdom extends Control<IControlOptions> {
          {
             id: '1',
             showType: showType.TOOLBAR,
-            icon: 'icon-Time icon-medium',
+            icon: 'icon-Time',
             '@parent': false,
             parent: null
          },
          {
             id: '3',
-            icon: 'icon-Print icon-medium',
+            icon: 'icon-Print',
             title: 'Распечатать',
             '@parent': false,
             parent: null
          },
          {
             id: '4',
-            icon: 'icon-24 icon-Linked',
+            icon: 'icon-Linked',
             fontColorStyle: 'secondary',
             viewMode: 'toolButton',
             iconStyle: 'secondary',
@@ -59,7 +59,7 @@ class ToolbarVdom extends Control<IControlOptions> {
          {
             id: '5',
             viewMode: 'icon',
-            icon: 'icon-Link icon-medium',
+            icon: 'icon-Link',
             title: 'Скопировать в буфер',
             '@parent': false,
             parent: null
@@ -102,7 +102,7 @@ class ToolbarVdom extends Control<IControlOptions> {
          },
          {
             id: '11',
-            icon: 'icon-medium icon-EmptyMessage',
+            icon: 'icon-EmptyMessage',
             fontColorStyle: 'secondary',
             showHeader: true,
             viewMode: 'link',
@@ -130,7 +130,7 @@ class ToolbarVdom extends Control<IControlOptions> {
          {
             id: '14',
             showType: showType.MENU,
-            icon: 'icon-medium icon-Groups',
+            icon: 'icon-Groups',
             fontColorStyle: 'secondary',
             title: 'Совещания',
             '@parent': false,
@@ -140,7 +140,7 @@ class ToolbarVdom extends Control<IControlOptions> {
          {
             id: '2',
             showType: showType.MENU,
-            icon: 'icon-medium icon-Report',
+            icon: 'icon-Report',
             fontColorStyle: 'secondary',
             title: 'Список задач',
             '@parent': true,
@@ -151,7 +151,7 @@ class ToolbarVdom extends Control<IControlOptions> {
       this._defaultItemsWithoutToolbutton = [
          {
             id: '1',
-            icon: 'icon-Print icon-medium',
+            icon: 'icon-Print',
             title: 'Распечатать',
             readOnly: false,
             '@parent': false,
@@ -160,7 +160,7 @@ class ToolbarVdom extends Control<IControlOptions> {
          {
             id: '2',
             viewMode: 'icon',
-            icon: 'icon-Link icon-medium',
+            icon: 'icon-Link',
             title: 'Скопировать в буфер',
             '@parent': false,
             parent: null
@@ -188,7 +188,7 @@ class ToolbarVdom extends Control<IControlOptions> {
          },
          {
             id: '6',
-            icon: 'icon-medium icon-EmptyMessage',
+            icon: 'icon-EmptyMessage',
             fontColorStyle: 'secondary',
             showHeader: true,
             viewMode: 'link',
@@ -218,7 +218,7 @@ class ToolbarVdom extends Control<IControlOptions> {
          {
             id: '1',
             showType: showType.TOOLBAR,
-            icon: 'icon-Time  icon-medium',
+            icon: 'icon-Time',
             fontColorStyle: 'secondary',
             viewMode: 'toolButton',
             iconStyle: 'secondary',
@@ -230,7 +230,7 @@ class ToolbarVdom extends Control<IControlOptions> {
          {
             id: '2',
             showType: showType.TOOLBAR,
-            icon: 'icon-Linked icon-medium',
+            icon: 'icon-Linked',
             fontColorStyle: 'secondary',
             viewMode: 'toolButton',
             iconStyle: 'secondary',
@@ -240,12 +240,23 @@ class ToolbarVdom extends Control<IControlOptions> {
          {
             id: '3',
             showType: showType.TOOLBAR,
-            icon: 'icon-Author icon-medium',
+            icon: 'icon-Author',
             fontColorStyle: 'secondary',
             viewMode: 'toolButton',
             iconStyle: 'secondary',
             contrastBackground: true,
             title: 'Автор'
+         },
+         {
+            id: '4',
+            showType: showType.TOOLBAR,
+            icon: 'icon-RoundPlus',
+            fontColorStyle: 'secondary',
+            viewMode: 'functionalButton',
+            iconStyle: 'contrast',
+            title: 'Добавить',
+            '@parent': true,
+            parent: null
          }
       ];
    }
