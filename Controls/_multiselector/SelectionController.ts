@@ -38,7 +38,7 @@ export class SelectionController {
       this._strategy = options.strategy;
       this._filter = options.filter;
 
-      this._updateSelectionForRender();
+      this._updateModel();
    }
 
    toggleItem(key: TKey): ISelectionControllerResult {
@@ -50,7 +50,7 @@ export class SelectionController {
          this._select([key]);
       }
 
-      this._updateSelectionForRender();
+      this._updateModel();
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -69,22 +69,22 @@ export class SelectionController {
          this._filter = options.filter;
       }
 
+      const oldSelection = clone(this._selection);
       if (selectionChanged) {
-         const oldSelection = clone(this._selection);
          this._selectedKeys = options.selectedKeys;
          this._excludedKeys = options.excludedKeys;
 
-         this._updateSelectionForRender();
-         return this._getResult(oldSelection, this._selection);
+         this._updateModel();
       } else if (itemsChanged || modelChanged || filterChanged) {
-         this._updateSelectionForRender();
+         this._updateModel();
       }
+      return this._getResult(oldSelection, this._selection);
    }
 
    selectAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._strategy.selectAll(this._selection, this._model);
-      this._updateSelectionForRender();
+      this._updateModel();
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -92,7 +92,7 @@ export class SelectionController {
       const oldSelection = clone(this._selection);
       this._strategy.toggleAll(this._selection, this._model);
 
-      this._updateSelectionForRender();
+      this._updateModel();
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -100,23 +100,33 @@ export class SelectionController {
       const oldSelection = clone(this._selection);
       this._strategy.unselectAll(this._selection, this._model);
 
-      this._updateSelectionForRender();
+      this._updateModel();
       return this._getResult(oldSelection, this._selection);
    }
 
-   removeKeys(removedItems: Model[]): ISelectionControllerResult {
+   handleAddItems(addedItems: Model[]): ISelectionControllerResult {
+      this._updateModel();
+      return {
+         selectedKeysDiff: { newKeys: [], added: [], removed: [] },
+         excludedKeysDiff: { newKeys: [], added: [], removed: [] },
+         selectedCount: this._getCount(this._selection),
+         isAllSelected: this._isAllSelected(this._selection)
+      };
+   }
+
+   handleRemoveItems(removedItems: Model[]): ISelectionControllerResult {
       // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
       // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
       if (this._model.getCollection()) {
          const oldSelection = clone(this._selection);
          this._remove(this._getItemsKeys(removedItems));
 
-         this._updateSelectionForRender();
+         this._updateModel();
          return this._getResult(oldSelection, this._selection);
       }
    }
 
-   reset(): ISelectionControllerResult {
+   handleReset(): ISelectionControllerResult {
       // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
       // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
       if (this._model.getCollection()) {
@@ -131,19 +141,9 @@ export class SelectionController {
             this._clearSelection();
          }
 
-         this._updateSelectionForRender();
+         this._updateModel();
          return this._getResult(oldSelection, this._selection);
       }
-   }
-
-   updateSelectedItems(): ISelectionControllerResult {
-      this._updateSelectionForRender();
-      return {
-         selectedKeysDiff: { newKeys: [], added: [], removed: [] },
-         excludedKeysDiff: { newKeys: [], added: [], removed: [] },
-         selectedCount: this._getCount(this._selection),
-         isAllSelected: this._isAllSelected(this._selection)
-      };
    }
 
    private _select(keys: TKeys): void {
@@ -238,7 +238,7 @@ export class SelectionController {
       };
    }
 
-   private _updateSelectionForRender(): void {
+   private _updateModel(): void {
       const selectionForModel = this._strategy.getSelectionForModel(this._selection, this._model);
       this._model.setSelectedItems(selectionForModel.get(true), true);
       this._model.setSelectedItems(selectionForModel.get(false), false);

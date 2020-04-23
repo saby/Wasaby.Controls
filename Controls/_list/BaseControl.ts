@@ -1189,13 +1189,13 @@ var _private = {
 
                switch (action) {
                   case IObservable.ACTION_REMOVE:
-                     result = self._selectionController.removeKeys(removedItems);
+                     result = self._selectionController.handleRemoveItems(removedItems);
                      break;
                   case IObservable.ACTION_RESET:
-                     result = self._selectionController.reset();
+                     result = self._selectionController.handleReset();
                      break;
                   case IObservable.ACTION_ADD:
-                     result = self._selectionController.updateSelectedItems();
+                     result = self._selectionController.handleAddItems(newItems);
                      break;
                }
 
@@ -1812,7 +1812,7 @@ var _private = {
           break;
       }
 
-      this.handleSelectionControllerResult(this, result);
+      this.handleSelectionControllerResult(result);
    },
 
    handleSelectionControllerResult(self: any, result: ISelectionControllerResult): void {
