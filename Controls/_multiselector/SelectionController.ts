@@ -2,8 +2,9 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { isEqual } from 'Types/object';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import clone = require('Core/core-clone');
-import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import { Model } from 'Types/entity';
+import { CollectionItem } from 'Controls/display';
+import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import {
    ISelectionControllerOptions,
    ISelectionControllerResult,
@@ -178,8 +179,8 @@ export class SelectionController {
       return this._strategy.getCount(selection || this._selection, this._model);
    }
 
-   private _getItemsKeys(items: Model[]): TKeys {
-      return items.map((item) => item.getId());
+   private _getItemsKeys(items: Array<CollectionItem<Model>>): TKeys {
+      return items.map((item) => item.getContents().getId());
    }
 
    private _isAllSelectedInRoot(root: object): boolean {
