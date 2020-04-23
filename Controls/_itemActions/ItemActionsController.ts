@@ -85,27 +85,10 @@ export class ItemActionsController {
     }
 
     /**
-     * Обновляет операции с записью элемента коллекции по его ключу
-     * @param key TItemKey
-     */
-    updateActionsForItem(key: TItemKey): void {
-        const item = this._collection.getItemBySourceKey(key);
-        if (item) {
-            const itemActions = this._collectActionsForItem(item);
-            ItemActionsController._setItemActions(item, this._wrapActionsInContainer(itemActions));
-            this._collection.nextVersion();
-        }
-    }
-
-    /**
      * Устанавливает флаг активности элементу коллекции по его ключу
-     * @param collection Коллекция элементов, содержащих операции с записью
      * @param key Ключ элемента коллекции, для которого нужно обновить операции с записью
      */
-    setActiveItem(
-        collection: IItemActionsCollection,
-        key: TItemKey
-    ): void {
+    setActiveItem(key: TItemKey): void {
         const oldActiveItem = this.getActiveItem();
         const newActiveItem = this._collection.getItemBySourceKey(key);
 
@@ -121,35 +104,27 @@ export class ItemActionsController {
 
     /**
      * Активирует Swipe для меню операций с записью
-     * @param collection Коллекция элементов, содержащих операции с записью
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
      * @param actionsContainerHeight высота контейнера для отображения операций с записью
      */
-    activateSwipe(
-        collection: IItemActionsCollection,
-        itemKey: TItemKey,
-        actionsContainerHeight: number
-    ): void {
-        this._setSwipeItem(this._collection, itemKey);
-        this.setActiveItem(this._collection, itemKey);
+    activateSwipe(itemKey: TItemKey, actionsContainerHeight: number): void {
+        this._setSwipeItem(itemKey);
+        this.setActiveItem(itemKey);
 
         if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
         }
 
         this._collection.setSwipeAnimation(ANIMATION_STATE.OPEN);
-        this._collection.nextVersion();
     }
 
     /**
      * Деактивирует Swipe для меню операций с записью
-     * @param collection Коллекция элементов, содержащих операции с записью
      */
-    deactivateSwipe(collection: IItemActionsCollection): void {
-        this._setSwipeItem(this._collection, null);
-        this.setActiveItem(this._collection, null);
+    deactivateSwipe(): void {
+        this._setSwipeItem(null);
+        this.setActiveItem(null);
         this._collection.setSwipeConfig(null);
-        this._collection.nextVersion();
     }
 
     /**
@@ -165,15 +140,6 @@ export class ItemActionsController {
      */
     getSwipeItem(collection: IItemActionsCollection): IItemActionsItem {
         return this._collection.find((item) => item.isSwiped());
-    }
-
-    /**
-     * Метод, который должен отработать после закрытия меню
-     * @private
-     */
-    afterCloseActionsMenu(): void {
-        this.setActiveItem(this._collection, null);
-        this.deactivateSwipe(this._collection);
     }
 
     /**
@@ -251,8 +217,7 @@ export class ItemActionsController {
 
     // Оставил на случай, если придётся откатиться к варианту работы с popup из Render
     // resetItemActionsConfig() {
-    //     // afterCloseActionsMenu();
-    //     this.setActiveItem(this._collection, null);
+    //     this.setActiveItem(null);
     //     this.deactivateSwipe(this._collection);
     //     this._collection.setActionsMenuConfig(null);
     //     this._collection.nextVersion();
@@ -265,7 +230,7 @@ export class ItemActionsController {
     //                         isContextMenu: boolean): void {
     //     const itemKey = contents?.getKey();
     //     const menuConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
-    //     this.setActiveItem(this._collection, itemKey);
+    //     this.setActiveItem(itemKey);
     //     this._collection.setActionsMenuConfig(menuConfig);
     //     this._collection.nextVersion();
     // }
@@ -333,13 +298,9 @@ export class ItemActionsController {
 
     /**
      * Устанавливает текущий swiped элемент
-     * @param collection Коллекция элементов, содержащих операции с записью
      * @param key Ключ элемента коллекции, на котором был выполнен swipe
      */
-    private _setSwipeItem(
-        collection: IItemActionsCollection,
-        key: TItemKey
-    ): void {
+    private _setSwipeItem(key: TItemKey): void {
         const oldSwipeItem = this.getSwipeItem(this._collection);
         const newSwipeItem = this._collection.getItemBySourceKey(key);
 

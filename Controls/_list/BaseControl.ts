@@ -1304,7 +1304,7 @@ var _private = {
             onResult: self._onItemActionsMenuResult,
             onClose: self._onItemActionsMenuClose
         };
-        self._itemActionsController.setActiveItem(self._listViewModel, itemKey);
+        self._itemActionsController.setActiveItem(itemKey);
         Sticky.openPopup(menuConfig).then((popupId) => {
             self._popupId = popupId;
         });
@@ -1315,7 +1315,8 @@ var _private = {
      * @private
      */
     closeActionsMenu(self: any): void {
-        self._itemActionsController.afterCloseActionsMenu();
+        self._itemActionsController.setActiveItem(null);
+        self._itemActionsController.deactivateSwipe();
         Sticky.closePopup(self._popupId);
     },
 
@@ -2421,15 +2422,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _onAfterBeginEdit: function (event, item, isAdd) {
         var result = this._notify('afterBeginEdit', [item, isAdd]);
-
         /*
         * TODO: KINGO
         * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
         * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
         * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-        * _canUpdateItemsActions  приведет к показу неактуальных операций.
+        * _canUpdateItemsActions приведет к показу неактуальных операций.
         */
-        this._itemActionsController.updateActionsForItem(item.key);
+        this._updateItemActions();
         return result;
     },
 
@@ -2488,7 +2488,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onItemActionsMenuClose(clickEvent: SyntheticEvent<MouseEvent>): void {
-        this._itemActionsController.afterCloseActionsMenu();
+        this._itemActionsController.setActiveItem(null);
+        this._itemActionsController.deactivateSwipe();
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {
@@ -2803,11 +2804,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 : itemContainer.querySelector('.js-controls-SwipeControl__actionsContainer');
 
         if (swipeEvent.nativeEvent.direction === 'left') {
-            this._itemActionsController.activateSwipe(
-                this._listViewModel,
-                item.getContents().getKey(),
-                swipeContainer?.clientHeight
-            );
+            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
             _private.setMarkedKey(this, key);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
@@ -2840,7 +2837,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
                 this._notify('itemSwipe', [this._itemActionsController.getSwipeItem(), e]);
             }
-            this._itemActionsController.deactivateSwipe(this._listViewModel);
+            this._itemActionsController.deactivateSwipe();
         }
     },
 
