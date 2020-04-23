@@ -42,6 +42,8 @@ import _Controller = require('Controls/_dropdown/_Controller');
 import Opener = require('Controls/_dropdown/Opener');
 import Combobox = require('Controls/_dropdown/ComboBox');
 import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
+import GroupTemplate = require('wml!Controls/_dropdown/GroupTemplate');
+import HeaderTemplate = require('wml!Controls/_dropdown/HeaderTemplate');
 
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import dropdownHistoryUtils = require('Controls/_dropdown/dropdownHistoryUtils');
@@ -57,6 +59,8 @@ export {
     Opener,
     Combobox,
     ItemTemplate,
+    GroupTemplate,
+    HeaderTemplate,
 
     MenuUtils,
     dropdownHistoryUtils,
