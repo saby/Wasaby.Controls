@@ -3327,7 +3327,7 @@ define([
          });
       });
 
-      it('_onAnimationEnd', function() {
+      it('_onSwipeAnimationEnd', function() {
          var setRightSwipedItemCalled = false;
          var ctrl = new lists.BaseControl();
          ctrl._listViewModel = {
@@ -3335,13 +3335,13 @@ define([
                setRightSwipedItemCalled = true;
             }
          };
-         ctrl._onAnimationEnd({
+         ctrl._onSwipeAnimationEnd({
             nativeEvent: {
                animationName: 'test'
             }
          });
          assert.isFalse(setRightSwipedItemCalled);
-         ctrl._onAnimationEnd({
+         ctrl._onSwipeAnimationEnd({
             nativeEvent: {
                animationName: 'rightSwipe'
             }

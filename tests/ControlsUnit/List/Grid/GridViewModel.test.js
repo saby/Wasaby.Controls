@@ -820,9 +820,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[3]);
 
-            current.isSelected = false;
+            current._isMarked = false;
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[4]);
-
+//controls-Grid__row-cell__last, controls-Grid__row-cell__last-default_theme-default
          });
       });
       describe('getCurrent', function() {
@@ -853,7 +853,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
          it('state', function() {
-            assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
+            assert.isTrue(current._isMarked, 'Incorrect value "current._isMarked".');
             assert.equal(false, current.isActive(), 'Incorrect value "current.isActive()".');
             assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.equal(false, current.isSwiped(), 'Incorrect value "current.isSwiped()".');

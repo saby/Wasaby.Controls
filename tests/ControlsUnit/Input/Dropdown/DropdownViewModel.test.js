@@ -157,7 +157,7 @@ define(
             viewModel.goToNext();
             viewModel.goToNext();
             let current = viewModel.getCurrent();
-            let checkData = current.isSelected && current.hasChildren && current.item.get(config.keyProperty) === '3' && viewModel.isEnd();
+            let checkData = current._isMarked && current.hasChildren && current.item.get(config.keyProperty) === '3' && viewModel.isEnd();
             assert.isTrue(checkData);
          });
 
@@ -479,7 +479,7 @@ define(
             emptyConfig.emptyText = 'Не выбрано';
             emptyConfig.displayProperty = 'title';
             let emptyItem = getEmpty(emptyConfig);
-            assert.isFalse(emptyItem.isSelected);
+            assert.isFalse(emptyItem._isMarked);
             assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
 
             emptyConfig.selectedKeys = [];
