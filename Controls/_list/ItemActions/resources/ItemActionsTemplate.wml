@@ -13,8 +13,8 @@
                 <Controls.Container.Async templateName="Controls/editableArea:Buttons">
                     <ws:partial template="{{content.resolvedTemplate}}"
                                 attr:class="controls-itemActionsV__wrapper-isEditing_theme-{{theme}}"
-                                on:applyButtonClick="_applyEdit()"
-                                on:closeButtonClick="_cancelEdit()"/>
+                                on:applyButtonClick="_commitEditActionHandler()"
+                                on:closeButtonClick="_cancelEditActionHandler()"/>
                 </Controls.Container.Async>
             </ws:if>
         </div>
@@ -45,8 +45,8 @@
             <Controls.Container.Async templateName="Controls/editableArea:Buttons">
                 <ws:partial template="{{content.resolvedTemplate}}"
                             attr:class="controls-itemActionsV__wrapper-isEditing_theme-{{theme}}"
-                            on:applyButtonClick="_applyEdit()"
-                            on:closeButtonClick="_cancelEdit()"/>
+                            on:applyButtonClick="_commitEditActionHandler()"
+                            on:closeButtonClick="_cancelEditActionHandler()"/>
             </Controls.Container.Async>
         </ws:if>
     </div>

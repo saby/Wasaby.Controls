@@ -2370,11 +2370,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.commitEdit();
     },
 
-    _commitEditActionHandler: function() {
+    /**
+     * Обработка нажатия на кнопку "сохранить"
+     * TODO вроде делает то же самое, что commitEdit
+     * @private
+     */
+    _commitEditActionHandler(): void {
         this._children.editInPlace.commitAndMoveNextRow();
     },
 
-    _cancelEditActionHandler: function() {
+    /**
+     * Обработка нажатия на кнопку "отмена"
+     * TODO вроде делает то же самое, что cancelEdit
+     * @private
+     */
+    _cancelEditActionHandler(): void {
         this._children.editInPlace.cancelEdit();
     },
 
@@ -2406,7 +2416,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             itemActionsClass: this._options.itemActionsClass
         });
     },
-    _onAfterEndEdit: function(event, item, isAdd) {
+
+    _onAfterEndEdit(event: SyntheticEvent, item: Model, isAdd: boolean) {
         this._updateItemActions();
         return this._notify('afterEndEdit', [item, isAdd]);
     },
@@ -2418,8 +2429,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @param isAdd
      * @private
      */
-    _onAfterBeginEdit: function (event, item, isAdd) {
-        var result = this._notify('afterBeginEdit', [item, isAdd]);
+    _onAfterBeginEdit(event: SyntheticEvent, item: Model, isAdd: boolean) {
+        const result = this._notify('afterBeginEdit', [item, isAdd]);
         /*
         * TODO: KINGO
         * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
