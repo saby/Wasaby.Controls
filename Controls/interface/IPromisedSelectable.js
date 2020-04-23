@@ -41,7 +41,8 @@ define('Controls/interface/IPromisedSelectable', [
    /**
     * @name Controls/interface/IPromisedSelectable#selectedKeys
     * @cfg {Array.<Number|String>} Массив ключей выбранных элементов.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
+    * @remark
+    * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">демо-пример</a>
     * @default []
     * @remark
     * Чтобы выбрать все элементы внутри узла, необходимо в selectedKeys передать значение {@link Controls/_interface/ISource#keyProperty keyProperty} этого узла.
@@ -92,7 +93,8 @@ define('Controls/interface/IPromisedSelectable', [
    /**
     * @name Controls/interface/IPromisedSelectable#excludedKeys
     * @cfg {Array.<Number|String>} Набор ключей элементов, которые должны быть исключены из выборки.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
+    * @remark
+    * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">демо-пример</a>
     * @default []
     * @remark
     * Узел будет отмечен как частично выбранный, если ключ любого из его дочерних элементов находится в excludedKeys. Такие узлы обычно отображаются с флагом в неопределенном состоянии рядом с ними.
