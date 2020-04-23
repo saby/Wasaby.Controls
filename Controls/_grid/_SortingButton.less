@@ -27,7 +27,7 @@
 
 .controls-SortingButton__caption {
    cursor: pointer;
-   display: inline;
+   display: inline-flex;
 }
 
 .controls-SortingButton_arrow_theme-@{themeName} {
@@ -39,6 +39,11 @@
 .controls-SortingButton__caption_theme-@{themeName} {
    font-size: @font-size_gridSortingButton;
    color: @text-color_gridSortingButton;
+}
+
+.controls-SortingButton__caption.controls-Grid__header-cell__content-ellipsis {
+   cursor: pointer;
+   display: inline;
 }
 
 .controls-SortingButton__caption:active {
