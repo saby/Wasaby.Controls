@@ -2834,7 +2834,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
-        e.stopPropagation();
         if (e.nativeEvent.animationName === 'rightSwipe' && this._listViewModel.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
             if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
                 this._notify('itemSwipe', [this._itemActionsController.getSwipeItem(), e]);

@@ -484,13 +484,13 @@ define(
 
             emptyConfig.selectedKeys = [];
             emptyItem = getEmpty(emptyConfig);
-            assert.isTrue(emptyItem.isSelected);
+            assert.isTrue(emptyItem._isMarked);
             assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
 
             emptyConfig.selectedKeys = ['100'];
             emptyConfig.emptyKey = '100';
             emptyItem = getEmpty(emptyConfig);
-            assert.isTrue(emptyItem.isSelected);
+            assert.isTrue(emptyItem._isMarked);
             assert.equal(emptyItem.emptyText, emptyConfig.emptyText);
 
             emptyConfig.emptyKey = 0;
