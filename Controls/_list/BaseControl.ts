@@ -1273,10 +1273,13 @@ var _private = {
         // TODO Проверить. Похоже, эти сложные расчёты нужны были для того,
         //  чтобы определить HTML контейнер при клике на экшн в выпадающем меню
         // self._listViewModel.getSourceIndexByItem(item)
+        // const itemIndex = listModel.getSourceIndexByItem(itemData);
         // const startIndex = VirtualScrollController.getStartIndex(self._listViewModel);
         // const itemContainer = clickEvent.target ||
         //     self._container.querySelector('.controls-ListView__itemV').parentNode.children
-        //         .filter((item: HTMLElement) => item.className.includes('controls-ListView__itemV');
+        //         .filter((item: HTMLElement) => (
+        //             item.className.includes('controls-ListView__itemV'
+        //         ))[itemIndex - startIndex];
 
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
@@ -2459,6 +2462,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const contents: Model = itemData.getContents();
         _private.setMarkedKey(this, contents.getKey());
         if (action && !action._isMenu && !action['parent@']) {
+            // TODO Проверить. в старом коде было место с пометкой "TODO breadcrumbs for new model"
+            // if (itemData.breadCrumbs) {
+            //     contents = contents[contents.length - 1];
+            // }
             _private.handleItemActionClick(this, action, event, contents);
         } else {
             _private.openItemActionsMenu(this, contents, action, event, false);
@@ -2808,10 +2815,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.setMarkedKey(this, key);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            // After the right swipe the item should get selected.
+            // After the right swipe the item should get selected. (Кусок старого кода)
             this._needSelectionController = true;
             this._delayedSelect = {key, status: item.isSelected()};
-            // TODO код ниже задавал Для Item controls-ListView__item_rightSwipeAnimation
+            // TODO Проверить. Код ниже задавал Для Item controls-ListView__item_rightSwipeAnimation
             //  для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f.
             //  Надо, то реализовать в новой модели.
             // Animation should be played only if checkboxes are visible.

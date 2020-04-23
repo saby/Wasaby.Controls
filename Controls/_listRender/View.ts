@@ -244,6 +244,11 @@ export default class View extends Control<IViewOptions> {
         if (action.handler) {
             action.handler(contents);
         }
+        // TODO Проверить. В старом коде было место с пометкой "TODO breadcrumbs for new model"
+        // if (itemData.breadCrumbs) {
+        //     contents = contents[contents.length - 1];
+        // }
+        // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         this._notify('actionClick', [action, contents, itemContainer]);
