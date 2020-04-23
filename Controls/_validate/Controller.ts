@@ -81,7 +81,7 @@ class Form extends Control<IControlOptions> {
     }
 
     activateValidator(control: ValidateContainer): void {
-        control.activate();
+        control.activate({enableScrollToElement: true});
     }
 
     setValidationResult(): void {
