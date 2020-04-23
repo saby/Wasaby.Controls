@@ -69,7 +69,7 @@ export class ItemActionsController {
             this._collection = options.collection;
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
-            this._visibilityCallback = options.visibilityCallback;
+            this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: unknown) => true);
             this._collection.setActionsAssigned(false);
         }
         if (!this._collection.areActionsAssigned()) {
