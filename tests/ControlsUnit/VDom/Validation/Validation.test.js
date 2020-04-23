@@ -25,7 +25,7 @@ define([
             validator._validationResult = result;
          },
          isValid: () => {
-            validator._isValidCall = true; return true;
+            validator._isValidCall = true; return !validator._validationResult;
          }
       };
 
@@ -109,9 +109,17 @@ define([
          FC.onValidateCreated({}, validator1);
          FC.onValidateCreated({}, validator2);
 
-         let results = FC.isValid();
-         assert.equal(validator1._isValidCall, results[0], true);
-         assert.equal(validator2._isValidCall, results[1], true);
+         let isValid = FC.isValid();
+         assert.equal(validator1._isValidCall, true);
+         assert.equal(validator2._isValidCall, true);
+         assert.equal(isValid, true);
+
+         let validator3 = getValidator();
+         validator3.setValidationResult('Error');
+         FC.onValidateCreated({}, validator3);
+         isValid = FC.isValid();
+         assert.equal(validator3._isValidCall, true);
+         assert.equal(isValid, false);
 
          FC.destroy();
       });
