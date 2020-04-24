@@ -53,24 +53,6 @@ define([
          assert.equal(cfg.isEditing, instance.editWhenFirstRendered);
       });
 
-      it('_afterUpdate', function() {
-         var focusCalled = false;
-         instance._beginEditTarget = {
-            getElementsByTagName: function(tagName) {
-               if (tagName === 'input') {
-                  return [{
-                     focus: function() {
-                        focusCalled = true;
-                     }
-                  }];
-               }
-            }
-         };
-         instance._afterUpdate();
-         assert.isTrue(focusCalled);
-         assert.isNull(instance._beginEditTarget);
-      });
-
       describe('_onClickHandler', function() {
          it('isEditing: true', function() {
             var result = false;
@@ -178,7 +160,7 @@ define([
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isTrue(instance._isEditing);
-            assert.isTrue(instance._beginEditTarget);
+            assert.isTrue(instance._isStartEditing);
          });
 
          it('without arguments', function() {
@@ -190,7 +172,7 @@ define([
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isTrue(instance._isEditing);
-            assert.isNull(instance._beginEditTarget);
+            assert.isTrue(instance._isStartEditing);
          });
 
          it('cancel', function() {
@@ -202,7 +184,7 @@ define([
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isFalse(instance._isEditing);
-            assert.isNotOk(instance._beginEditTarget);
+            assert.isNotOk(instance._isStartEditing);
          });
       });
 
