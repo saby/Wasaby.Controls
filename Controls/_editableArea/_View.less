@@ -12,7 +12,7 @@
    display: inline-flex;
 }
 
-.controls-EditableArea_isEditing_style_withBackground {
+.controls-EditableArea_isEditing_style_withBackground_theme-@{themeName} {
    background-color: @contrast_background-color_editableArea;
 }
 
@@ -36,7 +36,7 @@
    cursor: default;
 }
 
-.controls-EditableArea__applyButton {
+.controls-EditableArea__applyButton_theme-@{themeName} {
    height: @height_applyButton_editableArea;
    width: @width_applyButton_editableArea;
    border-radius: @border-radius_applyButton_editableArea;
@@ -44,15 +44,15 @@
    background-color: @background-color_applyButton_editableArea;
 }
 
-.controls-EditableArea__applyButton:hover {
+.controls-EditableArea__applyButton_theme-@{themeName}:hover {
    background-color: @background-color_hover_applyButton_editableArea;
 }
-.controls-EditableArea__applyButton:active {
+.controls-EditableArea__applyButton_theme-@{themeName}:active {
    box-shadow: none;
    background-color: @background-color_active_applyButton_editableArea;
 }
 
-.controls-EditableArea__closeButton {
+.controls-EditableArea__closeButton_theme-@{themeName} {
    width: @width_closeButton_editableArea;
    height: @height_closeButton_editableArea;
    border-width: @border-thickness_closeButton_editableArea;
@@ -65,33 +65,33 @@
    background-color: @background-color_closeButton_editableArea;
 }
 
-.controls-EditableArea__closeButton:hover {
+.controls-EditableArea__closeButton_theme-@{themeName}:hover {
    border-color: @border-color_hover_closeButton_editableArea;
    background-color: @background-color_hover_closeButton_editableArea;
 }
-.controls-EditableArea__closeButton:active {
+.controls-EditableArea__closeButton_theme-@{themeName}:active {
    box-shadow: none;
    border-color: @border-color_active_closeButton_editableArea;
    background-color: @background-color_active_closeButton_editableArea;
 }
 
-.controls-EditableArea__closeButton-icon {
+.controls-EditableArea__closeButton-icon_theme-@{themeName} {
    background-image: @icon_background-image_closeButton_editableArea;
    width: @icon-size_closeButton_editableArea;
    height: @icon-size_closeButton_editableArea;
 }
 
-.controls-EditableArea__closeButton-icon:hover {
+.controls-EditableArea__closeButton-icon_theme-@{themeName}:hover {
    background-image: @icon_hovered_background-image_closeButton_editableArea;
    width: @icon-size_closeButton_editableArea;
    height: @icon-size_closeButton_editableArea;
 }
 
-.controls-EditableArea__applyButton-icon {
+.controls-EditableArea__applyButton-icon_theme-@{themeName} {
    text-shadow: @text-shadow_applyButton_editableArea;
    .icon(@icon-size_applyButton_editableArea, 'cbuc-icons');
 }
 
-.controls-EditableArea_isEditing_wrapper {
+.controls-EditableArea_isEditing_wrapper_theme-@{themeName} {
    margin-left: @toolbar_button_offset_editableArea;
 }

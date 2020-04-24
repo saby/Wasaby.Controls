@@ -17,21 +17,27 @@
    align-items: center;
 }
 
-.controls-EditableArea__Text_style_accentHeader {
-   font-size: @font-size_3xl;
+.controls-EditableArea__Text_style_accentHeader,
+.controls-EditableArea__Text_style_primary,
+.controls-EditableArea__Text_style_secondary {
    font-weight: bold;
+}
+
+.controls-EditableArea__Text_style_accentHeader_theme-@{themeName} {
+   font-size: @font-size_3xl;
    color: @primary_item_text-color_tabs;
 }
-.controls-EditableArea__Text_style_primary{
+
+.controls-EditableArea__Text_style_primary_theme-@{themeName} {
    font-size: @font-size_3xl;
-   font-weight: bold;
    color: @primary_text-color;
 }
-.controls-EditableArea__Text_style_secondary{
+
+.controls-EditableArea__Text_style_secondary_theme-@{themeName} {
    font-size: @font-size_3xl;
-   font-weight: bold;
    color: @secondary_text-color;
 }
+
 .controls-EditableArea__editorWrapper {
    min-width: 0;
    display: inline-flex;
