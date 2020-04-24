@@ -52,6 +52,8 @@ export {default as Search} from './_display/Search';
 export {default as Tree} from './_display/Tree';
 export {default as TreeItem} from './_display/TreeItem';
 
+export { IBaseCollection } from './_display/interface';
+
 export {default as TileCollection} from './_display/TileCollection';
 export {default as TileCollectionItem} from './_display/TileCollectionItem';
 

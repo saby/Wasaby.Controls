@@ -660,10 +660,16 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true);
     },
 
-    // для совместимости с новой моделью
     setSelectedItems(items: Model[], selected: boolean|null): void {
+        // говнокод для совместимости с новой моделью
+        // вместо false ставим undefined,
+        // чтобы не сломалось показывание только при наведении
         items.forEach((item) => {
-            this._selectedKeys[item.getId()] = selected;
+            if (selected === false) {
+                this._selectedKeys[item.getId()] = undefined;
+            } else {
+                this._selectedKeys[item.getId()] = selected;
+            }
         });
 
         this._display.setSelectedItems(items, selected);
