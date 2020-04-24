@@ -114,6 +114,7 @@
   "plural#запись(-и,-ей)": "record|records",
   "Перенести $count$d$ $records$s$ в": "Move $count$d$ $records$s$ to",
   "Прервать поиск": "Stop the search",
+  "Продолжить поиск": "Continue the search",
   "Нет данных": "No data",
   "Найти": "Find",
   "Невозможно закрепить более 10 пунктов": "Can’t pin more than 10 points",
