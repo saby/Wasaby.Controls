@@ -178,6 +178,8 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    }
 });
 
+View._theme = ['Controls/list']
+
 View.getDefaultOptions = function () {
    return {
       style: 'withoutBackground'
