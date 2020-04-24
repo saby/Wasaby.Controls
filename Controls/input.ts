@@ -89,6 +89,7 @@ import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 import INewLineKey from 'Controls/_input/interface/INewLineKey';
 import * as MaskFormatterValue from 'Controls/_input/Mask/FormatterValue';
 export {default as IText, ITextOptions} from 'Controls/_input/interface/IText';
+export {default as IMask, IMaskOptions, IFormatMaskChars, getDefaultMaskOptions} from 'Controls/_input/interface/IMask';
 export {default as IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
 export {default as ITag, ITagOptions, TagStyle} from 'Controls/_input/interface/ITag';
 export {default as INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
