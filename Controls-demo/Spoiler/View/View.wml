@@ -5,8 +5,10 @@
       </Controls.spoiler:View>
    </div>
    <div class="controlsDemo__cell">
-      <Controls.spoiler:View captions="{{['Свернуть', 'Развернуть']}}">
+      <Controls.spoiler:View headerContentTemplate="{{_headerTemplate}}">
+         <ws:content>
          <div>Контентная область</div>
+         </ws:content>
       </Controls.spoiler:View>
    </div>
 </div>
