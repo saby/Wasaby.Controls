@@ -8,7 +8,7 @@
             <Controls.operations:Button on:expandedChanged="_expandedChangedHandler()"
                                         expanded="{{_expandedOperationsPanel}}"/>
             <ws:if data="{{_expandedOperationsPanel}}">
-                <Controls.operationsPanel:Container
+                <Controls.operations:PanelContainer
                         listMarkedKey="{{null}}">
                     <Controls.operations:Panel
                             parentProperty="parent"
@@ -17,7 +17,7 @@
                             source="{{_panelSource}}"
                             on:itemClick="_panelItemClick()">
                     </Controls.operations:Panel>
-                </Controls.operationsPanel:Container>
+                </Controls.operations:PanelContainer>
             </ws:if>
             <Controls.list:Container>
                 <Controls.operations:Container>
