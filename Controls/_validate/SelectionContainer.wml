@@ -1,5 +1,5 @@
 <ws:partial template="{{ _options.content }}"
-            validationErrors="{{isValid()}}"
+            validationErrors="{{_validationResult}}"
             validationStatus="{{_getValidStatus(_contentActive)}}"
             style="{{_isValidResult() ? 'invalid': 'info'}}"
             scope="{{_options}}"

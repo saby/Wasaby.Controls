@@ -81,7 +81,7 @@ class Form extends Control<IControlOptions> {
     }
 
     activateValidator(control: ValidateContainer): void {
-        control.activate();
+        control.activate({enableScrollToElement: true});
     }
 
     setValidationResult(): void {
@@ -90,7 +90,7 @@ class Form extends Control<IControlOptions> {
         });
     }
 
-    isValid(): IValidateResult {
+    getValidationResult(): IValidateResult {
         const results: IValidateResult = {};
         let i: number = 0;
         this._validates.forEach((validate: ValidateContainer) => {
@@ -99,14 +99,24 @@ class Form extends Control<IControlOptions> {
         return results;
     }
 
+    isValid(): boolean {
+        for (const item in this._validates) {
+            if (!this._validates[item].isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     //todo: удалить после перевода прикладников на новую сигнатуру метода isValid()
     isValidOld(): boolean {
         for (const item in this._validates) {
-           if (!this._validates[item].isValidOld()) {
+           if (!this._validates[item].isValid()) {
                return false;
            }
         }
         return true;
+
     }
 }
 
