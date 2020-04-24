@@ -32,7 +32,7 @@ define('Controls-demo/Input/Date/RangePG',
                   displayProperty: 'title',
                   selectedKey: 0
                },
-               style: {
+               validationStatus: {
                   emptyText: 'none',
                   placeholder: 'select',
                   keyProperty: 'id',
