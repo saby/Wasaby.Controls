@@ -403,7 +403,9 @@ var
             if (!self._isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
-            self.resetCachedItemData();
+            if (self._options.stickyColumn) {
+                self.resetCachedItemData();
+            }
 
             const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
