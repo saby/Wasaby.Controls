@@ -74,7 +74,6 @@ export class SelectionController {
       if (selectionChanged) {
          this._selectedKeys = options.selectedKeys;
          this._excludedKeys = options.excludedKeys;
-
          this._updateModel();
       } else if (itemsChanged || modelChanged || filterChanged) {
          this._updateModel();
