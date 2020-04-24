@@ -446,17 +446,14 @@
               "DD.MM.YYYY": "DD.MM.YYYY"
             }
           },
-          "style": {
+          "validationStatus": {
             "type": "enum",
             "title": "Display style of the field.",
             "enum": {
-              "info": "info",
-              "danger": "danger",
-              "success": "success",
-              "primary": "primary",
-              "warning": "warning",
-              "invalid": "invalid"
-            }
+              "valid": "valid",
+              "invalid": "invalid",
+              "invalidAccent": "invalidAccent"
+              }
           },
           "fontStyle": {
             "type": "enum",
