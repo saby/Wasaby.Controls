@@ -638,6 +638,9 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             } else {
                 listModel._setEditingItemData(null);
             }
+            if (this._editingItemData) {
+                this._editingItemData.setEditing(false);
+            }
             this._editingItemData = null;
             return;
         }

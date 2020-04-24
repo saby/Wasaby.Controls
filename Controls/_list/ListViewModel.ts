@@ -145,6 +145,7 @@ var _private = {
         };
         itemsModelCurrent.isSwiped = (): boolean => itemsModelCurrent.dispItem.isSwiped();
         itemsModelCurrent.setEditing = (editing: boolean, editingContents?: Model, silent?: boolean): void => {
+            itemsModelCurrent._isEditing = editing;
             itemsModelCurrent.dispItem.setEditing(editing, editingContents, silent);
         };
         itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent.dispItem.isEditing();
@@ -250,8 +251,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle;
         // Установка и сброс isEditing в новых списках уже вынесены в EditingController
-        itemsModelCurrent._isEditing = false;
-        itemsModelCurrent.setEditing(false);
+        itemsModelCurrent.setEditing(false, null, true);
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrollConfig = Boolean(this._options.virtualScrollConfig);
@@ -279,7 +279,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         // Установка и сброс isEditing в новых списках уже вынесены в EditingController
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
             itemsModelCurrent.setEditing(true, itemsModelCurrent.getContents());
-            itemsModelCurrent._isEditing = true;
             itemsModelCurrent.item = this._editingItemData.item;
         }
 
@@ -368,11 +367,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
-    /**
-     * @param key
-     * @param byOptions
-     * @deprecated
-     */
     setMarkedKey: function(key, byOptions) {
         if (byOptions) {
             this._options.markedKey = key;

@@ -1331,11 +1331,10 @@ var
             this._model.resetCachedItemData(itemKey);
         },
 
-        getItemDataByItem: function(dispItem) {
-            var
-                self = this,
-                current = this._model.getItemDataByItem(dispItem),
-                stickyColumn;
+        getItemDataByItem(dispItem) {
+            const self = this;
+            const current = this._model.getItemDataByItem(dispItem);
+            let stickyColumn;
 
             if (current._gridViewModelCached) {
                 return current;
@@ -1377,7 +1376,6 @@ var
                 current.columns = this._columns;
             }
 
-
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
@@ -1396,7 +1394,7 @@ var
             if (current.isGroup) {
                 current.groupPaddingClasses = _private.getGroupPaddingClasses(current, this._options.theme);
                 current.shouldFixGroupOnColumn = (columnAlignGroup?: number) => {
-                    return columnAlignGroup !== undefined && columnAlignGroup < current.columns.length - (current.hasMultiSelect ? 1 : 0)
+                    return columnAlignGroup !== undefined && columnAlignGroup < current.columns.length - (current.hasMultiSelect ? 1 : 0);
                 };
                 return current;
             }
