@@ -13,7 +13,7 @@
       tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
       placeholder="{{_options.placeholder}}"
-      validationErrors="{{_options.validationErrors}}"
+      validationStatus="{{_options.validationStatus}}"
       tooltip="{{_options.tooltip}}"
       dateConstructor="{{_options.dateConstructor}}"
       valueValidators="{{_options.valueValidators}}"
