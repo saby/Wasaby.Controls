@@ -19,9 +19,9 @@
    /**
     * @name Controls/_dropdown/interface/IHeaderTemplate#headerTemplate
     * @cfg {Function | String} Шаблон отображения для шапки меню.
-    * @default "Controls/dropdownPopup:Template"
+    * @default "Controls/dropdown:HeaderTemplate"
     * @remark
-    * По умолчанию для отрисовки шапки меню используется базовый шаблон Controls/dropdownPopup:Template.
+    * По умолчанию для отрисовки шапки меню используется базовый шаблон Controls/dropdown:HeaderTemplate.
     * Изменяя параметры базового шаблона вы можете задать собственное отображение шапки меню.
     * Параметры шаблона:
     * * caption — текст заголовка. Когда значение параметра не задано, оно наследуется из опции {@link Controls/_interface/ICaption#caption caption}.
@@ -37,9 +37,7 @@
     *          source="{{_source)}}"
     *          tooltip="Add">
     *       <ws:headerTemplate>
-    *           <Controls.Container.Async templateName="Controls/dropdownPopup:Template">
-    *             <ws:partial template="{{ content.resolvedTemplate }}" scope="{{ headTemplate }}" caption="Add"/>
-    *          </Controls.Container.Async>
+    *          <ws:partial template="Controls/dropdown:HeaderTemplate" scope="{{ headTemplate }}" caption="Add"/>
     *       </ws:headerTemplate>
     *    </Controls.dropdown:Button>
     * </pre>
@@ -61,11 +59,11 @@
    /*
     * @name Controls/_dropdown/interface/IHeaderTemplate#headerTemplate
     * @cfg {Function | String} Template that will be rendered above the list.
-    * @default "Controls/dropdownPopup:Template"
+    * @default "Controls/dropdown:HeaderTemplate"
     * @remark
-    * To determine the template, you should call the base template 'Controls/dropdownPopup:Template'.
+    * To determine the template, you should call the base template 'Controls/dropdown:HeaderTemplate'.
     * The template should be placed in the component using the <ws:partial> tag with the template attribute.
-    * By default, the base template 'Controls/dropdownPopup:Template' will display caption and icon, if they are set. You can change the following options:
+    * By default, the base template 'Controls/dropdown:HeaderTemplate' will display caption and icon, if they are set. You can change the following options:
     * <ul>
     *     <li>caption - header text,</li>
     *     <li>icon - header icon.</li>
@@ -80,9 +78,7 @@
     *          source="{{_source)}}"
     *          tooltip="Add">
     *       <ws:headerTemplate>
-    *           <Controls.Container.Async templateName="Controls/dropdownPopup:Template">
-    *             <ws:partial template="{{ content.resolvedTemplate }}" scope="{{ headTemplate }}" caption="Add"/>
-    *          </Controls.Container.Async>
+    *          <ws:partial template="Controls/dropdown:HeaderTemplate" scope="{{ headTemplate }}" caption="Add"/>
     *       </ws:headerTemplate>
     *    </Controls.Button.Menu>
     * </pre>
