@@ -1,6 +1,6 @@
 import Formatter = require('Controls/_input/Mask/Formatter');
 
-      
+
 
       var
          _private = {
@@ -17,16 +17,23 @@ import Formatter = require('Controls/_input/Mask/Formatter');
              * }
              */
             getDataBySplitValue: function(format, splitValue, replacer, inputType) {
-               if (inputType === 'insert' && replacer) {
-                  return Formatter.getFormatterData(format, {
-                     value: splitValue.before + splitValue.after,
-                     position: splitValue.before.replace(new RegExp(replacer + '*$', 'g'), '').length
-                  });
-               } else {
-                  return Formatter.getFormatterData(format, {
-                     value: splitValue.before + splitValue.after,
-                     position: splitValue.before.length
-                  });
+               // TODO: продумать механизм обработки ошибок в форматных полях.
+               // https://online.sbis.ru/opendoc.html?guid=3236bcfd-4ae8-4f90-a1c8-7e2caddde339
+               try {
+                  // TODO: нужен комментарий или удалить код. https://online.sbis.ru/opendoc.html?guid=3236bcfd-4ae8-4f90-a1c8-7e2caddde339
+                  if (inputType === 'insert' && replacer) {
+                     return Formatter.getFormatterData(format, {
+                        value: splitValue.before + splitValue.after,
+                        position: splitValue.before.replace(new RegExp(replacer + '*$', 'g'), '').length
+                     });
+                  } else {
+                     return Formatter.getFormatterData(format, {
+                        value: splitValue.before + splitValue.after,
+                        position: splitValue.before.length
+                     });
+                  }
+               } catch (e) {
+                  return false;
                }
             }
          },
@@ -230,4 +237,4 @@ import Formatter = require('Controls/_input/Mask/Formatter');
       InputProcessor._private = _private;
 
       export = InputProcessor;
-   
+

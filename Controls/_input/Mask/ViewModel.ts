@@ -3,7 +3,7 @@ import Formatter = require('Controls/_input/Mask/Formatter');
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 
-      
+
 
       /**
        * @class Controls/_input/Text/ViewModel
@@ -49,15 +49,16 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
             const fValue = value === null ? '' : value;
-            const fDate = Formatter.getFormatterData(this._format, { value: fValue, position: 0 });
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
-            if (fDate && fDate.value) {
+            try {
+               const fDate = Formatter.getFormatterData(this._format, { value: fValue, position: 0 });
                return fDate.value;
+            } catch (e) {
+               if (this.options.replacer) {
+                  return this._options.mask.replace(this.formatMaskCharsRegExp, this.options.replacer);
+               }
+               return '';
             }
-            if (this.options.replacer) {
-               return this._options.mask.replace(this.formatMaskCharsRegExp, this.options.replacer);
-            }
-            return '';
          }
          handleInput(splitValue, inputType) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
