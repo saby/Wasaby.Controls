@@ -163,6 +163,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       });
 
       describe('"_private" block', function() {
+         const dummyDispitem = {
+            getContents: () => [],
+            isEditing: () => false,
+            setEditing: (v) => {}
+         };
+
          it('calcItemColumnVersion', function() {
             assert.equal(gridMod.GridViewModel._private.calcItemColumnVersion({
                _columnsVersion: 1,
@@ -659,20 +665,20 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('getItemDataByItem', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
-            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+            let data = gridViewModel.getItemDataByItem(dummyDispitem);
 
             assert.isFalse(!!data.isFirstInGroup);
          });
 
          it('getItemDataByItem cache is reset on base template change', () => {
             const gridViewModel = new gridMod.GridViewModel(cfg);
-            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+            let data = gridViewModel.getItemDataByItem(dummyDispitem);
 
             assert.isNotOk(data.resolveBaseItemTemplate);
 
             const resolver = {};
             gridViewModel.setBaseItemTemplateResolver(resolver);
-            data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+            data = gridViewModel.getItemDataByItem(dummyDispitem);
 
             assert.strictEqual(data.resolveBaseItemTemplate, resolver);
          });
@@ -680,7 +686,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getMultiSelectClassList visible', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'visible';
-            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+            let data = gridViewModel.getItemDataByItem(dummyDispitem);
 
             assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox_theme-default');
          });
@@ -688,7 +694,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getMultiSelectClassList hidden', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'hidden';
-            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+            let data = gridViewModel.getItemDataByItem(dummyDispitem);
 
             assert.equal(data.multiSelectClassList, '');
          });
@@ -718,7 +724,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getMultiSelectClassList onhover unselected', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';
-            let data = gridViewModel.getItemDataByItem({ getContents: () => [] });
+            let data = gridViewModel.getItemDataByItem(dummyDispitem);
 
             assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-GridView__checkbox_theme-default');
             gridViewModel._options.multiSelectVisibility = 'visible';
@@ -769,7 +775,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             current._isSelected = false;
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[4]);
-//controls-Grid__row-cell__last, controls-Grid__row-cell__last-default_theme-default
+
          });
       });
       describe('getCurrent', function() {

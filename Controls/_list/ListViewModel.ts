@@ -110,18 +110,22 @@ var _private = {
         classList += ` controls-itemActionsV_${itemActionsPosition}${th}`;
         classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
         classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') + th : '';
-        classList += _private.getItemActionsContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding);
+        classList += _private.getItemActionsContainerPaddingClass(itemActionsClass, itemPadding, theme);
         return classList;
     },
 
-    getItemActionsContainerPaddingClass(classes: string[], itemPadding?: {top?: string, bottom?: string}): string {
-        let paddingClass = ' ';
-        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
-            paddingClass += 'controls-itemActionsV_padding-top_' + (itemPadding && itemPadding.top === 'null' ? 'null ' : 'default ');
-        } else  if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
-            paddingClass += 'controls-itemActionsV_padding-bottom_' + (itemPadding && itemPadding.bottom === 'null' ? 'null ' : 'default ');
+    getItemActionsContainerPaddingClass(classes: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
+        const _classes = classes || ITEMACTIONS_POSITION_CLASSES.bottomRight;
+        const paddingClass: string[] = [];
+        const themedPositionClassCompile = (position) => (
+            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
+        );
+        if (_classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+            paddingClass.push(themedPositionClassCompile('top'));
+        } else if (_classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+            paddingClass.push(themedPositionClassCompile('bottom'));
         }
-        return paddingClass;
+        return ` ${paddingClass.join(' ')} `;
     },
 
     // New Model compatibility
@@ -293,7 +297,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
         }
 
-        // // TODO REMOVE!!!
+        // TODO Проверить. Это надо реализовать. Ошибки нет, т.к. в шаблонах щас есть проверка на эти методы
         // export const ITEMACTIONS_DISPLAY_MODE = {
         //     ICON: 'icon',
         //     TITLE: 'title',
@@ -301,13 +305,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         //     AUTO: 'auto'
         // };
         // _needShowIcon(action: IItemAction): boolean {
-        //     // return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
+        //     return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
         // }
         // _needShowTitle(action: IItemAction): boolean {
-        //     // return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
-        //     //     action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
-        //     //     (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
-        //     //         !action.displayMode) && !action.icon);
+        //     return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
+        //         action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
+        //         (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
+        //         !action.displayMode) && !action.icon);
         // }
         return itemsModelCurrent;
     },

@@ -26,7 +26,7 @@
             {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') + '_theme-' + theme }}
             {{itemActionsPosition !== 'outside' ? (itemActionsClass ? itemActionsClass : 'controls-itemActionsV_position_bottomRight') : ''}}
             controls-itemActionsV_{{itemActionsPosition}}_theme-{{theme}}
-            {{itemData.getContainerPaddingClass(itemActionsClass || 'controls-itemActionsV_position_bottomRight', itemPadding)}}
+            {{itemData.getContainerPaddingClass(itemActionsClass, itemPadding, theme)}}
             {{itemData.isEditing() ? 'controls-itemActionsV_editing_theme-' + theme}}
             {{itemData.isEditing() && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
             {{itemData.isActive() && actionMenuIsShown ? 'controls-itemActionsV_visible'}}

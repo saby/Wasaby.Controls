@@ -54,8 +54,8 @@ import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
 //  Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
-let defaultSelectedKeys = [];
-let defaultExcludedKeys = [];
+const defaultSelectedKeys = [];
+const defaultExcludedKeys = [];
 
 const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 2, title: '10', pageSize: 10},
@@ -86,7 +86,7 @@ const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_PROPORTION = 2;
 
-const ITEMACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
+const ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
 
 interface IAnimationEvent extends Event {
     animationName: string;
@@ -95,51 +95,49 @@ interface IAnimationEvent extends Event {
 /**
  * Object with state from server side rendering
  * @typedef {Object}
- * @name ReceivedState
+ * @name IReceivedState
  * @property {*} [data]
  * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
  */
-type ReceivedState = {
+interface IReceivedState {
     data?: any;
     errorConfig?: dataSourceError.ViewConfig;
 }
 
 /**
  * @typedef {Object}
- * @name CrudResult
+ * @name ICrudResult
  * @property {*} [data]
  * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
  * @property {Error} [error]
  */
-type CrudResult = ReceivedState & {
+interface ICrudResult extends IReceivedState {
     error: Error;
 }
 
-type ErrbackConfig = {
+interface IErrbackConfig {
     dataLoadErrback?: (error: Error) => any;
     mode?: dataSourceError.Mode;
     error: Error;
 }
 
-type LoadingState = null | 'all' | 'up' | 'down';
-
 /**
- * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
+ * Удаляет оригинал ошибки из ICrudResult перед вызовом сриализатора состояния,
  * который не сможет нормально разобрать/собрать экземпляр случайной ошибки
- * @param {CrudResult} crudResult
- * @return {ReceivedState}
+ * @param {ICrudResult} crudResult
+ * @return {IReceivedState}
  */
-let getState = (crudResult: CrudResult): ReceivedState => {
+const getState = (crudResult: ICrudResult): IReceivedState => {
     delete crudResult.error;
     return crudResult;
 };
 
 /**
  * getting result from <CrudResult> wrapper
- * @param {CrudResult} [crudResult]
+ * @param {ICrudResult} [crudResult]
  * @return {Promise}
  */
-let getData = (crudResult: CrudResult): Promise<any> => {
+const getData = (crudResult: ICrudResult): Promise<any> => {
     if (!crudResult) {
         return Promise.resolve();
     }
@@ -149,7 +147,7 @@ let getData = (crudResult: CrudResult): Promise<any> => {
     return Promise.reject(crudResult.error);
 };
 
-var _private = {
+const _private = {
     isNewModelItemsChange: (action, newItems) => {
         return action && (action !== 'ch' || newItems && !newItems.properties);
     },
@@ -270,7 +268,7 @@ var _private = {
                 return _private.processError(self, {
                     error: error,
                     dataLoadErrback: cfg.dataLoadErrback
-                }).then(function(result: CrudResult) {
+                }).then(function(result: ICrudResult) {
                     if (cfg.afterReloadCallback) {
                         cfg.afterReloadCallback(cfg);
                     }
@@ -1384,21 +1382,21 @@ var _private = {
 
     /**
      * @param {Controls/_list/BaseControl} self
-     * @param {ErrbackConfig} config
+     * @param {IErrbackConfig} config
      * @return {Promise}
      * @private
      */
-    crudErrback(self: BaseControl, config: ErrbackConfig): Promise<CrudResult>{
+    crudErrback(self: BaseControl, config: IErrbackConfig): Promise<ICrudResult>{
         return _private.processError(self, config).then(getData);
     },
 
     /**
      * @param {Controls/_list/BaseControl} self
-     * @param {ErrbackConfig} config
-     * @return {Promise.<CrudResult>}
+     * @param {IErrbackConfig} config
+     * @return {Promise.<ICrudResult>}
      * @private
      */
-    processError(self: BaseControl, config: ErrbackConfig): Promise<CrudResult> {
+    processError(self: BaseControl, config: IErrbackConfig): Promise<ICrudResult> {
         if (config.dataLoadErrback instanceof Function) {
             config.dataLoadErrback(config.error);
         }
@@ -1752,11 +1750,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     /**
      * @param {Object} newOptions
      * @param {Object} context
-     * @param {ReceivedState} receivedState
+     * @param {IReceivedState} receivedState
      * @return {Promise}
      * @protected
      */
-    _beforeMount: function(newOptions, context, receivedState: ReceivedState = {}) {
+    _beforeMount: function(newOptions, context, receivedState: IReceivedState = {}) {
         var self = this;
 
         this._inertialScrolling = new InertialScrolling();
@@ -2557,7 +2555,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.getPortionedSearch(this).abortSearch();
     },
 
-    _onDataError(event: unknown, errorConfig: ErrbackConfig): void {
+    _onDataError(event: unknown, errorConfig: IErrbackConfig): void {
         _private.processError(this, {
             error: errorConfig.error,
             mode: errorConfig.mode || dataSourceError.Mode.dialog
@@ -2808,9 +2806,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const key = item.getContents().getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer =
-            itemContainer.classList.contains('js-controls-SwipeControl__actionsContainer')
+            itemContainer.classList.contains(ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR)
                 ? itemContainer
-                : itemContainer.querySelector('.js-controls-SwipeControl__actionsContainer');
+                : itemContainer.querySelector('.' + ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR);
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);

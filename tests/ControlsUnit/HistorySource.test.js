@@ -673,7 +673,7 @@ define(
                });
             });
             it('read', function() {
-               hSource.read(9).addCallback(function(item) {
+               hSource.read('666').addCallback(function(item) {
                   assert.equal(item.get('title'), 'Запись 666');
                });
             });
