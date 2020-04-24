@@ -113,7 +113,7 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
 
     protected _clickHandler(event: SyntheticEvent<MouseEvent>): void {
         this._expanded = !Util._getExpanded(this._options, this._expanded);
-        this._notify('expandedChanged', [this._expanded], {bubbling: true});
+        this._notify('expandedChanged', [this._expanded]);
         this._updateStates(this._options, this._expanded);
 
     }
