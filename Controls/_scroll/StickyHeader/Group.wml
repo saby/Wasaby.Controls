@@ -1,5 +1,5 @@
 <ws:if data="{{ _isStickySupport }}">
-   <Controls.event:Register name="stickyHeaderShadow" register="updateStickyShadow">
+   <Controls.event:Register name="stickyFixed" register="updateFixed">
       <ws:partial template="{{_options.content}}"
                   on:fixed="_fixedHandler()"
                   on:stickyRegister="_stickyRegisterHandler()"/>
