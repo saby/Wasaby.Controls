@@ -38,6 +38,7 @@ export default class ColumnsInnerView extends Control {
     private _columnsIndexes: number[][];
     private _model: Collection<Model>;
     protected _options: IColumnsInnerViewOptions;
+    private _spacing: number = SPACING;
 
     protected _beforeMount(options: IColumnsInnerViewOptions): void {
         this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
