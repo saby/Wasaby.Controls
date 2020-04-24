@@ -185,26 +185,6 @@ define([
          assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
       });
 
-      it('isSelected', function () {
-         const
-             cfg = {
-                items: new collection.RecordSet({
-                   rawData: data,
-                   keyProperty: 'id'
-                }),
-                keyProperty: 'id',
-                displayProperty: 'title',
-                markedKey: 1,
-                markerVisibility: 'visible',
-                selectedKeys: {1: true}
-             },
-             iv = new lists.ListViewModel(cfg);
-
-         assert.isTrue(lists.ListViewModel._private.isSelected(iv, iv.getCurrent()));
-         iv.goToNext();
-         assert.isFalse(lists.ListViewModel._private.isSelected(iv, iv.getCurrent()));
-      });
-
       it('getItemByMarkedKey', function () {
          const
              cfg = {
