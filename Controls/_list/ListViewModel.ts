@@ -660,7 +660,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true);
     },
 
-    setSelectedItems(items: Model[], selected: boolean): void {
+    setSelectedItems(items: Model[], selected: boolean|null): void {
         if (selected) {
             const selectedKeys = {};
             items.forEach((item) => selectedKeys[item.getId()] = selected);

@@ -1598,7 +1598,7 @@ var
             this._model.updateSelection(selectedKeys);
         },
 
-        setSelectedItems(items: Model[], selected: boolean): void {
+        setSelectedItems(items: Model[], selected: boolean|null): void {
             this._model.setSelectedItems(items, selected);
         },
 

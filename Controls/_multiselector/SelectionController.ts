@@ -23,7 +23,6 @@ export class SelectionController {
    private _selectedKeys: TKeys = [];
    private _excludedKeys: TKeys = [];
    private _strategy: ISelectionStrategy;
-   private _filter: object;
 
    private get _selection(): ISelection {
       return {
@@ -37,7 +36,6 @@ export class SelectionController {
       this._selectedKeys = options.selectedKeys.slice();
       this._excludedKeys = options.excludedKeys.slice();
       this._strategy = options.strategy;
-      this._filter = options.filter;
 
       this._updateModel();
    }
@@ -58,7 +56,6 @@ export class SelectionController {
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
       const itemsChanged = modelChanged ? true : options.model.getCollection() !== this._model.getCollection();
-      const filterChanged = options.filter !== this._filter;
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
 
@@ -66,16 +63,12 @@ export class SelectionController {
          this._model = options.model;
       }
 
-      if (filterChanged) {
-         this._filter = options.filter;
-      }
-
       const oldSelection = clone(this._selection);
       if (selectionChanged) {
          this._selectedKeys = options.selectedKeys;
          this._excludedKeys = options.excludedKeys;
          this._updateModel();
-      } else if (itemsChanged || modelChanged || filterChanged) {
+      } else if (itemsChanged || modelChanged) {
          this._updateModel();
       }
       return this._getResult(oldSelection, this._selection);
@@ -110,40 +103,27 @@ export class SelectionController {
          selectedKeysDiff: { newKeys: [], added: [], removed: [] },
          excludedKeysDiff: { newKeys: [], added: [], removed: [] },
          selectedCount: this._getCount(this._selection),
-         isAllSelected: this._isAllSelected(this._selection)
+         isAllSelected: this._strategy.isAllSelected(this._selection, this._model)
       };
    }
 
    handleRemoveItems(removedItems: Model[]): ISelectionControllerResult {
-      // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
-      // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
-      if (this._model.getCollection()) {
-         const oldSelection = clone(this._selection);
-         this._remove(this._getItemsKeys(removedItems));
+      const oldSelection = clone(this._selection);
+      this._remove(this._getItemsKeys(removedItems));
 
-         this._updateModel();
-         return this._getResult(oldSelection, this._selection);
-      }
+      this._updateModel();
+      return this._getResult(oldSelection, this._selection);
    }
 
-   handleReset(): ISelectionControllerResult {
-      // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
-      // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
-      if (this._model.getCollection()) {
-         const oldSelection = clone(this._selection);
-         const countItems = this._model.getCollection().getCount();
+   handleReset(newItems: Model[]): ISelectionControllerResult {
+      const oldSelection = clone(this._selection);
 
-         // Выделение надо сбросить только после вставки новых данных в модель
-         // Это необходимо, чтобы чекбоксы сбросились только после отрисовки новых данных,
-         // Иначе при проваливании в узел или при смене фильтрации сначала сбросятся чекбоксы,
-         // а данные отрисуются только после загрузки
-         if (this._shouldResetSelection(this._filter) || !countItems) {
-            this._clearSelection();
-         }
-
-         this._updateModel();
-         return this._getResult(oldSelection, this._selection);
+      if (!newItems.length) {
+         this._clearSelection();
       }
+
+      this._updateModel();
+      return this._getResult(oldSelection, this._selection);
    }
 
    private _select(keys: TKeys): void {
@@ -168,12 +148,6 @@ export class SelectionController {
       return this._model.getItemBySourceKey(key).isSelected();
    }
 
-   private _getRoot(): object | null {
-      return this._model.getRoot
-         ? this._model.getRoot().getContents()
-         : null;
-   }
-
    private _getCount(selection?: ISelection): number | null {
       return this._strategy.getCount(selection || this._selection, this._model);
    }
@@ -182,28 +156,8 @@ export class SelectionController {
       return items.map((item) => item.getContents().getId());
    }
 
-   private _isAllSelectedInRoot(root: object): boolean {
-      return this._selectedKeys.includes(root) && this._excludedKeys.includes(root);
-   }
-
-   private _isAllSelected(selection: ISelection): boolean {
-      const selectedCount = this._getCount();
-      const selectionCountEqualsItemsCount = !this._model.getHasMoreData() && selectedCount && selectedCount === this._model.getCount();
-      const root = this._getRoot();
-
-      return !this._model.getHasMoreData() && selectionCountEqualsItemsCount || selection.selected.includes(root)
-         && (selection.excluded.length === 0 || selection.excluded.length === 1 && selection.excluded[0] === root);
-   }
-
    private _isSelectionChanged(selectedKeys: TKeys, excludedKeys: TKeys): boolean {
       return !isEqual(selectedKeys, this._selectedKeys) || !isEqual(excludedKeys, this._excludedKeys);
-   }
-
-   private _shouldResetSelection(filter: object): boolean {
-      const listFilterChanged = !isEqual(this._filter, filter);
-      const isAllSelected = this._isAllSelectedInRoot(this._getRoot());
-
-      return isAllSelected && listFilterChanged;
    }
 
    private _getResult(oldSelection: ISelection, newSelection: ISelection): ISelectionControllerResult {
@@ -234,7 +188,7 @@ export class SelectionController {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
          selectedCount: this._getCount(newSelection),
-         isAllSelected: this._isAllSelected(newSelection)
+         isAllSelected: this._strategy.isAllSelected(newSelection, this._model)
       };
    }
 

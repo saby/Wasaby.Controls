@@ -21,6 +21,7 @@ import removeSelectionChildren from '../Utils/removeSelectionChildren';
  */
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
+const ALL_SELECTION_VALUE = null;
 
 export class TreeSelectionStrategy implements ISelectionStrategy {
    private _hierarchyRelation: relation.Hierarchy;
@@ -111,6 +112,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
    }
 
+   isAllSelected(selection: ISelection, model: ISelectionModel): boolean {
+      return selection.selected.includes(ALL_SELECTION_VALUE) && selection.excluded.includes(ALL_SELECTION_VALUE) && selection.excluded.length === 1;
+   }
+
+   //
    getCount(selection: ISelection, model: ISelectionModel): number|null {
       let countItemsSelected: number|null = 0;
       const rootId: TKey = this._getRoot(model);
@@ -201,7 +207,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    private _isAllSelectedInRoot(selection: ISelection, model: ISelectionModel): boolean {
-      const root: number | string = this._getRoot(model);
+      const root: TKey = this._getRoot(model);
       return selection.selected.includes(root) && selection.excluded.includes(root);
    }
 
