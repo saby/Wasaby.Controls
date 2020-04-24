@@ -12,7 +12,7 @@ import { CollectionItem } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
-import { Model } from "../../application/Types/entity";
+import { Model } from 'Types/entity';
 
 /**
  *
@@ -660,12 +660,11 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true);
     },
 
+    // для совместимости с новой моделью
     setSelectedItems(items: Model[], selected: boolean|null): void {
-        if (selected) {
-            const selectedKeys = {};
-            items.forEach((item) => selectedKeys[item.getId()] = selected);
-            this.updateSelection(selectedKeys);
-        }
+        items.forEach((item) => {
+            this._selectedKeys[item.getId()] = selected;
+        });
 
         this._display.setSelectedItems(items, selected);
     },
