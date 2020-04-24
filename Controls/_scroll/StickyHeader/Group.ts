@@ -61,7 +61,7 @@ export default class Group extends Control<IControlOptions> {
         top: 0,
         bottom: 0
     };
-    protected _shadowVisible: boolean = false;
+    protected _isFixed: boolean = false;
 
     protected _headers: IHeadersMap = {};
     protected _isRegistry: boolean = false;
@@ -93,11 +93,11 @@ export default class Group extends Control<IControlOptions> {
     }
 
     protected _afterMount(): void {
-        this._notify('register', ['updateStickyShadow', this, this._updateStickyShadow], {bubbling: true});
+        this._notify('register', ['updateFixed', this, this._updateFixed], {bubbling: true});
     }
 
     protected _beforeUnmount(): void {
-        this._notify('unregister', ['updateStickyShadow', this], {bubbling: true});
+        this._notify('unregister', ['updateFixed', this], {bubbling: true});
     }
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
@@ -150,13 +150,15 @@ export default class Group extends Control<IControlOptions> {
 
     protected _fixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
         event.stopImmediatePropagation();
-        if (!!fixedHeaderData.fixedPosition) {
-            this._stickyHeadersIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
-            if (this._shadowVisible === true) {
-                this._children.stickyHeaderShadow.start(this._stickyHeadersIds[fixedHeaderData.fixedPosition]);
+        if (!fixedHeaderData.isFakeFixed) {
+            if (!!fixedHeaderData.fixedPosition) {
+                this._stickyHeadersIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
+                if (this._isFixed === true) {
+                    this._children.stickyFixed.start(this._stickyHeadersIds[fixedHeaderData.fixedPosition]);
+                }
+            } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
+                this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
             }
-        } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
-            this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
         }
 
         if (!!fixedHeaderData.fixedPosition && !this._fixed) {
@@ -173,14 +175,14 @@ export default class Group extends Control<IControlOptions> {
         }
     }
 
-    protected _updateStickyShadow(ids: number[]): void {
-        var shadowVisible = ids.indexOf(this._index) !== -1;
-        if (this._shadowVisible !== shadowVisible) {
-            this._shadowVisible = shadowVisible;
-            if (shadowVisible) {
-               this._children.stickyHeaderShadow.start(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
+    protected _updateFixed(ids: number[]): void {
+        var isFixed = ids.indexOf(this._index) !== -1;
+        if (this._isFixed !== isFixed) {
+            this._isFixed = isFixed;
+            if (isFixed) {
+               this._children.stickyFixed.start(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
             } else {
-               this._children.stickyHeaderShadow.start([]);
+               this._children.stickyFixed.start([]);
             }
         }
     }

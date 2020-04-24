@@ -78,7 +78,8 @@ export default interface IResultColumnTemplateOptions {
      *        {{results.get('Name')}}
      *     </div>
      * </ws:partial>
-     *
+     * </pre>
+     * 
      * **Пример 3.** Переопределение стандартных параметров отображения результатов.
      *
      * <pre class="brush: html">
@@ -114,8 +115,7 @@ export default interface IResultColumnTemplateOptions {
 
     /**
      * @name Controls/_grid/interface/IResultColumnTemplate#fontWeight
-     * Начертание шрифта.
-     * @type TFontWeight
+     * @cfg {TFontWeight} Начертание шрифта.
      * @default bold
      */
     fontWeight?: TFontWeight;

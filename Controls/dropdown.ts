@@ -7,6 +7,8 @@
  * @includes Opener Controls/_dropdown/Opener
  * @includes Combobox Controls/_dropdown/ComboBox
  * @includes ItemTemplate Controls/dropdown:ItemTemplate
+ * @includes HeaderTemplate Controls/dropdown:HeaderTemplate
+ * @includes GroupTemplate Controls/dropdown:GroupTemplate
  * @includes IDropdownSource Controls/_dropdown/interface/IDropdownSource
  * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
  * @includes IGrouped Controls/_dropdown/interface/IGrouped
@@ -26,6 +28,8 @@
  * @includes Opener Controls/_dropdown/Opener
  * @includes Combobox Controls/_dropdown/ComboBox
  * @includes ItemTemplate Controls/dropdown:ItemTemplate
+ * @includes HeaderTemplate Controls/dropdown:HeaderTemplate
+ * @includes GroupTemplate Controls/dropdown:GroupTemplate
  * @includes IDropdownSource Controls/_dropdown/interface/IDropdownSource
  * @includes IFooterTemplate Controls/_dropdown/interface/IFooterTemplate
  * @includes IGrouped Controls/_dropdown/interface/IGrouped
