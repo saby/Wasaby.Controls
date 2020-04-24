@@ -18,7 +18,7 @@ export interface IGroupedOptions {
      * @name Controls/_dropdown/interface/IGrouped#groupTemplate
      * @cfg {Function} Шаблон группировки.
      * @remark
-     * Для определения шаблона вызовите базовый шаблон - "Controls/dropdownPopup:GroupTemplate".
+     * Для определения шаблона вызовите базовый шаблон - "Controls/dropdown:GroupTemplate".
      * Шаблон должен быть помещен в компонент с помощью тега <ws:partial> с атрибутом "template".
      * Базовый шаблон wml!Controls/_dropdownPopup/defaultGroupTemplate по умолчанию отображает только разделитель.
      * Вы можете изменить отображение разделителя, установив опцию:
@@ -34,7 +34,7 @@ export interface IGroupedOptions {
      *          groupProperty="group"
      *          source="{{_source}}">
      *       <ws:groupTemplate>
-     *          <ws:partial template="Controls/dropdownPopup:GroupTemplate" showText="{{true}}" />
+     *          <ws:partial template="Controls/dropdown:GroupTemplate" showText="{{true}}" />
      *       </ws:groupTemplate>
      *    </Controls.dropdown:Menu>
      * </pre>
