@@ -11,6 +11,7 @@ import {Bus as EventBus} from 'Env/Event';
 import {detection} from 'Env/Env';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
+import * as cClone from 'Core/core-clone';
 import template = require('wml!Controls/_popup/Manager/Manager');
 
 /**
@@ -528,7 +529,9 @@ class Manager extends Control<IManagerOptions> {
 
     private _fireEventHandler(item: IPopupItem, event: string): boolean {
         if (item) {
-            this._callEvents(item.popupOptions, event);
+            const popupOptions = cClone(item.popupOptions || {});
+            popupOptions.id = item.id;
+            this._callEvents(popupOptions, event);
         }
     }
 
