@@ -27,7 +27,7 @@ describe('Controls/_display/controllers/Selection', () => {
         let nextVersionCalled = false;
         const collection = {
             each: Array.prototype.forEach.bind(items),
-            nextVersion: () => nextVersionCalled = true;
+            nextVersion: () => nextVersionCalled = true
         };
 
         const testMap = new Map<string, boolean>([
