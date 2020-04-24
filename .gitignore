@@ -1,6 +1,8 @@
 .idea
 *.log
+/tsconfig.json
 /tslib.js
+/tslint.json
 /CONTROLS/**/*.css
 /application
 /package-lock.json
