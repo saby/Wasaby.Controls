@@ -1994,6 +1994,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
 
+        // TODO REMOVE
         // при создании списка с редактируемой записью, нужно проинициализировать itemActions.
         // это нельзя сделать до afterMount из-за того, что ItemActionsControl является ребенком BaseControl и
         // мы не можем к нему обратиться до того, как контролы будут построены.

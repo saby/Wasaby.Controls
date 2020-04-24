@@ -674,7 +674,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 this._editingItemData.level = listModel.getItemById(item.get(this._editingItemData.parentProperty)).getLevel() + 1;
             }
 
-            this._editingItemData.setEditing(true);
+            this._editingItemData.setEditing(true, this._editingItem);
             this._editingItemData.item = this._editingItem;
             if (this._isAdd) {
                 this._editingItemData.isAdd = this._isAdd;

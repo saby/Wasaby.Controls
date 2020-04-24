@@ -122,6 +122,36 @@ var _private = {
             paddingClass += 'controls-itemActionsV_padding-bottom_' + (itemPadding && itemPadding.bottom === 'null' ? 'null ' : 'default ');
         }
         return paddingClass;
+    },
+
+    // New Model compatibility
+    addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
+        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}): void => {
+            itemsModelCurrent.dispItem.setActions(actions);
+        };
+        itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
+            itemsModelCurrent.dispItem.getActions()
+        );
+        itemsModelCurrent.setActive = (state: boolean): void => {
+            itemsModelCurrent.dispItem.setActive(state);
+        };
+        itemsModelCurrent.isActive = (): boolean => itemsModelCurrent.dispItem.isActive();
+        itemsModelCurrent.setSwiped = (state: boolean): void => {
+            itemsModelCurrent.dispItem.setSwiped(state);
+        };
+        itemsModelCurrent.isSwiped = (): boolean => itemsModelCurrent.dispItem.isSwiped();
+        itemsModelCurrent.setEditing = (editing: boolean, editingContents?: Model, silent?: boolean): void => {
+            itemsModelCurrent.dispItem.setEditing(editing, editingContents, silent);
+        };
+        itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent.dispItem.isEditing();
+        itemsModelCurrent.getContents = () => itemsModelCurrent.dispItem.getContents();
+        itemsModelCurrent.hasVisibleActions = (): boolean => itemsModelCurrent.dispItem.hasVisibleActions();
+        itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.dispItem.shouldDisplayActions();
+        itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.dispItem.hasActionWithIcon();
+        itemsModelCurrent.isSelected = (): boolean => itemsModelCurrent.dispItem.isSelected();
+        itemsModelCurrent.setSelected = (selected: boolean|null, silent?: boolean): void => {
+            itemsModelCurrent.dispItem.setSelected(selected, silent);
+        };
     }
 };
 
@@ -138,6 +168,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _menuState: '',
     _reloadedKeys: null,
     _singleItemReloadCount: 0,
+    _editingItemData: null,
 
     // New model compatibility
     _actionsAssigned: false,
@@ -167,12 +198,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         this._reloadedKeys = {};
     },
-    setEditingConfig: function(editingConfig) {
-        if (!isEqual(editingConfig, this._options.editingConfig)) {
-            this._options.editingConfig = editingConfig;
-            this._nextModelVersion();
-        }
-    },
     setItemPadding: function(itemPadding) {
         this._options.itemPadding = itemPadding;
         this._nextModelVersion();
@@ -193,6 +218,9 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         } else {
             itemsModelCurrent._listViewModelCached = true;
         }
+
+        // New Model compatibility
+        _private.addNewModelCompatibilityForItem(itemsModelCurrent);
 
         itemsModelCurrent.itemActions = {};
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
@@ -217,7 +245,9 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle;
+        // Установка и сброс isEditing в новых списках уже вынесены в EditingController
         itemsModelCurrent._isEditing = false;
+        itemsModelCurrent.setEditing(false);
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrollConfig = Boolean(this._options.virtualScrollConfig);
@@ -242,7 +272,9 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
         itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
 
+        // Установка и сброс isEditing в новых списках уже вынесены в EditingController
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
+            itemsModelCurrent.setEditing(true, itemsModelCurrent.getContents());
             itemsModelCurrent._isEditing = true;
             itemsModelCurrent.item = this._editingItemData.item;
         }
@@ -260,34 +292,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 itemsModelCurrent.draggingItemData = this._draggingItemData;
             }
         }
-
-        // New Model compatibility
-        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}): void => {
-            itemsModelCurrent.dispItem.setActions(actions);
-        };
-        itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
-            itemsModelCurrent.dispItem.getActions()
-        );
-        itemsModelCurrent.setActive = (state: boolean): void => {
-            itemsModelCurrent.dispItem.setActive(state);
-        };
-        itemsModelCurrent.isActive = (): boolean => itemsModelCurrent.dispItem.isActive();
-        itemsModelCurrent.setSwiped = (state: boolean): void => {
-            itemsModelCurrent.dispItem.setSwiped(state);
-        };
-        itemsModelCurrent.isSwiped = (): boolean => itemsModelCurrent.dispItem.isSwiped();
-        itemsModelCurrent.setEditing = (state: boolean): void => {
-            itemsModelCurrent.dispItem.setEditing(state);
-        };
-        itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent.dispItem.isEditing();
-        itemsModelCurrent.getContents = () => itemsModelCurrent.dispItem.getContents();
-        itemsModelCurrent.hasVisibleActions = (): boolean => itemsModelCurrent.dispItem.hasVisibleActions();
-        itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.dispItem.shouldDisplayActions();
-        itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.dispItem.hasActionWithIcon();
-        itemsModelCurrent.isSelected = (): boolean => itemsModelCurrent.dispItem.isSelected();
-        itemsModelCurrent.setSelected = (selected: boolean|null, silent?: boolean): void => {
-            itemsModelCurrent.dispItem.setSelected(selected, silent);
-        };
 
         // // TODO REMOVE!!!
         // export const ITEMACTIONS_DISPLAY_MODE = {
@@ -714,6 +718,14 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     // New Model compatibility
     setActionsAssigned(assigned: boolean): void {
         this._actionsAssigned = assigned;
+    },
+
+    // Old method
+    setEditingConfig(editingConfig: IEditingConfig): void {
+        if (!isEqual(editingConfig, this._options.editingConfig)) {
+            this._options.editingConfig = editingConfig;
+            this._nextModelVersion();
+        }
     },
 
     // New Model compatibility
