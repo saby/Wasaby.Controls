@@ -444,12 +444,12 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
          this._gridColumns5 = [
             {
                displayProperty: 'date',
-               width: '70px',
+               width: '80px',
                resultTemplate: 'wml!Controls-demo/List/EditInPlace/FifthScenario/Results'
             },
             {
                displayProperty: 'type',
-               width: '130px',
+               width: '150px',
                template: 'wml!Controls-demo/List/EditInPlace/FifthScenario/SecondColumn',
                resultTemplate: 'wml!Controls-demo/List/EditInPlace/FifthScenario/Results'
             },
