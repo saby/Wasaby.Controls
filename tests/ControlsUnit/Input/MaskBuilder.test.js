@@ -42,7 +42,7 @@ define(
                assert.equal(result, '(ddd) ddd-dd-dd');
 
                result = MaskBuilder.getMask('56898123456');
-               assert.equal(result, '+d\\*');
+               assert.equal(result, '+\\?d\\*');
             });
             it('Addaptive phone with +7', function() {
                result = MaskBuilder.getMask('+7 (910) 856-34-21');
@@ -52,7 +52,7 @@ define(
                assert.equal(result, '+d ddddddddddd');
 
                result = MaskBuilder.getMask('+8 91085634210');
-               assert.equal(result, '+d\\*');
+               assert.equal(result, '+\\?d\\*');
             });
             it('Addaptive phone with 8', function() {
                result = MaskBuilder.getMask('8 (485) 274-32-85');
