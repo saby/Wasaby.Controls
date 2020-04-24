@@ -82,6 +82,17 @@
   .controls-Grid__row-cell {
     display: table-cell;
     vertical-align: top;
+
+
+    // Для td нет спецификации на position
+    // Ячейка обязательно должна иметь position relative для позиционирования маркера относительно себя.
+    // Т.к. это невозможно, используется дополнительный блок оборачивающий контент ячейки и имеет position relative.
+    // Данный блок растягивается по высоте строки ширине ячейки.
+    // Устанавка фиксированной высоты помогает алгоритмам браузера считать высоту td, относительно которой будет
+    // растягиваться дополнительный блок.
+    // Без задания высоты ячейке, блок будет игнорировать height: 100% и растягиваться по внутреннему содержимому.
+    // Минимальный размер строки обеспечивается внутренним блоком.
+    height: 0;
   }
 
   .controls-Grid__row-cell_theme-@{themeName} {
@@ -134,6 +145,19 @@
 
   .controls-Grid__header-cell__content__innerWrapper {
     max-width: 100%;
+  }
+
+  .controls-Grid__table__relative-cell-wrapper {
+    position: relative;
+    height: 100%;
+  }
+
+  .controls-Grid__table__relative-cell-wrapper_rowSeparator-s_theme-@{themeName} {
+    min-height: @cell_min-height_grid - @item-separator_s_thickness_list;
+  }
+
+  .controls-Grid__table__relative-cell-wrapper_rowSeparator-l_theme-@{themeName} {
+    min-height: @cell_min-height_grid - @item-separator_l_thickness_list;
   }
 }
 
