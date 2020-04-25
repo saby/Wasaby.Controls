@@ -76,14 +76,14 @@ export class Controller {
 
    selectAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
-      this._strategy.selectAll(this._selection, this._model.getCollection());
+      this._strategy.selectAll(this._selection);
       this._updateModel();
       return this._getResult(oldSelection, this._selection);
    }
 
    toggleAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
-      this._strategy.toggleAll(this._selection, this._model.getCollection(), this._model.getHasMoreData());
+      this._strategy.toggleAll(this._selection, this._model.getHasMoreData());
 
       this._updateModel();
       return this._getResult(oldSelection, this._selection);
@@ -91,7 +91,7 @@ export class Controller {
 
    unselectAll(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
-      this._strategy.unselectAll(this._selection, this._model.getCollection());
+      this._strategy.unselectAll(this._selection);
 
       this._updateModel();
       return this._getResult(oldSelection, this._selection);
@@ -103,7 +103,7 @@ export class Controller {
          selectedKeysDiff: { newKeys: [], added: [], removed: [] },
          excludedKeysDiff: { newKeys: [], added: [], removed: [] },
          selectedCount: this._getCount(this._selection),
-         isAllSelected: this._strategy.isAllSelected(this._selection, this._model.getCollection())
+         isAllSelected: this._strategy.isAllSelected(this._selection)
       };
    }
 
@@ -127,11 +127,11 @@ export class Controller {
    }
 
    private _select(keys: TKeys): void {
-      this._strategy.select(this._selection, keys, this._model.getCollection());
+      this._strategy.select(this._selection, keys);
    }
 
    private _unselect(keys: TKeys): void {
-      this._strategy.unselect(this._selection, keys, this._model.getCollection());
+      this._strategy.unselect(this._selection, keys);
    }
 
    private _clearSelection(): void {
@@ -149,7 +149,7 @@ export class Controller {
    }
 
    private _getCount(selection?: ISelection): number | null {
-      return this._strategy.getCount(selection || this._selection, this._model.getCollection(), this._model.getHasMoreData());
+      return this._strategy.getCount(selection || this._selection, this._model.getHasMoreData());
    }
 
    private _getItemsKeys(items: Array<CollectionItem<Record>>): TKeys {
@@ -188,12 +188,12 @@ export class Controller {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
          selectedCount: this._getCount(newSelection),
-         isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getCollection())
+         isAllSelected: this._strategy.isAllSelected(newSelection)
       };
    }
 
    private _updateModel(): void {
-      const selectionForModel = this._strategy.getSelectionForModel(this._selection, this._model.getCollection());
+      const selectionForModel = this._strategy.getSelectionForModel(this._selection);
       this._model.setSelectedItems(selectionForModel.get(true), true);
       this._model.setSelectedItems(selectionForModel.get(false), false);
       this._model.setSelectedItems(selectionForModel.get(null), null);
