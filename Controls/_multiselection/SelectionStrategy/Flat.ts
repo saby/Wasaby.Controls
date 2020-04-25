@@ -1,10 +1,10 @@
-import ISelectionStrategy from 'Controls/_multiselector/SelectionStrategy/ISelectionStrategy';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
-import { Model } from 'Types/entity';
-import { IFlatSelectionStrategyOptions, ISelectionModel } from '../interface';
+import { Record } from 'Types/entity';
+import { IFlatSelectionStrategyOptions} from '../interface';
+import ISelectionStrategy from './ISelectionStrategy';
 
 const ALL_SELECTION_VALUE = null;
 
@@ -16,7 +16,7 @@ const ALL_SELECTION_VALUE = null;
  * @author Герасимов А.М.
  */
 export class FlatSelectionStrategy implements ISelectionStrategy {
-   select(selection: ISelection, keys: TKeys): void {
+   select(selection: ISelection, keys: TKeys, items?: RecordSet): void {
       if (this.isAllSelected(selection)) {
          ArraySimpleValuesUtil.removeSubArray(selection.excluded, keys);
       } else {
@@ -32,8 +32,9 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   selectAll(selection: ISelection, model: ISelectionModel): void {
+   selectAll(selection: ISelection): void {
       selection.selected.length = 0;
+      selection.excluded.length = 0;
       selection.selected[0] = ALL_SELECTION_VALUE;
    }
 
@@ -48,23 +49,23 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    /**
     * Invert selection.
     */
-   toggleAll(selection: ISelection, model: ISelectionModel): void {
+   toggleAll(selection: ISelection): void {
       if (this.isAllSelected(selection)) {
          const excludedKeys: TKeys = selection.excluded.slice();
          this.unselectAll(selection);
          this.select(selection, excludedKeys);
       } else {
          const selectedKeys: TKeys = selection.selected.slice();
-         this.selectAll(selection, model);
+         this.selectAll(selection);
          this.unselect(selection, selectedKeys);
       }
    }
 
-   getSelectionForModel(selection: ISelection, model: ISelectionModel): Map<boolean, Model[]> {
+   getSelectionForModel(selection: ISelection, items: RecordSet): Map<boolean|null, Record[]> {
       const selectedItems = new Map([[true, []], [false, []], [null, []]]);
       const isAllSelected: boolean = this.isAllSelected(selection);
 
-      model.getCollection().forEach((item) => {
+      items.forEach((item) => {
          const itemId: TKey = item.getId();
          const isSelected = selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId);
 
@@ -74,13 +75,12 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return selectedItems;
    }
 
-   getCount(selection: ISelection, model: ISelectionModel): number|null {
+   getCount(selection: ISelection, items: RecordSet, hasMoreData: boolean): number|null {
       let countItemsSelected: number|null = null;
-      const items: RecordSet = model.getCollection();
       const itemsCount: number = items.getCount();
 
       if (this.isAllSelected(selection)) {
-         if (!model.getHasMoreData()) {
+         if (!hasMoreData) {
             countItemsSelected = itemsCount - selection.excluded.length;
          }
       } else {
@@ -94,6 +94,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       // nothing update
    }
 
+   // TODO что должно вернуться если выбраны все за ислючением одного(скольких-нибудь)
    isAllSelected(selection: ISelection): boolean {
       return selection.selected.includes(ALL_SELECTION_VALUE);
    }

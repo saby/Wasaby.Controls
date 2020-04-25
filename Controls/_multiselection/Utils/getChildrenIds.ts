@@ -2,19 +2,20 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation } from 'Types/entity';
 import { TKeySelection as TKey, TSelectedKeys as TKeys } from 'Controls/interface';
 import { Model } from 'Types/entity';
-import { getChildren, isNode } from './utils';
-import { IEntryPath, ISelectionModel } from '../interface';
+import { getChildren } from './utils';
+import { IEntryPath } from '../interface';
+import { RecordSet } from 'Types/collection';
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
 
-function getAllChildren(nodeId: TKey, model: ISelectionModel, hierarchyRelation: relation.Hierarchy): Model[] {
+function getAllChildren(nodeId: TKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): Model[] {
    const children: Model[] = [];
 
-   getChildren(nodeId, model, hierarchyRelation).forEach((child) => {
+   getChildren(nodeId, items, hierarchyRelation).forEach((child) => {
       ArraySimpleValuesUtil.addSubArray(children, [child]);
 
-      if (isNode(child, model, hierarchyRelation)) {
-         ArraySimpleValuesUtil.addSubArray(children, getAllChildren(child.getId(), model, hierarchyRelation));
+      if (hierarchyRelation.isNode(child)) {
+         ArraySimpleValuesUtil.addSubArray(children, getAllChildren(child.getId(), items, hierarchyRelation));
       }
    });
 
@@ -34,9 +35,9 @@ function getChildrenInEntryPath(parentId: TKey, entriesPath: IEntryPath[]): TKey
    return children;
 }
 
-export default function getChildrenIds(nodeId: TKey, model: ISelectionModel, hierarchyRelation: relation.Hierarchy): TKeys {
-   const entriesPath = model.getCollection().getMetaData()[FIELD_ENTRY_PATH];
-   let childrenIds = getAllChildren(nodeId, model, hierarchyRelation).map((child) => {
+export default function getChildrenIds(nodeId: TKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): TKeys {
+   const entriesPath = items.getMetaData()[FIELD_ENTRY_PATH];
+   let childrenIds = getAllChildren(nodeId, items, hierarchyRelation).map((child) => {
       return child.getId();
    });
 

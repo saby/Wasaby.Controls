@@ -1,6 +1,6 @@
 import { CollectionItem, IBaseCollection } from 'Controls/display';
 import { Model, relation } from 'Types/entity';
-import { TKeysSelection as TKeys} from 'Controls/interface';
+import { TKeysSelection as TKeys, TSelectedKey as TKey} from 'Controls/interface';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import { RecordSet } from 'Types/collection';
 
@@ -40,11 +40,12 @@ export interface ITreeSelectionStrategyOptions {
    selectDescendants: boolean;
    nodesSourceControllers?: Object;
    hierarchyRelation: relation.Hierarchy;
+   rootId: TKey;
 }
 
 export interface IEntryPath {
-   id: string|number|null;
-   parent: string|number|null;
+   id: TKey;
+   parent: TKey;
 }
 
 // tslint:disable-next-line:no-empty-interface

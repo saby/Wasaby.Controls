@@ -1,17 +1,21 @@
-import { relation } from 'Types/entity';
+import { relation, Record } from 'Types/entity';
 import { TKeySelection as TKey, ISelectionObject as ISelection } from 'Controls/interface';
-import { ISelectionModel } from '../interface';
-import { getChildren, isHasChildren, isNode } from './utils';
+import { getChildren } from './utils';
+import { RecordSet } from 'Types/collection';
+
+function isHasChildren(item: Record, hierarchyRelation: relation.Hierarchy): boolean {
+   return hierarchyRelation ? hierarchyRelation.hasDeclaredChildren(item) !== false : false;
+}
 
 export default function getSelectedChildrenCount(
    nodeId: TKey,
    selection: ISelection,
-   model: ISelectionModel,
+   items: RecordSet,
    hierarchyRelation: relation.Hierarchy,
    deep?: boolean
 ): number|null {
-   const nodeItem = model.getCollection().getRecordById(nodeId);
-   const children = getChildren(nodeId, model, hierarchyRelation);
+   const nodeItem = items.getRecordById(nodeId);
+   const children = getChildren(nodeId, items, hierarchyRelation);
    let selectedChildrenCount = 0;
 
    if (children.length) {
@@ -27,8 +31,8 @@ export default function getSelectedChildrenCount(
                   selectedChildrenCount++;
                }
 
-               if (isNode(childItem, model, hierarchyRelation) && isHasChildren(childItem, model, hierarchyRelation) && deep !== false) {
-                  childNodeSelectedCount = getSelectedChildrenCount(childId, selection, model, hierarchyRelation);
+               if (hierarchyRelation.isNode(childItem) && isHasChildren(childItem, hierarchyRelation) && deep !== false) {
+                  childNodeSelectedCount = getSelectedChildrenCount(childId, selection, items, hierarchyRelation);
 
                   if (childNodeSelectedCount === null) {
                      selectedChildrenCount = null;
@@ -39,7 +43,7 @@ export default function getSelectedChildrenCount(
             }
          }
       });
-   } else if (!nodeItem || isHasChildren(nodeItem, model, hierarchyRelation)) {
+   } else if (!nodeItem || isHasChildren(nodeItem, hierarchyRelation)) {
       selectedChildrenCount = null;
    }
 

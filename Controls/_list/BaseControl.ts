@@ -45,7 +45,7 @@ import {
     IFlatSelectionStrategyOptions,
    ISelectionControllerResult,
    SelectionController
-} from 'Controls/multiselector';
+} from 'Controls/multiselection';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 // Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1752,8 +1752,6 @@ var _private = {
          model: self._listViewModel,
          selectedKeys: options.selectedKeys,
          excludedKeys: options.excludedKeys,
-         filter: options.filter,
-         root: options.root,
          strategy
       });
    },
@@ -1763,8 +1761,6 @@ var _private = {
          model: self._listViewModel,
          selectedKeys: newOptions.selectedKeys,
          excludedKeys: newOptions.excludedKeys,
-         filter: newOptions.filter,
-         root: newOptions.root,
          strategyOptions: this.getSelectionStrategyOptions(newOptions)
       });
       this.handleSelectionControllerResult(self, result);
@@ -1790,7 +1786,8 @@ var _private = {
                parentProperty: options.parentProperty || 'Раздел',
                nodeProperty: options.nodeProperty || 'Раздел@',
                declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
-            })
+            }),
+            rootId: options.root
          };
       }
    },
