@@ -13,6 +13,5 @@ export default interface ISelectionStrategy {
    unselectAll(selection: ISelection): void;
    getSelectionForModel(selection: ISelection): Map<boolean|null, Record[]>;
    getCount(selection: ISelection, hasMoreData: boolean): number|null;
-   isAllSelected(selection: ISelection): boolean;
    update(options: ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions): void;
 }

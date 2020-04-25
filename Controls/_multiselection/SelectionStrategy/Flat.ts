@@ -27,7 +27,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    select(selection: ISelection, keys: TKeys): void {
-      if (this.isAllSelected(selection)) {
+      if (this._isAllSelected(selection)) {
          ArraySimpleValuesUtil.removeSubArray(selection.excluded, keys);
       } else {
          ArraySimpleValuesUtil.addSubArray(selection.selected, keys);
@@ -35,7 +35,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    unselect(selection: ISelection, keys: TKeys): void {
-      if (this.isAllSelected(selection)) {
+      if (this._isAllSelected(selection)) {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, keys);
       } else {
          ArraySimpleValuesUtil.removeSubArray(selection.selected, keys);
@@ -46,6 +46,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       selection.selected.length = 0;
       selection.excluded.length = 0;
       selection.selected[0] = ALL_SELECTION_VALUE;
+      selection.excluded[0] = ALL_SELECTION_VALUE;
    }
 
    /**
@@ -60,7 +61,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
     * Invert selection.
     */
    toggleAll(selection: ISelection, hasMoreData: boolean): void {
-      if (this.isAllSelected(selection)) {
+      if (this._isAllSelected(selection)) {
          const excludedKeys: TKeys = selection.excluded.slice();
          this.unselectAll(selection);
          this.select(selection, excludedKeys);
@@ -73,7 +74,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
    getSelectionForModel(selection: ISelection): Map<boolean|null, Record[]> {
       const selectedItems = new Map([[true, []], [false, []], [null, []]]);
-      const isAllSelected: boolean = this.isAllSelected(selection);
+      const isAllSelected: boolean = this._isAllSelected(selection);
 
       this._items.forEach((item) => {
          const itemId: TKey = item.getId();
@@ -89,7 +90,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       let countItemsSelected: number|null = null;
       const itemsCount: number = this._items.getCount();
 
-      if (this.isAllSelected(selection)) {
+      if (this._isAllSelected(selection)) {
          if (!hasMoreData) {
             countItemsSelected = itemsCount - selection.excluded.length;
          }
@@ -101,7 +102,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    // TODO что должно вернуться если выбраны все за ислючением одного(скольких-нибудь)
-   isAllSelected(selection: ISelection): boolean {
+   private _isAllSelected(selection: ISelection): boolean {
       return selection.selected.includes(ALL_SELECTION_VALUE);
    }
 }
