@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+/*import { assert } from 'chai';
 import { FlatSelectionStrategy } from 'Controls/multiselection';
 
 describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
@@ -7,4 +7,4 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
    it('select', () => {
 
    });
-});
+});*/
