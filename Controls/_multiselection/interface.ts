@@ -41,14 +41,14 @@ export interface ITreeSelectionStrategyOptions {
    nodesSourceControllers?: Object;
    hierarchyRelation: relation.Hierarchy;
    rootId: TKey;
+   items: RecordSet;
+}
+
+export interface IFlatSelectionStrategyOptions {
+   items: RecordSet;
 }
 
 export interface IEntryPath {
    id: TKey;
    parent: TKey;
-}
-
-// tslint:disable-next-line:no-empty-interface
-export interface IFlatSelectionStrategyOptions {
-   // is empty
 }

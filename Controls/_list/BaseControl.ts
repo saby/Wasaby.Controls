@@ -1746,7 +1746,7 @@ var _private = {
     },
 
    createSelectionController(self: any, options: any): SelectionController {
-      const strategy = this.createSelectionStrategy(options);
+      const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
 
       return new SelectionController({
          model: self._listViewModel,
@@ -1761,21 +1761,21 @@ var _private = {
          model: self._listViewModel,
          selectedKeys: newOptions.selectedKeys,
          excludedKeys: newOptions.excludedKeys,
-         strategyOptions: this.getSelectionStrategyOptions(newOptions)
+         strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
       });
       this.handleSelectionControllerResult(self, result);
    },
 
-   createSelectionStrategy(options: any): ISelectionStrategy {
-      const strategyOptions = this.getSelectionStrategyOptions(options);
+   createSelectionStrategy(options: any, items: RecordSet): ISelectionStrategy {
+      const strategyOptions = this.getSelectionStrategyOptions(options, items);
       if (options.parentProperty) {
          return new TreeSelectionStrategy(strategyOptions);
       } else {
-         return new FlatSelectionStrategy();
+         return new FlatSelectionStrategy(strategyOptions);
       }
    },
 
-   getSelectionStrategyOptions(options: any): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+   getSelectionStrategyOptions(options: any, items: RecordSet): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
       if (options.parentProperty) {
          return {
             nodesSourceControllers: options.nodesSourceControllers,
@@ -1787,8 +1787,11 @@ var _private = {
                nodeProperty: options.nodeProperty || 'Раздел@',
                declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
             }),
-            rootId: options.root
+            rootId: options.root,
+            items
          };
+      } else {
+         return { items };
       }
    },
 
