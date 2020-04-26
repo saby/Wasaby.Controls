@@ -18,6 +18,7 @@ import Util from './Util';
 /**
  * @name Controls/_spoiler/IViewOptions#headerContentTemplate
  * @cfg {function|String} Контент, занимающий свободное пространство справа от заголовка. Если заголовка нет, то контент занимает все пространство шапки, в этом случае заголовок можно добавить вручную в любом месте.
+ * @demo Controls-demo/Spoiler/View/HeaderContentTemplate/Index
  */
 /**
  * @name Controls/_spoiler/IViewOptions#expandedChangeCallback
