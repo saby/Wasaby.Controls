@@ -37,7 +37,7 @@ export function styleOptions(style: string): IActualMoneyFont {
             };
         case 'accentRegistry':
             return {
-                fontColorStyle: 'list', fontSize: 'l', fontWeight: 'bold'
+                fontColorStyle: 'default', fontSize: 'l', fontWeight: 'bold'
             };
         case 'noAccentRegistry':
             return {
