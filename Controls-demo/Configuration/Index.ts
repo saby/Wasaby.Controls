@@ -35,8 +35,8 @@ export default class ListEditorDemo extends Control<IListEditorOptions> {
             },
             editorOptions: {
                 source: this.getTileEditorSource(),
-                parentProperty: 'Р Р°Р·РґРµР»',
-                nodeProperty: 'Р Р°Р·РґРµР»@',
+                parentProperty: 'Раздел',
+                nodeProperty: 'Раздел@',
                 root: null
             }
         };
@@ -47,8 +47,8 @@ export default class ListEditorDemo extends Control<IListEditorOptions> {
             },
             editorOptions: {
                 source: this.getTileEditorSource(),
-                parentProperty: 'Р Р°Р·РґРµР»',
-                nodeProperty: 'Р Р°Р·РґРµР»@',
+                parentProperty: 'Раздел',
+                nodeProperty: 'Раздел@',
                 root: null
             }
         };
@@ -59,8 +59,8 @@ export default class ListEditorDemo extends Control<IListEditorOptions> {
             },
             editorOptions: {
                 source: this.getTileEditorSource(),
-                parentProperty: 'Р Р°Р·РґРµР»',
-                nodeProperty: 'Р Р°Р·РґРµР»@',
+                parentProperty: 'Раздел',
+                nodeProperty: 'Раздел@',
                 root: null
             }
         };
@@ -70,9 +70,9 @@ export default class ListEditorDemo extends Control<IListEditorOptions> {
         return [
             {
                 name: 'description',
-                Р Р°Р·РґРµР»: null,
-                'Р Р°Р·РґРµР»@': true,
-                caption: 'РћРїРёСЃР°РЅРёРµ',
+                Раздел: null,
+                'Раздел@': true,
+                caption: 'Описание',
                 editorOptions: {
                     minLines: 3
                 },
@@ -81,33 +81,33 @@ export default class ListEditorDemo extends Control<IListEditorOptions> {
             },
             {
                 name: 'tileView',
-                Р Р°Р·РґРµР»: 'description',
-                'Р Р°Р·РґРµР»@': false,
-                caption: 'РЎРїРёСЃРѕРє РїР»РёС‚РєРѕР№'
+                Раздел: 'description',
+                'Раздел@': false,
+                caption: 'Список плиткой'
             },
             {
                 name: 'showBackgroundImage',
-                Р Р°Р·РґРµР»: 'description',
-                'Р Р°Р·РґРµР»@': false,
-                caption: 'РџРѕРєР°Р·С‹РІР°С‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ'
+                Раздел: 'description',
+                'Раздел@': false,
+                caption: 'Показывать изображение'
             },
             {
                 caption: 'URL',
                 name: 'siteUrl',
-                Р Р°Р·РґРµР»: 'description',
-                'Р Р°Р·РґРµР»@': false
+                Раздел: 'description',
+                'Раздел@': false
             },
             {
-                caption: 'РСЃС‚РѕС‡РЅРёРє РІРёРґРµРѕ',
+                caption: 'Источник видео',
                 name: 'videoSource',
-                Р Р°Р·РґРµР»: 'description',
-                'Р Р°Р·РґРµР»@': false
+                Раздел: 'description',
+                'Раздел@': false
             },
             {
-                caption: 'РўРёРї С„РѕРЅР°',
+                caption: 'Тип фона',
                 name: 'backgroundType',
-                Р Р°Р·РґРµР»: 'description',
-                'Р Р°Р·РґРµР»@': false,
+                Раздел: 'description',
+                'Раздел@': false,
                 editorClass: 'controls-demo-pg-enum-editor'
             }
         ];

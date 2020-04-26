@@ -8,6 +8,5 @@
                     tableTemplate="{{_tableTemplate}}">
             </Controls.Configuration.ListEditor>
         </div>
-
     </ws:bodyContentTemplate>
 </Controls.Configuration.ListEditorPopup.Popup>

@@ -1,24 +1,26 @@
-<Controls.popupTemplate:Stack scope="{{_options}}">
-    <ws:headerContentTemplate>
-        <div class="configuration__ListEditorPopup_header">
-            <div class="configuration__ListEditor_headerButtons_wrapper">
-                <Controls.buttons:Button
-                        buttonStyle="primary"
-                        viewMode="linkButton"
-                        caption="{[Сбросить]}"
-                        on:click="_resetClick()"/>
-                <Controls.buttons:Button
-                        attr:title="{[Удалить}]"
-                        viewMode="link"
-                        icon="icon-Erase"
-                        iconStyle="danger"
-                        on:click="_removeClick()"/>
-                <Controls.buttons:Button
-                        buttonStyle="primary"
-                        viewMode="button"
-                        caption="{[Сохранить]}"
-                        on:click="_saveClick()"/>
+<Controls.form:Controller>
+    <Controls.popupTemplate:Stack scope="{{_options}}">
+        <ws:headerContentTemplate>
+            <div class="configuration__ListEditorPopup_header">
+                <div class="configuration__ListEditor_headerButtons_wrapper">
+                    <Controls.buttons:Button
+                            buttonStyle="primary"
+                            viewMode="linkButton"
+                            caption="{[Сбросить]}"
+                            on:click="_resetClick()"/>
+                    <Controls.buttons:Button
+                            attr:title="{[Удалить}]"
+                            viewMode="link"
+                            icon="icon-Erase"
+                            iconStyle="danger"
+                            on:click="_removeClick()"/>
+                    <Controls.buttons:Button
+                            buttonStyle="primary"
+                            viewMode="button"
+                            caption="{[Сохранить]}"
+                            on:click="_saveClick()"/>
+                </div>
             </div>
-        </div>
-    </ws:headerContentTemplate>
-</Controls.popupTemplate:Stack>
+        </ws:headerContentTemplate>
+    </Controls.popupTemplate:Stack>
+</Controls.form:Controller>
