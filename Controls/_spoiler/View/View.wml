@@ -12,7 +12,7 @@
         <ws:if data="{{_options.headerContentTemplate}}" >
             <div class="controls-SpoilerView__header__headerContentTemplate" style="width: 100%">
                 <ws:partial template="{{_options.headerContentTemplate}}"
-                            callback="{{_expandedHandler}}">
+                            expandedChangeCallback="{{_expandedHandler}}">
                 </ws:partial>
             </div>
         </ws:if>
