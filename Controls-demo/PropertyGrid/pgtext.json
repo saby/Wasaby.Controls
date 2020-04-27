@@ -220,7 +220,7 @@
           },
           "itemTemplate": {
             "type": "function",
-            "default": "wml!Controls/_dropdown/itemTemplate",
+            "default": "wml!Controls/_dropdown/Templates/itemTemplate",
             "title": "Template for item render."
           },
           "itemTemplateProperty": {
@@ -576,7 +576,7 @@
           },
           "itemTemplate": {
             "type": "function",
-            "default": "wml!Controls/_dropdown/itemTemplate",
+            "default": "wml!Controls/_dropdown/Templates/itemTemplate",
             "title": "Template for item render."
           },
           "itemTemplateProperty": {

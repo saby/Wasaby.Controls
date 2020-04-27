@@ -45,9 +45,9 @@ import Input = require('Controls/_dropdown/Input');
 import _Controller = require('Controls/_dropdown/_Controller');
 import Opener = require('Controls/_dropdown/Opener');
 import Combobox = require('Controls/_dropdown/ComboBox');
-import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
-import GroupTemplate = require('wml!Controls/_dropdown/GroupTemplate');
-import HeaderTemplate = require('wml!Controls/_dropdown/HeaderTemplate');
+import ItemTemplate = require('wml!Controls/_dropdown/Templates/itemTemplate');
+import GroupTemplate = require('wml!Controls/_dropdown/Templates/GroupTemplate');
+import HeaderTemplate = require('wml!Controls/_dropdown/Templates/HeaderTemplate');
 
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import dropdownHistoryUtils = require('Controls/_dropdown/dropdownHistoryUtils');
