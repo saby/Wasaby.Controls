@@ -36,7 +36,7 @@ import EnumEditor = require("Controls/_propertyGrid/defaultEditors/Enum");
 import IPropertyGrid = require("Controls/_propertyGrid/IPropertyGrid");
 import IEditor = require("Controls/_propertyGrid/IEditor");
 import IProperty = require("Controls/_propertyGrid/IProperty");
-import GroupTemplate = require("wml!Controls/_propertyGrid/groupTemplate");
+import GroupTemplate = require("wml!Controls/_propertyGrid/Render/resources/groupTemplate");
 
 export {
     PropertyGrid,

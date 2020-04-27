@@ -1,9 +1,10 @@
 import {Model} from 'Types/entity';
 import {Enum} from 'Types/collection';
+import {IHashMap} from 'Types/declarations';
 
 import getType = require('Core/helpers/getType');
 
-const DEFAULT_EDITORS: object = {
+const DEFAULT_EDITORS = {
     string: 'Controls/_propertyGrid/defaultEditors/String',
     boolean: 'Controls/_propertyGrid/defaultEditors/Boolean',
     date: 'Controls/_propertyGrid/defaultEditors/Date',
@@ -14,7 +15,8 @@ const DEFAULT_EDITORS: object = {
 
 class PropertyGridItem extends Model {
     _$keyProperty: string = 'name';
-    _$properties: object = {
+    _moduleName: string;
+    _$properties: IHashMap<Record<string, object>> = {
         editorTemplateName: {
             get(value: string|void): string {
                 if (value || DEFAULT_EDITORS[this.get('type')]) {
@@ -22,15 +24,15 @@ class PropertyGridItem extends Model {
                 }
                 if (getType(this.get('propertyValue')) === 'object') {
                     if (this.get('propertyValue') instanceof Enum) {
-                        return DEFAULT_EDITORS['enum'];
+                        return DEFAULT_EDITORS.enum;
                     }
                 }
                 return DEFAULT_EDITORS[getType(this.get('propertyValue'))];
             }
         },
         editorOptions: {
-            get(value: Object): Object {
-                const editorOptions: Object = {...value || {}};
+            get(value: Object): Record<string, any> {
+                const editorOptions: Record<string, any> = {...value || {}};
                 editorOptions.propertyValue = this.get('propertyValue');
                 return editorOptions;
             }
@@ -39,4 +41,4 @@ class PropertyGridItem extends Model {
 }
 
 PropertyGridItem.prototype._moduleName = 'Controls/_propertyGrid/PropertyGridItem';
-export = PropertyGridItem;
+export default PropertyGridItem;
