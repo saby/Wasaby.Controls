@@ -27,6 +27,10 @@ const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
 const DEFAULT_ACTION_CAPTION_POSITION = 'none';
 
+const DEFAULT_ACTION_POSITION = 'inside';
+
+const DEFAULT_ACTION_SIZE = 'm';
+
 export interface IItemActionsControllerOptions {
     /**
      * Коллекция элементов, содержащих операции с записью
@@ -84,8 +88,10 @@ export class Controller {
         if (!this._collection.areActionsAssigned()) {
             this._assignActions();
             this._calculateActionsTemplateConfig({
-                itemActionsPosition: options.itemActionsPosition,
+                itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
                 style: options.style,
+                iconSize: options.iconSize || DEFAULT_ACTION_SIZE,
+                editingToolbarVisibility: options.editingToolbarVisibility,
                 actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
                 actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
                 itemActionsClass: options.itemActionsClass
