@@ -14,7 +14,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
 /**
  * Контрол, позволяющий пользователю управлять параметром с двумя состояниями — включено и отключено.
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FCheckbox%2FstandartDemoCheckbox">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2Ftoggle%2FCheckbox%2FIndex">Демо-пример</a>.
  *
  * @class Controls/_toggle/Checkbox
  * @extends Core/Control
@@ -26,7 +26,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @public
  * @author Красильников А.С.
  * @category Toggle
- * @demo Controls-demo/Checkbox/Checkbox
+ * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
 
 /*
@@ -45,7 +45,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @public
  * @author Красильников А.С.
  * @category Toggle
- * @demo Controls-demo/Checkbox/CheckBoxDemoPG
+ * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
 
 /**
@@ -56,6 +56,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * True - Разрешено устанавливать третье состояние.
  * False - Не разрешено устанавливать третье состояние.
  * Если установлен режим triState, то значение может быть "null".
+ * @demo Controls-demo/toggle/Checkbox/Tristate/Index
  * @example
  * Чекбокс с включенным triState.
  * <pre>
@@ -81,6 +82,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * True - Enable triState.
  * False - Disable triState.
  * If the triState mode is set, then the value can be null.
+ * @demo Controls-demo/toggle/Checkbox/Tristate/Index
  * @example
  * Checkbox with enabled triState.
  * <pre>

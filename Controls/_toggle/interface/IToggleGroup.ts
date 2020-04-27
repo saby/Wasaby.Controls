@@ -28,6 +28,7 @@ export interface IToggleGroup {
      * @variant horizontal Элементы расположены один за другим (горизонтально).
      * @variant vertical Элементы расположены один под другим (вертикально).
      * @default vertical
+     * @demo Controls-demo/toggle/CheckboxGroup/Direction/Index
      * @example
      * Вертикальная ориентация.
      * <pre>
