@@ -388,7 +388,7 @@ const _private = {
         return self._children.scrollController.scrollToItem(key, toBottom, force);
     },
 
-    setMarkedKey(self, key) {
+    setMarkedKey(self, key: string | number): void {
         if (key !== undefined) {
             const model = self.getViewModel();
             if (self._options.useNewModel) {
@@ -397,7 +397,6 @@ const _private = {
             } else {
                 model.setMarkedKey(key);
             }
-            _private.scrollToItem(self, key);
         }
     },
 
@@ -408,6 +407,7 @@ const _private = {
             self.activate();
         }
         _private.setMarkedKey(self, newMarkedKey);
+        _private.scrollToItem(self, key, true, false);
     },
     moveMarkerToNext: function (self, event) {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
