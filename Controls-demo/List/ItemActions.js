@@ -6,7 +6,6 @@ define('Controls-demo/List/ItemActions', [
    'Core/Control',
    'wml!Controls-demo/List/ItemActions/ItemActions',
    'Types/source',
-   'css!Controls-demo/List/ItemActions/ItemActions'
 ], function(
    Env,
    BaseControl,
@@ -169,5 +168,7 @@ define('Controls-demo/List/ItemActions', [
             });
          }
       });
+   ModuleClass._styles = ['Controls-demo/List/ItemActions/ItemActions'];
+
    return ModuleClass;
 });
