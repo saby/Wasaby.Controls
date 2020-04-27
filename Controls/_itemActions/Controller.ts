@@ -112,6 +112,13 @@ export class Controller {
     }
 
     /**
+     * Получает текущий активный элемент коллекции
+     */
+    getActiveItem(): IItemActionsItem {
+        return this._collection.find((item) => item.isActive());
+    }
+
+    /**
      * Активирует Swipe для меню операций с записью
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
      * @param actionsContainerHeight высота контейнера для отображения операций с записью
@@ -134,13 +141,6 @@ export class Controller {
         this._setSwipeItem(null);
         this.setActiveItem(null);
         this._collection.setSwipeConfig(null);
-    }
-
-    /**
-     * Получает текущий активный элемент коллекции
-     */
-    getActiveItem(): IItemActionsItem {
-        return this._collection.find((item) => item.isActive());
     }
 
     /**
@@ -171,7 +171,6 @@ export class Controller {
             return;
         }
 
-        const hasParentAction = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
         const menuActions = this._getMenuActions(item, parentAction);
 
         if (!menuActions || menuActions.length === 0) {
@@ -179,35 +178,36 @@ export class Controller {
         }
 
         // there was a fake target before, check if it is needed
-        const menuTarget = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
-        const menuSource = new Memory({
+        const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
+        const source = new Memory({
             data: menuActions,
             keyProperty: 'id'
         });
-        const headConfig = hasParentAction ? {
+        const showHeader = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
+        const headConfig = showHeader ? {
             caption: parentAction.title,
             icon: parentAction.icon
         } : null;
         // Не реализовано в модели
         // const contextMenuConfig = this._collection.getContextMenuConfig();
         // ...contextMenuConfig,
-        const menuConfig: IMenuTemplateOptions = {
-            source: menuSource,
+        const templateOptions: IMenuTemplateOptions = {
+            source,
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
             dropdownClassName: 'controls-itemActionsV__popup',
             closeButtonVisibility: true,
             root: parentAction && parentAction.id,
-            showHeader: hasParentAction,
+            showHeader,
             headConfig
         };
         return {
             opener,
             template: 'Controls/menu:Popup',
             actionOnScroll: 'close',
-            target: menuTarget,
-            templateOptions: menuConfig,
+            target,
+            templateOptions,
             closeOnOutsideClick: true,
             targetPoint: {
                 vertical: 'top',
@@ -288,8 +288,6 @@ export class Controller {
         if (newSwipeItem) {
             newSwipeItem.setSwiped(true);
         }
-
-        this._collection.nextVersion();
     }
 
     /**
