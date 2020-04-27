@@ -6,7 +6,7 @@ define('Controls-demo/Container/Scroll',
       'wml!Controls-demo/Container/Scroll',
    ],
    function(Control, source, scroll, template) {
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
          _pagingVisible: true,
          _scrollbarVisible: true,

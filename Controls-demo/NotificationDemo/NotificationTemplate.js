@@ -8,7 +8,7 @@ define('Controls-demo/NotificationDemo/NotificationTemplate',
 
       'use strict';
 
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
 
          _openNotification: function(e, index) {

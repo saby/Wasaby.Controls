@@ -10,7 +10,7 @@ define('Controls-demo/Decorators/WrapURLs/WrapURLs',
 
       'use strict';
 
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
 
          _wrapText: null,

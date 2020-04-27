@@ -9,7 +9,7 @@ define('Controls-demo/InfoBox/InfoBox',
 
       'use strict';
 
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
          _dblClickHandler: function() {
             var child = this._children.demandInfobox;

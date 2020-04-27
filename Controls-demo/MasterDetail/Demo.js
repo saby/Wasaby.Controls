@@ -8,7 +8,7 @@ define('Controls-demo/MasterDetail/Demo', [
    'Controls-demo/MasterDetail/DemoSource',
    'Env/Env',
 ], function(Control, template, data, cClone, source, itemTemplate, DemoSource, Env) {
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _template: template,
 
 

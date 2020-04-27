@@ -8,7 +8,7 @@ define('Controls-demo/List/Mover', [
    'wml!Controls-demo/List/Mover/Mover',
 ], function(BaseControl, cClone, source, Toolbar, TreeMemory, GridData, template) {
    'use strict';
-   let ModuleClass = BaseControl.extend({
+   var ModuleClass = BaseControl.extend({
       _template: template,
       _countClicked: 0,
       _reloadCaption: 'Reload',

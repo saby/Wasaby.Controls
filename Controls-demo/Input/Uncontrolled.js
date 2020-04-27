@@ -8,7 +8,7 @@ define('Controls-demo/Input/Uncontrolled',
    function(Base, template) {
       'use strict';
 
-      let ModuleClass = Base.Control.extend({
+      var ModuleClass = Base.Control.extend({
          _template: template
       });
    

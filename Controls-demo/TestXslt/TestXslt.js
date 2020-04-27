@@ -24,7 +24,7 @@ define('Controls-demo/TestXslt/TestXslt', [
       });
    }
 
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _template: template,
       _xml: '',
       _xsl: '',

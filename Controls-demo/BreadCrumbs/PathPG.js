@@ -9,7 +9,7 @@ define('Controls-demo/BreadCrumbs/PathPG', [
    config,
    entity
 ) {
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _template: template,
       _dataObject: null,
       _componentOptions: null,

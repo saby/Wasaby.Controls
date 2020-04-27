@@ -153,7 +153,7 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
          }
       ];
 
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
 
          _titleVisible: true,

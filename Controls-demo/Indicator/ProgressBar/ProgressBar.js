@@ -8,7 +8,7 @@ define('Controls-demo/Indicator/ProgressBar/ProgressBar',
 
    function(Control, template, config) {
       'use strict';
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
          _metaData: null,
          _content: 'Controls/progress:Bar',

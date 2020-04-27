@@ -78,7 +78,7 @@ define('Controls-demo/OperationsPanel/Panel', [
       id: 2,
       title: '6 items'
    }];
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _template: template,
       _expanded: false,
       _eventName: '',

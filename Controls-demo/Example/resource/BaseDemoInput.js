@@ -33,7 +33,7 @@ define('Controls-demo/Example/resource/BaseDemoInput',
        * @param {String} contents[].label.required
        */
 
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
 
          _switchBlocker: function() {

@@ -8,7 +8,7 @@ define('Controls-demo/DragNDrop/MasterDetail', [
    'Controls-demo/DragNDrop/MasterDetail/TasksEntity',
    'wml!Controls-demo/DragNDrop/MasterDetail/itemTemplates/masterItemTemplate',
 ], function(Control, template, data, source, cInstance, dragnDrop, TasksEntity, itemTemplate) {
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _template: template,
       gridColumns: [{
          displayProperty: 'name',

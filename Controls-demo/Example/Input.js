@@ -24,7 +24,7 @@ define('Controls-demo/Example/Input',
    function(Env, Control, scrollToElement, template) {
       'use strict';
 
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
 
          _afterMount: function() {

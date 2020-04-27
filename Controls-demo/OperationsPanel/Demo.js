@@ -22,7 +22,7 @@ define('Controls-demo/OperationsPanel/Demo', [
       })
    }];
 
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _panelExpanded: false,
       _template: template,
       _panelSource: undefined,

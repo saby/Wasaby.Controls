@@ -23,7 +23,7 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
       {id: 5, name: 'Dmitry'}
    ];
 
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _template: template,
       _content: 'Controls/suggest:SearchInput',
       _dataObject: null,

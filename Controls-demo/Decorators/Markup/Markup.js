@@ -13,7 +13,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
    template) {
    'use strict';
 
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _template: template,
       _resolversMemorySource: null,
       _newParamKey: '',

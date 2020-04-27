@@ -9,7 +9,7 @@ define('Controls-demo/Input/Auth',
    function(Control, template, rk) {
       'use strict';
 
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
 
          _login: '',

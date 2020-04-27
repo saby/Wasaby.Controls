@@ -7,7 +7,7 @@ define('Controls-demo/Popup/PopupAnimation',
       'wml!Controls-demo/Popup/PopupAnimation/PopupAnimation',
    ],
    function(Control, template) {
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _animationDelay: 200,
          _fullCreateDelay: 1000,
          _template: template,

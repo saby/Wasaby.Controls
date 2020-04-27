@@ -10,7 +10,7 @@ define('Controls-demo/Example/Input/Money',
    function(Control, SetValueMixin, template) {
       'use strict';
 
-      let ModuleClass = Control.extend([SetValueMixin], {
+      var ModuleClass = Control.extend([SetValueMixin], {
          _template: template,
 
          _rightValue: '0.00',

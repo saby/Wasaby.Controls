@@ -8,7 +8,7 @@ define('Controls-demo/Example/Label',
    function(Control, template) {
       'use strict';
 
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
 
          _value: 'text',

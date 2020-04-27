@@ -84,7 +84,7 @@ define('Controls-demo/Example/Input/Suggest',
          }
       });
 
-      let ModuleClass = Control.extend([SetValueMixin], {
+      var ModuleClass = Control.extend([SetValueMixin], {
          _template: template,
 
          _source: null,

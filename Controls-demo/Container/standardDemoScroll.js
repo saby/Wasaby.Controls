@@ -48,7 +48,7 @@ define('Controls-demo/Container/standardDemoScroll', [
         };
     }
 
-    let ModuleClass = Control.extend({
+    var ModuleClass = Control.extend({
         _template: template,
         _menuItems: null,
         _numberItems: 15,

@@ -5,7 +5,7 @@ define('Controls-demo/Input/Suggest/resources/SuggestFooterTemplatePG', [
 ], function(Control, template) {
    'use strict';
    
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _template: template,
       _caption: 'custom footer button',
       _click: function() {

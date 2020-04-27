@@ -8,7 +8,7 @@ define('Controls-demo/Buttons/SelectorButtonPG', [
 ], function (Control, template, sourceLib, memorySourceFilter, sourceData, config) {
    'use strict';
 
-   let ModuleClass = Control.extend({
+   var ModuleClass = Control.extend({
       _selectedKeys: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       _template: template,
       _content: 'Controls/lookup:Selector',

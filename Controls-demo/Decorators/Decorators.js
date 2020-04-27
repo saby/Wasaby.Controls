@@ -12,7 +12,7 @@ define('Controls-demo/Decorators/Decorators',
 
       'use strict';
 
-      let ModuleClass = Control.extend({
+      var ModuleClass = Control.extend({
          _template: template
       })
    

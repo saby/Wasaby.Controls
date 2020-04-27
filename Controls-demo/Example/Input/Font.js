@@ -14,7 +14,7 @@ define('Controls-demo/Example/Input/Font',
       var FILLED_MONEY_VALUE = '852.45';
       var FILLED_NUMBER_VALUE = 123.456;
 
-      let ModuleClass = Control.extend([SetValueMixin], {
+      var ModuleClass = Control.extend([SetValueMixin], {
          _template: template,
 
          _filled1Value: FILLED_VALUE,
