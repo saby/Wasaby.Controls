@@ -617,26 +617,6 @@ define(
             assert.equal(position.bottom, 740);
          });
 
-         it('isNegativePosition', () => {
-            StickyStrategy._private._isMobileIOS = () => true;
-            let baseFixBottomPositionForIos = StickyStrategy._private._fixBottomPositionForIos;
-            StickyStrategy._private._fixBottomPositionForIos = (pos) => (pos.bottom = -1000);
-
-            let position = {
-               bottom: 100
-            };
-            let isNegative = StickyStrategy._private.isNegativePosition({}, position, {});
-            assert.equal(position.bottom, 100);
-            assert.equal(isNegative, true);
-
-            isNegative = StickyStrategy._private.isNegativePosition({checkNegativePosition: false}, position, {});
-            assert.equal(position.bottom, 100);
-            assert.equal(isNegative, false);
-
-            StickyStrategy._private._fixBottomPositionForIos = baseFixBottomPositionForIos;
-            StickyStrategy._private._isMobileIOS = () => false;
-         });
-
          it('getFakeDivMargins', () => {
             StickyController._private.getFakeDiv = () => {
                return {
@@ -644,7 +624,7 @@ define(
                      marginTop: '10.2px',
                      marginLeft: '11.4px'
                   }
-               }
+               };
             };
 
             const item = {
