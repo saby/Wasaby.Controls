@@ -1,5 +1,7 @@
 <span attr:class="controls-Button__close"
-      attr:ws-creates-context="false">
+      attr:ws-creates-context="false"
+      sbisname="floatAreaCloseButton"
+      class="ws-float-close sbisname-window-title-close ws-float-close-right">
     <span class="controls-Button__close__wrapper
                  controls-Button__close_{{_options.viewMode}} controls-Button__close_{{_options.viewMode}}-theme_{{_options.theme}}
                  controls-Button__close_{{_options.viewMode}}_{{_options.transparent ? 'transparent' : 'untransparent'}}-theme_{{_options.theme}}">
