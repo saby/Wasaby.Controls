@@ -3,6 +3,7 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
       'Core/Control',
       'wml!Controls-demo/Popup/Opener/resources/StackTemplateHeader',
       'Types/source',
+      'css!Controls-demo/Popup/Opener/resources/StackHeader',
       'wml!Controls-demo/List/Tree/DemoContentTemplate'
    ],
    function(Control, template, Source) {
@@ -63,8 +64,6 @@ define('Controls-demo/Popup/Opener/resources/StackTemplateHeader',
          }
       });
 
-
-      PopupPage._styles = ['Controls-demo/Popup/Opener/resources/StackHeader'];
 
       return PopupPage;
    });

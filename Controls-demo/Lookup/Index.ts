@@ -6,6 +6,7 @@ import controlTemplate = require('wml!Controls-demo/Lookup/Index');
 import suggestTemplate = require('wml!Controls-demo/Lookup/resources/SuggestTemplate');
 import selectorTemplate = require('Controls-demo/Lookup/FlatListSelector/FlatListSelector');
 import selectorTemplateWithTabs = require('Controls-demo/Lookup/FlatListSelectorWithTabs/FlatListSelectorWithTabs');
+import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control{
    protected _template: TemplateFunction = controlTemplate;
@@ -209,6 +210,4 @@ export default class extends Control{
 
       return currentItems;
    }
-
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

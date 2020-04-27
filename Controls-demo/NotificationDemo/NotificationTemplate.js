@@ -3,12 +3,13 @@ define('Controls-demo/NotificationDemo/NotificationTemplate',
       'Core/Control',
       'wml!Controls-demo/NotificationDemo/NotificationTemplate',
       'wml!Controls-demo/Popup/Opener/resources/CustomNotification',
+      'css!Controls-demo/NotificationDemo/NotificationTemplate'
    ],
    function(Control, template) {
 
       'use strict';
 
-      let ModuleClass = Control.extend({
+      return Control.extend({
          _template: template,
 
          _openNotification: function(e, index) {
@@ -19,8 +20,4 @@ define('Controls-demo/NotificationDemo/NotificationTemplate',
             this._children['myOpener' + index].close();
          }
       });
-   
-      ModuleClass._styles = ['Controls-demo/NotificationDemo/NotificationTemplate'];
-
-      return ModuleClass;
-});
+   });

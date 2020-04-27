@@ -3,6 +3,7 @@ define('Controls-demo/Slider/Range/SliderRangeDemo',
       'Core/Control',
       'Types/source',
       'wml!Controls-demo/Slider/Range/SliderRangeDemo',
+      'css!Controls-demo/Slider/Range/SliderRangeDemo',
       'Controls/slider'
    ],
    function(Control, source, template) {
@@ -79,8 +80,6 @@ define('Controls-demo/Slider/Range/SliderRangeDemo',
             this._readOnly = val;
          },
       });
-
-      SliderRangeDemo._styles = ['Controls-demo/Slider/Range/SliderRangeDemo'];
 
       return SliderRangeDemo;
    }

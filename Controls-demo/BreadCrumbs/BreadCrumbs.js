@@ -2,6 +2,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
    'Core/Control',
    'wml!Controls-demo/BreadCrumbs/BreadCrumbs/BreadCrumbs',
    'Types/entity',
+   'css!Controls-demo/BreadCrumbs/BreadCrumbs/BreadCrumbs'
 ], function(
    Control,
    template,
@@ -164,8 +165,6 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
          this._arrowActivated = true;
       }
    });
-
-   BreadCrumbs._styles = ['Controls-demo/BreadCrumbs/BreadCrumbs/BreadCrumbs'];
 
    return BreadCrumbs;
 });

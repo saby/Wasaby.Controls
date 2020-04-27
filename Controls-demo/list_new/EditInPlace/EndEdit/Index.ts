@@ -5,6 +5,7 @@ import {Model} from "Types/entity"
 import {getEditableCatalog as getData} from "../../DemoHelpers/DataCatalog"
 import {SyntheticEvent} from "Vdom/Vdom";
 import {editing as constEditing} from 'Controls/Constants';
+import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -52,6 +53,4 @@ export default class extends Control {
 
 
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

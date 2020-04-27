@@ -2,6 +2,8 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {Record} from 'Types/entity';
 import * as template from 'wml!Controls-demo/StateIndicator/StandartStateIndicatorDemo';
 import * as popupTemplate from 'wml!Controls-demo/StateIndicator/template/template';
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/StateIndicator/StandartStateIndicatorDemo';
 
 import {Infobox} from 'Controls/popup';
 
@@ -101,6 +103,4 @@ export default class StandartStateIndicatorDemo extends Control<IControlOptions>
       };
       this._children.IBOpener.open(config);
    }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/StateIndicator/StandartStateIndicatorDemo'];
 }

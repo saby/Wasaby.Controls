@@ -4,6 +4,7 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
       'tmpl!Controls-demo/Popup/Opener/Compatible/demoOpener',
       'require',
       'Types/source',
+      'css!Controls-demo/Popup/Opener/Compatible/demoOpener'
    ],
    function (Control, template, require, source) {
       'use strict';
@@ -318,8 +319,6 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
             );
          }
       });
-
-      TestOpener._styles = ['Controls-demo/Popup/Opener/Compatible/demoOpener'];
 
       return TestOpener;
    }

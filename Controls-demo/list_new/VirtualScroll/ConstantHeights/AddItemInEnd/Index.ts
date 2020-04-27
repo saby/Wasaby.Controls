@@ -3,6 +3,7 @@ import * as Template from "wml!Controls-demo/list_new/VirtualScroll/ConstantHeig
 import {Memory} from "Types/source"
 import {RecordSet} from "Types/collection"
 import {generateData} from "../../../DemoHelpers/DataCatalog"
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -37,6 +38,4 @@ export default class extends Control {
             data: this.dataArray
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

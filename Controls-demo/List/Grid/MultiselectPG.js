@@ -7,6 +7,9 @@ define('Controls-demo/List/Grid/MultiselectPG',
         'json!Controls-demo/List/Grid/resources/MultiselectPG/cfg',
         'wml!Controls-demo/List/Grid/resources/DemoMoney',
         'wml!Controls-demo/List/Grid/resources/DemoRating',
+        'css!Controls-demo/Filter/Button/PanelVDom',
+        'css!Controls-demo/Input/resources/VdomInputs',
+        'css!Controls-demo/Wrapper/Wrapper'
     ],
 
     function(Control, source, data, template, config) {
@@ -40,7 +43,5 @@ define('Controls-demo/List/Grid/MultiselectPG',
                 this._metaData = config[this._content].properties['ws-config'].options;
             }
         });
-        Component._styles = ['Controls-demo/Filter/Button/PanelVDom', 'Controls-demo/Input/resources/VdomInputs', 'Controls-demo/Wrapper/Wrapper'];
-
         return Component;
     });

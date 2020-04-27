@@ -4,11 +4,13 @@ define('Controls-demo/Example/Label',
       'wml!Controls-demo/Example/Label/Label',
 
       'Controls/input',
+      'css!Controls-demo/Example/Label/Label',
+      'css!Controls-demo/Example/resource/Base'
    ],
    function(Control, template) {
       'use strict';
 
-      let ModuleClass = Control.extend({
+      return Control.extend({
          _template: template,
 
          _value: 'text',
@@ -19,8 +21,4 @@ define('Controls-demo/Example/Label',
             this._lock = !this._lock;
          }
       });
-   
-      ModuleClass._styles = ['Controls-demo/Example/Label/Label', 'Controls-demo/Example/resource/Base'];
-
-      return ModuleClass;
-});
+   });

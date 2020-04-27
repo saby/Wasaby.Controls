@@ -3,6 +3,7 @@ import * as Template from "wml!Controls-demo/grid/ColumnScroll/AddColumns/AddCol
 import {Memory} from "Types/source"
 import {getCountriesStats} from "../../DemoHelpers/DataCatalog"
 
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -42,6 +43,4 @@ export default class extends Control {
         this._fakeIndex++;
         this._forceUpdate();
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

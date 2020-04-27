@@ -2,6 +2,7 @@ define('Controls-demo/List/Grid/EditableGrid', [
    'Core/Control',
    'wml!Controls-demo/List/Grid/resources/EditableGrid/EditableGrid',
    'Types/source',
+   'css!Controls-demo/List/Grid/resources/EditableGrid/EditableGrid'
 ], function(BaseControl, template, source, ItemTemplate) {
    'use strict';
    var
@@ -89,8 +90,6 @@ define('Controls-demo/List/Grid/EditableGrid', [
             });
          }
       });
-
-   ModuleClass._styles = ['Controls-demo/List/Grid/resources/EditableGrid/EditableGrid'];
 
    return ModuleClass;
 });

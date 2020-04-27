@@ -2,6 +2,8 @@ define('Controls-demo/AsyncTest/DepthAsync/Test6',
    [
       'Core/Control',
       'wml!Controls-demo/AsyncTest/DepthAsync/Test6',
+      'css!Controls-demo/AsyncTest/AsyncTestDemo',
+      'css!Controls-demo/AsyncTest/DepthAsync/Depth',
    ], function (Control, template) {
       'use strict';
 
@@ -19,8 +21,6 @@ define('Controls-demo/AsyncTest/DepthAsync/Test6',
             this._forceUpdate();
          },
       });
-
-      testDepthModule._styles = ['Controls-demo/AsyncTest/AsyncTestDemo', 'Controls-demo/AsyncTest/DepthAsync/Depth'];
 
       return testDepthModule;
    });

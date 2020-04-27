@@ -15,6 +15,7 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
    'wml!Controls-demo/List/EditInPlace/FifthScenario/Column',
    'wml!Controls-demo/List/EditInPlace/FifthScenario/SecondColumn',
    'wml!Controls-demo/List/EditInPlace/FifthScenario/Results',
+   'css!Controls-demo/List/EditInPlace/Scenarios'
 ], function(
    Control,
    template,
@@ -503,8 +504,6 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
          this._showAddButton = state;
       }
    });
-
-   EIPScenarios._styles = ['Controls-demo/List/EditInPlace/Scenarios'];
 
    return EIPScenarios;
 });

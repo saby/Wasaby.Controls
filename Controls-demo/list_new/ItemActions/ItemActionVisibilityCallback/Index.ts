@@ -5,6 +5,7 @@ import {Model} from "Types/entity"
 import {getContactsCatalog as getData} from "../../DemoHelpers/DataCatalog"
 import {getActionsForContacts as getItemActions} from "../../DemoHelpers/ItemActionsCatalog"
 import {showType} from "Controls/Utils/Toolbar"
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -33,6 +34,4 @@ export default class extends Control {
 
         return true;
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -1,6 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Menu/Control/ItemTemplate/ItemTemplateProperty/RightTemplate/Index');
 import {Memory} from 'Types/source';
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/Menu/Menu';
 import 'wml!Controls-demo/Menu/Control/ItemTemplate/ItemTemplateProperty/ItemTpl';
 
 export default class extends Control<IControlOptions> {
@@ -18,6 +20,4 @@ export default class extends Control<IControlOptions> {
             keyProperty: 'key'
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Menu/Menu'];
 }

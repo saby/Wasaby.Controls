@@ -4,6 +4,7 @@ define('Controls-demo/List/List/LoadMore', [
    'Types/source',
    'Controls-demo/List/List/resources/Data',
    'Controls/list',
+   'css!Controls-demo/List/List/resources/LoadMore/LoadMore'
 ], function (Control, template, sourceLib, ListData) {
    'use strict';
 
@@ -36,7 +37,5 @@ define('Controls-demo/List/List/LoadMore', [
             });
          }
       });
-   ModuleClass._styles = ['Controls-demo/List/List/resources/LoadMore/LoadMore'];
-
    return ModuleClass;
 });

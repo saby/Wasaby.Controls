@@ -4,6 +4,7 @@ define('Controls-demo/List/Tree/ExpandAll', [
    'Types/source',
    'Controls-demo/List/Tree/resources/Data',
    'Controls/treeGrid',
+   'css!Controls-demo/List/Tree/resources/ExpandAll/ExpandAll'
 ], function (Control, template, source, TreeData) {
    'use strict';
 
@@ -25,7 +26,5 @@ define('Controls-demo/List/Tree/ExpandAll', [
             });
          }
       });
-   ModuleClass._styles = ['Controls-demo/List/Tree/resources/ExpandAll/ExpandAll'];
-
    return ModuleClass;
 });

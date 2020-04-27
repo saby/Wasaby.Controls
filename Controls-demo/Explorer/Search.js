@@ -3,6 +3,7 @@ define('Controls-demo/Explorer/Search', [
    'wml!Controls-demo/Explorer/Search',
    'Controls-demo/Explorer/ExplorerMemory',
    'Types/source',
+   'css!Controls-demo/Explorer/Search',
    'Controls/explorer'
 ], function(BaseControl, template, MemorySource, source) {
    'use strict';
@@ -149,8 +150,6 @@ define('Controls-demo/Explorer/Search', [
             });
          }
       });
-
-   ModuleClass._styles = ['Controls-demo/Explorer/Search'];
 
    return ModuleClass;
 });

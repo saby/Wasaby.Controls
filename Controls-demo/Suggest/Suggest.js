@@ -11,6 +11,7 @@ define('Controls-demo/Suggest/Suggest', [
    'Controls-demo/Search/SearchMemory',
    'Controls-demo/Utils/MemorySourceFilter',
    'Controls-demo/Utils/MemorySourceData',
+   'css!Controls-demo/Suggest/Suggest'
 ], function(Control, template, source, SearchMemory, memorySourceFilter, MemorySourceData) {
    'use strict';
 
@@ -76,8 +77,6 @@ define('Controls-demo/Suggest/Suggest', [
          });
       }
    });
-
-   VDomSuggest._styles = ['Controls-demo/Suggest/Suggest'];
 
    return VDomSuggest;
 });

@@ -9,6 +9,8 @@ import fourthResultTemplate = require('wml!Controls-demo/BreadCrumbs/Scenarios/F
 import secondHeaderTemplate = require('wml!Controls-demo/BreadCrumbs/Scenarios/Second/headerTemplate');
 import {HierarchicalMemory} from 'Types/source';
 import {constants} from 'Env/Env';
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/BreadCrumbs/Scenarios/Scenarios';
 
 class ScenarioFirst extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
@@ -471,7 +473,5 @@ class ScenarioFirst extends Control<IControlOptions> {
 
 
     static _theme: string[] = ['Controls/Classes'];
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/BreadCrumbs/Scenarios/Scenarios'];
 }
 export default ScenarioFirst;

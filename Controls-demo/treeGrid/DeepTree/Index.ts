@@ -4,6 +4,7 @@ import {Memory} from "Types/source"
 import {Gadgets} from "../DemoHelpers/DataCatalog"
 import * as elipsisTpl from 'wml!Controls-demo/treeGrid/DeepTree/elipsisTpl'
 
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -19,6 +20,4 @@ export default class extends Control {
             data: Gadgets.getDeepSet()
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

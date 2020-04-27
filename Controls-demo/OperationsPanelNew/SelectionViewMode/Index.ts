@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base'
 import * as Template from 'wml!Controls-demo/OperationsPanelNew/SelectionViewMode/SelectionViewMode'
 import {Memory} from 'Types/source'
 import {getPanelData} from 'Controls-demo/OperationsPanelNew/DemoHelpers/DataCatalog';
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
@@ -22,6 +23,4 @@ export default class extends Control {
          this._selectionViewMode = type;
       }
    }
-
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -2,6 +2,7 @@ define('Controls-demo/FilterView/lookupTemplate',
    [
       'Core/Control',
       'wml!Controls-demo/FilterView/lookupTemplate/lookupTemplate',
+      'css!Controls-demo/Dropdown/Dropdown'
    ],
 
    function(Control, template) {
@@ -24,8 +25,6 @@ define('Controls-demo/FilterView/lookupTemplate',
          }
 
       });
-
-      LookupTemplate._styles = ['Controls-demo/Dropdown/Dropdown'];
 
       return LookupTemplate;
    });

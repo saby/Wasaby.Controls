@@ -1,5 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls-demo/LoadingIndicator/Scroll/Scroll');
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/LoadingIndicator/IndicatorContainer';
 
 class Scroll extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -11,7 +13,5 @@ class Scroll extends Control<IControlOptions> {
         this._children.LocalIndicatorTop.show({});
         this._children.LocalIndicatorBottom.show({});
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/LoadingIndicator/IndicatorContainer'];
 }
 export default Scroll;

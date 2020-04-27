@@ -4,6 +4,7 @@ import {Memory} from "Types/source"
 import {getEditing} from "../../DemoHelpers/DataCatalog"
 import 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor';
 
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -16,6 +17,4 @@ export default class extends Control {
             data: getEditing().getEditingData()
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

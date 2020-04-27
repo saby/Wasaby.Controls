@@ -4,6 +4,7 @@ import * as ListEntity from 'Controls-demo/DragNDrop/ListEntity';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
 import {Gadgets} from '../DataHelpers/DataCatalog';
 
+import 'css!Controls-demo/Controls-demo';
 
 
 export default class extends Control {
@@ -53,6 +54,4 @@ export default class extends Control {
         this._multiselect = this._multiselect === 'visible' ? 'hidden' : 'visible';
     }
 
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -2,6 +2,7 @@ define('Controls-demo/PropertyGrid/NumberTemplate',
    [
       'Core/Control',
       'wml!Controls-demo/PropertyGrid/NumberTemplate',
+      'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template) {
       'use strict';
@@ -13,8 +14,6 @@ define('Controls-demo/PropertyGrid/NumberTemplate',
          }
       });
 
-
-      numberTmpl._styles = ['Controls-demo/Input/resources/VdomInputs'];
 
       return numberTmpl;
    });

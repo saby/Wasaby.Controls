@@ -4,6 +4,8 @@ define('Controls-demo/Example/resource/BaseDemoInput',
       'wml!Controls-demo/Example/resource/BaseDemoInput/BaseDemoInput',
 
       'Controls/input',
+      'css!Controls-demo/Example/resource/Base',
+      'css!Controls-demo/Example/resource/BaseDemoInput/BaseDemoInput'
    ],
    function(Control, template) {
 
@@ -33,7 +35,7 @@ define('Controls-demo/Example/resource/BaseDemoInput',
        * @param {String} contents[].label.required
        */
 
-      let ModuleClass = Control.extend({
+      return Control.extend({
          _template: template,
 
          _switchBlocker: function() {
@@ -44,9 +46,5 @@ define('Controls-demo/Example/resource/BaseDemoInput',
             this._notify('labelClick', [labelName], {bubbling: true});
          }
       });
-   
-      ModuleClass._styles = ['Controls-demo/Example/resource/Base', 'Controls-demo/Example/resource/BaseDemoInput/BaseDemoInput'];
-
-      return ModuleClass;
-}
+   }
 );

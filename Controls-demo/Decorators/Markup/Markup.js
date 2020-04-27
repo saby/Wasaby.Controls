@@ -5,6 +5,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
    'Types/source',
    'wml!Controls-demo/Decorators/Markup/Markup',
 
+   'css!Controls-demo/Decorators/Markup/Markup',
    'Controls/decorator'
 
 ], function(Control,
@@ -13,7 +14,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
    template) {
    'use strict';
 
-   let ModuleClass = Control.extend({
+   return Control.extend({
       _template: template,
       _resolversMemorySource: null,
       _newParamKey: '',
@@ -85,8 +86,4 @@ define('Controls-demo/Decorators/Markup/Markup', [
          return JSON.stringify(object);
       }
    });
-
-   ModuleClass._styles = ['Controls-demo/Decorators/Markup/Markup'];
-
-   return ModuleClass;
 });

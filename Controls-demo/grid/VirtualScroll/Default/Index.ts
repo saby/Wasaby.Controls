@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from "UI/Base"
 import * as Template from "wml!Controls-demo/grid/VirtualScroll/Default/Default"
 import {Memory} from "Types/source"
 import {generateData} from "../../../list_new/DemoHelpers/DataCatalog";
+import 'css!Controls-demo/Controls-demo';
 import {getCountriesStats, countries} from '../../DemoHelpers/DataCatalog';
 
 export default class extends Control {
@@ -27,7 +28,5 @@ export default class extends Control {
          data: this.dataArray
       });
    }
-
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 

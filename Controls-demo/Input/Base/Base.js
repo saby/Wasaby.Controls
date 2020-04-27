@@ -4,6 +4,7 @@ define('Controls-demo/Input/Base/Base',
       'json!Controls-demo/Input/Base/Base',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
 
+      'css!Controls-demo/Input/Base/Base'
    ],
 
    function(Control, config, template) {
@@ -83,8 +84,6 @@ define('Controls-demo/Input/Base/Base',
             this._metaData = config[_private.CONTENT].properties['ws-config'].options;
          }
       });
-
-      Base._styles = ['Controls-demo/Input/Base/Base'];
 
       return Base;
    });

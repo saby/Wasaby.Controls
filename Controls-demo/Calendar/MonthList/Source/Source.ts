@@ -3,6 +3,8 @@ import {date as formatDate} from 'Types/formatter';
 import Source from 'Controls-demo/Calendar/MonthList/resources/Source';
 import template = require('wml!Controls-demo/Calendar/MonthList/Source/Source');
 import dayTemplate = require('wml!Controls-demo/Calendar/MonthList/resources/DayTemplate');
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/Calendar/MonthList/resources/MonthListDemo';
 
 class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -23,7 +25,5 @@ class DemoControl extends Control<IControlOptions> {
     }
 
     static _theme: string[] = ['Controls/Classes'];
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Calendar/MonthList/resources/MonthListDemo'];
 }
 export default DemoControl;

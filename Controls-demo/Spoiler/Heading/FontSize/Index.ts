@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Spoiler/Heading/FontSize/FontSize');
+import 'css!Controls-demo/Controls-demo';
 
 class FontSize extends Control<IControlOptions> {
     protected _expandedM: boolean = true;
@@ -8,7 +9,5 @@ class FontSize extends Control<IControlOptions> {
 
     protected _template: TemplateFunction = controlTemplate;
     static _theme: string[] = ['Controls/Classes'];
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default FontSize;

@@ -7,6 +7,8 @@ define('Controls-demo/Combobox/ComboboxVDom',
       'Controls/dropdown',
       'wml!Controls-demo/Combobox/itemTemplateCombobox',
       'wml!Controls-demo/Combobox/itemTemplateMultiline',
+      'css!Controls-demo/Combobox/ComboboxVDom',
+      'css!Controls-demo/Controls-demo'
    ],
    function(Control, template, source, historySourceCombobox) {
 
@@ -105,8 +107,6 @@ define('Controls-demo/Combobox/ComboboxVDom',
             return this._createMemory(items);
          }
       });
-
-      ComboBox._styles = ['Controls-demo/Combobox/ComboboxVDom', 'Controls-demo/Controls-demo'];
 
       return ComboBox;
    }

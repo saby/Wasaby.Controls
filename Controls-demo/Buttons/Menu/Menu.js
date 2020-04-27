@@ -5,6 +5,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
    'Controls/Constants',
    'Controls-demo/Buttons/Menu/historySourceMenu',
 
+   'css!Controls-demo/Buttons/Menu/Menu',
    'wml!Controls-demo/Buttons/Menu/itemTemplateSub',
    'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
 ], function(Control, template, source, ControlsConstants, HistorySourceMenu) {
@@ -326,7 +327,5 @@ define('Controls-demo/Buttons/Menu/Menu', [
          }
       }
    );
-   ModuleClass._styles = ['Controls-demo/Buttons/Menu/Menu'];
-
    return ModuleClass;
 });

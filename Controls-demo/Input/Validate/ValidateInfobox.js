@@ -1,6 +1,8 @@
 define('Controls-demo/Input/Validate/ValidateInfobox', [
    'Core/Control',
    'wml!Controls-demo/Input/Validate/ValidateInfobox',
+   'css!Controls-demo/Input/Validate/ValidateInfobox',
+   'css!Controls-demo/Input/resources/VdomInputs',
    'Controls/validate',
    'Controls-demo/Input/Validate/Validator'
 ], function(Control, template) {
@@ -30,7 +32,5 @@ define('Controls-demo/Input/Validate/ValidateInfobox', [
          this._children.formController.submit();
       }
    });
-   VdomDemoText._styles = ['Controls-demo/Input/Validate/ValidateInfobox', 'Controls-demo/Input/resources/VdomInputs'];
-
    return VdomDemoText;
 });

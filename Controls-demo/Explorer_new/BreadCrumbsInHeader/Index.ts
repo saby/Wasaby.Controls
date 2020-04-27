@@ -3,6 +3,7 @@ import * as Template from 'wml!Controls-demo/Explorer_new/BreadCrumbsInHeader/Br
 import {Gadgets} from '../DataHelpers/DataCatalog';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
 
+import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
@@ -18,6 +19,4 @@ export default class extends Control {
          data: Gadgets.getData()
       });
    }
-
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

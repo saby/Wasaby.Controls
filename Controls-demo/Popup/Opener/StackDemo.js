@@ -5,6 +5,8 @@ define('Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/resources/footer',
       'wml!Controls-demo/Popup/Opener/DialogTpl',
       'wml!Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
+      'css!Controls-demo/Popup/PopupPage',
+      'css!Controls-demo/Popup/Opener/resources/StackHeader'
    ],
    function(Control, template) {
       'use strict';
@@ -95,7 +97,5 @@ define('Controls-demo/Popup/Opener/StackDemo',
             });
          }
       });
-      PopupPage._styles = ['Controls-demo/Popup/PopupPage', 'Controls-demo/Popup/Opener/resources/StackHeader'];
-
       return PopupPage;
    });

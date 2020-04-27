@@ -3,6 +3,7 @@ define('Controls-demo/TestXslt/TestXslt', [
    'wml!Controls-demo/TestXslt/TestXslt',
    'Core/xslt-async',
    'is!browser?jquery',
+   'css!Controls-demo/TestXslt/TestXslt'
 ], function(Control, template, Xslt) {
    'use strict';
 
@@ -24,7 +25,7 @@ define('Controls-demo/TestXslt/TestXslt', [
       });
    }
 
-   let ModuleClass = Control.extend({
+   return Control.extend({
       _template: template,
       _xml: '',
       _xsl: '',
@@ -97,8 +98,4 @@ define('Controls-demo/TestXslt/TestXslt', [
          return  goodStr.indexOf(checkStr) === 0;
       }
    });
-
-   ModuleClass._styles = ['Controls-demo/TestXslt/TestXslt'];
-
-   return ModuleClass;
 });

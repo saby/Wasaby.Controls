@@ -3,6 +3,7 @@ import template = require('wml!Controls-demo/Explorer/CheckboxOnHover/CheckboxOn
 import {view as constView} from 'Controls/Constants';
 import ExplorerImages = require('Controls-demo/Explorer/ExplorerImages');
 import {HierarchicalMemory} from 'Types/source';
+import 'css!Controls-demo/Explorer/Demo/Demo';
 import {showType} from 'Controls/Utils/Toolbar';
 
 class Demo extends Control {
@@ -243,8 +244,6 @@ class Demo extends Control {
         return group;
     }
 
-
-    static _styles: string[] = ['Controls-demo/Explorer/Demo/Demo'];
 }
 
 export = Demo;

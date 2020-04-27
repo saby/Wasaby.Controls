@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Menu/Control/GroupProperty/GroupTemplate/Index');
 import {Memory} from 'Types/source';
+import 'css!Controls-demo/Controls-demo';
 
 class GroupTemplate extends Control {
     protected _template: TemplateFunction = controlTemplate;
@@ -22,7 +23,5 @@ class GroupTemplate extends Control {
 
     static _theme: string[] = ['Controls/Classes'];
 
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default GroupTemplate;

@@ -5,6 +5,9 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
       'wml!Controls-demo/Filter/Button/panelOptions/panelPG',
       'json!Controls-demo/PropertyGrid/pgtext',
 
+      'css!Controls-demo/Filter/Button/PanelVDom',
+      'css!Controls-demo/Input/resources/VdomInputs',
+      'css!Controls-demo/Wrapper/Wrapper',
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
       'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
@@ -247,7 +250,5 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
-      panelPG._styles = ['Controls-demo/Filter/Button/PanelVDom', 'Controls-demo/Input/resources/VdomInputs', 'Controls-demo/Wrapper/Wrapper'];
-
       return panelPG;
    });
