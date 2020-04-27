@@ -1,7 +1,7 @@
 import * as Deferred from 'Core/Deferred';
 import {Memory} from 'Types/source';
 
-const SEARCH_DELAY = 15000;
+const SEARCH_DELAY = 35000;
 
 export default class PortionedSearchSource {
     private source: Memory = null;
