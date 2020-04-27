@@ -11,15 +11,9 @@ import {
     IItemActionsContainer,
     IMenuTemplateOptions,
     IMenuConfig,
+    TItemActionShowType,
     IItemAction
 } from './interafce/IItemActions';
-
-// FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
-const showType = {
-    MENU: 0,
-    MENU_TOOLBAR: 1,
-    TOOLBAR: 2
-};
 
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
 
@@ -287,7 +281,7 @@ export class Controller {
         return (
             actions &&
             actions.all &&
-            actions.all.filter((action) => action.showType !== showType.TOOLBAR)
+            actions.all.filter((action) => action.showType !== TItemActionShowType.TOOLBAR)
         );
     }
 
@@ -402,8 +396,8 @@ export class Controller {
         if (showed.length > 1) {
             showed = showed.filter(
                 (action) =>
-                    action.showType === showType.TOOLBAR ||
-                    action.showType === showType.MENU_TOOLBAR
+                    action.showType === TItemActionShowType.TOOLBAR ||
+                    action.showType === TItemActionShowType.MENU_TOOLBAR
             );
             if (this._isMenuButtonRequired(actions)) {
                 showed.push({
@@ -425,8 +419,8 @@ export class Controller {
             (action) =>
                 !action.parent &&
                 (!action.showType ||
-                    action.showType === showType.MENU ||
-                    action.showType === showType.MENU_TOOLBAR)
+                    action.showType === TItemActionShowType.MENU ||
+                    action.showType === TItemActionShowType.MENU_TOOLBAR)
         );
     }
 

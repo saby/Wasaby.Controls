@@ -129,13 +129,10 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     setEventRaising?(raising: boolean, analyze?: boolean): void;
     areActionsAssigned(): boolean;
     setActionsAssigned(assigned: boolean): void;
-    setActionsMenuConfig(config: any): void;
-    getActionsMenuConfig(): any;
     setActionsTemplateConfig(config: IItemActionsTemplateConfig): void;
     getActionsTemplateConfig(): IItemActionsTemplateConfig;
     setSwipeConfig(config: ISwipeConfig): void;
     getSwipeConfig(): ISwipeConfig;
-    getEditingConfig(): IEditingConfig;
     setSwipeAnimation(state: ANIMATION_STATE): void;
 }
 
