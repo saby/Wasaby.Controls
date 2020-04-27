@@ -190,6 +190,8 @@ export default class TileRender extends BaseRender {
         );
     }
 
+    static _theme: string[] = ['Controls/tile'];
+
     static getDefaultOptions(): Partial<ITileRenderOptions> {
         return {
             itemTemplate: defaultItemTemplate

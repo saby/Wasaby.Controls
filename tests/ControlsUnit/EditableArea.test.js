@@ -53,24 +53,6 @@ define([
          assert.equal(cfg.isEditing, instance.editWhenFirstRendered);
       });
 
-      it('_afterUpdate', function() {
-         var focusCalled = false;
-         instance._beginEditTarget = {
-            getElementsByTagName: function(tagName) {
-               if (tagName === 'input') {
-                  return [{
-                     focus: function() {
-                        focusCalled = true;
-                     }
-                  }];
-               }
-            }
-         };
-         instance._afterUpdate();
-         assert.isTrue(focusCalled);
-         assert.isNull(instance._beginEditTarget);
-      });
-
       describe('_onClickHandler', function() {
          it('isEditing: true', function() {
             var result = false;
@@ -178,7 +160,7 @@ define([
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isTrue(instance._isEditing);
-            assert.isTrue(instance._beginEditTarget);
+            assert.isTrue(instance._isStartEditing);
          });
 
          it('without arguments', function() {
@@ -190,7 +172,7 @@ define([
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isTrue(instance._isEditing);
-            assert.isNull(instance._beginEditTarget);
+            assert.isTrue(instance._isStartEditing);
          });
 
          it('cancel', function() {
@@ -202,7 +184,7 @@ define([
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
             assert.isTrue(eventQueue[0].eventOptions.bubbling);
             assert.isFalse(instance._isEditing);
-            assert.isNotOk(instance._beginEditTarget);
+            assert.isNotOk(instance._isStartEditing);
          });
       });
 
@@ -269,6 +251,36 @@ define([
             // проверили, что опция не поменялась
             assert.equal(cfg.editObject.get('text'), 'asdf');
 
+         });
+         it ('change options after edit-mode', async function() {
+            instance._children = {
+               formController: {
+                  submit: function() {
+                     return Deferred.success({});
+                  }
+               }
+            };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._notify = mockNotify();
+            // начинаем редактирование, делаем клон записи с подтверждением изменений.
+            instance.beginEdit();
+            // меняем рекорд
+            instance._editObject.set('text', 'asdf');
+            // завершаем редактирование с сохранением
+            await instance.commitEdit();
+            // проверили, что опция поменялась
+            assert.equal(cfg.editObject.get('text'), 'asdf');
+
+            // меняем опцию и проверяем, что поменялся _editObject
+            const newCfg = {
+               editWhenFirstRendered: true,
+               editObject: entity.Model.fromObject({
+                  text: 'changed'
+               })
+            };
+            instance._beforeUpdate(newCfg);
+            assert.equal(instance._editObject.get('text'), 'changed');
          });
 
          it('deferred', async function() {

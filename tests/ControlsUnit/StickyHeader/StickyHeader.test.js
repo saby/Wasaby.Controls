@@ -84,7 +84,7 @@ define([
             };
             sinon.stub(component, '_initResizeObserver');
             sinon.stub(component, '_createObserver');
-            sinon.stub(StickyHeaderUtils, 'isDisplayed').returns(false);
+            sinon.stub(StickyHeaderUtils, 'isHidden').returns(true);
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             sinon.stub(component._model, 'update');
 
@@ -274,7 +274,7 @@ define([
          });
       });
 
-      describe('_updateStickyShadow', function() {
+      describe('_updateFixed', function() {
          it('should turn on a shadow and generate force update if the corresponding identifier is passed.', function() {
             const component = createComponent(StickyHeader, {});
             component._isFixed = false;

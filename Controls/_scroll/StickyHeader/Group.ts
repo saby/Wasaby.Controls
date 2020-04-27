@@ -4,6 +4,8 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/Group');
 import {SHADOW_VISIBILITY} from './_StickyHeader';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+import fastUpdate from './FastUpdate';
 
 /**
  * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
@@ -61,7 +63,7 @@ export default class Group extends Control<IControlOptions> {
         top: 0,
         bottom: 0
     };
-    protected _shadowVisible: boolean = false;
+    protected _isFixed: boolean = false;
 
     protected _headers: IHeadersMap = {};
     protected _isRegistry: boolean = false;
@@ -93,11 +95,11 @@ export default class Group extends Control<IControlOptions> {
     }
 
     protected _afterMount(): void {
-        this._notify('register', ['updateStickyShadow', this, this._updateStickyShadow], {bubbling: true});
+        RegisterUtil(this, 'updateFixed', this._updateFixed.bind(this));
     }
 
     protected _beforeUnmount(): void {
-        this._notify('unregister', ['updateStickyShadow', this], {bubbling: true});
+        UnregisterUtil(this, 'updateFixed');
     }
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
@@ -107,12 +109,6 @@ export default class Group extends Control<IControlOptions> {
     resetSticky(): void {
         for (const id in this._headers) {
             this._headers[id].inst.resetSticky();
-        }
-    }
-
-    restoreSticky(): void {
-        for (const id in this._headers) {
-            this._headers[id].inst.restoreSticky();
         }
     }
 
@@ -150,13 +146,15 @@ export default class Group extends Control<IControlOptions> {
 
     protected _fixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
         event.stopImmediatePropagation();
-        if (!!fixedHeaderData.fixedPosition) {
-            this._stickyHeadersIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
-            if (this._shadowVisible === true) {
-                this._children.stickyHeaderShadow.start(this._stickyHeadersIds[fixedHeaderData.fixedPosition]);
+        if (!fixedHeaderData.isFakeFixed) {
+            if (!!fixedHeaderData.fixedPosition) {
+                this._stickyHeadersIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
+                if (this._isFixed === true) {
+                    this._children.stickyFixed.start(this._stickyHeadersIds[fixedHeaderData.fixedPosition]);
+                }
+            } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
+                this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
             }
-        } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
-            this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
         }
 
         if (!!fixedHeaderData.fixedPosition && !this._fixed) {
@@ -173,14 +171,14 @@ export default class Group extends Control<IControlOptions> {
         }
     }
 
-    protected _updateStickyShadow(ids: number[]): void {
-        var shadowVisible = ids.indexOf(this._index) !== -1;
-        if (this._shadowVisible !== shadowVisible) {
-            this._shadowVisible = shadowVisible;
-            if (shadowVisible) {
-               this._children.stickyHeaderShadow.start(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
+    protected _updateFixed(ids: number[]): void {
+        var isFixed = ids.indexOf(this._index) !== -1;
+        if (this._isFixed !== isFixed) {
+            this._isFixed = isFixed;
+            if (isFixed) {
+               this._children.stickyFixed.start(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
             } else {
-               this._children.stickyHeaderShadow.start([]);
+               this._children.stickyFixed.start([]);
             }
         }
     }
@@ -222,7 +220,7 @@ export default class Group extends Control<IControlOptions> {
         // Это приводит к layout. И так для каждой ячейки для заголвков в таблице. Создадим список всех заголовков
         // которые надо обсчитать в этом синхронном участке кода и обсчитаем их за раз в микротаске,
         // один раз сняв со всех загоовков position: sticky.
-        if (!this._updateTopBottomDelayed.length) {
+        if (!this._delayedHeaders.length) {
             Promise.resolve().then(this._updateTopBottomDelayed.bind(this));
         }
         this._delayedHeaders.push(data.id);
@@ -230,31 +228,41 @@ export default class Group extends Control<IControlOptions> {
 
     private _updateTopBottomDelayed(): void {
         let
+            offsets: Record<POSITION, Record<string, number>> = {
+                top: {},
+                bottom: {}
+            },
             data: TRegisterEventData,
             offset: number;
 
-        // Сбрасываем position: sticky у всех заголовков. Мы могли бы сбрасывать его только у this._delayedHeaders
-        // заголовков. Но в таблицах заголовки лежат в контенере с display: contents и нельзя узнать его положение.
-        // По этому положение такой группы определяется по самому верхниму и самому нижнему ребенку.
-        // По этому приходится сбрасывать position: sticky у всех заголовков.
         this.resetSticky();
 
-        for (const id of this._delayedHeaders) {
-            data = this._headers[id];
-            for (const position of [POSITION.top, POSITION.bottom]) {
-                if (data.inst._options.position.indexOf(position) !== -1) {
-                    offset = data.inst.getOffset(this._container, position);
-                    this._headers[data.id][position] = offset;
-                    const positionValue: number = this._offset[position] + offset;
-                    data.inst[position] = positionValue;
-                    this._updateContext(position, positionValue);
+        fastUpdate.measure(() => {
+            for (const id of this._delayedHeaders) {
+                data = this._headers[id];
+                for (const position of [POSITION.top, POSITION.bottom]) {
+                    if (data.inst._options.position.indexOf(position) !== -1) {
+                        offset = data.inst.getOffset(this._container, position);
+                        this._headers[data.id][position] = offset;
+                        offsets[position][data.id] = this._offset[position] + offset;
+                    }
                 }
             }
-        }
+            this._delayedHeaders = [];
+        });
 
-        this.restoreSticky();
-
-        this._delayedHeaders = [];
+        fastUpdate.mutate(() => {
+            for (const position of [POSITION.top, POSITION.bottom]) {
+                let positionOffsets = offsets[position];
+                let headerId;
+                for (headerId in offsets[position]) {
+                    this._headers[headerId].inst[position] = positionOffsets[headerId];
+                }
+                if (headerId) {
+                    this._updateContext(position, positionOffsets[headerId]);
+                }
+            }
+        });
     }
 
     private _notifyFixed(fixedHeaderData: IFixedEventData): void {

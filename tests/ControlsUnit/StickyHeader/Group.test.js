@@ -159,29 +159,29 @@ define([
          });
       });
 
-      describe('_updateStickyShadow', function() {
+      describe('_updateFixed', function() {
          it('should transfer an event if the header identifier is equal to the current one', function() {
             const
                component = createComponent(scroll.Group, options);
 
-            component._children.stickyHeaderShadow = {
+            component._children.stickyFixed = {
                start: sinon.fake()
             };
 
-            component._updateStickyShadow([component._index]);
-            sinon.assert.called(component._children.stickyHeaderShadow.start);
+            component._updateFixed([component._index]);
+            sinon.assert.called(component._children.stickyFixed.start);
          });
 
          it('should not transfer an event if the header identifier is not equal to the current one', function() {
             const
                component = createComponent(scroll.Group, options);
 
-            component._children.stickyHeaderShadow = {
+            component._children.stickyFixed = {
                start: sinon.fake()
             };
 
-            component._updateStickyShadow([component._index + 1]);
-            sinon.assert.notCalled(component._children.stickyHeaderShadow.start);
+            component._updateFixed([component._index + 1]);
+            sinon.assert.notCalled(component._children.stickyFixed.start);
          });
       });
 
