@@ -64,7 +64,7 @@ export interface IHeading extends IExpandable, IFontSize, ITooltip {
  * @demo Controls-demo/Spoiler/Heading/Index
  */
 class Heading extends Control<IHeadingOptions> implements IHeading {
-    protected _icon: TIcon;
+    protected _icon: TIcon = 'ExpandLight';
     protected _view: TView;
     protected _caption: string;
     protected _expanded: boolean = false;

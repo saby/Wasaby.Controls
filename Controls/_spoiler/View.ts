@@ -65,7 +65,6 @@ class View extends Control<IViewOptions> implements IView {
 
     protected _beforeMount(options?: IViewOptions, contexts?: object, receivedState?: void): void {
         this._expanded = Util._getExpanded(options, this._expanded);
-        this._expandedHandler = this._expandedHandler.bind(this);
     }
 
     protected _beforeUpdate(options?: IViewOptions, contexts?: any): void {

@@ -18,7 +18,7 @@
         от расположения в верстке. Иконка должна иметь такую же базовую линию как у
         текста. Для этого добавляем пустой символ, который задаст базовую линию.-->
         <div class="controls-SpoilerHeading__icon-baseline">&#65279;</div>
-        <ws:partial template="{{_icon || 'ExpandLight'}}"
+        <ws:partial template="{{_icon}}"
                     attr:class="controls-SpoilerHeading__icon
                                  controls-SpoilerHeading__icon_theme-{{_options.theme}}
                                  controls-SpoilerHeading__icon_{{_view}}_theme-{{_options.theme}}"/>
