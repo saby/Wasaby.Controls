@@ -105,6 +105,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _template: template,
    _buttonsTemplate: buttonsTemplate,
    _isEditing: false,
+   _isStartEditing: false,
 
    _beforeMount: function (newOptions) {
       this._isEditing = newOptions.editWhenFirstRendered;
@@ -118,12 +119,9 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       }
    },
    _afterUpdate: function () {
-      if (this._beginEditTarget) {
-         // search closest input and focus
-         // Внутрь редактирования по месту могут положить контрол, который не содержит input например Controls.lookup:Input/Controls.Suggest:Input
-         const input = this._beginEditTarget.getElementsByTagName('input')[0];
-         input?.focus();
-         this._beginEditTarget = null;
+      if (this._isStartEditing) {
+         this.activate();
+         this._isStartEditing = false;
       }
    },
 
@@ -162,7 +160,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       });
       if (result !== constEditing.CANCEL) {
          this._isEditing = true;
-         this._beginEditTarget = event ? event.target.closest('.controls-EditableArea__editorWrapper') : null;
+         this._isStartEditing = true;
       }
    },
 
