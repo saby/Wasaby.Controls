@@ -20,10 +20,6 @@ import Util from './Util';
  * @cfg {function|String} Контент, занимающий свободное пространство справа от заголовка. Если заголовка нет, то контент занимает все пространство шапки, в этом случае заголовок можно добавить вручную в любом месте.
  * @demo Controls-demo/Spoiler/View/HeaderContentTemplate/Index
  */
-/**
- * Функция обратного вызова для обработки события expandedChanged, с помощью которой меняется состояние expanded.
- * @function Controls/_spoiler/IViewOptions#expandedChangedCallback
- */
 
 
 export interface IViewOptions extends IHeadingOptions {
