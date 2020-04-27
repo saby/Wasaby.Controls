@@ -6,7 +6,6 @@ define('Controls-demo/EditableArea/EditableArea', [
    'wml!Controls-demo/EditableArea/resources/exampleTabTemplate',
    'wml!Controls-demo/EditableArea/resources/exampleTabTemplate2',
 
-   'css!Controls-demo/EditableArea/EditableArea'
 ], function(
    Control,
    template,
@@ -63,5 +62,7 @@ define('Controls-demo/EditableArea/EditableArea', [
          });
       }
    });
+   EditableArea._styles = ['Controls-demo/EditableArea/EditableArea'];
+
    return EditableArea;
 });
