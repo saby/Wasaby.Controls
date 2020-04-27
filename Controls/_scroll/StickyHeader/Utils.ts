@@ -78,8 +78,8 @@ export function getOffset(parentElement: HTMLElement, element: HTMLElement, posi
    element = (element && element.get) ? element.get(0) : element;
 
    const
-       offset = getDimensions(element, true),
-       parrentOffset = getDimensions(parentElement, true);
+       offset = getDimensions(element),
+       parrentOffset = getDimensions(parentElement);
    if (position === 'top') {
       return offset.top - parrentOffset.top;
    } else {
@@ -115,14 +115,6 @@ export function validateIntersectionEntries(entries: IntersectionObserverEntry[]
 
 const CONTENTS_STYLE: string = 'contents';
 
-export function isDisplayed(element: HTMLElement): boolean {
-    if (element.offsetParent !== null) {
-        return true;
-    } else {
-        const styles = getComputedStyle(element);
-        if (styles.display === CONTENTS_STYLE) {
-            return isDisplayed(element.parentElement);
-        }
-    }
-    return false;
+export function isHidden(element: HTMLElement): boolean {
+    return !!element.closest('.ws-hidden');
 }
