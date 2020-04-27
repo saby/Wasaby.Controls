@@ -1,11 +1,13 @@
 define([
    'Env/Env',
    'Controls/scroll',
-   'Core/core-merge'
+   'Core/core-merge',
+    'Controls/_scroll/StickyHeader/Utils'
 ], function(
    Env,
    scroll,
-   coreMerge
+   coreMerge,
+   StickyHeaderUtils
 ) {
    'use strict';
 
@@ -66,7 +68,8 @@ define([
             scrollHeight: 100,
             clientHeight: 100
          };
-         sinon.stub(scroll._stickyHeaderController, '_isVisible').returns(true);
+         sinon.stub(StickyHeaderUtils, 'isHidden').returns(false);
+         // sinon.stub(scroll._stickyHeaderController, '_isVisible').returns(true);
       });
 
       afterEach(function() {
@@ -130,20 +133,26 @@ define([
                      stopImmediatePropagation: sinon.fake()
                   },
                   data = getRegisterObject(test);
-               return Promise.all([
-                  component._stickyRegisterHandler(event, data, true),
-                  component._stickyRegisterHandler(event, data, true)
-               ]).then(function() {
-                  sinon.stub(component, '_updateTopBottom');
-                  assert.equal(component._delayedHeaders.length, 2);
-                  component._afterMount({});
-                  assert.equal(component._delayedHeaders.length, 0);
-                  if (test.position === 'topbottom'){
-                     assert.equal(component._headersStack['top'].length, 2);
-                     assert.equal(component._headersStack['bottom'].length, 2);
-                  } else{
-                     assert.equal(component._headersStack[test.position].length, 2);
-                  }
+               return new Promise((resolve) => {
+                  Promise.all([
+                     component._stickyRegisterHandler(event, data, true),
+                     component._stickyRegisterHandler(event, data, true)
+                  ]).then(function() {
+                     sinon.stub(component, '_updateTopBottom');
+                     assert.equal(component._delayedHeaders.length, 2);
+                     component._afterMount({});
+                     Promise.resolve().then(() => {
+                        assert.equal(component._delayedHeaders.length, 0);
+                        if (test.position === 'topbottom'){
+                           assert.equal(component._headersStack['top'].length, 2);
+                           assert.equal(component._headersStack['bottom'].length, 2);
+                        } else{
+                           assert.equal(component._headersStack[test.position].length, 2);
+                        }
+                        resolve();
+                     });
+
+                  });
                });
             });
          });
