@@ -84,7 +84,7 @@ define([
             };
             sinon.stub(component, '_initResizeObserver');
             sinon.stub(component, '_createObserver');
-            sinon.stub(StickyHeaderUtils, 'isDisplayed').returns(false);
+            sinon.stub(StickyHeaderUtils, 'isHidden').returns(true);
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             sinon.stub(component._model, 'update');
 

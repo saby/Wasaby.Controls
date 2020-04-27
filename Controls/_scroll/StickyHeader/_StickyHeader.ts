@@ -10,10 +10,11 @@ import {
     MODE,
     IOffset,
     validateIntersectionEntries,
-    isDisplayed,
+    isHidden,
     IFixedEventData
 } from 'Controls/_scroll/StickyHeader/Utils';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
+import fastUpdate from './FastUpdate';
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
 import tmplNotify = require('Controls/Utils/tmplNotify');
@@ -196,11 +197,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     resetSticky(): void {
-        this._container.style.position = 'static';
-    }
-
-    restoreSticky(): void {
-        this._container.style.position = '';
+        fastUpdate.resetSticky(this._container);
     }
 
     get height(): number {
@@ -318,7 +315,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // Заголовки не зафиксированы, z-index у них не проставлен, их закрывает идущий за ними контент.
         // Через мгновение они появляются. Проблема есть в SwitchableArea и в стэковых окнах.
         // Сценарий 2. Области создаются скрытыми. а после загрузки данных отбражаются.
-        if (!isDisplayed(this._container)) {
+        if (isHidden(this._container)) {
             return;
         }
 
