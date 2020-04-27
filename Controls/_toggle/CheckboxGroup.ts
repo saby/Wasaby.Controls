@@ -15,6 +15,8 @@ import {
 /**
  * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
  *
+ * <a href="/materials/Controls-demo/app/Controls-demo%2Ftoggle%2FCheckboxGroup%2FIndex">Демо-пример</a>.
+ *
  * @class Controls/_toggle/CheckboxGroup
  * @extends Core/Control
  * @implements Controls/_interface/ISource
@@ -25,7 +27,7 @@ import {
  * @public
  * @author Красильников А.С.
  * @category Toggle
- * @demo Controls-demo/Checkbox/Group
+ * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 
 /*
@@ -41,7 +43,7 @@ import {
  * @public
  * @author Красильников А.С.
  * @category Toggle
- * @demo Controls-demo/Checkbox/Group
+ * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 
 export interface ICheckboxGroupOptions extends IControlOptions,
