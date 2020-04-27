@@ -92,12 +92,12 @@ var _private = {
          getNewTreeItem(currentItem): object {
             return {
                isNode: () => currentItem.hasChildren,
-               isSelected: () => currentItem.isSelected(),
+               isSelected: () => currentItem.isSelected ? currentItem.isSelected() : currentItem._isSelected,
                getContents: () => currentItem.item,
-               isSwiped: () => currentItem.isSwiped(),
-               shouldDisplayActions: () => {return false},
-               getLevel: () => {},
-               getParent: () => {return {getContents: () => currentItem.hasParent}}
+               isSwiped: () => currentItem.isSwiped ? currentItem.isSwiped() : currentItem._isSwiped,
+               shouldDisplayActions: () => false,
+               getLevel: () => undefined,
+               getParent: () => ({getContents: () => currentItem.hasParent})
             };
          }
    };
