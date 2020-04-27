@@ -2028,7 +2028,7 @@ define([
             }
          };
          ctrl._abortSearch();
-
+         assert.isTrue(ctrl._showContinueSearchButton);
          assert.deepEqual(ctrl._pagingCfg, {stateNext: 'disabled', stateEnd: 'disabled'});
          assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
          assert.isTrue(iterativeSearchAborted);

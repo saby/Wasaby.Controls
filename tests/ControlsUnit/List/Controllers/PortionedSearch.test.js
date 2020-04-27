@@ -43,7 +43,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          assert.isTrue(searchStarted);
          assert.isFalse(searchStopped);
 
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isTrue(searchStopped);
       });
 
@@ -54,7 +54,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          portionedSearchController.abortSearch();
          assert.isTrue(searchAborted);
 
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isFalse(searchStopped);
       });
 
@@ -65,7 +65,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          portionedSearchController.reset();
          assert.isTrue(searchReseted);
 
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isFalse(searchStopped);
       });
 
@@ -76,13 +76,13 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          clock.tick(5000);
          assert.isTrue(portionedSearchController.shouldSearch());
 
-         clock.tick(11000);
+         clock.tick(26000);
          assert.isFalse(portionedSearchController.shouldSearch());
       });
 
       it('continueSearch', () => {
          portionedSearchController.startSearch();
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isTrue(searchStopped);
          assert.isTrue(searchStarted);
 
@@ -92,7 +92,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          searchStopped = false;
          searchStarted = false;
          portionedSearchController.startSearch();
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isFalse(searchStopped);
          assert.isFalse(searchStarted);
       });
@@ -106,7 +106,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          clock.tick(9000);
          assert.isFalse(searchStopped);
 
-         clock.tick(9000);
+         clock.tick(22000);
          assert.isTrue(searchStopped);
       });
    });
