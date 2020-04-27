@@ -1,30 +1,8 @@
 <ws:if data="{{itemData.breadCrumbs}}">
-   <ws:partial template="{{itemData.resolveItemTemplate(itemData)}}"
+   <ws:partial template="{{ itemData.searchBreadCrumbsItemTemplate }}"
                scope="{{_options}}"
-               colspan="{{true}}"
-               expanderIcon="none"
-               marker="{{false}}"
-               attr:key="{{ itemData.key }}__breadcrumbs"
-               on:click="_onSearchItemClick(itemData.dispItem)">
-      <ws:colspanTemplate>
-         <Controls.Container.Async templateName="Controls/breadcrumbs:Path">
-            <ws:partial template="{{ content.resolvedTemplate }}"
-                        items="{{colspanTemplate.itemData.item}}"
-                        on:itemClick="_onSearchPathClick()"
-                        backgroundStyle="listItem"
-                        keyProperty="{{itemData.keyProperty}}"
-                        displayProperty="{{itemData.displayProperty}}">
-               <ws:itemTemplate>
-                  <ws:partial template="{{itemData.breadCrumbsItemTemplate}}">
-                     <ws:contentTemplate>
-                        <ws:partial template="wml!Controls/_treeGrid/SearchView/SearchBreadCrumbsContent" searchValue="{{itemData.searchValue}}"/>
-                     </ws:contentTemplate>
-                  </ws:partial>
-               </ws:itemTemplate>
-            </ws:partial>
-         </Controls.Container.Async>
-      </ws:colspanTemplate>
-   </ws:partial>
+               on:click="_onSearchItemClick(itemData.dispItem)"
+               on:itemClick="_onSearchPathClick()"/>
 </ws:if>
 <ws:else>
    <ws:partial template="{{itemData.resolveItemTemplate(itemData)}}"

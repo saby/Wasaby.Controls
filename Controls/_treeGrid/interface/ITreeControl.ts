@@ -1,3 +1,5 @@
+import {TemplateFunction} from 'UI/Base';
+
 /**
  * Интерфейс для древовидных списков.
  *
@@ -156,11 +158,30 @@
  */
 
 /**
+ * @name Controls/_treeGrid/interface/ITreeControl#searchBreadCrumbsItemTemplate
+ * @cfg {TemplateFunction} Шаблон элемента с хлебными крошками в {@link Controls/treeGrid:View дереве} при режиме поиска.
+ * @remark
+ * По умолчанию используется шаблон "Controls/treeGrid:SearchBreadCrumbsItemTemplate".
+ *
+ * Базовый шаблон searchBreadCrumbsItemTemplate поддерживает следующие параметры:
+ * - checkboxReadOnly {Boolean} — Флаг, позволяющий установить у checkbox в multiSelect режим "только для чтения".
+ */
+
+/*
+ * @name Controls/_treeGrid/interface/ITreeControl#searchBreadCrumbsItemTemplate
+ * @cfg {TemplateFunction} Element template with breadcrumbs in a {@link Controls/treeGrid:View tree} in search mode.
+ * @remark
+ * The default template is "Controls/treeGrid:SearchBreadCrumbsItemTemplate".
+ *
+ * Template supports the following parameters:
+ * - checkboxReadOnly {Boolean} — A flag that allows the checkbox to be set to read-only mode.
+ */
+
+/**
  * @typedef {String} ExpanderVisibility
  * @variant visible Всегда показывать экспандер для узлов и отступ для листьев.
  * @variant hasChildren Показывать экспандер только для узлов с дочерними элементами.
  */
-
 
 /**
  * @name Controls/_treeGrid/interface/ITreeControl#expanderVisibility
