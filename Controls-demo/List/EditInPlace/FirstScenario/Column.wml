@@ -1,7 +1,7 @@
 <ws:if data="{{itemData.columnIndex >= 2}}">
    <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}">
       <ws:contentTemplate>
-         <div class="controls-EditingTemplateText__editorWrapper controls-EditingTemplateText__editorWrapper_align_{{itemData.column.align ? itemData.column.align : 'left'}}">
+         <div class="controlsDemo_EditInPlace__scenarios__editorWrapper controls-EditingTemplateText__editorWrapper controls-EditingTemplateText__editorWrapper_align_{{itemData.column.align ? itemData.column.align : 'left'}}">
             <ws:if data="{{itemData.isEditing}}">
                <Controls.input:Number attr:class="controls-EditingTemplateText__editor"
                                       bind:value="itemData.item[itemData.column.displayProperty]"

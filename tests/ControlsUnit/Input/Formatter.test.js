@@ -1,176 +1,166 @@
 define(
    [
-      'Controls/_input/Mask/Formatter',
       'Controls/input'
    ],
-   function(Formatter, input) {
-
+   function(input) {
       'use strict';
 
-      describe('Controls/_input/Mask/Formatter', function() {
-         var
-            formatMaskChars = {
-               'd': '[0-9]',
-               'l': '[а-яa-zё]'
-            },
-            format = [
-               input.MaskFormatBuilder.getFormat('dd.dd', formatMaskChars, ' '),
-               input.MaskFormatBuilder.getFormat('+7(ddd)ddd-dd-dd', formatMaskChars, ''),
-               input.MaskFormatBuilder.getFormat('+7(ddd)ddd-dd-dd', formatMaskChars, ' '),
-               input.MaskFormatBuilder.getFormat('(ddd(ddd)ddd)', formatMaskChars, ''),
-               input.MaskFormatBuilder.getFormat('(ddd(ddd)ddd)', formatMaskChars, ' '),
-               input.MaskFormatBuilder.getFormat('(d\\*l\\{0,3})(d\\{0,3}l\\*)', formatMaskChars, '')
-            ],
-            result;
-         describe('_private.getValueGroups', function() {
-            it('Test_01', function() {
-               result = Formatter._private.getValueGroups(format[0], '1 .3 ');
-               assert.deepEqual(result, ['1 ', '.', '3 ']);
+      describe('Controls.input:MaskFormatter', function() {
+         const MaskFormatter = input.MaskFormatter;
+         const MaskFormatBuilder = input.MaskFormatBuilder;
+         const formatMaskChars = input.getDefaultMaskOptions().formatMaskChars;
+         const dateFormat = MaskFormatBuilder.getFormat('dd.dd', formatMaskChars, ' ');
+         const formatWithQuantifiers = MaskFormatBuilder.getFormat('(d\\*l\\{0,3})(d\\{0,3}l\\*)', formatMaskChars, '');
+         const mobileFormatWithReplacer = MaskFormatBuilder.getFormat('+7(ddd)ddd-dd-dd', formatMaskChars, ' ');
+         const mobileFormatWithoutReplacer = MaskFormatBuilder.getFormat('+7(ddd)ddd-dd-dd', formatMaskChars, '');
+         const nestedFormatWithReplacer = MaskFormatBuilder.getFormat('(ddd(ddd)ddd)', formatMaskChars, ' ');
+         const nestedFormatWithoutReplacer = MaskFormatBuilder.getFormat('(ddd(ddd)ddd)', formatMaskChars, '');
+
+         describe('splitValue', function() {
+            it('Date format.', function() {
+               const actual = MaskFormatter.splitValue(dateFormat, '1 .3 ');
+               assert.deepEqual(actual, ['1 ', '.', '3 ']);
             });
-            it('Test_02', function() {
-               result = Formatter._private.getValueGroups(format[1], '+7(915)972-11-61');
-               assert.deepEqual(result, ['+', '7', '(', '9', '1', '5', ')', '972', '-', '11', '-', '61']);
+            it('Mobile format without replacer.', function() {
+               const actual = MaskFormatter.splitValue(mobileFormatWithoutReplacer, '+7(915)972-11-61');
+               assert.deepEqual(actual, ['+', '7', '(', '915', ')', '972', '-', '11', '-', '61']);
             });
-            it('Test_03', function() {
-               result = Formatter._private.getValueGroups(format[2], '+7(   )972-  -61');
-               assert.deepEqual(result, ['+', '7', '(', ' ', ' ', ' ', ')', '972', '-', '  ', '-', '61']);
+            it('Mobile format with replacer.', function() {
+               const actual = MaskFormatter.splitValue(mobileFormatWithReplacer, '+7(   )972-  -61');
+               assert.deepEqual(actual, ['+', '7', '(', '   ', ')', '972', '-', '  ', '-', '61']);
             });
-            it('Test_04', function() {
-               result = Formatter._private.getValueGroups(format[3], '(123(456)789)');
-               assert.deepEqual(result, ['(', '1', '2', '3', '(', '4', '5', '6', ')', '7', '8', '9', ')']);
+            it('Format without the replacer with nested delimiters.', function() {
+               const actual = MaskFormatter.splitValue(nestedFormatWithoutReplacer, '(123(456)789)');
+               assert.deepEqual(actual, ['(', '123', '(', '456', ')', '789', ')']);
             });
-            it('Test_05', function() {
-               result = Formatter._private.getValueGroups(format[4], '(123(   )789)');
-               assert.deepEqual(result, ['(', '1', '2', '3', '(', ' ', ' ', ' ', ')', '7', '8', '9', ')']);
+            it('Format with the replacer and nested delimiters.', function() {
+               const actual = MaskFormatter.splitValue(nestedFormatWithReplacer, '(123(   )789)');
+               assert.deepEqual(actual, ['(', '123', '(', '   ', ')', '789', ')']);
             });
-            it('Test_06', function() {
-               result = Formatter._private.getValueGroups(format[5], '(1234qwe)(567rtyu)');
-               assert.deepEqual(result, ['(', '1234', 'qwe', ')', '(', '567', 'rtyu', ')']);
+            it('Format with quantifiers.', function() {
+               const actual = MaskFormatter.splitValue(formatWithQuantifiers, '(1234qwe)(567rtyu)');
+               assert.deepEqual(actual, ['(', '1234qwe', ')', '(', '567rtyu', ')']);
+            });
+            it('Error', function() {
+               const actual = MaskFormatter.splitValue.bind(MaskFormatter, dateFormat, 'qw.er');
+               assert.throws(actual, Error, 'Значение не соответствует формату маски.');
             });
          });
 
-         describe('getClearData', function() {
-            it('Test_01', function() {
-               result = Formatter.getClearData(format[0], '1 .3 ');
-               assert.deepEqual(result, {
+         describe('clearData', function() {
+            it('Date format.', function() {
+               const actual = MaskFormatter.clearData(dateFormat, '1 .3 ');
+               assert.deepEqual(actual, {
                   value: '1 3 ',
                   positions: [0, 1, 2, 2, 3]
                });
             });
-            it('Test_02', function() {
-               result = Formatter.getClearData(format[1], '+7(915)972-11-61');
-               assert.deepEqual(result, {
+            it('Mobile format without replacer.', function() {
+               const actual = MaskFormatter.clearData(mobileFormatWithoutReplacer, '+7(915)972-11-61');
+               assert.deepEqual(actual, {
                   value: '9159721161',
                   positions: [0, 0, 0, 0, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9]
                });
             });
-            it('Test_03', function() {
-               result = Formatter.getClearData(format[2], '+7(   )972-  -61');
-               assert.deepEqual(result, {
+            it('Mobile format with replacer.', function() {
+               const actual = MaskFormatter.clearData(mobileFormatWithReplacer, '+7(   )972-  -61');
+               assert.deepEqual(actual, {
                   value: '   972  61',
                   positions: [0, 0, 0, 0, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9]
                });
             });
-            it('Test_04', function() {
-               result = Formatter.getClearData(format[3], '(123(456)789)');
-               assert.deepEqual(result, {
+            it('Format without the replacer with nested delimiters.', function() {
+               const actual = MaskFormatter.clearData(nestedFormatWithoutReplacer, '(123(456)789)');
+               assert.deepEqual(actual, {
                   value: '123456789',
                   positions: [0, 0, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 9]
                });
             });
-            it('Test_05', function() {
-               result = Formatter.getClearData(format[4], '(123(   )789)');
-               assert.deepEqual(result, {
+            it('Format with the replacer and nested delimiters.', function() {
+               const actual = MaskFormatter.clearData(nestedFormatWithReplacer, '(123(   )789)');
+               assert.deepEqual(actual, {
                   value: '123   789',
                   positions: [0, 0, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 9]
                });
             });
-            it('Test_06', function() {
-               result = Formatter.getClearData(format[5], '(1234qwe)(567rtyu)');
-               assert.deepEqual(result, {
+            it('Format with quantifiers.', function() {
+               const actual = MaskFormatter.clearData(formatWithQuantifiers, '(1234qwe)(567rtyu)');
+               assert.deepEqual(actual, {
                   value: '1234qwe567rtyu',
                   positions: [0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 7, 8, 9, 10, 11, 12, 13, 14]
                });
             });
          });
 
-         describe('getFormatterData', function() {
-            it('Test_01', function() {
-               result = Formatter.getFormatterData(format[0], {
+         describe('formatData', function() {
+            it('Date format.', function() {
+               const actual = MaskFormatter.formatData(dateFormat, {
                   value: '1 3 ',
-                  position: 3
+                  carriagePosition: 3
                });
-               assert.deepEqual(result, {
+               assert.deepEqual(actual, {
                   value: '1 .3 ',
-                  position: 4
+                  carriagePosition: 4
                });
             });
-            it('Test_02', function() {
-               result = Formatter.getFormatterData(format[1], {
+            it('Mobile format without replacer.', function() {
+               const actual = MaskFormatter.formatData(mobileFormatWithoutReplacer, {
                   value: '915972',
-                  position: 5
+                  carriagePosition: 5
                });
-               assert.deepEqual(result, {
+               assert.deepEqual(actual, {
                   value: '+7(915)972',
-                  position: 9
+                  carriagePosition: 9
                });
             });
-            it('Test_03', function() {
-               result = Formatter.getFormatterData(format[2], {
+            it('Mobile format with replacer.', function() {
+               const actual = MaskFormatter.formatData(mobileFormatWithReplacer, {
                   value: '   972  61',
-                  position: 5
+                  carriagePosition: 5
                });
-               assert.deepEqual(result, {
+               assert.deepEqual(actual, {
                   value: '+7(   )972-  -61',
-                  position: 9
+                  carriagePosition: 9
                });
             });
-            it('Test_04', function() {
-               result = Formatter.getFormatterData(format[3], {
+            it('Format without the replacer with nested delimiters.', function() {
+               const actual = MaskFormatter.formatData(nestedFormatWithoutReplacer, {
                   value: '123456789',
-                  position: 4
+                  carriagePosition: 9
                });
-               assert.deepEqual(result, {
+               assert.deepEqual(actual, {
                   value: '(123(456)789)',
-                  position: 6
+                  carriagePosition: 12
                });
             });
-            it('Test_05', function() {
-               result = Formatter.getFormatterData(format[4], {
+            it('Format with the replacer and nested delimiters.', function() {
+               const actual = MaskFormatter.formatData(nestedFormatWithReplacer, {
                   value: '123   789',
-                  position: 4
+                  carriagePosition: 4
                });
-               assert.deepEqual(result, {
+               assert.deepEqual(actual, {
                   value: '(123(   )789)',
-                  position: 6
+                  carriagePosition: 6
                });
             });
-            it('Test_06', function() {
-               result = Formatter.getFormatterData(format[5], {
+            it('Format with quantifiers.', function() {
+               const actual = MaskFormatter.formatData(formatWithQuantifiers, {
                   value: '1234qwe567rtyu',
-                  position: 9
+                  carriagePosition: 9
                });
-               assert.deepEqual(result, {
+               assert.deepEqual(actual, {
                   value: '(1234qwe)(567rtyu)',
-                  position: 12
+                  carriagePosition: 12
                });
             });
-            it('Test_invalidData', function() {
-               result = Formatter.getFormatterData(format[0], {
-                  value: '12.34',
-                  position: 3
+            it('Mobile format without replacer. The cursor at the beginning of the front delimiter.', function() {
+               const actual = MaskFormatter.formatData(mobileFormatWithoutReplacer, {
+                  value: '1234567890',
+                  carriagePosition: 0
                });
-               assert.equal(result, false);
-            });
-
-            [{
-               format: format[1],
-               clearData: { value: '1234567890', position: 0 },
-               resultClearData: { value: '+7(123)456-78-90', position: 3 }
-            }].forEach(function(test, testNumber) {
-               it(`Test_${testNumber}`, function() {
-                  result = Formatter.getFormatterData(test.format, test.clearData);
-                  assert.deepEqual(result, test.resultClearData);
+               assert.deepEqual(actual, {
+                  value: '+7(123)456-78-90',
+                  carriagePosition: 3
                });
             });
          });

@@ -84,8 +84,6 @@
 
 <ws:template name="colTpl">
    <td class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
-              {{itemData.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}
-              {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
               {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
               {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
               {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
@@ -93,7 +91,10 @@
               controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
        style="{{ currentColumn.tableCellStyles }}"
        colspan="{{itemData.getColspanFor((itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
-       <div class="controls-TreeGridView__row-cell_innerWrapper">
+       <div class="controls-TreeGridView__row-cell_innerWrapper
+                   {{ currentColumn.classList.relativeCellWrapper }}
+                   {{itemData.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}
+                   {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}">
            <ws:partial template="columnContentWrapper"
                        attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
            <div if="{{!!itemData.dragTargetNode}}"
@@ -115,7 +116,7 @@
               controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
             colspan="1"
             style="width: 0; min-width: 0; max-width: 0; padding: 0px; overflow: visible; z-index: 3;">
-            <div class="controls-TreeGridView__row-cell_innerWrapper">
+            <div class="controls-TreeGridView__row-cell_innerWrapper {{ currentColumn.classList.relativeCellWrapper }}">
                 <ws:partial template="itemActionsTemplateChooser"/>
             </div>
         </td>

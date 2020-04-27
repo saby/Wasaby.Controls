@@ -5,6 +5,7 @@
                 <ws:partial template="{{currentResultsColumn.column.resultTemplate}}"
                             listModel="{{listModel}}"
                             currentResultsColumn="{{ currentResultsColumn }}"
+                            results="{{ listModel.getResults() }}"
                             column="{{currentResultsColumn.column}}" />
             </ws:if>
             <ws:else data="{{ currentResultsColumn.showDefaultResultTemplate }}">
