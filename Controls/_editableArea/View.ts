@@ -110,7 +110,13 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       this._isEditing = newOptions.editWhenFirstRendered;
       this._editObject = newOptions.editObject;
    },
-
+   /* В режиме редактирования создается клон, и ссылка остается на старый объект. Поэтому при изменении опций копируем ссылку
+    актуального объекта */
+   _beforeUpdate: function (newOptions) {
+      if (newOptions.editObject !== this._options.editObject) {
+         this._editObject = newOptions.editObject;
+      }
+   },
    _afterUpdate: function () {
       if (this._beginEditTarget) {
          // search closest input and focus

@@ -270,6 +270,36 @@ define([
             assert.equal(cfg.editObject.get('text'), 'asdf');
 
          });
+         it ('change options after edit-mode', async function() {
+            instance._children = {
+               formController: {
+                  submit: function() {
+                     return Deferred.success({});
+                  }
+               }
+            };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._notify = mockNotify();
+            // начинаем редактирование, делаем клон записи с подтверждением изменений.
+            instance.beginEdit();
+            // меняем рекорд
+            instance._editObject.set('text', 'asdf');
+            // завершаем редактирование с сохранением
+            await instance.commitEdit();
+            // проверили, что опция поменялась
+            assert.equal(cfg.editObject.get('text'), 'asdf');
+
+            // меняем опцию и проверяем, что поменялся _editObject
+            const newCfg = {
+               editWhenFirstRendered: true,
+               editObject: entity.Model.fromObject({
+                  text: 'changed'
+               })
+            };
+            instance._beforeUpdate(newCfg);
+            assert.equal(instance._editObject.get('text'), 'changed');
+         });
 
          it('deferred', async function() {
             instance.saveOptions(cfg);
