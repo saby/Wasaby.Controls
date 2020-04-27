@@ -1,12 +1,12 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_scroll/StickyHeader/Controller/Controller');
-import {POSITION, TRegisterEventData, TYPE_FIXED_HEADERS, IFixedEventData} from './Utils';
+import {debounce} from 'Types/function';
+import {IFixedEventData, isHidden, POSITION, TRegisterEventData, TYPE_FIXED_HEADERS} from './Utils';
 import StickyHeader, {SHADOW_VISIBILITY} from 'Controls/_scroll/StickyHeader/_StickyHeader';
-import {UnregisterUtil, RegisterUtil} from 'Controls/event';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+import fastUpdate from './FastUpdate';
 
 // @ts-ignore
-
-const CONTENTS_STYLE: string = 'contents';
 
 interface IShadowVisible {
     [id: number]: boolean;
@@ -39,6 +39,7 @@ class Component extends Control {
             bottom: []
         };
         this._headers = {};
+        this._resizeHandlerDebounced = debounce(this._resizeHandler.bind(this), 50);
     }
 
     _afterMount(options) {
@@ -130,7 +131,7 @@ class Component extends Control {
             // Невидимые заголовки нельзя обсчитать, потому что нельзя узнать их размеры и положение.
             this._delayedHeaders.push(data);
 
-            if (Component._isVisible(data.container) && this._stickyControllerMounted) {
+            if (!isHidden(data.container) && this._stickyControllerMounted) {
                 return Promise.resolve().then(this._registerDelayed.bind(this));
             }
 
@@ -175,20 +176,14 @@ class Component extends Control {
         // Игнорируем все собятия ресайза до _afterMount.
         // В любом случае в _afterMount мы попробуем рассчитать положение заголовков.
         if (this._stickyControllerMounted) {
-            this._updateTopBottom();
             this._registerDelayed();
+            this._updateTopBottom();
         }
     }
 
     private _resetSticky(): void {
         for (const id in this._headers) {
             this._headers[id].inst.resetSticky();
-        }
-    }
-
-    private _restoreSticky(): void {
-        for (const id in this._headers) {
-            this._headers[id].inst.restoreSticky();
         }
     }
 
@@ -201,23 +196,23 @@ class Component extends Control {
 
         this._resetSticky();
 
-        this._delayedHeaders = this._delayedHeaders.filter((header: TRegisterEventData) => {
-            if (Component._isVisible(header.container)) {
-                this._addToHeadersStack(header.id, header.position);
-                return false;
+        return fastUpdate.measure(() => {
+            this._delayedHeaders = this._delayedHeaders.filter((header: TRegisterEventData) => {
+                if (!isHidden(header.container)) {
+                    this._addToHeadersStack(header.id, header.position);
+                    return false;
+                }
+                return true;
+            });
+
+            if (delayedHeadersCount !== this._delayedHeaders.length) {
+                this._updateFixedInitially(POSITION.top);
+                this._updateFixedInitially(POSITION.bottom);
+                this._updateTopBottomDelayed();
+                this._headersHeight = this.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.allFixed);
+                this._clearOffsetCache();
             }
-            return true;
         });
-
-        if (delayedHeadersCount !== this._delayedHeaders.length) {
-            this._updateFixedInitially('top');
-            this._updateFixedInitially('bottom');
-            this._updateTopBottom();
-            this._headersHeight = this.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.allFixed);
-            this._clearOffsetCache();
-        }
-
-        this._restoreSticky();
     }
 
     /**
@@ -337,37 +332,43 @@ class Component extends Control {
         }
         this._updateTopBottomInitialized = true;
         return Promise.resolve().then(() => {
-            let offset = 0,
-                header;
-            for (let headerId of this._headersStack['top']) {
-                header = this._headers[headerId];
-                header.inst.top = offset;
-                if (header.mode === 'stackable' && Component._isVisible(header.container)) {
-                    offset += header.inst.height;
-                }
-            }
-            offset = 0;
-            for (let headerId of this._headersStack['bottom']) {
-                header = this._headers[headerId];
-                header.inst.bottom = offset;
-                if (header.mode === 'stackable' && Component._isVisible(header.container)) {
-                    offset += header.inst.height;
-                }
-            }
-            this._updateTopBottomInitialized = false;
+            return this._updateTopBottomDelayed();
         });
     }
 
-    static _isVisible(element: HTMLElement): boolean {
-        if (element.offsetParent !== null) {
-            return true;
-        } else {
-            const styles = getComputedStyle(element);
-            if (styles.display === CONTENTS_STYLE) {
-                return Component._isVisible(element.parentElement);
+    private _updateTopBottomDelayed(): void {
+        const offsets: Record<POSITION, Record<string, number>> = {
+                top: {},
+                bottom: {}
+            };
+
+        this._resetSticky();
+
+        fastUpdate.measure(() => {
+            let offset: number,
+                header: TRegisterEventData;
+
+            for (const position of [POSITION.top, POSITION.bottom]) {
+                offset = 0;
+                for (let headerId of this._headersStack[position]) {
+                    header = this._headers[headerId];
+                    offsets[position][headerId] = offset;
+                    if (header.mode === 'stackable' && !isHidden(header.container)) {
+                        offset += header.inst.height;
+                    }
+                }
             }
-        }
-        return false;
+        });
+        fastUpdate.mutate(() => {
+            for (const position of [POSITION.top, POSITION.bottom]) {
+                let positionOffsets = offsets[position];
+                for (const headerId in offsets[position]) {
+                    this._headers[headerId].inst[position] = positionOffsets[headerId];
+                }
+            }
+        });
+
+        this._updateTopBottomInitialized = false;
     }
 }
 
