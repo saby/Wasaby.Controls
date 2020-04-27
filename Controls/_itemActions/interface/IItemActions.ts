@@ -1,6 +1,7 @@
-import {IBaseCollection, IItemActionsTemplateConfig, ISwipeConfig, IEditingConfig, ANIMATION_STATE} from 'Controls/display';
-import {SyntheticEvent} from 'Vdom/Vdom';
+import {Control} from 'UI/Base';
 import {Model} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {IBaseCollection, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {ISource} from 'Controls/interface';
 
 export enum TItemActionShowType {
@@ -111,6 +112,8 @@ export interface IItemActionsTemplateOptions {
     actionCaptionPosition: 'right'|'bottom'|'none';
     itemActionsClass?: string;
     actionClickCallback?: TActionClickCallback;
+    size?: string;
+    toolbarVisibility?: boolean;
 }
 
 export interface IItemActionsItem {
@@ -143,10 +146,10 @@ export interface IMenuTemplateOptions {
     nodeProperty: string;
     dropdownClassName: string;
     closeButtonVisibility: boolean;
-    root: string;
+    root: number | string;
     showHeader: boolean;
     headConfig?: {
-        title: string;
+        caption: string;
         icon: string;
     };
 }
@@ -154,7 +157,12 @@ export interface IMenuTemplateOptions {
 export type IMenuActionHandler = (event: SyntheticEvent, action: string, data: Model) => void;
 
 export interface IMenuConfig {
-    target: HTMLElement;
+    opener: Element | Control<object, unknown>;
+    template: string;
+    actionOnScroll: string;
+    target: {
+        getBoundingClientRect(): ClientRect;
+    };
     templateOptions: IMenuTemplateOptions;
     closeOnOutsideClick: boolean;
     targetPoint: {
@@ -167,7 +175,7 @@ export interface IMenuConfig {
     className: string;
     nativeEvent: Event;
     autofocus: boolean;
-    eventHandlers: {
+    eventHandlers?: {
          onResult: IMenuActionHandler;
          onClose: IMenuActionHandler;
     };

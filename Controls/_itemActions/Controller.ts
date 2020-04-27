@@ -1,8 +1,8 @@
-import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
-import {SyntheticEvent} from 'Vdom/Vdom';
-import {Memory} from 'Types/source';
 import {Control} from 'UI/Base';
+import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
@@ -13,7 +13,7 @@ import {
     IMenuConfig,
     TItemActionShowType,
     IItemAction
-} from './interafce/IItemActions';
+} from './interface/IItemActions';
 
 const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
 
@@ -84,8 +84,8 @@ export class Controller {
             this._calculateActionsTemplateConfig({
                 itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
                 style: options.style,
-                iconSize: options.iconSize || DEFAULT_ACTION_SIZE,
-                editingToolbarVisibility: options.editingToolbarVisibility,
+                size: options.iconSize || DEFAULT_ACTION_SIZE,
+                toolbarVisibility: options.editingToolbarVisibility,
                 actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
                 actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
                 itemActionsClass: options.itemActionsClass
@@ -171,10 +171,8 @@ export class Controller {
             return;
         }
 
-        const hasParentAction = parentAction !== null && parentAction !== undefined;
-        const menuActions = hasParentAction
-            ? this._getChildActions(item, parentAction.id)
-            : this._getMenuActions(item);
+        const hasParentAction = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
+        const menuActions = this._getMenuActions(item, parentAction);
 
         if (!menuActions || menuActions.length === 0) {
             return;
@@ -225,24 +223,6 @@ export class Controller {
     }
 
     /**
-     * Получает список операций с записью для указанного элемента коллекции,
-     * дочерних по отношению операции, для которой передан строковый ключ
-     * @param item
-     * @param parentActionKey
-     */
-    private _getChildActions(
-        item: IItemActionsItem,
-        parentActionKey: IItemAction
-    ): IItemAction[] {
-        const actions = item.getActions();
-        const allActions = actions && actions.all;
-        if (allActions) {
-            return allActions.filter((action) => action.parent === parentActionKey);
-        }
-        return [];
-    }
-
-    /**
      * Вычисляет операции над записью для каждого элемента коллекции
      */
     private _assignActions(): void {
@@ -273,16 +253,25 @@ export class Controller {
     }
 
     /**
-     * Получает список операций с записью для указанного элемента коллекции
+     * Получает список операций с записью для указанного элемента коллекции,
+     * отфильтрованных по признаку "Должны отображаться в подменю".
+     * Если указан parentAction, то операции дополнительно фильтруются по признаку
+     * "дочерние по отношению к указанной операции".
+     * Если у parentAction отсутствует id (напр, кнопка "Показать меню" ("Шеврон")),
+     * будут показаны все элементы не-первого уровня, вне зависимости от того, какой у них родитель.
      * @param item
+     * @param parentAction
      */
-    private _getMenuActions(item: IItemActionsItem): IItemAction[] {
+    private _getMenuActions(item: IItemActionsItem, parentAction: IItemAction): IItemAction[] {
         const actions = item.getActions();
-        return (
-            actions &&
-            actions.all &&
-            actions.all.filter((action) => action.showType !== TItemActionShowType.TOOLBAR)
-        );
+        const allActions = actions && actions.all;
+        if (allActions) {
+            return allActions.filter((action) => (
+                action.showType !== TItemActionShowType.TOOLBAR &&
+                (parentAction && !!parentAction.id ? action.parent === parentAction.id : true)
+            ));
+        }
+        return [];
     }
 
     /**
@@ -323,9 +312,9 @@ export class Controller {
      */
     private _calculateActionsTemplateConfig(options: IItemActionsTemplateOptions): void {
         this._collection.setActionsTemplateConfig({
-            toolbarVisibility: options.editingToolbarVisibility,
+            toolbarVisibility: options.toolbarVisibility,
             style: options.style,
-            size: options.iconSize,
+            size: options.size,
             itemActionsPosition: options.itemActionsPosition,
             actionAlignment: options.actionAlignment,
             actionCaptionPosition: options.actionCaptionPosition,
@@ -392,21 +381,19 @@ export class Controller {
     private _wrapActionsInContainer(
         actions: IItemAction[]
     ): IItemActionsContainer {
-        let showed = actions;
-        if (showed.length > 1) {
-            showed = showed.filter(
-                (action) =>
-                    action.showType === TItemActionShowType.TOOLBAR ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR
-            );
-            if (this._isMenuButtonRequired(actions)) {
-                showed.push({
-                    icon: `icon-ExpandDown ${ITEM_ACTION_ICON_CLASS}`,
-                    style: 'secondary',
-                    iconStyle: 'secondary',
-                    _isMenu: true
-                });
-            }
+        const showed = actions.filter(
+            (action) =>
+                action.showType === TItemActionShowType.TOOLBAR ||
+                action.showType === TItemActionShowType.MENU_TOOLBAR
+        );
+        if (this._isMenuButtonRequired(actions)) {
+            showed.push({
+                id: null,
+                icon: `icon-ExpandDown ${ITEM_ACTION_ICON_CLASS}`,
+                style: 'secondary',
+                iconStyle: 'secondary',
+                _isMenu: true
+            });
         }
         return {
             all: actions,
