@@ -9,6 +9,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'Controls-demo/Explorer/ExplorerMemory',
    'Controls-demo/Utils/MemorySourceFilter',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown',
+   'css!Controls-demo/Input/Dropdown/Dropdown',
    'Controls/dropdown',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownSub',
    'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon',
@@ -481,7 +482,5 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._duplicateCaption = this._duplicateItemsData[keys[0] - 1].title;
       }
    });
-   DropdownDemo._styles = ['Controls-demo/Input/Dropdown/Dropdown'];
-
    return DropdownDemo;
 });

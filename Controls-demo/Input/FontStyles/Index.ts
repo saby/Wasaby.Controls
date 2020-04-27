@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Input/FontStyles/FontStyles');
+import 'css!Controls-demo/Controls-demo';
 
 class FontStyles extends Control<IControlOptions> {
     protected _linkValue = FontStyles._defaultValue;
@@ -17,7 +18,5 @@ class FontStyles extends Control<IControlOptions> {
 
     private static _defaultValue = 'text';
     static _theme: string[] = ['Controls/Classes'];
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default FontStyles;

@@ -3,6 +3,7 @@ define('Controls-demo/Slider/Range/StandartSliderRangeDemo',
       'Core/Control',
       'Env/Env',
       'wml!Controls-demo/Slider/Range/StandartSliderRangeDemo',
+      'css!Controls-demo/Slider/Range/StandartSliderRangeDemo',
       'Controls/slider'
    ],
    function(Control, Env, template) {
@@ -48,8 +49,6 @@ define('Controls-demo/Slider/Range/StandartSliderRangeDemo',
          }
 
       });
-
-      StandartSliderRangeDemo._styles = ['Controls-demo/Slider/Range/StandartSliderRangeDemo'];
 
       return StandartSliderRangeDemo;
    }

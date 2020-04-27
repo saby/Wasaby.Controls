@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Menu/Control/Root/Index');
 import {HierarchicalMemory} from 'Types/source';
+import 'css!Controls-demo/Controls-demo';
 
 class Root extends Control {
     protected _template: TemplateFunction = controlTemplate;
@@ -40,7 +41,5 @@ class Root extends Control {
 
     static _theme: string[] = ['Controls/Classes'];
 
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default Root;

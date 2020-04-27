@@ -4,6 +4,7 @@ define('Controls-demo/Compound/CompoundDemo', [
    'Types/source',
    'Lib/Control/LayerCompatible/LayerCompatible',
    'Env/Env',
+   'css!Controls-demo/Compound/CompoundDemo'
 ], function(Control, template, source, LayerCompatible, Env) {
    'use strict';
 
@@ -337,8 +338,6 @@ define('Controls-demo/Compound/CompoundDemo', [
          this.testLifecycleHandler();
       }
    });
-
-   CompoundDemo._styles = ['Controls-demo/Compound/CompoundDemo'];
 
    return CompoundDemo;
 });

@@ -4,6 +4,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
       'Controls/context',
       'wml!Controls-demo/InfoBox/resources/content',
       'wml!Controls-demo/InfoBox/Opener/InfoBox',
+      'css!Controls-demo/InfoBox/Opener/InfoBox'
    ],
    function(Control, context, contentTpl, template) {
       'use strict';
@@ -357,8 +358,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
             isTouch: context.TouchContextField
          };
       };
-
-      InfoBox._styles = ['Controls-demo/InfoBox/Opener/InfoBox'];
 
       return InfoBox;
    });

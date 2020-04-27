@@ -17,6 +17,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel',
       'tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel',
 
+      'css!Controls-demo/Filter/Button/PanelVDom'
    ],
 
    function(Control, sourceLib, chain, template) {
@@ -122,7 +123,5 @@ define('Controls-demo/Filter/Button/PanelVDom',
          }
 
       });
-      PanelVDom._styles = ['Controls-demo/Filter/Button/PanelVDom'];
-
       return PanelVDom;
    });

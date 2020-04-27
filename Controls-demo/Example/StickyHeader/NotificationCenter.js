@@ -8,6 +8,10 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/News',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/Employees',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/Violations',
+      'css!Controls-demo/Example/StickyHeader/NotificationCenter/News',
+      'css!Controls-demo/Example/StickyHeader/NotificationCenter/Employees',
+      'css!Controls-demo/Example/StickyHeader/NotificationCenter/Violations',
+      'css!Controls-demo/Example/StickyHeader/NotificationCenter/NotificationCenter'
    ],
    function(Control, source, template) {
 
@@ -153,7 +157,7 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
          }
       ];
 
-      let ModuleClass = Control.extend({
+      return Control.extend({
          _template: template,
 
          _titleVisible: true,
@@ -166,9 +170,5 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
             });
          }
       });
-   
-      ModuleClass._styles = ['Controls-demo/Example/StickyHeader/NotificationCenter/News', 'Controls-demo/Example/StickyHeader/NotificationCenter/Employees', 'Controls-demo/Example/StickyHeader/NotificationCenter/Violations', 'Controls-demo/Example/StickyHeader/NotificationCenter/NotificationCenter'];
-
-      return ModuleClass;
-}
+   }
 );

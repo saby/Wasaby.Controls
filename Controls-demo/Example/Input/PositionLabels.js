@@ -5,20 +5,19 @@ define('Controls-demo/Example/Input/PositionLabels',
       'wml!Controls-demo/Example/Input/PositionLabels/PositionLabels',
 
       'Controls/input',
+      'css!Controls-demo/Example/resource/Base',
+      'css!Controls-demo/Example/Input/PositionLabels/PositionLabels',
+      'css!Controls-demo/Example/resource/BaseDemoInput/BaseDemoInput'
    ],
    function(Control, SetValueMixin, template) {
       'use strict';
 
 
-      let ModuleClass = Control.extend([SetValueMixin], {
+      return Control.extend([SetValueMixin], {
          _template: template,
 
          _labelClickHandler: function(event, labelName) {
             this._children[labelName].activate();
          }
       });
-   
-      ModuleClass._styles = ['Controls-demo/Example/resource/Base', 'Controls-demo/Example/Input/PositionLabels/PositionLabels', 'Controls-demo/Example/resource/BaseDemoInput/BaseDemoInput'];
-
-      return ModuleClass;
-});
+   });

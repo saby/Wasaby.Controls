@@ -3,6 +3,7 @@ import * as Template from "wml!Controls-demo/grid/EditInPlace/Base/Base"
 import {Memory} from "Types/source"
 import {getPorts} from "../../DemoHelpers/DataCatalog"
 
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -15,6 +16,4 @@ export default class extends Control {
             data: getPorts().getData()
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -2,6 +2,8 @@ define('Controls-demo/Switch/SwitchDemo', [
    'Core/Control',
    'Types/source',
    'wml!Controls-demo/Switch/SwitchDemo',
+   'css!Controls-demo/Headers/resetButton',
+   'css!Controls-demo/Switch/UnionSwitchDemo'
 ], function(Control, source, template) {
    'use strict';
    var ModuleClass = Control.extend(
@@ -38,7 +40,5 @@ define('Controls-demo/Switch/SwitchDemo', [
             this._eventName = 'no event';
          }
       });
-   ModuleClass._styles = ['Controls-demo/Headers/resetButton', 'Controls-demo/Switch/UnionSwitchDemo'];
-
    return ModuleClass;
 });

@@ -2,6 +2,7 @@ define('Controls-demo/List/ScrollPaging', [
    'Core/Control',
    'wml!Controls-demo/List/ScrollPaging/ScrollPaging',
    'Types/source',
+   'css!Controls-demo/List/ScrollPaging/ScrollPaging'
 ], function (BaseControl,
              template,
              source
@@ -134,7 +135,5 @@ define('Controls-demo/List/ScrollPaging', [
             this._children.psina.__loadPage('down');
          }
       });
-   ModuleClass._styles = ['Controls-demo/List/ScrollPaging/ScrollPaging'];
-
    return ModuleClass;
 });

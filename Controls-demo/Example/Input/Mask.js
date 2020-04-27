@@ -5,18 +5,15 @@ define('Controls-demo/Example/Input/Mask',
       'wml!Controls-demo/Example/Input/Mask/Mask',
 
       'Controls/input',
+      'css!Controls-demo/Example/resource/Base',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, SetValueMixin, template) {
       'use strict';
 
-      let ModuleClass = Control.extend([SetValueMixin], {
+      return Control.extend([SetValueMixin], {
          _template: template,
 
          _mobilePhoneValue: ''
       });
-   
-      ModuleClass._styles = ['Controls-demo/Example/resource/Base'];
-
-      return ModuleClass;
-});
+   });

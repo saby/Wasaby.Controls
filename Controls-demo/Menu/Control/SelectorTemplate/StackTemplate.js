@@ -2,6 +2,7 @@ define('Controls-demo/Menu/Control/SelectorTemplate/StackTemplate', [
    'Core/Control',
    'wml!Controls-demo/Menu/Control/SelectorTemplate/StackTemplate',
    'Types/source',
+   'css!Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector'
 
 ], function(Control, template, source) {
 
@@ -43,7 +44,5 @@ define('Controls-demo/Menu/Control/SelectorTemplate/StackTemplate', [
       }
 
    });
-   DropdownDemo._styles = ['Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector'];
-
    return DropdownDemo;
 });

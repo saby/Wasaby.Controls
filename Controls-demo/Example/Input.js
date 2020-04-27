@@ -20,11 +20,12 @@ define('Controls-demo/Example/Input',
       'Controls-demo/Example/Input/Tag',
       'Controls-demo/Example/Input/Text',
       'Controls-demo/Example/Input/TimeInterval',
+      'css!Controls-demo/Example/resource/Base'
    ],
    function(Env, Control, scrollToElement, template) {
       'use strict';
 
-      let ModuleClass = Control.extend({
+      return Control.extend({
          _template: template,
 
          _afterMount: function() {
@@ -61,8 +62,4 @@ define('Controls-demo/Example/Input',
             this._children[demo].setValue(field, value);
          }
       });
-   
-      ModuleClass._styles = ['Controls-demo/Example/resource/Base'];
-
-      return ModuleClass;
-});
+   });

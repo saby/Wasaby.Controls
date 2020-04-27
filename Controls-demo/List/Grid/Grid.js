@@ -9,6 +9,7 @@ define('Controls-demo/List/Grid/Grid', [
    'wml!Controls-demo/List/Grid/DemoCostPrice',
    'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
    'wml!Controls-demo/List/Grid/DemoName',
+   'css!Controls-demo/List/Grid/Grid',
    'Controls/scroll',
    'Controls/grid',
    'wml!Controls-demo/List/Grid/Results',
@@ -251,8 +252,6 @@ define('Controls-demo/List/Grid/Grid', [
             this.gridColumns2 = field[0] === 'price' ? partialColumns : partialColumns2;
          }
       });
-
-   ModuleClass._styles = ['Controls-demo/List/Grid/Grid'];
 
    return ModuleClass;
 });

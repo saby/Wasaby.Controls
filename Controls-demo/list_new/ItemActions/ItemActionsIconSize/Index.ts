@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/ItemActions/ItemActionsIconSize/ItemActionsIconSize';
 import {Memory} from 'Types/source';
+import 'css!Controls-demo/Controls-demo';
 import {getContactsCatalog as getData} from '../../DemoHelpers/DataCatalog';
 import {getActionsForContacts as getItemActions} from '../../DemoHelpers/ItemActionsCatalog';
 
@@ -19,6 +20,4 @@ export default class extends Control {
         });
     }
 
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

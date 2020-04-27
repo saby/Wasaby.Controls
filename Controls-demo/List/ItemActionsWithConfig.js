@@ -7,6 +7,7 @@ define('Controls-demo/List/ItemActionsWithConfig', [
    'wml!Controls-demo/List/ItemActions/ItemActionsWithConfig',
    'Types/source',
    'Controls/Constants',
+   'css!Controls-demo/List/ItemActions/ItemActions',
 ], function(
    Env,
    BaseControl,
@@ -163,7 +164,5 @@ define('Controls-demo/List/ItemActionsWithConfig', [
             return item.get('group');
          }
       });
-   ModuleClass._styles = ['Controls-demo/List/ItemActions/ItemActions'];
-
    return ModuleClass;
 });

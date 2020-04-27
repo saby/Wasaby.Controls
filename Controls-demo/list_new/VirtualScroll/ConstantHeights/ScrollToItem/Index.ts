@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/VirtualScroll/ConstantHeights/ScrollToItem/ScrollToItem';
 import {Memory} from 'Types/source';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
+import 'css!Controls-demo/Controls-demo';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 interface IItem {
@@ -32,6 +33,4 @@ export default class extends Control {
         // @ts-ignore
         this._children.list.scrollToItem(id, false, true);
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -6,6 +6,7 @@ define('Controls-demo/DragNDrop/List', [
    'Controls-demo/DragNDrop/DemoData',
    'wml!Controls-demo/DragNDrop/List/List',
    'Controls/Utils/Toolbar',
+   'css!Controls-demo/DragNDrop/List/List',
    'Controls/dragnDrop',
 ], function(BaseControl, cClone, source, ListEntity, DemoData, template, Toolbar) {
    'use strict';
@@ -55,7 +56,5 @@ define('Controls-demo/DragNDrop/List', [
          });
       }
    });
-   ModuleClass._styles = ['Controls-demo/DragNDrop/List/List'];
-
    return ModuleClass;
 });

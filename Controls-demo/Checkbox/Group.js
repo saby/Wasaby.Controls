@@ -2,6 +2,7 @@ define('Controls-demo/Checkbox/Group', [
    'Core/Control',
    'wml!Controls-demo/Checkbox/Group/Group',
    'Types/source',
+   'css!Controls-demo/Checkbox/Group/Group',
 ], function(Control, template, source) {
    'use strict';
 
@@ -118,7 +119,5 @@ define('Controls-demo/Checkbox/Group', [
          }
       }
    );
-   CheckboxGroup._styles = ['Controls-demo/Checkbox/Group/Group'];
-
    return CheckboxGroup;
 });

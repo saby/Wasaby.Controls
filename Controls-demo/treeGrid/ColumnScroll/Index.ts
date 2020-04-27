@@ -3,6 +3,7 @@ import * as Template from 'wml!Controls-demo/treeGrid/ColumnScroll/ColumnScroll'
 import {Memory} from 'Types/source';
 import {Gadgets} from '../DemoHelpers/DataCatalog';
 import {getActionsForContacts as getItemActions} from '../../list_new/DemoHelpers/ItemActionsCatalog';
+import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -22,6 +23,4 @@ export default class extends Control {
             data
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -1,5 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls-demo/LoadingIndicator/Small/Small');
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/LoadingIndicator/IndicatorContainer';
 
 class Small extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -8,7 +10,5 @@ class Small extends Control<IControlOptions> {
         this._children.LocalIndicatorDefault.show({});
         this._children.LocalIndicatorSmall.show({});
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/LoadingIndicator/IndicatorContainer'];
 }
 export default Small;

@@ -1,6 +1,8 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Menu/Control/EmptyText/EmptyKey/Index');
 import {Memory} from 'Types/source';
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/Menu/Menu';
 
 class EmptyKey extends Control {
     protected _template: TemplateFunction = controlTemplate;
@@ -17,8 +19,6 @@ class EmptyKey extends Control {
             keyProperty: 'key'
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Menu/Menu'];
 }
 
 export default EmptyKey;

@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/list_new/VirtualScroll/Reload/ByCursor/ByCursor';
 import {DataSet, Memory, Query} from 'Types/source';
+import 'css!Controls-demo/Controls-demo';
 
 interface IItem {
     id: number;
@@ -52,6 +53,4 @@ export default class extends Control {
         // @ts-ignore
         this._children.list.reload();
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
