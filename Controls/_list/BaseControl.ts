@@ -407,7 +407,7 @@ const _private = {
             self.activate();
         }
         _private.setMarkedKey(self, newMarkedKey);
-        _private.scrollToItem(self, key, true, false);
+        _private.scrollToItem(self, newMarkedKey, true, false);
     },
     moveMarkerToNext: function (self, event) {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
