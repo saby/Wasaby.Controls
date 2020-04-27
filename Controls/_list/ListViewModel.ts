@@ -132,31 +132,61 @@ var _private = {
     // New Model compatibility
     addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
         itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}): void => {
-            itemsModelCurrent.dispItem.setActions(actions);
+            itemsModelCurrent.itemActions = actions;
+            if (itemsModelCurrent.dispItem.setActions) {
+                itemsModelCurrent.dispItem.setActions(actions);
+            }
         };
         itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
-            itemsModelCurrent.dispItem.getActions()
+            itemsModelCurrent.dispItem.getActions ? itemsModelCurrent.dispItem.getActions() : itemsModelCurrent.itemActions
         );
         itemsModelCurrent.setActive = (state: boolean): void => {
-            itemsModelCurrent.dispItem.setActive(state);
+            itemsModelCurrent._isActive = state;
+            if (itemsModelCurrent.dispItem.setActive !== undefined) {
+                itemsModelCurrent.dispItem.setActive(state);
+            }
         };
-        itemsModelCurrent.isActive = (): boolean => itemsModelCurrent.dispItem.isActive();
+        itemsModelCurrent.isActive = (): boolean => (
+            itemsModelCurrent.dispItem.isActive() !== undefined ? itemsModelCurrent.dispItem.isActive() : itemsModelCurrent._isActive
+        );
         itemsModelCurrent.setSwiped = (state: boolean): void => {
-            itemsModelCurrent.dispItem.setSwiped(state);
+            itemsModelCurrent._isSwiped = state;
+            if (itemsModelCurrent.dispItem.setSwiped !== undefined) {
+                itemsModelCurrent.dispItem.setSwiped(state);
+            }
         };
-        itemsModelCurrent.isSwiped = (): boolean => itemsModelCurrent.dispItem.isSwiped();
+        itemsModelCurrent.isSwiped = (): boolean => (
+            itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : itemsModelCurrent._isSwiped
+        );
         itemsModelCurrent.setEditing = (editing: boolean, editingContents?: Model, silent?: boolean): void => {
             itemsModelCurrent._isEditing = editing;
-            itemsModelCurrent.dispItem.setEditing(editing, editingContents, silent);
+            if (itemsModelCurrent.dispItem.setEditing !== undefined) {
+                itemsModelCurrent.dispItem.setEditing(editing, editingContents, silent);
+            }
         };
-        itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent.dispItem.isEditing();
-        itemsModelCurrent.getContents = () => itemsModelCurrent.dispItem.getContents();
-        itemsModelCurrent.hasVisibleActions = (): boolean => itemsModelCurrent.dispItem.hasVisibleActions();
-        itemsModelCurrent.shouldDisplayActions = (): boolean => itemsModelCurrent.dispItem.shouldDisplayActions();
-        itemsModelCurrent.hasActionWithIcon = (): boolean => itemsModelCurrent.dispItem.hasActionWithIcon();
-        itemsModelCurrent.isSelected = (): boolean => itemsModelCurrent.dispItem.isSelected();
+        itemsModelCurrent.isEditing = (): boolean => (
+            itemsModelCurrent.dispItem.isEditing !== undefined ? itemsModelCurrent.dispItem.isEditing() : false
+        );
+        itemsModelCurrent.getContents = () => (
+            itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
+        );
+        itemsModelCurrent.hasVisibleActions = (): boolean => (
+            itemsModelCurrent.dispItem.hasVisibleActions !== undefined ? itemsModelCurrent.dispItem.hasVisibleActions() : false
+        );
+        itemsModelCurrent.shouldDisplayActions = (): boolean => (
+            itemsModelCurrent.dispItem.shouldDisplayActions !== undefined ? itemsModelCurrent.dispItem.shouldDisplayActions() : false
+        );
+        itemsModelCurrent.hasActionWithIcon = (): boolean => (
+            itemsModelCurrent.dispItem.hasActionWithIcon !== undefined ? itemsModelCurrent.dispItem.hasActionWithIcon() : false
+        );
+        itemsModelCurrent.isSelected = (): boolean => (
+            itemsModelCurrent.dispItem.isSelected !== undefined ? itemsModelCurrent.dispItem.isSelected() : itemsModelCurrent._isSelected
+        );
         itemsModelCurrent.setSelected = (selected: boolean|null, silent?: boolean): void => {
-            itemsModelCurrent.dispItem.setSelected(selected, silent);
+            itemsModelCurrent._isSelected = true;
+            if (itemsModelCurrent.dispItem.setSelected !== undefined) {
+                itemsModelCurrent.dispItem.setSelected(selected, silent);
+            }
         };
     }
 };
