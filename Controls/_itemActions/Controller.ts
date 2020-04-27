@@ -55,7 +55,7 @@ export interface IItemActionsControllerOptions {
  * Контроллер, управляющий состоянием ItemActions в коллекции
  * @Author Пуханов В, Аверкиев П.А
  */
-export class ItemActionsController {
+export class Controller {
     private _collection: IItemActionsCollection;
     private _commonItemActions: IItemAction[];
     private _itemActionsProperty: string;
@@ -215,26 +215,6 @@ export class ItemActionsController {
         };
     }
 
-    // Оставил на случай, если придётся откатиться к варианту работы с popup из Render
-    // resetItemActionsConfig() {
-    //     this.setActiveItem(null);
-    //     this.deactivateSwipe(this._collection);
-    //     this._collection.setActionsMenuConfig(null);
-    //     this._collection.nextVersion();
-    // }
-
-    // Оставил на случай, если придётся откатиться к варианту работы с popup из Render
-    // updateItemActionsConfig(contents: Model,
-    //                         action: IItemAction,
-    //                         clickEvent: SyntheticEvent<MouseEvent>,
-    //                         isContextMenu: boolean): void {
-    //     const itemKey = contents?.getKey();
-    //     const menuConfig = this.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
-    //     this.setActiveItem(itemKey);
-    //     this._collection.setActionsMenuConfig(menuConfig);
-    //     this._collection.nextVersion();
-    // }
-
     /**
      * Получает список операций с записью для указанного элемента коллекции,
      * дочерних по отношению операции, для которой передан строковый ключ
@@ -267,7 +247,7 @@ export class ItemActionsController {
         this._collection.each((item) => {
             if (!item.isActive()) {
                 const actionsForItem = this._collectActionsForItem(item);
-                const itemChanged = ItemActionsController._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
+                const itemChanged = Controller._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
                 hasChanges = hasChanges || itemChanged;
             }
         });
@@ -354,7 +334,7 @@ export class ItemActionsController {
         const itemActions: IItemAction[] = this._itemActionsProperty
                 ? item.getContents().get(this._itemActionsProperty)
                 : this._commonItemActions;
-        const fixedActions = itemActions.map(ItemActionsController._fixActionIcon);
+        const fixedActions = itemActions.map(Controller._fixActionIcon);
         return fixedActions.filter((action) =>
             this._visibilityCallback(action, item.getContents())
         );
@@ -369,7 +349,7 @@ export class ItemActionsController {
         const actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
 
-        let swipeConfig = ItemActionsController._calculateSwipeConfig(
+        let swipeConfig = Controller._calculateSwipeConfig(
             actions,
             actionsTemplateConfig.actionAlignment,
             actionsContainerHeight,
@@ -378,9 +358,9 @@ export class ItemActionsController {
 
         if (
             actionsTemplateConfig.actionAlignment !== 'horizontal' &&
-            ItemActionsController._needsHorizontalMeasurement(swipeConfig)
+            Controller._needsHorizontalMeasurement(swipeConfig)
         ) {
-            swipeConfig = ItemActionsController._calculateSwipeConfig(
+            swipeConfig = Controller._calculateSwipeConfig(
                 actions,
                 'horizontal',
                 actionsContainerHeight,
@@ -388,7 +368,7 @@ export class ItemActionsController {
             );
         }
 
-        ItemActionsController._setItemActions(item, swipeConfig.itemActions);
+        Controller._setItemActions(item, swipeConfig.itemActions);
 
         if (swipeConfig.twoColumns) {
             const visibleActions = swipeConfig.itemActions.showed;
@@ -441,7 +421,7 @@ export class ItemActionsController {
         actions: IItemActionsContainer
     ): boolean {
         const oldActions = item.getActions();
-        if (!oldActions || (actions && !ItemActionsController._isMatchingActions(oldActions, actions))) {
+        if (!oldActions || (actions && !Controller._isMatchingActions(oldActions, actions))) {
             item.setActions(actions);
             return true;
         }
@@ -453,8 +433,8 @@ export class ItemActionsController {
         newContainer: IItemActionsContainer
     ): boolean {
         return (
-            ItemActionsController._isMatchingActionLists(oldContainer.all, newContainer.all) &&
-            ItemActionsController._isMatchingActionLists(oldContainer.showed, newContainer.showed)
+            Controller._isMatchingActionLists(oldContainer.all, newContainer.all) &&
+            Controller._isMatchingActionLists(oldContainer.showed, newContainer.showed)
         );
     }
 

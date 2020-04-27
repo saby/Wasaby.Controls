@@ -30,7 +30,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
 import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
-import {ItemActionsController} from 'Controls/itemActions';
+import {Controller as ItemActionsController} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');

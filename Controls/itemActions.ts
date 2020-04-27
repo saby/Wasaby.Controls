@@ -1,7 +1,7 @@
 /**
  * Библиотека, которая предоставляет операции с записью коллекции
  * @library Controls/itemActions
- * @includes TreeItem Controls/_itemActions/ItemActionsController
+ * @includes TreeItem Controls/_itemActions/Controller
  * @public
  * @author Аверкиев П.А.
  */
@@ -9,7 +9,7 @@
 /**
  * Library that provides collection item actions
  * @library Controls/itemActions
- * @includes TreeItem Controls/_itemActions/ItemActionsController
+ * @includes TreeItem Controls/_itemActions/Controller
  * @public
  * @author Аверкиев П.А.
  */
@@ -25,4 +25,4 @@ export {
     IItemAction,
     TItemActionShowType
 } from './_itemActions/interface/IItemActions';
-export {ItemActionsController} from './_itemActions/ItemActionsController';
+export {Controller} from './_itemActions/Controller';

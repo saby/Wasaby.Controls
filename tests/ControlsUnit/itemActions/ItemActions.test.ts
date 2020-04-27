@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import {ItemActionsController} from 'Controls/_itemActions/ItemActionsController';
+import {Controller as ItemActionsController} from 'Controls/_itemActions/ItemActionsController';
 import {showType} from 'Controls/Utils/Toolbar';
 
 describe('Controls/_itemActions/ItemActionsController', () => {

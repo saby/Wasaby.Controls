@@ -15,7 +15,7 @@ import {
     ANIMATION_STATE
 } from 'Controls/display';
 import {
-    ItemActionsController,
+    Controller as ItemActionsController,
     TItemActionVisibilityCallback,
     IItemAction} from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
