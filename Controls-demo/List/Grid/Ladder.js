@@ -4,6 +4,7 @@ define('Controls-demo/List/Grid/Ladder', [
    'Controls-demo/List/Grid/GridData',
    'Types/source',
 
+   'css!Controls-demo/List/Grid/resources/Ladder/Ladder',
 
    'Controls/scroll',
    'Controls/grid',
@@ -53,8 +54,6 @@ define('Controls-demo/List/Grid/Ladder', [
             ];
          }
       });
-
-   ModuleClass._styles = ['Controls-demo/List/Grid/resources/Ladder/Ladder'];
 
    return ModuleClass;
 });

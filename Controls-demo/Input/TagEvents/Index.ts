@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Input/TagEvents/TagEvents');
+import 'css!Controls-demo/Controls-demo';
 
 class TagEvents extends Control<IControlOptions> {
     protected _placeholder = 'Tooltip';
@@ -16,7 +17,5 @@ class TagEvents extends Control<IControlOptions> {
     }
 
     static _theme: string[] = ['Controls/Classes'];
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default TagEvents;

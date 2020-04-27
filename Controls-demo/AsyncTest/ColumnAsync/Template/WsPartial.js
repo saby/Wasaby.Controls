@@ -2,6 +2,7 @@ define('Controls-demo/AsyncTest/ColumnAsync/Template/WsPartial',
    [
       'Core/Control',
       'wml!Controls-demo/AsyncTest/ColumnAsync/Template/WsPartial',
+      'css!Controls-demo/AsyncTest/AsyncTestDemo',
    ], function (Control, template) {
       'use strict';
 
@@ -14,8 +15,6 @@ define('Controls-demo/AsyncTest/ColumnAsync/Template/WsPartial',
             this._forceUpdate();
          },
       });
-
-      wsPartialModule._styles = ['Controls-demo/AsyncTest/AsyncTestDemo'];
 
       return wsPartialModule;
    });

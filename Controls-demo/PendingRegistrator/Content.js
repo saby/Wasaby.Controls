@@ -3,6 +3,7 @@ define('Controls-demo/PendingRegistrator/Content', [
    'wml!Controls-demo/PendingRegistrator/Content',
    'Env/Env',
    'Core/Deferred',
+   'css!Controls-demo/PendingRegistrator/Content'
 ], function(Control, tmpl, Env, Deferred) {
    'use strict';
 
@@ -32,8 +33,6 @@ define('Controls-demo/PendingRegistrator/Content', [
          }
       }
    });
-
-   module._styles = ['Controls-demo/PendingRegistrator/Content'];
 
    return module;
 });

@@ -2,6 +2,7 @@ define('Controls-demo/Date/Month', [
    'Core/Control',
    'wml!Controls-demo/Date/Month',
    'Controls/calendar',
+   'css!Controls-demo/Date/Month'
 ], function (
    BaseControl,
    template
@@ -30,7 +31,5 @@ define('Controls-demo/Date/Month', [
          this._forceUpdate();
       }
    });
-   ModuleClass._styles = ['Controls-demo/Date/Month'];
-
    return ModuleClass;
 });

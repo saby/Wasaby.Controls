@@ -6,6 +6,7 @@ define('Controls-demo/Input/Lookup/Collection',
       'Types/source',
       'Types/entity',
 
+      'css!Controls-demo/Input/Lookup/Collection'
    ],
    function(Control, template, collection) {
 
@@ -52,8 +53,6 @@ define('Controls-demo/Input/Lookup/Collection',
 
          },
       });
-
-      Collection._styles = ['Controls-demo/Input/Lookup/Collection'];
 
       return Collection;
    });

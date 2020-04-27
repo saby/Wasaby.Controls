@@ -7,6 +7,7 @@ import controlTemplate = require('wml!Controls-demo/Suggest_new/Selector/FooterT
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/Selector/FooterTemplate/resources/SuggestTemplate');
 import footerTemplate = require('wml!Controls-demo/Suggest_new/Selector/FooterTemplate/resources/FooterTemplate');
 import standartFooterTemplate = require('wml!Controls-demo/Suggest_new/Input/FooterTemplate/resources/StandartFooterTemplate');
+import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control{
    protected _template: TemplateFunction = controlTemplate;
@@ -32,6 +33,4 @@ export default class extends Control{
          }
       };
    }
-
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

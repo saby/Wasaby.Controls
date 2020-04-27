@@ -3,6 +3,7 @@ import * as Template from "wml!Controls-demo/list_new/ItemActions/ItemActionsPos
 import {Memory} from "Types/source"
 import {getContactsCatalog as getData} from "../../../../DemoHelpers/DataCatalog"
 import {getActionsForContacts as getItemActions} from "../../../../DemoHelpers/ItemActionsCatalog"
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -15,6 +16,4 @@ export default class extends Control {
             data: getData()
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -6,6 +6,7 @@ define('Controls-demo/List/EditInPlace', [
    'Core/Deferred',
    'Controls/Constants',
    'Controls/validate',
+   'css!Controls-demo/List/EditInPlace/EditInPlace'
 ], function (Control,
              template,
              source,
@@ -208,7 +209,5 @@ define('Controls-demo/List/EditInPlace', [
          }
       }
    });
-   EditInPlace._styles = ['Controls-demo/List/EditInPlace/EditInPlace'];
-
    return EditInPlace;
 });

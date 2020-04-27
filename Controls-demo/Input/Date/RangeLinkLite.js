@@ -3,6 +3,7 @@ define('Controls-demo/Input/Date/RangeLinkLite', [
    'wml!Controls-demo/Input/Date/RangeLinkLite',
    'wml!Controls/_shortDatePicker/monthTemplate',
    'Controls-demo/Date/MonthListSource',
+   'css!Controls-demo/Input/Date/RangeLinkLite',
 ], function(
    BaseControl,
    template,
@@ -30,7 +31,5 @@ define('Controls-demo/Input/Date/RangeLinkLite', [
       _startValue2: new Date(2010, 0, 1),
       _endValue2: new Date(2011, 0, 0)
    });
-   ModuleClass._styles = ['Controls-demo/Input/Date/RangeLinkLite'];
-
    return ModuleClass;
 });

@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Input/ValidationStatuses/ValidationStatuses');
+import 'css!Controls-demo/Controls-demo';
 
 class ValidationStatuses extends Control<IControlOptions> {
     protected _validValue = ValidationStatuses._defaultValue;
@@ -11,8 +12,6 @@ class ValidationStatuses extends Control<IControlOptions> {
 
     private static _defaultValue = 'text';
     static _theme: string[] = ['Controls/Classes'];
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 
 export default ValidationStatuses;

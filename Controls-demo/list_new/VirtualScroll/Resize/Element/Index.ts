@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/list_new/VirtualScroll/Resize/Element/Element';
 import {Memory} from 'Types/source';
 import {generateData} from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
+import 'css!Controls-demo/Controls-demo';
 import 'Controls-demo/list_new/VirtualScroll/Resize/Element/ExpandingElement';
 
 interface IItem {
@@ -31,6 +32,4 @@ export default class extends Control {
             })
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

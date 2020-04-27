@@ -3,6 +3,7 @@ define('Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/WasabyContainer',
       'Core/Control',
       'wml!Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/WasabyContainer',
       'Lib/Control/LayerCompatible/LayerCompatible',
+      'css!Controls-demo/CompatibleDemo/CompatibleDemo'
    ],
    function(Control, template, CompatibleLayer) {
       'use strict';
@@ -33,8 +34,6 @@ define('Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/WasabyContainer',
             this.getTopParent()._setText(e, value);
          },
       });
-      WasabyContainer._styles = ['Controls-demo/CompatibleDemo/CompatibleDemo'];
-
       return WasabyContainer;
    }
 );

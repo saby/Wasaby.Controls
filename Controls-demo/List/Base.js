@@ -5,6 +5,7 @@ define('Controls-demo/List/Base', [
    'Core/Control',
    'wml!Controls-demo/List/Base/Base',
    'Types/source',
+   'css!Controls-demo/List/ScrollPaging/ScrollPaging'
 ], function (BaseControl,
              template,
              source
@@ -42,7 +43,5 @@ define('Controls-demo/List/Base', [
             });
          }
       });
-   ModuleClass._styles = ['Controls-demo/List/ScrollPaging/ScrollPaging'];
-
    return ModuleClass;
 });

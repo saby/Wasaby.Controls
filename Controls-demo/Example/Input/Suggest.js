@@ -4,6 +4,7 @@ define('Controls-demo/Example/Input/Suggest',
       'Types/source',
       'Controls-demo/Example/Input/SetValueMixin',
       'wml!Controls-demo/Example/Input/Suggest/Suggest',
+      'css!Controls-demo/Example/Input/Suggest/Suggest',
 
       'Controls/suggest',
       'Controls-demo/Example/resource/BaseDemoInput'
@@ -84,7 +85,7 @@ define('Controls-demo/Example/Input/Suggest',
          }
       });
 
-      let ModuleClass = Control.extend([SetValueMixin], {
+      return Control.extend([SetValueMixin], {
          _template: template,
 
          _source: null,
@@ -93,8 +94,4 @@ define('Controls-demo/Example/Input/Suggest',
             this._source = source;
          }
       });
-   
-      ModuleClass._styles = ['Controls-demo/Example/Input/Suggest/Suggest'];
-
-      return ModuleClass;
-});
+   });

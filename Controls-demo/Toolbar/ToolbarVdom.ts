@@ -3,6 +3,8 @@ import controlTemplate = require('wml!Controls-demo/Toolbar/ToolbarVdom');
 import itemTemplate = require('wml!Controls-demo/Toolbar/resources/itemTemplate');
 import itemTemplateContent = require('wml!Controls-demo/Toolbar/resources/itemTemplateContent');
 import {showType} from 'Controls/Utils/Toolbar';
+import 'css!Controls-demo/Toolbar/ToolbarVdom';
+import 'css!Controls-demo/Controls-demo';
 import {Memory} from 'Types/source';
 
 class ToolbarVdom extends Control<IControlOptions> {
@@ -263,7 +265,5 @@ class ToolbarVdom extends Control<IControlOptions> {
       this._currentClick = 'Вы нажали на ' + item.getId();
    }
    static _theme: string[] = ['Controls/Classes'];
-
-   static _styles: string[] = ['Controls-demo/Toolbar/ToolbarVdom', 'Controls-demo/Controls-demo'];
 }
 export default ToolbarVdom;

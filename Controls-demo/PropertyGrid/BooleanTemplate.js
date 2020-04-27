@@ -2,6 +2,7 @@ define('Controls-demo/PropertyGrid/BooleanTemplate',
    [
       'Core/Control',
       'wml!Controls-demo/PropertyGrid/BooleanTemplate',
+      'css!Controls-demo/Input/resources/VdomInputs'
    ],
    function(Control, template) {
       'use strict';
@@ -12,7 +13,5 @@ define('Controls-demo/PropertyGrid/BooleanTemplate',
             this._notify('valueChanged', [tmp]);
          },
       });
-      boolTmpl._styles = ['Controls-demo/Input/resources/VdomInputs'];
-
       return boolTmpl;
    });

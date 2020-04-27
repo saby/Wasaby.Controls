@@ -3,6 +3,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ExplorerMemory from 'Controls-demo/Explorer/ExplorerMemory';
 import * as template from 'wml!Controls-demo/Explorer/SearchExpand';
 
+import 'css!Controls-demo/Explorer/Search';
 
 interface ISearchExpandData {
    id: number;
@@ -140,6 +141,4 @@ export default class SearchExpand extends Control<IControlOptions> {
    protected _markedKeyChangedHandler(e: SyntheticEvent, markedKey: string): void {
       console.log('markedKey: ', markedKey);
    }
-
-   static _styles: string[] = ['Controls-demo/Explorer/Search'];
 }

@@ -3,6 +3,8 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
    'tmpl!Controls-demo/PropertyGrid/DemoPG',
    'json!Controls-demo/PropertyGrid/pgtext',
    'Types/source',
+   'css!Controls-demo/Input/Suggest/SuggestPG',
+   'css!Controls-demo/Input/Search/Suggest/SuggestPG'
 ], function(Control, template, propertyGridConfig, sourceLib) {
 
    'use strict';
@@ -23,7 +25,7 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
       {id: 5, name: 'Dmitry'}
    ];
 
-   let ModuleClass = Control.extend({
+   return Control.extend({
       _template: template,
       _content: 'Controls/suggest:SearchInput',
       _dataObject: null,
@@ -131,8 +133,4 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
          };
       }
    });
-
-   ModuleClass._styles = ['Controls-demo/Input/Suggest/SuggestPG', 'Controls-demo/Input/Search/Suggest/SuggestPG'];
-
-   return ModuleClass;
 });
