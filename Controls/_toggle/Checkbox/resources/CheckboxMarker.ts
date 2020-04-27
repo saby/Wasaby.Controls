@@ -15,7 +15,7 @@ export interface ICheckboxMarkerOptions extends IControlOptions {
  * @public
  * @author Красильников А.С.
  * @category Toggle
- * @demo Controls-demo/Checkbox/Checkbox
+ * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
 /**
  * @name Controls/_toggle/Checkbox#triState
