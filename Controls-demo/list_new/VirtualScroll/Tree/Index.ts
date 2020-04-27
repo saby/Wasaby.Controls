@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/list_new/VirtualScroll/Tree/Tree';
 import {DataSet, Memory, Query} from 'Types/source';
+import 'css!Controls-demo/Controls-demo';
 
 interface IItem {
     id: number;
@@ -51,6 +52,4 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._source = new PositionSourceMock({ keyProperty: 'id' });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

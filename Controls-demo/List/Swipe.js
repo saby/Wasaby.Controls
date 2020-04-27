@@ -6,6 +6,7 @@ define('Controls-demo/List/Swipe', [
    'Core/Control',
    'wml!Controls-demo/List/Swipe/Swipe',
    'Types/source',
+   'css!Controls-demo/List/Swipe/Swipe'
 ], function(Env,
    BaseControl,
    template,
@@ -401,7 +402,5 @@ define('Controls-demo/List/Swipe', [
          }
       }
    );
-   ModuleClass._styles = ['Controls-demo/List/Swipe/Swipe'];
-
    return ModuleClass;
 });

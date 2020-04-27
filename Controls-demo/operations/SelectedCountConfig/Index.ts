@@ -3,6 +3,7 @@ import * as template from 'wml!Controls-demo/operations/SelectedCountConfig/Sele
 import {Memory} from 'Types/source';
 import {default as CountSource} from 'Controls-demo/operations/resources/Source';
 import {Gadgets} from 'Controls-demo/treeGrid/DemoHelpers/DataCatalog';
+import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
     _template = template;
@@ -32,6 +33,4 @@ export default class extends Control {
             }
         };
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 };

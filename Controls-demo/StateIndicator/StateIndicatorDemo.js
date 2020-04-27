@@ -2,6 +2,7 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
    'Core/Control',
    'wml!Controls-demo/StateIndicator/StateIndicatorDemo',
    'wml!Controls-demo/StateIndicator/template/template',
+   'css!Controls-demo/StateIndicator/StateIndicatorDemo',
 ], function(Control, template, popupTemplate) {
    'use strict';
 
@@ -101,8 +102,6 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
 
 
 
-
-   Index._styles = ['Controls-demo/StateIndicator/StateIndicatorDemo'];
 
    return Index;
 });

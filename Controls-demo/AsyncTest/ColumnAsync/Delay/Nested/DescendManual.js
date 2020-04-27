@@ -2,6 +2,7 @@ define('Controls-demo/AsyncTest/ColumnAsync/Delay/Nested/DescendManual',
    [
       'Core/Control',
       'wml!Controls-demo/AsyncTest/ColumnAsync/Delay/Nested/DescendManual',
+      'css!Controls-demo/AsyncTest/AsyncTestDemo',
    ], function (Control, template) {
       'use strict';
 
@@ -22,8 +23,6 @@ define('Controls-demo/AsyncTest/ColumnAsync/Delay/Nested/DescendManual',
             this._forceUpdate();
          },
       });
-
-      delayDescendManualModule._styles = ['Controls-demo/AsyncTest/AsyncTestDemo'];
 
       return delayDescendManualModule;
    });

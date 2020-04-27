@@ -6,6 +6,7 @@ define('Controls-demo/Filter/Container', [
    'wml!Controls-demo/Filter/Container',
    'Types/source',
    'Controls-demo/Utils/MemorySourceData',
+   'css!Controls-demo/Filter/Container',
    'Controls/deprecatedList',
    'Controls/search',
    'Controls/filter'
@@ -93,8 +94,6 @@ define('Controls-demo/Filter/Container', [
          });
       }
    });
-
-   SearchContainer._styles = ['Controls-demo/Filter/Container'];
 
    return SearchContainer;
 });

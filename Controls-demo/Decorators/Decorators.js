@@ -7,17 +7,14 @@ define('Controls-demo/Decorators/Decorators',
       'Controls-demo/Decorators/Number/Number',
       'Controls-demo/Decorators/PhoneNumber/PhoneNumber',
       'Controls-demo/Decorators/WrapURLs/WrapURLs',
+      'css!Controls-demo/Decorators/Decorators'
    ],
    function(Control, template) {
 
       'use strict';
 
-      let ModuleClass = Control.extend({
+      return Control.extend({
          _template: template
       })
-   
-      ModuleClass._styles = ['Controls-demo/Decorators/Decorators'];
-
-      return ModuleClass;
-}
+   }
 );

@@ -5,6 +5,7 @@ import {getEditing} from "../../DemoHelpers/DataCatalog"
 import {showType} from 'Controls/Utils/Toolbar';
 import 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor';
 
+import 'css!Controls-demo/Controls-demo'
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -66,6 +67,4 @@ export default class extends Control {
             return items;
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

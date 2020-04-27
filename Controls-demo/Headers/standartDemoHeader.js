@@ -1,6 +1,7 @@
 define('Controls-demo/Headers/standartDemoHeader', [
    'Core/Control',
    'wml!Controls-demo/Headers/standartDemoHeader',
+   'css!Controls-demo/Headers/standartDemoHeader'
 ], function(Control, template) {
    'use strict';
 
@@ -77,7 +78,5 @@ define('Controls-demo/Headers/standartDemoHeader', [
             }
          }
       });
-   ModuleClass._styles = ['Controls-demo/Headers/standartDemoHeader'];
-
    return ModuleClass;
 });

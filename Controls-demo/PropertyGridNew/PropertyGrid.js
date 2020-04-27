@@ -4,6 +4,7 @@ define("Controls-demo/PropertyGridNew/PropertyGrid",
       "wml!Controls-demo/PropertyGridNew/PropertyGrid",
 
       'Types/collection',
+      "css!Controls-demo/PropertyGridNew/PropertyGrid"
    ],
    function(Control, template, collection) {
       "use strict";
@@ -71,8 +72,6 @@ define("Controls-demo/PropertyGridNew/PropertyGrid",
             this._editingObjectString = JSON.stringify(object, null, 4);
          },
       });
-
-      PropertyGrid._styles = ['Controls-demo/PropertyGridNew/PropertyGrid'];
 
       return PropertyGrid;
    });

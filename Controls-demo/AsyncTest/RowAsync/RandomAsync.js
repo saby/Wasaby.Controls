@@ -2,6 +2,7 @@ define('Controls-demo/AsyncTest/RowAsync/RandomAsync',
    [
       'Core/Control',
       'wml!Controls-demo/AsyncTest/RowAsync/RandomAsync',
+      'css!Controls-demo/AsyncTest/AsyncTestDemo',
    ],
    function(Control, template) {
       'use strict';
@@ -15,8 +16,6 @@ define('Controls-demo/AsyncTest/RowAsync/RandomAsync',
             this._forceUpdate();
          },
       });
-      rowAsyncModule._styles = ['Controls-demo/AsyncTest/AsyncTestDemo'];
-
       return rowAsyncModule;
    }
 );

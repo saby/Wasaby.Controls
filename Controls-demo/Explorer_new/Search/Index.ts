@@ -4,6 +4,7 @@ import {Gadgets} from '../DataHelpers/DataCatalog';
 import {Memory} from 'Types/source';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
 
+import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
@@ -31,6 +32,4 @@ export default class extends Control {
          ]
       });
    }
-
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

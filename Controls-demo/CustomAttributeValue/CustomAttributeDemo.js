@@ -2,6 +2,7 @@ define('Controls-demo/CustomAttributeValue/CustomAttributeDemo',
    [
       'Core/Control',
       'wml!Controls-demo/CustomAttributeValue/CustomAttributeDemo',
+      'css!Controls-demo/CustomAttributeValue/CustomAttributeDemo',
    ],
    function(Control, template) {
       'use strict';
@@ -30,8 +31,6 @@ define('Controls-demo/CustomAttributeValue/CustomAttributeDemo',
             this._forceUpdate();
          },
       });
-      customAttributeDemo._styles = ['Controls-demo/CustomAttributeValue/CustomAttributeDemo'];
-
       return customAttributeDemo;
    }
 );

@@ -5,6 +5,7 @@ define('Controls-demo/List/List/DocsBase', [
    'Controls-demo/List/List/resources/Navigation/Data',
    'Controls-demo/List/List/resources/DataDemoPG',
    'Controls/Constants',
+   'css!Controls-demo/List/List/resources/DocsBase/DocsBase',
 
    'wml!Controls-demo/List/List/resources/ItemTemplatePG/noHighlightOnHover',
    'wml!Controls-demo/List/List/resources/BasePG/emptyTemplate',
@@ -81,7 +82,5 @@ define('Controls-demo/List/List/DocsBase', [
          }
       }
    );
-   ModuleClass._styles = ['Controls-demo/List/List/resources/DocsBase/DocsBase'];
-
    return ModuleClass;
 });

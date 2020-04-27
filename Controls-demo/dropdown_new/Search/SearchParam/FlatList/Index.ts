@@ -3,6 +3,8 @@ import controlTemplate = require('wml!Controls-demo/dropdown_new/Search/SearchPa
 import {Memory} from 'Types/source';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
+import 'css!Controls-demo/Controls-demo';
+import 'css!Controls-demo/Menu/Control/Menu';
 
 class SearchFlat extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
@@ -41,7 +43,5 @@ class SearchFlat extends Control<IControlOptions> {
             filter: MemorySourceFilter()
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Menu/Control/Menu'];
 }
 export default SearchFlat;

@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from "UI/Base"
 import * as Template from "wml!Controls-demo/WIPPlaceholder/WIPPlaceholder"
 import {cookie} from "Env/Env"
+import 'css!Controls-demo/Controls-demo'
 
 export interface IWIPOptions extends IControlOptions {
     byTask?: string
@@ -15,6 +16,4 @@ export default class extends Control<IWIPOptions> {
         super(cfg);
         this._canShowTask = cookie.get('s3debug') === 'true';
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

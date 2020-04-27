@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from "UI/Base"
 import * as Template from "wml!Controls-demo/list_new/EmptyList/Default/Default"
 import {Memory} from "Types/source"
+import 'css!Controls-demo/Controls-demo'
 
 
 export default class extends Control {
@@ -13,6 +14,4 @@ export default class extends Control {
             data: []
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/EditInPlace/EditingOnMounting/EditingOnMounting';
 import {Memory} from 'Types/source';
 import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
+import 'css!Controls-demo/Controls-demo';
 import {getActionsForContacts as getItemActions} from '../../DemoHelpers/ItemActionsCatalog';
 
 export default class extends Control {
@@ -25,6 +26,4 @@ export default class extends Control {
             };
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

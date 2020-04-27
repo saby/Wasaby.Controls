@@ -5,21 +5,18 @@ define('Controls-demo/Decorators/Number/Number',
 
       'Controls/input',
       'Controls/decorator',
+      'css!Controls-demo/Decorators/Number/Number'
    ],
    function(Control, template) {
 
       'use strict';
 
-      let ModuleClass = Control.extend({
+      return Control.extend({
          _template: template,
 
          _number: 0,
 
          _fractionSize: 0
       });
-   
-      ModuleClass._styles = ['Controls-demo/Decorators/Number/Number'];
-
-      return ModuleClass;
-}
+   }
 );

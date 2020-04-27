@@ -1,6 +1,7 @@
 define('Controls-demo/DragNDrop/Basket', [
    'Core/Control',
    'wml!Controls-demo/DragNDrop/Basket/Basket',
+   'css!Controls-demo/DragNDrop/Basket/Basket'
 ], function(BaseControl, template) {
    'use strict';
 
@@ -46,8 +47,6 @@ define('Controls-demo/DragNDrop/Basket', [
          this._isDragEnter = false;
       }
    });
-
-   Basket._styles = ['Controls-demo/DragNDrop/Basket/Basket'];
 
    return Basket;
 });

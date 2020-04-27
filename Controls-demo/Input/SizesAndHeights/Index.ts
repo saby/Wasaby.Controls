@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Input/SizesAndHeights/SizesAndHeights');
+import 'css!Controls-demo/Controls-demo';
 
 class SizesAndHeights extends Control<IControlOptions> {
     protected _sizeAndHeightXSValue = SizesAndHeights._defaultValue;
@@ -16,8 +17,6 @@ class SizesAndHeights extends Control<IControlOptions> {
 
     private static _defaultValue = 'text';
     static _theme: string[] = ['Controls/Classes'];
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 
 export default SizesAndHeights;

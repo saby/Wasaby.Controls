@@ -2,6 +2,7 @@ define('Controls-demo/AsyncTest/ColumnAsync/Delay/Nested/Random',
    [
       'Core/Control',
       'wml!Controls-demo/AsyncTest/ColumnAsync/Delay/Nested/Random',
+      'css!Controls-demo/AsyncTest/AsyncTestDemo',
    ], function (Control, template) {
       'use strict';
 
@@ -22,8 +23,6 @@ define('Controls-demo/AsyncTest/ColumnAsync/Delay/Nested/Random',
             this._forceUpdate();
          },
       });
-
-      delayRandomModule._styles = ['Controls-demo/AsyncTest/AsyncTestDemo'];
 
       return delayRandomModule;
    });

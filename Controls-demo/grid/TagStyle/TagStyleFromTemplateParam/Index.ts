@@ -3,6 +3,7 @@ import {Memory} from 'Types/source';
 import {CollectionItem} from 'Controls/display';
 
 import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
+import 'css!Controls-demo/Controls-demo';
 
 import * as template from 'wml!Controls-demo/grid/TagStyle/TagStyleFromTemplateParam/TagStyleFromTemplateParam';
 
@@ -73,6 +74,4 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
             };
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

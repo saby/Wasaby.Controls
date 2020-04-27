@@ -1,5 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {Memory} from 'Types/source';
+import 'css!Controls-demo/Controls-demo';
 
 import {Gadgets} from '../DemoHelpers/DataCatalog';
 
@@ -20,6 +21,4 @@ export default class extends Control<BaseIndexOptions> {
             data: Gadgets.getFlatData()
         });
     }
-
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

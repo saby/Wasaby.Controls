@@ -2,6 +2,7 @@ import Control = require('Core/Control')
 import template = require('wml!Controls-demo/List/Grid/resources/VirtualScroll/VirtualScroll')
 import {getGridData} from "./../Utils/listDataGenerator"
 import {Memory} from 'Types/source'
+import 'css!Controls-demo/List/Grid/resources/VirtualScroll/VirtualScroll'
 
 
 
@@ -39,8 +40,6 @@ class GridVirtualScroll extends Control {
     }
 
 
-
-    static _styles: string[] = ['Controls-demo/List/Grid/resources/VirtualScroll/VirtualScroll'];
 }
 
 let dataArray = getGridData(1000, {
