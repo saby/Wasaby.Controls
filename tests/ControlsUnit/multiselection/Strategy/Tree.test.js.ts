@@ -1,16 +1,37 @@
 import { assert } from 'chai';
-import { FlatSelectionStrategy } from 'Controls/multiselection';
+import { TreeSelectionStrategy } from 'Controls/multiselection';
+import { relation } from 'Types/entity';
+import { ListData } from 'ControlsUnit/ListData';
 import { RecordSet } from 'Types/collection';
 
 describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
-   const items = new RecordSet({
-      rawData: [
-         { id: 1 },
-         { id: 2 },
-         { id: 3 }
-      ]
+   const hierarchy = new relation.Hierarchy({
+      keyProperty: ListData.KEY_PROPERTY,
+      parentProperty: ListData.PARENT_PROPERTY,
+      nodeProperty: ListData.NODE_PROPERTY,
+      declaredChildrenProperty: ListData.HAS_CHILDREN_PROPERTY
    });
-   const strategy = new FlatSelectionStrategy({ items });
+
+   const strategy = new TreeSelectionStrategy({
+      nodesSourceControllers: ListData.getNodesSourceController(),
+      selectDescendants: false,
+      selectAncestors: false,
+      hierarchyRelation: hierarchy,
+      rootId: null,
+      items: ListData.getItems()
+   });
+
+   const strategyWithDescendantsAndAncestors = new TreeSelectionStrategy({
+      nodesSourceControllers: ListData.getNodesSourceController(),
+      selectDescendants: true,
+      selectAncestors: true,
+      hierarchyRelation: hierarchy,
+      rootId: null,
+      items: new RecordSet({
+         keyProperty: ListData.KEY_PROPERTY,
+         rawData: ListData.getItems()
+      });
+   });
 
    describe('select', () => {
       it('not selected', () => {

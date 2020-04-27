@@ -1,7 +1,6 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { isEqual } from 'Types/object';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
-import clone = require('Core/core-clone');
 import { Record } from 'Types/entity';
 import { CollectionItem } from 'Controls/display';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
@@ -11,6 +10,7 @@ import {
    ISelectionDifference,
    ISelectionModel
 } from './interface';
+import clone = require('Core/core-clone');
 
 const ALL_SELECTION_VALUE = null;
 
@@ -31,6 +31,10 @@ export class Controller {
          excluded: this._excludedKeys
       };
    }
+   private set _selection(selection: ISelection): void {
+      this._selectedKeys = selection.selected;
+      this._excludedKeys = selection.excluded;
+   }
 
    constructor(options: ISelectionControllerOptions) {
       this._model = options.model;
@@ -38,20 +42,23 @@ export class Controller {
       this._excludedKeys = options.excludedKeys.slice();
       this._strategy = options.strategy;
 
-      this._updateModel();
+      this._updateModel(this._selection);
    }
 
    toggleItem(key: TKey): ISelectionControllerResult {
-      const oldSelection = clone(this._selection);
       const status = this._getItemStatus(key);
+      let newSelection;
+
       if (status === true || status === null) {
-         this._unselect([key]);
+         newSelection = this._strategy.unselect(this._selection, [key]);
       } else {
-         this._select([key]);
+         newSelection = this._strategy.select(this._selection, [key]);
       }
 
-      this._updateModel();
-      return this._getResult(oldSelection, this._selection);
+      this._updateModel(newSelection);
+      const result = this._getResult(this._selection, newSelection);
+      this._selection = newSelection;
+      return result;
    }
 
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
@@ -68,38 +75,39 @@ export class Controller {
       if (selectionChanged) {
          this._selectedKeys = options.selectedKeys;
          this._excludedKeys = options.excludedKeys;
-         this._updateModel();
+         this._updateModel(this._selection);
       } else if (itemsChanged || modelChanged) {
-         this._updateModel();
+         this._updateModel(this._selection);
       }
       return this._getResult(oldSelection, this._selection);
    }
 
    selectAll(): ISelectionControllerResult {
-      const oldSelection = clone(this._selection);
-      this._strategy.selectAll(this._selection);
-      this._updateModel();
-      return this._getResult(oldSelection, this._selection);
+      const newSelection = this._strategy.selectAll(this._selection);
+      this._updateModel(newSelection);
+      const result = this._getResult(this._selection, newSelection);
+      this._selection = newSelection;
+      return result;
    }
 
    toggleAll(): ISelectionControllerResult {
-      const oldSelection = clone(this._selection);
-      this._strategy.toggleAll(this._selection, this._model.getHasMoreData());
+      const newSelection = this._strategy.toggleAll(this._selection, this._model.getHasMoreData());
 
-      this._updateModel();
-      return this._getResult(oldSelection, this._selection);
-   }
+      this._updateModel(newSelection);
+      const result = this._getResult(this._selection, newSelection);
+      this._selection = newSelection;
+      return result;   }
 
    unselectAll(): ISelectionControllerResult {
-      const oldSelection = clone(this._selection);
-      this._strategy.unselectAll(this._selection);
+      const newSelection = this._strategy.unselectAll(this._selection);
 
-      this._updateModel();
-      return this._getResult(oldSelection, this._selection);
-   }
+      this._updateModel(newSelection);
+      const result = this._getResult(this._selection, newSelection);
+      this._selection = newSelection;
+      return result;   }
 
    handleAddItems(addedItems: Record[]): ISelectionControllerResult {
-      this._updateModel();
+      this._updateModel(this._selection);
       return {
          selectedKeysDiff: { newKeys: [], added: [], removed: [] },
          excludedKeysDiff: { newKeys: [], added: [], removed: [] },
@@ -112,7 +120,7 @@ export class Controller {
       const oldSelection = clone(this._selection);
       this._remove(this._getItemsKeys(removedItems));
 
-      this._updateModel();
+      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -123,16 +131,8 @@ export class Controller {
          this._clearSelection();
       }
 
-      this._updateModel();
+      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
-   }
-
-   private _select(keys: TKeys): void {
-      this._strategy.select(this._selection, keys);
-   }
-
-   private _unselect(keys: TKeys): void {
-      this._strategy.unselect(this._selection, keys);
    }
 
    private _clearSelection(): void {
@@ -193,8 +193,8 @@ export class Controller {
       };
    }
 
-   private _updateModel(): void {
-      const selectionForModel = this._strategy.getSelectionForModel(this._selection);
+   private _updateModel(selection: ISelection): void {
+      const selectionForModel = this._strategy.getSelectionForModel(selection);
       this._model.setSelectedItems(selectionForModel.get(true), true);
       this._model.setSelectedItems(selectionForModel.get(false), false);
       this._model.setSelectedItems(selectionForModel.get(null), null);

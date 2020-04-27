@@ -1,4 +1,3 @@
-/*
 define([
    'Controls/operations',
    'Controls/treeGrid',
@@ -196,4 +195,3 @@ define([
       });
    });
 });
-*/

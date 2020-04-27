@@ -5,6 +5,7 @@ import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISe
 import { Record } from 'Types/entity';
 import { IFlatSelectionStrategyOptions} from '../interface';
 import ISelectionStrategy from './ISelectionStrategy';
+import clone = require('Core/core-clone');
 
 const ALL_SELECTION_VALUE = null;
 
@@ -26,50 +27,70 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       this._items = options.items;
    }
 
-   select(selection: ISelection, keys: TKeys): void {
-      if (this._isAllSelected(selection)) {
-         ArraySimpleValuesUtil.removeSubArray(selection.excluded, keys);
+   select(selection: ISelection, keys: TKeys): ISelection {
+      const cloneSelection = clone(selection);
+
+      if (this._isAllSelected(cloneSelection)) {
+         ArraySimpleValuesUtil.removeSubArray(cloneSelection.excluded, keys);
       } else {
-         ArraySimpleValuesUtil.addSubArray(selection.selected, keys);
+         ArraySimpleValuesUtil.addSubArray(cloneSelection.selected, keys);
       }
+
+      return cloneSelection;
    }
 
-   unselect(selection: ISelection, keys: TKeys): void {
-      if (this._isAllSelected(selection)) {
-         ArraySimpleValuesUtil.addSubArray(selection.excluded, keys);
+   unselect(selection: ISelection, keys: TKeys): ISelection {
+      const cloneSelection = clone(selection);
+
+      if (this._isAllSelected(cloneSelection)) {
+         ArraySimpleValuesUtil.addSubArray(cloneSelection.excluded, keys);
       } else {
-         ArraySimpleValuesUtil.removeSubArray(selection.selected, keys);
+         ArraySimpleValuesUtil.removeSubArray(cloneSelection.selected, keys);
       }
+
+      return cloneSelection;
    }
 
-   selectAll(selection: ISelection): void {
-      selection.selected.length = 0;
-      selection.excluded.length = 0;
-      selection.selected[0] = ALL_SELECTION_VALUE;
-      selection.excluded[0] = ALL_SELECTION_VALUE;
+   selectAll(selection: ISelection): ISelection {
+      const cloneSelection = clone(selection);
+
+      cloneSelection.selected.length = 0;
+      cloneSelection.excluded.length = 0;
+      cloneSelection.selected[0] = ALL_SELECTION_VALUE;
+      cloneSelection.excluded[0] = ALL_SELECTION_VALUE;
+
+      return cloneSelection;
    }
 
    /**
     * Remove selection from all items.
     */
-   unselectAll(selection: ISelection): void {
-      selection.selected.length = 0;
-      selection.excluded.length = 0;
+   unselectAll(selection: ISelection): ISelection {
+      const cloneSelection = clone(selection);
+
+      cloneSelection.selected.length = 0;
+      cloneSelection.excluded.length = 0;
+
+      return cloneSelection;
    }
 
    /**
     * Invert selection.
     */
-   toggleAll(selection: ISelection, hasMoreData: boolean): void {
-      if (this._isAllSelected(selection)) {
-         const excludedKeys: TKeys = selection.excluded.slice();
-         this.unselectAll(selection);
-         this.select(selection, excludedKeys);
+   toggleAll(selection: ISelection, hasMoreData: boolean): ISelection {
+      const cloneSelection = clone(selection);
+
+      if (this._isAllSelected(cloneSelection)) {
+         const excludedKeys: TKeys = cloneSelection.excluded.slice();
+         this.unselectAll(cloneSelection);
+         this.select(cloneSelection, excludedKeys);
       } else {
-         const selectedKeys: TKeys = selection.selected.slice();
-         this.selectAll(selection);
-         this.unselect(selection, selectedKeys);
+         const selectedKeys: TKeys = cloneSelection.selected.slice();
+         this.selectAll(cloneSelection);
+         this.unselect(cloneSelection, selectedKeys);
       }
+
+      return cloneSelection;
    }
 
    getSelectionForModel(selection: ISelection): Map<boolean|null, Record[]> {
