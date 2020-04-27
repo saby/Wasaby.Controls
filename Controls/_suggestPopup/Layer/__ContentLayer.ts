@@ -45,12 +45,11 @@ var _private = {
 
       var suggestBCR = boundingClientToJSON(container.getBoundingClientRect());
       var containerBCR =  boundingClientToJSON(targetContainer.getBoundingClientRect());
-      var dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
 
       /* because dropDownContainer can have height smaller, than window height */
       function fixSizesByDDContainer(size) {
-         size.top -= dropDownContainerBCR.top;
-         size.bottom -= dropDownContainerBCR.top;
+         size.top -= self._dropDownContainerBCR.top;
+         size.bottom -= self._dropDownContainerBCR.top;
          return size;
       }
 
@@ -67,6 +66,24 @@ var _private = {
    getDropDownContainerSize: function(container) {
       container = container || document.getElementsByClassName('controls-Popup__stack-target-container')[0] || document.body;
       return container.getBoundingClientRect();
+   },
+
+   getScrollContainerSize: function() {
+      var scrollContainer = document.getElementsByClassName('controls-Suggest__scrollContainer')[0];
+      return scrollContainer.getBoundingClientRect();
+   },
+
+   updateMaxHeight: function(self) {
+      var dropDownContainerBCR = _private.getDropDownContainerSize();
+      if (dropDownContainerBCR !== self._dropDownContainerBCR) {
+         self._dropDownContainerBCR = dropDownContainerBCR;
+
+         var scrollBCR = _private.getScrollContainerSize();
+         self._maxScrollHeight = dropDownContainerBCR.height - scrollBCR.top + 'px';
+
+         var suggestBCR = self._container.getBoundingClientRect();
+         self._maxContainerHeight = dropDownContainerBCR.height - suggestBCR.top + 'px';
+      }
    },
 
    updateHeight: function(self) {
@@ -110,10 +127,14 @@ var __ContentLayer = BaseLayer.extend({
 
    _template: template,
    _height: 'auto',
+   _maxScrollHeight: 'none',
+   _maxContainerHeight: 'none',
 
    _afterUpdate: function() {
       /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
        2) do not change orientation of suggest, if suggest already showed or data loading now */
+      _private.updateMaxHeight(this);
+
       if (this._options.showContent) {
          const needNotifyControlResizeEvent = this._controlResized;
          _private.updateHeight(this);
