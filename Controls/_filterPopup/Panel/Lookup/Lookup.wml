@@ -12,7 +12,6 @@
                   class="controls-FilterPanel__LookupSelector {{_options.lookupClassName}}"
                   on:selectedKeysChanged="_selectedKeysChanged()"
                   on:inputCompleted="_notifyHandler('inputCompleted')"
-                  on:valueChanged="_notifyHandler('valueChanged')"
                   on:itemsChanged="_notifyHandler('itemsChanged')"
                   on:textValueChanged="_textValueChanged()"
                   on:itemClick="_notifyHandler('itemClick')"

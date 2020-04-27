@@ -4,7 +4,6 @@ import {editing as constEditing} from 'Controls/Constants';
 import template = require('wml!Controls/_editableArea/View');
 import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
 import {delay} from 'Types/function';
-import 'css!theme?Controls/editableArea';
 import 'css!theme?Controls/list';
 
 'use strict';
@@ -106,19 +105,23 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _template: template,
    _buttonsTemplate: buttonsTemplate,
    _isEditing: false,
+   _isStartEditing: false,
 
    _beforeMount: function (newOptions) {
       this._isEditing = newOptions.editWhenFirstRendered;
       this._editObject = newOptions.editObject;
    },
-
+   /* В режиме редактирования создается клон, и ссылка остается на старый объект. Поэтому при изменении опций копируем ссылку
+    актуального объекта */
+   _beforeUpdate: function (newOptions) {
+      if (newOptions.editObject !== this._options.editObject) {
+         this._editObject = newOptions.editObject;
+      }
+   },
    _afterUpdate: function () {
-      if (this._beginEditTarget) {
-         // search closest input and focus
-         // Внутрь редактирования по месту могут положить контрол, который не содержит input например Controls.lookup:Input/Controls.Suggest:Input
-         const input = this._beginEditTarget.getElementsByTagName('input')[0];
-         input?.focus();
-         this._beginEditTarget = null;
+      if (this._isStartEditing) {
+         this.activate();
+         this._isStartEditing = false;
       }
    },
 
@@ -157,7 +160,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       });
       if (result !== constEditing.CANCEL) {
          this._isEditing = true;
-         this._beginEditTarget = event ? event.target.closest('.controls-EditableArea__editorWrapper') : null;
+         this._isStartEditing = true;
       }
    },
 
@@ -177,6 +180,8 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       });
    }
 });
+
+View._theme = ['Controls/list']
 
 View.getDefaultOptions = function () {
    return {

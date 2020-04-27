@@ -1,8 +1,6 @@
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_editableArea/Templates/Editors/Base/Base');
-import 'css!theme?Controls/editableArea';
-
-'use strict';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 /**
  * Базовый шаблон редактирования полей ввода. Имитирует стили {@link Controls/input:Text Text}.
@@ -17,27 +15,18 @@ import 'css!theme?Controls/editableArea';
  * @demo Controls-demo/EditableArea/EditableArea
  */
 
-/*
- * Base template for editing of input fields. Mimicks styles of {@link Controls/input:Text Text}.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FEditableArea%2FEditableArea">Demo</a>.
- *
- * @class Controls/_editableArea/Templates/Editors/Base
- * @extends Core/Control
- * @author Авраменко А.С.
- * @public
- * @see Controls/_editableArea/Templates/Editors/DateTime
- */
+class Base extends Control<IControlOptions> {
+   protected _template: TemplateFunction = template;
 
-var Base = Control.extend({
-   _template: template,
-
-   _prepareValueForEditor: function (value) {
+   _prepareValueForEditor(value: string | TemplateFunction): string | TemplateFunction {
       return value;
-   },
+   }
 
-   _editorValueChangeHandler: function (event, value) {
+   _editorValueChangeHandler(event: SyntheticEvent, value: string | TemplateFunction): void {
       this._notify('valueChanged', [value]);
    }
-});
+
+   static _theme: string[] = ['Controls/editableArea'];
+}
 
 export default Base;

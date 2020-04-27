@@ -1,249 +1,360 @@
-import RegExpUtil = require('Controls/Utils/RegExp');
+import {escapeSpecialChars} from 'Controls/Utils/RegExp';
+import {IFormatMaskChars} from 'Controls/_input/interface/IMask';
 
+/**
+ * Парные разделители открывающего и закрывающего типа.
+ * Открывающему разделителю на i-ой позиции из набора "OPEN_DELIMITERS" соответствует
+ * закрывающий на i-ой позиции из набора "CLOSE_DELIMITERS". Код построен на основе этой структуры.
+ */
+const OPEN_DELIMITERS: string = '({[⟨<\'"«„‘”';
+const CLOSE_DELIMITERS: string = ')}]⟩>\'"»“’”';
 
+function getPairDelimiters(): string {
+    let pairDelimiters: string = '';
 
-      var
-         _private = {
+    for (let i = 0; i < OPEN_DELIMITERS.length; i++) {
+        pairDelimiters += `${OPEN_DELIMITERS[i]}${CLOSE_DELIMITERS[i]}`;
+    }
 
-            // Парные разделители открывающего типа. Порядок должен совпадать с порядком в closeDelimiters.
-            openDelimiters: '({[⟨<\'"«„‘”',
+    return pairDelimiters;
+}
 
-            // Парные разделители закрывающего типа. Порядок должен совпадать с порядком в openDelimiters.
-            closeDelimiters: ')}]⟩>\'"»“’”',
+export const PAIR_DELIMITERS = getPairDelimiters();
 
-            maskCharType: {
-               1: 'end',
-               2: 'key',
-               4: 'pairingDelimiter',
-               5: 'open',
-               6: 'close',
-               7: 'singlingDelimiter'
-            },
+/**
+ * TODO: можно переделать на именованные группы в регулярных выражениях, когда появится поддержка
+ * во всех браузерах. https://learn.javascript.ru/regexp-groups#imenovannye-gruppy
+ */
+enum MAP_TYPES_MASK_CHAR {
+    key = 1,
+    quantifier = 2,
+    pairDelimiter = 3,
+    singleDelimiter = 4
+}
 
-            /**
-             * Получить ключи маски в виде строки.
-             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/_input/Mask#formatMaskChars}.
-             * @return {String} ключи маски.
-             */
-            getMaskKeysString: function(formatMaskChars) {
-               var maskKeys = '';
+/**
+ * Получить регулярное выражение для разбора маски.
+ * @remark
+ * Разбор маски предполагает определения её структуру(ключи, кванторы, одиночные и парные разделители).
+ * @return Регулярное выражение с массивом результатов соответствующим MAP_TYPES_MASK_CHAR.
+ *
+ * @example
+ * const mask: string = 'dx-xd';
+ * const parsingMask: RegExp = getMaskParsing('dx');
+ * parsingMask.exec(mask); // ['d', undefined, undefined, undefined, index: 0, input: 'dx-xd'];
+ * parsingMask.exec(mask); // ['x', undefined, undefined, undefined, index: 1, input: 'dx-xd'];
+ * parsingMask.exec(mask); // [undefined, undefined, undefined, '-', index: 2, input: 'dx-xd'];
+ * parsingMask.exec(mask); // ['x', undefined, undefined, undefined, index: 3, input: 'dx-xd'];
+ * parsingMask.exec(mask); // ['d', undefined, undefined, undefined, index: 4, input: 'dx-xd'];
+ * parsingMask.exec(mask); // null;
+ */
+export function getMaskParsing(maskKeys: string): RegExp {
+    const key = `([${maskKeys}])`;
+    const quantifier = '\\\\({.*?}|.)';
+    const pairDelimiter = `([${escapeSpecialChars(PAIR_DELIMITERS)}])`;
+    const singleDelimiter = '(.)';
+    return new RegExp(`${key}(?:${quantifier})?|${pairDelimiter}|${singleDelimiter}`, 'g');
+}
 
-               for (var maskKey in formatMaskChars) {
-                  maskKeys += maskKey;
-               }
+export function getMaskKeys(formatMaskChars: IFormatMaskChars): string {
+    const keys: string = Object.keys(formatMaskChars).join('');
+    return escapeSpecialChars(keys);
+}
 
-               return RegExpUtil.escapeSpecialChars(maskKeys);
-            },
+type TSubtype = 'open' | 'close';
 
-            /**
-             * Получить замену для ключа, как его значение.
-             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/_input/Mask#formatMaskChars}.
-             * @param {String} key ключ.
-             * @param {String} quantifier квантор.
-             * @return {String} строка замены ключа.
-             */
-            getReplacingKeyAsValue: function(formatMaskChars, key, quantifier) {
-               return (quantifier ? '(?:' + formatMaskChars[key] + quantifier + ')' : formatMaskChars[key]) + '?';
-            },
+export function delimiterSubtype(delimiter: string): TSubtype {
+    if (OPEN_DELIMITERS.indexOf(delimiter) !== -1) {
+        return 'open';
+    }
+    if (CLOSE_DELIMITERS.indexOf(delimiter) !== -1) {
+        return 'close';
+    }
 
-            /**
-             * Получить замену для ключа, как его значение или заменитель.
-             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/_input/Mask#formatMaskChars}.
-             * @param {String} replacer заменитель {@link Controls/_input/Mask#replacer}.
-             * @param {String} key ключ.
-             * @param {String} quantifier квантор.
-             * @return {String} строка замены ключа.
-             */
-            getReplacingKeyAsValueAndReplacer: function(formatMaskChars, replacer, key, quantifier) {
-               return '(?:' + formatMaskChars[key] + '|' + replacer + ')' + quantifier;
-            },
+    throw Error('Неверно указан разделитель. Он должен быть парным.');
+}
 
-            /**
-             * Получить функция замены ключа.
-             * @param {String} replacer заменитель.
-             * @return {Function} функция замены ключа.
-             */
-            getReplacingKeyFn: function(formatMaskChars, replacer) {
-               //Need to escape the replacer in case it is a special regular expression character
-               replacer = RegExpUtil.escapeSpecialChars(replacer);
+export function pairOfDelimiter(delimiter: string, subtype: TSubtype): string {
+    let containsPair: string;
+    let containsDelimiter: string;
 
-               return replacer ? _private.getReplacingKeyAsValueAndReplacer.bind(this, formatMaskChars, replacer) : _private.getReplacingKeyAsValue.bind(this, formatMaskChars);
-            },
+    switch (subtype) {
+        case 'open':
+            containsPair = CLOSE_DELIMITERS;
+            containsDelimiter = OPEN_DELIMITERS;
+            break;
+        case 'close':
+            containsPair = OPEN_DELIMITERS;
+            containsDelimiter = CLOSE_DELIMITERS;
+            break;
+    }
 
-            /**
-             * Получить регулярное выражение для поиска кванторов, специальных конструкций, ключей, парных разделителей,
-             * одиночных разделителей и конца маски(;).
-             * @param {String} maskKeys ключи маски.
-             * @param {String} openDelimiters парные разделители открывающего типа.
-             * @param {String} closeDelimiters парные разделители закрывающего типа.
-             * @return {RegExp} регулярное выражение.
-             */
-            getRegExpSearchingMaskChar: function(maskKeys, openDelimiters, closeDelimiters) {
-               var expression = '';
+    const position: number = containsDelimiter.indexOf(delimiter);
+    if (position !== -1) {
+        return containsPair[position];
+    }
 
-               // Конец маски
-               expression += '(;$)';
+    throw Error('Неверно указан разделитель или его подтип.');
+}
 
-               // Ключи
-               expression += '|([' + maskKeys + '])';
+interface ICharData {
+    value: string;
+    type: string;
+}
 
-               // Кванторы +, *, ?, {n[, m]}
-               expression += '(?:\\\\({.*?}|.))?';
+interface IKeyData extends ICharData {
+    type: 'key';
+    quantifier: string;
+}
 
-               // Парные разделители
-               expression += '|(([' + RegExpUtil.escapeSpecialChars(openDelimiters) + '])|([' + RegExpUtil.escapeSpecialChars(closeDelimiters) + ']))';
+interface IPairDelimiterData extends ICharData {
+    type: 'pairDelimiter';
+    pair: string;
+    subtype: TSubtype;
+}
 
-               // Одиночные разделители
-               expression += '|(.)';
+interface ISingleDelimiterData extends ICharData {
+    type: 'singleDelimiter';
+}
 
-               return new RegExp(expression, 'g');
-            },
+type TMaskCharData = IKeyData | IPairDelimiterData | ISingleDelimiterData;
 
-            /**
-             * Получить данные символа маски.
-             * @param execSearchingGroupChar результат exec.
-             * @return {{value: String значение, type: String тип}}
-             */
-            getMaskCharData: function(execSearchingGroupChar) {
-               var maskCharData = {};
+/**
+ * @param exec Массив результатов после разбора символа маски.
+ */
+export function getCharData(exec: RegExpExecArray): TMaskCharData {
+    const keyValue: string = exec[MAP_TYPES_MASK_CHAR.key];
+    const quantifierValue: string = exec[MAP_TYPES_MASK_CHAR.quantifier] || '';
 
-               for (var i = 1; i < execSearchingGroupChar.length; i++) {
-                  if (execSearchingGroupChar[i]) {
-                     if ('type' in maskCharData) {
-                        maskCharData.subtype = _private.maskCharType[i];
+    if (keyValue) {
+        return {
+            type: 'key',
+            value: keyValue,
+            quantifier: quantifierValue
+        };
+    }
 
-                        return maskCharData;
-                     } else {
-                        maskCharData.value = execSearchingGroupChar[i];
-                        maskCharData.type = _private.maskCharType[i];
+    const pairDelimiterValue = exec[MAP_TYPES_MASK_CHAR.pairDelimiter];
 
-                        if (maskCharData.type === 'key') {
-                           maskCharData.quantifier = execSearchingGroupChar[i + 1] || '';
+    if (pairDelimiterValue) {
+        const subtype: TSubtype = delimiterSubtype(pairDelimiterValue);
+        return {
+            type: 'pairDelimiter',
+            value: pairDelimiterValue,
+            pair: pairOfDelimiter(pairDelimiterValue, subtype),
+            subtype
+        };
+    }
 
-                           return maskCharData;
-                        }
+    const singleDelimiterValue = exec[MAP_TYPES_MASK_CHAR.singleDelimiter];
 
-                        if (maskCharData.type !== 'pairingDelimiter') {
-                           return maskCharData;
-                        }
-                     }
-                  }
-               }
-            },
+    if (singleDelimiterValue) {
+        return {
+            type: 'singleDelimiter',
+            value: singleDelimiterValue
+        };
+    }
 
-            /**
-             * Получить данные о маске.
-             * @param mask
-             * @param searchingGroupChar
-             * @param getReplacingKey
-             * @return {{searchingGroups: String регулрное выражение для поиска групп, delimiterGroups: Object.<String> значение групп разделителей}}
-             */
-            getFormat: function(mask, searchingGroupChar, getReplacingKey) {
-               var
-                  keysGroup = '',
-                  searchingGroups = '^',
-                  singlingDelimitersGroup = '',
-                  positionGroup = 0,
-                  groupInPairingDelimiter = 0,
-                  delimiterGroups = {},
-                  execSearchingGroupChar, maskCharData;
+    throw Error('Неверный массив результатов после разбора символа маски.');
+}
 
-               mask += ';';
+export function getReplacingKeyAsValue(formatMaskChars: IFormatMaskChars, key: string, quantifier: string): string {
+    const keyValue: string = formatMaskChars[key];
 
-               execSearchingGroupChar = searchingGroupChar.exec(mask);
-               while (execSearchingGroupChar) {
-                  maskCharData = _private.getMaskCharData(execSearchingGroupChar);
+    return `${keyValue}${quantifier}`;
+}
 
-                  // Конец группы ключей.
-                  if (keysGroup && (maskCharData.type !== 'key' || groupInPairingDelimiter > 0)) {
-                     keysGroup = '';
-                     searchingGroups += ')';
-                     positionGroup++;
-                  }
+export function getReplacingKeyAsValueOrReplacer(formatMaskChars: IFormatMaskChars, replacer: string,
+                                                 key: string, quantifier: string): string {
+    const keyValue: string = formatMaskChars[key];
 
-                  // Начало группы ключей или группы разделителей.
-                  if (
-                     (maskCharData.type === 'key' && !keysGroup) ||
-                     (maskCharData.type === 'singlingDelimiter' && !singlingDelimitersGroup)) {
-                     searchingGroups += '(';
-                  }
+    return `(?:${keyValue}|${replacer})${quantifier}`;
+}
 
-                  // Найденый символ ключ.
-                  if (maskCharData.type === 'key') {
-                     searchingGroups += getReplacingKey(maskCharData.value, maskCharData.quantifier);
-                     keysGroup += maskCharData.value;
-                  }
+type TReplaceKey = (key: string, quantifier?: string) => string;
 
-                  // Найденый символ парный разделитель.
-                  if (maskCharData.type === 'pairingDelimiter') {
-                     delimiterGroups[positionGroup] = {
-                        type: 'pair',
-                        value: maskCharData.value,
-                        subtype: maskCharData.subtype
-                     };
+export function getReplacingKeyFn(formatMaskChars: IFormatMaskChars, replacer: string): TReplaceKey {
+    if (replacer) {
+        return getReplacingKeyAsValueOrReplacer.bind(this, formatMaskChars, replacer);
+    }
 
-                     if (maskCharData.subtype === 'open') {
-                        delimiterGroups[positionGroup].pair = _private.closeDelimiters[_private.openDelimiters.indexOf(maskCharData.value)];
-                        groupInPairingDelimiter++;
-                     } else {
-                        delimiterGroups[positionGroup].pair = _private.openDelimiters[_private.closeDelimiters.indexOf(maskCharData.value)];
-                        groupInPairingDelimiter--;
-                     }
+    return getReplacingKeyAsValue.bind(this, formatMaskChars);
+}
 
-                     searchingGroups += '(' + RegExpUtil.escapeSpecialChars(maskCharData.value) + ')?';
-                     positionGroup++;
-                  }
+export interface IDelimiterGroups {
+    [position: number]: ISingleDelimiterData | IPairDelimiterData;
+}
 
-                  // Found single delimiter character. We do not group single separators characters
-                  // that follow each other. Everywhere we work by inserting and deleting one character at a time.
-                  if (maskCharData.type === 'singlingDelimiter') {
-                     searchingGroups += RegExpUtil.escapeSpecialChars(maskCharData.value);
-                     singlingDelimitersGroup += maskCharData.value;
-                     delimiterGroups[positionGroup] = {
-                        value: singlingDelimitersGroup,
-                        type: 'single'
-                     };
-                     singlingDelimitersGroup = '';
-                     searchingGroups += ')?';
-                     positionGroup++;
-                  }
+export interface IFormat {
+    searchingGroups: string;
+    delimiterGroups: IDelimiterGroups;
+}
 
-                  //while loop
-                  execSearchingGroupChar = searchingGroupChar.exec(mask);
-               }
+interface IGroup {
+    keys: string;
+    searching: string;
+    position: number;
+}
 
-               searchingGroups += '$';
+interface IResultValidate {
+    valid: boolean;
+    unclosedDelimiters: string;
+}
 
-               return {
-                  searchingGroups: searchingGroups,
-                  delimiterGroups: delimiterGroups
-               };
+function isStartOfKeysGroup(data: TMaskCharData, group: IGroup): boolean {
+    return data.type === 'key' && group.keys === '';
+}
+
+function isEndOfKeysGroup(data: TMaskCharData, group: IGroup): boolean {
+    return data.type !== 'key' && group.keys !== '';
+}
+
+function validatePairDelimiters(charData: IPairDelimiterData, unclosedDelimiters: string): IResultValidate {
+    switch (charData.subtype) {
+        case 'open':
+            return {
+                valid: true,
+                unclosedDelimiters: `${unclosedDelimiters}${charData.value}`
+            };
+        case 'close':
+            const lastDelimiter = unclosedDelimiters[unclosedDelimiters.length - 1];
+
+            if (lastDelimiter === charData.pair) {
+                return {
+                    valid: true,
+                    unclosedDelimiters: unclosedDelimiters.slice(0, -1)
+                };
             }
-         },
-         FormatBuilder = {
-            pairingDelimiters: '(){}[]⟨⟩<>\'\'""«»„“‘’””',
+            break;
+    }
 
-            /**
-             * Получить данные о маске.
-             * @param {String} mask маска {@link Controls/_input/Mask#mask}.
-             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/_input/Mask#formatMaskChars}.
-             * @param {String} replacer заменитель {@link Controls/_input/Mask#replacer}.
-             * @return {{searchingGroups: String регулрное выражение для поиска групп, delimiterGroups: Object.<String> значение групп разделителей}}
-             */
-            getFormat: function(mask, formatMaskChars, replacer) {
-               return _private.getFormat(
-                  mask,
-                  _private.getRegExpSearchingMaskChar(
-                     _private.getMaskKeysString(formatMaskChars),
-                     _private.openDelimiters,
-                     _private.closeDelimiters
-                  ),
-                  _private.getReplacingKeyFn(formatMaskChars, replacer)
-               );
+    return {
+        valid: false,
+        unclosedDelimiters
+    };
+}
+
+/**
+ * Модифицирует маску в формате регулярного выражения под работу с пустым символом замены.
+ * @remark
+ * Вместо ключа может быть символ заменяющий его. Когда он не пустой, то регулярное выражение преобразуется
+ * в (<key>|replacer) (1). А когда он пустой такая конструкция не подойдет. Причина в том, что порядок
+ * символов должен сохраняться. Проще говоря, указав маску dl-ld, значение 12 не должно ей соответствовать, потому что
+ * после цифры должны быть 2 буквы. При использовании конструкция (1) символы l при поиске заменяться на пустые, и
+ * значение пройдет проверку на соответствие маске. Решение данной проблемы это использовать конструкцию
+ * <part 1><key>...<part n-1><key><part n>? => <part 1><key>...<part n-1><key><part n>?|<part 1><key>...<key><part n-1>|
+ * <part 1><key>...<part n-2><key>|...|<part 1><key>|<part 1> (2). Это означает дублировать часть маски без последнего ключа с
+ * использованием |(или) до тех пор, пока есть ключи.
+ * Конструкция (2) позволяет сохранить порядок символов.
+ * @param searching маска в формате регулярного выражения.
+ * @param keyPositions массив с позицией ключей.
+ * @return маска в формате регулярного выражения с поддержкой работы пустого символа замены.
+ */
+function processingEmptyReplacer(searching: string, keyPositions: number[]): string {
+    return keyPositions.reduceRight((acc: string, keyPosition: number): string => {
+        let part: string = searching.substring(0, keyPosition);
+
+        /**
+         * Если ключ на позиции ${keyPosition} является первым в группе, то
+         * после его удаления останет символ открытия группы. От него нужно избавиться, чтобы
+         * регулярное выражение было валидным. Иначе нужно закрыть группу, потому что символ
+         * закрытия группы стоит после ключа, а всё после ключа было удалено.
+         */
+        const lastChar: string = part[part.length - 1];
+        if (lastChar === '(') {
+            part = part.slice(0, -1);
+        } else {
+            part += ')';
+        }
+
+        return `${acc}|${part}`;
+    }, searching);
+}
+
+function exactMatch(searching: string): string {
+    return `^(?:${searching})$`;
+}
+
+export function getFormat(mask: string, formatMaskChars: IFormatMaskChars, replacer: string): IFormat {
+    const maskKeys: string = getMaskKeys(formatMaskChars);
+    const parsingMask: RegExp = getMaskParsing(maskKeys);
+    const escapeReplacer: string = escapeSpecialChars(replacer);
+    const replaceKey: TReplaceKey = getReplacingKeyFn(formatMaskChars, escapeReplacer);
+    const delimiterGroups: IDelimiterGroups = {};
+    const keyPositions: number[] = [];
+    const group: IGroup = {
+        keys: '',
+        searching: '',
+        position: 0
+    };
+
+    let iteration: number = 1;
+    const maxIteration: number = 1000;
+    let unclosedDelimiters: string = '';
+    let execParseMask: RegExpExecArray = parsingMask.exec(mask);
+    /**
+     * Группы ключей и разделители включаются в массив результатов с помощью конструкции (x).
+     * Подробнее https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/RegExp#quantifiers
+     */
+    while (execParseMask) {
+        if (iteration > maxIteration) {
+            throw RangeError('Превышено допустимое количество итераций.');
+        }
+        const charData = getCharData(execParseMask);
+
+        if (isStartOfKeysGroup(charData, group)) {
+            group.searching += '(';
+        }
+
+        if (isEndOfKeysGroup(charData, group)) {
+            group.keys = '';
+            group.searching += ')';
+            group.position++;
+        }
+
+        /**
+         * Валидируем парные разделители на предмет соответствия открых и закрытых.
+         */
+        if (charData.type === 'pairDelimiter') {
+            const resultValidate: IResultValidate = validatePairDelimiters(charData, unclosedDelimiters);
+
+            if (!resultValidate.valid) {
+                throw Error('Неверный формат парных разделителей. Открытые и закрытые не соответствуют друг другу.');
             }
-         };
+            unclosedDelimiters = resultValidate.unclosedDelimiters;
+        }
 
-      FormatBuilder._private = _private;
+        if (charData.type === 'key') {
+            group.keys += charData.value;
+            keyPositions.push(group.searching.length);
+            group.searching += replaceKey(charData.value, charData.quantifier);
+        }
 
-      export = FormatBuilder;
+        if (charData.type === 'singleDelimiter' || charData.type === 'pairDelimiter') {
+            group.searching += `(${escapeSpecialChars(charData.value)}?)`;
+            delimiterGroups[group.position] = charData;
+            group.position++;
+        }
 
+        iteration++;
+        execParseMask = parsingMask.exec(mask);
+    }
+
+    /**
+     * Группа ключей закрывается в цикле после обработки символа отличного от ключа.
+     * Если последний символ в маске будет ключом, то из-за того, что после него ничего нет,
+     * группа не будет закрыта после выхода из цикла.
+     */
+    if (group.keys) {
+        group.searching += ')';
+    }
+
+    if (replacer === '') {
+        group.searching = processingEmptyReplacer(group.searching, keyPositions);
+    }
+
+    return {
+        searchingGroups: exactMatch(group.searching),
+        delimiterGroups
+    };
+}

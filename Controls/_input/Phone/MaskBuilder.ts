@@ -1,6 +1,6 @@
 
 
-      
+
 
       export = {
          getMask: function(value) {
@@ -42,7 +42,7 @@
                }
             }
 
-            return mask || '+d\\*';
+            return mask || '+\\?d\\*';
          }
       };
-   
+

@@ -1,0 +1,9 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Controls.toggle:CheckboxGroup attr:class="ControlsDemo-CheckboxGroup__item_width"
+                                       source="{{_source}}"
+                                       direction="horizontal"
+                                       bind:selectedKeys="_selectedKeys"
+                                       keyProperty="key"/>
+    </div>
+</div>
