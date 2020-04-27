@@ -2403,6 +2403,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (!this._itemActionsController) {
             this._itemActionsController = new ItemActionsController();
         }
+        const editingConfig = this._listViewModel.getEditingConfig();
         this._itemActionsController.update({
             collection: this._listViewModel,
             itemActions: this._options.itemActions,
@@ -2412,7 +2413,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             style: this._options.style,
             actionAlignment: this._options.actionAlignment,
             actionCaptionPosition: this._options.actionCaptionPosition,
-            itemActionsClass: this._options.itemActionsClass
+            itemActionsClass: this._options.itemActionsClass,
+            iconSize: editingConfig ? 's' : 'm',
+            editingToolbarVisibility: editingConfig?.toolbarVisibility
         });
     },
 

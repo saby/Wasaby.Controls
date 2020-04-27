@@ -611,6 +611,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         if (!this._itemActionsController) {
             this._itemActionsController = new ItemActionsController();
         }
+        const editingConfig = listModel.getEditingConfig();
         this._itemActionsController.update({
             collection: listModel,
             itemActions,
@@ -618,7 +619,9 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             style: 'default',
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
-            itemActionsClass: 'controls-Menu__itemActions_position_rightCenter_theme-' + options.theme
+            itemActionsClass: 'controls-Menu__itemActions_position_rightCenter_theme-' + options.theme,
+            iconSize: editingConfig ? 's' : 'm',
+            editingToolbarVisibility: editingConfig?.toolbarVisibility
         });
     }
 

@@ -37,6 +37,11 @@ export interface IItemActionsControllerOptions {
      */
     itemActions: IItemAction[];
     /**
+     * Размер иконок операций с записью
+     * варианты 's'|'m'
+     */
+    iconSize: string;
+    /**
      * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
      */
     itemActionsProperty?: string;
@@ -44,6 +49,10 @@ export interface IItemActionsControllerOptions {
      * Callback для определения видимости операции
      */
     visibilityCallback?: TItemActionVisibilityCallback;
+    /**
+     * Должна ли быть видна панель с кнопками для редактирования
+     */
+    editingToolbarVisibility?: boolean;
     itemActionsPosition?: string;
     style?: string;
     itemActionsClass?: string;
@@ -313,11 +322,10 @@ export class Controller {
      * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
      */
     private _calculateActionsTemplateConfig(options: IItemActionsTemplateOptions): void {
-        const editingConfig = this._collection.getEditingConfig();
         this._collection.setActionsTemplateConfig({
-            toolbarVisibility: editingConfig?.toolbarVisibility,
+            toolbarVisibility: options.editingToolbarVisibility,
             style: options.style,
-            size: editingConfig ? 's' : 'm',
+            size: options.iconSize,
             itemActionsPosition: options.itemActionsPosition,
             actionAlignment: options.actionAlignment,
             actionCaptionPosition: options.actionCaptionPosition,

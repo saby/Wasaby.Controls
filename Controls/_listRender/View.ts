@@ -353,6 +353,7 @@ export default class View extends Control<IViewOptions> {
         if (!this._itemActionsController) {
             this._itemActionsController = new ItemActionsController();
         }
+        const editingConfig = this._collection.getEditingConfig();
         this._itemActionsController.update({
             collection: this._collection,
             itemActions: this._options.itemActions,
@@ -362,7 +363,9 @@ export default class View extends Control<IViewOptions> {
             style: this._options.style,
             actionAlignment: this._options.actionAlignment,
             actionCaptionPosition: this._options.actionCaptionPosition,
-            itemActionsClass: this._options.itemActionsClass
+            itemActionsClass: this._options.itemActionsClass,
+            iconSize: editingConfig ? 's' : 'm',
+            editingToolbarVisibility: editingConfig?.toolbarVisibility
         });
     }
 
