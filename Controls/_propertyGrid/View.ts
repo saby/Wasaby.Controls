@@ -137,6 +137,8 @@ export default class PropertyGridView extends Control<IPropertyGridViewOptions> 
             const isExpandClick = clickEvent?.target.closest('.controls-PropertyGrid__groupExpander');
             if (isExpandClick) {
                 displayItem.toggleExpanded();
+                this._collapsedGroups[displayItem.getContents()] = true;
+                this._listModel.setFilter(this._displayFilter.bind(this));
             }
         }
     }
