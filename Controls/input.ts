@@ -25,6 +25,7 @@
  * @includes InputCallback Controls/input/InputCallback
  * @includes IFieldData Controls/_input/interface/IFieldData
  * @includes ICallbackData Controls/_input/interface/ICallbackData
+ * @includes isMaskFormatValid Controls/_input/Mask/isFormatValid#isFormatValid
  *
  * @public
  * @author Крайнов Д.О.
@@ -96,6 +97,7 @@ export {default as INumberLength, INumberLengthOptions} from 'Controls/_input/in
 export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
 export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocusController';
 export {default as AdapterMask} from 'Controls/_input/Adapter/Mask';
+export {default as isMaskFormatValid} from 'Controls/_input/Mask/isFormatValid';
 
 /**
  * ПРИВАТНЫЕ МОДУЛИ.
