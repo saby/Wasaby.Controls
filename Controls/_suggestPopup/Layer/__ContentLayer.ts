@@ -45,11 +45,12 @@ var _private = {
 
       var suggestBCR = boundingClientToJSON(container.getBoundingClientRect());
       var containerBCR =  boundingClientToJSON(targetContainer.getBoundingClientRect());
+      var dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
 
       /* because dropDownContainer can have height smaller, than window height */
       function fixSizesByDDContainer(size) {
-         size.top -= self._dropDownContainerBCR.top;
-         size.bottom -= self._dropDownContainerBCR.top;
+         size.top -= dropDownContainerBCR.top;
+         size.bottom -= dropDownContainerBCR.top;
          return size;
       }
 
