@@ -8,7 +8,6 @@ import Deferred = require('Core/Deferred');
 import randomId = require('Core/helpers/Number/randomId');
 import library = require('Core/library');
 import isVDOMTemplate = require('Controls/Utils/isVDOMTemplate');
-
 function loadTemplate(name: string) {
    const libraryInfo = library.parse(name);
    let template = require(libraryInfo.name);
@@ -19,12 +18,13 @@ function loadTemplate(name: string) {
 
    return template;
 }
-
+// Minimum popup indentation from the right edge
+const MINIMAL_PANEL_DISTANCE = 100;
 /**
  * Слой совместимости для базового опенера для открытия старых шаблонов
  */
 const BaseOpener = {
-   _prepareConfigForOldTemplate(cfg, templateClass) {
+   _prepareConfigForOldTemplate(cfg, templateClass, rightOffset: number = 0) {
       let
          templateOptions = this._getTemplateOptions(templateClass),
          parentContext;
@@ -159,10 +159,14 @@ const BaseOpener = {
       cfg.templateOptions.maxHeight = cfg.maxHeight;
       cfg.templateOptions.width = cfg.width;
       cfg.templateOptions.height = cfg.height;
-
-      if (cfg.canMaximize && cfg.maxWidth && cfg.minWidth && cfg.maxWidth > cfg.minWidth) {
+      let isMaximaze = true;
+      // если не хватает места, не показываем кнопку расширения/сужения панели
+      if (cfg.templateOptions.type === 'stack') {
+         isMaximaze = (cfg.minWidth + MINIMAL_PANEL_DISTANCE + rightOffset) < document?.body.clientWidth;
+      }
+      if (isMaximaze && cfg.canMaximize && cfg.maxWidth && cfg.minWidth && cfg.maxWidth > cfg.minWidth) {
          cfg.minimizedWidth = cfg.minWidth;
-         cfg.minWidth += 100; // minWidth и minimizedWidth должны различаться.
+         cfg.minWidth += MINIMAL_PANEL_DISTANCE; // minWidth и minimizedWidth должны различаться.
          cfg.templateOptions.canMaximize = true;
          cfg.templateOptions.templateOptions.isPanelMaximized = cfg.maximized;
       }
