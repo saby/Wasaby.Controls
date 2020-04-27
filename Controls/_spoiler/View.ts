@@ -21,8 +21,8 @@ import Util from './Util';
  * @demo Controls-demo/Spoiler/View/HeaderContentTemplate/Index
  */
 /**
- * @name Controls/_spoiler/IViewOptions#expandedChangeCallback
- * @cfg {Function} Функция обратного вызова для обработки события expandedChanged, с помощью которой меняется состояние expanded
+ * Функция обратного вызова для обработки события expandedChanged, с помощью которой меняется состояние expanded.
+ * @function Controls/_spoiler/IViewOptions#expandedChangedCallback
  */
 
 

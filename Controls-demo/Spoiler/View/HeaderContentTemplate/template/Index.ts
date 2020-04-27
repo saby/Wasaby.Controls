@@ -5,10 +5,10 @@ import 'css!Controls-demo/Controls-demo';
 class Template extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
     static _theme: string[] = ['Controls/Classes'];
-    protected _expandedChangeCallback: Function;
+    protected _expandedChangecCallback: Function;
 
     protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
-        this._expandedChangeCallback = options.expandedChangeCallback;
+        this._expandedChangedCallback = options.expandedChangedCallback;
     }
 }
 export default Template;
