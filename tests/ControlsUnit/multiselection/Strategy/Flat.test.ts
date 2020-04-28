@@ -1,6 +1,9 @@
+// tslint:disable:no-magic-numbers
+
 import { assert } from 'chai';
 import { FlatSelectionStrategy } from 'Controls/multiselection';
 import { RecordSet } from 'Types/collection';
+import { Record } from 'Types/entity';
 
 describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
    const items = new RecordSet({
@@ -38,7 +41,7 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
       it('selected all', () => {
          let selection = { selected: [null], excluded: [null] };
-         selection = strategy.select(selection, [2]);
+         selection = strategy.unselect(selection, [2]);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null, 2]);
       });
@@ -112,23 +115,33 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
          const res = strategy.getSelectionForModel(selection);
          assert.deepEqual(res.get(true), []);
          assert.deepEqual(res.get(null), []);
-         assert.deepEqual(res.get(false), [ { id: 1 }, { id: 2 }, { id: 3 } ]);
+         assert.deepEqual(res.get(false), [
+            new Record({ rawData: [ { id: 1 } ] }),
+            new Record({ rawData: [ { id: 2 } ] }),
+            new Record({ rawData: [ { id: 3 } ] })
+         ]);
       });
 
       it('selected one', () => {
          const selection = { selected: [1], excluded: [] };
          const res = strategy.getSelectionForModel(selection);
-         assert.deepEqual(res.get(true), [ { id: 1 } ]);
+         assert.deepEqual(res.get(true), [ new Record({ rawData: [ { id: 1 } ] }) ]);
          assert.deepEqual(res.get(null), []);
-         assert.deepEqual(res.get(false), [ { id: 2 }, { id: 3 } ]);
+         assert.deepEqual(res.get(false), [
+            new Record({ rawData: [ { id: 2 } ] }),
+            new Record({ rawData: [ { id: 3 } ] })
+         ]);
       });
 
       it('selected all, but one', () => {
          const selection = { selected: [null], excluded: [null, 2] };
          const res = strategy.getSelectionForModel(selection);
-         assert.deepEqual(res.get(true), [{ id: 1 }, { id: 3 } ]);
+         assert.deepEqual(res.get(true), [
+            new Record({ rawData: [ { id: 1 } ] }),
+            new Record({ rawData: [ { id: 3 } ] })
+         ]);
          assert.deepEqual(res.get(null), []);
-         assert.deepEqual(res.get(false), [ { id: 2 } ]);
+         assert.deepEqual(res.get(false), [ new Record({ rawData: [ { id: 1 } ] }) ]);
       });
    });
 

@@ -116,7 +116,7 @@ export class Controller {
       };
    }
 
-   handleRemoveItems(removedItems: Record[]): ISelectionControllerResult {
+   handleRemoveItems(removedItems: Array<CollectionItem<Record>>): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._remove(this._getItemsKeys(removedItems));
 

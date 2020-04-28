@@ -78,16 +78,16 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
     * Invert selection.
     */
    toggleAll(selection: ISelection, hasMoreData: boolean): ISelection {
-      const cloneSelection = clone(selection);
+      let cloneSelection = clone(selection);
 
       if (this._isAllSelected(cloneSelection)) {
          const excludedKeys: TKeys = cloneSelection.excluded.slice();
-         this.unselectAll(cloneSelection);
-         this.select(cloneSelection, excludedKeys);
+         cloneSelection = this.unselectAll(cloneSelection);
+         cloneSelection = this.select(cloneSelection, excludedKeys);
       } else {
          const selectedKeys: TKeys = cloneSelection.selected.slice();
-         this.selectAll(cloneSelection);
-         this.unselect(cloneSelection, selectedKeys);
+         cloneSelection = this.selectAll(cloneSelection);
+         cloneSelection = this.unselect(cloneSelection, selectedKeys);
       }
 
       return cloneSelection;

@@ -1,9 +1,8 @@
-// tslint:disable:no-magic-numbers
 // tslint:disable:no-empty
+// tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
 import { SelectionController } from 'Controls/multiselection';
-import { Record } from 'Types/entity';
 
 describe('Controls/_multiselection/Controller', () => {
    const model = {
@@ -29,7 +28,11 @@ describe('Controls/_multiselection/Controller', () => {
       toggleAll(): void {},
       unselectAll(): void {},
       getCount(): void {},
-      getSelectionForModel(): void {}
+      getSelectionForModel(): object {
+         return {
+            get(): object { return {}; }
+         };
+      }
    };
 
    let controller;
@@ -80,7 +83,7 @@ describe('Controls/_multiselection/Controller', () => {
       });
 
       it('items changed', () => {
-         model.items = [1, 2, 3];
+         model.items = [1];
          controller.update({
             model,
             selectedKeys: [],
@@ -122,17 +125,17 @@ describe('Controls/_multiselection/Controller', () => {
    });
 
    it('handleAddItems', () => {
-      controller.handleAddItems([ new Record({ rawData: { id: 1 } }) ]);
+      controller.handleAddItems([]);
       assert.equal(model.flag, true);
    });
 
    it('handleRemoveItems', () => {
-      controller.handleRemoveItems([ new Record({ rawData: { id: 2 } }) ]);
+      controller.handleRemoveItems([]);
       assert.equal(model.flag, true);
    });
 
    it('handleReset', () => {
-      controller.handleReset([ new Record() ]);
+      controller.handleReset([]);
       assert.equal(model.flag, true);
    });
 });
