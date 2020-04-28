@@ -33,14 +33,22 @@ export = {
         return itemMaxWidth;
     },
 
+
     /**
      * В IE flex-end не срабатывает с overflow:hidden, поэтому показываем коллекцию наоборот,
      * чтобы поле в однострочном режиме могло сокращаться при ограниченной ширине
-     * @param {number} index
-     * @param {number} visibleItemsCount
+     * @param {number} index идекс элемента
+     * @param {number} visibleItemsCount количество видимых записей
+     * @param {string} itemsLayout режим отображения коллекции
+     * @param {boolean} isStaticCounter признак для определения не фиксированного счетчика
      * @returns {number}
      */
-    getItemOrder(index: number, visibleItemsCount: number): number {
-        return detection.isIE && this._options.itemsLayout === 'oneRow' ? visibleItemsCount - index : index;
+    getItemOrder(index: number, visibleItemsCount: number, itemsLayout: string, isStaticCounter?: boolean): number {
+        const collectionReversed = detection.isIE && itemsLayout === 'oneRow';
+        if (collectionReversed) {
+            // не абсолютный счетчик должен иметь максимальный order, т.к коллекция перевернута
+            return isStaticCounter ? visibleItemsCount + 1 : visibleItemsCount - index;
+        }
+        return index;
     }
 };

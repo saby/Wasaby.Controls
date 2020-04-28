@@ -13,6 +13,7 @@
          <ws:targetPoint vertical="bottom" horizontal="left"/>
       </Controls.popup:Sticky>
       <span name="infoBoxLink"
+            attr:style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout, !(_options.readOnly && !_options.maxVisibleItems))}}"
             attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed_theme-' + _options.theme}} {{_options.counterClassName}}"
             on:click="_openInfoBox()">
          <ws:partial template="{{_counterTemplate}}"
@@ -22,7 +23,7 @@
    </ws:if>
    <ws:for data="index, item in _visibleItems">
       <ws:partial
-              attr:style="order: {{_getItemOrder(index, _visibleItems.length)}};
+              attr:style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout)}};
                           max-width: {{_getItemMaxWidth(index, _options.items.getCount(), _options.maxVisibleItems, _options.itemsLayout, _counterWidth)}}"
               attr:class="js-controls-SelectedCollection__item controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
               template="{{_options.itemTemplate}}"
