@@ -1,43 +1,37 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container controlsDemo__mb3">
-   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth400">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth350">
       <div class="controls-text-label_theme-{{_options.theme}}">Постраничная навигация</div>
       <Controls.suggest:SearchInput
-              attr:class="demo-SuggestNewSearch__pageNav"
+              attr:class="demo-SuggestNewSearch__pageNav controlsDemo__input"
               bind:value="_suggestCustomValue"
               displayProperty="title"
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/Navigation/resources/SuggestTemplate">
-              <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
-          </ws:suggestTemplate>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/Navigation/resources/SuggestTemplate"/>
       </Controls.suggest:SearchInput>
   </div>
-   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth400">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth350">
       <div class="controls-text-label_theme-{{_options.theme}}">Без указания настроек навигации</div>
       <Controls.suggest:SearchInput
-              attr:class="demo-SuggestNewSearch__noSettingsNav"
+              attr:class="demo-SuggestNewSearch__noSettingsNav controlsDemo__input"
               bind:value="_suggestDefaultValue"
               displayProperty="title"
               searchParam="title"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/Navigation/resources/SuggestTemplate">
-              <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
-          </ws:suggestTemplate>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/Navigation/resources/SuggestTemplate"/>
       </Controls.suggest:SearchInput>
    </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">Подгружать данные, пока не будет достигут порог</div>
       <Controls.suggest:SearchInput
-              attr:class="demo-SuggestNewSearch__autoLoadNav"
+              attr:class="demo-SuggestNewSearch__autoLoadNav controlsDemo__input"
               bind:value="_maxCountValue"
               displayProperty="title"
               searchParam="title"
               navigation="{{_maxCountNavigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/Navigation/resources/SuggestTemplate">
-              <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
-          </ws:suggestTemplate>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/Navigation/resources/SuggestTemplate"/>
       </Controls.suggest:SearchInput>
    </div>
 </div>
