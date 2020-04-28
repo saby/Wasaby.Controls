@@ -1,31 +1,27 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container controlsDemo__mb3">
-   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth400">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth350">
       <div class="controls-text-label_theme-{{_options.theme}}">Шаблон пустого списка с кнопкой</div>
       <Controls.suggest:SearchInput
-              attr:class="demo-SuggestNewSearch__withButton"
+              attr:class="demo-SuggestNewSearch__withButton controlsDemo__input"
               bind:value="_suggestCustomValue"
               displayProperty="title"
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
           <ws:emptyTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/EmptyTemplate/resources/EmptyTemplate"/>
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/EmptyTemplate/resources/SuggestTemplate">
-              <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
-          </ws:suggestTemplate>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/EmptyTemplate/resources/SuggestTemplate"/>
       </Controls.suggest:SearchInput>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">Шаблон пустого списка по умолчанию</div>
       <Controls.suggest:SearchInput
-              attr:class="demo-SuggestNewSearch__default"
+              attr:class="demo-SuggestNewSearch__default controlsDemo__input"
               bind:value="_suggestDefaultValue"
               displayProperty="title"
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/EmptyTemplate/resources/SuggestTemplate">
-              <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
-          </ws:suggestTemplate>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/EmptyTemplate/resources/SuggestTemplate"/>
       </Controls.suggest:SearchInput>
    </div>
 </div>
