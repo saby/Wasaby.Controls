@@ -1,3 +1,5 @@
+// tslint:disable:no-magic-numbers
+
 import { assert } from 'chai';
 import { TreeSelectionStrategy } from 'Controls/multiselection';
 import { relation } from 'Types/entity';
