@@ -114,7 +114,13 @@ function isLinkGoodForDecorating(linkNode) {
     const firstChild = getFirstChild(linkNode);
 
     const linkHref = attributes.href ? attributes.href.toLowerCase() : '';
-    const decodedLinkHref = decodeURI(linkHref);
+    let decodedLinkHref;
+    try {
+        decodedLinkHref = decodeURI(linkHref);
+    } catch (e) {
+        // Защита от попытки декодирования ошибочной ссылки.
+        decodedLinkHref = '';
+    }
     const linkText = isTextNode(firstChild) ? firstChild.toLowerCase() : '';
 
     // Decorate link only with text == href, and href length shouldn't be more than given maximum.
