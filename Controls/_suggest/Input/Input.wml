@@ -33,7 +33,7 @@
             fontSize="{{_options.fontSize}}"
             style="{{_options.style}}"
             textAlign="{{_options.textAlign}}"
-            fontSize="{{_options.fontSize}}"
+            validationStatus="{{_options.validationStatus}}"
             inlineHeight="{{_options.inlineHeight}}"
             fontColorStyle="{{_options.fontColorStyle}}"
             borderStyle="{{_options.borderStyle}}"
