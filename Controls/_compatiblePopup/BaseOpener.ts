@@ -180,10 +180,10 @@ const BaseOpener = {
       cfg.templateOptions.height = cfg.height;
       let isMaximaze = true;
       // если не хватает места, не показываем кнопку расширения/сужения панели
-      if (cfg.templateOptions.type === 'stack') {
-         isMaximaze = (cfg.minWidth + MINIMAL_PANEL_DISTANCE + rightOffset) < document?.body.clientWidth;
+      if (cfg.canMaximize && cfg.templateOptions.type === 'stack' && ((cfg.minWidth + MINIMAL_PANEL_DISTANCE + rightOffset) > document?.body.clientWidth)) {
+         cfg.canMaximize = false;
       }
-      if (isMaximaze && cfg.canMaximize && cfg.maxWidth && cfg.minWidth && cfg.maxWidth > cfg.minWidth) {
+      if (cfg.canMaximize && cfg.maxWidth && cfg.minWidth && cfg.maxWidth > cfg.minWidth) {
          cfg.minimizedWidth = cfg.minWidth;
          cfg.minWidth += MINIMAL_PANEL_DISTANCE; // minWidth и minimizedWidth должны различаться.
          cfg.templateOptions.canMaximize = true;
