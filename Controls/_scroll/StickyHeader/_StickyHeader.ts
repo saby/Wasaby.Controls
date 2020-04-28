@@ -99,7 +99,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _isMobileAndroid: boolean = detection.isMobileAndroid;
     protected _isSafari13: boolean = StickyHeader._isSafari13();
 
-    private _isFixed: boolean = true;
+    private _isFixed: boolean = false;
     private _stickyHeadersHeight: IOffset = {
         top: null,
         bottom: null
@@ -489,7 +489,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _updateFixed(e, ids): void {
         const isFixed: boolean = ids.indexOf(this._index) !== -1;
         if (this._isFixed !== isFixed) {
-            if (this._model.fixedPosition) {
+            if (!this._model) {
+                // Модель еще не существует, значит заголвок только что создан и контроллер сказал
+                // заголовку что он зафиксирован. Обновим тень вручную что бы не было скачков.
+                fastUpdate.mutate(() => {
+                    this._container.querySelector('.controls-StickyHeader__shadow-bottom')
+                        .classList.remove('ws-invisible');
+                });
+            } else if (this._model.fixedPosition) {
                 if (isFixed) {
                     this._fixedNotifier(this._model.fixedPosition, '', true);
                 } else {
@@ -507,7 +514,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         return !!((this._context.stickyHeader?.shadowPosition &&
             this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
-            (this._model && this._model.fixedPosition === fixedPosition) &&
+            ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
             this._options.shadowVisibility === SHADOW_VISIBILITY.visible &&
             (this._options.mode === MODE.stackable || this._isFixed));
     }

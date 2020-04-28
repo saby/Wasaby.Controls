@@ -240,7 +240,8 @@ define([
             id: 2,
             inst: {
                _container: {}
-            }
+            },
+            position: 'top'
          };
 
          beforeEach(() => {
@@ -337,6 +338,26 @@ define([
 
             sinon.assert.notCalled(component._notify);
             sinon.restore();
+         });
+
+         it('should notify stickyFixed if group already fixed', function() {
+            const
+               component = createComponent(scroll.Group, options);
+            let event = {
+               blockUpdate: false,
+               stopImmediatePropagation: sinon.fake()
+            };
+            component._children = {
+               stickyFixed: {
+                  start: sinon.fake()
+               }
+            };
+            component._stickyHeadersIds = {
+               top: [10]
+            }
+            component._isFixed = true;
+            component._stickyRegisterHandler(event, data, true);
+            sinon.assert.calledWith(component._children.stickyFixed.start, [2, 10]);
          });
       });
    });
