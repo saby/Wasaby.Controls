@@ -310,8 +310,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             });
         } else {
             requirejs(['Controls/compatiblePopup'], (compatiblePopup) => {
-                const rightOffset = controller.TYPE === 'Stack' ? controller._getStackParentCoords().right : 0;
-                compatiblePopup.BaseOpener._prepareConfigForOldTemplate(cfg, rootTpl, rightOffset);
+                compatiblePopup.BaseOpener._prepareConfigForOldTemplate(cfg, rootTpl);
                 BaseOpener._openPopup(cfg, controller, def);
             });
         }

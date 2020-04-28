@@ -326,7 +326,7 @@ class StackController extends BaseController {
         return stackContainer.querySelector('.controls-Stack__content-wrapper');
     }
 
-    private _getStackParentCoords(): IPopupPosition {
+    static _getStackParentCoords(): IPopupPosition {
         let stackRoot: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
         if (!isNewEnvironment()) {
             stackRoot = document.querySelector('.ws-float-area-stack-root');

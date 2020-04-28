@@ -8,6 +8,7 @@ import Deferred = require('Core/Deferred');
 import randomId = require('Core/helpers/Number/randomId');
 import library = require('Core/library');
 import isVDOMTemplate = require('Controls/Utils/isVDOMTemplate');
+import StackController = require('Controls/_popupTemplate/Stack/Opener/StackController');
 function loadTemplate(name: string) {
    const libraryInfo = library.parse(name);
    let template = require(libraryInfo.name);
@@ -24,7 +25,8 @@ const MINIMAL_PANEL_DISTANCE = 100;
  * Слой совместимости для базового опенера для открытия старых шаблонов
  */
 const BaseOpener = {
-   _prepareConfigForOldTemplate(cfg, templateClass, rightOffset: number = 0) {
+   _prepareConfigForOldTemplate(cfg, templateClass) {
+      const rightOffset = cfg._type === 'stack' ? StackController._getStackParentCoords().right : 0;
       let
          templateOptions = this._getTemplateOptions(templateClass),
          parentContext;
