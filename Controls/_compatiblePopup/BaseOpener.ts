@@ -28,9 +28,8 @@ const BaseOpener = {
    _getTargetRightCoords(): number {
       let target: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
       if (!target) {
-         throw new Error('Target parameter is required');
+         target = document?.body;
       }
-// todo https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
       if (target.get) {
          target = target.get(0);
       }
