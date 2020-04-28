@@ -414,7 +414,7 @@ define(
             let fastFilter = getFastFilter(configWithItems);
             fastFilter._children = { DropdownOpener: { close: ()=> {closed = true;} } };
             fastFilter._beforeMount(configWithItems);
-            fastFilter._onResult(null, { action: 'footerClick' });
+            fastFilter._onResult(null, 'footerClick');
             assert.isTrue(closed);
          });
 
@@ -423,7 +423,7 @@ define(
                filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   isFilterChanged = false;
-                  fastData._onResult(null, { data: [fastData._configs[0]._items.at(2)], action: 'itemClick' });
+                  fastData._onResult(null, 'itemClick', fastData._configs[0]._items.at(2));
                   assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, 'США');
                   done();
@@ -437,10 +437,10 @@ define(
                { key: 1, title: 'Россия' },
                { key: 3, title: 'Великобритания' }
             ];
-            fastData2._onResult(null, { data: selectedItems, action: 'applyClick' });
+            fastData2._onResult(null, 'applyClick', selectedItems);
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
 
-            fastData2._onResult(null, { data: [], action: 'applyClick' });
+            fastData2._onResult(null, 'applyClick',  []);
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
          });
 
@@ -454,7 +454,7 @@ define(
                ]
             });
             fastData2._afterSelectorOpenCallback([]);
-            fastData2._onResult(null, { data: selectedItems, action: 'selectorResult' });
+            fastData2._onResult(null, 'selectorResult', selectedItems);
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Франция']);
             assert.deepEqual(fastData2._configs[0]._items.getCount(), 5);
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 5, title: 'Франция' });
@@ -616,6 +616,7 @@ define(
 
          it('open dropdown', function() {
             let fastFilter = new filterMod.Fast(config);
+            fastFilter._options.theme = 'default';
             let expectedConfig, isOpened, isLoading = false;
             fastFilter._children = {
                DropdownOpener: { open: (openerConfig) => {expectedConfig = openerConfig; isOpened = true;} }
@@ -625,6 +626,7 @@ define(
                   keyProperty: 'key',
                   rawData: items[0]
                }),
+               _source: 'targetSource',
                _sourceController: { hasMoreData: () => {}, isLoading: () => {return isLoading} }}];
             fastFilter._items = new collection.RecordSet({
                rawData: configItems.items,
@@ -635,10 +637,11 @@ define(
                horizontal: 'overflow',
                vertical: 'adaptive'
             });
-            assert.deepStrictEqual(expectedConfig.templateOptions.items, fastFilter._configs[0]._items);
+            assert.isOk(expectedConfig.templateOptions.source);
             assert.deepStrictEqual(expectedConfig.templateOptions.selectorItems, fastFilter._configs[0]._items);
             assert.strictEqual(expectedConfig.templateOptions.selectedKeys[0], 'Россия');
             assert.isTrue(isOpened);
+            assert.equal(expectedConfig.templateOptions.dropdownClassName, 'controls-FastFilter_width-popup_theme-default')
 
             isOpened = false;
             isLoading = true;
@@ -657,6 +660,7 @@ define(
                   keyProperty: 'key',
                   rawData: items[0]
                }),
+               _source: 'targetSource',
                _sourceController: { hasMoreData: () => {}, isLoading: () => {} },
                _needQuery: true
             }];
