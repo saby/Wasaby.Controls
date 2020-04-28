@@ -3,6 +3,6 @@
                                       controls-DropdownList__row-checkbox-{{checkBoxAlign === 'right' ? 'right' : 'left'}}_theme_{{_options.theme}}
                                       controls-DropdownList__row-checkbox_{{itemData._isSelected ? 'active' : 'default'}}_theme_{{_options.theme}}
                                       controls-Menu__row-checkbox_{{itemData.isEmptyItem ? 'invisible' :
-                                      treeItem._isSelected ? 'active' : 'default'}}_theme-{{_options.theme}}">
-   <ws:templateOptions value="{{treeItem._isSelected}}"/>
+                                      treeItem.isSelected() ? 'active' : 'default'}}_theme-{{_options.theme}}">
+   <ws:templateOptions value="{{treeItem.isSelected()}}"/>
 </Controls.Container.Async>
