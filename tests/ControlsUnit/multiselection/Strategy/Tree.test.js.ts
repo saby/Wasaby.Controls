@@ -6,7 +6,7 @@ import { relation } from 'Types/entity';
 import { ListData } from 'ControlsUnit/ListData';
 import { RecordSet } from 'Types/collection';
 
-describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
+describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
    const hierarchy = new relation.Hierarchy({
       keyProperty: ListData.KEY_PROPERTY,
       parentProperty: ListData.PARENT_PROPERTY,
@@ -250,14 +250,21 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
          assert.deepEqual(res.get(true), [ ListData.getItems()[1] ] );
          assert.deepEqual(res.get(null), [ ]);
          assert.deepEqual(res.get(false), ListData.getItems().filter((it) => it.id !== 2) );
+
+         // выбрали узел с родителями и с детьми и некоторые дети исключены
+         selection = { selected: [2], excluded: [3] };
+         res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
+         assert.deepEqual(res.get(true), ListData.getItems().filter((it) => it.id in [2, 4]) );
+         assert.deepEqual(res.get(null), [ ListData.getItems()[0] ]);
+         assert.deepEqual(res.get(false), ListData.getItems().filter((it) => !(it.id in [1, 2, 4])) );
       });
 
       it('selected all, but one', () => {
          const selection = { selected: [null], excluded: [null, 2] };
          const res = strategy.getSelectionForModel(selection);
-         assert.deepEqual(res.get(true), [{ id: 1 }, { id: 3 } ]);
-         assert.deepEqual(res.get(null), []);
-         assert.deepEqual(res.get(false), [ { id: 2 } ]);
+         assert.deepEqual(res.get(true), ListData.getItems().filter((it) => !(it.id in [2, 3, 4])) );
+         assert.deepEqual(res.get(null), [ ]);
+         assert.deepEqual(res.get(false), ListData.getItems().filter((it) => it.id in [2, 3, 4]) );
       });
    });
 
@@ -265,31 +272,75 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
       it('not selected', () => {
          const selection = { selected: [], excluded: [] };
          const count = strategy.getCount(selection, false);
+         const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
          assert.equal(count, 0);
+         assert.equal(countWithDescAndAnc, 0);
       });
 
       it('selected one', () => {
-         const selection = { selected: [1], excluded: [] };
+         const selection = { selected: [2], excluded: [] };
          const count = strategy.getCount(selection, false);
+         const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
          assert.equal(count, 1);
+         assert.equal(countWithDescAndAnc, 3);
       });
 
       it('selected one and has more data', () => {
          const selection = { selected: [1], excluded: [] };
          const count = strategy.getCount(selection, true);
-         assert.equal(count, 1);
+         const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, true);
+         assert.equal(count, null);
+         assert.equal(countWithDescAndAnc, null);
       });
 
       it('selected all, but one', () => {
          const selection = { selected: [null], excluded: [null, 2] };
          const count = strategy.getCount(selection, false);
-         assert.equal(count, 2);
+         const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
+         assert.equal(count, 1);
+         assert.equal(countWithDescAndAnc, 4);
       });
 
       it('selected all, but one and has more data', () => {
          const selection = { selected: [null], excluded: [null, 2] };
          const count = strategy.getCount(selection, true);
+         const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, true);
          assert.equal(count, null);
+         assert.equal(countWithDescAndAnc, null);
+      });
+   });
+
+   describe('cases of go inside node and out it', () => {
+      it('select node and go inside it', () => {
+         let selection = { selected: [], excluded: [] };
+         selection = strategyWithDescendantsAndAncestors.select(selection, [2]);
+         strategyWithDescendantsAndAncestors._rootId = 2;
+         const res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
+         assert.deepEqual(res.get(true), ListData.getItems().filter((it) => it.id in [2, 3, 4]) );
+         assert.deepEqual(res.get(null), [ ]);
+         assert.deepEqual(res.get(false), ListData.getItems().filter((it) => !(it.id in [1, 2, 3, 4])) );
+      });
+
+      it('select all being inside node and go out it', () => {
+         let selection = { selected: [], excluded: [] };
+         strategyWithDescendantsAndAncestors._rootId = 1;
+         selection = strategyWithDescendantsAndAncestors.selectAll(selection);
+         strategyWithDescendantsAndAncestors._rootId = null;
+         const res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
+         assert.deepEqual(res.get(true), [ ] );
+         assert.deepEqual(res.get(null), [ ]);
+         assert.deepEqual(res.get(false), [ListData.getItems()] );
+      });
+
+      it('select leaf being inside node and go out it', () => {
+         let selection = { selected: [], excluded: [] };
+         strategyWithDescendantsAndAncestors._rootId = 1;
+         selection = strategyWithDescendantsAndAncestors.select(selection, [5]);
+         strategyWithDescendantsAndAncestors._rootId = null;
+         const res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
+         assert.deepEqual(res.get(true), [ ListData.getItems()[4] ] );
+         assert.deepEqual(res.get(null), [ ListData.getItems()[0] ]);
+         assert.deepEqual(res.get(false), ListData.getItems().filter((it) => !(it.id in [1, 4])) );
       });
    });
 });

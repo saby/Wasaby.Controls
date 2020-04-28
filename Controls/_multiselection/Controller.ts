@@ -45,22 +45,6 @@ export class Controller {
       this._updateModel(this._selection);
    }
 
-   toggleItem(key: TKey): ISelectionControllerResult {
-      const status = this._getItemStatus(key);
-      let newSelection;
-
-      if (status === true || status === null) {
-         newSelection = this._strategy.unselect(this._selection, [key]);
-      } else {
-         newSelection = this._strategy.select(this._selection, [key]);
-      }
-
-      this._updateModel(newSelection);
-      const result = this._getResult(this._selection, newSelection);
-      this._selection = newSelection;
-      return result;
-   }
-
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
       const itemsChanged = modelChanged ? true : options.model.getCollection() !== this._model.getCollection();
@@ -80,6 +64,22 @@ export class Controller {
          this._updateModel(this._selection);
       }
       return this._getResult(oldSelection, this._selection);
+   }
+
+   toggleItem(key: TKey): ISelectionControllerResult {
+      const status = this._getItemStatus(key);
+      let newSelection;
+
+      if (status === true || status === null) {
+         newSelection = this._strategy.unselect(this._selection, [key]);
+      } else {
+         newSelection = this._strategy.select(this._selection, [key]);
+      }
+
+      this._updateModel(newSelection);
+      const result = this._getResult(this._selection, newSelection);
+      this._selection = newSelection;
+      return result;
    }
 
    selectAll(): ISelectionControllerResult {
