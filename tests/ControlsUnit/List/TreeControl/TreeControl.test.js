@@ -1194,6 +1194,7 @@ define([
                   }
 
                   treeControl._afterUpdate({root: null, filter: {}, source: source});
+                  treeControl._children.baseControl._afterUpdate({});
                   treeControl._children.baseControl._sourceController._loader.addCallback(function() {
                      try {
                         assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
