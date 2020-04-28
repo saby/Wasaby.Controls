@@ -1,5 +1,5 @@
 import IPropertyGridProperty from './IProperty';
-import {IControlOptions} from 'Vdom/Vdom';
+import {IControlOptions} from 'UI/Base';
 
 export interface IPropertyGridOptions extends IControlOptions {
     editingObject: Object;

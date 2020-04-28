@@ -28,13 +28,13 @@ export default class PropertyGridView extends Control<IPropertyGridViewOptions> 
             editingObject,
             source,
             collapsedGroups
-        }: IPropertyGridOptions
+        }: IPropertyGridViewOptions
     ): void {
         this._collapsedGroups = this._getCollapsedGroups(collapsedGroups);
         this._listModel = this._getCollection(nodeProperty, parentProperty, editingObject, source);
     }
 
-    protected _beforeUpdate(newOptions: IPropertyGridOptions): void {
+    protected _beforeUpdate(newOptions: IPropertyGridViewOptions): void {
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
             this._collapsedGroups = this._getCollapsedGroups(newOptions.collapsedGroups);
             this._listModel.setFilter(this._displayFilter.bind(this));
@@ -78,7 +78,7 @@ export default class PropertyGridView extends Control<IPropertyGridViewOptions> 
         return item.get(PROPERTY_GROUP_FIELD);
     }
 
-    private _displayFilter(itemContents: PropertyGridItem | string,): boolean {
+    private _displayFilter(itemContents: PropertyGridItem | string): boolean {
         if (itemContents instanceof PropertyGridItem) {
             const group = itemContents.get(PROPERTY_GROUP_FIELD);
             return !this._collapsedGroups[group];
@@ -123,8 +123,6 @@ export default class PropertyGridView extends Control<IPropertyGridViewOptions> 
         itemClone.set(PROPERTY_VALUE_FIELD, value);
 
         (this._listModel.getCollection().getRecordById(name) as Model).set(PROPERTY_VALUE_FIELD, value);
-
-        event.stopPropagation();
         this._notify('editingObjectChanged', [editingObjectClone]);
     }
 
@@ -136,8 +134,10 @@ export default class PropertyGridView extends Control<IPropertyGridViewOptions> 
         if (displayItem instanceof GroupItem) {
             const isExpandClick = clickEvent?.target.closest('.controls-PropertyGrid__groupExpander');
             if (isExpandClick) {
+                const groupName = displayItem.getContents();
+                const collapsed = this._collapsedGroups[groupName];
                 displayItem.toggleExpanded();
-                this._collapsedGroups[displayItem.getContents()] = true;
+                this._collapsedGroups[groupName] = !collapsed;
                 this._listModel.setFilter(this._displayFilter.bind(this));
             }
         }

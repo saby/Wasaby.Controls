@@ -1,17 +1,9 @@
 import {Model} from 'Types/entity';
 import {Enum} from 'Types/collection';
 import {IHashMap} from 'Types/declarations';
+import {DEFAULT_EDITORS} from './Constants';
 
 import getType = require('Core/helpers/getType');
-
-const DEFAULT_EDITORS = {
-    string: 'Controls/_propertyGrid/defaultEditors/String',
-    boolean: 'Controls/_propertyGrid/defaultEditors/Boolean',
-    date: 'Controls/_propertyGrid/defaultEditors/Date',
-    number: 'Controls/_propertyGrid/defaultEditors/Number',
-    text: 'Controls/_propertyGrid/defaultEditors/Text',
-    enum: 'Controls/_propertyGrid/defaultEditors/Enum'
-};
 
 class PropertyGridItem extends Model {
     _$keyProperty: string = 'name';
