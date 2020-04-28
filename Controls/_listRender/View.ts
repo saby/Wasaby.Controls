@@ -76,14 +76,14 @@ export default class View extends Control<IViewOptions> {
             this._collection.setEditingConfig(options.editingConfig);
         }
 
+        // UC: Record might be editing on page load, then we should initialize Item Actions.
         if (
             options.itemActions !== this._options.itemActions ||
             options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
             (options.itemActions || options.itemActionsProperty) && collectionRecreated ||
-            options.itemActionsProperty
+            options.itemActionsProperty ||
+            (options.editingConfig && options.editingConfig.item)
         ) {
-            // TODO Only reassign actions if Render is hovered. Otherwise wait
-            //  for mouseenter or touchstart to recalc the items
             this._updateItemActions();
         }
     }

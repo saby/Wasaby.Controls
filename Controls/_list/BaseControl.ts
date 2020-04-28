@@ -1816,7 +1816,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions);
-
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
                     _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -1992,14 +1991,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._isMounted = true;
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
-
-        // TODO REMOVE
-        // при создании списка с редактируемой записью, нужно проинициализировать itemActions.
-        // это нельзя сделать до afterMount из-за того, что ItemActionsControl является ребенком BaseControl и
-        // мы не можем к нему обратиться до того, как контролы будут построены.
-        // if (this._options.editingConfig && this._options.editingConfig.item) {
-        //     this._initItemActions();
-        // }
         if (this._options.itemsDragNDrop) {
             container.addEventListener('dragstart', this._nativeDragStart);
         }
@@ -2072,6 +2063,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
+        }
+        // UC: Record might be editing on page load, then we should initialize Item Actions.
+        if (
+            newOptions.itemActions !== this._options.itemActions ||
+            newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
+            (newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated ||
+            newOptions.itemActionsProperty ||
+            (newOptions.editingConfig && newOptions.editingConfig.item)
+        ) {
+            this._initItemActions();
         }
         if (recreateSource) {
             this.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);

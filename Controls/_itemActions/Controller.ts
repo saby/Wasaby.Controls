@@ -224,6 +224,7 @@ export class Controller {
 
     /**
      * Вычисляет операции над записью для каждого элемента коллекции
+     * //todo проверь
      */
     private _assignActions(): void {
         const supportsEventRaising = typeof this._collection.setEventRaising === 'function';
@@ -464,6 +465,7 @@ export class Controller {
         );
     }
 
+    // todo переедет в шаблон
     private static _fixActionIcon(action: IItemAction): IItemAction {
         if (!action.icon || action.icon.includes(ITEM_ACTION_ICON_CLASS)) {
             return action;

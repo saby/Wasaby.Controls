@@ -22,7 +22,7 @@ export default class extends Control {
         icon: 'icon-Erase icon-error',
         title: 'delete',
         style: 'bordered',
-        showType: showType.MENU_TOOLBAR,
+        showType: showType.TOOLBAR,
         handler: function(item) {
             this._children.remover.removeItems([item.get('id')]);
         }.bind(this)
