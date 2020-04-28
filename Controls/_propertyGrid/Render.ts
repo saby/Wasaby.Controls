@@ -21,8 +21,8 @@ export default class PropertyGridRender extends Control<IPropertyGridRenderOptio
         this._notify('itemClick', [item, e]);
     }
 
-    protected _propertyValueChanged(e: SyntheticEvent<Event>, value: any): void {
+    protected _propertyValueChanged(e: SyntheticEvent<Event>, item: PropertyGridItem, value: any): void {
         e.stopImmediatePropagation();
-        this._notify('propertyValueChanged', [value]);
+        this._notify('propertyValueChanged', [item, value]);
     }
 }
