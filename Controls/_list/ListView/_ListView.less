@@ -37,36 +37,51 @@
    padding-left: @item_padding-left_m_list;
 }
 
-.controls-ListView__item_default-topPadding_null_theme-@{themeName} {
+.controls-ListView__item_default-topPadding_null_theme-@{themeName},
+.controls-ListView__item_master-topPadding_null_theme-@{themeName} {
   padding-top: 0;
 }
 
-.controls-ListView__item_default-bottomPadding_null_theme-@{themeName} {
+.controls-ListView__item_default-topPadding_s_theme-@{themeName},
+.controls-ListView__item_master-topPadding_s_theme-@{themeName} {
+   padding-top: @item_padding-top_s_list;
+}
+
+.controls-ListView__item_default-topPadding_l_theme-@{themeName},
+.controls-ListView__item_master-topPadding_l_theme-@{themeName} {
+   padding-top: @item_padding-top_l_list;
+}
+
+.controls-ListView__item_default-topPadding_default_theme-@{themeName} {
+   padding-top: @item_padding-top_default_list;
+}
+
+.controls-ListView__item_master-topPadding_default_theme-@{themeName} {
+   padding-top: @master_item_padding-top_list;
+}
+
+
+.controls-ListView__item_default-bottomPadding_null_theme-@{themeName},
+.controls-ListView__item_master-bottomPadding_null_theme-@{themeName} {
   padding-bottom: 0;
 }
 
-.controls-ListView__item_default-topPadding_l_theme-@{themeName} {
-   padding-top: @item_padding-top_l_list;
- }
+.controls-ListView__item_default-bottomPadding_s_theme-@{themeName},
+.controls-ListView__item_master-bottomPadding_s_theme-@{themeName} {
+   padding-bottom: @item_padding-bottom_s_list;
+}
 
- .controls-ListView__item_default-bottomPadding_l_theme-@{themeName} {
-   padding-bottom: @item_padding-bottom_l_list;
- }
-
-.controls-ListView__item_default-topPadding_default_theme-@{themeName} {
-  padding-top: @item_padding-top_default_list;
+.controls-ListView__item_default-bottomPadding_l_theme-@{themeName},
+.controls-ListView__item_master-bottomPadding_l_theme-@{themeName} {
+  padding-bottom: @item_padding-bottom_l_list;
 }
 
 .controls-ListView__item_default-bottomPadding_default_theme-@{themeName} {
   padding-bottom: @item_padding-bottom_default_list;
 }
 
-.controls-ListView__item_default-topPadding_s_theme-@{themeName} {
-  padding-top: @item_padding-top_s_list;
-}
-
-.controls-ListView__item_default-bottomPadding_s_theme-@{themeName} {
-  padding-bottom: @item_padding-bottom_s_list;
+.controls-ListView__item_master-bottomPadding_default_theme-@{themeName} {
+   padding-bottom: @master_item_padding-bottom_list;
 }
 
 .controls-ListView__itemContent_withCheckboxes_theme-@{themeName},
@@ -368,14 +383,6 @@
    // иначе все position: absolute элементы внутри position: sticky
    // начинают сроиться относительно родителя уровнем выше
    transform: translateZ(0);
-}
-
-.controls-ListView__item_master-topPadding_default_theme-@{themeName} {
-   padding-top: @master_item_padding-top_list;
-}
-
-.controls-ListView__item_master-bottomPadding_default_theme-@{themeName} {
-   padding-bottom: @master_item_padding-top_list;
 }
 
 .controls-ListView__item__unmarked_master_theme-@{themeName} {
