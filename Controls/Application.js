@@ -118,7 +118,7 @@ define('Controls/Application',
             },
             validAttributes: {
                rel: true,
-               async: true,
+               defer: true,
                as: true,
                src: true,
                name: true,
