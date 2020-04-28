@@ -1,6 +1,7 @@
 import IPropertyGridProperty from './IProperty';
+import {IControlOptions} from 'UI/Base';
 
-export interface IPropertyGridOptions {
+export interface IPropertyGridOptions extends IControlOptions {
     editingObject: Object;
     source: IPropertyGridProperty[];
     groupTemplate?: Function;
