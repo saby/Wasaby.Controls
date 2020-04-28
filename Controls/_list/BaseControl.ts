@@ -38,11 +38,11 @@ import {IItemAction} from './interface/IList';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {IHashMap} from 'Types/declarations';
 import {
-    FlatSelectionStrategy,
-    TreeSelectionStrategy,
-    ISelectionStrategy,
-    ITreeSelectionStrategyOptions,
-    IFlatSelectionStrategyOptions,
+   FlatSelectionStrategy,
+   TreeSelectionStrategy,
+   ISelectionStrategy,
+   ITreeSelectionStrategyOptions,
+   IFlatSelectionStrategyOptions,
    ISelectionControllerResult,
    SelectionController
 } from 'Controls/multiselection';
@@ -209,6 +209,9 @@ var _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
+                    if (self._items) {
+                       self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                    }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
@@ -223,6 +226,7 @@ var _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
+                    self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -1189,11 +1193,8 @@ var _private = {
                let result;
 
                switch (action) {
-                  case IObservable.ACTION_REMOVE:
-                     // result = self._selectionController.handleRemoveItems(removedItems);
-                     break;
                   case IObservable.ACTION_RESET:
-                     result = self._selectionController.handleReset(newItems);
+                     result = self._selectionController.handleReset(newItems, self._prevRootId, self._prevRootId !== self._options.root);
                      break;
                   case IObservable.ACTION_ADD:
                      result = self._selectionController.handleAddItems(newItems);
@@ -1834,6 +1835,22 @@ var _private = {
 
       // для связи с контроллером ПМО
       self._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
+   },
+
+   onItemsChanged(self: any, action: string, removedItems: []): void {
+      // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
+      // при подписке на модель событие remove летит еще и при скрытии элементов
+      if (self._selectionController) {
+         let result;
+
+         switch (action) {
+            case IObservable.ACTION_REMOVE:
+               result = self._selectionController.removeKeys(removedItems);
+               break;
+         }
+
+         this.handleSelectionControllerResult(self, result);
+      }
    }
 };
 
@@ -1937,6 +1954,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _isMobileIOS: detection.isMobileIOS,
 
     _selectionController: null,
+    _prevRootId: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -2208,6 +2226,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
+        this._prevRootId = this._options.root;
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
 
             // При смене страницы, должно закрыться редактирование записи.
@@ -2701,6 +2720,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _actionsMenuResultHandler(args): void {
         _private.actionsMenuResultHandler(this, args);
+    },
+
+    _onItemsChanged(event, action, newItems, newItemsIndex, removedItems): void {
+        _private.onItemsChanged(this, action, removedItems);
     },
 
     _itemMouseDown(event, itemData, domEvent) {

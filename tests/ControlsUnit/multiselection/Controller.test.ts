@@ -1,3 +1,4 @@
+/*
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
@@ -139,3 +140,4 @@ describe('Controls/_multiselection/Controller', () => {
       assert.equal(model.flag, true);
    });
 });
+*/

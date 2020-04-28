@@ -124,10 +124,12 @@ export class Controller {
       return this._getResult(oldSelection, this._selection);
    }
 
-   handleReset(newItems: Record[]): ISelectionControllerResult {
+   handleReset(newItems: Record[], prevRootId: TKey, rootChanged: boolean): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
 
-      if (!newItems.length) {
+      // если у нас изменился корень и этот корень выбран, то это значит, что мы зашли в него нажали Выбрать все
+      // и вышли в родительский узел, по стандартам элементы должны стать невыбранными
+      if (rootChanged && this._selectedKeys.includes(prevRootId) && this._excludedKeys.includes(prevRootId)) {
          this._clearSelection();
       }
 
