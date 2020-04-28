@@ -178,7 +178,6 @@ const BaseOpener = {
       cfg.templateOptions.maxHeight = cfg.maxHeight;
       cfg.templateOptions.width = cfg.width;
       cfg.templateOptions.height = cfg.height;
-      let isMaximaze = true;
       // если не хватает места, не показываем кнопку расширения/сужения панели
       if (cfg.canMaximize && cfg.templateOptions.type === 'stack' && ((cfg.minWidth + MINIMAL_PANEL_DISTANCE + rightOffset) > document?.body.clientWidth)) {
          cfg.canMaximize = false;
