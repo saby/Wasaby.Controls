@@ -224,6 +224,9 @@ define(
 
          it('_prepareConfigForOldTemplate', function() {
             config.fixed = true;
+            compatiblePopup.BaseOpener._getTargetRightCoords = function() {
+               return 0;
+            };
             compatiblePopup.BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, true);
             assert.equal(config.templateOptions.closeButtonViewMode, 'testStyle');

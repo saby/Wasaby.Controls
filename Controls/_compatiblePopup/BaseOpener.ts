@@ -8,7 +8,7 @@ import Deferred = require('Core/Deferred');
 import randomId = require('Core/helpers/Number/randomId');
 import library = require('Core/library');
 import isVDOMTemplate = require('Controls/Utils/isVDOMTemplate');
-import StackController = require('Controls/_popupTemplate/Stack/Opener/StackController');
+import * as getDimensions from 'Controls/Utils/getDimensions';
 function loadTemplate(name: string) {
    const libraryInfo = library.parse(name);
    let template = require(libraryInfo.name);
@@ -25,8 +25,26 @@ const MINIMAL_PANEL_DISTANCE = 100;
  * Слой совместимости для базового опенера для открытия старых шаблонов
  */
 const BaseOpener = {
-   _prepareConfigForOldTemplate(cfg, templateClass) {
-      const rightOffset = cfg._type === 'stack' ? StackController._getStackParentCoords().right : 0;
+   _getTargetRightCoords(): number {
+      let target: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
+      if (!target) {
+         throw new Error('Target parameter is required');
+      }
+// todo https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+      if (target.get) {
+         target = target.get(0);
+      }
+      const box = getDimensions(target);
+      const right: number = box.right;
+      const fullLeftOffset: number =
+          window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0 -
+          document.documentElement.clientLeft || document.body.clientLeft || 0;
+
+      const coords = {leftScroll: fullLeftOffset, right: right + fullLeftOffset};
+      return document?.documentElement.clientWidth - coords.right;
+   },
+   _prepareConfigForOldTemplate(cfg, templateClass): void {
+      const rightOffset = cfg.isStack ? this._getTargetRightCoords() : 0;
       let
          templateOptions = this._getTemplateOptions(templateClass),
          parentContext;
