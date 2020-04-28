@@ -28,7 +28,8 @@
  * @author Герасимов А.М.
  */
 
-import PropertyGrid = require("Controls/_propertyGrid/PropertyGrid");
+import {default as PropertyGrid} from 'Controls/_propertyGrid/PropertyGrid';
+import {default as View} from 'Controls/_propertyGrid/View';
 import BooleanEditor = require("Controls/_propertyGrid/defaultEditors/Boolean");
 import StringEditor = require("Controls/_propertyGrid/defaultEditors/String");
 import TextEditor = require("Controls/_propertyGrid/defaultEditors/Text");
@@ -39,6 +40,7 @@ import IProperty = require("Controls/_propertyGrid/IProperty");
 import GroupTemplate = require("wml!Controls/_propertyGrid/Render/resources/groupTemplate");
 
 export {
+    View,
     PropertyGrid,
     BooleanEditor,
     StringEditor,

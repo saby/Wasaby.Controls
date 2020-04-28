@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_propertyGrid/PropertyGrid';
-import * as renderTemplate from 'Controls/_propertyGrid/Render';
+import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
 
 /**
@@ -35,4 +35,4 @@ class PropertyGrid extends Control<IPropertyGridOptions>  {
 
 PropertyGrid._theme = ['Controls/propertyGrid'];
 
-export = PropertyGrid;
+export default PropertyGrid;

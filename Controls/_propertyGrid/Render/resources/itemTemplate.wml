@@ -1,4 +1,4 @@
-<div class="controls-PropertyGrid__editor_theme-{{theme}}" >
+<div class="controls-PropertyGrid__editor_theme-{{theme}}">
     <ws:if data="{{item.caption !== ''}}">
         <span class="controls-PropertyGrid__editor-caption_theme-{{theme}}">{{item.caption || item.name}}</span>
     </ws:if>
