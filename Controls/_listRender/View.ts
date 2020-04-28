@@ -347,9 +347,6 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     protected _updateItemActions(): void {
-        if (!this._options.itemActions && !this._options.itemActionsProperty) {
-            return;
-        }
         if (!this._itemActionsController) {
             this._itemActionsController = new ItemActionsController();
         }

@@ -69,7 +69,8 @@ export class Controller {
     private _visibilityCallback: TItemActionVisibilityCallback;
 
     update(options: IItemActionsControllerOptions): void {
-        if (!isEqual(this._commonItemActions, options.itemActions) ||
+        if (options.itemActions === undefined ||
+            !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
             this._visibilityCallback !== options.visibilityCallback
         ) {
@@ -80,7 +81,9 @@ export class Controller {
             this._collection.setActionsAssigned(false);
         }
         if (!this._collection.areActionsAssigned()) {
-            this._assignActions();
+            if (this._commonItemActions && !this._itemActionsProperty) {
+                this._assignActions();
+            }
             this._calculateActionsTemplateConfig({
                 itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
                 style: options.style,
@@ -224,7 +227,6 @@ export class Controller {
 
     /**
      * Вычисляет операции над записью для каждого элемента коллекции
-     * //todo проверь
      */
     private _assignActions(): void {
         const supportsEventRaising = typeof this._collection.setEventRaising === 'function';

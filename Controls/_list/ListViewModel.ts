@@ -165,7 +165,7 @@ var _private = {
             }
         };
         itemsModelCurrent.isEditing = (): boolean => (
-            itemsModelCurrent.dispItem.isEditing !== undefined ? itemsModelCurrent.dispItem.isEditing() : false
+            itemsModelCurrent.dispItem.isEditing !== undefined ? itemsModelCurrent.dispItem.isEditing() : itemsModelCurrent._isEditing
         );
         itemsModelCurrent.getContents = () => (
             itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
@@ -281,8 +281,9 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle;
+        itemsModelCurrent._isEditing = false;
         // Установка и сброс isEditing в новых списках уже вынесены в EditingController
-        itemsModelCurrent.setEditing(false, null, true);
+        // itemsModelCurrent.setEditing(false, null, true);
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrollConfig = Boolean(this._options.virtualScrollConfig);
@@ -307,12 +308,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
         itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
         itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
-
-        // Установка и сброс isEditing в новых списках уже вынесены в EditingController
-        if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
-            itemsModelCurrent.setEditing(true, itemsModelCurrent.getContents());
-            itemsModelCurrent.item = this._editingItemData.item;
-        }
+        //
+        // // Установка и сброс isEditing в новых списках уже вынесены в EditingController
+        // if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
+        //     itemsModelCurrent.setEditing(true, itemsModelCurrent.getContents());
+        //     itemsModelCurrent.item = this._editingItemData.item;
+        // }
 
         if (this._dragEntity) {
             dragItems = this._dragEntity.getItems();

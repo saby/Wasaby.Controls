@@ -683,7 +683,6 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 this._editingItemData.isAdd = this._isAdd;
                 this._editingItemData.index = _private.getEditingItemIndex(this, item, listModel, _private.getAddPosition(options));
                 this._editingItemData.addPosition = options.editingConfig && options.editingConfig.addPosition;
-                // TODO is it correct??
                 this._editingItemData.drawActions = options.editingConfig && options.editingConfig.toolbarVisibility;
             }
 

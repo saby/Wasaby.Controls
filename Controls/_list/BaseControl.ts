@@ -2399,7 +2399,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _updateItemActions(): void {
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
-        if (this.__error || !this._listViewModel || !this._hasItemActions) {
+        if (this.__error || !this._listViewModel) {
             return;
         }
         if (!this._itemActionsController) {
