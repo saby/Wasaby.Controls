@@ -787,10 +787,8 @@ var
                 // т.к. крошки растянут колонку, поэтому размещаем крошки во второй колонке и задаем отрицательный margin слева.
                 // https://online.sbis.ru/doc/9fcac920-479a-40a3-8b8a-5aabb2886628
                 // В table-layout проблемы с растягиванием нет, поэтому используем colspan на крошке.
-                const isFullGridSup = GridLayoutUtil.isFullGridSupport();
-                const hasHeaderColumn = this._headerRows[0][1] && this._headerRows[0][1].isBreadCrumbs;
-                if (hasHeaderColumn) {
-                    if (!isFullGridSup) {
+                if (this._headerRows[0][1] && this._headerRows[0][1].isBreadCrumbs) {
+                    if (!GridLayoutUtil.isFullGridSupport()) {
                         headerColumn.isHiddenForBreadcrumbs = true;
                     } else {
                         headerColumn.shadowVisibility = 'hidden';
