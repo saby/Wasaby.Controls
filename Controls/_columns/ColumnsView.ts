@@ -15,7 +15,7 @@
  * </Controls.columns:View>
  * </pre>
  * 
- * @demo Controls-demo/list_new/ColumnsView
+ * @demo Controls-demo/list_new/ColumnsView/Default/Index
  */
 
 /**
