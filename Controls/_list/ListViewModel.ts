@@ -35,15 +35,14 @@ var _private = {
         };
     },
     getSpacingClassList: function(cfg) {
-        var
-            classList = '',
-            itemPadding = _private.getItemPadding(cfg),
-            style = cfg.style || 'default';
+        let classList = '';
+        const itemPadding = _private.getItemPadding(cfg);
+        const style = cfg.style || 'default';
 
-        classList += ' controls-ListView__itemContent controls-ListView__itemContent_' + style;
-        classList += ' controls-ListView__item_' + style + '-topPadding_' + (itemPadding.top || 'default').toLowerCase() + `_theme-${cfg.theme}`;
-        classList += ' controls-ListView__item_' + style + '-bottomPadding_' + (itemPadding.bottom || 'default').toLowerCase() + `_theme-${cfg.theme}`;
-        classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase() + `_theme-${cfg.theme}`;
+        classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}`;
+        classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${cfg.theme}`;
+        classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${cfg.theme}`;
+        classList += ` controls-ListView__item-rightPadding_${itemPadding.right}_theme-${cfg.theme}`;
 
         if (cfg.multiSelectVisibility !== 'hidden') {
             classList += ' controls-ListView__itemContent_withCheckboxes' + `_theme-${cfg.theme}`;
