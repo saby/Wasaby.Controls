@@ -5,6 +5,7 @@ import base64 = require('Core/base64');
 import { constants } from 'Env/Env';
 import * as objectMerge from 'Core/core-merge';
 import {Set} from 'Types/shim';
+import { Logger } from 'UI/Utils';
 
 const hrefMaxLength = 1499;
 const onlySpacesRegExp = /^\s+$/;
@@ -119,6 +120,7 @@ function isLinkGoodForDecorating(linkNode) {
         decodedLinkHref = decodeURI(linkHref);
     } catch (e) {
         // Защита от попытки декодирования ошибочной ссылки.
+        Logger.warn('ошибка "' + e.message + '" при попытке декодировать URI ' + linkHref);
         decodedLinkHref = '';
     }
     const linkText = isTextNode(firstChild) ? firstChild.toLowerCase() : '';
