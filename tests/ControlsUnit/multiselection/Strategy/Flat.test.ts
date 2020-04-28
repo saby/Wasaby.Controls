@@ -53,21 +53,21 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
          let selection = { selected: [], excluded: [] };
          selection = strategy.selectAll(selection);
          assert.deepEqual(selection.selected, [null]);
-         assert.deepEqual(selection.excluded, [null]);
+         assert.deepEqual(selection.excluded, []);
       });
 
       it('selected one', () => {
          let selection = { selected: [1], excluded: [] };
          selection = strategy.selectAll(selection);
          assert.deepEqual(selection.selected, [null]);
-         assert.deepEqual(selection.excluded, [null]);
+         assert.deepEqual(selection.excluded, []);
       });
 
       it('selected all, but one', () => {
          let selection = { selected: [null], excluded: [null, 2] };
          selection = strategy.selectAll(selection);
          assert.deepEqual(selection.selected, [null]);
-         assert.deepEqual(selection.excluded, [null]);
+         assert.deepEqual(selection.excluded, []);
       });
    });
 

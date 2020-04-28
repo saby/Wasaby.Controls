@@ -55,9 +55,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       const cloneSelection = clone(selection);
 
       cloneSelection.selected.length = 0;
-      cloneSelection.excluded.length = 0;
       cloneSelection.selected[0] = ALL_SELECTION_VALUE;
-      cloneSelection.excluded[0] = ALL_SELECTION_VALUE;
 
       return cloneSelection;
    }
@@ -122,7 +120,6 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   // TODO что должно вернуться если выбраны все за ислючением одного(скольких-нибудь)
    private _isAllSelected(selection: ISelection): boolean {
       return selection.selected.includes(ALL_SELECTION_VALUE);
    }
