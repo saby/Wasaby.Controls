@@ -324,18 +324,16 @@ var _private = {
     },
 
     saveSelection: function (self) {
+        const model = self._viewModel;
         /**
          * Input processing occurs on the input event. At the time of processing,
          * the data in the field has already changed. To work properly,
          * we need to know the selection before the changes. To do this, save it in the model.
          */
-        self._viewModel.selection = self._getFieldSelection();
-        /**
-         * If the model is changed, we apply all changes and inform the model that the changes are applied.
-         * The selection changes after a user action. Therefore, we do not need to change anything ourselves,
-         * only to inform the model about it.
-         */
-        self._viewModel.changesHaveBeenApplied();
+        model.selection = self._getFieldSelection();
+
+        _private.updateField(self, model.displayValue, model.selection);
+        model.changesHaveBeenApplied();
     },
 
     compatAutoComplete: function (autoComplete) {
@@ -440,6 +438,18 @@ var Base = Control.extend({
      * @protected
      */
     _fieldName: 'input',
+
+    /**
+     * @type {String} Значение атрибута value у <input/>.
+     * @remark
+     * Значение меняется только при инициализации, и смене режима на редактирование.
+     * Причина: Обработка пользовательского ввода происходит по событию input. В этот момент введенное значение
+     * уже отрисовано браузером. Это значение может быть изменено в зависимости от логики работы контрола.
+     * Чтобы не было морганий из-за синхронизации VDOM, значение меняется напрямую через свойство value на <input/>.
+     * Поэтому работа синхронизатора не требуется. Иначе из-за асинхронности, если во время обновления произойдет
+     * обработка ввода, то её результат будет удален синхронизатором после завершения обновления.
+     */
+    _fieldValue: null,
 
     /**
      * @type {Boolean} Determines whether the control is multiline.
@@ -631,6 +641,7 @@ var Base = Control.extend({
          * The state is not available until the control is mount to DOM. So hide the placeholder until then.
          */
         this._hidePlaceholder = this._autoComplete !== 'off' && !this._hidePlaceholderUsingCSS;
+        this._fieldValue = this._viewModel.displayValue;
     },
 
     _afterMount: function () {
@@ -651,6 +662,8 @@ var Base = Control.extend({
             // readOnly поле ввода не отображается. Подробнее:
             // TODO: https://online.sbis.ru/opendoc.html?guid=ba1ec63e-1915-499d-9e05-babfa3b79b41
             this._viewModel._oldDisplayValue = oldDisplayValue;
+
+            this._fieldValue = this._viewModel.displayValue;
         }
 
         const displayValueChangedByParent: boolean = oldDisplayValue !== this._viewModel.displayValue;
@@ -802,7 +815,7 @@ var Base = Control.extend({
     _inputHandler: function (event) {
         const field = this._getField();
         const model = this._viewModel;
-        const data = this._fixBugs.positionForInputProcessing({
+        const data = this._fixBugs.dataForInputProcessing({
             oldSelection: model.oldSelection,
             newPosition: field.selectionEnd,
             newValue: field.value,
@@ -818,22 +831,6 @@ var Base = Control.extend({
             selection, event.nativeEvent.inputType
         );
         const splitValue: ISplitValue = split(value, newValue, position, selection, inputType);
-
-        /**
-         * The iPad has a feature to replace the twice-entered "-" with hyphen or dash.
-         * After the second input, the previous character is deleted and, the hyphen or dash is entered.
-         * An error occurs if the previous character is not "-". For example, during the previous processing "-"
-         * could not be entered because of the logic of the control. The previous character must not be deleted in this case.
-         * It is necessary to restore it and consider that entered "-".
-         */
-        if (this._isMobileIOS) {
-            if (this._remoteChar && (splitValue.insert === _private.HYPHEN || splitValue.insert === _private.DASH)) {
-                splitValue.before += this._remoteChar;
-                splitValue.insert = '-';
-            }
-
-            this._remoteChar = inputType === 'deleteBackward' && splitValue.delete !== '-' ? splitValue.delete : '';
-        }
 
         _private.handleInput(this, splitValue, inputType);
 
@@ -1051,7 +1048,7 @@ var Base = Control.extend({
             }
         }
 
-        return model.displayValue;
+        return this._fieldValue;
     },
 
     _updateFieldInTemplate: function() {

@@ -341,7 +341,7 @@ var
                 stickyLadder = ladder.stickyLadder && ladder.stickyLadder[index];
 
             if (simpleLadder) {
-                version += 'LP_' + getItemsLadderVersion(simpleLadder);
+                version += 'LP_';
             }
             if (stickyLadder) {
                 version += 'SP_' + getItemsLadderVersion(stickyLadder);

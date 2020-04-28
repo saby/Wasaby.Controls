@@ -1,30 +1,26 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container controlsDemo__mb3">
-   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth400">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth350">
       <div class="controls-text-label_theme-{{_options.theme}}">list:View в шаблоне автодополнения</div>
       <Controls.suggest:SearchInput
-              attr:class="demo-SuggestNewSearch__listView"
+              attr:class="demo-SuggestNewSearch__listView controlsDemo__input"
               bind:value="_suggestCustomValue"
               displayProperty="title"
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/SuggestTemplate/resources/SuggestTemplate">
-              <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
-          </ws:suggestTemplate>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/SuggestTemplate/resources/SuggestTemplate"/>
       </Controls.suggest:SearchInput>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">grid:View в шаблоне автодополнения</div>
       <Controls.suggest:SearchInput
-              attr:class="demo-SuggestNewSearch__gridView"
+              attr:class="demo-SuggestNewSearch__gridView controlsDemo__input"
               bind:value="_suggestDefaultValue"
               displayProperty="title"
               searchParam="title"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/SearchInput/SuggestTemplate/resources/SuggestTemplateGrid">
-              <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
-          </ws:suggestTemplate>
+          <ws:suggestTemplate templateName="Controls-demo/Suggest_new/SearchInput/SuggestTemplate/resources/SuggestTemplateGrid"/>
       </Controls.suggest:SearchInput>
    </div>
 </div>

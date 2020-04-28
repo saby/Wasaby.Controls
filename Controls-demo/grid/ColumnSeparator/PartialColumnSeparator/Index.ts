@@ -3,7 +3,6 @@ import * as Template from 'wml!Controls-demo/grid/ColumnSeparator/PartialColumnS
 import {Memory} from 'Types/source';
 import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
 import * as clone from 'Core/core-clone';
-import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -68,4 +67,6 @@ export default class extends Control {
         }
         this._columns1 = newColumns;
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

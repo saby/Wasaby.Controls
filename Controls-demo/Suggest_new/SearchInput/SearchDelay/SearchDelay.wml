@@ -1,32 +1,28 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow demo-SearchSuggest__container controlsDemo__mb3">
-   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth400">
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo_fixedWidth350">
       <div class="controls-text-label_theme-{{_options.theme}}">Поиск без задержки</div>
       <Controls.suggest:SearchInput
-              attr:class="demo-SuggestNewSearch__noDelay"
+              attr:class="demo-SuggestNewSearch__noDelay controlsDemo__input"
               bind:value="_suggestCustomValue"
               displayProperty="title"
               searchParam="title"
               searchDelay="{{0}}"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/SearchDelay/resources/SuggestTemplate">
-              <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
-          </ws:suggestTemplate>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/SearchDelay/resources/SuggestTemplate"/>
       </Controls.suggest:SearchInput>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">Поиск с задержкой 1.5 секунды</div>
       <Controls.suggest:SearchInput
-              attr:class="demo-SuggestNewSearch__withDelay"
+              attr:class="demo-SuggestNewSearch__withDelay controlsDemo__input"
               bind:value="_suggestDefaultValue"
               displayProperty="title"
               searchParam="title"
               searchDelay="{{1500}}"
               navigation="{{_navigation}}"
               source="{{_source}}">
-          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/SearchDelay/resources/SuggestTemplate">
-              <ws:templateOptions demoClass="controlsDemo_fixedWidth400"/>
-          </ws:suggestTemplate>
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/SearchInput/SearchDelay/resources/SuggestTemplate"/>
       </Controls.suggest:SearchInput>
    </div>
 </div>

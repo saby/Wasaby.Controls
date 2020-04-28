@@ -2,8 +2,6 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/EditInPlace/Toolbar/Toolbar';
 import {Memory} from 'Types/source';
 import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
-import 'css!Controls-demo/Controls-demo';
-
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
@@ -14,4 +12,6 @@ export default class extends Control {
             data: getData()
         });
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
