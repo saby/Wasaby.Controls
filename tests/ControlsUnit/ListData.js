@@ -45,11 +45,6 @@ define('ControlsUnit/ListData', function() {
          }];
       },
 
-      getNodesSourceController() {
-         // TODO сделать
-         return {};
-      },
-
       getFlatItems: function() {
          return [{
             'id': 1,

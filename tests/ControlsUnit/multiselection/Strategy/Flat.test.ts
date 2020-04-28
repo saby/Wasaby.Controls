@@ -14,15 +14,15 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
    describe('select', () => {
       it('not selected', () => {
-         const selection = { selected: [], excluded: [] };
-         strategy.select(selection, [2]);
+         let selection = { selected: [], excluded: [] };
+         selection = strategy.select(selection, [2]);
          assert.deepEqual(selection.selected, [2]);
          assert.deepEqual(selection.excluded, []);
       });
 
       it('selected all, but one', () => {
-         const selection = { selected: [null], excluded: [null, 2] };
-         strategy.select(selection, [2]);
+         let selection = { selected: [null], excluded: [null, 2] };
+         selection = strategy.select(selection, [2]);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null]);
       });
@@ -30,15 +30,15 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
    describe('unselect', () => {
       it('selected one', () => {
-         const selection = { selected: [2], excluded: [] };
-         strategy.unselect(selection, [2]);
+         let selection = { selected: [2], excluded: [] };
+         selection = strategy.unselect(selection, [2]);
          assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
       });
 
       it('selected all', () => {
-         const selection = { selected: [null], excluded: [null] };
-         strategy.select(selection, [2]);
+         let selection = { selected: [null], excluded: [null] };
+         selection = strategy.select(selection, [2]);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null, 2]);
       });
@@ -46,22 +46,22 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
    describe('selectAll', () => {
       it('not selected', () => {
-         const selection = { selected: [], excluded: [] };
-         strategy.selectAll(selection);
+         let selection = { selected: [], excluded: [] };
+         selection = strategy.selectAll(selection);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null]);
       });
 
       it('selected one', () => {
-         const selection = { selected: [1], excluded: [] };
-         strategy.selectAll(selection);
+         let selection = { selected: [1], excluded: [] };
+         selection = strategy.selectAll(selection);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null]);
       });
 
       it('selected all, but one', () => {
-         const selection = { selected: [null], excluded: [null, 2] };
-         strategy.selectAll(selection);
+         let selection = { selected: [null], excluded: [null, 2] };
+         selection = strategy.selectAll(selection);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null]);
       });
@@ -69,15 +69,15 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
    describe('unselectAll', () => {
       it('selected one', () => {
-         const selection = { selected: [1], excluded: [] };
-         strategy.unselectAll(selection);
+         let selection = { selected: [1], excluded: [] };
+         selection = strategy.unselectAll(selection);
          assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
       });
 
       it('selected all, but one', () => {
-         const selection = { selected: [null], excluded: [null, 2] };
-         strategy.unselectAll(selection);
+         let selection = { selected: [null], excluded: [null, 2] };
+         selection = strategy.unselectAll(selection);
          assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
       });
@@ -85,22 +85,22 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
    describe('toggleAll', () => {
       it('not selected', () => {
-         const selection = { selected: [], excluded: [] };
-         strategy.selectAll(selection);
+         let selection = { selected: [], excluded: [] };
+         selection = strategy.toggleAll(selection);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null]);
       });
 
       it('selected one', () => {
-         const selection = { selected: [1], excluded: [] };
-         strategy.selectAll(selection);
+         let selection = { selected: [1], excluded: [] };
+         selection = strategy.toggleAll(selection);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null, 1]);
       });
 
       it('selected all, but one', () => {
-         const selection = { selected: [null], excluded: [null, 2] };
-         strategy.selectAll(selection);
+         let selection = { selected: [null], excluded: [null, 2] };
+         selection = strategy.toggleAll(selection);
          assert.deepEqual(selection.selected, [2]);
          assert.deepEqual(selection.excluded, []);
       });
