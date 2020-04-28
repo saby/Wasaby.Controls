@@ -194,6 +194,10 @@ export default class Group extends Control<IControlOptions> {
 
             this._updateTopBottom(data);
 
+            if (this._isFixed) {
+                this._children.stickyFixed.start([data.id].concat(this._stickyHeadersIds[data.position]));
+            }
+
             // Register group after first header is registered
             if (!this._isRegistry) {
                 this._notify('stickyRegister', [{
