@@ -206,8 +206,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
          },
 
          prepareFilter(filter: object, selection: TSelectionRecord, searchParam: string|undefined, parentProperty: string): object {
-            const propsToDelete = ['SelectionWithPath'];
-            const resultFilter = Utils.object.clone(filter);
+            filter = Utils.object.clone(filter);
 
              // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
              // TODO KINDO
@@ -221,18 +220,13 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
              // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
              // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
             if (searchParam && selection.get('marked')[0] !== null) {
-               propsToDelete.push(searchParam);
+               delete filter[searchParam];
             }
             if (parentProperty) {
-               propsToDelete.push(parentProperty);
+               delete filter[parentProperty];
             }
-
-            propsToDelete.forEach((propName) => {
-               delete resultFilter[propName];
-            });
-
-            resultFilter.selection = selection;
-            return resultFilter;
+            filter.selection = selection;
+            return filter;
          },
 
          prepareResult: function(result, initialSelection, keyProperty, selectCompleteInitiator) {
