@@ -324,6 +324,19 @@ var _private = {
         }
     },
 
+    /**
+     * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
+     * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
+     * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
+     * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
+     *
+     * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
+     * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+     */
+    isItemsSelectionAllowed(options: object): boolean {
+        return options.hasOwnProperty('selectedKeysCount');
+    },
+
     resolveIndicatorStateAfterReload: function(self, list, navigation):void {
         if (!self._isMounted) {
             return;
@@ -471,9 +484,9 @@ var _private = {
             self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
         }
     },
-    toggleSelection: function(self, event) {
+    spaceHandler: function(self, event) {
         const allowToggleSelection = !_private.isBlockedForLoading(self._loadingIndicatorState) &&
-            self._children.selectionController;
+            self._selectionController;
 
         if (allowToggleSelection) {
             const model = self.getViewModel();
@@ -484,7 +497,7 @@ var _private = {
             }
 
             if (toggledItemId) {
-                self._children.selectionController.onCheckBoxClick(toggledItemId, model.getSelectionStatus(toggledItemId));
+                self._selectionController.toggleItem(toggledItemId);
                 _private.moveMarkerToNext(self, event);
             }
         }
@@ -2536,7 +2549,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const isSwiped = this._options.useNewModel ? itemData.isSwiped() : itemData.isSwiped;
         const key = this._options.useNewModel ? itemData.getContents().getId() : itemData.key;
 
-        if (direction === 'right' && !isSwiped) {
+        if (direction === 'right' && !isSwiped && _private.isItemsSelectionAllowed(this._options)) {
             if (!this._selectionController) {
                this._createSelectionController();
             }
@@ -2569,7 +2582,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
         }
-        if (!this._options.itemActions) {
+        if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
             this._notify('itemSwipe', [actionsItem, childEvent]);
         }
     },

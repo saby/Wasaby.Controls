@@ -116,8 +116,7 @@ define(['Controls/grid'], function(gridMod) {
       it('beforeMount', function() {
          var
             cfg = {
-               columns: [],
-               multiSelectReady: function(){}
+               columns: []
             },
             gridView = new gridMod.GridView(cfg);
          gridView._listModel = {

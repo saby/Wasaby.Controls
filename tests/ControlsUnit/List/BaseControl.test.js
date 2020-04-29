@@ -1405,7 +1405,7 @@ define([
          assert.isFalse(notified);
       });
 
-      /*it('spaceHandler', async function() {
+      it('spaceHandler', async function() {
          var
              cfg = {
                 viewModelConstructor: lists.ListViewModel,
@@ -1434,7 +1434,7 @@ define([
          await baseControl._beforeMount(cfg);
          baseControl._selectionController = {
             toggleItem: (key) => {
-               if (status) {
+               if (baseControl._listViewModel.getSelectionStatus(key)) {
                   baseControl._listViewModel._selectedKeys.pop(key);
                } else {
                   baseControl._listViewModel._selectedKeys.push(key);
@@ -1457,7 +1457,7 @@ define([
 
 
          sandbox.restore();
-      });*/
+      });
 
       it('loadToDirection up', async function() {
          const source = new sourceLib.Memory({
@@ -1658,7 +1658,7 @@ define([
             });
             assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
          });
-         /*it('depend on placeholders', () => {
+         it('depend on placeholders', () => {
             updateShadowModeHandler.call(control, event, {
                top: 100,
                bottom: 0
@@ -1673,7 +1673,7 @@ define([
                top: 100,
                bottom: 100
             });
-         });*/
+         });
          it('depend on items exist', () => {
             control._options.navigation.view = 'infinity';
             control._sourceController._hasMoreData = {up: true, down: true};
@@ -1710,7 +1710,7 @@ define([
             });
             assert.deepEqual({top: 'visible', bottom: 'visible'}, control.lastNotifiedArguments[0]);
          });
-         /*it('with demand navigation', () => {
+         it('with demand navigation', () => {
             control._options.navigation.view = 'maxCount';
             control._options.navigation.viewConfig.maxCountValue = 12;
             control._listViewModel.count = 10;
@@ -1726,9 +1726,9 @@ define([
                bottom: 0
             });
             assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
-         });*/
+         });
 
-         /*it('depend on portionedSearch', () => {
+         it('depend on portionedSearch', () => {
             control._sourceController._hasMoreData = {up: false, down: true};
             control._showContinueSearchButton = true;
             updateShadowModeHandler.call(control, event, {
@@ -1750,7 +1750,7 @@ define([
                bottom: 0
             });
             assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
-         });*/
+         });
       });
 
       it('scrollToEdge_load', function(done) {
@@ -2684,7 +2684,7 @@ define([
       });
 
 
-      /*it('List navigation by keys and after reload', function(done) {
+      it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
          lists.BaseControl._private.scrollToItem = function() {
          };
@@ -2736,6 +2736,9 @@ define([
                viewModelConstructor: lists.ListViewModel
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
+         lnBaseControl._selectionController = {
+            toggleItem: function() { }
+         };
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -2773,9 +2776,9 @@ define([
                }, 1);
             }, 1);
          }, 1);
-      });*/
+      });
 
-      /*it('_onCheckBoxClick', function() {
+      it('_onCheckBoxClick', function() {
          var rs = new collection.RecordSet({
             keyProperty: 'id',
             rawData: data
@@ -2821,9 +2824,8 @@ define([
             assert.equal(args[1], 0);
          };
          ctrl._selectionController = {
-            toggleItem: function(key, status) {
-               assert.equal(key, 1);
-               assert.equal(status, 1);
+            toggleItem: function(key) {
+               assert.equal(key, 2);
             }
          };
          ctrl._onCheckBoxClick({}, 2, 0);
@@ -2833,13 +2835,12 @@ define([
             assert.equal(args[1], 1);
          };
          ctrl._selectionController = {
-            toggleItem: function(key, status) {
+            toggleItem: function(key) {
                assert.equal(key, 1);
-               assert.equal(status, 1);
             }
          };
          ctrl._onCheckBoxClick({}, 1, 1);
-      });*/
+      });
 
       it('_onItemClick', async function() {
          var cfg = {
@@ -4563,11 +4564,14 @@ define([
                      }
                   }
                };
+               instance._selectionController = {
+                  toggleItem: function() { }
+               };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
             }
 
-           /* it('multiSelectVisibility: visible, should start animation', function() {
+            it('multiSelectVisibility: visible, should start animation', function() {
                initTest('visible');
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
@@ -4583,7 +4587,7 @@ define([
                initTest('hidden');
                instance._listSwipe({}, itemData, childEvent);
                assert.isNotOk(instance.getViewModel()._rightSwipedItem);
-            });*/
+            });
          });
          describe('itemSwipe event', function() {
             var
@@ -4597,7 +4601,7 @@ define([
                   multiSelectStatus: false,
                   item: {}
                };
-            /*it('list has item actions, event should not fire', function() {
+            it('list has item actions, event should not fire', function() {
                var
                   cfg = {
                      viewName: 'Controls/List/ListView',
@@ -4619,6 +4623,9 @@ define([
                      }
                   }
                };
+               instance._selectionController = {
+                  toggleItem: function() { }
+               };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
                instance._notify = function(eventName) {
@@ -4627,9 +4634,9 @@ define([
                   }
                };
                instance._listSwipe({}, itemData, childEvent);
-            });*/
+            });
 
-            /*it('list has multiselection, event should not fire', function() {
+            it('list has multiselection, event should not fire', function() {
                var
                   cfg = {
                      viewName: 'Controls/List/ListView',
@@ -4651,6 +4658,9 @@ define([
                      }
                   }
                };
+               instance._selectionController = {
+                  toggleItem: function() { }
+               };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
                instance._notify = function(eventName) {
@@ -4659,9 +4669,9 @@ define([
                   }
                };
                instance._listSwipe({}, itemData, childEvent);
-            });*/
+            });
 
-            /*it('can update itemActions on left swipe', function(done) {
+            it('can update itemActions on left swipe', function(done) {
                var
                   cfg = {
                      itemActions: [1, 2, 3],
@@ -4706,7 +4716,7 @@ define([
                      done();
                   });
                return done;
-            });*/
+            });
 
             it('can update itemActions on left swipe if they set by itemActionsProperty', function(done) {
                var
@@ -4755,7 +4765,7 @@ define([
                return done;
             });
 
-           /* it('list doesn\'t handle swipe, event should fire', function() {
+            it('list doesn\'t handle swipe, event should fire', function() {
                var
                   cfg = {
                      viewName: 'Controls/List/ListView',
@@ -4767,7 +4777,7 @@ define([
                         idProperty: 'id'
                      },
                      viewModelConstructor: lists.ListViewModel,
-                     source: source
+                     source: source,
                   },
                   instance = new lists.BaseControl(cfg),
                   notifyCalled = false;
@@ -4776,6 +4786,9 @@ define([
                      close: function() {
                      }
                   }
+               };
+               instance._selectionController = {
+                  toggleItem: function() { }
                };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
@@ -4786,7 +4799,7 @@ define([
                };
                instance._listSwipe({}, itemData, childEvent);
                assert.isTrue(notifyCalled);
-            });*/
+            });
          });
 
          it('_onAfterBeginEdit parametrs', function() {
@@ -4824,7 +4837,7 @@ define([
             assert.isTrue(isNotified);
          });
 
-         /*it('_listSwipe  multiSelectStatus = true', function(done) {
+         it('_listSwipe  multiSelectStatus = true', function(done) {
             var callBackCount = 0;
             var
                cfg = {
@@ -4886,9 +4899,9 @@ define([
                   done();
                });
             return done;
-         });*/
+         });
 
-         /*it('_listSwipe  multiSelectStatus = false', function(done) {
+         it('_listSwipe  multiSelectStatus = false', function(done) {
             var callBackCount = 0;
             var
                cfg = {
@@ -4930,7 +4943,7 @@ define([
                   done();
                });
             return done;
-         });*/
+         });
 
          it('_listSwipe, multiSelectStatus = true, item is swiped', function(done) {
             var callBackCount = 0;
