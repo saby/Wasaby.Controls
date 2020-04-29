@@ -1,4 +1,4 @@
-@Library('pipeline') _
+@Library('pipeline@bls/web_only') _
 
 def version = '20.4000'
 
