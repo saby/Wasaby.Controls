@@ -21,7 +21,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * @public
  * @author Красильников А.С.
  * @category Toggle
- * @demo Controls-demo/Switch/SwitchDemo
+ * @demo Controls-demo/toggle/Switch/Base/Index
  */
 
 /*
@@ -37,7 +37,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * @public
  * @author Красильников А.С.
  * @category Toggle
- * @demo Controls-demo/Switch/SwitchDemo
+ * @demo Controls-demo/toggle/Switch/Base/Index
  */
 
 /**
