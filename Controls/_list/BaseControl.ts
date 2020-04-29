@@ -1851,8 +1851,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _draggingEntity: null,
     _draggingTargetItem: null,
 
-    _isMobileIOS: detection.isMobileIOS,
-
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
