@@ -167,6 +167,7 @@ define([
                cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_treeGrid/Tree/TreeViewModel')
             );
             setTimeout(function() {
+               ctrl._afterUpdate({});
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._children.listView = {
                   getItemsContainer: function() {
@@ -175,7 +176,6 @@ define([
                      };
                   }
                };
-               ctrl._afterUpdate({});
                ctrl._beforeUnmount();
                done();
             }, 100);
@@ -2430,7 +2430,9 @@ define([
                               resolve();
                               return res;
                            });
+                        lnBaseControl._afterUpdate({});
                      });
+                  lnBaseControl._afterUpdate({});
                }, 10);
             }, 10);
          });
@@ -2516,9 +2518,17 @@ define([
                ],
                viewModelConstructor: lists.ListViewModel
             };
-            await baseControl._beforeUpdate(newCfg);
-            baseControl._afterUpdate(cfg);
-            assert.equal(actionsUpdateCount, 2);
+            return new Promise(function(resolve) {
+               baseControl._beforeUpdate(newCfg).addCallback(function() {
+                  try {
+                     assert.equal(actionsUpdateCount, 2);
+                     resolve();
+                  } catch (e) {
+                     resolve(e);
+                  }
+               });
+               baseControl._afterUpdate(cfg);
+            });
          });
          it('updates on afterUpdate if model was recreated', function() {
             baseControl._itemActionsInitialized = true;
@@ -2788,6 +2798,7 @@ define([
                lnBaseControl._beforeUpdate(lnCfg2);
 
                setTimeout(function() {
+                  lnBaseControl._afterUpdate({});
                   assert.equal(lnBaseControl.getViewModel()
                      .getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');
                   done();
@@ -2941,9 +2952,10 @@ define([
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          assert.isFalse(ctrl._needBottomPadding);
-         await ctrl._beforeUpdate(cfgWithSource);
-         assert.isTrue(ctrl._needBottomPadding);
-
+         ctrl._beforeUpdate(cfgWithSource).addCallback(function() {
+            assert.isTrue(ctrl._needBottomPadding);
+         });
+         ctrl._afterUpdate(cfgWithSource);
       });
 
       it('setHasMoreData after reload in beforeMount', async function() {
@@ -5545,6 +5557,7 @@ define([
          cfgClone.sorting = [{ title: 'ASC' }];
          instance._beforeUpdate(cfgClone);
          clock.tick(100);
+         instance._afterUpdate({});
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
 
@@ -5553,6 +5566,7 @@ define([
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          instance._beforeUpdate(cfgClone);
+         instance._afterUpdate({});
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
@@ -5590,6 +5604,7 @@ define([
 
          cfgClone.searchValue = 'test';
          instance._beforeUpdate(cfgClone);
+         instance._afterUpdate({});
 
          assert.isTrue(portionSearchReseted);
          portionSearchReseted = false;
