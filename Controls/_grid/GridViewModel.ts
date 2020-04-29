@@ -747,7 +747,8 @@ var
             const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
             const headerColumn = {
                 column: cell,
-                index: columnIndex
+                index: columnIndex,
+                shadowVisibility: 'visible'
             };
             let cellClasses = `controls-Grid__header-cell controls-Grid__header-cell_theme-${theme}` +
                 ` controls-Grid__${this._isMultiHeader ? 'multi-' : ''}header-cell_min-height_theme-${theme}` +
@@ -786,9 +787,14 @@ var
                 // т.к. крошки растянут колонку, поэтому размещаем крошки во второй колонке и задаем отрицательный margin слева.
                 // https://online.sbis.ru/doc/9fcac920-479a-40a3-8b8a-5aabb2886628
                 // В table-layout проблемы с растягиванием нет, поэтому используем colspan на крошке.
-                if (!GridLayoutUtil.isFullGridSupport() && this._headerRows[0][1] && this._headerRows[0][1].isBreadCrumbs) {
-                    headerColumn.isHiddenForBreadcrumbs = true;
+                if (this._headerRows[0][1] && this._headerRows[0][1].isBreadCrumbs) {
+                    if (!GridLayoutUtil.isFullGridSupport()) {
+                        headerColumn.isHiddenForBreadcrumbs = true;
+                    } else {
+                        headerColumn.shadowVisibility = 'hidden';
+                    }
                 }
+
             } else {
                 cellClasses += _private.getPaddingHeaderCellClasses({
                     style: this._options.style,
@@ -838,7 +844,6 @@ var
 
             let cellContentClasses = '';
             let cellStyles = '';
-            let shadowVisibility = 'visible';
 
             if (cell.startRow || cell.startColumn) {
                 let { endRow, startRow, endColumn, startColumn } = cell;
@@ -882,7 +887,6 @@ var
                 cellContentClasses += ' controls-Grid__header-cell-content-block';
             }
 
-            headerColumn.shadowVisibility = shadowVisibility;
             headerColumn.cellStyles = cellStyles;
             headerColumn.cellClasses = cellClasses;
             headerColumn.cellContentClasses = cellContentClasses;
