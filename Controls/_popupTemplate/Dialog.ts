@@ -62,16 +62,17 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     }
 
     private _onMouseDown(event: SyntheticEvent<Event>): void {
-        const target = event.target?.tagName === 'INPUT' ? event.target : event.currentTarget;
-        // элементом, на котором произошло событие, может быть контрол, растянутый на ширину шапки. Чтобы корректно получать дерево контролов, берем таргет, к которому был прикреплен обработчик события, если это не инпут.
-        if (this._needStartDrag(target)) {
+        if (this._needStartDrag(event)) {
             this._startDragNDrop(event);
         }
     }
 
-    private _needStartDrag(target: EventTarget): boolean {
-        const controlsArray = goUpByControlTree(target);
-
+    private _needStartDrag(event: SyntheticEvent<Event>): boolean {
+        // элементом, на котором произошло событие, может быть контрол, растянутый на ширину шапки. Чтобы корректно получать дерево контролов, берем таргет, к которому был прикреплен обработчик события, если это не инпут.
+        if (event.target.tagName === 'INPUT') {
+            return false;
+        }
+        const controlsArray = goUpByControlTree(event.currentTarget);
         // if click to control then control must handle click
         // Шапка диалога - отдельный контрол, поэтому теперь индекс диалога в дереве контролов сместился
         //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=33010df1-501e-4874-a02c-a5f45394a661
