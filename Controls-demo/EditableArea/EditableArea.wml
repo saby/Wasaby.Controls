@@ -30,16 +30,18 @@
                     style="withBackground"
                     attr:class="ws-flexbox"
                     toolbarVisibility="{{true}}">
-                <Controls.editableArea:Base
-                        bind:value="content.editObject.text1"
-                        attr:class="ControlsDemo-EditableArea__longExample__editor_wrapper"
-                        style="asLink"
-                >
-                    <ws:editorTemplate>
-                        <Controls.input:Text selectOnClick="{{ false }}"
-                                             attr:class="controls-Input_negativeOffset_theme_{{_options.theme}} ControlsDemo-EditableArea__longExample__input"/>
-                    </ws:editorTemplate>
-                </Controls.editableArea:Base>
+                <div class="ControlsDemo-EditableArea__longExample__editor_wrapper">
+                    <Controls.editableArea:Base
+                            bind:value="content.editObject.text1"
+                            attr:class="ControlsDemo-EditableArea__longExample__editor"
+                            style="asLink"
+                    >
+                        <ws:editorTemplate>
+                            <Controls.input:Text selectOnClick="{{ false }}"
+                                                 attr:class="controls-Input_negativeOffset_theme_{{_options.theme}} ControlsDemo-EditableArea__longExample__input"/>
+                        </ws:editorTemplate>
+                    </Controls.editableArea:Base>
+                </div>
             </Controls.editableArea:View>
     </div>
 
