@@ -81,7 +81,7 @@ export class Controller {
             this._collection.setActionsAssigned(false);
         }
         if (!this._collection.areActionsAssigned()) {
-            if (this._commonItemActions && !this._itemActionsProperty) {
+            if (this._commonItemActions || this._itemActionsProperty) {
                 this._assignActions();
             }
             this._calculateActionsTemplateConfig({
