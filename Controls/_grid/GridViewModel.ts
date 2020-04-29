@@ -1384,7 +1384,7 @@ var
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
                         getVersion: () => {
-                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
+                           return _private.calcItemColumnVersion(self, current.getVersion(), this.columnIndex, this.index);
                         },
                         _preferVersionAPI: true,
                         gridCellStyles: '',
