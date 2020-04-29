@@ -2518,7 +2518,7 @@ define([
                ],
                viewModelConstructor: lists.ListViewModel
             };
-            baseControl._beforeUpdate(newCfg).addCallback(funciton() {
+            baseControl._beforeUpdate(newCfg).addCallback(function() {
                assert.equal(actionsUpdateCount, 2);
             });
             baseControl._afterUpdate(cfg);
