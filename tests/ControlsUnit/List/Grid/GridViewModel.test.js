@@ -2073,6 +2073,25 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isTrue(model.isFixedLayout());
          });
 
+         describe('header', () => {
+            it('valign header cell', function () {
+               model._headerRows = [
+                  [ /* Первая строка шапки */
+                     {
+                        /* Checkbox */
+                        startRow: 0,
+                        startColumn: 0
+                     },
+                     { startColumn: 1 }
+                  ],
+                  [ /* Вторая строка шапки */ ]
+               ];
+               model._maxEndRow = 3;
+
+               cAssert.isClassesEqual(model.getCurrentHeaderColumn(0, 1).cellClasses, 'controls-Grid__header-cell_align_items_top');
+            });
+         });
+
          it('_prepareCrossBrowserColumn', function () {
             const initialColumns = [
                {title: 'first', width: ''},
