@@ -2518,10 +2518,17 @@ define([
                ],
                viewModelConstructor: lists.ListViewModel
             };
-            baseControl._beforeUpdate(newCfg).addCallback(function() {
-               assert.equal(actionsUpdateCount, 2);
+            return new Promise(function(resolve) {
+               baseControl._beforeUpdate(newCfg).addCallback(function() {
+                  try {
+                     assert.equal(actionsUpdateCount, 2);
+                     resolve();
+                  } catch (e) {
+                     resolve(e);
+                  }
+               });
+               baseControl._afterUpdate(cfg);
             });
-            baseControl._afterUpdate(cfg);
          });
          it('updates on afterUpdate if model was recreated', function() {
             baseControl._itemActionsInitialized = true;
