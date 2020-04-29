@@ -4,7 +4,7 @@
          <div class="controls-Container__overlay" on:mousedown="_overlayClickHandler()"
               style="z-index: {{item.currentZIndex}};"></div>
       </ws:if>
-      <Controls.Pending name="{{item.id}}_registrator" attr:key="{{item.id}}">
+      <Controls.Pending name="{{item.id}}_registrator" attr:key="{{item.id}}" class="ws-float-area-stack-panel-overflow">
          <UI.HotKeys:Dispatcher>
             <Controls._popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
                                            on:deactivated="_popupDeactivated(item.id)"
