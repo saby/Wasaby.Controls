@@ -68,12 +68,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     }
 
     private _needStartDrag(target: EventTarget): boolean {
-        const controlsArray = goUpByControlTree(target);
-
-        // if click to control then control must handle click
-        // Шапка диалога - отдельный контрол, поэтому теперь индекс диалога в дереве контролов сместился
-        //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=33010df1-501e-4874-a02c-a5f45394a661
-        return this._options.draggable && controlsArray[1]._container === this._container;
+        return this._options.draggable && target.tagName !== 'INPUT';
     }
 
     private _startDragNDrop(event: SyntheticEvent<Event>): void {
