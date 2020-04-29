@@ -2064,20 +2064,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
         }
-        // UC: Record might be editing on page load, then we should initialize Item Actions.
-        if (
-            newOptions.itemActions !== this._options.itemActions ||
-            newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
-            (newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated ||
-            newOptions.itemActionsProperty ||
-            (newOptions.editingConfig && newOptions.editingConfig.item)
-        ) {
-            this._initItemActions();
-        }
         if (recreateSource) {
             this.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
         }
-
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }
@@ -2095,6 +2084,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._groupingLoader = new GroupingLoader({});
         } else if (!newOptions.groupProperty && this._options.groupProperty) {
             this._groupingLoader.destroy();
+        }
+
+        // UC: Record might be editing on page load, then we should initialize Item Actions.
+        if (
+            newOptions.itemActions !== this._options.itemActions ||
+            newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
+            (newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated ||
+            newOptions.itemActionsProperty ||
+            (newOptions.editingConfig && newOptions.editingConfig.item)
+        ) {
+            this._initItemActions();
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -2246,10 +2246,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
-        if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
-            this._shouldUpdateItemActions = false;
-            this._updateItemActions();
-        }
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;

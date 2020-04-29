@@ -379,6 +379,10 @@ export class Controller {
         this._collection.setSwipeConfig(swipeConfig);
     }
 
+    /**
+     * @param actions
+     * @private
+     */
     private _wrapActionsInContainer(
         actions: IItemAction[]
     ): IItemActionsContainer {
