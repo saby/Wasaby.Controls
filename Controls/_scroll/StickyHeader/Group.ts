@@ -70,28 +70,9 @@ export default class Group extends Control<IControlOptions> {
 
     private _delayedHeaders: number[] = [];
 
-    private _updateContext(position: POSITION, value: number) {
-        this._stickyHeaderContext[position] = value;
-        this._stickyHeaderContext.updateConsumers();
-    }
-
-    protected _getChildContext() {
-        return {
-            stickyHeader: this._stickyHeaderContext
-        };
-    }
-
     protected _beforeMount(options: IControlOptions, context): void {
         this._isStickySupport = isStickySupport();
         this._index = getNextId();
-        this._stickyHeaderContext = new StickyHeaderContext({
-            shadowPosition: context?.stickyHeader?.shadowPosition
-        });
-    }
-
-    protected _beforeUpdate(options: IControlOptions, context): void {
-        this._stickyHeaderContext.shadowPosition = context?.stickyHeader?.shadowPosition;
-        this._stickyHeaderContext.updateConsumers();
     }
 
     protected _afterMount(): void {
@@ -276,9 +257,9 @@ export default class Group extends Control<IControlOptions> {
         );
     }
 
-    static contextTypes(): {} {
-        return {
-            stickyHeader: StickyHeaderContext
-        };
-    }
+    // static contextTypes(): {} {
+    //     return {
+    //         stickyHeader: StickyHeaderContext
+    //     };
+    // }
 }
