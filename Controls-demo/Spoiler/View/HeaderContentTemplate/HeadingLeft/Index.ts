@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Spoiler/View/Scenarios/SecondScenario/SecondScenario');
+import controlTemplate = require('wml!Controls-demo/Spoiler/View/HeaderContentTemplate/HeadingLeft/HeadingLeft');
 import 'css!Controls-demo/Controls-demo';
 
 class SecondScenario extends Control<IControlOptions> {

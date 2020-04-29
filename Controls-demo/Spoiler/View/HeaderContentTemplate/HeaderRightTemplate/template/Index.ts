@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Spoiler/View/HeaderContentTemplate/template/Template');
+import controlTemplate = require('wml!Controls-demo/Spoiler/View/HeaderContentTemplate/HeaderRightTemplate/template/Template');
 import notifyHandler = require('Controls/Utils/tmplNotify');
 import 'css!Controls-demo/Controls-demo';
 
