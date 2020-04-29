@@ -55,6 +55,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       const cloneSelection = clone(selection);
 
       cloneSelection.selected.length = 0;
+      cloneSelection.excluded.length = 0;
       cloneSelection.selected[0] = ALL_SELECTION_VALUE;
 
       return cloneSelection;

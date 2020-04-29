@@ -22,19 +22,6 @@ export interface ISelectionControllerOptions {
    strategyOptions?: ITreeSelectionStrategyOptions;
 }
 
-export interface ISelectionDifference {
-   newKeys: TKeys;
-   added: TKeys;
-   removed: TKeys;
-}
-
-export interface ISelectionControllerResult {
-   selectedKeysDiff: ISelectionDifference;
-   excludedKeysDiff: ISelectionDifference;
-   selectedCount: number;
-   isAllSelected: boolean;
-}
-
 export interface ITreeSelectionStrategyOptions {
    selectAncestors: boolean;
    selectDescendants: boolean;
@@ -48,6 +35,29 @@ export interface IFlatSelectionStrategyOptions {
    items: RecordSet;
 }
 
+/**
+ * Изменения в состоянии выбранных ключей
+ */
+export interface ISelectionDifference {
+   keys: TKeys;
+   added: TKeys;
+   removed: TKeys;
+}
+
+/**
+ * Результат метода SelectionController-а
+ */
+export interface ISelectionControllerResult {
+   selectedKeysDiff: ISelectionDifference;
+   excludedKeysDiff: ISelectionDifference;
+   selectedCount: number;
+   isAllSelected: boolean;
+}
+
+/**
+ * Данные в рекорде
+ * Используется чтобы определить состояние узла с незагруженными детьми
+ */
 export interface IEntryPath {
    id: TKey;
    parent: TKey;

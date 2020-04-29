@@ -109,8 +109,8 @@ export class Controller {
    handleAddItems(addedItems: Record[]): ISelectionControllerResult {
       this._updateModel(this._selection);
       return {
-         selectedKeysDiff: { newKeys: [], added: [], removed: [] },
-         excludedKeysDiff: { newKeys: [], added: [], removed: [] },
+         selectedKeysDiff: { keys: [], added: [], removed: [] },
+         excludedKeysDiff: { keys: [], added: [], removed: [] },
          selectedCount: this._getCount(this._selection),
          isAllSelected: this._isAllSelected(this._selection)
       };
@@ -176,13 +176,13 @@ export class Controller {
          excludedKeysDiff = ArraySimpleValuesUtil.getArrayDifference(oldExcludedKeys, newExcludedKeys);
 
       const selectedDifference: ISelectionDifference = {
-         newKeys: newSelectedKeys,
+         keys: newSelectedKeys,
          added: selectedKeysDiff.added,
          removed: selectedKeysDiff.removed
       };
 
       const excludedDifference: ISelectionDifference = {
-         newKeys: newExcludedKeys,
+         keys: newExcludedKeys,
          added: excludedKeysDiff.added,
          removed: excludedKeysDiff.removed
       };

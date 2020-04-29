@@ -1,4 +1,3 @@
-/*
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
@@ -131,7 +130,7 @@ describe('Controls/_multiselection/Controller', () => {
    });
 
    it('handleRemoveItems', () => {
-      controller.handleRemoveItems([]);
+      controller.handleRemoveItems([]); // TODO add args
       assert.equal(model.flag, true);
    });
 
@@ -140,4 +139,3 @@ describe('Controls/_multiselection/Controller', () => {
       assert.equal(model.flag, true);
    });
 });
-*/

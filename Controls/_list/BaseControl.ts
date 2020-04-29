@@ -1825,12 +1825,12 @@ var _private = {
 
       const selectedDiff = result.selectedKeysDiff;
       if (selectedDiff.added.length || selectedDiff.removed.length) {
-         self._notify('selectedKeysChanged', [selectedDiff.newKeys, selectedDiff.added, selectedDiff.removed]);
+         self._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
       }
 
       const excludedDiff = result.excludedKeysDiff;
       if (excludedDiff.added.length || excludedDiff.removed.length) {
-         self._notify('excludedKeysChanged', [excludedDiff.newKeys, excludedDiff.added, excludedDiff.removed]);
+         self._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
       }
 
       // для связи с контроллером ПМО
