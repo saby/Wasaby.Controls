@@ -2486,61 +2486,6 @@ define([
          afterEach(() => {
             actionsUpdateCount = 0;
          });
-         it('afterMount with editing item', function() {
-            baseControl._afterMount(cfg);
-            assert.equal(actionsUpdateCount, 1);
-         });
-
-         it('_initItemActions', function() {
-            baseControl._itemActionsInitialized = false;
-            baseControl._initItemActions();
-            assert.equal(actionsUpdateCount, 1);
-         });
-         it('_onAfterEndEdit', function() {
-            baseControl._onAfterEndEdit({}, {});
-            baseControl._afterUpdate(cfg);
-            assert.equal(actionsUpdateCount, 1);
-         });
-         it('update on recreating source', async function() {
-            let newSource = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: data
-            });
-            let newCfg = {
-               viewName: 'Controls/List/ListView',
-               source: newSource,
-               keyProperty: 'id',
-               itemActions: [
-                  {
-                     id: 1,
-                     title: '123'
-                  }
-               ],
-               viewModelConstructor: lists.ListViewModel
-            };
-            return new Promise(function(resolve) {
-               baseControl._beforeUpdate(newCfg).addCallback(function() {
-                  try {
-                     assert.equal(actionsUpdateCount, 2);
-                     resolve();
-                  } catch (e) {
-                     resolve(e);
-                  }
-               });
-               baseControl._afterUpdate(cfg);
-            });
-         });
-         it('updates on afterUpdate if model was recreated', function() {
-            baseControl._itemActionsInitialized = true;
-            baseControl._modelRecreated = true;
-
-            lists.BaseControl._private.onListChange(baseControl, null, 'collectionChanged');
-            assert.strictEqual(actionsUpdateCount, 0);
-
-            baseControl._afterUpdate(cfg);
-            assert.isFalse(baseControl._modelRecreated);
-            assert.strictEqual(actionsUpdateCount, 1);
-         });
          it('control in error state, should not call update', function() {
             baseControl.__error = true;
             baseControl._updateItemActions();

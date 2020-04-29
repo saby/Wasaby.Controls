@@ -1323,10 +1323,6 @@ var
             };
         },
 
-        setMenuState(state: string): void {
-            this._model.setMenuState(state);
-        },
-
         isCachedItemData: function(itemKey) {
             return this._model.isCachedItemData(itemKey);
         },
@@ -1451,7 +1447,6 @@ var
                 const currentColumn: any = {
                         item: current.item,
                         style: current.style,
-                        isMenuShown: current.isMenuShown,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,

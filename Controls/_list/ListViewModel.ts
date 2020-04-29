@@ -200,7 +200,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _selectedKeys: null,
     _markedKey: null,
     _hoveredItem: null,
-    _menuState: '',
     _reloadedKeys: null,
     _singleItemReloadCount: 0,
     _editingItemData: null,
@@ -240,9 +239,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     getItemPadding: function() {
         return _private.getItemPadding(this._options);
     },
-    setMenuState(state: string): void {
-        this._menuState = state;
-    },
     getItemDataByItem: function() {
         const self = this;
         const itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments);
@@ -259,7 +255,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         itemsModelCurrent.itemActions = {};
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
-        itemsModelCurrent.isMenuShown = this._menuState === 'shown';
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         // TODO USE itemsModelCurrent.isSelected()
         itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
