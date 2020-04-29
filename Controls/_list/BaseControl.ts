@@ -157,6 +157,26 @@ const _private = {
         }
     },
 
+    // Attention! Вызывать эту функцию запрещено! Единственное исключение - метод reload.
+    // Функция предназначена для выполнения каллбека после завершения цикла обновления.
+    // Цикл обновления - это последовательный вызов beforeUpdate -> afterUpdate.
+    // И вот посреди этого цикла нельзя менять модель, иначе beforeUpdate отработает по одному состоянию, а
+    // afterUpdate уже совсем по другому!
+    // Как сделать правильно: нужно переписать BaseControl таким образом, чтобы items спускались в него из HOC.
+    // Примеры возникающих ошибок при обновлении items между beforeUpdate и afterUpdate:
+    // https://online.sbis.ru/opendoc.html?guid=487d70ed-ba64-48b4-ad14-138b576cb9c4
+    // https://online.sbis.ru/opendoc.html?guid=21fe75c0-62b8-4caf-9442-826827f73cd0
+    // https://online.sbis.ru/opendoc.html?guid=8a839900-ebc0-4dad-9b53-225f0c337580
+    // https://online.sbis.ru/opendoc.html?guid=dbaaabae-fcca-4c79-9c92-0f7fa2e70184
+    // p.s. в первой ошибке также прикреплены скрины консоли.
+    doAfterUpdate(self, callback): void {
+        if (self._updateInProgress) {
+            self._callbackAfterUpdate = callback;
+        } else {
+            callback();
+        }
+    },
+
     reload(self, cfg): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
@@ -181,6 +201,7 @@ const _private = {
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
+                _private.doAfterUpdate(self, () => {
                 if (list.getCount()) {
                     self._loadedItems = list;
                 } else {
@@ -264,6 +285,7 @@ const _private = {
                 if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
                     _private.checkLoadToDirectionCapability(self, filter, navigation);
                 }
+                });
             }).addErrback(function(error) {
                 return _private.processError(self, {
                     error: error,
@@ -1645,6 +1667,7 @@ const _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _updateInProgress: false,
     _groupingLoader: null,
 
     _isMounted: false,
@@ -1998,6 +2021,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforeUpdate: function(newOptions) {
+        this._updateInProgress = true;
         var filterChanged = !isEqual(newOptions.filter, this._options.filter);
         var navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         var resetPaging = this._pagingNavigation && filterChanged;
@@ -2246,7 +2270,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
-        if (this._shouldNotifyOnDrawItems) {
+        this._updateInProgress = false;        if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
@@ -2275,6 +2299,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._scrollPageLocked = false;
         this._modelRecreated = false;
+        if (this._callbackAfterUpdate) {
+            this._callbackAfterUpdate();
+            this._callbackAfterUpdate = null;
+        }
     },
 
     __onPagingArrowClick: function(e, arrow) {
