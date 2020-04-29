@@ -37,8 +37,8 @@ var _private = {
    isEmptyData: function(searchResult) {
       return !(searchResult && searchResult.data.getCount());
    },
-   suggestStateNotify: function(self, state) {
-      if (self._options.suggestState !== state) {
+   suggestStateNotify: function(self, state, options = self._options) {
+      if (options.suggestState !== state) {
          self._notify('suggestStateChanged', [state]);
       } else {
          self._forceUpdate();
@@ -62,9 +62,9 @@ var _private = {
       }
    },
 
-   close: function(self) {
+   close: function(self, options) {
       this.setCloseState(self);
-      this.suggestStateNotify(self, false);
+      this.suggestStateNotify(self, false, options);
 
       if (self._dependenciesDeferred && !self._dependenciesDeferred.isReady()) {
          self._dependenciesDeferred.cancel();
@@ -287,6 +287,10 @@ var _private = {
             self._children.stackOpener.open(popupOptions);
          });
       }
+   },
+   isInvalidValidationStatus(options): boolean {
+      return options.validationStatus === 'invalid' ||
+             options.validationStatus === 'invalidAccent';
    }
 };
 
@@ -401,6 +405,11 @@ var SuggestLayout = Control.extend({
       if (this._options.searchDelay !== newOptions.searchDelay) {
          this._searchDelay = newOptions.searchDelay;
       }
+
+      if (this._options.validationStatus !== newOptions.validationStatus &&
+          _private.isInvalidValidationStatus(newOptions)) {
+         _private.close(this, newOptions);
+      }
    },
    _afterUpdate: function() {
       if (this._options.suggestState && this._loading === false && !this._showContent) {
@@ -436,9 +445,11 @@ var SuggestLayout = Control.extend({
       _private.setFilter(self, self._options.filter, self._options);
       _private.updateSuggestState(this);
    },
-   _inputActivated: function() {
+   _inputActivated(): void {
       this._inputActive = true;
-      _private.inputActivated(this);
+      if (!_private.isInvalidValidationStatus(this._options)) {
+         _private.inputActivated(this);
+      }
    },
 
    _inputDeactivated: function() {
