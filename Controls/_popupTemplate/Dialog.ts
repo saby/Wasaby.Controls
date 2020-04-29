@@ -62,6 +62,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     }
 
     private _onMouseDown(event: SyntheticEvent<Event>): void {
+        // проверяем можем ли мы перемещать. Когда таргетом является инпут - не перемещаем
         if (event.target.tagName !== 'INPUT') {
             this._startDragNDrop(event);
         }
