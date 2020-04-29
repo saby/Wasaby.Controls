@@ -260,7 +260,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     isShouldBeDrawnItem: function(item) {
         var isInRange = ListViewModel.superclass.isShouldBeDrawnItem.apply(this, arguments);
-        return isInRange || item.isGroup || item.isSticky;
+        return isInRange || (item.isGroup && item.isStickyHeader) || item.isSticky;
     },
 
     _calcCursorClasses: function(clickable, cursor) {
