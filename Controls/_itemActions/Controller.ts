@@ -68,33 +68,31 @@ export class Controller {
     private _itemActionsProperty: string;
     private _visibilityCallback: TItemActionVisibilityCallback;
 
-    // TODO Инициализацию поддерева наверное нужно делать после раскрытия ветки. Обсуди с рук-м
     update(options: IItemActionsControllerOptions): void {
-        // if (options.itemActions === undefined ||
-        //     !isEqual(this._commonItemActions, options.itemActions) ||
-        //     this._itemActionsProperty !== options.itemActionsProperty ||
-        //     this._visibilityCallback !== options.visibilityCallback
-        // ) {
+        // !isEqual(this._commonItemActions, options.itemActions) ||
+        if (options.itemActions === undefined ||
+            this._itemActionsProperty !== options.itemActionsProperty ||
+            this._visibilityCallback !== options.visibilityCallback
+        ) {
             this._collection = options.collection;
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
             this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: unknown) => true);
-        //     this._collection.setActionsAssigned(false);
-        // }
-        // if (!this._collection.areActionsAssigned()) {
-        //     if (this._commonItemActions || this._itemActionsProperty) {
-                this._assignActions();
-            // }
-            this._calculateActionsTemplateConfig({
-                itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
-                style: options.style,
-                size: options.iconSize || DEFAULT_ACTION_SIZE,
-                toolbarVisibility: options.editingToolbarVisibility,
-                actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
-                actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
-                itemActionsClass: options.itemActionsClass
-            });
-        // }
+            // this._collection.setActionsAssigned(false);
+        }
+        // !this._collection.areActionsAssigned() &&
+        if (this._commonItemActions || this._itemActionsProperty) {
+            this._assignActions();
+        }
+        this._calculateActionsTemplateConfig({
+            itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
+            style: options.style,
+            size: options.iconSize || DEFAULT_ACTION_SIZE,
+            toolbarVisibility: options.editingToolbarVisibility,
+            actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
+            actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
+            itemActionsClass: options.itemActionsClass
+        });
     }
 
     /**
