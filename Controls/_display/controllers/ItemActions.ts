@@ -62,12 +62,13 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     getEditingConfig(): IEditingConfig;
 }
 
-const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
+const getItemActionIconClass = (theme: string): string => `controls-itemActionsV__action_icon_theme-${theme || 'default'} icon-size_theme-${theme || 'default'}`; 
 
 export function assignActions(
     collection: IItemActionsCollection,
     actionsGetter: TActionsGetterFunction,
-    visibilityCallback: TItemActionVisibilityCallback = () => true
+    theme: string,
+    visibilityCallback: TItemActionVisibilityCallback = () => true,
 ): void {
     if (collection.areActionsAssigned()) {
         return;
@@ -82,11 +83,11 @@ export function assignActions(
 
     collection.each((item) => {
         if (!item.isActive()) {
-            const fixedActions = actionsGetter(item).map(_fixActionIcon);
+            const fixedActions = actionsGetter(item).map((it) => _fixActionIcon(it, theme));
             const actionsForItem = fixedActions.filter((action) =>
                 visibilityCallback(action, item.getContents())
             );
-            const itemChanged = _setItemActions(item, _wrapActionsInContainer(actionsForItem));
+            const itemChanged = _setItemActions(item, _wrapActionsInContainer(actionsForItem, theme));
             hasChanges = hasChanges || itemChanged;
         }
     });
@@ -184,14 +185,15 @@ export function processActionClick(
     action: TItemAction,
     clickEvent: SyntheticEvent<MouseEvent>,
     fromDropdown: boolean,
-    actionClickCallback: Function
+    actionClickCallback: Function,
+    theme: string
 ): void {
     clickEvent.stopPropagation();
     if (action._isMenu) {
-        prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false, actionClickCallback);
+        prepareActionsMenuConfig(collection, itemKey, clickEvent, null, false, actionClickCallback, theme);
     } else if (action['parent@']) {
         if (!fromDropdown) {
-            prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false, actionClickCallback);
+            prepareActionsMenuConfig(collection, itemKey, clickEvent, action, false, actionClickCallback, theme);
         }
     } else {
         const item = collection.getItemBySourceKey(itemKey);
@@ -219,7 +221,8 @@ export function prepareActionsMenuConfig(
     clickEvent: SyntheticEvent<MouseEvent>,
     parentAction: TItemAction,
     isContext: boolean,
-    actionClickCallback: Function
+    actionClickCallback: Function,
+    theme: string
 ): void {
     const item = collection.getItemBySourceKey(itemKey);
     if (!item) {
@@ -236,7 +239,7 @@ export function prepareActionsMenuConfig(
 
         // there was a fake target before, check if it is needed
         const menuTarget = isContext ? null : getFakeMenuTarget(clickEvent.target as HTMLElement);
-        const closeHandler = _processActionsMenuClose.bind(null, collection, actionClickCallback);
+        const closeHandler = _processActionsMenuClose.bind(null, collection, actionClickCallback, theme);
         const menuSource = new Memory({
             data: menuActions,
             keyProperty: 'id'
@@ -274,7 +277,7 @@ export function prepareActionsMenuConfig(
             direction: {
                 horizontal: isContext ? 'right' : 'left'
             },
-            className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list',
+            className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list_theme-' + theme,
             nativeEvent: isContext ? clickEvent.nativeEvent : null,
             autofocus: false
         };
@@ -418,7 +421,8 @@ function _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
 function _processActionsMenuClose(
     collection: IItemActionsCollection,
     actionClickCallback: Function,
-    action: string, data: any[], event: SyntheticEvent<MouseEvent>
+    action: string, data: any[], event: SyntheticEvent<MouseEvent>,
+    theme: string,
 ): void {
     // Actions dropdown can start closing after the view itself was unmounted already, in which case
     // the model would be destroyed and there would be no need to process the action itself
@@ -433,7 +437,8 @@ function _processActionsMenuClose(
                 action,
                 event,
                 true,
-                actionClickCallback
+                actionClickCallback,
+                theme
             );
 
             // If this action has children, don't close the menu if it was clicked
@@ -463,18 +468,20 @@ function _setItemActions(
     return false;
 }
 
-function _fixActionIcon(action: TItemAction): TItemAction {
-    if (!action.icon || action.icon.includes(ITEM_ACTION_ICON_CLASS)) {
+function _fixActionIcon(action: TItemAction, theme: string): TItemAction {
+    const itemActionItemClass = getItemActionIconClass(theme);
+    if (!action.icon || action.icon.includes(itemActionItemClass)) {
         return action;
     }
     return {
         ...action,
-        icon: `${action.icon} ${ITEM_ACTION_ICON_CLASS}`
+        icon: `${action.icon} ${itemActionItemClass}`
     };
 }
 
 function _wrapActionsInContainer(
-    actions: TItemAction[]
+    actions: TItemAction[],
+    theme: string
 ): IItemActionsContainer {
     let showed = actions;
     if (showed.length > 1) {
@@ -485,7 +492,7 @@ function _wrapActionsInContainer(
         );
         if (_isMenuButtonRequired(actions)) {
             showed.push({
-                icon: `icon-ExpandDown ${ITEM_ACTION_ICON_CLASS}`,
+                icon: `icon-ExpandDown ${getItemActionIconClass(theme)}`,
                 style: 'secondary',
                 iconStyle: 'secondary',
                 title: rk('Ещё'),

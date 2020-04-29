@@ -377,6 +377,7 @@ define([
          var
              cfg = {
                 listModel: listViewModel,
+                theme: 'default',
                 itemActions: [
                    {
                       id: 0,
@@ -394,7 +395,7 @@ define([
          ctrl.saveOptions(cfg);
          ctrl.updateItemActions(listViewModel.getCurrent().item);
          let menuExpanderAction = listViewModel.getItemActions(listViewModel.getCurrent().item).showed.find((action) => action._isMenu);
-         assert.equal("icon-ExpandDown controls-itemActionsV__action_icon  icon-size", menuExpanderAction.icon);
+         assert.equal("icon-ExpandDown controls-itemActionsV__action_icon_theme-default  icon-size_theme-default", menuExpanderAction.icon);
          assert.equal("secondary", menuExpanderAction.iconStyle);
          assert.equal("secondary", menuExpanderAction.style);
          assert.isTrue(menuExpanderAction._isMenu);
@@ -614,6 +615,7 @@ define([
       it('updateItemActions', function() {
          var cfg = {
             listModel: listViewModel,
+            theme: 'default',
             itemActions: [{
                id: 0,
                title: 'first',
@@ -639,7 +641,7 @@ define([
             style: 'secondary',
             showType: tUtil.showType.TOOLBAR
          }, {
-            icon: 'icon-ExpandDown controls-itemActionsV__action_icon  icon-size',
+            icon: 'icon-ExpandDown controls-itemActionsV__action_icon_theme-default  icon-size_theme-default',
             iconStyle: 'secondary',
             style: 'secondary',
             title: rk('Ещё'),

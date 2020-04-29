@@ -1,6 +1,6 @@
 <div class="controls-BreadCrumbsView__crumb{{edge ? ' controls-BreadCrumbsView__max-width__edge' : ' controls-BreadCrumbsView__max-width'}} controls-BreadCrumbsView__crumb_theme-{{_options.theme}}">
     <ws:if data="{{ itemData.hasArrow }}">
-        <span class="controls-BreadCrumbsView__arrow controls-BreadCrumbsView__arrow_theme-{{_options.theme}} icon-size icon-DayForwardBsLine{{!_options.readOnly ? ' controls-BreadCrumbsView__arrow_enabled controls-BreadCrumbsView__arrow_enabled_theme-' + _options.theme}}"></span>
+        <span class="controls-BreadCrumbsView__arrow controls-BreadCrumbsView__arrow_theme-{{_options.theme}} icon-size_theme-{{_options.theme}} icon-DayForwardBsLine{{!_options.readOnly ? ' controls-BreadCrumbsView__arrow_enabled controls-BreadCrumbsView__arrow_enabled_theme-' + _options.theme}}"></span>
     </ws:if>
     <span class="controls-BreadCrumbsView__titleWrapper"
          title="{{itemData.getPropValue(itemData.item, displayProperty)}}">
