@@ -21,7 +21,7 @@ import {Logger} from 'UI/Utils';
 import {TouchContextField} from 'Controls/context';
 import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 
 // Utils imports
@@ -177,7 +177,7 @@ const _private = {
         }
     },
 
-    reload(self, cfg): Promise<any> | Deferred<any> {
+    reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
         const navigation = cClone(cfg.navigation);
@@ -200,7 +200,7 @@ const _private = {
             }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
-            self._sourceController.load(filter, sorting).addCallback(function(list) {
+            self._sourceController.load(filter, sorting, null,sourceConfig).addCallback(function(list) {
                 _private.doAfterUpdate(self, () => {
                 if (list.getCount()) {
                     self._loadedItems = list;
@@ -278,7 +278,8 @@ const _private = {
                     // При полной перезагрузке данных нужно сбросить состояние скролла
                     // и вернуться к началу списка, иначе браузер будет пытаться восстановить
                     // scrollTop, догружая новые записи после сброса.
-                    self._resetScrollAfterReload = true;
+                        self._resetScrollAfterReload = !self._keepScrollAfterReload;
+                        self._keepScrollAfterReload = false;
                 }
 
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
@@ -1729,6 +1730,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _intertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
 
+    _keepScrollAfterReload: false,
     _resetScrollAfterReload: false,
     _scrollPageLocked: false,
 
@@ -2342,8 +2344,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.hideIndicator(this);
     },
 
-    reload: function() {
-        return _private.reload(this, this._options).addCallback(getData);
+    reload: function(keepScroll: boolean, sourceConfig: IBaseSourceConfig) {
+        if (keepScroll) {
+            this._keepScrollAfterReload = true;
+        }
+        return _private.reload(this, this._options, sourceConfig).addCallback(getData);
     },
 
     _onGroupClick: function(e, groupId, baseEvent) {
