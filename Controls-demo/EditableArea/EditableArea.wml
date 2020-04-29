@@ -21,7 +21,29 @@
            </Controls.editableArea:View>
        </div>
    </div>
-   <div class="ControlsDemo-EditableArea__title">Пример 2 - редактирование во вкладке</div>
+
+    <div class="ControlsDemo-EditableArea__title">Пример 2 - на подложке в полную ширину</div>
+    <div class="ControlsDemo-EditableArea__FirstExample__long">
+            <Controls.editableArea:View
+                    name="edit"
+                    editObject="{{_record1}}"
+                    style="withBackground"
+                    attr:class="ws-flexbox"
+                    toolbarVisibility="{{true}}">
+                <Controls.editableArea:Base
+                        bind:value="content.editObject.text1"
+                        attr:class="ControlsDemo-EditableArea__longExample__editor_wrapper"
+                        style="asLink"
+                >
+                    <ws:editorTemplate>
+                        <Controls.input:Text selectOnClick="{{ false }}"
+                                             attr:class="controls-Input_negativeOffset_theme_{{_options.theme}} ControlsDemo-EditableArea__longExample__input"/>
+                    </ws:editorTemplate>
+                </Controls.editableArea:Base>
+            </Controls.editableArea:View>
+    </div>
+
+   <div class="ControlsDemo-EditableArea__title">Пример 3 - редактирование во вкладке</div>
    <div class="ControlsDemo-EditableArea__secondExample ControlsDemo-EditableArea-width">
          <Controls.tabs:Buttons
             attr:class="ControlsDemo-EditableArea__tabs"
@@ -31,7 +53,7 @@
             source="{{_tabSource}}"
          />
    </div>
-   <div class="ControlsDemo-EditableArea__title">Пример 3 - редактирование во вкладке</div>
+   <div class="ControlsDemo-EditableArea__title">Пример 4 - редактирование во вкладке</div>
 
    <div class="ControlsDemo-EditableArea__thirdExample ControlsDemo-EditableArea-width">
             <Controls.tabs:Buttons

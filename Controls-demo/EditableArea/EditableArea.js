@@ -42,12 +42,19 @@ define('Controls-demo/EditableArea/EditableArea', [
    var EditableArea = Control.extend({
       _template: template,
       _record: null,
+      _record1: null,
       _selectedTab: 0,
       _selectedTab2: 0,
       _tabSource: null,
 
       _beforeMount: function() {
          this._record = new entity.Record({
+            rawData: {
+               id: 1,
+               text1: 'Мой отдел'
+            }
+         });
+         this._record1 = new entity.Record({
             rawData: {
                id: 1,
                text1: 'Мой отдел'
