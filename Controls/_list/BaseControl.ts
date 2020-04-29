@@ -2696,7 +2696,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._initItemActions();
+        this._updateItemActions();
         if (this._options.itemsDragNDrop) {
             const dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
             let dragPosition;

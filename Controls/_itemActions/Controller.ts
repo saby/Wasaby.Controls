@@ -380,6 +380,8 @@ export class Controller {
     }
 
     /**
+     * Ищет операции, которые должны быть показаны только в тулбаре или в тулбаре и в меню и возвращает
+     * массив {showed, all}
      * @param actions
      * @private
      */
@@ -388,8 +390,9 @@ export class Controller {
     ): IItemActionsContainer {
         const showed = actions.filter(
             (action) =>
-                action.showType === TItemActionShowType.TOOLBAR ||
-                action.showType === TItemActionShowType.MENU_TOOLBAR
+                !action.parent &&
+                (action.showType === TItemActionShowType.TOOLBAR ||
+                action.showType === TItemActionShowType.MENU_TOOLBAR)
         );
         if (this._isMenuButtonRequired(actions)) {
             showed.push({
@@ -406,6 +409,12 @@ export class Controller {
         };
     }
 
+    /**
+     * Ищет операции, которые должны отображаться только в меню или в меню и тулбаре,
+     * и у которых нет родительской операции
+     * @param actions
+     * @private
+     */
     private _isMenuButtonRequired(actions: IItemAction[]): boolean {
         return actions.some(
             (action) =>
