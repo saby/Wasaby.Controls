@@ -562,8 +562,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
                     updateDef.callback({data: true});
                     return arg;
-                });
-                res.addErrback((error: Error) => {
+                }).catch((error: Error) => {
                     updateDef.errback(error);
                     return this._processError(error, dataSourceError.Mode.dialog);
                 });
