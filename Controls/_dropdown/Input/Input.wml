@@ -7,7 +7,6 @@
         caption="{{_options.caption || _text}}"
         selectedItemsChangedCallback="{{_prepareDisplayState}}"
         allowPin="{{false}}"
-        validationStatus="{{_options.validationStatus}}"
         on:deactivated="_deactivated()"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         attr:class="controls-Dropdown_theme_{{_options.theme}} {{_options.validationStatus === 'invalid' ? 'controls-Dropdown-validationStatus_invalid_theme_' + _options.theme}}">
@@ -27,7 +26,6 @@
                             hasMoreText="{{_hasMoreText}}"
                             isEmptyItem="{{_isEmptyItem && !_options.multiSelect}}"
                             readOnly="{{_options.readOnly}}"
-                            attr:class="aaaaaaaaa"
                             footerTemplate="{{_options.footerTemplate}}"/>
             </ws:content>
             <ws:template>
