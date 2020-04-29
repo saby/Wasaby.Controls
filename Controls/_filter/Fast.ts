@@ -248,6 +248,8 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
                _private.selectItems.call(this, items);
                _private.notifyChanges(this, this._items);
                this._children.DropdownOpener.close();
+            } else if (action === 'footerClick') {
+                this._children.DropdownOpener.close();
             }
          },
 
