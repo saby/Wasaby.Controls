@@ -197,7 +197,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     resetSticky(): void {
-        fastUpdate.resetSticky(this._container);
+        fastUpdate.resetSticky([this._container]);
     }
 
     get height(): number {

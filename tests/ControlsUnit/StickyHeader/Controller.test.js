@@ -247,8 +247,16 @@ define([
 
          it('should insert header in proper position', function() {
             component._afterMount({});
+            const obj = {className: 'test test2'};
+
             return Promise.all([0, 20, 10].map(function(offset, index) {
                const header = {
+                  container: {
+                     parentElement: obj,
+                     closest: function () {
+                        return obj;
+                     }
+                  },
                   id: index,
                   position: 'top',
                   mode: 'stackable',
@@ -450,6 +458,7 @@ define([
             component._afterMount({});
             return component._stickyRegisterHandler(event, data, true).then(function() {
                component._fixedHandler(event, {
+                  container: {parentElement: 1},
                   id: data.id,
                   fixedPosition: 'top',
                   prevPosition: '',
