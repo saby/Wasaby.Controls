@@ -23,7 +23,7 @@
    </div>
 
     <div class="ControlsDemo-EditableArea__title">Пример 2 - на подложке в полную ширину</div>
-    <div class="ControlsDemo-EditableArea__FirstExample__long">
+    <div class="ControlsDemo-EditableArea__FirstExample__long ws-flexbox ws-align-items-center">
             <Controls.editableArea:View
                     name="edit"
                     editObject="{{_record1}}"
