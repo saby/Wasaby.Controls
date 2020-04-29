@@ -2493,6 +2493,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
+        event.stopPropagation();
         const contents: Model = itemData.getContents();
         _private.setMarkedKey(this, contents.getKey());
         if (action && !action._isMenu && !action['parent@']) {
