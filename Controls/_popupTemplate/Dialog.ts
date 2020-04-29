@@ -68,7 +68,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     }
 
     private _needStartDrag(target: EventTarget): boolean {
-        return target.tagName !== 'INPUT';
+        return this._options.draggable && target.tagName !== 'INPUT';
     }
 
     private _startDragNDrop(event: SyntheticEvent<Event>): void {
