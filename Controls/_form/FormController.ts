@@ -10,6 +10,7 @@ import {IContainerConstructor} from 'Controls/_dataSource/error';
 import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {IFormOperation} from 'Controls/interface';
 
 interface IFormController extends IControlOptions {
     createMetaData?: unknown;
@@ -149,21 +150,21 @@ interface IUpdateConfig {
 
 class FormController extends Control<IFormController, IReceivedState> {
     protected _template: TemplateFunction = tmpl;
-    protected _record: Model = null;
-    protected _isNewRecord: boolean = false;
-    protected _createMetaDataOnUpdate: unknown = null;
-    protected _errorContainer: IContainerConstructor = dataSourceError.Container;
-    protected __errorController: dataSourceError.Controller;
-    protected _source: Memory;
-    protected _createdInMounting: IConfigInMounting;
-    protected _isMount: boolean;
-    protected _readInMounting: IConfigInMounting;
-    protected _wasCreated: boolean;
-    protected _wasRead: boolean;
-    protected _wasDestroyed: boolean;
-    protected _pendingPromise: Promise<any>;
-    protected _options: IFormController;
-    protected __error: dataSourceError.ViewConfig;
+    private _record: Model = null;
+    private _isNewRecord: boolean = false;
+    private _createMetaDataOnUpdate: unknown = null;
+    private _errorContainer: IContainerConstructor = dataSourceError.Container;
+    private __errorController: dataSourceError.Controller;
+    private _source: Memory;
+    private _createdInMounting: IConfigInMounting;
+    private _isMount: boolean;
+    private _readInMounting: IConfigInMounting;
+    private _wasCreated: boolean;
+    private _wasRead: boolean;
+    private _formOperationsStorage: IFormOperation[] = [];
+    private _wasDestroyed: boolean;
+    private _pendingPromise: Promise<any>;
+    private __error: dataSourceError.ViewConfig;
 
     protected _beforeMount(options?: IFormController, context?: object, receivedState: IReceivedState = {}): Promise<ICrudResult> | void {
         this.__errorController = options.errorController || new dataSourceError.Controller({});
@@ -419,9 +420,31 @@ class FormController extends Control<IFormController, IReceivedState> {
                 return self._record && self._record.isChanged() && !isInside;
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-                self._showConfirmDialog(deferred, forceFinishValue);
+                self._startFormOperations('cancel').then(() => {
+                    self._showConfirmDialog(deferred, forceFinishValue);
+                });
             }
         }], {bubbling: true});
+    }
+
+    private _registerFormOperationHandler(event: Event, operation: IFormOperation): void {
+        this._formOperationsStorage.push(operation);
+    }
+
+    private _startFormOperations(command: string): Promise<void> {
+        const resultPromises: Promise<void>[] = [];
+        this._formOperationsStorage = this._formOperationsStorage.filter((operation: IFormOperation) => {
+            if (operation.isDestroyed()) {
+                return false;
+            }
+            const result = operation[command]();
+            if (result instanceof Promise || result instanceof Deferred) {
+                resultPromises.push(result);
+            }
+            return true;
+        });
+
+        return Promise.all(resultPromises);
     }
 
     private _confirmDialogResult(answer: boolean, def: Promise<any>): void {
@@ -510,8 +533,10 @@ class FormController extends Control<IFormController, IReceivedState> {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
                 this._notifyToOpener('updateStarted', [this._record, this._getRecordId()]);
-                const res = this._update(config).then(this._getData);
-                updateResult.dependOn(res);
+                this._startFormOperations('save').then(() => {
+                    const res = this._update(config).then(this._getData);
+                    updateResult.dependOn(res);
+                });
             } else {
                 this._updateIsNewRecord(false);
                 updateResult.callback(true);
