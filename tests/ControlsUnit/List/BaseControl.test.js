@@ -4771,7 +4771,7 @@ define([
                instance._beforeMount(cfg);
                instance._notify = function(eventName, eventArgs, eventOptions) {
                   assert.equal(eventName, 'checkboxClick');
-                  assert.deepEqual(eventArgs, [1 false]);
+                  assert.deepEqual(eventArgs, [1, false]);
                   notifyCalled = true;
                };
                instance._listSwipe({}, itemData, childEvent);

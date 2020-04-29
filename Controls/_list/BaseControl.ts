@@ -2619,7 +2619,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // FIXME: https://online.sbis.ru/opendoc.html?guid=7a0a273b-420a-487d-bb1b-efb955c0acb8
             itemData.itemActions = this.getViewModel().getItemActions(actionsItem);
         }
-        if (!this._options.itemActions) {
+        if (!this._options.itemActions && isSwiped) {
             this._notify('itemSwipe', [actionsItem, childEvent]);
         }
     },
