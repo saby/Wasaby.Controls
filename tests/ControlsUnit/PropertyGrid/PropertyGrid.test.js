@@ -1,14 +1,14 @@
 define([
-    'Controls/_propertyGrid/View',
+    'Controls/_propertyGrid/PropertyGrid',
     'Controls/_propertyGrid/Constants',
     'Controls/display'
 ], function (
-    PropertyGridView,
+    PropertyGrid,
     Constants,
     display
 ) {
-    describe('Controls/_propertyGrid/View', () => {
-        const ViewInstance = new PropertyGridView.default();
+    describe('Controls/_propertyGrid/PropertyGrid', () => {
+        const ViewInstance = new PropertyGrid.default();
         let source, editingObject, editors;
         beforeEach(() => {
             source = [

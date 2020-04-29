@@ -1,7 +1,10 @@
-<Controls._propertyGrid.View
-    render="{{_render}}"
+<ws:partial
+    template="{{_options.render}}"
     groupTemplate="{{_options.groupTemplate}}"
+    itemTemplate="{{_options.itemTemplate}}"
+    listModel="{{_listModel}}"
+    collapsedGroups="{{_collapsedGroups}}"
     editingObject="{{_options.editingObject}}"
-    source="{{_options.source}}"
-    collapsedGroups="{{_options.collapsedGroups}}"
+    on:itemClick="_itemClick()"
+    on:propertyValueChanged="_propertyValueChanged()"
 />

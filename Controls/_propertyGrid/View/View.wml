@@ -1,7 +1,0 @@
-<ws:partial
-        template="{{_options.render}}"
-        listModel="{{_listModel}}"
-        collapsedGroups="{{_collapsedGroups}}"
-        scope="{{_options}}"
-        on:itemClick="_itemClick()"
-        on:propertyValueChanged="_propertyValueChanged()"/>
