@@ -8,6 +8,7 @@ import {isEqual} from 'Types/object';
 import {constants} from 'Env/Env';
 import {List} from 'Types/collection';
 import {Logger} from 'UI/Utils';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 const KEY_CODE_F2 = 113;
 
@@ -183,17 +184,17 @@ var BaseLookupView = Control.extend({
         }
     },
 
-    private _activated: function(): void {
+    _activated: function(): void {
         this._active = true;
     },
 
-    private _deactivated: function(): void {
+    _deactivated: function(): void {
         this._active = false;
         this._suggestState = false;
     },
 
-    _suggestStateChanged: function () {
-        if (this._infoboxOpened || !this._isInputActive(this._options)) {
+    _suggestStateChanged(event: SyntheticEvent, state: boolean): void {
+        if (this._infoboxOpened || !this._isInputActive(this._options) || !state) {
             this._suggestState = false;
         }
     },
