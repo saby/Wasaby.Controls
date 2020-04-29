@@ -62,8 +62,9 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     }
 
     private _onMouseDown(event: SyntheticEvent<Event>): void {
-        // элементом, на котором произошло событие, может быть контрол, встраиваемый в шапку. Чтобы корректно получать дерево контролов, берем таргет, к которому был прикреплен обработчик события.
-        if (this._needStartDrag(event.currentTarget)) {
+        const target = event.target?.tagName === 'INPUT' ? event.target : event.currentTarget;
+        // элементом, на котором произошло событие, может быть контрол, растянутый на ширину шапки. Чтобы корректно получать дерево контролов, берем таргет, к которому был прикреплен обработчик события, если это не инпут.
+        if (this._needStartDrag(target)) {
             this._startDragNDrop(event);
         }
     }
