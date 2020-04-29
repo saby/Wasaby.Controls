@@ -37,11 +37,15 @@ define(['Controls/grid', 'Types/source'], function(grid, TypesSource) {
       });
 
       it('_switchSorting', function() {
+         menuClosed = false;
          sortingSelector._switchValue();
          sortingSelector.__beforeUpdate(cfg);
          assert.deepEqual(sortingSelector._selectedKeys, [1]);
          assert.deepEqual(sortingSelector._currentParamName, 'F');
          assert.deepEqual(sortingSelector._currentOrder, 'DESC');
+         sortingSelector._afterUpdate();
+         assert.isTrue(menuClosed);
+         menuClosed = false;
       });
 
       it('_itemArrowClick', function() {
@@ -58,7 +62,7 @@ define(['Controls/grid', 'Types/source'], function(grid, TypesSource) {
          assert.deepEqual(sortingSelector._selectedKeys, [2]);
          assert.deepEqual(sortingSelector._currentParamName, 'S');
          assert.deepEqual(sortingSelector._currentOrder, 'ASC');
-         assert.isTrue(menuClosed);
+         assert.isFalse(menuClosed);
       });
       it('_selectedKeysChangedHandler', function() {
          assert.isFalse(sortingSelector._selectedKeysChangedHandler({},[1]));
