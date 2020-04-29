@@ -1,8 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Menu/Popup/FooterContentTemplate/Scroll/Index');
 import {Memory} from 'Types/source';
-import 'css!Controls-demo/Controls-demo';
-import 'css!Controls-demo/Menu/Menu';
 
 class FooterContentTemplateSimple extends Control {
     protected _template: TemplateFunction = controlTemplate;
@@ -27,6 +25,7 @@ class FooterContentTemplateSimple extends Control {
     }
 
     static _theme: string[] = ['Controls/Classes'];
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Menu/Menu'];
 
 }
 export default FooterContentTemplateSimple;
