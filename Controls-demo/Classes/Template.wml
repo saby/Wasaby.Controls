@@ -1,0 +1,85 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_size-2xs_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_size-2xs_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_size-xs_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_size-xs_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_size-s_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_size-m_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_size-m_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_size-l_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_size-l_theme-{{_options.theme}}"></span>
+        </div>
+
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-info_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-info_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-label_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-label_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-success_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-success_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-danger_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-danger_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-warning_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-warning_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-secondary_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-secondary_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-primary_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-primary_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-default_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-default_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-readonly_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-readonly_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-default_theme-{_options.theme}}">controls-text-default_theme-{{_options.theme}}</div>
+        <div class="controls-text-primary_theme-{{_options.theme}}">controls-text-primary_theme-{{_options.theme}}</div>
+        <div class="controls-text-secondary_theme-{{_options.theme}}">controls-text-secondary_theme-{{_options.theme}}</div>
+        <div class="controls-text-link_theme-{{_options.theme}}">controls-text-link_theme-{{_options.theme}}</div>
+        <div class="controls-text-label_theme-{{_options.theme}}">controls-text-label_theme-{{_options.theme}}</div>
+        <div class="controls-text-danger_theme-{{_options.theme}}">controls-text-danger_theme-{{_options.theme}}</div>
+        <div class="controls-text-success_theme-{{_options.theme}}">controls-text-success_theme-{{_options.theme}}</div>
+        <div class="controls-text-warning_theme-{{_options.theme}}">controls-text-warning_theme-{{_options.theme}}</div>
+        <div class="controls-text-unaccented_theme-{{_options.theme}}">controls-text-unaccented_theme-{{_options.theme}}</div>
+        <div class="controls-text-readonly_theme-{{_options.theme}}">controls-text-readonly_theme-{{_options.theme}}</div>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-fontsize-xs_theme-{_options.theme}}">controls-fontsize-xs_theme-{{_options.theme}}</div>
+        <div class="controls-fontsize-s_theme-{{_options.theme}}">controls-fontsize-s_theme-{{_options.theme}}</div>
+        <div class="controls-fontsize-m_theme-{{_options.theme}}">controls-fontsize-m_theme-{{_options.theme}}</div>
+        <div class="controls-fontsize-l_theme-{{_options.theme}}">controls-fontsize-l_theme-{{_options.theme}}</div>
+        <div class="controls-fontsize-xl_theme-{{_options.theme}}">controls-fontsize-xl_theme-{{_options.theme}}</div>
+        <div class="controls-fontsize-2xl_theme-{{_options.theme}}">controls-fontsize-2xl_theme-{{_options.theme}}</div>
+        <div class="controls-fontsize-3xl_theme-{{_options.theme}}">controls-fontsize-3xl_theme-{{_options.theme}}</div>
+        <div class="controls-fontsize-4xl_theme-{{_options.theme}}">controls-fontsize-4xl_theme-{{_options.theme}}</div>
+        <div class="controls-fontsize-5xl_theme-{{_options.theme}}">controls-fontsize-5xl_theme-{{_options.theme}}</div>
+    </div>
+
+</div>
