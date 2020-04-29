@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Spoiler/View/HeaderContentTemplate/HeaderTemplate/HeaderTemplate');
-import 'css!Controls-demo/Spoiler/View/HeaderContentTemplate/HeaderTemplate/headerTemplate';
+import controlTemplate = require('wml!Controls-demo/Spoiler/HeaderTemplate/HeaderTemplate');
+import 'css!Controls-demo/Spoiler/HeaderTemplate/headerTemplate';
 import 'css!Controls-demo/Controls-demo';
 
 
