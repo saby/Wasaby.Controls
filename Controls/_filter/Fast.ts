@@ -235,18 +235,18 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
          },
 
          onResult: function(event, action, data) {
-            if (data) {
+            if (data && action !== 'menuOpened') {
                const items = action === 'itemClick' ? [data] : data;
                if (action === 'selectorResult') {
                   this.lastOpenIndex = this._indexOpenedFilter;
                   _private.onSelectorResult(this._configs[this._indexOpenedFilter], items);
+               } else if (action === 'selectorDialogOpened') {
+                  this._afterSelectorOpenCallback(items);
                } else {
                   _private.updateHistory(this._configs[this.lastOpenIndex], items);
                }
                _private.selectItems.call(this, items);
                _private.notifyChanges(this, this._items);
-            }
-            if (action !== 'menuOpened') {
                this._children.DropdownOpener.close();
             }
          },
@@ -435,6 +435,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),
+               navigation: this._configs[index]._sourceController.getNavigation(),
                selectorOpener: this._children.selectorOpener,
                selectorDialogResult: this._onSelectorTemplateResult.bind(this),
                afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this),
