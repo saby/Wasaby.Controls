@@ -90,7 +90,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       const cloneSelection = clone(selection);
 
       if (this._withEntryPath()) {
-         this._unselectAllInRoot(cloneSelection);
+         cloneSelection = this._unselectAllInRoot(cloneSelection);
       } else {
          cloneSelection.selected.length = 0;
          cloneSelection.excluded.length = 0;
@@ -107,7 +107,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       let cloneSelection = clone(selection);
       if (this._isAllSelected(cloneSelection, this._rootId)) {
-         this._unselectAllInRoot(cloneSelection);
+         cloneSelection = this._unselectAllInRoot(cloneSelection);
 
          const intersectionKeys = ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, oldExcludedKeys);
          cloneSelection = this.select(cloneSelection, intersectionKeys);
@@ -212,15 +212,17 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return selection.selected.includes(this._rootId) && selection.excluded.includes(this._rootId);
    }
 
-   private _unselectAllInRoot(selection: ISelection): void {
+   private _unselectAllInRoot(selection: ISelection): ISelection {
       const rootInExcluded = selection.excluded.includes(this._rootId);
 
-      this.unselect(selection, [this._rootId]);
+      selection = this.unselect(selection, [this._rootId]);
       this._removeChildrenIdsFromSelection(selection, this._rootId);
 
       if (rootInExcluded) {
          selection.excluded = ArraySimpleValuesUtil.removeSubArray(selection.excluded, [this._rootId]);
       }
+
+      return selection;
    }
 
    private _withEntryPath(): boolean {

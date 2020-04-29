@@ -21,12 +21,12 @@ describe('Controls/_multiselection/Controller', () => {
    };
 
    const strategy = {
-      unselect(): void {},
-      select(): void {},
-      update(): void {},
-      selectAll(): void {},
-      toggleAll(): void {},
-      unselectAll(): void {},
+      unselect(): object { return { selected: [], excluded: [] }; },
+      select(): object { return { selected: [], excluded: [] }; },
+      update(): object { return { selected: [], excluded: [] }; },
+      selectAll(): object { return { selected: [], excluded: [] }; },
+      toggleAll(): object { return { selected: [], excluded: [] }; },
+      unselectAll(): object { return { selected: [], excluded: [] }; },
       getCount(): void {},
       getSelectionForModel(): object {
          return {
