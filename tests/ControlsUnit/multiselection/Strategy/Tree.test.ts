@@ -249,8 +249,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          let selection = { selected: [3], excluded: [] };
          let res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
          assert.deepEqual(toArray(res.get(true)), [ ListData.getItems()[2] ]);
-         assert.deepEqual(toArray(res.get(null)), [ ListData.getItems()[1], ListData.getItems()[0]]);
-         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => !(it.id in [1, 2, 3])) );
+         assert.deepEqual(toArray(res.get(null)), [ ListData.getItems()[0], ListData.getItems()[1]]);
+         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 2, 3].includes(it.id)) );
 
          // выбрали лист и выбрался только он
          selection = { selected: [3], excluded: [] };
@@ -262,9 +262,9 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          // выбрали узел с родителями и с детьми, выбрался узел, дети и родители
          selection = { selected: [2], excluded: [] };
          res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
-         assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => it.id in [2, 3, 4]) );
+         assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [2, 3, 4].includes(it.id)) );
          assert.deepEqual(toArray(res.get(null)), [ ListData.getItems()[0] ]);
-         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => !(it.id in [1, 2, 3, 4])) );
+         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 2, 3, 4].includes(it.id)) );
 
          // выбрали узел с родителями и с детьми, выбрался только узел
          selection = { selected: [2], excluded: [] };
@@ -276,17 +276,17 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          // выбрали узел с родителями и с детьми и некоторые дети исключены
          selection = { selected: [2], excluded: [3] };
          res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
-         assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => it.id in [2, 4]) );
-         assert.deepEqual(toArray(res.get(null)), [ ListData.getItems()[0] ]);
-         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => !(it.id in [1, 2, 4])) );
+         assert.deepEqual(toArray(res.get(true)), [ ListData.getItems()[3] ] );
+         assert.deepEqual(toArray(res.get(null)), [ ListData.getItems()[0], ListData.getItems()[1] ]);
+         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 2, 4].includes(it.id)) );
       });
 
       it('selected all, but one', () => {
          const selection = { selected: [null], excluded: [null, 2] };
          const res = strategy.getSelectionForModel(selection);
-         assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => !(it.id in [2, 3, 4])) );
+         assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => ![2, 3, 4].includes(it.id)) );
          assert.deepEqual(toArray(res.get(null)), [ ]);
-         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => it.id in [2, 3, 4]) );
+         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => [2, 3, 4].includes(it.id)) );
       });
    });
 
@@ -311,15 +311,15 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const selection = { selected: [1], excluded: [] };
          const count = strategy.getCount(selection, true);
          const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, true);
-         assert.equal(count, null);
-         assert.equal(countWithDescAndAnc, null);
+         assert.equal(count, 1);
+         assert.equal(countWithDescAndAnc, 5);
       });
 
       it('selected all, but one', () => {
          const selection = { selected: [null], excluded: [null, 2] };
          const count = strategy.getCount(selection, false);
          const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
-         assert.equal(count, 1);
+         assert.equal(count, 3);
          assert.equal(countWithDescAndAnc, 4);
       });
 
@@ -338,20 +338,9 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = strategyWithDescendantsAndAncestors.select(selection, [2]);
          strategyWithDescendantsAndAncestors._rootId = 2;
          const res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
-         assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => it.id in [2, 3, 4]) );
-         assert.deepEqual(toArray(res.get(null)), [ ]);
-         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => !(it.id in [1, 2, 3, 4])) );
-      });
-
-      it('select all being inside node and go out it', () => {
-         let selection = { selected: [], excluded: [] };
-         strategyWithDescendantsAndAncestors._rootId = 1;
-         selection = strategyWithDescendantsAndAncestors.selectAll(selection);
-         strategyWithDescendantsAndAncestors._rootId = null;
-         const res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
-         assert.deepEqual(toArray(res.get(true)), [ ] );
-         assert.deepEqual(toArray(res.get(null)), [ ]);
-         assert.deepEqual(toArray(res.get(false)), [ListData.getItems()] );
+         assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [2, 3, 4].includes(it.id)) );
+         assert.deepEqual(toArray(res.get(null)), [ ListData.getItems()[0] ]);
+         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 2, 3, 4].includes(it.id)) );
       });
 
       it('select leaf being inside node and go out it', () => {
@@ -362,7 +351,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
          assert.deepEqual(toArray(res.get(true)), [ ListData.getItems()[4] ] );
          assert.deepEqual(toArray(res.get(null)), [ ListData.getItems()[0] ]);
-         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => !(it.id in [1, 4])) );
+         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 5].includes(it.id)) );
       });
    });
 });
