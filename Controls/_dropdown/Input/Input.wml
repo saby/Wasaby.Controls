@@ -10,7 +10,7 @@
            allowPin="{{false}}"
            on:deactivated="_deactivated()"
            on:selectedItemsChanged="_selectedItemsChangedHandler()"
-           attr:class="controls-Dropdown_theme_{{_options.theme}} {{_options.style === 'invalid' ? 'controls-Dropdown-style_invalid_theme_' + _options.theme}}">
+           attr:class="controls-Dropdown_theme_{{_options.theme}} {{_options.validationStatus === 'invalid' ? 'controls-Dropdown-validationStatus_invalid_theme_' + _options.theme}}">
        <ws:content>
            <Controls.popup:InfoboxTarget targetSide="bottom"
                                          trigger="{{_needInfobox ? 'hover' : 'demand'}}">
