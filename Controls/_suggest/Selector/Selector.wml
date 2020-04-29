@@ -1,48 +1,44 @@
 <Controls._suggest._InputController
-        attr:class="{{_options.suggestState ? 'controls-Scroll_webkitOverflowScrollingTouch'}}"
-        on:choose="_choose()"
-        on:deactivated="_deactivated()"
-        on:suggestStateChanged="_suggestStateChanged()"
-        suggestState="{{_suggestState}}"
-        value="{{_searchValue}}"
-        suggestTemplate="{{_suggestTemplate}}"
-        footerTemplate="{{_options.footerTemplate}}"
-        emptyTemplate="{{_options.emptyTemplate}}"
-        minSearchLength="{{_options.minSearchLength}}"
-        source="{{_historySource || _options.source}}"
-        keyProperty="{{_options.keyProperty}}"
-        navigation="{{_options.navigation}}"
-        searchParam="{{_options.searchParam}}"
-        searchDelay="{{_options.searchDelay}}"
-        trim="{{_options.trim}}"
-        historyId="{{_options.historyId}}"
-        autoDropDown="{{_options.autoDropDown}}"
-        filter="{{_options.filter}}"
-        sorting="{{_options.sorting}}"
-        layerName="Controls/suggestPopup:__PopupLayer">
-   <Controls._suggest.Input.Render
-           size="{{_options.size}}"
-           value="{{_value}}"
-           style="{{_options.style}}"
-           tooltip="{{_options.tooltip}}"
-           tagStyle="{{_options.tagStyle}}"
-           style="{{_options.style}}"
-           fontSize="{{_options.fontSize}}"
-           selectOnClick="{{_options.selectOnClick}}"
-           on:tagClick="_notifyHandler('tagClick')"
-           on:tagHover="_notifyHandler('tagHover')"
-           on:valueChanged="_changeValueHandler()"
-           placeholder="{{_options.placeholder}}"
-           class="controls-ComboBox-InputRender">
-      <ws:rightFieldWrapper>
+   attr:class="{{_options.suggestState ? 'controls-Scroll_webkitOverflowScrollingTouch'}}"
+   on:choose="_choose()"
+   on:deactivated="_deactivated()"
+   on:suggestStateChanged="_suggestStateChanged()"
+   suggestState="{{_suggestState}}"
+   value="{{_searchValue}}"
+   suggestTemplate="{{_suggestTemplate}}"
+   footerTemplate="{{_options.footerTemplate}}"
+   emptyTemplate="{{_options.emptyTemplate}}"
+   minSearchLength="{{_options.minSearchLength}}"
+   source="{{_historySource || _options.source}}"
+   keyProperty="{{_options.keyProperty}}"
+   navigation="{{_options.navigation}}"
+   searchParam="{{_options.searchParam}}"
+   searchDelay="{{_options.searchDelay}}"
+   trim="{{_options.trim}}"
+   historyId="{{_options.historyId}}"
+   autoDropDown="{{_options.autoDropDown}}"
+   filter="{{_options.filter}}"
+   sorting="{{_options.sorting}}"
+   layerName="Controls/suggestPopup:__PopupLayer">
+   <Controls.input:Text
+      value="{{_value}}"
+      scope="{{_options}}"
+      attr:class="controls-ComboBox-InputRender"
+      on:tagClick="_notifyHandler('tagClick')"
+      on:tagHover="_notifyHandler('tagHover')"
+      on:valueChanged="_changeValueHandler()">
+      <ws:rightFieldTemplate>
          <ws:if data="{{!_options.readOnly}}">
             <span if="{{!_options.readOnly}}" class="controls-SelectorSuggest__arrow-wrapper"
                   on:click="_open()"
                   on:mousedown="_mouseDown()"
                   attr:ws-no-focus="true">
-               <span attr:class="controls-SelectorSuggest__iconArrow icon-{{_suggestState ? 'CollapseLight' : 'ExpandLight'}}"></span>
+               <span class="controls-SelectorSuggest__iconArrow icon-{{_suggestState ? 'CollapseLight' : 'ExpandLight'}}"></span>
             </span>
          </ws:if>
-      </ws:rightFieldWrapper>
-   </Controls._suggest.Input.Render>
+         <ws:if data="{{_options.rightFieldTemplate}}">
+            <ws:partial template="{{_options.rightFieldTemplate}}"/>
+         </ws:if>
+      </ws:rightFieldTemplate>
+   </Controls.input:Text>
 </Controls._suggest._InputController>
