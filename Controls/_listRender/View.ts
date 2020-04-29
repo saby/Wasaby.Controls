@@ -307,7 +307,7 @@ export default class View extends Control<IViewOptions> {
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
         const itemKey = contents?.getKey();
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, this._options.theme, isContextMenu);
         const onResult = this._itemActionsMenuResultHandler.bind(this);
         const onClose = this._itemActionsMenuCloseHandler.bind(this);
         this._itemActionsController.setActiveItem(itemKey);

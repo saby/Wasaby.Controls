@@ -160,6 +160,7 @@ export class Controller {
      * @param clickEvent событие клика
      * @param parentAction Родительская операция с записью
      * @param opener: контрол или элемент - опенер для работы системы автофокусов
+     * @param theme Название текущей темы
      * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
      */
     prepareActionsMenuConfig(
@@ -167,6 +168,7 @@ export class Controller {
         clickEvent: SyntheticEvent<MouseEvent>,
         parentAction: IItemAction,
         opener: Element | Control<object, unknown>,
+        theme: string,
         isContextMenu: boolean
     ): IMenuConfig {
         const item = this._collection.getItemBySourceKey(itemKey);
@@ -199,7 +201,7 @@ export class Controller {
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
-            dropdownClassName: 'controls-itemActionsV__popup',
+            dropdownClassName: `controls-itemActionsV__popup_theme-${theme}`,
             closeButtonVisibility: true,
             root: parentAction && parentAction.id,
             showHeader,
@@ -219,7 +221,7 @@ export class Controller {
             direction: {
                 horizontal: isContextMenu ? 'right' : 'left'
             },
-            className: 'controls-DropdownList__margin-head controls-ItemActions__popup__list',
+            className: `controls-DropdownList__margin-head controls-ItemActions__popup__list_theme-${theme}`,
             nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
             autofocus: false
         };

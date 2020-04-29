@@ -1323,7 +1323,7 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         isContextMenu: boolean): void {
         const itemKey = contents?.getKey();
-        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
+        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, self._options.theme,  isContextMenu);
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
             onClose: self._onItemActionsMenuClose

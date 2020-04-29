@@ -164,7 +164,7 @@
 }
 
 //since Opener does not know the specific size of the icon
-.controls-itemActionsV__popup .icon-size{
+.controls-itemActionsV__popup_theme-@{themeName} .icon-size{
   .icon-size-without-important(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
 }
 
@@ -227,7 +227,7 @@
 }
 
 // убрать после https://online.sbis.ru/opendoc.html?guid=c558bf80-4cd1-4854-a963-4af211246111
-.controls-ItemActions__popup__list {
-   margin-top: -(@close-button_offset-top_sticky + @border-thickness_sticky);
-   margin-left: @close-button_offset-right_sticky + @border-thickness_sticky;
+.controls-ItemActions__popup__list_theme-@{themeName} {
+  margin-top: -(@close-button_offset-top_sticky + @content_padding-top_sticky + @border-thickness_sticky);
+  margin-left: @close-button_offset-right_sticky + @border-thickness_sticky;
 }
