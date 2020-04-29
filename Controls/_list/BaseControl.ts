@@ -141,6 +141,26 @@ var _private = {
         }
     },
 
+    // Attention! Вызывать эту функцию запрещено! Единственное исключение - метод reload.
+    // Функция предназначена для выполнения каллбека после завершения цикла обновления.
+    // Цикл обновления - это последовательный вызов beforeUpdate -> afterUpdate.
+    // И вот посреди этого цикла нельзя менять модель, иначе beforeUpdate отработает по одному состоянию, а
+    // afterUpdate уже совсем по другому!
+    // Как сделать правильно: нужно переписать BaseControl таким образом, чтобы items спускались в него из HOC.
+    // Примеры возникающих ошибок при обновлении items между beforeUpdate и afterUpdate:
+    // https://online.sbis.ru/opendoc.html?guid=487d70ed-ba64-48b4-ad14-138b576cb9c4
+    // https://online.sbis.ru/opendoc.html?guid=21fe75c0-62b8-4caf-9442-826827f73cd0
+    // https://online.sbis.ru/opendoc.html?guid=8a839900-ebc0-4dad-9b53-225f0c337580
+    // https://online.sbis.ru/opendoc.html?guid=dbaaabae-fcca-4c79-9c92-0f7fa2e70184
+    // p.s. в первой ошибке также прикреплены скрины консоли.
+    doAfterUpdate(self, callback): void {
+        if (self._updateInProgress) {
+            self._callbackAfterUpdate = callback;
+        } else {
+            callback();
+        }
+    },
+
     reload(self, cfg): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
@@ -165,89 +185,91 @@ var _private = {
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
-                if (list.getCount()) {
-                    self._loadedItems = list;
-                } else {
-                    self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
-                }
-                if (self._pagingNavigation) {
-                    var hasMoreDataDown = list.getMetaData().more;
-                    self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, self._currentPageSize);
-                    self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, self._currentPageSize, self._currentPage);
-                }
-                var
-                    listModel = self._listViewModel;
-
-                if (cfg.afterReloadCallback) {
-                    cfg.afterReloadCallback(cfg, list);
-                }
-
-                if (cfg.serviceDataLoadCallback instanceof Function) {
-                    cfg.serviceDataLoadCallback(self._items, list);
-                }
-
-                if (cfg.dataLoadCallback instanceof Function) {
-                    cfg.dataLoadCallback(list);
-                }
-
-                if (!self._shouldNotResetPagingCache) {
-                    self._cachedPagingState = false;
-                }
-                clearTimeout(self._needPagingTimeout);
-
-                if (listModel) {
-                    if (self._options.groupProperty) {
-                        self._groupingLoader.resetLoadedGroups(listModel);
-                    }
-                    if (self._options.useNewModel) {
-                        // TODO restore marker + maybe should recreate the model completely
-                        // instead of assigning items
-                        // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-                        const modelCollection = listModel.getCollection();
-                        listModel.setCompatibleReset(true);
-                        modelCollection.setMetaData(list.getMetaData());
-                        modelCollection.assign(list);
-                        listModel.setCompatibleReset(false);
-                        self._items = listModel.getCollection();
+                _private.doAfterUpdate(self, () => {
+                    if (list.getCount()) {
+                        self._loadedItems = list;
                     } else {
-                        listModel.setItems(list);
-                        self._items = listModel.getItems();
+                        self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
+                    }
+                    if (self._pagingNavigation) {
+                        var hasMoreDataDown = list.getMetaData().more;
+                        self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, self._currentPageSize);
+                        self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, self._currentPageSize, self._currentPage);
+                    }
+                    var
+                        listModel = self._listViewModel;
+
+                    if (cfg.afterReloadCallback) {
+                        cfg.afterReloadCallback(cfg, list);
                     }
 
-                    if (self._sourceController) {
-                        _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                    if (cfg.serviceDataLoadCallback instanceof Function) {
+                        cfg.serviceDataLoadCallback(self._items, list);
                     }
 
-                    if (self._loadedItems) {
-                        self._shouldRestoreScrollPosition = true;
-                    }
-                    // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
-                    if (self._itemsChanged) {
-                        self._shouldNotifyOnDrawItems = true;
+                    if (cfg.dataLoadCallback instanceof Function) {
+                        cfg.dataLoadCallback(list);
                     }
 
-                }
-                if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
-                    cfg.afterSetItemsOnReloadCallback();
-                }
-                _private.prepareFooter(self, navigation, self._sourceController);
-                _private.resolveIndicatorStateAfterReload(self, list, navigation);
+                    if (!self._shouldNotResetPagingCache) {
+                        self._cachedPagingState = false;
+                    }
+                    clearTimeout(self._needPagingTimeout);
 
-                resDeferred.callback({
-                    data: list
+                    if (listModel) {
+                        if (self._options.groupProperty) {
+                            self._groupingLoader.resetLoadedGroups(listModel);
+                        }
+                        if (self._options.useNewModel) {
+                            // TODO restore marker + maybe should recreate the model completely
+                            // instead of assigning items
+                            // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
+                            const modelCollection = listModel.getCollection();
+                            listModel.setCompatibleReset(true);
+                            modelCollection.setMetaData(list.getMetaData());
+                            modelCollection.assign(list);
+                            listModel.setCompatibleReset(false);
+                            self._items = listModel.getCollection();
+                        } else {
+                            listModel.setItems(list);
+                            self._items = listModel.getItems();
+                        }
+
+                        if (self._sourceController) {
+                            _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                        }
+
+                        if (self._loadedItems) {
+                            self._shouldRestoreScrollPosition = true;
+                        }
+                        // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
+                        if (self._itemsChanged) {
+                            self._shouldNotifyOnDrawItems = true;
+                        }
+
+                    }
+                    if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
+                        cfg.afterSetItemsOnReloadCallback();
+                    }
+                    _private.prepareFooter(self, navigation, self._sourceController);
+                    _private.resolveIndicatorStateAfterReload(self, list, navigation);
+
+                    resDeferred.callback({
+                        data: list
+                    });
+
+                    if (self._isMounted && self._isScrollShown) {
+                        // При полной перезагрузке данных нужно сбросить состояние скролла
+                        // и вернуться к началу списка, иначе браузер будет пытаться восстановить
+                        // scrollTop, догружая новые записи после сброса.
+                        self._resetScrollAfterReload = true;
+                    }
+
+                    // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
+                    if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
+                        _private.checkLoadToDirectionCapability(self, filter, navigation);
+                    }
                 });
-
-                if (self._isMounted && self._isScrollShown) {
-                    // При полной перезагрузке данных нужно сбросить состояние скролла
-                    // и вернуться к началу списка, иначе браузер будет пытаться восстановить
-                    // scrollTop, догружая новые записи после сброса.
-                    self._resetScrollAfterReload = true;
-                }
-
-                // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-                if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
-                    _private.checkLoadToDirectionCapability(self, filter, navigation);
-                }
             }).addErrback(function(error) {
                 return _private.processError(self, {
                     error: error,
@@ -1752,6 +1774,7 @@ var _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _updateInProgress: false,
     _groupingLoader: null,
 
     _isMounted: false,
@@ -2097,6 +2120,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _beforeUpdate: function(newOptions) {
+        this._updateInProgress = true;
         var filterChanged = !isEqual(newOptions.filter, this._options.filter);
         var navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         var resetPaging = this._pagingNavigation && filterChanged;
@@ -2340,6 +2364,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
+        this._updateInProgress = false;
         if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
             this._shouldUpdateItemActions = false;
             this._updateItemActions();
@@ -2373,6 +2398,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._scrollPageLocked = false;
         this._modelRecreated = false;
+        if (this._callbackAfterUpdate) {
+            this._callbackAfterUpdate();
+            this._callbackAfterUpdate = null;
+        }
     },
 
     __onPagingArrowClick: function(e, arrow) {
