@@ -4636,41 +4636,6 @@ define([
                instance._listSwipe({}, itemData, childEvent);
             });
 
-            it('list has multiselection, event should not fire', function() {
-               var
-                  cfg = {
-                     viewName: 'Controls/List/ListView',
-                     viewConfig: {
-                        idProperty: 'id'
-                     },
-                     viewModelConfig: {
-                        items: rs,
-                        idProperty: 'id'
-                     },
-                     viewModelConstructor: lists.ListViewModel,
-                     source: source,
-                     selectedKeysCount: 1
-                  },
-                  instance = new lists.BaseControl(cfg);
-               instance._children = {
-                  itemActionsOpener: {
-                     close: function() {
-                     }
-                  }
-               };
-               instance._selectionController = {
-                  toggleItem: function() { }
-               };
-               instance.saveOptions(cfg);
-               instance._beforeMount(cfg);
-               instance._notify = function(eventName) {
-                  if (eventName === 'itemSwipe') {
-                     throw new Error('itemSwipe event should not fire if the list has multiselection');
-                  }
-               };
-               instance._listSwipe({}, itemData, childEvent);
-            });
-
             it('can update itemActions on left swipe', function(done) {
                var
                   cfg = {
@@ -4793,8 +4758,8 @@ define([
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
                instance._notify = function(eventName, eventArgs, eventOptions) {
-                  assert.equal(eventName, 'itemSwipe');
-                  assert.deepEqual(eventArgs, [itemData.actionsItem, childEvent]);
+                  assert.equal(eventName, 'checkboxClick');
+                  assert.deepEqual(eventArgs, [1 false]);
                   notifyCalled = true;
                };
                instance._listSwipe({}, itemData, childEvent);
