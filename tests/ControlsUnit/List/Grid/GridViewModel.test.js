@@ -1343,6 +1343,31 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          });
 
+         it('getCurrentHeaderColumn checkbox cell with breadcrumbs', function() {
+               const header = [
+                  {
+                     isBreadCrumbs: true,
+                  },
+                  {
+                     title: 'second'
+                  },
+                  {
+                     title: 'third'
+                  }
+               ]
+               gridViewModel._prepareHeaderColumns(header, true);
+               const headerRow = gridViewModel.getCurrentHeaderRow();
+               assert.deepEqual({
+                  column: {},
+                  cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__header-cell-checkbox_theme-default controls-Grid__header-cell-checkbox_min-width_theme-default',
+                  index: 0,
+                  cellContentClasses: '',
+                  cellStyles: '',
+                  shadowVisibility: 'hidden',
+               }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
+         })
+
          it('getCurrentHeaderColumn with header (startColumn and endColumn)', function() {
             gridViewModel._prepareHeaderColumns(gridHeaderWithColumns, true);
             const headerRow = gridViewModel.getCurrentHeaderRow();

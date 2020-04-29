@@ -212,18 +212,18 @@ define([
          var lookup = new Lookup();
 
          lookup._suggestState = true;
-         lookup._suggestStateChanged();
+         lookup._suggestStateChanged({}, false);
          assert.isFalse(lookup._suggestState);
 
          lookup._suggestState = true;
          lookup._isInputVisible = function() {
             return true;
          };
-         lookup._suggestStateChanged();
+         lookup._suggestStateChanged({}, true);
          assert.isTrue(lookup._suggestState);
 
          lookup._infoboxOpened = true;
-         lookup._suggestStateChanged();
+         lookup._suggestStateChanged({}, true);
          assert.isFalse(lookup._suggestState);
       });
 
