@@ -3,11 +3,12 @@ import {Memory, Query, DataSet} from 'Types/source';
 
 const SEARCH_DELAY = 35000;
 
-export default class PortionedSearchSource extends Memory {
+export default class PortionedSearchSource {
     private source: Memory = null;
+    protected _mixins: any[] = [];
 
     constructor(opts) {
-        super();
+        this['[Types/_source/ICrud]'] = true;
         this.source = opts.source;
     }
 
