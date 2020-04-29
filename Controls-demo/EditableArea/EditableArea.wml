@@ -28,7 +28,7 @@
                     name="edit"
                     editObject="{{_record1}}"
                     style="withBackground"
-                    attr:class="ws-flexbox"
+                    attr:class="ws-flexbox ws-flex-grow-1"
                     toolbarVisibility="{{true}}">
                 <div class="ControlsDemo-EditableArea__longExample__editor_wrapper">
                     <Controls.editableArea:Base
