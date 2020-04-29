@@ -45,6 +45,7 @@
          maxLength="{{_options.maxLength}}"
          value="{{_inputValue}}"
          tagStyle="{{_options.tagStyle}}"
+         validationStatus="{{_options.validationStatus}}"
          placeholder="{{_getPlaceholder(_options)}}"
          on:valueChanged="_changeValueHandler()"
          on:inputCompleted="_notifyHandler('inputCompleted')"
