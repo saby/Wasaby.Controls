@@ -492,6 +492,13 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
                            suggestComponent._dependenciesDeferred.addCallback(function() {
                               assert.deepEqual(suggestComponent._filter, {});
+
+                              suggestState = false;
+                              suggestComponent._options.suggestState = false;
+                              suggestComponent._options.validationStatus = 'invalid';
+                              suggestComponent._inputActivated();
+
+                              assert.isFalse(suggestState, 'suggest opened on activated with validationStatus: "invalid"');
                               resolve();
                            });
                         });
@@ -718,11 +725,15 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.equal(suggestComponent._searchValue, '');
          sinon.assert.calledOnce(suggestComponent._notify);
 
-         suggestComponent._options.suggestState = true;
+         suggestComponent._options.suggestState = false;
          suggestComponent._options.value = '';
          suggestComponent._beforeUpdate({suggestState: false, value: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');
          sinon.assert.calledOnce(suggestComponent._notify);
+
+         suggestComponent._options.validationStatus = 'valid';
+         suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
+         assert.isNull(suggestComponent._loading, 'load started with validationStatus: "invalid"');
 
          sandbox.restore();
       });
