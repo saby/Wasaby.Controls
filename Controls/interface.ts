@@ -79,4 +79,5 @@ export {default as ISortingSelectorOptions} from './_interface/ISortingSelector'
 export {default as IDisplayedRanges, IDisplayedRangesOptions} from './_interface/IDisplayedRanges';
 export {default as IOpenPopup} from './_interface/IOpenPopup';
 export {default as ISearch} from './_interface/ISearch';
+export {default as IFormOperation} from './_interface/IFormOperation';
 export {default as ISelectorDialog, ISelectorDialogOptions} from './_interface/ISelectorDialog';

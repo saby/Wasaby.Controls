@@ -49,7 +49,6 @@ var
             if (eventResult === constEditing.CANCEL) {
                 result = Deferred.success({cancelled: true});
             } else {
-                _private.registerPending(self);
                 if (eventResult && eventResult.addBoth) {
                     var id = self._notify('showIndicator', [{}], {bubbling: true});
                     eventResult.addBoth(function (defResult) {
@@ -199,10 +198,6 @@ var
                 self._editingItem.unsubscribe('onPropertyChange', self._resetValidation);
                 self._options.listModel.unsubscribe('onCollectionChange', self._updateIndex);
             }
-            if (self._pendingDeferred && !self._pendingDeferred.isReady()) {
-                self._pendingDeferred.callback();
-            }
-            self._pendingDeferred = null;
             self._originalItem = null;
             self._editingItem = null;
             self._isAdd = null;
@@ -343,14 +338,6 @@ var
             }
             return _private.afterBeginEdit(self, newOptions);
         },
-        registerPending(self): void {
-            if (!self._pendingDeferred || self._pendingDeferred.isReady()) {
-                self._pendingDeferred = new Deferred();
-            }
-            self._notify('registerPending', [self._pendingDeferred, {
-                onPendingFail: self._onPendingFail
-            }], {bubbling: true});
-        },
         getItemIndexWithGrouping(display, groupId, isAddInTop): number {
             /*
             * Если добавление идет в существующуюю группу, то добавляем ей в начало или в конец.
@@ -394,8 +381,6 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _originalItem: null,
     _editingItem: null,
     _endEditDeferred: null,
-    _pendingDeferred: null,
-
 
     constructor: function (options = {}) {
         EditInPlace.superclass.constructor.apply(this, arguments);
@@ -412,7 +397,6 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
              */
             this._children.formController.setValidationResult();
         }.bind(this);
-        this._onPendingFail = this._onPendingFail.bind(this);
         this._updateIndex = this._updateIndex.bind(this);
         this.__errorController = options.errorController || new dataSourceError.Controller({});
     },
@@ -438,9 +422,18 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     },
 
     _afterMount(): void {
-        // Пендинг регистрируется через событие, которые нельзя генерировать до полного построения контрола.
-        if (this._editingItem) {
-            _private.registerPending(this);
+        this._notify('registerFormOperation', [{
+            save: this._formOperationHandler.bind(this, true),
+            cancel: this._formOperationHandler.bind(this, false),
+            isDestroyed: () => this._destroyed
+        }], {bubbling: true});
+    },
+
+    _formOperationHandler(shouldSave: boolean): void {
+        if (!(this._options.task1178703576 && !shouldSave) && this._editingItem && this._editingItem.isChanged()) {
+            return this.commitEdit();
+        } else {
+            return this.cancelEdit();
         }
     },
 
@@ -741,23 +734,6 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             _private.editNextRow(this, !eventOptions.isShiftKey);
         }
         e.stopPropagation();
-    },
-
-    _onPendingFail(shouldSave: boolean, pendingDeferred: Promise<boolean>): void {
-        const cancelPending = () => this._notify('cancelFinishingPending', [], {bubbling: true});
-
-        if (!(this._options.task1178703576 && !shouldSave) && this._editingItem && this._editingItem.isChanged()) {
-            return this.commitEdit().addCallback((result = {}) => {
-                if (result.validationFailed) {
-                    cancelPending();
-                }
-                return result;
-            }).addErrback(() => {
-                cancelPending();
-            });
-        } else {
-            return this.cancelEdit();
-        }
     },
 
     _beforeUnmount: function () {
