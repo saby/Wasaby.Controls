@@ -69,8 +69,8 @@ export class Controller {
     private _visibilityCallback: TItemActionVisibilityCallback;
 
     update(options: IItemActionsControllerOptions): void {
-        // !isEqual(this._commonItemActions, options.itemActions) ||
         if (options.itemActions === undefined ||
+            !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
             this._visibilityCallback !== options.visibilityCallback
         ) {
@@ -80,6 +80,7 @@ export class Controller {
             this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: unknown) => true);
             // this._collection.setActionsAssigned(false);
         }
+        // Возможно, стоит проверять версию модели, если она меняется при раскрытии веток дерева
         // !this._collection.areActionsAssigned() &&
         if (this._commonItemActions || this._itemActionsProperty) {
             this._assignActions();
