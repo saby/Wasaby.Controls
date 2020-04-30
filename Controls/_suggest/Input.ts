@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Input/Input');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {getOptionTypes} from 'Controls/_suggest/Utils';
+import 'Controls/input';
 
 /**
  * Поле ввода с автодополнением это одострочное поле ввода, которое помогает пользователю ввести текст, предлагая подходящие варианты по первым набранным символам.
