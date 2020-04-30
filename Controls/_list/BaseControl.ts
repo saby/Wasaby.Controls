@@ -229,6 +229,10 @@ var _private = {
                         if (self._options.groupProperty) {
                             self._groupingLoader.resetLoadedGroups(listModel);
                         }
+
+                        if (self._items) {
+                           self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                        }
                         if (self._options.useNewModel) {
                             // TODO restore marker + maybe should recreate the model completely
                             // instead of assigning items
@@ -243,29 +247,7 @@ var _private = {
                             listModel.setItems(list);
                             self._items = listModel.getItems();
                         }
-                if (listModel) {
-                    if (self._options.groupProperty) {
-                        self._groupingLoader.resetLoadedGroups(listModel);
-                    }
-
-                    if (self._items) {
-                       self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
-                    }
-                    if (self._options.useNewModel) {
-                        // TODO restore marker + maybe should recreate the model completely
-                        // instead of assigning items
-                        // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-                        const modelCollection = listModel.getCollection();
-                        listModel.setCompatibleReset(true);
-                        modelCollection.setMetaData(list.getMetaData());
-                        modelCollection.assign(list);
-                        listModel.setCompatibleReset(false);
-                        self._items = listModel.getCollection();
-                    } else {
-                        listModel.setItems(list);
-                        self._items = listModel.getItems();
-                    }
-                    self._items.subscribe('onCollectionChange', self._onItemsChanged);
+                        self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                         if (self._sourceController) {
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -2960,8 +2942,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         this._listViewModel.setDragTargetPosition(dragPosition);
                     }
                 }
-                }
             }
+        }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
