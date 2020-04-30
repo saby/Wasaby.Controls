@@ -173,13 +173,7 @@
   .flex-shrink(1);
 }
 
-/*
-  Т.к нам нужен shrink: 0 для того, чтобы запись не сжимало поле ввода, то до расчета стилей коллекция вытолкнет весь контент.
-  Пока стили не посчитались ограничиваем ширину до кнопки сброса и селектора
-  https://online.sbis.ru/opendoc.html?guid=ca31428b-7657-41f4-9231-39c6544a7005
- */
 .controls-SelectedCollection__collection.controls-Lookup__collection_with_input {
-   max-width: ~"calc(100% - "(@reset-button_size_lookupInput + @trigger_width_lookupInput + @reset-button_offset_lookupSelector)~")";
   .flex-shrink(0);
 }
 
