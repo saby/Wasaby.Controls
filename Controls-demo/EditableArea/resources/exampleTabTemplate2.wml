@@ -1,22 +1,20 @@
-<div class="ws-align-items-baseline ws-inline-flexbox">
-   <Controls.editableArea:View
-      editObject="{{item}}"
-      readOnly="{{!selected}}"
-      style="withoutBorder"
-   >
-      <div class="ControlsDemo-EditableArea__eapWrapper">
-         <Controls.editableArea:Base
-            bind:value="content.editObject.name"
-            size="l"
-            style="accentHeader"
-         >
+<Controls.editableArea:View
+        editObject="{{item}}"
+        readOnly="{{!selected}}"
+        style="withoutBorder"
+>
+    <div class="ControlsDemo-EditableArea__eapWrapper">
+        <Controls.editableArea:Base
+                bind:value="content.editObject.name"
+                size="l"
+                style="accentHeader"
+        >
             <ws:editorTemplate>
-               <Controls.input:Text selectOnClick="{{ false }}"
-                                    size="m"
-                                    fontStyle="secondary"
-                                    attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
+                <Controls.input:Text selectOnClick="{{ false }}"
+                                     size="m"
+                                     fontStyle="secondary"
+                                     attr:class="controls-Input_negativeOffset_theme_{{_options.theme}}"/>
             </ws:editorTemplate>
-         </Controls.editableArea:Base>
-      </div>
-   </Controls.editableArea:View>
-</div>
+        </Controls.editableArea:Base>
+    </div>
+</Controls.editableArea:View>
