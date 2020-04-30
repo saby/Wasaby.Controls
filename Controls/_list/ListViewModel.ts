@@ -130,10 +130,10 @@ var _private = {
 
     // New Model compatibility
     addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
-        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}): void => {
+        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}, silent: boolean = true): void => {
             itemsModelCurrent.itemActions = actions;
             if (itemsModelCurrent.dispItem.setActions) {
-                itemsModelCurrent.dispItem.setActions(actions);
+                itemsModelCurrent.dispItem.setActions(actions, silent);
             }
         };
         itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (

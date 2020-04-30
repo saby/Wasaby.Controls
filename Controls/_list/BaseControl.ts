@@ -1248,7 +1248,6 @@ const _private = {
                 self._shouldUpdateItemActions = true;
             }
         }
-
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
             self._forceUpdate();
@@ -2038,7 +2037,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
         let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback
-                                                !== newOptions.itemActionVisibilityCallback;
+            !== newOptions.itemActionVisibilityCallback;
+        // todo init var
         this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
@@ -2279,6 +2279,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _afterUpdate: function(oldOptions) {
+        // if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
+        //     this._shouldUpdateItemActions = false;
+        //    this._updateItemActions();
+        // }
         this._updateInProgress = false;        if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
@@ -2424,7 +2428,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _cancelEditActionHandler(): void {
         this._children.editInPlace.cancelEdit();
     },
-
+    /**
+     * Выполняется из шаблона при mouseenter
+     * @private
+     */
     _initItemActions(): void {
         if (!this._itemActionsInitialized) {
             this._updateItemActions();
@@ -2433,6 +2440,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _updateItemActions(): void {
+        // let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback;
+        // from beforeUpdate: this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged; отложенная инициализация
+        // from listChange: If model was recreated or actions have not been initialized
+        // from listChange: yet, postpone item actions update until the new model is
+        // from listChange: received by ItemActionsControl as an option
+        // from listChange: if (!self._itemActionsInitialized || self._modelRecreated) отложенная инициализация
+
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this.__error || !this._listViewModel) {
@@ -2492,7 +2506,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemContextMenu(e: SyntheticEvent<Event>, item: CollectionItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
         clickEvent.preventDefault();
         clickEvent.stopPropagation();
-        const contents = item.getContents();
+        let contents = item.getContents();
+        // TODO item instanceof BreadcrumbsItem ?
+        if (Array.isArray(contents)) {
+            contents = contents[contents.length - 1];
+        }
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
         _private.setMarkedKey(this, contents.getKey());
     },
@@ -2506,13 +2524,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
         event.stopPropagation();
-        const contents: Model = itemData.getContents();
+        let contents: Model = itemData.getContents();
+        // TODO item instanceof BreadcrumbsItem ?
+        if (Array.isArray(contents)) {
+            contents = contents[contents.length - 1];
+        }
         _private.setMarkedKey(this, contents.getKey());
         if (action && !action._isMenu && !action['parent@']) {
-            // TODO Проверить. в старом коде было место с пометкой "TODO breadcrumbs for new model"
-            // if (itemData.breadCrumbs) {
-            //     contents = contents[contents.length - 1];
-            // }
             _private.handleItemActionClick(this, action, event, itemData);
         } else {
             _private.openItemActionsMenu(this, action, event, itemData, false);

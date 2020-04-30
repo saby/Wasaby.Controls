@@ -119,7 +119,7 @@ export interface IItemActionsTemplateOptions {
 export interface IItemActionsItem {
     getActions(): IItemActionsContainer;
     getContents(): Model;
-    setActions(actions: IItemActionsContainer): void;
+    setActions(actions: IItemActionsContainer, silent?: boolean): void;
     setActive(active: boolean): void;
     isActive(): boolean;
     setSwiped(swiped: boolean): void;

@@ -307,12 +307,17 @@ export class Controller {
      * @private
      */
     private _collectActionsForItem(item: IItemActionsItem): IItemAction[] {
+        let contents = item.getContents();
+        // TODO item instanceof BreadcrumbsItem ?
+        if (Array.isArray(contents)) {
+            contents = contents[contents.length - 1];
+        }
         const itemActions: IItemAction[] = this._itemActionsProperty
-                ? item.getContents().get(this._itemActionsProperty)
+                ? contents.get(this._itemActionsProperty)
                 : this._commonItemActions;
         const fixedActions = itemActions.map(Controller._fixActionIcon);
         return fixedActions.filter((action) =>
-            this._visibilityCallback(action, item.getContents())
+            this._visibilityCallback(action, contents)
         );
     }
 
@@ -409,7 +414,7 @@ export class Controller {
     ): boolean {
         const oldActions = item.getActions();
         if (!oldActions || (actions && !Controller._isMatchingActions(oldActions, actions))) {
-            item.setActions(actions);
+            item.setActions(actions, true);
             return true;
         }
         return false;

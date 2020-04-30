@@ -179,13 +179,12 @@ export default class View extends Control<IViewOptions> {
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         const moveMarker = new MarkerCommands.Mark(item.getContents().getKey());
-        const contents = item.getContents();
 
         this._executeCommands([moveMarker]);
         // TODO fire 'markedKeyChanged' event
 
         if (action && !action._isMenu && !action['parent@']) {
-            this._handleItemActionClick(action, clickEvent, contents);
+            this._handleItemActionClick(action, clickEvent, item);
         } else {
             this._openItemActionsMenu(action, clickEvent, item, false);
         }
@@ -237,16 +236,20 @@ export default class View extends Control<IViewOptions> {
 
     /**
      * Обрабатывает клик по конкретной операции
+     * @param action
+     * @param clickEvent
+     * @param item
      * @private
      */
-    private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, contents: Model): void {
+    private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
+        let contents = item.getContents();
+        // TODO item instanceof BreadcrumbsItem ?
+        if (Array.isArray(contents)) {
+            contents = contents[contents.length - 1];
+        }
         if (action.handler) {
             action.handler(contents);
         }
-        // TODO Проверить. В старом коде было место с пометкой "TODO breadcrumbs for new model"
-        // if (itemData.breadCrumbs) {
-        //     contents = contents[contents.length - 1];
-        // }
         // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
@@ -271,8 +274,8 @@ export default class View extends Control<IViewOptions> {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
-                const contents = this._itemActionsController.getActiveItem()?.getContents();
-                this._handleItemActionClick(action, clickEvent, contents);
+                const item = this._collection.getActiveItem();
+                this._handleItemActionClick(action, clickEvent, item);
             }
         }
     }
@@ -306,7 +309,12 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
-        const itemKey = item?.getContents()?.getKey();
+        let contents = item?.getContents();
+        // TODO item instanceof BreadcrumbsItem ?
+        if (Array.isArray(contents)) {
+            contents = contents[contents.length - 1];
+        }
+        const itemKey = contents?.getKey();
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, this._options.theme, isContextMenu);
         const onResult = this._itemActionsMenuResultHandler.bind(this);
         const onClose = this._itemActionsMenuCloseHandler.bind(this);
