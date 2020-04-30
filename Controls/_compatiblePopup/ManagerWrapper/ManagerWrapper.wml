@@ -7,7 +7,7 @@
                   <Controls.event:Register name="touchendDetect" register="touchend" attr:fixCompatible="1">
                      <Controls.event:Register name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
                         <Controls.popup:Global name="PopupGlobal">
-                        <Controls.popup:Manager name="Manager">
+                        <Controls.popup:Manager name="Manager" theme="{{_theme}}">
                            <Controls.Application.TouchDetector name="touchDetector">
                               <Controls.dragnDrop:Controller name="dragNDropContainer">
                                  <div>
