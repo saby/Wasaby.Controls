@@ -6,6 +6,7 @@ class FieldTemplate extends Control<IControlOptions> {
     private _value1: string = '123qweASD';
     private _value2: string = '123qweASD';
     private _value3: string = '123qweASD';
+    private _value4: string = '123qweASD';
 
     protected _template: TemplateFunction = controlTemplate
 
