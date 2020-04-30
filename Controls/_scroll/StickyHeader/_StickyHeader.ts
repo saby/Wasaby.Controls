@@ -18,6 +18,7 @@ import fastUpdate from './FastUpdate';
 import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
 import tmplNotify = require('Controls/Utils/tmplNotify');
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 export const enum SHADOW_VISIBILITY {
     visible = 'visible',
@@ -139,6 +140,18 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._updateBottomShadowStyle();
     }
 
+    protected _beforePaintOnMount(): void {
+        RegisterUtil(this, 'updateFixed', this._updateFixed.bind(this));
+
+        this._notify('stickyRegister', [{
+            id: this._index,
+            inst: this,
+            container: this._container,
+            position: this._options.position,
+            mode: this._options.mode
+        }, true], {bubbling: true});
+    }
+
     protected _afterMount(): void {
         const children = this._children;
 
@@ -149,14 +162,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             Logger.warn('Controls.scroll:StickyHeader: Используются фиксация заголовков вне Controls.scroll:Container. Либо используйте Controls.scroll:Container, либо уберите, либо отключите фиксацию заголовков в контролах в которых она включена.', this);
             return;
         }
-
-        this._notify('stickyRegister', [{
-            id: this._index,
-            inst: this,
-            container: this._container,
-            position: this._options.position,
-            mode: this._options.mode
-        }, true], {bubbling: true});
 
         this._model = new Model({
             topTarget: children.observationTargetTop,
@@ -171,6 +176,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _beforeUnmount(): void {
+        UnregisterUtil(this, 'updateFixed');
         if (this._model) {
             //Let the listeners know that the element is no longer fixed before the unmount.
             this._fixationStateChangeHandler('', this._model.fixedPosition);
@@ -198,7 +204,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     resetSticky(): void {
-        fastUpdate.resetSticky(this._container);
+        fastUpdate.resetSticky([this._container]);
     }
 
     get height(): number {
@@ -431,18 +437,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             style += 'z-index: ' + this._options.fixedZIndex + ';';
         }
 
-        /**
-         * Сценарий: проскролить список с группой заголовков, вызвать перестроение заголовков.
-         * Ошибка и причина: Значение top(позиция заголовка) определяется после монтирования в DOM. Из-за этого происходит скачок.
-         * Решение: Так как в группе уже определено значение top, то пробросим его до заголовков через контекст.
-         * Берем значение из контекста только в случае, когда ещё не произошел моинтинг в DOM, не смогли определить top.
-         * Это костыль, который будет удален по https://online.sbis.ru/opendoc.html?guid=243c78ec-7f27-4625-b347-d92523702e50
-         */
-        if (style.indexOf('top') === -1 && style.indexOf('bottom') === -1 && this._context?.stickyHeader && !this._container) {
-            style += `top: ${this._context.stickyHeader.top}px;`;
-            style += `bottom: ${this._context.stickyHeader.bottom}px;`;
-        }
-
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
         if (this._options.task1177692247 && this._options.fixedZIndex) {
             style += 'z-index: ' + this._options.fixedZIndex + ';';
@@ -487,7 +481,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _updateFixed(e, ids): void {
+    protected _updateFixed(ids: number[]): void {
         const isFixed: boolean = ids.indexOf(this._index) !== -1;
         if (this._isFixed !== isFixed) {
             if (!this._model) {
