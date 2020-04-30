@@ -42,7 +42,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * @author Красильников А.С.
  * @category Toggle
  *
- * @demo Controls-demo/toggle/DoubleSwitch/Base/IndexControls-demo/toggle/DoubleSwitch/Base/Index.ts
+ * @demo Controls-demo/toggle/DoubleSwitch/Base/Index
  *
  */
 
