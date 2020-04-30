@@ -98,6 +98,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _isMobilePlatform: boolean = detection.isMobilePlatform;
     protected _isMobileAndroid: boolean = detection.isMobileAndroid;
     protected _isSafari13: boolean = StickyHeader._isSafari13();
+    protected _isMobileIOS: boolean = detection.isMobileIOS;
 
     private _isFixed: boolean = false;
     private _stickyHeadersHeight: IOffset = {
