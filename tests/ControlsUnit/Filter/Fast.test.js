@@ -627,7 +627,7 @@ define(
                   rawData: items[0]
                }),
                _source: 'targetSource',
-               _sourceController: { hasMoreData: () => {}, isLoading: () => {return isLoading} }}];
+               _sourceController: { hasMoreData: () => {}, isLoading: () => {return isLoading}, getNavigation: () => {} }}];
             fastFilter._items = new collection.RecordSet({
                rawData: configItems.items,
                keyProperty: 'title'
@@ -661,7 +661,7 @@ define(
                   rawData: items[0]
                }),
                _source: 'targetSource',
-               _sourceController: { hasMoreData: () => {}, isLoading: () => {} },
+               _sourceController: { hasMoreData: () => {}, isLoading: () => {}, getNavigation: () => {} },
                _needQuery: true
             }];
             fastFilter._items = new collection.RecordSet({
