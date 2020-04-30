@@ -669,7 +669,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.setBaseItemTemplateResolver(resolver);
             data = gridViewModel.getItemDataByItem({ getContents: () => [] });
 
-            assert.strictEqual(data.resolveBaseItemTemplate, resolver);
+            assert.strictEqual(data.resolvers.baseItemTemplate, resolver);
          });
 
          it('getMultiSelectClassList visible', function() {
