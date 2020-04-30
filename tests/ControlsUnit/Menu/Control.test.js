@@ -220,7 +220,7 @@ define(
                menuControl._context = {
                   isTouch: { isTouch: false }
                };
-               handleStub = sandbox.stub(menuControl, 'startOpeningTimeout');
+               handleStub = sandbox.stub(menuControl, 'handleCurrentItem');
             });
 
             it('on groupItem', function() {

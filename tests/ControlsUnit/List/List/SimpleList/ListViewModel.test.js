@@ -133,6 +133,39 @@ define([
          assert.include(version, 'WITH_EDITING');
       });
 
+      it('isShouldBeDrawnItem', function() {
+         var
+            cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title'
+            },
+            model = new lists.ListViewModel(cfg);
+            const itemInRange = {
+               isSticky: false,
+               isGroup: false,
+               isStickyHeader: false,
+            }
+            assert.isTrue(model.isShouldBeDrawnItem(itemInRange));
+            const itemGroup = {
+               isSticky: false,
+               isGroup: true,
+               isStickyHeader: true,
+            }
+            model._startIndex = 1;
+            assert.isTrue(model.isShouldBeDrawnItem(itemGroup)); // curent index 0, strartIndex 1. item isn't in range but should render as group
+            const itemSticky = {
+               isSticky: true,
+               isGroup: false,
+               isStickyHeader: false,
+            }
+            assert.isTrue(model.isShouldBeDrawnItem(itemSticky)); // curent index 0, strartIndex 1. item isn't in range but should render as master sticky
+      });
+
+
       it('markItemReloaded', () => {
          var
             cfg = {

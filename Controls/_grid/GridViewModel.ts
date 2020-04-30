@@ -971,8 +971,11 @@ var
             if (headerColumn.column.align) {
                 cellContentClasses += ' controls-Grid__header-cell_justify_content_' + headerColumn.column.align;
             }
-            if (headerColumn.column.valign) {
-                cellContentClasses += ' controls-Grid__header-cell_align_items_' + headerColumn.column.valign;
+
+            if (!GridLayoutUtil.isFullGridSupport()) {
+                cellClasses += ` controls-Grid__header-cell_align_items_${headerColumn.column.valign || 'top'}`;
+            } else if (headerColumn.column.valign) {
+                cellContentClasses += ` controls-Grid__header-cell_align_items_${headerColumn.column.valign}`;
             }
 
             if (GridLayoutUtil.isOldIE()) {
@@ -1462,8 +1465,8 @@ var
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
-                        getVersion: () => {
-                           return _private.calcItemColumnVersion(self, current.getVersion(), current.columnIndex, current.index);
+                        getVersion: function () {
+                           return _private.calcItemColumnVersion(self, current.getVersion(), this.columnIndex, this.index);
                         },
                         _preferVersionAPI: true,
                         gridCellStyles: '',
