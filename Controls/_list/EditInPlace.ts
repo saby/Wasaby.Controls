@@ -430,7 +430,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     },
 
     _formOperationHandler(shouldSave: boolean): void {
-        if (!(this._options.task1178703576 && !shouldSave) && this._editingItem && this._editingItem.isChanged()) {
+        if (shouldSave && this._editingItem?.isChanged()) {
             return this.commitEdit();
         } else {
             return this.cancelEdit();
