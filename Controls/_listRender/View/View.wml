@@ -1,5 +1,6 @@
 <div class="controls-BaseControl controls-BaseControl_showActions controls-BaseControl__renderContainer">
    <ws:partial
+      attr:class="{{_itemActionsMenuId !== null ? 'controls-itemActionsV_invisible'}}"
       name="renderer"
       template="{{ _options.render }}"
       listModel="{{ _collection }}"

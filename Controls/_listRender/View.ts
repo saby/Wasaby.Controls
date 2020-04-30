@@ -54,7 +54,7 @@ export default class View extends Control<IViewOptions> {
 
     private _itemActionsController: ItemActionsController;
 
-    private _popupId: string;
+    private _itemActionsMenuId: string = null;
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
@@ -289,6 +289,7 @@ export default class View extends Control<IViewOptions> {
         if (this._collection && !this._collection.destroyed) {
             this._collection.setActiveItem(null);
             this._itemActionsController.deactivateSwipe();
+            this._itemActionsMenuId = null;
         }
     }
 
@@ -311,7 +312,7 @@ export default class View extends Control<IViewOptions> {
         const onClose = this._itemActionsMenuCloseHandler.bind(this);
         this._collection.setActiveItem(item);
         Sticky.openPopup(menuConfig).then((popupId) => {
-            this._popupId = popupId;
+            this._itemActionsMenuId = popupId;
             menuConfig.eventHandlers = {onResult, onClose};
         });
     }
@@ -323,7 +324,8 @@ export default class View extends Control<IViewOptions> {
     private _closeActionsMenu(): void {
         this._collection.setActiveItem(null);
         this._itemActionsController.deactivateSwipe();
-        Sticky.closePopup(this._popupId);
+        Sticky.closePopup(this._itemActionsMenuId);
+        this._itemActionsMenuId = null;
     }
 
     /**

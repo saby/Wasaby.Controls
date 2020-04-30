@@ -1221,10 +1221,10 @@ const _private = {
             if (self._options.navigation && self._options.navigation.source) {
                 self._sourceController.setState(self._listViewModel);
             }
-            if (action === IObservable.ACTION_REMOVE && self._menuIsShown) {
+            if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
+                    _private.closePopup(self);
                     self._onItemActionsMenuClose();
-                    Sticky.closePopup(self._popupId);
                 }
             }
         }
@@ -1332,7 +1332,7 @@ const _private = {
         };
         self._listViewModel.setActiveItem(item);
         Sticky.openPopup(menuConfig).then((popupId) => {
-            self._popupId = popupId;
+            self._itemActionsMenuId = popupId;
         });
     },
 
@@ -1343,7 +1343,16 @@ const _private = {
     closeActionsMenu(self: any): void {
         self._listViewModel.setActiveItem(null);
         self._itemActionsController.deactivateSwipe();
-        Sticky.closePopup(self._popupId);
+        _private.closePopup(self);
+    },
+
+    /**
+     * Закрывает popup меню
+     * @param self
+     */
+    closePopup(self): void {
+        Sticky.closePopup(self._itemActionsMenuId);
+        self._itemActionsMenuId = null;
     },
 
     bindHandlers(self): void {
@@ -1710,7 +1719,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _loadOffsetTop: LOAD_TRIGGER_OFFSET,
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
     _loadingIndicatorContainerOffsetTop: 0,
-    _menuIsShown: null,
     _viewSize: null,
     _viewPortSize: null,
     _scrollTop: 0,
@@ -1753,7 +1761,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _currentMenuConfig: null,
 
-    _popupId: null,
+    _itemActionsMenuId: null,
 
     _notifyHandler: tmplNotify,
 
@@ -2126,8 +2134,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
-            if (this._menuIsShown) {
-                Sticky.closePopup(this._popupId);
+            if (this._itemActionsMenuId) {
+                _private.closePopup(self);
                 this._onItemActionsMenuClose();
             }
 
@@ -2538,6 +2546,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemActionsMenuClose(clickEvent: SyntheticEvent<MouseEvent>): void {
         this._listViewModel.setActiveItem(null);
         this._itemActionsController.deactivateSwipe();
+        this._itemActionsMenuId = null;
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {

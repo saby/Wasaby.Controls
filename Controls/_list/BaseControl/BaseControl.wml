@@ -126,6 +126,7 @@
                 source="{{_sourceController}}"
                 useNewModel="{{ _options.useNewModel }}">
             <ws:partial
+                    attr:class="{{_itemActionsMenuId !== null ? 'controls-itemActionsV_invisible'}}"
                     name="{{name}}"
                     template="{{ _options.content }}"
                     scope="{{_options}}"

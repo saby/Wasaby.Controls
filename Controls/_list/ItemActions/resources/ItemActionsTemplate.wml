@@ -52,7 +52,7 @@
         </div>
     </div>
 </ws:template>
-<ws:template name="templateChooser">
+<ws:template name="templateChooser"">
     <ws:if data="{{itemData.isIE12 && !isTile}}">
         <ws:partial template="localItemActionsTemplateForEdge"/>
     </ws:if>
