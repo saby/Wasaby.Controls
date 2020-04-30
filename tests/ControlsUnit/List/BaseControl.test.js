@@ -1532,18 +1532,6 @@ define([
             }
          };
          var ctrl = new lists.BaseControl(cfg);
-         ctrl._children = {
-            scrollController: {
-               scrollToItem(key) {
-                  if (key === data[0].id) {
-                     result = 'top';
-                  } else if (key === data[data.length - 1].id) {
-                     result = 'bottom';
-                  }
-                  return Promise.resolve();
-               }
-            }
-         };
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -1783,18 +1771,6 @@ define([
             }
          };
          var ctrl = new lists.BaseControl(cfg);
-         ctrl._children = {
-            scrollController: {
-               scrollToItem(key) {
-                  if (key === data[0].id) {
-                     result = 'top';
-                  } else if (key === data[data.length - 1].id) {
-                     result = 'bottom';
-                  }
-                  return Promise.resolve();
-               }
-            }
-         };
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
