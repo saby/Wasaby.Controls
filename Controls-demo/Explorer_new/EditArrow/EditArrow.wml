@@ -15,6 +15,7 @@
             viewMode="{{_viewMode}}"
             header="{{_gridHeader}}"
             showEditArrow="{{true}}"
+            showActionButton="{{true}}"
             on:editArrowClick="_editArrowClick()"
             columns="{{_columns}}">
         </Controls.explorer:View>
