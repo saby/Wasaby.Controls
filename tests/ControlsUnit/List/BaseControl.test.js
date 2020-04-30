@@ -1439,7 +1439,8 @@ define([
                } else {
                   baseControl._listViewModel._selectedKeys.push(key);
                }
-            }
+            },
+            handleReset: function() {}
          };
          assert.deepEqual([], baseControl._listViewModel._selectedKeys);
          baseControl._loadingIndicatorState = 'all';
@@ -1531,6 +1532,18 @@ define([
             }
          };
          var ctrl = new lists.BaseControl(cfg);
+         ctrl._children = {
+            scrollController: {
+               scrollToItem(key) {
+                  if (key === data[0].id) {
+                     result = 'top';
+                  } else if (key === data[data.length - 1].id) {
+                     result = 'bottom';
+                  }
+                  return Promise.resolve();
+               }
+            }
+         };
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -1549,21 +1562,6 @@ define([
             }, 100);
          }, 100);
       });
-      /*
-      it('processLoadError', function() {
-         var cfg = {};
-         var ctrl = new BaseControl(cfg);
-         var error = { message: 'error' };
-
-         result = false;
-         var userErrback = function(error) {
-            result = error;
-         };
-         BaseControl._private.processLoadError(ctrl, error, userErrback);
-
-         assert.equal(error, result, 'UserErrback doesn\'t return instance of Error');
-      });
-      */
 
       it('indicator', function() {
          var cfg = {};
@@ -1785,9 +1783,20 @@ define([
             }
          };
          var ctrl = new lists.BaseControl(cfg);
+         ctrl._children = {
+            scrollController: {
+               scrollToItem(key) {
+                  if (key === data[0].id) {
+                     result = 'top';
+                  } else if (key === data[data.length - 1].id) {
+                     result = 'bottom';
+                  }
+                  return Promise.resolve();
+               }
+            }
+         };
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
-
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
@@ -2747,7 +2756,8 @@ define([
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
          lnBaseControl._selectionController = {
-            toggleItem: function() { }
+            toggleItem: function() {},
+            handleReset: function() {}
          };
 
          lnBaseControl.saveOptions(lnCfg);
@@ -2837,7 +2847,8 @@ define([
          ctrl._selectionController = {
             toggleItem: function(key) {
                assert.equal(key, 2);
-            }
+            },
+            handleReset: function() {}
          };
          ctrl._onCheckBoxClick({}, 2, 0);
          ctrl._notify = function(e, args) {
@@ -2848,7 +2859,8 @@ define([
          ctrl._selectionController = {
             toggleItem: function(key) {
                assert.equal(key, 1);
-            }
+            },
+            handleReset: function() {}
          };
          ctrl._onCheckBoxClick({}, 1, 1);
       });
@@ -4577,7 +4589,8 @@ define([
                   }
                };
                instance._selectionController = {
-                  toggleItem: function() { }
+                  toggleItem: function() { },
+                  handleReset: function() {}
                };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
@@ -4636,7 +4649,8 @@ define([
                   }
                };
                instance._selectionController = {
-                  toggleItem: function() { }
+                  toggleItem: function() { },
+                  handleReset: function() {}
                };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
@@ -4765,7 +4779,8 @@ define([
                   }
                };
                instance._selectionController = {
-                  toggleItem: function() { }
+                  toggleItem: function() { },
+                  handleReset: function() {}
                };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
@@ -4839,6 +4854,10 @@ define([
                      direction: 'left'
                   }
                };
+            instance._selectionController = {
+               toggleItem: function() {},
+               handleReset: function() {}
+            };
             instance.saveOptions(cfg);
             instance._beforeMount(cfg)
                .addCallback(function() {
@@ -4900,6 +4919,10 @@ define([
                      direction: 'right'
                   }
                };
+            instance._selectionController = {
+               toggleItem: function() {},
+               handleReset: function() {}
+            };
             instance.saveOptions(cfg);
             instance._beforeMount(cfg)
                .addCallback(function() {
