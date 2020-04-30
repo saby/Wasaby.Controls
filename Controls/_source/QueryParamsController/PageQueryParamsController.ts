@@ -76,10 +76,10 @@ class PageQueryParamsController implements IQueryParamsController {
         }
     }
 
-    prepareQueryParams(direction: Direction, config?: IBasePageSourceConfig): IAdditionalQueryParams {
+    prepareQueryParams(direction: Direction, callback, config?: IBasePageSourceConfig): IAdditionalQueryParams {
         const addParams: IAdditionalQueryParams = {};
         let neededPage: number;
-
+        const pageSize =  (config?.pageSize || this._options.pageSize);
         addParams.meta = {
             navigationType: QueryNavigationType.Page
         };
@@ -92,12 +92,17 @@ class PageQueryParamsController implements IQueryParamsController {
             neededPage = this._page;
         }
 
-        addParams.offset = (config?.page || neededPage) * (config?.pageSize || this._options.pageSize);
-        addParams.limit = (config?.pageSize || this._options.pageSize);
+        addParams.offset = (config?.page || neededPage) * pageSize;
+        addParams.limit = pageSize;
 
         if (this._options.hasMore === false) {
             addParams.meta.hasMore = false;
         }
+
+        callback({
+            page: neededPage,
+            pageSize
+        });
 
         return addParams;
     }
