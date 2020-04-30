@@ -2928,7 +2928,7 @@ define([
          assert.isTrue(ctrl._needBottomPadding);
 
       });
-      
+
       it('_needBottomPadding after reload in beforeUpdate', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -5718,6 +5718,31 @@ define([
          assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+      });
+
+      it('hide indicator if shouldn\'t load more', function() {
+         const baseControl = new lists.BaseControl();
+         baseControl._isMounted = true;
+
+         baseControl._loadingIndicatorState = 'down';
+         baseControl._loadTriggerVisibility = {down: false};
+         baseControl._beforePaint();
+         assert.isNull(baseControl._loadingIndicatorState);
+
+         baseControl._loadingIndicatorState = 'up';
+         baseControl._loadTriggerVisibility = {up: false};
+         baseControl._beforePaint();
+         assert.isNull(baseControl._loadingIndicatorState);
+
+         baseControl._loadingIndicatorState = 'down';
+         baseControl._loadTriggerVisibility = {down: true};
+         baseControl._beforePaint();
+         assert.equal(baseControl._loadingIndicatorState, 'down');
+
+         baseControl._loadingIndicatorState = 'up';
+         baseControl._loadTriggerVisibility = {up: true};
+         baseControl._beforePaint();
+         assert.equal(baseControl._loadingIndicatorState, 'up');
       });
 
       it('setIndicatorContainerHeight: list bigger then scrollContainer', function() {
