@@ -1607,7 +1607,7 @@ var _private = {
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
-    }
+    },
 
     resetPagingNavigation: function(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
