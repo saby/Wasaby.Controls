@@ -92,7 +92,6 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
    static getOptionTypes(): object {
       return {
          value: EntityDescriptor(Boolean),
-         caption: EntityDescriptor(String),
          captionPosition: EntityDescriptor(String).oneOf([
             'left',
             'right'
