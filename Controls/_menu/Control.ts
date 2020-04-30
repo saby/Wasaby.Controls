@@ -131,7 +131,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         if (item.getContents() instanceof Model && !this.isTouch()) {
             this._clearClosingTimout();
             this.setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
-            this.startOpeningTimeout();
+            this.handleCurrentItem(item, sourceEvent.target, sourceEvent.nativeEvent);
         }
     }
 
@@ -297,7 +297,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
         // Close the already opened sub menu. Installation of new data sets new size of the container.
         // If you change the size of the update, you will see the container twitch.
-        if (needCloseDropDown && !needKeepMenuOpen && !needOpenDropDown) {
+        if (needCloseDropDown && !needKeepMenuOpen) {
             this._closeSubMenu(needOpenDropDown);
         }
         if (needOpenDropDown && !needKeepMenuOpen) {
