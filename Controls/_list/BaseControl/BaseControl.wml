@@ -73,7 +73,9 @@
 <ws:template name="emptyTemplateIf">
     <ws:if data="{{__needShowEmptyTemplate(_options.emptyTemplate, _listViewModel)}}">
         <div class="controls-BaseControl__emptyTemplate">
-            <ws:partial template="{{_options.emptyTemplate}}"/>
+            <!-- Прокидываем items и filter в emptyTemplate для правильной работы системы помощи.
+                 Прокидывание будет убрано по задаче https://online.sbis.ru/opendoc.html?guid=e5ae488e-f7ef-47fa-bc15-c544369cec53-->
+            <ws:partial template="{{_options.emptyTemplate}}" items="{{_items}}" filter="{{_options.filter}}"/>
         </div>
     </ws:if>
 </ws:template>
