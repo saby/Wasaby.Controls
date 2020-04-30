@@ -53,12 +53,10 @@ define(
 
                template(inst, function(result) {
                   assert.equal(result, '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position">' +
-                     '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                      '<div></div><div></div><div></div>' +
                      '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                      '<div class="controls-StickyHeader__content">testing the template</div>' +
                      '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
-                     '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                      '</div>');
                });
             });
@@ -85,13 +83,11 @@ define(
                inst._options.content = function() {return ''};
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
                   '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '</div>');
             });
 
@@ -108,13 +104,11 @@ define(
                inst._options.content = function() {return ''};
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: -1px;padding-top:1px;margin-top: -1px;z-index: 2;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
                   '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '</div>');
                sandbox.restore();
             });
@@ -124,13 +118,11 @@ define(
                inst._options.content = function() {return ''};
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
                   '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '</div>');
             });
 
@@ -140,13 +132,11 @@ define(
                inst._options.content = function() {return ''};
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="bottom: 0px;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
                   '<div></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '</div>');
             });
 
@@ -155,14 +145,12 @@ define(
                inst._options.theme = 'default';
 
                assert.equal(template(inst),   '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
                   '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '</div>');
             });
 
@@ -175,15 +163,14 @@ define(
                inst._options.theme = 'default';
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '<div></div>' +
                   '<div></div>' +
                   '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal"></div>' +
-                  '</div>');
+                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal"></div>' +
+                   '</div>');
             });
 
             it('The header is fixed, the shadow should be', function() {
@@ -203,7 +190,6 @@ define(
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
-                  '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal ws-invisible"></div>' +
                   '</div>');
             });
          });

@@ -267,7 +267,7 @@
             name="itemActionsOpener"
             template="Controls/dropdownPopup:List"
             closeOnOutsideClick="{{true}}"
-            actionOnScroll="{{ _isMobileIOS ? 'track' : 'close' }}">
+            actionOnScroll="close">
             <ws:fittingMode vertical="overflow"/>
         </Controls.popup:Sticky>
         <Controls.event:Listener

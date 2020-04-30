@@ -5,9 +5,11 @@
    {{_options.backgroundVisible ? 'controls-StickyHeader__background'}}
    controls-StickyHeader_position" style="{{_getStyle() + (_options.style || '')}}">
    <!--We use visibility style instead of "if" statement to prevent jumps when scrolling on iPad-->
-   <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal
-               {{ !_isShadowVisible('top') ? ' ws-invisible' }}"
-         style="{{_topShadowStyle}}"></div>
+   <ws:if data="{{_isShadowVisible('top') || _isMobileIOS}}">
+      <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal
+                  {{ !_isShadowVisible('top') && _isMobileIOS ? ' ws-invisible' }}"
+            style="{{_topShadowStyle}}"></div>
+   </ws:if>
    <Controls.event:Listener event="updateFixed" on:updateFixed="_updateFixed()"/>
    <Controls.event:Listener event="updateStickyHeight" on:updateStickyHeight="_updateStickyHeight()"/>
    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
@@ -20,7 +22,9 @@
                on:controlResize="_selfResizeHandler()"/>
    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom" style="{{_getObserverStyle('bottom')}}"></div>
    <!--We use visibility style insted of "if" statement to prevent jumps when scrolling on iPad-->
-   <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal
-               {{ !_isShadowVisible('bottom') ? ' ws-invisible' }}"
-       style="{{_bottomShadowStyle}}"></div>
+   <ws:if data="{{_isShadowVisible('bottom') || _isMobileIOS}}">
+      <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal
+                  {{ !_isShadowVisible('bottom') && _isMobileIOS ? ' ws-invisible' }}"
+          style="{{_bottomShadowStyle}}"></div>
+   </ws:if>
 </div>
