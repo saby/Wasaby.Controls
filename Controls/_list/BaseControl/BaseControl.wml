@@ -15,16 +15,16 @@
         <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
             <div class="controls-BaseControl_paging-label_theme-{{_options.theme}}">
                 <div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} {{rk('из')}} {{_pagingLabelData.totalItemsCount}}, {{rk('по')}} </div>
-                <Controls.dropdown:Button
+                <Controls.dropdown:Input
                         attr:class="controls-BaseControl_paging-pageSizeChooser controls-BaseControl_paging-pageSizeChooser_theme-{{_options.theme}}"
                         keyProperty="id"
                         style="secondary"
-                        viewMode="link"
+                        displayProperty="title"
                         fontSize="s"
-                        on:menuItemActivate="_changePageSize()"
-                        caption="{{_pagingLabelData.pageSize}}"
+                        selectedKeys="{{_selectedPageSizeKey}}"
+                        on:selectedKeysChanged="_changePageSize()"
                         source="{{_pageSizeSource}}">
-                </Controls.dropdown:Button>
+                </Controls.dropdown:Input>
             </div>
         </ws:if>
         <ws:else>

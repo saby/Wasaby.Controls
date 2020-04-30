@@ -193,8 +193,7 @@ var _private = {
                     }
                     if (self._pagingNavigation) {
                         var hasMoreDataDown = list.getMetaData().more;
-                        self._knownPagesCount = _private.calcPaging(self, hasMoreDataDown, self._currentPageSize);
-                        self._pagingLabelData = _private.getPagingLabelData(hasMoreDataDown, self._currentPageSize, self._currentPage);
+                        _private.updatePagingData(self, hasMoreDataDown);
                     }
                     var
                         listModel = self._listViewModel;
@@ -1602,6 +1601,14 @@ var _private = {
     isPagingNavigation: function(navigation) {
         return navigation && navigation.view === 'pages';
     },
+    
+    updatePagingData(self, hasMoreData) {
+        self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
+        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
+        self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
+        self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
+    }
+
     resetPagingNavigation: function(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
         self._currentPageSize = navigation && navigation.sourceConfig && navigation.sourceConfig.pageSize || 1;
@@ -1940,8 +1947,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
-                        self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
-                        self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
+                        _private.updatePagingData(self, hasMoreData);
                     }
 
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
@@ -2841,8 +2847,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._currentPage = page;
         this._applyPagingNavigationState({page: this._currentPage});
     },
-    _changePageSize: function(e, item) {
-        this._currentPageSize = item.get('pageSize');
+
+    _changePageSize: function(e, key) {
+        this._currentPageSize = PAGE_SIZE_ARRAY[key-1].pageSize;
         this._currentPage = 1;
         this._applyPagingNavigationState({pageSize: this._currentPageSize});
     },
