@@ -94,7 +94,7 @@ const itemActions: IItemAction[] = [
 ];
 
 export default class ItemActions extends Control<IControlOptions> {
-   protected _lastClickedTitle: string;
+   protected _lastClickedTitle: string = 'false';
    protected _itemActions: IItemAction[] = itemActions;
    protected _template: TemplateFunction = template;
    protected _viewSource: Memory;

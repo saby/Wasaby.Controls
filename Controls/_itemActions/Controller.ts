@@ -97,38 +97,14 @@ export class Controller {
     }
 
     /**
-     * Устанавливает флаг активности элементу коллекции по его ключу
-     * @param key Ключ элемента коллекции, для которого нужно обновить операции с записью
-     */
-    setActiveItem(key: TItemKey): void {
-        const oldActiveItem = this.getActiveItem();
-        const newActiveItem = this._collection.getItemBySourceKey(key);
-
-        if (oldActiveItem) {
-            oldActiveItem.setActive(false);
-        }
-        if (newActiveItem) {
-            newActiveItem.setActive(true);
-        }
-
-        this._collection.nextVersion();
-    }
-
-    /**
-     * Получает текущий активный элемент коллекции
-     */
-    getActiveItem(): IItemActionsItem {
-        return this._collection.find((item) => item.isActive());
-    }
-
-    /**
      * Активирует Swipe для меню операций с записью
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
      * @param actionsContainerHeight высота контейнера для отображения операций с записью
      */
     activateSwipe(itemKey: TItemKey, actionsContainerHeight: number): void {
         this._setSwipeItem(itemKey);
-        this.setActiveItem(itemKey);
+        const item = this._collection.getItemBySourceKey(itemKey);
+        this._collection.setActiveItem(item);
 
         if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
@@ -142,7 +118,7 @@ export class Controller {
      */
     deactivateSwipe(): void {
         this._setSwipeItem(null);
-        this.setActiveItem(null);
+        this._collection.setActiveItem(null);
         this._collection.setSwipeConfig(null);
     }
 

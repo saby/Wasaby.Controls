@@ -123,6 +123,12 @@ var TreeTileViewModel = TreeViewModel.extend({
         return this._tileModel.getHoveredItem();
     },
 
+    /**
+     * TODO работа с activeItem Должна производиться через item.isActive(),
+     *  но из-за того, как в TileView организована работа с isHovered, isScaled и isAnimated
+     *  мы не можем снять эти состояния при клике внутри ItemActions
+     * @param itemData
+     */
     setActiveItem: function (itemData) {
         this._tileModel.setActiveItem(itemData);
         TreeTileViewModel.superclass.setActiveItem.apply(this, arguments);

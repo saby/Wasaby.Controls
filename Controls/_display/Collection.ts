@@ -674,6 +674,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _actionsTemplateConfig: IItemActionsTemplateConfig;
     protected _swipeConfig: ISwipeConfig;
 
+    protected _hoveredItem: T;
+
+    /**
+     * ссылка на текущий активный Item
+     */
+    protected _$activeItem: T;
+
     /**
      * Анимация свайпа: открытие или закрытие меню опций
      */
@@ -2212,6 +2219,34 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getHoveredItem(): T {
         return this._hoveredItem;
+    }
+
+    /**
+     * Устанавливает флаг активности переданному элементу коллекции
+     * @param item Элемент коллекции, для которого нужно обновить операции с записью
+     * TODO работа с activeItem Должна производиться через item.isActive(),
+     *  но из-за того, как в TileView организована работа с isHovered, isScaled и isAnimated
+     *  мы не можем снять эти состояния при клике внутри ItemActions
+     */
+    setActiveItem(item: T): void {
+        const oldActiveItem = this.getActiveItem();
+
+        if (oldActiveItem) {
+            oldActiveItem.setActive(false);
+        }
+        if (item) {
+            item.setActive(true);
+        }
+        this._$activeItem = item;
+        this._nextVersion();
+    }
+
+    /**
+     * Получает текущий активный элемент коллекции
+     * this.find((item) => item.isActive())
+     */
+    getActiveItem(): T {
+        return this._$activeItem;
     }
 
     getSwipeConfig(): ISwipeConfig {

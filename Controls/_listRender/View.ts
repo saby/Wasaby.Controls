@@ -187,7 +187,7 @@ export default class View extends Control<IViewOptions> {
         if (action && !action._isMenu && !action['parent@']) {
             this._handleItemActionClick(action, clickEvent, contents);
         } else {
-            this._openItemActionsMenu(contents, action, clickEvent, false);
+            this._openItemActionsMenu(action, clickEvent, item, false);
         }
     }
 
@@ -203,8 +203,7 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        const contents = item.getContents();
-        this._openItemActionsMenu(contents, null, clickEvent, true);
+        this._openItemActionsMenu(null, clickEvent, item, true);
     }
 
     /**
@@ -288,29 +287,29 @@ export default class View extends Control<IViewOptions> {
         // Actions dropdown can start closing after the view itself was unmounted already, in which case
         // the model would be destroyed and there would be no need to process the action itself
         if (this._collection && !this._collection.destroyed) {
-            this._itemActionsController.setActiveItem(null);
+            this._collection.setActiveItem(null);
             this._itemActionsController.deactivateSwipe();
         }
     }
 
     /**
      * Открывает меню операций
-     * @param contents
      * @param action
      * @param clickEvent
+     * @param item
      * @param isContextMenu
      */
     private _openItemActionsMenu(
-        contents: Model,
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
+        item: CollectionItem<Model>,
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
-        const itemKey = contents?.getKey();
+        const itemKey = item?.getContents()?.getKey();
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, this._options.theme, isContextMenu);
         const onResult = this._itemActionsMenuResultHandler.bind(this);
         const onClose = this._itemActionsMenuCloseHandler.bind(this);
-        this._itemActionsController.setActiveItem(itemKey);
+        this._collection.setActiveItem(item);
         Sticky.openPopup(menuConfig).then((popupId) => {
             this._popupId = popupId;
             menuConfig.eventHandlers = {onResult, onClose};
@@ -322,7 +321,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _closeActionsMenu(): void {
-        this._itemActionsController.setActiveItem(null);
+        this._collection.setActiveItem(null);
         this._itemActionsController.deactivateSwipe();
         Sticky.closePopup(this._popupId);
     }

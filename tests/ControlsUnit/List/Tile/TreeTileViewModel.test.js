@@ -193,7 +193,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
          treeTileViewModel.setActiveItem(null);
          assert.equal(treeTileViewModel.getHoveredItem(), null);
          treeTileViewModel.setHoveredItem({key: 2});
-         treeTileViewModel.setActiveItem({key: 3});
+         treeTileViewModel.setActiveItem({key: 3, setActive: function() {return null;}});
          assert.equal(treeTileViewModel.getHoveredItem().key, 2);
       });
 

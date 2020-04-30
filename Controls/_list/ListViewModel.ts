@@ -500,11 +500,31 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return this._swipeItem.actionsItem;
     },
 
-    setActiveItem: function(itemData) {
-        if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
-            this._activeItem = itemData;
-            this._nextModelVersion(true, 'activeItemChanged');
+    getActiveItem: function() {
+        return this._activeItem;
+    },
+
+    /**
+     * TODO работа с activeItem Должна производиться через item.isActive(),
+     *  но из-за того, как в TileView организована работа с isHovered, isScaled и isAnimated
+     *  мы не можем снять эти состояния при клике внутри ItemActions
+     * @param itemData
+     */
+    setActiveItem(item: CollectionItem<Model>): void {
+        if (item === this._activeItem) {
+            return;
         }
+        const oldActiveItem = this.getActiveItem();
+        if (oldActiveItem) {
+            oldActiveItem.setActive(false);
+        }
+        // TODO костыль. В TileView вместо item передаётся объект, поэтому проверяем на function
+        //  надо передавать настроенный item
+        if (item && typeof item.setActive === 'function') {
+            item.setActive(true);
+        }
+        this._activeItem = item;
+        this._nextModelVersion(true, 'activeItemChanged');
     },
 
     setDragEntity: function(entity) {
@@ -811,10 +831,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     updateSelection: function(selectedKeys) {
         this._selectedKeys = selectedKeys || [];
         this._nextModelVersion(true);
-    },
-
-    getActiveItem: function() {
-        return this._activeItem;
     },
 
     setItemTemplateProperty: function(itemTemplateProperty) {

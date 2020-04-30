@@ -1282,13 +1282,14 @@ const _private = {
      * @param self
      * @param action
      * @param clickEvent
-     * @param contents
+     * @param item
      */
     handleItemActionClick(
         self: any,
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
-        contents: Model): void {
+        item: CollectionItem<Model>): void {
+        const contents = item?.getContents();
         if (action.handler) {
             action.handler(contents);
         }
@@ -1312,24 +1313,24 @@ const _private = {
     /**
      * Открывает меню операций
      * @param self
-     * @param contents
      * @param action
      * @param clickEvent
+     * @param item
      * @param isContextMenu
      */
     openItemActionsMenu(
         self: any,
-        contents: Model,
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
+        item: CollectionItem<Model>,
         isContextMenu: boolean): void {
-        const itemKey = contents?.getKey();
+        const itemKey = item?.getContents()?.getKey();
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, self._options.theme,  isContextMenu);
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
             onClose: self._onItemActionsMenuClose
         };
-        self._itemActionsController.setActiveItem(itemKey);
+        self._listViewModel.setActiveItem(item);
         Sticky.openPopup(menuConfig).then((popupId) => {
             self._popupId = popupId;
         });
@@ -1340,7 +1341,7 @@ const _private = {
      * @private
      */
     closeActionsMenu(self: any): void {
-        self._itemActionsController.setActiveItem(null);
+        self._listViewModel.setActiveItem(null);
         self._itemActionsController.deactivateSwipe();
         Sticky.closePopup(self._popupId);
     },
@@ -2486,7 +2487,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         clickEvent.preventDefault();
         clickEvent.stopPropagation();
         const contents = item.getContents();
-        _private.openItemActionsMenu(this, contents, null, clickEvent, true);
+        _private.openItemActionsMenu(this, null, clickEvent, item, true);
         _private.setMarkedKey(this, contents.getKey());
     },
 
@@ -2506,9 +2507,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // if (itemData.breadCrumbs) {
             //     contents = contents[contents.length - 1];
             // }
-            _private.handleItemActionClick(this, action, event, contents);
+            _private.handleItemActionClick(this, action, event, itemData);
         } else {
-            _private.openItemActionsMenu(this, contents, action, event, false);
+            _private.openItemActionsMenu(this, action, event, itemData, false);
         }
     },
 
@@ -2524,8 +2525,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
-                const contents = this._itemActionsController.getActiveItem()?.getContents();
-                _private.handleItemActionClick(this, action, clickEvent, contents);
+                const item = this._listViewModel.getActiveItem();
+                _private.handleItemActionClick(this, action, clickEvent, item);
             }
         }
     },
@@ -2535,7 +2536,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onItemActionsMenuClose(clickEvent: SyntheticEvent<MouseEvent>): void {
-        this._itemActionsController.setActiveItem(null);
+        this._listViewModel.setActiveItem(null);
         this._itemActionsController.deactivateSwipe();
     },
 
