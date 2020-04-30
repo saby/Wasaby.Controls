@@ -2946,7 +2946,7 @@ define([
          ctrl._afterUpdate(cfgWithSource);
       });
 
-      it('setHasMoreData after reload in beforeMount', async function() {
+      /*it('setHasMoreData after reload in beforeMount', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
@@ -2971,7 +2971,8 @@ define([
          await ctrl._beforeMount(cfg);
          assert.isTrue(setHasMoreDataCalled);
 
-      });
+      });*/
+
       it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
