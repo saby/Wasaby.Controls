@@ -9,7 +9,7 @@
             <ws:partial template="{{ content.resolvedTemplate }}"
                         items="{{colspanTemplate.itemData.item}}"
                         backgroundStyle="listItem"
-                        attr:class="Controls-TreeView__searchBreadCrumbs"
+                        attr:class="controls-Grid__breadCrumbs"
                         keyProperty="{{itemData.keyProperty}}"
                         displayProperty="{{itemData.displayProperty}}">
                 <ws:itemTemplate>
