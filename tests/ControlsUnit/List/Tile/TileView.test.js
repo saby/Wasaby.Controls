@@ -500,10 +500,8 @@ define(['Controls/_tile/TileView/TileView',
 
       it('_onResize', function() {
          tileView._listModel.setHoveredItem({key: 1});
-         tileView._listModel.setActiveItem({key: 1, setActive: function() {return null;}});
          tileView._onResize();
          assert.equal(tileView._listModel.getHoveredItem(), null);
-         assert.equal(tileView._listModel.getActiveItem(), null);
       });
 
       it('_onScroll, _onItemWheel', function() {

@@ -115,7 +115,6 @@ var TileView = ListView.extend({
 
     _onResize: function () {
        this._listModel.setHoveredItem(null);
-       this._listModel.setActiveItem(null);
     },
 
     _beforeUpdate: function (newOptions) {
