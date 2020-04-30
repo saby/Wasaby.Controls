@@ -303,10 +303,10 @@ var
             }
 
             if (originalItem) {
-                index = listModel.getIndexBySourceItem(originalItem.getContents());
+                index = listModel.getIndexByKey(originalItem.getContents().getKey());
             } else if (_private.hasParentInItems(editingItem, listModel)) {
                 parentId = editingItem.get(listModel._options.parentProperty);
-                parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
+                parentIndex = listModel.getIndexByKey(listModel.getItemById(parentId, listModel._options.keyProperty).getContents().getKey());
                 index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listModel.getDisplayChildrenCount(parentId)) + 1;
             } else if (listModel._options.groupingKeyCallback || groupProperty) {
                 const groupId = groupProperty ? editingItem.get(groupProperty) : listModel._options.groupingKeyCallback(editingItem);

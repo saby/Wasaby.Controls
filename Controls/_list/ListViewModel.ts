@@ -453,10 +453,9 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     getLastItem: function() {
         return ItemsUtil.getLastItem(this._display);
     },
-    getIndexByKey: function(key) {
-        var
-            item = this.getItemById(key, this._options.keyProperty);
-        return this._display.getIndex(item);
+
+    getIndexByKey(key: string | number) {
+        return this._display.getIndexByKey(key);
     },
 
     getNextItemKey: function(key) {
