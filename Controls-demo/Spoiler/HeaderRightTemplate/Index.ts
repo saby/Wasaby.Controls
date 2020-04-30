@@ -1,9 +1,11 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Spoiler/HeaderRightTemplate/HeaderRightTemplate');
+import controlTemplate = require('wml!Controls-demo/Spoiler/HeaderRightTemplate/Template');
+import notifyHandler = require('Controls/Utils/tmplNotify');
 import 'css!Controls-demo/Controls-demo';
 
-class HeaderContentTemplate extends Control<IControlOptions> {
+class Template extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
+    protected _notifyHandler: Function = notifyHandler;
     static _theme: string[] = ['Controls/Classes'];
 }
-export default HeaderContentTemplate;
+export default Template;

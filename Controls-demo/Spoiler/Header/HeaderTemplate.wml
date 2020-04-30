@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper">
     <Controls.spoiler:View>
         <ws:headerContentTemplate>
-            <Controls-demo.Spoiler.HeaderTemplate.template.Index />
+            <Controls-demo.Spoiler.HeaderTemplate.Index />
         </ws:headerContentTemplate>
         <ws:content>
             <div class="controlsDemo__SpoilerFirst__content">
