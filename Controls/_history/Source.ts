@@ -203,8 +203,8 @@ var _private = {
       return recentIds;
    },
 
-   getItemsWithHistory: function (self, history, oldItems) {
-      var items = oldItems.clone();
+   prepareOriginItems(self, history, oldItems) {
+      var items = oldItems.clone(true);
       var filteredHistory, historyIds;
       filteredHistory = this.getFilterHistory(self, self._history);
       historyIds = filteredHistory.pinned.concat(filteredHistory.frequent.concat(filteredHistory.recent));
@@ -248,7 +248,16 @@ var _private = {
             items.add(newItem);
          }
       });
+
       return items;
+   },
+
+   getItemsWithHistory: function (self, history, oldItems) {
+      if (!self._historyItems) {
+         self._historyItems = _private.prepareOriginItems(self, history, oldItems);
+      }
+
+      return self._historyItems;
    },
 
    setHistoryFields: function(item, idProperty, id) {
@@ -361,11 +370,13 @@ var _private = {
       if (item.get('pinned')) {
          item.set('pinned', false);
          pinned.remove(pinned.getRecordById(item.getId()));
+         self._historyItems = null;
       } else {
          if (_private.checkPinnedAmount(pinned)) {
             id = item.getId();
             item.set('pinned', true);
             pinned.add(this.getRawHistoryItem(self, id, item.get('HistoryId') || id));
+            self._historyItems = null;
          } else {
             _private.showNotification();
             return false;
@@ -416,8 +427,51 @@ var _private = {
       }
    },
 
+   updateRecentInItems(self, recent): boolean {
+      let updateResult = true;
+
+      const getFirstRecentItemIndex = () => {
+         let recentItemIndex = -1;
+         self._historyItems.each((item, index) => {
+            if (recentItemIndex === -1 && item.get('recent') && !item.get('pinned')) {
+               recentItemIndex = index;
+            }
+         });
+         return recentItemIndex;
+      };
+
+      const moveRecentItemToTop = (item) => {
+         const firstRecentItemIndex = getFirstRecentItemIndex();
+         const itemIndex = self._historyItems.getIndex(item);
+
+         if (firstRecentItemIndex !== itemIndex) {
+            self._historyItems.move(
+                self._historyItems.getIndex(item),
+                firstRecentItemIndex + 1
+            );
+         }
+      };
+
+      chain.factory(recent).each((recentItem) => {
+         const itemId = recentItem.get(_private.getKeyProperty(self));
+         const item = self._historyItems.getRecordById(itemId);
+         const isRecent = item.get('recent');
+         const isPinned = item.get('pinned');
+
+         if (isRecent && !isPinned) {
+            moveRecentItemToTop(item);
+         } else if (!isPinned) {
+            updateResult = false;
+         }
+      });
+
+      return updateResult;
+   },
+
    updateRecent: function (self, data, meta) {
-      var historyData;
+      let historyData;
+      let recentData;
+
       if (data instanceof Array) {
          historyData = {
             ids: []
@@ -431,10 +485,15 @@ var _private = {
                _private.getSourceByMeta(self, meta).update({id: itemId}, meta);
             }
          });
-         _private.resolveRecent(self, data);
+         recentData = data;
       } else {
          historyData = data;
-         _private.resolveRecent(self, [data]);
+         recentData = [data];
+      }
+
+      _private.resolveRecent(self, recentData);
+      if (self._historyItems && !_private.updateRecentInItems(self, recentData)) {
+         self._historyItems = null;
       }
 
       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
