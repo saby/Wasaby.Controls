@@ -8,8 +8,7 @@ import {RecordSet, List} from 'Types/collection';
 import {ICrud, PrefetchProxy} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
-import {Collection, Tree, Search, TreeItem, SelectionController} from 'Controls/display';
-import {Controller as ItemActionsController} from 'Controls/itemActions';
+import {Collection, Tree, Search, TreeItem} from 'Controls/display';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
@@ -21,7 +20,7 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
 import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {TouchContextField} from 'Controls/context';
-import {IItemAction} from 'Controls/itemActions';
+import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
 import { Sticky } from 'Controls/popup';
 
 /**
@@ -393,10 +392,10 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private _changeSelection(key: string|number|null, treeItem: TreeItem<Model>): void {
-        SelectionController.selectItem(this._listModel, key, !treeItem.isSelected());
+        this._selectItem(this._listModel, key, !treeItem.isSelected());
 
         const isEmptySelected = this._options.emptyText && !this._listModel.getSelectedItems().length;
-        SelectionController.selectItem(this._listModel, this._options.emptyKey, !!isEmptySelected );
+        this._selectItem(this._listModel, this._options.emptyKey, !!isEmptySelected );
     }
 
     private getSelectedKeys(): TSelectedKeys {
@@ -649,6 +648,14 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         return {
             ScrollData: new ScrollData({pagingVisible: false})
         };
+    }
+
+    private _selectItem(collection: any, key: number|string, state: boolean): void {
+        const item = collection.getItemBySourceKey(key);
+        if (item) {
+            item.setSelected(state, true);
+            collection.nextVersion();
+        }
     }
 
     static _theme: string[] = ['Controls/menu', 'Controls/dropdownPopup'];

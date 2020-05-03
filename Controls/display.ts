@@ -52,6 +52,8 @@ export {default as Search} from './_display/Search';
 export {default as Tree} from './_display/Tree';
 export {default as TreeItem} from './_display/TreeItem';
 
+export { IBaseCollection, ICollectionCommand, TItemKey } from './_display/interface';
+
 export {default as TileCollection} from './_display/TileCollection';
 export {default as TileCollectionItem} from './_display/TileCollectionItem';
 
@@ -65,16 +67,11 @@ export {default as GridColumn} from './_display/GridColumn';
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
 export { EditInPlaceController };
 
-import * as SelectionController from './_display/controllers/Selection';
-export { SelectionController };
-
 import * as VirtualScrollController from './_display/controllers/VirtualScroll';
 export { VirtualScrollController };
 
 import * as VirtualScrollHideController from './_display/controllers/VirtualScrollHide';
 export { VirtualScrollHideController };
-
-export { ICollectionCommand, IBaseCollection, TItemKey } from './_display/interface';
 
 import * as MarkerCommands from './_display/commands/Marker';
 export { MarkerCommands };

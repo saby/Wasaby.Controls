@@ -832,6 +832,25 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true);
     },
 
+    setSelectedItems(items: Model[], selected: boolean|null): void {
+        // говнокод для совместимости с новой моделью
+        // вместо false ставим undefined,
+        // чтобы не сломалось показывание только при наведении
+        items.forEach((item) => {
+            if (selected === false) {
+                this._selectedKeys[item.getId()] = undefined;
+            } else {
+                this._selectedKeys[item.getId()] = selected;
+            }
+        });
+
+        this._display.setSelectedItems(items, selected);
+    },
+
+    getActiveItem: function() {
+        return this._activeItem;
+    },
+
     setItemTemplateProperty: function(itemTemplateProperty) {
         this._options.itemTemplateProperty = itemTemplateProperty;
         this._nextModelVersion();

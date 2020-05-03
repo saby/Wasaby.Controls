@@ -12,7 +12,7 @@ import {isEqual} from 'Types/object';
 import {ICrud, Memory} from 'Types/source';
 import {debounce} from 'Types/function';
 import {create as diCreate} from 'Types/di';
-import {Model} from 'Types/entity';
+import {Model, relation} from 'Types/entity';
 import {IHashMap} from 'Types/declarations';
 
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -30,10 +30,11 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
 import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
-import {Controller as ItemActionsController} from 'Controls/itemActions';
+import {Controller as ItemActionsController, IItemAction} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
+import {showType} from 'Controls/Utils/Toolbar';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
@@ -42,9 +43,17 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import {ISwipeEvent} from 'Controls/listRender';
 
 import {IDirection} from './interface/IVirtualScroll';
-import {IItemAction} from './interface/IList';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {CssClassList} from '../Utils/CssClassList';
+import {
+   FlatSelectionStrategy,
+   TreeSelectionStrategy,
+   ISelectionStrategy,
+   ITreeSelectionStrategyOptions,
+   IFlatSelectionStrategyOptions,
+   ISelectionControllerResult,
+   SelectionController
+} from 'Controls/multiselection';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
@@ -70,7 +79,7 @@ const
     HOT_KEYS = {
         moveMarkerToNext: constants.key.down,
         moveMarkerToPrevious: constants.key.up,
-        toggleSelection: constants.key.space,
+        spaceHandler: constants.key.space,
         enterHandler: constants.key.enter,
         keyDownHome: constants.key.home,
         keyDownEnd: constants.key.end,
@@ -235,6 +244,10 @@ const _private = {
                     if (self._options.groupProperty) {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
+
+                        if (self._items) {
+                           self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                        }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
@@ -249,6 +262,7 @@ const _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
+                        self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -347,18 +361,7 @@ const _private = {
             });
         }
     },
-    /**
-     * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
-     * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
-     * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
-     * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
-     *
-     * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
-     * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
-     */
-    isItemsSelectionAllowed(options: object): boolean {
-        return options.hasOwnProperty('selectedKeysCount');
-    },
+
 
     resolveIndicatorStateAfterReload: function(self, list, navigation):void {
         if (!self._isMounted) {
@@ -509,9 +512,9 @@ const _private = {
             self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
         }
     },
-    toggleSelection: function(self, event) {
+    spaceHandler: function(self, event) {
         const allowToggleSelection = !_private.isBlockedForLoading(self._loadingIndicatorState) &&
-            self._children.selectionController;
+            self._selectionController;
 
         if (allowToggleSelection) {
             const model = self.getViewModel();
@@ -522,7 +525,7 @@ const _private = {
             }
 
             if (toggledItemId) {
-                self._children.selectionController.onCheckBoxClick(toggledItemId, model.getSelectionStatus(toggledItemId));
+                self._selectionController.toggleItem(toggledItemId);
                 _private.moveMarkerToNext(self, event);
             }
         }
@@ -1226,6 +1229,21 @@ const _private = {
                     self._onItemActionsMenuClose();
                 }
             }
+
+            if (self._selectionController) {
+               let result;
+
+               switch (action) {
+                  case IObservable.ACTION_RESET:
+                     result = self._selectionController.handleReset(newItems, self._prevRootId, self._prevRootId !== self._options.root);
+                     break;
+                  case IObservable.ACTION_ADD:
+                     result = self._selectionController.handleAddItems(newItems);
+                     break;
+        }
+
+               self.handleSelectionControllerResult(result);
+            }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
         // for example if Controls.explorer:View is switched from list to tile mode. The controller
@@ -1660,7 +1678,113 @@ const _private = {
             // прокрутить отступ пейджинга и скрыть тень
             self._notify('doScroll', ['pageDown'], { bubbling: true });
         });
+    },
+
+   createSelectionController(self: any, options: any): SelectionController {
+      const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
+
+      return new SelectionController({
+         model: self._listViewModel,
+         selectedKeys: options.selectedKeys,
+         excludedKeys: options.excludedKeys,
+         strategy
+      });
+   },
+
+   updateSelectionController(self: any, newOptions: any): void {
+      const result = self._selectionController.update({
+         model: self._listViewModel,
+         selectedKeys: newOptions.selectedKeys,
+         excludedKeys: newOptions.excludedKeys,
+         strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
+      });
+      this.handleSelectionControllerResult(self, result);
+   },
+
+   createSelectionStrategy(options: any, items: RecordSet): ISelectionStrategy {
+      const strategyOptions = this.getSelectionStrategyOptions(options, items);
+      if (options.parentProperty) {
+         return new TreeSelectionStrategy(strategyOptions);
+      } else {
+         return new FlatSelectionStrategy(strategyOptions);
     }
+   },
+
+   getSelectionStrategyOptions(options: any, items: RecordSet): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+      if (options.parentProperty) {
+         return {
+            nodesSourceControllers: options.nodesSourceControllers,
+            selectDescendants: options.selectDescendants,
+            selectAncestors: options.selectAncestors,
+            hierarchyRelation: new relation.Hierarchy({
+               keyProperty: options.keyProperty || 'id',
+               parentProperty: options.parentProperty || 'Раздел',
+               nodeProperty: options.nodeProperty || 'Раздел@',
+               declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
+            }),
+            rootId: options.root,
+            items
+};
+      } else {
+         return { items };
+      }
+   },
+
+   onSelectedTypeChanged(typeName: string): void {
+      let result;
+      if (!this._selectionController) {
+       this._createSelectionController();
+      }
+
+      switch (typeName) {
+       case 'selectAll':
+          result = this._selectionController.selectAll();
+          break;
+       case 'unselectAll':
+          result = this._selectionController.unselectAll();
+          break;
+       case 'toggleAll':
+          result = this._selectionController.toggleAll();
+          break;
+      }
+
+      this.handleSelectionControllerResult(result);
+   },
+
+   handleSelectionControllerResult(self: any, result: ISelectionControllerResult): void {
+      if (!result) {
+         return;
+      }
+
+      const selectedDiff = result.selectedKeysDiff;
+      if (selectedDiff.added.length || selectedDiff.removed.length) {
+         self._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
+      }
+
+      const excludedDiff = result.excludedKeysDiff;
+      if (excludedDiff.added.length || excludedDiff.removed.length) {
+         self._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
+      }
+
+      // для связи с контроллером ПМО
+      self._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
+   },
+
+   onItemsChanged(self: any, action: string, removedItems: []): void {
+      // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
+      // при подписке на модель событие remove летит еще и при скрытии элементов
+      if (self._selectionController) {
+         let result;
+
+         switch (action) {
+            case IObservable.ACTION_REMOVE:
+               result = self._selectionController.removeKeys(removedItems);
+               break;
+         }
+
+         this.handleSelectionControllerResult(self, result);
+      }
+   }
 };
 
 /**
@@ -1761,12 +1885,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _draggingEntity: null,
     _draggingTargetItem: null,
 
+    _selectionController: null,
     _itemActionsController: null,
+    _prevRootId: null,
 
+    // TODO Проверить.
     _currentMenuConfig: null,
 
+    // TODO Проверить.
     _itemActionsMenuId: null,
 
+    // TODO Проверить.
     _notifyHandler: tmplNotify,
 
     /**
@@ -1798,12 +1927,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._inertialScrolling = new InertialScrolling();
 
-        // todo Костыль, т.к. построение ListView зависит от SelectionController.
-        // Будет удалено при выполнении одного из пунктов:
-        // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
-        // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
-        this._multiSelectReadyCallback = this._multiSelectReadyCallbackFn.bind(this);
-
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
 
@@ -1815,7 +1938,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.initializeNavigation(this, newOptions);
         _private.updateNavigation(this);
 
-        this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
         this._loadTriggerVisibility = {};
 
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
@@ -2008,14 +2130,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
     },
 
-    // todo Костыль, т.к. построение ListView зависит от SelectionController.
-    // Будет удалено при выполнении одного из пунктов:
-    // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
-    // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
-    _multiSelectReadyCallbackFn: function(multiSelectReady) {
-        this._multiSelectReady = multiSelectReady;
-    },
-
     getViewModel() {
         return this._listViewModel;
     },
@@ -2032,6 +2146,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             container.addEventListener('dragstart', this._nativeDragStart);
         }
         this._loadedItems = null;
+
+        if (this._options.selectedKeys && this._options.selectedKeys.length !== 0) {
+            this._createSelectionController();
+        }
+
+        // для связи с контроллером ПМО
+        this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
     },
 
     _beforeUpdate: function(newOptions) {
@@ -2048,6 +2169,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
         this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
+        this._prevRootId = this._options.root;
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
 
             // При смене страницы, должно закрыться редактирование записи.
@@ -2109,7 +2231,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }
-        this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden' || this._delayedSelect;
 
         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
@@ -2155,6 +2276,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._loadedItems) {
             this._shouldRestoreScrollPosition = true;
+        }
+
+        if (this._selectionController) {
+            _private.updateSelectionController(this, newOptions);
         }
     },
 
@@ -2250,6 +2375,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         this._loadTriggerVisibility = null;
 
+        // для связи с контроллером ПМО
+        this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
+
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
 
@@ -2293,11 +2421,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
-        }
-        if (this._delayedSelect && this._children.selectionController) {
-            this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
-            this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);
-            this._delayedSelect = null;
         }
 
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
@@ -2348,7 +2471,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _onCheckBoxClick: function(e, key, status, readOnly) {
         if (!readOnly) {
-            this._children.selectionController.onCheckBoxClick(key, status);
+            if (!this._selectionController) {
+               this._createSelectionController();
+            }
+
+            const result = this._selectionController.toggleItem(key);
+            _private.handleSelectionControllerResult(this, result);
             this._notify('checkboxClick', [key, status]);
         }
     },
@@ -2571,7 +2699,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._itemActionsMenuId = null;
     },
 
-    _itemMouseDown: function(event, itemData, domEvent) {
+    _onItemsChanged(event, action, newItems, newItemsIndex, removedItems): void {
+        _private.onItemsChanged(this, action, removedItems);
+    },
+
+    _itemMouseDown(event, itemData, domEvent) {
         let hasDragScrolling = false;
         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {
@@ -2744,7 +2876,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     {position: 'before', item: itemData.getContents()} :
                     this._listViewModel.calculateDragTargetPosition(itemData);
 
-                if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false)
+                if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false) {
                     if (this._options.useNewModel) {
                         this._draggingTargetItem = dragPosition.item;
                     } else {
@@ -2752,6 +2884,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
                 }
             }
+        }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
@@ -2832,6 +2965,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             keyProperty: newKeyProperty
         });
 
+    },
+
+    _createSelectionController(): void {
+        this._selectionController = _private.createSelectionController(this, this._options);
     },
 
     _getLoadingIndicatorClasses(state?: string): string {
@@ -2923,8 +3060,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
         return diCreate(modelName, { ...modelConfig, collection: items });
-    }
+    },
 
+    handleSelectionControllerResult(result: ISelectionControllerResult): void {
+       _private.handleSelectionControllerResult(this, result);
+    }
 });
 
 // TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757

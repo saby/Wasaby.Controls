@@ -247,9 +247,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
         const def = new Deferred();
-        // Если задали опцию, берем с опции, иначе с контрола, который открывает
-        const popupOpener = cfg?.opener || opener;
-
         // protect against wrong config. Opener must be specified only on popupOptions.
         if (cfg?.templateOptions?.opener) {
             delete cfg.templateOptions.opener;
@@ -258,39 +255,37 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
         if (!BaseOpener.isNewEnvironment()) {
             BaseOpener.getManager().then(() => {
-                if (popupOpener) {
-                    // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
-                    // Если topPopup, то zIndex менеджер высчитает сам
+                // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
+                // Если topPopup, то zIndex менеджер высчитает сам
 
-                    if (!cfg.zIndex) {
-                        if (!cfg.topPopup) {
-                            // На старой странице могут открывать на одном уровне 2 стековых окна.
-                            // Последнее открытое окно должно быть выше предыдущего, для этого должно знать его zIndex.
-                            // Данные хранятся в WM
-                            const oldWindowManager = requirejs('Core/WindowManager');
-                            const compatibleManagerWrapperName = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
-                            let managerWrapperMaxZIndex = 0;
-                            // На старой странице может быть бутерброд из старых и новых окон. zIndex вдомных окон берем
-                            // из менеджера совместимости. Ищем наибольший zIndex среди всех окон
-                            if (requirejs.defined(compatibleManagerWrapperName)) {
-                               managerWrapperMaxZIndex = requirejs(compatibleManagerWrapperName).default.getMaxZIndex();
-                            }
-                            const zIndexStep = 9;
-                            const item = ManagerController.find(cfg.id);
-                            // zindex окон, особенно на старой странице, никогда не обновлялся внутренними механизмами
-                            // Если окно уже открыто, zindex не меняем
-                            if (item) {
-                                cfg.zIndex = item.popupOptions.zIndex;
-                            } else if (oldWindowManager) {
-                                // Убираем нотификационные окна из выборки старого менеджера
-                                const baseOldZIndex = 1000;
-                                const oldMaxZWindow = oldWindowManager.getMaxZWindow((control) => {
-                                    return control._options.isCompoundNotification !== true;
-                                });
-                                const oldMaxZIndex = oldMaxZWindow?.getZIndex() || baseOldZIndex;
-                                const maxZIndex = Math.max(oldMaxZIndex, managerWrapperMaxZIndex);
-                                cfg.zIndex = maxZIndex + zIndexStep;
-                            }
+                if (!cfg.zIndex) {
+                    if (!cfg.topPopup) {
+                        // На старой странице могут открывать на одном уровне 2 стековых окна.
+                        // Последнее открытое окно должно быть выше предыдущего, для этого должно знать его zIndex.
+                        // Данные хранятся в WM
+                        const oldWindowManager = requirejs('Core/WindowManager');
+                        const compatibleManagerWrapperName = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+                        let managerWrapperMaxZIndex = 0;
+                        // На старой странице может быть бутерброд из старых и новых окон. zIndex вдомных окон берем
+                        // из менеджера совместимости. Ищем наибольший zIndex среди всех окон
+                        if (requirejs.defined(compatibleManagerWrapperName)) {
+                            managerWrapperMaxZIndex = requirejs(compatibleManagerWrapperName).default.getMaxZIndex();
+                        }
+                        const zIndexStep = 9;
+                        const item = ManagerController.find(cfg.id);
+                        // zindex окон, особенно на старой странице, никогда не обновлялся внутренними механизмами
+                        // Если окно уже открыто, zindex не меняем
+                        if (item) {
+                            cfg.zIndex = item.popupOptions.zIndex;
+                        } else if (oldWindowManager) {
+                            // Убираем нотификационные окна из выборки старого менеджера
+                            const baseOldZIndex = 1000;
+                            const oldMaxZWindow = oldWindowManager.getMaxZWindow((control) => {
+                                return control._options.isCompoundNotification !== true;
+                            });
+                            const oldMaxZIndex = oldMaxZWindow?.getZIndex() || baseOldZIndex;
+                            const maxZIndex = Math.max(oldMaxZIndex, managerWrapperMaxZIndex);
+                            cfg.zIndex = maxZIndex + zIndexStep;
                         }
                     }
                 }

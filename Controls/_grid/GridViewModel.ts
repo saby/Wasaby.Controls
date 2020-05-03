@@ -26,6 +26,7 @@ import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil'
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
+import { Model } from 'Types/entity';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -1214,6 +1215,10 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
+        getItemBySourceKey: function(id) {
+            return this._model.getItemById(id);
+        },
+
         setMarkedKey: function(key, byOptions) {
             this._model.setMarkedKey(key, byOptions);
         },
@@ -1576,6 +1581,10 @@ var
             return this._model.getItems();
         },
 
+        // для совместимости с новой моделью
+        getCollection: function() {
+            return this.getItems();
+        },
         /**
          * TODO работа с activeItem Должна производиться через item.isActive(),
          *  но из-за того, как в TileView организована работа с isHovered, isScaled и isAnimated
@@ -1784,6 +1793,10 @@ var
 
         updateSelection: function(selectedKeys) {
             this._model.updateSelection(selectedKeys);
+        },
+
+        setSelectedItems(items: Model[], selected: boolean|null): void {
+            this._model.setSelectedItems(items, selected);
         },
 
         setDragTargetPosition: function(position) {

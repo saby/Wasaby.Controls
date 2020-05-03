@@ -393,6 +393,10 @@ var ItemsViewModel = BaseViewModel.extend({
         return this._display ? ItemsUtil.getDisplayItemById(this._display, id, keyProperty) : undefined;
     },
 
+    getItemBySourceKey: function(id) {
+        return this.getItemById(id);
+    },
+
     getCount: function() {
         return this._display ? this._display.getCount() : 0;
     },
@@ -552,6 +556,11 @@ var ItemsViewModel = BaseViewModel.extend({
 
     getItems: function() {
         return this._items;
+    },
+
+    // для совместимости с новой моделью
+    getCollection: function() {
+        return this.getItems();
     },
 
     appendItems: function(items) {

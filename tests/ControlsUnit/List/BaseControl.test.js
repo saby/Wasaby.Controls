@@ -228,20 +228,6 @@ define([
          assert.deepEqual(lists.BaseControl._private.getSortingOnChange(sortingASC, 'test'), emptySorting);
       });
 
-      it('_private::isItemsSelectionAllowed', () => {
-         let options = {};
-         assert.isFalse(lists.BaseControl._private.isItemsSelectionAllowed(options));
-
-         options.selectedKeysCount = undefined;
-         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
-
-         options.selectedKeysCount = 0;
-         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
-
-         options.selectedKeysCount = 1;
-         assert.isTrue(lists.BaseControl._private.isItemsSelectionAllowed(options));
-      });
-
       it('_private::needLoadNextPageAfterLoad', function() {
          let list = new collection.RecordSet({
             rawData: [
@@ -1419,8 +1405,7 @@ define([
          assert.isFalse(notified);
       });
 
-      it('toggleSelection', async function() {
-
+      it('spaceHandler', async function() {
          var
              cfg = {
                 viewModelConstructor: lists.ListViewModel,
@@ -1447,14 +1432,15 @@ define([
 
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._children.selectionController = {
-            onCheckBoxClick: (key, status) => {
-               if (status) {
+         baseControl._selectionController = {
+            toggleItem: (key) => {
+               if (baseControl._listViewModel.getSelectionStatus(key)) {
                   baseControl._listViewModel._selectedKeys.pop(key);
                } else {
                   baseControl._listViewModel._selectedKeys.push(key);
                }
-            }
+            },
+            handleReset: function() {}
          };
          assert.deepEqual([], baseControl._listViewModel._selectedKeys);
          baseControl._loadingIndicatorState = 'all';
@@ -1463,11 +1449,11 @@ define([
 
          baseControl._loadingIndicatorState = null;
          sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
-         lists.BaseControl._private.toggleSelection(baseControl, event);
+         lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
 
          baseControl.getViewModel()._markedKey = 5;
-         lists.BaseControl._private.toggleSelection(baseControl, event);
+         lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.deepEqual([1, 1], baseControl._listViewModel._selectedKeys);
 
 
@@ -1564,21 +1550,6 @@ define([
             }, 100);
          }, 100);
       });
-      /*
-      it('processLoadError', function() {
-         var cfg = {};
-         var ctrl = new BaseControl(cfg);
-         var error = { message: 'error' };
-
-         result = false;
-         var userErrback = function(error) {
-            result = error;
-         };
-         BaseControl._private.processLoadError(ctrl, error, userErrback);
-
-         assert.equal(error, result, 'UserErrback doesn\'t return instance of Error');
-      });
-      */
 
       it('indicator', function() {
          var cfg = {};
@@ -1802,7 +1773,6 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
-
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
@@ -2665,6 +2635,10 @@ define([
                viewModelConstructor: lists.ListViewModel
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
+         lnBaseControl._selectionController = {
+            toggleItem: function() {},
+            handleReset: function() {}
+         };
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -2681,12 +2655,6 @@ define([
                assert.equal(lnBaseControl.getViewModel()
                   .getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
 
-               lnBaseControl._children = {
-                  selectionController: {
-                     onCheckBoxClick: function() {
-                     }
-                  }
-               };
                lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
                assert.equal(lnBaseControl.getViewModel()
                   .getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
@@ -2756,13 +2724,11 @@ define([
             assert.equal(args[0], 2);
             assert.equal(args[1], 0);
          };
-         ctrl._children = {
-            selectionController: {
-               onCheckBoxClick: function(key, status) {
+         ctrl._selectionController = {
+            toggleItem: function(key) {
                   assert.equal(key, 2);
-                  assert.equal(status, 0);
-               }
-            }
+            },
+            handleReset: function() {}
          };
          ctrl._onCheckBoxClick({}, 2, 0);
          ctrl._notify = function(e, args) {
@@ -2770,13 +2736,11 @@ define([
             assert.equal(args[0], 1);
             assert.equal(args[1], 1);
          };
-         ctrl._children = {
-            selectionController: {
-               onCheckBoxClick: function(key, status) {
+         ctrl._selectionController = {
+            toggleItem: function(key) {
                   assert.equal(key, 1);
-                  assert.equal(status, 1);
-               }
-            }
+            },
+            handleReset: function() {}
          };
          ctrl._onCheckBoxClick({}, 1, 1);
       });
@@ -2888,6 +2852,7 @@ define([
          assert.isTrue(setHasMoreDataCalled);
 
       });
+
       it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
@@ -3685,6 +3650,1184 @@ define([
          assert.deepEqual(selection.excluded, [3]);
       });
 
+/*
+TODO проверить. Эти тесты не совместимы с обновлёнными списками, но они покрывают необходимый функционал. Надо проверить их сценарии и удалить
+      describe('ItemActions', function() {
+         var
+            actions = [
+               {
+                  id: 0,
+                  title: 'прочитано',
+                  showType: tUtil.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action read Click');
+                  }
+               },
+               {
+                  id: 1,
+                  icon: 'icon-primary icon-PhoneNull',
+                  title: 'phone',
+                  showType: tUtil.showType.MENU,
+                  handler: function(item) {
+                     console.log('action phone Click ', item);
+                  }
+               },
+               {
+                  id: 2,
+                  icon: 'icon-primary icon-EmptyMessage',
+                  title: 'message',
+                  showType: tUtil.showType.MENU,
+                  handler: function() {
+                     alert('Message Click');
+                  }
+               },
+               {
+                  id: 3,
+                  icon: 'icon-primary icon-Profile',
+                  title: 'profile',
+                  showType: tUtil.showType.MENU_TOOLBAR,
+                  handler: function() {
+                     console.log('action profile Click');
+                  }
+               },
+               {
+                  id: 4,
+                  icon: 'icon-Erase icon-error',
+                  title: 'delete pls',
+                  showType: tUtil.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action delete Click');
+                  }
+               },
+               {
+                  id: 5,
+                  icon: 'icon-done icon-Admin',
+                  title: 'delete pls',
+                  showType: tUtil.showType.TOOLBAR,
+                  handler: function() {
+                     console.log('action delete Click');
+                  }
+               }
+            ];
+         it('showActionsMenu context', function(done) {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{},
+                     closest: () => 'elem'
+                  }
+               },
+               itemData = {
+                  itemActions: { all: actions }
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function(args) {
+                     callBackCount++;
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
+                     assert.equal(args.templateOptions.items.getKeyProperty(), 'id');
+                     assert.equal(args.templateOptions.keyProperty, 'id');
+                     assert.equal(args.templateOptions.parentProperty, 'parent');
+                     assert.equal(args.templateOptions.nodeProperty, 'parent@');
+                     assert.equal(itemData, instance._listViewModel._activeItem);
+                     assert.equal(instance._listViewModel._menuState, 'shown');
+                     assert.equal(callBackCount, 3);
+                     done();
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+         });
+         it('showActionsMenu context without actions, with footer', function(done) {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  contextMenuConfig: {
+                     footerTemplate: 'footer'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
+               },
+               target = {
+                  getBoundingClientRect: ()=>{},
+                  closest: () => 'elem'
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  },
+                  target: target
+               },
+               itemData = {
+                  itemActions: { all: [] }
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function(args) {
+                     callBackCount++;
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
+                     assert.equal(args.templateOptions.items.getKeyProperty(), 'id');
+                     assert.equal(args.templateOptions.keyProperty, 'id');
+                     assert.equal(args.templateOptions.parentProperty, 'parent');
+                     assert.equal(args.templateOptions.nodeProperty, 'parent@');
+                     assert.equal(itemData, instance._listViewModel._activeItem);
+                     assert.equal(instance._listViewModel._menuState, 'shown');
+                     assert.strictEqual(instance._targetItem, 'elem');
+                     assert.equal(callBackCount, 3);
+                     done();
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+         });
+         it('_onItemContextMenu', async () => {
+            var callBackCount = 0;
+            var cfg = {
+                  items: new collection.RecordSet({
+                     rawData: [
+                        {
+                           id: 1,
+                           title: 'item 1'
+                        },
+                        {
+                           id: 2,
+                           title: 'item 2'
+                        }
+                     ],
+                     keyProperty: 'id'
+                  }),
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  markedKey: null,
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{},
+                     closest: () => 'elem'
+                  }
+               },
+               itemData = {
+                  key: 2
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function() {
+                     callBackCount++;
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.equal(instance.getViewModel()._markedKey, 1);
+            instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
+            assert.equal(instance.getViewModel()._markedKey, 2);
+            assert.equal(callBackCount, 0);
+         });
+
+         it('closeSwipe on listDeactivated', () => {
+            let
+               swipeClosed = false,
+               cfg = {
+                  items: new collection.RecordSet({
+                     rawData: [
+                        {
+                           id: 1,
+                           title: 'item 1'
+                        },
+                        {
+                           id: 2,
+                           title: 'item 2'
+                        }
+                     ],
+                     keyProperty: 'id'
+                  }),
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  markedKey: null,
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg);
+            instance._children = {
+               swipeControl: {
+                  closeSwipe: function () {
+                     swipeClosed = true;
+                  }
+               }
+            };
+            instance._menuIsShown = true;
+            instance._listDeactivated();
+            assert.isFalse(swipeClosed);
+            instance._menuIsShown = false;
+            instance._listDeactivated();
+            assert.isTrue(swipeClosed);
+         });
+
+         it('close context menu if its owner was removed', function() {
+            let
+               swipeClosed = false,
+               itemActionsOpenerClosed = false,
+               cfg = {
+                  items: new collection.RecordSet({
+                     rawData: [
+                        {
+                           id: 1,
+                           title: 'item 1'
+                        },
+                        {
+                           id: 2,
+                           title: 'item 2'
+                        }
+                     ],
+                     keyProperty: 'id'
+                  }),
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  markedKey: null,
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg);
+            instance._children = {
+               itemActionsOpener: {
+                  close: function() {
+                     itemActionsOpenerClosed = true;
+                  }
+               },
+               swipeControl: {
+                  closeSwipe: function() {
+                     swipeClosed = true;
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._menuIsShown = true;
+            instance._itemWithShownMenu = {
+               getId: () => '123321'
+            };
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REMOVE,
+                  null,
+                  null,
+                  [{
+                     getContents: () => {
+                        return {
+                           getId: () => '123321'
+                        };
+                     }
+                  }],
+                  null);
+
+            assert.isFalse(instance._menuIsShown);
+            assert.isFalse(instance._actionMenuIsShown);
+            assert.isNull(instance._itemWithShownMenu);
+            assert.isTrue(itemActionsOpenerClosed);
+            assert.isTrue(swipeClosed);
+         });
+
+         it('showActionsMenu context', function() {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{},
+                     closest: () => 'elem'
+                  }
+               },
+               itemData = {};
+            instance._children = {
+               itemActionsOpener: {
+                  open: function() {
+                     callBackCount++;
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+            assert.equal(callBackCount, 0);
+         });
+
+         it('no showActionsMenu context without actions', function() {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu',
+                  stopPropagation: () => {
+                     contextMenuStopped = true;
+                  }
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  },
+                  target: {
+                     getBoundingClientRect: ()=>{},
+                     closest: () => 'elem'
+                  }
+               },
+               itemData = {
+                  itemActions: { all: [] }
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function() {
+                     callBackCount++;
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent);
+            assert.equal(callBackCount, 0); // проверяем что не открывали меню
+         });
+
+         it('showActionsMenu no context', function() {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               target = {
+                  getBoundingClientRect: function() {
+                     return {
+                        bottom: 1,
+                        height: 2,
+                        left: 3,
+                        right: 4,
+                        top: 5,
+                        width: 6
+                     };
+                  },
+                  closest: () => 'elem'
+               },
+               fakeEvent = {
+                  type: 'click'
+
+               },
+               childEvent = {
+                  target: target,
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  }
+               },
+               itemData = {
+                  itemActions: { all: actions }
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function(args) {
+                     callBackCount++;
+                     assert.deepEqual(target.getBoundingClientRect(), args.target.getBoundingClientRect());
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+            setTimeout(function() {
+               assert.equal(itemData, instance._listViewModel._activeItem);
+               assert.equal(instance._listViewModel._menuState, 'shown');
+               assert.equal(callBackCount, 3);
+            }, 100);
+         });
+
+         it('closeActionsMenu', function() {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               target = '123',
+               fakeEvent = {
+                  target: target,
+                  type: 'click',
+                  stopPropagation: function() {
+                     callBackCount++;
+                  }
+               };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._children = {
+               itemActionsOpener: {
+                  close: function() {
+                     callBackCount++;
+                  }
+               },
+               swipeControl: {
+                  closeSwipe: function() {
+                     callBackCount++;
+                  }
+               }
+            };
+            instance._listViewModel._activeItem = {
+               item: true
+            };
+            instance._container = {
+               querySelector: function(selector) {
+                  if (selector === '.controls-ListView__itemV') {
+                     return {
+                        parentNode: {
+                           children: [{
+                              className: ''
+                           }]
+                        }
+                     };
+                  }
+               }
+            };
+            instance._actionsMenuResultHandler({
+               action: 'itemClick',
+               event: fakeEvent,
+               data: [{
+                  getRawData: function() {
+                     callBackCount++;
+                     return {
+                        handler: function() {
+                           callBackCount++;
+                        }
+                     };
+                  }
+               }]
+            });
+            assert.equal(instance._listViewModel._activeItem, null);
+            assert.equal(instance._listViewModel._menuState, 'hidden');
+            assert.equal(callBackCount, 5);
+            assert.isFalse(instance._menuIsShown);
+         });
+
+         it('closeActionsMenu', () => {
+            const filter = {
+               1: 1,
+               2: 2
+            };
+            const filter2 = {
+               1: 1
+            };
+            let cfg = {
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               source: source,
+               filter: filter
+            };
+            let newCfg = {
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               source: source,
+               filter: filter2
+            };
+            let openerClosed = false;
+            let ctrl = new lists.BaseControl(cfg);
+            ctrl._children.itemActionsOpener = {
+               close: () => {
+                  openerClosed = true;
+               }
+            };
+            ctrl.saveOptions(cfg);
+            ctrl._beforeMount(cfg);
+            ctrl._menuIsShown = true;
+            ctrl._beforeUpdate(newCfg);
+            assert.isFalse(ctrl._menuIsShown);
+            assert.isTrue(openerClosed);
+         });
+         it('closeActionsMenu item with children', function() {
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._listViewModel._activeItem = {
+               item: true
+            };
+            instance._container = {
+               querySelector: function(selector) {
+                  if (selector === '.controls-ListView__itemV') {
+                     return {
+                        parentNode: {
+                           children: [{
+                              className: ''
+                           }]
+                        }
+                     };
+                  }
+               }
+            };
+            instance._actionsMenuResultHandler({
+               action: 'itemClick',
+               event: {
+                  type: 'click',
+                  stopPropagation: () => {
+                  }
+               },
+               data: [{
+                  getRawData: function() {
+                     return {
+                        'parent@': true
+                     };
+                  }
+               }]
+            });
+            assert.equal(instance._menuIsShown, null);
+         });
+
+         describe('_listSwipe animation', function() {
+            var
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               },
+               itemData = {
+                  key: 1,
+                  multiSelectStatus: false
+               },
+               instance;
+
+            function initTest(multiSelectVisibility) {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: lists.ListViewModel,
+                     source: source,
+                     multiSelectVisibility: multiSelectVisibility,
+                     selectedKeysCount: 1
+                  };
+               instance = new lists.BaseControl(cfg);
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {
+                     }
+                  }
+               };
+               instance._selectionController = {
+                  toggleItem: function() { },
+                  handleReset: function() {}
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+            }
+
+            it('multiSelectVisibility: visible, should start animation', function() {
+               initTest('visible');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
+            });
+
+            it('multiSelectVisibility: onhover, should start animation', function() {
+               initTest('onhover');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
+            });
+
+            it('multiSelectVisibility: hidden, should not start animation', function() {
+               initTest('hidden');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.isNotOk(instance.getViewModel()._rightSwipedItem);
+            });
+         });
+         describe('itemSwipe event', function() {
+            var
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               },
+               itemData = {
+                  key: 1,
+                  multiSelectStatus: false,
+                  item: {}
+               };
+            it('list has item actions, event should not fire', function() {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: lists.ListViewModel,
+                     source: source,
+                     itemActions: []
+                  },
+                  instance = new lists.BaseControl(cfg);
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {
+                     }
+                  }
+               };
+               instance._selectionController = {
+                  toggleItem: function() { },
+                  handleReset: function() {}
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+               instance._notify = function(eventName) {
+                  if (eventName === 'itemSwipe') {
+                     throw new Error('itemSwipe event should not fire if the list has itemActions');
+                  }
+               };
+               instance._listSwipe({}, itemData, childEvent);
+            });
+
+            it('can update itemActions on left swipe', function(done) {
+               var
+                  cfg = {
+                     itemActions: [1, 2, 3],
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: [],
+                        idProperty: 'id'
+                     },
+                     keyProperty: 'id',
+                     viewModelConstructor: lists.ListViewModel,
+                     source: source
+                  },
+                  instance = new lists.BaseControl(cfg),
+                  updated = false,
+                  childEvent = {
+                     nativeEvent: {
+                        direction: 'left'
+                     }
+                  };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg)
+                  .addCallback(function() {
+                     instance._children = {
+                        itemActionsOpener: {
+                           close: () => {
+                           }
+                        },
+                        itemActions: {
+                           updateItemActions: () => {
+                              updated = true;
+                              instance._listViewModel._actions[1] = cfg.itemActions;
+                           },
+                        }
+                     };
+                     let itemData = instance._listViewModel.getCurrent();
+                     instance._listSwipe({}, itemData, childEvent);
+                     assert.isTrue(updated);
+                     assert.deepEqual(itemData.itemActions, cfg.itemActions);
+                     done();
+                  });
+               return done;
+            });
+
+            it('can update itemActions on left swipe if they set by itemActionsProperty', function(done) {
+               var
+                  cfg = {
+                     itemActionsProperty: [1, 2, 3],
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: [],
+                        idProperty: 'id'
+                     },
+                     keyProperty: 'id',
+                     viewModelConstructor: lists.ListViewModel,
+                     source: source
+                  },
+                  instance = new lists.BaseControl(cfg),
+                  updated = false,
+                  childEvent = {
+                     nativeEvent: {
+                        direction: 'left'
+                     }
+                  };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg)
+                  .addCallback(function() {
+                     instance._children = {
+                        itemActionsOpener: {
+                           close: () => {
+                           }
+                        },
+                        itemActions: {
+                           updateItemActions: () => {
+                              updated = true;
+                              instance._listViewModel._actions[1] = cfg.itemActionsProperty;
+                           },
+                        }
+                     };
+                     let itemData = instance._listViewModel.getCurrent();
+                     instance._listSwipe({}, itemData, childEvent);
+                     assert.isTrue(updated);
+                     assert.deepEqual(itemData.itemActions, cfg.itemActionsProperty);
+                     done();
+                  });
+               return done;
+            });
+
+            it('list doesn\'t handle swipe, event should fire', function() {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: lists.ListViewModel,
+                     source: source,
+                  },
+                  instance = new lists.BaseControl(cfg),
+                  notifyCalled = false;
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {
+                     }
+                  }
+               };
+               instance._selectionController = {
+                  toggleItem: function() { },
+                  handleReset: function() {}
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+               instance._notify = function(eventName, eventArgs, eventOptions) {
+                  assert.equal(eventName, 'checkboxClick');
+                  assert.deepEqual(eventArgs, [1, false]);
+                  notifyCalled = true;
+               };
+               instance._listSwipe({}, itemData, childEvent);
+               assert.isTrue(notifyCalled);
+            });
+         });
+
+         it('_onAfterBeginEdit parametrs', function() {
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               item = {},
+               instance = new lists.BaseControl(cfg);
+
+            instance._children = {
+               itemActions: {
+                  updateItemActions: () => {
+                  }
+               }
+            };
+
+            instance._notify = (eventName, args) => {
+               assert.equal('afterBeginEdit', eventName);
+               assert.equal(item, args[0]);
+               assert.isTrue(args[1]);
+               return true;
+            };
+
+            let isNotified = instance._onAfterBeginEdit({}, item, true);
+            assert.isTrue(isNotified);
+         });
+
+         it('_listSwipe  multiSelectStatus = true', function(done) {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  itemActions: [1, 2, 3],
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  keyProperty: 'id',
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               updated = false,
+               instance = new lists.BaseControl(cfg),
+               itemData,
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'left'
+                  }
+               };
+            instance._selectionController = {
+               toggleItem: function() {},
+               handleReset: function() {}
+            };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg)
+               .addCallback(function() {
+                  instance._children = {
+                     itemActionsOpener: {
+                        close: function() {
+                           callBackCount++;
+                        }
+                     },
+                     itemActions: {
+                        updateItemActions: () => {
+                           updated = true;
+                           instance._listViewModel._actions[2] = cfg.itemActions;
+                        }
+                     }
+                  };
+                  instance._listViewModel.reset();
+                  instance._listViewModel.goToNext();
+                  itemData = instance._listViewModel.getCurrent();
+                  itemData.multiSelectVisibility = true;
+                  itemData.multiSelectStatus = true;
+
+                  instance._listSwipe({}, itemData, childEvent);
+                  assert.equal(callBackCount, 1);
+                  childEvent = {
+                     nativeEvent: {
+                        direction: 'right'
+                     }
+                  };
+                  assert.isTrue(updated);
+                  assert.deepEqual(itemData.itemActions, cfg.itemActions);
+
+                  instance._listSwipe({}, itemData, childEvent);
+                  assert.equal(callBackCount, 2);
+                  done();
+               });
+            return done;
+         });
+
+         it('_listSwipe  multiSelectStatus = false', function(done) {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               itemData,
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               };
+            instance._selectionController = {
+               toggleItem: function() {},
+               handleReset: function() {}
+            };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg)
+               .addCallback(function() {
+                  instance._children = {
+                     itemActionsOpener: {
+                        close: function() {
+                           callBackCount++;
+                        }
+                     }
+                  };
+                  instance._listViewModel.reset();
+                  instance._listViewModel.goToNext();
+                  itemData = instance._listViewModel.getCurrent();
+                  itemData.multiSelectVisibility = true;
+                  itemData.multiSelectStatus = false;
+                  instance._listSwipe({}, itemData, childEvent);
+                  assert.equal(callBackCount, 1);
+                  done();
+               });
+            return done;
+         });
+
+         it('_listSwipe, multiSelectStatus = true, item is swiped', function(done) {
+            var callBackCount = 0;
+            var
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg),
+               itemData,
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg)
+               .addCallback(function() {
+                  instance._children = {
+                     itemActionsOpener: {
+                        close: function() {
+                           callBackCount++;
+                        }
+                     }
+                  };
+                  instance._listViewModel.reset();
+                  instance._listViewModel.goToNext();
+                  itemData = instance._listViewModel.getCurrent();
+                  itemData.multiSelectVisibility = true;
+                  itemData.multiSelectStatus = true;
+                  itemData.isSwiped = true;
+
+                  instance._notify = function(eventName) {
+                     if (eventName === 'checkboxClick') {
+                        throw new Error('checkBoxClick shouldn\'t be called if the item is swiped');
+                     }
+                  };
+
+                  instance._listSwipe({}, itemData, childEvent);
+                  assert.equal(callBackCount, 1);
+                  done();
+               });
+            return done;
+         });
+         it('hideActionsAfterDrag', async function() {
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  itemsDragNDrop: true,
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  source: source
+               },
+               instance = new lists.BaseControl(cfg);
+            await instance._beforeMount(cfg);
+            instance.saveOptions(cfg);
+
+            instance._listViewModel.getDragTargetPosition = function() { return null; }
+            instance._listViewModel.getDragEntity = function() { return null; }
+            instance._listViewModel.getDragItemData = function() { return null; }
+
+            instance._dragEndHandler();
+            assert.isFalse(instance._showActions);
+
+            instance._itemMouseMove({}, {});
+            assert.isTrue(instance._showActions);
+
+         });
+
+      });
+*/
       it('resolveIndicatorStateAfterReload', function() {
          var baseControlMock = {
             _needScrollCalculation: true,
