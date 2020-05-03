@@ -124,9 +124,8 @@ export class Controller {
 
     /**
      * Получает последний swiped элемент
-     * @param collection Коллекция элементов, содержащих операции с записью
      */
-    getSwipeItem(collection: IItemActionsCollection): IItemActionsItem {
+    getSwipeItem(): IItemActionsItem {
         return this._collection.find((item) => item.isSwiped());
     }
 
@@ -260,7 +259,7 @@ export class Controller {
      * @param key Ключ элемента коллекции, на котором был выполнен swipe
      */
     private _setSwipeItem(key: TItemKey): void {
-        const oldSwipeItem = this.getSwipeItem(this._collection);
+        const oldSwipeItem = this.getSwipeItem();
         const newSwipeItem = this._collection.getItemBySourceKey(key);
 
         if (oldSwipeItem) {
@@ -322,7 +321,7 @@ export class Controller {
     }
 
     private _updateSwipeConfig(actionsContainerHeight: number): void {
-        const item = this.getSwipeItem(this._collection);
+        const item = this.getSwipeItem();
         if (!item) {
             return;
         }

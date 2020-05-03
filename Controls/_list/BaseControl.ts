@@ -1541,7 +1541,7 @@ const _private = {
     isPagingNavigation: function(navigation) {
         return navigation && navigation.view === 'pages';
     },
-    
+
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
@@ -3021,8 +3021,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             // After the right swipe the item should get selected. (Кусок старого кода)
-            this._needSelectionController = true;
-            this._delayedSelect = {key, status: item.isSelected()};
+            if (!this._selectionController) {
+                this._createSelectionController();
+            }
+            const result = this._selectionController.toggleItem(key);
+            _private.handleSelectionControllerResult(this, result);
+            this._notify('checkboxClick', [key, item.isSelected()]);
+
             // TODO Проверить. Код ниже задавал Для Item controls-ListView__item_rightSwipeAnimation
             //  для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f.
             //  Надо, то реализовать в новой модели.
@@ -3034,7 +3039,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.nextVersion();
             _private.setMarkedKey(this, key);
         }
-        if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
+        if (!this._options.itemActions && item.isSwiped()) {
             this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
         }
     },
@@ -3046,8 +3051,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _onSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe' && this._listViewModel.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
-            if (!this._options.itemActions && !_private.isItemsSelectionAllowed(this._options)) {
-                this._notify('itemSwipe', [this._itemActionsController.getSwipeItem(), e]);
+            const item = this._itemActionsController.getSwipeItem();
+            if (!this._options.itemActions && item) {
+                this._notify('itemSwipe', [item, e]);
             }
             this._itemActionsController.deactivateSwipe();
         }

@@ -128,7 +128,6 @@ export interface IItemActionsItem {
 
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
     destroyed: boolean;
-    each(cb: (item: IItemActionsItem) => void): void;
     setEventRaising?(raising: boolean, analyze?: boolean): void;
     areActionsAssigned(): boolean;
     setActionsAssigned(assigned: boolean): void;
