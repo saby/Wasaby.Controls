@@ -1306,9 +1306,6 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>): void {
         const contents = item?.getContents();
-        if (action.handler) {
-            action.handler(contents);
-        }
         // TODO Проверить. Похоже, эти сложные расчёты нужны были для того,
         //  чтобы определить HTML контейнер при клике на экшн в выпадающем меню
         // self._listViewModel.getSourceIndexByItem(item)
@@ -1323,6 +1320,9 @@ const _private = {
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         self._notify('actionClick', [action, contents, itemContainer]);
+        if (action.handler) {
+            action.handler(contents);
+        }
         _private.closeActionsMenu(self);
     },
 
