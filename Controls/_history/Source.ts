@@ -452,8 +452,8 @@ var _private = {
          }
       };
 
-      chain.factory(recent).each((recentItem) => {
-         const itemId = recentItem.get(_private.getKeyProperty(self));
+      if (recent.length === 1) {
+         const itemId = recent[0].get(_private.getKeyProperty(self));
          const item = self._historyItems.getRecordById(itemId);
          const isRecent = item.get('recent');
          const isPinned = item.get('pinned');
@@ -463,7 +463,9 @@ var _private = {
          } else if (!isPinned) {
             updateResult = false;
          }
-      });
+      } else {
+         updateResult = false;
+      }
 
       return updateResult;
    },
