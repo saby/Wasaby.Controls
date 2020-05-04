@@ -2151,6 +2151,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._createSelectionController();
         }
 
+        if (this._options.useNewModel) {
+            return import('Controls/listRender').then((listRender) => {
+                this._itemActionsTemplate = listRender.itemActionsTemplate;
+            });
+        }
+
         // для связи с контроллером ПМО
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
     },
