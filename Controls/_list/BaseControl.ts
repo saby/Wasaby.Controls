@@ -2493,6 +2493,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldRestoreScrollPosition = false;
             this._children.scrollController.checkTriggerVisibilityWithTimeout();
         }
+
+        // До отрисовки элементов мы не можем понять потребуется ли еще загрузка (зависит от видимости тригеров).
+        // Чтобы индикатор загрузки не мигал, показываем индикатор при загрузки, а скрываем после отрисовки.
+        const hasTrigger = this._loadTriggerVisibility.hasOwnProperty(this._loadingIndicatorState);
+        const isTriggerVisible = !this._loadTriggerVisibility[this._loadingIndicatorState];
+        const isLoading = !!this._sourceController && this._sourceController.isLoading();
+
+        if (this._loadingIndicatorState && !isLoading && hasTrigger && isTriggerVisible) {
+            _private.hideIndicator(this);
+        }
     },
 
     _afterUpdate: function(oldOptions) {
