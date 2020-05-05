@@ -5480,6 +5480,31 @@ TODO проверить. Эти тесты не совместимы с обно
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
       });
 
+      it('hide indicator if shouldn\'t load more', function() {
+         const baseControl = new lists.BaseControl();
+         baseControl._isMounted = true;
+
+         baseControl._loadingIndicatorState = 'down';
+         baseControl._loadTriggerVisibility = {down: false};
+         baseControl._beforePaint();
+         assert.isNull(baseControl._loadingIndicatorState);
+
+         baseControl._loadingIndicatorState = 'up';
+         baseControl._loadTriggerVisibility = {up: false};
+         baseControl._beforePaint();
+         assert.isNull(baseControl._loadingIndicatorState);
+
+         baseControl._loadingIndicatorState = 'down';
+         baseControl._loadTriggerVisibility = {down: true};
+         baseControl._beforePaint();
+         assert.equal(baseControl._loadingIndicatorState, 'down');
+
+         baseControl._loadingIndicatorState = 'up';
+         baseControl._loadTriggerVisibility = {up: true};
+         baseControl._beforePaint();
+         assert.equal(baseControl._loadingIndicatorState, 'up');
+      });
+
       it('setIndicatorContainerHeight: list bigger then scrollContainer', function() {
 
           const fakeBaseControl = {
