@@ -223,9 +223,6 @@ define([
                item: listModel.at(0).getContents()
             });
             assert.isTrue(listModel.at(0).getContents().isEqual(eip._editingItem));
-
-            // В новой схеме при editing === true всегда выдаётся editingItem вместо item
-            listModel.at(0).setEditing(false);
             assert.equal(listModel.at(0).getContents(), eip._originalItem);
          });
 

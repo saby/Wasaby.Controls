@@ -105,8 +105,8 @@ var _private = {
         const th = `_theme-${theme}`;
         let classList = 'controls-itemActionsV__wrapper';
         classList += '  controls-itemActionsV__wrapper_absolute';
-        classList += itemData.isEditing() ? ` controls-itemActionsV_editing${th}` : '';
-        classList += itemData.isEditing() && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
+        classList += itemData.isEditing ? ` controls-itemActionsV_editing${th}` : '';
+        classList += itemData.isEditing && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
         classList += ` controls-itemActionsV_${itemActionsPosition}${th}`;
         classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
         classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') + th : '';
@@ -156,15 +156,6 @@ var _private = {
         };
         itemsModelCurrent.isSwiped = (): boolean => (
             itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : itemsModelCurrent._isSwiped
-        );
-        itemsModelCurrent.setEditing = (editing: boolean, editingContents?: Model, silent?: boolean): void => {
-            itemsModelCurrent._isEditing = editing;
-            if (itemsModelCurrent.dispItem.setEditing !== undefined) {
-                itemsModelCurrent.dispItem.setEditing(editing, editingContents, silent);
-            }
-        };
-        itemsModelCurrent.isEditing = (): boolean => (
-            itemsModelCurrent.dispItem.isEditing !== undefined ? itemsModelCurrent.dispItem.isEditing() : itemsModelCurrent._isEditing
         );
         itemsModelCurrent.getContents = () => (
             itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
@@ -275,9 +266,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle;
-        itemsModelCurrent._isEditing = false;
-        // Установка и сброс isEditing в новых списках уже вынесены в EditingController
-        // itemsModelCurrent.setEditing(false, null, true);
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrollConfig = Boolean(this._options.virtualScrollConfig);
@@ -302,12 +290,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
         itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
         itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
-        //
-        // // Установка и сброс isEditing в новых списках уже вынесены в EditingController
-        // if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
-        //     itemsModelCurrent.setEditing(true, itemsModelCurrent.getContents());
-        //     itemsModelCurrent.item = this._editingItemData.item;
-        // }
+
+        // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
+        if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
+            itemsModelCurrent.isEditing = true;
+            itemsModelCurrent.item = this._editingItemData.item;
+        }
 
         if (this._dragEntity) {
             dragItems = this._dragEntity.getItems();

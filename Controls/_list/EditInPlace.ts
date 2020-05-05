@@ -655,9 +655,6 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             } else {
                 listModel._setEditingItemData(null);
             }
-            if (this._editingItemData) {
-                this._editingItemData.setEditing(false);
-            }
             this._editingItemData = null;
             return;
         }
@@ -694,7 +691,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
                 this._editingItemData.level = listModel.getItemById(item.get(this._editingItemData.parentProperty)).getLevel() + 1;
             }
 
-            this._editingItemData.setEditing(true, this._editingItem);
+            this._editingItemData.isEditing = true;
             this._editingItemData.item = this._editingItem;
             if (this._isAdd) {
                 this._editingItemData.isAdd = this._isAdd;
