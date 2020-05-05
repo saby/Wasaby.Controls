@@ -164,7 +164,7 @@ var _private = {
             itemsModelCurrent.dispItem.hasVisibleActions !== undefined ? itemsModelCurrent.dispItem.hasVisibleActions() : false
         );
         itemsModelCurrent.shouldDisplayActions = (): boolean => (
-            itemsModelCurrent.dispItem.shouldDisplayActions !== undefined ? itemsModelCurrent.dispItem.shouldDisplayActions() : false
+            itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing
         );
         itemsModelCurrent.hasActionWithIcon = (): boolean => (
             itemsModelCurrent.dispItem.hasActionWithIcon !== undefined ? itemsModelCurrent.dispItem.hasActionWithIcon() : false
