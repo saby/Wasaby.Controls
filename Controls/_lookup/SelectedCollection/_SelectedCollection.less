@@ -98,8 +98,7 @@
     max-width: 100%;
 }
 
-.controls-SelectedCollection__item__caption-wrapper-default,
-.controls-SelectedCollection__item__caption-wrapper-oneRow {
+.controls-SelectedCollection__item__caption-wrapper-default {
     line-height: @item_height_lookupSelectedCollection;
 }
 
@@ -162,14 +161,24 @@
     }
 }
 
-.controls-SelectedCollection__collection-default:after,
-.controls-SelectedCollection__collection-oneRow:after {
+.controls-SelectedCollection__collection-default:after {
     content: '\200b';
     line-height: @item_height_lookupSelectedCollection;
 }
 
 .controls-SelectedCollection__collection_singleLine {
     .justify-content(flex-end);
+    height: 100%;
+}
+
+.controls-SelectedCollection__collection_singleLine:before {
+    content: '\200b';
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.controls-SelectedCollection__collectionItem_layout_oneRow {
     height: 100%;
 }
 
