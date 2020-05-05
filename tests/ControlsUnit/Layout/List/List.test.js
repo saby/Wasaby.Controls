@@ -133,6 +133,7 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
       it('.abortCallback', function() {
          deprecatedList.Container._private.abortCallback(listLayout, {});
          assert.deepEqual(listSourceData, listLayout._source._$data);
+         assert.equal(listLayout._currentSearchValue, '');
       });
 
       it('.searchErrback', function() {
@@ -176,9 +177,11 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
             ]
          });
          listLayout._searchDeferred = new Deferred();
+         listLayout._searchValue = 'testValue';
          deprecatedList.Container._private.searchCallback(listLayout, {data: recordSet}, {testField: 'testValue'});
          assert.deepEqual(recordSet.getRawData(), listLayout._source._$data.query.getRawData());
          assert.deepEqual(listLayout._filter, {testField: 'testValue'});
+         assert.equal(listLayout._currentSearchValue, 'testValue');
       });
 
       it('.searchValueChanged', function(done) {

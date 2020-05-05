@@ -118,6 +118,7 @@ var _private = {
       self._searchMode = false;
       self._source = self._options.source;
       self._navigation = self._options.navigation;
+      self._currentSearchValue = '';
       self._forceUpdate();
    },
 
@@ -152,6 +153,7 @@ var _private = {
       _private.updateSource(self, self._options.reverseList);
       self._navigation = self._options.navigation;
       self._filter = _private.getCurrentFilter(self);
+      self._currentSearchValue = self._searchValue;
       self._searchDeferred.callback();
       self._forceUpdate();
    },
