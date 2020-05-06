@@ -237,6 +237,13 @@ define(
 
             let calculateLeft = item.popupOptions.left - ((item.popupOptions.left + item.popupOptions.width) - windowData.width);
             assert.equal(item.position.left, calculateLeft);
+
+            item.popupOptions.left = 0;
+            item.popupOptions.top = 0;
+            DialogController._fixCompatiblePosition(item);
+
+            assert.equal(item.position.top, 0);
+            assert.equal(item.position.left, 0);
          });
 
          it('dialog drag start', function() {
