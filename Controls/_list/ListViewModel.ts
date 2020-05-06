@@ -744,6 +744,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     // New Model compatibility
     nextVersion(): void {
         this._nextVersion();
+        // this.nextModelVersion(false, 'itemActionsUpdated');
     },
 
     // New Model compatibility
