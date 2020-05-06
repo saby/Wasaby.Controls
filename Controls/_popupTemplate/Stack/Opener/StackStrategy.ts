@@ -4,6 +4,7 @@
 import {Control} from 'UI/Base';
 import {detection} from 'Env/Env';
 import {goUpByControlTree} from 'UI/Focus';
+import {Controller, IPopupItem, IPopupPosition} from 'Controls/popup';
 
 interface IPosition {
     right: number;
@@ -19,14 +20,15 @@ interface IPosition {
 const MINIMAL_PANEL_DISTANCE = 100;
 
 const _private = {
-    getPanelWidth(item, tCoords, maxPanelWidth) {
+    getPanelWidth(item: IPopupItem, tCoords, maxPanelWidth: number): number {
         let panelWidth;
         const maxPanelWidthWithOffset = maxPanelWidth - tCoords.right;
         const isCompoundTemplate = item.popupOptions.isCompoundTemplate;
         let minWidth = parseInt(item.popupOptions.minWidth, 10);
         const maxWidth = parseInt(item.popupOptions.maxWidth, 10);
 
-        if (_private.isMaximizedPanel(item) && !item.popupOptions.propStorageId) { // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+        // todo:https://online.sbis.ru/opendoc.html?guid=8f7f8cea-b39d-4046-b5b2-f8dddae143ad
+        if (_private.isMaximizedPanel(item) && !item.popupOptions.propStorageId) {
             if (!_private.isMaximizedState(item)) {
                 panelWidth = item.popupOptions.minimizedWidth;
             } else {
@@ -38,7 +40,8 @@ const _private = {
             }
             return panelWidth;
         }
-        if (minWidth > maxPanelWidthWithOffset && !isCompoundTemplate) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
+        // If the minimum width does not fit into the screen - positioned on the right edge of the window
+        if (minWidth > maxPanelWidthWithOffset && !isCompoundTemplate) {
             if (_private.isMaximizedPanel(item)) {
                 minWidth = item.popupOptions.minimizedWidth;
             }
@@ -52,18 +55,31 @@ const _private = {
             panelWidth = Math.min(item.popupOptions.width, maxPanelWidth); // less then maxWidth
             panelWidth = Math.max(panelWidth, item.popupOptions.minimizedWidth || minWidth || 0); // more then minWidth
         }
+
+        // Если родитель не уместился по ширине и спозиционировался по правому краю экрана -
+        // все дети тоже должны быть по правому краю, не зависимо от своих размеров
+        const parentPosition = _private.getParentPosition(item);
+        if (parentPosition?.right === 0) {
+            tCoords.right = 0;
+        }
+
         return panelWidth;
+    },
+
+    getParentPosition(item: IPopupItem): IPopupPosition {
+        const parentItem = Controller.find(item.parentId);
+        return parentItem?.position;
     },
 
     getAvailableMaxWidth(itemMaxWidth: number, maxPanelWidth: number): number {
         return itemMaxWidth ? Math.min(itemMaxWidth, maxPanelWidth) : maxPanelWidth;
     },
 
-    isMaximizedPanel(item) {
+    isMaximizedPanel(item: IPopupItem) {
         return !!item.popupOptions.minimizedWidth && !item.popupOptions.propStorageId;
     },
 
-    isMaximizedState(item) {
+    isMaximizedState(item: IPopupItem) {
         return !!item.popupOptions.maximized;
     },
     calculateMaxWidth(self, popupOptions, tCoords) {
@@ -91,7 +107,7 @@ export = {
      * @param tCoords Coordinates of the container relative to which the panel is displayed
      * @param item Popup configuration
      */
-    getPosition(tCoords, item): IPosition {
+    getPosition(tCoords, item: IPopupItem): IPosition {
         const maxPanelWidth = this.getMaxPanelWidth();
         const width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
         const hasMaximizePopup: boolean = this._hasMaximizePopup(item);
@@ -116,7 +132,7 @@ export = {
         return position;
     },
 
-    _hasMaximizePopup(item): boolean {
+    _hasMaximizePopup(item: IPopupItem): boolean {
         const openerContainer: HTMLElement = item.popupOptions?.opener?._container;
         const parents: Control[] = this._goUpByControlTree(openerContainer);
         const popupModuleName: string = 'Controls/_popup/Manager/Popup';

@@ -392,6 +392,32 @@ define(
             delete itemConfig.popupOptions.width;
          });
 
+         it('stack right position with side parent position', () => {
+            const baseParentPosition = StackStrategy._private.getParentPosition;
+            const parentPosition = {
+               right: 0
+            };
+            StackStrategy._private.getParentPosition = () => parentPosition;
+
+            const popupOptions = {
+               minWidth: 900,
+               maxWidth: 1200,
+               templateOptions: {}
+            };
+            const itemConfig = {
+               popupOptions: popupOptions
+            };
+
+            const position = StackStrategy.getPosition({
+               top: 0,
+               right: 100
+            }, itemConfig);
+
+            assert.equal(position.right, 0);
+
+            StackStrategy._private.getParentPosition = baseParentPosition;
+         });
+
          it('stack state', () => {
             let itemConfig = {
                id: '22',
