@@ -1,6 +1,6 @@
 // TODO: использовать интерфейс опций базового класса полей ввода, когда он появится.
 import {IControlOptions} from 'UI/Base';
-import {IInputData, IInputType, ISplitValue} from './Base/InputUtil';
+import {IInputData} from './Base/InputUtil';
 import {MinusProcessing} from './FixBugs/MinusProcessing';
 import {InsertFromDrop} from './FixBugs/InsertFromDrop';
 import {TUpdatePositionCallback, CarriagePositionWhenFocus} from './FixBugs/CarriagePositionWhenFocus';
