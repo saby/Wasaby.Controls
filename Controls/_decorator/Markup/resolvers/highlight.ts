@@ -19,28 +19,27 @@
     * Модуль с функцией подсветки искомой строки.
     *
     * @class Controls/_decorator/Markup/resolvers/highlight
-    * @public
+    * @private
     * @author Кондаков Р.Н.
     * @remark
-    * JS:
-    * <pre>
-    *  define("MyControl", ["UI/Base",  "wml!Template", "Controls/decorator"], function(Base, template, decorator) {
+    * <pre class="brush: js">
+    * // JavaScript
+    * define("MyControl", ["UI/Base",  "wml!Template", "Controls/decorator"], function(Base, template, decorator) {
     *    var ModuleClass = Base.Control.extend({
-    *        _template: template,
-    *        json: [["p", "моя строка"]],
-    *        tagResolver: decorator._highlightResolver,
-    *        resolverParams: { "textToHighlight": "моя" }
+    *       _template: template,
+    *       json: [["p", "моя строка"]],
+    *       tagResolver: decorator._highlightResolver,
+    *       resolverParams: { "textToHighlight": "моя" }
     *    });
     *    return ModuleClass;
-    *  });
+    * });
     * </pre>
     * 
-    * WML:
-    * <pre>
-    *  <Controls.decorator:Markup
-    *    value="{{ json }}"
-    *    tagResolver="{{ tagResolver }}"
-    *    resolverParams="{{ resolverParams }}" />
+    * <pre class="brush: wml">
+    * <Controls.decorator:Markup
+    *     value="{{ json }}"
+    *     tagResolver="{{ tagResolver }}"
+    *     resolverParams="{{ resolverParams }}" />
     * </pre>
     * 
     * В результате выполнения кода слово "моя" будет подсвечено. 
