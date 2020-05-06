@@ -1601,7 +1601,7 @@ var _private = {
         );
     },
 
-    _notifyNavigationParamsChanged(actualParams) {
+    notifyNavigationParamsChanged(actualParams) {
         this._notify('navigationParamsChanged', [actualParams]);
     },
 
@@ -1883,7 +1883,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
         this._multiSelectReadyCallback = this._multiSelectReadyCallbackFn.bind(this);
 
-        this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
+        this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
 
