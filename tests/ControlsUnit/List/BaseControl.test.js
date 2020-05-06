@@ -151,6 +151,7 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             ctrl._beforeUpdate(cfg);
+            ctrl._afterUpdate(cfg);
 
             // check saving loaded items after new viewModelConstructor
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
@@ -1499,6 +1500,49 @@ define([
          assert.equal(6, lists.BaseControl._private.getItemsCount(baseControl), 'Items wasn\'t load');
       });
 
+      it('loadToDirection error', async function() {
+         const source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: data
+         });
+
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            source: source,
+            viewConfig: { keyProperty: 'id' },
+            viewModelConfig: { items: [], keyProperty: 'id' },
+            viewModelConstructor: lists.ListViewModel,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
+            }
+         };
+
+         var ctrl = new lists.BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+         ctrl._container = {clientHeight: 100};
+         ctrl._afterMount(cfg);
+
+         ctrl._sourceController.load = sinon.stub().returns(Promise.reject(new Error('test')));
+
+         ctrl.__errorController.process = sinon.stub().callsFake(function(config) {
+            return Promise.resolve({
+               mode: config.mode,
+               options: {}
+            });
+         });
+
+         await lists.BaseControl._private.loadToDirection(ctrl, 'down').catch(() => 1);
+         assert.strictEqual(ctrl.__error.mode, 'inlist', 'wrong errorConfig mode');
+         assert.typeOf(ctrl.__error.options.action, 'function', 'wrong action type');
+         assert.strictEqual(ctrl.__error.options.showInDirection, 'bottom', 'wrong error template position');
+      });
+
       it('items should get loaded when a user scrolls to the bottom edge of the list', function(done) {
          var rs = new collection.RecordSet({
             keyProperty: 'id',
@@ -2510,12 +2554,6 @@ define([
             baseControl._afterUpdate(cfg);
             assert.isFalse(baseControl._modelRecreated);
             assert.strictEqual(actionsUpdateCount, 1);
-         });
-         it('control in error state, should not call update', function() {
-            baseControl.__error = true;
-            baseControl._updateItemActions();
-            assert.equal(actionsUpdateCount, 0);
-            baseControl.__error = false;
          });
          it('without listViewModel should not call update', function() {
             baseControl._listViewModel = null;

@@ -109,6 +109,7 @@ type CrudResult = ReceivedState & {
 type ErrbackConfig = {
     dataLoadErrback?: (error: Error) => any;
     mode?: dataSourceError.Mode;
+    templateOptions?: object;
     error: Error;
 }
 
@@ -184,7 +185,6 @@ var _private = {
 
         if (self._sourceController) {
             _private.showIndicator(self);
-            _private.hideError(self);
             _private.getPortionedSearch(self).reset();
 
             if (cfg.groupProperty) {
@@ -194,6 +194,7 @@ var _private = {
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting, null,sourceConfig).addCallback(function(list) {
+                _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
                     if (list.getCount()) {
                         self._loadedItems = list;
@@ -284,9 +285,10 @@ var _private = {
                         _private.checkLoadToDirectionCapability(self, filter, navigation);
                     }
                 });
-            }).addErrback(function(error) {
+            }).addErrback(function(error: Error) {
+                _private.hideIndicator(self);
                 return _private.processError(self, {
-                    error: error,
+                    error,
                     dataLoadErrback: cfg.dataLoadErrback
                 }).then(function(result: CrudResult) {
                     if (cfg.afterReloadCallback) {
@@ -296,7 +298,7 @@ var _private = {
                         data: null,
                         ...result
                     });
-                });
+                }) as Deferred<Error>;
             });
         } else {
             if (cfg.afterReloadCallback) {
@@ -635,12 +637,40 @@ var _private = {
                 });
 
                 return addedItems;
-            }).addErrback((error) => {
+            }).addErrback((error: Error) => {
                 _private.hideIndicator(self);
                 return _private.crudErrback(self, {
                     error,
-                    dataLoadErrback: userErrback
-                });
+                    dataLoadErrback: userErrback,
+                    mode: dataSourceError.Mode.inlist,
+                    templateOptions: {
+                        /**
+                         * Действие при нажатии на кнопку повтора в шаблоне ошибки.
+                         * Вернет промис с коллбэком, скрывающим ошибку.
+                         * Контрол ошибки выполнит этот коллбэк для того,
+                         * чтобы подгрузка данных произошла без скачка положения скролла
+                         * из-за исчезновения шаблона ошибки.
+                         */
+                        action: () => {
+                            const afterActionCallback = () => _private.hideError(self);
+                            return _private.loadToDirection(
+                                self, direction,
+                                userCallback, userErrback,
+                                receivedFilter
+                            ).then(() => Promise.resolve(afterActionCallback));
+                        },
+                        /**
+                         * Позиция шаблона ошибки относительно списка.
+                         * Зависит от направления подгрузки данных.
+                         */
+                        showInDirection: direction
+                    }
+                }) as Deferred<Error>;
+            })
+            .catch((error: Error) => {
+                // скроллим в край списка, чтобы при ошибке загрузке данных шаблон ошибки сразу был виден
+                _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
+                return Promise.reject(error);
             });
         }
         Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
@@ -766,7 +796,11 @@ var _private = {
                self._options.dataLoadCallback,
                self._options.dataLoadErrback,
                filter
-            );
+            ).then(() => {
+                if (self.__error) {
+                    _private.hideError(self);
+                }
+            });
         }
     },
 
@@ -802,7 +836,13 @@ var _private = {
     },
     scrollPage: function(self, direction) {
         if (!self._scrollPageLocked) {
-            self._scrollPageLocked = true;
+            /**
+             * скроллу не нужно блокироваться, если есть ошибка, потому что
+             * тогда при пэйджинге до упора не инициируется цикл обновления
+             * (не происходит подгрузки данных), а флаг снимается только после него
+             * или при ручном скролле - из-за этого пэйджинг перестает работать
+             */
+            self._scrollPageLocked = !self.__error;
             _private.setMarkerAfterScroll(self);
             self._notify('doScroll', ['page' + direction], { bubbling: true });
         }
@@ -1515,7 +1555,7 @@ var _private = {
      * @return {Promise}
      * @private
      */
-    crudErrback(self: BaseControl, config: ErrbackConfig): Promise<CrudResult>{
+    crudErrback(self: BaseControl, config: ErrbackConfig): Promise<Error> {
         return _private.processError(self, config).then(getData);
     },
 
@@ -1537,10 +1577,14 @@ var _private = {
             theme: self._options.theme,
             mode: config.mode || dataSourceError.Mode.include
         }).then((errorConfig) => {
+            if (errorConfig && config.templateOptions) {
+                errorConfig.options.action = config.templateOptions.action;
+                errorConfig.options.showInDirection = config.templateOptions.showInDirection;
+            }
             _private.showError(self, errorConfig);
             return {
                 error: config.error,
-                errorConfig: errorConfig
+                errorConfig
             };
         });
     },
@@ -1620,7 +1664,7 @@ var _private = {
     isPagingNavigation: function(navigation) {
         return navigation && navigation.view === 'pages';
     },
-    
+
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
@@ -2488,7 +2532,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // Чтобы предотвратить эту ошибку - восстанавливаем скролл на ту позицию, которая была до вставки новых записей.
         // todo 2 Фантастически, но свежеиспеченный afterRender НЕ ПОДХОДИТ! Падают тесты. ХФ на носу, разбираться
         // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
-        if (this._shouldRestoreScrollPosition) {
+        if (this._shouldRestoreScrollPosition && !this.__error) {
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._children.scrollController.checkTriggerVisibilityWithTimeout();
@@ -2714,13 +2758,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldUpdateItemActions = false;
         }
     },
-    _updateItemActions: function() {
-        if (this.__error) {
-            return;
-        }
-
-        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
-        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
+    _updateItemActions() {
         if (this._listViewModel && this._hasItemActions && this._children.itemActions) {
             this._children.itemActions.updateActions();
         }
