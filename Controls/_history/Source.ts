@@ -204,7 +204,7 @@ var _private = {
    },
 
    prepareOriginItems(self, history, oldItems) {
-      var items = oldItems.clone(true);
+      var items = oldItems.clone();
       var filteredHistory, historyIds;
       filteredHistory = this.getFilterHistory(self, self._history);
       historyIds = filteredHistory.pinned.concat(filteredHistory.frequent.concat(filteredHistory.recent));
@@ -428,7 +428,7 @@ var _private = {
    },
 
    updateRecentInItems(self, recent): boolean {
-      let updateResult = true;
+      let updateResult = false;
 
       const getFirstRecentItemIndex = () => {
          let recentItemIndex = -1;
@@ -455,16 +455,16 @@ var _private = {
       if (recent.length === 1) {
          const itemId = recent[0].get(_private.getKeyProperty(self));
          const item = self._historyItems.getRecordById(itemId);
-         const isRecent = item.get('recent');
-         const isPinned = item.get('pinned');
 
-         if (isRecent && !isPinned) {
-            moveRecentItemToTop(item);
-         } else if (!isPinned) {
-            updateResult = false;
+         if (item) {
+            const isRecent = item.get('recent');
+            const isPinned = item.get('pinned');
+
+            if (isRecent && !isPinned) {
+               moveRecentItemToTop(item);
+               updateResult = true;
+            }
          }
-      } else {
-         updateResult = false;
       }
 
       return updateResult;
