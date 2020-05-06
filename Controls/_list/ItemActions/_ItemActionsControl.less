@@ -39,7 +39,7 @@
    Option 1 causes re-render of every item each time a user opens\closes menu, so we use option 2 here.
     */
    .controls-itemActionsV,
-   .controls-Swipe {
+   .controls-Swipe_theme-@{themeName} {
       visibility: hidden;
       display: inline-flex;
    }
@@ -122,10 +122,10 @@
   padding-right: 0;
 }
 // todo https://online.sbis.ru/opendoc.html?guid=803e1e7c-9e4d-4bc2-8627-0b732037d804
-.controls-itemActionsV__action .controls-itemActionsV__action_icon {
+.controls-itemActionsV__action .controls-itemActionsV__action_icon_theme-@{themeName} {
   display: flex;
 }
-.controls-itemActionsV__action_icon {
+.controls-itemActionsV__action_icon_theme-@{themeName} {
   width: @item_icon-size_itemActions;
   height: @item_icon-size_itemActions;
   justify-content: center;
@@ -143,40 +143,40 @@
   position: relative;
   white-space: nowrap;
 }
-.controls-itemActionsV__action_padding {
+.controls-itemActionsV__action_padding_theme-@{themeName} {
   margin: 0 @item_offset_itemActions;
 }
 
-.controls-itemActionsV__action_iconStyle_danger {
+.controls-itemActionsV__action_iconStyle_danger_theme-@{themeName} {
    color: @danger_color;
 }
 
-.controls-itemActionsV__action_iconStyle_success {
+.controls-itemActionsV__action_iconStyle_success_theme-@{themeName} {
    color: @success_color;
 }
 
-.controls-itemActionsV__action_iconStyle_secondary {
+.controls-itemActionsV__action_iconStyle_secondary_theme-@{themeName} {
    color: @secondary_icon-color;
 }
 
-.controls-itemActionsV__action_iconStyle_warning {
+.controls-itemActionsV__action_iconStyle_warning_theme-@{themeName} {
    color: @warning_color;
 }
 
 //since Opener does not know the specific size of the icon
-.controls-itemActionsV__popup .icon-size{
+.controls-itemActionsV__popup .icon-size_theme-@{themeName}{
   .icon-size-without-important(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
 }
 
-.controls-itemActionsV__action_icon_size_m {
+.controls-itemActionsV__action_icon_size_m_theme-@{themeName} {
    .icon(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
 }
 
-.controls-itemActionsV__action_icon_size_s {
+.controls-itemActionsV__action_icon_size_s_theme-@{themeName} {
    .icon-with-size(@item_icon-size_editing_itemActions, @item_icon_font-family_editing_itemsActions, @item_icon-size_itemActions);
 }
 
-.controls-itemActionsV__action_title {
+.controls-itemActionsV__action_title_theme-@{themeName} {
    min-height: @item_caption_min-height_itemActions;
    color: @item_text-color_itemActions;
    font-size: @item_font-size_itemActions;
@@ -187,32 +187,32 @@
 }
 
 .ws-is-hover {
-   .controls-itemActionsV__action:hover .controls-itemActionsV__action_title {
+   .controls-itemActionsV__action:hover .controls-itemActionsV__action_title_theme-@{themeName} {
       color: @item_hover_text-color_itemActions;
       text-decoration: underline;
    }
 
-   .controls-itemActionsV__action_iconStyle_danger:hover {
+   .controls-itemActionsV__action_iconStyle_danger_theme-@{themeName}:hover {
       color: @danger_color;
    }
 
-   .controls-itemActionsV__action_iconStyle_success:hover {
+   .controls-itemActionsV__action_iconStyle_success_theme-@{themeName}:hover {
       color: @success_color;
    }
 
-   .controls-itemActionsV__action_iconStyle_secondary:hover {
+   .controls-itemActionsV__action_iconStyle_secondary_theme-@{themeName}:hover {
       color: @secondary_hover_icon-color;
    }
 
-   .controls-itemActionsV__action_iconStyle_warning:hover {
+   .controls-itemActionsV__action_iconStyle_warning_theme-@{themeName}:hover {
       color: @warning_color;
    }
 
-   .controls-itemActionsV__action_iconStyle_danger:hover {
+   .controls-itemActionsV__action_iconStyle_danger_theme-@{themeName}:hover {
       border-color: @danger_color;
    }
 
-   .controls-itemActionsV__action_iconStyle_success:hover {
+   .controls-itemActionsV__action_iconStyle_success_theme-@{themeName}:hover {
       border-color: @success_color;
    }
 }
@@ -222,12 +222,12 @@
    right: 0;
 }
 
-.controls-itemActionsV__icon-with-title {
+.controls-itemActionsV__icon-with-title_theme-@{themeName} {
    padding-right: @item_icon-offset_itemActions;
 }
 
 // убрать после https://online.sbis.ru/opendoc.html?guid=c558bf80-4cd1-4854-a963-4af211246111
-.controls-ItemActions__popup__list {
+.controls-ItemActions__popup__list_theme-@{themeName} {
    margin-top: -(@close-button_offset-top_sticky + @border-thickness_sticky);
    margin-left: @close-button_offset-right_sticky + @border-thickness_sticky;
 }
