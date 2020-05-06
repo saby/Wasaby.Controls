@@ -15,6 +15,7 @@ import {IPrefetchHistoryParams} from './IPrefetch';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import isEqualItems from 'Controls/_filter/Utils/isEqualItems';
 import {Model} from 'Types/entity';
+import {default as Store} from 'OnlinePage/Store';
 
 export interface IFilterHistoryData {
    items: object[];
@@ -786,6 +787,26 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                     }
                     return history;
                 });
+            }
+        },
+
+
+        _afterMount: function (options) {
+            if (options.useStore) {
+                this._filterCallbackId = Store.onPropertyChanged('filter',
+                    (items) => this._itemsChanged(undefined, items)
+                );
+                this._filterHistoryCallbackId = Store.onPropertyChanged('filterHistory',
+                    (history) => this._filterHistoryApply(undefined, history)
+                );
+            }
+        },
+        _beforeUnmount: function () {
+            if (this._filterCallbackId) {
+                Store.unsubscribe(this._filterCallbackId);
+            }
+            if (this._filterHistoryCallbackId) {
+                Store.unsubscribe(this._filterHistoryCallbackId);
             }
         },
 
