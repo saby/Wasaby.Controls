@@ -46,6 +46,7 @@ import {
    ISelectionControllerResult,
    SelectionController
 } from 'Controls/multiselection';
+import { MarkerController } from 'Controls/marker';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 // Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -398,68 +399,32 @@ var _private = {
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
-            const model = self.getViewModel();
-            if (self._options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
-                markCommand.execute(model);
-            } else {
-                model.setMarkedKey(key);
-            }
+            self._markerController.setMarkedKey(key);
             _private.scrollToItem(self, key);
         }
-    },
-    moveMarker: function(self, newMarkedKey) {
-        // activate list when marker is moving. It let us press enter and open current row
-        // must check mounted to avoid fails on unit tests
-        if (self._mounted) {
-            self.activate();
-        }
-        _private.setMarkedKey(self, newMarkedKey);
     },
     moveMarkerToNext: function (self, event) {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
             return;
         }
-        if (self._options.markerVisibility !== 'hidden') {
-            event.preventDefault();
-            var model = self.getViewModel();
-            // TODO Update after MarkerManager is fully implemented
-            let nextKey;
-            if (self._options.useNewModel) {
-                const nextItem = model.getNext(
-                    model.find((item) => item.isMarked())
-                );
-                const contents = nextItem && nextItem.getContents();
-                nextKey = contents && contents.getId();
-            } else {
-                nextKey = model.getNextItemKey(model.getMarkedKey());
-            }
+        self._markerController.moveMarkerToNext();
 
-            _private.moveMarker(self, nextKey);
+        // activate list when marker is moving. It let us press enter and open current row
+        // must check mounted to avoid fails on unit tests
+        if (self._mounted && self._options.markerVisibility !== 'hidden') {
+            self.activate();
         }
     },
     moveMarkerToPrevious: function (self, event) {
         if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
             return;
         }
-        if (self._options.markerVisibility !== 'hidden') {
-            event.preventDefault();
-            var model = self.getViewModel();
+        self._markerController.moveMarkerToPrev();
 
-            // TODO Update after MarkerManager is fully implemented
-            let prevKey;
-            if (self._options.useNewModel) {
-                const prevItem = model.getPrevious(
-                    model.find((item) => item.isMarked())
-                );
-                const contents = prevItem && prevItem.getContents();
-                prevKey = contents && contents.getId();
-            } else {
-                prevKey = model.getPreviousItemKey(model.getMarkedKey());
-            }
-
-            _private.moveMarker(self, prevKey);
-
+        // activate list when marker is moving. It let us press enter and open current row
+        // must check mounted to avoid fails on unit tests
+        if (self._mounted && self._options.markerVisibility !== 'hidden') {
+            self.activate();
         }
     },
     setMarkerAfterScroll(self, event) {
@@ -1050,16 +1015,18 @@ var _private = {
             : self._listViewModel.getStartIndex();
         firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
         firstItemIndex = Math.min(firstItemIndex, self._listViewModel.getStopIndex());
+
+        let key = null;
         if (self._options.useNewModel) {
             const item = self._listViewModel.at(firstItemIndex);
             if (item) {
-                const key = item.getContents().getId();
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
-                markCommand.execute(self._listViewModel);
+               key = item.getContents().getId();
             }
         } else {
-            self._listViewModel.setMarkerOnValidItem(firstItemIndex);
+            key = self._listViewModel.getValidKeyForMarker(firstItemIndex);
         }
+
+        self._markerController.setMarkedKey(key);
     },
 
     getFirstVisibleItemIndex: function(itemsContainer, verticalOffset) {
@@ -1882,7 +1849,23 @@ var _private = {
 
          this.handleSelectionControllerResult(self, result);
       }
-   }
+   },
+
+   createMarkerController(self: any, options: any): MarkerController {
+        return new MarkerController({
+            model: self._listViewModel,
+            markerVisibility: options.markerVisibility,
+            markedKey: options.markedKey
+        })
+   },
+
+    updateMarkerController(self: any, options: any): void {
+        self._markerController.update({
+            model: self._listViewModel,
+            markerVisibility: options.markerVisibility,
+            markedKey: options.markedKey
+        })
+    }
 };
 
 /**
@@ -1987,6 +1970,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _selectionController: null,
     _prevRootId: null,
 
+    _markerController: null,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -2052,6 +2037,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
             if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+                self._markerController = _private.createMarkerController(self, newOptions);
             }
 
             if (newOptions.source) {
@@ -2298,13 +2284,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setKeyProperty(newOptions.keyProperty);
         }
 
-        if (newOptions.markedKey !== this._options.markedKey) {
-            if (newOptions.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(newOptions.markedKey);
-                markCommand.execute(this._listViewModel);
-            } else {
-                this._listViewModel.setMarkedKey(newOptions.markedKey, true);
-            }
+        if (newOptions.markedKey !== this._options.markedKey || newOptions.markerVisibility !== this._options.markerVisibility) {
+            _private.updateMarkerController(this, newOptions);
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
@@ -2600,13 +2581,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         if (direction === 'right' || direction === 'left') {
-            if (this._options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
-                markCommand.execute(this._listViewModel);
-            } else {
-                var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
-                this._listViewModel.setMarkedKey(newKey);
-            }
+            this._markerController.setMarkedKey(key);
         }
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
         if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
@@ -2755,12 +2730,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
         event.stopPropagation();
-        if (this._options.useNewModel) {
-            const markCommand = new displayLib.MarkerCommands.Mark(itemData.getContents().getId());
-            markCommand.execute(this._listViewModel);
-        } else {
-            this._listViewModel.setMarkedKey(itemData.key);
-        }
+        const key = itemData.getContents() ? itemData.getContents().getId() : itemData.key;
+        this._markerController.setMarkedKey(key);
     },
 
     _closeActionsMenu: function(args) {
@@ -2804,12 +2775,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const canBeMarked = this._mouseDownItemKey === key && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
 
         if (canBeMarked) {
-            if (this._options.useNewModel) {
-                const markCommand = new displayLib.MarkerCommands.Mark(key);
-                markCommand.execute(this._listViewModel);
-            } else {
-                this._listViewModel.setMarkedKey(key);
-            }
+            this._markerController.setMarkedKey(key);
         }
         this._mouseDownItemKey = undefined;
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);

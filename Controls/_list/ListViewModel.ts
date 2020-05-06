@@ -134,13 +134,6 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._actionsVersions = {};
         ListViewModel.superclass.constructor.apply(this, arguments);
 
-        if (this._items && cfg.markerVisibility !== 'hidden') {
-            if (cfg.markedKey !== null || cfg.markerVisibility === 'always' || cfg.markerVisibility === 'visible') {
-                this._markedKey = cfg.markedKey;
-                this.updateMarker(cfg.markedKey);
-            }
-        }
-
         this._selectedKeys = cfg.selectedKeys || [];
 
         // TODO надо ли?
@@ -308,56 +301,19 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
-    setMarkedKey: function(key, byOptions) {
-        if (byOptions) {
-            this._options.markedKey = key;
-        }
-        if (key === this._markedKey) {
-            return;
-        }
+    setMarkedKey: function(key) {
         const changedItems = [
             this.getItemById(this._markedKey),
             this.getItemById(key)
         ];
         this._markedKey = key;
         this._savedMarkedKey = undefined;
-        this._updateMarker(key);
         this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
         this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
-    _updateMarker: function(markedKey):void {
-        this._markedKey = markedKey;
-        if (this._options.markerVisibility === 'hidden' ||
-            this._options.markerVisibility === 'onactivated' && this._markedKey === null) {
-            return;
-        }
-
-        const isMarkedItemInRecordSet = _private.getItemByMarkedKey(this, markedKey);
-        // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
-        if (!isMarkedItemInRecordSet) {
-            if (this.getCount()) {
-                this._markedKey = this._items.at(0).getId();
-            } else {
-                this._markedKey = null;
-            }
-        }
-    },
-
-    updateMarker: function(markedKey):void {
-        const curMarkedKey = this._markedKey;
-        this._updateMarker(markedKey);
-        if (curMarkedKey !== this._markedKey) {
-            this._notify('onMarkedKeyChanged', this._markedKey);
-            this._nextModelVersion(true);
-        }
-    },
-
     setMarkerVisibility: function(markerVisibility) {
         this._options.markerVisibility = markerVisibility;
-        if (this._markedKey === null && markerVisibility === 'visible') {
-            this.updateMarker(null);
-        }
         this._nextModelVersion();
     },
 
@@ -528,12 +484,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setItems: function(items) {
         var currentItems = this.getItems();
-
         ListViewModel.superclass.setItems.apply(this, arguments);
-
-        //we should try to set markedKey by options, if there were no items before
-        //this._markedKey setted in constructor only if items were in constructor config
-        this.updateMarker(currentItems ? this._markedKey : this._options.markedKey);
         this._nextModelVersion();
     },
 
@@ -554,7 +505,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             });
         }
         _private.updateIndexes(this, 0, this.getCount());
-        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
+/*        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
             const curenMarkerIndex = this.getIndexByKey(this._markedKey);
             const curentItem = _private.getItemByMarkedKey(this, this._markedKey);
             if (this._markedKey && curenMarkerIndex === -1 && !curentItem) {
@@ -568,7 +519,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                     this.updateMarker(null);
                 }
             }
-        }
+        }*/
     },
     isValidItemForMarkedKey: function (item) {
         return !this._isGroup(item) && item.getId;
@@ -593,15 +544,16 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             nextIndex++;
         }
     },
-    setMarkerOnValidItem: function(index) {
+
+    getValidKeyForMarker: function(index) {
         const prevValidItem = this.getPreviousItem(index);
         const nextValidItem = this.getNextItem(index);
         if (nextValidItem !== undefined) {
-            this.setMarkedKey(nextValidItem);
+            return nextValidItem;
         } else if (prevValidItem !== undefined) {
-            this.setMarkedKey(prevValidItem);
+            return prevValidItem;
         } else {
-            this.setMarkedKey(null);
+            return null;
         }
     },
     _setEditingItemData: function(itemData) {

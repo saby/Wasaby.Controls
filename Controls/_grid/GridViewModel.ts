@@ -1248,8 +1248,8 @@ var
         getNextItemKey: function() {
             return this._model.getNextItemKey.apply(this._model, arguments);
         },
-        setMarkerOnValidItem: function(index) {
-            this._model.setMarkerOnValidItem(index);
+        getValidKeyForMarker: function(index) {
+            return this._model.getValidKeyForMarker(index);
         },
         setIndexes: function(startIndex, stopIndex) {
             return this._model.setIndexes(startIndex, stopIndex);

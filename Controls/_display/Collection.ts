@@ -2071,6 +2071,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$rightSpacing = itemPadding.right;
     }
 
+    setMarkedKey(key: string|number, status: boolean): void {
+        const item = this.getItemBySourceKey(key);
+        if (item) {
+            item.setMarked(status);
+        }
+        this.nextVersion();
+        // TODO наверное здесь нужно нотифаить что изменился ключ
+    }
+
     getRowSpacing(): string {
         return this._$rowSpacing;
     }

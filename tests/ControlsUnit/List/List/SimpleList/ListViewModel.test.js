@@ -501,7 +501,7 @@ define([
 
 
       });
-      it('setMarkerOnValidItem', function() {
+      it('getValidKeyForMarker', function() {
          var cfg = {
             keyProperty: 'id',
             items: new collection.RecordSet({
@@ -533,12 +533,9 @@ define([
             ---------- 3 ----------
             ---------- 4 ----------
           */
-         model.setMarkerOnValidItem(0);
-         assert.equal(model.getMarkedKey(), 1);
-         model.setMarkerOnValidItem(1);
-         assert.equal(model.getMarkedKey(), 1);
-         model.setMarkerOnValidItem(4);
-         assert.equal(model.getMarkedKey(), 3);
+         assert.equal(model.getValidKeyForMarker(0), 1);
+         assert.equal(model.getValidKeyForMarker(1), 1);
+         assert.equal(model.getValidKeyForMarker(4), 3);
       });
 
       it('SetMarkerOnRemove', function() {
