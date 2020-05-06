@@ -316,6 +316,7 @@ define([
             sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
             sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
                isLoadStarted = true;
+               return Promise.resolve();
             });
 
             lists.BaseControl._private.loadToDirectionIfNeed(self);
@@ -344,6 +345,7 @@ define([
             sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
             sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
                isLoadStarted = true;
+               return Promise.resolve();
             });
 
             shouldSearch = true;
@@ -1540,7 +1542,7 @@ define([
          await lists.BaseControl._private.loadToDirection(ctrl, 'down').catch(() => 1);
          assert.strictEqual(ctrl.__error.mode, 'inlist', 'wrong errorConfig mode');
          assert.typeOf(ctrl.__error.options.action, 'function', 'wrong action type');
-         assert.strictEqual(ctrl.__error.options.showInDirection, 'bottom', 'wrong error template position');
+         assert.strictEqual(ctrl.__error.options.showInDirection, 'down', 'wrong error template position');
       });
 
       it('items should get loaded when a user scrolls to the bottom edge of the list', function(done) {
