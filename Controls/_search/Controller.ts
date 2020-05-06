@@ -12,6 +12,7 @@ import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 import {Logger} from 'UI/Utils';
 import {error as dataSourceError} from 'Controls/dataSource';
+import {default as Store} from 'OnlinePage/Store';
 
 var _private = {
    getSearchController: function (self, newOptions) {
@@ -404,6 +405,14 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       }
    },
 
+   _afterMount: function (options) {
+      if (options.useStore) {
+         this._searchCallbackId = Store.onPropertyChanged('search',
+             ({value, force}) => this._search(undefined, value, force)
+         );
+      }
+   },
+
    _search: function (event, value, force) {
       _private.startSearch(this, value, force);
       _private.setInputSearchValue(this, value);
@@ -417,6 +426,9 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       this._dataOptions = null;
       this._itemOpenHandler = null;
       this._dataLoadCallback = null;
+      if (this._searchCallbackId) {
+         Store.unsubscribe(this._searchCallbackId);
+      }
    },
 
    _misspellCaptionClick: function () {
