@@ -136,6 +136,15 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     setSwipeConfig(config: ISwipeConfig): void;
     getSwipeConfig(): ISwipeConfig;
     setSwipeAnimation(state: ANIMATION_STATE): void;
+
+    /**
+     * Было решено переместить get/setActiveItem в коллекцию, т.к.
+     * в TileView так организована работа с isHovered, isScaled и isAnimated и
+     * мы не можем снять эти состояния при клике внутри ItemActions
+     * @param item
+     */
+    setActiveItem(item: IItemActionsItem): void;
+    getActiveItem(): IItemActionsItem;
 }
 
 export interface IMenuTemplateOptions {
