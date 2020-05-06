@@ -141,13 +141,13 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     reset: function() {
-        this._startIndex = Boolean(this._options.virtualScrollConfig) && !!this._startIndex ? this._startIndex : 0;
+        this._startIndex = Boolean(this._options?.virtualScrollConfig) && !!this._startIndex ? this._startIndex : 0;
         this._curIndex = 0;
     },
 
     isEnd: function() {
         var endIndex;
-        if (Boolean(this._options.virtualScrollConfig)) {
+        if (Boolean(this._options?.virtualScrollConfig)) {
             endIndex = !!this._stopIndex ? this._stopIndex : 0;
         } else {
             endIndex = (this._display ? this._display.getCount() : 0);
@@ -596,14 +596,48 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    // New Model compatibility
+    /**
+     * New Model compatibility
+     * Иногда Обновление ItemActions происходит в хуке BeforeUpdate
+     * Тогда к моменту вызова itemActionsController.update() в модели ещё не вызывался
+     * метод this.setItems() и this._display ещё не установлен после последнего сброса в null.
+     */
     each(callback: collection.EnumeratorCallback<Record>, context?: object): void {
-        this._display.each(callback, context);
+        if (this._display) {
+            this._display.each(callback, context);
+        } else {
+            this.reset();
+            while (this.isEnd()) {
+                const index = this.getCurrentIndex();
+                callback.call(
+                    context,
+                    this.getCurrent(),
+                    index
+                );
+                this.goToNext();
+            }
+        }
     },
 
-    // New Model compatibility
+    /**
+     * New Model compatibility
+     * Иногда Обновление ItemActions происходит в хуке BeforeUpdate
+     * Тогда к моменту вызова itemActionsController.update() в модели ещё не вызывался
+     * метод this.setItems() и this._display ещё не установлен после последнего сброса в null.
+     */
     find(predicate: (item: Model) => boolean): Model {
-        return this._display.find(predicate);
+        if (this._display) {
+            this._display.find(predicate);
+        } else {
+            this.reset();
+            while (this.isEnd()) {
+                const current = this.getCurrent();
+                if (predicate(current)) {
+                    return current;
+                }
+                this.goToNext();
+            }
+        }
     },
 
     // New Model compatibility
