@@ -163,6 +163,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _state: STATES.year,
 
     _monthRangeSelectionProcessing: false,
+    _yearsRangeSelectionProcessing: false,
 
     _dateRangeSelectionProcessing: false,
 
@@ -343,6 +344,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _monthsRangeChanged: function (e, start, end) {
         _private.rangeChanged(this, start, end ? dateUtils.getEndOfMonth(end) : null);
+    },
+
+    _monthsRangeSelectionStarted: function (e, start, end) {
+       this._yearsRangeSelectionProcessing = false;
     },
 
     _monthsSelectionChanged: function (e, start, end) {
