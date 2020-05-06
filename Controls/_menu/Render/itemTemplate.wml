@@ -42,7 +42,7 @@
          <ws:partial template="wml!Controls/_menu/Render/contentTemplate" scope="{{_options}}" item="{{treeItem.getContents()}}" />
       </ws:else>
 
-      <ws:if data="{{_options.allowPin !== false &&
+      <ws:if data="{{_options.allowPin &&
                      treeItem.getContents().has('pinned') &&
                      !treeItem.getContents().get(itemData.nodeProperty) &&
                      !(treeItem.getContents().get('pinned') === true && treeItem.getContents().get(itemData.parentProperty))}}">
