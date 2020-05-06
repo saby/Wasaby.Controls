@@ -62,7 +62,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     getEditingConfig(): IEditingConfig;
 }
 
-const getItemActionIconClass = (theme: string): string => `controls-itemActionsV__action_icon_theme-${theme || 'default'} icon-size_theme-${theme || 'default'}`; 
+const getItemActionIconClass = (theme: string): string => `controls-itemActionsV__action_icon_theme-${theme} icon-size_theme-${theme}`;
 
 export function assignActions(
     collection: IItemActionsCollection,

@@ -7,7 +7,7 @@
    </ws:else>
    <ws:else>
       <div class="controls-DragNDrop__draggingTemplate-icon">
-         <span class="controls-DragNDrop__draggingTemplate-icon-size icon-size_theme-{{_options.theme}} {{_options.logo || 'icon-DocumentUnknownType'}}"></span>
+         <span class="controls-DragNDrop__draggingTemplate-icon-size icon-size {{_options.logo || 'icon-DocumentUnknownType'}}"></span>
       </div>
    </ws:else>
    <div class="controls-DragNDrop__draggingTemplate-text">
