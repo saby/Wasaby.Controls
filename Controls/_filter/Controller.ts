@@ -42,7 +42,7 @@ const _private = {
             return result;
          },
 
-         equalItemsIterator: function(filterButtonItems, fastFilterItems, prepareCallback) {
+         equalItemsIterator(filterButtonItems, fastFilterItems, prepareCallback) {
             chain.factory(filterButtonItems).each(function(buttonItem, index) {
                chain.factory(fastFilterItems).each(function(fastItem) {
                   if (isEqualItems(buttonItem, fastItem)
@@ -162,21 +162,24 @@ const _private = {
 
             return result;
          },
-         addToHistory: function(self, filterButtonItems, fastFilterItems, historyId: string, prefetchParams?: IPrefetchHistoryParams): void {
-            const meta = {
-               $_addFromData: true
-            };
+         addToHistory(self, filterButtonItems, fastFilterItems, historyId: string, prefetchParams?: IPrefetchHistoryParams): void {
+             const meta = self._updateMeta || { $_addFromData: true };
 
              function update() {
-                 let historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
+                 let historyData;
+                 if (self._updateMeta) {
+                     historyData = self._updateMeta.item;
+                 } else {
+                     historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
+                 }
 
                  // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
                  self._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
 
-                 historyUtils.getHistorySource({historyId: historyId}).update(historyData, meta);
+                 historyUtils.getHistorySource({historyId}).update(historyData, meta);
              }
 
-            if (!historyUtils.getHistorySource({historyId: historyId})._history) {
+             if (!historyUtils.getHistorySource({historyId})._history) {
                // Getting history before updating if it hasn’t already done
                _private.getHistoryItems(self, historyId).addCallback(function() {
                   update();
@@ -186,10 +189,9 @@ const _private = {
             }
          },
 
-         getHistoryByItems(historyId: string, items: Array): object|void {
+         getHistoryByItems(self, historyId: string, items: any[]): object|void {
              const historySource = historyUtils.getHistorySource({historyId});
              const historyItems = historySource.getItems();
-             const pinned = historySource.getPinned();
 
              let result;
              let historyData;
@@ -197,6 +199,7 @@ const _private = {
              let minimizedItemFromOption;
 
              const findItemInHistory = (hItems) => {
+                 self._updateMeta = null;
                  if (hItems && hItems.getCount()) {
                      hItems.each((item, index) => {
                          if (!result) {
@@ -205,7 +208,6 @@ const _private = {
                              if (historyData) {
                                  minimizedItemFromOption = _private.minimizeFilterItems(items);
                                  minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
-
                                  if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
                                      result = {
                                          item,
@@ -221,12 +223,16 @@ const _private = {
 
              findItemInHistory(historyItems);
 
-             if (!result) {
-                 // Поправится, как будем хранить избранное на сервисе истории
-                 // https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
-                 findItemInHistory(pinned);
+             // Метод используется для поиска элемента для удаления и последующего сохранения нового элемента с новыми данными
+             // Если элемент запинен или добавлен в избранное, его нельзя удалять.
+             if (result && (result.item.get('pinned') || result.item.get('client'))) {
+                 self._updateMeta = {
+                     item: result.item,
+                     $_favorite: true,
+                     isClient: result.data.isClient
+                 };
+                 result = null;
              }
-
              return result;
          },
 
@@ -235,7 +241,7 @@ const _private = {
         },
 
         deleteCurrentFilterFromHistory(self): void {
-            const history = _private.getHistoryByItems(self._options.historyId, self._filterButtonItems);
+            const history = _private.getHistoryByItems(self, self._options.historyId, self._filterButtonItems);
 
             if (history) {
                 _private.deleteFromHistory(history.item, self._options.historyId);
@@ -248,7 +254,7 @@ const _private = {
             // поэтому ищем в истории такой фильтр, если есть, смотрим валидны ли ещё закэшированные данные,
             // если валидны, то просто добавляем идентификатор сессии в фильтр,
             // если данные не валидны, то такую запись из истории надо удалить
-            const history = _private.getHistoryByItems(options.historyId, items || self._filterButtonItems);
+            const history = _private.getHistoryByItems(self, options.historyId, items || self._filterButtonItems);
             let filter = self._filter;
             let needDeleteFromHistory = false;
             let needApplyPrefetch = false;
@@ -292,12 +298,12 @@ const _private = {
             }
         },
 
-         itemsIterator: function(filterButtonItems, fastDataItems, differentCallback, equalCallback) {
+         itemsIterator(filterButtonItems, fastDataItems, differentCallback, equalCallback) {
             function processItems(items) {
                chain.factory(items).each(function(elem) {
-                  let value = getPropValue(elem, 'value');
-                  let visibility = getPropValue(elem, 'visibility');
-                  let viewMode = getPropValue(elem, 'viewMode');
+                  const value = getPropValue(elem, 'value');
+                  const visibility = getPropValue(elem, 'visibility');
+                  const viewMode = getPropValue(elem, 'viewMode');
 
                   if (value !== undefined && ((visibility === undefined || visibility === true) || viewMode === 'frequent')) {
                      if (differentCallback) {
@@ -318,8 +324,8 @@ const _private = {
             }
          },
 
-         getFilterByItems: function(filterButtonItems, fastFilterItems) {
-            var filter = {};
+         getFilterByItems(filterButtonItems, fastFilterItems) {
+            const filter = {};
 
             function processItems(elem) {
                filter[getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name')] = getPropValue(elem, 'value');
@@ -330,8 +336,8 @@ const _private = {
             return filter;
          },
 
-         isFilterChanged: function(filterButtonItems, fastFilterItems) {
-            var filter = {};
+         isFilterChanged(filterButtonItems, fastFilterItems) {
+            const filter = {};
 
             function processItems(elem) {
                // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
@@ -346,8 +352,8 @@ const _private = {
             return !isEmpty(filter);
          },
 
-         getEmptyFilterKeys: function(filterButtonItems, fastFilterItems) {
-            var removedKeys = [];
+         getEmptyFilterKeys(filterButtonItems, fastFilterItems) {
+            const removedKeys = [];
 
             function processItems(elem) {
                removedKeys.push(getPropValue(elem, 'id') ? getPropValue(elem, 'id') : getPropValue(elem, 'name'));
@@ -358,7 +364,7 @@ const _private = {
             return removedKeys;
          },
 
-         setFilterItems: function(self, filterButtonOption, fastFilterOption, history) {
+         setFilterItems(self, filterButtonOption, fastFilterOption, history) {
             let historyItems;
 
             if (history) {
@@ -369,7 +375,7 @@ const _private = {
             self._fastFilterItems = _private.getItemsByOption(fastFilterOption, historyItems);
          },
 
-         setFilterButtonItems: function(filterButtonItems, fastFilterItems) {
+         setFilterButtonItems(filterButtonItems, fastFilterItems) {
             function prepareFastFilterItem(index) {
                // Fast filters could not be reset from the filter button. We set flag for filters duplicated in the fast filter.
                filterButtonItems[index].isFast = true;
@@ -377,13 +383,13 @@ const _private = {
             _private.equalItemsIterator(filterButtonItems, fastFilterItems, prepareFastFilterItem);
          },
 
-         resolveFilterButtonItems: function(filterButtonItems, fastFilterItems) {
+         resolveFilterButtonItems(filterButtonItems, fastFilterItems) {
             if (filterButtonItems && fastFilterItems) {
                _private.setFilterButtonItems(filterButtonItems, fastFilterItems);
             }
          },
 
-         updateFilterItems: function(self, newItems) {
+         updateFilterItems(self, newItems) {
             if (self._filterButtonItems) {
                self._filterButtonItems = _private.cloneItems(self._filterButtonItems);
                mergeSource(self._filterButtonItems, newItems);
@@ -397,8 +403,8 @@ const _private = {
             _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
          },
 
-         resolveItems: function(self, historyId, filterButtonItems, fastFilterItems, historyItems) {
-            var historyItemsDef = historyItems ? Deferred.success(historyItems) : _private.getHistoryItems(self, historyId);
+         resolveItems(self, historyId, filterButtonItems, fastFilterItems, historyItems) {
+            const historyItemsDef = historyItems ? Deferred.success(historyItems) : _private.getHistoryItems(self, historyId);
 
             return historyItemsDef.addCallback(function(historyItems) {
                _private.setFilterItems(self, filterButtonItems, fastFilterItems, historyItems);
@@ -406,10 +412,10 @@ const _private = {
             });
          },
 
-         calculateFilterByItems: function(filter, filterButtonItems, fastFilterItems) {
-            var filterClone = clone(filter || {});
-            var itemsFilter = _private.getFilterByItems(filterButtonItems, fastFilterItems);
-            var emptyFilterKeys = _private.getEmptyFilterKeys(filterButtonItems, fastFilterItems);
+         calculateFilterByItems(filter, filterButtonItems, fastFilterItems) {
+            const filterClone = clone(filter || {});
+            const itemsFilter = _private.getFilterByItems(filterButtonItems, fastFilterItems);
+            const emptyFilterKeys = _private.getEmptyFilterKeys(filterButtonItems, fastFilterItems);
 
             emptyFilterKeys.forEach(function(key) {
                delete filterClone[key];
@@ -421,8 +427,8 @@ const _private = {
 
             return filterClone;
          },
-         applyItemsToFilter: function(self, filter, filterButtonItems, fastFilterItems?) {
-            var filterClone = _private.calculateFilterByItems(filter, filterButtonItems, fastFilterItems);
+         applyItemsToFilter(self, filter, filterButtonItems, fastFilterItems?) {
+            const filterClone = _private.calculateFilterByItems(filter, filterButtonItems, fastFilterItems);
             _private.setFilter(self, filterClone);
          },
 
@@ -440,21 +446,21 @@ const _private = {
             return {};
          },
 
-         setFilter: function(self, filter) {
+         setFilter(self, filter) {
             self._filter = filter;
          },
 
-         notifyFilterChanged: function(self) {
+         notifyFilterChanged(self) {
             self._notify('filterChanged', [self._filter]);
          },
 
-         cloneItems: function(items) {
+         cloneItems(items) {
             if (items['[Types/_entity/CloneableMixin]']) {
                return items.clone();
             }
             return clone(items);
          },
-         itemsReady: function (self, filter, history?): void {
+         itemsReady(self, filter, history?): void {
              let resultFilter = filter;
 
              if (history) {
@@ -466,16 +472,16 @@ const _private = {
          }
       };
 
-      function getCalculatedFilter(cfg) {
-         var def = new Deferred();
-         var tmpStorage = {};
+function getCalculatedFilter(cfg) {
+         const def = new Deferred();
+         const tmpStorage = {};
          _private.resolveItems(tmpStorage, cfg.historyId, clone(cfg.filterButtonSource), clone(cfg.fastFilterSource), cfg.historyItems).addCallback(function(items) {
-            var calculatedFilter;
+            let calculatedFilter;
             try {
                calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
 
                if (cfg.prefetchParams && cfg.historyId) {
-                   const history = _private.getHistoryByItems(cfg.historyId, tmpStorage._filterButtonItems);
+                   const history = _private.getHistoryByItems(tmpStorage, cfg.historyId, tmpStorage._filterButtonItems);
 
                    if (history) {
                        calculatedFilter = Prefetch.applyPrefetchFromHistory(calculatedFilter, history.data);
@@ -500,7 +506,7 @@ const _private = {
          return def;
       }
 
-      function updateFilterHistory(cfg) {
+function updateFilterHistory(cfg) {
          if (!cfg.historyId) {
             throw new Error('Controls/_filter/Controller::historyId is required');
          }
@@ -751,7 +757,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             const historyId = this._options.historyId;
 
             return _private.getHistoryItems(this, historyId).then(() => {
-                const history = _private.getHistoryByItems(historyId, this._filterButtonItems);
+                const history = _private.getHistoryByItems(this, historyId, this._filterButtonItems);
 
                 if (history) {
                     _private.deleteFromHistory(history.item, historyId);
@@ -763,7 +769,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             });
         },
 
-        _beforeMount: function(options, context, receivedState): Promise<IFilterHistoryData|{}> {
+        _beforeMount(options, context, receivedState): Promise<IFilterHistoryData|{}> {
             let filter = options.filter;
 
             if (options.prefetchParams) {

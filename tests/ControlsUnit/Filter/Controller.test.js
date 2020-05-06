@@ -279,7 +279,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             PrefetchSessionId: 'testId',
             testFilterFilter: 'testValue'
          };
-         sandbox.replace(Filter._private, 'getHistoryByItems', function(historyId, hItems) {
+         sandbox.replace(Filter._private, 'getHistoryByItems', function(filterInst, historyId, hItems) {
             appliedItems = hItems;
             return historyItems;
          });
@@ -979,27 +979,23 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
                         id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField1: 'anyValue1'
                      }]
                   }
-               })
-            ]
-         });
-         let pinnedItems = new collection.List({
-            items: [
+               }),
                new entity.Model({
                   rawData: {
-                     ObjectData: [
-                        {
-                           id: 'testId3', value: 'testValue3', resetValue: 'testResetValue2'
-                        }
-                     ]
+                     ObjectData: {
+                        items: [{ id: 'testId2', value: 'testValuePinned', resetValue: 'testResetValuePinned', textValue: '', anyField1: 'anyValue2' }],
+                        isClient: false
+                     },
+                     pinned: 'true'
                   }
                }),
                new entity.Model({
                   rawData: {
-                     ObjectData: [
-                        {
-                           id: 'testIdPinned', value: 'testValuePinned', resetValue: 'testResetValuePinned', textValue: ''
-                        }
-                     ]
+                     ObjectData: {
+                        items: [{ id: 'testId3', value: 'testValueClient', resetValue: 'testResetValueClient', textValue: '', anyField1: 'anyValue3' }],
+                        isClient: true
+                     },
+                     client: 'true'
                   }
                })
             ]
@@ -1008,14 +1004,19 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          sandbox.replace(HistoryUtils, 'getHistorySource', () => {
             return {
                getItems: () => historyItems,
-               getDataObject: (data) => data.get('ObjectData'),
-               getPinned: () => pinnedItems
+               getDataObject: (data) => data.get('ObjectData')
             };
          });
-         assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 1);
+         let self = {};
+         assert.equal(Filter._private.getHistoryByItems(self, 'testId', filterItems).index, 1);
 
-         filterItems = [{id: 'testIdPinned', value: 'testValuePinned', resetValue: 'testResetValuePinned', textValue: '', anyField2: 'anyValue2'}];
-         assert.equal(Filter._private.getHistoryByItems('testId', filterItems).index, 1);
+         filterItems = [{id: 'testId2', value: 'testValuePinned', resetValue: 'testResetValuePinned', textValue: '', anyField1: 'anyValue2'}]
+         assert.isNull(Filter._private.getHistoryByItems(self, 'testId', filterItems), 'item cannot be deleted from pinned');
+         assert.isFalse(self._updateMeta.isClient);
+
+         filterItems = [{id: 'testId3', value: 'testValueClient', resetValue: 'testResetValueClient', textValue: '', anyField1: 'anyValue3'}]
+         assert.isNull(Filter._private.getHistoryByItems(self, 'testId', filterItems), 'item cannot be deleted from clint');
+         assert.isTrue(self._updateMeta.isClient);
          sandbox.restore();
       });
 

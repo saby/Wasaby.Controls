@@ -307,7 +307,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(controller._searchValue, '');
          assert.equal(controller._inputSearchValue, 'testInputValue');
          assert.deepEqual(filter, {test: 'test'});
-         assert.isTrue(stubNotify.withArgs('searchValueChanged', ['']).calledOnce);
+         assert.isTrue(stubNotify.withArgs('searchValueChanged', ['testInputValue']).calledOnce);
          assert.isTrue(stubNotify.withArgs('filterChanged', [filter]).calledOnce);
 
          controller._options.filter = { test: 'test' };

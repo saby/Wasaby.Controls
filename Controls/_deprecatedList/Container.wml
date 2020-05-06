@@ -7,4 +7,4 @@
             searchMode="{{_searchMode}}"
             markedKey="{{_options.markedKey}}"
             markerVisibility="{{_options.markerVisibility}}"
-            searchValue="{{_searchValue}}"/>
+            searchValue="{{_currentSearchValue}}"/>
