@@ -1,0 +1,14 @@
+<div class="ws-flexbox ws-align-items-baseline">
+    <div class="ControlsDemo__SpoilerFirst__heading">
+        <Controls.spoiler:Heading captions="{{['Collapse', 'Expand']}}" on:expandedChanged="_notifyHandler('expandedChanged')"/>
+        <div class="ControlsDemo__SpoilerFirst__heading__content">
+            <span class=" ControlsDemo__SpoilerFirst__heading__icon icon-Remark"></span>
+            <span class="ControlsDemo__SpoilerFirst__heading__text">note-23128177</span>
+        </div>
+
+    </div>
+    <div class="ControlsDemo__SpoilerFirst__headerContent ws-flexbox ws-align-items-baseline">
+        <div class="ControlsDemo__SpoilerFirst__headerContent__title">Title:</div>
+        <input class="controlsDemo__SpoilerFirst__content__input" type="text" placeholder="New note" />
+    </div>
+</div>
