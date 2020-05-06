@@ -1255,15 +1255,7 @@ const _private = {
             newModelChanged
         ) {
             self._itemsChanged = true;
-            if (self._itemActionsInitialized && !self._modelRecreated) {
-                // If actions were already initialized update them in place
-                self._updateItemActions();
-            } else {
-                // If model was recreated or actions have not been initialized
-                // yet, postpone item actions update until the new model is
-                // received by ItemActionsControl as an option
-                self._shouldUpdateItemActions = true;
-            }
+            self._updateItemActions(self._options);
         }
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
@@ -1612,9 +1604,6 @@ const _private = {
             .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${cfg.theme}`, cfg.loadingIndicatorState === 'down' && cfg.hasPaging && cfg.hasItems)
             .compile();
     },
-    hasItemActions: function(itemActions, itemActionsProperty) {
-        return !!(itemActions || itemActionsProperty);
-    },
     updateIndicatorContainerHeight(self, viewRect: DOMRect, viewPortRect: DOMRect): void {
         let top;
         let bottom;
@@ -1940,8 +1929,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._loadTriggerVisibility = {};
 
-        this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
-
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             let viewModelConfig = cClone(newOptions);
             if (collapsedGroups) {
@@ -2169,11 +2156,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
-        let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback
-            !== newOptions.itemActionVisibilityCallback;
-        // todo init var
-        this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged;
-        this._hasItemActions = _private.hasItemActions(newOptions.itemActions, newOptions.itemActionsProperty);
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
@@ -2252,15 +2234,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._groupingLoader.destroy();
         }
 
-        // UC: Record might be editing on page load, then we should initialize Item Actions.
+        // UC1: Record might be editing on page load, then we should initialize Item Actions.
+        // UC2: We should reassign ItemActions on model change before drawing them in For template
         if (
+            recreateSource ||
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
-            (newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated ||
+            ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
             newOptions.itemActionsProperty ||
             (newOptions.editingConfig && newOptions.editingConfig.item)
         ) {
-            this._initItemActions();
+            this._updateItemActions(newOptions);
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -2428,12 +2412,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _afterUpdate: function(oldOptions) {
-        // if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
-        //     this._shouldUpdateItemActions = false;
-        //    this._updateItemActions();
-        // }
-        this._updateInProgress = false;        if (this._shouldNotifyOnDrawItems) {
+    _afterUpdate(oldOptions): void {
+        this._updateInProgress = false;
+        if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
@@ -2584,19 +2565,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _initItemActions(): void {
         if (!this._itemActionsInitialized) {
-            this._updateItemActions();
+            this._updateItemActions(this._options);
             this._itemActionsInitialized = true;
-            this._shouldUpdateItemActions = false;
         }
     },
-    _updateItemActions(): void {
-        // let itemActionVisibilityCallbackChanged = this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback;
-        // from beforeUpdate: this._shouldUpdateItemActions = recreateSource || itemActionVisibilityCallbackChanged; отложенная инициализация
-        // from listChange: If model was recreated or actions have not been initialized
-        // from listChange: yet, postpone item actions update until the new model is
-        // from listChange: received by ItemActionsControl as an option
-        // from listChange: if (!self._itemActionsInitialized || self._modelRecreated) отложенная инициализация
 
+    /**
+     * Необходимо передавать опции для случая, когда в результате изменения модели меняются параметры
+     * для показа ItemActions и их нужно поменять до отрисовки.
+     * @param options
+     * @private
+     */
+    _updateItemActions(options): void {
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this.__error || !this._listViewModel) {
@@ -2608,21 +2588,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const editingConfig = this._listViewModel.getEditingConfig();
         this._itemActionsController.update({
             collection: this._listViewModel,
-            itemActions: this._options.itemActions,
-            itemActionsProperty: this._options.itemActionsProperty,
-            visibilityCallback: this._options.itemActionVisibilityCallback,
-            itemActionsPosition: this._options.itemActionsPosition,
-            style: this._options.style,
-            actionAlignment: this._options.actionAlignment,
-            actionCaptionPosition: this._options.actionCaptionPosition,
-            itemActionsClass: this._options.itemActionsClass,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style: options.style,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisibility: editingConfig?.toolbarVisibility
         });
     },
 
     _onAfterEndEdit(event: SyntheticEvent, item: Model, isAdd: boolean) {
-        this._updateItemActions();
+        this._updateItemActions(this._options);
         return this._notify('afterEndEdit', [item, isAdd]);
     },
 
@@ -2642,7 +2622,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
         * _canUpdateItemsActions приведет к показу неактуальных операций.
         */
-        this._updateItemActions();
+        this._updateItemActions(this._options);
         return result;
     },
 
@@ -2882,7 +2862,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._updateItemActions();
         if (this._options.itemsDragNDrop) {
             const dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
             let dragPosition;

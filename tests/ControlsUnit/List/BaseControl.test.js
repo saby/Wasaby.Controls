@@ -2408,14 +2408,6 @@ define([
          });
       });
 
-      it('hasItemActions', function() {
-         let itemAct = [1, 2, 3];
-         let itemActionsProp = 'itemActions';
-         assert.isTrue(lists.BaseControl._private.hasItemActions(itemAct));
-         assert.isTrue(lists.BaseControl._private.hasItemActions(undefined, itemActionsProp));
-         assert.isFalse(lists.BaseControl._private.hasItemActions(undefined, undefined));
-      });
-
       describe('updateItemActions', function() {
          var source = new sourceLib.Memory({
                keyProperty: 'id',
