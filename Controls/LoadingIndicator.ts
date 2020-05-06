@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import tmpl = require('wml!Controls/_LoadingIndicator/LoadingIndicator');
 import randomId = require('Core/helpers/Number/randomId');
 import collection = require('Types/collection');
+import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
 /*
  * @name Controls/LoadingIndicator#isGlobal
@@ -308,8 +309,12 @@ const module = Control.extend(/** @lends Controls/LoadingIndicator.prototype */{
     // Indicator is opened above existing popups.
     _updateZIndex(config) {
         const popupItem = ManagerController && ManagerController.find((config || {}).popupId);
+        const POPUP_BASE_ZINDEX = 10;
         if (popupItem) {
             this._zIndex = popupItem.currentZIndex;
+        } else if (isNewEnvironment() && this._options.mainIndicator) {
+            // в 20.2147 сделал максимально безопасно, в 20.3000 безусловно
+            this._zIndex = POPUP_BASE_ZINDEX - 1;
         } else {
             this._zIndex = null;
         }
