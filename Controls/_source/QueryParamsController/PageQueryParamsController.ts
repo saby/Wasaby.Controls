@@ -76,7 +76,7 @@ class PageQueryParamsController implements IQueryParamsController {
         }
     }
 
-    prepareQueryParams(direction: Direction, callback, config?: IBasePageSourceConfig): IAdditionalQueryParams {
+    prepareQueryParams(direction: Direction, callback?, config?: IBasePageSourceConfig): IAdditionalQueryParams {
         const addParams: IAdditionalQueryParams = {};
         let neededPage: number;
         const pageSize =  (config?.pageSize || this._options.pageSize);
@@ -98,8 +98,8 @@ class PageQueryParamsController implements IQueryParamsController {
         if (this._options.hasMore === false) {
             addParams.meta.hasMore = false;
         }
-
-        callback({
+        
+        callback && callback({
             page: neededPage,
             pageSize
         });

@@ -180,7 +180,7 @@ class PositionQueryParamsController implements IQueryParamsController {
         this._more = null;
     }
 
-    prepareQueryParams(loadDirection: Direction, callback, config?: IBasePositionSourceConfig): IAdditionalQueryParams {
+    prepareQueryParams(loadDirection: Direction, callback?, config?: IBasePositionSourceConfig): IAdditionalQueryParams {
         let navDirection: CursorDirection;
         let navPosition: Position;
         let sign: string = '';
@@ -227,7 +227,7 @@ class PositionQueryParamsController implements IQueryParamsController {
             }
         };
 
-        callback({
+        callback && callback({
             limit,
             position: navPosition
         });
