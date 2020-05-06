@@ -12,6 +12,6 @@
       on:click="_onItemActionsClick(action, item)"/>
 
    <ws:if data="{{actionIndex !== showedActions.length - 1}}">
-      <div attr:class="controls-Swipe__separator controls-Swipe__separator_{{ actionAlignment }}"></div>
+      <div attr:class="controls-Swipe__separator_theme-{{theme}} controls-Swipe__separator_{{ actionAlignment }}_theme-{{theme}}"></div>
    </ws:if>
 </ws:for>
