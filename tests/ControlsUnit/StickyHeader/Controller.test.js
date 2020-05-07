@@ -247,16 +247,9 @@ define([
 
          it('should insert header in proper position', function() {
             component._afterMount({});
-            const obj = {className: 'test test2'};
-
             return Promise.all([0, 20, 10].map(function(offset, index) {
                const header = {
-                  container: {
-                     parentElement: obj,
-                     closest: function () {
-                        return obj;
-                     }
-                  },
+                  container: {parentElement: 1},
                   id: index,
                   position: 'top',
                   mode: 'stackable',
