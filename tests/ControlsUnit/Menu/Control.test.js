@@ -369,6 +369,30 @@ define(
             assert.isTrue(closed);
          });
 
+         it('_openSelectorDialog with empty item', () => {
+            let emptyMenuControl = getMenu({
+               ...defaultOptions,
+               emptyKey: null,
+               emptyText: 'Not selected',
+               multiSelect: true,
+               selectedKeys: ['Not selected'],
+               selectorTemplate: {}
+            });
+            let items = Clone(defaultItems);
+            let selectorOptions = {};
+            const emptyItem = {
+               key: null,
+               title: 'Not selected'
+            };
+            items.push(emptyItem);
+            emptyMenuControl._options.selectorOpener = {
+               open: (tplOptions) => { selectorOptions = tplOptions; },
+            };
+            emptyMenuControl._listModel = getListModel(items);
+            emptyMenuControl._openSelectorDialog({});
+            assert.strictEqual(selectorOptions.templateOptions.selectedItems.getCount(), 0);
+         });
+
          it('displayFilter', function() {
             let menuControl = getMenu();
             let hierarchyOptions = {
