@@ -96,6 +96,7 @@ var _private = {
         // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
         if (this._options.listModel.getItems()) {
             const countItems = this._options.listModel.getItems().getCount();
+            const isAllSelected = _private.isAllSelectedInRoot(this, _private.getRoot(this));
             if (action === collection.IObservable.ACTION_REMOVE) {
                 this._multiselection.remove(_private.getItemsKeys(removedItems));
             }
@@ -103,7 +104,10 @@ var _private = {
             // Это необходимо, чтобы чекбоксы сбросились только после отрисовки новых данных,
             // Иначе при проваливании в узел или при смене фильтрации сначала сбросятся чекбоксы,
             // а данные отрисуются только после загрузки
-            if (this._resetSelection && action === collection.IObservable.ACTION_RESET || !countItems) {
+            if (this._resetSelection &&
+                action === collection.IObservable.ACTION_RESET ||
+                !countItems && isAllSelected
+            ) {
                 this._resetSelection = false;
                 this._multiselection.selectedKeys = [];
                 this._multiselection.excludedKeys = [];
