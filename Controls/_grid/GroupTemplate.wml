@@ -34,7 +34,7 @@
 </ws:template>
 <ws:template name="groupRightStickyTemplate">
       <Controls.scroll:StickyHeader
-        backgroundStyle="{{backgroundStyle}}"
+        backgroundStyle="{{itemData.backgroundStyle}}"
         attr:class="controls-ListView__stickyGroup_{{itemData.style}} controls-ListView__groupContent"
         fixedZIndex="{{4}}">
          <div class="controls-ListView__groupSeparator-right_theme-{{itemData.theme}}">&nbsp;</div>
@@ -45,7 +45,7 @@
 </ws:template>
 <ws:template name="groupContentStickyWrapper">
 <Controls.scroll:StickyHeader
-        backgroundStyle="{{backgroundStyle}}"
+        backgroundStyle="{{itemData.backgroundStyle}}"
         attr:class="controls-ListView__stickyGroup_{{itemData.style}} controls-ListView__groupContent
                {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
                controls-ListView__groupContent_align-{{textAlign || 'left'}}"
