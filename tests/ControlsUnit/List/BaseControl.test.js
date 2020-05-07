@@ -6184,19 +6184,19 @@ define([
             await control._afterMount(options);
          }
 
-         beforeEach(async () => {
-            baseControlOptions = {
-               keyProperty: 'id',
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewModelConstructor: lists.ListViewModel,
-               markedKey: null
-            };
-            const _baseControl = new lists.BaseControl(baseControlOptions);
-            _baseControl._private.createMarkerController = function() { return {}; }
-            await mountBaseControl(_baseControl, baseControlOptions);
-            baseControl = _baseControl;
-         });
+            beforeEach(async () => {
+               baseControlOptions = {
+                  keyProperty: 'id',
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  viewModelConstructor: lists.ListViewModel,
+                  markedKey: null
+               };
+               const _baseControl = new lists.BaseControl(baseControlOptions);
+               sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => { return {}; });
+               await mountBaseControl(_baseControl, baseControlOptions);
+               baseControl = _baseControl;
+            });
 
          afterEach(async () => {
             await baseControl._beforeUnmount();
@@ -6231,12 +6231,9 @@ define([
 
                baseControl._itemMouseDown(event, { key: 3 }, originalEvent);
 
-               assert.equal(
-                  baseControl._listViewModel.getItems().at(0),
-                  baseControl._listViewModel.getMarkedItem().getContents()
-               );
+                  assert.equal(baseControl._listViewModel.getMarkedItem(), undefined);
+               });
             });
-         });
 
          describe('_onItemMouseUp', () => {
 
@@ -6248,7 +6245,10 @@ define([
                const event = { stopPropagation: () => {} };
                const itemData = { item: {} };
 
-               baseControl._items.getCount = () => 1;
+                  baseControl._items.getCount = () => 1;
+                  baseControl._markerController = {
+                     setMarkedKey: function() {}
+                  };
 
                baseControl._notify = (eName, args) => {
                   if (eName === 'itemMouseUp') {
@@ -6267,20 +6267,24 @@ define([
                baseControlOptions.markerVisibility = 'onactivated';
                await mountBaseControl(baseControl, baseControlOptions);
 
-               const originalEvent = { target: {} };
-               const event = {};
+                  const originalEvent = {target: {}};
+                  const event = {};
+                  let setMarkedKeyIsCalled = false;
 
-               baseControl._items.getCount = () => 1;
-               baseControl._mouseDownItemKey = 1;
+                  baseControl._items.getCount = () => 1;
+                  baseControl._mouseDownItemKey = 1;
+                  baseControl._markerController = {
+                     setMarkedKey: function(key) {
+                        assert.equal(key, 1);
+                        setMarkedKeyIsCalled = true;
+                     }
+                  };
 
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
                baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
 
-               assert.equal(
-                  baseControl._listViewModel.getItems().at(0),
-                  baseControl._listViewModel.getMarkedItem().getContents()
-               );
-            });
+                  assert.equal(setMarkedKeyIsCalled, true);
+               });
 
             it('should not mark single item if editing', async function() {
                baseControlOptions.markerVisibility = 'onactivated';
@@ -6298,37 +6302,45 @@ define([
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
             });
 
-            it('should mark item if there are more then one item in list', async function() {
-               baseControlOptions.markerVisibility = 'onactivated';
-               await mountBaseControl(baseControl, baseControlOptions);
+               it('should mark item if there are more then one item in list', async function () {
+                  baseControlOptions.markerVisibility = 'onactivated';
+                  await mountBaseControl(baseControl, baseControlOptions);
+                  let setMarkedKeyIsCalled = false;
 
-               const originalEvent = { target: {} };
-               const event = {};
+                  const originalEvent = {target: {}};
+                  const event = {};
+                  baseControl._mouseDownItemKey = 1;
+                  baseControl._markerController = {
+                     setMarkedKey: function(key) {
+                        assert.equal(key, 1);
+                        setMarkedKeyIsCalled = true;
+                     }
+                  };
+
+                  // No editing
+                  assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+                  baseControl._itemMouseUp(event, {key: 1}, originalEvent);
+                  assert.equal(setMarkedKeyIsCalled, true);
+
+                  // With editing
+                  setMarkedKeyIsCalled = false;
+                  baseControl._listViewModel.setMarkedKey(null);
+                  baseControlOptions.editingConfig = {};
+                  await mountBaseControl(baseControl, baseControlOptions);
+                  baseControl._markerController = {
+                     setMarkedKey: function(key) {
+                        assert.equal(key, 1);
+                        setMarkedKeyIsCalled = true;
+                     }
+                  };
+
                baseControl._mouseDownItemKey = 1;
 
-               // No editing
-               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
-               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
-               assert.equal(
-                  baseControl._listViewModel.getItems().at(0),
-                  baseControl._listViewModel.getMarkedItem().getContents()
-               );
-
-               // With editing
-               baseControl._listViewModel.setMarkedKey(null);
-               baseControlOptions.editingConfig = {};
-               await mountBaseControl(baseControl, baseControlOptions);
-
-               baseControl._mouseDownItemKey = 1;
-
-               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
-               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
-               assert.equal(
-                  baseControl._listViewModel.getItems().at(0),
-                  baseControl._listViewModel.getMarkedItem().getContents()
-               );
+                  assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+                  baseControl._itemMouseUp(event, {key: 1}, originalEvent);
+                  assert.equal(setMarkedKeyIsCalled, true);
+               });
             });
-         });
 
 
          describe('_onItemClick', () => {
