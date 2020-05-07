@@ -16,7 +16,6 @@ import {IItemAction} from 'Controls/_list/interface/IList';
 
 let displayLib: typeof import('Controls/display');
 
-const ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 const ACTION_TYPE = 'itemActionsUpdated';
 const POSITION_CLASSES = {
     bottomRight: 'controls-itemActionsV_position_bottomRight',
@@ -29,6 +28,9 @@ export const actionDisplayMode = {
     AUTO: 'auto'
 };
 var _private = {
+    getActionIconClass: function(theme: string): string {
+        return `controls-itemActionsV__action_icon_theme-${theme}  icon-size_theme-${theme}`;
+    },
     fillItemAllActions: function(item, options) {
         var actions = [];
         if (options.itemActionsProperty) {
@@ -69,16 +71,17 @@ var _private = {
         } else {
             showed = cClone(all);
         }
-        // ACTION_ICON_CLASS нужен для отображаемых по ховеру операций - именно он обеспечивает их выравнивание
+        // actionIconClass нужен для отображаемых по ховеру операций - именно он обеспечивает их выравнивание
+        const actionIconClass = _private.getActionIconClass(options.theme);
         showed.forEach((action) => {
-            if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
-                action.icon += ' ' + ACTION_ICON_CLASS;
+            if (action.icon && !~action.icon.indexOf(actionIconClass)) {
+                action.icon += ' ' + actionIconClass;
             }
         });
 
         if (_private.needActionsMenu(all)) {
             showed.push({
-                icon: 'icon-ExpandDown ' + ACTION_ICON_CLASS,
+                icon: 'icon-ExpandDown ' + actionIconClass,
                 style: 'secondary',
                 iconStyle: 'secondary',
                 title: rk('Ещё'),
