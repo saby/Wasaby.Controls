@@ -244,7 +244,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
 
         if ((this._state === STATES.year && this._displayedDate.getFullYear() === new Date().getFullYear()) ||
-            (this._state === STATES.month && this._displayedDate.getMonth() === new Date().getMonth())) {
+            (this._state === STATES.month && this._displayedDate.getMonth() === new Date().getMonth() &&
+                this._displayedDate.getFullYear() === new Date().getFullYear())) {
             this._homeButtonVisible = false;
         }
 
