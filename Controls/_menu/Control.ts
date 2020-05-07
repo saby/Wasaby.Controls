@@ -540,6 +540,9 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         let filter = Clone(options.filter) || {};
         filter[options.parentProperty] = options.root;
         return this.getSourceController(options).load(filter).addCallback((items) => {
+            if (options.dataLoadCallback) {
+                options.dataLoadCallback(items);
+            }
             this.createViewModel(items, options);
             this._moreButtonVisible = options.selectorTemplate && this.getSourceController(options).hasMoreData('down');
             this._expandButtonVisible = this.isExpandButtonVisible(items, options.additionalProperty, options.root);
