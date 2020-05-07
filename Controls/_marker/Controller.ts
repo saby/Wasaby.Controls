@@ -36,16 +36,10 @@ export class Controller {
     */
    update(options: IOptions) {
       this._model = options.model;
+      this._markerVisibility = options.markerVisibility;
 
       if (this._markedKey !== options.markedKey) {
          this.setMarkedKey(options.markedKey);
-      }
-
-      if (this._markerVisibility !== options.markerVisibility) {
-         this._markerVisibility = options.markerVisibility;
-         if (this._markedKey === null && this._markerVisibility === Visibility.Visible) {
-            this.setMarkedKey(null);
-         }
       }
    }
 
@@ -64,6 +58,7 @@ export class Controller {
 
       if (this._markerVisibility === Visibility.Hidden || this._markerVisibility === Visibility.OnActivated && key === null) {
          if (key === null) {
+            this._model.setMarkedKey(this._markedKey, false);
             this._markedKey = null;
          }
          return;
