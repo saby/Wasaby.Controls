@@ -1,6 +1,6 @@
 import {Control} from 'UI/Base';
 import * as template from 'wml!Controls/_filter/View/Container';
-
+import {default as Store} from 'Controls/Store';
 /**
  * Контрол используют в качестве контейнера для {@link Controls/filter:View}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:View}.
  * @remark
@@ -48,6 +48,7 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
     _itemsChanged(event: Event, items): void {
        event.stopPropagation();
         this._notify('filterItemsChanged', [items], {bubbling: true});
+        Store.dispatch('filter', items);
     },
 
    _filterChanged(event: Event): void {
@@ -56,6 +57,7 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
 
     _historyApply(event: Event, history): void {
         this._notify('filterHistoryApply', [history], {bubbling: true});
+        Store.dispatch('filterHistory', history);
     }
 });
 
