@@ -174,7 +174,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         if (this._isPinIcon(sourceEvent.target)) {
             this._pinClick(event, item);
         } else {
-            if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem)) {
+            if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem.getContents())) {
                 this._changeSelection(key, treeItem);
                 this.updateApplyButton();
 
@@ -232,13 +232,15 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         config.overlay = 'none';
     }
 
-    protected _isEmptyItem(itemData) {
-        return this._options.emptyText && itemData.getContents().getId() === this._options.emptyKey;
+    protected _isEmptyItem(item: Model): boolean {
+        return this._options.emptyText && item.getKey() === this._options.emptyKey;
     }
 
     protected _openSelectorDialog(): void {
         const selectedItems = new List({
-            items: this.getSelectedItems()
+            items: this.getSelectedItems().filter((item: Model) => {
+                return !this._isEmptyItem(item);
+            })
         });
 
         this._options.selectorOpener.open(this.getSelectorDialogOptions(this._options, selectedItems));

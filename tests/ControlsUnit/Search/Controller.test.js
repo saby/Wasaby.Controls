@@ -307,7 +307,7 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
          assert.equal(controller._searchValue, '');
          assert.equal(controller._inputSearchValue, 'testInputValue');
          assert.deepEqual(filter, {test: 'test'});
-         assert.isTrue(stubNotify.withArgs('searchValueChanged', ['testInputValue']).calledOnce);
+         assert.isTrue(stubNotify.withArgs('searchValueChanged', ['']).calledOnce);
          assert.isTrue(stubNotify.withArgs('filterChanged', [filter]).calledOnce);
 
          controller._options.filter = { test: 'test' };
@@ -657,6 +657,15 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             it('new value', function() {
                searchController._beforeUpdate({searchValue: 'test2'}, {});
                assert.equal(value, 'test2');
+            });
+
+            it('empty searchValue', function() {
+               searchController._inputSearchValue = 'te';
+               searchController._options.minSearchLength = 3;
+               searchController._searchValue = '';
+
+               searchController._beforeUpdate({searchValue: ''}, {});
+               assert.equal(searchController._inputSearchValue, 'te');
             });
          });
          it('viewMode is changed', function() {

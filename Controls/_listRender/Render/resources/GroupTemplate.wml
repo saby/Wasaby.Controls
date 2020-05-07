@@ -1,9 +1,9 @@
-<div attr:class="controls-ListView__itemV{{debug()}} controls-ListView__itemV_cursor-pointer {{ item.isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-ListView__group' }}">
+<div attr:class="controls-ListView__itemV controls-ListView__itemV_cursor-pointer {{ item.isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-ListView__group' }}">
    <div attr:class="controls-ListView__groupContent {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}">
       <ws:if data="{{ separator !== false && separatorVisibility !== false && textAlign !== 'left' }}">
          <div attr:class="controls-ListView__groupSeparator-left_theme-{{theme}}">&nbsp;</div>
       </ws:if>
-      <div attr:class="controls-ListView__groupContent-text 
+      <div attr:class="controls-ListView__groupContent-text
          controls-ListView__groupContent-text_theme-{{theme}}
          {{ expanderVisible !== false ? ' controls-ListView__groupExpander controls-ListView__groupExpander_theme-' + theme +
          (expanderAlign === 'right' ? ' controls-ListView__groupExpander_right_theme-' + theme : ' controls-ListView__groupExpander_left_theme-' + theme) +
