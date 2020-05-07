@@ -22,7 +22,7 @@ interface IControllerItem {
 
 export interface IQueryParamsControllerOptions {
     controllerClass: Constructable;
-    controllerOptions: IPageQueryParamsControllerOptions | IPositionQueryParamsControllerOptions;
+    controllerOptions?: IPageQueryParamsControllerOptions | IPositionQueryParamsControllerOptions;
 }
 
 export default class QueryParamsController implements IQueryParamsController {
@@ -35,15 +35,15 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     getAllDataCount(root?: Key): boolean | number {
-        return this._getController(root).getAllDataCount();
+        return this.getController(root).getAllDataCount();
     }
 
     getLoadedDataCount(root?: Key): number {
-        return this._getController(root).getLoadedDataCount();
+        return this.getController(root).getLoadedDataCount();
     }
 
     hasMoreData(direction: 'up' | 'down', root?: Key): boolean | undefined {
-        return this._getController(root).hasMoreData(direction, root);
+        return this.getController(root).hasMoreData(direction, root);
     }
 
     prepareQueryParams(direction: 'up' | 'down', multiNavigation: boolean): IAdditionalQueryParams {
@@ -58,22 +58,22 @@ export default class QueryParamsController implements IQueryParamsController {
                 });
             });
         } else {
-            result = this._getController().prepareQueryParams(direction);
+            result = this.getController().prepareQueryParams(direction);
         }
 
         return result;
     }
 
     setConfig(config: INavigationSourceConfig, root?: Key): void {
-        this._getController(root).setConfig(config);
+        this.getController(root).setConfig(config);
     }
 
     setEdgeState(direction: 'up' | 'down', root?: Key): void {
-        this._getController(root).setEdgeState(direction);
+        this.getController(root).setEdgeState(direction);
     }
 
     setState(model: Collection<Record>, root?: Key): void {
-        this._getController(root).setState(model);
+        this.getController(root).setState(model);
     }
 
     updateQueryProperties(list?: RecordSet, direction?: Direction, root?: Key): void {
@@ -86,10 +86,10 @@ export default class QueryParamsController implements IQueryParamsController {
                 recordSetWithNavigation.setMetaData({
                     more: nav.get('nav_result')
                 });
-                this._getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction);
+                this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction);
             });
         } else {
-            this._getController(root).updateQueryProperties(list, direction);
+            this.getController(root).updateQueryProperties(list, direction);
         }
     }
 
@@ -100,7 +100,7 @@ export default class QueryParamsController implements IQueryParamsController {
         this._controllers = null;
     }
 
-    private _getController(root?: Key): IQueryParamsController {
+    getController(root?: Key): IQueryParamsController {
         let controllerItem = this._controllers.at(this._controllers.getIndexByValue('id', root));
 
         if (!controllerItem && !root) {
