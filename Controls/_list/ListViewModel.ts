@@ -505,21 +505,6 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             });
         }
         _private.updateIndexes(this, 0, this.getCount());
-/*        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
-            const curenMarkerIndex = this.getIndexByKey(this._markedKey);
-            const curentItem = _private.getItemByMarkedKey(this, this._markedKey);
-            if (this._markedKey && curenMarkerIndex === -1 && !curentItem) {
-                const prevValidItem = this.getPreviousItem(removedItemsIndex);
-                const nextValidItem = this.getNextItem(removedItemsIndex);
-                if (nextValidItem) {
-                    this.updateMarker(nextValidItem);
-                } else if (prevValidItem) {
-                    this.updateMarker(prevValidItem);
-                } else {
-                    this.updateMarker(null);
-                }
-            }
-        }*/
     },
     isValidItemForMarkedKey: function (item) {
         return !this._isGroup(item) && item.getId;

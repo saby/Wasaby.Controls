@@ -1163,7 +1163,7 @@ var _private = {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
-    onListChange: function(self, event, changesType, action, newItems, newItemsIndex, removedItems) {
+    onListChange: function(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
@@ -1179,6 +1179,10 @@ var _private = {
                 }
             }
 
+            if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
+               self._markerController.setMarkerNearlyCurrent();
+            }
+
             if (self._selectionController) {
                let result;
 
@@ -1190,8 +1194,7 @@ var _private = {
                      result = self._selectionController.handleAddItems(newItems);
                      break;
                }
-
-               self.handleSelectionControllerResult(result);
+                self.handleSelectionControllerResult(result);
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,

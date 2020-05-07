@@ -37,10 +37,7 @@ export class Controller {
    update(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-
-      if (this._markedKey !== options.markedKey) {
-         this.setMarkedKey(options.markedKey);
-      }
+      this.setMarkedKey(options.markedKey);
    }
 
    /**
@@ -48,9 +45,12 @@ export class Controller {
     * Если по переданному ключу не найден элемент, то маркер ставится на первый элемент списка
     * @param key ключ элемента, на который ставится маркер
     */
-   // TODO не забыть нотифай после вызова метода, что маркер изменился, хотя в старой модели нотифается, может и в новую нужно добавить нотифай,а после этого метода не надо
-   // TODO вызывать при изменении итемс, а при удалении элемента вызывать для ближайшего элемента
-   // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать
+   // TODO не забыть нотифай после вызова метода, что маркер изменился,
+   //  хотя в старой модели нотифается, может и в новую нужно добавить нотифай,а после этого метода не надо,
+   //  вроде в новой тоже нотифается, только из item-а
+
+   // TODO + вызывать при изменении итемс, а при удалении элемента вызывать для ближайшего элемента
+   // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать, хотя это не одно и тоже
    setMarkedKey(key: TKey): void {
       if (this._markedKey === key) {
          return;
@@ -97,6 +97,28 @@ export class Controller {
       // TODO написать совместимость моделей
       const prevKey = this._model.getPreviousItemKey(this._markedKey);
       this.setMarkedKey(prevKey);
+   }
+
+   /**
+    * Если элемента с текущим ключом маркера не существует,
+    * то маркер устанавливается на ближайший элемент.
+    *
+    * Ближайшим элементом в первую очередь выбирается следующий,
+    * при его отсутствии предыдущий, а иначе маркер сбрасывается.
+    */
+   setMarkerNearlyCurrent(): void {
+      const currentItem = this._model.getItemBySourceKey(this._markedKey);
+      if (this._markedKey && !currentItem) {
+         const nextKey = this._model.getNextItemKey(this._markedKey); // TODO добавить совместимость
+         const prevKey = this._model.getPreviousItemKey(this._markedKey); // TODO добавить совместимость
+         if (nextKey) {
+            this.setMarkedKey(nextKey);
+         } else if (prevKey) {
+            this.setMarkedKey(prevKey);
+         } else {
+            this.setMarkedKey(null);
+         }
+      }
    }
 
    private _setMarkerOnFirstItem(): TKey {
