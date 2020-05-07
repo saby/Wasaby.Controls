@@ -3,7 +3,8 @@
         <div for="indexOfDay, value in week"
              on:click="_dayClickHandler(value.date, mode, value.isCurrentMonth)"
              on:mouseenter="_mouseEnterHandler(value.date, mode, value.isCurrentMonth)"
-             attr:class="controls-MonthViewVDOM__item controls-MonthViewVDOM__item-old {{ monthViewModel._prepareClass(value, theme, fontColorStyle, backgroundStyle, sizeStyle) }} {{_themeCssClass}}"
+             attr:class="controls-MonthViewVDOM__item controls-MonthViewVDOM__item-old controls-MonthViewVDOM__item-old_theme-{{theme}}
+             {{ monthViewModel._prepareClass(value, theme, fontColorStyle, backgroundStyle, sizeStyle) }} {{_themeCssClass}}"
              data-date="{{value.id}}"
         >
             <ws:partial

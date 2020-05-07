@@ -3,6 +3,10 @@
    text-align: center;
 }
 
+.controls-MonthViewVDOM_theme-@{themeName} {
+   background: @monthview_background-color_monthSlider;
+}
+
 .controls-MonthViewVDOM-old {
    display: flex;
    flex-direction: column;
@@ -28,10 +32,13 @@
    text-align: center;
 }
 
-.controls-MonthViewVDOM__item-old {
+.controls-MonthViewVDOM__item-old_theme-@{themeName} {
    font-size: @monthview_item_font-size_monthSlider;
    margin-top: @monthview_item_border-thickness_monthSlider;
    margin-left: @monthview_item_border-thickness_monthSlider;
+}
+
+.controls-MonthViewVDOM__item-old {
    position: relative;
    min-width: 0;
    flex-grow: 1;
@@ -137,7 +144,6 @@
 
 .controls-MonthViewVDOM-old {
    width: @monthview_width_monthSlider;
-   background: @monthview_background-color_monthSlider;
 }
 
 .controls-MonthViewVDOM__tableRow-old {
