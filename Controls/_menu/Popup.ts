@@ -110,7 +110,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     private _setItemPadding(options) {
         if (options.itemPadding) {
             this._itemPadding = options.itemPadding;
-        } else if (options.closeButtonVisibility) {
+        } else if (options.closeButtonVisibility || options.showClose) {
             this._itemPadding = {
                 right: 'menu-close'
             };
