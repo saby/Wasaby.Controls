@@ -19,6 +19,7 @@
 
                              on:mouseleave="_mouseLeaveHandler()"
                              on:mousemove="_mouseMove()"
+                             on:separatorMouseEnter="_separatorMouseEnter()"
                              on:pinClick="_pinClick()">
       </Controls._menu.Render>
    </Controls.scroll:Container>
