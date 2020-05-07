@@ -1250,9 +1250,10 @@ const _private = {
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
         if (
-            changesType === 'collectionChanged' ||
+            (changesType === 'collectionChanged' ||
             changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
-            newModelChanged
+            newModelChanged) &&
+            self._itemActionsInitialized
         ) {
             self._itemsChanged = true;
             self._updateItemActions(self._options);
@@ -2586,7 +2587,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._listViewModel.getEditingConfig();
-        const firstAssignment = this._listViewModel.isActionsAssigned();
         const itemActionsChangeResult = this._itemActionsController.update({
             collection: this._listViewModel,
             itemActions: options.itemActions,

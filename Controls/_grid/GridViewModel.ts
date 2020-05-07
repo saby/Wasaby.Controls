@@ -1678,7 +1678,7 @@ var
 
         // New Model compatibility
         getEditingConfig(): IEditingConfig {
-            this._model.getEditingConfig();
+            return this._model.getEditingConfig();
         },
 
         // New Model compatibility

@@ -136,11 +136,32 @@ export interface ISwipeConfig {
     needIcon?: Function;
 }
 
-// При необходимости добавлять поля, сейчас описаны только те, которые
-// реально используются
+/**
+ * @typedef {Object} IEditingConfig
+ * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
+ * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже сущестсвующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+ * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+ * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
+ * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
+ * @property {AddPosition} [addPosition] Позиция редактирования по месту.
+ * @property {Types/entity:Record} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
+ */
+/*
+ * @typedef {Object} IEditingConfig
+ * @property {Boolean} [editOnClick=false] If true, click on list item starts editing in place.
+ * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
+ * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
+ * @property {Boolean} [toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
+ * @property {AddPosition} [addPosition] Editing in place position.
+ * @property {Types/entity:Record} [item=undefined] If present, editing of this item will begin on first render.
+ */
 export interface IEditingConfig {
     addPosition?: 'top'|'bottom';
     toolbarVisibility?: boolean;
+    editOnClick?: boolean;
+    autoAdd?: boolean;
+    sequentialEditing?: boolean;
+    item?: CollectionItem<any>;
 }
 
 interface IUserStrategy<S, T> {
