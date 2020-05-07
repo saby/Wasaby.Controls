@@ -69,6 +69,21 @@ define(
             });
          });
 
+         it('_loadItems check dataLoadCallback', function() {
+            let isDataLoadCallbackCalled = false;
+            let menuControl = getMenu();
+            let menuOptions = Clone(defaultOptions);
+            menuOptions.dataLoadCallback = () => {
+               isDataLoadCallbackCalled = true;
+            };
+            return new Promise((resolve) => {
+               menuControl.loadItems(menuOptions).addCallback(() => {
+                  assert.isTrue(isDataLoadCallbackCalled);
+                  resolve();
+               });
+            });
+         });
+
          describe('getCollection', function() {
             let menuControl = new menu.Control();
             let items = new collection.RecordSet({
