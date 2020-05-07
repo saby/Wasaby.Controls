@@ -1115,7 +1115,7 @@ define([
          });
       });
 
-      /*it('moveMarkerToNext && moveMarkerToPrevious', async function() {
+      it('moveMarkerToNext && moveMarkerToPrevious', async function() {
          var
             cfg = {
                viewModelConstructor: lists.ListViewModel,
@@ -1133,12 +1133,21 @@ define([
                markedKey: 2
             },
             baseControl = new lists.BaseControl(cfg),
-            originalScrollToItem = lists.BaseControl._private.scrollToItem;
-         lists.BaseControl._private.scrollToItem = function() {
+            moveMarkerToNextCalled = false,
+            moveMarkerToPrevCalled = false,
+            originalScrollToItem = lists.BaseControl._private.scrollToItem,
+            originalCreateMarkerController = lists.BaseControl._private.createMarkerController;
+         lists.BaseControl._private.scrollToItem = function() {};
+         lists.BaseControl._private.createMarkerController = function() {
+            return {
+               setMarkedKey(key) { baseControl._listViewModel.setMarkedKey(key) },
+               moveMarkerToNext() { moveMarkerToNextCalled = true; },
+               moveMarkerToPrev() { moveMarkerToPrevCalled = true; }
+            };
          };
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         assert.equal(2, baseControl._listViewModel.getMarkedKey());
+         assert.equal(baseControl._listViewModel.getMarkedKey(), null);
          baseControl._onViewKeyDown({
             target: {
                closest: function() {
@@ -1153,7 +1162,7 @@ define([
             preventDefault: function() {
             },
          });
-         assert.equal(3, baseControl._listViewModel.getMarkedKey());
+         assert.isTrue(moveMarkerToNextCalled);
          baseControl._onViewKeyDown({
             target: {
                closest: function() {
@@ -1168,11 +1177,13 @@ define([
             preventDefault: function() {
             },
          });
-         assert.equal(2, baseControl._listViewModel.getMarkedKey());
-         lists.BaseControl._private.scrollToItem = originalScrollToItem;
-      });*/
+         assert.isTrue(moveMarkerToPrevCalled);
 
-      /*it('moveMarker activates the control', async function() {
+         lists.BaseControl._private.scrollToItem = originalScrollToItem;
+         lists.BaseControl._private.createMarkerController = originalCreateMarkerController;
+      });
+
+      it('moveMarker activates the control', async function() {
          const
             cfg = {
                viewModelConstructor: lists.ListViewModel,
@@ -1190,9 +1201,16 @@ define([
                markedKey: 2
             },
             baseControl = new lists.BaseControl(cfg),
-            originalScrollToItem = lists.BaseControl._private.scrollToItem;
+            originalScrollToItem = lists.BaseControl._private.scrollToItem,
+            originalCreateMarkerController = lists.BaseControl._private.createMarkerController;
 
-         lists.BaseControl._private.scrollToItem = function() {
+         lists.BaseControl._private.scrollToItem = function() {};
+         lists.BaseControl._private.createMarkerController = function() {
+            return {
+               setMarkedKey(key) { baseControl._listViewModel.setMarkedKey(key) },
+               moveMarkerToNext() { moveMarkerToNextCalled = true; },
+               moveMarkerToPrev() { moveMarkerToPrevCalled = true; }
+            };
          };
 
          baseControl.saveOptions(cfg);
@@ -1221,8 +1239,10 @@ define([
          });
 
          assert.isTrue(isActivated, 'BaseControl should be activated when marker is moved');
+
          lists.BaseControl._private.scrollToItem = originalScrollToItem;
-      });*/
+         lists.BaseControl._private.createMarkerController = originalCreateMarkerController;
+      });
 
       /*it('moveMarkerToNext && moveMarkerToPrevious with markerVisibility = "hidden"', async function() {
          var
