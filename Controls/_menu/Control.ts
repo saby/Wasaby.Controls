@@ -259,6 +259,10 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
+    protected _separatorMouseEnter(event): void {
+        this._closeSubMenu();
+    }
+
     private _isNeedKeepMenuOpen(needCloseDropDown, nativeEvent): boolean {
         if (needCloseDropDown) {
             this.setSubMenuPosition();
