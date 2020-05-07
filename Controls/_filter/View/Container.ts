@@ -47,7 +47,13 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
 
     _itemsChanged(event: Event, items): void {
        event.stopPropagation();
-        this._notify('filterItemsChanged', [items], {bubbling: true});
+       if (this._options.useStore) {
+           import('Store').then((store) => {
+               store.dispatch('filterSource', items);
+           });
+       } else {
+           this._notify('filterItemsChanged', [items], {bubbling: true});
+       }
     },
 
    _filterChanged(event: Event): void {

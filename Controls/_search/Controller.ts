@@ -335,14 +335,35 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       Container.superclass.constructor.apply(this, arguments);
    },
 
+   _observeStore() {
+      import('Controls/Store').then((store) => {
+         this._store = store;
+         this._storeCallbackId = this._store.onPropertyChanged('searchValue', (searchValue) => {
+            const state = this._store.getState();
+            const needStartSearch = !_private.isSearchValueShort(this._options.minSearchLength, searchValue);
+            if (needStartSearch) {
+                _private.startSearch(this, searchValue);
+                if (searchValue !== this._inputSearchValue) {
+                    _private.setInputSearchValue(this, searchValue);
+                }
+            }
+         })
+      })
+   },
+
    _beforeMount: function (options, context) {
       this._dataOptions = context.dataOptions;
       this._previousViewMode = this._viewMode = options.viewMode;
+      let searchValue = options.searchValue;
+      if (this._options.useStore) {
+         this._observeStore();
+         searchValue = this._store.getState().searchValue;
+      }
 
-      if (options.searchValue) {
-         this._inputSearchValue = options.searchValue;
-         if (!_private.isSearchValueShort(options.minSearchLength, options.searchValue)) {
-            this._searchValue = options.searchValue;
+      if (searchValue) {
+         this._inputSearchValue = searchValue;
+         if (!_private.isSearchValueShort(options.minSearchLength, searchValue)) {
+            this._searchValue = searchValue;
 
             if (_private.needUpdateViewMode(this, 'search')) {
                _private.updateViewMode(this, 'search');
@@ -417,6 +438,10 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       this._dataOptions = null;
       this._itemOpenHandler = null;
       this._dataLoadCallback = null;
+      if (this._options.useStore) {
+         this._store.unsubscribe(this._storeCallbackId);
+         this._store = null;
+      }
    },
 
    _misspellCaptionClick: function () {
