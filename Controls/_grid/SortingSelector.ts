@@ -12,7 +12,6 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     private _currentParamName: string = null;
     private _currentOrder: 'ASC'|'DESC' = null;
     protected _source: Memory;
-    protected _closeMenu: boolean = false;
 
     protected _beforeMount(options: ISortingSelectorOptions): void {
         this.updateConfig(options.sortingParams, options.value);
@@ -22,15 +21,10 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         if (!isEqual(this._options.value, newOptions.value) ||
             !isEqual(this._options.sortingParams, newOptions.sortingParams)) {
             this.updateConfig(newOptions.sortingParams, newOptions.value);
-            this._closeMenu = true;
+            this._children.dropdown.closeMenu();
         }
     }
-    protected _afterUpdate() {
-        if (this._closeMenu) {
-            this._children.dropdown.closeMenu(); 
-            this._closeMenu = false;
-        }
-    }
+
     private updateConfig(sortingParams: [ISortingParam], value: [object]|undefined): void {
         const data = [];
 
@@ -68,7 +62,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         if (this._options.sortingParams[key].paramName === null) {
             this._resetValue();
             this._selectedKeys = [key];
-        } 
+        }
         return false;
     }
     private _setValue(param: string, order: string): void {
