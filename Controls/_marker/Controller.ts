@@ -56,7 +56,7 @@ export class Controller {
     */
    // TODO не забыть нотифай после вызова метода, что маркер изменился, хотя в старой модели нотифается, может и в новую нужно добавить нотифай,а после этого метода не надо
    // TODO вызывать при изменении итемс, а при удалении элемента вызывать для ближайшего элемента
-   // TODO вызывать после setRoot для TreeViewModel
+   // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать
    setMarkedKey(key: TKey): void {
       if (this._markedKey === key) {
          return;
@@ -86,9 +86,9 @@ export class Controller {
          return;
       }
 
-/*      const nextItem = this._model.getNext(this._getMarkedItem());
-      const nextKey = nextItem && nextItem.getId();*/
-      this.setMarkedKey(this._model.getNextItemKey(this._markedKey));
+      // TODO написать совместимость моделей
+      const nextKey = this._model.getNextItemKey(this._markedKey);
+      this.setMarkedKey(nextKey);
    }
 
    /**
@@ -99,8 +99,8 @@ export class Controller {
          return;
       }
 
-      const prevItem = this._model.getPrevious(this._getMarkedItem());
-      const prevKey = prevItem && prevItem.getId();
+      // TODO написать совместимость моделей
+      const prevKey = this._model.getPreviousItemKey(this._markedKey);
       this.setMarkedKey(prevKey);
    }
 

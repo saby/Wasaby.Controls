@@ -145,7 +145,7 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          assert.isTrue(searchViewModel._isGroup(itemGroupMock));
       });
 
-      it('isGroup', function() {
+      /*it('isGroup', function() {
          var cfg = {
             items: new Collection.RecordSet({
                rawData: [{
@@ -206,8 +206,7 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          model = new SearchViewModel(cfg);
          model.getItems().removeAt(4);
          assert.equal(6, model.getMarkedKey());
-
-      });
+      });*/
 
       it('setHoveredItem', function() {
          const model = new SearchViewModel({

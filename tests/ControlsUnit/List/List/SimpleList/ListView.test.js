@@ -427,7 +427,7 @@ define([
       });
 
       describe('_afterMount', function() {
-         it('should fire markedKeyChanged if _options.markerVisibility is \'visible\'', function() {
+         /*it('should fire markedKeyChanged if _options.markerVisibility is \'visible\'', function() {
             var model = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
@@ -449,9 +449,9 @@ define([
             lv._afterMount();
 
             assert.isTrue(stub.calledOnce);
-         });
+         });*/
 
-         it('should fire markedKeyChanged if _options.markedKey has been changed', function() {
+         /*it('should fire markedKeyChanged if _options.markedKey has been changed', function() {
             var model = new lists.ListViewModel({
                items: new collection.RecordSet({
                   rawData: data,
@@ -475,7 +475,7 @@ define([
             lv._afterMount();
 
             assert.isTrue(stub.calledOnce);
-         });
+         });*/
 
          it('should not fire markedKeyChanged if _options.markerVisibility is \'visible\', but markedKey is not undefined', function() {
             var model = new lists.ListViewModel({

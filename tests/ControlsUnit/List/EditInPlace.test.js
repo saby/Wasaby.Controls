@@ -1081,7 +1081,7 @@ define([
          });
 
          describe('afterEndEdit', function() {
-            it('add item', async function(done) {
+            /*it('add item', async function(done) {
                var source = new sourceLib.Memory({
                   keyProperty: 'id',
                   data: data
@@ -1113,7 +1113,7 @@ define([
                   }
                };
                await eip.commitEdit();
-            });
+            });*/
 
             it('edit item', function(done) {
                var source = new sourceLib.Memory({
