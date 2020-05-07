@@ -1281,6 +1281,7 @@ var _private = {
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
+            root: action && action.id,
             dropdownClassName: 'controls-itemActionsV__popup'
         };
         if (action) {
