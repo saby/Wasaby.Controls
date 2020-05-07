@@ -249,6 +249,7 @@ define([
             component._afterMount({});
             return Promise.all([0, 20, 10].map(function(offset, index) {
                const header = {
+                  container: {parentElement: 1},
                   id: index,
                   position: 'top',
                   mode: 'stackable',
@@ -450,6 +451,7 @@ define([
             component._afterMount({});
             return component._stickyRegisterHandler(event, data, true).then(function() {
                component._fixedHandler(event, {
+                  container: {parentElement: 1},
                   id: data.id,
                   fixedPosition: 'top',
                   prevPosition: '',

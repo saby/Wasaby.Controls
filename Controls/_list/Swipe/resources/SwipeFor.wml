@@ -11,7 +11,7 @@
        hasActionWithIcon="{{itemData.hasActionWithIcon()}}"
        on:click="_onItemActionsClick(action, itemData)"/>
     <ws:if data="{{actionIndex !== showedActions.length - 1}}">
-        <div class="controls-Swipe__separator
-        controls-Swipe__separator_{{actionAlignment}}"></div>
+        <div class="controls-Swipe__separator_theme-{{itemData.theme}}
+        controls-Swipe__separator_{{actionAlignment}}_theme-{{itemData.theme}}"></div>
     </ws:if>
 </ws:for>

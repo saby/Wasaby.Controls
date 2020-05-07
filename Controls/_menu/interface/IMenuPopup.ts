@@ -84,7 +84,7 @@ export default interface IMenuPopup {
 /**
  * @name Controls/_menu/interface/IMenuPopup#footerContentTemplate
  * @cfg {function} Контент, располагающийся в нижней части окна.
- * @demo Controls-demo/Menu/Popup/FooterContentTemplate/Index
+ * @demo Controls-demo/Menu/Popup/FooterContentTemplate/Scroll/Index
  * @example
  * WML:
  * <pre>
