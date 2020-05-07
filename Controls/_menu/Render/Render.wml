@@ -14,7 +14,9 @@
                   scope="{{_options}}"
                   item="{{null}}" />  <!-- https://online.sbis.ru/opendoc.html?guid=47950520-ef97-4302-8573-4b8495a3f0ee -->
       <ws:if data="{{_options.allowPin && _isHistorySeparatorVisible(itemTemplate.item)}}">
-         <div class="controls-Menu__group_separator_theme-{{_options.theme}}" attr:key="{{itemTemplate.item.getUid()}} + '_separator'"></div>
+         <div class="controls-Menu__group_separator-container_theme-{{_options.theme}}" attr:key="{{itemTemplate.item.getUid()}} + '_separator'" on:mouseenter="_proxyEvent('separatorMouseEnter')">
+            <div class="controls-Menu__group_separator_theme-{{_options.theme}}"></div>
+         </div>
       </ws:if>
    </ws:itemTemplate>
    <ws:multiSelectTpl>

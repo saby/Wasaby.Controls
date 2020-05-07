@@ -3,6 +3,7 @@ import { Model, relation } from 'Types/entity';
 import { TKeysSelection as TKeys, TSelectedKey as TKey} from 'Controls/interface';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import { RecordSet } from 'Types/collection';
+import { Controller as SourceController } from 'Controls/source';
 
 export interface ISelectionModel extends IBaseCollection<CollectionItem<Model>> {
    getHasMoreData(): boolean;
@@ -25,7 +26,7 @@ export interface ISelectionControllerOptions {
 export interface ITreeSelectionStrategyOptions {
    selectAncestors: boolean;
    selectDescendants: boolean;
-   nodesSourceControllers?: Object;
+   nodesSourceControllers?: Map<string, SourceController>;
    hierarchyRelation: relation.Hierarchy;
    rootId: TKey;
    items: RecordSet;

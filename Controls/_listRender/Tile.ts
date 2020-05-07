@@ -46,6 +46,7 @@ export default class TileRender extends BaseRender {
         super._beforeUpdate(newOptions);
         if (newOptions.listModel !== this._options.listModel) {
             this._animatedItem = null;
+            this._debouncedSetHoveredItem(null);
         }
         this._shouldPerformAnimation =
             this._animatedItem && !this._animatedItem.destroyed && this._animatedItem.isFixed();
