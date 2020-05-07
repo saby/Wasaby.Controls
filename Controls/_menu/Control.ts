@@ -155,7 +155,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             item.getContents().getKey(),
             action,
             clickEvent,
-            false
+            false,
+            this._options.theme
         );
     }
 
@@ -642,7 +643,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
         ItemActionsController.assignActions(
             this._listModel,
-            actionsGetter
+            actionsGetter,
+            options.theme
         );
     }
 
