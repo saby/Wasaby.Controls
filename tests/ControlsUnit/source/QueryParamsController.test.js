@@ -153,31 +153,6 @@ define(
                });
 
                assert.isFalse(!!pNav.hasMoreData('down'));
-
-               //first query with direction: after
-               dataRs.setMetaData({more: true});
-               pNav.updateQueryProperties(dataRs, null);
-
-               let moreDataRs = new collection.RecordSet({
-                  keyProperty: 'id',
-                  rawData: [
-                     {
-                        id: 1,
-                        nav_result: true
-                     },
-                     {
-                        id: 2,
-                        nav_result: false
-                     },
-                     {
-                        id: 3,
-                        nav_result: true
-                     }
-                  ]
-               });
-               dataRs.setMetaData({more: moreDataRs});
-               pNav.updateQueryProperties(dataRs, null);
-               assert.isTrue(pNav.hasMoreData('down'), 'Method hasMoreData returns incorrect value after reload');
             });
 
             it('should calculate hasMoreData() with load to direction query', function () {
