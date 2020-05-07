@@ -112,6 +112,7 @@ export default class extends Control {
 
     protected _resetSource(): void {
         this._source = getSource();
+        this._lostConnection = false;
     }
 
     protected _afterItemsRemove(event: unknown, idArray: string[]): boolean {

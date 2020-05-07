@@ -636,9 +636,14 @@ var _private = {
                     }
                 });
 
+                // Скрываем ошибку после успешной загрузки данных
+                _private.hideError(self);
+
                 return addedItems;
             }).addErrback((error: Error) => {
                 _private.hideIndicator(self);
+                // скроллим в край списка, чтобы при ошибке загрузке данных шаблон ошибки сразу был виден
+                _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
                 return _private.crudErrback(self, {
                     error,
                     dataLoadErrback: userErrback,
@@ -647,17 +652,21 @@ var _private = {
                         /**
                          * Действие при нажатии на кнопку повтора в шаблоне ошибки.
                          * Вернет промис с коллбэком, скрывающим ошибку.
-                         * Контрол ошибки выполнит этот коллбэк для того,
+                         * Контрол ошибки сам выполнит этот коллбэк для того,
                          * чтобы подгрузка данных произошла без скачка положения скролла
                          * из-за исчезновения шаблона ошибки.
                          */
                         action: () => {
                             const afterActionCallback = () => _private.hideError(self);
+                            const errorConfig = self.__error;
                             return _private.loadToDirection(
                                 self, direction,
                                 userCallback, userErrback,
                                 receivedFilter
-                            ).then(() => Promise.resolve(afterActionCallback));
+                            ).then(() => {
+                                _private.showError(self, errorConfig);
+                                return Promise.resolve(afterActionCallback);
+                            }, () => null);
                         },
                         /**
                          * Позиция шаблона ошибки относительно списка.
@@ -666,11 +675,6 @@ var _private = {
                         showInDirection: direction
                     }
                 }) as Deferred<Error>;
-            })
-            .catch((error: Error) => {
-                // скроллим в край списка, чтобы при ошибке загрузке данных шаблон ошибки сразу был виден
-                _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
-                return Promise.reject(error);
             });
         }
         Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
@@ -796,11 +800,7 @@ var _private = {
                self._options.dataLoadCallback,
                self._options.dataLoadErrback,
                filter
-            ).then(() => {
-                if (self.__error) {
-                    _private.hideError(self);
-                }
-            });
+            );
         }
     },
 
@@ -1596,13 +1596,11 @@ var _private = {
      */
     showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
         self.__error = errorConfig;
-        self._forceUpdate();
     },
 
     hideError(self: BaseControl): void {
         if (self.__error) {
             self.__error = null;
-            self._forceUpdate();
         }
     },
 
