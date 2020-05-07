@@ -2181,7 +2181,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._actionsAssigned = assigned;
     }
 
-    areActionsAssigned(): boolean {
+    isActionsAssigned(): boolean {
         return this._actionsAssigned;
     }
 

@@ -129,7 +129,7 @@ export interface IItemActionsItem {
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
     destroyed: boolean;
     setEventRaising?(raising: boolean, analyze?: boolean): void;
-    areActionsAssigned(): boolean;
+    isActionsAssigned(): boolean;
     setActionsAssigned(assigned: boolean): void;
     setActionsTemplateConfig(config: IItemActionsTemplateConfig): void;
     getActionsTemplateConfig(): IItemActionsTemplateConfig;

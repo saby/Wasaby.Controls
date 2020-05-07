@@ -19,18 +19,16 @@ import {
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 import cClone = require('Core/core-clone');
 import collection = require('Types/collection');
-import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
-import {Model} from 'Types/entity';
+import { Model } from 'Types/entity';
+import { IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
-import { Model } from 'Types/entity';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
-
 
 interface IGridSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
@@ -1669,64 +1667,58 @@ var
         },
 
         // New Model compatibility
-        areActionsAssigned(): boolean {
-            return this._actionsAssigned === true;
+        isActionsAssigned(): boolean {
+            return this._model.isActionsAssigned();
         },
 
         // New Model compatibility
         setActionsAssigned(assigned: boolean): void {
-            this._actionsAssigned = assigned;
+            this._model.setActionsAssigned(assigned);
         },
 
         // New Model compatibility
         getEditingConfig(): IEditingConfig {
-            return this._options.editingConfig;
+            this._model.getEditingConfig();
         },
 
         // New Model compatibility
         getActionsTemplateConfig(): IItemActionsTemplateConfig {
-            return this._actionsTemplateConfig;
+            return this._model.getActionsTemplateConfig();
         },
 
         // New Model compatibility
         setActionsTemplateConfig(config: IItemActionsTemplateConfig): void {
-            if (!isEqual(this._actionsTemplateConfig, config)) {
-                this._actionsTemplateConfig = config;
-                this._nextVersion();
-            }
+            this._model.setActionsTemplateConfig(config);
         },
 
         // New Model compatibility
         getActionsMenuConfig(): any {
-            return this._actionsMenuConfig;
+            return this._model.getActionsMenuConfig();
         },
 
         // New Model compatibility
         setActionsMenuConfig(config: any): void {
-            this._actionsMenuConfig = config;
-        },
-
-        // New Model compatibility
-        setSwipeConfig(config: ISwipeConfig): void {
-            if (!isEqual(this._swipeConfig, config)) {
-                this._swipeConfig = config;
-                this._nextVersion();
-            }
+            this._model.setActionsMenuConfig(config);
         },
 
         // New Model compatibility
         getSwipeConfig(): ISwipeConfig {
-            return this._swipeConfig;
+            return this._model.getSwipeConfig();
         },
 
         // New Model compatibility
-        setSwipeAnimation(animation: ANIMATION_STATE): void {
-            this._getActionsSwipeAnimation = animation;
+        setSwipeConfig(config: ISwipeConfig): void {
+            this._model.setSwipeConfig(config);
         },
 
         // New Model compatibility
         getSwipeAnimation(): ANIMATION_STATE {
-            return this._getActionsSwipeAnimation;
+            return this._model.getSwipeAnimation();
+        },
+
+        // New Model compatibility
+        setSwipeAnimation(animation: ANIMATION_STATE): void {
+            this._model.setSwipeAnimation(animation);
         },
 
         // New Model compatibility

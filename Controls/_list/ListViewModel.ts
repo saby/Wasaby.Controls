@@ -186,8 +186,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _dragEntity: null,
     _draggingItemData: null,
     _dragTargetPosition: null,
-    _actions: null,
-    _actionsVersions: null,
     _selectedKeys: null,
     _markedKey: null,
     _hoveredItem: null,
@@ -195,18 +193,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _singleItemReloadCount: 0,
     _editingItemData: null,
 
-    // New model compatibility
-    _actionsAssigned: false,
-    _actionsTemplateConfig: null,
-    _swipeConfig: null,
-    _actionsMenuConfig: null,
-    _getActionsSwipeAnimation: null,
-    // New model compatibility end
-
     constructor(cfg): void {
         const self = this;
-        this._actions = {};
-        this._actionsVersions = {};
         ListViewModel.superclass.constructor.apply(this, arguments);
 
         if (this._items && cfg.markerVisibility !== 'hidden') {
@@ -373,12 +361,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._swipeItem && this._swipeItem.key === key) {
             version = 'SWIPE_' + version;
         }
-
-        // TODO REMOVE OR IMPLEMENT (Not implemented in new lists)
-        // if (this._actionsVersions.hasOwnProperty(key)) {
-        //     version = 'ITEM_ACTION_' + this._actionsVersions[key] + version;
-        // }
-
         return version;
     },
 
@@ -744,17 +726,18 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     // New Model compatibility
     nextVersion(): void {
         this._nextVersion();
-        // this.nextModelVersion(false, 'itemActionsUpdated');
     },
 
     // New Model compatibility
-    areActionsAssigned(): boolean {
-        return this._actionsAssigned === true;
+    isActionsAssigned(): boolean {
+        return this._display ? this._display.isActionsAssigned() : false;
     },
 
     // New Model compatibility
     setActionsAssigned(assigned: boolean): void {
-        this._actionsAssigned = assigned;
+        if (this._display) {
+            this._display.setActionsAssigned(assigned)
+        }
     },
 
     // Old method
@@ -772,48 +755,50 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     // New Model compatibility
     getActionsTemplateConfig(): IItemActionsTemplateConfig {
-        return this._actionsTemplateConfig;
+        return this._display ? this._display.getActionsTemplateConfig() : {};
     },
 
     // New Model compatibility
     setActionsTemplateConfig(config: IItemActionsTemplateConfig): void {
-        if (!isEqual(this._actionsTemplateConfig, config)) {
-            this._actionsTemplateConfig = config;
-            this._nextVersion();
+        if (this._display) {
+            this._display.setActionsTemplateConfig(config);
         }
     },
 
     // New Model compatibility
     getActionsMenuConfig(): any {
-        return this._actionsMenuConfig;
+        return this._display ? this._display.getActionsMenuConfig() : {};
     },
 
     // New Model compatibility
     setActionsMenuConfig(config: any): void {
-        this._actionsMenuConfig = config;
-    },
-
-    // New Model compatibility
-    setSwipeConfig(config: ISwipeConfig): void {
-        if (!isEqual(this._swipeConfig, config)) {
-            this._swipeConfig = config;
-            this._nextVersion();
+        if (this._display) {
+            this._display.setActionsMenuConfig(config);
         }
     },
 
     // New Model compatibility
     getSwipeConfig(): ISwipeConfig {
-        return this._swipeConfig;
+        return this._display ? this._display.getSwipeConfig() : {};
+    },
+
+    // New Model compatibility
+    setSwipeConfig(config: ISwipeConfig): void {
+        if (this._display) {
+            this._display.setSwipeConfig(config);
+        }
     },
 
     // New Model compatibility
     setSwipeAnimation(animation: ANIMATION_STATE): void {
-        this._getActionsSwipeAnimation = animation;
+        if (this._display) {
+            this._display.setSwipeAnimation(animation);
+        }
     },
 
     // New Model compatibility
     getSwipeAnimation(): ANIMATION_STATE {
-        return this._getActionsSwipeAnimation;
+        return this._display ? this._display.getSwipeAnimation() : {};
     },
 
     updateSelection: function(selectedKeys) {

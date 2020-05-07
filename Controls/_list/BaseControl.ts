@@ -2586,7 +2586,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._listViewModel.getEditingConfig();
-        this._itemActionsController.update({
+        const firstAssignment = this._listViewModel.isActionsAssigned();
+        const itemActionsChangeResult = this._itemActionsController.update({
             collection: this._listViewModel,
             itemActions: options.itemActions,
             itemActionsProperty: options.itemActionsProperty,
@@ -2599,6 +2600,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisibility: editingConfig?.toolbarVisibility
         });
+        if (itemActionsChangeResult.length > 0) {
+            itemActionsChangeResult.forEach((recordKey: number | string) => {
+                this._listViewModel.resetCachedItemData(recordKey);
+            });
+            this._listViewModel.nextModelVersion(firstAssignment, 'itemActionsUpdated');
+        }
     },
 
     _onAfterEndEdit(event: SyntheticEvent, item: Model, isAdd: boolean) {

@@ -68,8 +68,16 @@ export class Controller {
     private _itemActionsProperty: string;
     private _visibilityCallback: TItemActionVisibilityCallback;
 
-    update(options: IItemActionsControllerOptions): void {
-        if (options.itemActions === undefined ||
+    /**
+     * Метод инициализации и обновления параметров.
+     * Для старой модели listViewModel возвращает массив id изменённых значений
+     * TODO Когда мы перестанем использовать старую listViewModel,
+     *  необходимо будет вычистить return методов update() и _assignActions(). Эти методы будут void
+     * @param options
+     */
+    update(options: IItemActionsControllerOptions): Array<number | string> {
+        let result: Array<number | string> = [];
+        if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
             this._visibilityCallback !== options.visibilityCallback
@@ -81,9 +89,9 @@ export class Controller {
             // this._collection.setActionsAssigned(false);
         }
         // Возможно, стоит проверять версию модели, если она меняется при раскрытии веток дерева
-        // !this._collection.areActionsAssigned() &&
+        // !this._collection.isActionsAssigned() &&
         if (this._commonItemActions || this._itemActionsProperty) {
-            this._assignActions();
+            result = this._assignActions();
         }
         this._calculateActionsTemplateConfig({
             itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
@@ -94,6 +102,7 @@ export class Controller {
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
             itemActionsClass: options.itemActionsClass
         });
+        return result;
     }
 
     /**
@@ -204,10 +213,15 @@ export class Controller {
 
     /**
      * Вычисляет операции над записью для каждого элемента коллекции
+     * Для старой модели listViewModel возвращает массив id изменённых значений
+     * TODO Когда мы перестанем использовать старую listViewModel,
+     *  необходимо будет вычистить return методов update() и _assignActions(). Эти методы будут void
+     * @private
      */
-    private _assignActions(): void {
+    private _assignActions(): Array<number | string> {
         const supportsEventRaising = typeof this._collection.setEventRaising === 'function';
         let hasChanges = false;
+        const changedItemsIds: Array<number | string> = [];
 
         if (supportsEventRaising) {
             this._collection.setEventRaising(false, true);
@@ -218,6 +232,9 @@ export class Controller {
                 const actionsForItem = this._collectActionsForItem(item);
                 const itemChanged = Controller._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
                 hasChanges = hasChanges || itemChanged;
+                if (itemChanged) {
+                    item.getContents().getKey();
+                }
             }
         });
 
@@ -230,6 +247,8 @@ export class Controller {
         if (hasChanges) {
             this._collection.nextVersion();
         }
+
+        return changedItemsIds;
     }
 
     /**
@@ -413,7 +432,7 @@ export class Controller {
     ): boolean {
         const oldActions = item.getActions();
         if (!oldActions || (actions && !Controller._isMatchingActions(oldActions, actions))) {
-            item.setActions(actions, true);
+            item.setActions(actions, false);
             return true;
         }
         return false;
