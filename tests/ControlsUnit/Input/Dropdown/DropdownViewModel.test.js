@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/_dropdownPopup/DropdownViewModel',
+      'Controls/_filterPopup/SimplePanel/DropdownViewModel',
       'Types/collection',
       'Controls/Constants',
       'Types/entity',
