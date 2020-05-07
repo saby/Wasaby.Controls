@@ -4177,6 +4177,10 @@ define([
                }
             };
 
+            sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => {
+               return {};
+            });
+
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._menuIsShown = true;

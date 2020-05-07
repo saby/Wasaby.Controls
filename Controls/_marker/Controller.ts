@@ -7,9 +7,9 @@ enum Visibility { Visible = 'visible', Hidden = 'hidden', OnActivated = 'onactiv
 
 interface IMarkerModel extends IBaseCollection<CollectionItem<Model>> {
    setMarkedKey(key: TKey, status: boolean): void;
-   getNext(item: Model): CollectionItem<Model>;
-   getPrevious(item: Model): CollectionItem<Model>;
    getFirstItem(): Model;
+   getPreviousItemKey(key: TKey): TKey;
+   getNextItemKey(key: TKey): TKey;
 }
 
 interface IOptions {
@@ -113,9 +113,5 @@ export class Controller {
       }
 
       return null;
-   }
-
-   private _getMarkedItem(): Model {
-      return this._model.getItemBySourceKey(this._markedKey).getContents();
    }
 }

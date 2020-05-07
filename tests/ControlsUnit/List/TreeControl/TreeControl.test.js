@@ -20,6 +20,9 @@ define([
    SettingsController
 ) {
    function correctCreateTreeControl(cfg) {
+      sandbox.replace(treeGrid.TreeControl._private, 'createMarkerController', () => {
+         return {};
+      });
       var
          treeControl,
          baseControl,
