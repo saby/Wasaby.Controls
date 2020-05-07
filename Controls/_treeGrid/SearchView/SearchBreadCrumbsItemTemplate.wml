@@ -10,6 +10,7 @@
                         items="{{colspanTemplate.itemData.item}}"
                         backgroundStyle="listItem"
                         attr:class="controls-Grid__breadCrumbs"
+                        breadCrumbsItemClickCallback="{{ itemData.breadcrumbsItemClickCallback }}"
                         keyProperty="{{itemData.keyProperty}}"
                         displayProperty="{{itemData.displayProperty}}">
                 <ws:itemTemplate>
