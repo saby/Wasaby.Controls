@@ -8,6 +8,6 @@
         <div attr:class="{{action.icon}} controls-itemActionsV__action_icon_size_{{size}}_theme-{{theme}} {{hasTitle ? ' controls-itemActionsV__icon-with-title_theme-' + theme}}"></div>
     </ws:if>
     <ws:if data="{{hasTitle}}">
-        <span class="controls-itemActionsV__action_title_theme-{{theme}}">{{action.title}}</span>
+        <span class="controls-itemActionsV__action_title controls-itemActionsV__action_title_theme-{{theme}}">{{action.title}}</span>
     </ws:if>
 </div>
