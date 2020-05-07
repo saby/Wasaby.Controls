@@ -620,21 +620,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _onBeginCollectionChange: function(action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
-        var
-           self = this;
-        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
-            // TODO KINGO. При удалении элементов очищаем закешированные для них операции над записью. Тем самым:
-            // а) избавляемся от утечек (не храним в памяти лишние ссылки);
-            // б) при создании записи с таким же ID мы сгенерим для неё новые операции над записью, а не переиспользуем старые.
-            // https://online.sbis.ru/opendoc.html?guid=905c3018-384a-4587-845c-aca5dc51944b
-            removedItems.forEach(function(removedItem) {
-                var
-                   removedItemContents = removedItem.getContents();
-                if (removedItemContents.get) {
-                    delete self._actions[removedItemContents.get(self._options.keyProperty)];
-                }
-            });
-        }
         _private.updateIndexes(this, 0, this.getCount());
         if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
             const curenMarkerIndex = this.getIndexByKey(this._markedKey);
