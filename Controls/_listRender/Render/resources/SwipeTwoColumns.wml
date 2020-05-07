@@ -1,5 +1,5 @@
 <ws:for data="columnIndex, column in showedActions">
-   <div attr:class="controls-Swipe__action_columns">
+   <div attr:class="controls-Swipe__action_columns_theme-{{theme}}">
       <ws:for data="actionIndex, action in column">
          <ws:partial
             template="Controls/list:_swipeActionTemplate"
@@ -14,11 +14,11 @@
             on:click="_onItemActionsClick(action, item)" />
 
          <ws:if data="{{ actionIndex === 0 }}">
-            <div attr:class="controls-Swipe__separator controls-Swipe__separator_columns_{{ columnIndex === 0 ? 'first' : 'second' }}"></div>
+            <div attr:class="controls-Swipe__separator_theme-{{theme}} controls-Swipe__separator_columns_{{ columnIndex === 0 ? 'first' : 'second' }}_theme-{{theme}}"></div>
          </ws:if>
       </ws:for>
    </div>
    <ws:if data="{{ columnIndex === 0 }}">
-      <div attr:class="controls-Swipe__separator controls-Swipe__separator_horizontal"></div>
+      <div attr:class="controls-Swipe__separator_theme-{{theme}} controls-Swipe__separator_horizontal"></div>
    </ws:if>
 </ws:for>

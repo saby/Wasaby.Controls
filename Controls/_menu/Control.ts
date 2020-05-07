@@ -155,7 +155,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             item.getContents().getKey(),
             action,
             clickEvent,
-            false
+            false,
+            this._options.theme
         );
     }
 
@@ -257,6 +258,10 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         if (!this._isNeedKeepMenuOpen(this.subMenu, event.nativeEvent) && this._subDropdownItem) {
             this._closeSubMenu();
         }
+    }
+
+    protected _separatorMouseEnter(event): void {
+        this._closeSubMenu();
     }
 
     private _isNeedKeepMenuOpen(needCloseDropDown, nativeEvent): boolean {
@@ -638,7 +643,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
         ItemActionsController.assignActions(
             this._listModel,
-            actionsGetter
+            actionsGetter,
+            options.theme
         );
     }
 

@@ -24,13 +24,14 @@ var _private = {
  * <a href="/materials/Controls-demo/app/Controls-demo%2FCombobox%2FComboboxVDom">Демо-пример</a>.
  * @class Controls/_dropdown/ComboBox
  * @extends Core/Control
- * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_interface/ISingleSelectable
- * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/IInputPlaceholder
- * @mixes Controls/interface/IDropdown
+ * @implements Controls/_interface/ISource
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/_interface/IFilter
+ * @implements Controls/_interface/ISingleSelectable
+ * @implements Controls/interface/IDropdownEmptyText
+ * @implements Controls/interface/IInputPlaceholder
+ * @implements Controls/interface/IDropdown
+ * @implements Controls/_interface/INavigation
  * @control
  * @public
  * @category Input
@@ -44,13 +45,13 @@ var _private = {
  * <a href="/materials/Controls-demo/app/Controls-demo%2FCombobox%2FComboboxVDom">Demo-example</a>.
  * @class Controls/_dropdown/ComboBox
  * @extends Core/Control
- * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_interface/ISingleSelectable
- * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/_input/interface/IBase
- * @mixes Controls/interface/IDropdown
+ * @implements Controls/_interface/ISource
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/_interface/IFilter
+ * @implements Controls/_interface/ISingleSelectable
+ * @implements Controls/interface/IDropdownEmptyText
+ * @implements Controls/_input/interface/IBase
+ * @implements Controls/interface/IDropdown
  * @control
  * @public
  * @category Input

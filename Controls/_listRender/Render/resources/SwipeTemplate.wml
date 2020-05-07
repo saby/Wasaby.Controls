@@ -1,9 +1,9 @@
 <ws:if data="{{ swipeConfig }}">
    <div attr:class="controls-itemActionsV_swipe_animationContainer">
       <div
-         attr:class="controls-Swipe controls-Swipe_{{ animationState }}"
+         attr:class="controls-Swipe_theme-{{theme}} controls-Swipe_{{ animationState }}_theme-{{theme}}"
          on:animationend="_onAnimationEnd()">
-         <div attr:class="controls-Swipe_{{ swipeConfig.twoColumns ? 'columns' : actionAlignment }}">
+         <div attr:class="controls-Swipe_{{ swipeConfig.twoColumns ? 'columns' : actionAlignment }}_theme-{{theme}}">
                <ws:if data="{{ swipeConfig.twoColumns }}">
                   <ws:partial
                      template="wml!Controls/_listRender/Render/resources/SwipeTwoColumns"

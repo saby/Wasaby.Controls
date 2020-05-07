@@ -118,7 +118,9 @@ describe('Controls/_display/controllers/ItemActions', () => {
                     }
                 },
                 null,
-                false
+                false,
+                undefined,
+                'default'
             );
 
             assert.isTrue(actionsItem.isActive());

@@ -44,7 +44,7 @@
   pointer-events: auto;
 }
 
-.controls-Swipe {
+.controls-Swipe_theme-@{themeName} {
   align-items: center;
   display: inline-flex;
   height: 100%;
@@ -80,136 +80,136 @@
   animation-fill-mode: forwards;
 }
 
-.controls-Swipe__action_padding_size_s {
+.controls-Swipe__action_padding_size_s_theme-@{themeName} {
   padding-top: @item_s_vertical_padding-vertical_swipe;
   padding-bottom: @item_s_vertical_padding-vertical_swipe;
 }
 
-.controls-Swipe__action_padding_size_m {
+.controls-Swipe__action_padding_size_m_theme-@{themeName} {
   padding-top: @item_horizontal_padding-vertical_swipe;
   padding-bottom: @item_horizontal_padding-vertical_swipe;
 }
 
-.controls-Swipe__action_padding_size_l {
+.controls-Swipe__action_padding_size_l_theme-@{themeName} {
   padding-top: @item_l_vertical_padding-vertical_swipe;
   padding-bottom: @item_l_vertical_padding-vertical_swipe;
 }
 
-.controls-Swipe__action_icon_size_m {
+.controls-Swipe__action_icon_size_m_theme-@{themeName} {
   .icon(@item_s_icon-size_swipe, @item_s_icon_font-family_swipe);
 }
 
-.controls-Swipe__action_icon_size_l {
+.controls-Swipe__action_icon_size_l_theme-@{themeName} {
   .icon(@item_l_icon-size_swipe, @item_l_icon_font-family_swipe);
 }
 
-.controls-Swipe__action_title {
+.controls-Swipe__action_title_theme-@{themeName} {
   color: @item_text-color_swipe;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.controls-Swipe__action_title_position_right {
+.controls-Swipe__action_title_position_right_theme-@{themeName} {
   padding-left: @item_icon_offset-horizontal_swipe;
   max-width: @item_horizontal_text_max-width_swipe;
 }
 
-.controls-Swipe__action_title_position_bottom {
+.controls-Swipe__action_title_position_bottom_theme-@{themeName} {
   max-width: @item_vertical_text_max-width_swipe;
 }
 
-.controls-Swipe__action_title_size_m {
+.controls-Swipe__action_title_size_m_theme-@{themeName} {
   font-size: @item_s_font-size_swipe;
 }
 
-.controls-Swipe__action_title_size_l {
+.controls-Swipe__action_title_size_l_theme-@{themeName} {
   font-size: @item_l_font-size_swipe;
 }
 
-.controls-Swipe__separator {
+.controls-Swipe__separator_theme-@{themeName} {
   background: @separator_color_swipe;
   flex-shrink: 0;
   display: block;
 }
 
-.controls-Swipe__separator_horizontal {
+.controls-Swipe__separator_horizontal_theme-@{themeName} {
   width: @separator_thickness_swipe;
   height: calc(100% ~'-' 2 * @separator_edge_padding-vertical_swipe);
   margin-bottom: @separator_edge_padding-vertical_swipe;
   margin-top: @separator_edge_padding-vertical_swipe;
 }
 
-.controls-Swipe__separator_vertical {
+.controls-Swipe__separator_vertical_theme-@{themeName} {
   width: auto;
   height: @separator_thickness_swipe;
   margin-left: @separator_edge_padding-horizontal_swipe + @shadow-blur_swipe;
   margin-right: @separator_edge_padding-horizontal_swipe;
 }
 
-.controls-Swipe__separator_columns_first {
+.controls-Swipe__separator_columns_first_theme-@{themeName} {
   width: auto;
   height: @separator_thickness_swipe;
   margin-right: @separator_padding-horizontal_swipe;
 }
 
-.controls-Swipe__separator_columns_second {
+.controls-Swipe__separator_columns_second_theme-@{themeName} {
   width: auto;
   height: @separator_thickness_swipe;
   margin-left: @separator_padding-horizontal_swipe;
 }
 
-.controls-Swipe_horizontal,
-.controls-Swipe_vertical,
-.controls-Swipe_columns {
+.controls-Swipe_horizontal_theme-@{themeName},
+.controls-Swipe_vertical_theme-@{themeName},
+.controls-Swipe_columns_theme-@{themeName} {
   display: inline-flex;
   height: 100%;
 }
 
-.controls-Swipe_horizontal,
-.controls-Swipe_columns {
+.controls-Swipe_horizontal_theme-@{themeName},
+.controls-Swipe_columns_theme-@{themeName} {
   padding-left:  @item_edge_padding-horizontal_swipe + @shadow-blur_swipe - @item_vertical_padding-horizontal_swipe;
   padding-right: @item_edge_padding-horizontal_swipe - @item_vertical_padding-horizontal_swipe;
 }
 
-.controls-Swipe_horizontal {
+.controls-Swipe_horizontal_theme-@{themeName} {
   align-items: center;
 }
 
-.controls-Swipe__action_columns {
+.controls-Swipe__action_columns_theme-@{themeName} {
   display: flex;
 }
 
-.controls-Swipe_vertical,
-.controls-Swipe__action_columns {
+.controls-Swipe_vertical_theme-@{themeName},
+.controls-Swipe__action_columns_theme-@{themeName} {
   flex-direction: column;
   justify-content: space-evenly;
 }
 
-.controls-Swipe__action_horizontal {
+.controls-Swipe__action_horizontal_theme-@{themeName} {
   padding-left: @item_vertical_padding-horizontal_swipe;
   padding-right: @item_vertical_padding-horizontal_swipe;
 }
-.controls-Swipe__action_vertical {
+.controls-Swipe__action_vertical_theme-@{themeName} {
   /*
    * Gradient takes some of the container's width on the left side, so we should compensate for it with larger padding.
    */
   padding-left:  @item_edge_padding-horizontal_swipe + @shadow-blur_swipe;
   padding-right: @item_edge_padding-horizontal_swipe;
 }
-.controls-Swipe__action_iconStyle_secondary {
+.controls-Swipe__action_iconStyle_secondary_theme-@{themeName} {
   color: @secondary_icon-color_swipe;
 }
 
-.controls-Swipe__action_iconStyle_danger {
+.controls-Swipe__action_iconStyle_danger_theme-@{themeName} {
   color: @danger_color;
 }
 
-.controls-Swipe__action_iconStyle_success {
+.controls-Swipe__action_iconStyle_success_theme-@{themeName} {
   color: @success_color;
 }
 
-.controls-Swipe__action_iconStyle_warning {
+.controls-Swipe__action_iconStyle_warning_theme-@{themeName} {
   color: @warning_color;
 }
 
