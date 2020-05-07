@@ -1619,7 +1619,9 @@ var _private = {
     },
 
     notifyNavigationParamsChanged(actualParams) {
-        this._notify('navigationParamsChanged', [actualParams]);
+        if (this._isMounted) {
+            this._notify('navigationParamsChanged', [actualParams]);
+        }
     },
 
     isPagingNavigation: function(navigation) {
