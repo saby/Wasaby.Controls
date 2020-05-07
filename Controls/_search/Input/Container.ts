@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Input/Container');
 import {constants} from 'Env/Env';
-import {default as Store} from 'OnlinePage/Store';
+import {default as Store} from 'Controls/Store';
 
 /**
  * Контрол используют в качестве контейнера для {@link Controls/search:Input}. Он обеспечивает передачу текстового значения, введённого в Controls/search:Input, в {@link Controls/search:Controller}.

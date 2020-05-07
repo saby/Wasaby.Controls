@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IExpandableOptions, IExpandable} from 'Controls/interface';
 import ButtonTemplate = require('wml!Controls/_operations/Button/Button');
-import {default as Store} from 'OnlinePage/Store';
+import {default as Store} from 'Controls/Store';
 export interface IOperationsButtonOptions extends IControlOptions, IExpandableOptions {
 }
 

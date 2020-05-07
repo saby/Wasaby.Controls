@@ -15,7 +15,7 @@ import {IPrefetchHistoryParams} from './IPrefetch';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import isEqualItems from 'Controls/_filter/Utils/isEqualItems';
 import {Model} from 'Types/entity';
-import {default as Store} from 'OnlinePage/Store';
+import {default as Store} from 'Controls/Store';
 
 export interface IFilterHistoryData {
    items: object[];

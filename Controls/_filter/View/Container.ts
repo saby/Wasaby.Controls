@@ -1,6 +1,6 @@
 import {Control} from 'UI/Base';
 import * as template from 'wml!Controls/_filter/View/Container';
-import {default as Store} from 'OnlinePage/Store';
+import {default as Store} from 'Controls/Store';
 /**
  * Контрол используют в качестве контейнера для {@link Controls/filter:View}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:View}.
  * @remark

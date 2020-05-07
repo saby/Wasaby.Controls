@@ -12,7 +12,7 @@ import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 import {Logger} from 'UI/Utils';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {default as Store} from 'OnlinePage/Store';
+import {default as Store} from 'Controls/Store';
 
 var _private = {
    getSearchController: function (self, newOptions) {
