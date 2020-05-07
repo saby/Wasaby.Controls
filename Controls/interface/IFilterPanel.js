@@ -692,7 +692,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     */
 
    /**
-    * @name Controls/interface/IFilterPanel#source
+    * @name Controls/interface/IFilterPanel#items
     * @cfg {Array.<FilterItem>} Специальная структура для визуального представления фильтра. Подробнее см. {@link Controls/_filter/View/interface/IFilterView#source}
     */
 
