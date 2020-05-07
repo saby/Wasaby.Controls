@@ -97,7 +97,6 @@ import ScrollEmitter = require('Controls/_list/BaseControl/Scroll/Emitter');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
 import ItemsView = require('Controls/_list/ItemsView');
 import ItemsViewModel = require('Controls/_list/ItemsViewModel');
-import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
@@ -140,7 +139,6 @@ export {
     BaseControl,
     ScrollEmitter,
     SearchItemsUtil,
-    getStyle,
     ItemsView,
     ItemsViewModel,
     LoadingIndicatorTemplate,

@@ -14,8 +14,7 @@ import {
     TItemActionShowType,
     IItemAction
 } from './interface/IItemActions';
-
-const ITEM_ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon icon-size';
+import {Utils} from './Utils';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -39,6 +38,10 @@ export interface IItemActionsControllerOptions {
      * варианты 's'|'m'
      */
     iconSize: string;
+    /**
+     * @param theme Название текущей темы
+     */
+    theme: string;
     /**
      * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
      */
@@ -67,6 +70,7 @@ export class Controller {
     private _commonItemActions: IItemAction[];
     private _itemActionsProperty: string;
     private _visibilityCallback: TItemActionVisibilityCallback;
+    private _theme: string;
 
     /**
      * Метод инициализации и обновления параметров.
@@ -77,6 +81,7 @@ export class Controller {
      */
     update(options: IItemActionsControllerOptions): Array<number | string> {
         let result: Array<number | string> = [];
+        this._theme = options.theme;
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
@@ -144,7 +149,6 @@ export class Controller {
      * @param clickEvent событие клика
      * @param parentAction Родительская операция с записью
      * @param opener: контрол или элемент - опенер для работы системы автофокусов
-     * @param theme Название текущей темы
      * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
      */
     prepareActionsMenuConfig(
@@ -152,7 +156,6 @@ export class Controller {
         clickEvent: SyntheticEvent<MouseEvent>,
         parentAction: IItemAction,
         opener: Element | Control<object, unknown>,
-        theme: string,
         isContextMenu: boolean
     ): IMenuConfig {
         const item = this._collection.getItemBySourceKey(itemKey);
@@ -185,7 +188,7 @@ export class Controller {
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
-            dropdownClassName: `controls-itemActionsV__popup_theme-${theme}`,
+            dropdownClassName: 'controls-itemActionsV__popup',
             closeButtonVisibility: true,
             root: parentAction && parentAction.id,
             showHeader,
@@ -205,7 +208,7 @@ export class Controller {
             direction: {
                 horizontal: isContextMenu ? 'right' : 'left'
             },
-            className: `controls-DropdownList__margin-head controls-ItemActions__popup__list_theme-${theme}`,
+            className: `controls-DropdownList__margin-head controls-ItemActions__popup__list_theme-${this._theme}`,
             nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
             autofocus: false
         };
@@ -333,7 +336,9 @@ export class Controller {
         const itemActions: IItemAction[] = this._itemActionsProperty
                 ? contents.get(this._itemActionsProperty)
                 : this._commonItemActions;
-        const fixedActions = itemActions.map(Controller._fixActionIcon);
+        const fixedActions = itemActions.map((action) => (
+            Controller._fixActionIcon(Controller._fixActionStyle(action), this._theme)
+        ));
         return fixedActions.filter((action) =>
             this._visibilityCallback(action, contents)
         );
@@ -398,7 +403,7 @@ export class Controller {
         if (this._isMenuButtonRequired(actions)) {
             showed.push({
                 id: null,
-                icon: `icon-ExpandDown ${ITEM_ACTION_ICON_CLASS}`,
+                icon: `icon-ExpandDown ${Controller.resolveItemActionClass(this._theme)}`,
                 style: 'secondary',
                 iconStyle: 'secondary',
                 _isMenu: true
@@ -481,15 +486,31 @@ export class Controller {
         );
     }
 
-    // todo переедет в шаблон
-    private static _fixActionIcon(action: IItemAction): IItemAction {
-        if (!action.icon || action.icon.includes(ITEM_ACTION_ICON_CLASS)) {
+    /**
+     * Добавляет совместимость старых и новых названий стилей через Utils.getStyle()
+     * @param action
+     * @private
+     */
+    private static _fixActionStyle(action: IItemAction): IItemAction {
+        action.style = Utils.getStyle(action.style, 'itemActions/Controller');
+        action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
+        return action;
+    }
+
+    // todo скорее всего, переедет в шаблон
+    private static _fixActionIcon(action: IItemAction, theme: string): IItemAction {
+        if (!action.icon || action.icon.includes(Controller.resolveItemActionClass(theme))) {
             return action;
         }
         return {
             ...action,
-            icon: `${action.icon} ${ITEM_ACTION_ICON_CLASS}`
+            icon: `${action.icon} ${Controller.resolveItemActionClass(theme)}`
         };
+    }
+
+    // todo скорее всего, переедет в шаблон
+    private static resolveItemActionClass(theme: string): string {
+        return `controls-itemActionsV__action_icon_theme-${theme} icon-size_theme-${theme}`;
     }
 
     private static _isMatchingActionLists(

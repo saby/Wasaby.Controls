@@ -96,7 +96,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * При наведении на запись в списке мы должны показать операции
+     * пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      * @param e
      * @private
      */
@@ -105,7 +105,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * По событию youch мы должны показать операции
+     * пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ youch пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      * @param e
      * @private
      */
@@ -114,7 +114,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * По клику на запись в списке нужно переместить маркер
+     * пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
      * @param e
      * @param item
      * @param clickEvent
@@ -131,7 +131,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обработчик свайпа по записи. Показывает операции по свайпу
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
      * @param e
      * @param item
      * @param swipeEvent
@@ -156,7 +156,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обработчик события окончания анимации свайпа по записи
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
      * @param e
      * @private
      */
@@ -165,7 +165,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обрабатывает событие клика по записи и бросает событие actionClick
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ actionClick
      * @param e
      * @param item
      * @param action
@@ -191,7 +191,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обработка события возникновения контекстного меню
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
      * @param e
      * @param item
      * @param clickEvent
@@ -206,7 +206,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обработка события клика по элементу списка
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
      * @param e
      * @param item
      * @param keyDownEvent
@@ -235,7 +235,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обрабатывает клик по конкретной операции
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      * @param action
      * @param clickEvent
      * @param item
@@ -247,8 +247,8 @@ export default class View extends Control<IViewOptions> {
         if (Array.isArray(contents)) {
             contents = contents[contents.length - 1];
         }
-        // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
-        // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
+        // TODO пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ controls-ListView__itemV пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+        // TODO пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ CSS пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         this._notify('actionClick', [action, contents, itemContainer]);
         if (action.handler) {
@@ -258,10 +258,10 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
-     * @param e событие onResult
-     * @param eventName название события, брошенного из Controls/menu:Popup.
-     * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ onResult пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+     * @param e пїЅпїЅпїЅпїЅпїЅпїЅпїЅ onResult
+     * @param eventName пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Controls/menu:Popup.
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
      * @param actionModel
      * @param clickEvent
      * @private
@@ -281,7 +281,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Обработчик закрытия выпадающего/контекстного меню
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
      * @param e
      * @param clickEvent
      * @private
@@ -297,7 +297,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Открывает меню операций
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      * @param action
      * @param clickEvent
      * @param item
@@ -326,7 +326,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Метод, который закрывает меню
+     * пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
      * @private
      */
     private _closeActionsMenu(): void {
@@ -337,7 +337,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Создаёт коллекцию из пришедших данных
+     * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
      * @param module
      * @param items
      * @param collectionOptions
@@ -352,7 +352,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Инициализирует контрорллере и обновляет в нём данные
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
      * @private
      */
     protected _updateItemActions(): void {
@@ -367,6 +367,7 @@ export default class View extends Control<IViewOptions> {
             visibilityCallback: this._options.itemActionVisibilityCallback,
             itemActionsPosition: this._options.itemActionsPosition,
             style: this._options.style,
+            theme: this._options.theme,
             actionAlignment: this._options.actionAlignment,
             actionCaptionPosition: this._options.actionCaptionPosition,
             itemActionsClass: this._options.itemActionsClass,

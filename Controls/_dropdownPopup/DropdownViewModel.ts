@@ -1,7 +1,8 @@
 /**
  * Created by as.krasilnikov on 26.12.2017.
  */
-import {BaseViewModel, getStyle, ItemsUtil, ItemsViewModel} from 'Controls/list';
+import {BaseViewModel, ItemsUtil, ItemsViewModel} from 'Controls/list';
+import {Utils} from 'Controls/itemActions';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import * as multiSelectTpl from 'wml!Controls/_dropdownPopup/multiSelectTpl';
@@ -234,7 +235,7 @@ var _private = {
             if (!this._itemsModel.isLast()) {
                itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item, itemsModelCurrent.hasParent);
             }
-            itemsModelCurrent.iconStyle = getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
+            itemsModelCurrent.iconStyle = Utils.getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             itemsModelCurrent.multiSelect = this._options.multiSelect;

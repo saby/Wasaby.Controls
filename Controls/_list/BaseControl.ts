@@ -2576,7 +2576,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @param options
      * @private
      */
-    _updateItemActions(options): void {
+    _updateItemActions(options: any): void {
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this.__error || !this._listViewModel) {
@@ -2594,6 +2594,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             visibilityCallback: options.itemActionVisibilityCallback,
             itemActionsPosition: options.itemActionsPosition,
             style: options.style,
+            theme: options.theme,
             actionAlignment: options.actionAlignment,
             actionCaptionPosition: options.actionCaptionPosition,
             itemActionsClass: options.itemActionsClass,

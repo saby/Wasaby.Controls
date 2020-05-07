@@ -640,9 +640,10 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             itemActions,
             itemActionsPosition: 'inside',
             style: 'default',
+            theme: options.theme,
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
-            itemActionsClass: 'controls-Menu__itemActions_position_rightCenter_theme-' + options.theme,
+            itemActionsClass: `controls-Menu__itemActions_position_rightCenter_theme-${options.theme}`,
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisibility: editingConfig?.toolbarVisibility
         });
