@@ -39,6 +39,17 @@ import {isHistorySource} from 'Controls/_filter/HistoryUtils';
  *
  */
 
+/**
+ * @name Controls/_filterPopup/SimplePanel#items
+ * @cfg {RecordSet} Список, в котором описана конфигурация для каждого фильтра, отображающегося в SimplePanel.
+ * Формируется контролом {@link Controls/filter:View}. При использовании Controls/_filterPopup/SimplePanel в качестве шаблона для фильтра опцию items необходимо прокинуть в контрол.
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.filterPopup:SimplePanel items="{{_options.items}}"/>
+ * </pre>
+ */
+
 var _private = {
 
     getItems: function(self, initItems) {

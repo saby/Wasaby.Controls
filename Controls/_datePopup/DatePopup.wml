@@ -29,6 +29,7 @@
                   selectionType="{{_yearRangeSelectionType}}"
                   quantum="{{_yearRangeQuantum}}"
                   readOnly="{{false}}"
+                  bind:selectionProcessing="_yearsRangeSelectionProcessing"
                   on:rangeChanged="_yearsRangeChanged()"
                   on:selectionChanged="_yearsSelectionChanged()"
                   on:onBeforeSelectionStarted="_yearsSelectionStarted()"
@@ -50,6 +51,7 @@
                bind:selectionProcessing="_monthRangeSelectionProcessing"
                on:rangeChanged="_monthsRangeChanged()"
                on:selectionChanged="_monthsSelectionChanged()"
+               on:onBeforeSelectionStarted="_monthsRangeSelectionStarted()"
                on:selectionEnded="_monthsRangeSelectionEnded()">
 
             <Controls._datePopup.MonthsRange
