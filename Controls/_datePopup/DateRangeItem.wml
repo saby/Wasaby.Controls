@@ -65,7 +65,7 @@
                   on:itemMouseLeave="_proxyEvent()"
                >
                   <ws:dayTemplate>
-                     <ws:partial template="Controls/calendar:MonthViewDayTemplate"
+                     <ws:partial template="{{_options.dayTemplate}}"
                                  sizeStyle="DateRangeItem"
                                  fontColorStyle="DateRangeItem"
                                  backgroundStyle="DateRangeItem">
