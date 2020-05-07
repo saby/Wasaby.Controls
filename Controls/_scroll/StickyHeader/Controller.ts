@@ -336,6 +336,10 @@ class Component extends Control {
         });
     }
 
+    private _isLastIndex(srcArray: object[], index: number): boolean {
+        return index === (srcArray.length - 1);
+    }
+
     private _updateTopBottomDelayed(): void {
         const offsets: Record<POSITION, Record<string, number>> = {
                 top: {},
@@ -345,18 +349,39 @@ class Component extends Control {
         this._resetSticky();
 
         fastUpdate.measure(() => {
-            let offset: number,
-                header: TRegisterEventData;
+            let header: TRegisterEventData,
+                nextHeader: TRegisterEventData,
+                prevHeader: TRegisterEventData,
+                parentElementOfNextHeader: Node,
+                parentElementOfPrevHeader: Node;
 
             for (const position of [POSITION.top, POSITION.bottom]) {
-                offset = 0;
-                for (let headerId of this._headersStack[position]) {
+                this._headersStack[position].reduce((offset, headerId, i) => {
                     header = this._headers[headerId];
+                    nextHeader = null;
                     offsets[position][headerId] = offset;
                     if (header.mode === 'stackable' && !isHidden(header.container)) {
-                        offset += header.inst.height;
+                        // Проверяем, имеет ли заголовок в родителях прямых родителей предыдущих заголовков.
+                        // Если имеет, значит заголовки находятся в одном контейнере -> высчитываем offset.
+                        if (!this._isLastIndex(this._headersStack[position], i)) {
+                            const nextHeaderId = this._headersStack[position][i + 1];
+                            nextHeader = this._headers[nextHeaderId];
+                            for (let j = 0; j <= i; j++) {
+                                prevHeader = this._headers[this._headersStack[position][j]];
+                                parentElementOfPrevHeader = prevHeader.container.parentElement;
+                                parentElementOfNextHeader = nextHeader.container.parentElement;
+                                while (parentElementOfNextHeader !== parentElementOfPrevHeader && parentElementOfNextHeader !== document.body) {
+                                    parentElementOfNextHeader = parentElementOfNextHeader.parentElement;
+                                }
+                                if (parentElementOfNextHeader === parentElementOfPrevHeader) {
+                                    return offset + header.inst.height;
+                                }
+                            }
+                            return 0;
+                        }
                     }
-                }
+                    return offset;
+                }, 0);
             }
         });
         fastUpdate.mutate(() => {
