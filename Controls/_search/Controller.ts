@@ -88,7 +88,7 @@ var _private = {
          if (!isEqual(self._options.filter, filter)) {
             self._notify('filterChanged', [filter]);
          }
-         self._notify('searchValueChanged', [self._inputSearchValue]);
+         self._notify('searchValueChanged', [self._searchValue]);
       }
    },
 
