@@ -269,7 +269,9 @@ var _private = {
                return historyService;
             });
          }
-         this._notify('valueChanged', ['']);
+         if (this._options.value) {
+            this._notify('valueChanged', ['']);
+         }
       },
 
       _onShowSelectorHandler: function(event, popupOptions) {

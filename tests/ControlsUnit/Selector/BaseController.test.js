@@ -363,6 +363,9 @@ define([
          const item = new entity.Model({
             rawData: {id: 1}
          });
+         const recordSetFromSelector = new collection.List({
+            items: [item]
+         });
          let valueCleared = false;
 
          selectedCollection._notify = (event, value) => {
@@ -373,16 +376,15 @@ define([
 
          selectedCollection._options.keyProperty = 'id';
          selectedCollection._options.historyId = 'historyField';
-         selectedCollection._selectCallback(
-            null,
-            new collection.List({
-               items: [item]
-            })
-         );
+         selectedCollection._selectCallback(null, recordSetFromSelector);
 
          assert.deepEqual(dataHistory, {
             ids: [1]
          });
+         assert.isFalse(valueCleared);
+
+         selectedCollection._options.value = 'testValue';
+         selectedCollection._selectCallback(null, recordSetFromSelector);
          assert.isTrue(valueCleared);
       });
    });
