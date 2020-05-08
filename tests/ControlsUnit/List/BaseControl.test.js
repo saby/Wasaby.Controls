@@ -5958,56 +5958,56 @@ define([
 
                await lists.BaseControl._private.reload(ctrl, cfgClone);
 
-               assert.equal(2, queryCallsCount);
-               assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0);
-            });
-            it('Navigation position', function () {
-               return new Promise(function (resolve, reject) {
-                  var
-                      ctrl,
-                      source = new sourceLib.Memory({
-                         keyProperty: 'id',
-                         data: data,
-                         filter: function () {
-                            return true;
-                         }
-                      }),
-                      cfg = {
-                         viewName: 'Controls/List/ListView',
-                         itemsReadyCallback: function (items) {
-                            setTimeout(function () {
-                               var
-                                   newItem = items.at(items.getCount() - 1)
-                                       .clone();
-                               newItem.set('id', 777);
-                               items.add(newItem);
-                               try {
-                                  assert.deepEqual(ctrl._sourceController._queryParamsController._afterPosition, [777]);
-                                  resolve();
-                               } catch (e) {
-                                  reject(e);
-                               }
-                            });
-                         },
-                         source: source,
-                         viewConfig: {
-                            keyProperty: 'id'
-                         },
-                         viewModelConfig: {
-                            items: [],
-                            keyProperty: 'id'
-                         },
-                         viewModelConstructor: lists.ListViewModel,
-                         navigation: {
-                            source: 'position',
-                            sourceConfig: {
-                               field: 'id',
-                               position: 0,
-                               direction: 'forward',
-                               limit: 20
-                            }
-                         }
-                      };
+            assert.equal(2, queryCallsCount);
+            assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0);
+         });
+         it('Navigation position', function() {
+            return new Promise(function(resolve, reject) {
+               var
+                  ctrl,
+                  source = new sourceLib.Memory({
+                     keyProperty: 'id',
+                     data: data,
+                     filter: function() {
+                        return true;
+                     }
+                  }),
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     itemsReadyCallback: function(items) {
+                        setTimeout(function() {
+                           var
+                              newItem = items.at(items.getCount() - 1)
+                                 .clone();
+                           newItem.set('id', 777);
+                           items.add(newItem);
+                           try {
+                              assert.deepEqual(ctrl._sourceController._queryParamsController._controllers.at(0).queryParamsController._afterPosition, [777]);
+                              resolve();
+                           } catch (e) {
+                              reject(e);
+                           }
+                        });
+                     },
+                     source: source,
+                     viewConfig: {
+                        keyProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: [],
+                        keyProperty: 'id'
+                     },
+                     viewModelConstructor: lists.ListViewModel,
+                     navigation: {
+                        source: 'position',
+                        sourceConfig: {
+                           field: 'id',
+                           position: 0,
+                           direction: 'forward',
+                           limit: 20
+                        }
+                     }
+                  };
 
                   ctrl = new lists.BaseControl(cfg);
                   ctrl.saveOptions(cfg);

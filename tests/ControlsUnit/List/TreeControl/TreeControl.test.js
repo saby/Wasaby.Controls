@@ -7,7 +7,8 @@ define([
    'Env/Env',
    'Types/collection',
    'Types/source',
-   'Controls/Application/SettingsController'
+   'Controls/Application/SettingsController',
+   'Controls/source'
 ], function(
    treeGrid,
    listMod,
@@ -17,7 +18,8 @@ define([
    Env,
    collection,
    sourceLib,
-   SettingsController
+   SettingsController,
+   cSource
 ) {
    function correctCreateTreeControl(cfg) {
       var
@@ -1331,6 +1333,11 @@ define([
                       },
                       hideIndicator() {
                          isIndicatorHasBeenHidden = true;
+                      },
+                      getSourceController() {
+                         return new cSource.Controller({
+                            source: new sourceLib.Memory()
+                         });
                       }
                    }
                 }
@@ -1863,6 +1870,11 @@ define([
                },
                hideIndicator() {
                   isIndicatorHasBeenHidden = true;
+               },
+               getSourceController() {
+                  return new cSource.Controller({
+                     source: new sourceLib.Memory()
+                  });
                }
             }
          };
@@ -1975,6 +1987,11 @@ define([
                   showIndicator() {
                   },
                   hideIndicator() {
+                  },
+                  getSourceController() {
+                     return new cSource.Controller({
+                        source: new sourceLib.Memory()
+                     });
                   }
                }
            };
