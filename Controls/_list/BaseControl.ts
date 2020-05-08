@@ -34,7 +34,6 @@ import {Controller as ItemActionsController, IItemAction} from 'Controls/itemAct
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
-import {showType} from 'Controls/Utils/Toolbar';
 import ListViewModel from 'Controls/_list/ListViewModel';
 import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
@@ -1880,23 +1879,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _itemActionsController: null,
     _prevRootId: null,
 
-    // TODO Проверить.
-    _currentMenuConfig: null,
-
-    // TODO Проверить.
-    _itemActionsMenuId: null,
-
-    // TODO Проверить.
     _notifyHandler: tmplNotify,
 
-    /**
-     * Шаблон операций с записью
-     */
+    // Идентификатор текущего открытого popup
+    _itemActionsMenuId: null,
+
+    // Шаблон операций с записью
     _itemActionsTemplate: itemActionsTemplate,
 
-    /**
-     * Шаблон операций с записью для swipe
-     */
+    // Шаблон операций с записью для swipe
     _swipeTemplate: swipeTemplate,
 
     constructor(options) {

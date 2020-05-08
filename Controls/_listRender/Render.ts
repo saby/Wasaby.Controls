@@ -33,7 +33,6 @@ export default class Render extends Control<IRenderOptions> {
     protected _templateKeyPrefix: string;
 
     protected _pendingResize: boolean = false;
-    protected _currentMenuConfig: unknown = null;
     protected _onCollectionChange(_e: unknown, action: string): void {
         if (action !== 'ch') {
             // Notify resize when items are added, removed or replaced, or
@@ -63,7 +62,6 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _beforeUnmount(): void {
         this._unsubscribeFromModelChanges(this._options.listModel);
-        this._currentMenuConfig = null;
     }
 
     protected _afterMount(): void {
