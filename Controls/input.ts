@@ -105,6 +105,7 @@ export {default as isMaskFormatValid} from 'Controls/_input/Mask/isFormatValid';
  * НЕ ИСПОЛЬЗОВАТЬ НА ПРИКЛАДНОЙ СТРОНЕ!!!
  */
 export {FixBugs as __FixBugs} from 'Controls/_input/FixBugs';
+export {ValueInField as __ValueInField} from 'Controls/_input/FixBugs/ValueInField';
 export {InsertFromDrop as __InsertFromDrop} from 'Controls/_input/FixBugs/InsertFromDrop';
 export {MinusProcessing as __MinusProcessing} from 'Controls/_input/FixBugs/MinusProcessing';
 export {CarriagePositionWhenFocus as __CarriagePositionWhenFocus} from 'Controls/_input/FixBugs/CarriagePositionWhenFocus';

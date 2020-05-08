@@ -440,18 +440,6 @@ var Base = Control.extend({
     _fieldName: 'input',
 
     /**
-     * @type {String} Значение атрибута value у <input/>.
-     * @remark
-     * Значение меняется только при инициализации, и смене режима на редактирование.
-     * Причина: Обработка пользовательского ввода происходит по событию input. В этот момент введенное значение
-     * уже отрисовано браузером. Это значение может быть изменено в зависимости от логики работы контрола.
-     * Чтобы не было морганий из-за синхронизации VDOM, значение меняется напрямую через свойство value на <input/>.
-     * Поэтому работа синхронизатора не требуется. Иначе из-за асинхронности, если во время обновления произойдет
-     * обработка ввода, то её результат будет удален синхронизатором после завершения обновления.
-     */
-    _fieldValue: null,
-
-    /**
      * @type {Boolean} Determines whether the control is multiline.
      * @protected
      */
@@ -633,7 +621,7 @@ var Base = Control.extend({
             updatePositionCallback: () => {
                 return this._updateSelection(this._viewModel.selection);
             }
-        });
+        }, this);
         this._fixedDisplayValue = this._viewModel.displayValue;
         /**
          * Placeholder is displayed in an empty field. To learn about the emptiness of the field
@@ -641,13 +629,14 @@ var Base = Control.extend({
          * The state is not available until the control is mount to DOM. So hide the placeholder until then.
          */
         this._hidePlaceholder = this._autoComplete !== 'off' && !this._hidePlaceholderUsingCSS;
-        this._fieldValue = this._viewModel.displayValue;
+        this._fixBugs.beforeMount();
     },
 
     _afterMount: function () {
         _private.initField(this);
 
         this._hidePlaceholder = false;
+        this._fixBugs.afterMount();
     },
 
     _beforeUpdate: function (newOptions) {
@@ -662,8 +651,6 @@ var Base = Control.extend({
             // readOnly поле ввода не отображается. Подробнее:
             // TODO: https://online.sbis.ru/opendoc.html?guid=ba1ec63e-1915-499d-9e05-babfa3b79b41
             this._viewModel._oldDisplayValue = oldDisplayValue;
-
-            this._fieldValue = this._viewModel.displayValue;
         }
 
         const displayValueChangedByParent: boolean = oldDisplayValue !== this._viewModel.displayValue;
@@ -671,7 +658,11 @@ var Base = Control.extend({
             this._fixedDisplayValue = this._viewModel.displayValue;
         }
 
-        this._fixBugs.update(this._options, newOptions);
+        this._fixBugs.beforeUpdate(this._options, newOptions);
+    },
+
+    _afterUpdate: function() {
+        this._fixBugs.afterUpdate();
     },
 
     /**
@@ -1048,7 +1039,7 @@ var Base = Control.extend({
             }
         }
 
-        return this._fieldValue;
+        return this._fixBugs.getFieldValue();
     },
 
     _updateFieldInTemplate: function() {
