@@ -2,6 +2,7 @@ import {Control} from 'UI/Base';
 import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {Model} from 'Types/entity';
 import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {
     IItemActionsCollection,
@@ -232,11 +233,15 @@ export class Controller {
 
         this._collection.each((item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
-                const actionsForItem = this._collectActionsForItem(item);
+                let contents = item.getContents();
+                if (item['[Controls/_display/BreadcrumbsItem]']) {
+                    contents = contents[contents.length - 1];
+                }
+                const actionsForItem = this._collectActionsForContents(contents);
                 const itemChanged = Controller._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
-                    changedItemsIds.push(item.getContents().getKey());
+                    changedItemsIds.push(contents.getKey());
                 }
             }
         });
@@ -324,14 +329,10 @@ export class Controller {
 
     /**
      * Набирает операции с записью для указанного элемента коллекции
-     * @param item IItemActionsItem
+     * @param contents Types/entity:Model
      * @private
      */
-    private _collectActionsForItem(item: IItemActionsItem): IItemAction[] {
-        let contents = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
-            contents = contents[contents.length - 1];
-        }
+    private _collectActionsForContents(contents: Model): IItemAction[] {
         const itemActions: IItemAction[] = this._itemActionsProperty
                 ? contents.get(this._itemActionsProperty)
                 : this._commonItemActions;

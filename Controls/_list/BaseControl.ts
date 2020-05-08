@@ -2603,7 +2603,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisibility: editingConfig?.toolbarVisibility
         });
-        if (itemActionsChangeResult.length > 0) {
+        if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
                 this._listViewModel.resetCachedItemData(recordKey);
             });
