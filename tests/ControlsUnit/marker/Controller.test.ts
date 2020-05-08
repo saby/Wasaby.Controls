@@ -57,7 +57,7 @@ describe('Controls/marker/Controller', () => {
       assert.equal(controller._markedKey, 1);
       assert.equal(controller._markerVisibility, 'visible');
       assert.deepEqual(model.items, [
-         {id: 1, marked: true},
+         {id: 1, marked: false},
          {id: 2, marked: false},
          {id: 3, marked: false}
       ]);
