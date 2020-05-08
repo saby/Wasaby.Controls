@@ -27,7 +27,19 @@ define([
          cfgBaseControl,
          cfgTreeControl = cMerge(cfg, {
             viewModelConstructor: treeGrid.ViewModel
-         });
+         }),
+         originCreateMarkerController = listMod.BaseControl._private.createMarkerController;
+
+      listMod.BaseControl._private.createMarkerController = function() {
+         return {
+            setMarkedKey() { },
+            moveMarkerToNext() { },
+            moveMarkerToPrev() { },
+            setMarkerNearlyCurrent() {},
+            update() {}
+         };
+      };
+
       cfgTreeControl = Object.assign(treeGrid.TreeControl.getDefaultOptions(), cfgTreeControl);
       treeControl = new treeGrid.TreeControl(cfgTreeControl);
       treeControl.saveOptions(cfgTreeControl);
@@ -48,6 +60,9 @@ define([
          treeBeforeUpdate.apply(treeControl, arguments);
          baseControl._beforeUpdate(treeControl._options);
       };
+
+      listMod.BaseControl._private.createMarkerController = originCreateMarkerController;
+
       return treeControl;
    }
 
@@ -1163,6 +1178,13 @@ define([
             getRoot: function() {
                return {
                   getContents: function() {
+                     return null;
+                  }
+               };
+            },
+            getChildren: function() {
+               return {
+                  getCount() {
                      return null;
                   }
                };

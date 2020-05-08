@@ -4162,7 +4162,13 @@ define([
             };
 
             sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => {
-               return {};
+               return {
+                  setMarkedKey(key) { },
+                  moveMarkerToNext() { },
+                  moveMarkerToPrev() { },
+                  setMarkerNearlyCurrent() {},
+                  update() {}
+               };
             });
 
             instance.saveOptions(cfg);
