@@ -116,68 +116,6 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
-    * @name Controls/interface/IDropdown#dataLoadCallback
-    * @cfg {Function}  Функция обратного вызова, которая будет вызываться, когда данные загружены источником.
-    * @example
-    * WML:
-    * <pre>
-    * <Controls.dropdown:Button
-    *       keyProperty="id"
-    *       iconStyle="secondary"
-    *       style="primary"
-    *       viewMode="button"
-    *       caption="+ Add"
-    *       dataLoadCallback="{{_callbackHandler}}"
-    *       source="{{_source)}}" />
-    * </pre>
-    * JS:
-    * <pre>
-    * this._source = new Memory({
-    *    keyProperty: 'id',
-    *    data: [
-    *       {id: 1, title: 'Yaroslavl'},
-    *       {id: 2, title: 'Moscow'},
-    *       {id: 3, title: 'St-Petersburg'}
-    *    ]
-    * });
-    * this._callbackHandler = function(items) {
-    *   // do something
-    * };
-    * </pre>
-    */
-
-   /*
-    * @name Controls/interface/IDropdown#dataLoadCallback
-    * @cfg {Function} Callback function that will be called when list data loaded by source
-    * @example
-    * WML:
-    * <pre>
-    * <Controls.dropdown:Button
-    *       keyProperty="id"
-    *       iconStyle="secondary"
-    *       style="primary"
-    *       viewMode="button"
-    *       caption="+ Add"
-    *       dataLoadCallback="{{_callbackHandler}}"
-    *       source="{{_source)}}" />
-    * </pre>
-    * JS:
-    * <pre>
-    * this._source = new Memory({
-    *    keyProperty: 'id',
-    *    data: [
-    *       {id: 1, title: 'Yaroslavl'},
-    *       {id: 2, title: 'Moscow'},
-    *       {id: 3, title: 'St-Petersburg'}
-    *    ]
-    * });
-    * this._callbackHandler = function(items) {
-    *   // do something
-    * };
-    * </pre>
-    */
-
-   /**
     * @name Controls/interface/IDropdown#menuPopupOptions
     * @cfg {Controls/popup:IStickyPopupOptions} Опции для окна выпадающего списка
     * @example

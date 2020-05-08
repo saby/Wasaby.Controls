@@ -6,6 +6,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
 
 import {highlightOptions} from 'Controls/_decorator/ActualAPI';
+import {addWordCheck} from 'Controls/Utils/RegExp';
 
 /**
  * @typedef HighlightMode
@@ -174,7 +175,7 @@ class Highlight extends Control<IHighlightOptions> {
 
         switch (highlightMode) {
             case 'word':
-                return new RegExp(`\\b${value}\\b`, flags);
+                return addWordCheck(value, flags);
             case 'substring':
                 return new RegExp(`${value}`, flags);
             default:
