@@ -293,23 +293,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 itemsModelCurrent.draggingItemData = this._draggingItemData;
             }
         }
-
-        // TODO Проверить. Это надо реализовать. Ошибки нет, т.к. в шаблонах щас есть проверка на эти методы
-        // export const ITEMACTIONS_DISPLAY_MODE = {
-        //     ICON: 'icon',
-        //     TITLE: 'title',
-        //     BOTH: 'both',
-        //     AUTO: 'auto'
-        // };
-        // _needShowIcon(action: IItemAction): boolean {
-        //     return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
-        // }
-        // _needShowTitle(action: IItemAction): boolean {
-        //     return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
-        //         action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
-        //         (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
-        //         !action.displayMode) && !action.icon);
-        // }
         return itemsModelCurrent;
     },
 
