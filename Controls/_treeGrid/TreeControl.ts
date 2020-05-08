@@ -598,7 +598,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         if (this._mouseDownExpanderKey === key && MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
             _private.toggleExpanded(this, dispItem);
             if (this._options.markItemByExpanderClick) {
-                this._children.baseControl.getViewModel().setMarkedKey(key);
+                this.setMarkedKey(key);
             }
         }
         this._mouseDownExpanderKey = undefined;
@@ -633,7 +633,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
 
     setMarkedKey: function(key) {
-        this._children.baseControl.getViewModel().setMarkedKey(key);
+        this._children.baseControl.setMarkedKey(key);
     },
     scrollToItem(key: string|number, toBottom: boolean): void {
         this._children.baseControl.scrollToItem(key, toBottom);

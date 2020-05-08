@@ -399,7 +399,7 @@ var _private = {
     },
     setMarkedKey: function(self, key) {
         if (key !== undefined) {
-            self._markerController.setMarkedKey(key);
+            self.setMarkedKey(key);
             _private.scrollToItem(self, key);
         }
     },
@@ -1026,7 +1026,7 @@ var _private = {
             key = self._listViewModel.getValidKeyForMarker(firstItemIndex);
         }
 
-        self._markerController.setMarkedKey(key);
+        self.setMarkedKey(key);
     },
 
     getFirstVisibleItemIndex: function(itemsContainer, verticalOffset) {
@@ -2583,7 +2583,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
         if (direction === 'right' || direction === 'left') {
-            this._markerController.setMarkedKey(key);
+            this.setMarkedKey(key);
         }
         const actionsItem = this._options.useNewModel ? itemData : itemData.actionsItem;
         if (direction === 'left' && this._hasItemActions && !this._options.useNewModel) {
@@ -2616,6 +2616,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._keepScrollAfterReload = true;
         }
         return _private.reload(this, this._options, sourceConfig).addCallback(getData);
+    },
+
+    setMarkedKey(key: number|string): void {
+        this._markerController.setMarkedKey(key);
     },
 
     _onGroupClick: function(e, groupId, baseEvent) {
@@ -2733,7 +2737,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._showActionsMenu.apply(this, arguments);
         event.stopPropagation();
         const key = itemData.getContents ? itemData.getContents().getId() : itemData.key;
-        this._markerController.setMarkedKey(key);
+        this.setMarkedKey(key);
     },
 
     _closeActionsMenu: function(args) {
@@ -2777,7 +2781,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const canBeMarked = this._mouseDownItemKey === key && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
 
         if (canBeMarked) {
-            this._markerController.setMarkedKey(key);
+            this.setMarkedKey(key);
         }
         this._mouseDownItemKey = undefined;
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
