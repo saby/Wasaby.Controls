@@ -2733,7 +2733,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
         event.stopPropagation();
-        const key = itemData.getContents() ? itemData.getContents().getId() : itemData.key;
+        const key = itemData.getContents ? itemData.getContents().getId() : itemData.key;
         this._markerController.setMarkedKey(key);
     },
 

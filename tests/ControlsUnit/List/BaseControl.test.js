@@ -1142,7 +1142,9 @@ define([
             return {
                setMarkedKey(key) { baseControl._listViewModel.setMarkedKey(key) },
                moveMarkerToNext() { moveMarkerToNextCalled = true; },
-               moveMarkerToPrev() { moveMarkerToPrevCalled = true; }
+               moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
+               setMarkerNearlyCurrent() {},
+               update() {}
             };
          };
          baseControl.saveOptions(cfg);
@@ -1209,7 +1211,9 @@ define([
             return {
                setMarkedKey(key) { baseControl._listViewModel.setMarkedKey(key) },
                moveMarkerToNext() { moveMarkerToNextCalled = true; },
-               moveMarkerToPrev() { moveMarkerToPrevCalled = true; }
+               moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
+               setMarkerNearlyCurrent() {},
+               update() {}
             };
          };
 
@@ -1244,61 +1248,7 @@ define([
          lists.BaseControl._private.createMarkerController = originalCreateMarkerController;
       });
 
-      /*it('moveMarkerToNext && moveMarkerToPrevious with markerVisibility = "hidden"', async function() {
-         var
-            cfg = {
-               viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'hidden',
-               keyProperty: 'key',
-               source: new sourceLib.Memory({
-                  idProperty: 'key',
-                  data: [{
-                     key: 1
-                  }, {
-                     key: 2
-                  }, {
-                     key: 3
-                  }]
-               }),
-               markedKey: 2
-            },
-            baseControl = new lists.BaseControl(cfg);
-         baseControl.saveOptions(cfg);
-         await baseControl._beforeMount(cfg);
-         assert.equal(2, baseControl._listViewModel.getMarkedKey());
-         baseControl._onViewKeyDown({
-            target: {
-               closest: function() {
-                  return false;
-               }
-            },
-            stopImmediatePropagation: function() {
-            },
-            nativeEvent: {
-               keyCode: Env.constants.key.down
-            },
-            preventDefault: function() {
-            },
-         });
-         assert.equal(2, baseControl._listViewModel.getMarkedKey());
-         baseControl._onViewKeyDown({
-            target: {
-               closest: function() {
-                  return false;
-               }
-            },
-            stopImmediatePropagation: function() {
-            },
-            nativeEvent: {
-               keyCode: Env.constants.key.up
-            },
-            preventDefault: function() {
-            },
-         });
-         assert.equal(2, baseControl._listViewModel.getMarkedKey());
-      });*/
-
-      /*it('moveMarkerToNext && moveMarkerToPrevious while loading', async function() {
+      it('moveMarkerToNext && moveMarkerToPrevious while loading', async function() {
          var
             cfg = {
                viewModelConstructor: lists.ListViewModel,
@@ -1318,6 +1268,7 @@ define([
             baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
+         baseControl._markerController.setMarkedKey(1);
          assert.equal(1, baseControl._listViewModel.getMarkedKey());
          baseControl._loadingIndicatorState = 'all';
          baseControl._onViewKeyDown({
@@ -1350,7 +1301,7 @@ define([
             },
          });
          assert.equal(1, baseControl._listViewModel.getMarkedKey());
-      });*/
+      });
 
       it('enterHandler', function () {
          var notified = false;
@@ -4040,7 +3991,7 @@ define([
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
-         /*it('_onItemContextMenu', async () => {
+         it('_onItemContextMenu', async () => {
             var callBackCount = 0;
             var cfg = {
                   items: new collection.RecordSet({
@@ -4091,7 +4042,8 @@ define([
                },
                itemData = {
                   key: 2
-               };
+               },
+               originalCreateMarkerController = lists.BaseControl._private.createMarkerController;
             instance._children = {
                itemActionsOpener: {
                   open: function() {
@@ -4100,13 +4052,25 @@ define([
                }
             };
 
+            lists.BaseControl._private.createMarkerController = function() {
+               return {
+                  markedKey: null,
+                  setMarkedKey(key) { this.markedKey = key; },
+                  moveMarkerToNext() {},
+                  moveMarkerToPrev() {},
+                  setMarkerNearlyCurrent() {},
+                  update() {}
+               };
+            };
+
             instance.saveOptions(cfg);
             await instance._beforeMount(cfg);
-            assert.equal(instance.getViewModel()._markedKey, 1);
             instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(instance.getViewModel()._markedKey, 2);
+            assert.equal(instance._markerController.markedKey, 2);
             assert.equal(callBackCount, 0);
-         });*/
+
+            lists.BaseControl._private.createMarkerController = originalCreateMarkerController;
+         });
 
          it('closeSwipe on listDeactivated', () => {
             let
@@ -4610,15 +4574,23 @@ define([
                };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
+               instance._markerController = {
+                  markedKey: null,
+                  setMarkedKey(key) { this.markedKey = key; },
+                  moveMarkerToNext() {},
+                  moveMarkerToPrev() {},
+                  setMarkerNearlyCurrent() {},
+                  update() {}
+               };
             }
 
-            /* it('multiSelectVisibility: visible, should start animation', function() {
+             it('multiSelectVisibility: visible, should start animation', function() {
                 initTest('visible');
                 instance._listSwipe({}, itemData, childEvent);
                 assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
-             });*/
+             });
 
-            /*it('multiSelectVisibility: onhover, should start animation', function() {
+            it('multiSelectVisibility: onhover, should start animation', function() {
                initTest('onhover');
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
@@ -4628,7 +4600,7 @@ define([
                initTest('hidden');
                instance._listSwipe({}, itemData, childEvent);
                assert.isNotOk(instance.getViewModel()._rightSwipedItem);
-            });*/
+            });
          });
          describe('itemSwipe event', function () {
             var
@@ -4642,7 +4614,7 @@ define([
                    multiSelectStatus: false,
                    item: {}
                 };
-            /*it('list has item actions, event should not fire', function() {
+            it('list has item actions, event should not fire', function() {
                var
                   cfg = {
                      viewName: 'Controls/List/ListView',
@@ -4670,13 +4642,22 @@ define([
                };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
+
+               instance._markerController = {
+                  setMarkedKey(key) { assert.equal(key, 1); },
+                  moveMarkerToNext() {},
+                  moveMarkerToPrev() {},
+                  setMarkerNearlyCurrent() {},
+                  update() {}
+               };
+
                instance._notify = function(eventName) {
                   if (eventName === 'itemSwipe') {
                      throw new Error('itemSwipe event should not fire if the list has itemActions');
                   }
                };
                instance._listSwipe({}, itemData, childEvent);
-            });*/
+            });
 
             it('can update itemActions on left swipe', function (done) {
                var
@@ -4772,7 +4753,7 @@ define([
                return done;
             });
 
-            /*it('list doesn\'t handle swipe, event should fire', function() {
+            it('list doesn\'t handle swipe, event should fire', function() {
                var
                   cfg = {
                      viewName: 'Controls/List/ListView',
@@ -4808,7 +4789,7 @@ define([
                instance._listSwipe({}, itemData, childEvent);
                assert.isTrue(notifyCalled);
             });
-         });*/
+         });
 
             it('_onAfterBeginEdit parametrs', function () {
                var
@@ -6445,4 +6426,3 @@ define([
          });
       });
    });
-});
