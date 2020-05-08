@@ -1502,7 +1502,7 @@ define([
          assert.equal(6, lists.BaseControl._private.getItemsCount(baseControl), 'Items wasn\'t load');
       });
 
-      it('loadToDirection error', async function() {
+      it('loadToDirection error and restore', async function() {
          const source = new sourceLib.Memory({
             keyProperty: 'id',
             data: data
@@ -1530,7 +1530,15 @@ define([
          ctrl._container = {clientHeight: 100};
          ctrl._afterMount(cfg);
 
-         ctrl._sourceController.load = sinon.stub().returns(Promise.reject(new Error('test')));
+         ctrl._sourceController.load = sinon.stub()
+            .rejects(new Error('test'))
+            .onThirdCall()
+            .resolves(
+               new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: []
+               })
+            );
 
          ctrl.__errorController.process = sinon.stub().callsFake(function(config) {
             return Promise.resolve({
@@ -1539,10 +1547,19 @@ define([
             });
          });
 
+         // on error
          await lists.BaseControl._private.loadToDirection(ctrl, 'down').catch(() => 1);
+         assert.isDefined(ctrl.__error, 'error was not set');
          assert.strictEqual(ctrl.__error.mode, 'inlist', 'wrong errorConfig mode');
          assert.typeOf(ctrl.__error.options.action, 'function', 'wrong action type');
          assert.strictEqual(ctrl.__error.options.showInDirection, 'down', 'wrong error template position');
+
+         // on loading restoring
+         await lists.BaseControl._private.loadToDirection(ctrl, 'down')
+            .catch(() => ctrl.__error.options.action())
+            .then(callback => callback());
+
+         assert.isNull(ctrl.__error, 'error was not hidden after successful loading');
       });
 
       it('items should get loaded when a user scrolls to the bottom edge of the list', function(done) {
