@@ -118,6 +118,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     protected _notifyHandler: Function = tmplNotify;
 
+    protected _moduleName: string = 'Controls/_scroll/StickyHeader/_StickyHeader';
+
     // Префикс для корректной установки background
     protected _backgroundStyle: string;
 
