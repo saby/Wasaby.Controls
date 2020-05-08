@@ -73,6 +73,7 @@ export interface IItemAction {
     handler?: (item) => void;
     parent?: string;
     'parent@'?: boolean|null;
+    _isMenu?: boolean;
 }
 
 interface IItemPadding {
@@ -317,7 +318,7 @@ export interface IList {
  * <pre>
  * <!-- customTemplateName.wml -->
  * <div>{{itemData.item.title}}</div>
- *    <ws:if data="{{!itemData.isSwiped}}">
+ *    <ws:if data="{{!itemData.isSwiped()}}">
  *       <ws:partial template="{{itemActionsTemplate}}"
  *                  attr:class="some-custom-class-for-itemActions"
  *                  itemData="{{itemData}}"
@@ -360,7 +361,7 @@ export interface IList {
  * customTemplateName.wml:
  * <pre>
  *  <div>{{itemData.item.title}}</div>
- *    <ws:if data="{{!itemData.isSwiped}}">
+ *    <ws:if data="{{!itemData.isSwiped()}}">
  *      <ws:partial template="{{itemActionsTemplate}}"
  *                  attr:class="some-custom-class-for-itemActions"
  *                  itemData="{{itemData}}"

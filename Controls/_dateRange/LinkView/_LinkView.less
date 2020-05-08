@@ -46,15 +46,12 @@
    cursor: pointer;
 }
 
-.controls-DateLinkView__style-hover_theme-@{themeName} {
-   &:hover {
-      color: @link_hover_text-color;
-   }
-}
-
 .ws-is-hover {
    .controls-DateLinkView__value-hovered:hover {
       text-decoration: underline;
+   }
+   .controls-DateLinkView__style-hover_theme-@{themeName}:hover {
+      color: @link_hover_text-color;
    }
 }
 
