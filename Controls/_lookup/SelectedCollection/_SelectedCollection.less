@@ -73,17 +73,13 @@
     .flex-shrink(0);
 }
 
-.controls-SelectedCollection__item__cross {
-    min-width: @item_reset-button_icon-size_lookupCollection;
+.controls-SelectedCollection__item__cross_theme-@{themeName} {
+    .icon-size(@item_reset-button_icon-size_lookupCollection);
+    color: @item_reset-button_icon-color_lookupCollection;
     .flex-shrink(0);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-}
-
-.controls-SelectedCollection__item__cross_theme-@{themeName} {
-    .icon-size(@item_reset-button_icon-size_lookupCollection);
-    color: @item_reset-button_icon-color_lookupCollection;
 }
 
 .ws-is-hover {
