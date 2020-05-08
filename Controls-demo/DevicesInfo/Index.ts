@@ -1,6 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {Memory, SbisService, ICrud, Query} from 'Types/source';
-import 'css!Controls-demo/Controls-demo';
 import 'css!Controls-demo/DevicesInfo/DevicesInfo';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {adapter} from 'Types/entity';
@@ -227,9 +226,15 @@ export default class extends Control {
         let changeType = () => {
             this._getBLObject().call('ChangeType', {
                 device_id: item.get('DeviceId'),
-                device_type: item.get('DeviceType')
+                device_type: type
             }).then(() => {
-                this._children.child.reload();
+                item.set('DeviceType', type);
+                RecordSynchronizer.mergeRecord(item, this._activityDevicesRecord, item.getId());
+                this._viewSourceDevices = new Memory({
+                    keyProperty: '@Id',
+                    data: this._activityDevicesRecord.getRawData(),
+                    adapter: new adapter.Sbis()
+                });
             }).catch(() => {
                 const message = 'Не удалось поменять тип устройства';
                 this._children.devicesInfoPopup.open({
@@ -256,7 +261,7 @@ export default class extends Control {
                 } else {
                     changeType();
                 }
-            }).addErrBack(function () {
+            }).catch(() => {
                 changeType();
             });
         } else {

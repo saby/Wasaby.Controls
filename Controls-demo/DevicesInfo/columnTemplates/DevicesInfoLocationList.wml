@@ -1,4 +1,4 @@
-<ws:partial template="Controls/grid:ColumnTemplate" attr:class="js-controls-ListView__notEditable controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}">
+<ws:partial template="Controls/grid:ColumnTemplate" itemData="{{itemData}}">
     <ws:contentTemplate>
         <div class="DeviceInfo-locationItem-wrapper">
             <div class="DevicesInfo-LocationList-city">{{itemData.item.get('City')}}</div>
