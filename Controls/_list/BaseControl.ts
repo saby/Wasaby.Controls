@@ -2286,7 +2286,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setKeyProperty(newOptions.keyProperty);
         }
 
-        if (newOptions.markedKey !== this._options.markedKey || newOptions.markerVisibility !== this._options.markerVisibility) {
+        if (newOptions.markedKey !== this._options.markedKey
+           || newOptions.markerVisibility !== this._options.markerVisibility
+           || this._modelRecreated) {
             _private.updateMarkerController(this, newOptions);
         }
 
