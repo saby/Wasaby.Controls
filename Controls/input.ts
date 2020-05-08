@@ -94,7 +94,7 @@ export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} 
 export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocusController';
 export {default as AdapterMask} from 'Controls/_input/Adapter/Mask';
 export {default as isMaskFormatValid} from 'Controls/_input/Mask/isFormatValid';
-export {Formatter as MaskFormatter, FormatBuilder as MaskFormatBuilder} from 'Controls/formatter';
+export {Formatter as MaskFormatter, FormatBuilder as MaskFormatBuilder} from 'Controls/decorator';
 
 /**
  * ПРИВАТНЫЕ МОДУЛИ.

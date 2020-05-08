@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/formatter'
+      'Controls/decorator'
    ],
    function(formatter) {
       'use strict';

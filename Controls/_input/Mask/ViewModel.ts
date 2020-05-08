@@ -1,4 +1,4 @@
-import {FormatBuilder, Formatter} from 'Controls/formatter';
+import {FormatBuilder, Formatter} from 'Controls/decorator';
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 

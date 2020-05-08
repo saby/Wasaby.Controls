@@ -1,4 +1,4 @@
-import {IFormatMaskChars, getDefaultMaskOptions, FormatBuilder, Formatter} from 'Controls/formatter';
+import {IFormatMaskChars, getDefaultMaskOptions, FormatBuilder, Formatter} from 'Controls/decorator';
 
 const DEFAULT_OPTIONS = getDefaultMaskOptions();
 

@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {phoneMask} from 'Controls/formatter';
+import {phoneMask} from 'Controls/decorator';
 
 describe('Controls/formatter:phoneMask', () => {
     it('dd-dd', () => {

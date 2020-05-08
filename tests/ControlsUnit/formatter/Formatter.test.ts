@@ -3,7 +3,7 @@ import {
     FormatBuilder as MaskFormatBuilder,
     Formatter as MaskFormatter,
     getDefaultMaskOptions
-} from 'Controls/formatter';
+} from 'Controls/decorator';
 
 describe('Controls.formatter:MaskFormatter', () => {
     const formatMaskChars = getDefaultMaskOptions().formatMaskChars;

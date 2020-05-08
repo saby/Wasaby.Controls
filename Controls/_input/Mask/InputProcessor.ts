@@ -1,4 +1,4 @@
-import {Formatter} from 'Controls/formatter';
+import {Formatter} from 'Controls/decorator';
 
 
 

@@ -1,5 +1,7 @@
 import {descriptor} from 'Types/entity';
-import {FORMAT_MASK_CHARS, REPLACER, phoneMask, FormatBuilder, Formatter, IFormatMaskChars} from 'Controls/formatter';
+import {FORMAT_MASK_CHARS, REPLACER, phoneMask} from './Phone/phoneMask';
+import * as Formatter from './resources/Formatter';
+import * as FormatBuilder from './resources/FormatBuilder';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 // @ts-ignore
 import * as template from 'wml!Controls/_decorator/Phone/Phone';

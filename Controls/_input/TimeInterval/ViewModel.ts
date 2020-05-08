@@ -1,6 +1,6 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
-import {FormatBuilder, Formatter} from 'Controls/formatter';
+import {FormatBuilder, Formatter} from 'Controls/decorator';
 
 import {TimeInterval} from 'Types/entity';
 import {Spaces} from 'Controls/_input/Mask/Space';

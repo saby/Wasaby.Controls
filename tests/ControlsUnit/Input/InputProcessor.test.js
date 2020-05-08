@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/formatter',
+      'Controls/decorator',
       'Controls/input'
    ],
    function(formatter, inputMod) {

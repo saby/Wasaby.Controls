@@ -1,6 +1,6 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
-import {FormatBuilder, Formatter, phoneMask, REPLACER, FORMAT_MASK_CHARS} from 'Controls/formatter';
+import {FormatBuilder, Formatter, phoneMask, REPLACER, FORMAT_MASK_CHARS} from 'Controls/decorator';
 
 /**
  * @class Controls/_input/Text/ViewModel

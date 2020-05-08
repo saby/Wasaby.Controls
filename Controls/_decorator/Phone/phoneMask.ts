@@ -1,6 +1,6 @@
-import toString from '../Utils/Formatting/toString';
+import toString from 'Controls/Utils/Formatting/toString';
 import DICTIONARY from './Dictionary';
-import {IFormatMaskChars} from "./IMask";
+import {IFormatMaskChars} from '../resources/IMask';
 
 export const REPLACER: string = '';
 

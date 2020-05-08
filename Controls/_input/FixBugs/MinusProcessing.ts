@@ -1,5 +1,5 @@
 import {detection} from 'Env/Env';
-import {IText, pasteWithRepositioning} from 'Controls/formatter';
+import {IText, pasteWithRepositioning} from 'Controls/decorator';
 import {IInputData} from '../Base/InputUtil';
 
 /**
