@@ -74,21 +74,25 @@
 }
 
 .controls-SelectedCollection__item__cross {
-    .icon-size-without-important(@item_reset-button_icon-size_lookupCollection);
+    min-width: @item_reset-button_icon-size_lookupCollection;
     .flex-shrink(0);
-    color: @item_reset-button_icon-color_lookupCollection;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
 }
 
+.controls-SelectedCollection__item__cross_theme-@{themeName} {
+    .icon-size(@item_reset-button_icon-size_lookupCollection);
+    color: @item_reset-button_icon-color_lookupCollection;
+}
+
 .ws-is-hover {
-    .controls-SelectedCollection__item__cross:hover {
+    .controls-SelectedCollection__item__cross_theme-@{themeName}:hover {
         color: @item_reset-button_hover_icon-color_lookupCollection;
     }
 }
 
-.controls-SelectedCollection__item__cross:active {
+.controls-SelectedCollection__item__cross_theme-@{themeName}:active {
     color: @item_reset-button_active_icon-color_lookupCollection;
 }
 
