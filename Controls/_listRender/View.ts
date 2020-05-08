@@ -254,7 +254,7 @@ export default class View extends Control<IViewOptions> {
             this._collection,
             actionsGetter,
             this._options.theme,
-            itemActionsVisibilityCallbacks
+            itemActionsVisibilityCallback
         );
     }
 
