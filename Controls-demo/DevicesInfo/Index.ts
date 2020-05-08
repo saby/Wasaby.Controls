@@ -6,7 +6,12 @@ import {adapter} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 
 import RecordSynchronizer = require('Controls/Utils/RecordSynchronizer');
-import {getActionsForDevices, getColumns, getActionsForBlockedDevices, getActionsForFailedTries} from 'Controls-demo/DevicesInfo/DevicesInfoTools';
+import {
+    getActionsForDevices,
+    getColumns,
+    getActionsForBlockedDevices,
+    getActionsForFailedTries
+} from 'Controls-demo/DevicesInfo/DevicesInfoTools';
 import {failingAuth, mainRecord} from 'Controls-demo/DevicesInfo/DemoData';
 
 import * as Template from 'wml!Controls-demo/DevicesInfo/DevicesInfo';
@@ -23,8 +28,11 @@ export default class extends Control {
 
     private _blockedDevicesShown: boolean;
     private _devicesShown: boolean;
-    private _blockedDevicesInvisible: boolean;
-    private _failedTriesInvisible: boolean;
+    private _blockedDevicesVisible: boolean = false;
+    private _failingAuthVisible: boolean = false;
+    private _activityDevicesRecordSet: RecordSet;
+    private _blockedDevicesRecordSet: RecordSet;
+    private _failingAuthRecordSet: RecordSet;
 
     protected _viewSourceDevices: Memory;
     protected _viewSourceBlockedDevices: Memory;
@@ -40,7 +48,6 @@ export default class extends Control {
     protected _columns: INoStickyLadderColumn[] = getColumns();
 
     protected _beforeMount(options?: {}, contexts?: object, receivedState?: TItems): Promise<TItems> | void {
-
         this._devicesNavigation = {
             source: 'page',
             sourceConfig: {
@@ -58,9 +65,6 @@ export default class extends Control {
             }
         };
 
-        this._blockedDevicesInvisible = false;
-        this._failedTriesInvisible = false;
-
         this._blockedDevicesShown = false;
         this._devicesShown = false;
 
@@ -68,50 +72,87 @@ export default class extends Control {
         this._itemActionFailedTries = getActionsForFailedTries();
         this._itemActionBlockedDevices = getActionsForBlockedDevices();
 
+        this._activityDevicesLoadCallback = this._dataLoadedCallback.bind(this, 'activityDevices');
+        this._blockedDevicesLoadCallback = this._dataLoadedCallback.bind(this, 'blockedDevices');
+        this._failingAuthLoadCallback = this._dataLoadedCallback.bind(this, 'failingAuth');
+
         if (receivedState) {
-            this._activityDevicesRecord = receivedState.activityDevices;
-            this._lockedDevicesRecord = receivedState.lockedDevices;
-            this._failingAuthRecord = receivedState.failingAuth;
             this._setSource(receivedState);
         } else {
-            return new Promise((resolve) => {
-                // const request = new SbisService({
-                //     endpoint: {
-                //         contract: 'UserDevice',
-                //         address: '/userdevice/service/'
-                //     },
-                //     binding: {
-                //         query: 'ListFailingAuth'
-                //     }
-                // });
-                // const record = new RecordSet();
-                // const fullUserActivityPromise = request.call('GetFullUserActivity', {Filter: record}).then((item) => {
-                //     resolve({activityDevices: item.getRow().get('ActivityDevices'), lockedDevices: item.getRow().get('LockedDevices')});
-                // });
-                // const query = new Query();
-                // query.limit(20);
-                // query.where();
-                // const failingAuthPromise = request.query(query).then((item) => {
-                //      resolve(item.getAll())
-                // });
-
-                const fullInfo = {
-                    activityDevices: mainRecord.get('ActivityDevices'),
-                    lockedDevices: mainRecord.get('LockedDevices'),
-                    failingAuth: failingAuth
-                };
-                // Promise.all([fullUserActivityPromise, failingAuthPromise]).then((values) => {
-                //     const fullInfo = {
-                //         activityDevices: values[0].activityDevices,
-                //         lockedDevices: values[0].activityDevices,
-                //         failingAuth: values[1]
-                //     };
-
-                    this._setSource(fullInfo);
-                    resolve(fullInfo);
-                // });
-            });
+            return this._loadData();
         }
+    }
+
+    private _getSbisService() {
+        return {
+            call: () => Promise.resolve(),
+            query: () => Promise.resolve()
+        };
+        // return  new SbisService({
+        //     endpoint: {
+        //         contract: 'UserDevice',
+        //         address: '/userdevice/service/'
+        //     },
+        //     binding: {
+        //         query: 'ListFailingAuth'
+        //     }
+        // });
+    }
+
+    private _loadData(): Promise<void> {
+        const fullUserActivityPromise = this._loadFullUserActivity();
+        const failingAuthPromise = this._loadFailingActivity();
+
+         return Promise.all([fullUserActivityPromise, failingAuthPromise]).then((values) => {
+             return  {
+                 activityDevices: values[0].activityDevices,
+                 lockedDevices: values[0].activityDevices,
+                 failingAuth: values[1]
+             };
+         });
+    }
+
+    private _loadFailingActivity(): Promise<void> {
+        return new Promise((resolve) => {
+            const request = this._getSbisService();
+            const query = new Query();
+            const limit = 20;
+            query.limit(limit);
+            query.where();
+            request.query(query).then((data) => {
+                // todo - раскомментить
+                // const failingAuth = data.getAll();
+                this._setSource({failingAuth});
+                resolve(failingAuth);
+            });
+        });
+    }
+
+    private _loadFullUserActivity(): Promise<void> {
+        return new Promise((resolve) => {
+            const request = this._getSbisService();
+            const list = new RecordSet();
+            request.call('GetFullUserActivity', {Filter: list}).then((item) => {
+                // todo - раскомментить
+                // const data = {activityDevices: item.getRow().get('ActivityDevices'), lockedDevices: item.getRow().get('LockedDevices')};
+                const data = {
+                    activityDevices: mainRecord.get('ActivityDevices'),
+                    lockedDevices: mainRecord.get('LockedDevices')
+                };
+                this._setSource(data);
+                resolve(data);
+            });
+        });
+
+    }
+
+    private _dataLoadedCallback(listName: string, recordSet: RecordSet): void {
+        this[`_${listName}RecordSet`] = recordSet;
+        this._checkListVisibility(listName, recordSet);
+    }
+
+    private _checkListVisibility(listName: string, recordSet: RecordSet): void {
+        this[`_${listName}Visible`] = !!recordSet.getCount();
     }
 
     protected _actionDevicesClick(event: Event, action, item): void {
@@ -120,7 +161,7 @@ export default class extends Control {
                 this._clearSessionDevice(item);
                 break;
             case 1:
-                this._switchLock(item, true , true);
+                this._switchLock(item, true, true);
                 break;
             case 3:
                 this._changeType(item, 1);
@@ -136,6 +177,7 @@ export default class extends Control {
                 break;
         }
     }
+
     protected _actionBlockedDevicesClick(e, action, item, container): void {
         this._switchLock(item, false, false);
     }
@@ -144,101 +186,81 @@ export default class extends Control {
         this._switchLock(item, true, false);
     }
 
-    private _setSource(state): void {
-        this._viewSourceDevices = new Memory({
-            keyProperty: '@Id',
-            data: state.activityDevices.getRawData(),
-            adapter: new adapter.Sbis()
-        });
-
-        this._viewSourceBlockedDevices = new Memory({
-            keyProperty: '@Id',
-            data: state.lockedDevices.getRawData(),
-            adapter: new adapter.Sbis()
-        });
-        if (!state.lockedDevices.getRawData()) {
-            this._blockedDevicesInvisible = true;
+    private _setSource(data): void {
+        if (data.activityDevices) {
+            this._viewSourceDevices = new Memory({
+                keyProperty: '@Id',
+                data: data.activityDevices.getRawData(),
+                adapter: new adapter.Sbis()
+            });
         }
-        this._viewSourceFailedTries = new Memory({
-            keyProperty: '@Id',
-            data: state.failingAuth.getRawData(),
-            adapter: new adapter.Sbis()
-        });
-        if (!state.failingAuth.getRawData()) {
-            this._failedTriesInvisible = true;
+
+        if (data.lockedDevices) {
+            this._viewSourceBlockedDevices = new Memory({
+                keyProperty: '@Id',
+                data: data.lockedDevices.getRawData(),
+                adapter: new adapter.Sbis()
+            });
+        }
+
+        if (data.failingAuth) {
+            this._viewSourceFailedTries = new Memory({
+                keyProperty: '@Id',
+                data: data.failingAuth.getRawData(),
+                adapter: new adapter.Sbis()
+            });
         }
     }
 
     private _getBLObject(): ICrud {
-        return new SbisService({
-            endpoint: "ДоверенноеУстройство"
-        });
+        // TODO:
+        return {
+            call: () => Promise.resolve(true)
+        };
+        // return new SbisService({
+        //     endpoint: "ДоверенноеУстройство"
+        // });
     }
 
     private _switchLock(item, lock, lockFromDevices): void {
-        this._getBLObject().call(lock? "Lock" : "Unlock", {
-            "id": item.get('@Id')
+        this._getBLObject().call(lock ? 'Lock' : 'Unlock', {
+            id: item.get('@Id')
         }).then(() => {
             if (lock) {
-                const record = lockFromDevices? this._activityDevicesRecord : this._failingAuthRecord;
-                    RecordSynchronizer.deleteRecord(record, item.getId());
-
-                    if (lockFromDevices) {
-                        this._viewSourceDevices = new Memory({
-                            keyProperty: '@Id',
-                            data: this._activityDevicesRecord.getRawData(),
-                            adapter: new adapter.Sbis()
-                        });
-                    } else {
-                        this._viewSourceFailedTries = new Memory({
-                            keyProperty: '@Id',
-                            data: this._failingAuthRecord.getRawData(),
-                            adapter: new adapter.Sbis()
-                        });
-                    }
-
                 item.set('Blocked', true);
-                RecordSynchronizer.addRecord(item, {}, this._lockedDevicesRecord);
-                this._blockedDevicesInvisible = true;
-                this._forceUpdate();
-            } else {
-                RecordSynchronizer.deleteRecord(this._lockedDevicesRecord, item.getId());
-                if (!this._viewSourceBlockedDevices.data.d.length) {
-                    this._blockedDevicesInvisible = true;
-                    this._forceUpdate();
+                if (!lockFromDevices) {
+                    this._loadData();
+                } else {
+                    this._loadFullUserActivity();
                 }
+                // RecordSynchronizer.addRecord(item, {}, this._blockedDevicesRecordSet);
+                // this._checkListVisibility('blockedDevices', this._blockedDevicesRecordSet);
+            } else {
+                this._loadData();
+                // RecordSynchronizer.deleteRecord(this._blockedDevicesRecordSet, item.getId());
+                // this._checkListVisibility('blockedDevices', this._blockedDevicesRecordSet);
             }
-            this._viewSourceBlockedDevices = new Memory({
-                keyProperty: '@Id',
-                data: this._lockedDevicesRecord.getRawData(),
-                adapter: new adapter.Sbis()
-            });
         }).catch(() => {
-             const message = lock ? "Не удалось заблокировать!" : "Не удалось разблокировать!";
-             this._children.devicesInfoPopup.open({
-                 message: message,
-                 type: 'ok'
-             });
+            const message = lock ? 'Не удалось заблокировать!' : 'Не удалось разблокировать!';
+            this._children.devicesInfoPopup.open({
+                message,
+                type: 'ok'
+            });
         });
     }
 
     private _changeType(item, type) {
-        let changeType = () => {
+        const changeType = () => {
             this._getBLObject().call('ChangeType', {
                 device_id: item.get('DeviceId'),
                 device_type: type
             }).then(() => {
                 item.set('DeviceType', type);
-                RecordSynchronizer.mergeRecord(item, this._activityDevicesRecord, item.getId());
-                this._viewSourceDevices = new Memory({
-                    keyProperty: '@Id',
-                    data: this._activityDevicesRecord.getRawData(),
-                    adapter: new adapter.Sbis()
-                });
+                RecordSynchronizer.mergeRecord(item, this._activityDevicesRecordSet, item.getId());
             }).catch(() => {
                 const message = 'Не удалось поменять тип устройства';
                 this._children.devicesInfoPopup.open({
-                    message: message,
+                    message,
                     type: 'ok'
                 });
             });
@@ -250,7 +272,7 @@ export default class extends Control {
                 if (result && result.getRow && result.getRow().get('IsEnabled')) {
                     const message = 'Изменив статус устройства на рабочий, вы разрешаете системе вести учет времени использования программ и посещения сайтов с этого устройства.';
                     this._children.devicesInfoPopup.open({
-                        message: message,
+                        message,
                         details: 'Сохранить изменения?',
                         type: 'yesno'
                     }).then((answer) => {
@@ -270,24 +292,24 @@ export default class extends Control {
     }
 
     private _clearSessionDevice(item) {
-        let clearSession = () => {
-            this._getBLObject().call("ClearSession", {
-                "key" : item.get("@Id")
+        const clearSession = () => {
+            this._getBLObject().call('ClearSession', {
+                key: item.get('@Id')
             }).then(() => {
                 this._children.devices.reload();
             }).catch(() => {
                 const message = 'Не удалось завершить сессию';
                 this._children.devicesInfoPopup.open({
-                    message: message,
+                    message,
                     type: 'ok'
                 });
             });
         };
 
-        if (item['CurrentDevice']) {
+        if (item.CurrentDevice) {
             const message = 'Завершить текущий сеанс?';
             this._children.devicesInfoPopup.open({
-                message: message,
+                message,
                 type: 'yesno'
             }).then((answer) => {
                 if (answer) {
