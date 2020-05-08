@@ -223,14 +223,9 @@ export class Controller {
      * @private
      */
     private _assignActions(): Array<number | string> {
-        const supportsEventRaising = typeof this._collection.setEventRaising === 'function';
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
-
-        if (supportsEventRaising) {
-            this._collection.setEventRaising(false, true);
-        }
-
+        this._collection.setEventRaising(false, true);
         this._collection.each((item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
                 let contents = item.getContents();
@@ -245,11 +240,7 @@ export class Controller {
                 }
             }
         });
-
-        if (supportsEventRaising) {
-            this._collection.setEventRaising(true, true);
-        }
-
+        this._collection.setEventRaising(true, true);
         this._collection.setActionsAssigned(true);
 
         if (hasChanges) {
