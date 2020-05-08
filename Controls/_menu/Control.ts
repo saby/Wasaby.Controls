@@ -448,6 +448,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                 self._notify('controlResize', [], {bubbling: true});
             });
         }
+        self._notify('applyButtonVisible', [this._applyButtonVisible]);
     }
 
     private createViewModel(items: RecordSet, options: IMenuControlOptions): void {

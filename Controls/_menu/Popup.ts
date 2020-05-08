@@ -35,6 +35,8 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _closeButtonVisibility: boolean;
     protected _verticalDirection: string = 'bottom';
     protected _horizontalDirection: string = 'right';
+    protected _applyButtonVisibility: boolean = false;
+    protected _selectedKeys: any = [];
 
     protected _beforeMount(options: IMenuPopupOptions): Promise<void>|void {
         this._headerTheme = this._getTheme();
@@ -52,7 +54,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _beforeUpdate(newOptions: IMenuPopupOptions): void {
         this._headerTheme = this._getTheme();
 
-        if (newOptions.stickyPosition.direction && this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
+        if (newOptions.stickyPosition && newOptions.stickyPosition.direction && this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
             this._verticalDirection = newOptions.stickyPosition.direction.vertical;
             this._horizontalDirection = newOptions.stickyPosition.direction.horizontal;
         }
@@ -65,6 +67,18 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
     protected _afterMount(options?: IMenuPopupOptions): void {
         this._notify('sendResult', ['menuOpened', this._container], {bubbling: true});
+    }
+
+    protected _setSelectedKeys(event: SyntheticEvent<MouseEvent>, selectedKeys): void {
+        this._selectedKeys = selectedKeys;
+    }
+
+    protected _setApplyButtonVisible(event: SyntheticEvent<MouseEvent>, applyButtonVisible): void {
+        this._applyButtonVisibility = applyButtonVisible;
+    }
+
+    private _applySelection(): void {
+        this._notify('applyClick', [this._selectedKeys]);
     }
 
     protected _headerClick(): void {
