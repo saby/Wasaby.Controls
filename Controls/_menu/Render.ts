@@ -190,24 +190,20 @@ class MenuRender extends Control<IMenuRenderOptions> {
     private getIconPadding(options: IMenuRenderOptions): string {
         const items = options.listModel.getCollection();
         const parentProperty = options.parentProperty;
-        let iconPadding = '', icon;
-        let headingIcon = options.headerTemplate !== null && (options.headConfig?.icon || options.headingIcon);
+        let iconPadding = '';
+        let icon;
 
-        if (options.root === null && headingIcon && (!options.headConfig || options.headConfig.menuStyle !== 'titleHead')) {
-            iconPadding = this.getIconSize(options.iconSize, headingIcon);
-        } else {
-            factory(items).each((item) => {
-                icon = item.get('icon');
-                if (icon && (!parentProperty || item.get(parentProperty) === options.root)) {
-                    iconPadding = this.getIconSize(options.iconSize, icon);
-                }
-            });
-        }
+        factory(items).each((item) => {
+            icon = item.get('icon');
+            if (icon && (!parentProperty || item.get(parentProperty) === options.root)) {
+                iconPadding = this.getIconSize(options.iconSize, icon);
+            }
+        });
         return iconPadding;
     }
 
     private getIconSize(iconSize: string, icon: string): string {
-        const iconSizes = [['icon-small', 's'], ['icon-medium', 'm'], ['icon-large', 'l']];
+        const iconSizes = [['icon-small', 's'], ['icon-medium', 'm'], ['icon-large', 'l'], ['icon-size', 'default']];
         if (iconSize) {
             return iconSize;
         } else {

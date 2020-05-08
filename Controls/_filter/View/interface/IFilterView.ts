@@ -204,7 +204,7 @@
  * <pre>
  * <!-- MyModule.wml -->
  * <Controls.filter:View
- *    items="{{_items}}"
+ *    source="{{_source}}"
  *    detailPanelTemplateName="wml!MyModule/panelTemplate"/>
  * </pre>
  *
@@ -220,9 +220,9 @@
  * // MyModule.js
  * _items: null,
  * _beforeMount: function(options) {
- *    this._items = [
+ *    this._source = [
  *       { name: 'type', value: ['1'], resetValue: ['1'] },
- *       { name: 'deleted', value: true, resetValue: false, textValue: 'Deleted', viewMode: extended }
+ *       { name: 'deleted', value: true, resetValue: false, textValue: 'Deleted', viewMode: 'extended' }
  *    ];
  * }
  * </pre>

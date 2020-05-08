@@ -33,6 +33,14 @@
                 <Controls.buttons:Button readOnly="{{false}}" iconStyle="primary" buttonStyle="primary" iconSize="m" viewMode="button" icon="icon-Send"/>
             </div>
         </div>
+        <div attr:class="demo-Button_margin-10 ControlsDemo__icon">
+            <div attr:class="test_element_two_column">
+                <Controls.buttons:Button readOnly="{{false}}" iconStyle="secondary" buttonStyle="secondary" iconSize="m" viewMode="button" icon="icon-AddButtonNew"/>
+            </div>
+            <div attr:class="test_element_two_column">
+                <Controls.buttons:Button readOnly="{{false}}" iconStyle="default" buttonStyle="primary" iconSize="m" viewMode="button" icon="icon-AddButtonNew"/>
+            </div>
+        </div>
     </div>
     <div attr:class="demo-Button_margin-10 ControlsDemo__iconText-text demo-standartDemoButton__iconText">
         <h3>Button with icon and text</h3>
@@ -62,9 +70,21 @@
                 <Controls.buttons:Button readOnly="{{false}}" attr:class="demo-controls-Button_style-magic" buttonStyle="magic" caption="Accent link 4" viewMode="linkButton" fontSize="m"/>
             </div>
         </div>
+        <h3>Sizes and font-weight</h3>
+        <div attr:class="demo-Button_margin-10 ControlsDemo__linkSizes demo-Button__testBlock_column">
+            <Controls.buttons:Button caption="Link xs" fontColorStyle="link" viewMode="linkButton" fontSize="xs"/>
+            <Controls.buttons:Button caption="Link m" fontColorStyle="link" viewMode="linkButton" fontSize="m"/>
+            <Controls.buttons:Button caption="Link l" fontColorStyle="link" viewMode="linkButton" fontSize="l"/>
+            <Controls.buttons:Button attr:style="font-weight: bold" caption="Link bold" fontColorStyle="link" viewMode="linkButton" fontSize="m"/>
+        </div>
         <h3>Button-link with icon and text</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__linkIconText">
-            <Controls.buttons:Button readOnly="{{false}}" icon="icon-Send" iconSize="s" iconStyle="secondary" caption="Main link" fontColorStyle="link" viewMode="linkButton" fontSize="m"/>
+            <div attr:class="test_element_two_column">
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-Send" iconSize="s" iconStyle="secondary" caption="Main link" fontColorStyle="link" viewMode="linkButton" fontSize="m"/>
+            </div>
+            <div attr:class="test_element_two_column">
+                <Controls.buttons:Button readOnly="{{false}}" icon="icon-Send" iconSize="m" iconStyle="secondary" caption="Main link" fontColorStyle="link" viewMode="linkButton" fontSize="m"/>
+            </div>
         </div>
         <h3>Button-link for table</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__linkForTable">
