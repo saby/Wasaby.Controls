@@ -151,7 +151,6 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             ctrl._beforeUpdate(cfg);
-            ctrl._afterUpdate(cfg);
 
             // check saving loaded items after new viewModelConstructor
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
@@ -316,7 +315,6 @@ define([
             sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
             sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
                isLoadStarted = true;
-               return Promise.resolve();
             });
 
             lists.BaseControl._private.loadToDirectionIfNeed(self);
@@ -345,7 +343,6 @@ define([
             sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
             sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
                isLoadStarted = true;
-               return Promise.resolve();
             });
 
             shouldSearch = true;

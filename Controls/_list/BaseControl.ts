@@ -642,7 +642,7 @@ var _private = {
                 return addedItems;
             }).addErrback((error: Error) => {
                 _private.hideIndicator(self);
-                // скроллим в край списка, чтобы при ошибке загрузке данных шаблон ошибки сразу был виден
+                // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
                 _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
                 return _private.crudErrback(self, {
                     error,
@@ -1555,7 +1555,7 @@ var _private = {
      * @return {Promise}
      * @private
      */
-    crudErrback(self: BaseControl, config: ErrbackConfig): Promise<Error> {
+    crudErrback(self: BaseControl, config: ErrbackConfig): Promise<CrudResult> {
         return _private.processError(self, config).then(getData);
     },
 
