@@ -3743,8 +3743,8 @@ TODO проверить. Эти тесты не совместимы с обно
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
-                     assert.equal(args.templateOptions.items.getKeyProperty(), 'id');
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.source, 'Types/source:Memory'));
+                     assert.equal(args.templateOptions.source.getKeyProperty(), 'id');
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
@@ -3806,8 +3806,8 @@ TODO проверить. Эти тесты не совместимы с обно
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
-                     assert.equal(args.templateOptions.items.getKeyProperty(), 'id');
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.source, 'Types/source:Memory'));
+                     assert.equal(args.templateOptions.source.getKeyProperty(), 'id');
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
@@ -4164,7 +4164,7 @@ TODO проверить. Эти тесты не совместимы с обно
                   open: function(args) {
                      callBackCount++;
                      assert.deepEqual(target.getBoundingClientRect(), args.target.getBoundingClientRect());
-                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.source, 'Types/source:Memory'));
                   }
                }
             };
@@ -4206,13 +4206,13 @@ TODO проверить. Эти тесты не совместимы с обно
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._children = {
-               itemActionsOpener: {
-                  close: function() {
+               swipeControl: {
+                  closeSwipe: function() {
                      callBackCount++;
                   }
                },
-               swipeControl: {
-                  closeSwipe: function() {
+               itemActionsOpener: {
+                  close: function() {
                      callBackCount++;
                   }
                }
@@ -4233,10 +4233,9 @@ TODO проверить. Эти тесты не совместимы с обно
                   }
                }
             };
-            instance._actionsMenuResultHandler({
-               action: 'itemClick',
-               event: fakeEvent,
-               data: [{
+            instance._actionsMenuResultHandler(
+               'itemClick',
+               {
                   getRawData: function() {
                      callBackCount++;
                      return {
@@ -4245,8 +4244,9 @@ TODO проверить. Эти тесты не совместимы с обно
                         }
                      };
                   }
-               }]
-            });
+               },
+               fakeEvent
+            );
             assert.equal(instance._listViewModel._activeItem, null);
             assert.equal(instance._listViewModel._menuState, 'hidden');
             assert.equal(callBackCount, 5);
@@ -5740,7 +5740,7 @@ TODO проверить. Эти тесты не совместимы с обно
                            newItem.set('id', 777);
                            items.add(newItem);
                            try {
-                              assert.deepEqual(ctrl._sourceController._queryParamsController._afterPosition, [777]);
+                              assert.deepEqual(ctrl._sourceController._queryParamsController._controllers.at(0).queryParamsController._afterPosition, [777]);
                               resolve();
                            } catch (e) {
                               reject(e);
