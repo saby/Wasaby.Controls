@@ -394,7 +394,7 @@ export class Controller {
         if (this._isMenuButtonRequired(actions)) {
             showed.push({
                 id: null,
-                icon: `icon-ExpandDown ${Controller.resolveItemActionClass(this._theme)}`,
+                icon: `icon-ExpandDown ${Controller._resolveItemActionClass(this._theme)}`,
                 style: 'secondary',
                 iconStyle: 'secondary',
                 _isMenu: true
@@ -427,7 +427,7 @@ export class Controller {
         actions: IItemActionsContainer
     ): boolean {
         const oldActions = item.getActions();
-        if (!oldActions || (actions && !Controller._isMatchingActions(oldActions, actions))) {
+        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions))) {
             item.setActions(actions, true);
             return true;
         }
@@ -439,8 +439,8 @@ export class Controller {
         newContainer: IItemActionsContainer
     ): boolean {
         return (
-            Controller._isMatchingActionLists(oldContainer.all, newContainer.all) &&
-            Controller._isMatchingActionLists(oldContainer.showed, newContainer.showed)
+            this._isMatchingActionLists(oldContainer.all, newContainer.all) &&
+            this._isMatchingActionLists(oldContainer.showed, newContainer.showed)
         );
     }
 
@@ -490,17 +490,17 @@ export class Controller {
 
     // todo скорее всего, переедет в шаблон
     private static _fixActionIcon(action: IItemAction, theme: string): IItemAction {
-        if (!action.icon || action.icon.includes(Controller.resolveItemActionClass(theme))) {
+        if (!action.icon || action.icon.includes(this._resolveItemActionClass(theme))) {
             return action;
         }
         return {
             ...action,
-            icon: `${action.icon} ${Controller.resolveItemActionClass(theme)}`
+            icon: `${action.icon} ${this._resolveItemActionClass(theme)}`
         };
     }
 
     // todo скорее всего, переедет в шаблон
-    private static resolveItemActionClass(theme: string): string {
+    private static _resolveItemActionClass(theme: string): string {
         return `controls-itemActionsV__action_icon_theme-${theme} icon-size_theme-${theme}`;
     }
 
