@@ -313,7 +313,7 @@ export default class View extends Control<IViewOptions> {
             contents = contents[contents.length - 1];
         }
         const itemKey = contents?.getKey();
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, this._options.theme, isContextMenu);
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
         const onResult = this._itemActionsMenuResultHandler.bind(this);
         const onClose = this._itemActionsMenuCloseHandler.bind(this);
         this._collection.setActiveItem(item);

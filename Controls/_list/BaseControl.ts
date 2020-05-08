@@ -1334,7 +1334,7 @@ const _private = {
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
         const itemKey = item?.getContents()?.getKey();
-        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, self._options.theme,  isContextMenu);
+        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
             onClose: self._onItemActionsMenuClose
@@ -2587,6 +2587,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._listViewModel.getEditingConfig();
+        const firstAssignment = this._listViewModel.isActionsAssigned();
         const itemActionsChangeResult = this._itemActionsController.update({
             collection: this._listViewModel,
             itemActions: options.itemActions,
