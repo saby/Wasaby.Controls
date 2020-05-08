@@ -798,7 +798,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             }
 
             if (receivedState) {
-                if (this._options.useStore) {
+                if (options.useStore) {
                     const state = Store.getState();
                     _private.setFilterItems(this, state.filterSource, [], receivedState);
                     _private.itemsReady(this, state.filter, receivedState);
