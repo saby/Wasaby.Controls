@@ -47,8 +47,11 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
 
     _itemsChanged(event: Event, items): void {
        event.stopPropagation();
-        this._notify('filterItemsChanged', [items], {bubbling: true});
-        Store.dispatch('filter', items);
+       if (this._options.useStore) {
+           Store.dispatch('filterSource', items);
+       } else {
+           this._notify('filterItemsChanged', [items], {bubbling: true});
+       }
     },
 
    _filterChanged(event: Event): void {
@@ -57,7 +60,6 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
 
     _historyApply(event: Event, history): void {
         this._notify('filterHistoryApply', [history], {bubbling: true});
-        Store.dispatch('filterHistory', history);
     }
 });
 

@@ -770,6 +770,25 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             });
         },
 
+        _observeStore(): void {
+            import('Controls/Store').then((store) => {
+                this._store = store;
+                const sourceCallbackId = this._store.onPropertyChanged('filterSource', (filterSource) => {
+                    _private.setFilterItems(this, filterSource, [], []);
+                    _private.itemsReady(this, this._filter);
+                });
+                const filterSourceCallbackId = this._store.onPropertyChanged('filter', (filter) => {
+                    _private.applyItemsToFilter(
+                        this,
+                        Prefetch.prepareFilter(filter, this._options.prefetchParams),
+                        this._filterButtonItems,
+                        this._fastFilterItems
+                    );
+                });
+                this._storeCallbacks = [sourceCallbackId, filterSourceCallbackId];
+            });
+        },
+
         _beforeMount(options, context, receivedState): Promise<IFilterHistoryData|{}> {
             let filter = options.filter;
 
@@ -777,17 +796,32 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                 filter = Prefetch.prepareFilter(filter, options.prefetchParams);
             }
 
+            if (options.useStore) {
+                this._observeStore();
+            }
+
             if (receivedState) {
-                _private.setFilterItems(this, options.filterButtonSource, options.fastFilterSource, receivedState);
-                _private.itemsReady(this, filter, receivedState);
+                if (this._options.useStore) {
+                    const state = this._store.getState();
+                    _private.setFilterItems(this, state.filterSource, [], receivedState);
+                    _private.itemsReady(this, state.filter, receivedState);
+                } else {
+                    _private.setFilterItems(this, options.filterButtonItems, options.fastFilterSource, receivedState);
+                    _private.itemsReady(this, options.filter, receivedState);
+                }
 
                 if (options.prefetchParams) {
                     this._isFilterChanged = true;
                 }
+            } else if (options.useStore) {
+                const state = this._store.getState();
+                _private.resolveItems(this, state.historyId, state.filterSource, [], options.historyItems).then((history) => {
+                    _private.itemsReady(this, state.filter, history);
+                    return history;
+                });
             } else {
                 return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback((history) => {
                     _private.itemsReady(this, filter, history);
-
                     if (options.historyItems && options.historyItems.length && options.historyId && options.prefetchParams) {
                         _private.processHistoryOnItemsChanged(this, options.historyItems, options);
                     }
@@ -817,31 +851,40 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
         },
 
          _beforeUpdate(newOptions): void {
-            const filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource;
-            const fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
+            if (!this._options.useStore) {
+                const filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource;
+                const fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
 
-            if (filterButtonChanged || fastFilterChanged) {
-               _private.setFilterItems(
-                   this,
-                   filterButtonChanged ? newOptions.filterButtonSource : this._filterButtonItems,
-                   fastFilterChanged ? newOptions.fastFilterSource : this._fastFilterItems);
+                if (filterButtonChanged || fastFilterChanged) {
+                    _private.setFilterItems(
+                        this,
+                        filterButtonChanged ? newOptions.filterButtonSource : this._filterButtonItems,
+                        fastFilterChanged ? newOptions.fastFilterSource : this._fastFilterItems);
 
-               _private.itemsReady(this, this._filter);
-            }
+                    _private.itemsReady(this, this._filter);
+                }
 
-            if (!isEqual(this._options.filter, newOptions.filter)) {
-               _private.applyItemsToFilter(
-                   this,
-                   Prefetch.prepareFilter(newOptions.filter, newOptions.prefetchParams),
-                   this._filterButtonItems,
-                   this._fastFilterItems
-               );
-            }
+                if (!isEqual(this._options.filter, newOptions.filter)) {
+                    _private.applyItemsToFilter(
+                        this,
+                        Prefetch.prepareFilter(newOptions.filter, newOptions.prefetchParams),
+                        this._filterButtonItems,
+                        this._fastFilterItems
+                    );
+                }
 
-            if (newOptions.historyId !== this._options.historyId) {
-                this._sourceController = null;
+                if (newOptions.historyId !== this._options.historyId) {
+                    this._sourceController = null;
+                }
             }
          },
+
+        _beforeUnmount(): void {
+             if (this._options.useStore) {
+                 this._storeCallbacks.forEach((id) => this._store.unsubscribe(id));
+                 this._store = null;
+             }
+        },
 
          _filterHistoryApply(event, history): void {
              if (this._options.prefetchParams) {

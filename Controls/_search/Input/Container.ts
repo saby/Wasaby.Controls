@@ -48,8 +48,11 @@ var SearchContainer = Control.extend(/** @lends Controls/_search/Input/Container
    },
 
    _notifySearch: function (value, force) {
-      this._notify('search', [value || '', force], {bubbling: true});
-      Store.dispatch('search', {value: value || '', force});
+      if (this._options.useStore) {
+         Store.dispatch('search', value);
+      } else {
+          this._notify('search', [value || '', force], {bubbling: true});
+      }
    },
 
    _valueChanged: function (event, value) {

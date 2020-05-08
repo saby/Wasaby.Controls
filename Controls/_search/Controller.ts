@@ -336,14 +336,25 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       Container.superclass.constructor.apply(this, arguments);
    },
 
+   _observeStore() {
+      this._storeCallbackId = Store.onPropertyChanged('searchValue', (searchValue) => {
+         this._search(null, searchValue, true);
+      })
+   },
+
    _beforeMount: function (options, context) {
       this._dataOptions = context.dataOptions;
       this._previousViewMode = this._viewMode = options.viewMode;
+      let searchValue = options.searchValue;
+      if (this._options.useStore) {
+         this._observeStore();
+         searchValue = Store.getState().searchValue;
+      }
 
-      if (options.searchValue) {
-         this._inputSearchValue = options.searchValue;
-         if (!_private.isSearchValueShort(options.minSearchLength, options.searchValue)) {
-            this._searchValue = options.searchValue;
+      if (searchValue) {
+         this._inputSearchValue = searchValue;
+         if (!_private.isSearchValueShort(options.minSearchLength, searchValue)) {
+            this._searchValue = searchValue;
 
             if (_private.needUpdateViewMode(this, 'search')) {
                _private.updateViewMode(this, 'search');
@@ -405,13 +416,6 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       }
    },
 
-   _afterMount: function (options) {
-      if (options.useStore) {
-         this._searchCallbackId = Store.onPropertyChanged('search',
-             ({value, force}) => this._search(undefined, value, force)
-         );
-      }
-   },
 
    _search: function (event, value, force) {
       _private.startSearch(this, value, force);
