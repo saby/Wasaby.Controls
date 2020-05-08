@@ -236,7 +236,7 @@ export class Controller {
                 const itemChanged = Controller._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
-                    item.getContents().getKey();
+                    changedItemsIds.push(item.getContents().getKey());
                 }
             }
         });
@@ -436,7 +436,7 @@ export class Controller {
     ): boolean {
         const oldActions = item.getActions();
         if (!oldActions || (actions && !Controller._isMatchingActions(oldActions, actions))) {
-            item.setActions(actions, false);
+            item.setActions(actions, true);
             return true;
         }
         return false;
