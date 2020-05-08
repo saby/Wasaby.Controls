@@ -96,7 +96,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ��� ��������� �� ������ � ������ �� ������ �������� ��������
+     * При наведении на запись в списке мы должны показать операции
      * @param e
      * @private
      */
@@ -105,7 +105,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * �� ������� youch �� ������ �������� ��������
+     * По событию youch мы должны показать операции
      * @param e
      * @private
      */
@@ -114,7 +114,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * �� ����� �� ������ � ������ ����� ����������� ������
+     * По клику на запись в списке нужно переместить маркер
      * @param e
      * @param item
      * @param clickEvent
@@ -131,7 +131,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ���������� ������ �� ������. ���������� �������� �� ������
+     * Обработчик свайпа по записи. Показывает операции по свайпу
      * @param e
      * @param item
      * @param swipeEvent
@@ -156,7 +156,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ���������� ������� ��������� �������� ������ �� ������
+     * Обработчик события окончания анимации свайпа по записи
      * @param e
      * @private
      */
@@ -165,7 +165,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ������������ ������� ����� �� ������ � ������� ������� actionClick
+     * Обрабатывает событие клика по записи и бросает событие actionClick
      * @param e
      * @param item
      * @param action
@@ -191,7 +191,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ��������� ������� ������������� ������������ ����
+     * Обработка события возникновения контекстного меню
      * @param e
      * @param item
      * @param clickEvent
@@ -206,7 +206,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ��������� ������� ����� �� �������� ������
+     * Обработка события клика по элементу списка
      * @param e
      * @param item
      * @param keyDownEvent
@@ -235,7 +235,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ������������ ���� �� ���������� ��������
+     * Обрабатывает клик по конкретной операции
      * @param action
      * @param clickEvent
      * @param item
@@ -243,12 +243,11 @@ export default class View extends Control<IViewOptions> {
      */
     private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
         let contents = item.getContents();
-        // TODO item instanceof BreadcrumbsItem ?
-        if (Array.isArray(contents)) {
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
             contents = contents[contents.length - 1];
         }
-        // TODO ���������. � ������ ���� ��� ����� controls-ListView__itemV �� �������� ������� ������
-        // TODO ��������� �� ��� ���������� �� CSS ������ ��� ������ ����������?
+        // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
+        // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         this._notify('actionClick', [action, contents, itemContainer]);
         if (action.handler) {
@@ -258,10 +257,10 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ���������� �������, ��������� ����� onResult � ����������/����������� ����
-     * @param e ������� onResult
-     * @param eventName �������� �������, ���������� �� Controls/menu:Popup.
-     * �������� �������� itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
+     * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
+     * @param e событие onResult
+     * @param eventName название события, брошенного из Controls/menu:Popup.
+     * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
      * @param actionModel
      * @param clickEvent
      * @private
@@ -281,7 +280,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ���������� �������� �����������/������������ ����
+     * Обработчик закрытия выпадающего/контекстного меню
      * @param e
      * @param clickEvent
      * @private
@@ -297,7 +296,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ��������� ���� ��������
+     * Открывает меню операций
      * @param action
      * @param clickEvent
      * @param item
@@ -310,8 +309,7 @@ export default class View extends Control<IViewOptions> {
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
         let contents = item?.getContents();
-        // TODO item instanceof BreadcrumbsItem ?
-        if (Array.isArray(contents)) {
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
             contents = contents[contents.length - 1];
         }
         const itemKey = contents?.getKey();
@@ -326,7 +324,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * �����, ������� ��������� ����
+     * Метод, который закрывает меню
      * @private
      */
     private _closeActionsMenu(): void {
@@ -337,7 +335,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * ������ ��������� �� ��������� ������
+     * Создаёт коллекцию из пришедших данных
      * @param module
      * @param items
      * @param collectionOptions
@@ -352,7 +350,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * �������������� ������������ � ��������� � �� ������
+     * Инициализирует контрорллере и обновляет в нём данные
      * @private
      */
     protected _updateItemActions(): void {

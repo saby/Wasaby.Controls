@@ -231,7 +231,7 @@ export class Controller {
         }
 
         this._collection.each((item) => {
-            if (!item.isActive()) {
+            if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
                 const actionsForItem = this._collectActionsForItem(item);
                 const itemChanged = Controller._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
                 hasChanges = hasChanges || itemChanged;
@@ -329,8 +329,7 @@ export class Controller {
      */
     private _collectActionsForItem(item: IItemActionsItem): IItemAction[] {
         let contents = item.getContents();
-        // TODO item instanceof BreadcrumbsItem ?
-        if (Array.isArray(contents)) {
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
             contents = contents[contents.length - 1];
         }
         const itemActions: IItemAction[] = this._itemActionsProperty

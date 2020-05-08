@@ -2645,8 +2645,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         clickEvent.preventDefault();
         clickEvent.stopPropagation();
         let contents = item.getContents();
-        // TODO item instanceof BreadcrumbsItem ?
-        if (Array.isArray(contents)) {
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
             contents = contents[contents.length - 1];
         }
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
@@ -2657,21 +2656,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Обработчик клика по операции
      * @param event
      * @param action
-     * @param itemData
+     * @param item
      * @private
      */
-    _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
+    _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, item: CollectionItem<Model>): void {
         event.stopPropagation();
-        let contents: Model = itemData.getContents();
-        // TODO item instanceof BreadcrumbsItem ?
-        if (Array.isArray(contents)) {
+        let contents: Model = item.getContents();
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
             contents = contents[contents.length - 1];
         }
         _private.setMarkedKey(this, contents.getKey());
         if (action && !action._isMenu && !action['parent@']) {
-            _private.handleItemActionClick(this, action, event, itemData);
+            _private.handleItemActionClick(this, action, event, item);
         } else {
-            _private.openItemActionsMenu(this, action, event, itemData, false);
+            _private.openItemActionsMenu(this, action, event, item, false);
         }
     },
 
