@@ -5928,7 +5928,7 @@ define([
                            newItem.set('id', 777);
                            items.add(newItem);
                            try {
-                              assert.deepEqual(ctrl._sourceController._queryParamsController._afterPosition, [777]);
+                              assert.deepEqual(ctrl._sourceController._queryParamsController._controllers.at(0).queryParamsController._afterPosition, [777]);
                               resolve();
                            } catch (e) {
                               reject(e);
