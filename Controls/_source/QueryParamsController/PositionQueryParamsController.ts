@@ -323,7 +323,7 @@ class PositionQueryParamsController implements IQueryParamsController {
             navDirection = CursorDirection.forward;
         }
 
-        return this._more[navDirection];
+        return this._getMoreMeta()[navDirection];
     }
 
     setEdgeState(direction: Direction): void {
@@ -360,8 +360,8 @@ class PositionQueryParamsController implements IQueryParamsController {
      * @param key
      * @private
      */
-    private _getMoreMeta(key: string | number): IPositionHasMore {
-        const meta: IPositionHasMore = this._getMore().getMoreMeta(key) as IPositionHasMore;
+    private _getMoreMeta(): IPositionHasMore {
+        const meta: IPositionHasMore = this._more as IPositionHasMore;
         if (meta && meta.backward === undefined) {
             meta.backward = meta.before;
         }

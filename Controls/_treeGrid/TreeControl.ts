@@ -180,7 +180,7 @@ var _private = {
         let hasMoreForNode;
 
         sourceControllers.forEach((controller, nodeKey) => {
-            hasMoreForNode = controller.hasMoreData('down', nodeKey);
+            hasMoreForNode = controller.hasMoreData('down');
 
             if (hasMoreForNode === undefined) {
                 hasMoreForNode = controller.hasMoreData('down');
