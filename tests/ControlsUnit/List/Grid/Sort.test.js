@@ -62,7 +62,7 @@ define(['Controls/grid', 'Types/source'], function(grid, TypesSource) {
          assert.deepEqual(sortingSelector._selectedKeys, [2]);
          assert.deepEqual(sortingSelector._currentParamName, 'S');
          assert.deepEqual(sortingSelector._currentOrder, 'ASC');
-         assert.isFalse(menuClosed);
+         assert.isTrue(menuClosed);
       });
       it('_selectedKeysChangedHandler', function() {
          assert.isFalse(sortingSelector._selectedKeysChangedHandler({},[1]));
