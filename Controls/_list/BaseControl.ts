@@ -683,7 +683,7 @@ const _private = {
                             ).then(() => {
                                 _private.showError(self, errorConfig);
                                 return Promise.resolve(afterActionCallback);
-                            }, () => null);
+                            });
                         },
                         /**
                          * Позиция шаблона ошибки относительно списка.
@@ -691,7 +691,7 @@ const _private = {
                          */
                         showInDirection: direction
                     }
-                }) as Deferred<Error>;
+                }) as Deferred<any>;
             });
         }
         Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
@@ -1469,7 +1469,7 @@ const _private = {
      * @return {Promise}
      * @private
      */
-    crudErrback(self: BaseControl, config: IErrbackConfig): Promise<ICrudResult> {
+    crudErrback(self: BaseControl, config: IErrbackConfig): Promise<any> {
         return _private.processError(self, config).then(getData);
     },
 
