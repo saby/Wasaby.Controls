@@ -96,7 +96,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РџСЂРё РЅР°РІРµРґРµРЅРёРё РЅР° Р·Р°РїРёСЃСЊ РІ СЃРїРёСЃРєРµ РјС‹ РґРѕР»Р¶РЅС‹ РїРѕРєР°Р·Р°С‚СЊ РѕРїРµСЂР°С†РёРё
+     * При наведении на запись в списке мы должны показать операции
      * @param e
      * @private
      */
@@ -105,7 +105,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РџРѕ СЃРѕР±С‹С‚РёСЋ youch РјС‹ РґРѕР»Р¶РЅС‹ РїРѕРєР°Р·Р°С‚СЊ РѕРїРµСЂР°С†РёРё
+     * По событию youch мы должны показать операции
      * @param e
      * @private
      */
@@ -114,7 +114,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РџРѕ РєР»РёРєСѓ РЅР° Р·Р°РїРёСЃСЊ РІ СЃРїРёСЃРєРµ РЅСѓР¶РЅРѕ РїРµСЂРµРјРµСЃС‚РёС‚СЊ РјР°СЂРєРµСЂ
+     * По клику на запись в списке нужно переместить маркер
      * @param e
      * @param item
      * @param clickEvent
@@ -131,7 +131,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РћР±СЂР°Р±РѕС‚С‡РёРє СЃРІР°Р№РїР° РїРѕ Р·Р°РїРёСЃРё. РџРѕРєР°Р·С‹РІР°РµС‚ РѕРїРµСЂР°С†РёРё РїРѕ СЃРІР°Р№РїСѓ
+     * Обработчик свайпа по записи. Показывает операции по свайпу
      * @param e
      * @param item
      * @param swipeEvent
@@ -156,7 +156,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ РѕРєРѕРЅС‡Р°РЅРёСЏ Р°РЅРёРјР°С†РёРё СЃРІР°Р№РїР° РїРѕ Р·Р°РїРёСЃРё
+     * Обработчик события окончания анимации свайпа по записи
      * @param e
      * @private
      */
@@ -165,7 +165,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ СЃРѕР±С‹С‚РёРµ РєР»РёРєР° РїРѕ Р·Р°РїРёСЃРё Рё Р±СЂРѕСЃР°РµС‚ СЃРѕР±С‹С‚РёРµ actionClick
+     * Обрабатывает событие клика по записи и бросает событие actionClick
      * @param e
      * @param item
      * @param action
@@ -191,7 +191,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёСЏ РІРѕР·РЅРёРєРЅРѕРІРµРЅРёСЏ РєРѕРЅС‚РµРєСЃС‚РЅРѕРіРѕ РјРµРЅСЋ
+     * Обработка события возникновения контекстного меню
      * @param e
      * @param item
      * @param clickEvent
@@ -206,7 +206,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РћР±СЂР°Р±РѕС‚РєР° СЃРѕР±С‹С‚РёСЏ РєР»РёРєР° РїРѕ СЌР»РµРјРµРЅС‚Сѓ СЃРїРёСЃРєР°
+     * Обработка события клика по элементу списка
      * @param e
      * @param item
      * @param keyDownEvent
@@ -235,7 +235,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РєР»РёРє РїРѕ РєРѕРЅРєСЂРµС‚РЅРѕР№ РѕРїРµСЂР°С†РёРё
+     * Обрабатывает клик по конкретной операции
      * @param action
      * @param clickEvent
      * @param item
@@ -246,8 +246,8 @@ export default class View extends Control<IViewOptions> {
         if (item['[Controls/_display/BreadcrumbsItem]']) {
             contents = contents[contents.length - 1];
         }
-        // TODO РџСЂРѕРІРµСЂРёС‚СЊ. Р’ СЃС‚Р°СЂРѕРј РєРѕРґРµ Р±С‹Р» РїРѕРёСЃРє controls-ListView__itemV РїРѕ С‚РµРєСѓС‰РµРјСѓ РёРЅРґРµРєСЃСѓ Р·Р°РїРёСЃРё
-        // TODO РљРѕСЂСЂРµРєС‚РЅРѕ Р»Рё С‚СѓС‚ РѕР±СЂР°С‰Р°С‚СЊСЃСЏ РїРѕ CSS РєР»Р°СЃСЃСѓ РґР»СЏ РїРѕРёСЃРєР° РєРѕРЅС‚РµР№РЅРµСЂР°?
+        // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
+        // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         this._notify('actionClick', [action, contents, itemContainer]);
         if (action.handler) {
@@ -257,10 +257,10 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёР№, Р±СЂРѕС€РµРЅРЅС‹С… С‡РµСЂРµР· onResult РІ РІС‹РїР°РґР°СЋС‰РµРј/РєРѕРЅС‚РµРєСЃС‚РЅРѕРј РјРµРЅСЋ
-     * @param e СЃРѕР±С‹С‚РёРµ onResult
-     * @param eventName РЅР°Р·РІР°РЅРёРµ СЃРѕР±С‹С‚РёСЏ, Р±СЂРѕС€РµРЅРЅРѕРіРѕ РёР· Controls/menu:Popup.
-     * Р’Р°СЂРёР°РЅС‚С‹ Р·РЅР°С‡РµРЅРёР№ itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
+     * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
+     * @param e событие onResult
+     * @param eventName название события, брошенного из Controls/menu:Popup.
+     * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
      * @param actionModel
      * @param clickEvent
      * @private
@@ -280,7 +280,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РћР±СЂР°Р±РѕС‚С‡РёРє Р·Р°РєСЂС‹С‚РёСЏ РІС‹РїР°РґР°СЋС‰РµРіРѕ/РєРѕРЅС‚РµРєСЃС‚РЅРѕРіРѕ РјРµРЅСЋ
+     * Обработчик закрытия выпадающего/контекстного меню
      * @param e
      * @param clickEvent
      * @private
@@ -296,7 +296,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РћС‚РєСЂС‹РІР°РµС‚ РјРµРЅСЋ РѕРїРµСЂР°С†РёР№
+     * Открывает меню операций
      * @param action
      * @param clickEvent
      * @param item
@@ -324,7 +324,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РњРµС‚РѕРґ, РєРѕС‚РѕСЂС‹Р№ Р·Р°РєСЂС‹РІР°РµС‚ РјРµРЅСЋ
+     * Метод, который закрывает меню
      * @private
      */
     private _closeActionsMenu(): void {
@@ -335,7 +335,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РЎРѕР·РґР°С‘С‚ РєРѕР»Р»РµРєС†РёСЋ РёР· РїСЂРёС€РµРґС€РёС… РґР°РЅРЅС‹С…
+     * Создаёт коллекцию из пришедших данных
      * @param module
      * @param items
      * @param collectionOptions
@@ -350,7 +350,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РєРѕРЅС‚СЂРѕСЂР»Р»РµСЂРµ Рё РѕР±РЅРѕРІР»СЏРµС‚ РІ РЅС‘Рј РґР°РЅРЅС‹Рµ
+     * Инициализирует контрорллере и обновляет в нём данные
      * @private
      */
     protected _updateItemActions(): void {
