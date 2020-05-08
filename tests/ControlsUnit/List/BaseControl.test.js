@@ -4781,6 +4781,15 @@ define([
                };
                instance.saveOptions(cfg);
                instance._beforeMount(cfg);
+
+               instance._markerController = {
+                  setMarkedKey(key) { assert.equal(key, 1); },
+                  moveMarkerToNext() {},
+                  moveMarkerToPrev() {},
+                  setMarkerNearlyCurrent() {},
+                  update() {}
+               };
+
                instance._notify = function(eventName, eventArgs, eventOptions) {
                   assert.equal(eventName, 'checkboxClick');
                   assert.deepEqual(eventArgs, [1, false]);
