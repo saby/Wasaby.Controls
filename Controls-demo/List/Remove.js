@@ -10,6 +10,7 @@ define('Controls-demo/List/Remove', [
       _template: template,
       _itemActions: undefined,
       _items: null,
+      _firstMarkedKey: 1,
       _beforeMount: function() {
          this._items = [
             {

@@ -302,6 +302,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setMarkedKey: function(key) {
+        if (this._markedKey === key) {
+            return;
+        }
+
         const changedItems = [
             this.getItemById(this._markedKey),
             this.getItemById(key)

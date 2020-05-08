@@ -26,15 +26,7 @@ export class Controller {
    constructor(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-
-      // TODO не уверен что это нужно
-      //  я это понимаб так, что если скрыт маркер то мы его значение сохраняем, но в модели ничего не меняем,
-      //  а потом если маркер показывают то проставляем для модели его
-      if (this._markerVisibility === Visibility.Hidden) {
-         this._markedKey = options.markedKey;
-      } else {
-         this.setMarkedKey(options.markedKey);
-      }
+      this._markedKey = options.markedKey;
    }
 
    /**
