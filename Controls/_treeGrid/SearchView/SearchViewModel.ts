@@ -59,6 +59,7 @@ var
          data.actionsItem = this.getActionsItem(data.item);
          data.searchBreadCrumbsItemTemplate = this._options.searchBreadCrumbsItemTemplate || 'Controls/treeGrid:SearchBreadCrumbsItemTemplate';
          data.searchBreadCrumbsItemContent = "Controls/breadcrumbs:ItemTemplate";
+         data.breadcrumbsItemClickCallback = this._breadcrumbsItemClickCallback;
 
          data.resolveItemTemplate = function(itemData) {
             if (!itemData.breadCrumbs && self._options.itemTemplate) {
@@ -104,7 +105,10 @@ var
           }
 
           return result;
-      }
+      },
+       setBreadcrumbsItemClickCallback(breadcrumbsItemClickCallback): void {
+           this._breadcrumbsItemClickCallback = breadcrumbsItemClickCallback;
+       }
    });
 
 export = SearchViewModel;
