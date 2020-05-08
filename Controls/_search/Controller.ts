@@ -346,7 +346,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       this._dataOptions = context.dataOptions;
       this._previousViewMode = this._viewMode = options.viewMode;
       let searchValue = options.searchValue;
-      if (this._options.useStore) {
+      if (options.useStore) {
          this._observeStore();
          searchValue = Store.getState().searchValue;
       }

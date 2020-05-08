@@ -771,22 +771,19 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
         },
 
         _observeStore(): void {
-            import('Controls/Store').then((store) => {
-                this._store = store;
-                const sourceCallbackId = this._store.onPropertyChanged('filterSource', (filterSource) => {
-                    _private.setFilterItems(this, filterSource, [], []);
-                    _private.itemsReady(this, this._filter);
-                });
-                const filterSourceCallbackId = this._store.onPropertyChanged('filter', (filter) => {
-                    _private.applyItemsToFilter(
-                        this,
-                        Prefetch.prepareFilter(filter, this._options.prefetchParams),
-                        this._filterButtonItems,
-                        this._fastFilterItems
-                    );
-                });
-                this._storeCallbacks = [sourceCallbackId, filterSourceCallbackId];
+            const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
+                _private.setFilterItems(this, filterSource, [], []);
+                _private.itemsReady(this, this._filter);
             });
+            const filterSourceCallbackId = Store.onPropertyChanged('filter', (filter) => {
+                _private.applyItemsToFilter(
+                    this,
+                    Prefetch.prepareFilter(filter, this._options.prefetchParams),
+                    this._filterButtonItems,
+                    this._fastFilterItems
+                );
+            });
+            this._storeCallbacks = [sourceCallbackId, filterSourceCallbackId];
         },
 
         _beforeMount(options, context, receivedState): Promise<IFilterHistoryData|{}> {
@@ -802,7 +799,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
 
             if (receivedState) {
                 if (this._options.useStore) {
-                    const state = this._store.getState();
+                    const state = Store.getState();
                     _private.setFilterItems(this, state.filterSource, [], receivedState);
                     _private.itemsReady(this, state.filter, receivedState);
                 } else {
@@ -814,7 +811,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                     this._isFilterChanged = true;
                 }
             } else if (options.useStore) {
-                const state = this._store.getState();
+                const state = Store.getState();
                 _private.resolveItems(this, state.historyId, state.filterSource, [], options.historyItems).then((history) => {
                     _private.itemsReady(this, state.filter, history);
                     return history;
@@ -827,26 +824,6 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                     }
                     return history;
                 });
-            }
-        },
-
-
-        _afterMount: function (options) {
-            if (options.useStore) {
-                this._filterCallbackId = Store.onPropertyChanged('filter',
-                    (items) => this._itemsChanged(undefined, items)
-                );
-                this._filterHistoryCallbackId = Store.onPropertyChanged('filterHistory',
-                    (history) => this._filterHistoryApply(undefined, history)
-                );
-            }
-        },
-        _beforeUnmount: function () {
-            if (this._filterCallbackId) {
-                Store.unsubscribe(this._filterCallbackId);
-            }
-            if (this._filterHistoryCallbackId) {
-                Store.unsubscribe(this._filterHistoryCallbackId);
             }
         },
 
@@ -881,8 +858,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
 
         _beforeUnmount(): void {
              if (this._options.useStore) {
-                 this._storeCallbacks.forEach((id) => this._store.unsubscribe(id));
-                 this._store = null;
+                 this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
              }
         },
 
