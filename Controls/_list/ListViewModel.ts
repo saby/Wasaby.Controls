@@ -140,22 +140,20 @@ var _private = {
             itemsModelCurrent.dispItem.getActions ? itemsModelCurrent.dispItem.getActions() : itemsModelCurrent.itemActions
         );
         itemsModelCurrent.setActive = (state: boolean): void => {
-            itemsModelCurrent._isActive = state;
             if (itemsModelCurrent.dispItem.setActive !== undefined) {
                 itemsModelCurrent.dispItem.setActive(state);
             }
         };
         itemsModelCurrent.isActive = (): boolean => (
-            itemsModelCurrent.dispItem.isActive() !== undefined ? itemsModelCurrent.dispItem.isActive() : itemsModelCurrent._isActive
+            itemsModelCurrent.dispItem.isActive() !== undefined ? itemsModelCurrent.dispItem.isActive() : false
         );
         itemsModelCurrent.setSwiped = (state: boolean): void => {
-            itemsModelCurrent._isSwiped = state;
             if (itemsModelCurrent.dispItem.setSwiped !== undefined) {
                 itemsModelCurrent.dispItem.setSwiped(state);
             }
         };
         itemsModelCurrent.isSwiped = (): boolean => (
-            itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : itemsModelCurrent._isSwiped
+            itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : false
         );
         itemsModelCurrent.getContents = () => (
             itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
@@ -237,9 +235,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         // TODO USE itemsModelCurrent.isSelected()
         itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
-        itemsModelCurrent._isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
-        // TODO USE itemsModelCurrent.isSwiped()
-        itemsModelCurrent._isSwiped = this._swipeItem && itemsModelCurrent.actionsItem === this._swipeItem.actionsItem;
         itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
         itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
         itemsModelCurrent.searchValue = this._options.searchValue;

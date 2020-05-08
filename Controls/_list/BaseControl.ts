@@ -1809,7 +1809,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _template: BaseControlTpl,
     iWantVDOM: true,
-    _isActiveByClick: false,
 
     _listViewModel: null,
     _viewModelConstructor: null,
