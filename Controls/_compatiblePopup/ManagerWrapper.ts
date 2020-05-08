@@ -12,10 +12,10 @@ import {Bus} from 'Env/Event';
 
 var ManagerWrapper = Control.extend({
    _template: template,
-   _theme: undefined,
+   _themeName: undefined,
 
    _beforeMount: function() {
-      this._theme = Controller.getTheme();
+      this._themeName = Controller.getTheme();
       // TODO: https://online.sbis.ru/opendoc.html?guid=3f08c72a-8ee2-4068-9f9e-74b34331e595
       this._loadViewSettingsController();
    },
@@ -189,7 +189,7 @@ var ManagerWrapper = Control.extend({
    },
 
    setTheme(theme: string): void {
-      this._theme = theme;
+      this._themeName = theme;
    },
 
    _beforeUnmount: function() {
