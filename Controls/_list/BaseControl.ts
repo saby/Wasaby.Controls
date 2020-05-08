@@ -1250,13 +1250,14 @@ const _private = {
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
         if (
-            (changesType === 'collectionChanged' ||
+            changesType === 'collectionChanged' ||
             changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
-            newModelChanged) &&
-            self._itemActionsInitialized
+            newModelChanged
         ) {
             self._itemsChanged = true;
-            self._updateItemActions(self._options);
+            if (self._itemActionsInitialized) {
+                self._updateItemActions(self._options);
+            }
         }
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
