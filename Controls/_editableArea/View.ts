@@ -4,7 +4,6 @@ import {editing as constEditing} from 'Controls/Constants';
 import template = require('wml!Controls/_editableArea/View');
 import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
 import {delay} from 'Types/function';
-import 'css!theme?Controls/list';
 
 'use strict';
 var
@@ -181,7 +180,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    }
 });
 
-View._theme = ['Controls/list']
+View._theme = ['Controls/list'];
 
 View.getDefaultOptions = function () {
    return {

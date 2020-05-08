@@ -4,6 +4,8 @@ import randomId = require('Core/helpers/Number/randomId');
 import {List} from 'Types/collection';
 import {ILoadingIndicatorOptions, ILoadingIndicator} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
+
 
 /**
  * Контейнер для контента с возможностью отображения индикатора загрузки.
@@ -151,10 +153,11 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     // Indicator is opened above existing popups.
     _updateZIndex(config: ILoadingIndicatorOptions): void {
         const popupItem = ManagerController && ManagerController.find((config || {}).popupId);
+        const POPUP_BASE_ZINDEX = 10;
         if (popupItem) {
             this._zIndex = popupItem.currentZIndex;
         } else {
-            this._zIndex = null;
+            this._zIndex = POPUP_BASE_ZINDEX - 1;
         }
     }
 

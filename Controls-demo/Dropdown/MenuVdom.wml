@@ -119,6 +119,9 @@
 				iconSize="m"
             menuStyle="cross"
             source="{{_getAdditionalData()}}">
+			 <ws:headerTemplate>
+				 <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с доп параметрами" />
+			 </ws:headerTemplate>
          </Controls.dropdown:Button>
       </div>
 	   <div style="padding: 5px;">
@@ -189,8 +192,11 @@
 			 iconSize="s"
 			 parentProperty="parent"
 			 nodeProperty="@parent"
-			 source="{{_getHierarchyItems()}}"
-		  />
+			 source="{{_getHierarchyItems()}}">
+			  <ws:headerTemplate>
+				  <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с иконкой" />
+			  </ws:headerTemplate>
+		  </Controls.dropdown:Button>
 	   </div>
 	   <div style="padding: 5px;">Кнопка-иконка medium
 		  <Controls.dropdown:Button
@@ -202,8 +208,11 @@
 			 iconSize="m"
 			 parentProperty="parent"
 			 nodeProperty="@parent"
-			 source="{{_getHierarchyItems()}}"
-		  />
+			 source="{{_getHierarchyItems()}}">
+			  <ws:headerTemplate>
+				  <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с иконкой" />
+			  </ws:headerTemplate>
+		  </Controls.dropdown:Button>
 	   </div>
 	   <div style="padding: 5px;">
 		  <Controls.dropdown:Button
@@ -231,6 +240,9 @@
 			 nodeProperty="@parent"
 			 source="{{_getHierarchyItems()}}">
 			 <ws:headConfig icon="icon-Author" />
+			  <ws:headerTemplate>
+				  <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с иконкой" />
+			  </ws:headerTemplate>
 		  </Controls.dropdown:Button>
 	   </div>
 	   <div style="padding: 5px;">Дублирование большой иконки
@@ -245,6 +257,9 @@
 			 nodeProperty="@parent"
 			 source="{{_getHierarchyItems()}}">
 			 <ws:headConfig icon="icon-Author" />
+			  <ws:headerTemplate>
+				  <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с иконкой" />
+			  </ws:headerTemplate>
 		  </Controls.dropdown:Button>
 	   </div>
   </div>

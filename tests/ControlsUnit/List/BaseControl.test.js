@@ -2928,7 +2928,7 @@ define([
          assert.isTrue(ctrl._needBottomPadding);
 
       });
-      
+
       it('_needBottomPadding after reload in beforeUpdate', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -5720,6 +5720,31 @@ define([
          assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
       });
 
+      it('hide indicator if shouldn\'t load more', function() {
+         const baseControl = new lists.BaseControl();
+         baseControl._isMounted = true;
+
+         baseControl._loadingIndicatorState = 'down';
+         baseControl._loadTriggerVisibility = {down: false};
+         baseControl._beforePaint();
+         assert.isNull(baseControl._loadingIndicatorState);
+
+         baseControl._loadingIndicatorState = 'up';
+         baseControl._loadTriggerVisibility = {up: false};
+         baseControl._beforePaint();
+         assert.isNull(baseControl._loadingIndicatorState);
+
+         baseControl._loadingIndicatorState = 'down';
+         baseControl._loadTriggerVisibility = {down: true};
+         baseControl._beforePaint();
+         assert.equal(baseControl._loadingIndicatorState, 'down');
+
+         baseControl._loadingIndicatorState = 'up';
+         baseControl._loadTriggerVisibility = {up: true};
+         baseControl._beforePaint();
+         assert.equal(baseControl._loadingIndicatorState, 'up');
+      });
+
       it('setIndicatorContainerHeight: list bigger then scrollContainer', function() {
 
           const fakeBaseControl = {
@@ -6092,7 +6117,7 @@ define([
                expectedSourceConfig.page = 0;
                expectedSourceConfig.pageSize = 100;
                expectedSourceConfig.hasMore = false;
-               baseControl._changePageSize({}, {id: 1, title: 100, get: function() {return this.title;}});
+               baseControl._changePageSize({}, 5);
                assert.equal(baseControl._currentPage, 1);
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);

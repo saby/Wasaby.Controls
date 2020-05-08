@@ -12,6 +12,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     root?: TKey;
     selectorOpener?: Stack;
     itemActions?: IItemAction[];
+    dataLoadCallback: Function;
 }
 
 /**
@@ -228,6 +229,34 @@ export default interface IMenuControl {
  *    });
  * </pre>
  * @see itemTemplate
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#dataLoadCallback
+ * @cfg {Function}  Функция обратного вызова, которая будет вызываться, когда данные загружены источником.
+ * @example
+ * WML:
+ * <pre>
+ * <Controls.menu:Control
+ *          keyProperty="id"
+ *          displayProperty="title"
+ *          dataLoadCallback="{{_callbackHandler}}"
+ *          source="{{_source)}}" />
+ * </pre>
+ * JS:
+ * <pre>
+ * this._source = new Memory({
+ *    keyProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Yaroslavl'},
+ *       {id: 2, title: 'Moscow'},
+ *       {id: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * this._callbackHandler = function(items) {
+ *   // do something
+ * };
+ * </pre>
  */
 
 /**

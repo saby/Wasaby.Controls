@@ -286,6 +286,7 @@ define(
                   adapter: new entity.adapter.Sbis()
                });
                hSource._history.pinned.add(newHistoryItem);
+               hSource._historyItems = null;
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(0).get('title'), 'Запись 5');
                assert.equal(historyItems.at(1).get('title'), 'Запись 7');
@@ -314,6 +315,7 @@ define(
                   keyProperty: 'id'
                });
                historyMod.Source._private.initHistory(hSource, newData, hSource._oldItems);
+               hSource._historyItems = null;
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(0).get('title'), 'Запись 5');
                assert.equal(historyItems.at(1).get('title'), 'Запись 4');
@@ -343,6 +345,7 @@ define(
                });
             });
             it('check alphabet', function() {
+               hSource._historyItems = null;
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(1).get('title'), 'Запись 4');
                assert.equal(historyItems.at(2).get('title'), 'Запись 6');
@@ -428,6 +431,15 @@ define(
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(3).get('title'), 'Запись 7');
                assert.equal(hSource._history.recent.at(0).getId(), '7');
+
+               let item = new entity.Model({
+                  rawData: {
+                     id: 'notInOriginalRecordSet'
+                  },
+                  keyProperty: 'id',
+               });
+               hSource.update([item], meta);
+               assert.isNull(hSource._historyItems);
             });
             it('updateRecent history not loaded', function() {
                let config2 = clone(config),

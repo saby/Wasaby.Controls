@@ -27,5 +27,4 @@
             </ws:if>
         </ws:if>
     </div>
-    <Controls.event:Listener listenAll="{{true}}" event="controlResize" on:controlResize="_onResize()"/>
 </div>

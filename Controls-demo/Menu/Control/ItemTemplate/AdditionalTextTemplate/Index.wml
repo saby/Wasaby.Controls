@@ -4,6 +4,7 @@
               source="{{_source}}"
               keyProperty="key"
               displayProperty="title"
+              iconSize="s"
               attr:class="ControlsDemo-menuControl_minWidth">
          <ws:itemTemplate>
             <ws:partial template="Controls/menu:ItemTemplate">
