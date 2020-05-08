@@ -39,11 +39,11 @@ define(
 
             ctrl._beforeMount(options);
 
-            assert.deepEqual([{ type: 'plain', value: 'text1' }], ctrl._parsedText);
+            assert.deepEqual([{type: 'plain', value: 'text1'}], ctrl._parsedText);
 
             ctrl._beforeUpdate(newOptions);
 
-            assert.deepEqual([{ type: 'plain', value: 'text2' }], ctrl._parsedText);
+            assert.deepEqual([{type: 'plain', value: 'text2'}], ctrl._parsedText);
 
             ctrl._beforeUpdate(newOptions2);
 
@@ -51,10 +51,10 @@ define(
                type: 'highlight',
                value: 'text'
             },
-            {
-               type: 'plain',
-               value: '3'
-            }], ctrl._parsedText);
+               {
+                  type: 'plain',
+                  value: '3'
+               }], ctrl._parsedText);
          });
 
          it('Template', function() {
@@ -141,6 +141,28 @@ define(
 
          describe('Parsed of the text.', function() {
             describe('Word search.', function() {
+               it('Cyrillic.', function() {
+                  ctrl._beforeMount({
+                     value: 'Здравствуй, мир! Как дела?',
+                     highlightedValue: 'мир',
+                     highlightMode: 'word'
+                  });
+
+                  assert.deepEqual(ctrl._parsedText, [
+                     {
+                        type: 'plain',
+                        value: 'Здравствуй, '
+                     },
+                     {
+                        type: 'highlight',
+                        value: 'мир'
+                     },
+                     {
+                        type: 'plain',
+                        value: '! Как дела?'
+                     }
+                  ]);
+               });
                it('The search word is not in the text.', function() {
                   ctrl._beforeMount({
                      value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
