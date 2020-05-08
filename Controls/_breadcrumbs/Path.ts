@@ -59,7 +59,10 @@ var BreadCrumbs = Control.extend({
     _notifyHandler: tmplNotify,
     _itemClickHandler: function(e, item) {
         e.stopPropagation();
-        this._notify('itemClick', [item])
+        this._notify('itemClick', [item]);
+        if (this._options.breadCrumbsItemClickCallback) {
+            this._options.breadCrumbsItemClickCallback(e, item);
+        }
     }
 });
 
