@@ -29,9 +29,6 @@
 }
 
 .controls-MonthViewVDOM__item-old {
-   font-size: @monthview_item_font-size_monthSlider;
-   margin-top: @monthview_item_border-thickness_monthSlider;
-   margin-left: @monthview_item_border-thickness_monthSlider;
    position: relative;
    min-width: 0;
    flex-grow: 1;
@@ -41,6 +38,12 @@
    align-items: center;
    justify-content: center;
    box-sizing: content-box;
+}
+
+.controls-MonthViewVDOM__item-old_theme-@{themeName} {
+   font-size: @monthview_item_font-size_monthSlider;
+   margin-top: @monthview_item_border-thickness_monthSlider;
+   margin-left: @monthview_item_border-thickness_monthSlider;
 }
 
 .controls-MonthViewVDOM__item {
@@ -72,6 +75,10 @@
       &:hover {
          outline: @monthview_item_border-thickness_monthSlider solid @monthview_item_hover_border-color_monthSlider;
       }
+   }
+
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected_theme-@{themeName}:hover {
+      background: @monthview_item_hover_background-color_monthSlider;
    }
 }
 
@@ -131,7 +138,7 @@
    cursor: pointer;
 }
 
-.controls-MonthViewVDOM-old {
+.controls-MonthViewVDOM-old_theme-@{themeName} {
    width: @monthview_width_monthSlider;
    background: @monthview_background-color_monthSlider;
 }

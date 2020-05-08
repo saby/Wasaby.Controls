@@ -658,6 +658,15 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
                searchController._beforeUpdate({searchValue: 'test2'}, {});
                assert.equal(value, 'test2');
             });
+
+            it('empty searchValue', function() {
+               searchController._inputSearchValue = 'te';
+               searchController._options.minSearchLength = 3;
+               searchController._searchValue = '';
+
+               searchController._beforeUpdate({searchValue: ''}, {});
+               assert.equal(searchController._inputSearchValue, 'te');
+            });
          });
          it('viewMode is changed', function() {
             var options = getDefaultOptions();

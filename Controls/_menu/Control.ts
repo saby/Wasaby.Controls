@@ -155,7 +155,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             item.getContents().getKey(),
             action,
             clickEvent,
-            false
+            false,
+            this._options.theme
         );
     }
 
@@ -169,7 +170,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         if (this._isPinIcon(sourceEvent.target)) {
             this._pinClick(event, item);
         } else {
-            if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem)) {
+            if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem.getContents())) {
                 this._changeSelection(key, treeItem);
                 this.updateApplyButton();
 
@@ -227,13 +228,15 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         config.overlay = 'none';
     }
 
-    protected _isEmptyItem(itemData) {
-        return this._options.emptyText && itemData.getContents().getId() === this._options.emptyKey;
+    protected _isEmptyItem(item: Model): boolean {
+        return this._options.emptyText && item.getKey() === this._options.emptyKey;
     }
 
     protected _openSelectorDialog(): void {
         const selectedItems = new List({
-            items: this.getSelectedItems()
+            items: this.getSelectedItems().filter((item: Model) => {
+                return !this._isEmptyItem(item);
+            })
         });
 
         this._options.selectorOpener.open(this.getSelectorDialogOptions(this._options, selectedItems));
@@ -257,6 +260,10 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         if (!this._isNeedKeepMenuOpen(this.subMenu, event.nativeEvent) && this._subDropdownItem) {
             this._closeSubMenu();
         }
+    }
+
+    protected _separatorMouseEnter(event): void {
+        this._closeSubMenu();
     }
 
     private _isNeedKeepMenuOpen(needCloseDropDown, nativeEvent): boolean {
@@ -533,6 +540,9 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         let filter = Clone(options.filter) || {};
         filter[options.parentProperty] = options.root;
         return this.getSourceController(options).load(filter).addCallback((items) => {
+            if (options.dataLoadCallback) {
+                options.dataLoadCallback(items);
+            }
             this.createViewModel(items, options);
             this._moreButtonVisible = options.selectorTemplate && this.getSourceController(options).hasMoreData('down');
             this._expandButtonVisible = this.isExpandButtonVisible(items, options.additionalProperty, options.root);
@@ -638,7 +648,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
         ItemActionsController.assignActions(
             this._listModel,
-            actionsGetter
+            actionsGetter,
+            options.theme
         );
     }
 

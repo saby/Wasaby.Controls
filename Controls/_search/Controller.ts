@@ -247,7 +247,7 @@ var _private = {
       const startSearchWithNewSourceController = searchValue && needRecreateSearchController;
       const needStartSearchBySearchValueChanged =
           isSearchValueChanged &&
-          (!isSearchValueShorterThenMinLength || _private.isSearchViewMode(self) && !searchValue);
+          (!isSearchValueShorterThenMinLength || (_private.isSearchViewMode(self) && !searchValue && self._searchValue));
 
       return needStartSearchBySearchValueChanged &&
              !needUpdateRoot ||

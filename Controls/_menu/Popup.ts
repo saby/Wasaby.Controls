@@ -6,6 +6,8 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as mStubs from 'Core/moduleStubs';
 import {default as headerTemplate} from 'Controls/_menu/Popup/headerTemplate';
 import {Controller as ManagerController} from 'Controls/popup';
+import {RecordSet} from 'Types/collection';
+import {factory} from 'Types/chain';
 
 /**
  * Базовый шаблон для {@link Controls/menu:Control}, отображаемого в прилипающем блоке.
@@ -36,6 +38,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
     protected _beforeMount(options: IMenuPopupOptions): Promise<void>|void {
         this._headerTheme = this._getTheme();
+        this._dataLoadCallback = this._dataLoadCallback.bind(this, options);
 
         this._setCloseButtonVisibility(options);
         this._prepareHeaderConfig(options);
@@ -72,6 +75,22 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
     protected _footerClick(event: SyntheticEvent<MouseEvent>, sourceEvent): void {
         this._notify('sendResult', ['footerClick', sourceEvent], {bubbling: true});
+    }
+
+    protected _dataLoadCallback(options: IMenuPopupOptions, items: RecordSet): void {
+        const root = options.root !== undefined ? options.root : null;
+        if (!this._headingIcon) {
+            return;
+        }
+        let needShowHeadingIcon = false;
+        factory(items).each((item) => {
+            if (item.get('icon') && (!options.parentProperty || item.get(options.parentProperty) === root)) {
+                needShowHeadingIcon = true;
+            }
+        });
+        if (!needShowHeadingIcon) {
+            this._headingIcon = null;
+        }
     }
 
     protected _prepareSubMenuConfig(event: SyntheticEvent<MouseEvent>, popupOptions) {

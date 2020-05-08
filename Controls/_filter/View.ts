@@ -751,8 +751,7 @@ var Filter = Control.extend({
         var popupOptions = {
             templateOptions: {
                 items: items,
-                historyId: this._options.historyId,
-                theme: this._options.theme
+                historyId: this._options.historyId
             },
             target: this._container[0] || this._container,
             actionOnScroll: detection.isMobileIOS ? 'none' : 'close'
