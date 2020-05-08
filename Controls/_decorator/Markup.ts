@@ -92,6 +92,43 @@ import {delay} from 'Types/function';
     * @name ValidHtml
     * @property {Object} validNodes Набор тегов, которые будут вставляться версткой. Формат: {tagName: true, ...}. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>.
     * @property {Object} validAttributes Набор разрешенных атрибутов, которые попадут в результат. Формат: {attributeName: true, ...}. Набор по умолчанию расположен в модуле <a href='https://git.sbis.ru/sbis/ws/blob/498360abc1272395be3b26ec388afb688bc9e200/WS.Core/core/validHtml.js'>Core/validHtml</a>.
+    * @example
+    * Рассмотрим пример, в котором вставляется верстка с картинкой и текстом. 
+    * 
+    * Control.wml
+    * <pre>
+    * <Controls.decorator:Markup value="{{ json }}" validHtml="{{ validHtml }}" />
+    * </pre>
+    * 
+    * Control.js
+    * <pre>
+    * ...
+    * _beforeMount: function() {
+    *    this.json = Converter.htmlToJson(`
+    *       <div>
+    *          <img src="logo.png" width="100" height="100">
+    *          <p>some text</p>
+    *       </div>
+    *    `);
+    * 
+    *    this.validHtml = {
+    *       validNodes: {
+    *          img: true,
+    *          div: true
+    *       },
+    *       validAttributes: {
+    *          src: true,
+    *          alt: true,
+    *          height: true,
+    *          width: true
+    *       }
+    *    };
+    * }
+    * ...
+    * </pre>
+    * 
+    * В данном примере опция validHtml разрешает в качестве верстки использовать только блочные теги div и картинки img, а также указан набор разрешенных атрибутов: src, alt, height и width. Это значит, что картинка будет вставлена версткой, а параграф будет экранирован и вставлен строкой.
+    * 
     */
 
    /**
