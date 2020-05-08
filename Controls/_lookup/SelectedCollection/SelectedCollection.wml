@@ -35,6 +35,7 @@
               itemsLayout="{{_options.itemsLayout}}"
               contentTemplate="{{_contentTemplate}}"
               crossTemplate="{{_crossTemplate}}"
+              theme="{{_options.theme}}"
               on:click="_itemClick(item)">
       </ws:partial>
    </ws:for>

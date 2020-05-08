@@ -163,7 +163,8 @@ var _private = {
          const collectionConfig = {
             itemsLayout: options.multiLine ? 'default' : 'oneRow',
             maxVisibleItems,
-            _counterWidth: counterWidth
+            _counterWidth: counterWidth,
+            theme: options.theme
          };
          const depOptions = ['itemTemplate', 'readOnly', 'displayProperty', 'items'];
 
