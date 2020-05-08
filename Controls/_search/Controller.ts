@@ -339,14 +339,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       import('Controls/Store').then((store) => {
          this._store = store;
          this._storeCallbackId = this._store.onPropertyChanged('searchValue', (searchValue) => {
-            const state = this._store.getState();
-            const needStartSearch = !_private.isSearchValueShort(this._options.minSearchLength, searchValue);
-            if (needStartSearch) {
-                _private.startSearch(this, searchValue);
-                if (searchValue !== this._inputSearchValue) {
-                    _private.setInputSearchValue(this, searchValue);
-                }
-            }
+            this._search(null, searchValue, true);
          })
       })
    },
