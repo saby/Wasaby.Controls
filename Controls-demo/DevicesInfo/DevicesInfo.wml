@@ -10,6 +10,7 @@
          </div>
          <Controls.grid:View
             dataLoadCallback="{{_activityDevicesLoadCallback}}"
+            itemsReadyCallback="{{_activityDevicesLoadCallback}}"
             backgroundStyle="default"
             rowSeparatorVisibility="true"
             navigation="{{_devicesNavigation}}"
@@ -26,8 +27,8 @@
                <ws:partial template="Controls/grid:ItemTemplate" highlightOnHover="{{false}}" hello="{{hello}}"/>
             </ws:itemTemplate>
          </Controls.grid:View>
-         <div class="DevicesInfo-button-wrapper {{_viewSourceDevices.data.d.length <= 3? 'DevicesInfo-invisible'}}">
-            <Controls.toggle:BigSeparator on:click="_toggleDevices()" value="{{_devicesShown}}"/>
+         <div class="DevicesInfo-button-wrapper {{!_activityDevicesArrowVisible ? 'ws-hidden'}}">
+            <Controls.toggle:BigSeparator on:click="_toggleDevices()" value="{{_activityDevicesArrowExpanded}}"/>
          </div>
       </div>
       <div
@@ -38,6 +39,7 @@
          </div>
          <Controls.grid:View
             dataLoadCallback="{{_blockedDevicesLoadCallback}}"
+            itemsReadyCallback="{{_blockedDevicesLoadCallback}}"
             on:actionClick="_actionBlockedDevicesClick()"
             rowSeparatorVisibility="true"
             keyProperty="@Id"
@@ -49,8 +51,8 @@
             itemActions="{{_itemActionBlockedDevices}}"
             itemActionsClass="controls-itemActionsV_position_topRight"/>
          <div
-            class="DevicesInfo-button-wrapper {{_viewSourceBlockedDevices.data.d.length <= 3? 'DevicesInfo-invisible'}}">
-            <Controls.toggle:BigSeparator on:click="_toggleBlockedDevices()" value="{{_blockedDevicesShown}}"/>
+            class="DevicesInfo-button-wrapper {{!_blockedDevicesArrowVisible ? 'ws-hidden'}}">
+            <Controls.toggle:BigSeparator on:click="_toggleBlockedDevices()" value="{{_blockedDevicesArrowExpanded}}"/>
          </div>
       </div>
       <div class="DevicesInfo-List-wrapper DevicesInfo-List-indent {{!_failingAuthVisible ? 'ws-hidden'}}">

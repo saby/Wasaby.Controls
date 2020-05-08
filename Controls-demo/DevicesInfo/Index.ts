@@ -23,13 +23,18 @@ interface INoStickyLadderColumn {
 
 type TItems = RecordSet<Record>;
 
+const MIN_PAGE_SIZE: number = 3;
+const MAX_PAGE_SIZE: number = 50;
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
 
-    private _blockedDevicesShown: boolean;
-    private _devicesShown: boolean;
-    private _blockedDevicesVisible: boolean = false;
-    private _failingAuthVisible: boolean = false;
+    private _blockedDevicesArrowExpanded: boolean = false;
+    private _activityDevicesArrowExpanded: boolean = false;
+    private _blockedDevicesArrowVisible: boolean = false;
+    private _activityDevicesArrowVisible: boolean = false;
+    private _blockedDevicesVisible: boolean = true;
+    private _failingAuthVisible: boolean = true;
     private _activityDevicesRecordSet: RecordSet;
     private _blockedDevicesRecordSet: RecordSet;
     private _failingAuthRecordSet: RecordSet;
@@ -51,7 +56,7 @@ export default class extends Control {
         this._devicesNavigation = {
             source: 'page',
             sourceConfig: {
-                pageSize: 3,
+                pageSize: MIN_PAGE_SIZE,
                 page: 0,
                 hasMore: false
             }
@@ -59,14 +64,11 @@ export default class extends Control {
         this._blockedDevicesNavigation = {
             source: 'page',
             sourceConfig: {
-                pageSize: 3,
+                pageSize: MIN_PAGE_SIZE,
                 page: 0,
                 hasMore: false
             }
         };
-
-        this._blockedDevicesShown = false;
-        this._devicesShown = false;
 
         this._itemActions = getActionsForDevices();
         this._itemActionFailedTries = getActionsForFailedTries();
@@ -153,6 +155,11 @@ export default class extends Control {
 
     private _checkListVisibility(listName: string, recordSet: RecordSet): void {
         this[`_${listName}Visible`] = !!recordSet.getCount();
+        this._checkArrowVisible(listName, recordSet);
+    }
+
+    private _checkArrowVisible(listName: string, recordSet: RecordSet): void {
+        this[`_${listName}ArrowVisible`] = recordSet.getCount() < recordSet.getMetaData().more || recordSet.getCount() > MIN_PAGE_SIZE;
     }
 
     protected _actionDevicesClick(event: Event, action, item): void {
@@ -256,7 +263,6 @@ export default class extends Control {
                 device_type: type
             }).then(() => {
                 item.set('DeviceType', type);
-                RecordSynchronizer.mergeRecord(item, this._activityDevicesRecordSet, item.getId());
             }).catch(() => {
                 const message = 'Не удалось поменять тип устройства';
                 this._children.devicesInfoPopup.open({
@@ -322,26 +328,26 @@ export default class extends Control {
     }
 
     private _toggleDevices(): void {
-        if (this._viewSourceDevices.data.d.length > 3) {
-            if (this._devicesShown) {
-                this._devicesNavigation.sourceConfig.pageSize = 3;
+        if (this._activityDevicesArrowVisible) {
+            this._activityDevicesArrowExpanded = !this._activityDevicesArrowExpanded;
+            if (this._activityDevicesArrowExpanded) {
+                this._devicesNavigation.sourceConfig.pageSize = MAX_PAGE_SIZE;
             } else {
-                this._devicesNavigation.sourceConfig.pageSize = 50;
+                this._devicesNavigation.sourceConfig.pageSize = MIN_PAGE_SIZE;
             }
             this._children.devices.reload();
-            this._devicesShown = !this._devicesShown;
         }
     }
 
     private _toggleBlockedDevices(): void {
-        if (this._viewSourceBlockedDevices.data.d.length > 3) {
-            if (this._blockedDevicesShown) {
-                this._blockedDevicesNavigation.sourceConfig.pageSize = 3;
+        if (this._blockedDevicesArrowVisible) {
+            this._blockedDevicesArrowExpanded = !this._blockedDevicesArrowExpanded;
+            if (this._blockedDevicesArrowExpanded) {
+                this._blockedDevicesNavigation.sourceConfig.pageSize = MAX_PAGE_SIZE;
             } else {
-                this._blockedDevicesNavigation.sourceConfig.pageSize = 50;
+                this._blockedDevicesNavigation.sourceConfig.pageSize = MIN_PAGE_SIZE;
             }
             this._children.blockedDevices.reload();
-            this._blockedDevicesShown = !this._blockedDevicesShown;
         }
     }
 }
