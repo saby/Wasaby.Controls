@@ -3,7 +3,6 @@ import Deferred = require('Core/Deferred');
 import {editing as constEditing} from 'Controls/Constants';
 import template = require('wml!Controls/_editableArea/View');
 import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
-import {delay} from 'Types/function';
 
 'use strict';
 var
@@ -60,16 +59,6 @@ var
             });
          }
          self._editObject.acceptChanges();
-      },
-      /**
-       * Асинхронно завершить редактирование и сохранить изменения.
-       * @remark
-       * Асинхронный вызов завершения редактирования решает проблему обработки устаревших данных в дочернем контроле:
-       * Например, если у поля ввода установлена опция trim = 'true', то при завершении редактирования будет обработано значение с пробелами,
-       * т.к. последовательно произойдет измененние значения поля ввода -> завершение редактирования -> обновление значения в поле ввода.
-       */
-      delayCommitEdit: function (self): void {
-         delay(self.commitEdit.bind(self));
       }
    };
 
@@ -132,7 +121,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
 
    _onDeactivatedHandler: function () {
       if (!this._options.readOnly && this._isEditing && !this._options.toolbarVisibility) {
-         _private.delayCommitEdit(this);
+         this.commitEdit();
       }
    },
 
@@ -140,7 +129,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       if (this._isEditing) {
          switch (event.nativeEvent.keyCode) {
             case 13: // Enter
-               _private.delayCommitEdit(this);
+               this.commitEdit();
                break;
             case 27: // Esc
                this.cancelEdit();
