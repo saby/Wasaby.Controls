@@ -1683,7 +1683,8 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
-               }
+               },
+               setMarkedKey(key) { treeGridViewModel._model._markedKey = key; }
             }
          };
 
