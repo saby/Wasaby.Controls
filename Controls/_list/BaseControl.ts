@@ -130,6 +130,16 @@ interface IErrbackConfig {
     error: Error;
 }
 
+type LoadingState = null | 'all' | 'up' | 'down';
+
+type IndicatorConfig {
+    hasItems: boolean;
+    hasPaging: boolean;
+    loadingIndicatorState: LoadingState;
+    theme: string;
+    isPortionedSearchInProgress: boolean;
+}
+
 /**
  * Удаляет оригинал ошибки из ICrudResult перед вызовом сриализатора состояния,
  * который не сможет нормально разобрать/собрать экземпляр случайной ошибки
@@ -560,7 +570,8 @@ const _private = {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
             }
-            _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController)
+            _private.setHasMoreData(
+                self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController)
             );
             if (self._options.serviceDataLoadCallback instanceof Function) {
                 self._options.serviceDataLoadCallback(self._items, addedItems);
@@ -1197,12 +1208,8 @@ const _private = {
 
         if (!_private.hasMoreDataInAnyDirection(self, self._sourceController) || !isPortionedLoad) {
             portionedSearch.reset();
-        } else if (loadedItems.getCount()) {
-            portionedSearch.resetTimer();
-
-            if (!_private.isLoadingIndicatorVisible(self) && self._loadingIndicatorTimer) {
-                _private.resetShowLoadingIndicatorTimer(self);
-            }
+        } else if (loadedItems.getCount() && !_private.isLoadingIndicatorVisible(self) && self._loadingIndicatorTimer) {
+            _private.resetShowLoadingIndicatorTimer(self);
         }
     },
 
@@ -1635,16 +1642,17 @@ const _private = {
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
     },
-    getLoadingIndicatorClasses(cfg: {
-        hasItems: boolean,
-        hasPaging: boolean,
-        loadingIndicatorState: 'all' | 'down' | 'up',
-        theme: string,
-    }): string {
+    getLoadingIndicatorClasses(
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress}: IndicatorConfig
+    ): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
-            .add(`controls-BaseControl__loadingIndicator__state-${cfg.loadingIndicatorState}`)
-            .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${cfg.theme}`, !cfg.hasItems && cfg.loadingIndicatorState === 'down')
-            .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${cfg.theme}`, cfg.loadingIndicatorState === 'down' && cfg.hasPaging && cfg.hasItems)
+            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
+            .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
+                 !hasItems && loadingIndicatorState === 'down')
+            .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`,
+                 loadingIndicatorState === 'down' && hasPaging && hasItems)
+            .add(`controls-BaseControl__loadingIndicator_style-portionedSearch_theme-${theme}`,
+                          isPortionedSearchInProgress)
             .compile();
     },
     updateIndicatorContainerHeight(self, viewRect: DOMRect, viewPortRect: DOMRect): void {
@@ -3009,11 +3017,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _getLoadingIndicatorClasses(state?: string): string {
         const hasItems = !!this._items && !!this._items.getCount();
+        const indicatorState = state || this._loadingIndicatorState;
         return _private.getLoadingIndicatorClasses({
             hasItems,
             hasPaging: !!this._pagingVisible,
-            loadingIndicatorState: state || this._loadingIndicatorState,
-            theme: this._options.theme
+            loadingIndicatorState: indicatorState,
+            theme: this._options.theme,
+            isPortionedSearchInProgress: !!this._portionedSearchInProgress
         });
     },
 
