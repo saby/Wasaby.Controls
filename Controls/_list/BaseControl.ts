@@ -105,7 +105,7 @@ type ErrbackConfig = {
 
 type LoadingState = null | 'all' | 'up' | 'down';
 
-type IndicatorConfig {
+interface IIndicatorConfig {
     hasItems: boolean;
     hasPaging: boolean;
     loadingIndicatorState: LoadingState;
@@ -1666,7 +1666,7 @@ var _private = {
         return loadingIndicatorState === 'all';
     },
     getLoadingIndicatorClasses(
-        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress}: IndicatorConfig
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress}: IIndicatorConfig
     ): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
