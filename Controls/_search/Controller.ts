@@ -166,6 +166,7 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
+      self._loading = false;
       if (!error.canceled) {
          _private.updateSearchParams(self, filter);
       }
@@ -258,7 +259,6 @@ var _private = {
    },
 
    updateSearchParams(self, filter): void {
-      self._loading = false;
       if (self._viewMode !== 'search') {
          _private.updateViewMode(self, 'search');
 
@@ -267,6 +267,7 @@ var _private = {
             _private.updateRootAfterSearch(self);
          }
       }
+      self._loading = false;
       self._notify('filterChanged', [filter]);
       self._searchValue = filter[self._options.searchParam] || '';
       self._notify('searchValueChanged', [self._searchValue]);
