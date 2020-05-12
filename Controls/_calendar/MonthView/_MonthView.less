@@ -77,8 +77,10 @@
       }
    }
 
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected_theme-@{themeName}:hover {
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected_theme-@{themeName}:hover,
+   .controls-MonthViewVDOM__backgroundColor-otherMonthDay-unselected_theme-@{themeName}:hover {
       background: @monthview_item_hover_background-color_monthSlider;
+      border-radius: @monthview_item_hover_border-radius_monthSlider;
    }
 }
 
