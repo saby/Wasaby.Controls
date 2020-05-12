@@ -43,7 +43,7 @@ var _private = {
    },
 
    searchCallback: function (self, result, filter) {
-      _private.updateSearchParams(self, filter, result);
+      _private.updateSearchParams(self, filter);
       self._notify('filterChanged', [filter]);
       self._notify('itemsChanged', [result.data]);
       self._misspellValue = getSwitcherStrFromData(result.data);
@@ -256,7 +256,7 @@ var _private = {
       self._viewMode = newViewMode;
    },
 
-   updateSearchParams(self, filter, result): void {
+   updateSearchParams(self, filter): void {
       self._loading = false;
       if (self._viewMode !== 'search') {
          _private.updateViewMode(self, 'search');
@@ -266,9 +266,11 @@ var _private = {
             _private.updateRootAfterSearch(self);
          }
       }
-
-      self._searchValue = filter[self._options.searchParam] || '';
-      self._notify('searchValueChanged', [self._searchValue]);
+      const searchValue = filter[self._options.searchParam] || '';
+      if (self._searchValue !== searchValue) {
+         self._searchValue = searchValue;
+         self._notify('searchValueChanged', [self._searchValue]);
+      }
    }
 };
 
