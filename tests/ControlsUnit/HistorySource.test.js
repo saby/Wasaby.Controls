@@ -249,8 +249,7 @@ define(
                   });
                   historyDef = hSource.query(query);
                   historyDef.addCallback(function(data) {
-                     let records = data.getAll();
-                     assert.isTrue(records.at(0).get('pinned'));
+                     assert.isTrue(data.at(0).get('pinned'));
                      assert.equal(hSource._history.pinned.getCount(), 1);
 
                      hSource.historySource = errorSource;
