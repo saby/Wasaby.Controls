@@ -2501,6 +2501,26 @@ define([
             baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 1);
          });
+         it('_onAfterEndEdit::update actions only after notify', function() {
+            const originNotify = baseControl._notify;
+            const originUpdate = baseControl._updateItemActions;
+            const order = [];
+            baseControl._notify = (ename) => {
+               order.push(ename);
+            };
+            baseControl._updateItemActions = () => {
+               order.push('_updateItemActions');
+               originUpdate.apply(baseControl, arguments);
+            };
+            baseControl._onAfterEndEdit({}, {});
+            baseControl._afterUpdate(cfg);
+
+            assert.deepEqual(order, ['afterEndEdit', '_updateItemActions']);
+            assert.equal(actionsUpdateCount, 1);
+
+            baseControl._notify = originNotify;
+            baseControl._updateItemActions = originUpdate;
+         });
          it('update on recreating source', async function() {
             let newSource = new sourceLib.Memory({
                keyProperty: 'id',
