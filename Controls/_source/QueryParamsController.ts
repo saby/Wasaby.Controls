@@ -46,7 +46,7 @@ export default class QueryParamsController implements IQueryParamsController {
         return this.getController(root).hasMoreData(direction, root);
     }
 
-    prepareQueryParams(direction: 'up' | 'down', multiNavigation: boolean): IAdditionalQueryParams {
+    prepareQueryParams(direction: 'up' | 'down', callback?, config?, multiNavigation?: boolean): IAdditionalQueryParams {
         let result;
 
         if (multiNavigation) {
@@ -54,11 +54,11 @@ export default class QueryParamsController implements IQueryParamsController {
             this._controllers.forEach((item) => {
                 result.push({
                     id: item.id,
-                    queryParams: item.queryParamsController.prepareQueryParams(direction)
+                    queryParams: item.queryParamsController.prepareQueryParams(direction, callback, config)
                 });
             });
         } else {
-            result = this.getController().prepareQueryParams(direction);
+            result = this.getController().prepareQueryParams(direction, callback, config);
         }
 
         return result;

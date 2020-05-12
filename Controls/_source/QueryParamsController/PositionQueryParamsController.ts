@@ -140,12 +140,13 @@ class PositionQueryParamsController implements IQueryParamsController {
         }
     }
 
-    prepareQueryParams(loadDirection: Direction, config?: IBasePositionSourceConfig): IAdditionalQueryParams {
+    prepareQueryParams(loadDirection: Direction, callback?, config?: IBasePositionSourceConfig): IAdditionalQueryParams {
         let navDirection: CursorDirection;
         let navPosition: Position;
         let sign: string = '';
         let additionalFilter: object;
         let navField: Field;
+        const limit = config?.limit || this._options.limit;
 
         navDirection = this._resolveDirection(loadDirection, this._getDirection(config?.direction));
         if (loadDirection === 'up') {
@@ -180,11 +181,16 @@ class PositionQueryParamsController implements IQueryParamsController {
 
         const addParams: IAdditionalQueryParams = {
             filter: additionalFilter,
-            limit: config?.limit || this._options.limit,
+            limit,
             meta: {
                 navigationType: QueryNavigationType.Position
             }
         };
+
+        callback && callback({
+            limit,
+            position: navPosition
+        });
 
         if (this._shouldLoadLastPage) {
             addParams.offset = -1;

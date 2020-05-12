@@ -280,7 +280,7 @@ define([
             component._isFixed = false;
             component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
-            component._updateFixed(null, [component._index]);
+            component._updateFixed([component._index]);
             assert.isTrue(component._isFixed);
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
@@ -290,7 +290,7 @@ define([
             component._isFixed = true;
             component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
-            component._updateFixed(null, ['someId']);
+            component._updateFixed(['someId']);
             assert.isFalse(component._isFixed);
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
@@ -299,7 +299,7 @@ define([
             const component = createComponent(StickyHeader, {});
             component._isFixed = true;
             sinon.stub(component, '_forceUpdate');
-            component._updateFixed(null, [component._index]);
+            component._updateFixed([component._index]);
             assert.isTrue(component._isFixed);
             sinon.assert.notCalled(component._forceUpdate);
             sinon.restore();

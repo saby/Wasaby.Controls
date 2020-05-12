@@ -180,7 +180,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    }
 });
 
-View._theme = ['Controls/list'];
+View._theme = ['Controls/list', 'Controls/editableArea'];
 
 View.getDefaultOptions = function () {
    return {

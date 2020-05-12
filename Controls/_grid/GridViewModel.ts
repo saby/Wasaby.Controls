@@ -1213,10 +1213,6 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
-        getItemBySourceKey: function(id) {
-            return this._model.getItemById(id);
-        },
-
         setMarkedKey: function(key, byOptions) {
             this._model.setMarkedKey(key, byOptions);
         },
@@ -1658,7 +1654,7 @@ var
 
         // New Model compatibility
         getItemBySourceKey(key: number | string): Model {
-            return this.getItemById(key, this._options.keyProperty);
+            return this._model.getItemBySourceKey(key);
         },
 
         // New Model compatibility
