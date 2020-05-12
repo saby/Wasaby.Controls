@@ -44,7 +44,6 @@ var _private = {
 
    searchCallback: function (self, result, filter) {
       _private.updateSearchParams(self, filter);
-      self._notify('filterChanged', [filter]);
       self._notify('itemsChanged', [result.data]);
       self._misspellValue = getSwitcherStrFromData(result.data);
    },
@@ -268,7 +267,7 @@ var _private = {
             _private.updateRootAfterSearch(self);
          }
       }
-
+      self._notify('filterChanged', [filter]);
       self._searchValue = filter[self._options.searchParam] || '';
       self._notify('searchValueChanged', [self._searchValue]);
    }
