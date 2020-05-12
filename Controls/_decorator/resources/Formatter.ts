@@ -1,5 +1,5 @@
-import {IText, pasteWithRepositioning} from 'Controls/_input/Base/Util';
-import {IFormat, IDelimiterGroups, IPairDelimiterData, ISingleDelimiterData} from 'Controls/_input/Mask/FormatBuilder';
+import {IText, pasteWithRepositioning} from './Util';
+import {IFormat, IDelimiterGroups, IPairDelimiterData, ISingleDelimiterData} from './FormatBuilder';
 
 /**
  * Разобрать значение на группы.

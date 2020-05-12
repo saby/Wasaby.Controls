@@ -19,16 +19,16 @@ import {
 } from 'Controls/_grid/utils/GridRowIndexUtil';
 import cClone = require('Core/core-clone');
 import collection = require('Types/collection');
+import { Model } from 'Types/entity';
+import { IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
-import { Model } from 'Types/entity';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
-
 
 interface IGridSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
@@ -90,7 +90,7 @@ var
             );
         },
         isDrawActions: function(itemData, currentColumn, colspan) {
-            return itemData.drawActions && _private.isActionsColumn(itemData, currentColumn, colspan);
+            return itemData.shouldDisplayActions() && _private.isActionsColumn(itemData, currentColumn, colspan);
         },
         getCellStyle: function(self, itemData, currentColumn, colspan) {
            var
@@ -275,7 +275,7 @@ var
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
             }
 
-            if (current.isSelected) {
+            if (current._isSelected) {
                 classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
@@ -1341,10 +1341,6 @@ var
             };
         },
 
-        setMenuState(state: string): void {
-            this._model.setMenuState(state);
-        },
-
         isCachedItemData: function(itemKey) {
             return this._model.isCachedItemData(itemKey);
         },
@@ -1358,11 +1354,10 @@ var
             this._model.resetCachedItemData(itemKey);
         },
 
-        getItemDataByItem: function(dispItem) {
-            var
-                self = this,
-                current = this._model.getItemDataByItem(dispItem),
-                stickyColumn;
+        getItemDataByItem(dispItem) {
+            const self = this;
+            const current = this._model.getItemDataByItem(dispItem);
+            let stickyColumn;
 
             if (current._gridViewModelCached) {
                 return current;
@@ -1404,7 +1399,6 @@ var
                 current.columns = this._columns;
             }
 
-
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
@@ -1423,7 +1417,7 @@ var
             if (current.isGroup) {
                 current.groupPaddingClasses = _private.getGroupPaddingClasses(current, this._options.theme);
                 current.shouldFixGroupOnColumn = (columnAlignGroup?: number) => {
-                    return columnAlignGroup !== undefined && columnAlignGroup < current.columns.length - (current.hasMultiSelect ? 1 : 0)
+                    return columnAlignGroup !== undefined && columnAlignGroup < current.columns.length - (current.hasMultiSelect ? 1 : 0);
                 };
                 return current;
             }
@@ -1470,7 +1464,6 @@ var
                 const currentColumn: any = {
                         item: current.item,
                         style: current.style,
-                        isMenuShown: current.isMenuShown,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,
@@ -1590,7 +1583,12 @@ var
         getCollection: function() {
             return this.getItems();
         },
-
+        /**
+         * TODO работа с activeItem Должна производиться через item.isActive(),
+         *  но из-за того, как в TileView организована работа с isHovered, isScaled и isAnimated
+         *  мы не можем снять эти состояния при клике внутри ItemActions
+         * @param itemData
+         */
         setActiveItem: function(itemData) {
             this._model.setActiveItem(itemData);
         },
@@ -1609,10 +1607,6 @@ var
 
         prependItems: function(items) {
             this._model.prependItems(items);
-        },
-
-        setItemActions: function(item, actions) {
-            return this._model.setItemActions(item, actions);
         },
 
         nextModelVersion: function() {
@@ -1662,15 +1656,92 @@ var
             return this._model.getCurrentIndex();
         },
 
-        getItemActions: function(item) {
-            return this._model.getItemActions(item);
+        // New Model compatibility
+        getItemBySourceKey(key: number | string): Model {
+            return this.getItemById(key, this._options.keyProperty);
         },
 
-        getIndexBySourceItem: function(item) {
-            return this._model.getIndexBySourceItem(item);
+        // New Model compatibility
+        nextVersion(): void {
+            this._nextVersion();
         },
 
-        at: function(index) {
+        // New Model compatibility
+        isActionsAssigned(): boolean {
+            return this._model.isActionsAssigned();
+        },
+
+        // New Model compatibility
+        setActionsAssigned(assigned: boolean): void {
+            this._model.setActionsAssigned(assigned);
+        },
+
+        // New Model compatibility
+        getEditingConfig(): IEditingConfig {
+            return this._model.getEditingConfig();
+        },
+
+        // New Model compatibility
+        getActionsTemplateConfig(): IItemActionsTemplateConfig {
+            return this._model.getActionsTemplateConfig();
+        },
+
+        // New Model compatibility
+        setActionsTemplateConfig(config: IItemActionsTemplateConfig): void {
+            this._model.setActionsTemplateConfig(config);
+        },
+
+        // New Model compatibility
+        getActionsMenuConfig(): any {
+            return this._model.getActionsMenuConfig();
+        },
+
+        // New Model compatibility
+        setActionsMenuConfig(config: any): void {
+            this._model.setActionsMenuConfig(config);
+        },
+
+        // New Model compatibility
+        getSwipeConfig(): ISwipeConfig {
+            return this._model.getSwipeConfig();
+        },
+
+        // New Model compatibility
+        setSwipeConfig(config: ISwipeConfig): void {
+            this._model.setSwipeConfig(config);
+        },
+
+        // New Model compatibility
+        getSwipeAnimation(): ANIMATION_STATE {
+            return this._model.getSwipeAnimation();
+        },
+
+        // New Model compatibility
+        setSwipeAnimation(animation: ANIMATION_STATE): void {
+            this._model.setSwipeAnimation(animation);
+        },
+
+        // New Model compatibility
+        each(callback: collection.EnumeratorCallback<Model>, context?: object): void {
+            this._model.each(callback, context);
+        },
+
+        // New Model compatibility
+        find(predicate: (item: Model) => boolean): Model {
+            return this._model.find(predicate);
+        },
+
+        // New Model compatibility
+        getSourceIndexByItem(item: Model): number {
+            return this._model ? this._model.getSourceIndexByItem(item) : undefined;
+        },
+
+        // New Model compatibility
+        getIndexBySourceItem(item: Model): number | string {
+            return this._model ? this._model.getIndexBySourceItem(item) : undefined;
+        },
+
+        at(index: number): Model {
             return this._model.at(index);
         },
 

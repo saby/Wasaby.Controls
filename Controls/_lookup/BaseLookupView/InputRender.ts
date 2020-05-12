@@ -41,5 +41,7 @@ import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/Input
       }
    });
 
+   InputRenderLookup._theme = ['Controls/lookup'];
+
    export = InputRenderLookup;
 

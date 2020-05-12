@@ -81,7 +81,6 @@ import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/
 import NumberEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/NumberChooser');
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 import BaseViewModel = require('Controls/_list/BaseViewModel');
-import ItemActionsControl = require('Controls/_list/ItemActions/ItemActionsControl');
 import ListViewModel = require('Controls/_list/ListViewModel');
 import {default as ListControl} from 'Controls/_list/ListControl';
 import ListView = require('Controls/_list/ListView');
@@ -98,7 +97,6 @@ import ScrollEmitter = require('Controls/_list/BaseControl/Scroll/Emitter');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
 import ItemsView = require('Controls/_list/ItemsView');
 import ItemsViewModel = require('Controls/_list/ItemsViewModel');
-import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
@@ -127,7 +125,6 @@ export {
     NumberEditingTemplate,
     ItemActionsHelpers,
     BaseViewModel,
-    ItemActionsControl,
     ListViewModel,
     ListControl,
     ListView,
@@ -142,7 +139,6 @@ export {
     BaseControl,
     ScrollEmitter,
     SearchItemsUtil,
-    getStyle,
     ItemsView,
     ItemsViewModel,
     LoadingIndicatorTemplate,
