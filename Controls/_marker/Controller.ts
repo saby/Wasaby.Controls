@@ -54,7 +54,9 @@ export class Controller {
    // TODO + вызывать при изменении итемс
    // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать, хотя это не одно и тоже
    setMarkedKey(key: TKey): void {
-      if (this._markedKey === key || this._markerVisibility === Visibility.Hidden
+      if (key === undefined
+         || this._markedKey === key
+         || this._markerVisibility === Visibility.Hidden
          || this._markerVisibility === Visibility.OnActivated && key === null) {
          return;
       }
