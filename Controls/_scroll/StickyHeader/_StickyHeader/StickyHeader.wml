@@ -24,6 +24,7 @@
    <ws:if data="{{_isShadowVisible('bottom') || _isMobileIOS}}">
       <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal
                   {{ !_isShadowVisible('bottom') && _isMobileIOS ? ' ws-invisible' }}"
-          style="{{_bottomShadowStyle}}"></div>
+          style="{{_bottomShadowStyle}}"
+          name="shadowBottom"></div>
    </ws:if>
 </div>

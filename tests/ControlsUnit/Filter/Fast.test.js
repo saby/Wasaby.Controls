@@ -705,7 +705,10 @@ define(
                selectorTemplate: 'selectorTemplate'
             };
             var result = filterMod.Fast._private.getItemPopupConfig(properties);
-            assert.deepEqual(properties, result);
+            const resultProps = {...properties};
+            resultProps.footerContentTemplate = resultProps.footerTemplate;
+            delete resultProps.footerTemplate;
+            assert.deepEqual(result, resultProps);
          });
 
          it('_private::prepareItems', function() {
