@@ -266,11 +266,9 @@ var _private = {
             _private.updateRootAfterSearch(self);
          }
       }
-      const searchValue = filter[self._options.searchParam] || '';
-      if (self._searchValue !== searchValue) {
-         self._searchValue = searchValue;
-         self._notify('searchValueChanged', [self._searchValue]);
-      }
+
+      self._searchValue = filter[self._options.searchParam] || '';
+      self._notify('searchValueChanged', [self._searchValue]);
    }
 };
 
