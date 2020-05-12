@@ -44,19 +44,11 @@ var _private = {
 
    searchCallback: function (self, result, filter) {
       self._loading = false;
-      if (self._viewMode !== 'search') {
-         _private.updateViewMode(self, 'search');
-
-         if (self._options.parentProperty) {
-            _private.deleteRootFromFilterAfterSearch(self, filter);
-            _private.updateRootAfterSearch(self);
-         }
+      if (self._viewMode !== 'search' && self._options.parentProperty) {
+         _private.deleteRootFromFilterAfterSearch(self, filter);
+         _private.updateRootAfterSearch(self);
       }
-
-      self._searchValue = filter[self._options.searchParam] || '';
-      self._notify('filterChanged', [filter]);
-      self._notify('itemsChanged', [result.data]);
-      self._notify('searchValueChanged', [self._searchValue]);
+      _private.updateSearchParams(self, filter, result);
       self._misspellValue = getSwitcherStrFromData(result.data);
    },
 
@@ -174,11 +166,12 @@ var _private = {
       }
    },
 
-   searchErrback: function (self, error: Error):void {
+   searchErrback: function (self, error: Error, filter):void {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
       self._loading = false;
+      _private.updateSearchParams(self, filter);
    },
 
    getRoot: function (path, currentRoot, parentProperty) {
@@ -265,6 +258,18 @@ var _private = {
    updateViewMode(self, newViewMode: string): void {
       self._previousViewMode = self._viewMode;
       self._viewMode = newViewMode;
+   },
+
+   updateSearchParams(self, filter, result): void {
+      if (self._viewMode !== 'search') {
+         _private.updateViewMode(self, 'search');
+      }
+      self._searchValue = filter[self._options.searchParam] || '';
+      self._notify('filterChanged', [filter]);
+      self._notify('searchValueChanged', [self._searchValue]);
+      if (result) {
+         self._notify('itemsChanged', [result.data]);
+      }
    }
 };
 
