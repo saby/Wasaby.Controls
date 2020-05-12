@@ -209,7 +209,7 @@ export class Controller {
             direction: {
                 horizontal: isContextMenu ? 'right' : 'left'
             },
-            className: `controls-DropdownList__margin-head controls-ItemActions__popup__list_theme-${this._theme}`,
+            className: showHeader ? 'controls-MenuButton_link_iconSize-medium_popup' : '' + `controls-ItemActions__popup__list_theme-${this._theme}`,
             nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
             autofocus: false
         };
