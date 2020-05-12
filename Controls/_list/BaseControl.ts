@@ -2320,11 +2320,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._groupingLoader.destroy();
         }
 
-       /* if (newOptions.markedKey !== this._options.markedKey
+        if (newOptions.markedKey !== this._options.markedKey
            || newOptions.markerVisibility !== this._options.markerVisibility
            || this._modelRecreated) {
             _private.updateMarkerController(this, newOptions);
-        }*/
+        }
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
@@ -2496,12 +2496,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
             this._shouldUpdateItemActions = false;
             this._updateItemActions();
-        }
-
-        if (oldOptions.markedKey !== this._options.markedKey
-           || oldOptions.markerVisibility !== this._options.markerVisibility
-           || this._modelRecreated) {
-            _private.updateMarkerController(this, oldOptions);
         }
 
         if (this._shouldNotifyOnDrawItems) {
