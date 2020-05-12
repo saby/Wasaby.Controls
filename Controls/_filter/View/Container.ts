@@ -45,6 +45,12 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
 
     _template: template,
 
+    _beforeMount(options): void {
+        if (options.useStore) {
+            this._source = Store.getState().filterSource;
+        }
+    },
+
     _itemsChanged(event: Event, items): void {
        event.stopPropagation();
        if (this._options.useStore) {
