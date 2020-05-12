@@ -806,10 +806,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._display.setSelectedItems(items, selected);
     },
 
-    getActiveItem: function() {
-        return this._activeItem;
-    },
-
     setItemTemplateProperty: function(itemTemplateProperty) {
         this._options.itemTemplateProperty = itemTemplateProperty;
         this._nextModelVersion();
