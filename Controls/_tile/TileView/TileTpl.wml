@@ -1,27 +1,27 @@
 <ws:template name="itemTpl">
-   <div attr:class="controls-TileView__item controls-TileView__item_theme-{{itemData.theme}} controls-ListView__itemV controls-ListView__itemV_cursor-{{cursor || 'pointer'}}
+   <div attr:class="controls-TileView__item controls-TileView__item_theme-{{theme}} controls-ListView__itemV controls-ListView__itemV_cursor-{{cursor || 'pointer'}}
                      {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}">
       <ws:partial template="{{content}}"/>
    </div>
 </ws:template>
 
 <ws:template name="defaultContentTpl">
-   <div attr:class="controls-TileView__itemContent controls-TileView__itemContent_theme-{{itemData.theme}} {{titleStyle === 'accent' ? 'controls-TileView__itemContent_accent'}}
-               {{highlightOnHover === true ? ' controls-TileView__itemContent_highlightOnHover_theme-' + itemData.theme}}
+   <div attr:class="controls-TileView__itemContent controls-TileView__itemContent_theme-{{theme}} {{titleStyle === 'accent' ? 'controls-TileView__itemContent_accent'}}
+               {{highlightOnHover === true ? ' controls-TileView__itemContent_highlightOnHover_theme-' + theme}}
                js-controls-SwipeControl__actionsContainer
-               {{!!itemData.isActive ? ' controls-TileView__item_active_theme-' + itemData.theme}}
-               {{!!itemData.isSwiped ? ' controls-TileView__item_swiped_theme-' + itemData.theme}}
+               {{!!itemData.isActive ? ' controls-TileView__item_active_theme-' + theme}}
+               {{!!itemData.isSwiped ? ' controls-TileView__item_swiped_theme-' + theme}}
                {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
                {{itemData.isUnfixed ? ' controls-TileView__item_unfixed' }}
                {{itemData.isUnscaleable ? ' controls-TileView__item_unscaleable'}}
                {{itemData.isScaled ? ' controls-TileView__item_scaled' }}
-               {{itemData.isFixed ? ' controls-TileView__item_fixed controls-TileView__item_fixed_theme-' + itemData.theme}}
+               {{itemData.isFixed ? ' controls-TileView__item_fixed controls-TileView__item_fixed_theme-' + theme}}
                {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
-               {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
-               {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility) + '_theme-' + itemData.theme}}
+               {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + theme}}
+               {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility) + '_theme-' + theme}}
                {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ?
-                  ' controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-' + itemData.theme :
-                  ' controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-' + itemData.theme}}
+                  ' controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-' + theme :
+                  ' controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-' + theme}}
                {{itemData.canShowActions ? ' controls-ListView__item_showActions'}}"
         attr:style="{{itemData.position ? itemData.position}} ">
       <ws:partial if="{{itemData.hasMultiSelect}}"
@@ -42,13 +42,13 @@
          <ws:partial template="{{imageWrapper}}"/>
          <ws:if data="{{itemData.item[itemData.displayProperty] || itemData.drawActions}}">
             <ws:if data="{{titleStyle === 'accent'}}">
-               <div class="controls-TileView__title_accent_theme-{{itemData.theme}}"
+               <div class="controls-TileView__title_accent_theme-{{theme}}"
                     title="{{itemData.item[itemData.displayProperty]}}">
                   <div class="controls-TileView__title_accent_ellipsis">{{itemData.item[itemData.displayProperty]}}</div>
                </div>
             </ws:if>
             <ws:else>
-               <div class="controls-TileView__title controls-TileView__title_theme-{{itemData.theme}} {{(titleStyle === 'onhover' || titleStyle === undefined && !hasTitle) ? 'controls-TileView__title_invisible'}}"
+               <div class="controls-TileView__title controls-TileView__title_theme-{{theme}} {{(titleStyle === 'onhover' || titleStyle === undefined && !hasTitle) ? 'controls-TileView__title_invisible'}}"
                     title="{{itemData.item[itemData.displayProperty]}}">{{itemData.item[itemData.displayProperty]}}</div>
             </ws:else>
 
@@ -59,7 +59,7 @@
                   highlightOnHover="{{highlightOnHover}}"
                   itemData="{{itemData}}"
                   isTile="{{true}}"
-                  itemActionsClass="{{itemActionsClass ? itemActionsClass : 'controls-TileView__itemActions_theme-' + itemData.theme + ' controls-TileView__itemActions_bottomRight'}}"/>
+                  itemActionsClass="{{itemActionsClass ? itemActionsClass : 'controls-TileView__itemActions_theme-' + theme + ' controls-TileView__itemActions_bottomRight'}}"/>
       <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
                   template="{{swipeTemplate}}"
                   itemData="{{itemData}}"
@@ -79,14 +79,14 @@
 </ws:template>
 
 <ws:if data="{{invisible}}">
-   <div attr:class="controls-TileView__item controls-TileView__item_theme-{{itemData.theme}} controls-TileView__item_invisible" attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}"></div>
+   <div attr:class="controls-TileView__item controls-TileView__item_theme-{{theme}} controls-TileView__item_invisible" attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}"></div>
 </ws:if>
 <ws:else>
    <ws:if data="{{itemData.tileMode === 'dynamic'}}">
       <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
          <ws:partial template="defaultContentTpl">
             <ws:imageWrapper>
-               <ws:partial template="imageWrapperTpl" attr:class="{{( titleStyle === undefined && hasTitle ) || titleStyle === 'partial' ? 'controls-TileView__imageWrapper_reduced_theme-' + itemData.theme}} {{itemData.isAnimated ? ' controls-TileView__item_animated'}}" attr:style="{{'height: ' + (itemData.isAnimated && itemData.zoomCoefficient ? itemData.zoomCoefficient * itemData.itemsHeight : itemData.itemsHeight) + 'px;'}}">
+               <ws:partial template="imageWrapperTpl" attr:class="{{( titleStyle === undefined && hasTitle ) || titleStyle === 'partial' ? 'controls-TileView__imageWrapper_reduced_theme-' + theme}} {{itemData.isAnimated ? ' controls-TileView__item_animated'}}" attr:style="{{'height: ' + (itemData.isAnimated && itemData.zoomCoefficient ? itemData.zoomCoefficient * itemData.itemsHeight : itemData.itemsHeight) + 'px;'}}">
                   <ws:partial template="imageTpl"/>
                </ws:partial>
             </ws:imageWrapper>
@@ -102,7 +102,7 @@
             <ws:imageWrapper>
                <ws:partial template="imageWrapperTpl">
                   <ws:if data="{{!staticHeight}}">
-                     <div attr:class="{{hasTitle ? 'controls-TileView__resizer_theme-' + itemData.theme}}" style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
+                     <div attr:class="{{hasTitle ? 'controls-TileView__resizer_theme-' + theme}}" style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
                   </ws:if>
                   <ws:partial template="imageTpl"/>
                </ws:partial>
