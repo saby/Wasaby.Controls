@@ -3,6 +3,7 @@
         <Controls.lookup:Input
                 bind:selectedKeys="_selectedKeys"
                 source="{{_source}}"
+                searchParam="title"
                 keyProperty="id"
                 multiSelect="{{true}}"
                 readOnly="{{true}}">
