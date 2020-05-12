@@ -1141,7 +1141,7 @@ define([
                setMarkedKey(key) { baseControl._listViewModel.setMarkedKey(key) },
                moveMarkerToNext() { moveMarkerToNextCalled = true; },
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
-               setMarkerNearlyCurrent() {},
+               handleRemoveItems() {},
                update() {}
             };
          };
@@ -1210,7 +1210,7 @@ define([
                setMarkedKey(key) { baseControl._listViewModel.setMarkedKey(key) },
                moveMarkerToNext() { moveMarkerToNextCalled = true; },
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
-               setMarkerNearlyCurrent() {},
+               handleRemoveItems() {},
                update() {}
             };
          };
@@ -3922,7 +3922,7 @@ TODO проверить. Эти тесты не совместимы с обно
                   setMarkedKey(key) { this.markedKey = key; },
                   moveMarkerToNext() {},
                   moveMarkerToPrev() {},
-                  setMarkerNearlyCurrent() {},
+                  handleRemoveItems() {},
                   update() {}
                };
             };
@@ -4030,7 +4030,7 @@ TODO проверить. Эти тесты не совместимы с обно
                   setMarkedKey(key) { },
                   moveMarkerToNext() { },
                   moveMarkerToPrev() { },
-                  setMarkerNearlyCurrent() {},
+                  handleRemoveItems() {},
                   update() {}
                };
             });
@@ -4445,7 +4445,7 @@ TODO проверить. Эти тесты не совместимы с обно
                   setMarkedKey(key) { this.markedKey = key; },
                   moveMarkerToNext() {},
                   moveMarkerToPrev() {},
-                  setMarkerNearlyCurrent() {},
+                  handleRemoveItems() {},
                   update() {}
                };
             }
@@ -4513,7 +4513,7 @@ TODO проверить. Эти тесты не совместимы с обно
                   setMarkedKey(key) { assert.equal(key, 1); },
                   moveMarkerToNext() {},
                   moveMarkerToPrev() {},
-                  setMarkerNearlyCurrent() {},
+                  handleRemoveItems() {},
                   update() {}
                };
 
@@ -4652,7 +4652,7 @@ TODO проверить. Эти тесты не совместимы с обно
                   setMarkedKey(key) { assert.equal(key, 1); },
                   moveMarkerToNext() {},
                   moveMarkerToPrev() {},
-                  setMarkerNearlyCurrent() {},
+                  handleRemoveItems() {},
                   update() {}
                };
 
@@ -6086,7 +6086,13 @@ TODO проверить. Эти тесты не совместимы с обно
                };
                const _baseControl = new lists.BaseControl(baseControlOptions);
                sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => {
-                  return {};
+                  return {
+                     setMarkedKey() { },
+                     moveMarkerToNext() {},
+                     moveMarkerToPrev() {},
+                     handleRemoveItems() {},
+                     update() {}
+                  };
                });
                await mountBaseControl(_baseControl, baseControlOptions);
                baseControl = _baseControl;

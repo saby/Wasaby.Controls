@@ -265,7 +265,9 @@ const _private = {
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                    _private.updateMarkerController(self, self._options);
+                    if (self._markerController) {
+                        _private.updateMarkerController(self, self._options);
+                    }
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -1237,7 +1239,7 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
+            if (action === IObservable.ACTION_REMOVE && removedItemsIndex && self._markerController) {
                 self._markerController.handleRemoveItems(removedItemsIndex);
             }
 

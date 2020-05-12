@@ -37,7 +37,7 @@ define([
             setMarkedKey() { },
             moveMarkerToNext() { },
             moveMarkerToPrev() { },
-            setMarkerNearlyCurrent() {},
+            handleRemoveItems() {},
             update() {}
          };
       };
