@@ -36,7 +36,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
             this._currentOrder = null;
         }
         sortingParams.forEach((item: ISortingParam, i: number) => {
-            const dataElem = {...item, id: i, value: '', readOnly: true};
+            const dataElem = {...item, id: i, value: '', readOnly: false};
             if (dataElem.paramName === this._currentParamName) {
                 if (this._currentOrder !== null) {
                     dataElem.value = this._currentOrder;
@@ -44,10 +44,6 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
                 this._selectedKeys = [i];
             }
 
-            // Возможность клика должна быть только для пункта, который сбрасывает сортировку
-            if (item.paramName === null) {
-                dataElem.readOnly = false;
-            }
             data.push(dataElem);
         });
 
@@ -75,11 +71,13 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         const newValue: string = this._currentOrder === 'ASC' ? 'DESC' : 'ASC';
         this._setValue(this._currentParamName, newValue);
     }
-    protected _itemArrowClick(e: SyntheticEvent<Event>, item: Record, order: 'ASC'|'DESC'): void {
+    protected _itemArrowClick(e: SyntheticEvent<Event>, item: Record): void {
         const param = item.get('paramName');
+        const order = item.get('value');
         this._selectedKeys = [item.get('id')];
-        this._setValue(param, order);
+        this._setValue(param, this._getOppositeOrder(order));
     }
+    protected _getOppositeOrder = (order: 'ASC'|'DESC'): 'ASC'|'DESC' => order === 'DESC' || !order ? 'ASC' : 'DESC'; 
 
     static _theme: [string] = ['Controls/grid'];
 }

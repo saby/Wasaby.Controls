@@ -1,20 +1,24 @@
+<ws:template name="arrowChooser">
+    <div class="controls-SortingSelector_arrow_separator_theme-{{_options.theme}}"></div>
+    <div class="controls-SortingSelector_arrow_spacing_theme-{{_options.theme}}
+                controls-SortingSelector_arrow_{{sortValue ? 'selected' : 'unselected'}}_theme-{{_options.theme}}">
+        <ws:if data="{{sortValue === 'DESC'}}">
+            <ws:partial attr:class="controls-SortingSelector_arrow_theme-{{_options.theme}}" value="DESC" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
+        </ws:if>
+        <ws:else>
+            <ws:partial  attr:class="controls-SortingSelector_arrow_theme-{{_options.theme}}" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
+        </ws:else>
+    </div>
+</ws:template>
 <ws:partial template="Controls/dropdown:ItemTemplate"
-            itemData="{{itemData}}">
+            itemData="{{itemData}}"
+            on:click="_itemArrowClick(itemData.item)">
     <ws:contentTemplate>
         <div class="controls-SortingSelector_itemWrapper">
             <div class="controls-SortingSelector_itemTitle">{{itemData.item.get(_options.displayProperty)}}</div>
             <ws:if data="{{itemData.item.get('paramName') !== null}}">
                 <div class="controls-SortingSelector_arrowsContainer">
-                    <div class="controls-SortingSelector_arrow_spacing_theme-{{_options.theme}}
-                                controls-SortingSelector_arrow_{{itemData.item.get('value') === 'DESC' ? 'selected' : 'unselected'}}_theme-{{_options.theme}}"
-                         on:click="_itemArrowClick(itemData.item, 'DESC')">
-                        <ws:partial attr:class="controls-SortingSelector_arrow_theme-{{_options.theme}}" value="DESC" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
-                    </div>
-                    <div class="controls-SortingSelector_arrow_spacing_theme-{{_options.theme}}
-                                controls-SortingSelector_arrow_{{itemData.item.get('value') === 'ASC' ? 'selected' : 'unselected'}}_theme-{{_options.theme}}"
-                         on:click="_itemArrowClick(itemData.item, 'ASC')">
-                        <ws:partial  attr:class="controls-SortingSelector_arrow_theme-{{_options.theme}}" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
-                    </div>
+                    <ws:partial template="arrowChooser" sortValue="{{itemData.item.get('value')}}"/>
                 </div>
             </ws:if>
         </div>
