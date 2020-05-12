@@ -26,7 +26,7 @@ export class Controller {
    constructor(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-      this._markedKey = options.markedKey;
+      this.setMarkedKey(options.markedKey);
    }
 
    /**
@@ -51,15 +51,7 @@ export class Controller {
    // TODO + вызывать при изменении итемс, а при удалении элемента вызывать для ближайшего элемента
    // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать, хотя это не одно и тоже
    setMarkedKey(key: TKey): void {
-      if (this._markedKey === key) {
-         return;
-      }
-
-      if (this._markerVisibility === Visibility.Hidden || this._markerVisibility === Visibility.OnActivated && key === null) {
-         if (key === null) {
-            this._model.setMarkedKey(this._markedKey, false);
-            this._markedKey = null;
-         }
+      if (this._markedKey === key || this._markerVisibility === Visibility.Hidden) {
          return;
       }
 
@@ -121,13 +113,15 @@ export class Controller {
    }
 
    private _setMarkerOnFirstItem(): TKey {
-      const firstItem = this._model.getFirstItem();
+      if (this._model.getCount()) {
+         const firstItem = this._model.getFirstItem();
 
-      if (firstItem) {
-         this._model.setMarkedKey(firstItem.getId(), true);
-         return firstItem.getId();
+         if (firstItem) {
+            this._model.setMarkedKey(firstItem.getId(), true);
+            return firstItem.getId();
+         }
       }
 
-      return null;
+      return undefined;
    }
 }

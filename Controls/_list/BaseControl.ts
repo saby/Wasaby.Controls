@@ -2040,8 +2040,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
-            self._markerController = _private.createMarkerController(self, newOptions);
-
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions);
 
@@ -2101,6 +2099,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         }
                         _private.calculateActionsTemplateConfig(self, newOptions);
                     }
+
+                    self._markerController = _private.createMarkerController(self, newOptions);
+
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
                     // TODO Kingo.
@@ -2286,12 +2287,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setKeyProperty(newOptions.keyProperty);
         }
 
-        if (newOptions.markedKey !== this._options.markedKey
-           || newOptions.markerVisibility !== this._options.markerVisibility
-           || this._modelRecreated) {
-            _private.updateMarkerController(this, newOptions);
-        }
-
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
         }
@@ -2324,6 +2319,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else if (!newOptions.groupProperty && this._options.groupProperty) {
             this._groupingLoader.destroy();
         }
+
+       /* if (newOptions.markedKey !== this._options.markedKey
+           || newOptions.markerVisibility !== this._options.markerVisibility
+           || this._modelRecreated) {
+            _private.updateMarkerController(this, newOptions);
+        }*/
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
@@ -2496,6 +2497,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._shouldUpdateItemActions = false;
             this._updateItemActions();
         }
+
+        if (oldOptions.markedKey !== this._options.markedKey
+           || oldOptions.markerVisibility !== this._options.markerVisibility
+           || this._modelRecreated) {
+            _private.updateMarkerController(this, oldOptions);
+        }
+
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
