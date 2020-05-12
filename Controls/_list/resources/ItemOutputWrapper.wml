@@ -1,16 +1,18 @@
-<ws:partial
-   template="wml!Controls/_list/resources/ItemOutput"
-   listModel="{{listModel}}"
-   editingItemData="{{editingItemData}}"
-   isAdd="{{isAdd}}"
-   itemActionsTemplate="{{itemActionsTemplate}}"
-   itemActionsClass="{{itemActionsClass}}"
-   swipeTemplate="{{swipeTemplate}}"
-   editArrowTemplate="{{editArrowTemplate}}"
-   multiSelectTpl="{{multiSelectTpl}}"
-   itemTemplate="{{(listModel.getCurrent().item.get && listModel.getCurrent().item.get(listModel.getCurrent().itemTemplateProperty)) || itemTemplate}}"
-   itemData="{{listModel.getCurrent()}}"
-   attr:key="{{listModel.getCurrent().key}}"
-   itemActionsPosition="{{itemActionsPosition}}"
-   backgroundStyle="{{backgroundStyle}}"
-   tagTemplate="{{tagTemplate}}"/>{{listModel.goToNext()}}
+<ws:if data="{{listModel.isShouldBeDrawnItem(listModel.getCurrent())}}">
+    <ws:partial
+       template="wml!Controls/_list/resources/ItemOutput"
+       listModel="{{listModel}}"
+       editingItemData="{{editingItemData}}"
+       isAdd="{{isAdd}}"
+       itemActionsTemplate="{{itemActionsTemplate}}"
+       itemActionsClass="{{itemActionsClass}}"
+       swipeTemplate="{{swipeTemplate}}"
+       editArrowTemplate="{{editArrowTemplate}}"
+       multiSelectTpl="{{multiSelectTpl}}"
+       itemTemplate="{{(listModel.getCurrent().item.get && listModel.getCurrent().item.get(listModel.getCurrent().itemTemplateProperty)) || itemTemplate}}"
+       itemData="{{listModel.getCurrent()}}"
+       attr:key="{{listModel.getCurrent().key}}"
+       itemActionsPosition="{{itemActionsPosition}}"
+       backgroundStyle="{{backgroundStyle}}"
+       tagTemplate="{{tagTemplate}}"/>
+</ws:if>{{listModel.goToNext()}}
