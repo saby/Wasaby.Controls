@@ -12,6 +12,7 @@ interface IMarkerModel extends IBaseCollection<CollectionItem<Model>> {
    getNextItem(index: number): TKey;
    getPreviousItemKey(key: TKey): TKey;
    getNextItemKey(key: TKey): TKey;
+   getCount(): number;
 }
 
 interface IOptions {
@@ -53,6 +54,7 @@ export class Controller {
    // TODO + вызывать при изменении итемс, а при удалении элемента вызывать для ближайшего элемента
    // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать, хотя это не одно и тоже
    setMarkedKey(key: TKey): void {
+      // не меняем маркер если ключ не изменился или маркер скрыт
       if (this._markedKey === key || this._markerVisibility === Visibility.Hidden) {
          return;
       }
@@ -103,15 +105,16 @@ export class Controller {
    }
 
    private _setMarkerOnFirstItem(): TKey {
-      if (this._model.getCount()) {
-         const firstItem = this._model.getFirstItem();
-
-         if (firstItem) {
-            this._model.setMarkedKey(firstItem.getId(), true);
-            return firstItem.getId();
-         }
+      // если модель пустая, то не на что ставить маркер
+      // если маркер undefined, значит сюда попали после отображения списка
+      if (!this._model.getCount() || this._markedKey === undefined) {
+         return undefined;
       }
 
-      return undefined;
+      const firstItem = this._model.getFirstItem();
+      if (firstItem) {
+         this._model.setMarkedKey(firstItem.getId(), true);
+         return firstItem.getId();
+      }
    }
 }
