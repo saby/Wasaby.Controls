@@ -2653,8 +2653,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _onAfterEndEdit(event: SyntheticEvent, item: Model, isAdd: boolean) {
+        this._notify('afterEndEdit', [item, isAdd]);
         this._updateItemActions(this._options);
-        return this._notify('afterEndEdit', [item, isAdd]);
     },
 
     /**
