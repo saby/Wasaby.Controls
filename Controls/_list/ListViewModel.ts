@@ -415,6 +415,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             prevItemId--;
         }
     },
+
     getMarkedKey: function() {
         return this._markedKey;
     },
@@ -600,7 +601,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             nextIndex++;
         }
     },
-
     getValidKeyForMarker: function(index) {
         const prevValidItem = this.getPreviousItem(index);
         const nextValidItem = this.getNextItem(index);

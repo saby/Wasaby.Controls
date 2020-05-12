@@ -8,6 +8,8 @@ enum Visibility { Visible = 'visible', Hidden = 'hidden', OnActivated = 'onactiv
 interface IMarkerModel extends IBaseCollection<CollectionItem<Model>> {
    setMarkedKey(key: TKey, status: boolean): void;
    getFirstItem(): Model;
+   getPreviousItem(index: number): TKey;
+   getNextItem(index: number): TKey;
    getPreviousItemKey(key: TKey): TKey;
    getNextItemKey(key: TKey): TKey;
 }
@@ -72,7 +74,6 @@ export class Controller {
          return;
       }
 
-      // TODO написать совместимость моделей
       const nextKey = this._model.getNextItemKey(this._markedKey);
       this.setMarkedKey(nextKey);
    }
@@ -85,14 +86,13 @@ export class Controller {
          return;
       }
 
-      // TODO написать совместимость моделей
       const prevKey = this._model.getPreviousItemKey(this._markedKey);
       this.setMarkedKey(prevKey);
    }
 
-   handleRemoveItems(removedItemsIndex: TKey): void {
-      const nextKey = this._model.getNextItem(removedItemsIndex); // TODO добавить совместимость
-      const prevKey = this._model.getPreviousItem(removedItemsIndex); // TODO добавить совместимость
+   handleRemoveItems(removedItemsIndex: number): void {
+      const nextKey = this._model.getNextItem(removedItemsIndex);
+      const prevKey = this._model.getPreviousItem(removedItemsIndex);
       if (nextKey) {
          this.setMarkedKey(nextKey);
       } else if (prevKey) {

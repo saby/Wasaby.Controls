@@ -1239,7 +1239,7 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_REMOVE && removedItemsIndex && self._markerController) {
+            if (action === IObservable.ACTION_REMOVE && removedItemsIndex !== undefined && self._markerController) {
                 self._markerController.handleRemoveItems(removedItemsIndex);
             }
 
