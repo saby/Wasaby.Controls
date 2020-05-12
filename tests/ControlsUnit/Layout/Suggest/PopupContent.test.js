@@ -27,14 +27,24 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
                   direction: {
                      vertical: 'top'
                   }
-               }
+               },
+               showContent: true
             };
 
-         layer._beforeUpdate({});
-         assert.isFalse(layer._shouldScrollToBottom);
+         layer.saveOptions({
+            showContent: false
+         });
 
+         layer._beforeUpdate({showContent: true});
+         assert.isFalse(layer._shouldScrollToBottom);
+         assert.isTrue(layer._showContent);
+         assert.isNull(layer._pendingShowContent);
+
+         layer._showContent = false;
          layer._beforeUpdate(optionsReverseList);
          assert.isTrue(layer._shouldScrollToBottom);
+         assert.isFalse(layer._showContent);
+         assert.isTrue(layer._pendingShowContent);
       });
 
       it('afterUpdate', function() {
@@ -61,15 +71,20 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
             }
          };
 
+         layer._showContent = false;
          layer._afterUpdate(oldOptions);
 
          assert.isTrue(resized);
          assert.isTrue(resultSended);
+         assert.isFalse(layer._showContent);
 
          resultSended = false;
          layer._positionFixed = true;
+         layer._pendingShowContent = true;
          layer._afterUpdate(oldOptions);
          assert.isFalse(resultSended);
+         assert.isTrue(layer._showContent);
+         assert.isNull(layer._pendingShowContent);
 
          layer.saveOptions(oldOptions);
          layer._positionFixed = false;
@@ -127,46 +142,6 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
          layer._shouldScrollToBottom = true;
          layer._beforePaint();
          assert.isTrue(isScrollToBottom);
-      });
-
-   });
-
-   describe('Controls._suggestPopup.Layer.__PopupContent template tests', function() {
-
-      it('showContent:false', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_theme-default controls-Suggest__suggestionsContainer_popup controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/scroll:Container"><span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
-
-         getMarkup(popupContentTemplate, {_options: {theme: 'default', showContent: false, target: {offsetWidth: ''}, content: '', stickyPosition: {direction: {vertical: ''}}}}).addCallback(function(res) {
-            assert.equal(res, standardMarkup);
-            done();
-         });
-      });
-
-      it('showContent:true', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_theme-default controls-Suggest__suggestionsContainer_popup controls-Suggest__suggestionsContainer_popup_shadow_"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/scroll:Container"><span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
-
-         getMarkup(popupContentTemplate, {_options: {theme: 'default', showContent: true, target: {offsetWidth: ''},  content: '', stickyPosition: {direction: {vertical: ''}}}}).addCallback(function(res) {
-            assert.equal(res, standardMarkup);
-            done();
-         });
-      });
-
-      it('target.offsetWidth:300px', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_theme-default controls-Suggest__suggestionsContainer_popup controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/scroll:Container"><span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
-
-         getMarkup(popupContentTemplate, {_options: {theme: 'default', target: {offsetWidth: 300}, content: '', stickyPosition: {direction: {vertical: ''}}}}).addCallback(function(res) {
-            assert.equal(res, standardMarkup);
-            done();
-         });
-      });
-
-      it('verticalAling', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_theme-default controls-Suggest__suggestionsContainer_popup controls-Suggest__suggestionsContainer_popup_shadow_top controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/scroll:Container"><span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
-
-         getMarkup(popupContentTemplate, {_options: {theme: 'default', target: {offsetWidth: 300}, content: '', stickyPosition: {direction: {vertical: 'top'}}}}).addCallback(function(res) {
-            assert.equal(res, standardMarkup);
-            done();
-         });
       });
 
    });

@@ -280,6 +280,7 @@ define(
 
                dropdownController._isOpened = true;
                dropdownController._items = itemsRecords.clone();
+               dropdownController._source = 'testSource';
                dropdownController._sourceController = {hasMoreData: ()=>{}};
                dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
                assert.isTrue(opened);
@@ -559,6 +560,7 @@ define(
             let dropdownController = getDropdownController(config),
                opened = false;
             dropdownController._items = itemsRecords.clone();
+            dropdownController._source = 'testSource';
             dropdownController._children.DropdownOpener = {
                open: () => { opened = true;}
             };
@@ -584,6 +586,13 @@ define(
             dropdownController._options.emptyText = 'Not selected';
             dropdownController._open();
             assert.isTrue(opened);
+
+            // update items in _menuSource
+            const newItems = new collection.RecordSet({keyProperty: 'id', rawData: [{id: '1', title: 'first'}]});
+            dropdownController._menuSource = null;
+            dropdownController._items = newItems;
+            dropdownController._open();
+            assert.deepEqual(dropdownController._menuSource.getData().query.getRawData(), newItems.getRawData());
          });
 
          it('_private::requireTemplates', (done) => {
@@ -656,6 +665,7 @@ define(
                rawData: [ {id: 1, title: 'Запись 1'} ]
             });
             dropdownController._items = item;
+            dropdownController._source = 'testSource';
             dropdownController._notify = (e, data) => {
                if (e === 'selectedItemsChanged') {
                   selectedItems = data[0];
@@ -860,6 +870,7 @@ define(
                rawData: [ {id: 1, title: 'Запись 1'}, {id: 2, title: 'Запись 2'} ]
             });
             dropdownController._items = items2;
+            dropdownController._source = 'testSource';
             dropdownController._sourceController = { hasMoreData: () => false };
             dropdownController._children.DropdownOpener = {
                close: function() {
@@ -896,6 +907,7 @@ define(
             let openConfig;
 
             dropdownController._sourceController = { hasMoreData: () => false };
+            dropdownController._source = 'testSource';
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',
                rawData: items
