@@ -310,7 +310,6 @@ var _private = {
 
             if (viewModelRoot !== root) {
                 viewModel.setRoot(root);
-
             }
             if (isDeepReload && modelExpandedItems.length && loadedList) {
                 const sourceController = baseControl.getSourceController();

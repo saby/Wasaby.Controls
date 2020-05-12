@@ -51,11 +51,11 @@ export class Controller {
    //  хотя в старой модели нотифается, может и в новую нужно добавить нотифай,а после этого метода не надо,
    //  вроде в новой тоже нотифается, только из item-а
 
-   // TODO + вызывать при изменении итемс, а при удалении элемента вызывать для ближайшего элемента
+   // TODO + вызывать при изменении итемс
    // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать, хотя это не одно и тоже
    setMarkedKey(key: TKey): void {
-      // не меняем маркер если ключ не изменился или маркер скрыт
-      if (this._markedKey === key || this._markerVisibility === Visibility.Hidden) {
+      if (this._markedKey === key || this._markerVisibility === Visibility.Hidden
+         || this._markerVisibility === Visibility.OnActivated && key === null) {
          return;
       }
 
@@ -106,15 +106,13 @@ export class Controller {
 
    private _setMarkerOnFirstItem(): TKey {
       // если модель пустая, то не на что ставить маркер
-      // если маркер undefined, значит сюда попали после отображения списка
-      if (!this._model.getCount() || this._markedKey === undefined) {
+      // если маркер undefined, значит сюда попали первый раз после загрузки списка
+      if (!this._model.getCount()) {
          return undefined;
       }
 
       const firstItem = this._model.getFirstItem();
-      if (firstItem) {
-         this._model.setMarkedKey(firstItem.getId(), true);
-         return firstItem.getId();
-      }
+      this._model.setMarkedKey(firstItem.getId(), true);
+      return firstItem.getId();
    }
 }
