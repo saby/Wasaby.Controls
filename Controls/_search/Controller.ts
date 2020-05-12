@@ -43,12 +43,6 @@ var _private = {
    },
 
    searchCallback: function (self, result, filter) {
-      self._loading = false;
-      if (self._viewMode !== 'search' && self._options.parentProperty) {
-         _private.deleteRootFromFilterAfterSearch(self, filter);
-         _private.updateRootAfterSearch(self);
-      }
-
       _private.updateSearchParams(self, filter, result);
       self._notify('filterChanged', [filter]);
       self._notify('itemsChanged', [result.data]);
@@ -173,7 +167,6 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
-      self._loading = false;
       _private.updateSearchParams(self, filter);
    },
 
@@ -264,8 +257,14 @@ var _private = {
    },
 
    updateSearchParams(self, filter, result): void {
+      self._loading = false;
       if (self._viewMode !== 'search') {
          _private.updateViewMode(self, 'search');
+
+         if (self._options.parentProperty) {
+            _private.deleteRootFromFilterAfterSearch(self, filter);
+            _private.updateRootAfterSearch(self);
+         }
       }
 
       self._searchValue = filter[self._options.searchParam] || '';
