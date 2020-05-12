@@ -1239,10 +1239,6 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_REMOVE && removedItemsIndex !== undefined && self._markerController) {
-                self._markerController.handleRemoveItems(removedItemsIndex);
-            }
-
             if (self._selectionController) {
                let result;
 
@@ -1380,6 +1376,7 @@ const _private = {
     bindHandlers(self): void {
         self._onItemActionsMenuClose = self._onItemActionsMenuClose.bind(self);
         self._onItemActionsMenuResult = self._onItemActionsMenuResult.bind(self);
+        self._onItemsChanged = self._onItemsChanged.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -1782,7 +1779,7 @@ const _private = {
       self._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
    },
 
-   onItemsChanged(self: any, action: string, removedItems: []): void {
+   onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
       // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
       // при подписке на модель событие remove летит еще и при скрытии элементов
       if (self._selectionController) {
@@ -1795,6 +1792,10 @@ const _private = {
          }
 
          this.handleSelectionControllerResult(self, result);
+      }
+
+      if (action === IObservable.ACTION_REMOVE && removedItemsIndex !== undefined && self._markerController) {
+         self._markerController.handleRemoveItems(removedItemsIndex);
       }
    },
 
@@ -2741,8 +2742,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._itemActionsMenuId = null;
     },
 
-    _onItemsChanged(event, action, newItems, newItemsIndex, removedItems): void {
-        _private.onItemsChanged(this, action, removedItems);
+    _onItemsChanged(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
+        _private.onItemsChanged(this, action, removedItems, removedItemsIndex);
     },
 
     _itemMouseDown(event, itemData, domEvent) {
