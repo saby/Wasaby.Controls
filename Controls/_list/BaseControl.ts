@@ -1258,10 +1258,11 @@ var _private = {
 
     getMenuConfig(items: IItemAction[], contextMenuConfig: object, action?: IItemAction): object {
         let defaultMenuConfig: object = {
-            items: new RecordSet({ rawData: items, keyProperty: 'id' }),
+            source: new Memory({ data: items, keyProperty: 'id' }),
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
+            root: action && action.id,
             dropdownClassName: 'controls-itemActionsV__popup'
         };
         if (action) {
@@ -1413,12 +1414,9 @@ var _private = {
         self._actionMenuIsShown = false;
     },
 
-    actionsMenuResultHandler(self, args): void {
-        const actionName = args && args.action;
-        const event = args && args.event;
-
+    actionsMenuResultHandler(self, actionName, data, event): void {
         if (actionName === 'itemClick') {
-            const action = args.data && args.data[0] && args.data[0].getRawData();
+            const action = data && data.getRawData();
             const activeItem =
                 self._options.useNewModel
                     ? displayLib.ItemActionsController.getActiveItem(self._listViewModel)
@@ -1601,7 +1599,7 @@ var _private = {
     isPagingNavigation: function(navigation) {
         return navigation && navigation.view === 'pages';
     },
-    
+
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
@@ -2637,8 +2635,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.closeActionsMenu(this, args);
     },
 
-    _actionsMenuResultHandler(args): void {
-        _private.actionsMenuResultHandler(this, args);
+    _actionsMenuResultHandler(actionName, data, event): void {
+        _private.actionsMenuResultHandler(this, actionName, data, event);
     },
 
     _itemMouseDown: function(event, itemData, domEvent) {
