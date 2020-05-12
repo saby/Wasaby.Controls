@@ -10,7 +10,6 @@
                   {{ !_isShadowVisible('top') && _isMobileIOS ? ' ws-invisible' }}"
             style="{{_topShadowStyle}}"></div>
    </ws:if>
-   <Controls.event:Listener event="updateFixed" on:updateFixed="_updateFixed()"/>
    <Controls.event:Listener event="updateStickyHeight" on:updateStickyHeight="_updateStickyHeight()"/>
    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop" style="{{_getObserverStyle('top')}}"></div>
