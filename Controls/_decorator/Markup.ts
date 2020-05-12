@@ -95,13 +95,13 @@ import {delay} from 'Types/function';
     * @example
     * Рассмотрим пример, в котором вставляется верстка с картинкой и текстом. 
     * 
-    * Control.wml
     * <pre>
+    * <!-- Control.wml -->
     * <Controls.decorator:Markup value="{{ json }}" validHtml="{{ validHtml }}" />
     * </pre>
     * 
-    * Control.js
     * <pre>
+    * // Control.js
     * ...
     * _beforeMount: function() {
     *    this.json = Converter.htmlToJson(`
