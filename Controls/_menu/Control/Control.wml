@@ -5,7 +5,7 @@
                                           controls-DropdownList__scroll
                                           controls-Menu__scroll_theme-{{_options.theme}}"
                               topShadowVisibility="hidden"
-                              bottomShadowVisibility="{{_options.footerTemplate ? 'auto' : 'hidden'}}">
+                              bottomShadowVisibility="{{_options.footerContentTemplate ? 'auto' : 'hidden'}}">
    <Controls._menu.Render scope="{{_options}}"
                              listModel="{{_listModel}}"
                              on:itemClick="_itemClick()"
@@ -19,6 +19,7 @@
 
                              on:mouseleave="_mouseLeaveHandler()"
                              on:mousemove="_mouseMove()"
+                             on:separatorMouseEnter="_separatorMouseEnter()"
                              on:pinClick="_pinClick()">
       </Controls._menu.Render>
    </Controls.scroll:Container>
@@ -36,7 +37,7 @@
          </ws:if>
          <ws:else data="{{_expandButtonVisible}}">
             <div class="controls-DropdownList__additional-button
-                              controls-Menu__additional">
+                        controls-Menu__additional">
                <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
                   <ws:partial template="{{content.resolvedTemplate}}"
                               bind:value="_expander"

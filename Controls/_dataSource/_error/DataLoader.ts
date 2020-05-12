@@ -94,12 +94,14 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
                url: undefined
             });
 
-            errorsResult.push(err);
-
             return {
                data
             };
          }).then((loadDataResult: IRequestDataResult) => {
+            if (loadDataResult.data instanceof Error) {
+               errorsResult.push(loadDataResult.data);
+            }
+
             sourcesResult[sourceIndex] = DataLoader._createSourceConfig(sourceConfig, loadDataResult);
          });
       });

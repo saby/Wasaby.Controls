@@ -34,6 +34,8 @@
                        attr:class="controls-Menu__popup-list-padding-{{_verticalDirection}}_theme-{{_options.theme}}"
                        scope="{{_options}}"
                        itemPadding="{{_itemPadding}}"
+                       dataLoadCallback="{{_dataLoadCallback}}"
+                       headingIcon="{{_headingIcon}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:applyClick="_sendResult('applyClick')"
                        on:moreButtonClick="_sendResult('selectorDialogOpened')"

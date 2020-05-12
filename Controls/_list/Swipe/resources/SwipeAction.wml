@@ -2,16 +2,16 @@
             {{actionCaptionPosition === 'bottom' ? '  controls-Swipe__action_column'}}
             {{actionCaptionPosition === 'right' ? '  controls-Swipe__action_caption_right'}}
             controls-itemActionsV__action_padding_swipe
-            controls-Swipe__action_{{actionAlignment}}
-            controls-Swipe__action_padding_size_{{paddingSize}}
+            controls-Swipe__action_{{actionAlignment}}_theme-{{theme}}
+            controls-Swipe__action_padding_size_{{paddingSize}}_theme-{{theme}}
             controls-itemActionsV__action_style_{{action.style || 'secondary'}}
-            controls-Swipe__action_iconStyle_{{action.iconStyle || 'secondary'}}">
+            controls-Swipe__action_iconStyle_{{action.iconStyle || 'secondary'}}_theme-{{theme}}">
    <ws:if data="{{needIcon(action, actionCaptionPosition, hasActionWithIcon)}}">
-      <i class="{{action.icon}} controls-Swipe__action_icon_size_{{itemActionsSize}} controls-Swipe__action_icon_swipe"/>
+      <i class="{{action.icon}} controls-Swipe__action_icon_size_{{itemActionsSize}}_theme-{{theme}} controls-Swipe__action_icon_swipe"/>
    </ws:if>
    <ws:if data="{{needTitle(action, actionCaptionPosition)}}">
-        <span class="controls-Swipe__action_title
-         controls-Swipe__action_title_size_{{itemActionsSize}}
-         controls-Swipe__action_title_position_{{actionCaptionPosition}}">{{action.title}}</span>
+        <span class="controls-Swipe__action_title_theme-{{theme}}
+         controls-Swipe__action_title_size_{{itemActionsSize}}_theme-{{theme}}
+         controls-Swipe__action_title_position_{{actionCaptionPosition}}_theme-{{theme}}">{{action.title}}</span>
     </ws:if>
 </div>

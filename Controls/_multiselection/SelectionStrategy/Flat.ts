@@ -93,7 +93,12 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    getSelectionForModel(selection: ISelection): Map<boolean|null, Record[]> {
-      const selectedItems = new Map([[true, []], [false, []], [null, []]]);
+      const selectedItems = new Map();
+      // IE не поддерживает инициализацию конструктором
+      selectedItems.set(true, []);
+      selectedItems.set(false, []);
+      selectedItems.set(null, []);
+
       const isAllSelected: boolean = this._isAllSelected(selection);
 
       this._items.forEach((item) => {

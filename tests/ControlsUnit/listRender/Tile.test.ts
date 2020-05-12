@@ -47,6 +47,10 @@ describe('Controls/_listRender/Tile', () => {
         };
 
         const tile = new Tile(defaultCfg);
+        let hoveredItem;
+        tile._debouncedSetHoveredItem = function(item) {
+            hoveredItem = item;
+        };
         tile.saveOptions(oldCfg);
 
         const animatedItem = { isFixed: () => false };
@@ -62,6 +66,7 @@ describe('Controls/_listRender/Tile', () => {
 
         tile._beforeUpdate(newCfg);
         assert.isNull(tile._animatedItem);
+        assert.isNull(hoveredItem);
     });
 
     describe('_afterUpdate()', () => {

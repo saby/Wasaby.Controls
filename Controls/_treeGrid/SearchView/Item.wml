@@ -1,8 +1,7 @@
 <ws:if data="{{itemData.breadCrumbs}}">
    <ws:partial template="{{ itemData.searchBreadCrumbsItemTemplate }}"
                scope="{{_options}}"
-               on:click="_onSearchItemClick(itemData.dispItem)"
-               on:itemClick="_onSearchPathClick()"/>
+               on:click="_onSearchItemClick(itemData.dispItem)"/>
 </ws:if>
 <ws:else>
    <ws:partial template="{{itemData.resolveItemTemplate(itemData)}}"

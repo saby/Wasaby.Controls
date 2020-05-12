@@ -167,10 +167,10 @@ class DialogController extends BaseController {
     _fixCompatiblePosition(item: IDialogItem): void {
         // COMPATIBLE: for old windows user can set the coordinates relative to the body
         if (!item.dragged) {
-            if (item.popupOptions.top) {
+            if (item.popupOptions.top !== undefined) {
                 item.position.top = item.popupOptions.top;
             }
-            if (item.popupOptions.left) {
+            if (item.popupOptions.left !== undefined) {
                 // Calculating the left position when reducing the size of the browser window
                 const differenceWindowWidth: number =
                     (item.popupOptions.left + item.popupOptions.width) - this._getWindowSize().width;
@@ -184,9 +184,11 @@ class DialogController extends BaseController {
     }
 
     private _getWindowSize(): IWindow {
+        // Ширина и высота берется по body специально.
+        // В случае, когда уменьшили окно браузера и появился нативный скролл.
         return {
-            width: window.innerWidth,
-            height: window.innerHeight,
+            width: document.body.clientWidth,
+            height: document.body.clientHeight,
             scrollTop: window.scrollY,
             scrollLeft: window.scrollX
         };

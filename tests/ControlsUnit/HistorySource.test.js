@@ -249,8 +249,7 @@ define(
                   });
                   historyDef = hSource.query(query);
                   historyDef.addCallback(function(data) {
-                     let records = data.getAll();
-                     assert.isTrue(records.at(0).get('pinned'));
+                     assert.isTrue(data.at(0).get('pinned'));
                      assert.equal(hSource._history.pinned.getCount(), 1);
 
                      hSource.historySource = errorSource;
@@ -431,6 +430,15 @@ define(
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(3).get('title'), 'Запись 7');
                assert.equal(hSource._history.recent.at(0).getId(), '7');
+
+               let item = new entity.Model({
+                  rawData: {
+                     id: 'notInOriginalRecordSet'
+                  },
+                  keyProperty: 'id',
+               });
+               hSource.update([item], meta);
+               assert.isNull(hSource._historyItems);
             });
             it('updateRecent history not loaded', function() {
                let config2 = clone(config),

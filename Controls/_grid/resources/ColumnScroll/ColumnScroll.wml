@@ -5,7 +5,6 @@
               scrollPosition="{{ _scrollPosition }}"
               startDragNDropCallback="{{ _options.startDragNDropCallback }}"
               dragNDropDelay="{{ _options.dragNDropDelay }}"
-              attr:ws-no-focus="true"
               on:dragScrolling="_positionChangedHandler()">
          <ws:partial template="{{ viewContent }}"/>
       </Controls._grid.DragScroll>
