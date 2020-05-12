@@ -85,6 +85,8 @@ var
                 var id = self._notify('showIndicator', [{}], { bubbling: true });
                 self._endEditDeferred = eventResult;
                 return eventResult.addErrback((error) => {
+                    // Отменяем сохранение, оставляем редактирование открытым, если промис сохранения завершился с
+                    // ошибкой (провалена валидация на сервере)
                     self._endEditDeferred = null;
                     return constEditing.CANCEL;
                 }).addCallback((resultOfDeferred) => {
