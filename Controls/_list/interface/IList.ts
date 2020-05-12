@@ -1,5 +1,5 @@
-import { RecordSet } from 'Types/collection';
 import { TemplateFunction } from 'UI/Base';
+import { IItemAction, IContextMenuConfig } from 'Controls/itemActions';
 
 /**
  * Интерфейс для списков.
@@ -50,31 +50,6 @@ type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
-
-export interface IContextMenuConfig {
-    items?: RecordSet;
-    groupTemplate?: TemplateFunction|string;
-    groupProperty?: string;
-    itemTemplate?: TemplateFunction|string;
-    footerTemplate?: TemplateFunction|string;
-    headerTemplate?: TemplateFunction|string;
-    iconSize?: string;
-}
-
-export interface IItemAction {
-    id: string;
-    title?: string;
-    icon?: string;
-    showType?: 0|1|2;
-    style?: string;
-    iconStyle?: TIconStyle;
-    displayMode?: TActionDisplayMode;
-    tooltip?: string;
-    handler?: (item) => void;
-    parent?: string;
-    'parent@'?: boolean|null;
-    _isMenu?: boolean;
-}
 
 interface IItemPadding {
     top?: TVerticalItemPadding;

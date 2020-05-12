@@ -24,6 +24,14 @@ export enum TItemActionShowType {
 export type TIconStyle = 'secondary'|'warning'|'danger'|'success';
 
 /**
+ * @typedef {String} TActionCaptionPosition
+ * @variant right Справа от иконки опции записи.
+ * @variant bottom Под иконкой опции записи.
+ * @variant none Не будет отображаться.
+ */
+export type TActionCaptionPosition = 'right'|'bottom'|'none';
+
+/**
  * @typedef {String} TActionDisplayMode
  * @variant title показывать только заголовок
  * @variant icon показывать только иконку
@@ -34,6 +42,23 @@ export type TIconStyle = 'secondary'|'warning'|'danger'|'success';
 export type TActionDisplayMode = 'title'|'icon'|'both'|'auto';
 
 /**
+ * @typedef {String} TItemActionsPosition
+ * @variant inside Внутри элемента.
+ * @variant outside Под элементом.
+ * @variant custom Произвольная позиция отображения. Задаётся через шаблон {@link Controls/interface/IItemTemplate itemTemplate}.
+ */
+export type TItemActionsPosition = 'inside'|'outside'|'custom';
+
+/**
+ * @cfg {string} TItemActionsSize
+ * Размер иконок опций записи
+ * @variant inside Внутри элемента.
+ * @variant outside Под элементом.
+ */
+export type TItemActionsSize = 'm'|'l';
+
+/**
+ * Configuration object for a button which will be shown when the user hovers over a list item.
  * TODO duplicated from IList
  */
 export interface IItemAction {
@@ -61,7 +86,7 @@ export interface IItemAction {
     /**
      * Action's style.
      */
-    style?: string;
+    style?: TIconStyle;
 
     /**
      * Style of the action's icon.
@@ -109,7 +134,7 @@ export interface IItemActionsTemplateOptions {
     style?: string;
     itemActionsPosition: string;
     actionAlignment?: string;
-    actionCaptionPosition: 'right'|'bottom'|'none';
+    actionCaptionPosition: TActionCaptionPosition;
     itemActionsClass?: string;
     actionClickCallback?: TActionClickCallback;
     size?: string;

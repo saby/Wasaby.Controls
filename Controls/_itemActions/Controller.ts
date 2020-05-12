@@ -1,9 +1,9 @@
-import {Control} from 'UI/Base';
-import {Memory} from 'Types/source';
-import {isEqual} from 'Types/object';
-import {SyntheticEvent} from 'Vdom/Vdom';
-import {Model} from 'Types/entity';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
+import { Control } from 'UI/Base';
+import { Memory } from 'Types/source';
+import { isEqual } from 'Types/object';
+import { SyntheticEvent } from 'Vdom/Vdom';
+import { Model } from 'Types/entity';
+import { TItemKey, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
@@ -13,9 +13,14 @@ import {
     IMenuTemplateOptions,
     IMenuConfig,
     TItemActionShowType,
-    IItemAction
+    TItemActionsSize,
+    IItemAction,
+    TItemActionsPosition,
+    TActionCaptionPosition
 } from './interface/IItemActions';
-import {Utils} from './Utils';
+import { verticalMeasurer } from './measurers/VerticalMeasurer';
+import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
+import { Utils } from './Utils';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -31,35 +36,54 @@ export interface IItemActionsControllerOptions {
      */
     collection: IItemActionsCollection;
     /**
-     * Действия с записью
+     * Операции с записью
      */
     itemActions: IItemAction[];
     /**
      * Размер иконок операций с записью
      * варианты 's'|'m'
      */
-    iconSize: string;
+    iconSize: TItemActionsSize;
     /**
-     * @param theme Название текущей темы
+     * @param theme Название текущей темы оформления
      */
     theme: string;
     /**
-     * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
+     * Имя свойства, которое содержит конфигурацию для панели с опциями записи.
      */
     itemActionsProperty?: string;
     /**
-     * Callback для определения видимости операции
+     * Функция обратного вызова для определения видимости опций записи.
      */
     visibilityCallback?: TItemActionVisibilityCallback;
     /**
      * Должна ли быть видна панель с кнопками для редактирования
      */
     editingToolbarVisibility?: boolean;
-    itemActionsPosition?: string;
-    style?: string;
+    /**
+     * Позиция по отношению к записи.
+     * Варианты: 'inside' | 'outside' | 'custom'
+     */
+    itemActionsPosition?: TItemActionsPosition;
+    /**
+     * Стиль отображения контейнера controls-itemActionsV.
+     * Варианты: 'master' | 'default'
+     */
+    style?: 'master'|'default';
+    /**
+     * Класс для установки контейнеру controls-itemActionsV.
+     * По умолчанию 'controls-itemActionsV_position_bottomRight'
+     */
     itemActionsClass?: string;
-    actionAlignment?: string;
-    actionCaptionPosition?: 'right'|'bottom'|'none';
+    /**
+     * Выравнивание опций записи, когда они отображаются в режиме swipe
+     * Варианты: 'horizontal' | 'vertical'
+     */
+    actionAlignment?: 'horizontal'|'vertical';
+    /**
+     * Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
+     */
+    actionCaptionPosition?: TActionCaptionPosition;
 }
 
 /**
@@ -92,10 +116,7 @@ export class Controller {
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
             this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: unknown) => true);
-            // this._collection.setActionsAssigned(false);
         }
-        // Возможно, стоит проверять версию модели, если она меняется при раскрытии веток дерева
-        // !this._collection.isActionsAssigned() &&
         if (this._commonItemActions || this._itemActionsProperty) {
             result = this._assignActions();
         }
@@ -181,7 +202,7 @@ export class Controller {
             caption: parentAction.title,
             icon: parentAction.icon
         } : null;
-        // Не реализовано в модели
+        // TODO Не реализовано в модели. По факту getContextMenuConfig() сейчас никак не используется
         // const contextMenuConfig = this._collection.getContextMenuConfig();
         // ...contextMenuConfig,
         const templateOptions: IMenuTemplateOptions = {
@@ -452,12 +473,7 @@ export class Controller {
     ): ISwipeConfig {
         // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
         // TODO Move these measurers to listRender, maybe rewrite them
-        const {SwipeVerticalMeasurer, SwipeHorizontalMeasurer} = require('Controls/list');
-
-        const measurer =
-            actionAlignment === 'vertical'
-                ? SwipeVerticalMeasurer.default
-                : SwipeHorizontalMeasurer.default;
+        const measurer = actionAlignment === 'vertical' ? verticalMeasurer : horizontalMeasurer;
         const config: ISwipeConfig = measurer.getSwipeConfig(
             actions,
             actionsContainerHeight,

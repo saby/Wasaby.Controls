@@ -1,4 +1,4 @@
-define(['Controls/_list/Swipe/VerticalMeasurer', 'i18n!ControlsUnit'], function(
+define(['Controls/_itemActions/measurers/VerticalMeasurer', 'i18n!ControlsUnit'], function(
    VerticalMeasurer,
    rk
 ) {

@@ -21,7 +21,6 @@ import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {TouchContextField} from 'Controls/context';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
-import { Sticky } from 'Controls/popup';
 
 /**
  * Контрол меню.

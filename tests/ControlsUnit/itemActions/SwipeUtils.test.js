@@ -1,5 +1,5 @@
 define([
-   'Controls/_list/Swipe/SwipeUtils'
+   'Controls/_itemActions/Utils'
 ], function(
    SwipeUtils
 ) {

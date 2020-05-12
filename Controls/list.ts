@@ -85,8 +85,6 @@ import ListViewModel = require('Controls/_list/ListViewModel');
 import {default as ListControl} from 'Controls/_list/ListControl';
 import ListView = require('Controls/_list/ListView');
 import SwipeTemplate = require('wml!Controls/_list/Swipe/resources/SwipeTemplate');
-import SwipeHorizontalMeasurer = require('Controls/_list/Swipe/HorizontalMeasurer');
-import SwipeVerticalMeasurer = require('Controls/_list/Swipe/VerticalMeasurer');
 import GroupContentResultsTemplate = require('wml!Controls/_list/GroupContentResultsTemplate');
 import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
 import ItemOutput = require('wml!Controls/_list/resources/ItemOutput');
@@ -101,7 +99,6 @@ import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {IList} from './_list/interface/IList';
-import {IItemAction} from './_list/interface/IList';
 
 export {
     AddButton,
@@ -129,8 +126,6 @@ export {
     ListControl,
     ListView,
     SwipeTemplate,
-    SwipeHorizontalMeasurer,
-    SwipeVerticalMeasurer,
     GroupContentResultsTemplate,
     ItemOutputWrapper,
     ItemOutput,
@@ -145,6 +140,5 @@ export {
     HotKeysContainer,
     InertialScrolling,
     IVirtualScrollConfig,
-    IList,
-    IItemAction
+    IList
 };

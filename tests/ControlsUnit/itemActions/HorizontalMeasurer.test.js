@@ -1,5 +1,5 @@
 define([
-   'Controls/_list/Swipe/HorizontalMeasurer',
+   'Controls/_itemActions/measurers/HorizontalMeasurer',
    'i18n!ControlsUnit'
 ], function(
    HorizontalMeasurer,
