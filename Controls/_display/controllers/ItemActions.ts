@@ -421,8 +421,8 @@ function _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
 function _processActionsMenuClose(
     collection: IItemActionsCollection,
     actionClickCallback: Function,
-    action: string, data: any[], event: SyntheticEvent<MouseEvent>,
     theme: string,
+    action: string, data: any[], event: SyntheticEvent<MouseEvent>
 ): void {
     // Actions dropdown can start closing after the view itself was unmounted already, in which case
     // the model would be destroyed and there would be no need to process the action itself
