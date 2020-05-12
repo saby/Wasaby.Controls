@@ -490,8 +490,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 // Модель еще не существует, значит заголвок только что создан и контроллер сказал
                 // заголовку что он зафиксирован. Обновим тень вручную что бы не было скачков.
                 fastUpdate.mutate(() => {
-                    this._container.querySelector('.controls-StickyHeader__shadow-bottom')
-                        .classList.remove('ws-invisible');
+                    if (this._children.shadowBottom) {
+                        this._children.shadowBottom.classList.remove('ws-invisible');
+                    }
                 });
             } else if (this._model.fixedPosition) {
                 if (isFixed) {
