@@ -77,6 +77,18 @@ var
         getRoot: function() {
             return this._model.getRoot();
         },
+        getNextItem: function() {
+           return this._model.getNextItem.apply(this._model, arguments);
+        },
+        getNextItemKey: function() {
+           return this._model.getNextItemKey.apply(this._model, arguments);
+        },
+       getPreviousItem: function() {
+           return this._model.getPreviousItem.apply(this._model, arguments);
+        },
+        getPreviousItemKey: function() {
+           return this._model.getPreviousItemKey.apply(this._model, arguments);
+        },
         setRoot: function (root) {
             this._model.setRoot(root);
         },
