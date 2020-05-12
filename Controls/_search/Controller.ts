@@ -48,7 +48,10 @@ var _private = {
          _private.deleteRootFromFilterAfterSearch(self, filter);
          _private.updateRootAfterSearch(self);
       }
+
       _private.updateSearchParams(self, filter, result);
+      self._notify('filterChanged', [filter]);
+      self._notify('itemsChanged', [result.data]);
       self._misspellValue = getSwitcherStrFromData(result.data);
    },
 
@@ -264,12 +267,9 @@ var _private = {
       if (self._viewMode !== 'search') {
          _private.updateViewMode(self, 'search');
       }
+
       self._searchValue = filter[self._options.searchParam] || '';
-      self._notify('filterChanged', [filter]);
       self._notify('searchValueChanged', [self._searchValue]);
-      if (result) {
-         self._notify('itemsChanged', [result.data]);
-      }
    }
 };
 
