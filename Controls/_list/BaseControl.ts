@@ -1545,11 +1545,12 @@ const _private = {
         return pagingLabelData;
     },
 
-    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty: string}): SourceController {
+    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty: string}, queryParamsCallback): SourceController {
         return new SourceController({
             source: source,
             navigation: navigation,
-            keyProperty: keyProperty
+            keyProperty: keyProperty,
+            queryParamsCallback: queryParamsCallback
         })
     },
 
@@ -1571,6 +1572,12 @@ const _private = {
             !options.footerTemplate &&
             options.resultsPosition !== 'bottom'
         );
+    },
+
+    notifyNavigationParamsChanged(actualParams) {
+        if (this._isMounted) {
+            this._notify('navigationParamsChanged', [actualParams]);
+        }
     },
 
     isPagingNavigation: function(navigation) {
@@ -1951,6 +1958,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._inertialScrolling = new InertialScrolling();
 
+        this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
 
@@ -1997,7 +2005,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
 
             if (newOptions.source) {
-                self._sourceController = _private.getSourceController(newOptions);
+                self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
                     _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -2311,7 +2319,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     reloadItem: function(key:String, readMeta:Object, replaceItem:Boolean, reloadType = 'read'):Deferred {
         const items = this._listViewModel.getItems();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-        const sourceController = _private.getSourceController(this._options);
+        const sourceController = _private.getSourceController(this._options, this._notifyNavigationParamsChanged);
 
         let reloadItemDeferred;
         let filter;
@@ -2998,7 +3006,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._sourceController = new SourceController({
             source: newSource,
             navigation: newNavigation,
-            keyProperty: newKeyProperty
+            keyProperty: newKeyProperty,
+            queryParamsCallback: this._notifyNavigationParamsChanged
         });
 
     },

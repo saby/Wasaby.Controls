@@ -250,6 +250,13 @@ export interface INavigationOptions<U> {
  * </pre>
  */
 
+/**
+ * @event Controls/_interface/INavigation#navigationParamsChanged Оповещает о смене параметров навигации.
+ * 
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {IBaseSourceConfig} params Параметры, с которыми происходила последнаяя загрузка данных в списке.
+ */
+
 /*
  * @name Controls/_interface/INavigation#navigation
  * @cfg {Navigation} List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)
