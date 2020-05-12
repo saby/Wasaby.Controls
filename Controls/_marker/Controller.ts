@@ -60,7 +60,11 @@ export class Controller {
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
       } else {
-         this._markedKey = this._setMarkerOnFirstItem();
+         if (key === null) {
+            this._markedKey = null;
+         } else {
+            this._markedKey = this._setMarkerOnFirstItem();
+         }
       }
    }
 

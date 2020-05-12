@@ -30,6 +30,9 @@ describe('Controls/marker/Controller', () => {
       },
       getFirstItem(): object {
          return {id: 1, marked: false, getId() { return this.id; }};
+      },
+      getCount(): number {
+         return this.items.length;
       }
    };
 
@@ -57,7 +60,7 @@ describe('Controls/marker/Controller', () => {
       assert.equal(controller._markedKey, 1);
       assert.equal(controller._markerVisibility, 'visible');
       assert.deepEqual(model.items, [
-         {id: 1, marked: false},
+         {id: 1, marked: true},
          {id: 2, marked: false},
          {id: 3, marked: false}
       ]);
@@ -83,7 +86,7 @@ describe('Controls/marker/Controller', () => {
       });
 
       it('null', () => {
-         controller._markerVisibility = 'hidden';
+         controller._markerVisibility = 'visible';
          controller._markedKey = 2;
          controller._model.items = [
             {id: 1, marked: false},

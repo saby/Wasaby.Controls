@@ -1917,7 +1917,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     // Шаблон операций с записью для swipe
     _swipeTemplate: swipeTemplate,
 
-    _markerController: null,
+        _markerController: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
