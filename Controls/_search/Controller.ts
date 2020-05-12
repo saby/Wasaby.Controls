@@ -167,7 +167,9 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
-      _private.updateSearchParams(self, filter);
+      if (!error.canceled) {
+         _private.updateSearchParams(self, filter);
+      }
    },
 
    getRoot: function (path, currentRoot, parentProperty) {
