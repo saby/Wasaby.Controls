@@ -60,11 +60,7 @@ export class Controller {
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
       } else {
-         if (key === null) {
-            this._markedKey = null;
-         } else {
-            this._markedKey = this._setMarkerOnFirstItem();
-         }
+         this._markedKey = this._setMarkerOnFirstItem();
       }
    }
 
@@ -94,25 +90,15 @@ export class Controller {
       this.setMarkedKey(prevKey);
    }
 
-   /**
-    * Если элемента с текущим ключом маркера не существует,
-    * то маркер устанавливается на ближайший элемент.
-    *
-    * Ближайшим элементом в первую очередь выбирается следующий,
-    * при его отсутствии предыдущий, а иначе маркер сбрасывается.
-    */
-   setMarkerNearlyCurrent(): void {
-      const currentItem = this._model.getItemBySourceKey(this._markedKey);
-      if (this._markedKey && !currentItem) {
-         const nextKey = this._model.getNextItemKey(this._markedKey); // TODO добавить совместимость
-         const prevKey = this._model.getPreviousItemKey(this._markedKey); // TODO добавить совместимость
-         if (nextKey) {
-            this.setMarkedKey(nextKey);
-         } else if (prevKey) {
-            this.setMarkedKey(prevKey);
-         } else {
-            this.setMarkedKey(null);
-         }
+   handleRemoveItems(removedItemsIndex: TKey): void {
+      const nextKey = this._model.getNextItem(removedItemsIndex); // TODO добавить совместимость
+      const prevKey = this._model.getPreviousItem(removedItemsIndex); // TODO добавить совместимость
+      if (nextKey) {
+         this.setMarkedKey(nextKey);
+      } else if (prevKey) {
+         this.setMarkedKey(prevKey);
+      } else {
+         this.setMarkedKey(null);
       }
    }
 
