@@ -1654,7 +1654,7 @@ var
 
         // New Model compatibility
         getItemBySourceKey(key: number | string): Model {
-            return this.getItemById(key, this._options.keyProperty);
+            return this._model.getItemBySourceKey(key);
         },
 
         // New Model compatibility
