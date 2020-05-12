@@ -2,7 +2,6 @@ import {QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {IAdditionalQueryParams, Direction} from '../interface/IAdditionalQueryParams';
 import {IQueryParamsController} from '../interface/IQueryParamsController';
-import {default as More} from './More';
 import {Collection} from 'Controls/display';
 import {Record} from 'Types/entity';
 import { IBasePageSourceConfig } from 'Controls/interface';
@@ -19,7 +18,7 @@ export interface IPageQueryParamsControllerOptions {
 class PageQueryParamsController implements IQueryParamsController {
     protected _nextPage: number = 1;
     protected _prevPage: number = -1;
-    protected _more: More = null;
+    protected _more: boolean | number = null;
     protected _page: number = 0;
     protected _options: IPageQueryParamsControllerOptions | null;
 
@@ -31,35 +30,17 @@ class PageQueryParamsController implements IQueryParamsController {
         }
     }
 
-    private _getMore(): More {
-        if (!this._more) {
-            this._more = new More();
-        }
-        return this._more;
-    }
-
-    private _processMoreByType(more: boolean | number | RecordSet): void {
-
-        const process = (_more) => {
-            if (this._options.hasMore === false) {
-                // meta.more can be undefined is is not error
-                if (_more && (typeof _more !== 'number')) {
-                    throw new Error('"more" Parameter has incorrect type. Must be numeric');
-                }
-            } else {
-                // meta.more can be undefined is is not error
-                if (_more && (typeof _more !== 'boolean')) {
-                    throw new Error('"more" Parameter has incorrect type. Must be boolean');
-                }
+    private _validateNavigation(more: boolean | number): void {
+        if (this._options.hasMore === false) {
+            // meta.more can be undefined is is not error
+            if (more && (typeof more !== 'number')) {
+                throw new Error('"more" Parameter has incorrect type. Must be numeric');
             }
-        };
-
-        if (more && (more instanceof RecordSet)) {
-            more.each((navResult) => {
-                process(navResult.get('nav_result'));
-            });
         } else {
-            process(more);
+            // meta.more can be undefined is is not error
+            if (more && (typeof more !== 'boolean')) {
+                throw new Error('"more" Parameter has incorrect type. Must be boolean');
+            }
         }
     }
 
@@ -76,10 +57,10 @@ class PageQueryParamsController implements IQueryParamsController {
         }
     }
 
-    prepareQueryParams(direction: Direction, config?: IBasePageSourceConfig): IAdditionalQueryParams {
+    prepareQueryParams(direction: Direction, callback?, config?: IBasePageSourceConfig): IAdditionalQueryParams {
         const addParams: IAdditionalQueryParams = {};
         let neededPage: number;
-
+        const pageSize =  (config?.pageSize || this._options.pageSize);
         addParams.meta = {
             navigationType: QueryNavigationType.Page
         };
@@ -92,12 +73,17 @@ class PageQueryParamsController implements IQueryParamsController {
             neededPage = this._page;
         }
 
-        addParams.offset = (config?.page || neededPage) * (config?.pageSize || this._options.pageSize);
-        addParams.limit = (config?.pageSize || this._options.pageSize);
+        addParams.offset = (config?.page || neededPage) * pageSize;
+        addParams.limit = pageSize;
 
         if (this._options.hasMore === false) {
             addParams.meta.hasMore = false;
         }
+        
+        callback && callback({
+            page: neededPage,
+            pageSize
+        });
 
         return addParams;
     }
@@ -142,11 +128,8 @@ class PageQueryParamsController implements IQueryParamsController {
      */
     updateQueryProperties(list?: RecordSet | {[p: string]: unknown}, direction?: Direction, config?: IBasePageSourceConfig): void {
         const meta = (list as RecordSet).getMetaData();
-
-        // Look at the Types/source:DataSet there is a remark "don't use 'more' anymore"...
-        this._processMoreByType(meta.more);
-        this._getMore().setMoreMeta(meta.more);
-
+        this._validateNavigation(meta.more);
+        this._more = meta.more;
         if (direction === 'down') {
             this._nextPage++;
         } else if (direction === 'up') {
@@ -172,8 +155,7 @@ class PageQueryParamsController implements IQueryParamsController {
     }
 
     getAllDataCount(rootKey?: string | number): boolean | number {
-        const dataCount = this._getMore().getMoreMeta(rootKey);
-        return dataCount as boolean | number;
+        return this._more;
     }
 
     getLoadedDataCount(): number {
@@ -184,7 +166,7 @@ class PageQueryParamsController implements IQueryParamsController {
         let result;
 
         if (direction === 'down') {
-            const moreResult = this._getMore().getMoreMeta(rootKey);
+            const moreResult = this._more;
 
             // moreResult === undefined, when navigation for passed rootKey is not defined
             if (moreResult === undefined) {

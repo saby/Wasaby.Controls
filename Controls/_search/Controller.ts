@@ -89,7 +89,7 @@ var _private = {
          if (!isEqual(self._options.filter, filter)) {
             self._notify('filterChanged', [filter]);
          }
-         self._notify('searchValueChanged', [self._inputSearchValue]);
+         self._notify('searchValueChanged', [self._searchValue]);
       }
    },
 
@@ -248,7 +248,7 @@ var _private = {
       const startSearchWithNewSourceController = searchValue && needRecreateSearchController;
       const needStartSearchBySearchValueChanged =
           isSearchValueChanged &&
-          (!isSearchValueShorterThenMinLength || _private.isSearchViewMode(self) && !searchValue);
+          (!isSearchValueShorterThenMinLength || (_private.isSearchViewMode(self) && !searchValue && self._searchValue));
 
       return needStartSearchBySearchValueChanged &&
              !needUpdateRoot ||

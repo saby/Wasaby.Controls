@@ -10,6 +10,14 @@ import {isFullGridSupport} from './../_grid/utils/GridLayoutUtil';
 var
     SearchView = GridView.extend({
         _itemClickNotifiedByPathClick: false,
+        constructor() {
+            SearchView.superclass.constructor.apply(this, arguments);
+            this._onSearchPathClick = this._onSearchPathClick.bind(this);
+        },
+        _beforeMount() {
+            SearchView.superclass._beforeMount.apply(this, arguments);
+            this._listModel.setBreadcrumbsItemClickCallback(this._onSearchPathClick);
+        },
         _resolveItemTemplate() {
            return SearchItemTpl;
         },

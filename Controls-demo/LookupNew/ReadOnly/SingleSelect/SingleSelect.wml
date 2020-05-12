@@ -2,6 +2,7 @@
     <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400 controlsDemo-Lookup-simple">
         <Controls.lookup:Input
                 bind:selectedKeys="_selectedKeys"
+                searchParam="title"
                 source="{{_source}}"
                 keyProperty="id"
                 multiSelect="{{false}}"

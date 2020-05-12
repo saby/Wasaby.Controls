@@ -27,12 +27,6 @@ var
           }
           return item;
       },
-      getItemActions(item) {
-         if (!!item.forEach) {
-            return SearchViewModel.superclass.getItemActions.call(this, item[item.length - 1]);
-         }
-         return SearchViewModel.superclass.getItemActions.call(this, item);
-      },
       setHoveredItem(item) {
          let actualItem = item;
          if (item && isBreadCrumbsItem(item)) {
@@ -59,6 +53,7 @@ var
          data.actionsItem = this.getActionsItem(data.item);
          data.searchBreadCrumbsItemTemplate = this._options.searchBreadCrumbsItemTemplate || 'Controls/treeGrid:SearchBreadCrumbsItemTemplate';
          data.searchBreadCrumbsItemContent = "Controls/breadcrumbs:ItemTemplate";
+         data.breadcrumbsItemClickCallback = this._breadcrumbsItemClickCallback;
 
          data.resolveItemTemplate = function(itemData) {
             if (!itemData.breadCrumbs && self._options.itemTemplate) {
@@ -104,7 +99,10 @@ var
           }
 
           return result;
-      }
+      },
+       setBreadcrumbsItemClickCallback(breadcrumbsItemClickCallback): void {
+           this._breadcrumbsItemClickCallback = breadcrumbsItemClickCallback;
+       }
    });
 
 export = SearchViewModel;

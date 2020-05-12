@@ -71,9 +71,6 @@ define('Controls-demo/FilterView/resources/hierarchyHistoryMemory', [
             var self = this;
 
             superQuery.addCallback(function(dataSet) {
-               var getAll = dataSet.getAll.bind(dataSet);
-               var originAll = getAll();
-               var originAllMeta = originAll.getMetaData();
                var moreResult = new collection.RecordSet({
                   keyProperty: 'id',
                   rawData: [{
@@ -84,12 +81,7 @@ define('Controls-demo/FilterView/resources/hierarchyHistoryMemory', [
                      nav_result: false
                   }]
                });
-
-               dataSet.getAll = function() {
-                  var resultAll = getAll();
-                  resultAll.setMetaData({more: moreResult});
-                  return resultAll;
-               };
+               dataSet.setMetaData({more: moreResult});
                resultDeferred.callback(dataSet);
                return dataSet;
             });

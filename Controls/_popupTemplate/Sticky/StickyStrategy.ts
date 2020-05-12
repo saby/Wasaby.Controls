@@ -114,10 +114,16 @@ interface IPosition {
          }
          const viewportOffset: number = _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'];
          const viewportPage: number = _private.getVisualViewport()[isHorizontal ? 'pageLeft' : 'pageTop'];
+
+         // viewportOffset и viewportPage показали одинаковое значение при показе клавиатуры, соответсвтенно по сути
+         // размер с клавой учитывался 2 раза. Использую 1 значение, на всякий случай беру максимальное. теоретически
+         // можно оптимизировать.
+         const viewportSpacing = Math.max(viewportOffset, viewportPage);
+
          const positionValue: number = position[isHorizontal ? 'left' : 'top'];
          const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
          const windowSize: number = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
-         let overflow = positionValue + taskBarKeyboardIosHeight + popupSize - windowSize - viewportOffset - viewportPage;
+         let overflow = positionValue + taskBarKeyboardIosHeight + popupSize - windowSize - viewportSpacing;
          if (_private.isIOS12()) {
             overflow -= targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
          }
@@ -214,7 +220,16 @@ interface IPosition {
          if (_private._isMobileIOS()) {
             _private._fixBottomPositionForIos(position, targetCoords);
          }
-         if (position.bottom) {
+         const body = _private.getBody();
+
+
+         // Проблема: body не всегда прилегает к нижней границе окна браузера.
+         // Если контент страницы больше высоты окна браузера, появляется скролл,
+         // но body по высоте остается с размер экрана. Это приводит к тому, что при сколле страницы в самый низ,
+         // низ боди и низ контента не будет совпадать. Т.к. окна находятся и позиционируются относительно боди
+         // в этом случае позиция окна будет иметь отрицательную координату (ниже нижней границы боди).
+         // В этом случае отключаю защиту от отрицательных координат.
+         if (position.bottom && (_private._isMobileIOS() || body.height === body.scrollHeight)) {
             position.bottom = Math.max(position.bottom, 0);
          }
          if (position.top) {
@@ -339,6 +354,7 @@ interface IPosition {
       getBody(): object {
          return {
             height: document.body.clientHeight,
+            scrollHeight: document.body.scrollHeight,
             width: document.body.clientWidth
          };
       },

@@ -5,6 +5,7 @@ import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
 import PageQueryParamsController from 'Controls/_source/QueryParamsController/PageQueryParamsController';
 import PositionQueryParamsController from 'Controls/_source/QueryParamsController/PositionQueryParamsController';
+import QueryParamsController from 'Controls/_source/QueryParamsController';
 import {Logger} from 'UI/Utils';
 
 var _private = {
@@ -76,16 +77,19 @@ var _private = {
              Logger.error('SourceController: Undefined navigation source type "' + type + '"');
       }
       if (cntCtr) {
-         cntInstance = new cntCtr(cfg);
+         cntInstance = new QueryParamsController({
+            controllerClass: cntCtr,
+            controllerOptions: cfg
+         });
       }
       return cntInstance;
    },
 
-   modifyQueryParamsWithNavigation: function(cleanParams, direction, paramsController, config?) {
+   modifyQueryParamsWithNavigation: function(cleanParams, direction, paramsController, callback, config?) {
       var resultParams, navigParams, navFilter;
 
       resultParams = cleanParams;
-      navigParams = paramsController.prepareQueryParams(direction, config);
+      navigParams = paramsController.prepareQueryParams(direction, callback, config);
 
       resultParams.limit = navigParams.limit;
       resultParams.offset = navigParams.offset;
@@ -137,7 +141,7 @@ var SourceController = cExtend.extend({
       this.cancelLoading();
 
       if (this._queryParamsController) {
-         queryParams = _private.modifyQueryParamsWithNavigation(queryParams, direction, this._queryParamsController, config);
+         queryParams = _private.modifyQueryParamsWithNavigation(queryParams, direction, this._queryParamsController, this._options.queryParamsCallback, config);
       }
 
       self = this;
@@ -188,9 +192,9 @@ var SourceController = cExtend.extend({
       }
    },
 
-   calculateState: function(list) {
+   calculateState: function(list, root: string|number) {
       if (this._queryParamsController) {
-         this._queryParamsController.updateQueryProperties(list, null);
+         this._queryParamsController.updateQueryProperties(list, null, root);
       }
    },
 

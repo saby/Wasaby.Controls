@@ -69,6 +69,21 @@ define(
             });
          });
 
+         it('_loadItems check dataLoadCallback', function() {
+            let isDataLoadCallbackCalled = false;
+            let menuControl = getMenu();
+            let menuOptions = Clone(defaultOptions);
+            menuOptions.dataLoadCallback = () => {
+               isDataLoadCallbackCalled = true;
+            };
+            return new Promise((resolve) => {
+               menuControl.loadItems(menuOptions).addCallback(() => {
+                  assert.isTrue(isDataLoadCallbackCalled);
+                  resolve();
+               });
+            });
+         });
+
          describe('getCollection', function() {
             let menuControl = new menu.Control();
             let items = new collection.RecordSet({
@@ -369,6 +384,30 @@ define(
             assert.isTrue(closed);
          });
 
+         it('_openSelectorDialog with empty item', () => {
+            let emptyMenuControl = getMenu({
+               ...defaultOptions,
+               emptyKey: null,
+               emptyText: 'Not selected',
+               multiSelect: true,
+               selectedKeys: ['Not selected'],
+               selectorTemplate: {}
+            });
+            let items = Clone(defaultItems);
+            let selectorOptions = {};
+            const emptyItem = {
+               key: null,
+               title: 'Not selected'
+            };
+            items.push(emptyItem);
+            emptyMenuControl._options.selectorOpener = {
+               open: (tplOptions) => { selectorOptions = tplOptions; },
+            };
+            emptyMenuControl._listModel = getListModel(items);
+            emptyMenuControl._openSelectorDialog({});
+            assert.strictEqual(selectorOptions.templateOptions.selectedItems.getCount(), 0);
+         });
+
          it('displayFilter', function() {
             let menuControl = getMenu();
             let hierarchyOptions = {
@@ -408,24 +447,6 @@ define(
             assert.equal(indicatorConfig.overlay, 'none');
          });
 
-         it('_calculateActionsConfig', function() {
-            let menuControl = getMenu();
-            let listModel = getListModel();
-
-            const expectedConfig = {
-               itemActionsPosition: 'inside',
-               actionCaptionPosition: 'none',
-               actionAlignment: 'horizontal',
-               style: 'default',
-               size: 'm',
-               itemActionsClass: 'controls-Menu__itemActions_position_rightCenter_theme-default',
-               toolbarVisibility: undefined
-            };
-
-            menuControl._calculateActionsConfig(listModel, {theme: 'default'});
-            assert.deepEqual(listModel.getActionsTemplateConfig(), expectedConfig);
-         });
-
          it('getCollection', function() {
             let menuControl = getMenu();
             let listModel = menuControl.getCollection(new collection.RecordSet(), {
@@ -434,28 +455,28 @@ define(
             });
             assert.instanceOf(listModel, display.Search);
          });
-
-         it('_itemActionClick', function() {
-            let isHandlerCalled = false;
-            let menuControl = getMenu();
-            menuControl._listModel = getListModel();
-            let action = {
-               id: 1,
-               icon: 'icon-Edit',
-               iconStyle: 'secondary',
-               title: 'edit',
-               showType: 2,
-               handler: function() {
-                  isHandlerCalled = true;
-               }
-            };
-            let clickEvent = {
-               stopPropagation: () => {}
-            };
-
-            menuControl._itemActionClick('itemActionClick', menuControl._listModel.at(1), action, clickEvent);
-            assert.isTrue(isHandlerCalled);
-         });
+         // TODO тестируем только публичные методы
+         // it('_itemActionClick', function() {
+         //    let isHandlerCalled = false;
+         //    let menuControl = getMenu();
+         //    menuControl._listModel = getListModel();
+         //    let action = {
+         //       id: 1,
+         //       icon: 'icon-Edit',
+         //       iconStyle: 'secondary',
+         //       title: 'edit',
+         //       showType: 2,
+         //       handler: function() {
+         //          isHandlerCalled = true;
+         //       }
+         //    };
+         //    let clickEvent = {
+         //       stopPropagation: () => {}
+         //    };
+         //
+         //    menuControl._itemActionClick('itemActionClick', menuControl._listModel.at(1), action, clickEvent);
+         //    assert.isTrue(isHandlerCalled);
+         // });
 
          describe('_subMenuResult', function() {
             let menuControl, stubClose, eventResult, nativeEvent, sandbox;
