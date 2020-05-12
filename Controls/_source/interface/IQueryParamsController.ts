@@ -37,7 +37,7 @@ export interface IQueryParamsController {
      * Collect current pagination state to pass them to Query object
      * @param direction
      */
-    prepareQueryParams(direction: Direction, config?: IBaseSourceConfig): IAdditionalQueryParams;
+    prepareQueryParams(direction: Direction, callback?, config?: IBaseSourceConfig, multiNavigation?: boolean): IAdditionalQueryParams;
 
     /**
      * Метод для разрушения текущего объекта IQueryParamsController

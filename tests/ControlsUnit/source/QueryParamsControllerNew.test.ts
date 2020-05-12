@@ -21,7 +21,7 @@ class FakeController implements IQueryParamsController {
       return undefined;
    }
 
-   prepareQueryParams(direction: Direction, config?: IBaseSourceConfig): IAdditionalQueryParams {
+   prepareQueryParams(direction: Direction, callback?, config?: IBaseSourceConfig): IAdditionalQueryParams {
       return undefined;
    }
 
@@ -61,7 +61,7 @@ describe('Controls/_source/QueryParamsController', () => {
 
       it('prepareQueryParams', () => {
          controller.updateQueryProperties(recordSetWithMultiNavigation);
-         const queryParams = controller.prepareQueryParams('down', true);
+         const queryParams = controller.prepareQueryParams('down', () => {}, {}, true);
          assert.equal(queryParams.length, 2);
       });
 
