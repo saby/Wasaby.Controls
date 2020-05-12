@@ -1213,10 +1213,6 @@ var
             return this._model.getItemById(id, keyProperty);
         },
 
-        getItemBySourceKey: function(id) {
-            return this._model.getItemById(id);
-        },
-
         setMarkedKey: function(key, byOptions) {
             this._model.setMarkedKey(key, byOptions);
         },
