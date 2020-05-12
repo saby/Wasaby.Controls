@@ -163,6 +163,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _state: STATES.year,
 
     _monthRangeSelectionProcessing: false,
+    _yearsRangeSelectionProcessing: false,
 
     _dateRangeSelectionProcessing: false,
 
@@ -244,7 +245,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
 
         if ((this._state === STATES.year && this._displayedDate.getFullYear() === new Date().getFullYear()) ||
-            (this._state === STATES.month && this._displayedDate.getMonth() === new Date().getMonth())) {
+            (this._state === STATES.month && this._displayedDate.getMonth() === new Date().getMonth() &&
+                this._displayedDate.getFullYear() === new Date().getFullYear())) {
             this._homeButtonVisible = false;
         }
 
@@ -343,6 +345,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _monthsRangeChanged: function (e, start, end) {
         _private.rangeChanged(this, start, end ? dateUtils.getEndOfMonth(end) : null);
+    },
+
+    _monthsRangeSelectionStarted: function (e, start, end) {
+       this._yearsRangeSelectionProcessing = false;
     },
 
     _monthsSelectionChanged: function (e, start, end) {

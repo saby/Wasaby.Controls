@@ -1396,8 +1396,9 @@ var _private = {
                 self._listViewModel.setActiveItem(itemData);
                 self._listViewModel.setMenuState('shown');
             }
-            require(['css!theme?Controls/input'], () => {
+            import('Controls/dropdown').then((dropdown) => {
                 const menuConfig = _private.getMenuConfig(children, self._options.contextMenuConfig, action);
+                const menuUtils = dropdown.MenuUtils;
 
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
@@ -1407,7 +1408,13 @@ var _private = {
                         onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
-                    className: 'controls-DropdownList__margin-head',
+                    className: menuUtils.cssStyleGeneration({
+                        viewMode: 'link',
+                        inlineHeight: 'm',
+                        icon: menuConfig.headConfig && menuConfig.headConfig.icon,
+                        iconSize: menuConfig.iconSize,
+                        showHeader: menuConfig.showHeader
+                    }),
                     autofocus: false
                 });
                 self._actionMenuIsShown = true;

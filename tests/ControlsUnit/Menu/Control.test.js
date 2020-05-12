@@ -69,6 +69,21 @@ define(
             });
          });
 
+         it('_loadItems check dataLoadCallback', function() {
+            let isDataLoadCallbackCalled = false;
+            let menuControl = getMenu();
+            let menuOptions = Clone(defaultOptions);
+            menuOptions.dataLoadCallback = () => {
+               isDataLoadCallbackCalled = true;
+            };
+            return new Promise((resolve) => {
+               menuControl.loadItems(menuOptions).addCallback(() => {
+                  assert.isTrue(isDataLoadCallbackCalled);
+                  resolve();
+               });
+            });
+         });
+
          describe('getCollection', function() {
             let menuControl = new menu.Control();
             let items = new collection.RecordSet({
@@ -367,6 +382,30 @@ define(
             actualOptions.templateOptions.handlers.onSelectComplete();
             assert.isTrue(selectCompleted);
             assert.isTrue(closed);
+         });
+
+         it('_openSelectorDialog with empty item', () => {
+            let emptyMenuControl = getMenu({
+               ...defaultOptions,
+               emptyKey: null,
+               emptyText: 'Not selected',
+               multiSelect: true,
+               selectedKeys: ['Not selected'],
+               selectorTemplate: {}
+            });
+            let items = Clone(defaultItems);
+            let selectorOptions = {};
+            const emptyItem = {
+               key: null,
+               title: 'Not selected'
+            };
+            items.push(emptyItem);
+            emptyMenuControl._options.selectorOpener = {
+               open: (tplOptions) => { selectorOptions = tplOptions; },
+            };
+            emptyMenuControl._listModel = getListModel(items);
+            emptyMenuControl._openSelectorDialog({});
+            assert.strictEqual(selectorOptions.templateOptions.selectedItems.getCount(), 0);
          });
 
          it('displayFilter', function() {

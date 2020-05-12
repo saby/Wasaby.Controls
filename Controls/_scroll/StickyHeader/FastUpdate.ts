@@ -22,8 +22,8 @@ class FastUpdate {
 
     _isInvalid: boolean = false;
 
-    resetSticky(elements: Element): void {
-        this._stickyContainersForReset.concat(elements);
+    resetSticky(elements: Element[]): void {
+        this._stickyContainersForReset = this._stickyContainersForReset.concat(elements);
     }
 
     measure(fn: Function): void {

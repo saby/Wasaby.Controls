@@ -229,7 +229,6 @@ var _private = {
       self._onClose = function(event, args) {
          self._isOpened = false;
          self._notify('dropDownClose');
-         self._setItems(self._items);
          if (typeof (options.close) === 'function') {
             options.close(args);
          }
@@ -513,6 +512,8 @@ var _Controller = Control.extend({
             return items;
          });
       } else if (this._items) {
+         // Обновляем данные в источнике, нужно для работы истории
+         this._setItems(this._items);
          itemsLoadCallback(this._items);
       }
    },

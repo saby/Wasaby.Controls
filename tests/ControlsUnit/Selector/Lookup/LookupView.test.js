@@ -324,7 +324,8 @@ define([
             displayProperty: 'testReadOnly',
             itemsLayout: 'oneRow',
             maxVisibleItems: 10,
-            _counterWidth: '10px'
+            _counterWidth: '10px',
+            theme: 'default'
          };
 
          var controlOptions = {
@@ -332,6 +333,7 @@ define([
             readOnly: 'testReadOnly',
             displayProperty: 'testReadOnly',
             multiLine: false,
+            theme: 'default'
          };
 
          assert.deepEqual(Lookup._private.getCollectionOptions(controlOptions, 10, '10px'), standardOptions);

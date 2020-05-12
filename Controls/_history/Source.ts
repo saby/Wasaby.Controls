@@ -616,12 +616,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
                } else {
                   newItems = self._oldItems;
                }
-               result = new sourceLib.DataSet({
-                  rawData: newItems.getRawData(true),
-                  keyProperty: newItems.getKeyProperty(),
-                  adapter: newItems.getAdapter(),
-                  model: newItems.getModel()
-               });
+               result = newItems;
             } else if (isCancelled) {
                // Необходимо вернуть ошибку из deferred'a, чтобы вся цепочка завершилась ошибкой
                result = data;

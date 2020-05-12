@@ -35,8 +35,8 @@ define('Controls-demo/Popup/Opener/StackDemo',
                   draggable: true
                },
                maxHeight: 700,
-               maxWidth: 700,
-               minWidth: 450
+               width: 600,
+               minWidth: 500
             });
          },
          openModalDialog: function() {
@@ -47,8 +47,8 @@ define('Controls-demo/Popup/Opener/StackDemo',
                },
                modal: true,
                maxHeight: 700,
-               maxWidth: 700,
-               minWidth: 450
+               width: 600,
+               minWidth: 500
             });
          },
          openSticky: function() {
