@@ -55,7 +55,7 @@ export type TItemActionsPosition = 'inside'|'outside'|'custom';
  * @variant inside Внутри элемента.
  * @variant outside Под элементом.
  */
-export type TItemActionsSize = 'm'|'l';
+export type TItemActionsSize = 'm'|'s';
 
 /**
  * Configuration object for a button which will be shown when the user hovers over a list item.
@@ -152,7 +152,6 @@ export interface IItemActionsItem {
 }
 
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
-    destroyed: boolean;
     setEventRaising?(raising: boolean, analyze?: boolean): void;
     isActionsAssigned(): boolean;
     setActionsAssigned(assigned: boolean): void;

@@ -40,14 +40,14 @@ export interface IItemActionsControllerOptions {
      */
     itemActions: IItemAction[];
     /**
-     * Размер иконок операций с записью
-     * варианты 's'|'m'
-     */
-    iconSize: TItemActionsSize;
-    /**
      * @param theme Название текущей темы оформления
      */
     theme: string;
+    /**
+     * Размер иконок операций с записью
+     * варианты 's'|'m'
+     */
+    iconSize?: TItemActionsSize;
     /**
      * Имя свойства, которое содержит конфигурацию для панели с опциями записи.
      */
@@ -59,7 +59,7 @@ export interface IItemActionsControllerOptions {
     /**
      * Должна ли быть видна панель с кнопками для редактирования
      */
-    editingToolbarVisibility?: boolean;
+    editingToolbarVisible?: boolean;
     /**
      * Позиция по отношению к записи.
      * Варианты: 'inside' | 'outside' | 'custom'
@@ -115,7 +115,7 @@ export class Controller {
             this._collection = options.collection;
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
-            this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: unknown) => true);
+            this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
         }
         if (this._commonItemActions || this._itemActionsProperty) {
             result = this._assignActions();
@@ -124,7 +124,7 @@ export class Controller {
             itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
             style: options.style,
             size: options.iconSize || DEFAULT_ACTION_SIZE,
-            toolbarVisibility: options.editingToolbarVisibility,
+            toolbarVisibility: options.editingToolbarVisible,
             actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
             itemActionsClass: options.itemActionsClass

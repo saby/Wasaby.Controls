@@ -534,7 +534,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @see getGroup
      * @see setGroup
      */
-    protected _$group: GroupFunction<S, T>;
+    protected _$
+        : GroupFunction<S, T>;
 
     /**
      * @cfg {

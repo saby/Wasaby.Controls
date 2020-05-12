@@ -4431,4 +4431,21 @@ describe('Controls/_display/Collection', () => {
             assert.isAbove(display.getVersion(), version);
         });
     });
+
+    // TODO возможно, это уйдёт из Collection
+    describe('setActiveItem()', () => {
+        it('deactivates old active item', () => {
+
+        });
+        it('activates new active item', () => {
+
+        });
+    });
+
+    // TODO возможно, это уйдёт из Collection
+    describe('getActiveItem()', () => {
+        it('returns currently active item', () => {
+
+        });
+    });
 });

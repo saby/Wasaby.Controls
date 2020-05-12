@@ -649,7 +649,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             actionCaptionPosition: 'none',
             itemActionsClass: `controls-Menu__itemActions_position_rightCenter_theme-${options.theme}`,
             iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisibility: editingConfig?.toolbarVisibility
+            editingToolbarVisible: editingConfig?.toolbarVisibility
         });
     }
 
