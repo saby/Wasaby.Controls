@@ -1198,11 +1198,7 @@ var _private = {
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
         if (self._pagingNavigation) {
             if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_ADD) {
-            
-                let countDifferece = (newItems?.length) || (- (removedItems?.length)) || 0;
-                var itemsCount = self._pagingLabelData.totalItemsCount + countDifferece;
-                _private.updatePagingData(self, itemsCount);
-
+                _private.updatePagingDataByItemsChanged(self, newItems, removedItems);
             }
         }
         if (changesType === 'collectionChanged' || newModelChanged) {
@@ -1617,6 +1613,12 @@ var _private = {
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
+    },
+
+    updatePagingDataByItemsChanged(self, newItems, removedItems) {
+        let countDifferece = (newItems?.length) || (- (removedItems?.length)) || 0;
+        let itemsCount = self._pagingLabelData.totalItemsCount + countDifferece;
+        _private.updatePagingData(self, itemsCount);
     },
 
     resetPagingNavigation: function(self, navigation) {
