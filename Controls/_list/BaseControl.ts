@@ -246,9 +246,9 @@ const _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
-                        if (self._items) {
-                           self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
-                        }
+                    if (self._items) {
+                       self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                    }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
@@ -263,7 +263,7 @@ const _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
-                        self._items.subscribe('onCollectionChange', self._onItemsChanged);
+                    self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -1983,6 +1983,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
+            self._markerController = _private.createMarkerController(self, newOptions);
+
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions);
                 if (receivedData) {
@@ -2040,9 +2042,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
                     }
-
-                    self._markerController = _private.createMarkerController(self, newOptions);
-
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
                     // TODO Kingo.
