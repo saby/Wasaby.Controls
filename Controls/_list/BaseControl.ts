@@ -1388,7 +1388,7 @@ var _private = {
                         onResult: self._actionsMenuResultHandler,
                         onClose: self._closeActionsMenu
                     },
-                    className: 'controls-DropdownList__margin-head',
+                    className: 'controls-MenuButton_link_iconSize-medium_popup',
                     autofocus: false
                 });
                 self._actionMenuIsShown = true;
