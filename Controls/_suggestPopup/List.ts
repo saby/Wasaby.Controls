@@ -105,6 +105,7 @@ var List = Control.extend({
    _items: null,
    _layerName: null,
    _markerVisibility: MARKER_VISIBILITY_DEFAULT,
+   _pendingMarkerVisibility: null,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
@@ -120,6 +121,13 @@ var List = Control.extend({
       }
 
       _private.checkContext(this, context);
+   },
+
+   _afterUpdate(): void {
+      if (this._pendingMarkerVisibility) {
+         this._markerVisibility = this._pendingMarkerVisibility;
+         this._pendingMarkerVisibility = null;
+      }
    },
 
    _tabsSelectedKeyChanged: function(event, key) {
@@ -162,7 +170,10 @@ var List = Control.extend({
       }
 
       if (this._suggestListOptions.searchValue && this._markerVisibility !== MARKER_VISIBILITY_AFTER_SEARCH) {
-         this._markerVisibility = MARKER_VISIBILITY_AFTER_SEARCH;
+         this._pendingMarkerVisibility = MARKER_VISIBILITY_AFTER_SEARCH;
+         // _pendingMarkerVisibility не используется в шаблоне, поэтому св-во не является реактивным
+         // и надо позвать forceUpdate
+         this._forceUpdate();
       }
 
       if (result) {

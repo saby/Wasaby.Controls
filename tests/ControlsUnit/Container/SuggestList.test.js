@@ -49,6 +49,17 @@ define(
             });
          });
 
+         describe('_afterUpdate', () => {
+            var suggestList = new suggestPopup.ListContainer();
+
+            suggestList._afterUpdate();
+            assert.equal(suggestList._markerVisibility, 'onactivated');
+
+            suggestList._pendingMarkerVisibility = 'visible';
+            suggestList._afterUpdate();
+            assert.equal(suggestList._markerVisibility, 'visible');
+         });
+
          it('_tabsSelectedKeyChanged', function() {
             var suggestList = new suggestPopup.ListContainer();
             var tab = null;
@@ -144,7 +155,7 @@ define(
                data: items
             });
 
-            assert.equal(suggestList._markerVisibility, 'visible');
+            assert.equal(suggestList._pendingMarkerVisibility, 'visible');
             assert.equal(suggestList._items, items);
          });
 
