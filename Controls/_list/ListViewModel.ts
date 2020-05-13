@@ -14,6 +14,11 @@ import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction} from 'Controls/itemActions';
 
+const ITEMACTIONS_POSITION_CLASSES = {
+    bottomRight: 'controls-itemActionsV_position_bottomRight',
+    topRight: 'controls-itemActionsV_position_topRight'
+};
+
 /**
  *
  * @author Авраменко А.С.
@@ -85,6 +90,21 @@ var _private = {
         const left =  `controls-ListView__groupContent__leftPadding_${current.hasMultiSelect ? 'withCheckboxes' : current.itemPadding.left}_theme-${theme}`;
         return {right, left};
     },
+
+    getItemActionsContainerPaddingClass(classes: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
+        const _classes = classes || ITEMACTIONS_POSITION_CLASSES.bottomRight;
+        const paddingClass: string[] = [];
+        const themedPositionClassCompile = (position) => (
+            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
+        );
+        if (_classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+            paddingClass.push(themedPositionClassCompile('top'));
+        } else if (_classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+            paddingClass.push(themedPositionClassCompile('bottom'));
+        }
+        return ` ${paddingClass.join(' ')} `;
+    },
+
     // New Model compatibility
     addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
         itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}, silent: boolean = true): void => {
@@ -229,6 +249,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
+
+        itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
 
         // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
