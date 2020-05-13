@@ -12,6 +12,7 @@ import { Model } from 'Types/entity';
 import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
+import {IItemAction} from 'Controls/itemActions';
 
 /**
  *
@@ -83,6 +84,57 @@ var _private = {
         const right = `controls-ListView__groupContent__rightPadding_${current.itemPadding.right}_theme-${theme}`;
         const left =  `controls-ListView__groupContent__leftPadding_${current.hasMultiSelect ? 'withCheckboxes' : current.itemPadding.left}_theme-${theme}`;
         return {right, left};
+    },
+    // New Model compatibility
+    addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
+        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}, silent: boolean = true): void => {
+            itemsModelCurrent.itemActions = actions;
+            if (itemsModelCurrent.dispItem.setActions) {
+                itemsModelCurrent.dispItem.setActions(actions, silent);
+            }
+        };
+        itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
+            itemsModelCurrent.dispItem.getActions ? itemsModelCurrent.dispItem.getActions() : itemsModelCurrent.itemActions
+        );
+        itemsModelCurrent.setActive = (state: boolean): void => {
+            itemsModelCurrent._isActive = state;
+            if (itemsModelCurrent.dispItem.setActive !== undefined) {
+                itemsModelCurrent.dispItem.setActive(state);
+            }
+        };
+        itemsModelCurrent.isActive = (): boolean => (
+            itemsModelCurrent.dispItem.isActive() !== undefined ? itemsModelCurrent.dispItem.isActive() : itemsModelCurrent._isActive
+        );
+        itemsModelCurrent.setSwiped = (state: boolean): void => {
+            itemsModelCurrent._isSwiped = state;
+            if (itemsModelCurrent.dispItem.setSwiped !== undefined) {
+                itemsModelCurrent.dispItem.setSwiped(state);
+            }
+        };
+        itemsModelCurrent.isSwiped = (): boolean => (
+            itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : itemsModelCurrent._isSwiped
+        );
+        itemsModelCurrent.getContents = () => (
+            itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
+        );
+        itemsModelCurrent.hasVisibleActions = (): boolean => (
+            itemsModelCurrent.dispItem.hasVisibleActions !== undefined ? itemsModelCurrent.dispItem.hasVisibleActions() : false
+        );
+        itemsModelCurrent.shouldDisplayActions = (): boolean => (
+            itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing
+        );
+        itemsModelCurrent.hasActionWithIcon = (): boolean => (
+            itemsModelCurrent.dispItem.hasActionWithIcon !== undefined ? itemsModelCurrent.dispItem.hasActionWithIcon() : false
+        );
+        itemsModelCurrent.isSelected = (): boolean => (
+            itemsModelCurrent.dispItem.isSelected !== undefined ? itemsModelCurrent.dispItem.isSelected() : itemsModelCurrent._isSelected
+        );
+        itemsModelCurrent.setSelected = (selected: boolean|null, silent?: boolean): void => {
+            itemsModelCurrent._isSelected = true;
+            if (itemsModelCurrent.dispItem.setSelected !== undefined) {
+                itemsModelCurrent.dispItem.setSelected(selected, silent);
+            }
+        };
     }
 };
 
