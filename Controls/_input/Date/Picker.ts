@@ -16,6 +16,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
     * @mixes Controls/interface/IInputDateTime
     * @mixes Controls/interface/IDateMask
     * @mixes Controls/interface/IInputTag
+    * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
     * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
     * @mixes Controls/_interface/IOpenPopup
@@ -67,6 +68,8 @@ import getOptions from 'Controls/Utils/datePopupUtils';
             templateOptions: {
                ...getOptions.getTemplateOptions(this),
                selectionType: 'single',
+                calendarSource: this._options.calendarSource,
+                dayTemplate: this._options.dayTemplate,
                headerType: 'input',
                closeButtonEnabled: true,
                range: this._options.range,

@@ -527,6 +527,9 @@ define(
             //if filter option was not changed, _filter from state will not updated by resolveOptions
             assert.deepEqual(self._filter, {testParentProperty: 'test'});
 
+            options.root = null;
+            lists.DataContainer._private.resolveOptions(self, options);
+            assert.deepEqual(self._filter, {test: 123});
          });
          it('_private.isEqualItems', function() {
 

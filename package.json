@@ -13,10 +13,10 @@
    ],
    "scripts": {
       "build": "npm run builder && node build-app",
-      "build:typescript": "saby-typescript --install --mode=development",
+      "build:typescript": "wasaby-cli --tasks=prepare",
       "builder": "wasaby-cli --tasks=build --only",
       "compile": "saby-typescript --compiler",
-      "start": "node app --applicationRoot=application",
+      "start": "wasaby-cli --tasks=app",
       "start:units": "wasaby-cli --tasks=startTest --only --server",
       "test": "wasaby-cli --tasks=startTest --only --node --report=console -c",
       "test:coverage": "wasaby-cli --tasks=startTest --only --node --coverage",
@@ -25,18 +25,16 @@
       "update-cli-store": "wasaby-cli --tasks=initStore --only",
       "prepare": "npm run update-cli-store && npm run build:typescript"
    },
+   "wasaby-cli": {
+      "port": 777
+   },
    "dependencies": {},
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
-      "body-parser": "^1.19.0",
-      "cookie-parser": "^1.4.3",
       "eslint": "^5.7.0",
-      "express": "^4.17.1",
       "wasaby-cli": "git+https://platform-git.sbis.ru/saby/wasaby-cli.git#rc-20.4000",
-      "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
-      "tslint": "^5.18.0",
-      "fs-extra": "9.0.0"
+      "tslint": "^5.18.0"
    }
 }

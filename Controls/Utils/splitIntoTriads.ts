@@ -1,6 +1,6 @@
 import {partOfNumber} from 'Controls/Utils/RegExp';
 
-const NUMBER_DIGITS_TRIAD = 3;
+export const NUMBER_DIGITS_TRIAD = 3;
 
 function reducerRight(value: string, current: string, index: number, arr: string[]) {
    const processedElements = arr.length - index - 1;
