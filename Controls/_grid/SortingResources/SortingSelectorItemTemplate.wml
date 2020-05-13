@@ -1,7 +1,7 @@
 <ws:template name="arrowChooser">
     <div class="controls-SortingSelector_arrow_separator_theme-{{_options.theme}}"></div>
     <div class="controls-SortingSelector_arrow_spacing_theme-{{_options.theme}}
-                controls-SortingSelector_arrow_{{sortValue ? 'selected' : 'unselected'}}_theme-{{_options.theme}}">
+                controls-SortingSelector_arrow_unselected_theme-{{_options.theme}}">
         <ws:if data="{{sortValue === 'DESC'}}">
             <ws:partial attr:class="controls-SortingSelector_arrow_theme-{{_options.theme}}" value="DESC" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
         </ws:if>
