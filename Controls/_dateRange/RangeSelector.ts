@@ -17,6 +17,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/ISelector
  * @mixes Controls/_dateRange/interfaces/IInput
+ * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IOpenPopup
@@ -93,6 +94,8 @@ var Component = BaseSelector.extend({
             templateOptions: {
                 ...getOptions.getDateRangeTemplateOptions(this),
                 headerType: 'link',
+                calendarSource: this._options.calendarSource,
+                dayTemplate: this._options.dayTemplate,
                 captionFormatter: this._options.captionFormatter,
                 emptyCaption: this._options.emptyCaption,
                 closeButtonEnabled: true,
