@@ -14,7 +14,7 @@ var _private = {
          instance._crudWrapper = new CrudWrapper({
             source: source
          });
-         return instance._crudWrapper.query().then((items) => {
+         return instance._crudWrapper.query({}).then((items) => {
             var
                leftOrder = 1,
                rightOrder = 30,
