@@ -8,7 +8,7 @@ import merge = require('Core/core-merge');
 import clone = require('Core/core-clone');
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import {isEqual} from 'Types/object';
-import {Controller as SourceController} from 'Controls/source';
+import {CrudWrapper} from 'Controls/dataSource';
 import {RecordSet} from 'Types/Collection';
 import Prefetch from 'Controls/_filter/Prefetch';
 import {IPrefetchHistoryParams} from './IPrefetch';
@@ -131,16 +131,16 @@ const _private = {
             if (id) {
                let source = historyUtils.getHistorySource({historyId: id});
 
-               if (!self._sourceController) {
-                  self._sourceController = new SourceController({
-                     source: source
+               if (!self._crudWrapper) {
+                  self._crudWrapper = new CrudWrapper({
+                     source
                   });
                }
 
                result = new Deferred();
 
-               self._sourceController.load({ $_history: true })
-                  .addCallback(function(res) {
+               self._crudWrapper.query({ $_history: true })
+                  .then((res) => {
                      let historyResult;
                      recent = source.getRecent();
 
@@ -153,7 +153,7 @@ const _private = {
                      result.callback(historyResult);
                      return res;
                   })
-                  .addErrback(function(error) {
+                  .catch((error) => {
                      error.processed = true;
                      result.callback([]);
                      return error;
@@ -818,7 +818,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             }
 
             if (newOptions.historyId !== this._options.historyId) {
-                this._sourceController = null;
+                this._crudWrapper = null;
             }
          },
 

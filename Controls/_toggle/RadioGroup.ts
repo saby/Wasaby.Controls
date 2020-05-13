@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import {Controller as SourceController} from 'Controls/source';
+import {CrudWrapper} from 'Controls/dataSource';
 import template = require('wml!Controls/_toggle/RadioGroup/RadioGroup');
 import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 
@@ -40,10 +40,10 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
 
    var _private = {
       initItems: function(source, self) {
-         self._sourceController = new SourceController({
+         self._crudWrapper = new CrudWrapper({
             source: source
          });
-         return self._sourceController.load().addCallback(function(items) {
+         return self._crudWrapper.query({}).then((items) => {
             return items;
          });
       }

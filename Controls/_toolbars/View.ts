@@ -26,6 +26,7 @@ import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
 import {ButtonTemplate, cssStyleGeneration} from 'Controls/buttons';
+import {CrudWrapper} from "../dataSource";
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -437,11 +438,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private static _loadItems(source: ICrudPlus): Promise<TItems> {
-        const sourceController = new SourceController({
-            source
-        });
+        const crudWrapper = new CrudWrapper({source});
 
-        return sourceController.load();
+        return crudWrapper.query({});
     }
 
     private static _calcMenuItems(items: TItems): TItems {
