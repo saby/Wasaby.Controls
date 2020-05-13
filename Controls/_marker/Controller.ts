@@ -1,26 +1,6 @@
 import { TKeySelection as TKey } from 'Controls/interface';
-import { CollectionItem, IBaseCollection } from 'Controls/display';
-import { Model } from 'Types/entity';
 import uDimension = require('Controls/Utils/getDimensions');
-
-type TVisibility = 'visible' | 'hidden' | 'onactivated';
-enum Visibility { Visible = 'visible', Hidden = 'hidden', OnActivated = 'onactivated'}
-
-interface IMarkerModel extends IBaseCollection<CollectionItem<Model>> {
-   setMarkedKey(key: TKey, status: boolean): void;
-   getFirstItem(): Model;
-   getPreviousItem(index: number): TKey;
-   getNextItem(index: number): TKey;
-   getPreviousItemKey(key: TKey): TKey;
-   getNextItemKey(key: TKey): TKey;
-   getCount(): number;
-}
-
-interface IOptions {
-   model: IMarkerModel;
-   markerVisibility: TVisibility;
-   markedKey: TKey;
-}
+import { IMarkerModel, IOptions, TVisibility, Visibility } from './interface';
 
 export class Controller {
    private _model: IMarkerModel;

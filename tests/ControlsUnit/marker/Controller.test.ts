@@ -104,17 +104,6 @@ describe('Controls/marker/Controller', () => {
          ]);
       });*/
 
-      it('visibility hidden', () => {
-         controller._markerVisibility = 'hidden';
-         controller.setMarkedKey(2);
-         assert.equal(controller._markedKey, undefined);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
-      });
-
       it('change key', () => {
          controller._markerVisibility = 'visible';
          controller._markedKey = 1;
