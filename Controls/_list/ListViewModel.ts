@@ -601,13 +601,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             nextIndex++;
         }
     },
-    getValidKeyForMarker: function(index) {
-        const prevValidItem = this.getPreviousItem(index);
-        const nextValidItem = this.getNextItem(index);
-        if (nextValidItem !== undefined) {
-            return nextValidItem;
-        } else if (prevValidItem !== undefined) {
-            return prevValidItem;
+    getValidItemForMarker: function(index) {
+        const prevValidItemKey = this.getPreviousItem(index);
+        const nextValidItemKey = this.getNextItem(index);
+        if (nextValidItemKey !== undefined) {
+            return this.getItemBySourceKey(nextValidItemKey);
+        } else if (prevValidItemKey !== undefined) {
+            return this.getItemBySourceKey(prevValidItemKey);
         } else {
             return null;
         }

@@ -1050,9 +1050,10 @@ const _private = {
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
-        let itemsContainer = self._children.listView.getItemsContainer();
-        let topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + (self._options.fixedHeadersHeights || 0));
+        const itemsContainer = self._children.listView.getItemsContainer();
+        const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
+        const verticalOffset = scrollTop - topOffset + (self._options.fixedHeadersHeights || 0);
+        self._markerController.setMarkerToFirstVisibleItem(itemsContainer.children, verticalOffset);
         self._setMarkerAfterScroll = false;
     },
 
@@ -1066,42 +1067,6 @@ const _private = {
         let container = self._container[0] || self._container;
         offsetTop += container.offsetTop - uDimension(container).top;
         return offsetTop;
-    },
-
-    setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
-        let firstItemIndex =
-            self._options.useNewModel
-            ? VirtualScrollController.getStartIndex(self._listViewModel)
-            : self._listViewModel.getStartIndex();
-        firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
-        firstItemIndex = Math.min(firstItemIndex, self._listViewModel.getStopIndex());
-
-        let key = null;
-        if (self._options.useNewModel) {
-            const item = self._listViewModel.at(firstItemIndex);
-            if (item) {
-               key = item.getContents().getId();
-            }
-        } else {
-            key = self._listViewModel.getValidKeyForMarker(firstItemIndex);
-        }
-
-        self.setMarkedKey(key);
-    },
-
-    getFirstVisibleItemIndex: function(itemsContainer, verticalOffset) {
-        let items = itemsContainer.children;
-        let itemsCount = items.length;
-        let itemsHeight = 0;
-        let i = 0;
-        if (verticalOffset <= 0) {
-            return 0;
-        }
-        while (itemsHeight < verticalOffset && i < itemsCount) {
-            itemsHeight += uDimension(items[i]).height;
-            i++;
-        }
-        return i;
     },
 
     handleListScrollSync(self, scrollTop) {

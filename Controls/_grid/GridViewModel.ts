@@ -1244,8 +1244,8 @@ var
         getNextItemKey: function() {
             return this._model.getNextItemKey.apply(this._model, arguments);
         },
-        getValidKeyForMarker: function(index) {
-            return this._model.getValidKeyForMarker(index);
+        getValidItemForMarker: function(index) {
+            return this._model.getValidItemForMarker(index);
         },
         setIndexes: function(startIndex, stopIndex) {
             return this._model.setIndexes(startIndex, stopIndex);

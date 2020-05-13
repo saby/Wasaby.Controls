@@ -28,6 +28,7 @@ import {create, register} from 'Types/di';
 import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
+import { VirtualScrollController } from 'Controls/display';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -955,6 +956,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this.getIndexByInstanceId(item.getInstanceId());
     }
 
+    getStartIndex(): number {
+        return VirtualScrollController.getStartIndex(this);
+    }
+
+    getStopIndex(): number {
+        return VirtualScrollController.getStopIndex(this);
+    }
+
     /**
      * Возвращает количество элементов проекции.
      * @param {Boolean} [skipGroups=false] Не считать группы
@@ -1175,7 +1184,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает предыдущий элемент относительно item
-     * @param {Controls/_display/CollectionItem} index элемент проекции
+     * @param {Controls/_display/CollectionItem} item элемент проекции
      * @return {Controls/_display/CollectionItem}
      */
     getPrevious(item: T): T {
@@ -2115,7 +2124,21 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             item.setMarked(status);
         }
         this.nextVersion();
-        // TODO наверное здесь нужно нотифаить что изменился ключ
+    }
+
+    getValidItemForMarker(index: number): S {
+        const item = this.getItemBySourceIndex(index);
+
+        // TODO неправильная логика у getPRev и getNext для этого места
+        const prevValidItem = this.getPrevious(item);
+        const nextValidItem = this.getNext(item);
+        if (nextValidItem !== undefined) {
+            return nextValidItem.getContents();
+        } else if (prevValidItem !== undefined) {
+            return prevValidItem.getContents();
+        } else {
+            return null;
+        }
     }
 
     getRowSpacing(): string {

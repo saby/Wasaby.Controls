@@ -289,7 +289,7 @@ define([
          assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0).');
       });
 
-      it('getValidKeyForMarker', function() {
+      it('getValidItemForMarker', function() {
          var cfg = {
             keyProperty: 'id',
             items: new collection.RecordSet({
@@ -321,9 +321,9 @@ define([
             ---------- 3 ----------
             ---------- 4 ----------
           */
-         assert.equal(model.getValidKeyForMarker(0), 1);
-         assert.equal(model.getValidKeyForMarker(1), 1);
-         assert.equal(model.getValidKeyForMarker(4), 3);
+         assert.equal(model.getValidItemForMarker(0).getContents().getId(), 1);
+         assert.equal(model.getValidItemForMarker(1).getContents().getId(), 1);
+         assert.equal(model.getValidItemForMarker(4).getContents().getId(), 3);
       });
 
       it('Selection', function() {

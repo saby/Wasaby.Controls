@@ -2586,7 +2586,7 @@ define([
             var expectedIndex = 0;
             lnBaseControl._listViewModel._startIndex = 0;
             lnBaseControl._listViewModel._stopIndex = 3;
-            lnBaseControl._listViewModel.getValidKeyForMarker = function(index) {
+            lnBaseControl._listViewModel.getValidItemForMarker = function(index) {
                assert.equal(index, expectedIndex);
             };
             lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 0);
