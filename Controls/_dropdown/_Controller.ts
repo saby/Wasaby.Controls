@@ -16,6 +16,8 @@ import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
 
+const LOADING_DELAY = 80;
+
 var _private = {
    createSourceController: function(self, options) {
       if (!self._sourceController) {
@@ -97,6 +99,13 @@ var _private = {
                 return error;
              });
           });
+   },
+
+   loadItemsByOpen(self, options) {
+      if (!this._loadedItemsDeferred) {
+         this._loadedItemsDeferred = _private.loadItems(self, options);
+      }
+      return this._loadedItemsDeferred;
    },
 
    getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
@@ -485,24 +494,39 @@ var _Controller = Control.extend({
       }
    },
 
+   _setLoadedItems(callbackFunc, isLoadOnClick) {
+      if (this._options.source && !this._items) {
+         _private.loadItemsByOpen(this, this._options).addCallback((items) => {
+            callbackFunc(items);
+         });
+      } else if (this._items) {
+         // Обновляем данные в источнике, нужно для работы истории
+         this._setItems(this._items, isLoadOnClick);
+         callbackFunc(this._items);
+      }
+   },
+
+   _loadDataForOpening(): void {
+      const LoadTemplates = (items: RecordSet): void => {
+         _private.requireTemplates(this, this._options);
+      };
+
+      this._setLoadedItems(LoadTemplates, false);
+   },
+
    _open(popupOptions?: object): void {
       if (this._options.readOnly) {
          return;
       }
-
-      const open = (): void => {
-         let config = _private.getPopupOptions(this, popupOptions);
-         _private.requireTemplates(this, this._options).addCallback(() => {
-            this._isOpened = true;
-            this._children.DropdownOpener.open(config, this);
-         });
-      };
-
       const itemsLoadCallback = (items: RecordSet): void => {
          const count = items.getCount();
 
          if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
-            open();
+            let config = _private.getPopupOptions(this, popupOptions);
+            _private.requireTemplates(this, this._options).addCallback(() => {
+               this._isOpened = true;
+               this._children.DropdownOpener.open(config, this);
+            });
          } else if (count === 1) {
             this._notify('selectedItemsChanged', [
                [items.at(0)]
@@ -510,16 +534,7 @@ var _Controller = Control.extend({
          }
       };
 
-      if (this._options.source && !this._items) {
-         _private.loadItems(this, this._options).addCallback((items) => {
-            itemsLoadCallback(items);
-            return items;
-         });
-      } else if (this._items) {
-         // Обновляем данные в источнике, нужно для работы истории
-         this._setItems(this._items);
-         itemsLoadCallback(this._items);
-      }
+      this._setLoadedItems(itemsLoadCallback, true);
    },
 
    _onSelectorTemplateResult: function(event, selectedItems) {
@@ -538,6 +553,14 @@ var _Controller = Control.extend({
       }
    },
 
+   _mouseEnterHandler: function() {
+      this._loadingTimer = setTimeout(this._loadDataForOpening.bind(this), LOADING_DELAY);
+   },
+
+   _mouseLeaveHandler: function() {
+      clearTimeout(this._loadingTimer);
+   },
+
    _beforeUnmount: function() {
       if (this._sourceController) {
          this._sourceController.cancelLoading();
@@ -550,7 +573,7 @@ var _Controller = Control.extend({
       return dropdownUtils.prepareEmpty(this._options.emptyText);
    },
 
-   _setItems: function(items) {
+   _setItems: function(items, isNeedSaveDepsDeferred) {
       if (items) {
          this._menuSource = new PrefetchProxy({
             target: this._source,
@@ -560,7 +583,9 @@ var _Controller = Control.extend({
          });
       }
       this._items = items;
-      this._depsDeferred = null;
+      if (!isNeedSaveDepsDeferred) {
+         this._depsDeferred = null;
+      }
    },
 
    _hasHistory(): boolean {
