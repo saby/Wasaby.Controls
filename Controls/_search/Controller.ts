@@ -241,7 +241,7 @@ var _private = {
       return !checkedValue;
    },
 
-   needStartSearch(self, options, needUpdateRoot, needRecreateSearchController, searchValue: string): boolean {
+   needStartSearch(self, options, needRecreateSearchController, searchValue: string, needUpdateRoot: boolean): boolean {
       const isSearchValueChanged = _private.isSearchValueChanged(self, searchValue);
       const isSearchValueShorterThenMinLength = _private.isSearchValueShort(options.minSearchLength, searchValue);
       const startSearchWithNewSourceController = searchValue && needRecreateSearchController;
@@ -250,8 +250,13 @@ var _private = {
           (!isSearchValueShorterThenMinLength || (_private.isSearchViewMode(self) && !searchValue && self._searchValue));
 
       return needStartSearchBySearchValueChanged &&
-             !needUpdateRoot ||
-             startSearchWithNewSourceController;
+          !needUpdateRoot ||
+          startSearchWithNewSourceController;
+   },
+
+   needUpdateInputSearchValue(self, options, needRecreateSearchController, searchValue: string): boolean {
+      return _private.isInputSearchValueChanged(this, searchValue) &&
+             _private.needStartSearch(self, options, needRecreateSearchController, searchValue);
    },
 
    isSearchViewMode(self): boolean {
@@ -396,11 +401,12 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (_private.needStartSearch(this, newOptions, needUpdateRoot, needRecreateSearchController, searchValue)) {
+
+      if (_private.needStartSearch(this, newOptions, needRecreateSearchController, searchValue, needUpdateRoot)) {
          _private.startSearch(this, searchValue);
-         if (searchValue !== this._inputSearchValue) {
-            _private.setInputSearchValue(this, searchValue);
-         }
+      }
+      if (_private.needUpdateInputSearchValue(this, newOptions, needRecreateSearchController, searchValue)) {
+         _private.setInputSearchValue(this, searchValue);
       }
    },
 

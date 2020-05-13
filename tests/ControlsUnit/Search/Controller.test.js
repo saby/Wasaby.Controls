@@ -710,9 +710,13 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             var options = getDefaultOptions();
             var searchStarted = false;
             options.root = 'test_root';
+            options.searchValue = 'test1';
+            searchController._inputSearchValue = 'test';
+            searchController._viewMode = 'search';
             searchMod.Controller._private.startSearch = () => {searchStarted = true;};
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
             assert.isFalse(searchStarted);
+            assert.equal(searchController._inputSearchValue, 'test1');
          });
       });
 
