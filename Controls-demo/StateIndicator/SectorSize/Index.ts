@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/StateIndicator/sectorSize/SectorSize');
+import controlTemplate = require('wml!Controls-demo/StateIndicator/SectorSize/SectorSize');
 
 interface IStateIndicatorDemoData {
     value: number;

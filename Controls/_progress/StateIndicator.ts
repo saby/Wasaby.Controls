@@ -75,6 +75,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * @variant s
  * @variant m
  * @default m
+ * @demo Controls-demo/StateIndicator/SectorSize/Index
  */
 
 /*
@@ -83,6 +84,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * @variant s
  * @variant m
  * @default m
+ * @demo Controls-demo/StateIndicator/SectorSize/Index
  */
 
 /**
