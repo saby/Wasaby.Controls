@@ -490,6 +490,11 @@ define([
       describe('public methods', function() {
          var
             treeViewModel = new treeGrid.TreeViewModel(cfg);
+         it('setRoot', function() {
+            let model = new treeGrid.TreeViewModel(cfg);
+            model.setRoot('testRoot');
+            assert.equal(model._options.root, 'testRoot');
+         });
          it('getCurrent and toggleExpanded', function() {
             assert.equal(undefined, treeViewModel.getExpandedItems()['123'], 'Invalid value "_expandedItems" before call "toggleExpanded(123, true)".');
             assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" before call "toggleExpanded(123, true)".');
