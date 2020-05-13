@@ -1,6 +1,8 @@
 <ws:if data="{{value.today && value.isCurrentMonth}}">
    <Controls.scroll:IntersectionObserverContainer observerName="datePopup">
-      <div>
+<!--в IE котнейнеры с дисплеем flex неправильно расчитывают положение детей если задана минимальная высота-->
+<!--display: flex на родителе пофиксит проблему-->
+      <div class="ws-flexbox">
          <ws:partial template="{{_dayTemplate}}" scope="{{_options}}" attr:data-date="{{value.id}}"/>
       </div>
    </Controls.scroll:IntersectionObserverContainer>
