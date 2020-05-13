@@ -84,7 +84,12 @@ var
             if (eventResult && eventResult.addBoth) {
                 var id = self._notify('showIndicator', [{}], { bubbling: true });
                 self._endEditDeferred = eventResult;
-                return eventResult.addBoth(function(resultOfDeferred) {
+                return eventResult.addErrback((error) => {
+                    // Отменяем сохранение, оставляем редактирование открытым, если промис сохранения завершился с
+                    // ошибкой (провалена валидация на сервере)
+                    self._endEditDeferred = null;
+                    return constEditing.CANCEL;
+                }).addCallback((resultOfDeferred) => {
                     self._notify('hideIndicator', [id], { bubbling: true });
 
                     if (resultOfDeferred === constEditing.CANCEL) {
