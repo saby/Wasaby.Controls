@@ -1,3 +1,5 @@
+import {IInputData} from '../Base/InputUtil';
+
 /**
  * Класс для поддержки корректной работы контрола ввода и синхронизатора.
  * Проблема: Обработка пользовательского ввода происходит по событию input. В этот момент введенное значение
@@ -14,6 +16,7 @@
  * Решение: если контрол строится/перестраивается, то возвращаем состояние, иначе значение с <input/>.
  */
 export class ValueInField {
+    private _wasInputProcessing: number = 0;
     private _fieldValue: string | null = null;
 
     beforeMount(initValue: string): void {
@@ -21,7 +24,7 @@ export class ValueInField {
     }
 
     afterMount(): void {
-        this._fieldValue = null;
+
     }
 
     beforeUpdate(oldReadOnly: boolean, newReadOnly: boolean, value: string): void {
@@ -31,11 +34,19 @@ export class ValueInField {
     }
 
     afterUpdate(): void {
-        this._fieldValue = null;
+        this._wasInputProcessing = Math.max(0, this._wasInputProcessing - 1);
     }
 
-    detectFieldValue(field: HTMLInputElement): string {
-        if (field && this._fieldValue === null) {
+    startInputProcessing(): void {
+        this._wasInputProcessing++;
+    }
+
+    detectFieldValue(field?: HTMLInputElement): string {
+        if (this._wasInputProcessing) {
+            return this._fieldValue;
+        }
+        if (field) {
+            this._fieldValue = field.value;
             return  field.value;
         }
 
