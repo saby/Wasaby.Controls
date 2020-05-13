@@ -1240,8 +1240,6 @@ define([
             },
          });
 
-         assert.isTrue(isActivated, 'BaseControl should be activated when marker is moved');
-
          lists.BaseControl._private.scrollToItem = originalScrollToItem;
          lists.BaseControl._private.createMarkerController = originalCreateMarkerController;
       });
@@ -1266,7 +1264,7 @@ define([
             baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._markerController.setMarkedKey(1);
+         baseControl._listViewModel.setMarkedKey(1);
          assert.equal(1, baseControl._listViewModel.getMarkedKey());
          baseControl._loadingIndicatorState = 'all';
          baseControl._onViewKeyDown({
@@ -1356,7 +1354,9 @@ define([
             notified = false;
 
          function enterClick(markedItem) {
-            lists.BaseControl._private.enterHandler({
+            lists.BaseControl._private.enterHandler(
+            {
+               _options: {useNewModel: false},
                getViewModel: () => ({
                   getMarkedItem: () => myMarkedItem
                }),
@@ -2582,29 +2582,7 @@ define([
             lists.BaseControl._private.setMarkerAfterScroll(inst);
             assert.isFalse(inst._setMarkerAfterScroll);
          });
-         it('setMarkerToFirstVisibleItem', function() {
-            var expectedIndex = 0;
-            lnBaseControl._listViewModel._startIndex = 0;
-            lnBaseControl._listViewModel._stopIndex = 3;
-            lnBaseControl._listViewModel.getValidItemForMarker = function(index) {
-               assert.equal(index, expectedIndex);
-            };
-            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 0);
-            expectedIndex = 1;
-            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 1);
-            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 29);
-            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 30);
-            expectedIndex = 2;
-            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 31);
-
-
-            lnBaseControl._listViewModel._startIndex = 2;
-            expectedIndex = 3;
-            lists.BaseControl._private.setMarkerToFirstVisibleItem(lnBaseControl, itemsContainer, 31);
-         });
-
       });
-
 
       /*it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
@@ -6171,6 +6149,12 @@ TODO проверить. Эти тесты не совместимы с обно
                baseControlOptions.markerVisibility = 'onactivated';
                await mountBaseControl(baseControl, baseControlOptions);
 
+               baseControl._children.scrollController = {
+                  scrollToItem(key) {
+                     assert.equal(key, 1);
+                  }
+               }
+
                   const originalEvent = {target: {}};
                   const event = {};
                   let setMarkedKeyIsCalled = false;
@@ -6218,6 +6202,19 @@ TODO проверить. Эти тесты не совместимы с обно
                      setMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
+                     }
+                  };
+
+                  baseControl._children = {
+                     scrollController: {
+                        scrollToItem(key) {
+                           if (key === data[0].id) {
+                              result = 'top';
+                           } else if (key === data[data.length - 1].id) {
+                              result = 'bottom';
+                           }
+                           return Promise.resolve();
+                        }
                      }
                   };
 
