@@ -457,8 +457,12 @@ var _Controller = Control.extend({
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
           !isEqual(newOptions.navigation, this._options.navigation) ||
           !isEqual(newOptions.filter, this._options.filter)) {
-         this._source = null;
-         this._sourceController = null;
+
+         if (this._sourceController && !this._sourceController.isLoading()) {
+            this._source = null;
+            this._sourceController = null;
+         }
+
          if (newOptions.lazyItemsLoading && !this._isOpened) {
             /* source changed, items is not actual now */
             this._setItems(null);
