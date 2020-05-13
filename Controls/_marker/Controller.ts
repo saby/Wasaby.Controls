@@ -32,7 +32,8 @@ export class Controller {
    setMarkedKey(key: TKey): void {
       if (key === undefined
          || this._markedKey === key
-         || this._markerVisibility === Visibility.OnActivated && key === null) {
+         // TODO нужно уточнить для чего это, так как оно не дает сбросить маркер
+         /*|| this._markerVisibility === Visibility.OnActivated && key === null*/) {
          return;
       }
 
