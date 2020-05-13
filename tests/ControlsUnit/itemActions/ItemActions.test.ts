@@ -400,12 +400,9 @@ describe('Controls/_itemActions/Controller', () => {
                     };
                 }
             } as HTMLElement;
-            const native = new MouseEvent('click', {
-                bubbles: true,
-                cancelable: true,
-                view: window
-            });
-            Object.defineProperty(native, 'target', {value: target, enumerable: true});
+            const native = {
+                target
+            };
             clickEvent = new SyntheticEvent<MouseEvent>(native);
         });
 
