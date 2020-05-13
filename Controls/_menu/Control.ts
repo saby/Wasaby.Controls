@@ -21,7 +21,6 @@ import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {TouchContextField} from 'Controls/context';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
-import { Sticky } from 'Controls/popup';
 
 /**
  * Контрол меню.
@@ -652,7 +651,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             actionCaptionPosition: 'none',
             itemActionsClass: `controls-Menu__itemActions_position_rightCenter_theme-${options.theme}`,
             iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisibility: editingConfig?.toolbarVisibility
+            editingToolbarVisible: editingConfig?.toolbarVisibility
         });
     }
 
