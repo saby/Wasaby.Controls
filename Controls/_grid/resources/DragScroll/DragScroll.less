@@ -17,26 +17,56 @@
 
 .controls-Grid__DragScroll__content {
    .controls-Grid__row-cell:not(.controls-Grid__cell_fixed) {
-      .controls-Grid__row-cell__content:not(.js-controls-ColumnScroll__notDraggable) {
+      .controls-Grid__row-cell__content {
          cursor: grab;
+      }
+
+      .controls-Grid__row-cell_cursor-pointer.js-controls-ColumnScroll__notDraggable,
+      .controls-Grid__row-cell_cursor-pointer .js-controls-ColumnScroll__notDraggable {
+         cursor: pointer;
+      }
+
+      .controls-Grid__row-cell_cursor-default.js-controls-ColumnScroll__notDraggable,
+      .controls-Grid__row-cell_cursor-default .js-controls-ColumnScroll__notDraggable {
+         cursor: default;
       }
    }
 
    .controls-Grid__header-cell:not(.controls-Grid__cell_fixed) {
-      .controls-Grid__header-cell__content:not(.js-controls-ColumnScroll__notDraggable) {
+      // Удалить после https://online.sbis.ru/opendoc.html?guid=43399cd1-c875-42da-8b6c-3c1e3a413cbc
+      cursor: grab;
+
+      .controls-Grid__header-cell__content {
          cursor: grab;
       }
 
-      // Удалить после https://online.sbis.ru/opendoc.html?guid=43399cd1-c875-42da-8b6c-3c1e3a413cbc
-      cursor: grab;
+      .controls-Grid__row-cell_cursor-pointer.js-controls-ColumnScroll__notDraggable,
+      .controls-Grid__row-cell_cursor-pointer .js-controls-ColumnScroll__notDraggable {
+         cursor: pointer;
+      }
+
+      .controls-Grid__row-cell_cursor-default.js-controls-ColumnScroll__notDraggable,
+      .controls-Grid__row-cell_cursor-default .js-controls-ColumnScroll__notDraggable {
+         cursor: default;
+      }
    }
 
    .controls-Grid__results-cell:not(.controls-Grid__cell_fixed) {
-      .controls-Grid__results-cell__content:not(.js-controls-ColumnScroll__notDraggable) {
+      // Удалить после https://online.sbis.ru/opendoc.html?guid=43399cd1-c875-42da-8b6c-3c1e3a413cbc
+      cursor: grab;
+
+      .controls-Grid__results-cell__content {
          cursor: grab;
       }
 
-      // Удалить после https://online.sbis.ru/opendoc.html?guid=43399cd1-c875-42da-8b6c-3c1e3a413cbc
-      cursor: grab;
+      .controls-Grid__row-cell_cursor-pointer.js-controls-ColumnScroll__notDraggable,
+      .controls-Grid__row-cell_cursor-pointer .js-controls-ColumnScroll__notDraggable {
+         cursor: pointer;
+      }
+
+      .controls-Grid__row-cell_cursor-default.js-controls-ColumnScroll__notDraggable,
+      .controls-Grid__row-cell_cursor-default .js-controls-ColumnScroll__notDraggable {
+         cursor: default;
+      }
    }
 }
