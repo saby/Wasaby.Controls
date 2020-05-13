@@ -11,13 +11,12 @@
     </div>
 </ws:template>
 <ws:partial template="Controls/dropdown:ItemTemplate"
-            itemData="{{itemData}}"
-            on:click="_itemArrowClick(itemData.item)">
+            itemData="{{itemData}}">
     <ws:contentTemplate>
         <div class="controls-SortingSelector_itemWrapper">
-            <div class="controls-SortingSelector_itemTitle">{{itemData.item.get(_options.displayProperty)}}</div>
+            <div class="controls-SortingSelector_itemTitle" on:click="_itemClick(itemData.item)">{{itemData.item.get(_options.displayProperty)}}</div>
             <ws:if data="{{itemData.item.get('paramName') !== null}}">
-                <div class="controls-SortingSelector_arrowsContainer">
+                <div class="controls-SortingSelector_arrowsContainer" on:click="_arrowClick(itemData.item)">
                     <ws:partial template="arrowChooser" sortValue="{{itemData.item.get('value')}}"/>
                 </div>
             </ws:if>

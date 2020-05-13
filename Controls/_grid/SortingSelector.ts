@@ -6,12 +6,17 @@ import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {ISortingSelectorOptions, ISortingParam} from 'Controls/interface/ISortingSelector';
 
+type Order = 'ASC'|'DESC'|'';
+
 class SortingSelector extends Control<ISortingSelectorOptions> {
     protected _template: TemplateFunction = template;
     protected _selectedKeys: [number|string];
     private _currentParamName: string = null;
-    private _currentOrder: 'ASC'|'DESC' = null;
+    private _currentOrder: Order = null;
     protected _source: Memory;
+    protected _itemPadding = {
+        right: 'null'
+    }
 
     protected _beforeMount(options: ISortingSelectorOptions): void {
         this.updateConfig(options.sortingParams, options.value);
@@ -21,7 +26,6 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         if (!isEqual(this._options.value, newOptions.value) ||
             !isEqual(this._options.sortingParams, newOptions.sortingParams)) {
             this.updateConfig(newOptions.sortingParams, newOptions.value);
-            this._children.dropdown.closeMenu();
         }
     }
 
@@ -71,13 +75,30 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         const newValue: string = this._currentOrder === 'ASC' ? 'DESC' : 'ASC';
         this._setValue(this._currentParamName, newValue);
     }
-    protected _itemArrowClick(e: SyntheticEvent<Event>, item: Record): void {
+    protected _itemClick(e: SyntheticEvent<Event>, item: Record): void {
         const param = item.get('paramName');
-        const order = item.get('value');
-        this._selectedKeys = [item.get('id')];
-        this._setValue(param, this._getOppositeOrder(order));
+        if (param === null) {
+            this._resetValue();
+            this._selectedKeys = [item.get('id')];
+        } else {
+            const order = item.get('value') || 'ASC';
+            this._selectedKeys = [item.get('id')];
+            this._setValue(param, param ? order : '');
+        }
+        this._children.dropdown.closeMenu();
     }
-    protected _getOppositeOrder = (order: 'ASC'|'DESC'): 'ASC'|'DESC' => order === 'DESC' || !order ? 'ASC' : 'DESC'; 
+    protected _arrowClick(e: SyntheticEvent<Event>, item: Record): void {
+        e.stopPropagation();
+        const order = item.get('value') || 'ASC';
+        item.set('value', this._getOppositeOrder(order));
+    }
+
+    protected _getOppositeOrder = (order: Order) => {
+        if (order === 'DESC' || !order) {
+            return 'ASC';
+        }
+        return 'DESC';
+    }
 
     static _theme: [string] = ['Controls/grid'];
 }
