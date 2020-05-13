@@ -4433,19 +4433,41 @@ describe('Controls/_display/Collection', () => {
     });
 
     // TODO возможно, это уйдёт из Collection
-    describe('setActiveItem()', () => {
-        it('deactivates old active item', () => {
+    describe('setActiveItem(), getActiveItem()', () => {
+        let rs: RecordSet;
+        let display: CollectionDisplay<unknown>;
 
+        beforeEach(() => {
+            const items = [
+                { id: 1, name: 'Ivan' },
+                { id: 2, name: 'Alexey' },
+                { id: 3, name: 'Olga' }
+            ];
+            rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs
+            });
+        });
+
+        it('deactivates old active item', () => {
+            const testingItem = display.getItemBySourceKey(1);
+            display.setActiveItem(display.getItemBySourceKey(1));
+            display.setActiveItem(display.getItemBySourceKey(2));
+            assert.isFalse(testingItem.isActive());
         });
         it('activates new active item', () => {
-
+            const testingItem = display.getItemBySourceKey(2);
+            display.setActiveItem(display.getItemBySourceKey(1));
+            display.setActiveItem(display.getItemBySourceKey(2));
+            assert.isTrue(testingItem.isActive());
         });
-    });
-
-    // TODO возможно, это уйдёт из Collection
-    describe('getActiveItem()', () => {
-        it('returns currently active item', () => {
-
+        it('correctly returns active item', () => {
+            const testingItem = display.getItemBySourceKey(2);
+            display.setActiveItem(display.getItemBySourceKey(2));
+            assert.equal(display.getActiveItem(), testingItem);
         });
     });
 });
