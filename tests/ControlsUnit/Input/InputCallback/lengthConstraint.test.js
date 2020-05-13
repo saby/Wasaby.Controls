@@ -9,6 +9,15 @@ define(
          describe('The maximum length is 4 and use grouping.', function() {
             var callback = lengthConstraint(4, true);
 
+            it('value: -123.45, position: 4', function() {
+               assert.deepEqual(callback({
+                  position: 4,
+                  displayValue: '-123.45'
+               }), {
+                  position: 4,
+                  displayValue: '-123.45'
+               });
+            });
             it('12345', function() {
                assert.deepEqual(callback({
                   position: 0,
