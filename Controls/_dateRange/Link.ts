@@ -11,6 +11,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/interface/ILinkView
  * @mixes Controls/_interface/IOpenPopup
+ * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/_interface/IFontColorStyle
  * @control
  * @public
@@ -33,6 +34,8 @@ var Component = BaseControl.extend({
          templateOptions: {
             ...getOptions.getTemplateOptions(this),
             headerType: 'link',
+            calendarSource: this._options.calendarSource,
+            dayTemplate: this._options.dayTemplate,
             closeButtonEnabled: true,
             rangeselect: false,
             range: this._options.range,
