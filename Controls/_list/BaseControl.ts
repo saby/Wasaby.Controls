@@ -1196,6 +1196,11 @@ var _private = {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
+        if (self._pagingNavigation) {
+            if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_ADD) {
+                _private.updatePagingDataByItemsChanged(self, newItems, removedItems);
+            }
+        }
         if (changesType === 'collectionChanged' || newModelChanged) {
             //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {
@@ -1603,10 +1608,17 @@ var _private = {
     },
     
     updatePagingData(self, hasMoreData) {
+        self._pagingNavigationVisible = (hasMoreData > 0);
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
+    },
+
+    updatePagingDataByItemsChanged(self, newItems, removedItems) {
+        let countDifferece = (newItems?.length) || (- (removedItems?.length)) || 0;
+        let itemsCount = self._pagingLabelData.totalItemsCount + countDifferece;
+        _private.updatePagingData(self, itemsCount);
     },
 
     resetPagingNavigation: function(self, navigation) {
