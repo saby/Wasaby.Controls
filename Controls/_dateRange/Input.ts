@@ -22,6 +22,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
+ * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/interface/IDateMask
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_interface/IDateRangeValidators
@@ -96,6 +97,8 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
             templateOptions: {
                 ...getOptions.getDateRangeTemplateOptions(this),
                 selectionType: this._options.selectionType,
+                calendarSource: this._options.calendarSource,
+                dayTemplate: this._options.dayTemplate,
                 quantum: this._options.quantum,
                 headerType: 'input',
                 closeButtonEnabled: true,
