@@ -491,7 +491,7 @@ define([
          var
             treeViewModel = new treeGrid.TreeViewModel(cfg);
          it('setRoot', function() {
-            let model = new treeGrid.TreeViewModel(cfg);
+            let model = new treeGrid.TreeViewModel(cMerge({}, cfg));
             model.setRoot('testRoot');
             assert.equal(model._options.root, 'testRoot');
          });
