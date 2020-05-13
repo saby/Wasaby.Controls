@@ -102,7 +102,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     }
 
     private _setCloseButtonVisibility(options) {
-        this._closeButtonVisibility = !!(options.closeButtonVisibility || options.showClose === true || options.searchParam);
+        this._closeButtonVisibility = !!(options.closeButtonVisibility || (options.showClose && !options.root) || options.searchParam);
     }
 
     private _prepareHeaderConfig(options) {
@@ -129,7 +129,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     private _setItemPadding(options) {
         if (options.itemPadding) {
             this._itemPadding = options.itemPadding;
-        } else if (options.closeButtonVisibility) {
+        } else if (this._closeButtonVisibility) {
             this._itemPadding = {
                 right: 'menu-close'
             };
