@@ -284,6 +284,7 @@ define(
                key: expectedOptions.root
             };
             expectedOptions.closeButtonVisibility = false;
+            expectedOptions.showClose = false;
             expectedOptions.showHeader = false;
             expectedOptions.headerTemplate = null;
             expectedOptions.headerContentTemplate = null;

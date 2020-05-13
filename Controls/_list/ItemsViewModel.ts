@@ -413,7 +413,8 @@ var ItemsViewModel = BaseViewModel.extend({
            this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
 
         const shouldNotUpdatePrefix =
-            collectionChangeResult === 'updatePrefix' ? false : action !== collection.IObservable.ACTION_RESET;
+            collectionChangeResult === 'updatePrefix' ? false : (action !== collection.IObservable.ACTION_RESET &&
+                                                                 action !== collection.IObservable.ACTION_MOVE);
 
         this._nextModelVersion(shouldNotUpdatePrefix, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);

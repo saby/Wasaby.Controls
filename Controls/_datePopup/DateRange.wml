@@ -37,7 +37,7 @@
          _limit="{{1}}"
          position="{{_position}}"
          attr:class="controls-PeriodDialog-DateRange-dates-wrapper"
-         calendarSource="{{_options.calendarSource}}"
+         source="{{_options.calendarSource}}"
          dayTemplate="{{_options.dayTemplate}}"
          on:itemClick="_onItemClick()"
          on:positionChanged="_onPositionChanged()"
