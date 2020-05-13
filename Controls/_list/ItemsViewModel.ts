@@ -627,7 +627,7 @@ var ItemsViewModel = BaseViewModel.extend({
      */
     find(predicate: (item: Model) => boolean): Model {
         if (this._display) {
-            this._display.find(predicate);
+            return this._display.find(predicate);
         } else {
             this.reset();
             while (this.isEnd()) {

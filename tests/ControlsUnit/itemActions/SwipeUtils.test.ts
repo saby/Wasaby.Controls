@@ -1,6 +1,6 @@
-import {assert} from 'chai';
-import {Utils} from 'Controls/_itemActions/Utils';
-import {IItemAction} from 'Controls/_itemActions/interface/IItemActions';
+import { assert } from 'chai';
+import { Utils } from 'Controls/_itemActions/Utils';
+import { IItemAction } from 'Controls/_itemActions/interface/IItemActions';
 
 describe('Controls/_itemActions/measurers/Utils', () => {
     it('getActualActions', () => {

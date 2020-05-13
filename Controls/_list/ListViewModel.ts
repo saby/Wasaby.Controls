@@ -764,6 +764,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return this._display ? this._display.getSwipeAnimation() : {};
     },
 
+    // New Model compatibility
+    setEventRaising(enabled: boolean, analyze: boolean): void {
+        if (this._display) {
+            this._display.setEventRaising(enabled, analyze);
+        }
+    },
+
     updateSelection: function(selectedKeys) {
         this._selectedKeys = selectedKeys || [];
         this._nextModelVersion(true);

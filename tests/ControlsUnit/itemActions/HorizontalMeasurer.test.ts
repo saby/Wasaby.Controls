@@ -1,8 +1,8 @@
-import {assert} from 'chai';
+import { assert } from 'chai';
 import * as rk from 'i18n!ControlsUnit';
 
-import {IItemAction} from 'Controls/_itemActions/interface/IItemActions';
-import {horizontalMeasurer} from 'Controls/_itemActions/measurers/HorizontalMeasurer';
+import { IItemAction } from 'Controls/_itemActions/interface/IItemActions';
+import { horizontalMeasurer } from 'Controls/_itemActions/measurers/HorizontalMeasurer';
 
 describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
     it('needIcon', () => {
