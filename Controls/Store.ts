@@ -1,5 +1,3 @@
-import {Data as RouterData} from 'Router/router';
-
 interface IStore {
     getState: Record<string, any>;
     onPropertyChanged: (propertyName: string, callback: (propertyName: string, data: any) => void) => string;
@@ -12,48 +10,66 @@ interface IStateCallback {
     callbackFn: Function;
 }
 
-interface IState {
-    [ctxName: string]: string | {
-        [propetyName: string]: {
-            value: any,
-            callbacks: IStateCallback[]
-        }
-    };
+interface ICtxState {
+    [propetyName: string]: {
+        value: any,
+        callbacks: IStateCallback[]
+    }
+}
 
+interface IState {
+    [ctxName: string]: string | ICtxState;
     activeContext?: string;
 }
 
 const ID_SEPARATOR = '--';
 
+/**
+ *
+ */
 class Store implements IStore {
     private constructor() { }
 
     state: IState;
 
-    getState(): IState {
-        this._updateStoreContext();
-        return this.state[this.state.activeContext];
+    /**
+     * Получение текущего стейта
+     */
+    getState(): ICtxState {
+        return this.state[this.state.activeContext] as ICtxState;
     }
 
+    /**
+     * Обновление значения в стейте
+     * @param propertyName название поля в стейте
+     * @param data данные
+     */
     dispatch(propertyName: string, data: any): void {
-        this._updateStoreContext();
         this._setValue(propertyName, data);
         this._notifySubscribers(propertyName);
     }
 
+    /**
+     * Подписка на изменение поля в стейте, при изменении поля вызовется колбэк с новым значением
+     * @param propertyName
+     * @param callback
+     * @return {string} id колбэка, чтоб отписаться при уничтожении контрола
+     */
     onPropertyChanged(propertyName: string, callback: (propertyName: string, data: any) => void): string {
-        this._updateStoreContext();
         return this._addCallback(propertyName, callback);
     }
 
+    /**
+     * Отписка колбэка по id
+     * @param id
+     */
     unsubscribe(id: string): void {
         this._removeCallback(id);
     }
 
-    // обновляем контекст в зависимости от урла
-    private _updateStoreContext(): void {
-        // пока пишем дефолтный и работаем только с ним чтоб не усложнять
-        this.state.activeContext = RouterData.getVisibleRelativeUrl();
+    // обновляем название актуального контекста в зависимости от урла (сейчас это делает OnlineSbisRu/_router/Router)
+    _updateStoreContext(contextName): void {
+        this.state.activeContext = contextName;
         if (!this.state[this.state.activeContext]) {
             this.state[this.state.activeContext] = {};
         }
@@ -70,11 +86,14 @@ class Store implements IStore {
         this.state[this.state.activeContext][propertyName] = value;
     }
 
+    // объявление поля в стейте
     private _defineProperty(propertyName: string): void {
+        // приватное поле с _ в котором лежит значение и колбэки
         Object.defineProperty(this.state[this.state.activeContext], '_' + propertyName, {
             value: {value: undefined, callbacks: []},
             enumerable: false
         });
+        // сеттер и геттер для публичного поля
         Object.defineProperty(this.state[this.state.activeContext], propertyName, {
             set: function (newValue) {
                 this['_' + propertyName].value = newValue;
