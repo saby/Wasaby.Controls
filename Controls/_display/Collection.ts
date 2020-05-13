@@ -28,7 +28,7 @@ import {create, register} from 'Types/di';
 import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
-import { VirtualScrollController } from 'Controls/display';
+import * as VirtualScrollController from './controllers/VirtualScroll';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');

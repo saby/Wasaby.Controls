@@ -421,32 +421,20 @@ const _private = {
 
     setMarkedKey(self, key: string | number): void {
         if (key !== undefined) {
-            self.setMarkedKey(key);
+            self._markerController.setMarkedKey(key);
             _private.scrollToItem(self, key);
         }
     },
     moveMarkerToNext: function (self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
-        self._markerController.moveMarkerToNext();
-
-        // activate list when marker is moving. It let us press enter and open current row
-        // must check mounted to avoid fails on unit tests
-        if (self._mounted && self._options.markerVisibility !== 'hidden') {
-            self.activate();
+        if (self._markerController) {
+            const key = self._markerController.moveMarkerToNext();
+            _private.scrollToItem(self, key);
         }
     },
     moveMarkerToPrevious: function (self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
-        self._markerController.moveMarkerToPrev();
-
-        // activate list when marker is moving. It let us press enter and open current row
-        // must check mounted to avoid fails on unit tests
-        if (self._mounted && self._options.markerVisibility !== 'hidden') {
-            self.activate();
+        if (self._markerController) {
+            const key = self._markerController.moveMarkerToPrev();
+            _private.scrollToItem(self, key);
         }
     },
     setMarkerAfterScroll(self, event) {
@@ -468,9 +456,6 @@ const _private = {
     },
 
     enterHandler: function(self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
         let markedItem;
         if (self._options.useNewModel) {
             markedItem = self.getViewModel().find((item) => item.isMarked());
@@ -482,21 +467,18 @@ const _private = {
         }
     },
     spaceHandler: function(self, event) {
-        const allowToggleSelection = !_private.isBlockedForLoading(self._loadingIndicatorState) &&
-            self._selectionController;
+        const model = self.getViewModel();
+        let toggledItemId = model.getMarkedKey();
 
-        if (allowToggleSelection) {
-            const model = self.getViewModel();
-            let toggledItemId = model.getMarkedKey();
+        if (!model.getItemById(toggledItemId) && model.getCount()) {
+            toggledItemId = model.at(0).getContents().getId();
+        }
 
-            if (!model.getItemById(toggledItemId) && model.getCount()) {
-                toggledItemId = model.at(0).getContents().getId();
-            }
-
-            if (toggledItemId) {
+        if (toggledItemId) {
+            if (self._selectionController) {
                 self._selectionController.toggleItem(toggledItemId);
-                _private.moveMarkerToNext(self, event);
             }
+            _private.moveMarkerToNext(self, event);
         }
     },
     prepareFooter: function(self, navigation, sourceController) {
@@ -1050,11 +1032,13 @@ const _private = {
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
-        const itemsContainer = self._children.listView.getItemsContainer();
-        const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-        const verticalOffset = scrollTop - topOffset + (self._options.fixedHeadersHeights || 0);
-        self._markerController.setMarkerToFirstVisibleItem(itemsContainer.children, verticalOffset);
-        self._setMarkerAfterScroll = false;
+        if (self._markerController) {
+            const itemsContainer = self._children.listView.getItemsContainer();
+            const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
+            const verticalOffset = scrollTop - topOffset + (self._options.fixedHeadersHeights || 0);
+            self._markerController.setMarkerToFirstVisibleItem(itemsContainer.children, verticalOffset);
+            self._setMarkerAfterScroll = false;
+        }
     },
 
     // TODO KINGO: Задержка нужна, чтобы расчет видимой записи производился после фиксации заголовка
@@ -1747,21 +1731,19 @@ const _private = {
    onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
       // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
       // при подписке на модель событие remove летит еще и при скрытии элементов
-      if (self._selectionController) {
-         let result;
 
-         switch (action) {
-            case IObservable.ACTION_REMOVE:
-               result = self._selectionController.removeKeys(removedItems);
+       let selectionControllerResult;
+       switch (action) {
+           case IObservable.ACTION_REMOVE:
+               if (self._selectionController) {
+                   selectionControllerResult = self._selectionController.removeKeys(removedItems);
+               }
+               if (removedItemsIndex !== undefined && self._markerController) {
+                   self._markerController.handleRemoveItems(removedItemsIndex);
+               }
                break;
-         }
-
-         this.handleSelectionControllerResult(self, result);
-      }
-
-      if (action === IObservable.ACTION_REMOVE && removedItemsIndex !== undefined && self._markerController) {
-         self._markerController.handleRemoveItems(removedItemsIndex);
-      }
+       }
+       this.handleSelectionControllerResult(self, selectionControllerResult);
    },
 
    createMarkerController(self: any, options: any): MarkerController {
@@ -1769,7 +1751,7 @@ const _private = {
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
             markedKey: options.markedKey
-        })
+        });
    },
 
     updateMarkerController(self: any, options: any): void {
@@ -1777,7 +1759,7 @@ const _private = {
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
             markedKey: options.markedKey
-        })
+        });
     }
 };
 
@@ -1894,7 +1876,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     // Шаблон операций с записью для swipe
     _swipeTemplate: swipeTemplate,
 
-        _markerController: null,
+    _markerController: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1961,7 +1943,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
-            self._markerController = _private.createMarkerController(self, newOptions);
+            if (newOptions.markerVisibility !== 'hidden') {
+                self._markerController = _private.createMarkerController(self, newOptions);
+            }
 
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
@@ -2498,7 +2482,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     setMarkedKey(key: number|string): void {
-        this._markerController.setMarkedKey(key);
+        _private.setMarkedKey(this, key);
     },
 
     _onGroupClick: function(e, groupId, baseEvent) {
@@ -2808,10 +2792,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _onViewKeyDown: function(event) {
-
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
-        if (!this._options._keyDownHandler || !this._options._keyDownHandler(event)) {
+        if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (!this._options._keyDownHandler || !this._options._keyDownHandler(event))) {
             let key = event.nativeEvent.keyCode;
             let dontStop = key === 33
                 || key === 34

@@ -48,12 +48,10 @@ export class Controller {
     * Если по переданному ключу не найден элемент, то маркер ставится на первый элемент списка
     * @param key ключ элемента, на который ставится маркер
     */
-   // TODO + вызывать при изменении итемс
    // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать, хотя это не одно и тоже
    setMarkedKey(key: TKey): void {
       if (key === undefined
          || this._markedKey === key
-         || this._markerVisibility === Visibility.Hidden
          || this._markerVisibility === Visibility.OnActivated && key === null) {
          return;
       }
@@ -69,28 +67,24 @@ export class Controller {
 
    /**
     * Переместить маркер на следующий элемент
+    * @return ключ, на который поставлен маркер
     */
-   moveMarkerToNext(): void {
-      if (this._markerVisibility === Visibility.Hidden) {
-         return;
-      }
-
+   moveMarkerToNext(): TKey {
       // TODO совместимость
       const nextKey = this._model.getNextItemKey(this._markedKey);
       this.setMarkedKey(nextKey);
+      return nextKey;
    }
 
    /**
     * Переместить маркер на предыдущий элемент
+    * @return ключ, на который поставлен маркер
     */
-   moveMarkerToPrev(): void {
-      if (this._markerVisibility === Visibility.Hidden) {
-         return;
-      }
-
+   moveMarkerToPrev(): TKey {
       // TODO совместимость
       const prevKey = this._model.getPreviousItemKey(this._markedKey);
       this.setMarkedKey(prevKey);
+      return prevKey;
    }
 
    handleRemoveItems(removedItemsIndex: number): void {
@@ -117,7 +111,6 @@ export class Controller {
 
    private _setMarkerOnFirstItem(): TKey {
       // если модель пустая, то не на что ставить маркер
-      // если маркер undefined, значит сюда попали первый раз после загрузки списка
       if (!this._model.getCount()) {
          return undefined;
       }
