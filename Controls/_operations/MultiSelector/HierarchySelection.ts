@@ -18,7 +18,7 @@ export interface IOptions extends ISelectionOptions {
    nodeProperty?: string,
    hasChildrenProperty?: string,
    selectionStrategy: TreeSelectionStrategy
-};
+}
 
 interface IEntryPath {
    id: String|number|null,
