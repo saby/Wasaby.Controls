@@ -73,6 +73,8 @@ export class FixBugs {
         processingResult = this._insertFromDropBug.inputProcessing(data);
         processingResult = this._minusProcessingBug.inputProcessing(processingResult);
 
+        this._valueInFieldBug.startInputProcessing(processingResult);
+
         return processingResult;
     }
 
