@@ -55,7 +55,7 @@
    <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
    {{ listModel.resetResultsColumns() }}
    <ws:for data="listModel.resetResultsColumns(); listModel.isEndResultsColumn(); listModel.goToNextResultsColumn();">
-      <ws:partial template="{{listModel.isStickyHeader() ? 'stickyCell' : 'cell'}}"
+      <ws:partial template="{{listModel.isStickyHeader() && !listModel.getCurrentResultsColumn().column.isActionCell ? 'stickyCell' : 'cell'}}"
                   listModel="{{ listModel }}"
                   backgroundStyle="{{backgroundStyle}}"
                   multiSelectVisibility="{{listModel.getMultiSelectVisibility()}}"
