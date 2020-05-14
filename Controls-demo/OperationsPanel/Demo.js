@@ -37,7 +37,6 @@ define('Controls-demo/OperationsPanel/Demo', [
       _excludedKeys: null,
       _selectedKey: 0,
       _expanded: false,
-      _markedKeyMoveDialog: 15,
 
       _beforeMount: function() {
          this._filterButtonSource = filterButtonData;

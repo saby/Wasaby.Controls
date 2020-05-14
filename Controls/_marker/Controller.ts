@@ -32,12 +32,17 @@ export class Controller {
          return;
       }
 
+      const itemExistsInModel = !!this._model.getItemBySourceKey(key);
       this._model.setMarkedKey(this._markedKey, false);
-      if (this._model.getItemBySourceKey(key)) {
+
+      if (this._markerVisibility === Visibility.Visible && !itemExistsInModel) {
+         this._markedKey = this._setMarkerOnFirstItem();
+         return;
+      }
+
+      if (itemExistsInModel) {
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
-      } else {
-         this._markedKey = this._setMarkerOnFirstItem();
       }
    }
 
@@ -47,6 +52,10 @@ export class Controller {
     */
    moveMarkerToNext(): TKey {
       const nextItem = this._model.getNextByKey(this._markedKey);
+      if (!nextItem) {
+         return this._markedKey;
+      }
+
       const nextKey = nextItem.getContents().getKey();
       this.setMarkedKey(nextKey);
       return nextKey;
@@ -58,6 +67,10 @@ export class Controller {
     */
    moveMarkerToPrev(): TKey {
       const prevItem = this._model.getPrevByKey(this._markedKey);
+      if (!prevItem) {
+         return this._markedKey;
+      }
+
       const prevKey = prevItem.getContents().getKey();
       this.setMarkedKey(prevKey);
       return prevKey;
@@ -91,8 +104,7 @@ export class Controller {
 
    private _setMarkerOnFirstItem(): TKey {
       // если модель пустая, то не на что ставить маркер
-      // если onactivated режим и маркер вручную не проставили, то не ставим его на первый элемент
-      if (!this._model.getCount() || this._markerVisibility === Visibility.OnActivated && this._markedKey !== null) {
+      if (!this._model.getCount()) {
          return undefined;
       }
 
