@@ -143,7 +143,7 @@ type GetSourceResult = {
 
                if (options.parentProperty) {
                   const hasRootInOptions = options.root;
-                  const hasRootInFilter = self._filter[options.parentProperty];
+                  const hasRootInFilter = self._filter && self._filter[options.parentProperty];
 
                   if ((hasRootInFilter || hasRootInOptions) && rootChanged) {
                      const newFilter = clone(options.filter);
