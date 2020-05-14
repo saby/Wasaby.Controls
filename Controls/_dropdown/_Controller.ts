@@ -61,6 +61,7 @@ var _private = {
       const preparedItem = _private.prepareItem(item, self._options.keyProperty, self._source);
       self._notify('pinClick', [preparedItem]);
       self._setItems(null);
+      self._loadItemsPromise = null;
       self._open();
    },
 
