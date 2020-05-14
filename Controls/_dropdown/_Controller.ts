@@ -104,7 +104,7 @@ var _private = {
    resetLoadPromises(self) {
       self._loadMenuTempPromise = null;
       self._loadItemsPromise = null;
-      self._loadItemsTempPromisePromise = null;
+      self._loadItemsTempPromise = null;
    },
 
    getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
@@ -464,7 +464,7 @@ var _Controller = Control.extend({
       }
 
       if (_private.templateOptionsChanged(newOptions, this._options)) {
-         this._loadItemsTempPromise = null;
+         this._loadMenuTempPromise = null;
          if (this._isOpened) {
             this._open();
          }
@@ -525,11 +525,8 @@ var _Controller = Control.extend({
       if (this._options.readOnly) {
          return;
       }
-
-      this._loadItemsTempPromise = null;
       return this.loadDependencies().then( () => {
          const count = this._items.getCount();
-
          if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
             let config = _private.getPopupOptions(this, popupOptions);
             this._isOpened = true;
@@ -587,7 +584,7 @@ var _Controller = Control.extend({
             }
          });
       } else {
-         this._loadItemsPromise = null;
+         this._loadItemsTempPromise = null;
       }
       this._items = items;
    },
