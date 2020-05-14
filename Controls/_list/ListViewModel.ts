@@ -335,8 +335,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
-    setMarkedKey: function(key) {
-        if (this._markedKey === key) {
+    setMarkedKey: function(key, status) {
+        // status - для совместимости с новой моделью
+        // если он false, то markedKey менять не нужно,
+        // мы его поменяем на следующем вызове со status=true
+        if (this._markedKey === key || status === false) {
             return;
         }
 

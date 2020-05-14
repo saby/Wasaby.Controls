@@ -420,7 +420,7 @@ const _private = {
     },
 
     setMarkedKey(self, key: string | number): void {
-        if (key !== undefined) {
+        if (key !== undefined && self._markerController) {
             self._markerController.setMarkedKey(key);
             _private.scrollToItem(self, key);
         }
