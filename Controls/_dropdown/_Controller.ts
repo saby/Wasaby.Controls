@@ -470,7 +470,7 @@ var _Controller = Control.extend({
       if (_private.templateOptionsChanged(newOptions, this._options)) {
          this._depsDeferred = null;
          if (this._isOpened) {
-            return this._open();
+            this._open();
          }
       }
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||

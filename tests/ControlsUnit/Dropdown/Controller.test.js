@@ -278,13 +278,16 @@ define(
                assert.isNull(dropdownController._depsDeferred);
                assert.isFalse(opened);
 
+               dropdownController._open = function() {
+                  opened = true;
+               };
+
                dropdownController._isOpened = true;
                dropdownController._items = itemsRecords.clone();
                dropdownController._source = 'testSource';
                dropdownController._sourceController = {hasMoreData: ()=>{}};
-               dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined }).then(function() {
-                  assert.isTrue(opened);
-               });
+               dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined })
+               assert.isTrue(opened);
             });
 
             it('new source', () => {
@@ -345,11 +348,13 @@ define(
                   });
                });
             });
-
             it('new source and dropdown is open', () => {
                dropdownController._items = itemsRecords.clone();
                dropdownController._isOpened = true;
                dropdownController._sourceController = { hasMoreData: () => {}, isLoading: () => {} };
+               dropdownController._open = function() {
+                  opened = true;
+               };
                dropdownController._beforeUpdate({
                   selectedKeys: [2],
                   keyProperty: 'id',
@@ -358,7 +363,7 @@ define(
                      data: updatedItems
                   })
                }).addCallback(() => {
-                  assert.equal(dropdownController._items.getCount(), updatedItems.length);
+                  assert.isTrue(opened);
                });
             });
 
@@ -612,6 +617,20 @@ define(
             dropdownController._items = newItems;
             dropdownController._open().then(function() {
                assert.deepEqual(dropdownController._menuSource.getData().query.getRawData(), newItems.getRawData());
+            });
+
+            //new source and dropdown is open
+            updatedItems = clone(items);
+            dropdownController._items = itemsRecords.clone();
+            dropdownController._isOpened = true;
+            dropdownController.source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: updatedItems
+            });
+            dropdownController._sourceController = { hasMoreData: () => {}, isLoading: () => {} };
+            dropdownController._open().then(function() {
+               assert.equal(dropdownController._items.getCount(), updatedItems.length);
+               assert.isTrue(opened);
             });
          });
 
