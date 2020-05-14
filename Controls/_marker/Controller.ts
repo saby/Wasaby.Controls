@@ -95,8 +95,10 @@ export class Controller {
       firstItemIndex = Math.min(firstItemIndex, this._model.getStopIndex());
 
       const item = this._model.getValidItemForMarker(firstItemIndex);
-      const itemKey = item.getContents().getKey();
-      this.setMarkedKey(itemKey);
+      if (item) {
+         const itemKey = item.getContents().getKey();
+         this.setMarkedKey(itemKey);
+      }
    }
 
    private _setMarkerOnFirstItem(): TKey {
@@ -106,6 +108,10 @@ export class Controller {
       }
 
       const firstItem = this._model.getFirstItem();
+      if (!firstItem) {
+         return undefined;
+      }
+
       this._model.setMarkedKey(firstItem.getKey(), true);
       return firstItem.getKey();
    }

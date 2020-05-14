@@ -1207,6 +1207,30 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         );
     }
 
+    getNextByKey(key: string|number): T {
+        const item = this.getItemBySourceKey(key);
+        return this.getNext(item);
+    }
+    getPrevByKey(key: string|number): T {
+        const item = this.getItemBySourceKey(key);
+        return this.getPrevious(item);
+    }
+
+    // TODO
+    /*getNextByIndex(index: number): T {
+        const itemsCount = this.getCount();
+        while (index < itemsCount) {
+            const nextItem = this.at(index);
+            if (nextItem.get) {
+                return nextItem;
+            }
+            index++;
+        }
+    }
+    getPrevByIndex(index: number): T {
+
+    }*/
+
     /**
      * Устанавливает текущим следующий элемент
      * @return {Boolean} Есть ли следующий элемент
