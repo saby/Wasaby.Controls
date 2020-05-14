@@ -12,8 +12,10 @@
       "Controls-demo/*"
    ],
    "scripts": {
-      "build": "wasaby-cli --tasks=build",
+      "build": "npm run builder && npm run build:index",
       "build:typescript": "wasaby-cli --tasks=prepare",
+      "builder": "wasaby-cli --tasks=build",
+      "build:index": "wasaby-cli --tasks=createIndex --moduleName=Controls-demo",
       "compile": "saby-typescript --compiler",
       "start": "wasaby-cli --tasks=app",
       "start:units": "wasaby-cli --tasks=startTest --server",
