@@ -143,8 +143,8 @@ export class Controller {
    }
 
    private _remove(keys: TKeys): void {
-      this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
-      this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
+      this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys.slice(), keys);
+      this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys.slice(), keys);
    }
 
    private _getItemStatus(key: TKey): boolean {
