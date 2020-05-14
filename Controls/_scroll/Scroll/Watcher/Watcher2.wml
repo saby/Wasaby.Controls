@@ -1,0 +1,7 @@
+<Controls.event:Register name="stateChange" register="stateChange">
+    <ws:partial
+        template="{{_options.content}}"
+        scope="{{_options}}"
+        on:controlResize="_resizeHandler()"
+    />
+</Controls.event:Register>
