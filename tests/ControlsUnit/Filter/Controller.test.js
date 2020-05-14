@@ -804,7 +804,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(history) {
                assert.deepEqual(history.length, 15);
 
-               self._sourceController = { load: () => Deferred.fail() };
+               self._crudWrapper = { query: () => Deferred.fail() };
                Filter._private.getHistoryItems(self, 'TEST_HISTORY_ID').addCallback(function(hItems) {
                   assert.equal(hItems.length, 0);
 
@@ -840,7 +840,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             }
          };
          Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID_2');
-         assert.isOk(self._sourceController);
+         assert.isOk(self._crudWrapper);
          Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
          assert.isTrue(historySaveEventFired);
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {

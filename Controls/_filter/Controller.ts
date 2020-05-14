@@ -139,7 +139,7 @@ const _private = {
 
                result = new Deferred();
 
-               self._crudWrapper.query({ $_history: true })
+               self._crudWrapper.query({filter: { $_history: true }})
                   .then((res) => {
                      let historyResult;
                      recent = source.getRecent();
