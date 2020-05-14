@@ -275,11 +275,20 @@ define([
             delta: -1,
             displayedRanges: [[null, new Date(2000, 0)], [new Date(2005, 0), null]],
             result: 2000
+         }, {
+            year: new Date(2005, 0),
+            displayedRanges: [[null, new Date(2002, 0)], [new Date(2004, 0), null]],
+            chooseHalfyears: false,
+            chooseMonths: false,
+            chooseQuarters: false,
+            delta: -1,
+            result: 2004
          }].forEach(function(options) {
             it('should update year', function() {
                const sandbox = sinon.sandbox.create(),
                   component = calendarTestUtils.createComponent(PeriodLiteDialog.View, options);
                sandbox.stub(component, '_notify');
+               component._position = options.year;
                component._changeYear('event', options.delta);
 
                assert.equal(component._position.getFullYear(), options.result);
@@ -302,6 +311,13 @@ define([
          }, {
             year: new Date(2018, 0),
             displayedRanges: [[new Date(2018, 0), new Date(2020, 0)]],
+            delta: -1
+         }, {
+            year: new Date(2018, 0),
+            displayedRanges: [[new Date(2018, 0), new Date(2020, 0)], [new Date(2022,0), null]],
+            chooseHalfyears: false,
+            chooseMonths: false,
+            chooseQuarters: false,
             delta: -1
          }].forEach(function(options) {
             it('should not update year', function () {
