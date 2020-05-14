@@ -80,13 +80,10 @@ export class Controller {
       const nextItem = this._model.getNextByIndex(removedItemsIndex);
       const prevItem = this._model.getPrevByIndex(removedItemsIndex);
 
-      const nextKey = nextItem.getContents().getKey();
-      const prevKey = prevItem.getContents().getKey();
-
-      if (nextKey) {
-         this.setMarkedKey(nextKey);
-      } else if (prevKey) {
-         this.setMarkedKey(prevKey);
+      if (nextItem) {
+         this.setMarkedKey(nextItem.getContents().getKey());
+      } else if (prevItem) {
+         this.setMarkedKey(prevItem.getContents().getKey());
       } else {
          this.setMarkedKey(null);
       }
