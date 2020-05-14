@@ -273,9 +273,9 @@ define(
             });
 
             it('new templateOptions', function() {
-               dropdownController._depsDeferred = {};
+               dropdownController._loadItemsTempPromise = {};
                dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
-               assert.isNull(dropdownController._depsDeferred);
+               assert.isNull(dropdownController._loadItemsTempPromise);
                assert.isFalse(opened);
 
                dropdownController._open = function() {
@@ -634,14 +634,14 @@ define(
             });
          });
 
-         it('_private::requireTemplates', (done) => {
+         it('_private::loadItemsTemplates', (done) => {
             let dropdownController = getDropdownController(config);
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',
                rawData: []
             });
-            dropdown._Controller._private.requireTemplates(dropdownController, config).addCallback(() => {
-               assert.isTrue(dropdownController._depsDeferred.isReady());
+            dropdown._Controller._private.loadItemsTemplates(dropdownController, config).addCallback(() => {
+               assert.isTrue(dropdownController._loadItemsTempPromise.isReady());
                done();
             });
          });

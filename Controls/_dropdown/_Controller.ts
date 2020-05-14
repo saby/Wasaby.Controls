@@ -61,7 +61,6 @@ var _private = {
       const preparedItem = _private.prepareItem(item, self._options.keyProperty, self._source);
       self._notify('pinClick', [preparedItem]);
       self._setItems(null);
-      self._loadItemsPromise = null;
       self._open();
    },
 
@@ -102,9 +101,10 @@ var _private = {
           });
    },
 
-   _resetLoadPromises(self) {
+   resetLoadPromises(self) {
       self._loadMenuTempPromise = null;
       self._loadItemsPromise = null;
+      self._loadItemsTempPromisePromise = null;
    },
 
    getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
@@ -236,7 +236,6 @@ var _private = {
       };
       self._onClose = function(event, args) {
          self._isOpened = false;
-         _private._resetLoadPromises(self);
          self._notify('dropDownClose');
          if (typeof (options.close) === 'function') {
             options.close(args);
@@ -256,12 +255,12 @@ var _private = {
       }
    },
 
-   requireTemplates: function(self, options) {
-      if (!self._depsDeferred) {
+   loadItemsTemplates: function(self, options) {
+      if (!self._loadItemsTempPromise) {
          const templatesToLoad = _private.getItemsTemplates(self, options);
-         self._depsDeferred = mStubs.require(templatesToLoad);
+         self._loadItemsTempPromise = mStubs.require(templatesToLoad);
       }
-      return self._depsDeferred;
+      return self._loadItemsTempPromise;
    },
 
    loadMenuTemplates(self, options: object) {
@@ -273,11 +272,7 @@ var _private = {
                templatesToLoad.push(options[template]);
             }
          });
-         self._loadMenuTempPromise = new Promise((resolve) => {
-            mStubs.require(templatesToLoad).addCallback(() => {
-               resolve();
-            });
-         });
+         self._loadMenuTempPromise = mStubs.require(templatesToLoad);
       }
       return self._loadMenuTempPromise;
    },
@@ -419,7 +414,7 @@ var _private = {
 var _Controller = Control.extend({
    _template: template,
    _items: null,
-   _depsDeferred: null,
+   _loadItemsTempPromise: null,
 
    _beforeMount: function (options, context, receivedState) {
       let result;
@@ -469,7 +464,7 @@ var _Controller = Control.extend({
       }
 
       if (_private.templateOptionsChanged(newOptions, this._options)) {
-         this._depsDeferred = null;
+         this._loadItemsTempPromise = null;
          if (this._isOpened) {
             this._open();
          }
@@ -477,7 +472,6 @@ var _Controller = Control.extend({
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
           !isEqual(newOptions.navigation, this._options.navigation) ||
           !isEqual(newOptions.filter, this._options.filter)) {
-
          if (this._sourceController && !this._sourceController.isLoading()) {
             this._source = null;
             this._sourceController = null;
@@ -487,6 +481,7 @@ var _Controller = Control.extend({
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
+            _private.resetLoadPromises(this);
             return _private.loadItems(this, newOptions).addCallback((items) => {
                if (items && this._isOpened) {
                   this._open();
@@ -505,13 +500,13 @@ var _Controller = Control.extend({
       }
    },
 
-   _loadItems(isLoadOnClick) {
+   _loadItems() {
       if (!this._loadItemsPromise || this._loadItemsPromise.resolved && !this._items) {
          if (this._options.source && !this._items) {
             this._loadItemsPromise = _private.loadItems(this, this._options);
          } else if (this._items) {
             // Обновляем данные в источнике, нужно для работы истории
-            this._setItems(this._items, isLoadOnClick);
+            this._setItems(this._items);
             this._loadItemsPromise = Promise.resolve();
          }
       }
@@ -519,12 +514,8 @@ var _Controller = Control.extend({
    },
 
    loadDependencies(): void {
-      _private._resetLoadPromises(this);
-      _private.loadMenuTemplates(this, this._options);
-      this._loadItems(false);
-
-      return Promise.all([this._loadMenuTempPromise, this._loadItemsPromise]).then( () => {
-         _private.requireTemplates(this, this._options);
+      return Promise.all([_private.loadMenuTemplates(this, this._options), this._loadItems(false)]).then( () => {
+         return _private.loadItemsTemplates(this, this._options);
        });
    },
 
@@ -532,18 +523,15 @@ var _Controller = Control.extend({
       if (this._options.readOnly) {
          return;
       }
-      _private.loadMenuTemplates(this, this._options);
-      this._loadItems(true);
 
-      return Promise.all([this._loadMenuTempPromise, this._loadItemsPromise]).then( () => {
+      this._loadItemsTempPromise = null;
+      return this.loadDependencies().then( () => {
          const count = this._items.getCount();
 
          if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
             let config = _private.getPopupOptions(this, popupOptions);
-            _private.requireTemplates(this, this._options).addCallback(() => {
-               this._isOpened = true;
-               this._children.DropdownOpener.open(config, this);
-            });
+            this._isOpened = true;
+            this._children.DropdownOpener.open(config, this);
          } else if (count === 1) {
             this._notify('selectedItemsChanged', [
                [this._items.at(0)]
@@ -596,11 +584,10 @@ var _Controller = Control.extend({
                query: items.clone()
             }
          });
+      } else {
+         this._loadItemsPromise = null;
       }
       this._items = items;
-      if (!isNeedSaveDepsDeferred) {
-         this._depsDeferred = null;
-      }
    },
 
    _hasHistory(): boolean {
