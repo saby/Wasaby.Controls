@@ -503,7 +503,7 @@ let
          var
             self = this,
             def;
-
+            console.log('BM:', options);
          if (!constants.isServerSide) {
              this._enableScrollbar = getEnableScrollbar();
          }
