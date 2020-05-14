@@ -282,8 +282,9 @@ define(
                dropdownController._items = itemsRecords.clone();
                dropdownController._source = 'testSource';
                dropdownController._sourceController = {hasMoreData: ()=>{}};
-               dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
-               assert.isTrue(opened);
+               dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined }).then(function() {
+                  assert.isTrue(opened);
+               });
             });
 
             it('new source', () => {
@@ -349,19 +350,16 @@ define(
                dropdownController._items = itemsRecords.clone();
                dropdownController._isOpened = true;
                dropdownController._sourceController = { hasMoreData: () => {}, isLoading: () => {} };
-               return new Promise((resolve) => {
-                  dropdownController._beforeUpdate({
-                     selectedKeys: [2],
+               dropdownController._beforeUpdate({
+                  selectedKeys: [2],
+                  keyProperty: 'id',
+                  source: new sourceLib.Memory({
                      keyProperty: 'id',
-                     source: new sourceLib.Memory({
-                        keyProperty: 'id',
-                        data: updatedItems
-                     })
-                  }).addCallback(() => {
-                     assert.equal(dropdownController._items.getCount(), updatedItems.length);
-                     assert.isTrue(opened);
-                     resolve();
-                  });
+                     data: updatedItems
+                  })
+               }).addCallback(() => {
+                  assert.equal(dropdownController._items.getCount(), updatedItems.length);
+                  assert.isTrue(opened);
                });
             });
 
@@ -583,34 +581,39 @@ define(
                open: () => { opened = true;}
             };
             dropdownController._sourceController = { hasMoreData: () => false, load: () => Deferred.success(itemsRecords.clone()) };
-            dropdownController._open();
-            assert.isTrue(opened);
+            dropdownController._open().then(function() {
+               assert.isTrue(opened);
+            });
 
             // items is empty recordSet
             opened = false;
             dropdownController._items.clear();
-            dropdownController._open();
-            assert.isFalse(opened);
+            dropdownController._open().then(function() {
+               assert.isFalse(opened);
+            });
 
             // items = null
             opened = false;
             dropdownController._items = null;
-            dropdownController._open();
-            assert.isFalse(opened);
+            dropdownController._open().then(function() {
+               assert.isFalse(opened);
+            });
 
             // items's count = 1 + emptyText
             opened = false;
             dropdownController._items = new collection.RecordSet({keyProperty: 'id', rawData: [{id: '1', title: 'first'}]});
             dropdownController._options.emptyText = 'Not selected';
-            dropdownController._open();
-            assert.isTrue(opened);
+            dropdownController._open().then(function() {
+               assert.isTrue(opened);
+            });
 
             // update items in _menuSource
             const newItems = new collection.RecordSet({keyProperty: 'id', rawData: [{id: '1', title: 'first'}]});
             dropdownController._menuSource = null;
             dropdownController._items = newItems;
-            dropdownController._open();
-            assert.deepEqual(dropdownController._menuSource.getData().query.getRawData(), newItems.getRawData());
+            dropdownController._open().then(function() {
+               assert.deepEqual(dropdownController._menuSource.getData().query.getRawData(), newItems.getRawData());
+            });
          });
 
          it('_private::requireTemplates', (done) => {
@@ -689,8 +692,9 @@ define(
                   selectedItems = data[0];
                }
             };
-            dropdownController._open();
-            assert.deepEqual(selectedItems, [item.at(0)]);
+            dropdownController._open().then(function() {
+               assert.deepEqual(selectedItems, [item.at(0)]);
+            });
          });
 
          it('_open lazyLoad', () => {
@@ -901,6 +905,10 @@ define(
                   return opened;
                }
             };
+
+            dropdownController._open = function() {
+               opened = true;
+            };
             let stopped;
             let event = {stopPropagation: () => {stopped = true;}};
             dropdownController._clickHandler(event);
@@ -936,8 +944,9 @@ define(
                }
             };
 
-            dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
+            dropdownController.openMenu({ testOption: 'testValue' }).then(function() {
+               assert.equal(openConfig.testOption, 'testValue');
+            });
 
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',
@@ -949,8 +958,9 @@ define(
             openConfig = null;
             dropdownController._options.footerTemplate = {};
 
-            dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
+            dropdownController.openMenu({ testOption: 'testValue' }).then(function() {
+               assert.equal(openConfig.testOption, 'testValue');
+            });
          });
 
          it('closeMenu', () => {
