@@ -315,13 +315,15 @@ export default class View extends Control<IViewOptions> {
         }
         const itemKey = contents?.getKey();
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
-        const onResult = this._itemActionsMenuResultHandler.bind(this);
-        const onClose = this._itemActionsMenuCloseHandler.bind(this);
-        this._collection.setActiveItem(item);
-        Sticky.openPopup(menuConfig).then((popupId) => {
-            this._itemActionsMenuId = popupId;
-            menuConfig.eventHandlers = {onResult, onClose};
-        });
+        if (menuConfig) {
+            const onResult = this._itemActionsMenuResultHandler.bind(this);
+            const onClose = this._itemActionsMenuCloseHandler.bind(this);
+            this._collection.setActiveItem(item);
+            Sticky.openPopup(menuConfig).then((popupId) => {
+                this._itemActionsMenuId = popupId;
+                menuConfig.eventHandlers = {onResult, onClose};
+            });
+        }
     }
 
     /**
