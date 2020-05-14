@@ -507,7 +507,8 @@ var _Controller = Control.extend({
 
    _loadItems(isLoadOnClick) {
       if (!this._loadItemsPromise) {
-         if (this._options.source && !this._items) {
+         const itemsIsEmpty = this._items && !this._items.getCount();
+         if (this._options.source && (!this._items || itemsIsEmpty)) {
             this._loadItemsPromise = _private.loadItems(this, this._options);
          } else if (this._items) {
             // Обновляем данные в источнике, нужно для работы истории
