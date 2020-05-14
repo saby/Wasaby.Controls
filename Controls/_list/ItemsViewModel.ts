@@ -604,19 +604,11 @@ var ItemsViewModel = BaseViewModel.extend({
      * метод this.setItems() и this._display ещё не установлен после последнего сброса в null.
      */
     each(callback: collection.EnumeratorCallback<Record>, context?: object): void {
+        if (!this._display) {
+            console.log('listViewModel.each() _display methods should not call before _display (re-)initialization');
+        }
         if (this._display) {
             this._display.each(callback, context);
-        } else {
-            this.reset();
-            while (this.isEnd()) {
-                const index = this.getCurrentIndex();
-                callback.call(
-                    context,
-                    this.getCurrent(),
-                    index
-                );
-                this.goToNext();
-            }
         }
     },
 
@@ -627,18 +619,7 @@ var ItemsViewModel = BaseViewModel.extend({
      * метод this.setItems() и this._display ещё не установлен после последнего сброса в null.
      */
     find(predicate: (item: Model) => boolean): Model {
-        if (this._display) {
-            return this._display.find(predicate);
-        } else {
-            this.reset();
-            while (this.isEnd()) {
-                const current = this.getCurrent();
-                if (predicate(current)) {
-                    return current;
-                }
-                this.goToNext();
-            }
-        }
+        return this._display ? this._display.find(predicate) : null;
     },
 
     // New Model compatibility
