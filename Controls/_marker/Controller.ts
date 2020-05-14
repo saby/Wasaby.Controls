@@ -30,10 +30,7 @@ export class Controller {
     */
    // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать, хотя это не одно и тоже
    setMarkedKey(key: TKey): void {
-      if (key === undefined
-         || this._markedKey === key
-         // TODO нужно уточнить для чего это, так как оно не дает сбросить маркер
-         /*|| this._markerVisibility === Visibility.OnActivated && key === null*/) {
+      if (key === undefined || this._markedKey === key) {
          return;
       }
 
@@ -92,7 +89,8 @@ export class Controller {
 
    private _setMarkerOnFirstItem(): TKey {
       // если модель пустая, то не на что ставить маркер
-      if (!this._model.getCount()) {
+      // если onactivated режим и маркер вручную не проставили, то не ставим его на первый элемент
+      if (!this._model.getCount() || this._markerVisibility === Visibility.OnActivated && this._markedKey === undefined) {
          return undefined;
       }
 
