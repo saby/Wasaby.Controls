@@ -2,7 +2,7 @@ import cExtend = require('Core/core-simpleExtend');
 import entity = require('Types/entity');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
 import dateUtils = require('Controls/Utils/Date');
-   
+
 
    /**
     * Модель для контрола 'Controls/input:Date'.
@@ -64,7 +64,7 @@ import dateUtils = require('Controls/Utils/Date');
          this._mask = options.mask;
          this._value = options.value;
          this._lastValue = this._value;
-         this._textValue = this._stringValueConverter.getStringByValue(options.value);
+         this._textValue = this._stringValueConverter.getStringByValue(options.value, options.mask, true);
       },
 
       /**
