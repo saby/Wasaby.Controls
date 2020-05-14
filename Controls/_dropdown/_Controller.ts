@@ -506,7 +506,7 @@ var _Controller = Control.extend({
    },
 
    _loadItems(isLoadOnClick) {
-      // if (!this._loadItemsPromise) {
+      if (!this._loadItemsPromise || this._loadItemsPromise.resolved && !this._items) {
          if (this._options.source && !this._items) {
             this._loadItemsPromise = _private.loadItems(this, this._options);
          } else if (this._items) {
@@ -514,7 +514,7 @@ var _Controller = Control.extend({
             this._setItems(this._items, isLoadOnClick);
             this._loadItemsPromise = Promise.resolve();
          }
-      // }
+      }
       return this._loadItemsPromise;
    },
 
