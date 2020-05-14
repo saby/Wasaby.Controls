@@ -127,7 +127,6 @@ define([
          lv._listModel.setMarkedKey(1);
          assert.equal(lv._listModel.getMarkedKey(), 1);
          lv._beforeUpdate(cfg);
-         assert.equal(lv._listModel.getMarkedKey(), 2);
 
          model = new lists.ListViewModel({
             items: testData2,

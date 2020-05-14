@@ -1216,20 +1216,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this.getPrevious(item);
     }
 
-    // TODO
-    /*getNextByIndex(index: number): T {
-        const itemsCount = this.getCount();
-        while (index < itemsCount) {
-            const nextItem = this.at(index);
-            if (nextItem.get) {
-                return nextItem;
-            }
-            index++;
-        }
+    getNextByIndex(index: number): T {
+        return this.at(index + 1);
     }
     getPrevByIndex(index: number): T {
-
-    }*/
+        return this.at(index - 1);
+    }
 
     /**
      * Устанавливает текущим следующий элемент

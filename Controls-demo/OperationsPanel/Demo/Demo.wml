@@ -62,6 +62,7 @@
                                                filter="{{_moveDialogFilter}}"
                                                multiSelectVisibility="visible"
                                                parentProperty="Раздел"
+                                               markedKey="{{_markedKeyMoveDialog}}"
                                                expandedItems="{{_expandedItemsMoveDialog}}"
                                                showRoot="{{true}}"
                                                source="{{_moverSource}}"

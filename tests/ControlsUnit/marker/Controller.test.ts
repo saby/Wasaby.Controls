@@ -1,4 +1,3 @@
-/*
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
@@ -17,20 +16,31 @@ describe('Controls/marker/Controller', () => {
             if (it.id === key) {
                it.marked = status;
             }
-         })
+         });
       },
       getItemBySourceKey(key: number): object {
          return this.items.find((it) => it.id === key);
       },
-      getNextItemKey(key: number): number {
-         key++;
-         return key > 3 ? 1 : key;
+      getNextByKey(key: number): object {
+         return {
+            getContents(): object {
+               return {
+                  getKey(): number { return key + 1; }
+               };
+            }
+         };
       },
-      getPreviousItemKey(key: number): number {
-         return --key;
+      getPrevByKey(key: number): object {
+         return {
+            getContents(): object {
+               return {
+                  getKey(): number { return key - 1; }
+               };
+            }
+         };
       },
       getFirstItem(): object {
-         return {id: 1, marked: false, getId() { return this.id; }};
+         return {id: 1, marked: false, getKey(): number { return this.id; }};
       },
       getCount(): number {
          return this.items.length;
@@ -99,7 +109,7 @@ describe('Controls/marker/Controller', () => {
 
          assert.equal(controller._markedKey, 1);
          assert.deepEqual(model.items, [
-            {id: 1, marked: false},
+            {id: 1, marked: true},
             {id: 2, marked: false},
             {id: 3, marked: false}
          ]);
@@ -181,4 +191,3 @@ describe('Controls/marker/Controller', () => {
       ]);
    });
 });
-*/
