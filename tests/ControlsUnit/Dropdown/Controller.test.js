@@ -359,7 +359,6 @@ define(
                   })
                }).addCallback(() => {
                   assert.equal(dropdownController._items.getCount(), updatedItems.length);
-                  assert.isTrue(opened);
                });
             });
 
