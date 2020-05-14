@@ -37,8 +37,7 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
 
          layer._beforeUpdate({showContent: true});
          assert.isFalse(layer._shouldScrollToBottom);
-         assert.isTrue(layer._showContent);
-         assert.isNull(layer._pendingShowContent);
+         assert.isTrue(layer._pendingShowContent);
 
          layer._showContent = false;
          layer._beforeUpdate(optionsReverseList);
