@@ -64,7 +64,6 @@
    border-left: @columnscroll_separator_thickness_grid solid @columnscroll_separator_color_grid;
 }
 
-.ws-is-ie,
 .ws-is-mobile-safari,
 .ws-is-desktop-safari {
    // stack of z-index on safari and ie work differently, then in chrome and ff
@@ -97,10 +96,4 @@
       //https://stackoverflow.com/questions/37696746/ios-not-respecting-z-index-with-webkit-overflow-scrolling
       transform: translateX(0);
    }
-}
-
-// ie fix for percentage width and subpixel
-// https://online.sbis.ru/opendoc.html?guid=1b3f1c99-6d0c-47c2-af1b-621d81c6bab9
-.ws-is-ie .controls-MasterDetail_master {
-   width: 27.1%;
 }
