@@ -567,11 +567,11 @@ var _Controller = Control.extend({
    },
 
    _mouseEnterHandler: function() {
-      this._loadingTimer = setTimeout(this.loadDependencies.bind(this), PRELOAD_DEPENDENCIES_HOVER_DELAY);
+      this._loadDependenciesTimer = setTimeout(this.loadDependencies.bind(this), PRELOAD_DEPENDENCIES_HOVER_DELAY);
    },
 
    _mouseLeaveHandler: function() {
-      clearTimeout(this._loadingTimer);
+      clearTimeout(this._loadDependenciesTimer);
    },
 
    _beforeUnmount: function() {
