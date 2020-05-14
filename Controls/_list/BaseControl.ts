@@ -329,15 +329,16 @@ const _private = {
         }
         return resDeferred;
     },
-    canStartDragNDrop(domEvent: any, cfg: any): boolean {
-        return (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
+    canStartDragNDrop(domEvent: any, cfg: any, isTouch: boolean): boolean {
+        return !isTouch && 
+            (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
             cfg.itemsDragNDrop &&
             !(domEvent.nativeEvent.button) &&
             !cfg.readOnly &&
             !domEvent.target.closest('.controls-DragNDrop__notDraggable');
     },
     startDragNDrop(self, domEvent, itemData): void {
-        if (_private.canStartDragNDrop(domEvent, self._options)) {
+        if (_private.canStartDragNDrop(domEvent, self._options, self._context?.isTouch?.isTouch)) {
             const key = self._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
 
             //Support moving with mass selection.
