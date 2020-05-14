@@ -1262,16 +1262,6 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>): void {
         const contents = item?.getContents();
-        // TODO Проверить. Похоже, эти сложные расчёты нужны были для того,
-        //  чтобы определить HTML контейнер при клике на экшн в выпадающем меню
-        // self._listViewModel.getSourceIndexByItem(item)
-        // const itemIndex = listModel.getSourceIndexByItem(itemData);
-        // const startIndex = VirtualScrollController.getStartIndex(self._listViewModel);
-        // const itemContainer = clickEvent.target ||
-        //     self._container.querySelector('.controls-ListView__itemV').parentNode.children
-        //         .filter((item: HTMLElement) => (
-        //             item.className.includes('controls-ListView__itemV'
-        //         ))[itemIndex - startIndex];
 
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
@@ -1807,7 +1797,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _template: BaseControlTpl,
     iWantVDOM: true,
-    _isActiveByClick: false,
 
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -2603,7 +2592,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             actionCaptionPosition: options.actionCaptionPosition,
             itemActionsClass: options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisibility: editingConfig?.toolbarVisibility
+            editingToolbarVisible: editingConfig?.toolbarVisibility
         });
         if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {

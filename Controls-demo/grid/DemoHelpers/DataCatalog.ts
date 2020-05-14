@@ -14,7 +14,7 @@ import * as itemCountr from 'wml!Controls-demo/grid/resources/CellTemplates/Coun
 import * as resTpl from 'wml!Controls-demo/grid/EditInPlace/EditingCell/resultsTpl';
 import * as notScrollableCell from 'wml!Controls-demo/grid/ColumnScroll/DragScrolling/notScrollableCell';
 import * as notDraggableCell from 'wml!Controls-demo/grid/ColumnScroll/DragScrolling/notDraggableCell';
-
+import * as dragScrollPopulationCell from 'wml!Controls-demo/grid/ColumnScroll/DragScrolling/populationCell';
 
 
 const resultCellTpl = numberResultTpl;
@@ -353,7 +353,8 @@ function getCountriesStats() {
             {
                 displayProperty: 'population',
                 width: 'max-content',
-                compatibleWidth: '100px'
+                compatibleWidth: '100px',
+                template: dragScrollPopulationCell
             },
             {
                 displayProperty: 'square',

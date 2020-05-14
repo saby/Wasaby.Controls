@@ -1,20 +1,20 @@
 import rk = require('i18n!Controls');
-import { IMeasurer } from './interface/IMeasurer';
-import { IItemAction, ShowType } from './interface/IItemAction';
-import { ISwipeConfig, ItemActionsSize } from './interface/ISwipeConfig';
-import { ISwipeControlOptions } from './interface/ISwipeControl';
-import { getActualActions} from './SwipeUtils';
+import { ISwipeConfig } from 'Controls/display';
+
+import { IMeasurer } from '../interface/IMeasurer';
+import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
+import { Utils } from '../Utils';
 
 const MAX_ACTIONS_COUNT = 3;
 const HEIGHT_LOWER_BOUND_WITH_TITLE = 58;
 const HEIGHT_LOWER_BOUND_WITHOUT_TITLE = 38;
 
-type ActionCaptionPosition = Exclude<ISwipeControlOptions['actionCaptionPosition'], 'right'>;
+type ActionCaptionPosition = Exclude<TActionCaptionPosition, 'right'>;
 
 function getItemActionsSize(
    rowHeight: number,
    actionCaptionPosition: ActionCaptionPosition
-): ItemActionsSize {
+): TItemActionsSize {
    if (actionCaptionPosition !== 'none') {
       return rowHeight < HEIGHT_LOWER_BOUND_WITH_TITLE ? 'm' : 'l';
    } else {
@@ -22,23 +22,24 @@ function getItemActionsSize(
    }
 }
 
-const HorizontalMeasurer: IMeasurer = {
+export const horizontalMeasurer: IMeasurer = {
    getSwipeConfig(
       actions: IItemAction[],
       rowHeight: number,
       actionCaptionPosition: ActionCaptionPosition,
-      menuButtonVisibility: 'visible'|'adaptive'
+      menuButtonVisibility?: 'visible'|'adaptive'
    ): ISwipeConfig {
 
-      let itemActions = getActualActions(actions);
+      let itemActions = Utils.getActualActions(actions);
 
       if (itemActions.length > MAX_ACTIONS_COUNT || menuButtonVisibility === 'visible') {
          itemActions = itemActions.slice(0, MAX_ACTIONS_COUNT);
          itemActions.push({
+            id: null,
             icon: 'icon-SwipeMenu',
             title: rk('Ещё'),
             _isMenu: true,
-            showType: ShowType.TOOLBAR
+            showType: TItemActionShowType.TOOLBAR
          });
       }
 
@@ -64,5 +65,3 @@ const HorizontalMeasurer: IMeasurer = {
       return !action.icon || (actionCaptionPosition !== 'none' && !!action.title);
    }
 };
-
-export default HorizontalMeasurer;

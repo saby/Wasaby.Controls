@@ -776,6 +776,7 @@ var
         setRoot: function(root) {
             this._expandedItems = [];
             this._display.setRoot(root);
+            this._options.root = root;
             this._nextModelVersion();
         },
         setNodeProperty(nodeProperty: string): void {

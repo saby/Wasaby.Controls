@@ -1737,6 +1737,11 @@ var
             return this._model ? this._model.getIndexBySourceItem(item) : undefined;
         },
 
+        // New Model compatibility
+        setEventRaising(enabled: boolean, analyze: boolean): void {
+            return this._model.setEventRaising(enabled, analyze);
+        },
+
         at(index: number): Model {
             return this._model.at(index);
         },

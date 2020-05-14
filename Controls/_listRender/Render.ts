@@ -23,7 +23,7 @@ export interface IRenderChildren {
 }
 
 export interface ISwipeEvent extends Event {
-    direction: string;
+    direction: 'left'|'right'|'top'|'bottom';
 }
 
 export default class Render extends Control<IRenderOptions> {

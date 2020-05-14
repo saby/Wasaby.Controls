@@ -124,6 +124,16 @@ export interface IItemActionsTemplateConfig {
     itemActionsClass?: string;
 }
 
+export interface IContextMenuConfig {
+    items?: RecordSet;
+    groupTemplate?: TemplateFunction|string;
+    groupProperty?: string;
+    itemTemplate?: TemplateFunction|string;
+    footerTemplate?: TemplateFunction|string;
+    headerTemplate?: TemplateFunction|string;
+    iconSize?: string;
+}
+
 export interface ISwipeConfig {
     itemActionsSize?: 's'|'m'|'l';
     itemActions?: {
@@ -525,7 +535,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @see getGroup
      * @see setGroup
      */
-    protected _$group: GroupFunction<S, T>;
+    protected _$
+        : GroupFunction<S, T>;
 
     /**
      * @cfg {
@@ -590,7 +601,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$hasMoreData: boolean;
 
-    protected _$contextMenuConfig: any;
+    protected _$contextMenuConfig: IContextMenuConfig;
 
     protected _$compatibleReset: boolean;
 
@@ -706,7 +717,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     /**
      * Анимация свайпа: открытие или закрытие меню опций
      */
-    protected _getActionsSwipeAnimation: ANIMATION_STATE;
+    protected _swipeAnimation: ANIMATION_STATE;
 
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
@@ -2214,7 +2225,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     // yet not used anywhere
-    getContextMenuConfig(): unknown {
+    getContextMenuConfig(): IContextMenuConfig {
         return this._$contextMenuConfig;
     }
 
@@ -2319,7 +2330,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * Может быть, стоит объединить с _swipeConfig
      */
     setSwipeAnimation(animation: ANIMATION_STATE): void {
-        this._getActionsSwipeAnimation = animation;
+        this._swipeAnimation = animation;
     }
 
     /**
@@ -2327,7 +2338,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * Может быть, стоит объединить с _swipeConfig
      */
     getSwipeAnimation(): ANIMATION_STATE {
-        return this._getActionsSwipeAnimation;
+        return this._swipeAnimation;
     }
 
     appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object): void {
