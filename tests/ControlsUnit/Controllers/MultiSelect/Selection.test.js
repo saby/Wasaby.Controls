@@ -200,9 +200,11 @@ define([
             excludedKeys: [4, 5]
          });
          selectionInstance = new operations.Selection(cfg);
+         const oldKeys = selectionInstance.selectedKeys;
          selectionInstance.remove([2, 3, 5, 7]);
+         const newKeys = selectionInstance.selectedKeys;
          selectionInstance.updateSelectionForRender();
-
+         assert.isTrue(oldKeys !== newKeys);
          assert.deepEqual([1], selectionInstance.selectedKeys, 'Constructor: wrong field values');
          assert.deepEqual([4], selectionInstance.excludedKeys, 'Constructor: wrong field values');
          assert.deepEqual({1: true}, selectionInstance._listModel._selectedKeys);

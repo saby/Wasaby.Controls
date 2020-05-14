@@ -15,7 +15,7 @@ export interface IOptions {
    selectedKeys?: TKeys,
    excludedKeys?: TKeys,
    selectionStrategy: FlatSelectionStrategy
-};
+}
 
 /**
  * @class Controls/_operations/MultiSelector/Selection
@@ -57,7 +57,7 @@ export default class Selection {
    }
 
    set selectedKeys(keys: TKeys): void {
-      this._selectedKeys = keys;
+      this._selectedKeys = keys.slice();
    }
 
    get excludedKeys(): TKeys {
@@ -65,7 +65,7 @@ export default class Selection {
    }
 
    set excludedKeys(keys: TKeys): void {
-      this._excludedKeys = keys;
+      this._excludedKeys = keys.slice();
    }
 
    constructor(options: IOptions): void {
@@ -107,8 +107,8 @@ export default class Selection {
     * @param {Array} keys Keys to remove.
     */
    remove(keys: TKeys): void {
-      this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
-      this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
+      this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys.slice(), keys);
+      this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys.slice(), keys);
    }
 
    /**
