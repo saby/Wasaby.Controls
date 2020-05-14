@@ -156,6 +156,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             action,
             clickEvent,
             false,
+            undefined,
             this._options.theme
         );
     }
