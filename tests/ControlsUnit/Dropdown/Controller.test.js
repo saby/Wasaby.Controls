@@ -275,7 +275,7 @@ define(
             it('new templateOptions', function() {
                dropdownController._loadItemsTempPromise = {};
                dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
-               assert.isNull(dropdownController._loadItemsTempPromise);
+               assert.isNull(dropdownController._loadMenuTempPromise);
                assert.isFalse(opened);
 
                dropdownController._open = function() {
