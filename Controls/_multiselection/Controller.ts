@@ -57,8 +57,8 @@ export class Controller {
 
       const oldSelection = clone(this._selection);
       if (selectionChanged) {
-         this._selectedKeys = options.selectedKeys;
-         this._excludedKeys = options.excludedKeys;
+         this._selectedKeys = options.selectedKeys.slice();
+         this._excludedKeys = options.excludedKeys.slice();
          this._updateModel(this._selection);
       } else if (itemsChanged || modelChanged) {
          this._updateModel(this._selection);
