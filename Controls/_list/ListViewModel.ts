@@ -12,7 +12,6 @@ import { Model } from 'Types/entity';
 import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
-import {detection} from 'Env/Env';
 import {IItemAction} from 'Controls/itemActions';
 
 const ITEMACTIONS_POSITION_CLASSES = {
@@ -90,28 +89,6 @@ var _private = {
         const right = `controls-ListView__groupContent__rightPadding_${current.itemPadding.right}_theme-${theme}`;
         const left =  `controls-ListView__groupContent__leftPadding_${current.hasMultiSelect ? 'withCheckboxes' : current.itemPadding.left}_theme-${theme}`;
         return {right, left};
-    },
-    // itemActions classes only For Edge
-    getItemActionsClasses(itemData, itemActionsPosition, actionMenuIsShown, theme): string {
-        const th = `_theme-${theme}`;
-        let classList = 'controls-itemActionsV' + ' controls-itemActionsV_full_item_size';
-        classList += itemData.isActive() && actionMenuIsShown ? ' controls-itemActionsV_visible' : '';
-        classList += itemData.isSwiped() ? ' controls-itemActionsV_swiped' : '';
-        classList += itemData.itemActionsColumnScrollDraw ? ' controls-itemActionsV_columnScrollDraw' : '';
-        return classList;
-    },
-    getItemActionsWrapperClasses(itemData, itemActionsPosition, highlightOnHover, style,
-        itemActionsClass, itemPadding, toolbarVisibility, theme): string {
-        const th = `_theme-${theme}`;
-        let classList = 'controls-itemActionsV__wrapper';
-        classList += '  controls-itemActionsV__wrapper_absolute';
-        classList += itemData.isEditing ? ` controls-itemActionsV_editing${th}` : '';
-        classList += itemData.isEditing && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
-        classList += ` controls-itemActionsV_${itemActionsPosition}${th}`;
-        classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
-        classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') + th : '';
-        classList += _private.getItemActionsContainerPaddingClass(itemActionsClass, itemPadding, theme);
-        return classList;
     },
 
     getItemActionsContainerPaddingClass(classes: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
@@ -261,10 +238,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
 
-        // itemActionsClassesForEdge
-        itemsModelCurrent.isIE12 = detection.isIE12;
-        itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
-        itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
         itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
 
         // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
