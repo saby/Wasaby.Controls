@@ -118,6 +118,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
    protected _colorState: number[];
    private _colors: string[];
    private _numSectors: number = 10;
+   private _percentageDifferences: number[] = [];
 
    private _checkData(opts: IStateIndicatorOptions): void {
       let sum = 0;
@@ -159,6 +160,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       let itemValue;
       let itemNumSectors;
       let excess;
+      this._percentageDifferences = [];
 
       if (opts.scale <= 0 || opts.scale > maxPercentValue) {
          correctScale = defaultScaleValue;
@@ -170,6 +172,8 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
             // convert to number, ignore negative ones
             itemValue = Math.max(0, + opts.data[i].value || 0);
             itemNumSectors = Math.floor(itemValue / sectorSize);
+            const percentageDeviation = itemValue - sectorSize * itemNumSectors;
+            this._percentageDifferences.push(percentageDeviation);
             if (itemValue > 0 && itemNumSectors === 0) {
                // if state value is positive and corresponding sector number is 0, increase it by 1 (look specification)
                itemNumSectors = 1;
@@ -193,12 +197,28 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       opts.data.forEach((item) => {
          sum += item.value;
       });
-
-      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то прибавим сектор к наибольшему значению.
+      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то будем прибавлять сектор к такому элементу, у которого процентное отклонение больше остальных.
       if (totalSectorsUsed < _numSectors && sum === maxPercentValue) {
-         colorValues.splice(longestValueStart, 0,  colorValues[longestValueStart]);
+         while (totalSectorsUsed !== _numSectors) {
+            const maxDeviationIndex = this._getMaxPercentageDeviationIndex();
+            colorValues.splice(colorValues.indexOf(maxDeviationIndex + 1), 0,  maxDeviationIndex + 1);
+            totalSectorsUsed++;
+            this._percentageDifferences[maxDeviationIndex] -= sectorSize;
+         }
       }
       return colorValues;
+   }
+
+   private _getMaxPercentageDeviationIndex(): number {
+      let maxDeviation = this._percentageDifferences[0];
+      let maxDeviationIndex = 0;
+      for (let i = 1; i < this._percentageDifferences.length; i++) {
+         if (this._percentageDifferences[i] > maxDeviation) {
+            maxDeviation = this._percentageDifferences[i];
+            maxDeviationIndex = i;
+         }
+      }
+      return maxDeviationIndex;
    }
 
    private _applyNewState(opts: IStateIndicatorOptions): void {

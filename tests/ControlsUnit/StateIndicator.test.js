@@ -108,7 +108,7 @@ define([
          opts = {scale:5, data:[{value: 34, className:'', title:''}, {value: 33, className:'', title:''}, {value: 33, className:'', title:''}]};
          colors = psi._setColors(opts.data);
          data = psi._calculateColorState(opts,colors,numSectors);
-         assert.deepEqual([1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3], data, 'calculateColorState 20 3 test case 5: WrongResult');
+         assert.deepEqual([1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3], data, 'calculateColorState 20 3 test case 5: WrongResult');
 
          opts = {scale:5, data:[{value: 50, className:'', title:''}, {value: 25, className:'', title:''}, {value: 25, className:'', title:''}]};
          colors = psi._setColors(opts.data);
@@ -124,6 +124,21 @@ define([
          colors = psi._setColors(opts.data);
          data = psi._calculateColorState(opts,colors,numSectors);
          assert.deepEqual([1,1,2,2,2,2,3,4,4,4,4,4,4], data, 'calculateColorState 20 3 test case 1: WrongResult');
+
+      });
+      it('simple calculateColorState: 5 sectors with 100%', function() {
+         var psi, data, opts, colors;
+         psi = new progress.StateIndicator({});
+
+         opts = {scale:20, data:[{value: 34, className:'', title:''}, {value: 33, className:'', title:''}, {value: 33, className:'', title:''}]};
+         colors = psi._setColors(opts.data);
+         data = psi._calculateColorState(opts,colors,5);
+         assert.deepEqual([1,1,2,2,3], data);
+
+         opts = {scale:20, data:[{value: 33, className:'', title:''}, {value: 34, className:'', title:''}, {value: 33, className:'', title:''}]};
+         colors = psi._setColors(opts.data);
+         data = psi._calculateColorState(opts,colors,5);
+         assert.deepEqual([1,1,2,2,3], data);
 
       });
    })
