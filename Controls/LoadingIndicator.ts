@@ -159,6 +159,11 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         } else {
             this._zIndex = POPUP_BASE_ZINDEX - 1;
         }
+
+        // глобальный индикатор всегда делаем с высоким z-индексом 1000000
+        if (this.isGlobal) {
+            this._zIndex = null;
+        }
     }
 
     _showHandler(event: SyntheticEvent<Event>, config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {
