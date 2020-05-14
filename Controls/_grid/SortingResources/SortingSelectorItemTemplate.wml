@@ -2,12 +2,7 @@
     <div class="controls-SortingSelector_arrow_separator_theme-{{_options.theme}}"></div>
     <div class="controls-SortingSelector_arrow_spacing_theme-{{_options.theme}}
                 controls-SortingSelector_arrow_unselected_theme-{{_options.theme}}">
-        <ws:if data="{{sortValue === 'DESC'}}">
-            <ws:partial attr:class="controls-SortingSelector_arrow_theme-{{_options.theme}}" value="DESC" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
-        </ws:if>
-        <ws:else>
-            <ws:partial  attr:class="controls-SortingSelector_arrow_theme-{{_options.theme}}" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
-        </ws:else>
+            <ws:partial attr:class="controls-SortingSelector_arrow_theme-{{_options.theme}}" value="{{sortValue}}" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
     </div>
 </ws:template>
 <ws:partial template="Controls/dropdown:ItemTemplate"
