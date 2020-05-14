@@ -477,11 +477,13 @@ var _Controller = Control.extend({
             this._sourceController = null;
          }
 
+         if (newOptions.source !== this._options.source) {
+            _private.resetLoadPromises(this);
+         }
          if (newOptions.lazyItemsLoading && !this._isOpened) {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
-            _private.resetLoadPromises(this);
             return _private.loadItems(this, newOptions).addCallback((items) => {
                if (items && this._isOpened) {
                   this._open();
@@ -514,7 +516,7 @@ var _Controller = Control.extend({
    },
 
    loadDependencies(): void {
-      return Promise.all([_private.loadMenuTemplates(this, this._options), this._loadItems(false)]).then( () => {
+      return Promise.all([_private.loadMenuTemplates(this, this._options), this._loadItems()]).then( () => {
          return _private.loadItemsTemplates(this, this._options);
        });
    },
@@ -584,6 +586,8 @@ var _Controller = Control.extend({
                query: items.clone()
             }
          });
+      } else {
+         this._loadItemsPromise = null;
       }
       this._items = items;
    },
