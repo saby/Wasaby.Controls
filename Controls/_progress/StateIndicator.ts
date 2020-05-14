@@ -74,15 +74,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
  * @cfg {String} Размер одного сектора диаграммы.
  * @variant s
  * @variant m
- * @default m
- * @demo Controls-demo/StateIndicator/SectorSize/Index
- */
-
-/*
- * @name Controls/_progress/StateIndicator#sectorSize
- * @cfg {String} Size of sector.
- * @variant s
- * @variant m
+ * @variant l
  * @default m
  * @demo Controls-demo/StateIndicator/SectorSize/Index
  */
