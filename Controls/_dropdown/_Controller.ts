@@ -519,6 +519,7 @@ var _Controller = Control.extend({
    },
 
    loadDependencies(): void {
+      this._resetLoadPromises(this);
       _private.loadMenuTemplates(this, this._options);
       this._loadItems(false);
 
