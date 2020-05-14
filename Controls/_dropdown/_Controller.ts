@@ -584,8 +584,6 @@ var _Controller = Control.extend({
                query: items.clone()
             }
          });
-      } else {
-         this._loadItemsPromise = null;
       }
       this._items = items;
    },
