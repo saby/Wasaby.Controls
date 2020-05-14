@@ -575,7 +575,7 @@ var _Controller = Control.extend({
       return dropdownUtils.prepareEmpty(this._options.emptyText);
    },
 
-   _setItems: function(items, isNeedSaveDepsDeferred) {
+   _setItems: function(items) {
       if (items) {
          this._menuSource = new PrefetchProxy({
             target: this._source,
