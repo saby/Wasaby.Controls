@@ -584,7 +584,7 @@ var _Controller = Control.extend({
             }
          });
       } else {
-         this._loadItemsTempPromise = null;
+         this._loadItemsPromise = null;
       }
       this._items = items;
    },
