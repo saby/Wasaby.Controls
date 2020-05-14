@@ -77,17 +77,17 @@ var
         getRoot: function() {
             return this._model.getRoot();
         },
-        getNextItem: function() {
-           return this._model.getNextItem.apply(this._model, arguments);
+        getNextByKey: function() {
+           return this._model.getNextByKey.apply(this._model, arguments);
         },
-        getNextItemKey: function() {
-           return this._model.getNextItemKey.apply(this._model, arguments);
+        getPrevByKey: function() {
+           return this._model.getPrevByKey.apply(this._model, arguments);
         },
-       getPreviousItem: function() {
-           return this._model.getPreviousItem.apply(this._model, arguments);
+        getNextByIndex: function() {
+           return this._model.getNextByIndex.apply(this._model, arguments);
         },
-        getPreviousItemKey: function() {
-           return this._model.getPreviousItemKey.apply(this._model, arguments);
+        getPrevByIndex: function() {
+           return this._model.getPrevByIndex.apply(this._model, arguments);
         },
         setRoot: function (root) {
             this._model.setRoot(root);

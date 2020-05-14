@@ -1036,7 +1036,7 @@ const _private = {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (self._options.fixedHeadersHeights || 0);
-            self._markerController.setMarkerToFirstVisibleItem(itemsContainer.children, verticalOffset);
+            self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
             self._setMarkerAfterScroll = false;
         }
     },
@@ -1738,7 +1738,7 @@ const _private = {
        switch (action) {
            case IObservable.ACTION_REMOVE:
                if (self._selectionController) {
-                   selectionControllerResult = self._selectionController.removeKeys(removedItems);
+                   selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerController) {
                    self._markerController.handleRemoveItems(removedItemsIndex);

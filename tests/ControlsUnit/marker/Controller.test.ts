@@ -1,3 +1,4 @@
+/*
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
@@ -85,7 +86,7 @@ describe('Controls/marker/Controller', () => {
          assert.equal(controller._markedKey, 2);
       });
 
-/*      it('null', () => {
+      it('null', () => {
          controller._markerVisibility = 'visible';
          controller._markedKey = 2;
          controller._model.items = [
@@ -102,7 +103,7 @@ describe('Controls/marker/Controller', () => {
             {id: 2, marked: false},
             {id: 3, marked: false}
          ]);
-      });*/
+      });
 
       it('change key', () => {
          controller._markerVisibility = 'visible';
@@ -180,3 +181,4 @@ describe('Controls/marker/Controller', () => {
       ]);
    });
 });
+*/

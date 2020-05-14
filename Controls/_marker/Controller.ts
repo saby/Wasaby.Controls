@@ -1,6 +1,5 @@
-import { TKeySelection as TKey } from 'Controls/interface';
 import uDimension = require('Controls/Utils/getDimensions');
-import { IMarkerModel, IOptions, TVisibility, Visibility } from './interface';
+import { IMarkerModel, IOptions, TVisibility, Visibility, TKey } from './interface';
 
 export class Controller {
    private _model: IMarkerModel;
@@ -28,17 +27,10 @@ export class Controller {
     * Если по переданному ключу не найден элемент, то маркер ставится на первый элемент списка
     * @param key ключ элемента, на который ставится маркер
     */
-   // TODO вызывать после setRoot для TreeViewModel, может лучше на reset делать, хотя это не одно и тоже
    setMarkedKey(key: TKey): void {
       if (key === undefined || this._markedKey === key || !this._model) {
          return;
       }
-/*
-      if (this._markerVisibility === Visibility.OnActivated && key === null) {
-         this._model.setMarkedKey(this._markedKey, false);
-         this._markedKey = undefined;
-         return;
-      }*/
 
       this._model.setMarkedKey(this._markedKey, false);
       if (this._model.getItemBySourceKey(key)) {
@@ -54,8 +46,8 @@ export class Controller {
     * @return ключ, на который поставлен маркер
     */
    moveMarkerToNext(): TKey {
-      // TODO совместимость
-      const nextKey = this._model.getNextItemKey(this._markedKey);
+      const nextItem = this._model.getNextByKey(this._markedKey);
+      const nextKey = nextItem.getContents().getKey();
       this.setMarkedKey(nextKey);
       return nextKey;
    }
@@ -65,16 +57,19 @@ export class Controller {
     * @return ключ, на который поставлен маркер
     */
    moveMarkerToPrev(): TKey {
-      // TODO совместимость
-      const prevKey = this._model.getPreviousItemKey(this._markedKey);
+      const prevItem = this._model.getPrevByKey(this._markedKey);
+      const prevKey = prevItem.getContents().getKey();
       this.setMarkedKey(prevKey);
       return prevKey;
    }
 
    handleRemoveItems(removedItemsIndex: number): void {
-      // TODO совместимость
-      const nextKey = this._model.getNextItem(removedItemsIndex);
-      const prevKey = this._model.getPreviousItem(removedItemsIndex);
+      const nextItem = this._model.getNextByIndex(removedItemsIndex);
+      const prevItem = this._model.getPrevByIndex(removedItemsIndex);
+
+      const nextKey = nextItem.getContents().getKey();
+      const prevKey = prevItem.getContents().getKey();
+
       if (nextKey) {
          this.setMarkedKey(nextKey);
       } else if (prevKey) {
@@ -84,13 +79,13 @@ export class Controller {
       }
    }
 
-   setMarkerToFirstVisibleItem(items: HTMLElement[], verticalOffset: number): void {
+   setMarkerOnFirstVisibleItem(items: HTMLElement[], verticalOffset: number): void {
       let firstItemIndex = this._model.getStartIndex();
       firstItemIndex += this._getFirstVisibleItemIndex(items, verticalOffset);
       firstItemIndex = Math.min(firstItemIndex, this._model.getStopIndex());
 
       const item = this._model.getValidItemForMarker(firstItemIndex);
-      const itemKey = item.getContents ? item.getContents().getId() : item.getId();
+      const itemKey = item.getContents().getKey();
       this.setMarkedKey(itemKey);
    }
 
@@ -102,8 +97,8 @@ export class Controller {
       }
 
       const firstItem = this._model.getFirstItem();
-      this._model.setMarkedKey(firstItem.getId(), true);
-      return firstItem.getId();
+      this._model.setMarkedKey(firstItem.getKey(), true);
+      return firstItem.getKey();
    }
 
    private _getFirstVisibleItemIndex(items: HTMLElement[], verticalOffset: number): number {
