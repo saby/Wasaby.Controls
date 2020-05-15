@@ -1086,7 +1086,7 @@ define([
 
          });
 
-         /*describe('afterEndEdit', function() {
+         describe('afterEndEdit', function() {
             it('add item', async function(done) {
                var source = new sourceLib.Memory({
                   keyProperty: 'id',
@@ -1107,7 +1107,6 @@ define([
                eip._notify = function(event, args) {
                   if (event === 'beforeEndEdit') {
                      editingItem = eip._editingItem;
-                     assert.equal(listModel.getMarkedKey(), 1);
                      assert.isNotNull(listModel.getEditingItemData());
                   }
                   if (event === 'afterEndEdit') {
@@ -1205,7 +1204,7 @@ define([
                   done();
                });
             });
-         });*/
+         });
 
          describe('update model', function () {
             let
