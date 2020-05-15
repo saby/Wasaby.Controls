@@ -7,7 +7,7 @@
                     <Controls.list:View
                             class="removeDemo__list test_list_1"
                             name="list"
-                            bind:markedKey="_firstMarkedKey"
+                            markedKey="{{1}}"
                             itemActions="{{_itemActions}}"/>
                 </Controls.list:Container>
             </div>

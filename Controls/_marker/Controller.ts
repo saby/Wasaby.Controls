@@ -19,6 +19,12 @@ export class Controller {
    update(options: IOptions): void {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
+
+      // если уже проставлен какой-то маркер и присылают null,
+      // то маркер не меняем, иначе это поставит его на первый элемент
+      if (this._markedKey !== undefined && this._markedKey !== null && options.markedKey === null) {
+         return;
+      }
       this.setMarkedKey(options.markedKey);
    }
 
