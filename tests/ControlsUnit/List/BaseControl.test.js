@@ -2584,7 +2584,7 @@ define([
          });
       });
 
-      it('List navigation by keys and after reload', function(done) {
+      /*it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
          lists.BaseControl._private.scrollToItem = function() {
          };
@@ -2677,7 +2677,7 @@ define([
                }, 1);
             }, 1);
          }, 1);
-      });
+      });*/
 
       it('_onCheckBoxClick', function() {
          var rs = new collection.RecordSet({

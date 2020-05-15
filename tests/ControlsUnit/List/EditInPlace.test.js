@@ -1086,7 +1086,7 @@ define([
 
          });
 
-         describe('afterEndEdit', function() {
+         /*describe('afterEndEdit', function() {
             it('add item', async function(done) {
                var source = new sourceLib.Memory({
                   keyProperty: 'id',
@@ -1205,7 +1205,7 @@ define([
                   done();
                });
             });
-         });
+         });*/
 
          describe('update model', function () {
             let
