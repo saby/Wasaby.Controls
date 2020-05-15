@@ -33,6 +33,7 @@ var _private = {
  * Хлебные крошки с кнопкой "Назад".
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FBreadCrumbs%2FScenarios">демо-пример</a>.
+ * Набор переменных тем оформления смотрите <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_breadcrumbs.less">здесь</a>. 
  * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/bread-crumbs/ здесь}.
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control

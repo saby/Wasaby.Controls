@@ -131,6 +131,16 @@ interface IErrbackConfig {
     error: Error;
 }
 
+type LoadingState = null | 'all' | 'up' | 'down';
+
+interface IIndicatorConfig {
+    hasItems: boolean;
+    hasPaging: boolean;
+    loadingIndicatorState: LoadingState;
+    theme: string;
+    isPortionedSearchInProgress: boolean;
+}
+
 /**
  * Удаляет оригинал ошибки из ICrudResult перед вызовом сриализатора состояния,
  * который не сможет нормально разобрать/собрать экземпляр случайной ошибки
@@ -167,7 +177,7 @@ const _private = {
         }
     },
 
-    // Attention! Вызывать эту функцию запрещено! Единственное исключение - метод reload.
+    // Attention! Вызывать эту функцию запрещено! Исключение - методы reload, onScrollHide, onScrollShow.
     // Функция предназначена для выполнения каллбека после завершения цикла обновления.
     // Цикл обновления - это последовательный вызов beforeUpdate -> afterUpdate.
     // И вот посреди этого цикла нельзя менять модель, иначе beforeUpdate отработает по одному состоянию, а
@@ -178,10 +188,15 @@ const _private = {
     // https://online.sbis.ru/opendoc.html?guid=21fe75c0-62b8-4caf-9442-826827f73cd0
     // https://online.sbis.ru/opendoc.html?guid=8a839900-ebc0-4dad-9b53-225f0c337580
     // https://online.sbis.ru/opendoc.html?guid=dbaaabae-fcca-4c79-9c92-0f7fa2e70184
+    // https://online.sbis.ru/opendoc.html?guid=b6715c2a-704a-414b-b764-ea2aa4b9776b
     // p.s. в первой ошибке также прикреплены скрины консоли.
     doAfterUpdate(self, callback): void {
         if (self._updateInProgress) {
-            self._callbackAfterUpdate = callback;
+            if (self._callbackAfterUpdate) {
+                self._callbackAfterUpdate.push(callback);
+            } else {
+                self._callbackAfterUpdate = [callback];
+            }
         } else {
             callback();
         }
@@ -511,7 +526,8 @@ const _private = {
             if (addedItems.getCount()) {
                 self._loadedItems = addedItems;
             }
-            _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController)
+            _private.setHasMoreData(
+                self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController)
             );
             if (self._options.serviceDataLoadCallback instanceof Function) {
                 self._options.serviceDataLoadCallback(self._items, addedItems);
@@ -872,48 +888,52 @@ const _private = {
     },
 
     onScrollShow: function(self, params) {
-        // ToDo option "loadOffset" is crutch for contacts.
-        // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
-        self._isScrollShown = true;
+        _private.doAfterUpdate(self, () => {
+            // ToDo option "loadOffset" is crutch for contacts.
+            // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
+            self._isScrollShown = true;
 
-        self._viewPortRect = params.viewPortRect;
+            self._viewPortRect = params.viewPortRect;
 
-        const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
-        if (!self._scrollPagingCtr) {
-            if (_private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
-                    self._scrollPagingCtr = scrollPagingCtr;
-                    self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
-                });
+            const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
+            if (!self._scrollPagingCtr) {
+                if (_private.needScrollPaging(self._options.navigation)) {
+                    _private.createScrollPagingController(self, {
+                        scrollTop: self._scrollTop,
+                        scrollHeight: params.scrollHeight,
+                        clientHeight: params.clientHeight
+                    }).addCallback(function(scrollPagingCtr) {
+                        self._scrollPagingCtr = scrollPagingCtr;
+                        self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
+                    });
+                }
+            } else if (_private.needScrollPaging(self._options.navigation)) {
+                self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
             }
-        } else if (_private.needScrollPaging(self._options.navigation)) {
-            self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
-        }
+        });
     },
 
     onScrollHide: function(self) {
-        if (self._pagingVisible) {
-            self._pagingVisible = false;
-            self._cachedPagingState = false;
-            self._forceUpdate();
-        }
-        self._isScrollShown = false;
+        _private.doAfterUpdate(self, () => {
+            if (self._pagingVisible) {
+                self._pagingVisible = false;
+                self._cachedPagingState = false;
+                self._forceUpdate();
+            }
+            self._isScrollShown = false;
+        });
     },
 
-    createScrollPagingController: function(self) {
-        var def = new Deferred();
-
-        var scrollPagingCtr = new ScrollPagingController({
+    createScrollPagingController: function(self, scrollParams) {
+        const scrollPagingConfig = {
+            scrollParams,
             mode: self._options.navigation.viewConfig.pagingMode,
-            pagingCfgTrigger: function(cfg) {
+            pagingCfgTrigger: (cfg) => {
                 self._pagingCfg = cfg;
                 self._forceUpdate();
             }
-        });
-
-        def.callback(scrollPagingCtr);
-
-        return def;
+        };
+        return new Deferred().callback(new ScrollPagingController(scrollPagingConfig));
     },
 
     getSelectionForDragNDrop: function(selectedKeys, excludedKeys, dragKey) {
@@ -1025,7 +1045,11 @@ const _private = {
             }
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
+                _private.createScrollPagingController(self, {
+                    scrollTop: self._scrollTop,
+                    scrollHeight: params.scrollHeight,
+                    clientHeight: params.clientHeight
+                }).addCallback(function(scrollPagingCtr) {
                     self._scrollPagingCtr = scrollPagingCtr;
                 });
             }
@@ -1118,12 +1142,8 @@ const _private = {
 
         if (!_private.hasMoreDataInAnyDirection(self, self._sourceController) || !isPortionedLoad) {
             portionedSearch.reset();
-        } else if (loadedItems.getCount()) {
-            portionedSearch.resetTimer();
-
-            if (!_private.isLoadingIndicatorVisible(self) && self._loadingIndicatorTimer) {
-                _private.resetShowLoadingIndicatorTimer(self);
-            }
+        } else if (loadedItems.getCount() && !_private.isLoadingIndicatorVisible(self) && self._loadingIndicatorTimer) {
+            _private.resetShowLoadingIndicatorTimer(self);
         }
     },
 
@@ -1565,16 +1585,17 @@ const _private = {
     isBlockedForLoading(loadingIndicatorState): boolean {
         return loadingIndicatorState === 'all';
     },
-    getLoadingIndicatorClasses(cfg: {
-        hasItems: boolean,
-        hasPaging: boolean,
-        loadingIndicatorState: 'all' | 'down' | 'up',
-        theme: string,
-    }): string {
+    getLoadingIndicatorClasses(
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress}: IIndicatorConfig
+    ): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
-            .add(`controls-BaseControl__loadingIndicator__state-${cfg.loadingIndicatorState}`)
-            .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${cfg.theme}`, !cfg.hasItems && cfg.loadingIndicatorState === 'down')
-            .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${cfg.theme}`, cfg.loadingIndicatorState === 'down' && cfg.hasPaging && cfg.hasItems)
+            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
+            .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
+                 !hasItems && loadingIndicatorState === 'down')
+            .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`,
+                 loadingIndicatorState === 'down' && hasPaging && hasItems)
+            .add(`controls-BaseControl__loadingIndicator_style-portionedSearch_theme-${theme}`,
+                          isPortionedSearchInProgress)
             .compile();
     },
     updateIndicatorContainerHeight(self, viewRect: DOMRect, viewPortRect: DOMRect): void {
@@ -2428,7 +2449,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._scrollPageLocked = false;
         this._modelRecreated = false;
         if (this._callbackAfterUpdate) {
-            this._callbackAfterUpdate();
+            this._callbackAfterUpdate.forEach((callback) => {
+                callback();
+            });
             this._callbackAfterUpdate = null;
         }
     },
@@ -2965,11 +2988,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _getLoadingIndicatorClasses(state?: string): string {
         const hasItems = !!this._items && !!this._items.getCount();
+        const indicatorState = state || this._loadingIndicatorState;
         return _private.getLoadingIndicatorClasses({
             hasItems,
             hasPaging: !!this._pagingVisible,
-            loadingIndicatorState: state || this._loadingIndicatorState,
-            theme: this._options.theme
+            loadingIndicatorState: indicatorState,
+            theme: this._options.theme,
+            isPortionedSearchInProgress: !!this._portionedSearchInProgress
         });
     },
 
