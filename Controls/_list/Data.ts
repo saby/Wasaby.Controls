@@ -141,9 +141,21 @@ type GetSourceResult = {
             if (!self._filter || filterChanged || rootChanged) {
                self._filter = options.filter;
 
-               if (options.parentProperty && options.root) {
-                  self._filter = clone(options.filter);
-                  self._filter[options.parentProperty] = options.root;
+               if (options.parentProperty) {
+                  const hasRootInOptions = options.root;
+                  const hasRootInFilter = self._filter && self._filter[options.parentProperty];
+
+                  if ((hasRootInFilter || hasRootInOptions) && rootChanged) {
+                     const newFilter = clone(options.filter);
+
+                     if (hasRootInOptions) {
+                        newFilter[options.parentProperty] = options.root;
+                     } else {
+                        delete newFilter[options.parentProperty];
+                     }
+
+                     self._filter = newFilter;
+                  }
                }
             }
          },

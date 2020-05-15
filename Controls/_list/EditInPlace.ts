@@ -50,16 +50,20 @@ var
                 result = Deferred.success({cancelled: true});
             } else {
                 if (eventResult && eventResult.addBoth) {
-                    var id = self._notify('showIndicator', [{}], {bubbling: true});
+                    self._showIndicator();
                     eventResult.addBoth(function (defResult) {
-                        self._notify('hideIndicator', [id], {bubbling: true});
+                        self._hideIndicator();
                         return defResult;
                     });
                     result = eventResult;
                 } else if ((eventResult && eventResult.item instanceof entity.Record) || (options && options.item instanceof entity.Record)) {
                     result = Deferred.success(eventResult || options);
                 } else if (isAdd) {
-                    result = _private.createModel(self, eventResult || options);
+                    self._showIndicator();
+                    result = _private.createModel(self, eventResult || options).addBoth((createModelResult) => {
+                        self._hideIndicator();
+                        return createModelResult;
+                    });
                 }
             }
             return result;
@@ -81,10 +85,16 @@ var
                 self._isAdd
             ]);
             if (eventResult && eventResult.addBoth) {
-                var id = self._notify('showIndicator', [{}], { bubbling: true });
+                self._showIndicator();
                 self._endEditDeferred = eventResult;
-                return eventResult.addBoth(function(resultOfDeferred) {
-                    self._notify('hideIndicator', [id], { bubbling: true });
+                return eventResult.addErrback((error) => {
+                    // Отменяем сохранение, оставляем редактирование открытым, если промис сохранения завершился с
+                    // ошибкой (провалена валидация на сервере)
+                    self._endEditDeferred = null;
+                    self._hideIndicator();
+                    return constEditing.CANCEL;
+                }).addCallback((resultOfDeferred) => {
+                    self._hideIndicator();
 
                     if (resultOfDeferred === constEditing.CANCEL) {
                         self._endEditDeferred = null;
@@ -101,8 +111,11 @@ var
                 if (eventResult === constEditing.CANCEL) {
                     return Deferred.success({ cancelled: true });
                 }
+                // Если обновление данных на БЛ затягивается, должен появиться индикатор загрузки.
+                self._showIndicator();
                 return _private.updateModel(self, commit).addCallback(function() {
                     return Deferred.success().addCallback(function() {
+                        self._hideIndicator();
                         _private.afterEndEdit(self, commit);
                     });
                 });
@@ -147,7 +160,6 @@ var
         updateModel: function (self, commit) {
             if (commit && (self._isAdd || self._editingItem.isChanged())) {
                 if (self._options.source) {
-                    //
                     return self._options.source.update(self._editingItem).addCallbacks(function () {
                         _private.acceptChanges(self);
                     }, (error: Error) => {
@@ -381,6 +393,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _originalItem: null,
     _editingItem: null,
     _endEditDeferred: null,
+    _loadingIndicatorId: null,
 
     constructor: function (options = {}) {
         EditInPlace.superclass.constructor.apply(this, arguments);
@@ -734,6 +747,14 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             _private.editNextRow(this, !eventOptions.isShiftKey);
         }
         e.stopPropagation();
+    },
+
+    _showIndicator(): void {
+        this._loadingIndicatorId = this._notify('showIndicator', [{}], {bubbling: true});
+    },
+    _hideIndicator(): void {
+        this._notify('hideIndicator', [this._loadingIndicatorId], {bubbling: true});
+        this._loadingIndicatorId = null;
     },
 
     _beforeUnmount: function () {

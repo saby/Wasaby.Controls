@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/ItemActions/DisplayMode/DisplayMode';
 import {Memory} from 'Types/source';
 import {getActionsWithDisplayMode} from '../../DemoHelpers/ItemActionsCatalog';
-import {IItemAction} from '../../../../Controls/_list/interface/IList';
+import { IItemAction } from 'Controls/itemActions';
 import {getContactsCatalog} from '../../DemoHelpers/DataCatalog';
 
 export default class extends Control {

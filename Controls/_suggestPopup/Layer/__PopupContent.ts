@@ -31,14 +31,7 @@ var __PopupContent = BaseLayer.extend({
           // scroll after list render in  _beforePaint hook
          this._shouldScrollToBottom = true;
       }
-
-      if (this._options.showContent !== newOptions.showContent) {
-         if (isPopupOpenedToTop) {
-            this._pendingShowContent = newOptions.showContent;
-         } else {
-            this._showContent = newOptions.showContent;
-         }
-      }
+      this._pendingShowContent = newOptions.showContent;
 
       this._reverseList = isPopupOpenedToTop;
    },
@@ -65,6 +58,7 @@ var __PopupContent = BaseLayer.extend({
    _beforePaint(): void {
       if (this._shouldScrollToBottom) {
          this._children.scrollContainer.scrollToBottom();
+         this._shouldScrollToBottom = false;
       }
    },
 

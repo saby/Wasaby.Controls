@@ -1,4 +1,3 @@
-import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
 import {SyntheticEvent} from "Vdom/Vdom";
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
@@ -47,7 +46,11 @@ interface IOffsetCache {
     [key: string]: number;
 }
 
-export default class Group extends Control<IControlOptions> {
+interface IStickyHeaderGroupOptions extends IControlOptions {
+    calculateHeadersOffsets?: boolean;
+}
+
+export default class Group extends Control<IStickyHeaderGroupOptions> {
     protected _template: TemplateFunction = template;
     private _index: number = null;
     protected _isStickySupport: boolean = false;
@@ -172,7 +175,9 @@ export default class Group extends Control<IControlOptions> {
                 bottom: 0
             };
 
-            this._updateTopBottom(data);
+            if (this._options.calculateHeadersOffsets) {
+                this._updateTopBottom(data);
+            }
 
             if (this._isFixed) {
                 this._children.stickyFixed.start([data.id].concat(this._stickyHeadersIds[data.position]));
@@ -255,5 +260,11 @@ export default class Group extends Control<IControlOptions> {
             }],
             {bubbling: true}
         );
+    }
+
+    static getDefaultOptions(): Partial<IStickyHeaderGroupOptions> {
+        return {
+            calculateHeadersOffsets: true
+        };
     }
 }

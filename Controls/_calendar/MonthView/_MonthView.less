@@ -55,7 +55,7 @@
 
 .controls-MonthViewVDOM__item_theme-@{themeName} {
    font-size: @monthview_item_font-size_monthSlider;
-   min-width: @monthview_item_height_monthSlider;
+   min-width: @monthview_item_width_monthSlider;
    min-height: @monthview_item_height_monthSlider;
    margin-top: @monthview_item_border-thickness_monthSlider;
    margin-left: @monthview_item_border-thickness_monthSlider;
@@ -77,8 +77,10 @@
       }
    }
 
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected_theme-@{themeName}:hover {
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected_theme-@{themeName}:hover,
+   .controls-MonthViewVDOM__backgroundColor-otherMonthDay-unselected_theme-@{themeName}:hover {
       background: @monthview_item_hover_background-color_monthSlider;
+      border-radius: @monthview_item_hover_border-radius_monthSlider;
    }
 }
 

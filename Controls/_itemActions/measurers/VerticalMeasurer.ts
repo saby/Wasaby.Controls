@@ -1,12 +1,12 @@
 import rk = require('i18n!Controls');
-import { IMeasurer } from './interface/IMeasurer';
-import { IItemAction, ShowType } from './interface/IItemAction';
-import { ISwipeConfig, ItemActionsSize } from './interface/ISwipeConfig';
-import { ISwipeControlOptions } from './interface/ISwipeControl';
-import {getActualActions} from './SwipeUtils';
+import { ISwipeConfig  } from 'Controls/display';
+
+import { IMeasurer } from '../interface/IMeasurer';
+import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
+import { Utils } from '../Utils';
 
 const breakpoints: Record<
-   ISwipeControlOptions['actionCaptionPosition'],
+   TActionCaptionPosition,
    {
       lowerBound: number;
       upperBound: number;
@@ -29,9 +29,9 @@ const breakpoints: Record<
 function getItemActionsSize(
    countOfActions: number,
    rowHeight: number,
-   actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']
+   actionCaptionPosition: TActionCaptionPosition
 ): {
-   itemActionsSize: ItemActionsSize;
+   itemActionsSize: TItemActionsSize;
    countOfActions: number;
 } {
    if (countOfActions === 1) {
@@ -63,8 +63,8 @@ function getItemActionsSize(
 }
 
 function getPaddingSize(
-   actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition'],
-   itemActionsSize: ItemActionsSize
+   actionCaptionPosition: TActionCaptionPosition,
+   itemActionsSize: TItemActionsSize
 ): 's' | 'm' | 'l' {
    switch (actionCaptionPosition) {
       case 'none':
@@ -76,21 +76,21 @@ function getPaddingSize(
    }
 }
 
-const VerticalMeasurer: IMeasurer = {
+export const verticalMeasurer: IMeasurer = {
    getSwipeConfig(
       actions: IItemAction[],
       rowHeight: number,
-      actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition'],
+      actionCaptionPosition: TActionCaptionPosition,
       menuButtonVisibility: 'visible'|'adaptive'
    ): ISwipeConfig {
       let columnsCount = 1;
-      let itemActions = getActualActions(actions);
+      let itemActions = Utils.getActualActions(actions);
 
       const {
          itemActionsSize,
          countOfActions
       }: {
-         itemActionsSize: ItemActionsSize;
+         itemActionsSize: TItemActionsSize;
          countOfActions: number;
       } = getItemActionsSize(actions.length, rowHeight, actionCaptionPosition);
 
@@ -102,10 +102,11 @@ const VerticalMeasurer: IMeasurer = {
       if (columnsCount * countOfActions !== actions.length || menuButtonVisibility === 'visible') {
          itemActions = itemActions.slice(0, columnsCount * countOfActions - 1);
          itemActions.push({
+            id: null,
             icon: 'icon-SwipeMenu',
             title: rk('Ещё'),
             _isMenu: true,
-            showType: ShowType.TOOLBAR
+            showType: TItemActionShowType.TOOLBAR
          });
       }
 
@@ -123,14 +124,12 @@ const VerticalMeasurer: IMeasurer = {
    },
    needIcon(
       action: IItemAction,
-      actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition'],
+      actionCaptionPosition: TActionCaptionPosition,
       hasActionWithIcon: boolean = false
    ): boolean {
       return !!action.icon || (hasActionWithIcon && actionCaptionPosition === 'right');
    },
-   needTitle(action: IItemAction, actionCaptionPosition: ISwipeControlOptions['actionCaptionPosition']): boolean {
+   needTitle(action: IItemAction, actionCaptionPosition: TActionCaptionPosition): boolean {
       return !action.icon || actionCaptionPosition !== 'none' && !!action.title;
    }
 };
-
-export default VerticalMeasurer;

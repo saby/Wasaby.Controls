@@ -91,7 +91,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             itemConfig.itemTemplate = properties.itemTemplate;
             itemConfig.itemTemplateProperty = properties.itemTemplateProperty;
             itemConfig.headerTemplate = properties.headerTemplate;
-            itemConfig.footerTemplate = properties.footerTemplate;
+            itemConfig.footerContentTemplate = properties.footerTemplate || properties.footerContentTemplate;
             itemConfig.multiSelect = properties.multiSelect;
             itemConfig.emptyText = properties.emptyText;
             itemConfig.selectorTemplate = properties.selectorTemplate;

@@ -95,7 +95,7 @@ var _private = {
                isNode: () => currentItem.hasChildren,
                isSelected: () => currentItem.isSelected ? currentItem.isSelected() : currentItem._isSelected,
                getContents: () => currentItem.item,
-               isSwiped: () => currentItem.isSwiped ? currentItem.isSwiped() : currentItem._isSwiped,
+               isSwiped: () => currentItem.isSwiped ? currentItem.isSwiped() : false,
                shouldDisplayActions: () => false,
                getLevel: () => undefined,
                getParent: () => ({getContents: () => currentItem.hasParent})
@@ -226,8 +226,6 @@ var _private = {
             itemsModelCurrent._isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
             itemsModelCurrent.iconSize = this._options.iconSize;
-            // TODO USE itemsModelCurrent.isSwiped()
-            itemsModelCurrent._isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem;
 
             //Draw the separator to split history and nohistory items.
             //Separator is needed only when list has both history and nohistory items

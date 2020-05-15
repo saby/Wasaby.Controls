@@ -83,6 +83,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 collection: propertyGridItems,
                 parentProperty,
                 nodeProperty,
+                keyProperty: PROPERTY_NAME_FIELD,
                 root: null,
                 group: this._groupCallback,
                 filter: this._displayFilter.bind(this)
@@ -91,6 +92,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             return new Collection({
                 collection: propertyGridItems,
                 group: this._groupCallback,
+                keyProperty: PROPERTY_NAME_FIELD,
                 filter: this._displayFilter.bind(this)
             });
         }
@@ -105,7 +107,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             const group = itemContents.get(PROPERTY_GROUP_FIELD);
             return !this._collapsedGroups[group];
         }
-        return true;
+        return itemContents !== constView.hiddenGroup;
     }
 
     private _getCollapsedGroups(collapsedGroups: Array<string | number> = []): Record<string, boolean> {

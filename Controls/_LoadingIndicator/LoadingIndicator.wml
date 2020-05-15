@@ -1,4 +1,8 @@
 <div class="controls-LoadingIndicator">
-   <ws:partial template="{{_options.content}}" scope="{{ _options }}" on:showIndicator="_showHandler()" on:hideIndicator="_hideHandler()"
+   <ws:partial template="{{_options.content}}"
+               scope="{{ _options }}"
+               message="{{message}}"
+               on:showIndicator="_showHandler()"
+               on:hideIndicator="_hideHandler()"
                attr:class="controls-loading-indicator_content"/>
 </div>

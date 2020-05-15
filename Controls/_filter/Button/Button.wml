@@ -25,9 +25,6 @@
            on:click="openDetailPanel()">
       </div>
    </div>
-   <ws:if data="{{_options.filterTemplate}}">
-      <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.alignment}}"></div>
-   </ws:if>
 
    <Controls.popup:Sticky
            name="filterStickyOpener"
