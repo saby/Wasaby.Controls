@@ -876,7 +876,11 @@ var _private = {
             const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
             if (!self._scrollPagingCtr) {
                 if (_private.needScrollPaging(self._options.navigation)) {
-                    _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
+                    _private.createScrollPagingController(self, {
+                        scrollTop: self._scrollTop,
+                        scrollHeight: params.scrollHeight,
+                        clientHeight: params.clientHeight
+                    }).addCallback(function(scrollPagingCtr) {
                         self._scrollPagingCtr = scrollPagingCtr;
                         self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
                     });
@@ -898,20 +902,16 @@ var _private = {
         });
     },
 
-    createScrollPagingController: function(self) {
-        var def = new Deferred();
-
-        var scrollPagingCtr = new ScrollPagingController({
+    createScrollPagingController: function(self, scrollParams) {
+        const scrollPagingConfig = {
+            scrollParams,
             mode: self._options.navigation.viewConfig.pagingMode,
-            pagingCfgTrigger: function(cfg) {
+            pagingCfgTrigger: (cfg) => {
                 self._pagingCfg = cfg;
                 self._forceUpdate();
             }
-        });
-
-        def.callback(scrollPagingCtr);
-
-        return def;
+        };
+        return new Deferred().callback(new ScrollPagingController(scrollPagingConfig));
     },
 
     getSelectionForDragNDrop: function(selectedKeys, excludedKeys, dragKey) {
@@ -1023,7 +1023,11 @@ var _private = {
             }
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
+                _private.createScrollPagingController(self, {
+                    scrollTop: self._scrollTop,
+                    scrollHeight: params.scrollHeight,
+                    clientHeight: params.clientHeight
+                }).addCallback(function(scrollPagingCtr) {
                     self._scrollPagingCtr = scrollPagingCtr;
                 });
             }
