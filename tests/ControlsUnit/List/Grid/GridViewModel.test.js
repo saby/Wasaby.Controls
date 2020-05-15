@@ -227,29 +227,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         'property3': {}
                      },
                      1: {
-
                      }
                   },
                   stickyLadder: {
                      0: {
-                        'property1': {
-                           ladderLength: 2
-                        },
-                        'property2': {
-                           ladderLength: 1
-                        },
-                        'property3': {}
+                        ladderLength: 2,
+                        headingStyle: 'grid-row: span 2'
                      },
-                     1: {
-
-                     }
+                     1: {},
                   }
                };
             assert.equal('LP_', gridMod.GridViewModel._private.calcLadderVersion(onlySimpleLadder, 0));
             assert.equal('LP_', gridMod.GridViewModel._private.calcLadderVersion(onlySimpleLadder, 1));
 
-            assert.equal('LP_SP_2_1_0_', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 0));
-            assert.equal('LP_SP_', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 1));
+            assert.equal('LP_SP_2', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 0));
+            assert.equal('LP_SP_0', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 1));
 
 
          });

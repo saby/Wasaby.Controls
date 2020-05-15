@@ -322,17 +322,6 @@ var
         },
 
         calcLadderVersion(ladder = {}, index): string {
-
-            function getItemsLadderVersion(ladder) {
-                let ladderVersion = '';
-
-                Object.keys(ladder).forEach((ladderProperty) => {
-                    ladderVersion += (ladder[ladderProperty].ladderLength || 0) + '_';
-                });
-
-                return ladderVersion;
-            }
-
             let
                 version = '',
                 simpleLadder = ladder.ladder && ladder.ladder[index],
@@ -342,7 +331,7 @@ var
                 version += 'LP_';
             }
             if (stickyLadder) {
-                version += 'SP_' + getItemsLadderVersion(stickyLadder);
+                version += 'SP_' + (stickyLadder.ladderLength || 0);
             }
 
             return version;
@@ -427,7 +416,6 @@ var
                 columns: self._options.columns,
                 stickyColumn: self._options.stickyColumn
             });
-            let updateVersion = false;
             //Нужно сбросить кэш для записей, у которых поменялась конфигурация лесенки
             if (self._ladder) {
                 for (let i = startIndex; i < stopIndex ; i++) {
@@ -437,13 +425,9 @@ var
                         const dispItem = self.getItemById(self.getItems()?.at(i)?.getId());
                         if (dispItem) {
                             self.resetCachedItemData(self._getDisplayItemCacheKey(dispItem));
-                            updateVersion = true;
                         }
                     }
                 }
-            }
-            if (updateVersion) {
-                self._nextModelVersion();
             }
             return newLadder;
         },
