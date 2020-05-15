@@ -265,7 +265,7 @@ var _private = {
 
    loadMenuTemplates(self, options: object) {
       if (!self._loadMenuTempPromise) {
-         let templatesToLoad = [];
+         let templatesToLoad = ['Controls/menu'];
          let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
          templates.forEach((template) => {
             if (typeof options[template] === 'string') {
