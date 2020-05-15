@@ -20,7 +20,7 @@ var _private = {
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Полный список параметров отображается при нажатии на контрол.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FCombobox%2FComboboxVDom">Демо-пример</a>|<a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_buttons.less">Less-переменные</a>|<a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/combobox/">Руководство разработчика</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FCombobox%2FComboboxVDom">Демо-пример</a>|<a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">Less-переменные</a>|<a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/combobox/">Руководство разработчика</a>.
  * @class Controls/_dropdown/ComboBox
  * @extends Core/Control
  * @implements Controls/_interface/ISource
