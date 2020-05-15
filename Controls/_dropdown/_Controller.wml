@@ -1,6 +1,8 @@
 <div>
    <ws:partial template="{{_options.content}}"
-               on:click="_clickHandler()"
+               on:mousedown="_clickHandler()"
+               on:mouseenter="_mouseEnterHandler()"
+               on:mouseleave="_mouseLeaveHandler()"
                on:keydown="_keyDown()"/>
 
    <Controls.popup:Sticky name="DropdownOpener"
