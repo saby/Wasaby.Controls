@@ -117,69 +117,6 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          assert.isTrue(searchViewModel._isGroup(itemGroupMock));
       });
 
-      /*it('isGroup', function() {
-         var cfg = {
-            items: new Collection.RecordSet({
-               rawData: [{
-                  id: 1,
-                  type: true,
-                  parent: null,
-               },
-                  {
-                     id: 2,
-                     type: null,
-                     parent: 1
-                  },
-                  {
-                     id: 3,
-                     type: null,
-                     parent: 1
-                  },
-                  {
-                     id: 4,
-                     type: true,
-                     parent: null
-                  },
-                  {
-                     id: 5,
-                     type: null,
-                     parent: 4
-                  },
-                  {
-                     id: 6,
-                     type: null,
-                     parent: 4
-                  },
-                  {
-                     id: 7,
-                     type: null,
-                     parent: 4
-                  }
-               ],
-               keyProperty: 'id'
-            }),
-            parentProperty: 'parent',
-            nodeProperty: 'type',
-            keyProperty: 'id'
-         },
-         model;
-
-         cfg.markedKey = 3;
-         model = new SearchViewModel(cfg);
-         model.getItems().removeAt(2);
-         assert.equal(5, model.getMarkedKey());
-
-         cfg.markedKey = 2;
-         model = new SearchViewModel(cfg);
-         model.getItems().removeAt(1);
-         assert.equal(5, model.getMarkedKey());
-
-         cfg.markedKey = 7;
-         model = new SearchViewModel(cfg);
-         model.getItems().removeAt(4);
-         assert.equal(6, model.getMarkedKey());
-      });*/
-
       it('setHoveredItem', function() {
          const model = new SearchViewModel({
             root: 'myTestRoot',
