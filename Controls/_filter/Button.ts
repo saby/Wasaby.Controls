@@ -46,26 +46,6 @@ import {resetFilter} from 'Controls/_filter/resetFilterUtils';
  */
 
 var _private = {
-   getFilterButtonCompatible: function(self) {
-      var result = new Deferred();
-      requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (function(Layer) {
-         Layer.load().addCallback(function(res) {
-            requirejs(['Controls/filterCompatible'], function(filterCompatible) {
-               if (!self._filterCompatible) {
-                  self._filterCompatible = new filterCompatible._FilterCompatible({
-                     filterButton: self,
-                     filterButtonOptions: self._options,
-                     tabindex: 0
-                  });
-               }
-               result.callback(self._filterCompatible);
-            });
-            return res;
-         });
-      }));
-      return result;
-   },
-
    getText: function(items) {
       var textArr = [];
 
@@ -104,9 +84,6 @@ var _private = {
       self._items = items;
       self._text = _private.getText(items);
       self._isItemsChanged = _private.isItemsChanged(items);
-      if (self._options.filterTemplate && self._filterCompatible) {
-         self._filterCompatible.updateFilterStructure(items);
-      }
    },
    setPopupOptions: function(self, alignment) {
       self._popupOptions = {
@@ -214,32 +191,19 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
    },
 
    _clearClick: function() {
-      if (this._options.filterTemplate) {
-         _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
-            panelOpener.clearFilter();
-         });
-      } else {
-         _private.resetItems(this, this._items);
-         this._notify('filterChanged', [{}]);
-         this._notify('itemsChanged', [this._items]);
-      }
+      _private.resetItems(this, this._items);
+      this._notify('filterChanged', [{}]);
+      this._notify('itemsChanged', [this._items]);
       this._text = '';
    },
 
    openDetailPanel: function() {
       var self = this;
       if (!this._options.readOnly) {
-         /* if template - show old component */
-         if (this._options.filterTemplate) {
-            _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
-               panelOpener.showFilterPanel();
-            });
-         } else {
-            _private.requireDeps(this).addCallback(function(res) {
-               self._children.filterStickyOpener.open(_private.getPopupConfig(self));
-               return res;
-            });
-         }
+         _private.requireDeps(this).addCallback(function(res) {
+            self._children.filterStickyOpener.open(_private.getPopupConfig(self));
+            return res;
+         });
       }
    },
 
