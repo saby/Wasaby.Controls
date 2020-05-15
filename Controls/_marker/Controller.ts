@@ -100,6 +100,11 @@ export class Controller {
       }
    }
 
+   /**
+    * Устанавливает маркер на первый элемент, который полностью виден на странице
+    * @param items список HTMLElement-ов на странице
+    * @param verticalOffset вертикальное смещение скролла
+    */
    setMarkerOnFirstVisibleItem(items: HTMLElement[], verticalOffset: number): void {
       let firstItemIndex = this._model.getStartIndex();
       firstItemIndex += this._getFirstVisibleItemIndex(items, verticalOffset);
