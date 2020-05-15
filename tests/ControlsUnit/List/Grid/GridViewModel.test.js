@@ -737,10 +737,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._options.multiSelectVisibility = 'visible';
          });
 
-         /*it('getItemColumnCellClasses', function() {
+         it('getItemColumnCellClasses', function() {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
-               current = gridViewModel.getCurrent(),
+               current,
                expectedResult = [
                   'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ' +
                   'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__row-cell-checkbox_theme-default ' +
@@ -769,6 +769,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell__last controls-Grid__row-cell__last-default_theme-default'
                ];
 
+            gridViewModel.setMarkedKey(123);
+            assert.equal(gridViewModel.getMarkedKey(), 123);
+
+            current = gridViewModel.getCurrent();
+
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[0]);
             current.goToNextColumn();
 
@@ -783,7 +788,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             current._isSelected = false;
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[4]);
 
-         });*/
+         });
       });
       describe('getCurrent', function() {
          var
