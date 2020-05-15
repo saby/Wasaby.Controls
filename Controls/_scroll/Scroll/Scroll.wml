@@ -5,7 +5,7 @@
          <Controls._scroll.StickyHeader.Controller
             name="stickyController"
             on:fixed="_fixedHandler()">
-            <Controls._scroll.Scroll.Watcher2 scope="{{_options}}" name="scrollWatcher2">
+            <Controls._scroll.Scroll.Watcher2 scope="{{_options}}" name="scrollWatcher2" on:scrollStateChanged="_scrollStateChangedHandler()">
 
             <!--Реализация области блоков требует наличия следующей структуры: controls-BlockLayout > controls-BlockLayout__blockGroup.
             Добавляем класс controls-BlockLayout__blockGroup, для того чтобы была соблюдена структура, когда используется controls-BlockLayout на контейнере.
@@ -24,26 +24,32 @@
                               {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
                     on:controlResize="_resizeHandler()"
                     on:scroll="_scrollHandler()"
-                    on:wheel="_wheelHandler()">
-                  <ws:partial template="{{_options.content}}"
-                              scope="{{_options}}"
-                              attr:class="controls-Scroll__userContent"
-                              on:saveScrollPosition="_saveScrollPosition()"
-                              on:scrollToElement="_scrollToElement()"
-                              on:updatePlaceholdersSize="_updatePlaceholdersSize()"
-                              on:restoreScrollPosition="_restoreScrollPosition()"
-                              on:updateShadowMode="_updateShadowMode()"
-                              on:selectedKeysChanged="selectedKeysChanged()"
-                              on:excludedKeysChanged="excludedKeysChanged()"
-                              on:itemClick="itemClick()"
-                              on:itemMouseDown="_tmplNotify('itemMouseDown')"
-                              on:rootChanged="_tmplNotify('rootChanged')"
-                              on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
-                              on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
-                              on:checkboxClick="_tmplNotify('checkboxClick')"
-                              on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
-                              on:actionClick="_tmplNotify('actionClick')"
-                              on:editArrowClick="_tmplNotify('editArrowClick')"/>
+                    on:wheel="_wheelHandler()"
+                    >
+<!--                  <Controls.event:Listener-->
+<!--                          event="dataError"-->
+<!--                          on:dataError="_onDataError()"/>-->
+                    <span class="RESIZEOBSERVERTODO">
+                        <ws:partial template="{{_options.content}}"
+                                    scope="{{_options}}"
+                                    attr:class="controls-Scroll__userContent"
+                                    on:saveScrollPosition="_saveScrollPosition()"
+                                    on:scrollToElement="_scrollToElement()"
+                                    on:updatePlaceholdersSize="_updatePlaceholdersSize()"
+                                    on:restoreScrollPosition="_restoreScrollPosition()"
+                                    on:updateShadowMode="_updateShadowMode()"
+                                    on:selectedKeysChanged="selectedKeysChanged()"
+                                    on:excludedKeysChanged="excludedKeysChanged()"
+                                    on:itemClick="itemClick()"
+                                    on:itemMouseDown="_tmplNotify('itemMouseDown')"
+                                    on:rootChanged="_tmplNotify('rootChanged')"
+                                    on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
+                                    on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
+                                    on:checkboxClick="_tmplNotify('checkboxClick')"
+                                    on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
+                                    on:actionClick="_tmplNotify('actionClick')"
+                                    on:editArrowClick="_tmplNotify('editArrowClick')"/>
+                    </span>
                </span>
             </Controls._scroll.Scroll.Watcher2>
 

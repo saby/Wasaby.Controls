@@ -499,7 +499,6 @@ let
          var
             self = this,
             def;
-            console.log('BM:', options);
          if (!constants.isServerSide) {
              this._enableScrollbar = getEnableScrollbar();
          }
@@ -913,6 +912,10 @@ let
             }
          }
       },
+
+       _scrollStateChangedHandler(): void {
+          console.log('_scrollStateChangedHandler!!!');
+       },
 
       _scrollbarTaken() {
          if (this._showScrollbarOnHover && (this._displayState.canScroll || this._displayState.canHorizontalScroll)) {

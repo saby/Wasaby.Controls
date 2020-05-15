@@ -3,5 +3,6 @@
         template="{{_options.content}}"
         scope="{{_options}}"
         on:controlResize="_resizeHandler()"
+        on:register="_registerIt()"
     />
 </Controls.event:Register>
