@@ -2558,20 +2558,8 @@ define([
                viewModelConstructor: lists.ListViewModel
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
-         var getBCR = function() {
-            return {
-               height: 30
-            };
-         };
          lnBaseControl.saveOptions(lnCfg);
          await lnBaseControl._beforeMount(lnCfg);
-         var itemsContainer = {
-            children: [
-               { getBoundingClientRect: getBCR },
-               { getBoundingClientRect: getBCR },
-               { getBoundingClientRect: getBCR },
-            ]
-         };
          it('moveMarkerOnScrollPaging option', function() {
             let inst = {_options: {}, _setMarkerAfterScroll: false};
             lists.BaseControl._private.setMarkerAfterScroll(inst);

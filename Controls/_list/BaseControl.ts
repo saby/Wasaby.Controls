@@ -1033,6 +1033,7 @@ const _private = {
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
+        // TODO вручную обрабатывать pagedown и делать stop propagation
         if (self._markerController) {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);

@@ -82,6 +82,11 @@ export class Controller {
       return prevKey;
    }
 
+   /**
+    * Обработчк удаления элементов
+    * Ставит маркер на следующий элемент, при его отустствии на предыдущий, иначе сбрасывает маркер
+    * @param removedItemsIndex
+    */
    handleRemoveItems(removedItemsIndex: number): void {
       const nextItem = this._model.getNextByIndex(removedItemsIndex);
       const prevItem = this._model.getPrevByIndex(removedItemsIndex);
