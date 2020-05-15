@@ -39,6 +39,11 @@ define([
       it('constructor', function () {
          var result;
          var spInstance = new ScrollPaging({
+            scrollParams: {
+               scrollTop: 0,
+               scrollHeight: 100,
+               clientHeight: 50
+            },
             pagingCfgTrigger: function(cfg) {
                result = cfg;
             }
@@ -56,6 +61,11 @@ define([
       it('scroll', function () {
          var result;
          var spInstance = new ScrollPaging({
+            scrollParams: {
+               scrollTop: 0,
+               scrollHeight: 100,
+               clientHeight: 50
+            },
             pagingCfgTrigger: function(cfg) {
                result = cfg;
             }
