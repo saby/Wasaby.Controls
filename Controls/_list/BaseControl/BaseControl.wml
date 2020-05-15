@@ -41,7 +41,7 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
-    <ws:if data="{{_loadingIndicatorState && _loadingIndicatorState !== 'up'}}">
+    <ws:if data="{{_loadingIndicatorState === 'all'}}">
         <ws:partial template="loadingIndicator"/>
     </ws:if>
     <ws:if data="{{_options.footerTemplate}}">
@@ -233,7 +233,7 @@
 
         <ws:if data="{{_listViewModel}}">
 
-            <ws:if data="{{_loadingIndicatorState && _loadingIndicatorState=== 'up'}}">
+            <ws:if data="{{_loadingIndicatorState=== 'up'}}">
                 <ws:partial template="loadingIndicator"/>
             </ws:if>
 
@@ -242,6 +242,10 @@
             <ws:partial template="fullView" name="listView" attr:class="{{(_showActions || _options.useNewModel) ? 'controls-BaseControl_showActions'}}"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
+        </ws:if>
+
+        <ws:if data="{{_loadingIndicatorState === 'down'}}">
+            <ws:partial template="loadingIndicator"/>
         </ws:if>
 
         <ws:if data="{{_showContinueSearchButton}}">

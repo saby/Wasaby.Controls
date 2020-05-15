@@ -5690,12 +5690,13 @@ define([
 
       it('_getLoadingIndicatorClasses', function() {
          const theme = 'default';
-         function testCaseWithArgs(indicatorState, hasPaging) {
+         function testCaseWithArgs(indicatorState, hasPaging, isPortionedSearchInProgress = false) {
             return lists.BaseControl._private.getLoadingIndicatorClasses({
                hasItems: true,
                hasPaging: hasPaging,
                loadingIndicatorState: indicatorState,
-               theme
+               theme,
+               isPortionedSearchInProgress
             });
          }
 
@@ -5703,6 +5704,7 @@ define([
          assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up', false));
          assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down', false));
          assert.equal(`controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`, testCaseWithArgs('down', true));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down controls-BaseControl__loadingIndicator_style-portionedSearch_theme-default', testCaseWithArgs('down', false, true));
 
       });
 
