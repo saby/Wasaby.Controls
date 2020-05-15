@@ -503,13 +503,13 @@ var _Controller = Control.extend({
    },
 
    _loadItems() {
-      if (!this._loadItemsPromise || this._loadItemsPromise.resolved && !this._items) {
+      if (this._items) {
+         // Обновляем данные в источнике, нужно для работы истории
+         this._setItems(this._items);
+         this._loadItemsPromise = Promise.resolve();
+      } else if (!this._loadItemsPromise || this._loadItemsPromise.resolved && !this._items) {
          if (this._options.source && !this._items) {
             this._loadItemsPromise = _private.loadItems(this, this._options);
-         } else if (this._items) {
-            // Обновляем данные в источнике, нужно для работы истории
-            this._setItems(this._items);
-            this._loadItemsPromise = Promise.resolve();
          }
       }
       return this._loadItemsPromise;
