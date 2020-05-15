@@ -29,19 +29,7 @@ define([
          cfgBaseControl,
          cfgTreeControl = cMerge(cfg, {
             viewModelConstructor: treeGrid.ViewModel
-         }),
-         originCreateMarkerController = listMod.BaseControl._private.createMarkerController;
-
-      listMod.BaseControl._private.createMarkerController = function() {
-         return {
-            setMarkedKey() { },
-            moveMarkerToNext() { },
-            moveMarkerToPrev() { },
-            handleRemoveItems() {},
-            update() {}
-         };
-      };
-
+         });
       cfgTreeControl = Object.assign(treeGrid.TreeControl.getDefaultOptions(), cfgTreeControl);
       treeControl = new treeGrid.TreeControl(cfgTreeControl);
       treeControl.saveOptions(cfgTreeControl);
@@ -62,8 +50,6 @@ define([
          treeBeforeUpdate.apply(treeControl, arguments);
          baseControl._beforeUpdate(treeControl._options);
       };
-
-      listMod.BaseControl._private.createMarkerController = originCreateMarkerController;
 
       return treeControl;
    }
@@ -767,7 +753,7 @@ define([
       });
 
 
-      /*it('TreeControl._afterUpdate', function() {
+      it('TreeControl._afterUpdate', function() {
          var source = new sourceLib.Memory({
             data: [],
             keyProperty: 'id'
@@ -839,7 +825,6 @@ define([
                treeControl._afterUpdate({filter: {}, source: source});
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
-                  assert.equal(12, treeViewModel._model._root);
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
                   assert.isTrue(sourceControllersCleared);
@@ -851,7 +836,7 @@ define([
                }, 20);
             }, 10);
          });
-      });*/
+      });
 
       it('clearSourceControllersForNotExpandedNodes', function() {
          const getSourceController = () => {
@@ -1005,7 +990,7 @@ define([
          assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
       });
 
-     /* it('List navigation by keys', function(done) {
+      it('List navigation by keys', function(done) {
          // mock function working with DOM
          listMod.BaseControl._private.scrollToItem = function() {};
 
@@ -1062,7 +1047,7 @@ define([
                done();
             }, 1);
          }, 1);
-      });*/
+      });
       it('TreeControl._beforeUpdate name of property', function() {
          var
             source = new sourceLib.Memory({
@@ -1701,7 +1686,7 @@ define([
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
       });
 
-      /*it('markItemByExpanderClick false', function() {
+      it('markItemByExpanderClick false', function() {
 
          var
             savedMethod = treeGrid.TreeControl._private.toggleExpanded,
@@ -1732,7 +1717,8 @@ define([
                stopImmediatePropagation: function(){}
             },
             treeControl = new treeGrid.TreeControl(cfg),
-            treeGridViewModel = new treeGrid.ViewModel(cfg);
+            treeGridViewModel = new treeGrid.ViewModel(cfg),
+            expectedMarkedKey = 1;
          treeControl.saveOptions(cfg);
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
@@ -1743,6 +1729,9 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
+               },
+               setMarkedKey(key) {
+                  assert.equal(key, expectedMarkedKey);
                }
             }
          };
@@ -1751,14 +1740,12 @@ define([
 
          treeControl._mouseDownExpanderKey = 0;
          treeControl._onExpanderMouseUp(e, 0, treeGridViewModel.at(0));
-         assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
          treeControl._mouseDownExpanderKey = 1;
          treeControl._onExpanderMouseUp(e, 1, treeGridViewModel.at(1));
-         assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
-      });*/
+      });
 
       it('reloadItem', function(done) {
          var source = new sourceLib.Memory({
@@ -1828,7 +1815,7 @@ define([
          });
       });
 
-      /*it('toggle node by click', async function() {
+      it('toggle node by click', async function() {
          let
              isIndicatorHasBeenShown = false,
              isIndicatorHasBeenHidden = false,
@@ -1946,7 +1933,7 @@ define([
          assertTestCaseResult([0, 1], false);
 
          treeGrid.TreeControl._private.createSourceController = savedMethod;
-      });*/
+      });
 
 
        it('don\'t toggle node by click if handler returns false', async function() {
