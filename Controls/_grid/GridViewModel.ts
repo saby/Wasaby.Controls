@@ -323,17 +323,6 @@ var
         },
 
         calcLadderVersion(ladder = {}, index): string {
-
-            function getItemsLadderVersion(ladder) {
-                let ladderVersion = '';
-
-                Object.keys(ladder).forEach((ladderProperty) => {
-                    ladderVersion += (ladder[ladderProperty].ladderLength || 0) + '_';
-                });
-
-                return ladderVersion;
-            }
-
             let
                 version = '',
                 simpleLadder = ladder.ladder && ladder.ladder[index],
@@ -343,7 +332,7 @@ var
                 version += 'LP_';
             }
             if (stickyLadder) {
-                version += 'SP_' + getItemsLadderVersion(stickyLadder);
+                version += 'SP_' + (stickyLadder.ladderLength || 0);
             }
 
             return version;
@@ -412,21 +401,36 @@ var
             if (!self._isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
-            if (self._options.stickyColumn) {
+            if (!self._ladder || self._options.stickyColumn) {
                 self.resetCachedItemData();
             }
 
             const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
-
-            return prepareLadder({
+            const startIndex = self.getStartIndex();
+            const stopIndex = hasVirtualScroll ? self.getStopIndex() : displayStopIndex;
+            const newLadder: any = prepareLadder({
                 ladderProperties: self._options.ladderProperties,
-                startIndex: self.getStartIndex(),
-                stopIndex: hasVirtualScroll ? self.getStopIndex() : displayStopIndex,
+                startIndex,
+                stopIndex,
                 display: self.getDisplay(),
                 columns: self._options.columns,
                 stickyColumn: self._options.stickyColumn
             });
+            //Нужно сбросить кэш для записей, у которых поменялась конфигурация лесенки
+            if (self._ladder) {
+                for (let i = startIndex; i < stopIndex ; i++) {
+                    if (!isEqual(newLadder.stickyLadder[i], self._ladder.stickyLadder[i]) || 
+                        !isEqual(newLadder.ladder[i], self._ladder.ladder[i])) {
+
+                        const dispItem = self.getItemById(self.getItems()?.at(i)?.getId());
+                        if (dispItem) {
+                            self.resetCachedItemData(self._getDisplayItemCacheKey(dispItem));
+                        }
+                    }
+                }
+            }
+            return newLadder;
         },
         getTableCellStyles(currentColumn): string {
             let styles = '';
@@ -1349,6 +1353,9 @@ var
         resetCachedItemData: function(itemKey?) {
             this._model.resetCachedItemData(itemKey);
         },
+        _getDisplayItemCacheKey(dispItem) {
+            return this._model._getDisplayItemCacheKey(dispItem);
+        },
 
         getItemDataByItem(dispItem) {
             const self = this;
@@ -1863,7 +1870,7 @@ var
         getFooterStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
                 const offsetForMultiSelect: number = +(this.getMultiSelectVisibility() !== 'hidden');
-                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
+                const offsetForStickyColumn: number = +(this.shouldAddStickyLadderCell());
 
                 return GridLayoutUtil.getColumnStyles({
                     columnStart: 0,
