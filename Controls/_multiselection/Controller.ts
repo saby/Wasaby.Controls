@@ -57,8 +57,8 @@ export class Controller {
 
       const oldSelection = clone(this._selection);
       if (selectionChanged) {
-         this._selectedKeys = options.selectedKeys;
-         this._excludedKeys = options.excludedKeys;
+         this._selectedKeys = options.selectedKeys.slice();
+         this._excludedKeys = options.excludedKeys.slice();
          this._updateModel(this._selection);
       } else if (itemsChanged || modelChanged) {
          this._updateModel(this._selection);
@@ -143,8 +143,8 @@ export class Controller {
    }
 
    private _remove(keys: TKeys): void {
-      this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
-      this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
+      this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys.slice(), keys);
+      this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys.slice(), keys);
    }
 
    private _getItemStatus(key: TKey): boolean {
