@@ -3,6 +3,12 @@
    border-radius: @border-radius_default_searchInput;
 }
 
+//добавляю пока только один размер для высоты l (используется на tensor.ru)
+.controls-Render_search_borderRadius-l_theme-@{themeName},
+.controls-Render_searchContrast_borderRadius-l_theme-@{themeName} {
+  border-radius: @border-radius_l_searchInput;
+}
+
 .controls-Render_state-search-valid_theme-@{themeName},
 .controls-Render_state-search-invalid_theme-@{themeName},
 .controls-Render_state-search-invalidAccent_theme-@{themeName} {

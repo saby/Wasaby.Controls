@@ -20,10 +20,26 @@ var Paging = cExtend.extend({
     constructor: function (cfg) {
         this._options = cfg;
         Paging.superclass.constructor.apply(this, arguments);
-
-        this.handleScrollTop();
+        this._initializePaging(cfg.scrollParams);
     },
 
+    _initializePaging(scrollParams) {
+        if (scrollParams.scrollTop === 0) {
+            this._curState = 'top';
+        } else if (scrollParams.clientHeight + scrollParams.scrollTop >= scrollParams.scrollHeight) {
+            this._curState = 'bottom';
+        } else {
+            this._curState = 'middle';
+        }
+
+        // refactored by https://online.sbis.ru/opendoc.html?guid=edc7e56a-fe3c-4763-995e-5e29fcac3c6f
+        this._options.pagingCfgTrigger({
+            stateBegin: this._curState !== 'top' ? 'normal' : 'disabled',
+            statePrev: this._curState !== 'top' ? 'normal' : 'disabled',
+            stateNext: this._curState !== 'bottom' ? 'normal' : 'disabled',
+            stateEnd: this._curState !== 'bottom' ? 'normal' : 'disabled'
+        });
+    },
 
     handleScroll: function () {
         if (!(this._curState === 'middle')) {
@@ -78,7 +94,6 @@ var Paging = cExtend.extend({
                 break;
         }
     },
-
 
     destroy: function () {
         this._options = {};
