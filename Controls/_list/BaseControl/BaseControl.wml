@@ -41,6 +41,9 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
+    <ws:if data="{{_loadingIndicatorState === 'all'}}">
+        <ws:partial template="loadingIndicator"/>
+    </ws:if>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content_theme-{{_options.theme}}">
             <ws:partial template="{{_options.footerTemplate}}"/>
@@ -209,7 +212,7 @@
 
         <ws:if data="{{_listViewModel}}">
 
-            <ws:if data="{{_loadingIndicatorState && _loadingIndicatorState=== 'up'}}">
+            <ws:if data="{{_loadingIndicatorState=== 'up'}}">
                 <ws:partial template="loadingIndicator"/>
             </ws:if>
 
@@ -220,7 +223,7 @@
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
 
-        <ws:if data="{{_loadingIndicatorState && _loadingIndicatorState !== 'up'}}">
+        <ws:if data="{{_loadingIndicatorState === 'down'}}">
             <ws:partial template="loadingIndicator"/>
         </ws:if>
 
