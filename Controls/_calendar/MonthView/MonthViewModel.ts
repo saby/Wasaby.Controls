@@ -153,12 +153,13 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       if (backgroundStyle) {
          backgroundColorClass += '_style-' + backgroundStyle;
       }
-
-      css.push(textColorClass, backgroundColorClass);
+      if (scope.isCurrentMonth || scope.mode === 'extended') {
+         css.push(textColorClass, backgroundColorClass);
+      }
 
       // Оставляем старые классы т.к. они используются в большом выборе периода до его редизайна
       // TODO: Выпилить старые классы
-      if (scope.isCurrentMonth) {
+      if (scope.isCurrentMonth || scope.mode === 'extended') {
          if (scope.selectionEnabled) {
             css.push('controls-MonthViewVDOM__cursor-item');
          }
