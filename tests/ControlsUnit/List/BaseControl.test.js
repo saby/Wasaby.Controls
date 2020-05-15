@@ -2584,7 +2584,7 @@ define([
          });
       });
 
-      /*it('List navigation by keys and after reload', function(done) {
+      it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
          lists.BaseControl._private.scrollToItem = function() {
          };
@@ -2632,7 +2632,7 @@ define([
                   }]
                }),
                keyProperty: 'id',
-               markedKey: 1,
+               markedKey: 'firstItem',
                viewModelConstructor: lists.ListViewModel
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
@@ -2659,7 +2659,6 @@ define([
                lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
                assert.equal(lnBaseControl.getViewModel()
                   .getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
-               assert.isTrue(preventDefaultCalled);
 
                lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
                assert.equal(lnBaseControl.getViewModel()
@@ -2678,7 +2677,7 @@ define([
                }, 1);
             }, 1);
          }, 1);
-      });*/
+      });
 
       it('_onCheckBoxClick', function() {
          var rs = new collection.RecordSet({
