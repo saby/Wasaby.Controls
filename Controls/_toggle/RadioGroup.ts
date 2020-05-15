@@ -1,5 +1,7 @@
 import Control = require('Core/Control');
 import {Controller as SourceController} from 'Controls/source';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Model} from 'Types/entity';
 import template = require('wml!Controls/_toggle/RadioGroup/RadioGroup');
 import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 
@@ -74,8 +76,8 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
          }
       },
 
-      _selectKeyChanged: function(e, item, keyProperty) {
-         if (!this._options.readOnly) {
+      _selectKeyChanged: function(e: SyntheticEvent<MouseEvent | TouchEvent>, item: Model, keyProperty: string) {
+         if (!this._options.readOnly && item.get('readOnly') !== true) {
             this._notify('selectedKeyChanged', [item.get(keyProperty)]);
          }
       }
@@ -93,4 +95,3 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
    Radio._private = _private;
 
    export = Radio;
-
