@@ -427,19 +427,23 @@ var
                 columns: self._options.columns,
                 stickyColumn: self._options.stickyColumn
             });
-
-            //Нужно сбросить кэш для записей, у которых поменялась конфигурация лесенки, иначе таблица ломается
+            let updateVersion = false;
+            //Нужно сбросить кэш для записей, у которых поменялась конфигурация лесенки
             if (self._ladder) {
                 for (let i = startIndex; i < stopIndex ; i++) {
                     if (!isEqual(newLadder.stickyLadder[i], self._ladder.stickyLadder[i]) || 
                         !isEqual(newLadder.ladder[i], self._ladder.ladder[i])) {
-                            
+
                         const dispItem = self.getItemById(self.getItems()?.at(i)?.getId());
                         if (dispItem) {
                             self.resetCachedItemData(self._getDisplayItemCacheKey(dispItem));
+                            updateVersion = true;
                         }
                     }
                 }
+            }
+            if (updateVersion) {
+                self._nextModelVersion();
             }
             return newLadder;
         },
