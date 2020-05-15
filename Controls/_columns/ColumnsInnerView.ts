@@ -54,7 +54,7 @@ export default class ColumnsInnerView extends Control {
             } else {
                 this._columnsCount = DEFAULT_COLUMNS_COUNT;
             }
-        this.updateColumns();
+            this.updateColumns();
         }
     }
 

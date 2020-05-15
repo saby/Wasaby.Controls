@@ -2218,7 +2218,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._groupingLoader.destroy();
         }
 
-        _private.updateMarkerController(this, newOptions);
+        if (this._markerController) {
+            _private.updateMarkerController(this, newOptions);
+        }
 
         // UC1: Record might be editing on page load, then we should initialize Item Actions.
         // UC2: We should reassign ItemActions on model change before drawing them in For template
