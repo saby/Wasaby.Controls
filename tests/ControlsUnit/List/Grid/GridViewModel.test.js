@@ -227,29 +227,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         'property3': {}
                      },
                      1: {
-
                      }
                   },
                   stickyLadder: {
                      0: {
-                        'property1': {
-                           ladderLength: 2
-                        },
-                        'property2': {
-                           ladderLength: 1
-                        },
-                        'property3': {}
+                        ladderLength: 2,
+                        headingStyle: 'grid-row: span 2'
                      },
-                     1: {
-
-                     }
+                     1: {},
                   }
                };
             assert.equal('LP_', gridMod.GridViewModel._private.calcLadderVersion(onlySimpleLadder, 0));
             assert.equal('LP_', gridMod.GridViewModel._private.calcLadderVersion(onlySimpleLadder, 1));
 
-            assert.equal('LP_SP_2_1_0_', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 0));
-            assert.equal('LP_SP_', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 1));
+            assert.equal('LP_SP_2', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 0));
+            assert.equal('LP_SP_0', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 1));
 
 
          });
@@ -1229,6 +1221,55 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(2, Object.keys(ladder.stickyLadder).length);
             assert.equal(2, Object.keys(ladder.ladder).length);
          });
+
+         it('prepareLadder should reset cache of updated items', function () {
+            const date1 = new Date(2017, 0, 1);
+            const date2 = new Date(2017, 0, 3);
+            const ladderViewModel = new gridMod.GridViewModel({
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', date: date1, photo: '1.png' },
+                     { id: 1, title: 'i1', date: date1, photo: '1.png' },
+                     { id: 2, title: 'i2', date: date1, photo: '1.png' },
+                     { id: 3, title: 'i3', date: date2, photo: '2.png' }
+                  ]
+               }),
+               keyProperty: 'id',
+               columns: [{
+                  width: '1fr',
+                  displayProperty: 'title'
+               }, {
+                  width: '1fr',
+                  template: 'wml!MyTestDir/Photo',
+                  stickyProperty: 'photo'
+               }],
+               ladderProperties: ['date'],
+               virtualScrolling: true
+            });
+
+            ladderViewModel._model._startIndex = 0;
+            ladderViewModel._model._stopIndex = 4;
+            ladderViewModel._ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
+            assert.equal(4, Object.keys(ladderViewModel._ladder.stickyLadder).length);
+            assert.equal(4, Object.keys(ladderViewModel._ladder.ladder).length);
+
+            
+            let resetCacheKey = null;
+            let fullCacheReset = false;
+            ladderViewModel.resetCachedItemData = (key) => {
+               if (!key) {
+                  fullCacheReset = true;
+               }
+               resetCacheKey = key;
+            };
+            ladderViewModel._model._startIndex = 1;
+            ladderViewModel._ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
+            assert.equal(3, Object.keys(ladderViewModel._ladder.stickyLadder).length);
+            assert.equal(3, Object.keys(ladderViewModel._ladder.ladder).length);
+            assert.isFalse(fullCacheReset, 'Не должен сбрасываться весь кэш');
+            assert.equal(1, resetCacheKey, 'Неверный id записи со сброшенным кэшем');
+         });
       });
       describe('other methods of the class', function() {
          var
@@ -1517,7 +1558,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                property: ''
             };
             assert.equal('grid-column-start: 1; grid-column-end: 6;', gridViewModel.getFooterStyles());
+            gridViewModel._model._draggingItemData = {}
+            assert.equal('grid-column-start: 1; grid-column-end: 5;', gridViewModel.getFooterStyles());
             gridViewModel._options.stickyColumn = undefined;
+            gridViewModel._model._draggingItemData = undefined;
          });
 
          it('is multiheader', function() {
