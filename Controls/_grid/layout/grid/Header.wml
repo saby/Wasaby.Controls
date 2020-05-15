@@ -67,7 +67,7 @@
 </ws:template>
 
 <ws:if data="{{listModel.isStickyHeader()}}">
-   <Controls.scroll:Group>
+   <Controls.scroll:Group calculateHeadersOffsets="{{ listModel._isMultiHeader }}">
       <ws:partial template="header" listModel="{{ listModel }}" />
    </Controls.scroll:Group>
 </ws:if>
