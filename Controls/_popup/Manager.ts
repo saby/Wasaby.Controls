@@ -558,6 +558,9 @@ class Manager extends Control<IManagerOptions> {
 
     private _redrawItems(): void {
         const zIndexChanged = this._updateZIndex();
+        // индекс обновляется после вызова show
+        // но после вызывается еще eventHandler и тут уже индексы не меняются
+        // поэтому nextVersion не вызовется и попап не отобржается
         if (zIndexChanged) {
             this._popupItems._nextVersion();
         }
@@ -584,9 +587,9 @@ class Manager extends Control<IManagerOptions> {
 
             const newZIndex = customZIndex || calculatedZIndex || baseZIndex;
             if (newZIndex !== item.currentZIndex) {
-                item.currentZIndex = newZIndex;
                 zIndexChanged = true;
             }
+            item.currentZIndex = newZIndex;
         });
 
         return zIndexChanged;
