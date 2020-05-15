@@ -66,7 +66,7 @@
 </ws:template>
 
 <ws:if data="{{listModel.isStickyHeader() && listModel.getResultsPosition() === 'top'}}">
-    <Controls.scroll:Group>
+    <Controls.scroll:Group calculateHeadersOffsets="{{ listModel._isMultiHeader }}">
        <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
        <ws:partial template="results" temp="{{ listModel.getVersion() }}"/>
     </Controls.scroll:Group>
