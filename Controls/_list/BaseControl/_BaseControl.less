@@ -82,19 +82,17 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 
 .controls-BaseControl__loadingIndicator__state-up {
    position: relative;
+   pointer-events: none;
 }
 .controls-BaseControl__loadingIndicator__state-down {
-   position: relative;
+   position: sticky;
+   bottom: 0;
+   pointer-events: none;
 }
 
 .controls-BaseControl__loadingIndicator__state-up .controls-BaseControl__loadingIndicatorImg-wrapper_theme-@{themeName} {
    position: absolute;
    top: 0;
-}
-
-.controls-BaseControl__loadingIndicator__state-down .controls-BaseControl__loadingIndicatorImg-wrapper_theme-@{themeName} {
-   position: absolute;
-   bottom: 0;
 }
 
 .controls-BaseControl_empty__loadingIndicator__state-down_theme-@{themeName} {
@@ -106,7 +104,7 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 }
 
 .controls-BaseControl_withPaging__loadingIndicator__state-down_theme-@{themeName} {
-   top: @item_height_paging;
+   margin-bottom: -@item_height_paging;
 }
 
 .controls-BaseControl__loadingIndicator__state-all {
@@ -124,7 +122,13 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    z-index: 1;
    display: inline-flex;
    align-items: center;
+   pointer-events: auto;
 }
+
+.controls-BaseControl__loadingIndicatorImg-wrapper_style-portionedSearch_theme-@{themeName} {
+   box-shadow: @loadingIndicator_iterativeSearch_box-shadow_list;
+}
+
 .controls-BaseControl__loadingIndicatorImg_theme-@{themeName} {
    background: @spinner_l_background-image_loadingIndicator 0 0 no-repeat;/**/
    width: @spinner_l_size_loadingIndicator;
@@ -186,7 +190,7 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 
 .controls-BaseControl__loadingIndicator-footerTemplate_theme-@{themeName} {
    margin-left: @content_l_padding_loadingIndicator;
-   color: @unaccented_color;
+   color: @text-color_loadingIndicator;
    font-size: @font-size_xs;
 }
 
