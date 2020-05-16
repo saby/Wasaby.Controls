@@ -1,5 +1,11 @@
 import {IInputData} from '../Base/InputUtil';
 
+export interface IConfigForDetectValue {
+    // TODO: Добавить тип как интерфейс базовой модели.
+    model: object;
+    field?: HTMLInputElement
+}
+
 /**
  * Класс для поддержки корректной работы контрола ввода и синхронизатора.
  * Проблема: Обработка пользовательского ввода происходит по событию input. В этот момент введенное значение
@@ -41,15 +47,15 @@ export class ValueInField {
         this._wasInputProcessing++;
     }
 
-    detectFieldValue(field?: HTMLInputElement): string {
+    detectFieldValue(config: IConfigForDetectValue): string {
         if (this._wasInputProcessing) {
             return this._fieldValue;
         }
-        if (field) {
-            this._fieldValue = field.value;
-            return  field.value;
-        }
 
-        return this._fieldValue;
+        const {field, model} = config;
+        const value: string = field ? field.value : model.displayValue;
+        this._fieldValue = value;
+
+        return value;
     }
 }
