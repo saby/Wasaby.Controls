@@ -1087,7 +1087,7 @@ define([
                   },
                   multiSelectVisibility: 'visible',
                   theme
-               }), ` controls-ListView__itemContent controls-ListView__itemContent_theme-default_default controls-ListView__item_default-topPadding_null_theme-default controls-ListView__item_default-bottomPadding_s_theme-default` +
+               }), ` controls-ListView__itemContent controls-ListView__itemContent_default_theme-default controls-ListView__item_default-topPadding_null_theme-default controls-ListView__item_default-bottomPadding_s_theme-default` +
                   ` controls-ListView__item-rightPadding_m_theme-default controls-ListView__itemContent_withCheckboxes_theme-default`);
             });
 
