@@ -73,12 +73,15 @@ export class FixBugs {
         processingResult = this._insertFromDropBug.inputProcessing(data);
         processingResult = this._minusProcessingBug.inputProcessing(processingResult);
 
-        this._valueInFieldBug.startInputProcessing(processingResult);
+        this._valueInFieldBug.startInputProcessing();
 
         return processingResult;
     }
 
     getFieldValue(): string {
-        return this._valueInFieldBug.detectFieldValue(this._inst._getField());
+        return this._valueInFieldBug.detectFieldValue({
+            model: this._inst._viewModel,
+            field: this._inst._getField()
+        });
     }
 }
