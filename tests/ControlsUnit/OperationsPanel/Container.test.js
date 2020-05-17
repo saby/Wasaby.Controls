@@ -20,25 +20,47 @@ define(['Controls/operations'], function(operations) {
          }), [2]);
       });
 
-      it('_beforeUpdate', function() {
-         let containerInstance = new operations.PanelContainer();
+      describe('_beforeUpdate', function() {
+         let containerInstance;
 
-         containerInstance._options.listMarkedKey = null;
-         containerInstance._options.selectedKeys = [];
-
-         containerInstance._beforeUpdate({
-            listMarkedKey: 1,
-            selectedKeys: []
+         beforeEach(() => {
+            containerInstance = new operations.PanelContainer();
+            containerInstance.saveOptions({
+               listMarkedKey: null,
+               selectedKeys: [],
+               selectedKeysCount: 0
+            });
          });
-         assert.deepEqual(containerInstance._selectedKeys, [1]);
-         assert.deepEqual(containerInstance._selectedKeysCount, 0);
 
-         containerInstance._beforeUpdate({
-            listMarkedKey: 1,
-            selectedKeys: [2]
+         describe('marked key', () => {
+            it('selectedKeys are empty and list has marked key', () => {
+               containerInstance._beforeUpdate({
+                  listMarkedKey: 1,
+                  selectedKeys: []
+               });
+               assert.deepEqual(containerInstance._selectedKeys, [1]);
+               assert.deepEqual(containerInstance._selectedKeysCount, 0);
+            });
+
+            it('has selectedKeys and list has marked key', () => {
+               containerInstance._beforeUpdate({
+                  listMarkedKey: 1,
+                  selectedKeys: [2]
+               });
+               assert.deepEqual(containerInstance._selectedKeys, [2]);
+               assert.isUndefined(containerInstance._selectedKeysCount);
+            });
          });
-         assert.deepEqual(containerInstance._selectedKeys, [2]);
-         assert.isUndefined(containerInstance._selectedKeysCount);
+
+         describe('selectedKeysCount', () => {
+            it('selectedKeysCount is changed', () => {
+               containerInstance._beforeUpdate({
+                  selectedKeysCount: 100,
+                  selectedKeys: [2]
+               });
+               assert.equal(containerInstance._selectedKeysCount, 100);
+            });
+         });
       });
    });
 });
