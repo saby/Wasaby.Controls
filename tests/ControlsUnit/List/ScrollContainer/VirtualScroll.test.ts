@@ -285,6 +285,23 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance.insertItems(0, 2, {up: false, down: false}, 'up');
             assert.deepEqual({direction: 'up', heightDifference: 0}, instance.getParamsToRestoreScroll());
         });
+        it('after shift with recalculate indexes to both direction', () => {
+            // test for task https://online.sbis.ru/opendoc.html?guid=d739f7ec-36e2-4386-8b17-f39d135f4656
+            const instance = new controller({pageSize: 10, segmentSize: 5}, {viewport: 3, trigger: 1, scroll: 30});
+            instance.resetRange(1, 40);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([3, 3, 3, 3, 3, 3, 3, 3, 3, 3]));
+            instance.shiftRange('up');
+            // @ts-ignore
+            // render items 5, 6, 7, 8
+            instance.updateItemsHeights(generateContainer([3, 3, 3, 3]));
+            instance.getParamsToRestoreScroll();
+            // add 5 items and render items *0, *1, *2, *3, *4, 5, 6, 7, 8, *9 (* - new items)
+            instance.insertItems(0, 5, {up: true, down: false}, 'up');
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([3, 3, 3, 3, 3, 3, 3, 3, 3, 3]));
+            assert.deepEqual({direction: 'up', heightDifference: -3}, instance.getParamsToRestoreScroll());
+        });
     });
     describe('.updateItemsHeights()', () => {
         it('range changed switch off', () => {
