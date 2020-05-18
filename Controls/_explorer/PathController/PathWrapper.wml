@@ -30,7 +30,7 @@
       <ws:partial template="headingPath"
                   on:arrowClick="_notifyHandler('arrowClick')"/>
    </ws:else>
-</ws:if>ff
+</ws:if>
 <ws:else>
 
  <!-- нельзя использовать invisible-node. он ломает всплытие событий/-->
