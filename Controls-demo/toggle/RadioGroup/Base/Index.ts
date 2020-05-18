@@ -21,11 +21,13 @@ class Base extends Control<IControlOptions> {
                 id: '2',
                 title: 'State2',
                 caption: 'Additional caption2',
-                readOnly: true
+                readOnly: true,
+                tooltip: 'sorry'
             }, {
                 id: '3',
                 title: 'State3',
-                caption: 'Additional caption3'
+                caption: 'Additional caption3',
+                tooltip: 'vv'
             }]
         });
     }
