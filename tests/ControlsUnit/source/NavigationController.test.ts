@@ -12,7 +12,7 @@ import {
     Direction,
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
-} from 'Controls/_source/interface/IAdditionalQueryParams';
+} from 'Controls/_interface/IAdditionalQueryParams';
 import {SourceFaker} from 'Controls-demo/List/Utils/listDataGenerator';
 
 const fakePageNavigationConfig = (hasMore?: boolean, page: number = 0): INavigationOptionValue<INavigationPageSourceConfig> => {

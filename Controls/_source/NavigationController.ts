@@ -13,7 +13,7 @@ import {
     Direction,
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
-} from './interface/IAdditionalQueryParams';
+} from 'Controls/_interface/IAdditionalQueryParams';
 import {INavigationSourceConfig} from 'Controls/_interface/INavigation';
 
 /**
