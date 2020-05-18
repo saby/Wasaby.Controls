@@ -4,7 +4,7 @@ import {factory, RecordSet} from 'Types/collection';
 import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {Opener as DropdownOpener} from 'Controls/dropdown';
+import {Sticky  as StickyOpener} from 'Controls/popup';
 import {Controller as SourceController} from 'Controls/source';
 import {IShowType, showType, getMenuItems} from 'Controls/Utils/Toolbar';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
@@ -149,7 +149,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     _children: {
         menuTarget: HTMLElement,
-        menuOpener: DropdownOpener
+        menuOpener: StickyOpener
     };
 
     readonly '[Controls/_interface/IHierarchy]': boolean = true;

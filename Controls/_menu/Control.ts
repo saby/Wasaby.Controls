@@ -21,7 +21,6 @@ import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {TouchContextField} from 'Controls/context';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
-import { Sticky } from 'Controls/popup';
 
 /**
  * Контрол меню.
@@ -593,26 +592,28 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private getTemplateOptions(item: TreeItem<Model>): object {
-        let templateOptions = Clone(this._options);
-        templateOptions.root = item.getContents().get(this._options.keyProperty);
-        templateOptions.bodyContentTemplate = 'Controls/_menu/Control';
-        templateOptions.footerContentTemplate = this._options.nodeFooterTemplate;
-        templateOptions.footerItemData = {
-            key: templateOptions.root,
-            item
+        const root = item.getContents().get(this._options.keyProperty);
+        const subMenuOptions = {
+            root,
+            bodyContentTemplate: 'Controls/_menu/Control',
+            footerContentTemplate: this._options.nodeFooterTemplate,
+            footerItemData: {
+                key: root,
+                item
+            },
+            closeButtonVisibility: false,
+            showClose: false,
+            showHeader: false,
+            headerTemplate: null,
+            headerContentTemplate: null,
+            additionalProperty: null,
+            searchParam: null,
+            itemPadding: null,
+            source: this.getSourceSubMenu(root),
+            iWantBeWS3: false // FIXME https://online.sbis.ru/opendoc.html?guid=9bd2e071-8306-4808-93a7-0e59829a317a
         };
-        templateOptions.closeButtonVisibility = false;
-        templateOptions.showHeader = false;
-        templateOptions.headerTemplate = null;
-        templateOptions.headerContentTemplate = null;
-        templateOptions.additionalProperty = null;
-        templateOptions.searchParam = null;
-        templateOptions.itemPadding = null;
 
-        templateOptions.source = this.getSourceSubMenu(templateOptions.root);
-
-        templateOptions.iWantBeWS3 = false; // FIXME https://online.sbis.ru/opendoc.html?guid=9bd2e071-8306-4808-93a7-0e59829a317a
-        return templateOptions;
+        return {...this._options, ...subMenuOptions};
     }
 
     private getSourceSubMenu(root) {
@@ -650,7 +651,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             actionCaptionPosition: 'none',
             itemActionsClass: `controls-Menu__itemActions_position_rightCenter_theme-${options.theme}`,
             iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisibility: editingConfig?.toolbarVisibility
+            editingToolbarVisible: editingConfig?.toolbarVisibility
         });
     }
 

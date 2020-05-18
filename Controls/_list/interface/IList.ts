@@ -1,5 +1,5 @@
-import { RecordSet } from 'Types/collection';
 import { TemplateFunction } from 'UI/Base';
+import { IItemAction, IContextMenuConfig } from 'Controls/itemActions';
 
 /**
  * Интерфейс для списков.
@@ -40,41 +40,16 @@ type TActionAlignment = 'horizontal'|'vertical';
 type TActionCaptionPosition = 'right'|'bottom'|'none';
 /**
  * @typedef {String} TActionDisplayMode
- * @variant title показывать только заголовок
- * @variant icon показывать только иконку
- * @variant both показывать иконку и заголовок
- * @variant auto если есть иконка, то показывать иконку, иначе заголовок
+ * @variant title Показывать только заголовок.
+ * @variant icon Показывать только иконку.
+ * @variant both Показывать иконку и заголовок.
+ * @variant auto Если есть иконка, то показывать иконку, иначе заголовок.
  */
 type TActionDisplayMode = 'title'|'icon'|'both'|'auto';
 type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
-
-export interface IContextMenuConfig {
-    items?: RecordSet;
-    groupTemplate?: TemplateFunction|string;
-    groupProperty?: string;
-    itemTemplate?: TemplateFunction|string;
-    footerTemplate?: TemplateFunction|string;
-    headerTemplate?: TemplateFunction|string;
-    iconSize?: string;
-}
-
-export interface IItemAction {
-    id: string;
-    title?: string;
-    icon?: string;
-    showType?: 0|1|2;
-    style?: string;
-    iconStyle?: TIconStyle;
-    displayMode?: TActionDisplayMode;
-    tooltip?: string;
-    handler?: (item) => void;
-    parent?: string;
-    'parent@'?: boolean|null;
-    _isMenu?: boolean;
-}
 
 interface IItemPadding {
     top?: TVerticalItemPadding;
@@ -107,7 +82,7 @@ export interface IList {
     nodeConfig?: INodeConfig;
 }
 
-/*
+/*ENG
  * Interface for lists.
  *
  * @interface Controls/_list/interface/IList
@@ -129,7 +104,7 @@ export interface IList {
  * @default Controls/list:LoadingIndicatorTemplate
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#contextMenuVisibility
  * @cfg {Boolean} Determines whether context menu should be shown on right-click.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
@@ -138,16 +113,16 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#contextMenuConfig
- * @cfg {Controls/menu:IMenuControlOptions} Конфигурация для меню операций над записью.
+ * @cfg {Controls/menu:IMenuControlOptions} Конфигурация для меню опции записи.
  * @remark
  * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию.
  * В качестве ключей можно использовать следующие свойства:
- * - items - для смены набора элементов.
- * - groupProperty, groupTemplate для установки группировки.
- * - itemTemplate - шаблон элемента меню.
- * - footerTemplate - шаблон футера.
- * - headerTemplate - шаблон шапки.
- * - iconSize - размер иконок в выпадающем меню.
+ * * items — для смены набора элементов.
+ * * groupProperty, groupTemplate для установки группировки.
+ * * itemTemplate — шаблон элемента меню.
+ * * footerTemplate — шаблон футера.
+ * * headerTemplate — шаблон шапки.
+ * * iconSize — размер иконок в выпадающем меню.
  */
 
 /*ENG
@@ -175,7 +150,7 @@ export interface IList {
  * </pre>
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Template for the empty list.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
@@ -204,31 +179,39 @@ export interface IList {
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-пример</a>
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Template that will be rendered below the list.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  */
 
 /**
- * @name Controls/_list/interface/IList#multiSelectVisibility
- * @cfg {String} Режим отображения флагов множественного выбора.
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">демо-пример</a>
+ * @typedef {String} MultiSelectVisibility
  * @variant visible Показать.
  * @variant hidden Скрыть.
  * @variant onhover Показывать при наведении.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#multiSelectVisibility
+ * @cfg {MultiSelectVisibility} Режим отображения флагов множественного выбора.
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">демо-пример</a>
  * @default hidden
  * @remark
  * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/service-development/service-contract/logic/list/list-iterator/">руководству разработчика</a>.
  */
 
-/*
- * @name Controls/_list/interface/IList#multiSelectVisibility
- * @cfg {String} Whether multiple selection is enabled.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
+/*ENG
+ * @typedef {String} MultiSelectVisibility
  * @variant visible Show.
  * @variant hidden Do not show.
  * @variant onhover Show on hover.
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#multiSelectVisibility
+ * @cfg {MultiSelectVisibility} Whether multiple selection is enabled.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
  * @default hidden
  */
 
@@ -238,12 +221,12 @@ export interface IList {
  * @property {String} title Название опции записи.
  * @property {String} tooltip Текст подсказки при наведении мыши.
  * @property {String} icon Имя иконки для опции записи.
- * @property {TActionDisplayMode} displayMode Режим отображения операции над записью.
- * @property {Enum} [item.showType] Определяет, где будет отображаться элемент. Значение берется из утилиты 'Controls/Utils/Toolbar'. {@link Controls/Utils/Toolbar Подробнее}
+ * @property {TActionDisplayMode} displayMode Режим отображения опции записи.
+ * @property {Enum} [item.showType] Определяет, где будет отображаться элемент. Значение берется из утилиты {@link Controls/Utils/Toolbar}.
  * Доступные значения:
- * showType.MENU - Элемент отображается только в меню
- * showType.MENU_TOOLBAR - Элемент отображается в меню и в тулбаре
- * showType.TOOLBAR - Элемент отображается только в тулбаре
+ * * showType.MENU — элемент отображается только в меню.
+ * * showType.MENU_TOOLBAR — элемент отображается в меню и в тулбаре.
+ * * showType.TOOLBAR — элемент отображается только в тулбаре.
  * @property {String} style Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
  * Он будет установлен для html-контейнера самой опции записи, и свойства класса будут применены как к тексту (см. title), так и к иконке (см. icon).
  * @property {TIconStyle} [iconStyle=secondary] Стиль иконки.
@@ -256,7 +239,7 @@ export interface IList {
  * Подробнее о различиях между типами узлов можно прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy здесь}.
  */
 
-/*
+/*ENG
  * @typedef {Object} ItemAction
  * @property {String} id Identifier of operation.
  * @property {String} title Operation name.
@@ -288,7 +271,7 @@ export interface IList {
  * @see actionCaptionPosition
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#itemActions
  * @cfg {Array.<ItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
@@ -303,7 +286,7 @@ export interface IList {
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @example
  * Размещаем опции записи в шаблоне с использованием itemActionsTemplate:
- * <pre>
+ * <pre class="brush: html">
  * <Controls.list:View itemActionsPosition="custom" itemActions="{{_itemActions}}">
  *    <ws:itemTemplate>
  *      <ws:partial template="Controls/list:ItemTemplate">
@@ -315,7 +298,7 @@ export interface IList {
  * </Controls.list:View>
  * </pre>
  *
- * <pre>
+ * <pre class="brush: html">
  * <!-- customTemplateName.wml -->
  * <div>{{itemData.item.title}}</div>
  *    <ws:if data="{{!itemData.isSwiped()}}">
@@ -334,7 +317,7 @@ export interface IList {
  * @see actionCaptionPosition
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#itemActionsPosition
  * @cfg {String} Position of item actions.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
@@ -379,7 +362,7 @@ export interface IList {
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Дескриптор события мыши.
  */
 
-/*
+/*ENG
  * @event Controls/_list/interface/IList#itemMouseEnter Occurs when the cursor is over the list item.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item that the cursor was over.
@@ -393,7 +376,7 @@ export interface IList {
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Дескриптор события мыши.
  */
 
-/*
+/*ENG
  * @event Controls/_list/interface/IList#itemMouseLeave Occurs when the cursor leaves the list item.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item that the cursor was over.
@@ -407,7 +390,7 @@ export interface IList {
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Дескриптор события мыши.
  */
 
-/*
+/*ENG
  * @event Controls/_list/interface/IList#itemMouseMove Occurs when the cursor moves over list items.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item that the cursor is moving along.
@@ -429,7 +412,7 @@ export interface IList {
  * @see actionCaptionPosition
  */
 
-/*
+/*ENG
  * @event Controls/_list/interface/IList#actionClick Occurs when itemAction button is clicked.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {ItemAction} action Object with configuration of the clicked action.
@@ -451,7 +434,7 @@ export interface IList {
  * @see actionCaptionPosition
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#actionAlignment
  * @cfg {String} Determines how item actions will be aligned on swipe.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">Example</a>.
@@ -473,7 +456,7 @@ export interface IList {
  * @see actionAlignment
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#actionCaptionPosition
  * @cfg {String} Determines where the caption of an item action will be displayed on swipe.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">Example</a>.
@@ -495,8 +478,9 @@ export interface IList {
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @example
  * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
- * WML:
- * <pre>
+ * 
+ * <pre class="brush: html">
+ * <!-- WML -->
  * <Controls.list:View
  *     attr:class="demo-News"
  *     itemActions="{{_itemActions}}"
@@ -508,8 +492,9 @@ export interface IList {
  *     ...
  * </Controls.list:View>
  * </pre>
- * TS:
- * <pre>
+ * 
+ * <pre class="brush: js">
+ * // TypeScript
  *  ...
  *  private _visibilityCallback(action: IItemAction, item: Model): boolean {
  *   if (action.title === 'Read') {
@@ -527,7 +512,7 @@ export interface IList {
  * @see actionAlignment
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
  * @cfg {Function} item operation visibility filter function
  * @param {ItemAction} action Object with configuration of an action.
@@ -566,7 +551,7 @@ export interface IList {
  * Настройка для опций записи извлекается из данных самого элемента.
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @example
- * <pre>
+ * <pre class="brush: js">
  * _beforeMount: function(newOptions) {
  *    this._viewSource = new source.Memory({
  *       keyProperty: 'id',
@@ -607,7 +592,7 @@ export interface IList {
  * @see actionAlignment
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#itemActionsProperty
  * @cfg {String} Name of the item's property that contains item actions.
  */
@@ -616,10 +601,10 @@ export interface IList {
  * @name Controls/_list/interface/IList#markedKey
  * @cfg {Number} Идентификатор выделенной маркером строки.
  * @remark
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-пример</a>.
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#markedKey
  * @cfg {Number} Identifier of the marked collection item.
  * @remark
@@ -627,17 +612,21 @@ export interface IList {
  */
 
 /**
- * @name Controls/_list/interface/IList#markerVisibility
- * @cfg {String} Режим отображения маркера строки.
- * @remark
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-пример</a>
+ * @typedef {String} MarkerVisibility
  * @variant visible Маркер отображается всегда, даже если ключевая запись не указана.
  * @variant hidden Маркер всегда скрыт.
- * @variant onactivated - Маркер отображается при активации списка. Например, когда пользователь отмечает запись.
+ * @variant onactivated Маркер отображается при активации списка. Например, когда пользователь отмечает запись.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#markerVisibility
+ * @cfg {MarkerVisibility} Режим отображения маркера строки.
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-пример</a>.
  * @default onactivated
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#markerVisibility
  * @cfg {String} Determines when marker is visible.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
@@ -696,24 +685,32 @@ export interface IList {
  * @cfg {Function} Функция обратного вызова для определения сбоя загрузки данных из источника.
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#dataLoadErrback
  * @cfg {Function} Callback function that will be called when data loading fail
  */
 
 /**
- * @name Controls/_list/interface/IList#style
- * @cfg {String} Режим отображения списка.
+ * @typedef {String} Style
  * @variant master Двухколоночный реестр.
  * @variant default Плоский список.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#style
+ * @cfg {Style} Режим отображения списка.
  * @default default
  */
 
-/*
- * @name Controls/_list/interface/IList#style
- * @cfg {String} Control styling
+/*ENG
+ * @typedef {String} Style
  * @variant master Stylizes control as MasterDetail
  * @variant default Simple list
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#style
+ * @cfg {String} Control styling
  * @default default
  */
 
@@ -721,14 +718,12 @@ export interface IList {
  * @typedef {String} ReloadType
  * @variant query Элемент будет перезагружен с помощью метода "Поисковый запрос".
  * @variant read Элемент будет перезагружен с помощью метода "Прочитать".
- * @default read
  */
 
-/*
+/*ENG
  * @typedef {String} ReloadType
  * @variant query Item will be reloaded with query method
  * @variant read Item will be reloaded with read method
- * @default read
  */
 
 /**
@@ -739,13 +734,13 @@ export interface IList {
  * @param {Boolean} replaceItem Определяет, как загруженный элемент будет применяться к коллекции.
  * Если параметр имеет значение true, элемент коллекции будет заменен загруженным элементом.
  * Если параметр имеет значение false (по умолчанию), загруженные элементы будут объединены в элемент коллекции.
- * @param {ReloadType} reloadType Определяет, как будет загружен элемент.
+ * @param {ReloadType} [reloadType=read] Определяет, как будет загружен элемент.
  * @example
- *  <pre>
- *      _itemUpdated: function(id) {
- *          var list = this._children.myList;
- *          list.reloadItem(id);
- *      }
+ * <pre class="brush: js">
+ * _itemUpdated: function(id) {
+ *    var list = this._children.myList;
+ *    list.reloadItem(id);
+ * }
  * </pre>
  */
 
@@ -756,15 +751,15 @@ export interface IList {
  * @param {Boolean} toBottom Определяет, будет ли виден нижний край элемента. По умолчанию нижний край элемента виден.
  * @param {Boolean} force Определяет, нужно ли подскролливать к границе элемента, если он виден
  * @example
- *  <pre>
- *      _buttonClick: function() {
- *          var list = this._children.myList;
- *          list.scrollToItem(this._firstItemKey);
- *      }
+ * <pre class="brush: js">
+ * _buttonClick: function() {
+ *    var list = this._children.myList;
+ *    list.scrollToItem(this._firstItemKey);
+ * }
  * </pre>
  */
 
-/*
+/*ENG
  * Loads model from data source, merges changes into the current data and renders the item.
  * @function Controls/_list/interface/IList#reloadItem
  * @param {String} key Identifier of the collection item, that should be reloaded from source.
@@ -774,11 +769,11 @@ export interface IList {
  * if the parameter is set to false (by default), loaded item will merged to item from collection.
  * @param {reloadType} Determine how the item will be reloaded.
  * @example
- *  <pre>
- *      _itemUpdated: function(id) {
- *          var list = this._children.myList;
- *          list.reloadItem(id);
- *      }
+ * <pre class="brush: js">
+ * _buttonClick: function() {
+ *    var list = this._children.myList;
+ *    list.scrollToItem(this._firstItemKey);
+ * }
  * </pre>
  */
 
@@ -802,7 +797,7 @@ export interface IList {
  * Событие срабатывает, только если со списком ничего не происходит при жесте "swipe" (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IClickableView#itemClick itemClick}.
  */
 
-/*
+/*ENG
  * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
@@ -813,7 +808,8 @@ export interface IList {
 
 /**
  * @event Controls/_list/interface/IList#hoveredItemChanged Происходит при наведении курсора мыши на элемент списка.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-пример</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента, на который наводим курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента.
@@ -822,14 +818,15 @@ export interface IList {
 /**
  * @event Controls/_list/interface/IList#activeElementChanged Происходит при смене активного элемента в процессе скроллирования
  * @param {Vdom/Vdom:SyntheticEvent<Event>} event Дескриптор события
- * @param {string} key Ключ активного элемента
+ * @param {String} key Ключ активного элемента
  * @remark Активным элементом считается последний элемент, который находится выше середины вьюпорта.
  * Для высчитывания активного элемента в списочном контроле должен быть включен виртуальный скроллинг.
  * @see shouldCheckActiveElement
  */
 
-/*
+/*ENG
  * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
+ * @remark
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
@@ -837,83 +834,81 @@ export interface IList {
  */
 
 /**
- * @event  Controls/_list/interface/IList#markedKeyChanged Происходит при выделении пользователем элемента списка.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @event Controls/_list/interface/IList#markedKeyChanged Происходит при выделении пользователем элемента списка.
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-примеры</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Ключ выбранного элемента.
  */
 
-/*
- * @event  Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+/*ENG
+ * @event Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
+ * @remark
+ * See also <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Number} key Key of the selected item.
  */
 
 /**
- * @event  Controls/_list/interface/IList#drawItems Происходит при отрисовке очередного набора данных.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @event Controls/_list/interface/IList#drawItems Происходит при отрисовке очередного набора данных.
+ * @remark
+ * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-примеры</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
-/*
- * @event  Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
+/*ENG
+ * @event Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
+ * @remark
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 
 /**
- * @typedef {Object} VerticalItemPaddingEnum
- * @variant null Без отступа.
+ * @typedef {String} VerticalItemPaddingEnum
  * @variant s Маленький отступ.
- * @default s
+ * @variant l Большой отступ.
  */
 
-/*
- * @typedef {Object} VerticalItemPaddingEnum
- * @variant null Without padding.
+/*ENG
+ * @typedef {String} VerticalItemPaddingEnum
  * @variant s Small padding.
- * @default s
+ * @variant l Large padding.
  */
 
 /**
- * @typedef {Object} HorizontalItemPaddingEnum
- * @variant null Без отступа.
+ * @typedef {String} HorizontalItemPaddingEnum
  * @variant xs Минимальный отступ.
  * @variant s Маленький отступ.
  * @variant m Средний отступ.
  * @variant l Большой отступ.
  * @variant xl Очень большой оступ.
  * @variant xxl Максимальный отступ.
- * @default M
  */
 
-/*
+/*ENG
  * @typedef {Object} HorizontalItemPaddingEnum
- * @variant null without padding.
  * @variant xs Extra small padding.
  * @variant s Small padding.
  * @variant m Medium padding.
  * @variant l Large padding.
  * @variant xl Extra large padding.
  * @variant xxl Extra extra large padding.
- * @default m
  */
 
 /**
  * @typedef {Object} ItemPadding
- * @property {VerticalItemPaddingEnum} [top] Отступ от содержимого элемента до верхней границы элемента.
- * @property {VerticalItemPaddingEnum} [bottom] Отступ от содержимого элемента до нижней границы элемента.
- * @property {HorizontalItemPaddingEnum} [left] Отступ от содержимого элемента до левой границы элемента.
- * @property {HorizontalItemPaddingEnum} [right] Отступ от содержимого элемента до правой границы элемента.
+ * @property {VerticalItemPaddingEnum} [top=s] Отступ от содержимого элемента до верхней границы элемента. Если свойство принимает значение null, то отступы отсутствуют.
+ * @property {VerticalItemPaddingEnum} [bottom=s] Отступ от содержимого элемента до нижней границы элемента. Если свойство принимает значение null, то отступы отсутствуют.
+ * @property {HorizontalItemPaddingEnum} [left=m] Отступ от содержимого элемента до левой границы элемента. Если свойство принимает значение null, то отступы отсутствуют.
+ * @property {HorizontalItemPaddingEnum} [right=m] Отступ от содержимого элемента до правой границы элемента. Если свойство принимает значение null, то отступы отсутствуют.
  */
 
-/*
+/*ENG
  * @typedef {Object} ItemPadding
- * @property {VerticalItemPaddingEnum} [top] Padding from item content to top item border.
- * @property {VerticalItemPaddingEnum} [bottom] Padding from item content to bottom item border.
- * @property {HorizontalItemPaddingEnum} [left] Padding from item content to left item border.
- * @property {HorizontalItemPaddingEnum} [right] Padding from item content to right item border.
+ * @property {VerticalItemPaddingEnum} [top=s] Padding from item content to top item border.
+ * @property {VerticalItemPaddingEnum} [bottom=s] Padding from item content to bottom item border.
+ * @property {HorizontalItemPaddingEnum} [left=m] Padding from item content to left item border.
+ * @property {HorizontalItemPaddingEnum} [right=m] Padding from item content to right item border.
  */
 
 /**
@@ -921,19 +916,20 @@ export interface IList {
  * @name Controls/_list/interface/IList#itemPadding
  */
 
-/*
+/*ENG
  * @cfg {ItemPadding} Configuration inner paddings in the item.
  * @name Controls/_list/interface/IList#itemPadding
  */
 
 /**
  * @name Controls/_list/interface/IList#backgroundStyle
- * @cfg {string} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
- * @default default (фон цвета темы)
+ * @cfg {String} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
+ * @remark
+ * @default default
  */
 
-/*
+/*ENG
  * @name Controls/_list/interface/IList#backgroundStyle
- * @cfg {string} Style prefix to configure background for inner list control components with static or absolute positioning.
+ * @cfg {String} Style prefix to configure background for inner list control components with static or absolute positioning.
  * @default default (theme background)
  */

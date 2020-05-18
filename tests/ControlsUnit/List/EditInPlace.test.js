@@ -1038,10 +1038,11 @@ define([
                   item: listModel.at(0).getContents()
                });
 
-               eip.cancelEdit().addErrback(function () {
+               eip.cancelEdit().addCallback(function (result) {
+                  assert.deepEqual(result, {cancelled: true});
                   assert.isTrue(isIndicatorHasBeenShown);
                   assert.isTrue(isIndicatorHasBeenHidden);
-                  assert.isTrue(isAfterEndEditHasBeenNotified);
+                  assert.isFalse(isAfterEndEditHasBeenNotified);
                   done();
                });
 

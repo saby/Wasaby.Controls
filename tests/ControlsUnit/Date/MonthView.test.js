@@ -85,15 +85,25 @@ define([
       });
 
       describe('_mouseEnterHandler', function() {
-         it('should generate "itemMouseEnter" event', function() {
-            let sandbox = sinon.sandbox.create(),
-               item = 'item',
-               mv = calendarTestUtils.createComponent(calendar.MonthView, config);
+         [{
+            title: 'mode=current, month is current',
+            isCurrentMonth: true,
+            mode: 'current'
+         }, {
+            title: 'mode=extended, month is not current',
+            isCurrentMonth: false,
+            mode: 'extended'
+         }].forEach((test) => {
+            it('should generate "itemMouseEnter" event. ' + test.title, function() {
+               let sandbox = sinon.sandbox.create(),
+                  item = 'item',
+                  mv = calendarTestUtils.createComponent(calendar.MonthView, { mode: test.mode });
 
-            sandbox.stub(mv, '_notify');
-            mv._mouseEnterHandler({}, item, true);
-            sinon.assert.calledWith(mv._notify, 'itemMouseEnter', [item]);
-            sandbox.restore();
+               sandbox.stub(mv, '_notify');
+               mv._mouseEnterHandler({}, item, test.isCurrentMonth);
+               sinon.assert.calledWith(mv._notify, 'itemMouseEnter', [item]);
+               sandbox.restore();
+            });
          });
 
          it('should\'t generate "itemMouseEnter" event', function () {

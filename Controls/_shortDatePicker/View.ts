@@ -163,6 +163,19 @@ var Component = BaseControl.extend({
                 break;
             }
         }
+        // При нажатии кнопки 'Вниз' у типа 'Только года', мы отнимаем ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX,
+        // если мы попали за границы displayedRanges, берем за основу вычислений ближайший элемент снизу.
+        if (index === undefined) {
+            for (let i = this._displayedRanges.length - 1; i >= 0; i--) {
+                if (this._displayedRanges[i][1] < new Date(year, 0) && this._displayedRanges[i][1] !== null) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index === undefined) {
+                return year;
+            }
+        }
         //Проверяем год, на который переходим. Если оне не попадает в тот же массив что и year - ищем ближайших год на
         //который можно перейти в следующем массиве
         if (this._hitsDiplayedRange(year + delta, index)) {
@@ -192,8 +205,9 @@ var Component = BaseControl.extend({
             //для того чтобы установить _position
             const yearToSet = this._getDisplayedYear(yearToCheck, delta) + ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX;
             this.setYear(yearToSet);
+        } else {
+            this.setYear(this._getDisplayedYear(year, delta));
         }
-        this.setYear(this._getDisplayedYear(year, delta));
     },
 
     _onYearMouseLeave: function () {

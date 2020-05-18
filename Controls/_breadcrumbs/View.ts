@@ -30,8 +30,12 @@ class BreadCrumbsView extends Control<IControlOptions> {
     }
 
     private _onItemClick(e: SyntheticEvent<Event>, itemData): void {
+            e.stopPropagation();
             if (!this._options.readOnly) {
                 this._notify('itemClick', [itemData.item]);
+            } else {
+                // Если мы не обработали клик по хлебным крошкам (например они readOnly), то не блокируем событие клика, но делаем его невсплывающим
+                this._notify('click', []);
             }
     }
 

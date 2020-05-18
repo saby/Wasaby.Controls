@@ -67,6 +67,7 @@ define([
          bc._onHoveredItemChanged({}, hoveredItem);
       });
       describe('_onItemClick', function() {
+         const mockEvent = (e) => ({...e, stopPropagation() {}});
          it('item', function() {
             var itemData = {
                item: new entity.Model({
@@ -81,7 +82,7 @@ define([
                   assert.equal(itemData.item.get('id'), args[0].get('id'));
                }
             };
-            bc._onItemClick({}, itemData);
+            bc._onItemClick(mockEvent(), itemData);
 
             // check notify itemClick in readOnly mode
             var notifyClickCalled = false;
@@ -91,7 +92,7 @@ define([
                   notifyClickCalled = true;
                }
             };
-            bc._onItemClick({}, itemData);
+            bc._onItemClick(mockEvent(), itemData);
             assert.isFalse(notifyClickCalled, 'itemClick notified in readOnly mode.');
          });
          it('dots', function() {
