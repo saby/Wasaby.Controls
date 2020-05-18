@@ -45,7 +45,7 @@ var _private = {
         const itemPadding = _private.getItemPadding(cfg);
         const style = cfg.style || 'default';
 
-        classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}`;
+        classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item-rightPadding_${itemPadding.right}_theme-${cfg.theme}`;
