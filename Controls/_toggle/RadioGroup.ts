@@ -78,7 +78,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
       }
    }
 
-   protected _beforeUpdate(newOptions: IRadioGroupOptions): void|Promise<RecordSet> {
+   protected _beforeUpdate(newOptions: IRadioGroupOptions): Promise<void> {
       if (newOptions.source && newOptions.source !== this._options.source) {
          return this._initItems(newOptions).then((items: RecordSet) => {
             this._items = items;
