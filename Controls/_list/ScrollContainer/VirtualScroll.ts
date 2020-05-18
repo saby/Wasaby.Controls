@@ -236,11 +236,21 @@ export default class VirtualScroll {
      */
     getParamsToRestoreScroll(): IScrollRestoreParams {
         const itemsHeights = this._itemsHeightData.itemsHeights;
+        let heightDifference;
+        // Могут быть ситуации, когда newStopIndex > oldStopIndex. Например, когда подгружается вверх очередная пачка
+        // данных и функция корректировки индекса изменяет не только startIndex, но и stopIndex (вместо 38 делает 40).
+        // Тогда корректировку высоты нужно делать с отрицательным знаком, а саму высоту расчитывать обратном порядке.
+        if (this._savedDirection === 'up') {
+            heightDifference = this._range.stop > this._oldRange.stop ?
+                - this._getItemsHeightsSum(this._oldRange.stop, this._range.stop, itemsHeights) :
+                this._getItemsHeightsSum(this._range.stop, this._oldRange.stop, itemsHeights);
+        } else {
+            heightDifference = this._getItemsHeightsSum(this._oldRange.start, this._range.start, itemsHeights);
+        }
+
         const paramsForRestore = {
             direction: this._savedDirection,
-            heightDifference: this._savedDirection === 'up' ?
-                this._getItemsHeightsSum(this._range.stop, this._oldRange.stop, itemsHeights) :
-                this._getItemsHeightsSum(this._oldRange.start, this._range.start, itemsHeights)
+            heightDifference
         };
 
         this._savedDirection = undefined;
