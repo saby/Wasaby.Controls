@@ -8,6 +8,7 @@ import notifyHandler = require('Controls/Utils/tmplNotify');
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Record} from 'Types/entity';
+import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 
 
 var _private = {
@@ -61,6 +62,10 @@ var _private = {
 
    initialized(self, options: object): void {
       self._initialized = true;
+
+      scheduleCallbackAfterRedraw(self, () => {
+         self._notify('controlResize', [], {bubbling: true});
+      });
 
       if (options.operationsPanelOpenedCallback) {
          options.operationsPanelOpenedCallback();

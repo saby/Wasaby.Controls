@@ -530,6 +530,13 @@ define(
             options.root = null;
             lists.DataContainer._private.resolveOptions(self, options);
             assert.deepEqual(self._filter, {test: 123});
+
+            self._options.root = undefined;
+            options.root = null;
+            delete self._options.filter['root'];
+            filter = self._filter;
+            lists.DataContainer._private.resolveOptions(self, options);
+            assert.isTrue(filter === self._filter);
          });
          it('_private.isEqualItems', function() {
 

@@ -12,7 +12,6 @@ import { Model } from 'Types/entity';
 import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
-import {detection} from 'Env/Env';
 import {IItemAction} from 'Controls/itemActions';
 
 const ITEMACTIONS_POSITION_CLASSES = {
@@ -46,7 +45,7 @@ var _private = {
         const itemPadding = _private.getItemPadding(cfg);
         const style = cfg.style || 'default';
 
-        classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}`;
+        classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item-rightPadding_${itemPadding.right}_theme-${cfg.theme}`;
@@ -91,28 +90,6 @@ var _private = {
         const left =  `controls-ListView__groupContent__leftPadding_${current.hasMultiSelect ? 'withCheckboxes' : current.itemPadding.left}_theme-${theme}`;
         return {right, left};
     },
-    // itemActions classes only For Edge
-    getItemActionsClasses(itemData, itemActionsPosition, actionMenuIsShown, theme): string {
-        const th = `_theme-${theme}`;
-        let classList = 'controls-itemActionsV' + ' controls-itemActionsV_full_item_size';
-        classList += itemData.isActive() && actionMenuIsShown ? ' controls-itemActionsV_visible' : '';
-        classList += itemData.isSwiped() ? ' controls-itemActionsV_swiped' : '';
-        classList += itemData.itemActionsColumnScrollDraw ? ' controls-itemActionsV_columnScrollDraw' : '';
-        return classList;
-    },
-    getItemActionsWrapperClasses(itemData, itemActionsPosition, highlightOnHover, style,
-        itemActionsClass, itemPadding, toolbarVisibility, theme): string {
-        const th = `_theme-${theme}`;
-        let classList = 'controls-itemActionsV__wrapper';
-        classList += '  controls-itemActionsV__wrapper_absolute';
-        classList += itemData.isEditing ? ` controls-itemActionsV_editing${th}` : '';
-        classList += itemData.isEditing && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
-        classList += ` controls-itemActionsV_${itemActionsPosition}${th}`;
-        classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
-        classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') + th : '';
-        classList += _private.getItemActionsContainerPaddingClass(itemActionsClass, itemPadding, theme);
-        return classList;
-    },
 
     getItemActionsContainerPaddingClass(classes: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
         const _classes = classes || ITEMACTIONS_POSITION_CLASSES.bottomRight;
@@ -140,22 +117,20 @@ var _private = {
             itemsModelCurrent.dispItem.getActions ? itemsModelCurrent.dispItem.getActions() : itemsModelCurrent.itemActions
         );
         itemsModelCurrent.setActive = (state: boolean): void => {
-            itemsModelCurrent._isActive = state;
             if (itemsModelCurrent.dispItem.setActive !== undefined) {
                 itemsModelCurrent.dispItem.setActive(state);
             }
         };
         itemsModelCurrent.isActive = (): boolean => (
-            itemsModelCurrent.dispItem.isActive() !== undefined ? itemsModelCurrent.dispItem.isActive() : itemsModelCurrent._isActive
+            itemsModelCurrent.dispItem.isActive() !== undefined ? itemsModelCurrent.dispItem.isActive() : false
         );
         itemsModelCurrent.setSwiped = (state: boolean): void => {
-            itemsModelCurrent._isSwiped = state;
             if (itemsModelCurrent.dispItem.setSwiped !== undefined) {
                 itemsModelCurrent.dispItem.setSwiped(state);
             }
         };
         itemsModelCurrent.isSwiped = (): boolean => (
-            itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : itemsModelCurrent._isSwiped
+            itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : false
         );
         itemsModelCurrent.getContents = () => (
             itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
@@ -237,9 +212,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         // TODO USE itemsModelCurrent.isSelected()
         itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
-        itemsModelCurrent._isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
-        // TODO USE itemsModelCurrent.isSwiped()
-        itemsModelCurrent._isSwiped = this._swipeItem && itemsModelCurrent.actionsItem === this._swipeItem.actionsItem;
         itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
         itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
         itemsModelCurrent.searchValue = this._options.searchValue;
@@ -273,10 +245,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
 
-        // itemActionsClassesForEdge
-        itemsModelCurrent.isIE12 = detection.isIE12;
-        itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
-        itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
         itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
 
         // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
@@ -298,23 +266,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
                 itemsModelCurrent.draggingItemData = this._draggingItemData;
             }
         }
-
-        // TODO Проверить. Это надо реализовать. Ошибки нет, т.к. в шаблонах щас есть проверка на эти методы
-        // export const ITEMACTIONS_DISPLAY_MODE = {
-        //     ICON: 'icon',
-        //     TITLE: 'title',
-        //     BOTH: 'both',
-        //     AUTO: 'auto'
-        // };
-        // _needShowIcon(action: IItemAction): boolean {
-        //     return !!action.icon && (action.displayMode !== ITEMACTIONS_DISPLAY_MODE.TITLE);
-        // }
-        // _needShowTitle(action: IItemAction): boolean {
-        //     return !!action.title && (action.displayMode === ITEMACTIONS_DISPLAY_MODE.TITLE ||
-        //         action.displayMode === ITEMACTIONS_DISPLAY_MODE.BOTH ||
-        //         (action.displayMode === ITEMACTIONS_DISPLAY_MODE.AUTO ||
-        //         !action.displayMode) && !action.icon);
-        // }
         return itemsModelCurrent;
     },
 
@@ -784,6 +735,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     // New Model compatibility
     getSwipeAnimation(): ANIMATION_STATE {
         return this._display ? this._display.getSwipeAnimation() : {};
+    },
+
+    // New Model compatibility
+    setEventRaising(enabled: boolean, analyze: boolean): void {
+        if (this._display) {
+            this._display.setEventRaising(enabled, analyze);
+        }
     },
 
     updateSelection: function(selectedKeys) {

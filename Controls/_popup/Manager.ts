@@ -579,6 +579,11 @@ class Manager extends Control<IManagerOptions> {
             const calculatedZIndex: number = currentItem.parentZIndex ? currentItem.parentZIndex + step : null;
             const baseZIndex: number = (index + 1) * step;
 
+            // zIndex c конфига не может быть меньше родительского
+            if (currentItem.parentZIndex && customZIndex < currentItem.parentZIndex) {
+                customZIndex = calculatedZIndex;
+            }
+
             item.currentZIndex = customZIndex || calculatedZIndex || baseZIndex;
         });
     }

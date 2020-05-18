@@ -1,9 +1,9 @@
-import {Control} from 'UI/Base';
-import {Memory} from 'Types/source';
-import {isEqual} from 'Types/object';
-import {SyntheticEvent} from 'Vdom/Vdom';
-import {Model} from 'Types/entity';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
+import { Control } from 'UI/Base';
+import { Memory } from 'Types/source';
+import { isEqual } from 'Types/object';
+import { SyntheticEvent } from 'Vdom/Vdom';
+import { Model } from 'Types/entity';
+import { TItemKey, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
@@ -13,9 +13,14 @@ import {
     IMenuTemplateOptions,
     IMenuConfig,
     TItemActionShowType,
-    IItemAction
+    TItemActionsSize,
+    IItemAction,
+    TItemActionsPosition,
+    TActionCaptionPosition
 } from './interface/IItemActions';
-import {Utils} from './Utils';
+import { verticalMeasurer } from './measurers/VerticalMeasurer';
+import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
+import { Utils } from './Utils';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -31,35 +36,54 @@ export interface IItemActionsControllerOptions {
      */
     collection: IItemActionsCollection;
     /**
-     * Действия с записью
+     * Операции с записью
      */
     itemActions: IItemAction[];
+    /**
+     * @param theme Название текущей темы оформления
+     */
+    theme: string;
     /**
      * Размер иконок операций с записью
      * варианты 's'|'m'
      */
-    iconSize: string;
+    iconSize?: TItemActionsSize;
     /**
-     * @param theme Название текущей темы
-     */
-    theme: string;
-    /**
-     * Свойство элемента коллекции, по которому из элемента можно достать настроенные для него операции
+     * Имя свойства, которое содержит конфигурацию для панели с опциями записи.
      */
     itemActionsProperty?: string;
     /**
-     * Callback для определения видимости операции
+     * Функция обратного вызова для определения видимости опций записи.
      */
     visibilityCallback?: TItemActionVisibilityCallback;
     /**
      * Должна ли быть видна панель с кнопками для редактирования
      */
-    editingToolbarVisibility?: boolean;
-    itemActionsPosition?: string;
-    style?: string;
+    editingToolbarVisible?: boolean;
+    /**
+     * Позиция по отношению к записи.
+     * Варианты: 'inside' | 'outside' | 'custom'
+     */
+    itemActionsPosition?: TItemActionsPosition;
+    /**
+     * Стиль отображения контейнера controls-itemActionsV.
+     * Варианты: 'master' | 'default'
+     */
+    style?: 'master'|'default';
+    /**
+     * Класс для установки контейнеру controls-itemActionsV.
+     * По умолчанию 'controls-itemActionsV_position_bottomRight'
+     */
     itemActionsClass?: string;
-    actionAlignment?: string;
-    actionCaptionPosition?: 'right'|'bottom'|'none';
+    /**
+     * Выравнивание опций записи, когда они отображаются в режиме swipe
+     * Варианты: 'horizontal' | 'vertical'
+     */
+    actionAlignment?: 'horizontal'|'vertical';
+    /**
+     * Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
+     */
+    actionCaptionPosition?: TActionCaptionPosition;
 }
 
 /**
@@ -91,11 +115,8 @@ export class Controller {
             this._collection = options.collection;
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
-            this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: unknown) => true);
-            // this._collection.setActionsAssigned(false);
+            this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
         }
-        // Возможно, стоит проверять версию модели, если она меняется при раскрытии веток дерева
-        // !this._collection.isActionsAssigned() &&
         if (this._commonItemActions || this._itemActionsProperty) {
             result = this._assignActions();
         }
@@ -103,7 +124,7 @@ export class Controller {
             itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
             style: options.style,
             size: options.iconSize || DEFAULT_ACTION_SIZE,
-            toolbarVisibility: options.editingToolbarVisibility,
+            toolbarVisibility: options.editingToolbarVisible,
             actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
             itemActionsClass: options.itemActionsClass
@@ -181,7 +202,7 @@ export class Controller {
             caption: parentAction.title,
             icon: parentAction.icon
         } : null;
-        // Не реализовано в модели
+        // TODO Не реализовано в модели. По факту getContextMenuConfig() сейчас никак не используется
         // const contextMenuConfig = this._collection.getContextMenuConfig();
         // ...contextMenuConfig,
         const templateOptions: IMenuTemplateOptions = {
@@ -223,14 +244,9 @@ export class Controller {
      * @private
      */
     private _assignActions(): Array<number | string> {
-        const supportsEventRaising = typeof this._collection.setEventRaising === 'function';
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
-
-        if (supportsEventRaising) {
-            this._collection.setEventRaising(false, true);
-        }
-
+        this._collection.setEventRaising(false, true);
         this._collection.each((item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
                 let contents = item.getContents();
@@ -245,11 +261,7 @@ export class Controller {
                 }
             }
         });
-
-        if (supportsEventRaising) {
-            this._collection.setEventRaising(true, true);
-        }
-
+        this._collection.setEventRaising(true, true);
         this._collection.setActionsAssigned(true);
 
         if (hasChanges) {
@@ -403,7 +415,7 @@ export class Controller {
         if (this._isMenuButtonRequired(actions)) {
             showed.push({
                 id: null,
-                icon: `icon-ExpandDown ${Controller.resolveItemActionClass(this._theme)}`,
+                icon: `icon-ExpandDown ${Controller._resolveItemActionClass(this._theme)}`,
                 style: 'secondary',
                 iconStyle: 'secondary',
                 _isMenu: true
@@ -436,7 +448,7 @@ export class Controller {
         actions: IItemActionsContainer
     ): boolean {
         const oldActions = item.getActions();
-        if (!oldActions || (actions && !Controller._isMatchingActions(oldActions, actions))) {
+        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions))) {
             item.setActions(actions, true);
             return true;
         }
@@ -448,8 +460,8 @@ export class Controller {
         newContainer: IItemActionsContainer
     ): boolean {
         return (
-            Controller._isMatchingActionLists(oldContainer.all, newContainer.all) &&
-            Controller._isMatchingActionLists(oldContainer.showed, newContainer.showed)
+            this._isMatchingActionLists(oldContainer.all, newContainer.all) &&
+            this._isMatchingActionLists(oldContainer.showed, newContainer.showed)
         );
     }
 
@@ -459,14 +471,7 @@ export class Controller {
         actionsContainerHeight: number,
         actionCaptionPosition: 'right'|'bottom'|'none'
     ): ISwipeConfig {
-        // FIXME: https://online.sbis.ru/opendoc.html?guid=380045b2-1cd8-4868-8c3f-545cc5c1732f
-        // TODO Move these measurers to listRender, maybe rewrite them
-        const {SwipeVerticalMeasurer, SwipeHorizontalMeasurer} = require('Controls/list');
-
-        const measurer =
-            actionAlignment === 'vertical'
-                ? SwipeVerticalMeasurer.default
-                : SwipeHorizontalMeasurer.default;
+        const measurer = actionAlignment === 'vertical' ? verticalMeasurer : horizontalMeasurer;
         const config: ISwipeConfig = measurer.getSwipeConfig(
             actions,
             actionsContainerHeight,
@@ -499,17 +504,17 @@ export class Controller {
 
     // todo скорее всего, переедет в шаблон
     private static _fixActionIcon(action: IItemAction, theme: string): IItemAction {
-        if (!action.icon || action.icon.includes(Controller.resolveItemActionClass(theme))) {
+        if (!action.icon || action.icon.includes(this._resolveItemActionClass(theme))) {
             return action;
         }
         return {
             ...action,
-            icon: `${action.icon} ${Controller.resolveItemActionClass(theme)}`
+            icon: `${action.icon} ${this._resolveItemActionClass(theme)}`
         };
     }
 
     // todo скорее всего, переедет в шаблон
-    private static resolveItemActionClass(theme: string): string {
+    private static _resolveItemActionClass(theme: string): string {
         return `controls-itemActionsV__action_icon_theme-${theme} icon-size_theme-${theme}`;
     }
 

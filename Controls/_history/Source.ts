@@ -105,6 +105,7 @@ var _private = {
          const recent = this.prepareHistoryItems(self, row.get('recent'), sourceItems);
          const frequent = this.prepareHistoryItems(self, row.get('frequent'), sourceItems);
 
+         self._historyItems = null;
          self._history = {
             pinned: pinned,
             frequent: frequent,

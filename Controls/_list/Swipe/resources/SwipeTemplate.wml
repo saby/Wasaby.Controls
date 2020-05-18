@@ -6,8 +6,8 @@
     </ws:if>
     <ws:else data="{{swipeConfig}}">
         <div class="controls-itemActionsV_swipe_animationContainer">
-            <div attr:class="controls-Swipe_theme-{{itemData.theme}}
-                controls-Swipe_{{animationState}}_theme-{{itemData.theme}}"
+            <div class="controls-Swipe_theme-{{itemData.theme}}
+                controls-Swipe_{{animationState}}"
                 on:animationend="_onSwipeAnimationEnd()">
                 <div class="controls-Swipe_{{swipeConfig.twoColumns ? 'columns' : actionAlignment}}_theme-{{itemData.theme}}">
 

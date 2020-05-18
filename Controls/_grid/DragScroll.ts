@@ -18,7 +18,13 @@ type TPoint = {
 const SCROLL_SPEED_BY_DRAG = 0.75;
 const DISTANCE_TO_START_DRAG_N_DROP = 3;
 const START_ITEMS_DRAG_N_DROP_DELAY = 250;
-const NOT_DRAG_SCROLLABLE_SELECTOR = '.js-controls-ColumnScroll__notDraggable';
+
+// TODO: В будущем этот селектор должен импортироваться из DND. Это селектор не DragScroll'a
+const DRAG_N_DROP_NOT_DRAGGABLE = 'controls-DragNDrop__notDraggable';
+
+export const JS_SELECTORS = {
+    NOT_DRAG_SCROLLABLE: 'js-controls-ColumnScroll__notDraggable'
+};
 
 export class DragScroll extends Control<IDragScrollOptions> {
     protected _template: TemplateFunction = template;
@@ -51,18 +57,19 @@ export class DragScroll extends Control<IDragScrollOptions> {
 
     /**
      * Начинает скроллирование с помощью Drag'N'Drop.
+     * Возвращает флаг типа boolean, указывающий возможен ли старт прокрутки с помощью Drag'N'Drop.
      * @private
      */
-    private _manageDragScrollStart(startPosition: TPoint, target: HTMLElement): void {
+    private _manageDragScrollStart(startPosition: TPoint, target: HTMLElement): boolean {
         const hasDragNDrop = !!this._options.startDragNDropCallback;
-        const isTargetDraggable = !target.closest('.controls-DragNDrop__notDraggable');
+        const isTargetDraggable = !target.closest(`.${DRAG_N_DROP_NOT_DRAGGABLE}`);
 
         // Если за данный элемент нельзя скролить, то при возможности сразу начинаем DragNDrop.
         if (!this._isTargetScrollable(target)) {
             if (hasDragNDrop && isTargetDraggable) {
                 this._initDragNDrop();
             }
-            return;
+            return false;
         }
 
         this._isMouseDown = true;
@@ -77,6 +84,7 @@ export class DragScroll extends Control<IDragScrollOptions> {
         if (hasDragNDrop && isTargetDraggable) {
             this._initDelayedDragNDrop();
         }
+        return true;
     }
 
     /**
@@ -183,6 +191,7 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @private
      */
     private _shouldInitDragNDropByVerticalMovement(): boolean {
+        // TODO: Убрать селектор .controls-Grid__row, логически о нем знать здесь мы не можем
         return !!this._options.startDragNDropCallback &&
             !this._isOverlayShown &&
             typeof this._startItemsDragNDropTimer === 'number' &&
@@ -216,7 +225,6 @@ export class DragScroll extends Control<IDragScrollOptions> {
     private _initDragNDrop(): void {
         this._manageDragScrollStop();
         this._options.startDragNDropCallback();
-        this._notify('shouldStartDragNDrop', [], {bubbling: true});
     }
 
     /**
@@ -227,12 +235,18 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @private
      */
     private _isTargetScrollable(target: HTMLElement): boolean {
-        return !target.closest(NOT_DRAG_SCROLLABLE_SELECTOR) && !target.closest('.controls-Grid__cell_fixed');
+
+        /*
+        * TODO: https://online.sbis.ru/opendoc.html?guid=f5101ade-8716-40cb-a0be-3701b212b2fa
+        * После закрытия везде, где вешается controls-Grid__cell_fixed начать вешать еще и
+        * DragScroll.JS_SELECTORS.NOT_DRAG_SCROLLABLE. Отсюда controls-Grid__cell_fixed удалить.
+        * */
+        return !target.closest(`.${JS_SELECTORS.NOT_DRAG_SCROLLABLE}`) && !target.closest('.controls-Grid__cell_fixed');
     }
 
     /**
      * Возвращает значение задержки в течении которой может начаться Drag'N'Drop записей.
-     * Если за это время указатель не был перемещен достаточно далеко, начинается Drag'N'Drop записей.
+     * Если за это время указатель не был перемещен достаточно далеко, должен начаться Drag'N'Drop записей.
      *
      * @param {IDragScrollOptions} options Опции контрола.
      * @see START_ITEMS_DRAG_N_DROP_DELAY
@@ -244,6 +258,29 @@ export class DragScroll extends Control<IDragScrollOptions> {
         return typeof options.dragNDropDelay === 'number' ? options.dragNDropDelay : START_ITEMS_DRAG_N_DROP_DELAY;
     }
 
+    /**
+     * Возвращает объект Selection, представленный в виде диапазона текста, который пользователь выделил на странице.
+     * @private
+     */
+    private _getSelection(): Selection | null {
+        return typeof window !== 'undefined' ? window.getSelection() : null;
+    }
+
+    /**
+     * Сбрасывает выделение текста в окне браузера.
+     * @private
+     */
+    private _clearSelection(): void {
+        const selection = this._getSelection();
+        if (selection) {
+            if (selection.removeAllRanges) {
+                selection.removeAllRanges();
+            } else if (selection.empty) {
+                selection.empty();
+            }
+        }
+    }
+
     //#region Event handlers
 
     /**
@@ -252,9 +289,11 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @protected
      */
     protected _onViewMouseDown(e: SyntheticEvent<MouseEvent>): void {
-        // Только по ПКМ
-        if (validateEvent(e)) {
-            this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement);
+        // Только по ПКМ. Если началось скроллирование перетаскиванием, нужно убрать предыдущее выделение и
+        // запретить выделение в процессе скроллирования.
+        if (validateEvent(e) && this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement)) {
+            e.preventDefault();
+            this._clearSelection();
         }
     }
 
@@ -264,9 +303,11 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @protected
      */
     protected _onViewTouchStart(e: SyntheticEvent<TouchEvent>): void {
-        // Обрабатываем только один тач
-        if (validateEvent(e)) {
-            this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement);
+        // Обрабатываем только один тач. Если началось скроллирование перетаскиванием, нужно убрать предыдущее
+        // выделение и запретить выделение в процессе скроллирования.
+        if (validateEvent(e) && this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement)) {
+            e.preventDefault();
+            this._clearSelection();
         } else {
             this._manageDragScrollStop();
         }

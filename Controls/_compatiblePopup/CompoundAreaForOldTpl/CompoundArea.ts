@@ -716,8 +716,17 @@ var CompoundArea = CompoundContainer.extend([
       }
       return opener === this;
    },
-   _keyDown: function(event) {
-      if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === Env.constants.key.esc) {
+   _keyDown: function(event: SyntheticEvent<KeyboardEvent>) {
+      const nativeEvent = event.nativeEvent;
+      const closingByKeys = !nativeEvent.shiftKey && nativeEvent.keyCode === Env.constants.key.esc;
+      const targetInEditInPlace = Boolean(event.target.closest('.controls-editInPlace'));
+
+      /**
+       * Если нажали на esc в старом редактировании по месту, то закрываться не нужно.
+       * Событие сработает на окне раньше (связано с механизмом распостранения событияй в ядре), поэтому редактирование не может прекратить всплытие.
+       * Ставим защиту на такой случай.
+       */
+      if (closingByKeys && !targetInEditInPlace) {
          this.close();
          if (Env.detection.safari) {
             // Need to prevent default behaviour if popup is opened

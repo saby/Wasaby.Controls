@@ -23,10 +23,12 @@
       on:tagClick="_proxyEvent('tagClick')"
       on:tagHover="_proxyEvent('tagHover')">
    </Controls._input.DateTime>
-   <span class="controls-Input-DatePicker__buttonWrapper" attr:tabindex="-1">
+   <span class="controls-Input-DatePicker__buttonWrapper_theme-{{_options.theme}}" attr:tabindex="-1">
       <span class="ws-flexbox ws-align-items-center controls-Input-DatePicker__buttonBaseLine">
          <span
-                 attr:class="controls-Input-DatePicker__button controls-icon icon-Calendar2 controls-icon_style-secondary_theme-{{_options.theme}}"
+                 attr:class="controls-Input-DatePicker__button
+                              controls-Input-DatePicker__button_theme-{{_options.theme}}
+                              controls-icon icon-Calendar2 controls-icon_style-secondary_theme-{{_options.theme}}"
                  iconStyle="secondary"
                  on:click="openPopup()">
          </span>

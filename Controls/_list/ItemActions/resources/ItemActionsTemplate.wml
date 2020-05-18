@@ -1,26 +1,3 @@
-<ws:template name="localItemActionsTemplateForEdge">
-    <div attr:class="{{itemData.getItemActionsClasses(itemData, itemActionsPosition, actionMenuIsShown, theme)}}">
-        <div attr:class="{{itemData.getItemActionsWrapperClasses(itemData, itemActionsPosition, highlightOnHover, style,
-        itemActionsClass, itemPadding, toolbarVisibility, theme)}}">
-            <ws:partial
-                    template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"
-                    itemData="{{itemData}}"
-                    needShowTitle="{{needShowTitle}}"
-                    needShowIcon="{{needShowIcon}}"
-                    size="{{size}}"
-                    showedActions="{{itemData.getActions().showed}}"/>
-            <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">
-                <Controls.Container.Async templateName="Controls/editableArea:Buttons">
-                    <ws:partial template="{{content.resolvedTemplate}}"
-                                attr:class="controls-itemActionsV__wrapper-isEditing_theme-{{theme}}"
-                                on:applyButtonClick="_commitEditActionHandler()"
-                                on:closeButtonClick="_cancelEditActionHandler()"/>
-                </Controls.Container.Async>
-            </ws:if>
-        </div>
-    </div>
-</ws:template>
-
 <ws:template name="localItemActionsTemplate">
     <div attr:class="controls-itemActionsV
                 {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') + '_theme-' + theme }}
@@ -52,20 +29,13 @@
         </div>
     </div>
 </ws:template>
-<ws:template name="templateChooser">
-    <ws:if data="{{itemData.isIE12 && !isTile}}">
-        <ws:partial template="localItemActionsTemplateForEdge"/>
-    </ws:if>
-    <ws:else>
-        <ws:partial template="localItemActionsTemplate"/>
-    </ws:else>
-</ws:template>
-        <!-- TODO moved to Grid/Item.wml after complete task: https://online.sbis.ru/opendoc.html?guid=d473668a-3c9a-43b9-a59c-b994cbf873bd -->
+
+<!-- TODO moved to Grid/Item.wml after complete task: https://online.sbis.ru/opendoc.html?guid=d473668a-3c9a-43b9-a59c-b994cbf873bd -->
 <ws:if data="{{!!itemActionsContainerStyles}}">
     <div class="controls-itemActionsV__container" style="{{itemActionsContainerStyles}}">
-        <ws:partial template="templateChooser"/>
+        <ws:partial template="localItemActionsTemplate"/>
     </div>
 </ws:if>
 <ws:else>
-    <ws:partial template="templateChooser"/>
+    <ws:partial template="localItemActionsTemplate"/>
 </ws:else>

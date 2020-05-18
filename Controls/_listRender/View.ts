@@ -371,7 +371,7 @@ export default class View extends Control<IViewOptions> {
             actionCaptionPosition: this._options.actionCaptionPosition,
             itemActionsClass: this._options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisibility: editingConfig?.toolbarVisibility
+            editingToolbarVisible: editingConfig?.toolbarVisibility
         });
     }
 

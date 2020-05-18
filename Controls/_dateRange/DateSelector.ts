@@ -1,7 +1,6 @@
 import BaseSelector from 'Controls/_dateRange/BaseSelector';
 import ILinkView from './interfaces/ILinkView';
 import componentTmpl = require('wml!Controls/_dateRange/DateSelector/DateSelector');
-import 'css!theme?Controls/dateRange';
 import getOptions from 'Controls/Utils/datePopupUtils';
 /**
  * Controls that allows user to select date value in calendar.
@@ -11,6 +10,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/interface/ILinkView
  * @mixes Controls/_interface/IOpenPopup
+ * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/_interface/IFontColorStyle
  * @control
  * @public
@@ -33,6 +33,8 @@ var Component = BaseSelector.extend({
          templateOptions: {
             ...getOptions.getTemplateOptions(this),
             headerType: 'link',
+            calendarSource: this._options.calendarSource,
+            dayTemplate: this._options.dayTemplate,
             closeButtonEnabled: true,
             rangeselect: false,
             range: this._options.range,
@@ -70,5 +72,6 @@ Component.getDefaultOptions = function() {
 Component.getOptionTypes = function() {
    return ILinkView.getOptionTypes();
 };
+Component._theme = ['Controls/dateRange'];
 
 export default Component;

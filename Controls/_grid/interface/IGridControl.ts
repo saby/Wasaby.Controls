@@ -334,7 +334,7 @@
 // TODO: Удалить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
 /**
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
- * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена. Используйте {@link Controls/_heading/Counter#fontColorStyle}.
+ * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена. Используйте опцию {@link Controls/grid:IGridControl#rowSeparatorSize rowSeparatorSize}.
  * @cfg {Boolean} Позволяет отображать/скрывать разделитель строк.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">демо-пример</a>
