@@ -244,7 +244,7 @@ var
         getItemColumnCellClasses: function(current, theme) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'relativeCellWrapper', 'columnContent');
-            const style = current.style || 'default';
+            let style = current.style === 'masterOld' || !current.style ? 'default' : current.style;
             const backgroundStyle = current.backgroundStyle || current.style || 'default';
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
@@ -276,6 +276,7 @@ var
             }
 
             if (current._isSelected) {
+                style = current.style || 'default';
                 classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
@@ -420,7 +421,7 @@ var
             //Нужно сбросить кэш для записей, у которых поменялась конфигурация лесенки
             if (self._ladder) {
                 for (let i = startIndex; i < stopIndex ; i++) {
-                    if (!isEqual(newLadder.stickyLadder[i], self._ladder.stickyLadder[i]) || 
+                    if (!isEqual(newLadder.stickyLadder[i], self._ladder.stickyLadder[i]) ||
                         !isEqual(newLadder.ladder[i], self._ladder.ladder[i])) {
 
                         const dispItem = self.getItemById(self.getItems()?.at(i)?.getId());
@@ -1393,8 +1394,9 @@ var
             current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
                 return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
             };
+            const style = current.style === 'masterOld' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
-            controls-GridView__itemV_marker-${current.style || 'default'}_theme-${self._options.theme}`;
+            controls-GridView__itemV_marker-${style}_theme-${self._options.theme}`;
 
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
