@@ -163,25 +163,19 @@ const _private = {
             return result;
          },
          addToHistory(self, filterButtonItems, fastFilterItems, historyId: string, prefetchParams?: IPrefetchHistoryParams): void {
-             const meta = { $_addFromData: true };
+             const meta = self._updateMeta || { $_addFromData: true };
 
              function update() {
                  let historyData;
-                 const historySource = historyUtils.getHistorySource({historyId});
                  if (self._updateMeta) {
-                     const historyObject = historySource.getDataObject(self._updateMeta.item);
-                     historyData = {
-                         items: historyObject.items || [],
-                         prefetchParams: historyObject.prefetchParams || {}
-                     };
+                     historyData = self._updateMeta.item;
                  } else {
                      historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
+                     // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
+                     self._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
                  }
 
-                 // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
-                 self._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
-
-                 historySource.update(historyData, meta);
+                 historyUtils.getHistorySource({historyId}).update(historyData, meta);
              }
 
              if (!historyUtils.getHistorySource({historyId})._history) {
