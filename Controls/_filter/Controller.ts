@@ -172,10 +172,9 @@ const _private = {
                      historyData = self._updateMeta.item;
                  } else {
                      historyData = _private.getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
+                     // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
+                     self._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
                  }
-
-                 // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
-                 self._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
 
                  historyUtils.getHistorySource({historyId}).update(historyData, meta);
              }
