@@ -217,7 +217,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
              if (historyUtils.isHistorySource(currentFilter._source)) {
                  currentFilter._source.update(items, historyUtils.getMetaHistory());
 
-                 if (currentFilter._sourceController && currentFilter._source.getItems) {
+                 if (currentFilter._sourceController && currentFilter._source.getItems()) {
                      currentFilter._items = currentFilter._source.getItems();
                  }
              }
@@ -430,7 +430,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
                source: new PrefetchProxy({
                   target: this._configs[index]._source,
                   data: {
-                     query: (this._configs[index].popupItems || this._configs[index]._items).clone()
+                     query: (this._configs[index]._items || this._configs[index].popupItems).clone()
                   }
                }),
                selectorItems: this._configs[index]._items,
