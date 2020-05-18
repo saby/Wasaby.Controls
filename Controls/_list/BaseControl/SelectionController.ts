@@ -77,7 +77,7 @@ var _private = {
     isAllSelectedInRoot(self, root): boolean {
         const selectedKeys = self._multiselection.selectedKeys;
         const excludedKeys = self._multiselection.excludedKeys;
-        return selectedKeys.includes(root) && excludedKeys.includes(root);
+        return selectedKeys.includes(root) && (!self._options.parentProperty || excludedKeys.includes(root));
     },
 
     getRoot(self): number|string|null {
@@ -94,8 +94,9 @@ var _private = {
     onCollectionChange: function (event, action, newItems, newItemsIndex, removedItems) {
         // Можем попасть сюда в холостую, когда старая модель очистилась, а новая еще не пришла
         // выписана задача https://online.sbis.ru/opendoc.html?guid=2ccba240-9d41-4a11-8e05-e45bd922c3ac
-        if (this._options.listModel.getItems()) {
-            const countItems = this._options.listModel.getItems().getCount();
+        const items = this._options.listModel.getItems();
+        if (items) {
+            const countItems = items instanceof Array ? items.length : items.getCount();
             const isAllSelected = _private.isAllSelectedInRoot(this, _private.getRoot(this));
             if (action === collection.IObservable.ACTION_REMOVE) {
                 this._multiselection.remove(_private.getItemsKeys(removedItems));

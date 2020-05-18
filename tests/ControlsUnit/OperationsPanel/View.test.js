@@ -174,6 +174,29 @@ define([
                });
             });
          });
+
+         it('resize event on afterMount', async () => {
+            let resizeEventFired = false;
+            instance._notify = (eventName) => {
+               if (eventName === 'controlResize') {
+                  resizeEventFired = true;
+               }
+            };
+            instance._children = {
+               toolbarBlock: {
+                  clientWidth: 100
+               }
+            };
+            WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
+            await instance._beforeMount(cfg);
+            instance._afterMount();
+            assert.isFalse(resizeEventFired);
+            assert.isTrue(instance._initialized);
+
+            instance._beforeUpdate(cfg);
+            instance._afterUpdate(cfg);
+            assert.isTrue(resizeEventFired);
+         });
       });
 
       describe('_beforeUpdate', function() {
