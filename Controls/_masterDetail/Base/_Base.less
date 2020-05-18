@@ -32,13 +32,26 @@
    }
 }
 
+.controls-MasterDetail_masterOld-template_theme-@{themeName} {
+   &:before {
+      width: @masterOld_separator_thickness_list;
+   }
+}
+
 .controls-MasterDetail_master-template-contrast_theme-@{themeName} {
    &:before {
       background-color: @master_separator_contrast-color_list;
    }
 }
 
-.controls-MasterDetail_master-template-same_theme-@{themeName} {
+.controls-MasterDetail_masterOld-template-contrast_theme-@{themeName} {
+   &:before {
+      background-color: @masterOld_separator_color_list;
+   }
+}
+
+.controls-MasterDetail_master-template-same_theme-@{themeName},
+.controls-MasterDetail_masterOld-template-same_theme-@{themeName} {
    &:before {
       background-color: @master_separator_color_list;
    }

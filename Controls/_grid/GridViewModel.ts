@@ -127,7 +127,8 @@ var
             if (params.columnIndex === params.columns.length - arrayLengthOffset) {
                 classLists.right += ` controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
             }
-            if (!params.isHeader && !params.isResult) {const style = params.style || 'master';
+            if (!params.isHeader && !params.isResult) {
+                const style = params.style === 'masterOld' ? 'master' : params.style || 'master';
                 classLists.top += ` controls-Grid__row-cell_${style}_rowSpacingTop_${params.itemPadding.top}_theme-${theme}`;
                 classLists.bottom += ` controls-Grid__row-cell_${style}_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme}`;
             }
@@ -241,7 +242,7 @@ var
         getItemColumnCellClasses: function(current, theme) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'relativeCellWrapper');
-            const style = current.style || 'default';
+            let style = current.style === 'masterOld' || !current.style ? 'default' : current.style;
             const backgroundStyle = current.backgroundStyle || current.style || 'default';
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
@@ -275,6 +276,7 @@ var
             }
 
             if (current.isSelected) {
+                style = current.style || 'default';
                 classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
@@ -1296,7 +1298,7 @@ var
             };
 
             current.getMarkerClasses = (rowSeparatorVisibility): string => {
-                const style = this._options.style || 'default';
+                const style = this._options.style === 'masterOld' || !this._options.style ? 'default' : this._options.style;
                 let classes = `controls-GridView__itemV_marker controls-GridView__itemV_marker-${style}
                                 controls-GridView__itemV_marker-${style}_theme-${self._options.theme}`;
 
