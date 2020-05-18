@@ -37,6 +37,8 @@ export default class MultiSelector extends Control {
    protected _isAllSelected: boolean = false;
    protected _listMarkedKey: TKey = null;
    protected _notifyHandler: Function = tmplNotify;
+   protected _isOperationsPanelOpened: boolean = false;
+   protected _savedListMarkedKey: TKey = null;
 
    protected _beforeMount() {
       this._itemOpenHandler = this._itemOpenHandler.bind(this);
@@ -71,11 +73,31 @@ export default class MultiSelector extends Control {
    }
 
    protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: TKey): void {
-      this._listMarkedKey = markedKey;
+      this._setListMarkedKey(markedKey);
       this._notify('markedKeyChanged', [markedKey]);
    }
 
    protected _markedKeyChangedHandler(event: SyntheticEvent<null>): void {
       event.stopPropagation();
+   }
+
+   protected _operationsPanelOpen(): void {
+      this._isOperationsPanelOpened = true;
+      if (this._savedListMarkedKey) {
+         this._setListMarkedKey(this._savedListMarkedKey);
+      }
+   }
+
+   protected _operationsPanelClose(): void {
+      this._isOperationsPanelOpened = false;
+   }
+
+   private _setListMarkedKey(key: TKey): void {
+      if (this._isOperationsPanelOpened) {
+         this._listMarkedKey = key;
+         this._savedListMarkedKey = null;
+      } else {
+         this._savedListMarkedKey = key;
+      }
    }
 }
