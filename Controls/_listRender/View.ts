@@ -180,7 +180,6 @@ export default class View extends Control<IViewOptions> {
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         const moveMarker = new MarkerCommands.Mark(item.getContents().getKey());
-
         this._executeCommands([moveMarker]);
         // TODO fire 'markedKeyChanged' event
 
@@ -259,7 +258,6 @@ export default class View extends Control<IViewOptions> {
 
     /**
      * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
-     * @param e событие onResult
      * @param eventName название события, брошенного из Controls/menu:Popup.
      * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
      * @param actionModel
@@ -267,7 +265,6 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _itemActionsMenuResultHandler(
-        e: SyntheticEvent<MouseEvent>,
         eventName: string,
         actionModel: Model,
         clickEvent: SyntheticEvent<MouseEvent>): void {
@@ -318,10 +315,10 @@ export default class View extends Control<IViewOptions> {
         if (menuConfig) {
             const onResult = this._itemActionsMenuResultHandler.bind(this);
             const onClose = this._itemActionsMenuCloseHandler.bind(this);
+            menuConfig.eventHandlers = {onResult, onClose};
             this._collection.setActiveItem(item);
             Sticky.openPopup(menuConfig).then((popupId) => {
                 this._itemActionsMenuId = popupId;
-                menuConfig.eventHandlers = {onResult, onClose};
             });
         }
     }
