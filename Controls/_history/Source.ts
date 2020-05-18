@@ -98,7 +98,7 @@ var _private = {
       return self.originSource;
    },
 
-   : function(self, data, sourceItems) {
+   initHistory: function(self, data, sourceItems) {
       if (data.getRow) {
          const row = data.getRow();
          const pinned = this.prepareHistoryItems(self, row.get('pinned'), sourceItems);
