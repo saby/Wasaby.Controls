@@ -11,9 +11,7 @@ import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
 export interface IRadioGroupOptions extends IControlOptions,
     ISingleSelectableOptions,
     ISourceOptions,
-    IToggleGroupOptions {
-   direction?: string;
-}
+    IToggleGroupOptions {}
 
    /**
     * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
