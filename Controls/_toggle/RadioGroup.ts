@@ -1,5 +1,4 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {Controller as SourceController} from 'Controls/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
@@ -49,16 +48,6 @@ export interface IRadioGroupOptions extends IControlOptions,
     * @demo Controls-demo/toggle/RadioGroup/Index
     */
 
-   var _private = {
-      initItems: function(source, self) {
-         self._crudWrapper = new CrudWrapper({
-            source: source
-         });
-         return self._crudWrapper.query({}).then((items) => {
-            return items;
-         });
-      }
-   };
 class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, ISingleSelectable, IToggleGroup {
    '[Controls/_interface/ISource]': boolean = true;
    '[Controls/_interface/ISingleSelectable]': boolean = true;
@@ -67,7 +56,7 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
    protected _template: TemplateFunction = template;
    protected _defaultItemTemplate: TemplateFunction = defaultItemTemplate;
    protected _items: RecordSet;
-   protected _sourceController: any;
+   protected _crudWrapper: CrudWrapper;
 
    protected _beforeMount(options: IRadioGroupOptions, context: object, receivedState: RecordSet): void|Promise<RecordSet> {
       if (receivedState) {
@@ -96,10 +85,10 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
    }
 
    private _initItems(options: IRadioGroupOptions): Promise<RecordSet> {
-      this._sourceController = new SourceController({
+      this._crudWrapper = new CrudWrapper({
          source: options.source
       });
-      return this._sourceController.load().addCallback((items) => {
+      return this._crudWrapper.query({}).then((items) => {
          return items;
       });
    }
