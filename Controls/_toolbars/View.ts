@@ -17,6 +17,7 @@ import {
     IItemTemplate,
     IItemTemplateOptions
 } from 'Controls/interface';
+import {IItemAction} from 'Controls/itemActions';
 
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import {IButtonOptions} from 'Controls/buttons';
@@ -111,6 +112,11 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      */
     popupFooterTemplate?: String | Function;
 
+    /**
+     * @name  Controls/_toolbars/IToolbarOptions#itemActions
+     * @cfg {Array<ItemAction>} Конфигурация опций записи.
+     */
+    itemActions?: IItemAction[];
 }
 
 /**
