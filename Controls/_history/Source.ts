@@ -98,13 +98,14 @@ var _private = {
       return self.originSource;
    },
 
-   initHistory: function(self, data, sourceItems) {
+   : function(self, data, sourceItems) {
       if (data.getRow) {
          const row = data.getRow();
          const pinned = this.prepareHistoryItems(self, row.get('pinned'), sourceItems);
          const recent = this.prepareHistoryItems(self, row.get('recent'), sourceItems);
          const frequent = this.prepareHistoryItems(self, row.get('frequent'), sourceItems);
 
+         self._historyItems = null;
          self._history = {
             pinned: pinned,
             frequent: frequent,
