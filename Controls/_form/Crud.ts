@@ -75,6 +75,8 @@ let CRUD = Control.extend({
             ];
 
             this._notify('registerPending', argsPending, {bubbling: true});
+
+            return resultUpdate;
         }
 
         return null;
