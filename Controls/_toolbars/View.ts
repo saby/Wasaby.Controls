@@ -176,6 +176,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 nodeProperty: options.nodeProperty,
                 parentProperty: options.parentProperty,
                 groupTemplate: options.groupTemplate,
+                itemActions: options.itemActions,
                 groupProperty: options.groupProperty,
                 groupingKeyCallback: options.groupingKeyCallback,
                 additionalProperty: options.additionalProperty,
