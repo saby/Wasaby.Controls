@@ -13,5 +13,7 @@
            on:markedKeyChanged="_markedKeyChangedHandler()"
            on:selectedTypeChanged="_selectedTypeChangedHandler()"
            on:listMarkedKeyChanged="_listMarkedKeyChangedHandler()"
+           on:operationsPanelOpen="_operationsPanelOpen()"
+           on:operationsPanelClose="_operationsPanelClose()"
    />
 </Controls.event:Register>
