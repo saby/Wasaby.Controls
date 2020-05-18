@@ -83,7 +83,7 @@ class Store implements IStore {
         if (!this._hasValue(propertyName)) {
             this._defineProperty(propertyName);
         }
-        this.state[this.state.activeContext][propertyName] = value;
+        this.state[this.state.activeContext]['_' + propertyName].value = value;
     }
 
     // объявление поля в стейте
@@ -95,8 +95,8 @@ class Store implements IStore {
         });
         // сеттер и геттер для публичного поля
         Object.defineProperty(this.state[this.state.activeContext], propertyName, {
-            set: function (newValue) {
-                this['_' + propertyName].value = newValue;
+            set: function () {
+                // do nothing
             },
             get: function () {
                 return this['_' + propertyName].value;
