@@ -150,6 +150,11 @@ export default class View extends Control<IViewOptions> {
             this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
             break;
         default:
+            // TODO https://online.sbis.ru/opendoc.html?guid=c30fd644-a1b9-4b66-85fb-f4d8a67ff877
+            // Animation should be played only if checkboxes are visible.
+            // if (this._options.multiSelectVisibility !== 'hidden') {
+            //     this._listViewModel.setRightSwipedItem(itemData);
+            // }
             this._collection.setSwipeAnimation(ANIMATION_STATE.CLOSE);
             this._collection.nextVersion();
             break;
