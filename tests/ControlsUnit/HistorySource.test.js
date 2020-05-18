@@ -315,7 +315,6 @@ define(
                   keyProperty: 'id'
                });
                historyMod.Source._private.initHistory(hSource, newData, hSource._oldItems);
-               hSource._historyItems = null;
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(0).get('title'), 'Запись 5');
                assert.equal(historyItems.at(1).get('title'), 'Запись 4');
