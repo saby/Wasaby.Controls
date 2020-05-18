@@ -833,13 +833,21 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          const fastFilterItems = [];
          const filterButtonItems = [];
          let self = {};
+         let historyData = {};
          let historySaveEventFired = false;
-         self._notify = function(eventName) {
+         self._notify = function(eventName, args = []) {
             if (eventName === 'historySave') {
                historySaveEventFired = true;
+               historyData = args[0];
             }
          };
+         const filterItems = [{id: 'testId3', value: 'testValueClient', resetValue: 'testResetValueClient', textValue: '', anyField1: 'anyValue3'}];
+         Filter._private.getHistoryByItems(self, 'TEST_HISTORY_ID_2', filterItems);
          Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID_2');
+         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID_2').addCallback(function(items) {
+            assert.deepEqual(items, filterItems);
+            done();
+         });
          assert.isOk(self._sourceController);
          Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
          assert.isTrue(historySaveEventFired);
