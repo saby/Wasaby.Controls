@@ -5,7 +5,9 @@
                   items="{{_items}}"
                   name="Path"
                   withoutBackButton="{{_withoutBackButton}}"
-                  attr:class="controls-Explorer__Path_theme-{{_options.theme}} {{_options.style == 'master' ? 'controls-Explorer__Path_style_master_theme-' + _options.theme}}"
+                  attr:class="controls-Explorer__Path_theme-{{_options.theme}}
+                              {{_options.style == 'master' || _options.style == 'masterOld' ? 'controls-Explorer__Path_master_theme-' + _options.theme
+                              'controls-Explorer__Path_style_{{_options.style}}_theme-' + _options.theme}}"
                   on:backButtonClick="_notifyHandler('backButtonClick')"
                   on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                   on:arrowActivated="_notifyHandler('arrowActivated')"
@@ -28,7 +30,7 @@
       <ws:partial template="headingPath"
                   on:arrowClick="_notifyHandler('arrowClick')"/>
    </ws:else>
-</ws:if>
+</ws:if>ff
 <ws:else>
 
  <!-- нельзя использовать invisible-node. он ломает всплытие событий/-->

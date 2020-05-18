@@ -36,7 +36,7 @@ var _private = {
     getSpacingClassList: function(cfg) {
         let classList = '';
         const itemPadding = _private.getItemPadding(cfg);
-        const style = cfg.style || 'default';
+        const style = cfg.style === 'masterOld' || !cfg.style ? 'default' : cfg.style;
 
         classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${cfg.theme}`;
