@@ -50,18 +50,11 @@ export interface IRadioGroupOptions extends IControlOptions,
     * @demo Controls-demo/toggle/RadioGroup/Index
     */
 
-  /* var _private = {
-      initItems: function(source, self) {
-         self._sourceController = new SourceController({
-            source: source
-         });
-         return self._sourceController.load().addCallback(function(items) {
-            return items;
-         });
-      }
-   };
-*/
 class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, ISingleSelectable, IToggleGroup {
+   '[Controls/_interface/ISource]': boolean = true;
+   '[Controls/_interface/ISingleSelectable]': boolean = true;
+   '[Controls/_toggle/interface/IToggleGroup]': boolean = true;
+
    protected _template: TemplateFunction = template;
    protected _defaultItemTemplate: TemplateFunction = defaultItemTemplate;
    protected _items: RecordSet;
