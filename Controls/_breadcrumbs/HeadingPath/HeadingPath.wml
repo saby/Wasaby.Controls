@@ -26,7 +26,7 @@
             <Controls._breadcrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs_home-path-spacing_theme-{{_options.theme}} controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
                                        items="{{_breadCrumbsItems}}"
                                        visibleItems="{{_visibleItems}}"
-                                       backgroundStyle="{{_options.backgroundStyle}}"
+                                       backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                                        keyProperty="{{_options.keyProperty}}"
                                        displayProperty="{{_options.displayProperty}}"
                                        highlighter="{{_options.highlighter}}"
