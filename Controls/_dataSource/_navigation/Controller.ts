@@ -1,19 +1,19 @@
 import {QueryOrderSelector, QueryWhere} from 'Types/source';
-import {RecordSet} from 'Types/collection';
+import {RecordSet, List} from 'Types/collection';
 import {INavigationOptionValue} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 
 import * as cClone from 'Core/core-clone';
 
-import {IQueryParamsController} from './interface/IQueryParamsController';
-import PageQueryParamsController from './QueryParamsController/PageQueryParamsController';
-import PositionQueryParamsController from './QueryParamsController/PositionQueryParamsController';
+import {IQueryParamsController} from './IQueryParamsController';
+import PageQueryParamsController from './PageQueryParamsController';
+import PositionQueryParamsController from './PositionQueryParamsController';
 
 import {
     Direction,
     IAdditionalQueryParams,
     IAdditionQueryParamsMeta
-} from './interface/IAdditionalQueryParams';
+} from './IAdditionalQueryParams';
 import {INavigationSourceConfig} from 'Controls/_interface/INavigation';
 
 /**
@@ -183,6 +183,13 @@ class QueryParamsBuilder {
     }
 }
 
+type TKey = string | number | null; // TODO общий тип для ключа
+
+interface IControllerItem {
+    id: TKey;
+    queryParamsController: IQueryParamsController;
+}
+
 export interface INavigationControllerOptions {
     /**
      * @name Controls/_source/NavigationController#navigation
@@ -221,12 +228,13 @@ export class NavigationController {
 
     protected _options: INavigationControllerOptions | null;
 
-    private readonly _queryParamsController: IQueryParamsController;
+    private readonly _queryParamsControllers: List<IControllerItem>;
 
     constructor(cfg: INavigationControllerOptions) {
         this._options = cfg;
         if (this._options.navigation) {
-            this._queryParamsController = NavigationControllerFactory.resolve(this._options.navigation);
+            // this._queryParamsController = NavigationControllerFactory.resolve(this._options.navigation);
+            this._queryParamsControllers = new List();
         }
     }
 

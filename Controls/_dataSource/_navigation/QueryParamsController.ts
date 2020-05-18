@@ -1,11 +1,11 @@
-import {IQueryParamsController} from 'Controls/_source/interface/IQueryParamsController';
-import {IPageQueryParamsControllerOptions} from 'Controls/_source/QueryParamsController//PageQueryParamsController';
-import {IPositionQueryParamsControllerOptions} from 'Controls/_source/QueryParamsController/PositionQueryParamsController';
+import {IQueryParamsController} from 'Controls/_dataSource/_navigation/IQueryParamsController';
+import {IPageQueryParamsControllerOptions} from 'Controls/_dataSource/_navigation/PageQueryParamsController';
+import {IPositionQueryParamsControllerOptions} from 'Controls/_dataSource/_navigation/PositionQueryParamsController';
 import {RecordSet, List} from 'Types/collection';
 import {Collection} from 'Controls/display';
 import {Record} from 'Types/entity';
 import {INavigationSourceConfig} from 'Controls/interface';
-import {Direction, IAdditionalQueryParams} from 'Controls/_source/interface/IAdditionalQueryParams';
+import {Direction, IAdditionalQueryParams} from 'Controls/_dataSource/_navigation/IAdditionalQueryParams';
 
 type Key = string|number|null;
 type NavigationRecord = Record<{

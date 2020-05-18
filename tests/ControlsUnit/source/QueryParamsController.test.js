@@ -4,8 +4,8 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'Controls/_source/QueryParamsController/PageQueryParamsController',
-      'Controls/_source/QueryParamsController/PositionQueryParamsController',
+      'Controls/_dataSource/_navigation/PageQueryParamsController',
+      'Controls/_dataSource/_navigation/PositionQueryParamsController',
       'Types/collection',
       'Types/source'
    ],

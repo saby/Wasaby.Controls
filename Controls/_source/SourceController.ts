@@ -3,9 +3,9 @@ import cInstance = require('Core/core-instance');
 import sourceLib = require('Types/source');
 import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
-import PageQueryParamsController from 'Controls/_source/QueryParamsController/PageQueryParamsController';
-import PositionQueryParamsController from 'Controls/_source/QueryParamsController/PositionQueryParamsController';
-import QueryParamsController from 'Controls/_source/QueryParamsController';
+import PageQueryParamsController from 'Controls/_dataSource/_navigation/PageQueryParamsController';
+import PositionQueryParamsController from 'Controls/_dataSource/_navigation/PositionQueryParamsController';
+import QueryParamsController from 'Controls/_dataSource/_navigation/QueryParamsController';
 import {Logger} from 'UI/Utils';
 
 var _private = {

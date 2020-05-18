@@ -1,5 +1,5 @@
-import QueryParamsController from  'Controls/_source/QueryParamsController';
-import {IQueryParamsController} from 'Controls/_source/interface/IQueryParamsController';
+import QueryParamsController from 'Controls/_dataSource/_navigation/QueryParamsController';
+import {IQueryParamsController} from 'Controls/_dataSource/_navigation/IQueryParamsController';
 import {Direction, IAdditionalQueryParams} from 'Controls/source';
 import {IBaseSourceConfig, INavigationSourceConfig} from 'Controls/interface';
 import {Collection} from 'Controls/display';
