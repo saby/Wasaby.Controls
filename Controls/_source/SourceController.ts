@@ -3,9 +3,9 @@ import cInstance = require('Core/core-instance');
 import sourceLib = require('Types/source');
 import cDeferred = require('Core/Deferred');
 import cClone = require('Core/core-clone');
-import PageQueryParamsController from 'Controls/_dataSource/_navigation/PageQueryParamsController';
-import PositionQueryParamsController from 'Controls/_dataSource/_navigation/PositionQueryParamsController';
-import QueryParamsController from 'Controls/_dataSource/_navigation/QueryParamsController';
+import {PageQueryParamsController} from 'Controls/dataSource';
+import {PositionQueryParamsController} from 'Controls/dataSource';
+import {QueryParamsController} from 'Controls/dataSource';
 import {Logger} from 'UI/Utils';
 
 var _private = {
@@ -112,9 +112,7 @@ var _private = {
       return resultParams;
    }
 };
-/**
- * @Deprecated Please use Controls/source/NavigationController instead
- */
+
 var SourceController = cExtend.extend({
    _source: null,
    _queryParamsController: null,

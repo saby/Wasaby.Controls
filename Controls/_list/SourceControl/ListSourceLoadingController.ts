@@ -3,7 +3,7 @@ import {DataSet, QueryOrderSelector, QueryWhere} from 'Types/source';
 import {ObservableMixin} from 'Types/entity';
 
 import {IDirection} from 'Controls/_list/interface/IVirtualScroll';
-import {NavigationController} from 'Controls/_dataSource/_navigation/Controller';
+import {NavigationController} from 'Controls/dataSource';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 
 import {

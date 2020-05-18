@@ -224,7 +224,7 @@ export interface INavigationControllerOptions {
  * @public
  * @author Аверкиев П.А.
  */
-export class NavigationController {
+export default class NavigationController {
 
     protected _options: INavigationControllerOptions | null;
 

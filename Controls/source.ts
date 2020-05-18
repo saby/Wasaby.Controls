@@ -19,7 +19,6 @@
 import {default as EnumAdapter} from './_source/Adapter/Enum';
 import Controller = require('Controls/_source/SourceController');
 
-export {NavigationController} from 'Controls/_dataSource/_navigation/Controller';
 export {IAdditionalQueryParams, Direction} from 'Controls/_dataSource/_navigation/IAdditionalQueryParams';
 
 export {default as SelectedKey} from './_source/Adapter/SelectedKey';

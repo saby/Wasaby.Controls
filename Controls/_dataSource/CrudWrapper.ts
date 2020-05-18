@@ -9,11 +9,11 @@ import {IAdditionalQueryParams} from 'Controls/_dataSource/_navigation/IAddition
 
 export interface ICrudWrapperOptions {
     /**
-     * @name Controls/_source/NavigationController#source
+     * @name Controls/_source/CrudWrapper#source
      * @cfg {Types/source:ICrud} Ресурс для запроса данных
      */
     /*
-     * @name Controls/_source/NavigationController#source
+     * @name Controls/_source/CrudWrapper#source
      * @cfg {Types/source:ICrud} Source to request data
      */
     source: ICrud;
@@ -268,7 +268,7 @@ export class CrudWrapper {
      */
     private static _isValidCrudSource(source: ICrud): boolean {
         if (!cInstance.instanceOfModule(source, 'Types/_source/ICrud') && !cInstance.instanceOfMixin(source, 'Types/_source/ICrud')) {
-            Logger.error('NavigationController: Source option has incorrect type');
+            Logger.error('Controls:dataSource/CrudWrapper: Source option has incorrect type');
             return false;
         }
         return true;
