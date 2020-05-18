@@ -18,7 +18,7 @@
                              source="{{_masterSource}}"
                              keyProperty="id"
                              parentProperty="Раздел"
-                             style="master"
+                             style="masterClassic"
                              backgroundStyle="master"
                              nodeProperty="Раздел@"
                              markerVisibility="visible"
@@ -70,7 +70,7 @@
             <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
                <Controls.masterDetail:List selectedField="sourceType" attr:class="controls-demo_MasterDetail_master_list">
                   <Controls.list:View
-                     style="master"
+                     style="masterClassic"
                      backgroundStyle="master"
                      keyProperty="id"
                      markerVisibility="visible"
@@ -135,7 +135,7 @@
                         source="{{_masterSource}}"
                         keyProperty="id"
                         parentProperty="Раздел"
-                        style="master"
+                        style="masterClassic"
                         backgroundStyle="master"
                         nodeProperty="Раздел@"
                         markerVisibility="visible"

@@ -572,11 +572,11 @@
 }
 
 .ws-is-mobile-chrome-ios .controls-Grid__row-cell_selected-master_theme-@{themeName},
-.ws-is-mobile-chrome-ios .controls-Grid__row-cell_selected-masterOld_theme-@{themeName},
+.ws-is-mobile-chrome-ios .controls-Grid__row-cell_selected-masterClassic_theme-@{themeName},
 .ws-is-desktop-safari .controls-Grid__row-cell_selected-master_theme-@{themeName},
-.ws-is-desktop-safari .controls-Grid__row-cell_selected-masterOld_theme-@{themeName},
+.ws-is-desktop-safari .controls-Grid__row-cell_selected-masterClassic_theme-@{themeName},
 .ws-is-mobile-safari .controls-Grid__row-cell_selected-master_theme-@{themeName},
-.ws-is-mobile-safari .controls-Grid__row-cell_selected-masterOld_theme-@{themeName} {
+.ws-is-mobile-safari .controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
    // ave safari 13
    // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
    // иначе все position: absolute элементы внутри position: sticky
@@ -584,28 +584,28 @@
    transform: translateZ(0);
 }
 
-.controls-Grid__row-cell_selected-masterOld_theme-@{themeName} {
+.controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
    z-index: 1;
-   background-color: @master_item_selected_background-color_list;
+   background-color: @masterClassic_item_selected_background-color_list;
 
    &:before {
       content: '';
       z-index: 2;
       box-sizing: border-box;
-      border-width: @master_item_selected_border-thickness_list 0 @master_item_selected_border-thickness_list 0;
+      border-width: @masterClassic_item_selected_border-thickness_list 0 @masterClassic_item_selected_border-thickness_list 0;
       border-style: solid;
-      border-color: @master_item_selected_border-top-color_list transparent @master_item_selected_border-bottom-color_list transparent;
-      box-shadow: @master_item_selected_box-shadow_list;
+      border-color: @masterClassic_item_selected_border-top-color_list transparent @masterClassic_item_selected_border-bottom-color_list transparent;
+      box-shadow: @masterClassic_item_selected_box-shadow_list;
       width: ~'calc(100% + @{master_separator_thickness_list})';
       position: absolute;
       left: 0;
       pointer-events: none;
-      top: -@master_item_selected_border-thickness_list;
-      bottom: -@master_item_selected_border-thickness_list;
+      top: -@masterClassic_item_selected_border-thickness_list;
+      bottom: -@masterClassic_item_selected_border-thickness_list;
    }
 }
 
-.controls-Grid__row-cell_selected__last-masterOld_theme-@{themeName} {
+.controls-Grid__row-cell_selected__last-masterClassic_theme-@{themeName} {
    &:after {
       content: '';
       z-index: 1;
@@ -614,7 +614,7 @@
       width: @master_separator_thickness_list;
       position: absolute;
       right: -@master_separator_thickness_list;
-      background-color: @master_item_selected_background-color_list;
+      background-color: @masterClassic_item_selected_background-color_list;
    }
 }
 
@@ -636,11 +636,11 @@
 
 .ws-is-hover {
    .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName},
-   .controls-Grid__row_masterOld_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
+   .controls-Grid__row_masterClassic_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
       background-color: @master_item_hover_background-color_list;
    }
    .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-background-master_theme-@{themeName},
-   .controls-Grid__row_highlightOnHover_masterOld_theme-@{themeName}:hover .controls-background-master_theme-@{themeName} {
+   .controls-Grid__row_highlightOnHover_masterClassic_theme-@{themeName}:hover .controls-background-master_theme-@{themeName} {
       background-color: @master_item_hover_background-color_list;
    }
 }

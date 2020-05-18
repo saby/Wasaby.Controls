@@ -179,11 +179,11 @@ var
 
                 // могут передать node или hiddenNode в этом случае добавляем наши классы для master/default
                 if ((expanderIcon === 'node') || (expanderIcon === 'hiddenNode')) {
-                    expanderIconClass += '_' + (itemData.style === 'master' || itemData.style === 'masterOld' ? 'master' : 'default');
+                    expanderIconClass += '_' + (itemData.style === 'master' || itemData.style === 'masterClassic' ? 'master' : 'default');
                 }
             } else {
                 expanderIconClass = ' controls-TreeGrid__row-expander_' + (itemType === true ? 'node_' : 'hiddenNode_')
-                + (itemData.style === 'master' || itemData.style === 'masterOld' ? 'master' : 'default');
+                + (itemData.style === 'master' || itemData.style === 'masterClassic' ? 'master' : 'default');
             }
 
             expanderClasses += expanderIconClass + `_theme-${theme}`;

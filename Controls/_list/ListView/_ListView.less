@@ -399,18 +399,18 @@
    }
 }
 
-.controls-ListView__item__marked_masterOld_theme-@{themeName} {
+.controls-ListView__item__marked_masterClassic_theme-@{themeName} {
    z-index: 1;
-   background-color: @master_item_selected_background-color_list;
+   background-color: @masterClassic_item_selected_background-color_list;
 
    &:before {
       content: '\200b';
       z-index: 2;
       box-sizing: border-box;
-      border-width: @master_item_selected_border-thickness_list 0 @master_item_selected_border-thickness_list 0;
+      border-width: @masterClassic_item_selected_border-thickness_list 0 @masterClassic_item_selected_border-thickness_list 0;
       border-style: solid;
-      border-color: @master_item_selected_border-top-color_list transparent @master_item_selected_border-bottom-color_list transparent;
-      box-shadow: @master_item_selected_box-shadow_list;
+      border-color: @masterClassic_item_selected_border-top-color_list transparent @masterClassic_item_selected_border-bottom-color_list transparent;
+      box-shadow: @masterClassic_item_selected_box-shadow_list;
       width: ~'calc(100% + @{master_separator_thickness_list})';
       position: absolute;
       bottom: 0;
@@ -426,7 +426,7 @@
       width: @master_separator_thickness_list;
       position: absolute;
       right: -@master_separator_thickness_list;
-      background-color: @master_item_selected_background-color_list;
+      background-color: @masterClassic_item_selected_background-color_list;
    }
 }
 
@@ -446,9 +446,9 @@
    transform: translateY(-50%);
 }
 
-.controls-ListView__itemV_marker_masterOld_theme-@{themeName} {
+.controls-ListView__itemV_marker_masterClassic_theme-@{themeName} {
    position: absolute;
-   width: @masterOld-marker_thickness_list;
+   width: @masterClassic-marker_thickness_list;
    background-color: @marker_color_list;
    height: 100%;
    left: 0;
@@ -471,7 +471,7 @@
 //TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
 .ws-is-hover:not(.ws-is-mobile-platform) {
    .controls-ListView__item_master_theme-@{themeName},
-   .controls-ListView__item_masterOld_theme-@{themeName} {
+   .controls-ListView__item_masterClassic_theme-@{themeName} {
       &:hover {
          background-color: @master_item_hover_background-color_list;
       }

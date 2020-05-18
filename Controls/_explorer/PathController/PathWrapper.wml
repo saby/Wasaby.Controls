@@ -6,7 +6,7 @@
                   name="Path"
                   withoutBackButton="{{_withoutBackButton}}"
                   attr:class="controls-Explorer__Path_theme-{{_options.theme}}
-                              {{_options.style == 'master' || _options.style == 'masterOld' ? 'controls-Explorer__Path_master_theme-' + _options.theme}}
+                              {{_options.style == 'master' || _options.style == 'masterClassic' ? 'controls-Explorer__Path_master_theme-' + _options.theme}}
                               {{'controls-Explorer__Path_style_' + _options.style + '_theme-' + _options.theme}}"
                   on:backButtonClick="_notifyHandler('backButtonClick')"
                   on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
