@@ -2,7 +2,7 @@
    <div class="controls-Menu__popup">
       <ws:if data="{{_headerTemplate && _applyButtonVisibility}}">
          <div class="controls-DropdownList__applyButton
-                              controls-Menu__applyButton-top_theme-{{_options.theme}}">
+                              controls-Menu__applyButton_theme-{{_options.theme}}">
             <Controls.buttons:Button viewMode="functionalButton"
                                      icon="icon-Yes"
                                      iconSize="m"

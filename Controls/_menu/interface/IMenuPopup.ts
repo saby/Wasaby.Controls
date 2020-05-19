@@ -21,13 +21,6 @@ export interface IMenuPopupOptions extends IMenuControlOptions, ISearch {
  * @public
  * @author Золотова Э.Е.
  */
-
-/**
- * @typedef {String} ApplyButtonAlign
- * @variant top Кнопка расположена наверху.
- * @variant bottom Кнопка расположена внизу.
- */
-
 export default interface IMenuPopup {
     readonly '[Controls/_menu/interface/IMenuPopup]': boolean;
 }
@@ -149,9 +142,4 @@ export default interface IMenuPopup {
  * @name Controls/_menu/interface/IMenuPopup#emptyTemplate
  * @cfg {Function} Шаблон, который будет отображаться в выпадающем списке, если поисковой запрос не вернул результатов.
  * @demo Controls-demo/Menu/Popup/SearchParam/EmptyTemplate/Index
- */
-
-/**
- * @name Controls/_menu/interface/IMenuPopup#applyButtonAlign
- * @cfg {ApplyButtonAlign} Устанавливает вертикальное выравнивание для кнопки подтверждения выбора.
  */
