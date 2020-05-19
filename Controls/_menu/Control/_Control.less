@@ -105,7 +105,7 @@
 }
 
 .controls-Menu__content-multiselect_theme-@{themeName} {
-   padding-right: @apply-button_inline-height_menuPopup + (@apply-button-top_offset_menuPopup * 2);
+   padding-right: @apply-button_width_menuPopup + (@apply-button-right_offset_menuPopup * 2);
 }
 
 .controls-Menu__defaultItem_theme-@{themeName},
@@ -239,9 +239,14 @@
    width: 100%;
 }
 
+.controls-Menu__applyButton {
+   height: 100%;
+   width: 100%;
+}
+
 .controls-Menu__applyButton-top_theme-@{themeName} {
    position: absolute;
-   right: @apply-button-top_offset_menuPopup;
+   right: @apply-button-right_offset_menuPopup;
    top: (@item_height_menu - @icon-size_m) / 2;
    z-index: 2;
    height: @apply-button_height_menuPopup;
