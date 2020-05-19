@@ -293,6 +293,7 @@
                 filter="{{ _options.filter }}"
                 source="{{ _options.source }}"
                 nodesSourceControllers="{{_options.nodesSourceControllers}}"
+                task1179321660="{{_options.task1179321660}}"
                 selectDescendants="{{_options.selectDescendants}}"
                 selectAncestors="{{_options.selectAncestors}}"
                 root="{{_options.root}}"
