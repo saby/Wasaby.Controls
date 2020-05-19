@@ -113,12 +113,17 @@ var
                 }
                 // Если обновление данных на БЛ затягивается, должен появиться индикатор загрузки.
                 self._showIndicator();
-                return _private.updateModel(self, commit).addCallback(function() {
-                    return Deferred.success().addCallback(function() {
-                        self._hideIndicator();
-                        _private.afterEndEdit(self, commit);
-                    });
-                });
+                return _private.updateModel(self, commit).addBoth((result) => {
+                    self._hideIndicator();
+                    return result;
+                }).addCallbacks(
+                    () => {
+                        return _private.afterEndEdit(self, commit);
+                    },
+                    (error) => {
+                        return Deferred.success({ cancelled: true });
+                    }
+                );
             }
         },
 
@@ -601,7 +606,11 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         // Выставляем каретку и активируем поле только после начала редактирования и гарантированной отрисовке полей ввода.
         if (this._clickItemInfo && this._clickItemInfo.item === this._originalItem && this._pendingInputRenderState === PendingInputRenderState.Rendering) {
             target = document.elementFromPoint(this._clickItemInfo.clientX, this._clickItemInfo.clientY);
-            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+            if ((target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')
+                // Выполняем корректировку выделения только в случае пустого выделения
+                // (учитываем опцию selectOnClick для input-контролов).
+                // https://online.sbis.ru/opendoc.html?guid=904a460a-02da-46a7-bb61-5e0ed2dc4375
+                && target.selectionStart === target.selectionEnd) {
                 fakeElement = document.createElement('div');
                 fakeElement.innerText = '';
 

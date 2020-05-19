@@ -12,6 +12,7 @@ import {RecordSet} from 'Types/collection';
 import {ICrud} from 'Types/source';
 import {Logger} from 'UI/Utils';
 import {error as dataSourceError} from 'Controls/dataSource';
+import {default as Store} from 'Controls/Store';
 
 var _private = {
    getSearchController: function (self, newOptions) {
@@ -232,7 +233,7 @@ var _private = {
       return !checkedValue;
    },
 
-   needStartSearch(self, options, needUpdateRoot, needRecreateSearchController, searchValue: string): boolean {
+   needStartSearch(self, options, needRecreateSearchController, searchValue: string, needUpdateRoot: boolean): boolean {
       const isSearchValueChanged = _private.isSearchValueChanged(self, searchValue);
       const isSearchValueShorterThenMinLength = _private.isSearchValueShort(options.minSearchLength, searchValue);
       const startSearchWithNewSourceController = searchValue && needRecreateSearchController;
@@ -241,8 +242,13 @@ var _private = {
           (!isSearchValueShorterThenMinLength || (_private.isSearchViewMode(self) && !searchValue && self._searchValue));
 
       return needStartSearchBySearchValueChanged &&
-             !needUpdateRoot ||
-             startSearchWithNewSourceController;
+          !needUpdateRoot ||
+          startSearchWithNewSourceController;
+   },
+
+   needUpdateInputSearchValue(self, options, needRecreateSearchController, searchValue: string): boolean {
+      return _private.isInputSearchValueChanged(this, searchValue) &&
+             _private.needStartSearch(self, options, needRecreateSearchController, searchValue);
    },
 
    isSearchViewMode(self): boolean {
@@ -341,14 +347,25 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       Container.superclass.constructor.apply(this, arguments);
    },
 
+   _observeStore() {
+      this._storeCallbackId = Store.onPropertyChanged('searchValue', (searchValue) => {
+         this._search(null, searchValue, true);
+      })
+   },
+
    _beforeMount: function (options, context) {
       this._dataOptions = context.dataOptions;
       this._previousViewMode = this._viewMode = options.viewMode;
+      let searchValue = options.searchValue;
+      if (options.useStore) {
+         this._observeStore();
+         searchValue = Store.getState().searchValue;
+      }
 
-      if (options.searchValue) {
-         this._inputSearchValue = options.searchValue;
-         if (!_private.isSearchValueShort(options.minSearchLength, options.searchValue)) {
-            this._searchValue = options.searchValue;
+      if (searchValue) {
+         this._inputSearchValue = searchValue;
+         if (!_private.isSearchValueShort(options.minSearchLength, searchValue)) {
+            this._searchValue = searchValue;
 
             if (_private.needUpdateViewMode(this, 'search')) {
                _private.updateViewMode(this, 'search');
@@ -402,13 +419,15 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (_private.needStartSearch(this, newOptions, needUpdateRoot, needRecreateSearchController, searchValue)) {
+
+      if (_private.needStartSearch(this, newOptions, needRecreateSearchController, searchValue, needUpdateRoot)) {
          _private.startSearch(this, searchValue);
-         if (searchValue !== this._inputSearchValue) {
-            _private.setInputSearchValue(this, searchValue);
-         }
+      }
+      if (_private.needUpdateInputSearchValue(this, newOptions, needRecreateSearchController, searchValue)) {
+         _private.setInputSearchValue(this, searchValue);
       }
    },
+
 
    _search: function (event, value, force) {
       _private.startSearch(this, value, force);
@@ -423,6 +442,9 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       this._dataOptions = null;
       this._itemOpenHandler = null;
       this._dataLoadCallback = null;
+      if (this._searchCallbackId) {
+         Store.unsubscribe(this._searchCallbackId);
+      }
    },
 
    _misspellCaptionClick: function () {

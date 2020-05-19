@@ -58,9 +58,14 @@ let CRUD = Control.extend({
         const updateMetaData = config?.additionalData;
 
         if (record.isChanged() || isNewRecord) {
-            const resultUpdate = this._dataSource
-                .update(record, updateMetaData)
-                .then((key) => {
+            const resultUpdate = this._dataSource.update(record, updateMetaData);
+            const argsPending = [
+                resultUpdate, {
+                    showLoadingIndicator: this._options.showLoadingIndicator
+                }
+            ];
+            this._notify('registerPending', argsPending, {bubbling: true});
+            resultUpdate.then((key) => {
                     this._notify('updateSuccessed', [record, key, config]);
                     return key;
                 })
@@ -68,13 +73,7 @@ let CRUD = Control.extend({
                     this._notify('updateFailed', [error, record]);
                     return error;
                 });
-            const argsPending = [
-                resultUpdate, {
-                    showLoadingIndicator: this._options.showLoadingIndicator
-                }
-            ];
-
-            this._notify('registerPending', argsPending, {bubbling: true});
+            return resultUpdate;
         }
 
         return null;

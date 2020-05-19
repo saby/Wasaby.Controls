@@ -805,7 +805,7 @@ let
          let marginTop = parseInt(computedStyle.marginTop, 10);
          let marginRight = parseInt(computedStyle.marginRight, 10);
 
-         this._contentStyles = this._styleHideScrollbar.replace(/-?\d+/g, function(found) {
+         this._contentStyles = this._styleHideScrollbar.replace(/-?[1-9]\d*/g, function(found) {
             return parseInt(found, 10) + marginRight;
          });
 

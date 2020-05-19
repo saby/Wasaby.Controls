@@ -184,11 +184,10 @@ class DialogController extends BaseController {
     }
 
     private _getWindowSize(): IWindow {
-        // Ширина и высота берется по body специально.
-        // В случае, когда уменьшили окно браузера и появился нативный скролл.
+        //TODO: https://online.sbis.ru/opendoc.html?guid=e049a729-ff28-46a4-9122-76e198ab30bd
         return {
-            width: document.body.clientWidth,
-            height: document.body.clientHeight,
+            width: window.innerWidth,
+            height: window.innerHeight,
             scrollTop: window.scrollY,
             scrollLeft: window.scrollX
         };

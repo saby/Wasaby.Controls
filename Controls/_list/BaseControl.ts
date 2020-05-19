@@ -1309,14 +1309,16 @@ const _private = {
         isContextMenu: boolean): void {
         const itemKey = item?.getContents()?.getKey();
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
-        menuConfig.eventHandlers = {
-            onResult: self._onItemActionsMenuResult,
-            onClose: self._onItemActionsMenuClose
-        };
-        self._listViewModel.setActiveItem(item);
-        Sticky.openPopup(menuConfig).then((popupId) => {
-            self._itemActionsMenuId = popupId;
-        });
+        if (menuConfig) {
+            menuConfig.eventHandlers = {
+                onResult: self._onItemActionsMenuResult,
+                onClose: self._onItemActionsMenuClose
+            };
+            self._listViewModel.setActiveItem(item);
+            Sticky.openPopup(menuConfig).then((popupId) => {
+                self._itemActionsMenuId = popupId;
+            });
+        }
     },
 
     /**
@@ -2790,6 +2792,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else {
             this._listViewModel.setDragEntity(dragObject.entity);
             this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItem.dispItem));
+            
+            // Cобытие mouseEnter на записи может сработать до dragStart.
+            // И тогда перемещение при наведении не будет обработано. 
+            // В таком случае обрабатываем наведение на запись сейчас.
+            // 
+            //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
+            if (this._unprocessedDragEnteredItem) {
+                this._processItemMouseEnterWithDragNDrop(event, this._unprocessedDragEnteredItem);
+            }
         }
     },
 
@@ -2878,25 +2889,27 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setDragEntity(null);
         }
     },
-
-    _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        if (this._options.itemsDragNDrop) {
-            const dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
-            let dragPosition;
-
-            if (dragEntity) {
-                dragPosition = this._options.useNewModel ?
+    _processItemMouseEnterWithDragNDrop(_, itemData) {
+        const dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
+        let dragPosition;
+        if (dragEntity) {
+            dragPosition = this._options.useNewModel ?
                     {position: 'before', item: itemData.getContents()} :
                     this._listViewModel.calculateDragTargetPosition(itemData);
-
-                if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false) {
-                    if (this._options.useNewModel) {
-                        this._draggingTargetItem = dragPosition.item;
-                    } else {
-                        this._listViewModel.setDragTargetPosition(dragPosition);
-                    }
+            if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false) {
+                if (this._options.useNewModel) {
+                    this._draggingTargetItem = dragPosition.item;
+                } else {
+                    this._listViewModel.setDragTargetPosition(dragPosition);
                 }
             }
+            this._unprocessedDragEnteredItem = null;
+        }
+    },
+    _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
+        if (this._options.itemsDragNDrop) {
+            this._unprocessedDragEnteredItem = itemData;
+            this._processItemMouseEnterWithDragNDrop(event, itemData);
         }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
@@ -2917,6 +2930,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._options.itemsDragNDrop) {
+            this._unprocessedDragEnteredItem = null;
             _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
         }
     },
