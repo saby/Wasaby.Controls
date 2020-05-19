@@ -13,7 +13,6 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     selectorOpener?: Stack;
     itemActions?: IItemAction[];
     dataLoadCallback: Function;
-    applyButtonAlign?: string;
 }
 
 /**
@@ -28,13 +27,6 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
  * @public
  * @author Золотова Э.Е.
  */
-
-/**
- * @typedef {String} ApplyButtonAlign
- * @variant top Кнопка расположена наверху.
- * @variant bottom Кнопка расположена внизу.
- */
-
 export default interface IMenuControl {
     readonly '[Controls/_menu/interface/IMenuControl]': boolean;
 }
@@ -56,12 +48,6 @@ export default interface IMenuControl {
  * @cfg {String} Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
  * @demo Controls-demo/Menu/Control/EmptyText/EmptyKey/Index
  */
-
-/**
- * @name Controls/_menu/interface/IMenuControl#applyButtonAlign
- * @cfg {ApplyButtonAlign} Устанавливает вертикальное выравнивание для кнопки подтверждения выбора.
- */
-
 
 /**
  * @name Controls/_menu/interface/IMenuControl#multiSelect
