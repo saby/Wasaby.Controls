@@ -7,6 +7,7 @@
       <Controls.Pending name="{{item.id}}_registrator" attr:key="{{item.id}}" class="ws-float-area-stack-panel-overflow">
          <UI.HotKeys:Dispatcher>
             <Controls._popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
+                                           theme="{{_options.theme}}"
                                            on:deactivated="_popupDeactivated(item.id)"
                                            on:activated="_popupActivated(item.id)"
                                            attr:class="controls-Container__popup
