@@ -40,7 +40,6 @@ export default class Component extends Control {
     private _registrar: IRegistrar = null;
 
     private _resizeObserver: IResizeObserver;
-    private _contentResizeObserver: IResizeObserver;
 
     _beforeMount(options: IControlOptions): void {
         this._registrar = new Registrar({register: 'scrollContainer'});
@@ -140,11 +139,7 @@ export default class Component extends Control {
                 this._onResizeContainer();
             });
             this._resizeObserver.observe(this._container);
-
-            this._contentResizeObserver = new ResizeObserver(() => {
-                this._onResizeContainer();
-            });
-            this._contentResizeObserver.observe(this._container.children.contentObserver);
+            this._resizeObserver.observe(this._container.children.contentObserver);
         } else {
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
         }
