@@ -9,7 +9,7 @@
                                      iconStyle="contrast"
                                      buttonStyle="success"
                                      attr:class="controls-Menu__applyButton"
-                                     inlineHeight="menuapplytop"
+                                     inlineHeight="menuapply"
                                      on:click="_applySelection()"/>
          </div>
       </ws:if>
