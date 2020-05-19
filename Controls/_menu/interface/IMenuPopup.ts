@@ -6,7 +6,6 @@ export interface IMenuPopupOptions extends IMenuControlOptions, ISearch {
     headerContentTemplate: TemplateFunction;
     footerContentTemplate: TemplateFunction;
     closeButtonVisibility: boolean;
-    applyButtonAlign?: string;
 }
 
 /**

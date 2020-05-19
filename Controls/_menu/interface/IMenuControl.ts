@@ -13,7 +13,6 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     selectorOpener?: Stack;
     itemActions?: IItemAction[];
     dataLoadCallback: Function;
-    applyButtonAlign?: string;
 }
 
 /**
