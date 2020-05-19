@@ -544,11 +544,13 @@ var _Controller = Control.extend({
       this._onResult(event, 'selectorResult', result);
    },
 
-   _clickHandler: function(event) {
+   _clickHandler(event: SyntheticEvent): void {
       // stop bubbling event, so the list does not handle click event.
       event.stopPropagation();
-      var opener = this._children.DropdownOpener;
-      if (opener.isOpened()) {
+   },
+
+   _mouseDownHandler(): void {
+      if (this._children.DropdownOpener.isOpened()) {
          _private.closeDropdownList(this);
       } else {
          this._open();
