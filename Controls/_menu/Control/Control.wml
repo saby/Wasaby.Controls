@@ -1,16 +1,5 @@
 <div class="controls-menu"
      attr:ws-no-focus="true">
-   <ws:template name="applyButton">
-      <div class="controls-DropdownList__applyButton">
-         <Controls.buttons:Button viewMode="functionalButton"
-                                  icon="icon-Yes"
-                                  iconSize="m"
-                                  iconStyle="contrast"
-                                  buttonStyle="success"
-                                  inlineHeight="{{inlineHeight}}"
-                                  on:click="_applySelection()"/>
-      </div>
-   </ws:template>
    <ws:if data="{{_applyButtonVisible && !_options.headerContentTemplate}}">
       <div class="controls-DropdownList__applyButton controls-Menu__applyButton_theme-{{_options.theme}}">
          <Controls.buttons:Button viewMode="functionalButton"
