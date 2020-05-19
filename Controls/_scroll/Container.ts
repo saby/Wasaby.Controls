@@ -918,7 +918,7 @@ let
       },
 
        _scrollStateChangedHandler(): void {
-          console.log('_scrollStateChangedHandler!!!');
+          console.log('_scrollStateChangedHandler');
        },
 
       _scrollbarTaken() {
