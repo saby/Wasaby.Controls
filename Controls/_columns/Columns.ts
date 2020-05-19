@@ -20,3 +20,5 @@ export default class Columns extends View {/** @lends Controls/_list/List.protot
         return 'Controls/display:ColumnsCollection';
     }
 }
+
+
