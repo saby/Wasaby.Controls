@@ -67,7 +67,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       }
 
       if (selectionIsChanged || selectionCountChanged || isAllSelectedChanged || selectionCfgChanged) {
-         return this._updateMenuCaptionByOptions(newOptions);
+         return this._updateMenuCaptionByOptions(newOptions, selectionCfgChanged);
       }
    }
 
@@ -98,15 +98,16 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       });
    }
 
-   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions): Promise<TCount> {
+   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions, counterConfigChanged: boolean): Promise<TCount> {
       const selectedKeys = options.selectedKeys;
       const excludedKeys = options.excludedKeys;
       const selection = this._getSelection(selectedKeys, excludedKeys);
+      const count = counterConfigChanged ? null : options.selectedKeysCount;
       const getCountCallback = (count) => {
          this._menuCaption = this._getMenuCaption(selection, count, options.isAllSelected);
          this._sizeChanged = true;
       };
-      const getCountResult = this._getCount(selection, options.selectedKeysCount, options.selectedCountConfig);
+      const getCountResult = this._getCount(selection, count, options.selectedCountConfig);
 
       // Если счётчик удаётся посчитать без вызова метода, то надо это делать синхронно,
       // иначе promise порождает асинхронность и перестроение панели операций будет происходить скачками,
@@ -145,8 +146,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
        selectionCountConfig: IGetCountCallParams
    ): Promise<TCount>|TCount {
       let countResult;
-      const selectionCountConfigChanged = selectionCountConfig !== this._options.selectedCountConfig;
-      if (!this._options.selectedCountConfig  || !selectionCountConfigChanged && this._isCorrectCount(count)) {
+      if (!this._options.selectedCountConfig || this._isCorrectCount(count)) {
          countResult = count === undefined ? selection.selected.length : count;
       } else {
          this._children.countIndicator.show();
