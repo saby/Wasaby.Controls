@@ -901,7 +901,7 @@ define(
             assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
-         it('_clickHandler', () => {
+         it('_mouseDownHandler', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             dropdownController._beforeMount(configLazyLoad);
             let opened = false;
@@ -927,14 +927,22 @@ define(
             dropdownController._open = function() {
                opened = true;
             };
-            let stopped;
-            let event = {stopPropagation: () => {stopped = true;}};
-            dropdownController._clickHandler(event);
+            dropdownController._mouseDownHandler();
             assert.isTrue(opened);
-            assert.isTrue(stopped);
+
+            dropdownController._mouseDownHandler();
+            assert.isFalse(opened);
+         });
+
+         it('_clickHandler', () => {
+            const dropdownController = getDropdownController();
+            let eventStopped = false;
+            const event = {
+               stopPropagation: () => { eventStopped = true; }
+            };
 
             dropdownController._clickHandler(event);
-            assert.isFalse(opened);
+            assert.isTrue(eventStopped);
          });
 
          it('_beforeUnmount', function() {
