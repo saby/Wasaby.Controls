@@ -12,6 +12,8 @@ interface IResizeObserver {
 interface IRegistrar {
     start: (eventType: string, params: object) => void;
     _registry: any;
+    register: (event: SyntheticEvent, params: object, callback: () => void) => void;
+    startOnceTarget: (component: any, eventType: string, params: object) => void;
 }
 
 interface IState {
@@ -38,6 +40,7 @@ export default class Component extends Control {
     private _registrar: IRegistrar = null;
 
     private _resizeObserver: IResizeObserver;
+    private _contentResizeObserver: IResizeObserver;
 
     _beforeMount(options: IControlOptions): void {
         this._registrar = new Registrar({register: 'scrollContainer'});
@@ -45,8 +48,11 @@ export default class Component extends Control {
 
     _afterMount(): void {
         this._initResizeHandler();
-        if (!isEmpty(this._registrar._registry)) {
-            this._notifyScrollStateChange();
+        if (this._updateState() && !isEmpty(this._registrar._registry)) {
+            this._sendByRegistrar('scrollStateChanged', {
+                state: this._state,
+                oldState: this._oldState
+            });
         }
     }
 
@@ -59,23 +65,73 @@ export default class Component extends Control {
         this._onResizeContainer();
     }
 
-    _registerIt(event, registerType, component, callback, triggers): void {
-        console.log();
+    _scrollHandler(e: SyntheticEvent): void {
+        this._onScrollContainer();
     }
 
-    _onResizeContainer(): void {
-        this._notifyScrollStateChange();
+    _onScrollContainer(): void {
+        const isStateUpdated = this._updateState();
+
+        if (this._options.task1178703223 && this._state.scrollLeft &&
+            this._options.scrollMode !== 'verticalHorizontal') {
+            this._container.scrollLeft = 0;
+        }
+        if (this._state.scrollTop === this._oldState.scrollTop) {
+            return;
+        }
     }
 
-    _notifyScrollStateChange(): boolean {
-        if (this._updateState()) {
+    _registerIt(event: SyntheticEvent, registerType: string, component: any,
+                callback: () => void, triggers: object): void {
+        //TODO заменить listScroll потом на что нибудь вроде containerScroll
+        if (registerType === 'listScroll') {
+            this._registrar.register(event, component, callback);
+            this._onRegisterNewComponent(component);
+        }
+    }
+
+    _onRegisterNewComponent(component: any): void {
+        this._updateState();
+        if (this._calcCanScroll) {
             this._sendByRegistrar('scrollStateChanged', {
                 state: this._state,
                 oldState: this._oldState
             });
-            return true;
         }
-        return false;
+
+        this._registrar.startOnceTarget(component, 'viewportResize', {
+            scrollHeight: this._state.scrollHeight,
+            scrollTop: this._state.scrollTop,
+            clientHeight: this._state.clientHeight,
+            rect: this._container.getBoundingClientRect()
+        });
+    }
+
+    _onResizeContainer(): void {
+        const isStateUpdated = this._updateState();
+        if (isStateUpdated) {
+            this._sendByRegistrar('scrollStateChanged', {
+                state: this._state,
+                oldState: this._oldState
+            });
+        }
+
+        if (this._oldState.scrollHeight !== this._state.scrollHeight) {
+            this._sendByRegistrar('viewportResize', {
+                scrollHeight: this._state.scrollHeight,
+                scrollTop: this._state.scrollTop,
+                clientHeight: this._state.clientHeight,
+                rect: this._container.getBoundingClientRect()
+            });
+        }
+
+        if ((this._oldState.clientHeight !== this._state.clientHeight) ||
+            (this._oldState.scrollHeight !== this._state.scrollHeight)) {
+            this._sendByRegistrar('scrollResize', {
+                clientHeight: this._state.clientHeight,
+                scrollHeight: this._state.scrollHeight
+            });
+        }
     }
 
     _initResizeHandler(): void {
@@ -84,6 +140,11 @@ export default class Component extends Control {
                 this._onResizeContainer();
             });
             this._resizeObserver.observe(this._container);
+
+            this._contentResizeObserver = new ResizeObserver(() => {
+                this._onResizeContainer();
+            });
+            this._contentResizeObserver.observe(this._container.children.contentObserver);
         } else {
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
         }
@@ -104,8 +165,8 @@ export default class Component extends Control {
                     scrollHeight: this._container.scrollHeight,
                     clientWidth: this._container.clientWidth,
                     scrollWidth: this._container.scrollWidth,
-                    verticalPosition: 'test',
-                    horizontalPosition: 'test',
+                    verticalPosition: 'test', //TODO
+                    horizontalPosition: 'test', //TODO
                     canScroll: this._calcCanScroll(),
                     viewPortRect: this._container.getBoundingClientRect()
                 };

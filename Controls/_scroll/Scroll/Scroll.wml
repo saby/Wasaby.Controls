@@ -29,7 +29,7 @@
 <!--                  <Controls.event:Listener-->
 <!--                          event="dataError"-->
 <!--                          on:dataError="_onDataError()"/>-->
-                    <span class="RESIZEOBSERVERTODO">
+                    <span class="controls-Scroll__contentObserver" name="contentObserver">
                         <ws:partial template="{{_options.content}}"
                                     scope="{{_options}}"
                                     attr:class="controls-Scroll__userContent"
@@ -56,7 +56,6 @@
          </Controls._scroll.StickyHeader.Controller>
       </Controls.event:Register>
    </Controls._scroll.Scroll.Watcher>
-
 </ws:template>
 
 <ws:template name="scrollTpl">

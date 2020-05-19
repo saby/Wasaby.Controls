@@ -4,5 +4,6 @@
         scope="{{_options}}"
         on:controlResize="_resizeHandler()"
         on:register="_registerIt()"
+        on:scroll="_scrollHandler()"
     />
 </Controls.event:Register>
