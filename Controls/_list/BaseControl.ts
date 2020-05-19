@@ -1390,14 +1390,16 @@ const _private = {
         isContextMenu: boolean): void {
         const itemKey = item?.getContents()?.getKey();
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
-        menuConfig.eventHandlers = {
-            onResult: self._onItemActionsMenuResult,
-            onClose: self._onItemActionsMenuClose
-        };
-        self._listViewModel.setActiveItem(item);
-        Sticky.openPopup(menuConfig).then((popupId) => {
-            self._itemActionsMenuId = popupId;
-        });
+        if (menuConfig) {
+            menuConfig.eventHandlers = {
+                onResult: self._onItemActionsMenuResult,
+                onClose: self._onItemActionsMenuClose
+            };
+            self._listViewModel.setActiveItem(item);
+            Sticky.openPopup(menuConfig).then((popupId) => {
+                self._itemActionsMenuId = popupId;
+            });
+        }
     },
 
     /**
