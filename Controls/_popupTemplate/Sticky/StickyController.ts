@@ -50,7 +50,7 @@ let _fakeDiv;
 
 const _private = {
     prepareOriginPoint(config) {
-        const newCfg = cClone(config);
+        const newCfg = {...config};
         newCfg.direction = newCfg.direction || {};
         newCfg.offset = newCfg.offset || {};
 

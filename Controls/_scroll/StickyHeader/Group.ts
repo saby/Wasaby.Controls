@@ -1,4 +1,3 @@
-import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
 import {SyntheticEvent} from "Vdom/Vdom";
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
@@ -47,7 +46,11 @@ interface IOffsetCache {
     [key: string]: number;
 }
 
-export default class Group extends Control<IControlOptions> {
+interface IStickyHeaderGroupOptions extends IControlOptions {
+    calculateHeadersOffsets?: boolean;
+}
+
+export default class Group extends Control<IStickyHeaderGroupOptions> {
     protected _template: TemplateFunction = template;
     private _index: number = null;
     protected _isStickySupport: boolean = false;
@@ -70,28 +73,9 @@ export default class Group extends Control<IControlOptions> {
 
     private _delayedHeaders: number[] = [];
 
-    private _updateContext(position: POSITION, value: number) {
-        this._stickyHeaderContext[position] = value;
-        this._stickyHeaderContext.updateConsumers();
-    }
-
-    protected _getChildContext() {
-        return {
-            stickyHeader: this._stickyHeaderContext
-        };
-    }
-
     protected _beforeMount(options: IControlOptions, context): void {
         this._isStickySupport = isStickySupport();
         this._index = getNextId();
-        this._stickyHeaderContext = new StickyHeaderContext({
-            shadowPosition: context?.stickyHeader?.shadowPosition
-        });
-    }
-
-    protected _beforeUpdate(options: IControlOptions, context): void {
-        this._stickyHeaderContext.shadowPosition = context?.stickyHeader?.shadowPosition;
-        this._stickyHeaderContext.updateConsumers();
     }
 
     protected _afterMount(): void {
@@ -139,7 +123,6 @@ export default class Group extends Control<IControlOptions> {
         for (let id in this._headers) {
             const positionValue: number = this._headers[id][position] + value;
             this._headers[id].inst[position] = positionValue;
-            this._updateContext(position, positionValue);
         }
         this._offset[position] = value;
     }
@@ -192,7 +175,9 @@ export default class Group extends Control<IControlOptions> {
                 bottom: 0
             };
 
-            this._updateTopBottom(data);
+            if (this._options.calculateHeadersOffsets) {
+                this._updateTopBottom(data);
+            }
 
             if (this._isFixed) {
                 this._children.stickyFixed.start([data.id].concat(this._stickyHeadersIds[data.position]));
@@ -262,9 +247,6 @@ export default class Group extends Control<IControlOptions> {
                 for (headerId in offsets[position]) {
                     this._headers[headerId].inst[position] = positionOffsets[headerId];
                 }
-                if (headerId) {
-                    this._updateContext(position, positionOffsets[headerId]);
-                }
             }
         });
     }
@@ -280,9 +262,9 @@ export default class Group extends Control<IControlOptions> {
         );
     }
 
-    static contextTypes(): {} {
+    static getDefaultOptions(): Partial<IStickyHeaderGroupOptions> {
         return {
-            stickyHeader: StickyHeaderContext
+            calculateHeadersOffsets: true
         };
     }
 }

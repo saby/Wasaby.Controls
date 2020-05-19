@@ -18,6 +18,8 @@ var __PopupContent = BaseLayer.extend({
    _popupOptions: null,
    _suggestWidth: null,
    _reverseList: false,
+   _pendingShowContent: null,
+   _showContent: false,
    _shouldScrollToBottom: false,
 
    _beforeUpdate(newOptions): void {
@@ -29,6 +31,7 @@ var __PopupContent = BaseLayer.extend({
           // scroll after list render in  _beforePaint hook
          this._shouldScrollToBottom = true;
       }
+      this._pendingShowContent = newOptions.showContent;
 
       this._reverseList = isPopupOpenedToTop;
    },
@@ -37,6 +40,11 @@ var __PopupContent = BaseLayer.extend({
       // need to notify resize after show content, that the popUp recalculated its position
       if (this._options.showContent !== oldOptions.showContent) {
          this._notify('controlResize', [], {bubbling: true});
+      }
+
+      if (this._pendingShowContent) {
+         this._showContent = this._pendingShowContent;
+         this._pendingShowContent = null;
       }
 
       // Для Ipad'а фиксируем автодополнение, только если оно отобразилось вверх, если оно отобразилось вниз,
@@ -50,6 +58,7 @@ var __PopupContent = BaseLayer.extend({
    _beforePaint(): void {
       if (this._shouldScrollToBottom) {
          this._children.scrollContainer.scrollToBottom();
+         this._shouldScrollToBottom = false;
       }
    },
 
@@ -59,7 +68,7 @@ var __PopupContent = BaseLayer.extend({
       const target: HTMLElement = this._options.target[0] || this._options.target;
       const container: HTMLElement = this._container[0] || this._container;
 
-      /* Width of the suggestion popup should setted for template from suggestTemplate option,
+      /* Width of the suggestion popup should set for template from suggestTemplate option,
          this is needed to make it possible to set own width for suggestions popup by user of control.
          Than user can set own width:
          <Controls.suggest:Input>

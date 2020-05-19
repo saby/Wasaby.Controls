@@ -27,6 +27,7 @@
                              itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
                              showActionButton="{{false}}"
                              markedKey="{{_options.markedKey}}"
+                             on:markedKeyChanged="_onMarkedKeyChanged()"
                              on:actionClick="_onItemActionsClick()"
                              on:itemClick="_onItemClick()"
                              parentProperty="{{_options.parentProperty}}"

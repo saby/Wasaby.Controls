@@ -127,7 +127,8 @@ var
             if (params.columnIndex === params.columns.length - arrayLengthOffset) {
                 classLists.right += ` controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
             }
-            if (!params.isHeader && !params.isResult) {const style = params.style || 'master';
+            if (!params.isHeader && !params.isResult) {
+                const style = params.style === 'masterClassic' ? 'master' : params.style || 'master';
                 classLists.top += ` controls-Grid__row-cell_${style}_rowSpacingTop_${params.itemPadding.top}_theme-${theme}`;
                 classLists.bottom += ` controls-Grid__row-cell_${style}_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme}`;
             }
@@ -241,7 +242,7 @@ var
         getItemColumnCellClasses: function(current, theme) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'relativeCellWrapper');
-            const style = current.style || 'default';
+            let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             const backgroundStyle = current.backgroundStyle || current.style || 'default';
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
@@ -275,6 +276,7 @@ var
             }
 
             if (current.isSelected) {
+                style = current.style || 'default';
                 classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
@@ -322,17 +324,6 @@ var
         },
 
         calcLadderVersion(ladder = {}, index): string {
-
-            function getItemsLadderVersion(ladder) {
-                let ladderVersion = '';
-
-                Object.keys(ladder).forEach((ladderProperty) => {
-                    ladderVersion += (ladder[ladderProperty].ladderLength || 0) + '_';
-                });
-
-                return ladderVersion;
-            }
-
             let
                 version = '',
                 simpleLadder = ladder.ladder && ladder.ladder[index],
@@ -342,7 +333,7 @@ var
                 version += 'LP_';
             }
             if (stickyLadder) {
-                version += 'SP_' + getItemsLadderVersion(stickyLadder);
+                version += 'SP_' + (stickyLadder.ladderLength || 0);
             }
 
             return version;
@@ -411,21 +402,36 @@ var
             if (!self._isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
-            if (self._options.stickyColumn) {
+            if (!self._ladder || self._options.stickyColumn) {
                 self.resetCachedItemData();
             }
 
             const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
-
-            return prepareLadder({
+            const startIndex = self.getStartIndex();
+            const stopIndex = hasVirtualScroll ? self.getStopIndex() : displayStopIndex;
+            const newLadder: any = prepareLadder({
                 ladderProperties: self._options.ladderProperties,
-                startIndex: self.getStartIndex(),
-                stopIndex: hasVirtualScroll ? self.getStopIndex() : displayStopIndex,
+                startIndex,
+                stopIndex,
                 display: self.getDisplay(),
                 columns: self._options.columns,
                 stickyColumn: self._options.stickyColumn
             });
+            //Нужно сбросить кэш для записей, у которых поменялась конфигурация лесенки
+            if (self._ladder) {
+                for (let i = startIndex; i < stopIndex ; i++) {
+                    if (!isEqual(newLadder.stickyLadder[i], self._ladder.stickyLadder[i]) ||
+                        !isEqual(newLadder.ladder[i], self._ladder.ladder[i])) {
+
+                        const dispItem = self.getItemById(self.getItems()?.at(i)?.getId());
+                        if (dispItem) {
+                            self.resetCachedItemData(self._getDisplayItemCacheKey(dispItem));
+                        }
+                    }
+                }
+            }
+            return newLadder;
         },
         getTableCellStyles(currentColumn): string {
             let styles = '';
@@ -1258,6 +1264,9 @@ var
         resetCachedItemData: function(itemKey?) {
             this._model.resetCachedItemData(itemKey);
         },
+        _getDisplayItemCacheKey(dispItem) {
+            return this._model._getDisplayItemCacheKey(dispItem);
+        },
 
         getItemDataByItem: function(dispItem) {
             var
@@ -1296,7 +1305,7 @@ var
             };
 
             current.getMarkerClasses = (rowSeparatorVisibility): string => {
-                const style = this._options.style || 'default';
+                const style = this._options.style === 'masterClassic' || !this._options.style ? 'default' : this._options.style;
                 let classes = `controls-GridView__itemV_marker controls-GridView__itemV_marker-${style}
                                 controls-GridView__itemV_marker-${style}_theme-${self._options.theme}`;
 
@@ -1686,7 +1695,7 @@ var
         getFooterStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
                 const offsetForMultiSelect: number = +(this.getMultiSelectVisibility() !== 'hidden');
-                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
+                const offsetForStickyColumn: number = +(this.shouldAddStickyLadderCell());
 
                 return GridLayoutUtil.getColumnStyles({
                     columnStart: 0,

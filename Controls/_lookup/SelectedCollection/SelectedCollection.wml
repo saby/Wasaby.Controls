@@ -18,6 +18,7 @@
             on:click="_openInfoBox()">
          <ws:partial template="{{_counterTemplate}}"
                      itemsCount="{{_options.items.getCount()}}"
+                     fontSize="{{_options.fontSize}}"
                      attr:style="{{_counterWidth ? 'width: ' + _counterWidth + 'px;'}}"/>
       </span>
    </ws:if>
@@ -35,6 +36,7 @@
               itemsLayout="{{_options.itemsLayout}}"
               contentTemplate="{{_contentTemplate}}"
               crossTemplate="{{_crossTemplate}}"
+              theme="{{_options.theme}}"
               on:click="_itemClick(item)">
       </ws:partial>
    </ws:for>

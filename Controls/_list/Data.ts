@@ -141,9 +141,21 @@ type GetSourceResult = {
             if (!self._filter || filterChanged || rootChanged) {
                self._filter = options.filter;
 
-               if (options.parentProperty && options.root) {
-                  self._filter = clone(options.filter);
-                  self._filter[options.parentProperty] = options.root;
+               if (options.parentProperty) {
+                  const hasRootInOptions = options.root;
+                  const hasRootInFilter = self._filter && self._filter[options.parentProperty];
+
+                  if ((hasRootInFilter || hasRootInOptions) && rootChanged) {
+                     const newFilter = clone(options.filter);
+
+                     if (hasRootInOptions) {
+                        newFilter[options.parentProperty] = options.root;
+                     } else {
+                        delete newFilter[options.parentProperty];
+                     }
+
+                     self._filter = newFilter;
+                  }
                }
             }
          },
@@ -248,7 +260,8 @@ type GetSourceResult = {
             } else if (!isEqual(newOptions.filter, this._options.filter) ||
                        !isEqual(newOptions.navigation, this._options.navigation) ||
                        newOptions.sorting !== this._options.sorting ||
-                       newOptions.keyProperty !== this._options.keyProperty) {
+                       newOptions.keyProperty !== this._options.keyProperty ||
+                       newOptions.root !== this._options.root) {
                _private.updateDataOptions(this, this._dataOptionsContext);
                this._dataOptionsContext.updateConsumers();
             }

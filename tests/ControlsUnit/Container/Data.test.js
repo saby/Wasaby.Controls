@@ -294,6 +294,17 @@ define(
             });
          });
 
+         it('rootChanged', async () => {
+            const config = {source: source, keyProperty: 'id', filter: {test: 'test'}, root: '123', parentProperty: 'root'};
+            const data = getDataWithConfig(config);
+
+            await data._beforeMount(config);
+            const newConfig = {...config};
+            delete newConfig.root;
+            data._beforeUpdate(newConfig);
+            assert.isTrue(!data._dataOptionsContext.filter.root);
+         });
+
          it('query returns error', function(done) {
             var source = {
                query: function() {
@@ -527,6 +538,16 @@ define(
             //if filter option was not changed, _filter from state will not updated by resolveOptions
             assert.deepEqual(self._filter, {testParentProperty: 'test'});
 
+            options.root = null;
+            lists.DataContainer._private.resolveOptions(self, options);
+            assert.deepEqual(self._filter, {test: 123});
+
+            self._options.root = undefined;
+            options.root = null;
+            delete self._options.filter['root'];
+            filter = self._filter;
+            lists.DataContainer._private.resolveOptions(self, options);
+            assert.isTrue(filter === self._filter);
          });
          it('_private.isEqualItems', function() {
 

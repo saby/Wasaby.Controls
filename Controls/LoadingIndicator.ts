@@ -156,8 +156,11 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         const POPUP_BASE_ZINDEX = 10;
         if (popupItem) {
             this._zIndex = popupItem.currentZIndex;
-        } else {
+        } else if (isNewEnvironment() && this._options.mainIndicator) {
+            // TODO https://online.sbis.ru/opendoc.html?guid=ce175632-8ecc-4789-803a-4fef10906f5c
             this._zIndex = POPUP_BASE_ZINDEX - 1;
+        } else {
+            this._zIndex = null;
         }
     }
 

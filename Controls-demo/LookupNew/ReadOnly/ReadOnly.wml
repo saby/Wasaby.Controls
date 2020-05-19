@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell demo-LookupNew__multiReadOnly">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/LookupNew/ReadOnly/MultiSelect/Index' }}">
@@ -7,7 +7,7 @@
         </Router.router:Reference>
         <Controls-demo.LookupNew.ReadOnly.MultiSelect.Index/>
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell demo-LookupNew__singleReadOnly">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/LookupNew/ReadOnly/SingleSelect/Index' }}">
@@ -15,7 +15,7 @@
         </Router.router:Reference>
         <Controls-demo.LookupNew.ReadOnly.SingleSelect.Index/>
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell demo-LookupNew__multiLineReadOnly">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/LookupNew/ReadOnly/MultiLine/Index' }}">

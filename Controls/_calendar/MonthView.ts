@@ -86,15 +86,15 @@ var MonthView = BaseControl.extend({
       return {};
    },
 
-   _dayClickHandler: function(event, item, clickable) {
+   _dayClickHandler: function(event, item, isCurrentMonth) {
       if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable &&
-          !this._options.readOnly && clickable) {
+          !this._options.readOnly && (isCurrentMonth || this._options.mode === 'extended')) {
          this._notify('itemClick', [item, event]);
       }
    },
 
-   _mouseEnterHandler: function(event, item, clickable) {
-      if (clickable) {
+   _mouseEnterHandler: function(event, item, isCurrentMonth) {
+      if (isCurrentMonth || this._options.mode === 'extended') {
          this._notify('itemMouseEnter', [item]);
       }
    }

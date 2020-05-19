@@ -43,20 +43,8 @@ var _private = {
    },
 
    searchCallback: function (self, result, filter) {
-      self._loading = false;
-      if (self._viewMode !== 'search') {
-         _private.updateViewMode(self, 'search');
-
-         if (self._options.parentProperty) {
-            _private.deleteRootFromFilterAfterSearch(self, filter);
-            _private.updateRootAfterSearch(self);
-         }
-      }
-
-      self._searchValue = filter[self._options.searchParam] || '';
-      self._notify('filterChanged', [filter]);
+      _private.updateSearchParams(self, filter);
       self._notify('itemsChanged', [result.data]);
-      self._notify('searchValueChanged', [self._searchValue]);
       self._misspellValue = getSwitcherStrFromData(result.data);
    },
 
@@ -174,11 +162,14 @@ var _private = {
       }
    },
 
-   searchErrback: function (self, error: Error):void {
+   searchErrback: function (self, error: Error, filter):void {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
       self._loading = false;
+      if (!error.canceled) {
+         _private.updateSearchParams(self, filter);
+      }
    },
 
    getRoot: function (path, currentRoot, parentProperty) {
@@ -241,7 +232,7 @@ var _private = {
       return !checkedValue;
    },
 
-   needStartSearch(self, options, needUpdateRoot, needRecreateSearchController, searchValue: string): boolean {
+   needStartSearch(self, options, needRecreateSearchController, searchValue: string, needUpdateRoot: boolean): boolean {
       const isSearchValueChanged = _private.isSearchValueChanged(self, searchValue);
       const isSearchValueShorterThenMinLength = _private.isSearchValueShort(options.minSearchLength, searchValue);
       const startSearchWithNewSourceController = searchValue && needRecreateSearchController;
@@ -250,8 +241,13 @@ var _private = {
           (!isSearchValueShorterThenMinLength || (_private.isSearchViewMode(self) && !searchValue && self._searchValue));
 
       return needStartSearchBySearchValueChanged &&
-             !needUpdateRoot ||
-             startSearchWithNewSourceController;
+          !needUpdateRoot ||
+          startSearchWithNewSourceController;
+   },
+
+   needUpdateInputSearchValue(self, options, needRecreateSearchController, searchValue: string): boolean {
+      return _private.isInputSearchValueChanged(this, searchValue) &&
+             _private.needStartSearch(self, options, needRecreateSearchController, searchValue);
    },
 
    isSearchViewMode(self): boolean {
@@ -265,6 +261,21 @@ var _private = {
    updateViewMode(self, newViewMode: string): void {
       self._previousViewMode = self._viewMode;
       self._viewMode = newViewMode;
+   },
+
+   updateSearchParams(self, filter): void {
+      if (self._viewMode !== 'search') {
+         _private.updateViewMode(self, 'search');
+
+         if (self._options.parentProperty) {
+            _private.deleteRootFromFilterAfterSearch(self, filter);
+            _private.updateRootAfterSearch(self);
+         }
+      }
+      self._loading = false;
+      self._notify('filterChanged', [filter]);
+      self._searchValue = filter[self._options.searchParam] || '';
+      self._notify('searchValueChanged', [self._searchValue]);
    }
 };
 
@@ -396,11 +407,12 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (_private.needStartSearch(this, newOptions, needUpdateRoot, needRecreateSearchController, searchValue)) {
+
+      if (_private.needStartSearch(this, newOptions, needRecreateSearchController, searchValue, needUpdateRoot)) {
          _private.startSearch(this, searchValue);
-         if (searchValue !== this._inputSearchValue) {
-            _private.setInputSearchValue(this, searchValue);
-         }
+      }
+      if (_private.needUpdateInputSearchValue(this, newOptions, needRecreateSearchController, searchValue)) {
+         _private.setInputSearchValue(this, searchValue);
       }
    },
 

@@ -1,12 +1,12 @@
-<div attr:class="controls-TileView__item controls-TileView__item_theme-{{itemData.theme}}  js-controls-TileView__withoutZoom controls-ListView__itemV controls-ListView__itemV_cursor-{{cursor || 'pointer'}} controls-TreeTileView__item_theme-{{itemData.theme}} js-controls-SwipeControl__actionsContainer
-         {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility) + '_theme-' + itemData.theme}}
+<div attr:class="controls-TileView__item controls-TileView__item_theme-{{theme}}  js-controls-TileView__withoutZoom controls-ListView__itemV controls-ListView__itemV_cursor-{{cursor || 'pointer'}} controls-TreeTileView__item_theme-{{theme}} js-controls-SwipeControl__actionsContainer
+         {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility) + '_theme-' + theme}}
          controls-ListView__item_showActions
          {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ?
-            ' controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-' + itemData.theme
-            : ' controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-' + itemData.theme}}
-         {{!!itemData.isActive ? ' controls-TreeTileView__item_active_theme-' + itemData.theme}}
+            ' controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-' + theme
+            : ' controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-' + theme}}
+         {{!!itemData.isActive ? ' controls-TreeTileView__item_active_theme-' + theme}}
          {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-         {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme' + itemData.theme}}"
+         {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme' + theme}}"
      attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultFolderWidth) + 'px; flex-basis: ' + (width || itemData.defaultFolderWidth)+ 'px;'}}">
   <ws:partial if="{{itemData.hasMultiSelect}}"
               template="{{multiSelectTpl}}"
@@ -16,21 +16,19 @@
                          multiSelectStatus="{{itemData.multiSelectStatus}}"
                          key="{{itemData.key}}" />
   </ws:partial>
-  <span attr:class="controls-TreeTileView__nodeIcon_theme-{{itemData.theme}} icon-large icon-Folder icon-disabled"></span>
+  <span attr:class="controls-TreeTileView__nodeIcon_theme-{{theme}} icon-large icon-Folder icon-disabled"></span>
   <ws:if data="{{!!itemData.dragTargetNode}}">
-     <div attr:class="controls-TreeTileView__dragTargetNode_theme-{{itemData.theme}}"></div>
+     <div attr:class="controls-TreeTileView__dragTargetNode_theme-{{theme}}"></div>
   </ws:if>
-  <div attr:class=" controls-TreeTileView__title controls-TreeTileView__title_theme-{{itemData.theme}}" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
+  <div attr:class=" controls-TreeTileView__title controls-TreeTileView__title_theme-{{theme}}" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
   <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
               highlightOnHover="{{highlightOnHover}}"
               template="{{swipeTemplate}}"
               itemData="{{itemData}}"
-              isTile="{{true}}"
               itemActionsTemplate="{{itemActionsTemplate}}"/>
   <ws:partial if="{{!itemData.isSwiped && itemData.drawActions && itemData.itemActionsPosition !== 'custom'}}"
               template="{{itemActionsTemplate}}"
               highlightOnHover="{{highlightOnHover}}"
               itemData="{{itemData}}"
-              isTile="{{true}}"
-              itemActionsClass="{{itemActionsClass ? itemActionsClass : 'controls-TileView__itemActions_theme-' + itemData.theme + ' controls-TreeTileView__itemActions_center'}}"/>
+              itemActionsClass="{{itemActionsClass ? itemActionsClass : 'controls-TileView__itemActions_theme-' + theme + ' controls-TreeTileView__itemActions_center'}}"/>
 </div>

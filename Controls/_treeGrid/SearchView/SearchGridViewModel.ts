@@ -28,6 +28,9 @@ var SearchGridViewModel = TreeGridViewModel.extend({
         }
         const items = this.getItems();
         return this.getHasMoreData() || items && items.getCount() > 1;
+    },
+    setBreadcrumbsItemClickCallback(breadcrumbsItemClickCallback) {
+        this._model.setBreadcrumbsItemClickCallback(breadcrumbsItemClickCallback);
     }
 });
 export = SearchGridViewModel;

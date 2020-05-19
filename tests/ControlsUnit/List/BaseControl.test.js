@@ -2028,7 +2028,7 @@ define([
             }
          };
          ctrl._abortSearch();
-         assert.isTrue(ctrl._showContinueSearchButton);
+         assert.isFalse(ctrl._showContinueSearchButton);
          assert.deepEqual(ctrl._pagingCfg, {stateNext: 'disabled', stateEnd: 'disabled'});
          assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
          assert.isTrue(iterativeSearchAborted);
@@ -2500,6 +2500,26 @@ define([
             baseControl._onAfterEndEdit({}, {});
             baseControl._afterUpdate(cfg);
             assert.equal(actionsUpdateCount, 1);
+         });
+         it('_onAfterEndEdit::update actions only after notify', function() {
+            const originNotify = baseControl._notify;
+            const originUpdate = baseControl._updateItemActions;
+            const order = [];
+            baseControl._notify = (ename) => {
+               order.push(ename);
+            };
+            baseControl._updateItemActions = () => {
+               order.push('_updateItemActions');
+               originUpdate.apply(baseControl, arguments);
+            };
+            baseControl._onAfterEndEdit({}, {});
+            baseControl._afterUpdate(cfg);
+
+            assert.deepEqual(order, ['afterEndEdit', '_updateItemActions']);
+            assert.equal(actionsUpdateCount, 1);
+
+            baseControl._notify = originNotify;
+            baseControl._updateItemActions = originUpdate;
          });
          it('update on recreating source', async function() {
             let newSource = new sourceLib.Memory({
@@ -3963,8 +3983,8 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
-                     assert.equal(args.templateOptions.items.getKeyProperty(), 'id');
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.source, 'Types/source:Memory'));
+                     assert.equal(args.templateOptions.source.getKeyProperty(), 'id');
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
@@ -4026,8 +4046,8 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
-                     assert.equal(args.templateOptions.items.getKeyProperty(), 'id');
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.source, 'Types/source:Memory'));
+                     assert.equal(args.templateOptions.source.getKeyProperty(), 'id');
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
@@ -4384,7 +4404,7 @@ define([
                   open: function(args) {
                      callBackCount++;
                      assert.deepEqual(target.getBoundingClientRect(), args.target.getBoundingClientRect());
-                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
+                     assert.isTrue(cInstance.instanceOfModule(args.templateOptions.source, 'Types/source:Memory'));
                   }
                }
             };
@@ -4426,13 +4446,13 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._children = {
-               itemActionsOpener: {
-                  close: function() {
+               swipeControl: {
+                  closeSwipe: function() {
                      callBackCount++;
                   }
                },
-               swipeControl: {
-                  closeSwipe: function() {
+               itemActionsOpener: {
+                  close: function() {
                      callBackCount++;
                   }
                }
@@ -4453,10 +4473,9 @@ define([
                   }
                }
             };
-            instance._actionsMenuResultHandler({
-               action: 'itemClick',
-               event: fakeEvent,
-               data: [{
+            instance._actionsMenuResultHandler(
+               'itemClick',
+               {
                   getRawData: function() {
                      callBackCount++;
                      return {
@@ -4465,8 +4484,9 @@ define([
                         }
                      };
                   }
-               }]
-            });
+               },
+               fakeEvent
+            );
             assert.equal(instance._listViewModel._activeItem, null);
             assert.equal(instance._listViewModel._menuState, 'hidden');
             assert.equal(callBackCount, 5);
@@ -5670,12 +5690,13 @@ define([
 
       it('_getLoadingIndicatorClasses', function() {
          const theme = 'default';
-         function testCaseWithArgs(indicatorState, hasPaging) {
+         function testCaseWithArgs(indicatorState, hasPaging, isPortionedSearchInProgress = false) {
             return lists.BaseControl._private.getLoadingIndicatorClasses({
                hasItems: true,
                hasPaging: hasPaging,
                loadingIndicatorState: indicatorState,
-               theme
+               theme,
+               isPortionedSearchInProgress
             });
          }
 
@@ -5683,6 +5704,7 @@ define([
          assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-up', testCaseWithArgs('up', false));
          assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down', testCaseWithArgs('down', false));
          assert.equal(`controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`, testCaseWithArgs('down', true));
+         assert.equal('controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-down controls-BaseControl__loadingIndicator_style-portionedSearch_theme-default', testCaseWithArgs('down', false, true));
 
       });
 

@@ -659,5 +659,35 @@ define([
            assert.isTrue(isUpdated);
 
        });
+       
+       it('should update prefix on move items', function () {
+         const cfg = {
+             keyProperty: 'id',
+             items: new collection.RecordSet({
+                 rawData: [
+                     {id: 0},
+                     {id: 1}
+                 ],
+                 idProperty: 'id'
+             }),
+         };
+
+         const model = new list.ItemsViewModel(cfg);
+         const orNMV = model._nextModelVersion;
+         let isUpdated = false;
+
+         model._nextModelVersion = (notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) => {
+             assert.equal(changesType, 'collectionChanged');
+             assert.isFalse(notUpdatePrefixItemVersion);
+             assert.equal(action, 'm');
+             isUpdated = true;
+             orNMV.apply(model, arguments);
+         };
+
+         model._onCollectionChangeFnc({}, 'm', [], void 0, [], void 0);
+
+         assert.isTrue(isUpdated);
+
+     });
    })
 });

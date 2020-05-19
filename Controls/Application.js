@@ -148,7 +148,7 @@ define('Controls/Application',
           * @private
           */
          /* eslint-enable */
-         _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
+         _scrollingClass: Env.detection.isMobileIOS ? 'controls-Scroll_webkitOverflowScrollingTouch' : '',
 
          _dragClass: 'ws-is-no-drag',
 

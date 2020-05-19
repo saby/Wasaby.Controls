@@ -32,8 +32,8 @@ var _private = {
       }
    },
 
-   getCounterWidth: function(itemsCount) {
-      return selectedCollectionUtils.getCounterWidth(itemsCount);
+   getCounterWidth(itemsCount: number, theme: string, fontSize: string): number {
+      return selectedCollectionUtils.getCounterWidth(itemsCount, theme, fontSize);
    },
 
    getMaxVisibleItems: function(items, itemsSizes, availableWidth, counterWidth) {
@@ -163,7 +163,8 @@ var _private = {
          const collectionConfig = {
             itemsLayout: options.multiLine ? 'default' : 'oneRow',
             maxVisibleItems,
-            _counterWidth: counterWidth
+            _counterWidth: counterWidth,
+            theme: options.theme
          };
          const depOptions = ['itemTemplate', 'readOnly', 'displayProperty', 'items'];
 
@@ -232,7 +233,7 @@ var LookupView = BaseLookupView.extend({
       if (this._isNeedCalculatingSizes(newOptions)) {
          // in mode read only and single line, counter does not affect the collection
          if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
-            counterWidth = _private.getCounterWidth(itemsCount);
+            counterWidth = _private.getCounterWidth(itemsCount, newOptions.theme, newOptions.fontSize);
          }
 
          fieldWrapperWidth = this._getFieldWrapperWidth();

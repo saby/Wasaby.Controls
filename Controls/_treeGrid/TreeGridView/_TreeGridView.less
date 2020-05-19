@@ -39,7 +39,8 @@
    padding-right: @expander_default_padding-right_treeGrid;
 }
 
-.controls-TreeGrid__row_master-expander_size_default_theme-@{themeName} {
+.controls-TreeGrid__row_master-expander_size_default_theme-@{themeName},
+.controls-TreeGrid__row_masterClassic-expander_size_default_theme-@{themeName}, {
    padding-top: @expander_default_padding-top_treeGrid;
    padding-bottom: @expander_default_padding-bottom_treeGrid;
    padding-left: @expander_default_padding-left_treeGrid;
@@ -52,7 +53,8 @@
 //https://online.sbis.ru/opendoc.html?guid=fd048300-3223-4bb5-8982-db3a14a05996
 
 .ws-is-ie {
-   .controls-Grid__cell_master .controls-TreeGrid__row-expander_size_default_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_default_theme-@{themeName} {
+   .controls-Grid__cell_master .controls-TreeGrid__row-expander_size_default_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_default_theme-@{themeName},
+   .controls-Grid__cell_masterClassic .controls-TreeGrid__row-expander_size_default_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_default_theme-@{themeName} {
       padding-top: @expander_s_padding-top_treeGrid - 1;
       padding-bottom: @item_padding-bottom_s_grid - 1;
    }
@@ -136,6 +138,7 @@
    overflow: hidden;
    text-align: center;
    position: absolute;
+   font-weight: normal; // https://online.sbis.ru/opendoc.html?guid=c9f0873b-3b20-4b73-a084-f67cc2c3071f
 }
 .controls-TreeGrid__row-expander_node_default_collapsed_theme-@{themeName}:before,
 .controls-TreeGrid__row-expander_node_master_collapsed_theme-@{themeName}:before {
@@ -229,13 +232,18 @@
    margin-left: @_hierarchy_offset_xl_treeGrid;
 }
 .controls-TreeGrid__row-cell_default_theme-@{themeName}.controls-TreeGrid__row-cell__node_theme-@{themeName},
+.controls-TreeGrid__row-cell_masterClassic_theme-@{themeName}.controls-TreeGrid__row-cell__node_theme-@{themeName},
 .controls-TreeGrid__row-cell__node_theme-@{themeName} .controls-EditingTemplateText_theme-@{themeName} {
   font-size: @node_font-size_treeGrid;
 }
+
+.controls-TreeGrid__row-cell_masterClassic_theme-@{themeName}.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName},
 .controls-TreeGrid__row-cell_default_theme-@{themeName}.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName},
 .controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName} .controls-EditingTemplateText_theme-@{themeName} {
   font-size: @hidden-node_font-size_treeGrid;
 }
+
+.controls-TreeGrid__row-cell_masterClassic_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName},
 .controls-TreeGrid__row-cell_default_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName},
 .controls-TreeGrid__row-cell__item_theme-@{themeName} .controls-EditingTemplateText_theme-@{themeName} {
   font-size: @item_font-size_m_grid;

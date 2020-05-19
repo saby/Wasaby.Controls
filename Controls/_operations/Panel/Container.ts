@@ -33,10 +33,19 @@ export default class OperationsPanelContainer extends Control<IOperationsPanelCo
 
     protected _beforeUpdate(newOptions: IOperationsPanelContainerOptions): void {
         if (!isEqual(this._options.selectedKeys, newOptions.selectedKeys) ||
-            this._options.listMarkedKey !== newOptions.listMarkedKey) {
+            this._options.listMarkedKey !== newOptions.listMarkedKey ||
+            this._selectedKeysCount !== newOptions.selectedKeysCount) {
             this._selectedKeys = this._getSelectedKeys(newOptions);
             this._selectedKeysCount = this._getSelectedKeysCount(newOptions, this._selectedKeys);
         }
+    }
+
+    protected _afterMount(): void {
+        this._notify('operationsPanelOpen', [],{bubbling: true});
+    }
+
+    protected _beforeUnmount(): void {
+        this._notify('operationsPanelClose', [],{bubbling: true});
     }
 
     private _getSelectedKeysCount(options: IOperationsPanelContainerOptions, selectedKeys: number[]|string[]): number {

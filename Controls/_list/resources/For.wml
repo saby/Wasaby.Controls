@@ -75,17 +75,10 @@
    </ws:if>
 </ws:template>
 
-<ws:template name="drawItemsTemplate">
-   <ws:if data="{{listModel.isShouldBeDrawnItem(currentItem)}}">
-      <ws:partial template="itemTemplate" currentItem="{{currentItem}}" />
-   </ws:if>
-   <ws:else>
-      {{listModel.goToNext()}}
-   </ws:else>
-</ws:template>
 <ws:for data="listModel.reset(); listModel.isEnd();">
-   <ws:partial template="drawItemsTemplate" currentItem="{{listModel.getCurrent()}}"/>
+   <ws:partial template="itemTemplate" currentItem="{{listModel.getCurrent()}}"/>
 </ws:for>
+
 <ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">
    <ws:partial template="addItem" currentItem="{{currentItem}}"/>
 </ws:if>

@@ -3,6 +3,7 @@
         <Controls.scroll:Container attr:class="controls-demo-Lookup__scroll">
             <Controls.lookup:Input
                     bind:selectedKeys="_selectedKeys"
+                    searchParam="title"
                     source="{{_source}}"
                     keyProperty="id"
                     multiSelect="{{true}}"

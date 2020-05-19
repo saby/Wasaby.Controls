@@ -185,6 +185,11 @@ define([
             assert.deepEqual(instance._multiselection.selectedKeys, newCfg.selectedKeys);
             assert.deepEqual(instance._multiselection.excludedKeys, newCfg.excludedKeys);
             assert.isTrue(instance._resetSelection);
+
+            instance._resetSelection = false;
+            instance._options.excludedKeys = [];
+            instance._beforeUpdate(newCfg);
+            assert.isTrue(instance._resetSelection);
          });
 
          it('change root', async function () {

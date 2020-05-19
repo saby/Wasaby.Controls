@@ -51,16 +51,20 @@ var
             } else {
                 _private.registerPending(self);
                 if (eventResult && eventResult.addBoth) {
-                    var id = self._notify('showIndicator', [{}], {bubbling: true});
+                    self._showIndicator();
                     eventResult.addBoth(function (defResult) {
-                        self._notify('hideIndicator', [id], {bubbling: true});
+                        self._hideIndicator();
                         return defResult;
                     });
                     result = eventResult;
                 } else if ((eventResult && eventResult.item instanceof entity.Record) || (options && options.item instanceof entity.Record)) {
                     result = Deferred.success(eventResult || options);
                 } else if (isAdd) {
-                    result = _private.createModel(self, eventResult || options);
+                    self._showIndicator();
+                    result = _private.createModel(self, eventResult || options).addBoth((createModelResult) => {
+                        self._hideIndicator();
+                        return createModelResult;
+                    });
                 }
             }
             return result;
@@ -82,10 +86,16 @@ var
                 self._isAdd
             ]);
             if (eventResult && eventResult.addBoth) {
-                var id = self._notify('showIndicator', [{}], { bubbling: true });
+                self._showIndicator();
                 self._endEditDeferred = eventResult;
-                return eventResult.addBoth(function(resultOfDeferred) {
-                    self._notify('hideIndicator', [id], { bubbling: true });
+                return eventResult.addErrback((error) => {
+                    // Отменяем сохранение, оставляем редактирование открытым, если промис сохранения завершился с
+                    // ошибкой (провалена валидация на сервере)
+                    self._endEditDeferred = null;
+                    self._hideIndicator();
+                    return constEditing.CANCEL;
+                }).addCallback((resultOfDeferred) => {
+                    self._hideIndicator();
 
                     if (resultOfDeferred === constEditing.CANCEL) {
                         self._endEditDeferred = null;
@@ -102,11 +112,19 @@ var
                 if (eventResult === constEditing.CANCEL) {
                     return Deferred.success({ cancelled: true });
                 }
-                return _private.updateModel(self, commit).addCallback(function() {
-                    return Deferred.success().addCallback(function() {
-                        _private.afterEndEdit(self, commit);
-                    });
-                });
+                // Если обновление данных на БЛ затягивается, должен появиться индикатор загрузки.
+                self._showIndicator();
+                return _private.updateModel(self, commit).addBoth((result) => {
+                    self._hideIndicator();
+                    return result;
+                }).addCallbacks(
+                    () => {
+                        return _private.afterEndEdit(self, commit);
+                    },
+                    (error) => {
+                        return Deferred.success({ cancelled: true });
+                    }
+                );
             }
         },
 
@@ -148,7 +166,6 @@ var
         updateModel: function (self, commit) {
             if (commit && (self._isAdd || self._editingItem.isChanged())) {
                 if (self._options.source) {
-                    //
                     return self._options.source.update(self._editingItem).addCallbacks(function () {
                         _private.acceptChanges(self);
                     }, (error: Error) => {
@@ -395,6 +412,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _editingItem: null,
     _endEditDeferred: null,
     _pendingDeferred: null,
+    _loadingIndicatorId: null,
 
 
     constructor: function (options = {}) {
@@ -594,7 +612,11 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         // Выставляем каретку и активируем поле только после начала редактирования и гарантированной отрисовке полей ввода.
         if (this._clickItemInfo && this._clickItemInfo.item === this._originalItem && this._pendingInputRenderState === PendingInputRenderState.Rendering) {
             target = document.elementFromPoint(this._clickItemInfo.clientX, this._clickItemInfo.clientY);
-            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+            if ((target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')
+                // Выполняем корректировку выделения только в случае пустого выделения
+                // (учитываем опцию selectOnClick для input-контролов).
+                // https://online.sbis.ru/opendoc.html?guid=904a460a-02da-46a7-bb61-5e0ed2dc4375
+                && target.selectionStart === target.selectionEnd) {
                 fakeElement = document.createElement('div');
                 fakeElement.innerText = '';
 
@@ -758,6 +780,14 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         } else {
             return this.cancelEdit();
         }
+    },
+
+    _showIndicator(): void {
+        this._loadingIndicatorId = this._notify('showIndicator', [{}], {bubbling: true});
+    },
+    _hideIndicator(): void {
+        this._notify('hideIndicator', [this._loadingIndicatorId], {bubbling: true});
+        this._loadingIndicatorId = null;
     },
 
     _beforeUnmount: function () {

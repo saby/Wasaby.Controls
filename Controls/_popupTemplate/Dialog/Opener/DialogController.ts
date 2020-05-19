@@ -184,6 +184,7 @@ class DialogController extends BaseController {
     }
 
     private _getWindowSize(): IWindow {
+        //TODO: https://online.sbis.ru/opendoc.html?guid=e049a729-ff28-46a4-9122-76e198ab30bd
         return {
             width: window.innerWidth,
             height: window.innerHeight,
