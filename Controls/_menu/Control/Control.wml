@@ -7,6 +7,7 @@
                                   iconSize="m"
                                   iconStyle="contrast"
                                   buttonStyle="success"
+                                  attr:class="controls-Menu__applyButton"
                                   inlineHeight="{{inlineHeight}}"
                                   on:click="_applySelection()"/>
       </div>
