@@ -113,12 +113,17 @@ var
                 }
                 // Если обновление данных на БЛ затягивается, должен появиться индикатор загрузки.
                 self._showIndicator();
-                return _private.updateModel(self, commit).addCallback(function() {
-                    return Deferred.success().addCallback(function() {
-                        self._hideIndicator();
-                        _private.afterEndEdit(self, commit);
-                    });
-                });
+                return _private.updateModel(self, commit).addBoth((result) => {
+                    self._hideIndicator();
+                    return result;
+                }).addCallbacks(
+                    () => {
+                        return _private.afterEndEdit(self, commit);
+                    },
+                    (error) => {
+                        return Deferred.success({ cancelled: true });
+                    }
+                );
             }
         },
 
