@@ -1,20 +1,18 @@
-import {QueryOrderSelector, QueryWhere} from 'Types/source';
-import {RecordSet} from 'Types/collection';
+import {QueryOrderSelector, QueryWhereExpression} from 'Types/source';
+import {RecordSet, List} from 'Types/collection';
 import {INavigationOptionValue} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 
 import * as cClone from 'Core/core-clone';
 
 import {IQueryParamsController} from './interface/IQueryParamsController';
-import PageQueryParamsController from './QueryParamsController/PageQueryParamsController';
-import PositionQueryParamsController from './QueryParamsController/PositionQueryParamsController';
+import PageNavigationStore from './NavigationController/PageNavigationStore';
+import PageParamsCalculator from './NavigationController/PageParamsCalculator';
+import PositionNavigationStore from './NavigationController/PositionNavigationStore';
+import PositionParamsCalculator from './NavigationController/PositionParamsCalculator';
 
-import {
-    Direction,
-    IAdditionalQueryParams,
-    IAdditionQueryParamsMeta
-} from 'Controls/_interface/IAdditionalQueryParams';
-import {INavigationSourceConfig} from 'Controls/_interface/INavigation';
+import {Direction, IAdditionalQueryParams, IAdditionQueryParamsMeta} from 'Controls/_interface/IAdditionalQueryParams';
+import {TNavigationSource, INavigationSourceConfig} from 'Controls/_interface/INavigation';
 
 /**
  * Вспомогательный интерфейс для определения типа typeof object
@@ -68,118 +66,21 @@ interface IDictionary<T> {
  * @private
  * @author Аверкиев П.А.
  */
-class NavigationControllerFactory {
-    static factorySource: IDictionary<IType<IQueryParamsController>> = {
-        page: PageQueryParamsController,
-        position: PositionQueryParamsController
+type TNavigationStore = PageNavigationStore | PositionNavigationStore;
+type TNavigationCalculator = PageParamsCalculator | PositionParamsCalculator;
+
+class NavigationStoreFactory {
+    static factorySource: IDictionary<IType<TNavigationStore>> = {
+        page: PageNavigationStore,
+        position: PositionNavigationStore
     };
 
-    static resolve(navigationOptionValue: INavigationOptionValue<INavigationSourceConfig>): IQueryParamsController {
-        if (!navigationOptionValue.source) {
-            return;
+    static resolve(type: TNavigationSource, config: INavigationSourceConfig): IQueryParamsController {
+        if (type && type in this.factorySource) {
+            return new this.factorySource[type](config);
         }
-        if (navigationOptionValue.source in this.factorySource) {
-            return new this.factorySource[navigationOptionValue.source](navigationOptionValue.sourceConfig);
-        }
-        Logger.error('NavigationController: Undefined navigation source type "' + navigationOptionValue.source + '"');
+        Logger.error('NavigationController: Undefined navigation source type "' + type + '"');
         return;
-    }
-}
-
-/**
- * Строитель запроса.
- * @remark
- * Принимает набор опций фильтрации, сортировки и пейджинации и позволяет их вывести как список переданных свойств
- * или как сформированный запрос Types/source:Query.
- * Поддерживает merge с опциями IAdditionalQueryParams.
- * @class Controls/_source/QueryParamsBuilder
- * @example
- * const params: IAdditionalQueryParams = {filter, sorting};
- * const queryBuilder = new QueryParamsBuilder(params);
- * const params2: IAdditionalQueryParams = {filter, meta, offset, limit};
- * const queryBuilder2 = new QueryParamsBuilder(params);
- * const query = queryBuilder.merge(queryBuilder2.raw()).raw();
- * @private
- * @author Аверкиев П.А.
- */
-/*
- * Query builder.
- * @remark
- * Accept params for filtering, sorting and pagination and allows to output them as raw data
- * or as Types/source:Query query.
- * Maintains merge() method to merge internal options with passed IAdditionalQueryParams.
- * @class Controls/_source/QueryParamsBuilder
- * @example
- * const params: IAdditionalQueryParams = {filter, sorting};
- * const queryBuilder = new QueryParamsBuilder(params);
- * const params2: IAdditionalQueryParams = {filter, meta, offset, limit};
- * const queryBuilder2 = new QueryParamsBuilder(params);
- * const query = queryBuilder.merge(queryBuilder2.raw()).build();
- * @private
- * @author Аверкиев П.А.
- */
-class QueryParamsBuilder {
-    private _filter: QueryWhere;
-    private _sorting: QueryOrderSelector;
-    private _limit: number;
-    private _offset: number;
-    private _meta: IAdditionQueryParamsMeta;
-
-    constructor(options?: IAdditionalQueryParams) {
-        if (options) {
-            this.merge(options);
-        }
-    }
-
-    /**
-     * Заменяет/объединяет текущие значения свойств фильтрации, сортировки и пейджинации.
-     * Обратите внимание на то, что фильтры не будут заменены, они всегда пытаются смёрджиться.
-     * @param params {IAdditionalQueryParams} набор опций фильтрации, сортировки и пейджинации
-     * @return QueryParamsBuilder текущий экземпляр класса
-     */
-    /*
-     * Reset/Merge current class properties values for filtering, sorting and pagination.
-     * Note, that filters will be only merged and won't be reset.
-     * @param params {IAdditionalQueryParams} params for filtering, sorting and pagination
-     * @return QueryParamsBuilder текущий экземпляр класса
-     */
-    merge(params: IAdditionalQueryParams): QueryParamsBuilder {
-        Object.keys(params).forEach((param) => {
-            if (params[param] !== undefined && params[param] !== null) {
-                if (param === 'filter') {
-                    const filter: QueryWhere = this._filter ? cClone(this._filter) : {};
-                    this._filter = ({...filter, ...params[param]});
-                } else if (param === 'sorting') {
-                    if (!this._sorting) {
-                        this._sorting = params[param];
-                    } else if (Array.isArray(this._sorting) && Array.isArray(params[param])) {
-                        // @ts-ignore
-                        this._sorting = this._sorting.concat(params[param]);
-                    } else {
-                        this._sorting = params[param];
-                    }
-                } else {
-                    this[`_${param}`] = params[param];
-                }
-            }
-        });
-        return this;
-    }
-
-    /**
-     * @return {IAdditionalQueryParams} текущее состояние объекта
-     */
-    /*
-     * @return {IAdditionalQueryParams} current object state
-     */
-    raw(): IAdditionalQueryParams {
-        return {
-            filter: this._filter || {},
-            sorting: this._sorting || [],
-            limit: this._limit,
-            offset: this._offset,
-            meta: this._meta
-        };
     }
 }
 
@@ -192,7 +93,21 @@ export interface INavigationControllerOptions {
      * @name Controls/_source/NavigationController#navigation
      * @cfg {Types/source:INavigationOptionValue} Navigation options
      */
-    navigation?: INavigationOptionValue<INavigationSourceConfig>;
+    navigationType: TNavigationSource;
+    navigationConfig?: INavigationSourceConfig;
+}
+
+type TKey = string | number | null; // TODO общий тип
+
+interface IQueryParamsControllerItem {
+    id: TKey;
+    queryParamsController: IQueryParamsController;
+}
+
+interface IGetQueryParamsArg {
+    filter: QueryWhereExpression<unknown>;
+    sorting: QueryOrderSelector;
+    navigationConfig?: INavigationSourceConfig;
 }
 
 /**
@@ -217,16 +132,21 @@ export interface INavigationControllerOptions {
  * @public
  * @author Аверкиев П.А.
  */
+
 export class NavigationController {
 
-    protected _options: INavigationControllerOptions | null;
-
-    private readonly _queryParamsController: IQueryParamsController;
+    private _navigationType: TNavigationSource;
+    private _navigationConfig: INavigationSourceConfig;
+    private readonly _navigationStores: List<TNavigationStore> = null;
 
     constructor(cfg: INavigationControllerOptions) {
-        this._options = cfg;
-        if (this._options.navigation) {
-            this._queryParamsController = NavigationControllerFactory.resolve(this._options.navigation);
+        this._navigationType = cfg.navigationType;
+        this._navigationConfig = cfg.navigationConfig;
+
+        if (this._navigationType) {
+            this._navigationStores = new List();
+        } else {
+            Logger.error('NavigationController: navigationType option is undefined');
         }
     }
 
@@ -235,27 +155,85 @@ export class NavigationController {
      * Если в опцию navigation был передан объект INavigationOptionValue<INavigationSourceConfig>, его filter, sorting и настрйоки пейджинации
      * также одбавляются в запрос.
      * @param direction {Direction} Направление навигации.
-     * @param filter {Types/source:QueryWhere} Настрйоки фильтрации
+     * @param filter {Types/source:QueryWhereExpression} Настрйоки фильтрации
      * @param sorting {Types/source:QueryOrderSelector} Настрйки сортировки
      */
-    /*
-     * Builds a query based on passed filter and sorting params
-     * If INavigationOptionValue<INavigationSourceConfig> is set into the class navigation property, its filter, sorting and pagination settings
-     * will also be added to query
-     * @param direction {Direction} navigation direction
-     * @param filter {Types/source:QueryWhere} filter settings
-     * @param sorting {Types/source:QueryOrderSelector} sorting settings
-     */
-    getQueryParams(direction?: Direction, filter?: QueryWhere, sorting?: QueryOrderSelector): IAdditionalQueryParams {
-        const queryParams = new QueryParamsBuilder({filter, sorting});
-        if (this._queryParamsController) {
-            const queryParamsBuilderOptions = this._queryParamsController.prepareQueryParams(direction);
-            const controllerQueryParams = new QueryParamsBuilder(queryParamsBuilderOptions);
-            queryParams.merge(controllerQueryParams.raw());
-        }
-        return queryParams.raw();
+
+    getQueryParams(getQueryArgs: IGetQueryParamsArg, id: TKey = null): IAdditionalQueryParams {
+        const queryParams = this._getCleanParams(getQueryArgs);
+
+        // Если id не передан то берется стор для корневого раздела, для которого жесткий id=null
+        const store = this._getStore(id);
+        const calculator = this._getCalculator();
+        const navigationQueryConfig = getQueryArgs.navigationConfig || {};
+
+        const addParams = calculator.getQueryParams(store, navigationQueryConfig);
+        return this._mergeParams(queryParams, addParams);
     }
 
+    getQueryParamsHierarchical(filter: QueryWhere, sorting: QueryOrderSelector, navigationConfig?) {
+
+    }
+
+    getQueryParamsForward(filter: QueryWhere, sorting: QueryOrderSelector, navigationConfig?) {
+
+    }
+
+    getQueryParamsBackward(filter: QueryWhere, sorting: QueryOrderSelector, navigationConfig?) {
+
+    }
+
+    private _getStore(id: TKey): TNavigationStore {
+        let resStore: TNavigationStore;
+        if (this._navigationStores[id]) {
+            resStore = this._navigationStores[id];
+        } else {
+            resStore = NavigationStoreFactory.resolve(this._navigationType, this._navigationConfig);
+        }
+        return resStore;
+    }
+
+    private _getCalculator(): TNavigationCalculator {
+        let resCalculator;
+        switch (this._navigationType) {
+            case 'page': resCalculator = PageParamsCalculator; break;
+            case 'position': resCalculator = PositionParamsCalculator; break;
+        }
+        return resCalculator;
+    }
+
+    private _mergeParams(clean: IAdditionalQueryParams, add: IAdditionalQueryParams): IAdditionalQueryParams {
+        const resultParams = clean;
+
+        resultParams.limit = add.limit;
+        resultParams.offset = add.offset;
+
+        if (add.filter) {
+            // we can't modify original filter
+            resultParams.filter = cClone(resultParams.filter);
+            const navFilter = add.filter;
+            for (let i in navFilter) {
+                if (navFilter.hasOwnProperty(i)) {
+                    resultParams.filter[i] = navFilter[i];
+                }
+            }
+        }
+
+        if (add.meta) {
+            resultParams.meta = add.meta;
+        }
+
+        return resultParams;
+    }
+
+    private _getCleanParams(getQueryArgs: IGetQueryParamsArg): IAdditionalQueryParams {
+        return {
+            filter: getQueryArgs.filter || {},
+            sorting: getQueryArgs.sorting,
+            limit: undefined,
+            offset: undefined
+        };
+    }
     /**
      * Вычисляет следующее состояние контроллера параметров запроса: следующую страницу, или позицию
      * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
