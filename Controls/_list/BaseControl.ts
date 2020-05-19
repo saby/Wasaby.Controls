@@ -374,11 +374,7 @@ var _private = {
             // because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
             // otherwise empty template will shown
             if (needShowIndicatorByNavigation && needShowIndicatorByMeta) {
-                if (self._listViewModel && self._listViewModel.getCount()) {
-                    _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
-                } else {
-                    _private.showIndicator(self);
-                }
+                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
             } else {
                 _private.hideIndicator(self);
             }
@@ -952,13 +948,15 @@ var _private = {
     },
 
     showIndicator(self, direction: 'down' | 'up' | 'all' = 'all'): void {
-        if (!self._isMounted || self._loadingState === 'all') {
+        if (!self._isMounted) {
             return;
         }
 
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
+        } else {
+            self._loadingIndicatorState = null;
         }
         _private.startShowLoadingIndicatorTimer(self);
     },
@@ -1693,6 +1691,7 @@ var _private = {
     ): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}_theme-${theme}`)
             .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
                  !hasItems && loadingIndicatorState === 'down')
             .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`,
