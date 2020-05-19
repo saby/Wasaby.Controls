@@ -202,16 +202,10 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
             options.multiSelectReadyCallback(multiSelectReady);
         }
 
-        if (options.task1179321660) {
-            multiSelectReady.callback();
-        }
-
         return _private.getMultiselection(options).then((multiselectionInstance) => {
             this._multiselection = multiselectionInstance;
             this._multiselection.updateSelectionForRender();
-            if (!multiSelectReady.isReady()) {
-                multiSelectReady.callback();
-            }
+            multiSelectReady.callback();
         });
     },
 
