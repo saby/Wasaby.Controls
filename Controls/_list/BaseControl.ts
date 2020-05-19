@@ -2123,7 +2123,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
     // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
     _multiSelectReadyCallbackFn: function(multiSelectReady) {
-        this._multiSelectReady = multiSelectReady;
+        if (!this._options.task1179321660) {
+            this._multiSelectReady = multiSelectReady;
+        }
     },
 
     getViewModel: function() {
