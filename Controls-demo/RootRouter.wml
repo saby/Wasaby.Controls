@@ -1,20 +1,8 @@
 <div class="ControlsDemo-Page ws-flexbox ws-flex-column">
-   <div class="ws-flexbox ws-flex-row" id="Header" if="{{_isMenuButtonVisible()}}">
-         <a attr:class="ws-link" 
-                        attr:id="Back"
-                        attr:style="width: 100px"
-                           on:click="goHomeHandler()">&lt;&nbsp;Меню</a>
-         <ws:if data="{{sourceUrl}}">                  
-            <div class="ws-flex-grow-1 ws-flexbox ws-flex-column">                     
-               <a attr:class="ws-link ws-align-self-end"
-                  attr:style="width: 100px"
-                  attr:id="Source"
-                  attr:target="_blank"
-                  attr:href="{{sourceUrl}}"
-                  >Source</a>
-            </div>
-         </ws:if>
-   </div>
+   <a attr:class="ws-link" if="{{_isMenuButtonVisible()}}"
+                    attr:id="Back"
+                    attr:style="width: 100px"
+                     on:click="goHomeHandler()">&lt;&nbsp;Меню</a>
    <Router.router:Route mask="app/:app">
       <Controls-demo.RootTemplateWrapper>
          <ws:if data="{{content.app && content.templateLoaded}}">
