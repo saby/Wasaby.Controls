@@ -30,7 +30,7 @@ define('Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/WasabyContainer',
          },
 
          _setTextOld: function(e, value) {
-            this.getTopParent()._setText(e, value);
+            this._parent._parent._setText(e, value);
          },
       });
       WasabyContainer._styles = ['Controls-demo/CompatibleDemo/CompatibleDemo'];
