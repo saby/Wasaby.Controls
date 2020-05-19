@@ -108,7 +108,7 @@ class ValidateContainer extends Control {
     _isOpened: boolean = false;
     _contentActive: boolean = false;
     _currentValue: any;
-    _validationResult: ValidResult;
+    _validationResult: ValidResult = null;
     _isNewEnvironment: boolean;
     _closeId: number;
 
@@ -225,7 +225,7 @@ class ValidateContainer extends Control {
     validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
-            this.setValidationResult(undefined);
+            this.setValidationResult(null);
             this._callValidators(validators, validateConfig).then(resolve);
         });
 
@@ -240,6 +240,9 @@ class ValidateContainer extends Control {
      * @see validate
      */
     setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
+        if (this._validationResult === validationResult) {
+            return;
+        }
         this._validationResult = validationResult;
         if (!(validationResult instanceof Promise)) {
             this._forceUpdate();
