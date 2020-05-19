@@ -645,6 +645,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             collection: listModel,
             itemActions,
             itemActionsPosition: 'inside',
+            visibilityCallback: options.itemActionVisibilityCallback,
             style: 'default',
             theme: options.theme,
             actionAlignment: 'horizontal',

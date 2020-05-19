@@ -11,6 +11,7 @@ class ToolbarVdom extends Control<IControlOptions> {
    protected _flatItems = null;
    protected _currentClick = 'Нажми на тулбар';
    protected _defaultItemsWithoutToolbutton = null;
+   private _itemActions: { icon: string; id: number; title: string }[];
 
    private _getDefaultMemory(): Memory {
       return new Memory({
@@ -28,6 +29,13 @@ class ToolbarVdom extends Control<IControlOptions> {
 
    protected _beforeMount(): void {
       this._itemClick = this._itemClick.bind(this);
+      this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
+      this._itemActions = [{
+         id: 1,
+         icon: 'icon-ExpandDown',
+         title: 'view'
+      }
+      ];
       this._defaultItems = [
          {
             id: '1',
@@ -261,6 +269,15 @@ class ToolbarVdom extends Control<IControlOptions> {
 
    private _itemClick(event, item): void {
       this._currentClick = 'Вы нажали на ' + item.getId();
+   }
+   private _itemActionVisibilityCallback(action, item) {
+      let actionVisibility = false
+
+      if (item.get('id') === '7' || item.get('id') === '8') {
+         actionVisibility = true;
+      }
+
+      return actionVisibility;
    }
    static _theme: string[] = ['Controls/Classes'];
 
