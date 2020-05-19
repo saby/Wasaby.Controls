@@ -51,6 +51,7 @@
              keyProperty="id"
              itemTemplateProperty="myTemplate"
              source="{{_getMemorySource(_flatItems)}}"
+             on:itemClick="_itemClick()"
           />
           контент идущий за Toolbar'ом
        </div>
