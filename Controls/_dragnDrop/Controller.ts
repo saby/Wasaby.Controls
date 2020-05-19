@@ -59,15 +59,6 @@ export default class Controller {
 
    handleMouseLeave() {}
 
-   _canStartDragNDrop(domEvent: any, cfg: any, isTouch: boolean): boolean {
-      return !isTouch &&
-         (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
-         cfg.itemsDragNDrop &&
-         !(domEvent.nativeEvent.button) &&
-         !cfg.readOnly &&
-         !domEvent.target.closest('.controls-DragNDrop__notDraggable');
-   }
-
    _processItemMouseEnterWithDragNDrop(_, itemData): void {
       const dragEntity = this._useNewModel ? this._draggingEntity : this._model.getDragEntity();
       let dragPosition;

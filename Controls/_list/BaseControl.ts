@@ -339,6 +339,8 @@ const _private = {
         }
         return resDeferred;
     },
+
+    // TODO по этому условию проверять стоит ли создавать контроллер, а часть наверное вынести в контроллер
     canStartDragNDrop(domEvent: any, cfg: any, isTouch: boolean): boolean {
         return !isTouch && 
             (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
