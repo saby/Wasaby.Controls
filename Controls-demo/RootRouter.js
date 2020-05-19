@@ -6,11 +6,13 @@ define('Controls-demo/RootRouter', [
    'wml!Controls-demo/RootRouter',
    'Application/Initializer',
    'Application/Env',
+   'Core/Deferred',
    'css!Controls-demo/RootRouter'
 ], function(BaseControl,
-            template,
-            AppInit,
-            AppEnv) {
+   template,
+   AppInit,
+   AppEnv,
+   Deferred) {
    'use strict';
 
    var ModuleClass = BaseControl.extend(
@@ -18,11 +20,20 @@ define('Controls-demo/RootRouter', [
          _template: template,
          isReloading: false,
          pathName: 'Controls-demo/app/Controls-demo%2FIndexOld',
+         sourceUrl: null,
          reload: function() {
             this.isReloading = true;
+
             // При обновлении демки сбрасываем все что лежит в settingsController (задается на application);
             // здесь падает рендеринг на wi.sbis-doc
-            //window.localStorage.setItem('controlSettingsStorage', '{}');
+            // window.localStorage.setItem('controlSettingsStorage', '{}');
+         },
+         _beforeMount(options, context, receivedState) {
+            var _state = {
+               sourceUrl: (receivedState && receivedState.sourceUrl) || options.sourceUrl
+            };
+            this.sourceUrl = _state.sourceUrl;
+            return new Deferred().callback(_state);
          },
 
          _afterMount: function() {
