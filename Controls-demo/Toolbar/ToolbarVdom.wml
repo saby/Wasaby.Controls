@@ -25,10 +25,9 @@
                   popupClassName="controls-Toolbar_test_popupClassName"
                   on:itemClick="_itemClick()"
                   itemsSpacing="big"
-                  itemActions="{{_itemActions}}"
           />
        </div>
-       <div style="padding: 5px;">Пример тулбара itemAction
+       <div style="padding: 5px;">Пример тулбара с itemActions
            <Controls.toolbars:View
                    name="myToolbar"
                    attr:id="Toolbar_1"
@@ -36,7 +35,7 @@
                    nodeProperty="@parent"
                    keyProperty="id"
                    additionalProperty="additional"
-                   source="{{_getMemorySource(_defaultItems)}}"
+                   source="{{_getMemorySource(_defaultItemsWithActions)}}"
                    popupClassName="controls-Toolbar_test_popupClassName"
                    on:itemClick="_itemClick()"
                    itemsSpacing="big"

@@ -11,7 +11,8 @@ class ToolbarVdom extends Control<IControlOptions> {
    protected _flatItems = null;
    protected _currentClick = 'Нажми на тулбар';
    protected _defaultItemsWithoutToolbutton = null;
-   private _itemActions: { icon: string; id: number; title: string }[];
+   protected _defaultItemsWithActions;
+   protected _itemActions;
 
    private _getDefaultMemory(): Memory {
       return new Memory({
@@ -154,6 +155,48 @@ class ToolbarVdom extends Control<IControlOptions> {
             additional: true
          }
       ];
+      this._defaultItemsWithActions = [
+         {
+            id: '3',
+            icon: 'icon-Print',
+            title: 'Распечатать',
+            '@parent': false,
+            parent: null
+         },
+         {
+            id: '4',
+            icon: 'icon-Linked',
+            fontColorStyle: 'secondary',
+            viewMode: 'toolButton',
+            iconStyle: 'secondary',
+            contrastBackground: true,
+            title: 'Связанные документы',
+            '@parent': true,
+            parent: null
+         },
+         {
+            id: '5',
+            viewMode: 'icon',
+            icon: 'icon-Link',
+            title: 'Скопировать в буфер',
+            '@parent': false,
+            parent: null
+         },
+         {
+            id: '7',
+            showType: showType.MENU,
+            title: 'Проекту',
+            '@parent': false,
+            parent: '4'
+         },
+         {
+            id: '8',
+            showType: showType.MENU,
+            title: 'Этапу',
+            '@parent': false,
+            parent: '4'
+         }
+      ];
       this._defaultItemsWithoutToolbutton = [
          {
             id: '1',
@@ -271,12 +314,10 @@ class ToolbarVdom extends Control<IControlOptions> {
       this._currentClick = 'Вы нажали на ' + item.getId();
    }
    private _itemActionVisibilityCallback(action, item) {
-      let actionVisibility = false
-
-      if (item.get('id') === '7' || item.get('id') === '8') {
-         actionVisibility = true;
+      let actionVisibility = true;
+      if (!item.get('parent')) {
+         actionVisibility = false;
       }
-
       return actionVisibility;
    }
    static _theme: string[] = ['Controls/Classes'];
