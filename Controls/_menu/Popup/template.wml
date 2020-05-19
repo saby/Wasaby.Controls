@@ -1,6 +1,6 @@
 <ws:template name="menuPopup" >
    <div class="controls-Menu__popup">
-      <ws:if data="{{_headerTemplate && _applyButtonVisibility && _options.applyButtonAlign === 'top'}}">
+      <ws:if data="{{_headerTemplate && _applyButtonVisibility}}">
          <div class="controls-DropdownList__applyButton
                               controls-Menu__applyButton-top_theme-{{_options.theme}}">
             <Controls.buttons:Button viewMode="functionalButton"
@@ -9,7 +9,7 @@
                                      iconStyle="contrast"
                                      buttonStyle="success"
                                      attr:class="controls-Menu__applyButton"
-                                     inlineHeight="menuapplytop"
+                                     inlineHeight="menuapply"
                                      on:click="_applySelection()"/>
          </div>
       </ws:if>
