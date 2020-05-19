@@ -17,7 +17,7 @@ import {
     IItemTemplate,
     IItemTemplateOptions
 } from 'Controls/interface';
-import {IItemAction} from 'Controls/itemActions';
+import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import {IButtonOptions} from 'Controls/buttons';
@@ -117,6 +117,14 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @cfg {Array<ItemAction>} Конфигурация опций записи.
      */
     itemActions?: IItemAction[];
+    /**
+     * @name Controls/_toolbars/IToolbarOptions#itemActionVisibilityCallback
+     * @cfg {function} Функция управления видимостью операций над записью.
+     * @param {ItemAction} action Объект с настройкой действия.
+     * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
+     * @returns {Boolean} Определяет, должна ли операция отображаться.
+     */
+     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
 }
 
 /**
