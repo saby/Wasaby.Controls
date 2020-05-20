@@ -151,7 +151,7 @@ var
                 }
 
                 // если текущая колонка первая и для нее не задан мультиселект и прилипание, то убираем левый отступ
-                if (currentColumn.columnIndex === 0 && !current.hasMultiSelect && !currentColumn.column.stickyProperty) {
+                if (currentColumn.columnIndex === 0 && !current.hasMultiSelect) {
                     currentColumn.classList.padding.left += ' controls-TreeGrid__row-cell__firstColumn__contentSpacing_null';
                 }
 
