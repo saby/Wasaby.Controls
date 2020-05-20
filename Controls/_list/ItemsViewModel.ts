@@ -678,6 +678,11 @@ var ItemsViewModel = BaseViewModel.extend({
     getHasMoreData: function() {
         return this._hasMoreData;
     },
+
+    setTheme(theme: string): void {
+        this._options.theme = theme;
+        this.resetCachedItemData();
+    }
 });
 
 export = ItemsViewModel;
