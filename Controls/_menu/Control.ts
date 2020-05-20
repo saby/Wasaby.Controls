@@ -61,6 +61,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _isMouseInOpenedItemArea: boolean = false;
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
+    private _notifyResizeAfterRender: Boolean = false;
     private _itemActionsController: ItemActionsController;
 
     protected _beforeMount(options: IMenuControlOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
@@ -76,25 +77,26 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         const rootChanged = newOptions.root !== this._options.root;
         const sourceChanged = newOptions.source !== this._options.source;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
+        let result;
 
         if (sourceChanged) {
             this._sourceController = null;
         }
 
         if (rootChanged || sourceChanged || filterChanged) {
-            this.loadItems(newOptions);
+            result = this.loadItems(newOptions).then(() => {
+                this._notifyResizeAfterRender = true;
+            });
         }
         if (this.isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
             this.setSelectedItems(this._listModel, newOptions.selectedKeys);
         }
+
+        return result;
     }
 
     protected _afterRender(oldOptions: IMenuControlOptions): void {
-        const rootChanged = oldOptions.root !== this._options.root;
-        const sourceChanged = oldOptions.source !== this._options.source;
-        const filterChanged = !isEqual(oldOptions.filter, this._options.filter);
-
-        if (rootChanged || sourceChanged || filterChanged) {
+        if (this._notifyResizeAfterRender) {
             this._notify('controlResize', [], {bubbling: true});
         }
     }
