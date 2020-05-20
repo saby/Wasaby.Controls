@@ -84,6 +84,17 @@ define(
             });
          });
 
+         describe('_beforeUpdate', () => {
+            it('source is changed', async() => {
+               const menuControl = getMenu();
+               const newMenuOptions = { ...defaultOptions };
+
+               newMenuOptions.source = new source.Memory();
+               await menuControl._beforeUpdate(newMenuOptions);
+               assert.isTrue(menuControl._notifyResizeAfterRender);
+            });
+         });
+
          describe('getCollection', function() {
             let menuControl = new menu.Control();
             let items = new collection.RecordSet({
