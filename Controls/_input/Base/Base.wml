@@ -43,6 +43,7 @@
                      value="{{_viewModel.displayValue}}"
                      hidePlaceholder="{{_hidePlaceholder}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
+                     isBrowserPlatform="{{_isBrowserPlatform}}"
                      ieVersion="{{_ieVersion}}"
                      isEdge="{{_isEdge}}"/>
       </ws:else>
