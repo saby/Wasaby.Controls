@@ -2,6 +2,7 @@
  * Шаблон, который по умолчанию используется для отображения месяца в MonthList.
  * @class Controls/calendar:MonthListMonthTemplate
  * @public
+ * @author Красильников А.С.
  */
 
 /*

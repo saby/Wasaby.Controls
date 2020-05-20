@@ -111,6 +111,7 @@ export {CarriagePositionWhenFocus as __CarriagePositionWhenFocus} from 'Controls
  * Объект с набором методов для опции {@link Controls/_input/interface/IValue#inputCallback}
  * @class Controls/input/InputCallback
  * @public
+ * @author Красильников А.С.
  * @mixes Controls/_input/InputCallback/hoursFormat
  * @mixes Controls/_input/InputCallback/lengthConstraint
  */
