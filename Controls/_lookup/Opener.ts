@@ -30,7 +30,8 @@ var SelectorOpener = Control.extend({
    _popupId: null,
 
    open: function (cfg) {
-      return StackOpener.openPopup(cfg || {}).then((popupId) => {
+      cfg.opener = cfg.opener || this._options._logicParent;
+      return StackOpener.openPopup(Object.assign(cfg, this._options) || {}).then((popupId) => {
          this._popupId = popupId;
       });
    },
