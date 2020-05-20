@@ -204,7 +204,9 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
 
         return _private.getMultiselection(options).then((multiselectionInstance) => {
             this._multiselection = multiselectionInstance;
-            this._multiselection.updateSelectionForRender();
+            if (options.selectedKeys.length || options.excludedKeys.length) {
+                this._multiselection.updateSelectionForRender();
+            }
             multiSelectReady.callback();
         });
     },
@@ -213,7 +215,10 @@ var SelectionController = Control.extend(/** @lends Controls/_list/BaseControl/S
         const options = this._options;
 
         this._notify('register', ['selectedTypeChanged', this, _private.selectedTypeChangedHandler], {bubbling: true});
-        _private.notifySelectedCountChangedEvent(this, options.selectedKeys, options.excludedKeys);
+
+        if (options.selectedKeys.length || options.excludedKeys.length) {
+            _private.notifySelectedCountChangedEvent(this, options.selectedKeys, options.excludedKeys);
+        }
 
         this._onCollectionChangeHandler = _private.onCollectionChange.bind(this);
         options.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);

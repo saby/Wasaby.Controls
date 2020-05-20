@@ -81,7 +81,13 @@ define([
          instance._afterMount();
          assert.isTrue(stubNotify.withArgs('register', ['selectedTypeChanged', instance, SelectionController._private.selectedTypeChangedHandler], {bubbling: true}).calledOnce);
          assert.isTrue(instance._options.items.hasEventHandlers('onCollectionChange'));
-         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).calledOnce);
+         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [0, false], { bubbling: true }).notCalled);
+
+         cfg.selectedKeys = [3, 4];
+         await instance._beforeMount(cfg);
+         instance.saveOptions(cfg);
+         instance._afterMount();
+         assert.isTrue(stubNotify.withArgs('listSelectedKeysCountChanged', [2, false], { bubbling: true }).calledOnce);
       });
 
       describe('_beforeUpdate', function() {
