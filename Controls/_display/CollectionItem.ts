@@ -411,8 +411,8 @@ export default class CollectionItem<T> extends mixin<
             ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}`;
     }
 
-    getItemActionClasses(itemActionsPosition: string): string {
-        return `controls-itemActionsV_${itemActionsPosition}`;
+    getItemActionClasses(itemActionsPosition: string, theme?: string): string {
+        return `controls-itemActionsV_${itemActionsPosition}_theme-${theme}`;
     }
 
     getContentClasses(theme: string, style: string): string {
