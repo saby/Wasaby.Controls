@@ -1,4 +1,5 @@
 import merge = require('Core/core-merge');
+import {Stack as StackOpener} from 'Controls/popup';
 
 interface PopupOptions {
     opener: any;
@@ -19,8 +20,15 @@ export default function(self, popupOptions, multiSelect) {
         selectorTemplate = self._options.selectorTemplate,
         defaultPopupOptions: PopupOptions = merge({
             opener: self,
+            template: self._options.selectorTemplate.templateName,
             closeOnOutsideClick: true,
-            isCompoundTemplate: self._options.isCompoundTemplate
+            isCompoundTemplate: self._options.isCompoundTemplate,
+            eventHandlers: {
+                onResult: (result) => {
+                    self._selectCallback(null, result);
+                },
+                onClose: self._closeHandler.bind(self)
+            }
         }, selectorTemplate && selectorTemplate.popupOptions || {});
 
     if (popupOptions && popupOptions.template || selectorTemplate) {
@@ -37,6 +45,6 @@ export default function(self, popupOptions, multiSelect) {
             }
         }, selectorTemplate.templateOptions || {});
 
-        return selectorOpener.open(merge(defaultPopupOptions, popupOptions || {}));
+        return StackOpener.openPopup(merge(defaultPopupOptions, popupOptions || {}));
     }
 }
