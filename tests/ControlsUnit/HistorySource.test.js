@@ -454,6 +454,21 @@ define(
                assert.deepEqual(myItem, updatedData);
 
             });
+            it('prepareItems', (done) => {
+               let historySource = new historyMod.Source(config);
+               let query = new sourceLib.Query().where({
+                  $_history: true
+               });
+               historySource.query(query).addCallback(() => {
+                  let currentItems = historySource.getItems();
+                  let newItems = historySource.prepareItems(new collection.RecordSet({
+                      rawData: items,
+                      keyProperty: 'id'
+                  }));
+                  assert.notEqual(currentItems, newItems);
+                  done();
+               });
+            });
             it('prepareHistoryItems', function(done) {
                let newData = new sourceLib.DataSet({
                   rawData: {
