@@ -30,13 +30,6 @@ class ToolbarVdom extends Control<IControlOptions> {
 
    protected _beforeMount(): void {
       this._itemClick = this._itemClick.bind(this);
-      this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
-      this._itemActions = [{
-         id: 1,
-         icon: 'icon-ExpandDown',
-         title: 'view'
-      }
-      ];
       this._defaultItems = [
          {
             id: '1',
@@ -312,13 +305,6 @@ class ToolbarVdom extends Control<IControlOptions> {
 
    private _itemClick(event, item): void {
       this._currentClick = 'Вы нажали на ' + item.getId();
-   }
-   private _itemActionVisibilityCallback(action, item) {
-      let actionVisibility = true;
-      if (!item.get('parent')) {
-         actionVisibility = false;
-      }
-      return actionVisibility;
    }
    static _theme: string[] = ['Controls/Classes'];
 

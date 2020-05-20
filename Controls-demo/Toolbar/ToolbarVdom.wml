@@ -27,23 +27,6 @@
                   itemsSpacing="big"
           />
        </div>
-       <div style="padding: 5px;">Пример тулбара с itemActions
-           <Controls.toolbars:View
-                   name="myToolbar"
-                   attr:id="Toolbar_1"
-                   parentProperty="parent"
-                   nodeProperty="@parent"
-                   keyProperty="id"
-                   additionalProperty="additional"
-                   source="{{_getMemorySource(_defaultItemsWithActions)}}"
-                   popupClassName="controls-Toolbar_test_popupClassName"
-                   on:itemClick="_itemClick()"
-                   itemsSpacing="big"
-                   itemActions="{{_itemActions}}"
-                   itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-           />
-       </div>
-
        <div style="padding: 5px;">Пример тулбара из toolButtons:
           <Controls.toolbars:View
              name="myFlatToolbar"
