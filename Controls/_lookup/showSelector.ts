@@ -19,13 +19,15 @@ export default function(self, popupOptions, multiSelect) {
         selectorTemplate = self._options.selectorTemplate,
         defaultPopupOptions: PopupOptions = merge({
             opener: self,
-            template: selectorTemplate.templateName,
+            template: self._options.selectorTemplate.templateName,
             closeOnOutsideClick: true,
             isCompoundTemplate: self._options.isCompoundTemplate,
             eventHandlers: {
                 onResult: (result) => {
-                    selectorOpener.close();
                     self._selectCallback(null, result);
+                },
+                onClose: () => {
+                    self._closeHandler();
                 }
             }
         }, selectorTemplate && selectorTemplate.popupOptions || {});
@@ -33,15 +35,7 @@ export default function(self, popupOptions, multiSelect) {
     if (popupOptions && popupOptions.template || selectorTemplate) {
         defaultPopupOptions.templateOptions = merge({
             selectedItems: self._getItems().clone(),
-            multiSelect: multiSelect,
-            handlers: {
-                onSelectComplete: function (event, result) {
-                    selectorOpener.close();
-                    if (self._options.isCompoundTemplate) {
-                        self._selectCallback(null, result);
-                    }
-                }
-            }
+            multiSelect: multiSelect
         }, selectorTemplate.templateOptions || {});
 
         return selectorOpener.open(merge(defaultPopupOptions, popupOptions || {}));

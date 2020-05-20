@@ -42,5 +42,3 @@ var SelectorOpener = Control.extend({
 });
 
 export = SelectorOpener;
-
-
