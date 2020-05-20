@@ -17,7 +17,7 @@ let CRUD = Control.extend({
         }
     },
     _beforeUpdate(newOptions): void {
-        if (this._options.dataSource !== newOptions.dataSource && newOptions.updateDataSource) {
+        if (this._options.dataSource !== newOptions.dataSource) {
             this._dataSource = newOptions.dataSource;
         }
     },
