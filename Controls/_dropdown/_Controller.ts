@@ -190,7 +190,7 @@ var _private = {
       }
    },
 
-   onResult: function (event, action, data, popupId) {
+   onResult: function (action, data) {
       switch (action) {
          case 'pinClick':
             _private.pinClick(this, data);
@@ -326,12 +326,12 @@ var _private = {
             horizontal: 'overflow'
          },
          eventHandlers: {
-            onOpen: self._onOpen(),
+            onOpen: self._onOpen,
             onClose: () => {
                self._popupId = null;
                self._onClose();
             },
-            onResult: self._onResult()
+            onResult: self._onResult
          },
          autofocus: false,
          closeOnOutsideClick: true
@@ -561,7 +561,7 @@ var _Controller = Control.extend({
 
    _onSelectorTemplateResult: function(event, selectedItems) {
       let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
-      this._onResult(event, 'selectorResult', result);
+      this._onResult('selectorResult', result);
    },
 
    _clickHandler(event: SyntheticEvent): void {

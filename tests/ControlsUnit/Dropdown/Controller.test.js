@@ -471,7 +471,7 @@ define(
                   isFooterClicked = true;
                }
             };
-            dropdownController._onResult(null, 'footerClick');
+            dropdownController._onResult('footerClick');
             assert.isFalse(isClosed);
             assert.isTrue(isFooterClicked);
          });
@@ -505,26 +505,26 @@ define(
             };
 
             // returned false from handler and no hierarchy
-            dropdownController._onResult(null, 'itemClick', dropdownController._items.at(4));
+            dropdownController._onResult('itemClick', dropdownController._items.at(4));
             assert.isFalse(closed);
 
             // returned undefined from handler and there is hierarchy
             closed = false;
             closeByNodeClick = false;
-            dropdownController._onResult(null, 'itemClick', dropdownController._items.at(5));
+            dropdownController._onResult('itemClick', dropdownController._items.at(5));
             assert.isFalse(closed);
 
             // returned undefined from handler and no hierarchy
             closed = false;
             dropdownController._popupId = 'test';
             closeByNodeClick = undefined;
-            dropdownController._onResult(null, 'itemClick', dropdownController._items.at(4));
+            dropdownController._onResult('itemClick', dropdownController._items.at(4));
             assert.isTrue(closed);
 
             // returned true from handler and there is hierarchy
             closed = false;
             closeByNodeClick = undefined;
-            dropdownController._onResult(null, 'itemClick', dropdownController._items.at(5));
+            dropdownController._onResult('itemClick', dropdownController._items.at(5));
             assert.isTrue(closed);
          });
 
@@ -744,8 +744,6 @@ define(
                };
             });
             it ('only popupOptions', () => {
-               dropdownController._onOpen = function() {};
-               dropdownController._onResult = function() {};
                const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
                assert.deepEqual(resultPopupConfig.fittingMode,  {
                   vertical: 'adaptive',
@@ -756,8 +754,6 @@ define(
             });
 
             it('templateOptions', () => {
-               dropdownController._onOpen = function() {};
-               dropdownController._onResult = function() {};
                dropdownController._menuSource = 'testSource';
                const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
 
@@ -1168,7 +1164,7 @@ define(
                   filter: {}
                });
 
-               dropdownController._onResult(null, 'applyClick', items);
+               dropdownController._onResult('applyClick', items);
                assert.deepEqual(selectedItems, items);
             });
 
@@ -1203,7 +1199,7 @@ define(
                item.set('originalId', item.getId());
                item.set('id', item.getId() + '_history');
                assert.equal(item.getId(), '6_history');
-               dropdownController._onResult(null, 'itemClick', item);
+               dropdownController._onResult('itemClick', item);
                assert.equal(resultItems[0].getId(), '6');
                assert.isTrue(updated);
 
@@ -1215,7 +1211,7 @@ define(
                   },
                   keyProperty: 'id'
                });
-               dropdownController._onResult(null, 'itemClick', item);
+               dropdownController._onResult('itemClick', item);
                assert.equal(resultItems[0].getId(), '5');
                assert.isFalse(updated);
             });
@@ -1253,7 +1249,7 @@ define(
                closed = false;
                assert.equal(item.getId(), '6_history');
                dropdownController._source = historySource;
-               dropdownController._onResult(null, 'pinClick', item);
+               dropdownController._onResult('pinClick', item);
                assert.isFalse(closed);
                assert.equal(resultItem.getId(), '6');
             });
