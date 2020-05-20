@@ -2159,9 +2159,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     triggerVisibilityChangedHandler(_: SyntheticEvent<Event>, direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
-            if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
-                _private.hideIndicator(this);
-            }
+        if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
+            _private.hideIndicator(this);
+        }
         if (!this._ignoreTriggerVisibilityChanges) {
             if (_private.needScrollPaging(this._options.navigation)) {
                 const doubleRatio = (this._viewSize / this._viewPortSize) > MIN_SCROLL_PAGING_PROPORTION;
