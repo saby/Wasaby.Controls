@@ -16,6 +16,11 @@ let CRUD = Control.extend({
             this._dataSource = cfg.dataSource;
         }
     },
+    _beforeUpdate(newOptions): void {
+        if (this._options.dataSource !== newOptions.dataSource) {
+            this._dataSource = newOptions.dataSource;
+        }
+    },
 
     create(initValues) {
         let def = this._dataSource.create(initValues);

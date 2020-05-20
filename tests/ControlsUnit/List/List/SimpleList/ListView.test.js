@@ -127,7 +127,6 @@ define([
          lv._listModel.setMarkedKey(1);
          assert.equal(lv._listModel.getMarkedKey(), 1);
          lv._beforeUpdate(cfg);
-         assert.equal(lv._listModel.getMarkedKey(), 2);
 
          model = new lists.ListViewModel({
             items: testData2,
@@ -427,56 +426,6 @@ define([
       });
 
       describe('_afterMount', function() {
-         it('should fire markedKeyChanged if _options.markerVisibility is \'visible\'', function() {
-            var model = new lists.ListViewModel({
-               items: new collection.RecordSet({
-                  rawData: data,
-                  keyProperty: 'id'
-               }),
-               keyProperty: 'id',
-               markerVisibility: 'visible'
-            });
-            var cfg = {
-               listModel: model,
-               keyProperty: 'id',
-               markerVisibility: 'visible'
-            };
-            var lv = new lists.ListView(cfg);
-            lv.saveOptions(cfg);
-            lv._beforeMount(cfg);
-            var stub = sandbox.stub(lv, '_notify').withArgs('markedKeyChanged', [1]);
-
-            lv._afterMount();
-
-            assert.isTrue(stub.calledOnce);
-         });
-
-         it('should fire markedKeyChanged if _options.markedKey has been changed', function() {
-            var model = new lists.ListViewModel({
-               items: new collection.RecordSet({
-                  rawData: data,
-                  keyProperty: 'id'
-               }),
-               keyProperty: 'id',
-               markedKey: 0,
-               markerVisibility: 'visible'
-            });
-            var cfg = {
-               listModel: model,
-               keyProperty: 'id',
-               markedKey: 0,
-               markerVisibility: 'visible'
-            };
-            var lv = new lists.ListView(cfg);
-            lv.saveOptions(cfg);
-            lv._beforeMount(cfg);
-            var stub = sandbox.stub(lv, '_notify').withArgs('markedKeyChanged', [1]);
-
-            lv._afterMount();
-
-            assert.isTrue(stub.calledOnce);
-         });
-
          it('should not fire markedKeyChanged if _options.markerVisibility is \'visible\', but markedKey is not undefined', function() {
             var model = new lists.ListViewModel({
                items: new collection.RecordSet({

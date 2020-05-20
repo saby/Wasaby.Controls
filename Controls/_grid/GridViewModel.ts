@@ -1250,8 +1250,8 @@ var
         getNextItemKey: function() {
             return this._model.getNextItemKey.apply(this._model, arguments);
         },
-        setMarkerOnValidItem: function(index) {
-            this._model.setMarkerOnValidItem(index);
+        getValidItemForMarker: function(index) {
+            return this._model.getValidItemForMarker(index);
         },
         setIndexes: function(startIndex, stopIndex) {
             return this._model.setIndexes(startIndex, stopIndex);
@@ -1537,6 +1537,19 @@ var
 
         getNext: function() {
             return this._model.getNext();
+        },
+
+        getNextByKey: function() {
+            return this._model.getNextByKey.apply(this._model, arguments);
+        },
+        getPrevByKey: function() {
+            return this._model.getPrevByKey.apply(this._model, arguments);
+        },
+        getNextByIndex: function() {
+            return this._model.getNextByIndex.apply(this._model, arguments);
+        },
+        getPrevByIndex: function() {
+            return this._model.getPrevByIndex.apply(this._model, arguments);
         },
 
         isLast: function() {

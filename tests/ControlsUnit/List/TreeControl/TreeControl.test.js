@@ -50,6 +50,7 @@ define([
          treeBeforeUpdate.apply(treeControl, arguments);
          baseControl._beforeUpdate(treeControl._options);
       };
+
       return treeControl;
    }
 
@@ -267,6 +268,7 @@ define([
             rawData: rawData,
             keyProperty: 'key'
          }));
+         model.setMarkedKey(1);
          treeGrid.TreeControl._private.expandMarkedItem(treeControl);
          model.setMarkedKey(2);
          treeGrid.TreeControl._private.expandMarkedItem(treeControl);
@@ -823,7 +825,6 @@ define([
                treeControl._afterUpdate({filter: {}, source: source});
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
-                  assert.equal(12, treeViewModel._model._root);
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
                   assert.isTrue(sourceControllersCleared);
@@ -835,8 +836,6 @@ define([
                }, 20);
             }, 10);
          });
-
-
       });
 
       it('clearSourceControllersForNotExpandedNodes', function() {
@@ -1169,6 +1168,22 @@ define([
                      return null;
                   }
                };
+            },
+            getChildren: function() {
+               return {
+                  getCount() {
+                     return null;
+                  }
+               };
+            },
+            getCollection: function () {
+               return new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               });
+            },
+            getItemBySourceItem: function () {
+               return null;
             }
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
@@ -1662,7 +1677,8 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
-               }
+               },
+               setMarkedKey(key) { treeGridViewModel._model._markedKey = key; }
             }
          };
 
@@ -1710,7 +1726,8 @@ define([
                stopImmediatePropagation: function(){}
             },
             treeControl = new treeGrid.TreeControl(cfg),
-            treeGridViewModel = new treeGrid.ViewModel(cfg);
+            treeGridViewModel = new treeGrid.ViewModel(cfg),
+            expectedMarkedKey = 1;
          treeControl.saveOptions(cfg);
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
@@ -1721,6 +1738,9 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
+               },
+               setMarkedKey(key) {
+                  assert.equal(key, expectedMarkedKey);
                }
             }
          };
@@ -1729,11 +1749,9 @@ define([
 
          treeControl._mouseDownExpanderKey = 0;
          treeControl._onExpanderMouseUp(e, 0, treeGridViewModel.at(0));
-         assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
          treeControl._mouseDownExpanderKey = 1;
          treeControl._onExpanderMouseUp(e, 1, treeGridViewModel.at(1));
-         assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
       });
