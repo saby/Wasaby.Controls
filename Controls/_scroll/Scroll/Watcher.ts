@@ -319,7 +319,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                self.setScrollTop(0);
             } else {
                const
-                  sizeCache = _private.getSizeCache(sel_restoreScrollPosition f, container),
+                  sizeCache = _private.getSizeCache(self, container),
                   clientHeight = sizeCache.clientHeight,
                   scrollHeight = sizeCache.scrollHeight,
                   currentScrollTop = container.scrollTop + (self._isVirtualPlaceholderMode() ? self._topPlaceholderSize : 0);

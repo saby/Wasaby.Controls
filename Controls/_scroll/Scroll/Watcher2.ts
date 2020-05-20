@@ -41,6 +41,11 @@ export default class Component extends Control {
 
     private _resizeObserver: IResizeObserver;
 
+    private _topPlaceholderSize: number;
+    private _bottomPlaceholderSize: number;
+
+    private _scrollTopTimer: number = null;
+
     _beforeMount(options: IControlOptions): void {
         this._registrar = new Registrar({register: 'scrollContainer'});
     }
@@ -78,13 +83,80 @@ export default class Component extends Control {
         if (this._state.scrollTop === this._oldState.scrollTop) {
             return;
         }
+
+        this._sendByRegistrar('scrollStateChanged', {
+            state: this._state,
+            oldState: this._oldState
+        });
+
+        if (this._state.verticalPosition !== this._oldState.verticalPosition) {
+            setTimeout(() => {
+                this._sendByRegistrar('scrollMove', {
+                    scrollTop: this._state.scrollTop,
+                    position: this._state.verticalPosition,
+                    clientHeight: this._state.clientHeight,
+                    scrollHeight: this._state.scrollHeight
+                });
+            }, 0);
+        }
+
+        // если не почистить таймер, то может выполняться таймер из ветки ниже, т.к. он с паузой 100
+        if (this._scrollTopTimer) {
+            clearTimeout(this._scrollTopTimer);
+            this._scrollTopTimer = null;
+        } else {
+            if (!this._scrollTopTimer) {
+                this._scrollTopTimer = setTimeout(() => {
+                    if (this._scrollTopTimer) {
+                        this._sendByRegistrar('scrollMove', {
+                            scrollTop: this._state.scrollTop,
+                            position: this._state.verticalPosition,
+                            clientHeight: this._state.clientHeight,
+                            scrollHeight: this._state.scrollHeight
+                        });
+                        clearTimeout(this._scrollTopTimer);
+                        this._scrollTopTimer = null;
+                    }
+                }, 100);
+            }
+        }
+    }
+
+    _getVerticalPosition(): string {
+        let curPosition;
+        if (this._container.scrollTop <= 0 && (!this._isVirtualPlaceholderMode() || this._topPlaceholderSize <= 0)) {
+            curPosition = 'up';
+        } else if ((this._container.scrollTop + this._container.clientHeight >= this._container.scrollHeight) &&
+            (!this._isVirtualPlaceholderMode() || this._bottomPlaceholderSize <= 0)) {
+            curPosition = 'down';
+        } else {
+            curPosition = 'middle';
+        }
+        return curPosition;
+    }
+
+    _getHorizontalPosition(): string {
+        let curPosition;
+        if (this._container.scrollLeft <= 0) {
+            curPosition = 'left';
+        } else if (this._container.scrollLeft + this._container.clientWidth >= this._container.scrollWidth) {
+            curPosition = 'right';
+        } else {
+            curPosition = 'middle';
+        }
+        return curPosition;
+    }
+
+    _isVirtualPlaceholderMode(): boolean {
+        return this._topPlaceholderSize || this._bottomPlaceholderSize;
     }
 
     _registerIt(event: SyntheticEvent, registerType: string, component: any,
                 callback: () => void, triggers: object): void {
-        //TODO заменить listScroll потом на что нибудь вроде containerScroll
+        //TODO заменить listScroll потом на что нибудь вроде containerScroll и удалить notify register
         if (registerType === 'listScroll') {
             this._registrar.register(event, component, callback);
+            this._notify('register', ['listScroll', component, callback, triggers], {bubbling: true});
             this._onRegisterNewComponent(component);
         }
     }
@@ -160,8 +232,8 @@ export default class Component extends Control {
                     scrollHeight: this._container.scrollHeight,
                     clientWidth: this._container.clientWidth,
                     scrollWidth: this._container.scrollWidth,
-                    verticalPosition: 'test', //TODO
-                    horizontalPosition: 'test', //TODO
+                    verticalPosition: this._getVerticalPosition(),
+                    horizontalPosition: this._getHorizontalPosition(),
                     canScroll: this._calcCanScroll(),
                     viewPortRect: this._container.getBoundingClientRect()
                 };
