@@ -28,7 +28,8 @@ export default function(self, popupOptions, multiSelect) {
                 },
                 onClose: self._closeHandler.bind(self)
             }
-        }, selectorTemplate && selectorTemplate.popupOptions || {});
+        }, selectorTemplate && selectorTemplate.popupOptions || {}),
+        popupId;
 
     if (popupOptions && popupOptions.template || selectorTemplate) {
         defaultPopupOptions.templateOptions = merge({
@@ -36,6 +37,7 @@ export default function(self, popupOptions, multiSelect) {
             multiSelect: multiSelect,
             handlers: {
                 onSelectComplete: function (event, result) {
+                    StackOpener.closePopup(popupId);
                     if (self._options.isCompoundTemplate) {
                         self._selectCallback(null, result);
                     }
@@ -43,6 +45,8 @@ export default function(self, popupOptions, multiSelect) {
             }
         }, selectorTemplate.templateOptions || {});
 
-        return StackOpener.openPopup(merge(defaultPopupOptions, popupOptions || {}));
+        return StackOpener.openPopup(merge(defaultPopupOptions, popupOptions || {})).then((id) => {
+            popupId = id;
+        });
     }
 }
