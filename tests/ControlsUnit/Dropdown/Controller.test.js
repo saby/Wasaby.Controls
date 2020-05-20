@@ -7,9 +7,10 @@ define(
       'Controls/history',
       'Core/Deferred',
       'Types/entity',
-      'Core/core-instance'
+      'Core/core-instance',
+      'Controls/popup'
    ],
-   (dropdown, sourceLib, clone, collection, history, Deferred, entity, cInstance) => {
+   (dropdown, sourceLib, clone, collection, history, Deferred, entity, cInstance, popup) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -151,11 +152,7 @@ define(
          it('_keyDown', function() {
             let dropdownController = getDropdownController(config),
                closed = false, isStopped = false;
-            dropdownController._children = {
-               Sticky: {
-                  closePopup: () => {closed = true; }
-               }
-            };
+            popup.Sticky.closePopup = () => {closed = true; };
             let event = {
                nativeEvent: {
                   keyCode: 28
@@ -254,13 +251,7 @@ define(
             beforeEach(function() {
                opened = false;
                dropdownController = getDropdownController(config);
-               dropdownController._children = {
-                  Sticky: {
-                     openPopup: function() {
-                        opened = true;
-                     }
-                  }
-               };
+               popup.Sticky.openPopup = () => {opened = true; };
 
                updatedItems = clone(items);
                updatedItems.push({
@@ -450,9 +441,7 @@ define(
                let readOnlyConfig = clone(config),
                   isClosed = false;
 
-               dropdownController._children.Sticky = {
-                  closePopup: () => {isClosed = true;}
-               };
+               popup.Sticky.closePopup = () => {isClosed = true; };
                readOnlyConfig.readOnly = true;
                dropdownController._beforeUpdate(readOnlyConfig);
                assert.isTrue(isClosed);
@@ -485,14 +474,8 @@ define(
 
             dropdownController._beforeMount(configLazyLoad);
             dropdownController._items = itemsRecords.clone();
-            dropdownController._children.Sticky = {
-               closePopup: function() {
-                  closed = true;
-               },
-               openPopup: function() {
-                  opened = true;
-               }
-            };
+            popup.Sticky.closePopup = () => {closed = true; };
+            popup.Sticky.openPopup = () => {opened = true; };
 
             dropdownController._notify = (e, eventResult) => {
                assert.equal(e, 'selectedItemsChanged');
@@ -910,14 +893,8 @@ define(
             dropdownController._items = items2;
             dropdownController._source = 'testSource';
             dropdownController._sourceController = { hasMoreData: () => false };
-            dropdownController._children.Sticky = {
-               closePopup: function() {
-                  opened = false;
-               },
-               openPopup: function() {
-                  opened = true;
-               }
-            };
+            popup.Sticky.closePopup = () => {opened = false; };
+            popup.Sticky.openPopup = () => {opened = true; };
 
             dropdownController._open = function() {
                opened = true;
@@ -989,11 +966,7 @@ define(
             let dropdownController = getDropdownController(config);
             let closed = false;
 
-            dropdownController._children.Sticky = {
-               closePopup: () => {
-                  closed = true;
-               }
-            };
+            popup.Sticky.closePopup = () => {closed = true; };
 
             dropdownController.closeMenu();
             assert.isTrue(closed);

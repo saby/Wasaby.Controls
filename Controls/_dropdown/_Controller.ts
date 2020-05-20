@@ -2,6 +2,7 @@
 import Control = require('Core/Control');
 // @ts-ignore
 import template = require('wml!Controls/_dropdown/_Controller');
+import {Sticky as StickyOpener} from 'Controls/popup';
 import chain = require('Types/chain');
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
@@ -15,7 +16,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
-import {Sticky as StickyOpener} from 'Controls/popup';
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
@@ -62,6 +62,7 @@ var _private = {
       const preparedItem = _private.prepareItem(item, self._options.keyProperty, self._source);
       self._notify('pinClick', [preparedItem]);
       self._setItems(null);
+      self._oldPopupId = self._popupId;
       self._open();
    },
 
@@ -224,7 +225,7 @@ var _private = {
    },
 
    closeDropdownList: function (self) {
-      self._children.Sticky.closePopup(self._popupId);
+      StickyOpener.closePopup(self._popupId);
       self._isOpened = false;
    },
 
@@ -301,6 +302,8 @@ var _private = {
          closeButtonVisibility: false,
          emptyText: self._getEmptyText(),
          allowPin: self._options.allowPin && self._hasHistory(),
+         headerTemplate: self._options.headTemplate || self._options.headerTemplate,
+         footerContentTemplate: self._options.footerContentTemplate || self._options.footerTemplate,
          items: self._items,
          source: self._menuSource,
          filter: self._filter,
@@ -327,9 +330,18 @@ var _private = {
             horizontal: 'overflow'
          },
          eventHandlers: {
-            onOpen: self._onOpen,
+            onOpen: () => {
+               if (self._oldPopupId) {
+                  StickyOpener.closePopup(self._oldPopupId);
+               }
+               self._onOpen();
+            },
             onClose: () => {
-               self._popupId = null;
+               if (self._oldPopupId) {
+                  self._oldPopupId = null;
+               } else {
+                  self._popupId = null;
+               }
                self._onClose();
             },
             onResult: self._onResult
@@ -434,9 +446,6 @@ var _Controller = Control.extend({
    _loadItemsTempPromise: null,
 
    _beforeMount: function (options, context, receivedState) {
-      this._children = {
-         Sticky: StickyOpener
-      };
       let result;
       this._onResult = _private.onResult.bind(this);
       _private.setHandlers(this, options);
@@ -549,7 +558,7 @@ var _Controller = Control.extend({
          if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
             let config = _private.getPopupOptions(this, popupOptions);
             this._isOpened = true;
-            this._children.Sticky.openPopup(config, this).then((popupId) => {
+            StickyOpener.openPopup(config, this).then((popupId) => {
                this._popupId = popupId;
             });
          } else if (count === 1) {
