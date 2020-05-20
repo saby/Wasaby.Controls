@@ -647,6 +647,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
    },
 
    prepareItems: function(items) {
+      this._historyItems = null;
       this._oldItems = items.clone();
       return this.getItems();
    },

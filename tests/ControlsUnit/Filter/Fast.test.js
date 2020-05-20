@@ -481,6 +481,21 @@ define(
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 11, title: 'Китай' });
          });
 
+         it('_onResult selectorDialogOpened', () => {
+            let instance = getFastFilterWithItems(configItems);
+            let opened = true;
+            let notifyFire = false;
+            instance._children.DropdownOpener = {
+               close: () => { opened = false }
+            };
+            instance._notify = () => {
+               notifyFire = true;
+            };
+            instance._onResult(null, 'selectorDialogOpened', []);
+            assert.isFalse(notifyFire);
+            assert.isFalse(opened);
+         });
+
          it('_onSelectorTemplateResult', function() {
             let fastData2 = getFastFilterWithItems(configItems);
             let selectedItems = new collection.RecordSet({
