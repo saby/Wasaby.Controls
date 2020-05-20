@@ -437,20 +437,20 @@ const _private = {
 
     setMarkedKey(self, key: string | number): void {
         if (key !== undefined && self._markerController) {
-            self._markerController.setMarkedKey(key);
+            self._markedKey = self._markerController.setMarkedKey(key);
             _private.scrollToItem(self, key);
         }
     },
     moveMarkerToNext: function (self, event) {
         if (self._markerController) {
-            const key = self._markerController.moveMarkerToNext();
-            _private.scrollToItem(self, key);
+            self._markedKey = self._markerController.moveMarkerToNext();
+            _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToPrevious: function (self, event) {
         if (self._markerController) {
-            const key = self._markerController.moveMarkerToPrev();
-            _private.scrollToItem(self, key);
+            self._markedKey = self._markerController.moveMarkerToPrev();
+            _private.scrollToItem(self, self._markedKey);
         }
     },
     setMarkerAfterScroll(self, event) {
@@ -1062,7 +1062,7 @@ const _private = {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (self._options.fixedHeadersHeights || 0);
-            self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
+            self._markedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
             self._setMarkerAfterScroll = false;
         }
     },
@@ -1776,7 +1776,7 @@ const _private = {
         return new MarkerController({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.markedKey
+            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
         });
    },
 
@@ -1784,7 +1784,7 @@ const _private = {
         self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.markedKey
+            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
         });
     }
 };
@@ -1902,6 +1902,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _swipeTemplate: swipeTemplate,
 
     _markerController: null,
+    _markedKey: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -3128,7 +3129,6 @@ BaseControl.getDefaultOptions = function() {
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
         loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
-        markedKey: null,
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {}

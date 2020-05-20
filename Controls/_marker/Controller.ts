@@ -20,11 +20,6 @@ export class Controller {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
 
-      // если уже проставлен какой-то маркер и присылают null,
-      // то маркер не меняем, иначе это поставит его на первый элемент
-      if (this._markedKey !== undefined && this._markedKey !== null && options.markedKey === null) {
-         return;
-      }
       this.setMarkedKey(options.markedKey);
    }
 
@@ -32,24 +27,32 @@ export class Controller {
     * Снимает старый маркер и ставит новый
     * Если по переданному ключу не найден элемент, то маркер ставится на первый элемент списка
     * @param key ключ элемента, на который ставится маркер
+    * @return {string|number} новый ключ маркера
     */
-   setMarkedKey(key: TKey): void {
+   setMarkedKey(key: TKey): TKey {
       if (key === undefined || this._markedKey === key || !this._model) {
          return;
       }
 
-      const itemExistsInModel = !!this._model.getItemBySourceKey(key);
       this._model.setMarkedKey(this._markedKey, false);
 
-      if (this._markerVisibility === Visibility.Visible && !itemExistsInModel) {
-         this._markedKey = this._setMarkerOnFirstItem();
-         return;
-      }
-
+      const itemExistsInModel = !!this._model.getItemBySourceKey(key);
       if (itemExistsInModel) {
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
+      } else {
+         switch (this._markerVisibility) {
+            case Visibility.OnActivated:
+               this._model.setMarkedKey(null, true);
+               this._markedKey = null;
+               break;
+            case Visibility.Visible:
+               this._markedKey = this._setMarkerOnFirstItem();
+               break;
+         }
       }
+
+      return this._markedKey;
    }
 
    /**
@@ -105,7 +108,7 @@ export class Controller {
     * @param items список HTMLElement-ов на странице
     * @param verticalOffset вертикальное смещение скролла
     */
-   setMarkerOnFirstVisibleItem(items: HTMLElement[], verticalOffset: number): void {
+   setMarkerOnFirstVisibleItem(items: HTMLElement[], verticalOffset: number): TKey {
       let firstItemIndex = this._model.getStartIndex();
       firstItemIndex += this._getFirstVisibleItemIndex(items, verticalOffset);
       firstItemIndex = Math.min(firstItemIndex, this._model.getStopIndex());
@@ -115,6 +118,8 @@ export class Controller {
          const itemKey = item.getContents().getKey();
          this.setMarkedKey(itemKey);
       }
+
+      return this._markedKey;
    }
 
    private _setMarkerOnFirstItem(): TKey {
