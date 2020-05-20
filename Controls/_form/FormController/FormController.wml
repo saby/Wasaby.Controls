@@ -9,6 +9,7 @@
          on:deleteSuccessed="_crudHandler()"
          on:deleteFailed="_crudHandler()"
          showLoadingIndicator="{{ true }}"
+         updateDataSource="{{_options.updateDataSource || false}}"
          name="crud"
          dataSource="{{ _source }}">
       <div>
