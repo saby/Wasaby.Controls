@@ -21,7 +21,13 @@ export default function(self, popupOptions, multiSelect) {
             opener: self,
             template: selectorTemplate.templateName,
             closeOnOutsideClick: true,
-            isCompoundTemplate: self._options.isCompoundTemplate
+            isCompoundTemplate: self._options.isCompoundTemplate,
+            eventHandlers: {
+                onResult: (result) => {
+                    selectorOpener.close();
+                    self._selectCallback(null, result);
+                }
+            }
         }, selectorTemplate && selectorTemplate.popupOptions || {});
 
     if (popupOptions && popupOptions.template || selectorTemplate) {

@@ -27,6 +27,8 @@ import {Stack as StackOpener} from 'Controls/popup';
 
 var SelectorOpener = Control.extend({
 
+   _popupId: null,
+
    open: function (cfg) {
       return StackOpener.openPopup(cfg || {}).then((popupId) => {
          this._popupId = popupId;
