@@ -24,6 +24,7 @@
                                     virtualScrollConfig="{{_virtualScrollConfig}}"
                                     dragControlId="{{ _dragControlId }}"
                                     canStartDragNDrop="{{ _canStartDragNDrop }}"
+                                    markerVisibility="{{ _options.markerVisibility }}"
                                     on:itemClick="_onItemClick()"
                                     on:itemMouseDown="_notifyHandler('itemMouseDown')"
                                     on:checkboxClick="_notifyHandler('checkboxClick')"
