@@ -17,6 +17,7 @@ import {
     IItemTemplate,
     IItemTemplateOptions
 } from 'Controls/interface';
+import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import {IButtonOptions} from 'Controls/buttons';
@@ -111,6 +112,21 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      */
     popupFooterTemplate?: String | Function;
 
+    /**
+     * @name  Controls/_toolbars/IToolbarOptions#itemActions
+     * @cfg {Array<ItemAction>} Конфигурация опций записи.
+     * @demo Controls-demo/Toolbar/ItemActions/Index
+     */
+    itemActions?: IItemAction[];
+    /**
+     * @name Controls/_toolbars/IToolbarOptions#itemActionVisibilityCallback
+     * @cfg {function} Функция управления видимостью операций над записью.
+     * @param {ItemAction} action Объект с настройкой действия.
+     * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
+     * @returns {Boolean} Определяет, должна ли операция отображаться.
+     * @demo Controls-demo/Toolbar/ItemActions/Index
+     */
+     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
 }
 
 /**
@@ -176,6 +192,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 nodeProperty: options.nodeProperty,
                 parentProperty: options.parentProperty,
                 groupTemplate: options.groupTemplate,
+                itemActions: options.itemActions,
+                itemActionVisibilityCallback: options.itemActionVisibilityCallback,
                 groupProperty: options.groupProperty,
                 groupingKeyCallback: options.groupingKeyCallback,
                 additionalProperty: options.additionalProperty,
