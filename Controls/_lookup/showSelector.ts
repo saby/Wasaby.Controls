@@ -16,7 +16,6 @@ interface PopupOptions {
  */
 export default function(self, popupOptions, multiSelect) {
     let
-        selectorOpener = self._children.selectorOpener,
         selectorTemplate = self._options.selectorTemplate,
         defaultPopupOptions: PopupOptions = merge({
             opener: self,
@@ -37,7 +36,6 @@ export default function(self, popupOptions, multiSelect) {
             multiSelect: multiSelect,
             handlers: {
                 onSelectComplete: function (event, result) {
-                    selectorOpener.close();
                     if (self._options.isCompoundTemplate) {
                         self._selectCallback(null, result);
                     }
