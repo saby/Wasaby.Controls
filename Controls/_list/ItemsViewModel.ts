@@ -610,11 +610,13 @@ var ItemsViewModel = BaseViewModel.extend({
             this.reset();
             while (this.isEnd()) {
                 const index = this.getCurrentIndex();
-                callback.call(
-                    context,
-                    this.getCurrent(),
-                    index
-                );
+                if (this.isShouldBeDrawnItem()) {
+                    callback.call(
+                        context,
+                        this.getCurrent(),
+                        index
+                    );
+                }
                 this.goToNext();
             }
         }
