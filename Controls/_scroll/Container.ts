@@ -914,7 +914,7 @@ let
       },
 
        _scrollStateChangedHandler(): void {
-          console.log('_scrollStateChangedHandler');
+          //console.log('_scrollStateChangedHandler');
        },
 
       _scrollbarTaken() {
@@ -1198,6 +1198,7 @@ let
             this._topPlaceholderSize = placeholdersSizes.top;
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
             this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
+            this._children.scrollWatcher2.updatePlaceholdersSize(placeholdersSizes);
          }
       },
 

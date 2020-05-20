@@ -70,12 +70,62 @@ export default class Component extends Control {
     }
 
     _scrollHandler(e: SyntheticEvent): void {
-        this._onScrollContainer();
+        this.onScrollContainer();
     }
 
-    _onScrollContainer(): void {
-        const isStateUpdated = this._updateState();
+    _doScrollHandler(e: SyntheticEvent, scrollParam: string): void {
+        this.doScroll(scrollParam);
+        //e.stopPropagation();
+    }
 
+    doScroll(scrollParam: string): void {
+        this._updateState();
+        if (scrollParam === 'top') {
+            this.setScrollTop(0);
+        } else {
+           const currentScrollTop = this._state.scrollTop + (this._isVirtualPlaceholderMode() ?
+               this._topPlaceholderSize : 0);
+           if (scrollParam === 'bottom') {
+               this.setScrollTop(this._state.scrollHeight - this._state.clientHeight);
+           } else if (scrollParam === 'pageUp') {
+               this.setScrollTop(currentScrollTop - this._state.clientHeight);
+           } else if (scrollParam === 'pageDown') {
+               this.setScrollTop(currentScrollTop + this._state.clientHeight);
+           }
+        }
+    }
+
+    setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
+        if (this._isVirtualPlaceholderMode() && !withoutPlaceholder) {
+            this._updateState();
+            const realScrollTop = scrollTop - this._topPlaceholderSize;
+            const scrollTopOverflow = this._state.scrollHeight - realScrollTop - this._state.clientHeight < 0;
+            const applyScrollTop = () => {
+                this._container.scrollTop = realScrollTop;
+            };
+            if (realScrollTop >= 0 && !scrollTopOverflow) {
+                this._container.scrollTop = realScrollTop;
+            } else if (this._topPlaceholderSize === 0 && realScrollTop < 0 || scrollTopOverflow &&
+                this._bottomPlaceholderSize === 0) {
+                applyScrollTop();
+            } else {
+                this._sendByRegistrar('virtualScrollMove', {
+                    scrollTop,
+                    scrollHeight: this._state.scrollHeight,
+                    clientHeight: this._state.clientHeight,
+                    applyScrollTopCallback: applyScrollTop
+                });
+            }
+        } else {
+            this._container.scrollTop = scrollTop;
+            // в watcher1 в onScrollContainer передается withObserver = false, значит вызовется sendEdgePositions,
+            // в других случаях withObserver = true, значит получается sendEdgePositions вызван не будет (?)
+            this.onScrollContainer();
+        }
+    }
+
+    onScrollContainer(): void {
+        this._updateState();
         if (this._options.task1178703223 && this._state.scrollLeft &&
             this._options.scrollMode !== 'verticalHorizontal') {
             this._container.scrollLeft = 0;
@@ -147,8 +197,13 @@ export default class Component extends Control {
         return curPosition;
     }
 
-    _isVirtualPlaceholderMode(): boolean {
+    _isVirtualPlaceholderMode(): number {
         return this._topPlaceholderSize || this._bottomPlaceholderSize;
+    }
+
+    updatePlaceholdersSize(placeholdersSizes: any): void {
+        this._topPlaceholderSize = placeholdersSizes.top;
+        this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
     _registerIt(event: SyntheticEvent, registerType: string, component: any,
