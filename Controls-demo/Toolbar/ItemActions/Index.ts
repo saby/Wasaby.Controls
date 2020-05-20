@@ -64,7 +64,7 @@ class ItemActions extends Control<IControlOptions> {
         });
 
     }
-    private _itemActionVisibilityCallback(action, item: Model): boolean {
+    private _itemActionVisibilityCallback(action: object, item: Model): boolean {
         let actionVisibility = true;
         if (!item.get('parent')) {
             actionVisibility = false;
