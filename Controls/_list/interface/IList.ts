@@ -50,7 +50,13 @@ type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
-
+/**
+ * @typedef {String} TItemActionVisibility
+ * @variant onhover Инициализируется и отображается сразу после первого наведению на любую запись списка
+ * @variant visible Инициализируется и отображается при рендеринге записей
+ * @variant demand Инициализируется и отображается после первого наведению на любую запись списка только если курсор мыши задержался на записи более, чем на 100mc
+ */
+type TItemActionVisibility = 'onhover'|'delayed'|'visible';
 interface IItemPadding {
     top?: TVerticalItemPadding;
     bottom?: TVerticalItemPadding;
@@ -68,6 +74,7 @@ export interface IList {
     itemActionsPosition?: TItemActionsPosition;
     actionAlignment?: TActionAlignment;
     actionCaptionPosition?: TActionCaptionPosition;
+    itemActionVisibility?: TItemActionVisibility;
     itemActionVisibilityCallback?: (action: IItemAction, item) => boolean;
     itemActionsProperty?: string;
     markedKey?: string|number;
@@ -478,7 +485,7 @@ export interface IList {
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @example
  * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
- * 
+ *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.list:View
@@ -492,7 +499,7 @@ export interface IList {
  *     ...
  * </Controls.list:View>
  * </pre>
- * 
+ *
  * <pre class="brush: js">
  * // TypeScript
  *  ...

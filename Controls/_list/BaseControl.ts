@@ -93,6 +93,7 @@ const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_PROPORTION = 2;
+const ITEM_ACTION_VISIBILITY_DELAY = 100;
 
 const ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
 
@@ -340,7 +341,7 @@ const _private = {
         return resDeferred;
     },
     canStartDragNDrop(domEvent: any, cfg: any, isTouch: boolean): boolean {
-        return !isTouch && 
+        return !isTouch &&
             (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
             cfg.itemsDragNDrop &&
             !(domEvent.nativeEvent.button) &&
@@ -1962,6 +1963,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     // Шаблон операций с записью для swipe
     _swipeTemplate: swipeTemplate,
 
+    // функция отложенного отображения/скрытия операций записи
+    _toggleItemActionsDebounced: null,
+
+    // Функция отложенной инициализации записей
+    _initItemActionsDebounced: null,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1982,6 +1989,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._inertialScrolling = new InertialScrolling();
 
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
+        this._toggleItemActionsDebounced = debounce(self._toggleItemActions.bind(self), ITEM_ACTION_VISIBILITY_DELAY);
+        this._initItemActionsDebounced = debounce(self._initItemActions.bind(self), ITEM_ACTION_VISIBILITY_DELAY);
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
 
@@ -2627,14 +2636,32 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _cancelEditActionHandler(): void {
         this._children.editInPlace.cancelEdit();
     },
+
+    /**
+     * Добавляет CSS класс, который Показывает или скрывает ItemActions
+     * @private
+     */
+    _toggleItemActions(immediate?: boolean): void {
+        if (this._options.itemActionVisibility === 'onhover' || immediate) {
+            console.log('Занимаемся показом');
+        } else if (this._options.itemActionVisibility === 'delayed') {
+            this._toggleItemActionsDebounced(true);
+        }
+    },
+
     /**
      * Выполняется из шаблона при mouseenter
      * @private
      */
-    _initItemActions(): void {
+    _initItemActions(immediate?: boolean): void {
         if (!this._itemActionsInitialized) {
-            this._updateItemActions(this._options);
-            this._itemActionsInitialized = true;
+            if (this._options.itemActionVisibility === 'onhover' || immediate) {
+                this._updateItemActions(this._options);
+                this._toggleItemActions(true);
+                this._itemActionsInitialized = true;
+            } else if (this._options.itemActionVisibility === 'delayed') {
+                this._initItemActionsDebounced(true);
+            }
         }
     },
 
@@ -2845,11 +2872,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else {
             this._listViewModel.setDragEntity(dragObject.entity);
             this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItem.dispItem));
-            
+
             // Cобытие mouseEnter на записи может сработать до dragStart.
-            // И тогда перемещение при наведении не будет обработано. 
+            // И тогда перемещение при наведении не будет обработано.
             // В таком случае обрабатываем наведение на запись сейчас.
-            // 
+            //
             //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
             if (this._unprocessedDragEnteredItem) {
                 this._processItemMouseEnterWithDragNDrop(event, this._unprocessedDragEnteredItem);
@@ -2960,12 +2987,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._unprocessedDragEnteredItem = null;
         }
     },
-    _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
+
+    /**
+     * Когда навели мышь на item
+     * @param event
+     * @param itemData
+     * @private
+     */
+    _onItemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (this._options.itemsDragNDrop) {
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(event, itemData);
         }
-        this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
+        this._notify('itemMouseEnter', [itemData.getContents(), nativeEvent]);
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {
@@ -2981,13 +3015,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
         }
     },
-    _itemMouseLeave(event, itemData, nativeEvent) {
-        this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
+
+    /**
+     * Убрали навели мышь с item'a
+     * @param event
+     * @param itemData
+     * @private
+     */
+    _onItemMouseLeave(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
+        this._notify('itemMouseLeave', [itemData.getContents(), nativeEvent]);
         if (this._options.itemsDragNDrop) {
             this._unprocessedDragEnteredItem = null;
             _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
         }
     },
+
     _sortingChanged: function(event, propName) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
@@ -3185,7 +3227,8 @@ BaseControl.getDefaultOptions = function() {
         markedKey: null,
         stickyHeader: true,
         virtualScrollMode: 'remove',
-        filter: {}
+        filter: {},
+        itemActionVisibility: 'onhover'
     };
 };
 export = BaseControl;
