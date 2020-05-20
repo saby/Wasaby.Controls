@@ -834,6 +834,45 @@ define([
          assert.isFalse(ctrl._listViewModel.getHasMoreData());
       });
 
+      describe('_continueSearch', () => {
+         let moreDataUp;
+         let moreDataDown;
+         let sandbox;
+         let baseControl;
+         let sourceController;
+         let loadDirection;
+
+         beforeEach(() => {
+            moreDataUp = false;
+            moreDataDown = false;
+            sandbox = sinon.createSandbox();
+            baseControl = new lists.BaseControl({});
+            sourceController = {
+               hasMoreData: direction => (direction === 'up' ? moreDataUp : moreDataDown)
+            };
+            baseControl._sourceController = sourceController;
+            sandbox.replace(lists.BaseControl._private, 'loadToDirectionIfNeed', (self, direction) => {
+               loadDirection = direction;
+            });
+         });
+
+         afterEach(() => {
+            sandbox.restore();
+         });
+
+         it('continue search up', () => {
+            moreDataUp = true;
+            baseControl._continueSearch();
+            assert.equal(loadDirection, 'up');
+         });
+
+         it('continue search down', () => {
+            moreDataDown = true;
+            baseControl._continueSearch();
+            assert.equal(loadDirection, 'down');
+         });
+      });
+
       it('_private.hasMoreData', function() {
          let hasMoreDataResult = false;
          const self = {
