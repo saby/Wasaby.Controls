@@ -240,13 +240,10 @@ class ValidateContainer extends Control {
      * @see validate
      */
     setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
-        if (this._validationResult === validationResult) {
-            return;
-        }
-        this._validationResult = validationResult;
-        if (!(validationResult instanceof Promise)) {
+        if (this._validationResult !== validationResult && !(validationResult instanceof Promise)) {
             this._forceUpdate();
         }
+        this._validationResult = validationResult;
         if (validationResult && !config.hideInfoBox) {
             _private.openInfoBox(this);
         } else if (this._isOpened && validationResult === null) {
