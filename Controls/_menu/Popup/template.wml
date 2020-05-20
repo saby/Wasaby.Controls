@@ -1,15 +1,15 @@
 <ws:template name="menuPopup" >
    <div class="controls-Menu__popup">
-      <ws:if data="{{_headerTemplate && _applyButtonVisibility && _options.applyButtonAlign === 'top'}}">
+      <ws:if data="{{_headerTemplate && _applyButtonVisibility}}">
          <div class="controls-DropdownList__applyButton
-                              controls-Menu__applyButton-top_theme-{{_options.theme}}">
+                              controls-Menu__applyButton_theme-{{_options.theme}}">
             <Controls.buttons:Button viewMode="functionalButton"
                                      icon="icon-Yes"
                                      iconSize="m"
                                      iconStyle="contrast"
                                      buttonStyle="success"
                                      attr:class="controls-Menu__applyButton"
-                                     inlineHeight="menuapplytop"
+                                     inlineHeight="menuapply"
                                      on:click="_applySelection()"/>
          </div>
       </ws:if>
@@ -70,7 +70,6 @@
                        groupTemplate="{{_options.groupTemplate}}"
                        groupProperty="{{_options.groupProperty}}"
                        allowPin="{{_options.allowPin}}"
-                       applyButtonAlign="{{_options.applyButtonAlign}}"
                        headerContentTemplate="{{_headerTemplate}}"
                        additionalProperty="{{_options.additionalProperty}}"
                        groupingKeyCallback="{{_options.groupingKeyCallback}}"
