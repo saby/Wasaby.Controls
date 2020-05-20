@@ -2,7 +2,6 @@ import cExtend = require('Core/core-simpleExtend');
 import formatter = require('Types/formatter');
 import {dateMaskConstants} from 'Controls/interface';
 import dateUtils = require('Controls/Utils/Date');
-import {DateTime} from 'Types/entity';
 import {getMaskType, DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, TIME_MASK_TYPE} from './Utils';
 
 var _private = {
@@ -336,17 +335,11 @@ var ModuleClass = cExtend.extend({
    /**
     * Returns the text displayed value
     * @param value
-    * @param mask
-    * @param shiftTZ
+    * @returns {*}
     */
-   getStringByValue(value: Date, mask: string, shiftTZ: boolean = false): string {
+   getStringByValue: function(value, mask) {
       if (dateUtils.isValidDate(value)) {
-         const actualMask: string = this._mask || mask;
-         if (shiftTZ) {
-            const tzOffset: number = DateTime.getClientTimezoneOffset();
-            return formatter.date(value, actualMask, tzOffset);
-         }
-         return formatter.date(value, actualMask);
+         return formatter.date(value, this._mask || mask);
       }
       return '';
    },

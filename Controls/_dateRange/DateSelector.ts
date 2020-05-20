@@ -15,7 +15,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @control
  * @public
  * @category Input
- * @author Водолазских А.А.
+ * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/Link
  *
  */

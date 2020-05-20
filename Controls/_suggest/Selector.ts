@@ -20,6 +20,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  * @control
+ * @author Герасимов А.М.
  * @public
  */
 
