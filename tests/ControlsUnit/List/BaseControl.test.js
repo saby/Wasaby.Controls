@@ -1616,7 +1616,6 @@ define([
 
          lists.BaseControl._private.showIndicator(ctrl, 'down');
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
-         assert.isNull(ctrl._loadingIndicatorState, 'Wrong loading state');
 
          // картинка должнa появляться через 2000 мс, проверим, что её нет сразу
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');

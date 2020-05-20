@@ -955,8 +955,6 @@ var _private = {
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
-        } else {
-            self._loadingIndicatorState = null;
         }
         _private.startShowLoadingIndicatorTimer(self);
     },
