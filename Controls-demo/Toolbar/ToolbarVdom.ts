@@ -148,48 +148,6 @@ class ToolbarVdom extends Control<IControlOptions> {
             additional: true
          }
       ];
-      this._defaultItemsWithActions = [
-         {
-            id: '3',
-            icon: 'icon-Print',
-            title: 'Распечатать',
-            '@parent': false,
-            parent: null
-         },
-         {
-            id: '4',
-            icon: 'icon-Linked',
-            fontColorStyle: 'secondary',
-            viewMode: 'toolButton',
-            iconStyle: 'secondary',
-            contrastBackground: true,
-            title: 'Связанные документы',
-            '@parent': true,
-            parent: null
-         },
-         {
-            id: '5',
-            viewMode: 'icon',
-            icon: 'icon-Link',
-            title: 'Скопировать в буфер',
-            '@parent': false,
-            parent: null
-         },
-         {
-            id: '7',
-            showType: showType.MENU,
-            title: 'Проекту',
-            '@parent': false,
-            parent: '4'
-         },
-         {
-            id: '8',
-            showType: showType.MENU,
-            title: 'Этапу',
-            '@parent': false,
-            parent: '4'
-         }
-      ];
       this._defaultItemsWithoutToolbutton = [
          {
             id: '1',

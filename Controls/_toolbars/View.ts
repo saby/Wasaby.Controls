@@ -115,6 +115,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
     /**
      * @name  Controls/_toolbars/IToolbarOptions#itemActions
      * @cfg {Array<ItemAction>} Конфигурация опций записи.
+     * @demo Controls-demo/Toolbar/ItemActions/Index
      */
     itemActions?: IItemAction[];
     /**
@@ -123,6 +124,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @param {ItemAction} action Объект с настройкой действия.
      * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
      * @returns {Boolean} Определяет, должна ли операция отображаться.
+     * @demo Controls-demo/Toolbar/ItemActions/Index
      */
      itemActionVisibilityCallback?: TItemActionVisibilityCallback;
 }
