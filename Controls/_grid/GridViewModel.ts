@@ -559,8 +559,9 @@ var
         _isSupportLadder(ladderProperties: []): boolean {
             return isSupportLadder(ladderProperties);
         },
+
         setTheme(theme: string): void {
-            this._options.theme = theme;
+            this._model.setTheme(theme);
         },
 
         _updateLastItemKey(): void {
