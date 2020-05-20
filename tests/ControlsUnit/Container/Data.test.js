@@ -183,25 +183,6 @@ define(
             assert.equal(data._prefetchSource._$data.query, sourceData);
          });
 
-         it('update equal source', function(done) {
-            var
-               items,
-               config = {source: source, keyProperty: 'id'},
-               data = getDataWithConfig(config);
-
-            data._beforeMount(config).addCallback(function() {
-               items = data._items;
-
-               data._beforeUpdate({source: new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: sourceDataEdited
-               }), idProperty: 'id'}).addCallback(function() {
-                  assert.isTrue(data._items === items);
-                  done();
-               });
-            });
-         });
-
          it('_itemsReadyCallbackHandler', async function() {
             const options = {source: source, keyProperty: 'id'};
             let data = getDataWithConfig(options);
