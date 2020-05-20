@@ -1100,9 +1100,11 @@ const _private = {
                 self._showContinueSearchButton = false;
             },
             searchContinueCallback: () => {
+                let direction = _private.hasMoreData(self, self._sourceController, 'up') ? 'up' : 'down';
+
                 self._portionedSearchInProgress = true;
                 self._showContinueSearchButton = false;
-                _private.loadToDirectionIfNeed(self, 'down');
+                _private.loadToDirectionIfNeed(self, direction);
             },
             searchAbortCallback: () => {
                 self._portionedSearchInProgress = false;
