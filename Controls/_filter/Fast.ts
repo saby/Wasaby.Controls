@@ -14,6 +14,7 @@ import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
+import {Model} from 'Types/entity';
 
       /**
        * Контрол "Быстрый фильтр". Использует выпадающие списки для выбора параметров фильтрации.
@@ -375,6 +376,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
          _beforeMount: function(options, context, receivedState) {
             this._configs = [];
             this._onResult = _private.onResult.bind(this);
+            this._selectorOpenCallback = this._selectorOpenCallback.bind(this);
 
             var resultDef;
 
@@ -393,6 +395,15 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             }
             this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
             return resultDef;
+         },
+          // TODO: убрать по задаче: https://online.sbis.ru/opendoc.html?guid=637922a8-7d23-4d18-a7f2-b58c7cfb3cb0
+         _selectorOpenCallback() {
+            const value = getPropValue(this._items.at(this.lastOpenIndex), 'value');
+            const selectedKeys = value instanceof Array ? value : [value];
+            return chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
+               const itemId = item.getKey();
+               return itemId !== null && selectedKeys.includes(itemId);
+            }).value();
          },
 
          _beforeUpdate: function(newOptions) {
@@ -430,7 +441,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
                source: new PrefetchProxy({
                   target: this._configs[index]._source,
                   data: {
-                     query: (this._configs[index]._items || this._configs[index].popupItems).clone()
+                     query: (this._configs[index].popupItems || this._configs[index]._items).clone()
                   }
                }),
                selectorItems: this._configs[index]._items,

@@ -32,6 +32,7 @@
                </ws:if>
                <Controls._menu.Control
                        attr:class="controls-Menu__popup-list-padding-{{_verticalDirection}}_theme-{{_options.theme}}"
+                       selectorOpenCallback="{{_options.selectorOpenCallback}}"
                        nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
                        root="{{_options.root}}"
                        selectorOpener="{{_options.selectorOpener}}"
