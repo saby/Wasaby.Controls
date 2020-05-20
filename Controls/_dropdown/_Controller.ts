@@ -312,8 +312,9 @@ var _private = {
          selectorOpener: self._children.selectorOpener,
          selectorDialogResult: self._onSelectorTemplateResult.bind(self)
       };
+      let options = {...self._options};
       const config = {
-         templateOptions: Object.assign(templateOptions, self._options),
+         templateOptions: Object.assign(options, templateOptions),
          className: self._options.popupClassName,
          template: 'Controls/menu:Popup',
          actionOnScroll: 'close',

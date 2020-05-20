@@ -150,11 +150,10 @@ define(
 
          it('_keyDown', function() {
             let dropdownController = getDropdownController(config),
-               closed = false, isOpened = true, isStopped = false;
+               closed = false, isStopped = false;
             dropdownController._children = {
-               DropdownOpener: {
-                  isOpened: () => {return isOpened;},
-                  close: () => {closed = true; }
+               Sticky: {
+                  closePopup: () => {closed = true; }
                }
             };
             let event = {
@@ -172,12 +171,13 @@ define(
             // Тестируем нажатие esc, когда выпадающий список открыт
             isStopped = false;
             event.nativeEvent.keyCode = 27;
+            dropdownController._popupId = 'test';
             dropdownController._keyDown(event);
             assert.isTrue(closed);
             assert.isTrue(isStopped);
 
             // Тестируем нажатие esc, когда выпадающий список закрыт
-            isOpened = false;
+            dropdownController._popupId = null;
 
             isStopped = false;
             closed = false;
@@ -255,12 +255,9 @@ define(
                opened = false;
                dropdownController = getDropdownController(config);
                dropdownController._children = {
-                  DropdownOpener: {
-                     open: function() {
+                  Sticky: {
+                     openPopup: function() {
                         opened = true;
-                     },
-                     isOpened: function() {
-                        return opened;
                      }
                   }
                };
@@ -453,8 +450,8 @@ define(
                let readOnlyConfig = clone(config),
                   isClosed = false;
 
-               dropdownController._children.DropdownOpener = {
-                  close: () => {isClosed = true;}
+               dropdownController._children.Sticky = {
+                  closePopup: () => {isClosed = true;}
                };
                readOnlyConfig.readOnly = true;
                dropdownController._beforeUpdate(readOnlyConfig);
@@ -488,11 +485,11 @@ define(
 
             dropdownController._beforeMount(configLazyLoad);
             dropdownController._items = itemsRecords.clone();
-            dropdownController._children.DropdownOpener = {
-               close: function() {
+            dropdownController._children.Sticky = {
+               closePopup: function() {
                   closed = true;
                },
-               open: function() {
+               openPopup: function() {
                   opened = true;
                }
             };
@@ -519,6 +516,7 @@ define(
 
             // returned undefined from handler and no hierarchy
             closed = false;
+            dropdownController._popupId = 'test';
             closeByNodeClick = undefined;
             dropdownController._onResult(null, 'itemClick', dropdownController._items.at(4));
             assert.isTrue(closed);
@@ -746,6 +744,8 @@ define(
                };
             });
             it ('only popupOptions', () => {
+               dropdownController._onOpen = function() {};
+               dropdownController._onResult = function() {};
                const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
                assert.deepEqual(resultPopupConfig.fittingMode,  {
                   vertical: 'adaptive',
@@ -756,6 +756,8 @@ define(
             });
 
             it('templateOptions', () => {
+               dropdownController._onOpen = function() {};
+               dropdownController._onResult = function() {};
                dropdownController._menuSource = 'testSource';
                const resultPopupConfig = dropdown._Controller._private.getPopupOptions(dropdownController);
 
@@ -912,15 +914,12 @@ define(
             dropdownController._items = items2;
             dropdownController._source = 'testSource';
             dropdownController._sourceController = { hasMoreData: () => false };
-            dropdownController._children.DropdownOpener = {
-               close: function() {
+            dropdownController._children.Sticky = {
+               closePopup: function() {
                   opened = false;
                },
-               open: function() {
+               openPopup: function() {
                   opened = true;
-               },
-               isOpened: function() {
-                  return opened;
                }
             };
 
@@ -930,6 +929,7 @@ define(
             dropdownController._mouseDownHandler();
             assert.isTrue(opened);
 
+            dropdownController._popupId = 'test';
             dropdownController._mouseDownHandler();
             assert.isFalse(opened);
          });
@@ -993,8 +993,8 @@ define(
             let dropdownController = getDropdownController(config);
             let closed = false;
 
-            dropdownController._children.DropdownOpener = {
-               close: () => {
+            dropdownController._children.Sticky = {
+               closePopup: () => {
                   closed = true;
                }
             };
