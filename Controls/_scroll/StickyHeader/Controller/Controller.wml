@@ -1,5 +1,6 @@
 <Controls.event:Register name="stickyFixed" register="updateFixed">
       <ws:partial
+            attr:class="controls-StickyHeaderController"
             template="{{_options.content}}"
             scope="{{options}}"
             fixedHeadersHeights="{{_headersHeight}}"

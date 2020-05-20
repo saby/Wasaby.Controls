@@ -41,6 +41,7 @@ import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObs
 
 import Group from 'Controls/_scroll/StickyHeader/Group';
 import {isStickySupport, getNextId as getNextStickyId, getOffset as getStickyOffset} from 'Controls/_scroll/StickyHeader/Utils';
+import {getHeadersHeight as getStickyHeadersHeight} from 'Controls/_scroll/StickyHeader/Utils/getHeadersHeight';
 import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
 
 export {
@@ -54,6 +55,7 @@ export {
    isStickySupport,
    getNextStickyId,
    getStickyOffset,
+   getStickyHeadersHeight,
    Group,
    HotKeysContainer,
    IntersectionObserverController,
