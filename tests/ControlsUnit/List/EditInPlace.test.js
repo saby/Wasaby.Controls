@@ -1107,7 +1107,6 @@ define([
                eip._notify = function(event, args) {
                   if (event === 'beforeEndEdit') {
                      editingItem = eip._editingItem;
-                     assert.equal(listModel.getMarkedKey(), 1);
                      assert.isNotNull(listModel.getEditingItemData());
                   }
                   if (event === 'afterEndEdit') {

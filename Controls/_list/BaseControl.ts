@@ -29,7 +29,7 @@ import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
-import {CollectionItem, EditInPlaceController, MarkerCommands, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
+import {CollectionItem, EditInPlaceController, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
 import {Controller as ItemActionsController, IItemAction} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
@@ -53,6 +53,7 @@ import {
    ISelectionControllerResult,
    SelectionController
 } from 'Controls/multiselection';
+import { MarkerController } from 'Controls/marker';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
@@ -260,9 +261,9 @@ const _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
-                        if (self._items) {
-                           self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
-                        }
+                    if (self._items) {
+                       self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                    }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
@@ -277,7 +278,11 @@ const _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
-                        self._items.subscribe('onCollectionChange', self._onItemsChanged);
+                    self._items.subscribe('onCollectionChange', self._onItemsChanged);
+
+                    if (self._markerController) {
+                        _private.updateMarkerController(self, self._options);
+                    }
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -427,70 +432,21 @@ const _private = {
     },
 
     setMarkedKey(self, key: string | number): void {
-        if (key !== undefined) {
-            const model = self.getViewModel();
-            if (self._options.useNewModel) {
-                const markCommand = new MarkerCommands.Mark(key);
-                markCommand.execute(model);
-            } else {
-                model.setMarkedKey(key);
-            }
+        if (key !== undefined && self._markerController) {
+            self._markedKey = self._markerController.setMarkedKey(key);
+            _private.scrollToItem(self, key);
         }
-    },
-
-    moveMarker: function(self, newMarkedKey) {
-        // activate list when marker is moving. It let us press enter and open current row
-        // must check mounted to avoid fails on unit tests
-        if (self._mounted) {
-            self.activate();
-        }
-        _private.setMarkedKey(self, newMarkedKey);
-        _private.scrollToItem(self, newMarkedKey, true, false);
     },
     moveMarkerToNext: function (self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
-        if (self._options.markerVisibility !== 'hidden') {
-            event.preventDefault();
-            var model = self.getViewModel();
-            // TODO Update after MarkerManager is fully implemented
-            let nextKey;
-            if (self._options.useNewModel) {
-                const nextItem = model.getNext(
-                    model.find((item) => item.isMarked())
-                );
-                const contents = nextItem && nextItem.getContents();
-                nextKey = contents && contents.getId();
-            } else {
-                nextKey = model.getNextItemKey(model.getMarkedKey());
-            }
-
-            _private.moveMarker(self, nextKey);
+        if (self._markerController) {
+            self._markedKey = self._markerController.moveMarkerToNext();
+            _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToPrevious: function (self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
-        if (self._options.markerVisibility !== 'hidden') {
-            event.preventDefault();
-            var model = self.getViewModel();
-
-            // TODO Update after MarkerManager is fully implemented
-            let prevKey;
-            if (self._options.useNewModel) {
-                const prevItem = model.getPrevious(
-                    model.find((item) => item.isMarked())
-                );
-                const contents = prevItem && prevItem.getContents();
-                prevKey = contents && contents.getId();
-            } else {
-                prevKey = model.getPreviousItemKey(model.getMarkedKey());
-            }
-
-            _private.moveMarker(self, prevKey);
-
+        if (self._markerController) {
+            self._markedKey = self._markerController.moveMarkerToPrev();
+            _private.scrollToItem(self, self._markedKey);
         }
     },
     setMarkerAfterScroll(self, event) {
@@ -512,9 +468,6 @@ const _private = {
     },
 
     enterHandler: function(self, event) {
-        if (_private.isBlockedForLoading(self._loadingIndicatorState)) {
-            return;
-        }
         let markedItem;
         if (self._options.useNewModel) {
             markedItem = self.getViewModel().find((item) => item.isMarked());
@@ -526,21 +479,18 @@ const _private = {
         }
     },
     spaceHandler: function(self, event) {
-        const allowToggleSelection = !_private.isBlockedForLoading(self._loadingIndicatorState) &&
-            self._selectionController;
+        const model = self.getViewModel();
+        let toggledItemId = model.getMarkedKey();
 
-        if (allowToggleSelection) {
-            const model = self.getViewModel();
-            let toggledItemId = model.getMarkedKey();
+        if (!model.getItemById(toggledItemId) && model.getCount()) {
+            toggledItemId = model.at(0).getContents().getId();
+        }
 
-            if (!model.getItemById(toggledItemId) && model.getCount()) {
-                toggledItemId = model.at(0).getContents().getId();
-            }
-
-            if (toggledItemId) {
+        if (toggledItemId) {
+            if (self._selectionController) {
                 self._selectionController.toggleItem(toggledItemId);
-                _private.moveMarkerToNext(self, event);
             }
+            _private.moveMarkerToNext(self, event);
         }
     },
     prepareFooter: function(self, navigation, sourceController) {
@@ -1103,10 +1053,14 @@ const _private = {
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
-        let itemsContainer = self._children.listView.getItemsContainer();
-        let topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + (self._options.fixedHeadersHeights || 0));
-        self._setMarkerAfterScroll = false;
+        // TODO вручную обрабатывать pagedown и делать stop propagation
+        if (self._markerController) {
+            const itemsContainer = self._children.listView.getItemsContainer();
+            const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
+            const verticalOffset = scrollTop - topOffset + (self._options.fixedHeadersHeights || 0);
+            self._markedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
+            self._setMarkerAfterScroll = false;
+        }
     },
 
     // TODO KINGO: Задержка нужна, чтобы расчет видимой записи производился после фиксации заголовка
@@ -1119,40 +1073,6 @@ const _private = {
         let container = self._container[0] || self._container;
         offsetTop += container.offsetTop - uDimension(container).top;
         return offsetTop;
-    },
-
-    setMarkerToFirstVisibleItem: function(self, itemsContainer, verticalOffset) {
-        let firstItemIndex =
-            self._options.useNewModel
-            ? VirtualScrollController.getStartIndex(self._listViewModel)
-            : self._listViewModel.getStartIndex();
-        firstItemIndex += _private.getFirstVisibleItemIndex(itemsContainer, verticalOffset);
-        firstItemIndex = Math.min(firstItemIndex, self._listViewModel.getStopIndex());
-        if (self._options.useNewModel) {
-            const item = self._listViewModel.at(firstItemIndex);
-            if (item) {
-                const key = item.getContents().getId();
-                const markCommand = new MarkerCommands.Mark(key);
-                markCommand.execute(self._listViewModel);
-            }
-        } else {
-            self._listViewModel.setMarkerOnValidItem(firstItemIndex);
-        }
-    },
-
-    getFirstVisibleItemIndex: function(itemsContainer, verticalOffset) {
-        let items = itemsContainer.children;
-        let itemsCount = items.length;
-        let itemsHeight = 0;
-        let i = 0;
-        if (verticalOffset <= 0) {
-            return 0;
-        }
-        while (itemsHeight < verticalOffset && i < itemsCount) {
-            itemsHeight += uDimension(items[i]).height;
-            i++;
-        }
-        return i;
     },
 
     handleListScrollSync(self, scrollTop) {
@@ -1269,7 +1189,7 @@ const _private = {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
-    onListChange: function(self, event, changesType, action, newItems, newItemsIndex, removedItems) {
+    onListChange: function(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
@@ -1300,9 +1220,8 @@ const _private = {
                   case IObservable.ACTION_ADD:
                      result = self._selectionController.handleAddItems(newItems);
                      break;
-        }
-
-               self.handleSelectionControllerResult(result);
+               }
+                self.handleSelectionControllerResult(result);
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -1420,6 +1339,7 @@ const _private = {
     bindHandlers(self): void {
         self._onItemActionsMenuClose = self._onItemActionsMenuClose.bind(self);
         self._onItemActionsMenuResult = self._onItemActionsMenuResult.bind(self);
+        self._onItemsChanged = self._onItemsChanged.bind(self);
     },
 
     groupsExpandChangeHandler: function(self, changes) {
@@ -1831,21 +1751,39 @@ const _private = {
       self._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
    },
 
-   onItemsChanged(self: any, action: string, removedItems: []): void {
+   onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
       // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
       // при подписке на модель событие remove летит еще и при скрытии элементов
-      if (self._selectionController) {
-         let result;
 
-         switch (action) {
-            case IObservable.ACTION_REMOVE:
-               result = self._selectionController.removeKeys(removedItems);
+       let selectionControllerResult;
+       switch (action) {
+           case IObservable.ACTION_REMOVE:
+               if (self._selectionController) {
+                   selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
+               }
+               if (removedItemsIndex !== undefined && self._markerController) {
+                   self._markerController.handleRemoveItems(removedItemsIndex);
+               }
                break;
-         }
+       }
+       this.handleSelectionControllerResult(self, selectionControllerResult);
+   },
 
-         this.handleSelectionControllerResult(self, result);
-      }
-   }
+   createMarkerController(self: any, options: any): MarkerController {
+        return new MarkerController({
+            model: self._listViewModel,
+            markerVisibility: options.markerVisibility,
+            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
+        });
+   },
+
+    updateMarkerController(self: any, options: any): void {
+        self._markedKey = self._markerController.update({
+            model: self._listViewModel,
+            markerVisibility: options.markerVisibility,
+            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
+        });
+    }
 };
 
 /**
@@ -1960,6 +1898,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     // Шаблон операций с записью для swipe
     _swipeTemplate: swipeTemplate,
 
+    _markerController: null,
+    _markedKey: null,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -2023,6 +1964,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
             if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+            }
+
+            if (newOptions.markerVisibility !== 'hidden') {
+                self._markerController = _private.createMarkerController(self, newOptions);
             }
 
             if (newOptions.source) {
@@ -2262,10 +2207,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setKeyProperty(newOptions.keyProperty);
         }
 
-        if (newOptions.markedKey !== this._options.markedKey) {
-            _private.setMarkedKey(this, newOptions.markedKey);
-        }
-
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
         }
@@ -2302,15 +2243,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._groupingLoader.destroy();
         }
 
+        if (this._markerController) {
+            _private.updateMarkerController(this, newOptions);
+        }
+
         // UC1: Record might be editing on page load, then we should initialize Item Actions.
         // UC2: We should reassign ItemActions on model change before drawing them in For template
         if (
-            recreateSource ||
-            newOptions.itemActions !== this._options.itemActions ||
-            newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
-            ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
-            newOptions.itemActionsProperty ||
-            (newOptions.editingConfig && newOptions.editingConfig.item)
+           recreateSource ||
+           newOptions.itemActions !== this._options.itemActions ||
+           newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
+           ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
+           newOptions.itemActionsProperty ||
+           (newOptions.editingConfig && newOptions.editingConfig.item)
         ) {
             this._updateItemActions(newOptions);
         }
@@ -2563,6 +2508,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.reload(this, this._options, sourceConfig).addCallback(getData);
     },
 
+    setMarkedKey(key: number|string): void {
+        _private.setMarkedKey(this, key);
+    },
+
     _onGroupClick: function(e, groupId, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
@@ -2731,11 +2680,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, item: CollectionItem<Model>): void {
         event.stopPropagation();
-        let contents: Model = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
-            contents = contents[contents.length - 1];
-        }
-        _private.setMarkedKey(this, contents.getKey());
+        const key = item.getContents ? item.getContents().getId() : item.key;
+        this.setMarkedKey(key);
+
         if (action && !action._isMenu && !action['parent@']) {
             _private.handleItemActionClick(this, action, event, item);
         } else {
@@ -2771,8 +2718,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._itemActionsMenuId = null;
     },
 
-    _onItemsChanged(event, action, newItems, newItemsIndex, removedItems): void {
-        _private.onItemsChanged(this, action, removedItems);
+    _onItemsChanged(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
+        _private.onItemsChanged(this, action, removedItems, removedItemsIndex);
     },
 
     _itemMouseDown(event, itemData, domEvent) {
@@ -2804,7 +2751,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const canBeMarked = this._mouseDownItemKey === key && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
 
         if (canBeMarked) {
-            _private.setMarkedKey(this, key);
+            this.setMarkedKey(key);
         }
         this._mouseDownItemKey = undefined;
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
@@ -2881,10 +2828,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _onViewKeyDown: function(event) {
-
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
-        if (!this._options._keyDownHandler || !this._options._keyDownHandler(event)) {
+        if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (!this._options._keyDownHandler || !this._options._keyDownHandler(event))) {
             let key = event.nativeEvent.keyCode;
             let dontStop = key === 33
                 || key === 34
@@ -3184,7 +3130,6 @@ BaseControl.getDefaultOptions = function() {
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
         loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
-        markedKey: null,
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {}
