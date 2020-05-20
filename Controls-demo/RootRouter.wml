@@ -7,8 +7,8 @@
          <ws:if data="{{sourceUrl}}">                  
             <div class="ws-flex-grow-1 ws-flexbox ws-flex-column">                     
                <a attr:class="ws-link ws-align-self-end"
-                  attr:style="width: 100px"
                   attr:id="Source"
+                  attr:style="width: 100px"
                   attr:target="_blank"
                   attr:href="{{sourceUrl}}"
                   >Source</a>
