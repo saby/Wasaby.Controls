@@ -15,12 +15,22 @@ export class Controller {
    /**
     * Обновить состояние контроллера
     * @param options
+    * @return {number|string} измененный или нет ключ маркера
     */
-   update(options: IOptions): void {
+   update(options: IOptions): TKey {
+      const markerVisibilityChanged = this._markerVisibility !== options.markerVisibility;
+
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-
       this.setMarkedKey(options.markedKey);
+
+      // данный кейс возникает в suggest input.
+      // В нем для проставления маркера на первый элемент после создания basecontrol передают visibility=Visible
+      if (markerVisibilityChanged && this._markerVisibility === Visibility.Visible && this._markedKey === null) {
+         this._markedKey = this._setMarkerOnFirstItem();
+      }
+
+      return this._markedKey;
    }
 
    /**

@@ -1778,7 +1778,7 @@ const _private = {
    },
 
     updateMarkerController(self: any, options: any): void {
-        self._markerController.update({
+        self._markedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
             markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
