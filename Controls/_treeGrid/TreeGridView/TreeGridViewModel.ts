@@ -138,6 +138,7 @@ var
                 currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
 
                 currentColumn.prepareExpanderClasses = current.prepareExpanderClasses;
+                currentColumn.getExpanderSize = current.getExpanderSize;
 
                 currentColumn.isExpanded = current.isExpanded;
                 currentColumn.classList.base += ` controls-TreeGrid__row-cell_theme-${theme} controls-TreeGrid__row-cell_${currentColumn.style || 'default'}_theme-${theme}`;

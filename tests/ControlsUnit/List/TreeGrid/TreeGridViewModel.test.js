@@ -382,17 +382,17 @@ define(['Controls/treeGrid',
          }];
 
          let treeGridView = new treeGrid.ViewModel({
-             items: new collection.RecordSet({
-                idProperty: 'id',
-                rawData: [
-                   { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
-                ]
-             }),
-             keyProperty: 'id',
-             nodeProperty: 'type',
-             parentProperty: 'parent',
-             columns: initialColumns,
-             resultsPosition: 'top'
+            items: new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
+               ]
+            }),
+            keyProperty: 'id',
+            nodeProperty: 'type',
+            parentProperty: 'parent',
+            columns: initialColumns,
+            resultsPosition: 'top'
          });
 
          assert.equal(undefined, treeGridView.getResultsPosition());
@@ -443,6 +443,42 @@ define(['Controls/treeGrid',
          assert.equal(undefined, ladderViewModel.isDrawResults());
          ladderViewModel._options.resultsVisibility = 'visible';
          assert.isTrue(ladderViewModel.isDrawResults());
+      });
+
+      it('itemData and columnData should have same methods that use in expander template', function() {
+         let initialColumns = [{
+            width: '1fr',
+            displayProperty: 'title'
+         }];
+
+         let model = new treeGrid.ViewModel({
+            items: new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
+               ]
+            }),
+            keyProperty: 'id',
+            nodeProperty: 'type',
+            parentProperty: 'parent',
+            columns: initialColumns,
+            resultsPosition: 'top'
+         });
+
+         const itemData = model.getCurrent();
+         const columnData = itemData.getCurrentColumn();
+
+         assert.isNumber(itemData.key);
+         assert.equal(itemData.key, columnData.key);
+
+         assert.isDefined(itemData.dispItem);
+         assert.equal(itemData.dispItem, columnData.dispItem);
+
+         assert.isFunction(itemData.prepareExpanderClasses);
+         assert.equal(itemData.prepareExpanderClasses, columnData.prepareExpanderClasses);
+
+         assert.isFunction(itemData.getExpanderSize);
+         assert.equal(itemData.getExpanderSize, columnData.getExpanderSize);
       });
    });
    function MockedDisplayItem(cfg) {
