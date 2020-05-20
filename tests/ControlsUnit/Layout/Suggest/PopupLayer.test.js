@@ -38,7 +38,7 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
             }
          };
 
-         layer._onResult({
+         layer._onResult({},{
             direction: {
                vertical: 'test',
                horizontal: 'test'
