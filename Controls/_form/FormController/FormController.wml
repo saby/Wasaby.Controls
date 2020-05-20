@@ -12,7 +12,6 @@
          name="crud"
          dataSource="{{ _source }}">
       <div>
-         <Controls.popup:Confirmation name="popupOpener"/>
          <ws:partial
             name="errorContainer"
             template="{{ _options.errorContainer || _errorContainer }}"
