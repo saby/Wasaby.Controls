@@ -236,12 +236,17 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     protected _openSelectorDialog(): void {
-        const selectedItems = new List({
-            items: this.getSelectedItems().filter((item: Model) => {
-                return !this._isEmptyItem(item);
-            })
-        });
-
+        let selectedItems;
+        // TODO: убрать по задаче: https://online.sbis.ru/opendoc.html?guid=637922a8-7d23-4d18-a7f2-b58c7cfb3cb0
+        if (this._options.selectorOpenCallback) {
+            selectedItems = this._options.selectorOpenCallback();
+        } else {
+            selectedItems = new List({
+                items: this.getSelectedItems().filter((item: Model) => {
+                    return !this._isEmptyItem(item);
+                })
+            });
+        }
         this._options.selectorOpener.open(this.getSelectorDialogOptions(this._options, selectedItems));
         this._notify('moreButtonClick', [selectedItems]);
     }
