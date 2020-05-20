@@ -11,8 +11,6 @@ class ToolbarVdom extends Control<IControlOptions> {
    protected _flatItems = null;
    protected _currentClick = 'Нажми на тулбар';
    protected _defaultItemsWithoutToolbutton = null;
-   protected _defaultItemsWithActions;
-   protected _itemActions;
 
    private _getDefaultMemory(): Memory {
       return new Memory({
