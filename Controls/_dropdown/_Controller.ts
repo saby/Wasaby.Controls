@@ -300,6 +300,7 @@ var _private = {
       let templateOptions = {
          closeButtonVisibility: false,
          emptyText: self._getEmptyText(),
+         allowPin: self._options.allowPin && self._hasHistory(),
          items: self._items,
          source: self._menuSource,
          filter: self._filter,
