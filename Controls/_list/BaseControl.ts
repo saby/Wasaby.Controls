@@ -226,6 +226,11 @@ var _private = {
                     if (!self._shouldNotResetPagingCache) {
                         self._cachedPagingState = false;
                     }
+
+                    if (!self._ignoreTriggerVisibilityChanges) {
+                        self._ignoreTriggerVisibilityChanges = true;
+                    }
+                    
                     clearTimeout(self._needPagingTimeout);
 
                     if (listModel) {
@@ -2090,12 +2095,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     triggerVisibilityChangedHandler(_: SyntheticEvent<Event>, direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
-        if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
-            _private.hideIndicator(this);
-        }
-        if (_private.needScrollPaging(this._options.navigation)) {
-            const doubleRatio = (this._viewSize / this._viewPortSize) > MIN_SCROLL_PAGING_PROPORTION;
-            this._pagingVisible = _private.needShowPagingByScrollSize(this, doubleRatio);
+            if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
+                _private.hideIndicator(this);
+            }
+        if (!this._ignoreTriggerVisibilityChanges) {
+            if (_private.needScrollPaging(this._options.navigation)) {
+                const doubleRatio = (this._viewSize / this._viewPortSize) > MIN_SCROLL_PAGING_PROPORTION;
+                this._pagingVisible = _private.needShowPagingByScrollSize(this, doubleRatio);
+            }
         }
     },
 
@@ -2113,6 +2120,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _viewResize(): void {
+        this._ignoreTriggerVisibilityChanges = false;
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
