@@ -37,6 +37,7 @@ import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {IHashMap} from 'Types/declarations';
+import {getStickyHeadersHeight} from 'Controls/scroll';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -1042,7 +1043,7 @@ var _private = {
     setMarkerAfterScrolling: function(self, scrollTop) {
         let itemsContainer = self._children.listView.getItemsContainer();
         let topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + (self._options.fixedHeadersHeights || 0));
+        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0));
         self._setMarkerAfterScroll = false;
     },
 
