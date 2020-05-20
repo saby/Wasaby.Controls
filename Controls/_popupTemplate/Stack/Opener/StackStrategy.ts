@@ -62,6 +62,10 @@ const _private = {
         if (parentPosition?.right === 0) {
             tCoords.right = 0;
         }
+        // Если панель не уместилось по ширине, то позиционирование панели осуществляется от правого края экрана
+        if ((panelWidth + tCoords.right) > document?.body.clientWidth) {
+            tCoords.right = 0;
+        }
 
         return panelWidth;
     },
