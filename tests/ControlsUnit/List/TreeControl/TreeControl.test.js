@@ -1175,6 +1175,15 @@ define([
                      return null;
                   }
                };
+            },
+            getCollection: function () {
+               return new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               });
+            },
+            getItemBySourceItem: function () {
+               return null;
             }
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
