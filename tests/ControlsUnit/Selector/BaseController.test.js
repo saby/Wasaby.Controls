@@ -304,18 +304,24 @@ define([
          });
          assert.deepEqual(selectedCollection._selectedKeys, []);
 
-         selectedCollection._beforeUpdate({
+         let selectedCollectionConfig = {
             multiSelect: true,
             selectedKeys: [1, 2],
             source: source,
             keyProperty: 'id'
-         }).addCallback(function() {
+         };
+         selectedCollection._beforeUpdate(selectedCollectionConfig).addCallback(function() {
             assert.deepEqual(selectedCollection._selectedKeys, [1, 2]);
             assert.equal(selectedCollection._items.getCount(), 2);
+            assert.isTrue(!!selectedCollection.sourceController, 'wrong source controller after update');
 
-            selectedCollection._beforeUpdate({
-               selectedKeys: []
-            });
+            selectedCollection.saveOptions(selectedCollectionConfig);
+            selectedCollectionConfig = {...selectedCollectionConfig};
+            selectedCollectionConfig.selectedKeys = [];
+            selectedCollectionConfig.source = null;
+            selectedCollection._beforeUpdate(selectedCollectionConfig);
+
+            assert.isNull(selectedCollection.sourceController, 'wrong source controller after update');
             assert.deepEqual(selectedCollection._selectedKeys, []);
             assert.equal(selectedCollection._items.getCount(), 0);
             done();

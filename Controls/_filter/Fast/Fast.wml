@@ -26,7 +26,8 @@
            actionOnScroll="close"
            on:result="_onResult()">
       <ws:templateOptions
-              closeButtonVisibility="{{true}}">
+              closeButtonVisibility="{{true}}"
+              selectorOpenCallback="{{_selectorOpenCallback}}">
       </ws:templateOptions>
    </Controls.popup:Sticky>
    <ws:if data="{{_hasSelectorTemplate}}">

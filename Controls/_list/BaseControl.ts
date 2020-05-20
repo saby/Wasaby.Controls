@@ -306,7 +306,7 @@ var _private = {
         return resDeferred;
     },
     canStartDragNDrop(domEvent: any, cfg: any, isTouch: boolean): boolean {
-        return !isTouch && 
+        return !isTouch &&
             (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
             cfg.itemsDragNDrop &&
             !(domEvent.nativeEvent.button) &&
@@ -374,11 +374,7 @@ var _private = {
             // because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
             // otherwise empty template will shown
             if (needShowIndicatorByNavigation && needShowIndicatorByMeta) {
-                if (self._listViewModel && self._listViewModel.getCount()) {
-                    _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
-                } else {
-                    _private.showIndicator(self);
-                }
+                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
             } else {
                 _private.hideIndicator(self);
             }
@@ -952,7 +948,7 @@ var _private = {
     },
 
     showIndicator(self, direction: 'down' | 'up' | 'all' = 'all'): void {
-        if (!self._isMounted || self._loadingState === 'all') {
+        if (!self._isMounted) {
             return;
         }
 
@@ -1693,6 +1689,7 @@ var _private = {
     ): string {
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}_theme-${theme}`)
             .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
                  !hasItems && loadingIndicatorState === 'down')
             .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`,
@@ -2124,7 +2121,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
     // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
     _multiSelectReadyCallbackFn: function(multiSelectReady) {
-        this._multiSelectReady = multiSelectReady;
+        if (!this._options.task1179321660) {
+            this._multiSelectReady = multiSelectReady;
+        }
     },
 
     getViewModel: function() {
@@ -2216,6 +2215,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
+        }
+
+        if (newOptions.theme !== this._options.theme && !newOptions.useNewModel) {
+            this._listViewModel.setTheme(newOptions.theme);
         }
 
         if (newOptions.searchValue !== this._options.searchValue) {
@@ -2749,11 +2752,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else {
             this._listViewModel.setDragEntity(dragObject.entity);
             this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItem.dispItem));
-            
+
             // Cобытие mouseEnter на записи может сработать до dragStart.
-            // И тогда перемещение при наведении не будет обработано. 
+            // И тогда перемещение при наведении не будет обработано.
             // В таком случае обрабатываем наведение на запись сейчас.
-            // 
+            //
             //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
             if (this._unprocessedDragEnteredItem) {
                 this._processItemMouseEnterWithDragNDrop(event, this._unprocessedDragEnteredItem);
