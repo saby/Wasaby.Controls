@@ -10,6 +10,7 @@
          on:deleteFailed="_crudHandler()"
          on:registerFormOperation="_registerFormOperationHandler()"
          showLoadingIndicator="{{ true }}"
+         updateDataSource="{{_options.updateDataSource || false}}"
          name="crud"
          dataSource="{{ _source }}">
       <div>
