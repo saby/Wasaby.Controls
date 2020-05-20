@@ -242,6 +242,8 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
                   _private.onSelectorResult(this._configs[this._indexOpenedFilter], items);
                } else if (action === 'selectorDialogOpened') {
                   this._afterSelectorOpenCallback(items);
+                  this._children.DropdownOpener.close();
+                  return;
                } else {
                   _private.updateHistory(this._configs[this.lastOpenIndex], items);
                }
