@@ -14,5 +14,7 @@
                 on:controlResize="_viewResizeHandler()"/>
     <div name="bottomVirtualScrollTrigger" style="position: relative; bottom: 0;"></div>
     <div name="bottomLoadTrigger"></div>
-    <Controls._list.BaseControl.Scroll.Emitter on:emitListScroll="_observeScrollHandler()" name="scrollObserver"/>
+    <ws:if data="{{!_options.task1179200403 || _options.needScrollCalculation}}">
+        <Controls._list.BaseControl.Scroll.Emitter on:emitListScroll="_observeScrollHandler()" name="scrollObserver"/>
+    </ws:if>
 </div>

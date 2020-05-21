@@ -390,26 +390,27 @@ export default class ScrollContainer extends Control<IOptions> {
         {start, stop}: IRange,
         force?: boolean
     ): void {
-        let collectionStartIndex: number;
-        let collectionStopIndex: number;
+        if (!this._options.task1179200403 || this._options.needScrollCalculation) {
+            let collectionStartIndex: number;
+            let collectionStopIndex: number;
 
-        if (collection.getViewIterator) {
-            collectionStartIndex = displayLib.VirtualScrollController.getStartIndex(collection);
-            collectionStopIndex = displayLib.VirtualScrollController.getStopIndex(collection);
-        } else {
-            collectionStartIndex = collection.getStartIndex();
-            collectionStopIndex = collection.getStopIndex();
-        }
-
-        if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
             if (collection.getViewIterator) {
-                collection.getViewIterator().setIndices(start, stop);
+                collectionStartIndex = displayLib.VirtualScrollController.getStartIndex(collection);
+                collectionStopIndex = displayLib.VirtualScrollController.getStopIndex(collection);
             } else {
-                // @ts-ignore
-                collection.setIndexes(start, stop);
+                collectionStartIndex = collection.getStartIndex();
+                collectionStopIndex = collection.getStopIndex();
+            }
+
+            if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
+                if (collection.getViewIterator) {
+                    collection.getViewIterator().setIndices(start, stop);
+                } else {
+                    // @ts-ignore
+                    collection.setIndexes(start, stop);
+                }
             }
         }
-
         if (this.__mounted) {
             this._notify('updateShadowMode', [{
                 up: start > 0,
