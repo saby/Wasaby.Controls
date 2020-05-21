@@ -61,7 +61,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private _observerRegistered: boolean = false;
 
     private _virtualScroll: VirtualScroll;
-    private _itemsContainer: HTMLElement;
+    private _itemsContainerGetter: Function;
 
     private _viewHeight: number = 0;
     private _viewportHeight: number = 0;
@@ -170,8 +170,8 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    protected _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainer: HTMLElement): void {
-        this._itemsContainer = itemsContainer;
+    protected _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
+        this._itemsContainerGetter = itemsContainerGetter;
     }
 
     protected _stopBubblingEvent(event: SyntheticEvent<Event>): void {
@@ -255,7 +255,8 @@ export default class ScrollContainer extends Control<IOptions> {
                     // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
                     // логического родителя, который отрисовывает все элементы
                     // https://online.sbis.ru/opendoc.html?guid=942e1a1d-15ee-492e-b763-0a52d091a05e
-                    const itemContainer = this._virtualScroll.getItemContainerByIndex(index, this._itemsContainer);
+                    const itemsContainer = this._itemsContainerGetter();
+                    const itemContainer = this._virtualScroll.getItemContainerByIndex(index, itemsContainer);
 
                     if (itemContainer) {
                         this._fakeScroll = true;
@@ -481,10 +482,11 @@ export default class ScrollContainer extends Control<IOptions> {
     private _viewResize(viewSize: number, updateItemsHeights: boolean = true): void {
         this._viewHeight = viewSize;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
+        const itemsContainer = this._itemsContainerGetter();
         this._virtualScroll.resizeView(
             this._viewHeight,
             this._triggerOffset,
-            updateItemsHeights ? this._itemsContainer : undefined
+            updateItemsHeights ? itemsContainer : undefined
         );
     }
 
