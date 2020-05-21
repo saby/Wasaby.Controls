@@ -67,8 +67,15 @@ export default interface IItemTemplateOptions {
     */
    folderWidth?: number;
    /**
-    * @name Controls/tile:ItemTemplate#shadowVisibility
-    * @cfg {Boolean} Нужно ли отображать тень для плитки.
+    * @typedef {String} ShadowVisibility
+    * @variant visible Отображается.
+    * @variant hidden Не отображается.
+    * @variant onhover Отображается только при наведении на плитку.
     */
-   shadowVisibility?: boolean;
+   /**
+    * @name Controls/tile:ItemTemplate#shadowVisibility
+    * @cfg {ShadowVisibility} Нужно ли отображать тень для плитки.
+    * @default visible
+    */
+   shadowVisibility?: string;
 }
