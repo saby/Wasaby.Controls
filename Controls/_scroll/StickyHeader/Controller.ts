@@ -27,8 +27,6 @@ class Component extends Control {
     private _stickyControllerMounted: boolean = false;
     private _updateTopBottomInitialized: boolean = false;
 
-    private _headersHeight;
-
     _beforeMount(options) {
         this._headersStack = {
             top: [],
@@ -209,7 +207,6 @@ class Component extends Control {
                 this._updateFixedInitially(POSITION.top);
                 this._updateFixedInitially(POSITION.bottom);
                 this._updateTopBottomDelayed();
-                this._headersHeight = this.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.allFixed);
                 this._clearOffsetCache();
             }
         });
