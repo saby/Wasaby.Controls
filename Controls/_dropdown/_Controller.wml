@@ -1,7 +1,4 @@
 <div>
-   <ws:if data="{{_popupId}}">
-      <Controls.event:Listener event="scroll" on:scroll="_scrollHandler()" listenAll="{{true}}"/>
-   </ws:if>
    <ws:partial template="{{_options.content}}"
                on:click="_clickHandler()"
                on:mousedown="_mouseDownHandler()"
@@ -10,5 +7,8 @@
                on:keydown="_keyDown()"/>
    <ws:if data="{{_options.selectorTemplate}}">
       <Controls.popup:Stack name="selectorOpener" on:result="_onSelectorTemplateResult()" />
+   </ws:if>
+   <ws:if data="{{_popupId}}">
+      <Controls.event:Listener event="scroll" on:scroll="_scrollHandler()" listenAll="{{true}}"/>
    </ws:if>
 </div>
