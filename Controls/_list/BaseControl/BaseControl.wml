@@ -112,6 +112,7 @@
             on:changeIndicatorState="changeIndicatorStateHandler()"
             collection="{{_listViewModel}}"
             needScrollCalculation="{{_needScrollCalculation}}"
+            task1179200403="{{_options.task1179200403}}"
             scope="{{_options}}">
         <Controls._list.EditInPlace
                 name="editInPlace"
