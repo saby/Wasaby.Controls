@@ -735,6 +735,12 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
          assert.isNull(suggestComponent._loading, 'load started with validationStatus: "invalid"');
 
+         suggestComponent._options.validationStatus = 'invalid';
+         suggestComponent._options.suggestState = true;
+         suggestComponent._loading = true;
+         suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
+         assert.isTrue(suggestComponent._loading);
+
          sandbox.restore();
       });
 
