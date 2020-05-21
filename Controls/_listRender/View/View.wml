@@ -1,18 +1,17 @@
-<div class="controls-BaseControl controls-BaseControl_showActions controls-BaseControl__renderContainer">
+<div class="controls-BaseControl controls-BaseControl_showActions_{{_options.itemActionVisibility}}' controls-BaseControl__renderContainer">
    <ws:partial
       attr:class="{{_itemActionsMenuId !== null ? 'controls-itemActionsV_invisible'}}"
       name="renderer"
       template="{{ _options.render }}"
       listModel="{{ _collection }}"
       scope="{{ _options }}"
-
-      on:mouseenter="_onRenderMouseEnter()"
       on:touchstart="_onRenderTouchStart()"
-
       on:itemClick="_onItemClick()"
       on:itemSwipe="_onItemSwipe()"
       on:closeSwipe="_onCloseSwipe()"
       on:itemActionClick="_onItemActionClick()"
       on:itemContextMenu="_onItemContextMenu()"
-      on:itemKeyDown="_onItemKeyDown()"/>
+      on:itemKeyDown="_onItemKeyDown()"
+      on:itemMouseEnter="_onItemMouseEnter()"
+      on:itemMouseLeave="_onItemMouseLeave()"/>
 </div>

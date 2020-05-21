@@ -54,7 +54,7 @@ type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
  * @typedef {String} TItemActionVisibility
  * @variant onhover Инициализируется и отображается сразу после первого наведению на любую запись списка
  * @variant visible Инициализируется и отображается при рендеринге записей
- * @variant demand Инициализируется и отображается после первого наведению на любую запись списка только если курсор мыши задержался на записи более, чем на 100mc
+ * @variant delayed Инициализируется и отображается после первого наведению на любую запись списка только если курсор мыши задержался на записи более, чем на 100mc
  */
 type TItemActionVisibility = 'onhover'|'delayed'|'visible';
 interface IItemPadding {

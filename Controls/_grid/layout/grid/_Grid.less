@@ -245,18 +245,33 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName}:not(.controls-Grid__row-ladder-cell) {
       background-color: @item_hover_background-color_list;
    }
+
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-listItem_theme-@{themeName} {
       background-color: @item_hover_background-color_list;
    }
-   .controls-BaseControl_showActions .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row:hover {
+
+   .controls-BaseControl_showActions_delayed .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row:hover {
       > .controls-Grid__row-cell,
       > .controls-itemActionsV__container,
       > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper {
          > .controls-itemActionsV {
-            display: inline-block;
+            transition: opacity 100ms step-end;
+         }
+      }
+   }
+
+   .controls-BaseControl_showActions_visible .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row,
+   .controls-BaseControl_showActions_onhover .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row:hover,
+   .controls-BaseControl_showActions_delayed .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row:hover {
+      > .controls-Grid__row-cell,
+      > .controls-itemActionsV__container,
+      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper {
+         > .controls-itemActionsV {
+            opacity: 1;
             visibility: visible;
          }
       }
+
       /** Общая проблема с background'ом у контролов, которые лежат в списке, решается через background: inherit **/
       .controls-SelectedCollection__InfoBox_fixed_theme-@{themeName} {
          background-color: @item_hover_background-color_list;
@@ -267,15 +282,15 @@
       }
       /**********************************************/
    }
-
 }
-.ws-is-hover .controls-BaseControl_showActions .controls-Grid__row:hover,
+.ws-is-hover .controls-BaseControl_showActions_visible .controls-Grid__row,
+.ws-is-hover .controls-BaseControl_showActions_delayed .controls-Grid__row:hover,
+.ws-is-hover .controls-BaseControl_showActions_onhover .controls-Grid__row:hover,
 .ws-is-touch .controls-GridView__item_active_theme-@{themeName} {
    .controls-Grid__editArrow-blur_theme-@{themeName},
    .controls-Grid__editArrow-wrapper_theme-@{themeName} {
       visibility: visible;
    }
-
 }
 
 .controls-Grid__row-cell-background-editing_theme-@{themeName} {

@@ -1964,9 +1964,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _swipeTemplate: swipeTemplate,
 
     // функция отложенного отображения/скрытия операций записи
-    _toggleItemActionsDebounced: null,
-
-    // Функция отложенной инициализации записей
     _initItemActionsDebounced: null,
 
     constructor(options) {
@@ -1989,7 +1986,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._inertialScrolling = new InertialScrolling();
 
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
-        this._toggleItemActionsDebounced = debounce(self._toggleItemActions.bind(self), ITEM_ACTION_VISIBILITY_DELAY);
         this._initItemActionsDebounced = debounce(self._initItemActions.bind(self), ITEM_ACTION_VISIBILITY_DELAY);
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
@@ -2641,27 +2637,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Добавляет CSS класс, который Показывает или скрывает ItemActions
      * @private
      */
-    _toggleItemActions(immediate?: boolean): void {
+    _initItemActions(immediate?: boolean, stop?: boolean): void {
         if (this._options.itemActionVisibility === 'onhover' || immediate) {
-            console.log('Занимаемся показом');
-        } else if (this._options.itemActionVisibility === 'delayed') {
-            this._toggleItemActionsDebounced(true);
-        }
-    },
-
-    /**
-     * Выполняется из шаблона при mouseenter
-     * @private
-     */
-    _initItemActions(immediate?: boolean): void {
-        if (!this._itemActionsInitialized) {
-            if (this._options.itemActionVisibility === 'onhover' || immediate) {
+            if (!this._itemActionsInitialized && !stop) {
                 this._updateItemActions(this._options);
-                this._toggleItemActions(true);
-                this._itemActionsInitialized = true;
-            } else if (this._options.itemActionVisibility === 'delayed') {
-                this._initItemActionsDebounced(true);
             }
+        } else if (this._options.itemActionVisibility === 'delayed') {
+            this._initItemActionsDebounced(true);
         }
     },
 
@@ -2992,9 +2974,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Когда навели мышь на item
      * @param event
      * @param itemData
+     * @param nativeEvent
      * @private
      */
     _onItemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
+        this._initItemActions();
         if (this._options.itemsDragNDrop) {
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(event, itemData);
@@ -3017,12 +3001,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     /**
-     * Убрали навели мышь с item'a
+     * Убрали мышь с item'a
      * @param event
      * @param itemData
+     * @param nativeEvent
      * @private
      */
     _onItemMouseLeave(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
+        this._initItemActionsDebounced(true, true);
         this._notify('itemMouseLeave', [itemData.getContents(), nativeEvent]);
         if (this._options.itemsDragNDrop) {
             this._unprocessedDragEnteredItem = null;
@@ -3228,7 +3214,7 @@ BaseControl.getDefaultOptions = function() {
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {},
-        itemActionVisibility: 'onhover'
+        itemActionVisibility: 'delayed'
     };
 };
 export = BaseControl;

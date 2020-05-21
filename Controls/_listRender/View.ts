@@ -2,6 +2,7 @@ import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
 
 import template = require('wml!Controls/_listRender/View/View');
 
+import { debounce } from 'Types/function';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { create as diCreate } from 'Types/di';
@@ -25,7 +26,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 
 import { constants } from 'Env/Env';
 
-import {ISwipeEvent} from './Render';
+import { ISwipeEvent } from './Render';
 
 export interface IViewOptions extends IControlOptions {
     items: RecordSet;
@@ -34,6 +35,7 @@ export interface IViewOptions extends IControlOptions {
     render: string;
 
     itemActions?: any[];
+    itemActionVisibility?: 'onhover'|'delayed'|'visible';
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
     itemActionsPosition?: string;
     itemActionsProperty?: string;
@@ -46,6 +48,8 @@ export interface IViewOptions extends IControlOptions {
     editingConfig?: any;
 }
 
+const ITEM_ACTION_VISIBILITY_DELAY = 100;
+
 export default class View extends Control<IViewOptions> {
     protected _template: TemplateFunction = template;
     protected _tmplNotify: Function = tmplNotify;
@@ -57,8 +61,15 @@ export default class View extends Control<IViewOptions> {
     // Идентификатор текущего открытого popup
     private _itemActionsMenuId: string = null;
 
+    // Флаг, позволяющий не повторять инициализацию на каждом наведении на запись
+    private _itemActionsInitialized: boolean = false;
+
+    // функция отложенного отображения/скрытия операций записи
+    private _initItemActionsDebounced: (immediate?: boolean, stop?: boolean) => void = null;
+
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
+        this._initItemActionsDebounced = debounce(this._initItemActions.bind(this), ITEM_ACTION_VISIBILITY_DELAY);
         return libraryLoad(options.render).then(() => null);
     }
 
@@ -97,12 +108,39 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * При наведении на запись в списке мы должны показать операции
-     * @param e
+     * Добавляет CSS класс, который Показывает или скрывает ItemActions
      * @private
      */
-    protected _onRenderMouseEnter(e: SyntheticEvent<MouseEvent>): void {
-        this._updateItemActions();
+    _initItemActions(immediate?: boolean, stop?: boolean): void {
+        if (this._options.itemActionVisibility === 'onhover' || immediate) {
+            if (!this._itemActionsInitialized && !stop) {
+                this._updateItemActions(this._options);
+            }
+        } else if (this._options.itemActionVisibility === 'delayed') {
+            this._initItemActionsDebounced(true);
+        }
+    }
+
+    /**
+     * При наведении на запись в списке мы должны проинициализировать операции
+     * @param event
+     * @param itemData
+     * @param nativeEvent
+     * @private
+     */
+    _onItemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
+        this._initItemActions();
+    }
+
+    /**
+     * При наведении на запись в списке мы должны сбросить инициализацию операций
+     * @param event
+     * @param itemData
+     * @param nativeEvent
+     * @private
+     */
+    _onItemMouseLeave(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
+        this._initItemActionsDebounced(true, true);
     }
 
     /**

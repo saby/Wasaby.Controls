@@ -206,23 +206,35 @@
    opacity: @item_dragging_opacity_list;
 }
 
-.ws-is-hover .controls-BaseControl_showActions {
+.controls-BaseControl_showActions_visible {
    .controls-ListView__item_showActions {
-      &:hover {
-         > .controls-itemActionsV {
-            display: inline-block;
-            opacity: 1;
-         }
-         .controls-itemActionsV_custom_theme-@{themeName} {
-            display: inline-block;
-            opacity: 1;
-         }
+      .controls-itemActionsV_custom_theme-@{themeName},
+      > .controls-itemActionsV {
+         visibility: visible;
+         opacity: 1;
       }
    }
-   .controls-ListView__item_highlightOnHover_editing {
-      &:hover {
-         background-color: @item_editing_background-color_list;
+}
+
+.ws-is-hover .controls-BaseControl_showActions_delayed {
+   .controls-ListView__item_showActions:hover {
+      .controls-itemActionsV_custom_theme-@{themeName},
+      > .controls-itemActionsV {
+         transition: opacity 100ms step-end;
       }
+   }
+}
+.ws-is-hover .controls-BaseControl_showActions_delayed,
+.ws-is-hover .controls-BaseControl_showActions_onhover {
+   .controls-ListView__item_showActions:hover {
+      .controls-itemActionsV_custom_theme-@{themeName},
+      > .controls-itemActionsV {
+         visibility: visible;
+         opacity: 1;
+      }
+   }
+   .controls-ListView__item_highlightOnHover_editing:hover {
+      background-color: @item_editing_background-color_list;
    }
 }
 
