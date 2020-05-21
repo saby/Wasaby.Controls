@@ -62,7 +62,6 @@ var _private = {
       const preparedItem = _private.prepareItem(item, self._options.keyProperty, self._source);
       self._notify('pinClick', [preparedItem]);
       self._setItems(null);
-      self._oldPopupId = self._popupId;
       self._open();
    },
 
@@ -318,6 +317,7 @@ var _private = {
       };
       let options = {...self._options};
       const config = {
+         id: self._popupId,
          templateOptions: Object.assign(options, templateOptions),
          className: self._options.popupClassName,
          template: 'Controls/menu:Popup',
@@ -331,17 +331,10 @@ var _private = {
          },
          eventHandlers: {
             onOpen: () => {
-               if (self._oldPopupId) {
-                  StickyOpener.closePopup(self._oldPopupId);
-               }
                self._onOpen();
             },
             onClose: () => {
-               if (self._oldPopupId) {
-                  self._oldPopupId = null;
-               } else {
-                  self._popupId = null;
-               }
+               self._popupId = null;
                self._onClose();
             },
             onResult: self._onResult
