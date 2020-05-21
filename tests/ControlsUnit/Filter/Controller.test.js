@@ -840,7 +840,7 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             }
          };
          Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID_2');
-         assert.isOk(self._crudWrapper);
+         assert.isOk(self._sourceController);
          Filter._private.addToHistory(self, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
          assert.isTrue(historySaveEventFired);
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {

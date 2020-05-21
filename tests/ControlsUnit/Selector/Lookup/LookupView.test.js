@@ -218,7 +218,9 @@ define([
                items: getItems(6),
                multiSelect: true,
                multiLine: false,
-               readOnly: false
+               readOnly: false,
+               fontSize: 's',
+               theme: 'testTheme'
             };
 
          lookup._fieldWrapper = {

@@ -66,6 +66,7 @@
                   _counterWidth="{{_counterWidth}}"
                   maxVisibleItems="{{!_options.readOnly || _options.multiLine || _maxVisibleItems === _options.items.getCount() ? _maxVisibleItems : 0}}"
                   readOnly="{{_options.readOnly}}"
+                  fontSize="{{_options.fontSize}}"
                   on:itemClick="_itemClick()"
                   on:crossClick="_crossClick()"
                   on:openInfoBox="_openInfoBox()"

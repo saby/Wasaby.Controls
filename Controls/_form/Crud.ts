@@ -16,6 +16,11 @@ let CRUD = Control.extend({
             this._dataSource = cfg.dataSource;
         }
     },
+    _beforeUpdate(newOptions): void {
+        if (this._options.dataSource !== newOptions.dataSource) {
+            this._dataSource = newOptions.dataSource;
+        }
+    },
 
     create(initValues) {
         let def = this._dataSource.create(initValues);
@@ -58,24 +63,20 @@ let CRUD = Control.extend({
         const updateMetaData = config?.additionalData;
 
         if (record.isChanged() || isNewRecord) {
-            const resultUpdate = this._dataSource
-                .update(record, updateMetaData)
-                .then((key) => {
-                    this._notify('updateSuccessed', [record, key, config]);
-                    return key;
-                })
-                .catch((error) => {
-                    this._notify('updateFailed', [error, record]);
-                    return error;
-                });
+            const resultUpdate = this._dataSource.update(record, updateMetaData);
             const argsPending = [
                 resultUpdate, {
                     showLoadingIndicator: this._options.showLoadingIndicator
                 }
             ];
-
             this._notify('registerPending', argsPending, {bubbling: true});
-
+            resultUpdate.addCallback((key) => {
+                    this._notify('updateSuccessed', [record, key, config]);
+                    return key;
+                }).addErrback((error) => {
+                    this._notify('updateFailed', [error, record]);
+                    return error;
+                });
             return resultUpdate;
         }
 

@@ -2,6 +2,7 @@
  * Шаблон, который по умолчанию используется для отображения дня в MonthView.
  * @class Controls/calendar:MonthViewDayTemplate
  * @public
+ * @author Красильников А.С.
  */
 
 /*

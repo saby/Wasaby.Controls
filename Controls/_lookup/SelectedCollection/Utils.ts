@@ -5,9 +5,11 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 const LAST_IE_VERSION = 11;
 
 export = {
-    getCounterWidth(itemsCount: number): number {
+    getCounterWidth(itemsCount: number, theme: string, fontSize: string): number {
         return itemsCount && GetWidth.getWidth(CounterTemplate({
-            itemsCount
+            itemsCount,
+            theme,
+            fontSize
         }));
     },
 

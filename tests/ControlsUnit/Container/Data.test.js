@@ -183,25 +183,6 @@ define(
             assert.equal(data._prefetchSource._$data.query, sourceData);
          });
 
-         it('update equal source', function(done) {
-            var
-               items,
-               config = {source: source, keyProperty: 'id'},
-               data = getDataWithConfig(config);
-
-            data._beforeMount(config).addCallback(function() {
-               items = data._items;
-
-               data._beforeUpdate({source: new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: sourceDataEdited
-               }), idProperty: 'id'}).addCallback(function() {
-                  assert.isTrue(data._items === items);
-                  done();
-               });
-            });
-         });
-
          it('_itemsReadyCallbackHandler', async function() {
             const options = {source: source, keyProperty: 'id'};
             let data = getDataWithConfig(options);
@@ -292,6 +273,17 @@ define(
                   resolve();
                });
             });
+         });
+
+         it('rootChanged', async () => {
+            const config = {source: source, keyProperty: 'id', filter: {test: 'test'}, root: '123', parentProperty: 'root'};
+            const data = getDataWithConfig(config);
+
+            await data._beforeMount(config);
+            const newConfig = {...config};
+            delete newConfig.root;
+            data._beforeUpdate(newConfig);
+            assert.isTrue(!data._dataOptionsContext.filter.root);
          });
 
          it('query returns error', function(done) {

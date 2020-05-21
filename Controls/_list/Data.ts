@@ -250,6 +250,7 @@ type GetSourceResult = {
             if (this._options.source !== newOptions.source) {
                this._loading = true;
                return _private.createPrefetchSource(this, null, null, _private.getGroupHistoryId(newOptions)).addCallback((result) => {
+                  this._items = null;
                   _private.resolvePrefetchSourceResult(this, result);
                   _private.updateDataOptions(this, this._dataOptionsContext);
                   this._dataOptionsContext.updateConsumers();
@@ -260,7 +261,8 @@ type GetSourceResult = {
             } else if (!isEqual(newOptions.filter, this._options.filter) ||
                        !isEqual(newOptions.navigation, this._options.navigation) ||
                        newOptions.sorting !== this._options.sorting ||
-                       newOptions.keyProperty !== this._options.keyProperty) {
+                       newOptions.keyProperty !== this._options.keyProperty ||
+                       newOptions.root !== this._options.root) {
                _private.updateDataOptions(this, this._dataOptionsContext);
                this._dataOptionsContext.updateConsumers();
             }
