@@ -54,6 +54,7 @@ import {
    SelectionController
 } from 'Controls/multiselection';
 import { MarkerController } from 'Controls/marker';
+import {getStickyHeadersHeight} from 'Controls/scroll';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
@@ -1057,7 +1058,7 @@ const _private = {
         if (self._markerController) {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-            const verticalOffset = scrollTop - topOffset + (self._options.fixedHeadersHeights || 0);
+            const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
             self._markedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
             self._setMarkerAfterScroll = false;
         }
