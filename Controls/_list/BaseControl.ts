@@ -2740,7 +2740,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         clickEvent.preventDefault();
         clickEvent.stopPropagation();
         let contents = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
+        if (Array.isArray(item)) {
             contents = contents[contents.length - 1];
         }
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
@@ -2757,7 +2757,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, item: CollectionItem<Model>): void {
         event.stopPropagation();
         let contents: Model = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
+        if (Array.isArray(item)) {
             contents = contents[contents.length - 1];
         }
         _private.setMarkedKey(this, contents.getKey());
