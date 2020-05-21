@@ -402,10 +402,13 @@ import {Model} from 'Types/entity';
          _selectorOpenCallback() {
             const value = getPropValue(this._items.at(this.lastOpenIndex), 'value');
             const selectedKeys = value instanceof Array ? value : [value];
-            return chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
+            let selectedItems = chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
                const itemId = item.getKey();
                return itemId !== null && selectedKeys.includes(itemId);
             }).value();
+            return new collection.List({
+                items: selectedItems
+            });
          },
 
          _beforeUpdate: function(newOptions) {
