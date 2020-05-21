@@ -1,18 +1,18 @@
-import {ICrudPlus, PrefetchProxy} from 'Types/source';
+import {ICrudPlus} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {Controller as SourceController} from 'Controls/source';
+import {CrudWrapper} from '../dataSource';
 
 import {
     IHierarchyOptions, IIconSizeOptions,
     IItemTemplate, IItemTemplateOptions,
 } from 'Controls/interface';
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
-import * as template from 'wml!Controls/_toolbars/BoxView';
-import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
+import * as template from 'wml!Controls/_toolbars/BoxView/BoxView';
+import * as defaultItemTemplate from 'wml!Controls/_toolbars/BoxView/ItemTemplate';
 import {ButtonTemplate, IButtonOptions, cssStyleGeneration} from 'Controls/buttons';
 
 type TItem = Record;
@@ -23,8 +23,8 @@ export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: ICon
     const style = item.get('buttonStyle');
     const viewMode = item.get('viewMode');
 
-    const size = 's';
-    const iconSize = 's';
+    const size = item.get('iconSize') || toolbarOptions.iconSize;
+    const iconSize = item.get('iconSize') || toolbarOptions.iconSize;
 
     const iconStyle = item.get('iconStyle');
     const transparent = item.get('buttonTransparent');
@@ -60,7 +60,7 @@ export function getButtonTemplate(): TemplateFunction {
 /**
  * Интерфейс опций контрола {@link Controls/toolbars:BoxView}.
  * @interface Controls/_toolbars/IToolbarBoxOptions
- * @author Губин П.А. (Красильников А.С.)
+ * @author Красильников А.С.
  */
 export interface IToolbarBoxOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IToolbarSourceOptions {
@@ -74,7 +74,7 @@ export interface IToolbarBoxOptions extends IControlOptions, IHierarchyOptions, 
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_toolbars/IToolbarSource
  *
- * @author Губин П.А. (Красильников А.С.)
+ * @author Красильников А.С.
  */
 class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTemplate, IToolbarSource {
     protected _items: TItems = null;
@@ -86,18 +86,8 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
     readonly '[Controls/_toolbars/IToolbarSource]': boolean = true;
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
 
-    private _createPrefetchProxy(source: ICrudPlus, items: TItems): ICrudPlus {
-        return new PrefetchProxy({
-            target: source,
-            data: {
-                query: items
-            }
-        });
-    }
-
     private _setStateByItems(items: TItems, source: ICrudPlus): void {
         this._items = items;
-        this._source = this._createPrefetchProxy(source, items);
     }
 
     private _setStateBySource(source: ICrudPlus): Promise<TItems> {
@@ -155,16 +145,8 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
     static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
 
     private static _loadItems(source: ICrudPlus): Promise<TItems> {
-        const sourceController = new SourceController({
-            source
-        });
-
-        return sourceController.load();
-        /*
-        import {CrudWrapper} from "../dataSource";
         const crudWrapper = new CrudWrapper({source});
         return crudWrapper.query({});
-        */
     }
 
     static getDefaultOptions() {
