@@ -360,11 +360,10 @@ var SuggestLayout = Control.extend({
       this._searchDelay = options.searchDelay;
       this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
-      _private.setFilter(this, options.filter, options);
-
       if (_private.isValueLengthLongerThenMinSearchLength(options.value, options)) {
          _private.setSearchValue(this, options.value);
       }
+      _private.setFilter(this, options.filter, options);
    },
    _beforeUnmount: function() {
       this._searchResult = null;

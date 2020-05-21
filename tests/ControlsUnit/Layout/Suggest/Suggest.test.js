@@ -655,11 +655,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       it('Suggest::_beforeMount', function() {
          let suggestComponent = new suggestMod._InputController();
 
-         suggestComponent._searchValue = '123';
          suggestComponent._beforeMount({
             searchParam: 'title',
             minSearchLength: 3,
-            filter: {test: 5}
+            filter: {test: 5},
+            value: '123'
          });
 
          assert.deepEqual(suggestComponent._filter, {
