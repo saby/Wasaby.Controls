@@ -32,7 +32,7 @@
       </ws:if>
    </ws:placeholder>
    <ws:content>
-      <ws:if data="{{_options.forComment && _options.readOnly && !_options.multiline}}">
+      <ws:if data="{{_options.readOnly && !_options.multiline}}">
          <ws:partial options="{{_options}}"
                      scope="{{_readOnlyField.scope}}"
                      value="{{_viewModel.displayValue}}"
