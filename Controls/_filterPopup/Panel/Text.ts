@@ -1,23 +1,12 @@
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Text/Text');
-import 'css!theme?Controls/filterPopup';
 
-/**
+   /**
     * Контрол, отображающий текст с кнопкой сброса в виде крестика.
     * Используется для демонстрации пользователю выбранного фильтра, клик по крестику сбрасывает фильтр.
     * @class Controls/_filterPopup/Panel/Text
     * @extends Core/Control
     * @mixes Controls/_interface/ITextValue
-    * @control
-    * @public
-    * @author Герасимов А.М.
-    */
-
-   /*
-    * Control with caption and reset button.
-    * Is used for demonstration of selected filter, click on cross will reset filter
-    * @class Controls/_filterPopup/Panel/Text
-    * @extends Core/Control
     * @control
     * @public
     * @author Герасимов А.М.
@@ -34,16 +23,6 @@ import 'css!theme?Controls/filterPopup';
     * </pre>
     */
 
-   /*
-    * @name Controls/_filterPopup/Panel/Text#caption
-    * @cfg {String} Caption Control caption text.
-    * @example
-    * <pre>
-    *    <Controls.filterPopup:Text>
-    *        <ws:caption>По удалённым</ws:caption>
-    *    </Controls.filterPopup:Text>
-    * </pre>
-    */
    /**
     * @name Controls/_filterPopup/Panel/Text#value
     * @cfg {*} [value=true] Значение, которое будет установлено в конфигурацию фильтра после построения контрола.
@@ -54,27 +33,24 @@ import 'css!theme?Controls/filterPopup';
     *    </Controls.filterPopup:Text>
     * </pre>
     */
-
-   var Text = Control.extend({
-      _template: template,
-
-      _afterMount: function() {
+class Text extends Control<IControlOptions> {
+      protected _template: TemplateFunction = template;
+      protected  _afterMount(): void {
          this._notify('valueChanged', [this._options.value]);
          this._notify('textValueChanged', [this._options.caption]);
-      },
+      }
 
-      _resetHandler: function() {
+      protected _resetHandler(): void {
          this._notify('visibilityChanged', [false]);
       }
 
-   });
+      static _theme: string[] = ['Controls/filterPopup'];
 
-   Text.getDefaultOptions = function() {
-      return {
-         value: true
-      };
-   };
+      static getDefaultOptions(): object {
+         return {
+            value: true
+         };
+      }
+   }
 
-   export = Text;
-
-
+export default Text;
