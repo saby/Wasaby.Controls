@@ -330,9 +330,7 @@ var _private = {
             horizontal: 'overflow'
          },
          eventHandlers: {
-            onOpen: () => {
-               self._onOpen();
-            },
+            onOpen: self._onOpen,
             onClose: () => {
                self._popupId = null;
                self._onClose();
