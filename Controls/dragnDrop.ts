@@ -25,7 +25,7 @@
  */
 
 import Container = require('Controls/_dragnDrop/Container');
-import Controller = require('Controls/_dragnDrop/Controller/Controller');
+import Controller = require('Controls/_dragnDrop/Controller');
 import DraggingTemplate = require('Controls/_dragnDrop/DraggingTemplate');
 import Entity = require('Controls/_dragnDrop/Entity');
 import ItemsEntity = require('Controls/_dragnDrop/Entity/Items');

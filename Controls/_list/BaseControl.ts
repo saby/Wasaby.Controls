@@ -340,7 +340,7 @@ const _private = {
         return resDeferred;
     },
 
-    // TODO по этому условию проверять стоит ли создавать контроллер, а часть наверное вынести в контроллер
+    // TODO dnd по этому условию проверять стоит ли создавать контроллер, а часть наверное вынести в контроллер
     canStartDragNDrop(domEvent: any, cfg: any, isTouch: boolean): boolean {
         return !isTouch && 
             (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
@@ -350,12 +350,14 @@ const _private = {
             !domEvent.target.closest('.controls-DragNDrop__notDraggable');
     },
     startDragNDrop(self, domEvent, itemData): void {
+        // TODO dnd росто проверить что контроллер создан
         if (_private.canStartDragNDrop(domEvent, self._options, self._context?.isTouch?.isTouch)) {
             const key = self._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
 
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-            const selection = _private.getSelectionForDragNDrop(self._options.selectedKeys, self._options.excludedKeys, key);
+            // TODO dnd вызвать аналогичный метод контроллера
+            const selection = self._dndListController.getSelectionForDragNDrop(self._options.selectedKeys, self._options.excludedKeys, key);
             selection.recursive = false;
             const recordSet = self._options.useNewModel ? self._listViewModel.getCollection() : self._listViewModel.getItems();
 
@@ -375,7 +377,7 @@ const _private = {
                         dragStartResult.dragControlId = self._options.dragControlId;
                     }
                     self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
-                    self._draggingItem = itemData;
+                    self._dndListController.draggingItem = itemData;
                 }
             });
         }
@@ -2841,38 +2843,25 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject, domEvent) {
-        if (this._options.useNewModel) {
-            this._draggingEntity = dragObject.entity;
-        } else {
-            this._listViewModel.setDragEntity(dragObject.entity);
-            this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItem.dispItem));
+        const notifyChangeDragTarget = (dragEntity, dragPosition) => {
+            this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]);
+        }
 
-            // Cобытие mouseEnter на записи может сработать до dragStart.
-            // И тогда перемещение при наведении не будет обработано. 
-            // В таком случае обрабатываем наведение на запись сейчас.
-            // 
-            //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
-            if (this._unprocessedDragEnteredItem) {
-                this._processItemMouseEnterWithDragNDrop(event, this._unprocessedDragEnteredItem);
-            }
+        if (this._dndListController) {
+            this._dndListController.handleDragStart(dragObject, notifyChangeDragTarget);
         }
     },
 
     _dragEnd: function(event, dragObject) {
+        // TODO dnd хуета
         if (this._options.itemsDragNDrop) {
-            this._dragEndHandler(dragObject);
-        }
-    },
-
-    _dragEndHandler: function(dragObject) {
-        if (!this._options.useNewModel) {
-            var targetPosition = this._listViewModel.getDragTargetPosition();
-            if (targetPosition) {
-                this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            if (!this._options.useNewModel) {
+                var targetPosition = this._listViewModel.getDragTargetPosition();
+                if (targetPosition) {
+                    this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+                }
             }
         }
-        // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой. Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
-        this._showActions = false;
     },
 
     handleKeyDown(event): void {
@@ -2944,59 +2933,36 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._listViewModel.setDragEntity(null);
         }
     },
-    _processItemMouseEnterWithDragNDrop(_, itemData) {
-        const dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
-        let dragPosition;
-        if (dragEntity) {
-            dragPosition = this._options.useNewModel ?
-                    {position: 'before', item: itemData.getContents()} :
-                    this._listViewModel.calculateDragTargetPosition(itemData);
-            if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false) {
-                if (this._options.useNewModel) {
-                    this._draggingTargetItem = dragPosition.item;
-                } else {
-                    this._listViewModel.setDragTargetPosition(dragPosition);
-                }
-            }
-            this._unprocessedDragEnteredItem = null;
-        }
-    },
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        if (this._options.itemsDragNDrop) {
-            this._unprocessedDragEnteredItem = itemData;
-            this._processItemMouseEnterWithDragNDrop(event, itemData);
+        const notifyChangeDragTarget = (dragEntity, dragPosition) => {
+            this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]);
         }
+
+        if (this._dndListController) {
+            this._dndListController.unprocessedDragEnteredItem = itemData;
+            this._dndListController.processItemMouseEnterWithDragNDrop(itemData, notifyChangeDragTarget);
+        }
+
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
-        if (
-            !this._options.useNewModel &&
-            (!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) &&
-            !this._showActions
-        ) {
-            this._showActions = true;
+
+        if (this._dndListController) {
+            if (this._dndListController.isDragging()) {
+                this._notify('draggingItemMouseMove', [itemData, nativeEvent]);
+            }
         }
-        if (this._options.itemsDragNDrop) {
-            _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
-        }
-        /*
-            вызывать по результату метода контроллера, если вернет тру
-            _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
-         */
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
-        if (this._options.itemsDragNDrop) {
-            this._unprocessedDragEnteredItem = null;
-            _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
+        if (this._dndListController) {
+            this._dndListController.unprocessedDragEnteredItem = null;
+            if (this._dndListController.isDragging()) {
+                this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
+            }
         }
-
-        /*
-            вызывать по результату метода контроллера, если вернет тру
-            _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
-         */
     },
     _sortingChanged: function(event, propName) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName);
