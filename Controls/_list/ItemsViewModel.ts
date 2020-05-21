@@ -145,7 +145,7 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     _isSupportVirtualScroll: function() {
-        return Boolean(this._options?.virtualScrollConfig) && (!this._options.task1179200403 || this._options.supportVirtualScroll);
+        return Boolean(this._options?.virtualScrollConfig) && this._options.supportVirtualScroll;
     },
 
     reset: function() {

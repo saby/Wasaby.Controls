@@ -390,7 +390,7 @@ export default class ScrollContainer extends Control<IOptions> {
         {start, stop}: IRange,
         force?: boolean
     ): void {
-        if (!this._options.task1179200403 || this._options.needScrollCalculation) {
+        if (this._options.needScrollCalculation) {
             let collectionStartIndex: number;
             let collectionStopIndex: number;
 
