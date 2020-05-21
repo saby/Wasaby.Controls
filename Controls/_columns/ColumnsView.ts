@@ -1,5 +1,9 @@
 /**
  * Списочный контрол, который позволяет расположить записи в нескольких столбцах в зависимости от доступной ширины.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_columns.less">переменные тем оформления</a>
  *
  * @class Controls/columns:View
  * @extends Core/Control

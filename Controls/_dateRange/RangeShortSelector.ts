@@ -8,6 +8,10 @@ import componentTmpl = require('wml!Controls/_dateRange/RangeShortSelector/Range
 /**
  * Контрол позволяет пользователю выбрать временной период: месяц, квартал, полугодие, год. Выбор происходит с помощью панели быстрого выбора периода.
  *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a>
+ * 
  * @class Controls/_dateRange/RangeShortSelector
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
