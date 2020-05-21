@@ -85,7 +85,7 @@ define(
 
             renderOptions.multiSelect = true;
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
-            assert.equal(leftSpacing, 'm');
+            assert.equal(leftSpacing, 'null');
 
             renderOptions.itemPadding.left = 'xs';
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
