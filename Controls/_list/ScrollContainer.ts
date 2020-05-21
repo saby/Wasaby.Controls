@@ -493,10 +493,11 @@ export default class ScrollContainer extends Control<IOptions> {
     private _viewportResize(viewportSize: number, updateItemsHeights: boolean = true): void {
         this._viewportHeight = viewportSize;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
+        const itemsContainer = this._itemsContainerGetter();
         this._virtualScroll.resizeViewport(
             this._viewportHeight,
             this._triggerOffset,
-            updateItemsHeights ? this._itemsContainer : undefined
+            updateItemsHeights ? itemsContainer : undefined
         );
     }
 
@@ -523,7 +524,8 @@ export default class ScrollContainer extends Control<IOptions> {
     private _afterRenderHandler(): void {
         if (this._virtualScroll.rangeChanged) {
             this._viewResize(this._container.offsetHeight, false);
-            this._virtualScroll.updateItemsHeights(this._itemsContainer);
+            const itemsContainer = this._itemsContainerGetter();
+            this._virtualScroll.updateItemsHeights(itemsContainer);
         }
 
         if (this._applyScrollTopCallback) {
