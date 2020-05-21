@@ -407,7 +407,7 @@ var SuggestLayout = Control.extend({
       }
 
       if (this._options.validationStatus !== newOptions.validationStatus &&
-          _private.isInvalidValidationStatus(newOptions)) {
+          _private.isInvalidValidationStatus(newOptions) && !_private.isInvalidValidationStatus(this._options)) {
          _private.close(this, newOptions);
       }
    },
