@@ -273,7 +273,7 @@ var _private = {
             }
          });
          self._loadMenuTempPromise = mStubs.require(templatesToLoad).then((loadedDeps) => {
-            return loadedDeps[0].Popup.loadCSS(options.theme);
+            return loadedDeps[0].Control.loadCSS(options.theme);
          });
       }
       return self._loadMenuTempPromise;
