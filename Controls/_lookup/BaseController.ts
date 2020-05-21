@@ -204,6 +204,10 @@ var _private = {
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
 
+         if (sourceIsChanged) {
+            this.sourceController = null;
+         }
+
          if (keysChanged || sourceIsChanged) {
             this._selectedKeys = newOptions.selectedKeys.slice();
          } else if (newOptions.keyProperty !== this._options.keyProperty) {
@@ -224,7 +228,7 @@ var _private = {
 
                   return result;
                });
-            } else if (keysChanged) {
+            } else {
                this._setItems(new List());
             }
          }

@@ -11,7 +11,6 @@ import { Sticky } from 'Controls/popup';
 import {
     Collection,
     CollectionItem,
-    MarkerCommands,
     ICollectionCommand,
     ANIMATION_STATE
 } from 'Controls/display';
@@ -27,6 +26,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { constants } from 'Env/Env';
 
 import { ISwipeEvent } from './Render';
+import { MarkerController, TVisibility, Visibility } from 'Controls/marker';
 
 export interface IViewOptions extends IControlOptions {
     items: RecordSet;
@@ -46,6 +46,9 @@ export interface IViewOptions extends IControlOptions {
     actionCaptionPosition?: 'right'|'bottom'|'none';
 
     editingConfig?: any;
+
+    markerVisibility: TVisibility;
+    markedKey: number|string;
 }
 
 const ITEM_ACTION_VISIBILITY_DELAY = 100;
@@ -67,9 +70,18 @@ export default class View extends Control<IViewOptions> {
     // функция отложенного отображения/скрытия операций записи
     private _initItemActionsDebounced: (immediate?: boolean, stop?: boolean) => void = null;
 
+    private _markerController: MarkerController = null;
+
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
         this._initItemActionsDebounced = debounce(this._initItemActions.bind(this), ITEM_ACTION_VISIBILITY_DELAY);
+        if (options.markerVisibility !== Visibility.Hidden) {
+            this._markerController = new MarkerController({
+                model: this._collection,
+                markerVisibility: options.markerVisibility,
+                markedKey: options.markedKey
+            });
+        }
         return libraryLoad(options.render).then(() => null);
     }
 
@@ -86,6 +98,18 @@ export default class View extends Control<IViewOptions> {
 
         if (options.editingConfig !== this._options.editingConfig || options.editingConfig && collectionRecreated) {
             this._collection.setEditingConfig(options.editingConfig);
+        }
+
+        if (options.markedKey !== this._options.markedKey
+           || options.markerVisibility !== this._options.markerVisibility
+           || collectionRecreated) {
+            if (this._markerController) {
+                this._markerController.update({
+                    model: this._collection,
+                    markerVisibility: options.markerVisibility,
+                    markedKey: options.markedKey
+                });
+            }
         }
 
         // UC: Record might be editing on page load, then we should initialize Item Actions.
@@ -164,8 +188,9 @@ export default class View extends Control<IViewOptions> {
         item: Model,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        const moveMarker = new MarkerCommands.Mark(item.getKey());
-        this._executeCommands([moveMarker]);
+        if (this._markerController) {
+            this._markerController.setMarkedKey(item.getKey());
+        }
         // TODO fire 'markedKeyChanged' event
     }
 
@@ -217,8 +242,9 @@ export default class View extends Control<IViewOptions> {
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        const moveMarker = new MarkerCommands.Mark(item.getContents().getKey());
-        this._executeCommands([moveMarker]);
+        if (this._markerController) {
+            this._markerController.setMarkedKey(item.getContents().getKey());
+        }
         // TODO fire 'markedKeyChanged' event
 
         if (action && !action._isMenu && !action['parent@']) {
@@ -255,16 +281,18 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         keyDownEvent: SyntheticEvent<KeyboardEvent>
     ): void {
-        const commands: Array<ICollectionCommand<unknown>> = [];
         switch (keyDownEvent.nativeEvent.keyCode) {
         case constants.key.down:
-            commands.push(new MarkerCommands.MarkNext());
+            if (this._markerController) {
+                this._markerController.moveMarkerToNext();
+            }
             break;
         case constants.key.up:
-            commands.push(new MarkerCommands.MarkPrevious());
+            if (this._markerController) {
+                this._markerController.moveMarkerToPrev();
+            }
             break;
         }
-        this._executeCommands(commands);
         // TODO fire 'markedKeyChanged' event if needed
     }
 

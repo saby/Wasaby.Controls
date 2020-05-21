@@ -610,11 +610,13 @@ var ItemsViewModel = BaseViewModel.extend({
             this.reset();
             while (this.isEnd()) {
                 const index = this.getCurrentIndex();
-                callback.call(
-                    context,
-                    this.getCurrent(),
-                    index
-                );
+                if (this.isShouldBeDrawnItem()) {
+                    callback.call(
+                        context,
+                        this.getCurrent(),
+                        index
+                    );
+                }
                 this.goToNext();
             }
         }
@@ -678,6 +680,11 @@ var ItemsViewModel = BaseViewModel.extend({
     getHasMoreData: function() {
         return this._hasMoreData;
     },
+
+    setTheme(theme: string): void {
+        this._options.theme = theme;
+        this.resetCachedItemData();
+    }
 });
 
 export = ItemsViewModel;

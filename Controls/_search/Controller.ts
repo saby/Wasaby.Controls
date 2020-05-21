@@ -233,22 +233,15 @@ var _private = {
       return !checkedValue;
    },
 
-   needStartSearch(self, options, needRecreateSearchController, searchValue: string, needUpdateRoot: boolean): boolean {
-      const isSearchValueChanged = _private.isSearchValueChanged(self, searchValue);
+   needStartSearchBySearchValueChanged(self, options: object, searchValue: string): boolean {
       const isSearchValueShorterThenMinLength = _private.isSearchValueShort(options.minSearchLength, searchValue);
-      const startSearchWithNewSourceController = searchValue && needRecreateSearchController;
-      const needStartSearchBySearchValueChanged =
-          isSearchValueChanged &&
+      const isSearchValueChanged = _private.isSearchValueChanged(self, searchValue);
+      return isSearchValueChanged &&
           (!isSearchValueShorterThenMinLength || (_private.isSearchViewMode(self) && !searchValue && self._searchValue));
-
-      return needStartSearchBySearchValueChanged &&
-          !needUpdateRoot ||
-          startSearchWithNewSourceController;
    },
 
-   needUpdateInputSearchValue(self, options, needRecreateSearchController, searchValue: string): boolean {
-      return _private.isInputSearchValueChanged(this, searchValue) &&
-             _private.needStartSearch(self, options, needRecreateSearchController, searchValue);
+   startSearchWithNewSourceController(searchValue: string, needRecreateSearchController: boolean): boolean {
+      return searchValue && needRecreateSearchController;
    },
 
    isSearchViewMode(self): boolean {
@@ -420,11 +413,15 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
          }
       }
 
-      if (_private.needStartSearch(this, newOptions, needRecreateSearchController, searchValue, needUpdateRoot)) {
-         _private.startSearch(this, searchValue);
-      }
-      if (_private.needUpdateInputSearchValue(this, newOptions, needRecreateSearchController, searchValue)) {
-         _private.setInputSearchValue(this, searchValue);
+      const isNewSourceController = _private.startSearchWithNewSourceController(searchValue, needRecreateSearchController);
+
+      if (_private.needStartSearchBySearchValueChanged(this, newOptions, searchValue) || isNewSourceController) {
+         if (!needUpdateRoot || isNewSourceController) {
+            _private.startSearch(this, searchValue);
+         }
+         if (_private.isInputSearchValueChanged(this, searchValue)) {
+            _private.setInputSearchValue(this, searchValue);
+         }
       }
    },
 

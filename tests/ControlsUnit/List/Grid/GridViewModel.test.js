@@ -599,7 +599,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getItemColumnCellClasses for old browsers', function() {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
-               current = gridViewModel.getCurrent(),
+               current,
                expected = {
                   withMarker: 'controls-Grid__row-cell controls-Grid__row-cell_theme-default controls-Grid__row-cell-background-hover_theme-default ' +
                       'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__row-cell-checkbox_theme-default ' +
@@ -610,6 +610,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                       'controls-Grid__row-checkboxCell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ' +
                       'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default_theme-default controls-Grid__row-cell_selected__first-default_theme-default'
                };
+
+            gridViewModel.setMarkedKey(123);
+            assert.equal(gridViewModel.getMarkedKey(), 123);
+
+            current = gridViewModel.getCurrent();
             current.isNotFullGridSupport = true;
 
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(),
@@ -693,6 +698,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('shouldDrawMarker', function() {
             const gridViewModel = new gridMod.GridViewModel(cfg);
+            gridViewModel.setMarkedKey(123);
+            assert.equal(gridViewModel.getMarkedKey(), 123);
             const firstItem = gridViewModel._model.getDisplay().at(0);
             let itemData = gridViewModel.getItemDataByItem(firstItem);
 
@@ -725,7 +732,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getItemColumnCellClasses', function() {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
-               current = gridViewModel.getCurrent(),
+               current,
                expectedResult = [
                   'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ' +
                   'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__row-cell-checkbox_theme-default ' +
@@ -754,6 +761,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell__last controls-Grid__row-cell__last-default_theme-default'
                ];
 
+            gridViewModel.setMarkedKey(123);
+            assert.equal(gridViewModel.getMarkedKey(), 123);
+
+            current = gridViewModel.getCurrent();
+
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[0]);
             current.goToNextColumn();
 
@@ -773,7 +785,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       describe('getCurrent', function() {
          var
             gridViewModel = new gridMod.GridViewModel(cfg),
-            current = gridViewModel.getCurrent();
+            current;
+         gridViewModel.setMarkedKey(123);
+         assert.equal(gridViewModel.getMarkedKey(), 123);
+
+         current = gridViewModel.getCurrent();
 
          it('configuration', function() {
             assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
@@ -798,10 +814,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
          it('state', function() {
-            assert.isTrue(current._isSelected, 'Incorrect value "current._isSelected".');
-            assert.equal(false, current.isActive(), 'Incorrect value "current.isActive()".');
+            assert.isTrue(current._isSelected, 'Incorrect value "current.isSelected".');
+            assert.equal(false, current.isActive(), 'Incorrect value "current.isActive".');
             assert.isTrue(current.multiSelectVisibility === 'visible');
-            assert.equal(false, current.isSwiped(), 'Incorrect value "current.isSwiped()".');
+            assert.equal(false, current.isSwiped(), 'Incorrect value "current.isSwiped".');
          });
 
          it('columns', function() {
