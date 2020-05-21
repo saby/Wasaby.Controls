@@ -274,7 +274,9 @@ var _private = {
                templatesToLoad.push(options[template]);
             }
          });
-         self._loadMenuTempPromise = mStubs.require(templatesToLoad);
+         self._loadMenuTempPromise = mStubs.require(templatesToLoad).then((loadedDeps) => {
+            return loadedDeps[0].Control.loadCSS(options.theme);
+         });
       }
       return self._loadMenuTempPromise;
    },
