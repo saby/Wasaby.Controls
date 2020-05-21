@@ -6,7 +6,6 @@
             itemActions="{{_itemActions}}"
             itemActionVisibility="{{_itemActionVisibility}}"
             itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-            attr:style="width: 100%"
             bind:markedKey="_markedKey">
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">
