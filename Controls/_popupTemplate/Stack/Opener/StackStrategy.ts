@@ -63,14 +63,11 @@ const _private = {
             tCoords.right = 0;
         }
         // Если панель не уместилась по ширине, то позиционирование панели осуществляется от правого края экрана
-        if ((panelWidth + tCoords.right) > _private.getBodyWidth()) {
+        if ((panelWidth + tCoords.right) > maxPanelWidth) {
             tCoords.right = 0;
         }
 
         return panelWidth;
-    },
-    getBodyWidth() {
-        return document?.body.clientWidth;
     },
 
     getParentPosition(item: IPopupItem): IPopupPosition {

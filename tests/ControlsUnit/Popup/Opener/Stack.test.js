@@ -764,7 +764,6 @@ define(
                right: 150,
                top: 0
             };
-            StackStrategy._private.getBodyWidth = () => 1024;
             // document.body.clientWidth = 1024, maxPanelWidth = 1024 - 100 = 924
             const panelWidth = StackStrategy._private.getPanelWidth(item, tCoords, 924);
             assert.equal(panelWidth, 950);
