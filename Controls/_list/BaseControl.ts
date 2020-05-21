@@ -1238,7 +1238,7 @@ const _private = {
             newModelChanged
         ) {
             self._itemsChanged = true;
-            if (self._itemActionsInitialized) {
+            if (self._listViewModel.isActionsAssigned()) {
                 self._updateItemActions(self._options);
             }
         }
@@ -1876,7 +1876,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _scrollPageLocked: false,
 
     _itemReloaded: false,
-    _itemActionsInitialized: false,
     _modelRecreated: false,
 
     _portionedSearch: null,
@@ -1893,6 +1892,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _notifyHandler: tmplNotify,
 
+    // По умолчанию считаем, что показывать экшны не надо, пока не будет установлено true
+    _showActions: false,
+
     // Идентификатор текущего открытого popup
     _itemActionsMenuId: null,
 
@@ -1906,7 +1908,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _markedKey: null,
 
     // функция отложенного отображения/скрытия операций записи
-    _initItemActionsDebounced: null,
+    _itemActionsInitializerDebounced: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -1928,7 +1930,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._inertialScrolling = new InertialScrolling();
 
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
-        this._initItemActionsDebounced = debounce(self._initItemActions.bind(self), ITEM_ACTION_VISIBILITY_DELAY);
+
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
 
@@ -1976,6 +1978,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             if (newOptions.markerVisibility !== 'hidden') {
                 self._markerController = _private.createMarkerController(self, newOptions);
+            }
+
+            if (newOptions.itemActionVisibility === 'delayed') {
+                this._itemActionsInitializerDebounced = debounce(self._itemActionsInitializer.bind(self), ITEM_ACTION_VISIBILITY_DELAY);
+            }
+            if (newOptions.itemActionVisibility === 'visible') {
+                self._showActions = true;
+                self._updateItemActions(newOptions);
             }
 
             if (newOptions.source) {
@@ -2591,13 +2601,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Добавляет CSS класс, который Показывает или скрывает ItemActions
      * @private
      */
-    _initItemActions(immediate?: boolean, stop?: boolean): void {
+    _itemActionsInitializer(immediate?: boolean, stop?: boolean): void {
         if (this._options.itemActionVisibility === 'onhover' || immediate) {
-            if (!this._itemActionsInitialized && !stop) {
+            if (!this._listViewModel.isActionsAssigned() && !stop) {
                 this._updateItemActions(this._options);
             }
         } else if (this._options.itemActionVisibility === 'delayed') {
-            this._initItemActionsDebounced(true);
+            this._itemActionsInitializerDebounced(true, stop);
         }
     },
 
@@ -2932,7 +2942,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onItemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._initItemActions();
+        this._itemActionsInitializer();
         if (this._options.itemsDragNDrop) {
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(event, itemData);
@@ -2962,7 +2972,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onItemMouseLeave(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._initItemActionsDebounced(true, true);
+        this._itemActionsInitializer(false, true);
         this._notify('itemMouseLeave', [itemData.getContents(), nativeEvent]);
         if (this._options.itemsDragNDrop) {
             this._unprocessedDragEnteredItem = null;
@@ -3167,7 +3177,7 @@ BaseControl.getDefaultOptions = function() {
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {},
-        itemActionVisibility: 'delayed'
+        itemActionVisibility: 'onhover'
     };
 };
 export = BaseControl;

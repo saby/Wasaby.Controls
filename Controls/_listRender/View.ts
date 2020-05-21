@@ -64,17 +64,21 @@ export default class View extends Control<IViewOptions> {
     // Идентификатор текущего открытого popup
     private _itemActionsMenuId: string = null;
 
-    // Флаг, позволяющий не повторять инициализацию на каждом наведении на запись
-    private _itemActionsInitialized: boolean = false;
-
     // функция отложенного отображения/скрытия операций записи
-    private _initItemActionsDebounced: (immediate?: boolean, stop?: boolean) => void = null;
+    private _itemActionsInitializerDebounced: (immediate?: boolean, stop?: boolean) => void = null;
 
     private _markerController: MarkerController = null;
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
-        this._initItemActionsDebounced = debounce(this._initItemActions.bind(this), ITEM_ACTION_VISIBILITY_DELAY);
+
+        if (options.itemActionVisibility === 'delayed') {
+            this._itemActionsInitializerDebounced = debounce(this._itemActionsInitializer.bind(this), ITEM_ACTION_VISIBILITY_DELAY);
+        }
+        if (options.itemActionVisibility === 'visible') {
+            this._updateItemActions(options);
+        }
+
         if (options.markerVisibility !== Visibility.Hidden) {
             this._markerController = new MarkerController({
                 model: this._collection,
@@ -135,13 +139,13 @@ export default class View extends Control<IViewOptions> {
      * Добавляет CSS класс, который Показывает или скрывает ItemActions
      * @private
      */
-    _initItemActions(immediate?: boolean, stop?: boolean): void {
+    protected _itemActionsInitializer(immediate?: boolean, cancel?: boolean): void {
         if (this._options.itemActionVisibility === 'onhover' || immediate) {
-            if (!this._itemActionsInitialized && !stop) {
+            if (!this._collection.isActionsAssigned() && !cancel) {
                 this._updateItemActions(this._options);
             }
         } else if (this._options.itemActionVisibility === 'delayed') {
-            this._initItemActionsDebounced(true);
+            this._itemActionsInitializerDebounced(true, cancel);
         }
     }
 
@@ -153,7 +157,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     _onItemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._initItemActions();
+        this._itemActionsInitializer(false, false);
     }
 
     /**
@@ -164,7 +168,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     _onItemMouseLeave(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._initItemActionsDebounced(true, true);
+        this._itemActionsInitializer(true, true);
     }
 
     /**
