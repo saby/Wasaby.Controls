@@ -2846,7 +2846,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else {
             this._listViewModel.setDragEntity(dragObject.entity);
             this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItem.dispItem));
-            
+
             // Cобытие mouseEnter на записи может сработать до dragStart.
             // И тогда перемещение при наведении не будет обработано. 
             // В таком случае обрабатываем наведение на запись сейчас.
@@ -2981,6 +2981,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._options.itemsDragNDrop) {
             _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
         }
+        /*
+            вызывать по результату метода контроллера, если вернет тру
+            _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
+         */
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
@@ -2988,6 +2992,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._unprocessedDragEnteredItem = null;
             _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
         }
+
+        /*
+            вызывать по результату метода контроллера, если вернет тру
+            _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
+         */
     },
     _sortingChanged: function(event, propName) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName);
