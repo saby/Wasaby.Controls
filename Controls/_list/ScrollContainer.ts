@@ -107,7 +107,8 @@ export default class ScrollContainer extends Control<IOptions> {
     private _throttledPositionChanged: Function = throttle((params) => {
         const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-        this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+        this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
+            this._options.needScrollCalculation, this._options.task1179200403);
     }, SCROLLMOVE_DELAY, true);
 
     protected _beforeMount(options: IOptions): void {
@@ -283,7 +284,8 @@ export default class ScrollContainer extends Control<IOptions> {
                             const rangeShiftResult = this._virtualScroll
                                 .resetRange(index, this._options.collection.getCount());
                             this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-                            this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+                            this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
+                                this._options.needScrollCalculation, this._options.task1179200403);
 
                             // Скролл нужно восстанавливать после отрисовки, для этого используем _restoreScrollResolve
                             this._restoreScrollResolve = scrollCallback;
@@ -366,7 +368,8 @@ export default class ScrollContainer extends Control<IOptions> {
         const rangeShiftResult = this._virtualScroll
             .resetRange(initialIndex, options.collection.getCount(), itemsHeights);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-        this._setCollectionIndices(options.collection, rangeShiftResult.range, true);
+        this._setCollectionIndices(options.collection, rangeShiftResult.range, true,
+            options.needScrollCalculation, options.task1179200403);
 
         if (options.activeElement) {
             this._restoreScrollResolve = () => {
@@ -388,28 +391,31 @@ export default class ScrollContainer extends Control<IOptions> {
     private _setCollectionIndices(
         collection: Collection<Record>,
         {start, stop}: IRange,
-        force?: boolean
+        force?: boolean,
+        needScrollCalculation?: boolean,
+        task1179200403 ?: boolean
     ): void {
-        let collectionStartIndex: number;
-        let collectionStopIndex: number;
+        if (!task1179200403 || needScrollCalculation) {
+            let collectionStartIndex: number;
+            let collectionStopIndex: number;
 
-        if (collection.getViewIterator) {
-            collectionStartIndex = displayLib.VirtualScrollController.getStartIndex(collection);
-            collectionStopIndex = displayLib.VirtualScrollController.getStopIndex(collection);
-        } else {
-            collectionStartIndex = collection.getStartIndex();
-            collectionStopIndex = collection.getStopIndex();
-        }
-
-        if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
             if (collection.getViewIterator) {
-                collection.getViewIterator().setIndices(start, stop);
+                collectionStartIndex = displayLib.VirtualScrollController.getStartIndex(collection);
+                collectionStopIndex = displayLib.VirtualScrollController.getStopIndex(collection);
             } else {
-                // @ts-ignore
-                collection.setIndexes(start, stop);
+                collectionStartIndex = collection.getStartIndex();
+                collectionStopIndex = collection.getStopIndex();
+            }
+
+            if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
+                if (collection.getViewIterator) {
+                    collection.getViewIterator().setIndices(start, stop);
+                } else {
+                    // @ts-ignore
+                    collection.setIndexes(start, stop);
+                }
             }
         }
-
         if (this.__mounted) {
             this._notify('updateShadowMode', [{
                 up: start > 0,
@@ -511,7 +517,8 @@ export default class ScrollContainer extends Control<IOptions> {
                 if (!this._virtualScroll.rangeChanged) {
                     const rangeShiftResult = this._virtualScroll.shiftRange(direction);
                     this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-                    this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+                    this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
+                        this._options.needScrollCalculation, this._options.task1179200403);
                     this._indicatorState = direction;
                 }
             });
@@ -605,7 +612,8 @@ export default class ScrollContainer extends Control<IOptions> {
             // Такое происходит например при добавлении в узел дерева
             // После решения ошибки этот код будет не нужен и индексы проставляться будут только здесь
             // @ts-ignore
-            this._setCollectionIndices(this._options.collection, this._virtualScroll._range);
+            this._setCollectionIndices(this._options.collection, this._virtualScroll._range, false,
+                this._options.needScrollCalculation, this._options.task1179200403);
         }
     }
 
@@ -628,7 +636,8 @@ export default class ScrollContainer extends Control<IOptions> {
                 direction
             );
             this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-            this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+            this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
+                this._options.needScrollCalculation, this._options.task1179200403);
         }
     }
 
@@ -641,7 +650,8 @@ export default class ScrollContainer extends Control<IOptions> {
     private _itemsRemovedHandler(removeIndex: number, items: object[]): void {
         const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-        this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+        this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
+            this._options.needScrollCalculation, this._options.task1179200403);
     }
 
     /**
