@@ -25,7 +25,7 @@ import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {Logger} from 'UI/Utils';
-import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
+import groupUtil from 'Controls/_dataSource/GroupUtil';
 
 type HistoryItems = object[];
 type SortingObject = object[];
@@ -84,7 +84,7 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       });
    }
    if (cfg.groupHistoryId) {
-      collapsedGroupsPromise = GroupUtil.restoreCollapsedGroups(cfg.groupHistoryId);
+      collapsedGroupsPromise = groupUtil.restoreCollapsedGroups(cfg.groupHistoryId);
    }
 
    return Promise.all([
