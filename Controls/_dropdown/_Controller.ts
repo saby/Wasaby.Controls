@@ -16,6 +16,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
@@ -477,6 +478,10 @@ var _Controller = Control.extend({
       return result;
    },
 
+   _afterMount: function() {
+      RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
+   },
+
    _beforeUpdate: function (newOptions) {
       if (newOptions.readOnly && newOptions.readOnly !== this._options.readOnly) {
          _private.closeDropdownList(this);
@@ -598,6 +603,7 @@ var _Controller = Control.extend({
          this._sourceController = null;
       }
       this._setItems(null);
+      UnregisterUtil(this, 'scroll');
    },
 
    _getEmptyText: function () {
