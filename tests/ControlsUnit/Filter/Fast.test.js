@@ -151,6 +151,12 @@ define(
             open: setTrue.bind(this, assert)
          };
 
+         it('_selectorOpenCallback', () => {
+            let fastFilter = getFastFilterWithItems(configItems);
+            const items = fastFilter._selectorOpenCallback();
+            assert.isTrue(items instanceof collection.List);
+         });
+
          it('_beforeMount', function(done) {
             let fastFilter = getFastFilter(configItems);
             let receivedItems = [{
