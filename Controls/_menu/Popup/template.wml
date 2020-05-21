@@ -60,6 +60,7 @@
                        allowPin="{{_options.allowPin}}"
                        additionalProperty="{{_options.additionalProperty}}"
                        groupingKeyCallback="{{_options.groupingKeyCallback}}"
+                       selectorDialogResult="{{_options.selectorDialogResult}}"
                        itemPadding="{{_itemPadding}}"
                        dataLoadCallback="{{_dataLoadCallback}}"
                        headingIcon="{{_headingIcon}}"
