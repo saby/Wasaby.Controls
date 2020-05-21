@@ -145,8 +145,12 @@ var _private = {
           });
       }
    },
-   shouldSearch: function(self, value) {
-      return self._inputActive && value && value.length >= self._options.minSearchLength;
+   shouldSearch(self, value): boolean {
+      return self._inputActive && _private.isValueLengthLongerThenMinSearchLength(value, self._options);
+   },
+
+   isValueLengthLongerThenMinSearchLength(value, options): boolean {
+     return value && value.length >= options.minSearchLength;
    },
 
    prepareValue: function(self, value) {
@@ -357,6 +361,10 @@ var SuggestLayout = Control.extend({
       this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
       _private.setFilter(this, options.filter, options);
+
+      if (_private.isValueLengthLongerThenMinSearchLength(options.value, options)) {
+         _private.setSearchValue(this, options.value);
+      }
    },
    _beforeUnmount: function() {
       this._searchResult = null;
