@@ -309,7 +309,7 @@ export default class View extends Control<IViewOptions> {
      */
     private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
         let contents = item.getContents();
-        if (Array.isArray(item)) {
+        if (Array.isArray(contents)) {
             contents = contents[contents.length - 1];
         }
         // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
@@ -373,7 +373,7 @@ export default class View extends Control<IViewOptions> {
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
         let contents = item?.getContents();
-        if (Array.isArray(item)) {
+        if (Array.isArray(contents)) {
             contents = contents[contents.length - 1];
         }
         const itemKey = contents?.getKey();

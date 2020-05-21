@@ -251,7 +251,7 @@ export class Controller {
         this._collection.each((item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
                 let contents = item.getContents();
-                if (Array.isArray(item)) {
+                if (Array.isArray(contents)) {
                     contents = contents[contents.length - 1];
                 }
                 const actionsForItem = this._collectActionsForContents(contents);

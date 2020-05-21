@@ -2676,7 +2676,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         clickEvent.preventDefault();
         clickEvent.stopPropagation();
         let contents = item.getContents();
-        if (Array.isArray(item)) {
+        if (Array.isArray(contents)) {
             contents = contents[contents.length - 1];
         }
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
