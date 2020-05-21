@@ -1,0 +1,3 @@
+<div>
+    <i>{{ _options.record.title }}</i> - <span>{{ _options.record.description }}</span>
+</div>

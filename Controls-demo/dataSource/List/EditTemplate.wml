@@ -1,0 +1,6 @@
+<!-- width > 274px, чтобы в include size > 'small' иначе пикчи не рисуются -->
+<div style="padding: 20px; width:275px; border: 1px solid #ccc;">
+    <Controls.form:Controller dataSource="{{ _source }}" key="{{ _options.id }}">
+        <Controls-demo.dataSource.List.FormControllerContent />
+    </Controls.form:Controller>
+</div>

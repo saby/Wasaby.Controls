@@ -1,0 +1,83 @@
+<div class='mdl-grid demo-content demo-controls-list ws-flexbox ws-flex-row content' style='margin:50px;'>
+   <div>
+      <h1>Controls/list:View</h1>
+      <h2>Страница тестирования отображения ошибок</h2>
+      <h3>Тест 1. Построение контрола с ошибкой на СП </h3>
+      <div>
+         Открыть поочередно следующие ссылки. <br />
+         Проверять, что вместо списка встроен соответствующий для кода ошибки шаблон
+         <ul class="demo_List__test1_list">
+            <!-- <li><a href="?statusCode=401">ошибка 401</a></li> -->
+            <li><a href="?statusCode=403">ошибка 403</a></li>
+            <li><a href="?statusCode=404">ошибка 404</a></li>
+            <li><a href="?statusCode=500">ошибка 500</a></li>
+            <li><a href="?statusCode=502">ошибка 502</a></li>
+            <li><a href="?statusCode=503">ошибка 503</a></li>
+            <li><a href="?statusCode=504">ошибка 504</a></li>
+            <li><a href="?statusCode=Connection_Error">ошибка Connection_Error</a></li>
+         </ul>
+      </div>
+
+      <h3>Тест 2. При некорректном запросе на БЛ Control/List отображает вместо контента шаблон ошибки</h3>
+      <div>
+         <ol>
+            <li>
+               <Controls.buttons:Button class="demo_List__test2_select_200" caption='Выбрать в 200 Код ответа сервера' on:click='select200()' />
+            </li>
+            <li>
+               <Controls.buttons:Button class="demo_List__test2_update" caption='Обновить список' on:click='reloadList()' />
+            </li>
+            <li> Проверить что загрузились изречения на латинском языке </li>
+            <li> Для каждого Кода ошибки ответа сервера
+               <ol>
+                  <li>Выбрать Код ответа сервера
+                     <div style="width:150px; display: inline-block;">
+                        <Controls.dropdown:Combobox source='{{ code }}' keyProperty='title' displayProperty='title'
+                                                    bind:selectedKey='selectedCode' on:selectedKeyChanged='_forceUpdate()' class="demo_List__test2_combobox"/>
+                     </div>
+                  </li>
+                  <li>
+                     <Controls.buttons:Button caption='Обновить список' on:click='reloadList()' />
+                  </li>
+                  <li> проверять, что вместо списка латинских фраз встроен соответсвующий для кода ошибки шаблон
+                  </li>
+               </ol>
+            </li>
+         </ol>
+      </div>
+
+      <h3>Тест 3. При некорректном запросе на БЛ Control/FormController отображает вместо контента шаблон ошибки
+      </h3>
+      <div>
+         <ol>
+            <li>
+               <Controls.buttons:Button class="demo_List__test3_select_200" caption='Выбрать в 200 Код ответа сервера' on:click='select200()' />
+            </li>
+            <li>
+               <Controls.buttons:Button class="demo_List__test3_update" caption='Обновить список' on:click='reloadList()' />
+            </li>
+            <li>Проверить что загрузились изречения на латинском языке</li>
+            <li>
+               Выбрать любой элемент списка, проверить что открылась боковая панель с переводом фразы.</li>
+            <li> Для каждого Кода ошибки ответа сервера
+               <ol>
+                  <li> Выбирать Код ответа сервера
+                     <div style="width:150px; display: inline-block">
+                        <Controls.dropdown:Combobox source='{{ code }}' keyProperty='title' displayProperty='title'
+                                                    bind:selectedKey='selectedCode' on:selectedKeyChanged='_forceUpdate()' class="demo_List__test3_combobox"/>
+                     </div>
+                  </li>
+                  <li>кликать по элементу списка, проверять,
+                     что вместо перевода фразы встроен соответсвующий для кода ошибки шаблон</li>
+               </ol>
+            </li>
+         </ol>
+      </div>
+   </div>
+   <!-- min width > 274px, чтобы в include size > 'small' иначе пикчи не рисуются -->
+   <div style="border: 1px solid #ccc; min-width: 275px;">
+      <Controls.popup:Edit name="editOpener" mode="stack" />
+      <Controls.list:View name="listControl" source='{{ _fsource }}' keyProperty='id'
+                          on:itemClick="_itemClickHandler()" />
+   </div>
+</div>
