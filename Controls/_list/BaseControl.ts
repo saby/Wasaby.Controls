@@ -2853,7 +2853,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragEnd: function(event, dragObject) {
-        // TODO dnd хуета
         if (this._options.itemsDragNDrop) {
             if (!this._options.useNewModel) {
                 var targetPosition = this._listViewModel.getDragTargetPosition();
@@ -2888,29 +2887,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
-
-            if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-                const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
-                this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
-                this._listViewModel.setDragEntity(dragObject.entity);
-            } else if (dragEnterResult === true) {
-                this._listViewModel.setDragEntity(dragObject.entity);
-            }
+            this._dndListController.handleDragEnter(dragObject, dragEnterResult);
         }
     },
 
     _dragLeave: function() {
-        if (this._options.useNewModel) {
-            this._draggingTargetItem = null;
-        } else {
-            this._listViewModel.setDragTargetPosition(null);
+        if (!this._useNewModel) {
+            this._model.setDragTargetPosition(null);
         }
     },
 
     _documentDragEnd: function() {
         var self = this;
 
-        //Reset the state of the dragndrop after the movement on the source happens.
+        // Reset the state of the dragndrop after the movement on the source happens.
         if (this._dragEndResult instanceof Promise) {
             _private.showIndicator(self);
             this._dragEndResult.addBoth(function() {
