@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">size = s, style = secondary</div>
         <Controls.heading:Back caption="Back" size="s" style="secondary"></Controls.heading:Back>
