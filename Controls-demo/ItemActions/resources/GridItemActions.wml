@@ -1,0 +1,12 @@
+<div class="itemActionsDemo">
+    <Controls.grid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            allowEmptySelection="{{false}}"
+            itemActions="{{_itemActions}}"
+            itemActionVisibility="{{_itemActionVisibility}}"
+            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+            columns="{{_columns}}"
+            bind:markedKey="_markedKey">
+    </Controls.grid:View>
+</div>

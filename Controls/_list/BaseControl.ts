@@ -1981,7 +1981,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
 
             if (newOptions.itemActionVisibility === 'delayed') {
-                this._itemActionsInitializerDebounced = debounce(self._itemActionsInitializer.bind(self), ITEM_ACTION_VISIBILITY_DELAY);
+                self._itemActionsInitializerDebounced = debounce(self._itemActionsInitializer.bind(self), ITEM_ACTION_VISIBILITY_DELAY);
             }
             if (newOptions.itemActionVisibility === 'visible') {
                 self._showActions = true;

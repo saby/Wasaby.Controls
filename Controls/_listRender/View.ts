@@ -168,7 +168,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     _onItemMouseLeave(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._itemActionsInitializer(true, true);
+        this._itemActionsInitializer(false, true);
     }
 
     /**
