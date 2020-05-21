@@ -4,16 +4,23 @@ import {Registrar} from 'Controls/event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 
+interface IWatcher2 extends IControlOptions {
+    scrollMode?: string;
+    task1178703223?: any;
+}
+
 interface IResizeObserver {
     observe: (el: HTMLElement) => void;
-    unobserve: (el: HTMLElement) => void;
     disconnect: () => void;
 }
+
 interface IRegistrar {
     start: (eventType: string, params: object) => void;
-    _registry: any;
     register: (event: SyntheticEvent, params: object, callback: () => void) => void;
     startOnceTarget: (component: any, eventType: string, params: object) => void;
+    unregister: (event: SyntheticEvent, params: object) => void;
+    destroy: () => void;
+    _registry: any;
 }
 
 interface IState {
@@ -23,16 +30,16 @@ interface IState {
     scrollHeight: number;
     clientWidth: number;
     scrollWidth: number;
-
     verticalPosition: string;
     horizontalPosition: string;
     canScroll: boolean;
     viewPortRect: ClientRect;
 }
 
-export default class Component extends Control {
+export default class Watcher2 extends Control<IWatcher2> {
     protected _template: TemplateFunction = template;
     protected _container: HTMLElement = null;
+    protected _options: IWatcher2;
 
     private _state: IState = null;
     private _oldState: IState = null;
@@ -43,7 +50,6 @@ export default class Component extends Control {
 
     private _topPlaceholderSize: number;
     private _bottomPlaceholderSize: number;
-
     private _scrollTopTimer: number = null;
 
     _beforeMount(options: IControlOptions): void {
@@ -51,13 +57,20 @@ export default class Component extends Control {
     }
 
     _afterMount(): void {
-        this._initResizeHandler();
+        this._initializeResizeHandler();
         if (this._updateState() && !isEmpty(this._registrar._registry)) {
             this._sendByRegistrar('scrollStateChanged', {
                 state: this._state,
                 oldState: this._oldState
             });
         }
+    }
+
+    _beforeUnmount(): void {
+        this._terminateResizeHandler();
+        this._registrar.destroy();
+        this._state = null;
+        this._oldState = null;
     }
 
     _sendByRegistrar(eventType: string, params: object): void {
@@ -75,7 +88,23 @@ export default class Component extends Control {
 
     _doScrollHandler(e: SyntheticEvent, scrollParam: string): void {
         this.doScroll(scrollParam);
-        //e.stopPropagation();
+        //e.stopPropagation(); раскоменитить
+    }
+
+    _registerIt(event: SyntheticEvent, registerType: string, component: any,
+                callback: () => void, triggers: object): void {
+        //TODO заменить listScroll потом на что нибудь вроде containerScroll и удалить notify register
+        if (registerType === 'listScroll') {
+            this._registrar.register(event, component, callback);
+            this._notify('register', ['listScroll', component, callback, triggers], {bubbling: true});
+            this._onRegisterNewComponent(component);
+        }
+    }
+
+    _unRegisterIt(e: SyntheticEvent, registerType: string, component: any): void {
+        if (registerType === 'listScroll') {
+            this._registrar.unregister(e, component);
+        }
     }
 
     doScroll(scrollParam: string): void {
@@ -206,16 +235,6 @@ export default class Component extends Control {
         this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
-    _registerIt(event: SyntheticEvent, registerType: string, component: any,
-                callback: () => void, triggers: object): void {
-        //TODO заменить listScroll потом на что нибудь вроде containerScroll и удалить notify register
-        if (registerType === 'listScroll') {
-            this._registrar.register(event, component, callback);
-            this._notify('register', ['listScroll', component, callback, triggers], {bubbling: true});
-            this._onRegisterNewComponent(component);
-        }
-    }
-
     _onRegisterNewComponent(component: any): void {
         this._updateState();
         if (this._calcCanScroll) {
@@ -260,7 +279,7 @@ export default class Component extends Control {
         }
     }
 
-    _initResizeHandler(): void {
+    _initializeResizeHandler(): void {
         if (typeof window !== 'undefined' && window.ResizeObserver) {
             this._resizeObserver = new ResizeObserver(() => {
                 this._onResizeContainer();
@@ -269,6 +288,15 @@ export default class Component extends Control {
             this._resizeObserver.observe(this._container.children.contentObserver);
         } else {
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
+        }
+    }
+
+    _terminateResizeHandler(): void {
+        if (typeof window !== 'undefined' && window.ResizeObserver) {
+            this._resizeObserver.disconnect();
+            this._resizeObserver = null;
+        } else {
+            this._notify('unregister', ['controlResize', this], {bubbling: true});
         }
     }
 
