@@ -329,4 +329,6 @@ export default class Watcher2 extends Control<IWatcher2> {
     _calcCanScroll(): boolean {
         return this._container.scrollHeight - this._container.clientHeight > 1;
     }
+
+    // TODO Все события которые всплывают из внутренних контролов оставляем, но переносим из скрол контейнера в watcher. saveScrollPosition, restoreScrollPosition, scrollToElement, updatePlaceholdersSize
 }
