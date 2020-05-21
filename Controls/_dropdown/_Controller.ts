@@ -595,6 +595,12 @@ var _Controller = Control.extend({
       clearTimeout(this._loadDependenciesTimer);
    },
 
+   _scrollHandler: function() {
+      if (this._popupId) {
+         _private.closeDropdownList(this);
+      }
+   },
+
    _beforeUnmount: function() {
       if (this._sourceController) {
          this._sourceController.cancelLoading();
