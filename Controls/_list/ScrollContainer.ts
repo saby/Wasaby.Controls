@@ -84,6 +84,7 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     private _restoreScrollResolve: Function;
+    private _scrollToItemAfterRender: Function;
     private _applyScrollTopCallback: Function;
     private _checkTriggerVisibilityTimeout: number;
 
@@ -270,10 +271,12 @@ export default class ScrollContainer extends Control<IOptions> {
                     scrollCallback();
                 } else if (force) {
                     this._inertialScrolling.callAfterScrollStopped(() => {
-                        // Нельзя менять диапазон отображемых элементов во время перерисовки
-                        // поэтому нужно перенести scrollToItem на следующий цикл синхронизации
                         if (this._virtualScroll.rangeChanged) {
-                            this._restoreScrollResolve = () => {
+                            // Нельзя менять диапазон отображемых элементов во время перерисовки
+                            // поэтому нужно перенести scrollToItem на следующий цикл синхронизации (после отрисовки)
+                            // Для этого используем _scrollToItemAfterRender.
+                            // https://online.sbis.ru/opendoc.html?guid=2a97761f-e25a-4a10-9735-ded67e36e527
+                            this._scrollToItemAfterRender = () => {
                                 this.scrollToItem(key, toBottom, force).then(resolve);
                             };
                         } else {
@@ -281,6 +284,8 @@ export default class ScrollContainer extends Control<IOptions> {
                                 .resetRange(index, this._options.collection.getCount());
                             this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
                             this._setCollectionIndices(this._options.collection, rangeShiftResult.range);
+
+                            // Скролл нужно восстанавливать после отрисовки, для этого используем _restoreScrollResolve
                             this._restoreScrollResolve = scrollCallback;
                         }
                     });
@@ -538,19 +543,15 @@ export default class ScrollContainer extends Control<IOptions> {
             this.checkTriggerVisibilityWithTimeout();
             this._restoreScrollResolve = null;
         } else if (this._restoreScrollResolve) {
-            // В результате _restoreScrollResolve он может сам себя перезаписать
-            // (такое происходит, когда вызвали scrolLToItem)
-            // во время перерисовки. В таком случае занулять _restoreScrollResolve нельзя
-            // TODO Нужно этот момент продумать получше, выписал задачу
-            // https://online.sbis.ru/opendoc.html?guid=df37d700-5686-4c28-baee-e015b5db444c
-            const oldScrollResolve = this._restoreScrollResolve;
             this._restoreScrollResolve();
-
-            if (this._restoreScrollResolve === oldScrollResolve) {
-                this._restoreScrollResolve = null;
-            }
+            this._restoreScrollResolve = null;
 
             this.checkTriggerVisibilityWithTimeout();
+        }
+
+        if (this._scrollToItemAfterRender) {
+            this._scrollToItemAfterRender();
+            this._scrollToItemAfterRender = null;
         }
     }
 
