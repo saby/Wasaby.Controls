@@ -1472,6 +1472,7 @@ var
                 const currentColumn: any = {
                         item: current.item,
                         style: current.style,
+                        backgroundStyle: current.backgroundStyle,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,
