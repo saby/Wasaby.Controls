@@ -35,7 +35,7 @@ import {Controller as ItemActionsController, IItemAction} from 'Controls/itemAct
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
 import ListViewModel from 'Controls/_list/ListViewModel';
-import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
+import ScrollPagingController from 'Controls/_list/Controllers/ScrollPaging';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
@@ -94,7 +94,8 @@ const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
 const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
-const MIN_SCROLL_PAGING_PROPORTION = 2;
+const MIN_SCROLL_PAGING_SHOW_PROPORTION = 2;
+const MAX_SCROLL_PAGING_HIDE_PROPORTION = 1;
 
 const ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
 
@@ -829,15 +830,26 @@ const _private = {
         }
     },
 
-    needShowPagingByScrollSize: function(self, doubleRatio) {
+    needShowPagingByScrollSize: function(self, viewSize: number, viewPortSize: number): boolean {
         let result = false;
+
+        const proportion = (viewSize / viewPortSize);
+
+        
+        // если условия выше не прошли, то начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
+        if (!result) {
+            result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
+        }
+        
+        // если все данные поместились на один экран, то скрываем пэйджинг
+        if (result) {
+            result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
+        }
 
         // если мы для списка раз вычислили, что нужен пэйджинг, то возвращаем этот статус
         // это нужно для ситуации, если первая пачка данных вернула естьЕще (в этом случае пэйджинг нужен)
         // а вторая вернула мало записей и суммарный объем менее двух вьюпортов, пэйджинг не должен исчезнуть
-        if (self._cachedPagingState === true) {
-            result = true;
-        } else if (self._sourceController) {
+        if (self._sourceController) {
 
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             const hasMoreData = {
@@ -868,18 +880,16 @@ const _private = {
 
             if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
                 result = true;
+
+                // Если пэйджинг был показан из-за hasMore, то запоминаем это, 
+                // чтобы не скрыть после полной загрузки, даже если не набралось на две страницы.
+                self._cachedPagingState = true;
             }
         }
 
-        // если условия выше не прошли, то начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
-        if (!result) {
-            result = doubleRatio;
-        }
-
-        // если пэйджинг был показан, запомним этот факт
-        if (result) {
-            self._cachedPagingState = true;
-        }
+        if (self._cachedPagingState === true) {
+            result = true;
+        } 
 
         return result;
     },
@@ -892,21 +902,17 @@ const _private = {
 
             self._viewPortRect = params.viewPortRect;
 
-            const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
-            if (!self._scrollPagingCtr) {
-                if (_private.needScrollPaging(self._options.navigation)) {
-                    _private.createScrollPagingController(self, {
-                        scrollTop: self._scrollTop,
-                        scrollHeight: params.scrollHeight,
-                        clientHeight: params.clientHeight
-                    }).addCallback(function(scrollPagingCtr) {
-                        self._scrollPagingCtr = scrollPagingCtr;
-                        self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
-                    });
-                }
-            } else if (_private.needScrollPaging(self._options.navigation)) {
-                self._pagingVisible = _private.needShowPagingByScrollSize(self, doubleRatio);
+            if (_private.needScrollPaging(self._options.navigation)) {
+                _private.getScrollPagingController(self, {
+                    scrollTop: self._scrollTop,
+                    scrollHeight: params.scrollHeight,
+                    clientHeight: params.clientHeight
+                }).then((scrollPagingCtr) => {
+                    self._scrollPagingCtr = scrollPagingCtr;
+                    self._pagingVisible = _private.needShowPagingByScrollSize(self, params.scrollHeight, params.clientHeight);
+                });
             }
+            
         });
     },
 
@@ -920,17 +926,22 @@ const _private = {
             self._isScrollShown = false;
         });
     },
-
+    getScrollPagingController: function(self, scrollParams) {
+        if (self._scrollPagingCtr) {
+            return Promise.resolve(self._scrollPagingCtr);
+        } else {
+            return _private.createScrollPagingController(self, scrollParams);
+        }
+    },
     createScrollPagingController: function(self, scrollParams) {
         const scrollPagingConfig = {
             scrollParams,
-            mode: self._options.navigation.viewConfig.pagingMode,
             pagingCfgTrigger: (cfg) => {
                 self._pagingCfg = cfg;
                 self._forceUpdate();
             }
         };
-        return new Deferred().callback(new ScrollPagingController(scrollPagingConfig));
+        return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
     },
 
     getSelectionForDragNDrop: function(selectedKeys, excludedKeys, dragKey) {
@@ -1022,34 +1033,45 @@ const _private = {
      * Обработать прокрутку списка виртуальным скроллом
      */
     handleListScroll: function(self, params) {
-        var hasMoreData;
+        //var hasMoreData;
 
-        if (self._scrollPagingCtr) {
-            if (params.position === 'middle') {
-                self._scrollPagingCtr.handleScroll(params.scrollTop);
-            } else {
-                // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
-                if (self._sourceController) {
-                    const hasMoreDataUp = _private.hasMoreData(self, self._sourceController, 'up');
-                    const hasMoreDataDown = _private.hasMoreData(self, self._sourceController, 'down');
+        // if (self._scrollPagingCtr) {
+        //     if (params.position === 'middle') {
+        //         self._scrollPagingCtr.handleScroll(params.scrollTop);
+        //     } else {
+        //         // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
+        //         if (self._sourceController) {
+        //             const hasMoreDataUp = _private.hasMoreData(self, self._sourceController, 'up');
+        //             const hasMoreDataDown = _private.hasMoreData(self, self._sourceController, 'down');
 
-                    hasMoreData = {
-                        up: hasMoreDataUp,
-                        down: hasMoreDataDown && _private.allowLoadMoreByPortionedSearch(self)
-                    };
-                }
-                self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
-            }
-        } else {
-            if (_private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, {
-                    scrollTop: self._scrollTop,
-                    scrollHeight: params.scrollHeight,
-                    clientHeight: params.clientHeight
-                }).addCallback(function(scrollPagingCtr) {
-                    self._scrollPagingCtr = scrollPagingCtr;
-                });
-            }
+        //             hasMoreData = {
+        //                 up: hasMoreDataUp,
+        //                 down: hasMoreDataDown && _private.allowLoadMoreByPortionedSearch(self)
+        //             };
+        //         }
+        //         self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
+        //     }
+        // } else {
+        //     if (_private.needScrollPaging(self._options.navigation)) {
+        //         _private.createScrollPagingController(self, {
+        //             scrollTop: self._scrollTop,
+        //             scrollHeight: params.scrollHeight,
+        //             clientHeight: params.clientHeight
+        //         }).then(function(scrollPagingCtr) {
+        //             self._scrollPagingCtr = scrollPagingCtr;
+        //         });
+        //     }
+        // }
+        if (_private.needScrollPaging(self._options.navigation)) {
+            return _private.getScrollPagingController(self, {
+                scrollTop: self._scrollTop,
+                scrollHeight: params.scrollHeight,
+                clientHeight: params.clientHeight
+            }).then((scrollPagingCtr) => {
+                self._scrollPagingCtr = scrollPagingCtr;
+                self._scrollPagingCtr.handleScroll(params.position);
+                
+            });
         }
     },
 
@@ -1125,8 +1147,7 @@ const _private = {
     disablePagingNextButtons(self): void {
         if (self._pagingVisible) {
             self._pagingCfg = {...self._pagingCfg};
-            self._pagingCfg.stateNext = 'disabled';
-            self._pagingCfg.stateEnd = 'disabled';
+            self._pagingCfg.forwardEnabled = false;
         }
     },
 
@@ -2078,13 +2099,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._viewPortRect = viewportRect;
     },
 
-    scrollResizeHandler(_: SyntheticEvent<Event>, params: unknown): void {
-        const doubleRatio = (params.scrollHeight / params.clientHeight) > MIN_SCROLL_PAGING_PROPORTION;
+    scrollResizeHandler(_: SyntheticEvent<Event>, params: object): void {
         if (_private.needScrollPaging(this._options.navigation)) {
+            const scrollParams = {...params, scrollTop: this._scrollTop};
             // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
             // поэтому нужен таймаут
+            _private.getScrollPagingController(this, scrollParams).then((scrollPagingCtr) => {
+                this._scrollPagingCtr = scrollPagingCtr;
+                this._scrollPagingCtr.updateScrollParams(scrollParams);
+            });
             this._needPagingTimeout = setTimeout(() => {
-                this._pagingVisible = _private.needShowPagingByScrollSize(this, doubleRatio);
+                this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
             }, 18);
         }
     },
@@ -2106,8 +2131,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.hideIndicator(this);
         }
         if (_private.needScrollPaging(this._options.navigation)) {
-            const doubleRatio = (this._viewSize / this._viewPortSize) > MIN_SCROLL_PAGING_PROPORTION;
-            this._pagingVisible = _private.needShowPagingByScrollSize(this, doubleRatio);
+            this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewPortSize);
         }
     },
 

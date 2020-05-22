@@ -1880,144 +1880,146 @@ define([
             }
          }
       };
-      it('ScrollPagingController', function(done) {
-         var heightParams = {
-            scrollHeight: 400,
-            clientHeight: 1000
-         };
+      describe('ScrollPagingController', () => {
+         it('ScrollPagingController', async function() {
+            var heightParams = {
+               scrollHeight: 1000,
+               clientHeight: 400
+            };
 
-         var rs = new collection.RecordSet({
-            keyProperty: 'id',
-            rawData: data
-         });
+            var rs = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: data
+            });
 
-         var source = new sourceLib.Memory({
-            keyProperty: 'id',
-            data: data
-         });
+            var source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            });
 
-         var cfg = {
-            viewName: 'Controls/List/ListView',
-            source: source,
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               items: rs,
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            navigation: {
-               view: 'infinity',
-               source: 'page',
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
                viewConfig: {
-                  pagingMode: 'direct'
+                  keyProperty: 'id'
                },
-               sourceConfig: {
-                  pageSize: 3,
-                  page: 0,
-                  hasMore: false
-               }
-            },
-         };
-         var ctrl = new lists.BaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  view: 'infinity',
+                  source: 'page',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  },
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0,
+                     hasMore: false
+                  }
+               },
+            };
+            var ctrl = new lists.BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            ctrl._beforeMount(cfg);
 
-         ctrl._children = triggers;
-         // эмулируем появление скролла
-         lists.BaseControl._private.onScrollShow(ctrl, heightParams);
-         ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            ctrl._children = triggers;
+            // эмулируем появление скролла
+            await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
+            ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
 
-         // скроллпэйджиг контроллер создается асинхронном
-         setTimeout(function() {
-            assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
+            // скроллпэйджиг контроллер создается асинхронном
+            //setTimeout(function() {
+               assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            // прокручиваем к низу, проверяем состояние пэйджинга
-            lists.BaseControl._private.handleListScroll(ctrl, {
-               scrollTop: 300,
-               position: 'down'
-            });
+               // прокручиваем к низу, проверяем состояние пэйджинга
+               await lists.BaseControl._private.handleListScroll(ctrl, {
+                  scrollTop: 600,
+                  scrollHeight: 1000,
+                  clientHeight: 400,
+                  position: 'down'
+               });
 
-            assert.deepEqual({
-               stateBegin: 'normal',
-               statePrev: 'normal',
-               stateNext: 'normal',
-               stateEnd: 'normal'
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
+               assert.deepEqual({
+                  backwardEnabled: true,
+                  forwardEnabled: false
+               }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
-            lists.BaseControl._private.handleListScroll(ctrl, {
-               scrollTop: 200,
-               position: 'middle'
-            });
-            assert.deepEqual({
-               stateBegin: 'normal',
-               statePrev: 'normal',
-               stateNext: 'normal',
-               stateEnd: 'normal'
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+               await lists.BaseControl._private.handleListScroll(ctrl, {
+                  scrollTop: 200,
+                  scrollHeight: 1000,
+                  clientHeight: 400,
+                  position: 'middle'
+               });
+               assert.deepEqual({
+                  backwardEnabled: true,
+                  forwardEnabled: true
+               }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
-            ctrl._pagingVisible = true;
-            ctrl._abortSearch();
-            assert.deepEqual({
-               stateBegin: 'normal',
-               statePrev: 'normal',
-               stateNext: 'disabled',
-               stateEnd: 'disabled'
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+               ctrl._pagingVisible = true;
+               await ctrl._abortSearch();
+               assert.deepEqual({
+                  backwardEnabled: true,
+                  forwardEnabled: false
+               }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
 
-            lists.BaseControl._private.handleListScroll(ctrl, {
-               scrollTop: 200,
-               position: 'down'
-            });
-            assert.deepEqual({
-               stateBegin: 'normal',
-               statePrev: 'normal',
-               stateNext: 'disabled',
-               stateEnd: 'disabled'
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
-            lists.BaseControl._private.getPortionedSearch(ctrl).reset();
+               await lists.BaseControl._private.handleListScroll(ctrl, {
+                  scrollTop: 200,
+                  scrollHeight: 1000,
+                  clientHeight: 400,
+                  position: 'down'
+               });
+               assert.deepEqual({
+                  backwardEnabled: true,
+                  forwardEnabled: false
+               }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+               await lists.BaseControl._private.getPortionedSearch(ctrl).reset();
 
-            // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
-            // и еще раз доскроллили до конца, то самое время блокировать кнопки.
-            lists.BaseControl._private.handleListScroll(ctrl, {
-               scrollTop: 400,
-               position: 'down'
-            });
-            assert.deepEqual({
-               stateBegin: 'normal',
-               statePrev: 'normal',
-               stateNext: 'disabled',
-               stateEnd: 'disabled'
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+               // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
+               // и еще раз доскроллили до конца, то самое время блокировать кнопки.
+               await lists.BaseControl._private.handleListScroll(ctrl, {
+                  scrollTop: 400,
+                  scrollHeight: 1000,
+                  clientHeight: 400,
+                  position: 'down'
+               });
+               assert.deepEqual({
+                  backwardEnabled: true,
+                  forwardEnabled: false
+               }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
 
-            lists.BaseControl._private.handleListScroll(ctrl, {
-               scrollTop: 200,
-               position: 'middle'
-            });
+               await lists.BaseControl._private.handleListScroll(ctrl, {
+                  scrollTop: 200,
+                  scrollHeight: 1000,
+                  clientHeight: 400,
+                  position: 'middle'
+               });
 
-            lists.BaseControl._private.onScrollHide(ctrl);
-            assert.deepEqual({
-               stateBegin: 'normal',
-               statePrev: 'normal',
-               stateNext: 'normal',
-               stateEnd: 'normal'
-            }, ctrl._pagingCfg, 'Wrong state of paging after scrollHide');
-            assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
-            assert.isFalse(ctrl._cachedPagingState, 'Wrong state _cachedPagingState after scrollHide');
+               await lists.BaseControl._private.onScrollHide(ctrl);
+               assert.deepEqual({
+                  backwardEnabled: true,
+                  forwardEnabled: true
+               }, ctrl._pagingCfg, 'Wrong state of paging after scrollHide');
+               assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
+               assert.isFalse(ctrl._cachedPagingState, 'Wrong state _cachedPagingState after scrollHide');
 
-            lists.BaseControl._private.handleListScroll(ctrl, {
-               scrollTop: 200,
-               position: 'middle'
-            });
+               await lists.BaseControl._private.handleListScroll(ctrl, {
+                  scrollTop: 200,
+                  scrollHeight: 1000,
+                  clientHeight: 400,
+                  position: 'middle'
+               });
 
-            setTimeout(function() {
-               assert.isFalse(ctrl._pagingVisible);
-               done();
-            }, 100);
+               setTimeout(function() {
+                  assert.isFalse(ctrl._pagingVisible);
+                  //done();
+               }, 100);
 
-         }, 100);
+            //}, 100);
+         });
       });
 
       it('abortSearch', async () => {
@@ -2073,7 +2075,7 @@ define([
          };
          ctrl._abortSearch();
          assert.isFalse(ctrl._showContinueSearchButton);
-         assert.deepEqual(ctrl._pagingCfg, {stateNext: 'disabled', stateEnd: 'disabled'});
+         assert.deepEqual(ctrl._pagingCfg, {forwardEnabled: false});
          assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
          assert.isTrue(iterativeSearchAborted);
       });
