@@ -67,7 +67,7 @@ export class FlatController implements IDragNDropListController{
    // и после того как документ перетащили, то смотрим не нужно ли что-то подождать и если есть промис то ожидаем
    private _dragEndResult;
 
-   constructor(private _useNewModel: boolean, private _model: IModel) {}
+   constructor(private _useNewModel: boolean, protected _model: IModel) {}
 
    update(useNewModel: boolean, model: IModel) {
       this._useNewModel = useNewModel;
@@ -134,7 +134,7 @@ export class FlatController implements IDragNDropListController{
          !this._model.getDragEntity() &&
          cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
       ) {
-         const dragEnterResult = notifyDragEnter(dragObject.entity); // this._notify('dragEnter', [dragObject.entity]);
+         const dragEnterResult = notifyDragEnter(dragObject.entity);
 
          if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
             const draggingItemProjection = this._model._prepareDisplayItemForAdd(dragEnterResult);

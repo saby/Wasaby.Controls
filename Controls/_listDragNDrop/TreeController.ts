@@ -13,7 +13,7 @@ export default class TreeController extends FlatController {
       this._notifyExpandNode = notifyExpandNode;
    }
 
-   handleMouseMove(itemData, nativeEvent, notifyChangeDragTarget) {
+   handleMouseMove(itemData, event, notifyChangeDragTarget) {
       if (!itemData.dispItem.isNode()) {
          return;
       }
