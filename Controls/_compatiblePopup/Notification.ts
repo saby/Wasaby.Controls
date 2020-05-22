@@ -16,6 +16,7 @@ import template = require('wml!Controls/_compatiblePopup/Notification/Notificati
  * @cfg {Function} Устанавливает шаблон для содержимого нотификационного уведомления.
  */
 
+
 /**
  * @name Controls/Popup/Templates/Notification/Compatible#footerTemplate
  * @cfg {Function} Устанавливает шаблон футера нотификационного уведомления.

@@ -5,3 +5,4 @@ const ITEM_TYPES: object = {
 };
 
 export default ITEM_TYPES;
+

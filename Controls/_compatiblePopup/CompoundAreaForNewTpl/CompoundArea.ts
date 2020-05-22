@@ -2,6 +2,7 @@
  * Created by as.krasilnikov on 13.04.2018.
  */
 
+
 import CompoundControl = require('Lib/Control/CompoundControl/CompoundControl');
 import template = require('wml!Controls/_compatiblePopup/CompoundAreaForNewTpl/CompoundArea');
 import ManagerWrapperController from 'Controls/Popup/Compatible/ManagerWrapper/Controller';

@@ -17,6 +17,7 @@ interface IPopupOptions {
    propStorageId?: number;
 }
 
+
 interface IComponentWrapperOptions {
    templateOptions: ITemplateOptions;
    popupOptions: IPopupOptions;

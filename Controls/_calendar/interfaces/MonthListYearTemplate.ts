@@ -4,6 +4,7 @@
  * @public
  */
 
+
 /*
  * @name Controls/calendar:MonthListYearTemplate#bodyTemplate
  * @cfg {String|Function} Шаблон отображения года

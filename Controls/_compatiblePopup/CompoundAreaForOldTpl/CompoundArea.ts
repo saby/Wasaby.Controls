@@ -17,6 +17,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
 import 'css!theme?Controls/compatiblePopup';
 
+
 function removeOperation(operation, array) {
    var idx = arrayFindIndex(array, function(op) {
       return op === operation;

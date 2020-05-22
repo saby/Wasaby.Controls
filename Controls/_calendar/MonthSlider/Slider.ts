@@ -8,6 +8,7 @@ import tmpl = require('wml!Controls/_calendar/MonthSlider/Slider/Slider');
     // Приватные методы и константы, возможно, можно выделить в отдельный слой абстракции для анимаций и
     // переиспользовать в других компонентах.
 
+
 var
     ANIMATIONS_DATA = {
         slideRight: {

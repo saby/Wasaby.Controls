@@ -23,6 +23,7 @@
  * @demo Controls-demo/list_new/ColumnsView/Default/Index
  */
 
+
 /**
  * @name Controls/columns:View#itemTemplate
  * @cfg {Number} Шаблон записи. 

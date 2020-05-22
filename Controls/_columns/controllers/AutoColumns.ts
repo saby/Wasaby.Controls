@@ -6,3 +6,4 @@ export class AutoColumns implements IColumnsCalculator {
         return index % columnsCount;
     }
 }
+

@@ -19,6 +19,7 @@ class NotificationBase extends Notification {
          }
       };
 
+
       return  super._beforeMount(options);
    }
    static _theme: string[] = ['Controls/popupTemplate'];

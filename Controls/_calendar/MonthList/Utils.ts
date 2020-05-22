@@ -1,6 +1,7 @@
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 
+
 export default {
     dateToId: function(date: Date): string {
         return formatDate(date, 'YYYY-MM-DD');

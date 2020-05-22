@@ -7,3 +7,4 @@
         <ws:partial template="{{_options.viewName}}" itemTemplate="{{_options.itemTemplate}}"/>
     </Controls._columns.ColumnsInnerView>
 </Controls.list:BaseControl>
+

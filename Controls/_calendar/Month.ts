@@ -24,6 +24,7 @@ import MonthViewModel from 'Controls/_calendar/Month/Model';
  *
  */
 
+
 var Component = BaseControl.extend({
     _template: monthTmpl,
     _monthViewModel: MonthViewModel,

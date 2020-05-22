@@ -2,6 +2,7 @@ export interface IMonthListVirtualPageSizeOptions {
    virtualPageSize: number;
 }
 
+
 /**
  * Интерфейс для контролов, которые основаны на {@link Controls/calendar:MonthList} и поддерживающие изменение виртуальной страницы.
  * @interface Controls/_calendar/interfaces/IMonthListVirtualPageSize

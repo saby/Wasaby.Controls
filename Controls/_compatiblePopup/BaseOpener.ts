@@ -17,6 +17,7 @@ function loadTemplate(name: string) {
       template = template[property];
    });
 
+
    return template;
 }
 // Minimum popup indentation from the right edge

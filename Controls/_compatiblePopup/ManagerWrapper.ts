@@ -20,6 +20,7 @@ var ManagerWrapper = Control.extend({
       this._loadViewSettingsController();
    },
 
+
    _afterMount: function() {
       Controller.registerManager(this);
 

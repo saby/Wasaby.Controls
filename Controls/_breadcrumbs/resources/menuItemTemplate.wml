@@ -1,3 +1,4 @@
-<ws:partial  template="Controls/dropdown:ItemTemplate"
-                        itemData="{{itemData}}"
-                        contentTemplate="wml!Controls/_breadcrumbs/resources/menuContentTemplate"  />
+<ws:partial template="Controls/dropdown:ItemTemplate"
+            itemData="{{itemData}}"
+            contentTemplate="wml!Controls/_breadcrumbs/resources/menuContentTemplate" />
+

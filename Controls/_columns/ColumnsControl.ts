@@ -15,3 +15,4 @@ export default class ColumnsControl extends ListControl {
         return this._children.innerView.keyDownHandler.call(this._children.innerView, e);
     }
 }
+

@@ -1,5 +1,6 @@
 import {TemplateFunction} from 'UI/Base';
 
+
 export interface IMonthListOptions {
    viewMode: string;
    position?: Date;

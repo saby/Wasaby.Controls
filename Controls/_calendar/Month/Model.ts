@@ -7,6 +7,7 @@ import DateUtil = require('Controls/Utils/Date');
  * @author Красильников А.С.
  */
 
+
 var ModuleClass = MonthViewModel.extend({
 
     _normalizeState: function (state) {

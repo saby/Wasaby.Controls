@@ -16,3 +16,4 @@ var OldNotification = Control.extend({
 });
 OldNotification._theme = ['Controls/compatiblePopup'];
 export default OldNotification;
+

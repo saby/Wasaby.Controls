@@ -1,1 +1,1 @@
-<ws:partial  template="{{_options.content}}"  record="{{  _options.record  }}"/>
+<ws:partial template="{{_options.content}}" record="{{ _options.record }}"/>

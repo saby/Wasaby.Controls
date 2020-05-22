@@ -8,6 +8,7 @@ interface IColumnsControllerOptions extends IControlOptions {
     columnsMode: 'auto' | 'fixed';
 }
 
+
 export default class ColumnsController extends Control {
     private _columnsCalculator: IColumnsCalculator;
 

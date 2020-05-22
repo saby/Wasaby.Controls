@@ -15,6 +15,7 @@ import IMonth from './interfaces/IMonth';
 
 import {Logger} from 'UI/Utils';
 
+
 var _private = {
    _updateView: function(self, options) {
       var newMonth = options.month || new options.dateConstructor();

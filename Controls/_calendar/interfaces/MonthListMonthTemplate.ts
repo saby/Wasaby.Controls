@@ -5,6 +5,7 @@
  * @author Красильников А.С.
  */
 
+
 /*
  * @name Controls/calendar:MonthListMonthTemplate#bodyTemplate
  * @cfg {String|Function} Шаблон отображения месяца

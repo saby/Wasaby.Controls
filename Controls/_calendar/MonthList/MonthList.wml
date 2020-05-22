@@ -24,6 +24,7 @@
             <ws:sourceConfig limit="{{_options._limit}}" position="{{_startPositionId}}" direction="bothways" field="id"></ws:sourceConfig>
          </ws:navigation>
 
+
          <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate"
                         itemData="{{itemTemplate.itemData}}"

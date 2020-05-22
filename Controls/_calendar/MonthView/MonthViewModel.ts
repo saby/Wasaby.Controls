@@ -33,6 +33,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       }
    },
 
+
    getMonthArray: function() {
       return this._modelArray;
    },

@@ -2,6 +2,7 @@ import {date as dateFormat} from 'Types/formatter';
 import {descriptor} from 'Types/entity';
 import dateUtil = require('Controls/Utils/Date');
 
+
 /**
  * Интерфейс для контролов, которые отображают месяц.
  * @interface Controls/_calendar/interfaces/IMonth

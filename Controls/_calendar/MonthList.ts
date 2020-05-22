@@ -23,6 +23,7 @@ import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate')
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
 import {Logger} from 'UI/Utils';
 
+
 interface IModuleComponentOptions extends
     IControlOptions,
     IMonthListSourceOptions,

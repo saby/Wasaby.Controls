@@ -1,25 +1,26 @@
-<div  attr:class="controls-BreadCrumbsView  controls-BreadCrumbsView_theme-{{_options.theme}}">
-        <ws:if  data="{{_options.visibleItems.length  >  0}}">
-                <div  attr:class="controls-BreadCrumbsView__wrapper">
-                        <ws:partial  template="{{_itemsTemplate}}"
-                                                displayProperty="{{  _options.displayProperty  }}"
-                                                highlighter="{{_options.highlighter}}"
-                                                applyHighlighter="{{_applyHighlighter}}"
-                                                items="{{_options.visibleItems}}"
-                                                backgroundStyle="{{_options.backgroundStyle  ||  _options.style}}"
-                                                itemTemplate="{{_options.itemTemplate}}"  />
-                </div>
-        </ws:if>
+<div attr:class="controls-BreadCrumbsView controls-BreadCrumbsView_theme-{{_options.theme}}">
+    <ws:if data="{{_options.visibleItems.length > 0}}">
+        <div attr:class="controls-BreadCrumbsView__wrapper">
+            <ws:partial template="{{_itemsTemplate}}"
+                        displayProperty="{{ _options.displayProperty }}"
+                        highlighter="{{_options.highlighter}}"
+                        applyHighlighter="{{_applyHighlighter}}"
+                        items="{{_options.visibleItems}}"
+                        backgroundStyle="{{_options.backgroundStyle || _options.style}}"
+                        itemTemplate="{{_options.itemTemplate}}" />
+        </div>
+    </ws:if>
 
-        <Controls.popup:Sticky
-                        on:result="_onResult()"
-                        on:close="_onClose()"
-                        on:open="_onOpen()"
-                        name="menuOpener"
-                        template="Controls/menu:Popup"
-                        closeOnOutsideClick="{{true}}"
-                        actionOnScroll="close">
-                <ws:templateOptions  className="controls-BreadCrumbsController__menu_theme-{{_options.theme}}"/>
-        </Controls.popup:Sticky>
+
+    <Controls.popup:Sticky
+            on:result="_onResult()"
+            on:close="_onClose()"
+            on:open="_onOpen()"
+            name="menuOpener"
+            template="Controls/menu:Popup"
+            closeOnOutsideClick="{{true}}"
+            actionOnScroll="close">
+        <ws:templateOptions className="controls-BreadCrumbsController__menu_theme-{{_options.theme}}"/>
+    </Controls.popup:Sticky>
 
 </div>

@@ -28,6 +28,7 @@ var _private = {
    }
 };
 
+
 var DialogHelper = {
    open: function(path, config) {
       var result = moduleStubs.requireModule(path).addCallback(function(Component) {

@@ -5,6 +5,7 @@
  * @author Красильников А.С.
  */
 
+
 /*
  * @name Controls/calendar:MonthViewDayTemplate#backgroundStyle
  * @cfg {String} Постфикс стиля для настройки фона ячейки.

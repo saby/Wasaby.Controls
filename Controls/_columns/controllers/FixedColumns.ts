@@ -10,3 +10,4 @@ export class FixedColumns implements IColumnsCalculator {
         return 0;
     }
 }
+

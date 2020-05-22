@@ -14,6 +14,7 @@
       </div>
    </div>
 
+
    <Controls._calendar.MonthSlider.Slider
       data="{{_month}}"
       animation="{{_animation}}"

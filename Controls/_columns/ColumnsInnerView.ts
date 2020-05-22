@@ -25,6 +25,7 @@ export interface IColumnsInnerViewOptions extends IList {
     source: ICrudPlus;
 }
 
+
 const SPACING = 12;
 const DEFAULT_MIN_WIDTH = 270;
 const DEFAULT_MAX_WIDTH = 400;

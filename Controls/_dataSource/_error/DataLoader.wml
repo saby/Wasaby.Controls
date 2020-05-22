@@ -1,3 +1,3 @@
-<Controls._dataSource._error.Container  viewConfig="{{_errorViewConfig}}">
-      <ws:partial  template="{{_options.content}}"  sources="{{_sources}}"  scope="{{_options}}"/>
+<Controls._dataSource._error.Container viewConfig="{{_errorViewConfig}}">
+   <ws:partial template="{{_options.content}}" sources="{{_sources}}" scope="{{_options}}"/>
 </Controls._dataSource._error.Container>

@@ -32,3 +32,4 @@
    </ws:else>
    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>
+
