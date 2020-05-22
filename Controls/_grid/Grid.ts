@@ -2,11 +2,16 @@ import {ListControl as viewTemplate, View as List} from 'Controls/list';
 import GridViewModel = require('Controls/_grid/GridViewModel');
 import viewName = require('Controls/_grid/GridView');
 
-/**
+   /**
     * Контрол «Таблица». Может загружать данные из источника данных.
-    * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>здесь</a>.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">Демо-пример</a>.
-    *
+    * 
+    * @remark
+    * Полезные ссылки:
+    * * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">демо-пример</a>
+    * * <a href="/doc/platform/developmentapl/interface-development/controls/list/">руководство разработчика</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_grid.less">переменные тем оформления grid</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_grid.less">переменные тем оформления list</a>
+    * 
     * @class Controls/_grid/Grid
     * @extends Controls/list:View
     * @mixes Controls/_interface/ISource

@@ -15,11 +15,15 @@ import 'Controls/form';
 import {Logger} from 'UI/Utils';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 
-/**
+   /**
     * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
     * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FFilter%2FButton%2FPanelVDom">Демо-пример</a>.
-    *
+    * 
+    * @remark
+    * Полезные ссылки:
+    * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilter%2FButton%2FPanelVDom">демо-пример</a>
+    * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3">руководство разработчика</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления</a>
     *
     * @class Controls/_filterPopup/DetailPanel
     * @extends Core/Control
