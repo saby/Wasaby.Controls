@@ -26,7 +26,6 @@
                   <ws:partial template="{{_options.headerTemplate}}"
                               iconSize="{{_options.iconSize}}"
                               icon="{{_headingIcon}}"
-                              icon="{{_headingIcon}}"
                               caption="{{_headingCaption}}"
                               theme="{{_headerTheme}}"
                               on:click="_headerClick()"/>
