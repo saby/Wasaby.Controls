@@ -75,15 +75,6 @@ export class FlatController implements IDragNDropListController{
    }
 
    startDragNDrop(itemData, items, dragControlId, notifyDragStart) {
-      const key = this._useNewModel ? itemData.getContents().getKey() : itemData.key;
-
-      const dragKeyPosition = items.indexOf(key);
-      // If dragged item is in the list, but it's not the first one, move
-      // it to the front of the array
-      if (dragKeyPosition > 0) {
-         items.splice(dragKeyPosition, 1);
-         items.unshift(key);
-      }
       const dragStartResult = notifyDragStart(items);
       if (dragStartResult) {
          if (dragControlId) {
@@ -178,22 +169,13 @@ export class FlatController implements IDragNDropListController{
       let
          selected,
          excluded,
-         dragItemIndex,
-         isSelectAll;
+         dragItemIndex;
 
       selected = cClone(selectedKeys) || [];
-      isSelectAll = selected.indexOf(null) !== -1;
-      dragItemIndex = selected.indexOf(dragKey);
-      if (dragItemIndex !== -1) {
-         selected.splice(dragItemIndex, 1);
-      }
-      if (!isSelectAll) {
-         selected.unshift(dragKey);
-      }
 
       excluded = cClone(excludedKeys) || [];
       dragItemIndex = excluded.indexOf(dragKey);
-      if (dragItemIndex !== -1) {
+      if (dragItemIndex !== -1) { // TODO dnd протестировать, точно ли это нужно
          excluded.splice(dragItemIndex, 1);
       }
 
