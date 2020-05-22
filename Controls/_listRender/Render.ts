@@ -65,7 +65,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _afterMount(): void {
-        this._notify('itemsContainerReady', [this.getItemsContainer()]);
+        this._notify('itemsContainerReady', [this.getItemsContainer.bind(this)]);
     }
 
     getItemsContainer(): HTMLDivElement {
@@ -97,6 +97,7 @@ export default class Render extends Control<IRenderOptions> {
             !EditInPlaceController.isEditing(this._options.listModel)
         ) {
             this._notify('itemContextMenu', [item, e, false]);
+            e.preventDefault();
             e.stopPropagation();
         }
     }

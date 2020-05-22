@@ -52,6 +52,7 @@ export interface IToggleGroup {
     /**
      * @name Controls/_toggle/interface/IToggleGroup#itemTemplate
      * @cfg {Function} Шаблон для рендеринга элемента.
+     * @demo Controls-demo/toggle/RadioGroup/ItemTemplate/Index
      * @default Base template
      * @remark
      * Чтобы определить шаблон, вы должны вызвать базовый шаблон.

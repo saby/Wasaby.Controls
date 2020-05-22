@@ -572,6 +572,23 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             assert.equal(searchController._searchValue, '');
          });
 
+         it('searchValue is empty', function() {
+            var options = getDefaultOptions();
+            var searchStarted = false;
+            searchMod.Controller._private.startSearch = () => {searchStarted = true;};
+            searchController._inputSearchValue = 'test';
+            searchController._searchValue = 'test';
+            options.searchValue = '';
+            searchMod.Controller._private.needStartSearchBySearchValueChanged = function() {
+               searchController._searchValue = '';
+               return true;
+            };
+            searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+
+            assert.equal(searchController._inputSearchValue, '');
+            assert.isFalse(searchStarted);
+         });
+
          it('filter is changed', function() {
             var options = getDefaultOptions();
             var aborted;
@@ -716,9 +733,13 @@ define(['Controls/search', 'Types/source', 'Core/core-instance', 'Types/collecti
             var options = getDefaultOptions();
             var searchStarted = false;
             options.root = 'test_root';
+            options.searchValue = 'test1';
+            searchController._inputSearchValue = 'test';
+            searchController._viewMode = 'search';
             searchMod.Controller._private.startSearch = () => {searchStarted = true;};
             searchController._beforeUpdate(options, {dataOptions: defaultOptions});
             assert.isFalse(searchStarted);
+            assert.equal(searchController._inputSearchValue, 'test1');
          });
       });
 

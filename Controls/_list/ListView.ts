@@ -137,9 +137,6 @@ var ListView = BaseControl.extend(
             if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
                 this._listModel.setItemPadding(newOptions.itemPadding);
             }
-            if (newOptions.markedKey) {
-                this._listModel.setMarkedKey(newOptions.markedKey);
-            }
 
             // TODO https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             if (this._options.leftSpacing !== newOptions.leftSpacing) {
@@ -170,7 +167,7 @@ var ListView = BaseControl.extend(
         },
 
         _afterMount: function() {
-            this._notify('itemsContainerReady', [this.getItemsContainer()]);
+            this._notify('itemsContainerReady', [this.getItemsContainer.bind(this)]);
             /* TODO это временное решение для ускорения списка с вложенными плитками
               суть - в том что когда у плитки случается afterMount - у внешнего списка уже все пересчитал с актуальными
               размерами вложенных плиток. Поэтому нет вариантов, что afterMount плитки может поресайзить внешний список

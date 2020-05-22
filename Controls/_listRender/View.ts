@@ -10,7 +10,6 @@ import { Sticky } from 'Controls/popup';
 import {
     Collection,
     CollectionItem,
-    MarkerCommands,
     ICollectionCommand,
     ANIMATION_STATE
 } from 'Controls/display';
@@ -26,6 +25,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { constants } from 'Env/Env';
 
 import {ISwipeEvent} from './Render';
+import { MarkerController, TVisibility, Visibility } from 'Controls/marker';
 
 export interface IViewOptions extends IControlOptions {
     items: RecordSet;
@@ -44,6 +44,9 @@ export interface IViewOptions extends IControlOptions {
     actionCaptionPosition?: 'right'|'bottom'|'none';
 
     editingConfig?: any;
+
+    markerVisibility: TVisibility;
+    markedKey: number|string;
 }
 
 export default class View extends Control<IViewOptions> {
@@ -57,8 +60,17 @@ export default class View extends Control<IViewOptions> {
     // Идентификатор текущего открытого popup
     private _itemActionsMenuId: string = null;
 
+    private _markerController: MarkerController = null;
+
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
+        if (options.markerVisibility !== Visibility.Hidden) {
+            this._markerController = new MarkerController({
+                model: this._collection,
+                markerVisibility: options.markerVisibility,
+                markedKey: options.markedKey
+            });
+        }
         return libraryLoad(options.render).then(() => null);
     }
 
@@ -75,6 +87,18 @@ export default class View extends Control<IViewOptions> {
 
         if (options.editingConfig !== this._options.editingConfig || options.editingConfig && collectionRecreated) {
             this._collection.setEditingConfig(options.editingConfig);
+        }
+
+        if (options.markedKey !== this._options.markedKey
+           || options.markerVisibility !== this._options.markerVisibility
+           || collectionRecreated) {
+            if (this._markerController) {
+                this._markerController.update({
+                    model: this._collection,
+                    markerVisibility: options.markerVisibility,
+                    markedKey: options.markedKey
+                });
+            }
         }
 
         // UC: Record might be editing on page load, then we should initialize Item Actions.
@@ -126,8 +150,9 @@ export default class View extends Control<IViewOptions> {
         item: Model,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        const moveMarker = new MarkerCommands.Mark(item.getKey());
-        this._executeCommands([moveMarker]);
+        if (this._markerController) {
+            this._markerController.setMarkedKey(item.getKey());
+        }
         // TODO fire 'markedKeyChanged' event
     }
 
@@ -179,9 +204,9 @@ export default class View extends Control<IViewOptions> {
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        const moveMarker = new MarkerCommands.Mark(item.getContents().getKey());
-
-        this._executeCommands([moveMarker]);
+        if (this._markerController) {
+            this._markerController.setMarkedKey(item.getContents().getKey());
+        }
         // TODO fire 'markedKeyChanged' event
 
         if (action && !action._isMenu && !action['parent@']) {
@@ -218,16 +243,18 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         keyDownEvent: SyntheticEvent<KeyboardEvent>
     ): void {
-        const commands: Array<ICollectionCommand<unknown>> = [];
         switch (keyDownEvent.nativeEvent.keyCode) {
         case constants.key.down:
-            commands.push(new MarkerCommands.MarkNext());
+            if (this._markerController) {
+                this._markerController.moveMarkerToNext();
+            }
             break;
         case constants.key.up:
-            commands.push(new MarkerCommands.MarkPrevious());
+            if (this._markerController) {
+                this._markerController.moveMarkerToPrev();
+            }
             break;
         }
-        this._executeCommands(commands);
         // TODO fire 'markedKeyChanged' event if needed
     }
 
@@ -259,7 +286,6 @@ export default class View extends Control<IViewOptions> {
 
     /**
      * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
-     * @param e событие onResult
      * @param eventName название события, брошенного из Controls/menu:Popup.
      * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
      * @param actionModel
@@ -267,7 +293,6 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _itemActionsMenuResultHandler(
-        e: SyntheticEvent<MouseEvent>,
         eventName: string,
         actionModel: Model,
         clickEvent: SyntheticEvent<MouseEvent>): void {
@@ -315,13 +340,15 @@ export default class View extends Control<IViewOptions> {
         }
         const itemKey = contents?.getKey();
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
-        const onResult = this._itemActionsMenuResultHandler.bind(this);
-        const onClose = this._itemActionsMenuCloseHandler.bind(this);
-        this._collection.setActiveItem(item);
-        Sticky.openPopup(menuConfig).then((popupId) => {
-            this._itemActionsMenuId = popupId;
+        if (menuConfig) {
+            const onResult = this._itemActionsMenuResultHandler.bind(this);
+            const onClose = this._itemActionsMenuCloseHandler.bind(this);
             menuConfig.eventHandlers = {onResult, onClose};
-        });
+            this._collection.setActiveItem(item);
+            Sticky.openPopup(menuConfig).then((popupId) => {
+                this._itemActionsMenuId = popupId;
+            });
+        }
     }
 
     /**

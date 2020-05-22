@@ -245,7 +245,7 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName}:not(.controls-Grid__row-ladder-cell) {
       background-color: @item_hover_background-color_list;
    }
-   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-listItem_theme-@{themeName} {
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-default_theme-@{themeName} {
       background-color: @item_hover_background-color_list;
    }
    .controls-BaseControl_showActions .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row:hover {
@@ -570,7 +570,7 @@
    background-color: @master-marker_color_list;
    top: calc(50% - @item-separator_s_thickness_list);
    left: 0;
-   transform: translateY(-50%);
+   margin-top: -@master-marker_height_list/2;
 }
 
 .ws-is-hover {

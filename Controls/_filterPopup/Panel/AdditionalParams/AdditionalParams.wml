@@ -1,6 +1,7 @@
 <div class="controls-AdditionalParams">
    <ws:template name="itemTemplate">
-      <div class="controls-AdditionalParams__item controls-AdditionalParams__item_{{direction}}">
+      <div class="controls-AdditionalParams__item controls-AdditionalParams__item_theme-{{_options.theme}}
+                  controls-AdditionalParams__item_{{direction}} controls-AdditionalParams__item_{{direction}}_theme-{{_options.theme}}">
          <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate.templateName}}"
                      item="{{item}}"
                      templateOptions="{{_options.itemTemplate.templateOptions}}"
@@ -11,8 +12,9 @@
                      on:selectedKeyChanged="_valueChangedHandler(index)"/>
       </div>
    </ws:template>
-   <div class="controls-AdditionalParams__heading">{[Еще можно отобрать]}</div>
-   <div class="controls-AdditionalParams__items {{_isMaxHeight ? 'controls-AdditionalParams_block-maxHeight'}}">
+   <div class="controls-AdditionalParams__heading controls-AdditionalParams__heading_theme-{{_options.theme}}">{[Еще можно отобрать]}</div>
+   <div class="controls-AdditionalParams__items controls-AdditionalParams__items_theme-{{_options.theme}}
+               {{_isMaxHeight ? 'controls-AdditionalParams_block-maxHeight controls-AdditionalParams_block-maxHeight_theme-' + _options.theme}}">
       <div class="controls-AdditionalParams__items-leftColumn">
          <ws:for data="index, item in _options.items">
             <ws:if data="{{!_isItemVisible(item) && _columns.leftColumn.indexOf(index) !== -1}}">
