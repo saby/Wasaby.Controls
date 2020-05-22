@@ -56,5 +56,5 @@ import 'Controls/_dragnDrop/DraggingTemplate';
              this._draggingTemplate = null;
          }
       });
-
+      Controller._styles = ['Controls/dragnDrop'];
       export = Controller;

@@ -111,7 +111,9 @@ const
          return shadowState.indexOf(position) !== - 1;
       },
       calculateShadowClasses(shadowState: string, position: string, theme: string, backgroundStyle: string): string {
-         let shadowClasses = `controls-ColumnScroll__shadow_theme-${theme}`
+         let shadowClasses = `js-controls-ColumnScroll__shadow`
+                            + ` js-controls-ColumnScroll__shadow_${position}`
+                            + ` controls-ColumnScroll__shadow_theme-${theme}`
                             + ` controls-ColumnScroll__shadow-${position}_theme-${theme}`
                             + ` controls-horizontal-gradient-${backgroundStyle || 'default'}_theme-${theme}`;
          if (!_private.isShadowVisible(shadowState, position)) {
@@ -135,16 +137,34 @@ const
       drawTransform (self, position) {
          // This is the fastest synchronization method scroll position and cell transform.
          // Scroll position synchronization via VDOM is much slower.
-         let newHTML = `.${self._transformSelector} .controls-Grid__cell_transform { transform: translateX(-${position}px); }`;
 
-         if (!isFullGridSupport()) {
-             const maxTranslate = self._contentSize - self._contentContainerSize;
-             newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(-${maxTranslate}px); }`;
-         }
+         // Горизонтальный скролл передвигает всю таблицу, но компенсирует скролл для некоторых ячеек, например для
+         // зафиксированных ячеек
+         let newHTML =
+             // Скроллируется таблица
+             `.${self._transformSelector} { transform: translateX(-${position}px); }` +
 
-         if (self._children.contentStyle.innerHTML !== newHTML) {
-            self._children.contentStyle.innerHTML = newHTML;
-         }
+             // Не скроллируем зафиксированные колонки
+             `.${self._transformSelector} .controls-Grid__cell_fixed { transform: translateX(${position}px); }` +
+
+             // Не скроллируем скроллбар
+             `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
+
+             // Не скроллируем тени. ScaleX -1 отражает тень по вертикали, чтобы не писать разные стили для теней.
+             `.${self._transformSelector} .js-controls-ColumnScroll__shadow_start { transform: translateX(${position}px); }` +
+             `.${self._transformSelector} .js-controls-ColumnScroll__shadow_end { transform: translateX(${position}px) scaleX(-1); }`;
+
+          // Не скроллируем операции над записью
+          if (isFullGridSupport()) {
+              newHTML += `.${self._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
+          } else {
+              const maxTranslate = self._contentSize - self._contentContainerSize;
+              newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(${position - maxTranslate}px); }`;
+          }
+
+          if (self._children.contentStyle.innerHTML !== newHTML) {
+              self._children.contentStyle.innerHTML = newHTML;
+          }
 
       },
        /**

@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">style=secondary</div>
         <Controls.toggle:Separator caption="Button" bind:value="_expanded1" style="secondary"></Controls.toggle:Separator>

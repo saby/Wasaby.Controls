@@ -6,7 +6,6 @@ import {constants} from 'Env/Env';
 import {
     ColumnsCollection as Collection,
     ColumnsCollectionItem as CollectionItem,
-    MarkerCommands,
 } from 'Controls/display';
 import scrollToElement = require('Controls/Utils/scrollToElement');
 
@@ -14,6 +13,7 @@ import {IList} from 'Controls/list';
 
 import ColumnsController from './controllers/ColumnsController';
 import * as template from 'wml!Controls/_columns/ColumnsInnerView';
+import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
 
 export interface IColumnsInnerViewOptions extends IList {
     columnMinWidth: number;
@@ -32,9 +32,10 @@ const DEFAULT_COLUMNS_COUNT = 2;
 
 export default class ColumnsInnerView extends Control {
     _template: TemplateFunction = template;
-    private _itemsContainer: HTMLDivElement;
+    private _itemsContainerGetter: Function;
     private _columnsCount: number;
     private _columnsController: ColumnsController;
+    private _markerController: MarkerController;
     private _columnsIndexes: number[][];
     private _model: Collection<Model>;
     protected _options: IColumnsInnerViewOptions;
@@ -46,6 +47,15 @@ export default class ColumnsInnerView extends Control {
         this._subscribeToModelChanges(options.listModel);
         this._resizeHandler = this._resizeHandler.bind(this);
         this._model = options.listModel;
+
+        if (options.markerVisibility !== MarkerVisibility.Visible) {
+            this._markerController = new MarkerController({
+                markerVisibility: options.markerVisibility,
+                markedKey: options.markedKey,
+                model: options.listModel
+            });
+        }
+
         if (options.columnsMode === 'auto' && options.initialWidth) {
             this._recalculateColumnsCountByWidth(options.initialWidth);
         } else {
@@ -54,7 +64,7 @@ export default class ColumnsInnerView extends Control {
             } else {
                 this._columnsCount = DEFAULT_COLUMNS_COUNT;
             }
-        this.updateColumns();
+            this.updateColumns();
         }
     }
 
@@ -69,10 +79,18 @@ export default class ColumnsInnerView extends Control {
         if (this._model !== options.listModel) {
             this._model = options.listModel;
         }
+
+        if (this._markerController) {
+            this._markerController.update({
+                markerVisibility: options.markerVisibility,
+                markedKey: options.markedKey,
+                model: options.listModel
+            });
+        }
     }
 
-    private saveItemsContainer(e: SyntheticEvent<Event>, itemsContainer: HTMLDivElement): void {
-        this._itemsContainer = itemsContainer;
+    private saveItemsContainer(e: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
+        this._itemsContainerGetter = itemsContainerGetter;
     }
     private _recalculateColumnsCountByWidth(width: number): void {
         const newColumnsCount = Math.floor(width / ((this._options.columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
@@ -82,7 +100,8 @@ export default class ColumnsInnerView extends Control {
         }
     }
     protected _resizeHandler(): void {
-        const currentWidth = this._itemsContainer.getBoundingClientRect().width;
+        const itemsContainer = this._itemsContainerGetter();
+        const currentWidth = itemsContainer.getBoundingClientRect().width;
 
         // если currentWidth === 0, значит контрол скрыт (на вкладке switchbleArea), и не нужно пересчитывать
         if (this._options.columnsMode === 'auto' && currentWidth > 0) {
@@ -218,17 +237,17 @@ export default class ColumnsInnerView extends Control {
 
     private moveMarker(direction: string): void {
         const model = this._options.listModel;
-        if (model && this._options.markerVisibility !== 'hidden') {
+        if (model && this._markerController) {
             const curMarkedItem = this._model.find((item) => item.isMarked());
             let newMarkedItem: CollectionItem<Model>;
             newMarkedItem = this[`getItemTo${direction}`](model, curMarkedItem);
             if (newMarkedItem && curMarkedItem !== newMarkedItem) {
-                const moveMarker = new MarkerCommands.Mark(newMarkedItem.getContents().getKey());
-                moveMarker.execute(this._model);
+                this._markerController.setMarkedKey(newMarkedItem.getContents().getKey());
                 const column = newMarkedItem.getColumn();
                 const curIndex = model.getIndex(newMarkedItem);
                 const columnIndex = this._columnsIndexes[column].indexOf(curIndex);
-                const elem = this._itemsContainer.children[column].children[columnIndex + 1] as HTMLElement;
+                const itemsContainer = this._itemsContainerGetter();
+                const elem = itemsContainer.children[column].children[columnIndex + 1] as HTMLElement;
                 scrollToElement(elem, direction === 'Down');
             }
         }

@@ -1,7 +1,8 @@
 <div class="controls-PropertyGrid">
     <ws:for data="index, item in _items">
         <ws:if data="{{_isItemVisible(item)}}">
-            <div class="controls-PropertyGrid__item {{index === _lastVisibleIndex ? 'controls-PropertyGrid__lastItem'}}">
+            <div class="controls-PropertyGrid__item controls-PropertyGrid__item_theme-{{_options.theme}}
+                        {{index === _lastVisibleIndex ? 'controls-PropertyGrid__lastItem'}}">
                 <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate.templateName}}"
                             item="{{item}}"
                             templateOptions="{{_options.itemTemplate.templateOptions}}"

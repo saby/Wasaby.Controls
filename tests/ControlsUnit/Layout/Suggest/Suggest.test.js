@@ -655,11 +655,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       it('Suggest::_beforeMount', function() {
          let suggestComponent = new suggestMod._InputController();
 
-         suggestComponent._searchValue = '123';
          suggestComponent._beforeMount({
             searchParam: 'title',
             minSearchLength: 3,
-            filter: {test: 5}
+            filter: {test: 5},
+            value: '123'
          });
 
          assert.deepEqual(suggestComponent._filter, {
@@ -734,6 +734,12 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestComponent._options.validationStatus = 'valid';
          suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
          assert.isNull(suggestComponent._loading, 'load started with validationStatus: "invalid"');
+
+         suggestComponent._options.validationStatus = 'invalid';
+         suggestComponent._options.suggestState = true;
+         suggestComponent._loading = true;
+         suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
+         assert.isTrue(suggestComponent._loading);
 
          sandbox.restore();
       });

@@ -77,6 +77,18 @@ var
         getRoot: function() {
             return this._model.getRoot();
         },
+        getNextByKey: function() {
+           return this._model.getNextByKey.apply(this._model, arguments);
+        },
+        getPrevByKey: function() {
+           return this._model.getPrevByKey.apply(this._model, arguments);
+        },
+        getNextByIndex: function() {
+           return this._model.getNextByIndex.apply(this._model, arguments);
+        },
+        getPrevByIndex: function() {
+           return this._model.getPrevByIndex.apply(this._model, arguments);
+        },
         setRoot: function (root) {
             this._model.setRoot(root);
         },
@@ -138,6 +150,7 @@ var
                 currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
 
                 currentColumn.prepareExpanderClasses = current.prepareExpanderClasses;
+                currentColumn.getExpanderSize = current.getExpanderSize;
 
                 currentColumn.isExpanded = current.isExpanded;
                 currentColumn.classList.base += ` controls-TreeGrid__row-cell_theme-${theme} controls-TreeGrid__row-cell_${currentColumn.style || 'default'}_theme-${theme}`;
@@ -150,8 +163,8 @@ var
                     currentColumn.classList.base += ` controls-TreeGrid__row-cell__item_theme-${theme}`;
                 }
 
-                // если текущая колонка первая и для нее не задан мультиселект и прилипание, то убираем левый отступ
-                if (currentColumn.columnIndex === 0 && !current.hasMultiSelect && !currentColumn.column.stickyProperty) {
+                // если текущая колонка первая и для нее не задан мультиселект, то убираем левый отступ
+                if (currentColumn.columnIndex === 0 && !current.hasMultiSelect) {
                     currentColumn.classList.padding.left += ' controls-TreeGrid__row-cell__firstColumn__contentSpacing_null';
                 }
 

@@ -25,5 +25,5 @@ export interface ICollectionItemStyled {
      * CSS classes to show Item Actions (within Controls/listRender:itemActionsTemplate template)
      * @param itemActionsPosition position relative to Item: 'inside' | 'outside'
      */
-    getItemActionClasses(itemActionsPosition: string): string;
+    getItemActionClasses(itemActionsPosition: string, theme?: string): string;
 }

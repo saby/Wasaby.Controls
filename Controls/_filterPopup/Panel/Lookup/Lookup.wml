@@ -1,7 +1,7 @@
 <div class="controls-FilterPanel__Lookup">
    <ws:if data="{{_caption}}">
       <Controls._filterPopup.Panel.Link
-            attr:class="controls-FilterPanel__Lookup_link"
+            attr:class="controls-FilterPanel__Lookup_link controls-FilterPanel__Lookup_link_theme-{{_options.theme}}"
             caption="{{_caption}}"
             on:click="showSelector()"/>
    </ws:if>
@@ -13,6 +13,7 @@
                   on:selectedKeysChanged="_selectedKeysChanged()"
                   on:inputCompleted="_notifyHandler('inputCompleted')"
                   on:itemsChanged="_notifyHandler('itemsChanged')"
+                  on:valueChanged="_notifyHandler('valueChanged')"
                   on:textValueChanged="_textValueChanged()"
                   on:itemClick="_notifyHandler('itemClick')"
                   on:openInfoBox="_notifyHandler('openInfoBox')"

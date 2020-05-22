@@ -151,6 +151,12 @@ define(
             open: setTrue.bind(this, assert)
          };
 
+         it('_selectorOpenCallback', () => {
+            let fastFilter = getFastFilterWithItems(configItems);
+            const items = fastFilter._selectorOpenCallback();
+            assert.isTrue(items instanceof collection.List);
+         });
+
          it('_beforeMount', function(done) {
             let fastFilter = getFastFilter(configItems);
             let receivedItems = [{
@@ -479,6 +485,21 @@ define(
             assert.deepEqual(fastData2._items.at(0).value, ['Китай', 'Франция']);
             assert.deepEqual(fastData2._configs[0]._items.getCount(), 6);
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 11, title: 'Китай' });
+         });
+
+         it('_onResult selectorDialogOpened', () => {
+            let instance = getFastFilterWithItems(configItems);
+            let opened = true;
+            let notifyFire = false;
+            instance._children.DropdownOpener = {
+               close: () => { opened = false }
+            };
+            instance._notify = () => {
+               notifyFire = true;
+            };
+            instance._onResult(null, 'selectorDialogOpened', []);
+            assert.isFalse(notifyFire);
+            assert.isFalse(opened);
          });
 
          it('_onSelectorTemplateResult', function() {

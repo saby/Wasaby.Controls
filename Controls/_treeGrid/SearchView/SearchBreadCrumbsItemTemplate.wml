@@ -8,7 +8,7 @@
         <Controls.Container.Async templateName="Controls/breadcrumbs:Path">
             <ws:partial template="{{ content.resolvedTemplate }}"
                         items="{{colspanTemplate.itemData.item}}"
-                        backgroundStyle="{{_options.backgroundStyle || 'listItem'}}"
+                        backgroundStyle="{{_options.backgroundStyle}}"
                         attr:class="controls-Grid__breadCrumbs"
                         breadCrumbsItemClickCallback="{{ itemData.breadcrumbsItemClickCallback }}"
                         keyProperty="{{itemData.keyProperty}}"

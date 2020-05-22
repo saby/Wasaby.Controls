@@ -133,6 +133,7 @@ var
             // При редактировании по месту маркер появляется только если в списке больше одной записи.
             // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
             if (self._isAdd && commit && self._options.listModel.getCount() > 1) {
+                // TODO переделать на marker.Controller, когда этот контрол будет переводиться в контроллер
                 self._options.listModel.setMarkedKey(self._editingItem.getId());
             }
             if (self._options.useNewModel) {
