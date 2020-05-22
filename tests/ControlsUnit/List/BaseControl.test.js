@@ -3922,7 +3922,7 @@ define([
          instance._itemMouseMove({}, {});
          assert.equal(eName, 'draggingItemMouseMove');
          instance.saveOptions({...cfg, itemsDragNDrop: false});
-         instance._itemMouseLeave({}, {});
+         instance._onItemMouseLeave({}, { getContents: function() { return {}; } });
          assert.equal(eName, 'itemMouseLeave');
       });
 
@@ -3948,11 +3948,11 @@ define([
             eName = eventName;
          };
          instance._listViewModel.getDragItemData = () => ({});
-         instance._itemMouseLeave({}, {});
+         instance._onItemMouseLeave({}, { getContents: function() { return {}; } });
          assert.equal(eName, 'draggingItemMouseLeave');
          eName = null;
          instance.saveOptions({...cfg, itemsDragNDrop: false});
-         instance._itemMouseLeave({}, {});
+         instance._onItemMouseLeave({}, { getContents: function() { return {}; } });
          assert.equal(eName, 'itemMouseLeave');
       });
 
@@ -4479,7 +4479,10 @@ define([
             };
             const instance = new lists.BaseControl(cfg);
             const enterItemData = {
-               item: {}
+               item: {},
+               getContents: function() {
+                  return this.item;
+               }
             };
             const enterNativeEvent = {};
             let called = false;
@@ -4493,7 +4496,7 @@ define([
             };
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
 
-            instance._itemMouseEnter({}, enterItemData, enterNativeEvent);
+            instance._onItemMouseEnter({}, enterItemData, enterNativeEvent);
             assert.isTrue(called);
          });
 
