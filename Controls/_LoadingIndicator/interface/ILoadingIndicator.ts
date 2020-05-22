@@ -143,25 +143,6 @@ export default interface ILoadingIndicator {
  */
 
 /**
- * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#mods
- * @cfg {Array.<String>|String} Параметр может использоваться для пользовательской настройки индикатора.
- * @remark
- * Параметр mods содержит слова, которые будут добавлены в качестве стиля "controls-loading-indicator_mod-[mod]" в контейнер индикатора.
- * * [] — без использования параметра mods
- * * ['gray'] — серый цвет градиента. Используется с настройками скролла.
- * @default []
- */
-
-/*
- * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#mods
- * @cfg {Array.<String>|String} It can be using for custom tuning of indicator.
- * mods contains words what will be adding as "controls-loading-indicator_mod-[mod]" style in indicator's container
- * * [] — no mods
- * * ['gray'] — gray color of gradient. it's using with scroll property
- * @default []
- */
-
-/**
  * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#delay
  * @cfg {Number} Задержка перед началом показа индикатора.
  * @remark
