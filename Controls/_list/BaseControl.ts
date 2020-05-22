@@ -2597,7 +2597,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     /**
-     * Добавляет CSS класс, который Показывает или скрывает ItemActions
+     * Выполняется из шаблона при mouseenter
      * @private
      */
     _initItemActions(): void {

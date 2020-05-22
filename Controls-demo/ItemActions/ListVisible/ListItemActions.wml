@@ -1,4 +1,4 @@
-<div class="itemActionsDemo">
+<div class="controlsDemo__wrapper controlsDemo__itemActions_list_visible">
     <Controls.list:View
             keyProperty="id"
             source="{{_viewSource}}"

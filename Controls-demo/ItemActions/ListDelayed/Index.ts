@@ -15,7 +15,7 @@ interface ISrcData {
 const srcData: ISrcData[] = [
    {
       id: 1,
-      title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+      title: 'TV 1',
       description: 'Другое название 1'
    },
    {

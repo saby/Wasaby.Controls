@@ -130,18 +130,6 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Добавляет CSS класс, который Показывает или скрывает ItemActions
-     * @private
-     */
-    protected _initItemActions(): void {
-        if (this._options.itemActionVisibility !== 'start') {
-            if (!this._collection.isActionsAssigned()) {
-                this._updateItemActions(this._options);
-            }
-        }
-    }
-
-    /**
      * По событию youch мы должны показать операции
      * @param e
      * @private
@@ -156,7 +144,11 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     protected _onRenderMouseEnter(e: SyntheticEvent<TouchEvent>): void {
-        this._initItemActions();
+        if (this._options.itemActionVisibility !== 'start') {
+            if (!this._collection.isActionsAssigned()) {
+                this._updateItemActions(this._options);
+            }
+        }
     }
 
     /**

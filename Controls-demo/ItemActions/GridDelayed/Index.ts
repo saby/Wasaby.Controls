@@ -27,7 +27,7 @@ const columns = [
 const srcData: ISrcData[] = [
    {
       id: 1,
-      title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+      title: 'Notebooks 1',
       description: 'Другое название 1'
    },
    {
@@ -43,14 +43,6 @@ const srcData: ISrcData[] = [
 ];
 
 const itemActions: IItemAction[] = [
-   {
-      id: 5,
-      title: 'прочитано',
-      showType: TItemActionShowType.TOOLBAR,
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action read Click');
-      }
-   },
    {
       id: 1,
       icon: 'icon-PhoneNull',
@@ -73,7 +65,7 @@ const itemActions: IItemAction[] = [
       id: 3,
       icon: 'icon-Profile',
       title: 'profile',
-      showType: TItemActionShowType.MENU_TOOLBAR,
+      showType: TItemActionShowType.MENU,
       parent: 2,
       'parent@': null,
       handler(model: Model): void {
@@ -87,16 +79,6 @@ const itemActions: IItemAction[] = [
       'parent@': null,
       handler(model: Model): void {
          IoC.resolve('ILogger').info('action profile Click');
-      }
-   },
-   {
-      id: 4,
-      icon: 'icon-Erase',
-      iconStyle: 'danger',
-      title: 'delete pls',
-      showType: TItemActionShowType.TOOLBAR,
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action delete Click');
       }
    }
 ];

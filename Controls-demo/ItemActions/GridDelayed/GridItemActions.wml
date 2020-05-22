@@ -1,4 +1,4 @@
-<div class="itemActionsDemo">
+<div class="controlsDemo__wrapper controlsDemo__itemActions_grid_delayed">
     <Controls.grid:View
             keyProperty="id"
             source="{{_viewSource}}"
