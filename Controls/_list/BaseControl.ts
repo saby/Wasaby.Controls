@@ -1306,9 +1306,15 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
-        const itemKey = item?.getContents()?.getKey();
+        let contents = item.getContents();
+        if (Array.isArray(contents)) {
+            contents = contents[contents.length - 1];
+        }
+        const itemKey = contents?.getKey();
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
         if (menuConfig) {
+            clickEvent.nativeEvent.preventDefault();
+            clickEvent.stopImmediatePropagation();
             menuConfig.eventHandlers = {
                 onResult: self._onItemActionsMenuResult,
                 onClose: self._onItemActionsMenuClose
@@ -2669,10 +2675,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onItemContextMenu(e: SyntheticEvent<Event>, item: CollectionItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
-        clickEvent.preventDefault();
         clickEvent.stopPropagation();
         let contents = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
+        if (Array.isArray(contents)) {
             contents = contents[contents.length - 1];
         }
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
