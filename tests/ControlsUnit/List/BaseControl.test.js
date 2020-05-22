@@ -1,8 +1,6 @@
 /**
  * Created by kraynovdo on 23.10.2017.
  */
-import {FlatController} from "../../../Controls/listDragNDrop";
-
 define([
    'Types/source',
    'Types/collection',
