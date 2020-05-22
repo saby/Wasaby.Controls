@@ -1,0 +1,16 @@
+<span attr:class="controls-demo-radioGroup__itemWrapper">
+    <Controls.popup:InfoboxTarget trigger="hover" attr:style="display:inline-block; vertical-align:bottom;" attr:class="ControlsDemo-InfoBox__hover">
+        <ws:content>
+            <ws:partial
+                    template="Controls/toggle:ItemTemplate"
+                    item="{{item}}"
+                    readOnly="{{readOnly}}"
+                    selected="{{selected}}">
+            </ws:partial>
+        </ws:content>
+        <ws:template>
+            <div>Это всплывающая подсказка по ховеру.</div>
+        </ws:template>
+    </Controls.popup:InfoboxTarget>
+</span>
+
