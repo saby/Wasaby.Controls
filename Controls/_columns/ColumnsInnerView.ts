@@ -32,7 +32,7 @@ const DEFAULT_COLUMNS_COUNT = 2;
 
 export default class ColumnsInnerView extends Control {
     _template: TemplateFunction = template;
-    private _itemsContainer: HTMLDivElement;
+    private _itemsContainerGetter: Function;
     private _columnsCount: number;
     private _columnsController: ColumnsController;
     private _columnsIndexes: number[][];
@@ -71,8 +71,8 @@ export default class ColumnsInnerView extends Control {
         }
     }
 
-    private saveItemsContainer(e: SyntheticEvent<Event>, itemsContainer: HTMLDivElement): void {
-        this._itemsContainer = itemsContainer;
+    private saveItemsContainer(e: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
+        this._itemsContainerGetter = itemsContainerGetter;
     }
     private _recalculateColumnsCountByWidth(width: number): void {
         const newColumnsCount = Math.floor(width / ((this._options.columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
@@ -82,7 +82,8 @@ export default class ColumnsInnerView extends Control {
         }
     }
     protected _resizeHandler(): void {
-        const currentWidth = this._itemsContainer.getBoundingClientRect().width;
+        const itemsContainer = this._itemsContainerGetter();
+        const currentWidth = itemsContainer.getBoundingClientRect().width;
 
         // если currentWidth === 0, значит контрол скрыт (на вкладке switchbleArea), и не нужно пересчитывать
         if (this._options.columnsMode === 'auto' && currentWidth > 0) {
@@ -228,7 +229,8 @@ export default class ColumnsInnerView extends Control {
                 const column = newMarkedItem.getColumn();
                 const curIndex = model.getIndex(newMarkedItem);
                 const columnIndex = this._columnsIndexes[column].indexOf(curIndex);
-                const elem = this._itemsContainer.children[column].children[columnIndex + 1] as HTMLElement;
+                const itemsContainer = this._itemsContainerGetter();
+                const elem = itemsContainer.children[column].children[columnIndex + 1] as HTMLElement;
                 scrollToElement(elem, direction === 'Down');
             }
         }

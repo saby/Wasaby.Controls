@@ -558,7 +558,9 @@ var ItemsViewModel = BaseViewModel.extend({
         let shouldAppend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
-            shouldAppend = items.getCount() > 0;
+
+            // (this._items.getCount() === 0) для того чтоб emptyTemplate перерисовался
+            shouldAppend = (items.getCount() > 0) || (this._items.getCount() === 0);
         }
         if (shouldAppend) {
             this._items.append(items);
@@ -580,7 +582,9 @@ var ItemsViewModel = BaseViewModel.extend({
         let shouldPrepend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
-            shouldPrepend = items.getCount() > 0;
+
+            // (this._items.getCount() === 0) для того чтоб emptyTemplate перерисовался
+            shouldPrepend = (items.getCount() > 0) || (this._items.getCount() === 0);
         }
         if (shouldPrepend) {
             this._items.prepend(items);

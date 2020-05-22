@@ -477,7 +477,13 @@ import {Model} from 'Types/entity';
             if (this._configs[index]._needQuery) {
                this._configs[index]._needQuery = false;
                _private.loadItemsFromSource(this._configs[index], getPropValue(this._items.at(index), 'properties')).addCallback(() => {
-                  open(config);
+                  if (this._options.task1179323125) {
+                      _private.loadNewItems(this, this._items, this._configs).addCallback(() => {
+                          open(config);
+                      });
+                  } else {
+                      open(config);
+                  }
                });
             } else {
                open(config);
