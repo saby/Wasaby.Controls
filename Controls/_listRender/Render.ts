@@ -72,7 +72,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _afterMount(): void {
-        this._notify('itemsContainerReady', [this.getItemsContainer()]);
+        this._notify('itemsContainerReady', [this.getItemsContainer.bind(this)]);
     }
 
     getItemsContainer(): HTMLDivElement {
