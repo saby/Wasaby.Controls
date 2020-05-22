@@ -226,14 +226,13 @@
         </ws:if>
 
         <ws:if data="{{_showContinueSearchButton}}">
-            <div class="controls-BaseControl__continueSearch ws-flexbox ws-justify-content-center">
-                <div class="controls-BaseControl__continueSearch_wrapper_theme-{{_options.theme}} ws-inline-flexbox ws-align-items-center" on:click="_continueSearch()">
-                    <div class="controls-BaseControl__continueSearch_icon controls-icon icon-Search2 controls-icon_size-m_theme-{{_options.theme}}"></div>
-                    <div class="controls-BaseControl__continueSearch_caption">
+            <ws:partial template="{{_options.continueSearchTemplate}}">
+                <ws:contentTemplate>
+                    <div class="controls-BaseControl__continueSearch_caption" on:click="_continueSearch()">
                         {[Продолжить поиск]}
                     </div>
-                </div>
-            </div>
+                </ws:contentTemplate>
+            </ws:partial>
         </ws:if>
 
         <ws:if data="{{_pagingVisible}}">
