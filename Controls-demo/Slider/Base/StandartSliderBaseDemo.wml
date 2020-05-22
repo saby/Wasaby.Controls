@@ -1,143 +1,143 @@
-<div class="demo__wrapper">
-   <div class="demo-standartSliderBase__slidersBlock">
-      <h1>Slider Base</h1>
-      <h2>Horizontal</h2>
-      <div class="demo__block">
-         <div class="demo__label">
-            size
-         </div>
-         <div class="demo__element">
-            <h3>s</h3>
-         </div>
-         <div class="demo__element">
-            <h3>m</h3>
-         </div>
-      </div>
-      <div class="demo__block demo-standartSliderBase__blockSimple">
-         <div class="demo__label">
-            simple
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderBase__simpleS"
-               size="s"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               bind:value="_myValue1"
-            />
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderBase__simpleM"
-               size="m"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               bind:value="_myValue2"
-            />
-         </div>
-      </div>
-      <div class="demo__block demo-standartSliderBase__blockBordered">
-         <div class="demo__label">
-            bordered
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderBase__borderedS"
-               size="s"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               borderVisible="{{true}}"
-               bind:value="_myValue3"
-            />
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderBase__borderedM"
-               size="m"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               borderVisible="{{true}}"
-               bind:value="_myValue4"
-            />
-         </div>
-      </div>
-      <div class="demo__block demo-standartSliderBase__blockScale">
-         <div class="demo__label">
-            with scale
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderBase__scaleS"
-               size="s"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               scaleStep="{{20}}"
-               bind:value="_myValue5"
-            />
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderBase__scaleM"
-               size="m"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               scaleStep="{{20}}"
-               bind:value="_myValue6"
-            />
-         </div>
-      </div>
-      <div class="demo__block demo-standartSliderBase__blockReadOnly">
-         <div class="demo__label">
-            readOnly
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderBase__readOnlyS"
-               size="s"
-               readOnly="{{true}}"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               borderVisible="{{true}}"
-               bind:value="_myValue7"
-            />
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderBase__readOnlyM"
-               size="m"
-               readOnly="{{true}}"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               scaleStep="{{20}}"
-               bind:value="_myValue8"
-            />
-         </div>
-      </div>
-      <div class="demo__block">
-         <div class="demo__label">
-            with input
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderRange__inputS"
-                                   size="s"
-                                   minValue="{{_minValueI}}"
-                                   maxValue="{{_maxValueI}}"
-                                   borderVisible="{{true}}"
-                                   on:valueChanged="_inputCompleted()"
-                                   bind:value="_valueI"
-            />
-            <div class="demo_slider_input-wrapper">
-               <Controls.input:Number class="demo_slider_input_field" name="inputValue" precision="{{0}}" bind:value="_inputValue" on:inputCompleted="_inputCompleted()"></Controls.input:Number>
+<div  class="demo__wrapper">
+      <div  class="demo-standartSliderBase__slidersBlock">
+            <h1>Slider  Base</h1>
+            <h2>Horizontal</h2>
+            <div  class="demo__block">
+                  <div  class="demo__label">
+                        size
+                  </div>
+                  <div  class="demo__element">
+                        <h3>s</h3>
+                  </div>
+                  <div  class="demo__element">
+                        <h3>m</h3>
+                  </div>
             </div>
-         </div>
-      </div>
-      <div class="demo__block">
-         <div class="demo__label">
-            without tooltip
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Base attr:class="demo-standartSliderRange__withoutTooltip"
-                                  size="s"
-                                  tooltipVisible="{{false}}"
-                                  minValue="{{0}}"
-                                  maxValue="{{100}}"
-                                  scaleStep="{{20}}"
-                                  bind:value="_myValueTooltip"
-            />
-         </div>
-      </div>
+            <div  class="demo__block  demo-standartSliderBase__blockSimple">
+                  <div  class="demo__label">
+                        simple
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderBase__simpleS"
+                              size="s"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              bind:value="_myValue1"
+                        />
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderBase__simpleM"
+                              size="m"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              bind:value="_myValue2"
+                        />
+                  </div>
+            </div>
+            <div  class="demo__block  demo-standartSliderBase__blockBordered">
+                  <div  class="demo__label">
+                        bordered
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderBase__borderedS"
+                              size="s"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              borderVisible="{{true}}"
+                              bind:value="_myValue3"
+                        />
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderBase__borderedM"
+                              size="m"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              borderVisible="{{true}}"
+                              bind:value="_myValue4"
+                        />
+                  </div>
+            </div>
+            <div  class="demo__block  demo-standartSliderBase__blockScale">
+                  <div  class="demo__label">
+                        with  scale
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderBase__scaleS"
+                              size="s"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              scaleStep="{{20}}"
+                              bind:value="_myValue5"
+                        />
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderBase__scaleM"
+                              size="m"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              scaleStep="{{20}}"
+                              bind:value="_myValue6"
+                        />
+                  </div>
+            </div>
+            <div  class="demo__block  demo-standartSliderBase__blockReadOnly">
+                  <div  class="demo__label">
+                        readOnly
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderBase__readOnlyS"
+                              size="s"
+                              readOnly="{{true}}"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              borderVisible="{{true}}"
+                              bind:value="_myValue7"
+                        />
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderBase__readOnlyM"
+                              size="m"
+                              readOnly="{{true}}"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              scaleStep="{{20}}"
+                              bind:value="_myValue8"
+                        />
+                  </div>
+            </div>
+            <div  class="demo__block">
+                  <div  class="demo__label">
+                        with  input
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderRange__inputS"
+                                                                      size="s"
+                                                                      minValue="{{_minValueI}}"
+                                                                      maxValue="{{_maxValueI}}"
+                                                                      borderVisible="{{true}}"
+                                                                      on:valueChanged="_inputCompleted()"
+                                                                      bind:value="_valueI"
+                        />
+                        <div  class="demo_slider_input-wrapper">
+                              <Controls.input:Number  class="demo_slider_input_field"  name="inputValue"  precision="{{0}}"  bind:value="_inputValue"  on:inputCompleted="_inputCompleted()"></Controls.input:Number>
+                        </div>
+                  </div>
+            </div>
+            <div  class="demo__block">
+                  <div  class="demo__label">
+                        without  tooltip
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Base  attr:class="demo-standartSliderRange__withoutTooltip"
+                                                                    size="s"
+                                                                    tooltipVisible="{{false}}"
+                                                                    minValue="{{0}}"
+                                                                    maxValue="{{100}}"
+                                                                    scaleStep="{{20}}"
+                                                                    bind:value="_myValueTooltip"
+                        />
+                  </div>
+            </div>
 
-   </div>
+      </div>
 </div>

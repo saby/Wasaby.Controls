@@ -1,9 +1,9 @@
-<div class="controlsDemo__wrapper">
-   <div class="controlsDemo__cell ws-flexbox ws-align-items-baseline">
-      <Controls.spoiler:Heading attr:class="controlsDemo__mr"
-                                captions="{{['Свернуть', 'Развернуть']}}"
-                                bind:expanded="_expanded"/>
-      <div class="controlsDemo__mr">baseline</div>
-      <Controls.heading:Title fontSize="3xl" caption="baseline"/>
-   </div>
+<div  class="controlsDemo__wrapper">
+      <div  class="controlsDemo__cell  ws-flexbox  ws-align-items-baseline">
+            <Controls.spoiler:Heading  attr:class="controlsDemo__mr"
+                                                                captions="{{['Свернуть',  'Развернуть']}}"
+                                                                bind:expanded="_expanded"/>
+            <div  class="controlsDemo__mr">baseline</div>
+            <Controls.heading:Title  fontSize="3xl"  caption="baseline"/>
+      </div>
 </div>

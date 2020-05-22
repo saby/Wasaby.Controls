@@ -1,12 +1,12 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Spoiler/Heading/Heading');
+import  {Control,  IControlOptions,  TemplateFunction}  from  'UI/Base';
+import  controlTemplate  =  require('wml!Controls-demo/Spoiler/Heading/Heading');
 
-class Heading extends Control<IControlOptions> {
-    protected _expanded: boolean = true;
+class  Heading  extends  Control<IControlOptions>  {
+        protected  _expanded:  boolean  =  true;
 
-    protected _template: TemplateFunction = controlTemplate;
-    static _theme: string[] = ['Controls/Classes'];
+        protected  _template:  TemplateFunction  =  controlTemplate;
+        static  _theme:  string[]  =  ['Controls/Classes'];
 
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+        static  _styles:  string[]  =  ['Controls-demo/Controls-demo'];
 }
-export default Heading;
+export  default  Heading;

@@ -1,8 +1,8 @@
-<div class="controlsDemo__wrapper">
-   <div class="controlsDemo__cell">
-      <Controls.spoiler:Heading captions="{{['Свернуть', 'Развернуть']}}" bind:expanded="_expanded"/>
-   </div>
-   <div class="controlsDemo__cell">
-      <Controls.spoiler:Heading captions="{{['Свернуть', 'Развернуть']}}"/>
-   </div>
+<div  class="controlsDemo__wrapper">
+      <div  class="controlsDemo__cell">
+            <Controls.spoiler:Heading  captions="{{['Свернуть',  'Развернуть']}}"  bind:expanded="_expanded"/>
+      </div>
+      <div  class="controlsDemo__cell">
+            <Controls.spoiler:Heading  captions="{{['Свернуть',  'Развернуть']}}"/>
+      </div>
 </div>

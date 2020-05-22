@@ -1,14 +1,14 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Spoiler/Heading/FontSize/FontSize');
+import  {Control,  IControlOptions,  TemplateFunction}  from  'UI/Base';
+import  controlTemplate  =  require('wml!Controls-demo/Spoiler/Heading/FontSize/FontSize');
 
-class FontSize extends Control<IControlOptions> {
-    protected _expandedM: boolean = true;
-    protected _expandedL: boolean = true;
-    protected _captions: string = 'Заголовок';
+class  FontSize  extends  Control<IControlOptions>  {
+        protected  _expandedM:  boolean  =  true;
+        protected  _expandedL:  boolean  =  true;
+        protected  _captions:  string  =  'Заголовок';
 
-    protected _template: TemplateFunction = controlTemplate;
-    static _theme: string[] = ['Controls/Classes'];
+        protected  _template:  TemplateFunction  =  controlTemplate;
+        static  _theme:  string[]  =  ['Controls/Classes'];
 
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+        static  _styles:  string[]  =  ['Controls-demo/Controls-demo'];
 }
-export default FontSize;
+export  default  FontSize;

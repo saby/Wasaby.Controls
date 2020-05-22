@@ -1,13 +1,13 @@
-<div class="controlsDemo__wrapper">
-    <Controls.spoiler:View>
-        <ws:headerContentTemplate>
-            <Controls-demo.Spoiler.HeaderTemplate.Index />
-        </ws:headerContentTemplate>
-        <ws:content>
-            <div class="controlsDemo__SpoilerFirst__content">
-                <div class="controlsDemo__SpoilerFirst__content__desc">Field Description *</div>
-                <input class="controlsDemo__SpoilerFirst__content__input" type="text" placeholder="Placeholder" />
-            </div>
-        </ws:content>
-    </Controls.spoiler:View>
+<div  class="controlsDemo__wrapper">
+        <Controls.spoiler:View>
+                <ws:headerContentTemplate>
+                        <Controls-demo.Spoiler.HeaderTemplate.Index  />
+                </ws:headerContentTemplate>
+                <ws:content>
+                        <div  class="controlsDemo__SpoilerFirst__content">
+                                <div  class="controlsDemo__SpoilerFirst__content__desc">Field  Description  *</div>
+                                <input  class="controlsDemo__SpoilerFirst__content__input"  type="text"  placeholder="Placeholder"  />
+                        </div>
+                </ws:content>
+        </Controls.spoiler:View>
 </div>

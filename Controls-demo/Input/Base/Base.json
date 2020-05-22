@@ -1,8 +1,8 @@
 {
-  "Controls/input:Base": {
-    "properties": {
-      "ws-config": {
-        "options": {
+    "Controls/input:Base":  {
+        "properties":  {
+            "ws-config":  {
+          "options": {
           "name": {
             "type": "String"
           },

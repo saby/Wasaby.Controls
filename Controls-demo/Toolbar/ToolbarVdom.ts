@@ -1,4 +1,4 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import  {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Toolbar/ToolbarVdom');
 import itemTemplate = require('wml!Controls-demo/Toolbar/resources/itemTemplate');
 import itemTemplateContent = require('wml!Controls-demo/Toolbar/resources/itemTemplateContent');

@@ -1,142 +1,142 @@
-<div class="demo__wrapper">
-   <div class="demo-standartSliderRange__slidersBlock">
-      <h1>Slider Range</h1>
-      <h2>Horizontal</h2>
-      <div class="demo__block">
-         <div class="demo__label">
-            size
-         </div>
-         <div class="demo__element">
-            <h3>s</h3>
-         </div>
-         <div class="demo__element">
-            <h3>m</h3>
-         </div>
-      </div>
-      <div class="demo__block">
-         <div class="demo__label">
-            simple
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Range attr:class="demo-standartSliderRange__simpleS"
-               size="s"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               bind:startValue="_startValue1"
-               bind:endValue="_endValue1"
-            />
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Range attr:class="demo-standartSliderRange__simpleM"
-               size="m"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               bind:startValue="_startValue2"
-               bind:endValue="_endValue2"
-            />
-         </div>
-      </div>
-      <div class="demo__block">
-         <div class="demo__label">
-            bordered
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Range attr:class="demo-standartSliderRange__borderedS"
-               size="s"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               borderVisible="{{true}}"
-               bind:startValue="_startValue3"
-               bind:endValue="_endValue3"
-            />
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Range attr:class="demo-standartSliderRange__borderedM"
-               size="m"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               borderVisible="{{true}}"
-               bind:startValue="_startValue4"
-               bind:endValue="_endValue4"
-            />
-         </div>
-      </div>
-      <div class="demo__block">
-         <div class="demo__label">
-            with scale
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Range attr:class="demo-standartSliderRange__scaleS"
-               size="s"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               scaleStep="{{20}}"
-               bind:startValue="_startValue5"
-               bind:endValue="_endValue5"
-            />
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Range attr:class="demo-standartSliderRange__scaleM"
-               size="m"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               scaleStep="{{20}}"
-               bind:startValue="_startValue6"
-               bind:endValue="_endValue6"
-            />
-         </div>
-      </div>
-      <div class="demo__block">
-         <div class="demo__label">
-            readOnly
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Range attr:class="demo-standartSliderRange__readOnlyS"
-               size="s"
-               readOnly="{{true}}"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               borderVisible="{{true}}"
-               bind:startValue="_startValue7"
-               bind:endValue="_endValue7"
-            />
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Range attr:class="demo-standartSliderRange__readOnlyM"
-               size="m"
-               readOnly="{{true}}"
-               minValue="{{0}}"
-               maxValue="{{100}}"
-               scaleStep="{{20}}"
-               bind:startValue="_startValue8"
-               bind:endValue="_endValue8"
-            />
-         </div>
-      </div>
-      <div class="demo__block">
-         <div class="demo__label">
-            with input
-         </div>
-         <div class="demo__element">
-            <Controls.slider:Range attr:class="demo-standartSliderRange__inputS"
-                    size="s"
-                    minValue="{{_minValueI}}"
-                    maxValue="{{_maxValueI}}"
-                    borderVisible="{{true}}"
-                    on:startValueChanged="_startInputCompleted()"
-                    on:endValueChanged="_endInputCompleted()"
-                    bind:startValue="_startValueI"
-                    bind:endValue="_endValueI"
-            />
-            <div class="demo_slider_input-wrapper">
-               <Controls.input:Label class="demo_slider_input-label_first" caption="from"></Controls.input:Label>
-               <Controls.input:Number class="demo_slider_input_field demo_slider_input_field_first" name="inputStartValue" precision="{{0}}" bind:value="_inputStartValue" on:inputCompleted="_startInputCompleted()" on:keyDown="_inputKeyDown()"></Controls.input:Number>
-               <Controls.input:Label class="demo_slider_input-label" caption="to"></Controls.input:Label>
-               <Controls.input:Number class="demo_slider_input_field demo_slider_input_field_last" name="inputEndValue" precision="{{0}}" bind:value="_inputEndValue" on:inputCompleted="_endInputCompleted()"></Controls.input:Number>
-               <Controls.input:Label class="demo_slider_input-label demo_slider_input-label_last" caption="$"></Controls.input:Label>
+<div  class="demo__wrapper">
+      <div  class="demo-standartSliderRange__slidersBlock">
+            <h1>Slider  Range</h1>
+            <h2>Horizontal</h2>
+            <div  class="demo__block">
+                  <div  class="demo__label">
+                        size
+                  </div>
+                  <div  class="demo__element">
+                        <h3>s</h3>
+                  </div>
+                  <div  class="demo__element">
+                        <h3>m</h3>
+                  </div>
             </div>
-         </div>
-      </div>
+            <div  class="demo__block">
+                  <div  class="demo__label">
+                        simple
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Range  attr:class="demo-standartSliderRange__simpleS"
+                              size="s"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              bind:startValue="_startValue1"
+                              bind:endValue="_endValue1"
+                        />
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Range  attr:class="demo-standartSliderRange__simpleM"
+                              size="m"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              bind:startValue="_startValue2"
+                              bind:endValue="_endValue2"
+                        />
+                  </div>
+            </div>
+            <div  class="demo__block">
+                  <div  class="demo__label">
+                        bordered
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Range  attr:class="demo-standartSliderRange__borderedS"
+                              size="s"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              borderVisible="{{true}}"
+                              bind:startValue="_startValue3"
+                              bind:endValue="_endValue3"
+                        />
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Range  attr:class="demo-standartSliderRange__borderedM"
+                              size="m"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              borderVisible="{{true}}"
+                              bind:startValue="_startValue4"
+                              bind:endValue="_endValue4"
+                        />
+                  </div>
+            </div>
+            <div  class="demo__block">
+                  <div  class="demo__label">
+                        with  scale
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Range  attr:class="demo-standartSliderRange__scaleS"
+                              size="s"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              scaleStep="{{20}}"
+                              bind:startValue="_startValue5"
+                              bind:endValue="_endValue5"
+                        />
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Range  attr:class="demo-standartSliderRange__scaleM"
+                              size="m"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              scaleStep="{{20}}"
+                              bind:startValue="_startValue6"
+                              bind:endValue="_endValue6"
+                        />
+                  </div>
+            </div>
+            <div  class="demo__block">
+                  <div  class="demo__label">
+                        readOnly
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Range  attr:class="demo-standartSliderRange__readOnlyS"
+                              size="s"
+                              readOnly="{{true}}"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              borderVisible="{{true}}"
+                              bind:startValue="_startValue7"
+                              bind:endValue="_endValue7"
+                        />
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Range  attr:class="demo-standartSliderRange__readOnlyM"
+                              size="m"
+                              readOnly="{{true}}"
+                              minValue="{{0}}"
+                              maxValue="{{100}}"
+                              scaleStep="{{20}}"
+                              bind:startValue="_startValue8"
+                              bind:endValue="_endValue8"
+                        />
+                  </div>
+            </div>
+            <div  class="demo__block">
+                  <div  class="demo__label">
+                        with  input
+                  </div>
+                  <div  class="demo__element">
+                        <Controls.slider:Range  attr:class="demo-standartSliderRange__inputS"
+                                        size="s"
+                                        minValue="{{_minValueI}}"
+                                        maxValue="{{_maxValueI}}"
+                                        borderVisible="{{true}}"
+                                        on:startValueChanged="_startInputCompleted()"
+                                        on:endValueChanged="_endInputCompleted()"
+                                        bind:startValue="_startValueI"
+                                        bind:endValue="_endValueI"
+                        />
+                        <div  class="demo_slider_input-wrapper">
+                              <Controls.input:Label  class="demo_slider_input-label_first"  caption="from"></Controls.input:Label>
+                              <Controls.input:Number  class="demo_slider_input_field  demo_slider_input_field_first"  name="inputStartValue"  precision="{{0}}"  bind:value="_inputStartValue"  on:inputCompleted="_startInputCompleted()"  on:keyDown="_inputKeyDown()"></Controls.input:Number>
+                              <Controls.input:Label  class="demo_slider_input-label"  caption="to"></Controls.input:Label>
+                              <Controls.input:Number  class="demo_slider_input_field  demo_slider_input_field_last"  name="inputEndValue"  precision="{{0}}"  bind:value="_inputEndValue"  on:inputCompleted="_endInputCompleted()"></Controls.input:Number>
+                              <Controls.input:Label  class="demo_slider_input-label  demo_slider_input-label_last"  caption="$"></Controls.input:Label>
+                        </div>
+                  </div>
+            </div>
 
-   </div>
+      </div>
 </div>
