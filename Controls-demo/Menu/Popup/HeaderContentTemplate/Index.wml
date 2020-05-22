@@ -4,8 +4,6 @@
       <Controls.menu:Popup
               source="{{_source}}"
               keyProperty="key"
-              multiSelect="{{true}}"
-              applyButtonAlign="top"
               displayProperty="title">
          <ws:headerContentTemplate>
             <ws:partial template="Controls/menu:HeaderTemplate" caption="{[Выберите город]}"/>
