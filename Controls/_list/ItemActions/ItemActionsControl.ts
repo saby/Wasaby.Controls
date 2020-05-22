@@ -124,15 +124,17 @@ var _private = {
                 }
                 options.listModel.reset();
                 while (options.listModel.isEnd()) {
-                    let itemData = options.listModel.getCurrent();
-                    let item = itemData.actionsItem;
-                    if (item !== constView.hiddenGroup && item.get) {
-                        updateItemActionsResult = _private.updateItemActions(self, item, options);
-                        if (hasChanges !== 'all') {
-                            if (hasChanges !== 'partial') {
-                                hasChanges = updateItemActionsResult;
+                    if (options.listModel.isShouldBeDrawnItem()) {
+                        let itemData = options.listModel.getCurrent();
+                        let item = itemData.actionsItem;
+                        if (item !== constView.hiddenGroup && item.get) {
+                            updateItemActionsResult = _private.updateItemActions(self, item, options);
+                            if (hasChanges !== 'all') {
+                                if (hasChanges !== 'partial') {
+                                    hasChanges = updateItemActionsResult;
+                                }
                             }
-                        }
+                        } 
                     }
                     options.listModel.goToNext();
                 }

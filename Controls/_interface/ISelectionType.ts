@@ -19,19 +19,19 @@ export interface ISelectionObject {
    /**
     * @name Controls/_interface/ISelectionObject#selected
     * @cfg {Array<Number>|Array<String>} Идентификаторы отмеченных записей.
-    */ 
+    */
     selected: TKeysSelection;
    /**
     * @name Controls/_interface/ISelectionObject#excluded
     * @cfg {Array<Number>|Array<String>} Идентификаторы исключённых записей.
-    */ 
+    */
     excluded: TKeysSelection;
-};
+}
 
 export interface ISelectionTypeOptions {
     selectionType: TSelectionType;
     recursiveSelection: boolean;
-};
+}
 
 /**
  * Интерфейс для контролов, поддерживающих выбор записей определённого типа.

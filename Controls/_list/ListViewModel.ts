@@ -176,7 +176,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle || this._options.style;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
-            itemsModelCurrent.virtualScrollConfig = Boolean(this._options.virtualScrollConfig);
+            itemsModelCurrent.virtualScrollConfig = this._isSupportVirtualScroll();
         }
 
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
@@ -231,7 +231,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     isShouldBeDrawnItem: function(item) {
         var isInRange = ListViewModel.superclass.isShouldBeDrawnItem.apply(this, arguments);
-        return isInRange || (item.isGroup && item.isStickyHeader) || item.isSticky;
+        return isInRange || (item?.isGroup && item?.isStickyHeader) || item?.isSticky;
     },
 
     _calcCursorClasses: function(clickable, cursor) {

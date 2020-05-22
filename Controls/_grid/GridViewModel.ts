@@ -559,8 +559,9 @@ var
         _isSupportLadder(ladderProperties: []): boolean {
             return isSupportLadder(ladderProperties);
         },
+
         setTheme(theme: string): void {
-            this._options.theme = theme;
+            this._model.setTheme(theme);
         },
 
         _updateLastItemKey(): void {
@@ -1123,7 +1124,9 @@ var
         getItemById: function(id, keyProperty) {
             return this._model.getItemById(id, keyProperty);
         },
-
+        setSupportVirtualScroll: function(value) {
+            this._model.setSupportVirtualScroll(value);
+        },
         setMarkedKey: function(key, byOptions) {
             this._model.setMarkedKey(key, byOptions);
         },

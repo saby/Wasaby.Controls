@@ -37,6 +37,7 @@ import {Model} from 'saby-types/Types/entity';
 import {IItemAction} from "./interface/IList";
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {IHashMap} from 'Types/declarations';
+import {getStickyHeadersHeight} from 'Controls/scroll';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -306,7 +307,7 @@ var _private = {
         return resDeferred;
     },
     canStartDragNDrop(domEvent: any, cfg: any, isTouch: boolean): boolean {
-        return !isTouch && 
+        return !isTouch &&
             (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
             cfg.itemsDragNDrop &&
             !(domEvent.nativeEvent.button) &&
@@ -955,8 +956,6 @@ var _private = {
         self._loadingState = direction;
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
-        } else {
-            self._loadingIndicatorState = null;
         }
         _private.startShowLoadingIndicatorTimer(self);
     },
@@ -1044,7 +1043,7 @@ var _private = {
     setMarkerAfterScrolling: function(self, scrollTop) {
         let itemsContainer = self._children.listView.getItemsContainer();
         let topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + (self._options.fixedHeadersHeights || 0));
+        _private.setMarkerToFirstVisibleItem(self, itemsContainer, scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0));
         self._setMarkerAfterScroll = false;
     },
 
@@ -1119,9 +1118,11 @@ var _private = {
                 self._showContinueSearchButton = false;
             },
             searchContinueCallback: () => {
+                let direction = _private.hasMoreData(self, self._sourceController, 'up') ? 'up' : 'down';
+
                 self._portionedSearchInProgress = true;
                 self._showContinueSearchButton = false;
-                _private.loadToDirectionIfNeed(self, 'down');
+                _private.loadToDirectionIfNeed(self, direction);
             },
             searchAbortCallback: () => {
                 self._portionedSearchInProgress = false;
@@ -1944,6 +1945,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 } else {
                     delete viewModelConfig.items;
                 }
+                viewModelConfig.supportVirtualScroll = self._needScrollCalculation;
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
             } else if (newOptions.useNewModel && receivedData) {
                 self._listViewModel = self._createNewModel(
@@ -2171,6 +2173,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
+            if (this._listViewModel && this._listViewModel.setSupportVirtualScroll) {
+                this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
+            }
         }
         _private.updateNavigation(this);
 
@@ -2188,7 +2193,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
-                items
+                items,
+                supportVirtualScroll: !!this._needScrollCalculation
             }));
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
@@ -2217,6 +2223,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
+        }
+
+        if (newOptions.theme !== this._options.theme && !newOptions.useNewModel) {
+            this._listViewModel.setTheme(newOptions.theme);
         }
 
         if (newOptions.searchValue !== this._options.searchValue) {
@@ -2750,11 +2760,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else {
             this._listViewModel.setDragEntity(dragObject.entity);
             this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItem.dispItem));
-            
+
             // Cобытие mouseEnter на записи может сработать до dragStart.
-            // И тогда перемещение при наведении не будет обработано. 
+            // И тогда перемещение при наведении не будет обработано.
             // В таком случае обрабатываем наведение на запись сейчас.
-            // 
+            //
             //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
             if (this._unprocessedDragEnteredItem) {
                 this._processItemMouseEnterWithDragNDrop(event, this._unprocessedDragEnteredItem);
