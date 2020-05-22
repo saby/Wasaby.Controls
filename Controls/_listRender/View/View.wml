@@ -6,12 +6,11 @@
       listModel="{{ _collection }}"
       scope="{{ _options }}"
       on:touchstart="_onRenderTouchStart()"
+      on:mouseenter="_onRenderMouseEnter()"
       on:itemClick="_onItemClick()"
       on:itemSwipe="_onItemSwipe()"
       on:closeSwipe="_onCloseSwipe()"
       on:itemActionClick="_onItemActionClick()"
       on:itemContextMenu="_onItemContextMenu()"
-      on:itemKeyDown="_onItemKeyDown()"
-      on:itemMouseEnter="_onItemMouseEnter()"
-      on:itemMouseLeave="_onItemMouseLeave()"/>
+      on:itemKeyDown="_onItemKeyDown()"/>
 </div>

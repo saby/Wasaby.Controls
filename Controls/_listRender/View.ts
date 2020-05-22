@@ -64,17 +64,11 @@ export default class View extends Control<IViewOptions> {
     // Идентификатор текущего открытого popup
     private _itemActionsMenuId: string = null;
 
-    // функция отложенного отображения/скрытия операций записи
-    private _itemActionsInitializerDebounced: (immediate?: boolean, stop?: boolean) => void = null;
-
     private _markerController: MarkerController = null;
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
 
-        if (options.itemActionVisibility === 'delayed') {
-            this._itemActionsInitializerDebounced = debounce(this._itemActionsInitializer.bind(this), ITEM_ACTION_VISIBILITY_DELAY);
-        }
         if (options.itemActionVisibility === 'visible') {
             this._updateItemActions(options);
         }
@@ -139,36 +133,12 @@ export default class View extends Control<IViewOptions> {
      * Добавляет CSS класс, который Показывает или скрывает ItemActions
      * @private
      */
-    protected _itemActionsInitializer(immediate?: boolean, cancel?: boolean): void {
-        if (this._options.itemActionVisibility === 'onhover' || immediate) {
-            if (!this._collection.isActionsAssigned() && !cancel) {
+    protected _initItemActions(): void {
+        if (this._options.itemActionVisibility !== 'start') {
+            if (!this._collection.isActionsAssigned()) {
                 this._updateItemActions(this._options);
             }
-        } else if (this._options.itemActionVisibility === 'delayed') {
-            this._itemActionsInitializerDebounced(true, cancel);
         }
-    }
-
-    /**
-     * При наведении на запись в списке мы должны проинициализировать операции
-     * @param event
-     * @param itemData
-     * @param nativeEvent
-     * @private
-     */
-    _onItemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._itemActionsInitializer(false, false);
-    }
-
-    /**
-     * При наведении на запись в списке мы должны сбросить инициализацию операций
-     * @param event
-     * @param itemData
-     * @param nativeEvent
-     * @private
-     */
-    _onItemMouseLeave(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._itemActionsInitializer(false, true);
     }
 
     /**
@@ -178,6 +148,15 @@ export default class View extends Control<IViewOptions> {
      */
     protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
         this._updateItemActions();
+    }
+
+    /**
+     * По событию youch мы должны показать операции
+     * @param e
+     * @private
+     */
+    protected _onRenderMouseEnter(e: SyntheticEvent<TouchEvent>): void {
+        this._initItemActions();
     }
 
     /**

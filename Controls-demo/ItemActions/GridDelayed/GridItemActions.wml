@@ -2,11 +2,8 @@
     <Controls.grid:View
             keyProperty="id"
             source="{{_viewSource}}"
-            allowEmptySelection="{{false}}"
             itemActions="{{_itemActions}}"
             itemActionVisibility="{{_itemActionVisibility}}"
-            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-            columns="{{_columns}}"
-            bind:markedKey="_markedKey">
+            columns="{{_columns}}">
     </Controls.grid:View>
 </div>

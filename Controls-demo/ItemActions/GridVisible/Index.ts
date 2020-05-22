@@ -4,7 +4,7 @@ import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
 import {IoC} from 'Env/Env';
 import {Memory} from 'Types/source';
 
-import * as template from 'wml!Controls-demo/List/ItemActions/ItemActions';
+import * as template from 'wml!Controls-demo/ItemActions/GridVisible/GridItemActions';
 
 interface ISrcData {
    id: number;
@@ -101,45 +101,19 @@ const itemActions: IItemAction[] = [
    }
 ];
 
-export class ItemActionsBase extends Control<IControlOptions> {
+export default class GridVisibleItemActions extends Control<IControlOptions> {
    protected _itemActions: IItemAction[] = itemActions;
    protected _template: TemplateFunction = template;
    protected _viewSource: Memory;
    protected _markedKey: number | string;
-   protected _columns: {displayProperty: string} = columns;
-   protected _itemActionVisibility: string = 'onhover';
+   protected _columns: Array<{displayProperty: string}> = columns;
+   protected _itemActionVisibility: string = 'visible';
 
    protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
-      for (let i = 0; i < 7; i++) {
-         srcData.push({
-            id: i,
-            title: 'number #' + i,
-            description: 'пожалейте разрабочиков ' + i
-         });
-      }
       this._viewSource = new Memory({
          keyProperty: 'id',
          data: srcData
       });
       this._markedKey = 2;
    }
-
-   protected _itemActionVisibilityCallback(action: IItemAction, item: Model): boolean {
-      if (item.get('id') === 2) {
-         if (action.id === 2 || action.id === 3) {
-            return false;
-         } else {
-            return true;
-         }
-      }
-      if (action.id === 5) {
-         return false;
-      }
-      if (item.get('id') === 4) {
-         return false;
-      }
-      return true;
-   }
-
-   static _styles: string[] = ['Controls-demo/List/ItemActions/ItemActions'];
 }

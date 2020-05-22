@@ -1907,9 +1907,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _markerController: null,
     _markedKey: null,
 
-    // функция отложенного отображения/скрытия операций записи
-    _itemActionsInitializerDebounced: null,
-
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -1981,9 +1978,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 self._markerController = _private.createMarkerController(self, newOptions);
             }
 
-            if (newOptions.itemActionVisibility === 'delayed') {
-                self._itemActionsInitializerDebounced = debounce(self._itemActionsInitializer.bind(self), ITEM_ACTION_VISIBILITY_DELAY);
-            }
             if (newOptions.itemActionVisibility === 'visible') {
                 self._showActions = true;
                 self._updateItemActions(newOptions);
@@ -2606,13 +2600,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Добавляет CSS класс, который Показывает или скрывает ItemActions
      * @private
      */
-    _itemActionsInitializer(immediate?: boolean, stop?: boolean): void {
-        if (this._options.itemActionVisibility === 'onhover' || immediate) {
-            if (!this._listViewModel.isActionsAssigned() && !stop) {
+    _initItemActions(): void {
+        if (this._options.itemActionVisibility !== 'visible') {
+            if (!this._listViewModel.isActionsAssigned()) {
                 this._updateItemActions(this._options);
             }
-        } else if (this._options.itemActionVisibility === 'delayed') {
-            this._itemActionsInitializerDebounced(true, stop);
         }
     },
 
@@ -2938,21 +2930,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._unprocessedDragEnteredItem = null;
         }
     },
-
-    /**
-     * Когда навели мышь на item
-     * @param event
-     * @param itemData
-     * @param nativeEvent
-     * @private
-     */
-    _onItemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._itemActionsInitializer();
+    _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (this._options.itemsDragNDrop) {
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(event, itemData);
         }
-        this._notify('itemMouseEnter', [itemData.getContents(), nativeEvent]);
+        this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {
@@ -2968,23 +2951,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.notifyIfDragging(this, 'draggingItemMouseMove', itemData, nativeEvent);
         }
     },
-
-    /**
-     * Убрали мышь с item'a
-     * @param event
-     * @param itemData
-     * @param nativeEvent
-     * @private
-     */
-    _onItemMouseLeave(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        this._itemActionsInitializer(false, true);
-        this._notify('itemMouseLeave', [itemData.getContents(), nativeEvent]);
+    _itemMouseLeave(event, itemData, nativeEvent) {
+        this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._options.itemsDragNDrop) {
             this._unprocessedDragEnteredItem = null;
             _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
         }
     },
-
     _sortingChanged: function(event, propName) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();

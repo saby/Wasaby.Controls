@@ -2,11 +2,8 @@
     <Controls.list:View
             keyProperty="id"
             source="{{_viewSource}}"
-            allowEmptySelection="{{false}}"
             itemActions="{{_itemActions}}"
-            itemActionVisibility="{{_itemActionVisibility}}"
-            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-            bind:markedKey="_markedKey">
+            itemActionVisibility="{{_itemActionVisibility}}">
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">
                 <ws:contentTemplate>

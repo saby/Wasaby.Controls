@@ -1,0 +1,9 @@
+<div class="itemActionsDemo">
+    <Controls.grid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            itemActions="{{_itemActions}}"
+            itemActionVisibility="{{_itemActionVisibility}}"
+            columns="{{_columns}}">
+    </Controls.grid:View>
+</div>
