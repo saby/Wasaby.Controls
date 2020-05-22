@@ -167,7 +167,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
         let leftSpacing = 'm';
         if (options.itemPadding.left) {
             leftSpacing = options.itemPadding.left;
-        } else if (options.multiSelect && options.applyButtonAlign !== 'top') {
+        } else if (options.multiSelect) {
             leftSpacing = 'null';
         }
         return leftSpacing;
