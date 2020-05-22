@@ -233,6 +233,9 @@ export default class ScrollContainer extends Control<IOptions> {
         const direction = this._addItemsDirection;
         this._addItemsDirection = null;
 
+        // при 0 записей не надо тревожить виртуальный скролл, т.к. 0 записей не вызывает перестройку DOM
+        // в итоге ScrollContainer, который реагирует на afterRender beforeRender начинает восстанавливать скролл не
+        // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
             this._itemsAddedHandler(this._addItemsIndex, this._addItems, direction);
         }
