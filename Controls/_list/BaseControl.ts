@@ -2182,7 +2182,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
-            if (this._listViewModel) {
+            if (this._listViewModel && this._listViewModel.setSupportVirtualScroll) {
                 this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
             }
         }
