@@ -7,6 +7,7 @@ import template = require('wml!Controls/_validate/DateRange');
  * Валидация запускается автоматически при потере фокуса.
  * @remark
  * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
+ * @class Controls/_validate/DateRange
  * @extends Controls/_validate/Container
  * @control
  * @public
