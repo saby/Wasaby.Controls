@@ -6,14 +6,23 @@ import ActualApi from 'Controls/_buttons/ActualApi';
 
 /**
  * Контрол «Кнопка с меню».
+<<<<<<< HEAD
  *
+=======
+ * 
+>>>>>>> 20.3100/docs/21-may-less-new
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FMenu%2FMenu">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/button/">руководство разработчика</a>
+<<<<<<< HEAD
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления dropdown</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
  * 
+=======
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления</a>
+ *
+>>>>>>> 20.3100/docs/21-may-less-new
  * @class Controls/_dropdown/Button
  * @extends Core/Control
  * @mixes Controls/_menu/interface/IMenuPopup
