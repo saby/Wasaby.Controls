@@ -9,11 +9,14 @@ class ItemTemplate extends Control<IControlOptions> {
         targetSide: 'top',
         alignment: 'start'
     };
-    _open(e: SyntheticEvent<MouseEvent>, readOnly: boolean): void {
+    private _open(e: SyntheticEvent<MouseEvent>, readOnly: boolean): void {
         if (readOnly === true) {
             this._cfg.target = e.currentTarget;
             this._children.IBOpener.open(this._cfg);
         }
+    }
+    private _close(e: SyntheticEvent<MouseEvent>): void {
+        this._children.IBOpener.close();
     }
 
     static _theme: string[] = ['Controls/Classes'];
