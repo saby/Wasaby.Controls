@@ -2615,6 +2615,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _updateItemActions(options: any): void {
+        console.log('пытаемся показать');
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this.__error || !this._listViewModel) {
@@ -2644,6 +2645,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 this._listViewModel.resetCachedItemData(recordKey);
             });
             this._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
+            console.log('показали');
         }
     },
 
