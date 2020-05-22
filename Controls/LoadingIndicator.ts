@@ -49,7 +49,6 @@ import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
  *    -  scroll (String) - add gradient of indicator's background (If not setted, by default use value of similar control option)
  *    -  small (String) - size of indicator (If not setted, by default use value of similar control option)
  *    -  overlay (String) - setting of indicator's overlay (If not setted, by default use value of similar control option)
- *    -  mods (Array.<String>|String) - It can be using for custom tuning of indicator (If not setted, by default use value of similar control option)
  *    -  delay (Number) - timeout before indicator will be visible (If not setted, by default use value of similar control option)
  * waitPromise (Promise) - when this promise will be resolved, indicator hides (not necessary property)
  * showIndicator returns id value using as argument of hideIndicator.
@@ -187,7 +186,6 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @param {Scroll} [config.scroll=''] Добавляет градиент фону индикатора.
      * @param {Small} [config.small=''] Размер индикатора.
      * @param {Overlay} [config.overlay=default] Настройки оверлея индикатора.
-     * @param {Array.<String>|String} [config.mods] Может использоваться для пользовательской настройки индикатора.
      * @param {Number} [config.delay=2000] Задержка перед началом показа индикатора.
      * @param {Promise} [waitPromise] Promise, к которому привязывается отображение индикатора. Индикатор скроется после завершения Promise.
      * @return {Number} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
