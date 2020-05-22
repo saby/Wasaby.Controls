@@ -2680,8 +2680,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (Array.isArray(contents)) {
             contents = contents[contents.length - 1];
         }
+        const key = contents ? contents.getKey() : item.key;
+        this.setMarkedKey(key);
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
-        _private.setMarkedKey(this, contents.getKey());
     },
 
     /**

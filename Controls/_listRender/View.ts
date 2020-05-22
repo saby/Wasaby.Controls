@@ -341,6 +341,8 @@ export default class View extends Control<IViewOptions> {
         const itemKey = contents?.getKey();
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
         if (menuConfig) {
+            clickEvent.nativeEvent.preventDefault();
+            clickEvent.stopImmediatePropagation();
             const onResult = this._itemActionsMenuResultHandler.bind(this);
             const onClose = this._itemActionsMenuCloseHandler.bind(this);
             menuConfig.eventHandlers = {onResult, onClose};
