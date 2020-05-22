@@ -2,9 +2,10 @@
  * Списочный контрол, который позволяет расположить записи в нескольких столбцах в зависимости от доступной ширины.
  * 
  * @remark
- * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_columns.less">переменные тем оформления</a>
- *
+ * Переменные тем оформления:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_columns.less">набор переменных columns</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">набор переменных list</a>
+ * 
  * @class Controls/columns:View
  * @extends Core/Control
  * @author Авраменко А.С.
