@@ -5,8 +5,12 @@
                 bind:selectedKey="_selectedKey"
                 keyProperty="id"
                 source="{{_source}}"
-                itemTemplate="wml!Controls-demo/toggle/RadioGroup/ItemTemplate/Template"
         >
+            <ws:itemTemplate>
+                <Controls-demo.toggle.RadioGroup.ItemTemplate.Template  item="{{item}}"
+                                                                        readOnly="{{readOnly}}"
+                                                                        selected="{{selected}}"/>
+            </ws:itemTemplate>
         </Controls.toggle:RadioGroup>
     </div>
 </div>
