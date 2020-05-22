@@ -920,12 +920,14 @@ define(
          });
 
          it('_beforeUnmount', function() {
-            let isCanceled = false;
+            let isCanceled = false, opened = true;
             let dropdownController = getDropdownController(configLazyLoad);
+            popup.Sticky.closePopup = () => {opened = false;};
             dropdownController._sourceController = {cancelLoading: () => { isCanceled = true }};
             dropdownController._beforeUnmount();
             assert.isFalse(!!dropdownController._sourceController);
             assert.isTrue(isCanceled);
+            assert.isFalse(opened);
          });
 
          it('openMenu', () => {
