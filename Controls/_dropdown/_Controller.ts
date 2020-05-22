@@ -606,6 +606,7 @@ var _Controller = Control.extend({
          this._sourceController = null;
       }
       this._setItems(null);
+      _private.closeDropdownList(this);
       UnregisterUtil(this, 'scroll');
    },
 
