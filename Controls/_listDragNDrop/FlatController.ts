@@ -27,9 +27,9 @@ interface IModel {
    getDragTargetPosition();
 }
 
-export default class Controller {
+export default class FlatController {
    private _useNewModel: boolean; // TODO потом избавиться
-   private _model: IModel;
+   protected _model: IModel;
 
    // это то что перетаскиваем, прикладники сверху сюда что-то могут положить,
    // но обязательно есть items - список перетаскиваемых элементов
@@ -40,18 +40,43 @@ export default class Controller {
 
    // этот элемент тут запоминается, пока на нем стрелка мыши
    // и после dragStart этот элемент берется как перетаскиваемый и здесь обнуляется
-   private _unprocessedDragEnteredItem;
+   private _unprocessedDragEnteredItem: CollectionItem<Model>;
 
    // это то что прикладники вернули на dragEnd
    // и после того как документ перетащили, то смотрим не нужно ли что-то подождать и если есть промис то ожидаем
    private _dragEndResult;
 
-   set draggingItem(draggingItem) { this._draggingItem = draggingItem; }
-   set unprocessedDragEnteredItem(item) { this._unprocessedDragEnteredItem = item; }
-
    constructor() {}
 
    update() {}
+
+   startDragNDrop(itemData, items, dragControlId, notifyDragStart) {
+      const key = this._useNewModel ? itemData.getContents().getKey() : itemData.key;
+
+      const dragKeyPosition = items.indexOf(key);
+      // If dragged item is in the list, but it's not the first one, move
+      // it to the front of the array
+      if (dragKeyPosition > 0) {
+         items.splice(dragKeyPosition, 1);
+         items.unshift(key);
+      }
+      const dragStartResult = notifyDragStart(items);
+      if (dragStartResult) {
+         if (dragControlId) {
+            dragStartResult.dragControlId = dragControlId;
+         }
+         this._draggingItem = itemData;
+      }
+      return dragStartResult;
+   }
+
+   handleMouseMove(itemData, nativeEvent, notifyChangeDragTarget) {
+      // в плоской делать вроде тут нечего
+   }
+
+   handleMouseLeave(itemData, nativeEvent) {
+      this._unprocessedDragEnteredItem = null;
+   }
 
    handleMouseEnter(
       event: SyntheticEvent<MouseEvent>,
@@ -59,10 +84,9 @@ export default class Controller {
       notifyChangeDragTarget: Function
    ): void {
       this._unprocessedDragEnteredItem = itemData;
-      this.processItemMouseEnterWithDragNDrop(itemData, notifyChangeDragTarget);
+      this._processItemMouseEnterWithDragNDrop(itemData, notifyChangeDragTarget);
    }
 
-   // TODO может изменить название
    handleDragStart(dragObject, notifyChangeDragTarget: Function): void {
       if (this._useNewModel) {
          this._draggingEntity = dragObject.entity;
@@ -75,14 +99,8 @@ export default class Controller {
          // В таком случае обрабатываем наведение на запись сейчас.
          //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
          if (this._unprocessedDragEnteredItem) {
-            this.processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem, notifyChangeDragTarget);
+            this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem, notifyChangeDragTarget);
          }
-      }
-   }
-
-   handleDragLeave() {
-      if (!this._useNewModel) {
-         this._model.setDragTargetPosition(null);
       }
    }
 
@@ -100,6 +118,21 @@ export default class Controller {
             this._model.setDragEntity(dragObject.entity);
          } else if (dragEnterResult === true) {
             this._model.setDragEntity(dragObject.entity);
+         }
+      }
+   }
+
+   handleDragLeave() {
+      if (!this._useNewModel) {
+         this._model.setDragTargetPosition(null);
+      }
+   }
+
+   handleDragEnd(dragObject, notifyDragEnd) {
+      if (!this._useNewModel) {
+         const targetPosition = this._model.getDragTargetPosition();
+         if (targetPosition) {
+            this._dragEndResult = notifyDragEnd(dragObject.entity, targetPosition);
          }
       }
    }
@@ -146,14 +179,7 @@ export default class Controller {
       };
    }
 
-   // TODO понять шо це такое, может можно переписать как-то лучше
-   // вроде как это проверяет не перетаскивается ли сейчас элемент
-   isDragging(): boolean {
-      // TODO Make available for new model as well
-      return !this._useNewModel && (this._model.getDragEntity() || this._model.getDragItemData());
-   }
-
-   processItemMouseEnterWithDragNDrop(itemData: CollectionItem<Model>, notifyChangeDragTarget: Function): void {
+   private _processItemMouseEnterWithDragNDrop(itemData: CollectionItem<Model>, notifyChangeDragTarget: Function): void {
       const dragEntity = this._useNewModel ? this._draggingEntity : this._model.getDragEntity();
 
       /*
@@ -179,7 +205,7 @@ export default class Controller {
       }
    }
 
-   _resetDragFields() {
+   private _resetDragFields() {
       if (this._useNewModel) {
          this._draggingEntity = null;
          this._draggingItem = null;
