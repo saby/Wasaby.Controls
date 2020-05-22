@@ -13,6 +13,7 @@ interface IActualMoneyFont {
     fontColorStyle: string;
 }
 
+
 export function styleOptions(style: string): IActualMoneyFont {
     switch (style) {
         case 'accentResults':
