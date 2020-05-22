@@ -233,7 +233,9 @@ export default class ScrollContainer extends Control<IOptions> {
         const direction = this._addItemsDirection;
         this._addItemsDirection = null;
 
-        this._itemsAddedHandler(this._addItemsIndex, this._addItems, direction);
+        if (this._addItems && this._addItems.length) {
+            this._itemsAddedHandler(this._addItemsIndex, this._addItems, direction);
+        }
 
         this._addItems = [];
         this._addItemsIndex = null;
