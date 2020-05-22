@@ -2880,13 +2880,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _documentDragEnd: function() {
-        const self = this;
-
-        const showIndicator = () => { _private.showIndicator(self); },
-            hideIndicator = () => { _private.hideIndicator(self); }
-
         if (this._dndListController) {
-            this._dndListController.handleDocumentDragEnd(showIndicator, hideIndicator);
+            this._dndListController.handleDocumentDragEnd(this.showIndicator, this.hideIndicator);
         }
     },
 
