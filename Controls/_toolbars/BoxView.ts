@@ -4,7 +4,7 @@ import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {CrudWrapper} from '../dataSource';
+import {CrudWrapper} from 'Controls/dataSource';
 
 import {
     IHierarchyOptions, IIconSizeOptions,
@@ -18,6 +18,7 @@ import {ButtonTemplate, IButtonOptions, cssStyleGeneration} from 'Controls/butto
 type TItem = Record;
 type TItems = RecordSet<TItem>;
 
+// todo: избавиться в этом компоне
 export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: IControlOptions = {}): IButtonOptions {
     const icon = item.get('icon');
     const style = item.get('buttonStyle');
