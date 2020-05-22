@@ -138,14 +138,22 @@ var ItemsViewModel = BaseViewModel.extend({
         return ItemsUtil.getDefaultDisplayFlat(items, cfg, filter);
     },
 
+    setSupportVirtualScroll: function(value) {
+        this._options.supportVirtualScroll = value;
+    },
+
+    _isSupportVirtualScroll: function() {
+        return Boolean(this._options.virtualScrollConfig) && (!this._options.task1179200403 || this._options.supportVirtualScroll);
+    },
+
     reset: function() {
-        this._startIndex = Boolean(this._options.virtualScrollConfig) && !!this._startIndex ? this._startIndex : 0;
+        this._startIndex = this._isSupportVirtualScroll() && !!this._startIndex ? this._startIndex : 0;
         this._curIndex = 0;
     },
 
     isEnd: function() {
         var endIndex;
-        if (Boolean(this._options.virtualScrollConfig)) {
+        if (this._isSupportVirtualScroll()) {
             endIndex = !!this._stopIndex ? this._stopIndex : 0;
         } else {
             endIndex = (this._display ? this._display.getCount() : 0);
@@ -181,7 +189,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     isLast: function() {
         var lastIndex;
-        if (Boolean(this._options.virtualScrollConfig)) {
+        if (this._isSupportVirtualScroll()) {
             lastIndex = this._stopIndex - 1;
         } else {
             lastIndex = (this._display ? this._display.getCount() - 1 : 0);
@@ -550,7 +558,9 @@ var ItemsViewModel = BaseViewModel.extend({
         let shouldAppend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
-            shouldAppend = items.getCount() > 0;
+
+            // (this._items.getCount() === 0) для того чтоб emptyTemplate перерисовался
+            shouldAppend = (items.getCount() > 0) || (this._items.getCount() === 0);
         }
         if (shouldAppend) {
             this._items.append(items);
@@ -572,7 +582,9 @@ var ItemsViewModel = BaseViewModel.extend({
         let shouldPrepend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
-            shouldPrepend = items.getCount() > 0;
+
+            // (this._items.getCount() === 0) для того чтоб emptyTemplate перерисовался
+            shouldPrepend = (items.getCount() > 0) || (this._items.getCount() === 0);
         }
         if (shouldPrepend) {
             this._items.prepend(items);
@@ -610,6 +622,11 @@ var ItemsViewModel = BaseViewModel.extend({
     getHasMoreData: function() {
         return this._hasMoreData;
     },
+
+    setTheme(theme: string): void {
+        this._options.theme = theme;
+        this.resetCachedItemData();
+    }
 });
 
 export = ItemsViewModel;

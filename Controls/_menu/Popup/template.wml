@@ -32,6 +32,7 @@
                </ws:if>
                <Controls._menu.Control
                        attr:class="controls-Menu__popup-list controls-Menu__popup-list-padding-{{_verticalDirection}}_theme-{{_options.theme}}"
+                       selectorOpenCallback="{{_options.selectorOpenCallback}}"
                        nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
                        root="{{_options.root}}"
                        selectorOpener="{{_options.selectorOpener}}"
@@ -60,6 +61,7 @@
                        applyButtonAlign="{{_options.applyButtonAlign}}"
                        additionalProperty="{{_options.additionalProperty}}"
                        groupingKeyCallback="{{_options.groupingKeyCallback}}"
+                       selectorDialogResult="{{_options.selectorDialogResult}}"
                        itemPadding="{{_itemPadding}}"
                        dataLoadCallback="{{_dataLoadCallback}}"
                        headingIcon="{{_headingIcon}}"

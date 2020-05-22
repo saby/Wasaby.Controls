@@ -2,6 +2,7 @@
     <div class="controls-BreadCrumbsPath__wrapper">
         <ws:if data="{{ _backButtonCaption && !_options.withoutBackButton }}">
             <Controls._breadcrumbs.HeadingPath.Back backButtonCaption="{{_backButtonCaption}}"
+                                               backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                                                backButtonClass="{{_backButtonClass}}"
                                                counterCaption="{{ _getCounterCaption(_options.items) }}"
                                                showArrowOutsideOfBackButton="{{!_breadCrumbsItems && !_options.rootVisible}}"

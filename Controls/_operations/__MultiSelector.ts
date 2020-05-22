@@ -59,13 +59,15 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
                                  options.excludedKeys !== newOptions.excludedKeys;
       const viewModeChanged = options.selectionViewMode !== newOptions.selectionViewMode;
       const isAllSelectedChanged = options.isAllSelected !== newOptions.isAllSelected;
+      const selectionCfgChanged = options.selectedCountConfig !== newOptions.selectedCountConfig;
+      const selectionCountChanged = options.selectedKeysCount !== newOptions.selectedKeysCount;
 
-      if (selectionIsChanged || viewModeChanged || isAllSelectedChanged) {
+      if (selectionIsChanged || viewModeChanged || isAllSelectedChanged || selectionCfgChanged) {
          this._menuSource = this._getMenuSource(newOptions);
       }
 
-      if (selectionIsChanged || options.selectedKeysCount !== newOptions.selectedKeysCount || isAllSelectedChanged) {
-         return this._updateMenuCaptionByOptions(newOptions);
+      if (selectionIsChanged || selectionCountChanged || isAllSelectedChanged || selectionCfgChanged) {
+         return this._updateMenuCaptionByOptions(newOptions, selectionCfgChanged);
       }
    }
 
@@ -96,15 +98,16 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       });
    }
 
-   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions): Promise<TCount> {
+   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions, counterConfigChanged: boolean): Promise<TCount> {
       const selectedKeys = options.selectedKeys;
       const excludedKeys = options.excludedKeys;
       const selection = this._getSelection(selectedKeys, excludedKeys);
+      const count = counterConfigChanged ? null : options.selectedKeysCount;
       const getCountCallback = (count) => {
          this._menuCaption = this._getMenuCaption(selection, count, options.isAllSelected);
          this._sizeChanged = true;
       };
-      const getCountResult = this._getCount(selection, options.selectedKeysCount);
+      const getCountResult = this._getCount(selection, count, options.selectedCountConfig);
 
       // Если счётчик удаётся посчитать без вызова метода, то надо это делать синхронно,
       // иначе promise порождает асинхронность и перестроение панели операций будет происходить скачками,
@@ -137,16 +140,19 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       return caption;
    }
 
-   private _getCount(selection: ISelectionObject, count: TCount): Promise<TCount>|TCount {
+   private _getCount(
+       selection: ISelectionObject,
+       count: TCount,
+       selectionCountConfig: IGetCountCallParams
+   ): Promise<TCount>|TCount {
       let countResult;
-
-      if (this._isCorrectCount(count) || !this._options.selectedCountConfig) {
+      if (!this._options.selectedCountConfig || this._isCorrectCount(count)) {
          countResult = count === undefined ? selection.selected.length : count;
       } else {
          this._children.countIndicator.show();
-         countResult = getCountUtil.getCount(selection, this._options.selectedCountConfig).then((count) => {
+         countResult = getCountUtil.getCount(selection, selectionCountConfig).then((result: number): number => {
             this._children.countIndicator.hide();
-            return count;
+            return result;
          });
       }
       return countResult;

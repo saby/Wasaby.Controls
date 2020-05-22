@@ -10,6 +10,7 @@ import {IContainerConstructor} from 'Controls/_dataSource/error';
 import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {Confirmation} from 'Controls/popup';
 
 interface IFormController extends IControlOptions {
     createMetaData?: unknown;
@@ -466,7 +467,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _showConfirmPopup(type: string, details?: string): Promise<string | boolean> {
-        return this._children.popupOpener.open({
+        return Confirmation.openPopup({
             message: rk('Сохранить изменения?'),
             details,
             type
