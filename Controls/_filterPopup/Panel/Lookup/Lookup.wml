@@ -7,17 +7,20 @@
    </ws:if>
    <Controls.event:Register name="controlResize" register="controlResize"
                             attr:class="{{_passed || _options.selectedKeys.length  ? '' : 'ws-hidden'}}">
-      <ws:partial template="{{_options.lookupTemplateName}}"
-                  name="lookup"
-                  class="controls-FilterPanel__LookupSelector {{_options.lookupClassName}}"
-                  on:selectedKeysChanged="_selectedKeysChanged()"
-                  on:inputCompleted="_notifyHandler('inputCompleted')"
-                  on:itemsChanged="_notifyHandler('itemsChanged')"
-                  on:valueChanged="_notifyHandler('valueChanged')"
-                  on:textValueChanged="_textValueChanged()"
-                  on:itemClick="_notifyHandler('itemClick')"
-                  on:openInfoBox="_notifyHandler('openInfoBox')"
-                  scope="{{_options}}">
-      </ws:partial>
+      <Controls.Container.Async templateName="{{_options.lookupTemplateName}}">
+         <ws:partial
+                 template="{{ content.resolvedTemplate }}"
+                 name="lookup"
+                 class="controls-FilterPanel__LookupSelector {{_options.lookupClassName}}"
+                 on:selectedKeysChanged="_selectedKeysChanged()"
+                 on:inputCompleted="_notifyHandler('inputCompleted')"
+                 on:itemsChanged="_notifyHandler('itemsChanged')"
+                 on:valueChanged="_notifyHandler('valueChanged')"
+                 on:textValueChanged="_textValueChanged()"
+                 on:itemClick="_notifyHandler('itemClick')"
+                 on:openInfoBox="_notifyHandler('openInfoBox')"
+                 scope="{{_options}}"
+         />
+      </Controls.Container.Async>
    </Controls.event:Register>
 </div>
