@@ -375,7 +375,9 @@ const _private = {
                 }
 
                 const dragStartResult = self._dndListController.startDragNDrop(itemData, items, self._options.dragControlId, notifyDragStart);
-                self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
+                if (dragStartResult) {
+                    self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
+                }
             });
         }
     },
