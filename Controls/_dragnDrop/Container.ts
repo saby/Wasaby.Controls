@@ -1,7 +1,6 @@
 import Control = require('Core/Control');
 import Env = require('Env/Env');
 import template = require('wml!Controls/_dragnDrop/Container/Container');
-import 'css!Controls/_dragnDrop/Container';
 import entity = require('Types/entity');
 
       var
@@ -1067,6 +1066,8 @@ import entity = require('Types/entity');
             this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
          }
       });
+
+      DragNDropController._styles = ['Controls/dragnDrop'];
 
       DragNDropController._private = _private;
 
