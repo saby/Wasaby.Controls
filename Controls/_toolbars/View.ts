@@ -131,7 +131,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
 
 /**
  * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FToolbar%2FToolbarVdom">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FToolbar%2FBase%2FIndex">Демо-пример</a>.
  *
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
@@ -143,7 +143,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  *
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/Toolbar/ToolbarVdom
+ * @demo Controls-demo/Toolbar/Base/Index
  */
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate, IGrouped, IToolbarSource {
     /*
