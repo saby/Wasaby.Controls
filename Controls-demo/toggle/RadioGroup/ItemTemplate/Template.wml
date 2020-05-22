@@ -9,7 +9,7 @@
             </ws:partial>
         </ws:content>
         <ws:template>
-            <div>Это всплывающая подсказка по ховеру.</div>
+            <div>Hover tooltip</div>
         </ws:template>
     </Controls.popup:InfoboxTarget>
 </span>

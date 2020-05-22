@@ -5,6 +5,7 @@ import itemTemplate = require('wml!Controls-demo/toggle/RadioGroup/ItemTemplate/
 
 class ItemTemplate extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
+    protected _itemTemplate: TemplateFunction = itemTemplate;
     protected _selectedKey: string = '1';
     protected _source: Memory;
 

@@ -6,7 +6,8 @@
                 keyProperty="id"
                 source="{{_source}}"
                 itemTemplate="wml!Controls-demo/toggle/RadioGroup/ItemTemplate/Template"
-        />
+        >
+        </Controls.toggle:RadioGroup>
     </div>
 </div>
 
