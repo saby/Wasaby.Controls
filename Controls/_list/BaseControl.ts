@@ -1961,6 +1961,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 } else {
                     delete viewModelConfig.items;
                 }
+                viewModelConfig.supportVirtualScroll = self._needScrollCalculation;
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
             } else if (newOptions.useNewModel && receivedData) {
                 self._listViewModel = self._createNewModel(
@@ -2190,6 +2191,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
+            if (this._listViewModel) {
+                this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
+            }
         }
         _private.updateNavigation(this);
 
@@ -2207,7 +2211,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
-                items
+                items,
+                supportVirtualScroll: !!this._needScrollCalculation
             }));
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;

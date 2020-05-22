@@ -1218,7 +1218,9 @@ var
         getItemById: function(id, keyProperty) {
             return this._model.getItemById(id, keyProperty);
         },
-
+        setSupportVirtualScroll: function(value) {
+            this._model.setSupportVirtualScroll(value);
+        },
         setMarkedKey: function(key, byOptions) {
             this._model.setMarkedKey(key, byOptions);
         },
