@@ -1,6 +1,6 @@
-<div class="controls-menu "
+<div class="controls-menu"
      attr:ws-no-focus="true">
-   <ws:if data="{{_applyButtonVisible && !_options.headerContentTemplate}}">
+   <ws:if data="{{_applyButtonVisible}}">
       <div class="controls-DropdownList__applyButton controls-Menu__applyButton_theme-{{_options.theme}}">
          <Controls.buttons:Button viewMode="functionalButton"
                                   icon="icon-Yes"

@@ -1,18 +1,5 @@
 <ws:template name="menuPopup" >
    <div class="controls-Menu__popup">
-      <ws:if data="{{_headerTemplate && _applyButtonVisibility}}">
-         <div class="controls-DropdownList__applyButton
-                              controls-Menu__applyButton_theme-{{_options.theme}}">
-            <Controls.buttons:Button viewMode="functionalButton"
-                                     icon="icon-Yes"
-                                     iconSize="m"
-                                     iconStyle="contrast"
-                                     buttonStyle="success"
-                                     attr:class="controls-Menu__applyButton"
-                                     inlineHeight="menuapply"
-                                     on:click="_applySelection()"/>
-         </div>
-      </ws:if>
       <Controls.popupTemplate:Sticky
               attr:class="controls-DropdownList__popup
                           controls-Popup__isolatedFocusingContext
@@ -44,7 +31,7 @@
                               on:click="_headerClick()"/>
                </ws:if>
                <Controls._menu.Control
-                       attr:class="controls-Menu__popup-list-padding-{{_verticalDirection}}_theme-{{_options.theme}}"
+                       attr:class="controls-Menu__popup-list controls-Menu__popup-list-padding-{{_verticalDirection}}_theme-{{_options.theme}}"
                        nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
                        root="{{_options.root}}"
                        selectorOpener="{{_options.selectorOpener}}"
@@ -70,7 +57,7 @@
                        groupTemplate="{{_options.groupTemplate}}"
                        groupProperty="{{_options.groupProperty}}"
                        allowPin="{{_options.allowPin}}"
-                       headerContentTemplate="{{_headerTemplate}}"
+                       applyButtonAlign="{{_options.applyButtonAlign}}"
                        additionalProperty="{{_options.additionalProperty}}"
                        groupingKeyCallback="{{_options.groupingKeyCallback}}"
                        itemPadding="{{_itemPadding}}"
@@ -84,8 +71,6 @@
                        on:menuOpened="_sendResult('menuOpened')"
                        on:beforeSubMenuOpen="_prepareSubMenuConfig()"
                        on:subMenuMouseenter="_sendResult('subMenuMouseenter')"
-                       on:applyButtonVisible="_setApplyButtonVisible()"
-                       on:selectedKeysChanged="_setSelectedKeys()"
                />
             </div>
          </ws:bodyContentTemplate>
