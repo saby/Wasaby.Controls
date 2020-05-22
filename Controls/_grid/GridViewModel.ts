@@ -1397,6 +1397,7 @@ var
                 const currentColumn: any = {
                         item: current.item,
                         style: current.style,
+                        backgroundStyle: current.backgroundStyle,
                         isMenuShown: current.isMenuShown,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
