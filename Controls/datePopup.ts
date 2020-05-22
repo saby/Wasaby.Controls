@@ -244,11 +244,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
             this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
         }
 
-        if ((this._state === STATES.year && this._displayedDate.getFullYear() === new Date().getFullYear()) ||
-            (this._state === STATES.month && this._displayedDate.getMonth() === new Date().getMonth() &&
-                this._displayedDate.getFullYear() === new Date().getFullYear())) {
-            this._homeButtonVisible = false;
-        }
+        this._updateHomeButtonVisible();
 
         this._headerType = options.headerType;
     },
@@ -271,10 +267,21 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _toggleStateClick: function(): void {
         _private.toggleState(this);
+        this._updateHomeButtonVisible();
     },
 
     _homeButtonClick: function () {
         this._displayedDate = dateUtils.getStartOfMonth(new Date());
+    },
+
+    _updateHomeButtonVisible(): void {
+        if ((this._state === STATES.year && this._displayedDate.getFullYear() === new Date().getFullYear()) ||
+            (this._state === STATES.month && this._displayedDate.getMonth() === new Date().getMonth() &&
+                this._displayedDate.getFullYear() === new Date().getFullYear())) {
+            this._homeButtonVisible = false;
+        } else {
+            this._homeButtonVisible = true;
+        }
     },
 
     _currentDayIntersectHandler: function(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
