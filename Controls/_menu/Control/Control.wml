@@ -1,4 +1,4 @@
-<div class="controls-menu "
+<div class="controls-menu"
      attr:ws-no-focus="true">
    <ws:template name="applyButton">
       <div class="controls-DropdownList__applyButton {{_options.applyButtonAlign}}">
@@ -12,7 +12,7 @@
                                   on:click="_applySelection()"/>
       </div>
    </ws:template>
-   <ws:if data="{{_applyButtonVisible && !_options.headerContentTemplate && _options.applyButtonAlign === 'top'}}">
+   <ws:if data="{{_applyButtonVisible && _options.applyButtonAlign === 'top'}}">
       <ws:partial template="applyButton" attr:class="controls-Menu__applyButton-top_theme-{{_options.theme}}" inlineHeight="menuapplytop"></ws:partial>
    </ws:if>
    <Controls.scroll:Container attr:class="controls-ScrollContainer__flex
