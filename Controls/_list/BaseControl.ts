@@ -58,6 +58,7 @@ import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
+import { IDragNDropListController, TreeController as DndTreeController, FlatController as DndFlatController } from 'Controls/listDragNDrop';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -260,9 +261,9 @@ const _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
-                        if (self._items) {
-                           self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
-                        }
+                    if (self._items) {
+                       self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                    }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
@@ -277,7 +278,7 @@ const _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
-                        self._items.subscribe('onCollectionChange', self._onItemsChanged);
+                    self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -356,7 +357,6 @@ const _private = {
 
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-            // TODO dnd вызвать аналогичный метод контроллера
             const selection = self._dndListController.getSelectionForDragNDrop(self._options.selectedKeys, self._options.excludedKeys, key);
             selection.recursive = false;
             const recordSet = self._options.useNewModel ? self._listViewModel.getCollection() : self._listViewModel.getItems();
@@ -1834,7 +1834,18 @@ const _private = {
 
          this.handleSelectionControllerResult(self, result);
       }
-   }
+   },
+
+    createDndListController(self: any, options: any): IDragNDropListController {
+        if (options.parentProperty) {
+            const notifyTreeControlMouseMove = (dragEntity) => {
+                return self._notify('draggingItemMouseMove', [dragEntity]);
+            }
+            return new DndTreeController(options.useNewModel, self._listViewModel, notifyTreeControlMouseMove);
+        } else {
+            return new DndFlatController(options.useNewModel, self._listViewModel);
+        }
+    }
 };
 
 /**
@@ -2012,6 +2023,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
             if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+            }
+
+            if (newOptions.itemsDragNDrop) {
+                self._dndListController = _private.createDndListController(self, newOptions);
             }
 
             if (newOptions.source) {
@@ -2905,14 +2920,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._dndListController) {
-            // TODO dnd переопределить в деревянном контроллере
             this._dndListController.handleMouseMove(itemData, nativeEvent, notifyChangeDragTarget);
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
-            // TODO dnd переопределить в деревянном контроллере
             this._dndListController.handleMouseLeave(itemData, nativeEvent);
         }
     },

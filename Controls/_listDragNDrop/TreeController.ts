@@ -1,4 +1,4 @@
-import FlatController from "./FlatController";
+import FlatController, { IModel } from "./FlatController";
 
 const DRAG_MAX_OFFSET = 15,
    EXPAND_ON_DRAG_DELAY = 1000;
@@ -6,6 +6,12 @@ const DRAG_MAX_OFFSET = 15,
 export default class TreeController extends FlatController {
    private _expandOnDragData;
    private _timeoutForExpandOnDrag;
+   private readonly _notifyExpandNode;
+
+   constructor(useNewModel: boolean, model: IModel, notifyExpandNode: Function) {
+      super(useNewModel, model);
+      this._notifyExpandNode = notifyExpandNode;
+   }
 
    handleMouseMove(itemData, nativeEvent, notifyChangeDragTarget) {
       if (!itemData.dispItem.isNode()) {
@@ -35,7 +41,7 @@ export default class TreeController extends FlatController {
                }
             }
             if (itemData.item.get(itemData.nodeProperty) !== null && (!this._expandOnDragData || this._expandOnDragData !== itemData) && !itemData.isExpanded) {
-               this._clearTimeoutForExpandOnDrag(this);
+               this._clearTimeoutForExpandOnDrag();
                this._expandOnDragData = itemData;
                this._setTimeoutForExpandOnDrag(this._expandOnDragData);
             }
@@ -43,15 +49,21 @@ export default class TreeController extends FlatController {
       }
    }
 
-   handleMouseLeave(itemData, nativeEvent) {
+   handleMouseLeave() {
+      super.handleMouseLeave();
+      this._clearTimeoutForExpandOnDrag();
+      this._expandOnDragData = null;
+   }
 
+   handleDragEnd(dragObject, notifyDragEnd) {
+      super.handleDragEnd(dragObject, notifyDragEnd);
+      this._clearTimeoutForExpandOnDrag();
    }
 
    private _setTimeoutForExpandOnDrag(itemData) {
       this._timeoutForExpandOnDrag = setTimeout(() => {
-            this._expandNodeOnDrag(itemData);
-         },
-         EXPAND_ON_DRAG_DELAY);
+            this._notifyExpandNode(itemData);
+         }, EXPAND_ON_DRAG_DELAY);
    }
 
    private _clearTimeoutForExpandOnDrag() {

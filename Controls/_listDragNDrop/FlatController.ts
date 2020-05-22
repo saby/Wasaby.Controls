@@ -5,7 +5,7 @@ import { SyntheticEvent } from "Vdom/Vdom";
 import { Model } from "Types/entity";
 import { ItemsEntity } from "Controls/dragnDrop";
 
-interface IModel {
+export interface IModel {
    calculateDragTargetPosition(itemData);
    getItemDataByItem();
    _prepareDisplayItemForAdd(); // TODO жесткая хрень, надо понять для чего
@@ -27,10 +27,31 @@ interface IModel {
    getDragTargetPosition();
 }
 
-export default class FlatController {
-   private _useNewModel: boolean; // TODO потом избавиться
-   protected _model: IModel;
+export interface IDragNDropListController {
+   update(useNewModel: boolean, model: IModel);
 
+   startDragNDrop(itemData, items, dragControlId, notifyDragStart);
+
+   handleMouseMove(itemData, nativeEvent, notifyChangeDragTarget);
+
+   handleMouseLeave();
+
+   handleMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, notifyChangeDragTarget: Function): void;
+
+   handleDragStart(dragObject, notifyChangeDragTarget: Function): void;
+
+   handleDragEnter(dragObject, notifyDragEnter: Function);
+
+   handleDragLeave();
+
+   handleDragEnd(dragObject, notifyDragEnd);
+
+   handleDocumentDragEnd(showIndicator: Function, hideIndicator: Function);
+
+   getSelectionForDragNDrop(selectedKeys, excludedKeys, dragKey);
+}
+
+export default class FlatController implements IDragNDropListController{
    // это то что перетаскиваем, прикладники сверху сюда что-то могут положить,
    // но обязательно есть items - список перетаскиваемых элементов
    private _draggingEntity: ItemsEntity;
@@ -46,9 +67,12 @@ export default class FlatController {
    // и после того как документ перетащили, то смотрим не нужно ли что-то подождать и если есть промис то ожидаем
    private _dragEndResult;
 
-   constructor() {}
+   constructor(private _useNewModel: boolean, private _model: IModel) {}
 
-   update() {}
+   update(useNewModel: boolean, model: IModel) {
+      this._useNewModel = useNewModel;
+      this._model = model;
+   }
 
    startDragNDrop(itemData, items, dragControlId, notifyDragStart) {
       const key = this._useNewModel ? itemData.getContents().getKey() : itemData.key;
@@ -74,7 +98,7 @@ export default class FlatController {
       // в плоской делать вроде тут нечего
    }
 
-   handleMouseLeave(itemData, nativeEvent) {
+   handleMouseLeave() {
       this._unprocessedDragEnteredItem = null;
    }
 
