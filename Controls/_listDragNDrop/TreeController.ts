@@ -1,4 +1,4 @@
-import FlatController, { IModel } from "./FlatController";
+import { FlatController, IModel } from "./FlatController";
 
 const DRAG_MAX_OFFSET = 15,
    EXPAND_ON_DRAG_DELAY = 1000;

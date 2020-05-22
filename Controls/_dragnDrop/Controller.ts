@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_dragnDrop/Controller');
+import template = require('wml!Controls/_dragnDrop/Controller/Controller');
 import 'Controls/_dragnDrop/DraggingTemplate';
       /**
        * Контроллер обеспечивает взаимосвязь между контейнерами перемещения Controls/dragnDrop:Container.

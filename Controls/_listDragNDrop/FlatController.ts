@@ -51,7 +51,7 @@ export interface IDragNDropListController {
    getSelectionForDragNDrop(selectedKeys, excludedKeys, dragKey);
 }
 
-export default class FlatController implements IDragNDropListController{
+export class FlatController implements IDragNDropListController{
    // это то что перетаскиваем, прикладники сверху сюда что-то могут положить,
    // но обязательно есть items - список перетаскиваемых элементов
    private _draggingEntity: ItemsEntity;

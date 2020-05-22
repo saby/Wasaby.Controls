@@ -2254,6 +2254,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._modelRecreated = true;
         }
 
+        if (this._dndListController) {
+            this._dndListController.update(newOptions.useNewModel, this._listViewModel);
+        }
+
         if (newOptions.groupMethod !== this._options.groupMethod) {
             _private.reload(this, newOptions);
         }
@@ -2852,8 +2856,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragEnd: function(event, dragObject) {
-        const notifyDragEnd = (dragObject, targetPosition) => {
-            this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position])
+        const notifyDragEnd = (dragEntity, targetPosition) => {
+            this._notify('dragEnd', [dragEntity, targetPosition.item, targetPosition.position])
         }
 
         if (this._dndListController) {
