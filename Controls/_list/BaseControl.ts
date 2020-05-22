@@ -1033,35 +1033,6 @@ const _private = {
      * Обработать прокрутку списка виртуальным скроллом
      */
     handleListScroll: function(self, params) {
-        //var hasMoreData;
-
-        // if (self._scrollPagingCtr) {
-        //     if (params.position === 'middle') {
-        //         self._scrollPagingCtr.handleScroll(params.scrollTop);
-        //     } else {
-        //         // when scroll is at the edge we will send information to scrollPaging about the availability of data next/prev
-        //         if (self._sourceController) {
-        //             const hasMoreDataUp = _private.hasMoreData(self, self._sourceController, 'up');
-        //             const hasMoreDataDown = _private.hasMoreData(self, self._sourceController, 'down');
-
-        //             hasMoreData = {
-        //                 up: hasMoreDataUp,
-        //                 down: hasMoreDataDown && _private.allowLoadMoreByPortionedSearch(self)
-        //             };
-        //         }
-        //         self._scrollPagingCtr.handleScrollEdge(params.position, hasMoreData);
-        //     }
-        // } else {
-        //     if (_private.needScrollPaging(self._options.navigation)) {
-        //         _private.createScrollPagingController(self, {
-        //             scrollTop: self._scrollTop,
-        //             scrollHeight: params.scrollHeight,
-        //             clientHeight: params.clientHeight
-        //         }).then(function(scrollPagingCtr) {
-        //             self._scrollPagingCtr = scrollPagingCtr;
-        //         });
-        //     }
-        // }
         if (_private.needScrollPaging(self._options.navigation)) {
             return _private.getScrollPagingController(self, {
                 scrollTop: self._scrollTop,
