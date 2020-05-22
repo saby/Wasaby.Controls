@@ -582,7 +582,6 @@ define([
                   keyProperty: 'id'
                }),
                keyProperty: 'id',
-               markedKey: 2,
                style: 'master',
             });
          });
@@ -595,6 +594,7 @@ define([
             assert.isUndefined(item.isDragging);
 
             lvm.setDragEntity(dragEntity);
+            lvm._markedKey = 2;
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
             assert.isTrue(item.isVisible);
