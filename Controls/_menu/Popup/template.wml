@@ -31,7 +31,7 @@
                               on:click="_headerClick()"/>
                </ws:if>
                <Controls._menu.Control
-                       attr:class="controls-Menu__popup-list-padding-{{_verticalDirection}}_theme-{{_options.theme}}"
+                       attr:class="controls-Menu__popup-list controls-Menu__popup-list-padding-{{_verticalDirection}}_theme-{{_options.theme}}"
                        selectorOpenCallback="{{_options.selectorOpenCallback}}"
                        nodeFooterTemplate="{{_options.nodeFooterTemplate}}"
                        root="{{_options.root}}"
@@ -64,6 +64,7 @@
                        itemPadding="{{_itemPadding}}"
                        dataLoadCallback="{{_dataLoadCallback}}"
                        headingIcon="{{_headingIcon}}"
+                       applyButtonAlign="{{_options.applyButtonAlign}}"
                        theme="{{_options.theme}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:applyClick="_sendResult('applyClick')"
