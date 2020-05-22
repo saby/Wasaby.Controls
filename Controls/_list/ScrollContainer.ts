@@ -225,6 +225,12 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
+    private __getItemsContainer(): HTMLElement {
+        if (this._itemsContainerGetter) {
+            return this._itemsContainerGetter();
+        }
+    }
+
     startBatchAdding(direction: IDirection): void {
         this._addItemsDirection = direction;
     }
@@ -256,7 +262,7 @@ export default class ScrollContainer extends Control<IOptions> {
                     // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
                     // логического родителя, который отрисовывает все элементы
                     // https://online.sbis.ru/opendoc.html?guid=942e1a1d-15ee-492e-b763-0a52d091a05e
-                    const itemsContainer = this._itemsContainerGetter();
+                    const itemsContainer = this.__getItemsContainer();
                     const itemContainer = this._virtualScroll.getItemContainerByIndex(index, itemsContainer);
 
                     if (itemContainer) {
@@ -488,7 +494,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private _viewResize(viewSize: number, updateItemsHeights: boolean = true): void {
         this._viewHeight = viewSize;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
-        const itemsContainer = this._itemsContainerGetter();
+        const itemsContainer = this.__getItemsContainer();
         this._virtualScroll.resizeView(
             this._viewHeight,
             this._triggerOffset,
@@ -499,7 +505,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private _viewportResize(viewportSize: number, updateItemsHeights: boolean = true): void {
         this._viewportHeight = viewportSize;
         this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
-        const itemsContainer = this._itemsContainerGetter();
+        const itemsContainer = this.__getItemsContainer();
         this._virtualScroll.resizeViewport(
             this._viewportHeight,
             this._triggerOffset,
@@ -531,7 +537,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private _afterRenderHandler(): void {
         if (this._virtualScroll.rangeChanged) {
             this._viewResize(this._container.offsetHeight, false);
-            const itemsContainer = this._itemsContainerGetter();
+            const itemsContainer = this.__getItemsContainer();
             this._virtualScroll.updateItemsHeights(itemsContainer);
         }
 
