@@ -2,7 +2,7 @@ import {View as List} from 'Controls/list';
 import {TreeControl} from 'Controls/treeGrid';
 import TreeTileViewModel = require('Controls/_tile/TreeTileView/TreeTileViewModel');
 import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
- 
+
 'use strict';
 
 /**
