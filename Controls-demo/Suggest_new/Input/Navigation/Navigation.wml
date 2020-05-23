@@ -41,10 +41,10 @@
       </Controls.suggest:Input>
    </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell ControlsDemo-Suggest_down">
-      <div class="controls-text-label_theme-{{_options.theme}}">Постраничная навигация (открытие вверх)</div>
+      <div class="controls-text-label_theme-{{_options.theme}}">Постраничная навигация (вверх)</div>
       <Controls.suggest:Input
               attr:class="controlsDemo__input demo-SuggestNew__pageNavigationUp"
-              bind:value="_suggestCustomValue"
+              bind:value="_suggestCustomValueUp"
               displayProperty="title"
               searchParam="title"
               navigation="{{_navigation}}"
