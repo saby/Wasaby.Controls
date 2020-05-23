@@ -1,0 +1,64 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Toolbar/Base/Index' }}">
+            <a href="{{content.href}}">Базовая настройка тулбара</a>
+        </Router.router:Reference>
+        <Controls-demo.Toolbar.Base.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Toolbar/ReadOnly/Index' }}">
+            <a href="{{content.href}}">Базовая настройка тулбара c readOnly кнопкой</a>
+        </Router.router:Reference>
+        <Controls-demo.Toolbar.ReadOnly.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Toolbar/ItemsSpacing/Index' }}">
+            <a href="{{content.href}}">Настройка расстояния между кнопками</a>
+        </Router.router:Reference>
+        <Controls-demo.Toolbar.ItemsSpacing.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Toolbar/ItemTemplate/Index' }}">
+            <a href="{{content.href}}">Настройка itemTemplate</a>
+        </Router.router:Reference>
+        <Controls-demo.Toolbar.ItemTemplate.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Toolbar/Groups/Index' }}">
+            <a href="{{content.href}}">Настройка групп</a>
+        </Router.router:Reference>
+        <Controls-demo.Toolbar.Groups.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Toolbar/AdditionalProperty/Index' }}">
+            <a href="{{content.href}}">Настройка дополнительных пунктов меню</a>
+        </Router.router:Reference>
+        <Controls-demo.Toolbar.AdditionalProperty.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Toolbar/PopupFooterTemplate/Index' }}">
+            <a href="{{content.href}}">Настройка футера дополнительного меню тулбара </a>
+        </Router.router:Reference>
+        <Controls-demo.Toolbar.PopupFooterTemplate.Index/>
+    </div>
+</div>
