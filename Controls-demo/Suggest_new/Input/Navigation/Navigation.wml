@@ -40,4 +40,18 @@
           </ws:suggestTemplate>
       </Controls.suggest:Input>
    </div>
+   <div class="controlsDemo__wrapper__horizontal controlsDemo__cell ControlsDemo-Suggest_down">
+      <div class="controls-text-label_theme-{{_options.theme}}">Постраничная навигация (открытие вверх)</div>
+      <Controls.suggest:Input
+              attr:class="controlsDemo__input demo-SuggestNew__pageNavigationUp"
+              bind:value="_suggestCustomValue"
+              displayProperty="title"
+              searchParam="title"
+              navigation="{{_navigation}}"
+              source="{{_source}}">
+          <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/Input/Navigation/resources/SuggestTemplate">
+              <ws:templateOptions demoClass="demo-SuggestInputList"/>
+          </ws:suggestTemplate>
+      </Controls.suggest:Input>
+  </div>
 </div>
