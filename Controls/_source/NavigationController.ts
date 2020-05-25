@@ -1,6 +1,5 @@
 import {QueryOrderSelector, QueryWhereExpression} from 'Types/source';
 import {RecordSet, List} from 'Types/collection';
-import {INavigationOptionValue} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 
 import * as cClone from 'Core/core-clone';
@@ -12,7 +11,7 @@ import PositionNavigationStore from './NavigationController/PositionNavigationSt
 import PositionParamsCalculator from './NavigationController/PositionParamsCalculator';
 
 import {Direction, IAdditionalQueryParams, IAdditionQueryParamsMeta} from 'Controls/_interface/IAdditionalQueryParams';
-import {TNavigationSource, INavigationSourceConfig} from 'Controls/_interface/INavigation';
+import {TNavigationSource, INavigationSourceConfig, TNavigationDirection} from 'Controls/_interface/INavigation';
 
 /**
  * Вспомогательный интерфейс для определения типа typeof object
@@ -75,7 +74,7 @@ class NavigationStoreFactory {
         position: PositionNavigationStore
     };
 
-    static resolve(type: TNavigationSource, config: INavigationSourceConfig): IQueryParamsController {
+    static resolve(type: TNavigationSource, config: INavigationSourceConfig): TNavigationStore {
         if (type && type in this.factorySource) {
             return new this.factorySource[type](config);
         }
@@ -154,20 +153,22 @@ export class NavigationController {
      * Строит запрос данных на основе переданных параметров filter и sorting
      * Если в опцию navigation был передан объект INavigationOptionValue<INavigationSourceConfig>, его filter, sorting и настрйоки пейджинации
      * также одбавляются в запрос.
+     * @param getQueryArgs {} Настройки фильтрации, сортировки, навигации
+     * @param id {} Идентификатор запрашиваемого узла. По-умолчанию корневой узел.
      * @param direction {Direction} Направление навигации.
-     * @param filter {Types/source:QueryWhereExpression} Настрйоки фильтрации
-     * @param sorting {Types/source:QueryOrderSelector} Настрйки сортировки
      */
 
-    getQueryParams(getQueryArgs: IGetQueryParamsArg, id: TKey = null): IAdditionalQueryParams {
+    getQueryParams(getQueryArgs: IGetQueryParamsArg,
+                   id: TKey = null,
+                   direction?: TNavigationDirection): IAdditionalQueryParams {
         const queryParams = this._getCleanParams(getQueryArgs);
 
-        // Если id не передан то берется стор для корневого раздела, для которого жесткий id=null
+        // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
         const store = this._getStore(id);
         const calculator = this._getCalculator();
         const navigationQueryConfig = getQueryArgs.navigationConfig || {};
 
-        const addParams = calculator.getQueryParams(store, navigationQueryConfig);
+        const addParams = calculator.getQueryParams(store, navigationQueryConfig, direction);
         return this._mergeParams(queryParams, addParams);
     }
 
@@ -175,13 +176,34 @@ export class NavigationController {
 
     }
 
-    getQueryParamsForward(filter: QueryWhere, sorting: QueryOrderSelector, navigationConfig?) {
+    /**
+     * Вычисляет следующее состояние контроллера параметров запроса: следующую страницу, или позицию
+     * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
+     * @param direction {Direction} направление навигации ('up' или 'down')
+     */
+    /*
+     * Calculates next query params controller state: next page, or position
+     * @param list {Types/collection:RecordSet} object containing meta information for current request
+     * @param direction {Direction} nav direction ('up' or 'down')
+     */
+    updateQueryProperties(list?: RecordSet, direction?: Direction): void {
+        const more = list.getMetaData().more;
+        let recordSetWithNavigation;
 
+        if (more instanceof RecordSet) {
+            more.each((nav: NavigationRecord) => {
+                recordSetWithNavigation = new RecordSet();
+                recordSetWithNavigation.setMetaData({
+                    more: nav.get('nav_result')
+                });
+                this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction);
+            });
+        } else {
+            this.getController(root).updateQueryProperties(list, direction);
+        }
     }
 
-    getQueryParamsBackward(filter: QueryWhere, sorting: QueryOrderSelector, navigationConfig?) {
-
-    }
+    updateQueryPropertiesHierarchical
 
     private _getStore(id: TKey): TNavigationStore {
         let resStore: TNavigationStore;
@@ -233,21 +255,6 @@ export class NavigationController {
             limit: undefined,
             offset: undefined
         };
-    }
-    /**
-     * Вычисляет следующее состояние контроллера параметров запроса: следующую страницу, или позицию
-     * @param list {Types/collection:RecordSet} объект, содержащий метаданные текущего запроса
-     * @param direction {Direction} направление навигации ('up' или 'down')
-     */
-    /*
-     * Calculates next query params controller state: next page, or position
-     * @param list {Types/collection:RecordSet} object containing meta information for current request
-     * @param direction {Direction} nav direction ('up' or 'down')
-     */
-    updateQueryProperties(list?: RecordSet, direction?: Direction): void {
-        if (this._queryParamsController) {
-            this._queryParamsController.updateQueryProperties(list, direction);
-        }
     }
 
     /**
