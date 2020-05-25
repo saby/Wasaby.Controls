@@ -8,6 +8,7 @@
                multiSelect="{{_options.multiSelect}}"
                checkBoxAlign="right"
                showClose="{{true}}"
+               className="{{_options.className}}"
                defaultItemTemplate="{{_defaultItemTemplate}}"
                emptyTemplate="{{_emptyItemTemplate}}"
    />
