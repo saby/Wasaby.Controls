@@ -10,7 +10,7 @@ import viewName = require('Controls/_grid/GridView');
     * * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">демо-пример</a>
     * * <a href="/doc/platform/developmentapl/interface-development/controls/list/">руководство разработчика</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_grid.less">переменные тем оформления grid</a>
-    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_grid.less">переменные тем оформления list</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
     * 
     * @class Controls/_grid/Grid
     * @extends Controls/list:View
