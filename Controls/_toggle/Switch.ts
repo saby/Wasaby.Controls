@@ -10,8 +10,11 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
 }
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
- *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FSwitch%2FstandartDemoSwitch">Демо-пример</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FSwitch%2FstandartDemoSwitch">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
  *
  * @class Controls/_toggle/Switch
  * @extends Core/Control

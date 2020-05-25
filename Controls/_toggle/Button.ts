@@ -37,8 +37,12 @@ export interface IToggleButtonOptions extends
 
 /**
  * Кнопка, которая переключается между двумя состояниями: включено и выключено.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex">Демо-пример</a>.
  *
  * @class Controls/_toggle/Button
  * @extends Core/Control
