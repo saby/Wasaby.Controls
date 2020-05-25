@@ -1,4 +1,4 @@
-@Library('pipeline') _
+@Library('pipeline@cache/type_none') _
 
 def version = '20.3100'
 
