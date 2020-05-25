@@ -253,6 +253,10 @@ class Popup extends Control<IPopupControlOptions> {
         return this._options.id;
     }
 
+    getZIndex(): number {
+        return this._options.zIndex;
+    }
+
     private _isResized(oldOptions: IPopupOptions, newOptions: IPopupOptions): boolean {
         const {position: oldPosition, hidden: oldHidden}: IPopupOptions = oldOptions;
         const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
