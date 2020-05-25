@@ -10,7 +10,11 @@ function generateContainer(itemsHeights: number[]): { children: object[] } {
                         height: item
                     };
                 },
-                className: ''
+                classList: {
+                    contains() {
+                        return false;
+                    }
+                }
             };
         })
     };
