@@ -7,7 +7,6 @@ import { Remover } from 'Controls/list';
 import { IItemAction } from 'Controls/itemActions';
 import { Confirmation } from 'Controls/popup';
 import {INavigationOptionValue, INavigationPageSourceConfig} from 'Controls/_interface/INavigation';
-import 'css!Controls-demo/Controls-demo';
 
 interface IFilter {
     title?: string;

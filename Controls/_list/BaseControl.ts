@@ -53,6 +53,7 @@ import {
    ISelectionControllerResult,
    SelectionController
 } from 'Controls/multiselection';
+import {getStickyHeadersHeight} from 'Controls/scroll';
 import { MarkerController } from 'Controls/marker';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
@@ -1057,7 +1058,7 @@ const _private = {
         if (self._markerController) {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-            const verticalOffset = scrollTop - topOffset + (self._options.fixedHeadersHeights || 0);
+            const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
             self._markedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
             self._setMarkerAfterScroll = false;
         }
@@ -1953,6 +1954,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 } else {
                     delete viewModelConfig.items;
                 }
+                viewModelConfig.supportVirtualScroll = self._needScrollCalculation;
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
             } else if (newOptions.useNewModel && receivedData) {
                 self._listViewModel = self._createNewModel(
@@ -2174,6 +2176,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
+            if (this._listViewModel && this._listViewModel.setSupportVirtualScroll) {
+                this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
+            }
         }
         _private.updateNavigation(this);
 
@@ -2191,7 +2196,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
-                items
+                items,
+                supportVirtualScroll: !!this._needScrollCalculation
             }));
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;

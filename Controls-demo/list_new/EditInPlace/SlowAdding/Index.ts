@@ -1,7 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/EditInPlace/SlowAdding/SlowAdding';
 import {Memory} from 'Types/source';
-import 'css!Controls-demo/Controls-demo';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {editing} from 'Controls/Constants';
@@ -58,4 +57,5 @@ export default class extends Control {
     protected _addItem(): void {
         this._children.list.beginAdd();
     }
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

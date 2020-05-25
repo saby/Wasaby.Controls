@@ -22,12 +22,14 @@ define([
             {
                id: 2,
                title: 'Второй',
-               type: 2
+               type: 2,
+               style: 'master'
             },
             {
                id: 3,
                title: 'Третий',
-               type: 2
+               type: 2,
+               style: 'masterClassic'
             }
          ];
       });
@@ -580,7 +582,7 @@ define([
                   keyProperty: 'id'
                }),
                keyProperty: 'id',
-               markedKey: null
+               style: 'master',
             });
          });
 
@@ -592,13 +594,19 @@ define([
             assert.isUndefined(item.isDragging);
 
             lvm.setDragEntity(dragEntity);
+            lvm._markedKey = 2;
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
             assert.isTrue(item.isVisible);
+            assert.isTrue(item.isSticky);
             assert.isFalse(item.hasMultiSelect);
+
+            lvm._markedKey = 3;
             item = lvm.getItemDataByItem(lvm.getItemById('3', 'id'));
             assert.isUndefined(item.isDragging);
+            assert.isTrue(item.isSticky);
             assert.isFalse(item.isVisible);
+
             item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
             assert.isUndefined(item.isDragging);
             assert.isUndefined(item.isVisible);
@@ -633,7 +641,7 @@ define([
 
          it('getMultiSelectClassList onhover unselected', function() {
             lvm._options.multiSelectVisibility = 'onhover';
-            var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            var item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
          });
 

@@ -402,10 +402,13 @@ import {Model} from 'Types/entity';
          _selectorOpenCallback() {
             const value = getPropValue(this._items.at(this.lastOpenIndex), 'value');
             const selectedKeys = value instanceof Array ? value : [value];
-            return chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
+            let selectedItems = chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
                const itemId = item.getKey();
                return itemId !== null && selectedKeys.includes(itemId);
             }).value();
+            return new collection.List({
+                items: selectedItems
+            });
          },
 
          _beforeUpdate: function(newOptions) {
@@ -474,7 +477,9 @@ import {Model} from 'Types/entity';
             if (this._configs[index]._needQuery) {
                this._configs[index]._needQuery = false;
                _private.loadItemsFromSource(this._configs[index], getPropValue(this._items.at(index), 'properties')).addCallback(() => {
-                  open(config);
+                   _private.loadNewItems(this, this._items, this._configs).addCallback(() => {
+                       open(config);
+                   });
                });
             } else {
                open(config);
