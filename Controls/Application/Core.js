@@ -51,11 +51,11 @@ define('Controls/Application/Core',
             // и так и сяк
             if (!AppInit.isInit()) {
                var stateReceiverInst = new StateReceiver();
-               var environmentFactory = undefined;
+               var env = undefined;
                if (typeof window === 'undefined') {
-                  environmentFactory = PresentationService.default;
+                  env = new PresentationService.default();
                }
-               AppInit.default(cfg, environmentFactory, stateReceiverInst);
+               AppInit.default(cfg, env, stateReceiverInst);
 
                if (typeof window === 'undefined' || window.__hasRequest === undefined) {
                   // need create request for SSR
