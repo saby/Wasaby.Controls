@@ -34,7 +34,7 @@ interface IModuleComponentOptions extends
 
 const enum ITEM_BODY_SELECTOR {
     year = '.controls-MonthList__year-months',
-    month = '.controls-MonthList__month-body',
+    month = '.controls-MonthViewVDOM',
     day = '.controls-MonthViewVDOM__item'
 }
 
@@ -45,6 +45,10 @@ const enum VIEW_MODE {
 
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_calendar.less">переменные тем оформления</a>
  *
  * @class Controls/_calendar/MonthList
  * @extends Core/Control

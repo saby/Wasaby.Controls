@@ -4,7 +4,7 @@ import {factory, RecordSet} from 'Types/collection';
 import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {Opener as DropdownOpener} from 'Controls/dropdown';
+import {Sticky  as StickyOpener} from 'Controls/popup';
 import {Controller as SourceController} from 'Controls/source';
 import {IShowType, showType, getMenuItems} from 'Controls/Utils/Toolbar';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
@@ -17,6 +17,7 @@ import {
     IItemTemplate,
     IItemTemplateOptions
 } from 'Controls/interface';
+import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import {IButtonOptions} from 'Controls/buttons';
@@ -26,6 +27,7 @@ import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
 import {ButtonTemplate, cssStyleGeneration} from 'Controls/buttons';
+import {CrudWrapper} from "../dataSource";
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -106,15 +108,30 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
     /**
      * @name Controls/_toolbars/IToolbarOptions#popupFooterTemplate
      * @cfg {String|Function} Шаблон футера дополнительного меню тулбара.
-     * @demo Controls-demo/Toolbar/popupFooterTemplate/Index
+     * @demo Controls-demo/Toolbar/PopupFooterTemplate/Index
      */
     popupFooterTemplate?: String | Function;
 
+    /**
+     * @name  Controls/_toolbars/IToolbarOptions#itemActions
+     * @cfg {Array<ItemAction>} Конфигурация опций записи.
+     * @demo Controls-demo/Toolbar/ItemActions/Index
+     */
+    itemActions?: IItemAction[];
+    /**
+     * @name Controls/_toolbars/IToolbarOptions#itemActionVisibilityCallback
+     * @cfg {function} Функция управления видимостью операций над записью.
+     * @param {ItemAction} action Объект с настройкой действия.
+     * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
+     * @returns {Boolean} Определяет, должна ли операция отображаться.
+     * @demo Controls-demo/Toolbar/ItemActions/Index
+     */
+     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
 }
 
 /**
  * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FToolbar%2FToolbarVdom">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FToolbar%2FBase%2FIndex">Демо-пример</a>.
  *
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
@@ -126,7 +143,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  *
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/Toolbar/ToolbarVdom
+ * @demo Controls-demo/Toolbar/Base/Index
  */
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate, IGrouped, IToolbarSource {
     /*
@@ -148,7 +165,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     _children: {
         menuTarget: HTMLElement,
-        menuOpener: DropdownOpener
+        menuOpener: StickyOpener
     };
 
     readonly '[Controls/_interface/IHierarchy]': boolean = true;
@@ -175,6 +192,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 nodeProperty: options.nodeProperty,
                 parentProperty: options.parentProperty,
                 groupTemplate: options.groupTemplate,
+                itemActions: options.itemActions,
+                itemActionVisibilityCallback: options.itemActionVisibilityCallback,
                 groupProperty: options.groupProperty,
                 groupingKeyCallback: options.groupingKeyCallback,
                 additionalProperty: options.additionalProperty,
@@ -437,11 +456,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private static _loadItems(source: ICrudPlus): Promise<TItems> {
-        const sourceController = new SourceController({
-            source
-        });
+        const crudWrapper = new CrudWrapper({source});
 
-        return sourceController.load();
+        return crudWrapper.query({});
     }
 
     private static _calcMenuItems(items: TItems): TItems {

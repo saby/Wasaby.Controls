@@ -4,7 +4,6 @@ define('Controls-demo/StickyHeader/StickyHeaderDisplaced',
       'Controls/scroll',
       'wml!Controls-demo/StickyHeader/StickyHeaderDisplaced',
 
-      'css!Controls-demo/StickyHeader/StickyHeader'
    ],
    function(Control, scrollLib, template) {
 
@@ -23,6 +22,8 @@ define('Controls-demo/StickyHeader/StickyHeaderDisplaced',
              this._headersHeight = scrollLib.getStickyHeadersHeight(this._children.containerForHeadersHeight, 'top', 'allFixed');
          }
       });
+
+      StickyHeader._styles = ['Controls-demo/StickyHeader/StickyHeader'];
 
       return StickyHeader;
    }

@@ -114,13 +114,6 @@ var ListView = BaseControl.extend(
                 this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
-            // todo Костыль, т.к. построение ListView зависит от SelectionController.
-            // Будет удалено при выполнении одного из пунктов:
-            // 1. Все перешли на платформенный хелпер при формировании рекордсета на этапе первой загрузки и удален асинхронный код из SelectionController.beforeMount.
-            // 2. Полностью переведен BaseControl на новую модель и SelectionController превращен в умный, упорядоченный менеджер, умеющий работать асинхронно.
-            if (newOptions.multiSelectReady) {
-               return newOptions.multiSelectReady;
-            }
         },
 
         _beforeUnmount: function() {
@@ -143,9 +136,6 @@ var ListView = BaseControl.extend(
             }
             if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
                 this._listModel.setItemPadding(newOptions.itemPadding);
-            }
-            if (newOptions.markedKey) {
-                this._listModel.setMarkedKey(newOptions.markedKey);
             }
 
             // TODO https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
@@ -244,7 +234,7 @@ var ListView = BaseControl.extend(
         },
 
         _onItemMouseDown: function(event, itemData) {
-            if (itemData && itemData.isSwiped) {
+            if (itemData && itemData.isSwiped()) {
                // TODO: Сейчас на itemMouseDown список переводит фокус на fakeFocusElement и срабатывает событие listDeactivated.
                // Из-за этого события закрывается свайп, это неправильно, т.к. из-за этого становится невозможным открытие меню.
                // Выпилить после решения задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629

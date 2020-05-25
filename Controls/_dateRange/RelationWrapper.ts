@@ -4,6 +4,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
 /**
  * Обертка для контрола выбора периодов, с помощью которой периоды могут быть связаны.
  * Используется в сочетании с {@link Controls/_dateRange/RelationController RelationController}.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a> 
  *
  * @class Controls/_dateRange/RelationWrapper
  * @extends Core/Control
@@ -42,10 +46,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *             bind:startValue1="_startValue1"
  *             bind:endValue1="_endValue1">
  *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *    </Controls.dateRange:RelationController>
  * </pre>
@@ -70,10 +74,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *             bind:startValue1="_startValue1"
  *             bind:endValue1="_endValue1">
  *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *    </Controls.dateRange:RelationController>
  * </pre>
@@ -112,10 +116,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *             bind:startValue1="_startValue1"
  *             bind:endValue1="_endValue1">
  *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}" relationMode="byCapacity">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *    </Controls.dateRange:RelationController>
  * </pre>
@@ -142,10 +146,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *             bind:startValue1="_startValue1"
  *             bind:endValue1="_endValue1">
  *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}" relationMode="byCapacity">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *    </Controls.dateRange:RelationController>
  * </pre>

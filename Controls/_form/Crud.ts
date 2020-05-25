@@ -17,7 +17,7 @@ let CRUD = Control.extend({
         }
     },
     _beforeUpdate(newOptions): void {
-        if (this._options.dataSource !== newOptions.dataSource && newOptions.updateDataSource) {
+        if (this._options.dataSource !== newOptions.dataSource) {
             this._dataSource = newOptions.dataSource;
         }
     },
@@ -70,11 +70,10 @@ let CRUD = Control.extend({
                 }
             ];
             this._notify('registerPending', argsPending, {bubbling: true});
-            resultUpdate.then((key) => {
+            resultUpdate.addCallback((key) => {
                     this._notify('updateSuccessed', [record, key, config]);
                     return key;
-                })
-                .catch((error) => {
+                }).addErrback((error) => {
                     this._notify('updateFailed', [error, record]);
                     return error;
                 });

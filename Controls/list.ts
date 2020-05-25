@@ -67,6 +67,7 @@ import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import {default as View} from 'Controls/_list/List';
 import BaseAction from 'Controls/_list/BaseAction';
 import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTemplate');
+import ContinueSearchTemplate = require('wml!Controls/_list/resources/ContinueSearchTemplate');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
 import DataContainer = require('Controls/_list/Data');
@@ -81,13 +82,10 @@ import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/
 import NumberEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/NumberChooser');
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 import BaseViewModel = require('Controls/_list/BaseViewModel');
-import ItemActionsControl = require('Controls/_list/ItemActions/ItemActionsControl');
 import ListViewModel = require('Controls/_list/ListViewModel');
 import {default as ListControl} from 'Controls/_list/ListControl';
 import ListView = require('Controls/_list/ListView');
 import SwipeTemplate = require('wml!Controls/_list/Swipe/resources/SwipeTemplate');
-import SwipeHorizontalMeasurer = require('Controls/_list/Swipe/HorizontalMeasurer');
-import SwipeVerticalMeasurer = require('Controls/_list/Swipe/VerticalMeasurer');
 import GroupContentResultsTemplate = require('wml!Controls/_list/GroupContentResultsTemplate');
 import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
 import ItemOutput = require('wml!Controls/_list/resources/ItemOutput');
@@ -98,12 +96,10 @@ import ScrollEmitter = require('Controls/_list/BaseControl/Scroll/Emitter');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
 import ItemsView = require('Controls/_list/ItemsView');
 import ItemsViewModel = require('Controls/_list/ItemsViewModel');
-import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {IList} from './_list/interface/IList';
-import {IItemAction} from './_list/interface/IList';
 
 export {
     AddButton,
@@ -127,13 +123,10 @@ export {
     NumberEditingTemplate,
     ItemActionsHelpers,
     BaseViewModel,
-    ItemActionsControl,
     ListViewModel,
     ListControl,
     ListView,
     SwipeTemplate,
-    SwipeHorizontalMeasurer,
-    SwipeVerticalMeasurer,
     GroupContentResultsTemplate,
     ItemOutputWrapper,
     ItemOutput,
@@ -142,13 +135,12 @@ export {
     BaseControl,
     ScrollEmitter,
     SearchItemsUtil,
-    getStyle,
     ItemsView,
     ItemsViewModel,
     LoadingIndicatorTemplate,
+    ContinueSearchTemplate,
     HotKeysContainer,
     InertialScrolling,
     IVirtualScrollConfig,
-    IList,
-    IItemAction
+    IList
 };
