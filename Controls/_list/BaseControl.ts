@@ -1221,17 +1221,17 @@ var _private = {
         if (changesType === 'collectionChanged' || newModelChanged) {
             //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {
-                self._sourceController.setState(self._listViewModel);
+                const stateChanged = self._sourceController.setState(self._listViewModel);
+
+                if (stateChanged) {
+                    _private.prepareFooter(self, self._options.navigation, self._sourceController);
+                }
             }
             if (action === IObservable.ACTION_REMOVE && self._menuIsShown) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
                     self._closeActionsMenu();
                     self._children.itemActionsOpener.close();
                 }
-            }
-
-            if (action === IObservable.ACTION_RESET) {
-                _private.prepareFooter(self, self._options.navigation, self._sourceController);
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
