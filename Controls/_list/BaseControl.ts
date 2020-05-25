@@ -818,13 +818,13 @@ var _private = {
 
     calcTriggerVisibility(self, scrollParams, triggerOffset, direction: 'up' | 'down'): boolean {
         if (direction === 'up') {
-            return scrollParams.scrollTop < triggerOffset * 1.3;
+            return scrollParams.scrollTop <= triggerOffset * 1.3;
         } else {
             let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
             if (self._pagingVisible) {
                 bottomScroll -= 32;
             }
-            return bottomScroll < triggerOffset * 1.3;
+            return bottomScroll <= triggerOffset * 1.3;
         }
     },
 
