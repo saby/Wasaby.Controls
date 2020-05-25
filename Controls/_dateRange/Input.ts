@@ -93,7 +93,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
             ...getOptions.getCommonOptions(this),
             target: this._container,
             template: 'Controls/datePopup',
-            className: 'controls-PeriodDialog__picker',
+            className: 'controls-PeriodDialog__picker_theme-' + this._options.theme,
             templateOptions: {
                 ...getOptions.getDateRangeTemplateOptions(this),
                 selectionType: this._options.selectionType,

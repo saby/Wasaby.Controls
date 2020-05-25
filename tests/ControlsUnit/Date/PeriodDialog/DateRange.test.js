@@ -152,7 +152,7 @@ define([
             const component = calendarTestUtils.createComponent(DateRange, { year: year });
             assert.strictEqual(
                component._getSeparatorCssClass(),
-               'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-sticky-support'
+               'controls-PeriodDialog-DateRangeItem__separator-sticky-support'
             );
          });
          it('sticky not supported.', function() {
@@ -160,7 +160,7 @@ define([
             component._isStickySupport = false;
             assert.strictEqual(
                component._getSeparatorCssClass(),
-               'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-not-sticky-support'
+               'controls-PeriodDialog-DateRangeItem__separator-not-sticky-support'
             );
          });
       });
