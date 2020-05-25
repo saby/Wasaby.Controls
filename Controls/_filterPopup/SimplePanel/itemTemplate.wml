@@ -8,6 +8,5 @@
       scope="{{_options}}"
       isLast="{{isLast}}"
       showSeparator="{{showSeparator}}"
-      className="controls-SimplePanel-List__item"
    />
 </ws:else>
