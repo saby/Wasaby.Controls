@@ -40,7 +40,7 @@
          </ws:if>
 
          <ws:else>
-            <ws:partial template="wml!Controls/_menu/Render/contentTemplate" scope="{{_options}}" item="{{treeItem.getContents()}}" class="{{className}}" />
+            <ws:partial template="wml!Controls/_menu/Render/contentTemplate" scope="{{_options}}" item="{{treeItem.getContents()}}" />
          </ws:else>
 
       </div>

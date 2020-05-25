@@ -8,7 +8,6 @@
                multiSelect="{{_options.multiSelect}}"
                checkBoxAlign="right"
                showClose="{{true}}"
-               className="controls-SimplePanel-List__item"
                defaultItemTemplate="{{_defaultItemTemplate}}"
                emptyTemplate="{{_emptyItemTemplate}}"
    />

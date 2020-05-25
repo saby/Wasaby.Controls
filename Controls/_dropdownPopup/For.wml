@@ -35,7 +35,6 @@
          parentProperty="{{parentProperty}}"
          nodeProperty="{{nodeProperty}}"
          iconPadding="{{iconPadding}}"
-         className="{{className}}"
          class="controls-DropdownList__defaultItem {{!listModel.isLast() && !listModel.isGroupNext() ? 'controls-DropdownList__row-separator'}} theme_{{_options.theme}}"/>
    </ws:else>
 </ws:for>
