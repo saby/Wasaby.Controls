@@ -2113,7 +2113,43 @@ define([
          assert.isTrue(baseControl._isScrollShown);
 
       });
-
+      describe('calcTriggerVisibility', () => {
+         let calcTriggerVisibility = lists.BaseControl._private.calcTriggerVisibility;
+         let scrollParams = {
+            scrollTop: 0,
+            clientHeight: 300,
+            scrollHeight: 300
+         };
+         it('up', () => {
+            let scrollParams = {
+               scrollTop: 0,
+               clientHeight: 300,
+               scrollHeight: 600
+            };
+            assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger should be visible');
+            scrollParams = {
+               scrollTop: 200,
+               clientHeight: 300,
+               scrollHeight: 600
+            };
+            assert.isFalse(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger shouldn\'t be visible');
+         });
+         
+         it('down', () => {
+            let scrollParams = {
+               scrollTop: 300,
+               clientHeight: 300,
+               scrollHeight: 600
+            };
+            assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'down'), 'down trigger should be visible');
+            scrollParams = {
+               scrollTop: 0,
+               clientHeight: 300,
+               scrollHeight: 600
+            };
+            assert.isFalse(calcTriggerVisibility({}, scrollParams, 100, 'down'), 'down trigger shouldn\'t be visible');
+         });
+      });
       it('needShowPagingByScrollSize', function() {
          var cfg = {
             navigation: {
