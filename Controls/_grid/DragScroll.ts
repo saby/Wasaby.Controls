@@ -93,10 +93,6 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @private
      */
     private _manageDragScrollMove(newMousePosition: TPoint): void {
-        if (!this._isMouseDown) {
-            return;
-        }
-
         // Расстояние, на которое был перемещен указатель мыши с момента нажатия клавиши ПКМ.
         const mouseMoveDistance: TPoint = {
             x: newMousePosition.x - this._startMousePosition.x,
@@ -135,7 +131,7 @@ export class DragScroll extends Control<IDragScrollOptions> {
         // Не надо стрелять событием, если позиция скролла не поменялась.
         if (this._currentScrollPosition !== newScrollPosition) {
             this._currentScrollPosition = newScrollPosition;
-            this._notify('dragScrolling', [newScrollPosition]);
+            this._notify('dragScrolling', [newScrollPosition], { bubbling: false });
         }
     }
 
@@ -281,14 +277,14 @@ export class DragScroll extends Control<IDragScrollOptions> {
         }
     }
 
-    //#region Event handlers
+    //#region View event handlers
 
     /**
      * Обработчик события mousedown над таблицей.
      * @param {SyntheticEvent} e Дескриптор события mousedown.
      * @protected
      */
-    protected _onViewMouseDown(e: SyntheticEvent<MouseEvent>): void {
+    protected onViewMouseDown(e: SyntheticEvent<MouseEvent>): void {
         // Только по ПКМ. Если началось скроллирование перетаскиванием, нужно убрать предыдущее выделение и
         // запретить выделение в процессе скроллирования.
         if (validateEvent(e) && this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement)) {
@@ -302,7 +298,7 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @param {SyntheticEvent} e Дескриптор события touchstart.
      * @protected
      */
-    protected _onViewTouchStart(e: SyntheticEvent<TouchEvent>): void {
+    protected onViewTouchStart(e: SyntheticEvent<TouchEvent>): void {
         // Обрабатываем только один тач. Если началось скроллирование перетаскиванием, нужно убрать предыдущее
         // выделение и запретить выделение в процессе скроллирования.
         if (validateEvent(e) && this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement)) {
@@ -318,8 +314,10 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @param {SyntheticEvent} e Дескриптор события mousemove.
      * @protected
      */
-    protected _onViewMouseMove(e: SyntheticEvent<MouseEvent>): void {
-        this._manageDragScrollMove(getCursorPosition(e));
+    protected onViewMouseMove(e: SyntheticEvent<MouseEvent>): void {
+        if (this._isMouseDown) {
+            this._manageDragScrollMove(getCursorPosition(e));
+        }
     }
 
     /**
@@ -327,9 +325,53 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @param {SyntheticEvent} e Дескриптор события touchmove.
      * @protected
      */
-    protected _onViewTouchMove(e: SyntheticEvent<TouchEvent>): void {
-        this._manageDragScrollMove(getCursorPosition(e));
+    protected onViewTouchMove(e: SyntheticEvent<TouchEvent>): void {
+        if (this._isMouseDown) {
+            this._manageDragScrollMove(getCursorPosition(e));
+        }
     }
+
+    /**
+     * Обработчик события mouseup над таблицей.
+     * Происходит, если не был начат полноценный скролл колонок, а следовательно не был показан overlay.
+     * Полноценный скролл колонок начинается, если в течении определенного времени указатель мыши был отведен на
+     * достаточно большую дистанцию.
+     * @see IDragScrollOptions.dragNDropDelay
+     * @see START_ITEMS_DRAG_N_DROP_DELAY
+     * @see DISTANCE_TO_START_DRAG_N_DROP
+     * @param {SyntheticEvent} e Дескриптор события mouseup.
+     * @protected
+     */
+    protected onViewMouseUp(e: SyntheticEvent<MouseEvent>): void {
+        // Чтобы лишний раз не срабатывало, но не понятно, может ли чломаться что то. Если да, то ошибка скорее
+        // всего не в этом, а в том почему мы вообще попали в onViewMouseUp(не был показан оверлэй)
+        if (this._isMouseDown) {
+            this._manageDragScrollStop();
+        }
+    }
+
+    /**
+     * Обработчик события touchend над таблицей.
+     * Происходит, если не был начат полноценный скролл колонок, а следовательно не был показан overlay.
+     * Полноценный скролл колонок начинается, если в течении определенного времени был выполнен touch на достаточно
+     * большую дистанцию.
+     * @see IDragScrollOptions.dragNDropDelay
+     * @see START_ITEMS_DRAG_N_DROP_DELAY
+     * @see DISTANCE_TO_START_DRAG_N_DROP
+     * @param {SyntheticEvent} e Дескриптор события touchend.
+     * @protected
+     */
+    protected onViewTouchEnd(e: SyntheticEvent<TouchEvent>): void {
+        // Чтобы лишний раз не срабатывало, но не понятно, может ли чломаться что то. Если да, то ошибка скорее
+        // всего не в этом, а в том почему мы вообще попали в onViewMouseUp(не был показан оверлэй)
+        if (this._isMouseDown) {
+            this._manageDragScrollStop();
+        }
+    }
+
+    //#endregion
+
+    //#region Overlay event handlers
 
     /**
      * Обработчик события mousemove над overlay.
@@ -338,7 +380,9 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @protected
      */
     protected _onOverlayMouseMove(e: SyntheticEvent<MouseEvent>): void {
-        this._manageDragScrollMove(getCursorPosition(e));
+        if (this._isMouseDown) {
+            this._manageDragScrollMove(getCursorPosition(e));
+        }
     }
 
     /**
@@ -348,7 +392,9 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @protected
      */
     protected _onOverlayTouchMove(e: SyntheticEvent<TouchEvent>): void {
-        this._manageDragScrollMove(getCursorPosition(e));
+        if (this._isMouseDown) {
+            this._manageDragScrollMove(getCursorPosition(e));
+        }
     }
 
     /**
@@ -368,36 +414,6 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @protected
      */
     protected _onOverlayTouchEnd(e: SyntheticEvent<TouchEvent>): void {
-        this._manageDragScrollStop();
-    }
-
-    /**
-     * Обработчик события mouseup над таблицей.
-     * Происходит, если не был начат полноценный скролл колонок, а следовательно не был показан overlay.
-     * Полноценный скролл колонок начинается, если в течении определенного времени указатель мыши был отведен на
-     * достаточно большую дистанцию.
-     * @see IDragScrollOptions.dragNDropDelay
-     * @see START_ITEMS_DRAG_N_DROP_DELAY
-     * @see DISTANCE_TO_START_DRAG_N_DROP
-     * @param {SyntheticEvent} e Дескриптор события mouseup.
-     * @protected
-     */
-    protected _onViewMouseUp(e: SyntheticEvent<MouseEvent>): void {
-        this._manageDragScrollStop();
-    }
-
-    /**
-     * Обработчик события touchend над таблицей.
-     * Происходит, если не был начат полноценный скролл колонок, а следовательно не был показан overlay.
-     * Полноценный скролл колонок начинается, если в течении определенного времени был выполнен touch на достаточно
-     * большую дистанцию.
-     * @see IDragScrollOptions.dragNDropDelay
-     * @see START_ITEMS_DRAG_N_DROP_DELAY
-     * @see DISTANCE_TO_START_DRAG_N_DROP
-     * @param {SyntheticEvent} e Дескриптор события touchend.
-     * @protected
-     */
-    protected _onViewTouchEnd(e: SyntheticEvent<TouchEvent>): void {
         this._manageDragScrollStop();
     }
 
