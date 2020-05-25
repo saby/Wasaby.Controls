@@ -1229,7 +1229,10 @@ var _private = {
                     self._children.itemActionsOpener.close();
                 }
             }
-            _private.prepareFooter(self, self._options.navigation, self._sourceController);
+
+            if (action === IObservable.ACTION_RESET) {
+                _private.prepareFooter(self, self._options.navigation, self._sourceController);
+            }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
         // for example if Controls.explorer:View is switched from list to tile mode. The controller
