@@ -286,6 +286,11 @@ const _private = {
                         _private.updateMarkerController(self, self._options);
                     }
 
+                    if (self._options.itemActionVisibility === 'visible') {
+                        self._showActions = true;
+                        self._updateItemActions(self._options);
+                    }
+
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                     }
@@ -1978,11 +1983,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 self._markerController = _private.createMarkerController(self, newOptions);
             }
 
-            if (newOptions.itemActionVisibility === 'visible') {
-                self._showActions = true;
-                self._updateItemActions(newOptions);
-            }
-
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
@@ -2640,6 +2640,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility
         });
+        const item = this._listViewModel.at(0);
+        if (item.getActions().length) {
+            console.log(item.getActions());
+        }
+        console.log('пытаемся показать');
         if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
                 this._listViewModel.resetCachedItemData(recordKey);
