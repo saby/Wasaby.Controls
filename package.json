@@ -22,9 +22,7 @@
       "test": "wasaby-cli --tasks=startTest --node --report=console",
       "test:coverage": "wasaby-cli --tasks=startTest --node --coverage",
       "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish .",
-      "lintless": "stylelint \"Controls/**/*.less\"",
-      "update-cli-store": "wasaby-cli --tasks=initStore",
-      "prepare": "npm run update-cli-store && npm run build:typescript"
+      "lintless": "stylelint \"Controls/**/*.less\""
    },
    "wasaby-cli": {
       "port": 777
