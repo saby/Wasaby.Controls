@@ -41,7 +41,7 @@ const _private = {
             return panelWidth;
         }
         // If the minimum width does not fit into the screen - positioned on the right edge of the window
-        if (minWidth > maxPanelWidthWithOffset && !isCompoundTemplate) {
+        if (minWidth > maxPanelWidthWithOffset) {
             if (_private.isMaximizedPanel(item)) {
                 minWidth = item.popupOptions.minimizedWidth;
             }
@@ -62,11 +62,6 @@ const _private = {
         if (parentPosition?.right === 0) {
             tCoords.right = 0;
         }
-        // Если панель не уместилась по ширине, то позиционирование панели осуществляется от правого края экрана
-        if ((panelWidth + tCoords.right) > maxPanelWidth) {
-            tCoords.right = 0;
-        }
-
         return panelWidth;
     },
 
