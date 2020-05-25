@@ -112,6 +112,11 @@ class PageQueryParamsController implements IQueryParamsController {
      */
     setState(model: Collection<Record>): void {
         // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+        const items = model.getItems();
+
+        this._more = new More({
+            moreMeta: items.getMetaData().total
+        });
     }
 
     /**
