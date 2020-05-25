@@ -10,7 +10,7 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._items = new RecordSet({
             rawData: generateSimpleData({
-                count: 10,
+                count: 3,
                 keyProperty: 'key',
                 displayProperty: 'caption'
             }),

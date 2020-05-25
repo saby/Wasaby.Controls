@@ -1,11 +1,17 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/listRender/itemTemplate/displayProperty/displayProperty';
+import * as Template from 'wml!Controls-demo/listRender/itemPadding/m/m';
 import {generateSimpleData} from '../../data';
 import { RecordSet } from 'Types/collection';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _items: RecordSet;
+    protected _itemPadding: {} = {
+        left: 'm',
+        right: 'm',
+        top: 'm',
+        bottom: 'm'
+    };
 
     protected _beforeMount(): void {
         this._items = new RecordSet({
