@@ -9,7 +9,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/directory/lookup/'>здесь</a>
  * Здесь вы можете увидеть <a href="/materials/Controls-demo/app/Engine-demo%2FSelectorButton">демонстрационный пример</a>.
  * @name Controls/_lookup/Button#showSelectorCaption
- * @cfg {string} Заголовок кнопки для выбора записей из справочника
+ * @cfg {String} Заголовок кнопки для выбора записей из справочника
  *
  * @class Controls/_lookup/Button
  * @extends Core/Control
