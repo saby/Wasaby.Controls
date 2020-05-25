@@ -258,7 +258,7 @@
             </div>
         </ws:if>
 
-        <ws:if data="{{_pagingVisible}}">
+        <ws:if data="{{_pagingVisible && !_options.task1179362156}}">
             <div class="controls-BaseControl_paging-Padding_theme-{{_options.theme}}">
             </div>
             <div class="controls-BaseControl__pagingContainer">
