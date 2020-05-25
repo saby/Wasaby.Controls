@@ -309,8 +309,7 @@ type GetSourceResult = {
             });
 
             _private.resolvePrefetchSourceResult(this, {
-               source: source,
-               data: items
+               source
             });
 
             _private.updateDataOptions(this, this._dataOptionsContext);
