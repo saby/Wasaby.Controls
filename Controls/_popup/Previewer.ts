@@ -6,7 +6,6 @@ import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import PreviewerOpener from './Opener/Previewer';
 import {goUpByControlTree} from 'UI/Focus';
-import 'css!theme?Controls/popup';
 
 /**
  * @class Controls/_popup/Previewer
@@ -174,7 +173,7 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
         }
     }
 
-    protected _previewerClickHandler(event: SyntheticEvent<MouseEvent>): void {
+    protected _contentMouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
         if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
             /**
              * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
@@ -182,6 +181,14 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
             if (!this._isPopupOpened()) {
                 this._debouncedAction('_open', [event]);
             }
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
+    protected _contentClickHandler(event: SyntheticEvent<MouseEvent>): void {
+        // Stopping mousedown event doesn't stop click event
+        if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -226,6 +233,8 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
         this._isOpened = false;
         this._notify('close', []);
     }
+
+    static _theme: string[] = ['Controls/popup'];
 
     static getDefaultOptions(): IPreviewerOptions {
         return {

@@ -487,7 +487,7 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
+                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden controls-StickyHeaderController">' +
                   '<div class="controls-Scroll__userContent">test</div>' +
                   '</span>' +
                   '<div></div>' +
@@ -497,7 +497,7 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar" style="margin-right: -15px;">' +
+                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-StickyHeaderController" style="margin-right: -15px;">' +
                   '<div class="controls-Scroll__userContent">test</div>' +
                   '</span>' +
                   '<div></div>' +

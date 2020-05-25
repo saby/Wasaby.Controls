@@ -635,8 +635,9 @@ var
         _isSupportLadder(ladderProperties: []): boolean {
             return isSupportLadder(ladderProperties);
         },
+
         setTheme(theme: string): void {
-            this._options.theme = theme;
+            this._model.setTheme(theme);
         },
 
         _updateLastItemKey(): void {
@@ -1217,7 +1218,9 @@ var
         getItemById: function(id, keyProperty) {
             return this._model.getItemById(id, keyProperty);
         },
-
+        setSupportVirtualScroll: function(value) {
+            this._model.setSupportVirtualScroll(value);
+        },
         setMarkedKey: function(key, byOptions) {
             this._model.setMarkedKey(key, byOptions);
         },
@@ -1249,8 +1252,8 @@ var
         getNextItemKey: function() {
             return this._model.getNextItemKey.apply(this._model, arguments);
         },
-        setMarkerOnValidItem: function(index) {
-            this._model.setMarkerOnValidItem(index);
+        getValidItemForMarker: function(index) {
+            return this._model.getValidItemForMarker(index);
         },
         setIndexes: function(startIndex, stopIndex) {
             return this._model.setIndexes(startIndex, stopIndex);
@@ -1396,7 +1399,9 @@ var
             };
             const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
-            controls-GridView__itemV_marker-${style}_theme-${self._options.theme}`;
+            controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${self._options.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${self._options.theme}`;
 
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
@@ -1469,6 +1474,7 @@ var
                 const currentColumn: any = {
                         item: current.item,
                         style: current.style,
+                        backgroundStyle: current.backgroundStyle,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,
@@ -1536,6 +1542,19 @@ var
 
         getNext: function() {
             return this._model.getNext();
+        },
+
+        getNextByKey: function() {
+            return this._model.getNextByKey.apply(this._model, arguments);
+        },
+        getPrevByKey: function() {
+            return this._model.getPrevByKey.apply(this._model, arguments);
+        },
+        getNextByIndex: function() {
+            return this._model.getNextByIndex.apply(this._model, arguments);
+        },
+        getPrevByIndex: function() {
+            return this._model.getPrevByIndex.apply(this._model, arguments);
         },
 
         isLast: function() {

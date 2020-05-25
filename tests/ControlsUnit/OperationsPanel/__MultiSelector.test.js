@@ -252,22 +252,23 @@ define([
             selected: ['test'],
             excluded: []
          };
-         instance._options.selectedCountConfig = {
-            rpc: {
-               call: () => {
-                  return Promise.resolve({
-                     getRow: () => {
-                        return {
-                           get: () => 'TEST_DATA_COUNT'
-                        };
-                     }
-                  });
-               },
-               getAdapter: () => {
-                  return new entity.adapter.Json();
-               }
-            }
+         let selectionCountConfig = {
+             rpc: {
+                 call: () => {
+                     return Promise.resolve({
+                         getRow: () => {
+                             return {
+                                 get: () => 'TEST_DATA_COUNT'
+                             };
+                         }
+                     });
+                 },
+                 getAdapter: () => {
+                     return new entity.adapter.Json();
+                 }
+             }
          };
+         instance._options.selectedCountConfig = selectionCountConfig;
          instance._children = {
             countIndicator: {
                show: function () {},
@@ -275,7 +276,7 @@ define([
             }
          };
          instance._menuCaption = 'Отмечено: 3';
-         instance._getCount(selection, null);
+         instance._getCount(selection, null, selectionCountConfig);
          assert.equal(instance._menuCaption, 'Отмечено: 3');
       });
    });

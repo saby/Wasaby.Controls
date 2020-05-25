@@ -22,8 +22,11 @@ type GetSourceResult = {
 
       /**
        * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
+       * 
        * @remark
-       * См. <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>.
+       * Полезные ссылки:
+       * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
@@ -250,6 +253,7 @@ type GetSourceResult = {
             if (this._options.source !== newOptions.source) {
                this._loading = true;
                return _private.createPrefetchSource(this, null, null, _private.getGroupHistoryId(newOptions)).addCallback((result) => {
+                  this._items = null;
                   _private.resolvePrefetchSourceResult(this, result);
                   _private.updateDataOptions(this, this._dataOptionsContext);
                   this._dataOptionsContext.updateConsumers();

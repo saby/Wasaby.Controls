@@ -17,6 +17,7 @@ import {
     IItemTemplate,
     IItemTemplateOptions
 } from 'Controls/interface';
+import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import {IButtonOptions} from 'Controls/buttons';
@@ -107,15 +108,30 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
     /**
      * @name Controls/_toolbars/IToolbarOptions#popupFooterTemplate
      * @cfg {String|Function} Шаблон футера дополнительного меню тулбара.
-     * @demo Controls-demo/Toolbar/popupFooterTemplate/Index
+     * @demo Controls-demo/Toolbar/PopupFooterTemplate/Index
      */
     popupFooterTemplate?: String | Function;
 
+    /**
+     * @name  Controls/_toolbars/IToolbarOptions#itemActions
+     * @cfg {Array<ItemAction>} Конфигурация опций записи.
+     * @demo Controls-demo/Toolbar/ItemActions/Index
+     */
+    itemActions?: IItemAction[];
+    /**
+     * @name Controls/_toolbars/IToolbarOptions#itemActionVisibilityCallback
+     * @cfg {function} Функция управления видимостью операций над записью.
+     * @param {ItemAction} action Объект с настройкой действия.
+     * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
+     * @returns {Boolean} Определяет, должна ли операция отображаться.
+     * @demo Controls-demo/Toolbar/ItemActions/Index
+     */
+     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
 }
 
 /**
  * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FToolbar%2FToolbarVdom">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FToolbar%2FBase%2FIndex">Демо-пример</a>.
  *
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
@@ -127,7 +143,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  *
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/Toolbar/ToolbarVdom
+ * @demo Controls-demo/Toolbar/Base/Index
  */
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate, IGrouped, IToolbarSource {
     /*
@@ -176,6 +192,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 nodeProperty: options.nodeProperty,
                 parentProperty: options.parentProperty,
                 groupTemplate: options.groupTemplate,
+                itemActions: options.itemActions,
+                itemActionVisibilityCallback: options.itemActionVisibilityCallback,
                 groupProperty: options.groupProperty,
                 groupingKeyCallback: options.groupingKeyCallback,
                 additionalProperty: options.additionalProperty,

@@ -263,7 +263,7 @@ export default class VirtualScroll {
         let startChildrenIndex = 0;
 
         for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
-            if (itemsContainer.children[i].className.indexOf('controls-ListView__hiddenContainer') === -1) {
+            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer')) {
                 startChildrenIndex = i;
                 break;
             }
@@ -388,7 +388,7 @@ export default class VirtualScroll {
         let startChildrenIndex = 0;
 
         for (let i = startChildrenIndex, len = container.children.length; i < len; i++) {
-            if (container.children[i].className.indexOf('controls-ListView__hiddenContainer') === -1) {
+            if (!container.children[i].classList.contains('controls-ListView__hiddenContainer')) {
                 startChildrenIndex = i;
                 break;
             }

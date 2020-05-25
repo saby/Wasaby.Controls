@@ -1,4 +1,5 @@
 import merge = require('Core/core-merge');
+import {Stack as StackOpener} from 'Controls/popup';
 
 interface PopupOptions {
     opener: any;
@@ -15,13 +16,20 @@ interface PopupOptions {
  */
 export default function(self, popupOptions, multiSelect) {
     let
-        selectorOpener = self._children.selectorOpener,
         selectorTemplate = self._options.selectorTemplate,
         defaultPopupOptions: PopupOptions = merge({
             opener: self,
+            template: self._options.selectorTemplate.templateName,
             closeOnOutsideClick: true,
-            isCompoundTemplate: self._options.isCompoundTemplate
-        }, selectorTemplate && selectorTemplate.popupOptions || {});
+            isCompoundTemplate: self._options.isCompoundTemplate,
+            eventHandlers: {
+                onResult: (result) => {
+                    self._selectCallback(null, result);
+                },
+                onClose: self._closeHandler.bind(self)
+            }
+        }, selectorTemplate && selectorTemplate.popupOptions || {}),
+        popupId;
 
     if (popupOptions && popupOptions.template || selectorTemplate) {
         defaultPopupOptions.templateOptions = merge({
@@ -29,7 +37,7 @@ export default function(self, popupOptions, multiSelect) {
             multiSelect: multiSelect,
             handlers: {
                 onSelectComplete: function (event, result) {
-                    selectorOpener.close();
+                    StackOpener.closePopup(popupId);
                     if (self._options.isCompoundTemplate) {
                         self._selectCallback(null, result);
                     }
@@ -37,6 +45,8 @@ export default function(self, popupOptions, multiSelect) {
             }
         }, selectorTemplate.templateOptions || {});
 
-        return selectorOpener.open(merge(defaultPopupOptions, popupOptions || {}));
+        return StackOpener.openPopup(merge(defaultPopupOptions, popupOptions || {})).then((id) => {
+            popupId = id;
+        });
     }
 }

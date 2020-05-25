@@ -7,7 +7,11 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
 
 /**
  * Контрол-кнопка, использующийся для показа и скрытия панели действий {@link Controls/operations:Panel}.
- * Подробное описание и инструкцию по найстройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/operations/'>здесь</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/operations/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less">переменные тем оформления</a>
  *
  * @class Controls/_operations/Button
  * @extends Core/Control
@@ -57,7 +61,7 @@ class OperationsButton extends Control<IOperationsButtonOptions> implements IExp
    }
    protected _onClick(): void {
       if (!this._options.readOnly) {
-         this._notify('expandedChanged', [!this._expanded]);
+         this._notify('expandedChanged', [!this._options.expanded]);
          if (this._options.useStore) {
             Store.dispatch('operationsPanelExpanded', !this._expanded);
          }
