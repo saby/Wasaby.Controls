@@ -96,7 +96,8 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /**
  * @name Controls/_progress/StateIndicator#data
  * @cfg {Array.<IndicatorCategory>} Массив категорий диаграммы.
- * <pre class="brush:html">
+ * @example
+ * <pre class="brush: html">
  *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
  * @remark
@@ -106,6 +107,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /*
  * @name Controls/_progress/StateIndicator#data
  * @cfg {Array.<IndicatorCategory>} Array of indicator categories
+ * @example
  * <pre class="brush:html">
  *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
