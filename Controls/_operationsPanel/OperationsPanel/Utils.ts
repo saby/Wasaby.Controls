@@ -50,7 +50,7 @@ import { Logger } from 'UI/Utils';
                itemsSpacing: 'medium',
                theme,
                buttonTemplate: toolbars.getButtonTemplate(),
-               buttonTemplateOptions: toolbars.getButtonTemplateOptionsByItem(item),
+               buttonTemplateOptions,
                contentTemplate: _private.getContentTemplate(item, itemTemplate, itemTemplateProperty)
             });
          });
