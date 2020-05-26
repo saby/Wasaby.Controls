@@ -64,6 +64,11 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     */
 
    /**
+    * @name Controls/_filterPopup/DetailPanel#topTemplate Шаблон, который отображает в шапке панели фильтров.
+    */
+
+
+   /**
     * @event Controls/_filterPopup/DetailPanel#sendResult Происходит при клике по кнопке "Отобрать".
     * @param {Object} filter Объект фильтра {'filter_id': 'filter_value'}.
     * @param {Object} items Набор элементов.
