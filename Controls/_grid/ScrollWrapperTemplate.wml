@@ -1,6 +1,6 @@
 <ws:if data="{{_options.gridSupport === 'full'}}">
     <Controls.scroll:StickyHeader
-            attr:class="controls-Grid_columnScroll_wrapper"
+            attr:class="controls-Grid_columnScroll_wrapper js-controls-Grid_columnScroll_thumb-wrapper"
             attr:style="{{_gridStyle}}"
             backgroundStyle="{{_options.backgroundStyle || _options.style}}"
             mode="stackable"
@@ -27,6 +27,6 @@
         shouldSetMarginTop="{{_shouldSetMarginTop}}"
         contentSize="{{_options.contentSize}}"
         gridSupport="{{_options.gridSupport}}"
-        attr:class="controls-ColumnScroll_theme-{{_options.theme}} controls-ColumnScroll_without_offset"
+        attr:class="controls-ColumnScroll_theme-{{_options.theme}} controls-ColumnScroll_without_offset js-controls-Grid_columnScroll_thumb-wrapper"
         on:positionChanged="_localPositionHandler()"/>
 </ws:else>
