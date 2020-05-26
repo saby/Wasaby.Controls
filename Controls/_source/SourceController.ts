@@ -194,10 +194,14 @@ var SourceController = cExtend.extend({
       }
    },
 
-   setState: function(state) {
+   setState: function(state): boolean {
+      let stateChanged = false;
+
       if (this._queryParamsController) {
-         this._queryParamsController.setState(state);
+         stateChanged = this._queryParamsController.setState(state);
       }
+
+      return stateChanged;
    },
 
    isLoading: function() {

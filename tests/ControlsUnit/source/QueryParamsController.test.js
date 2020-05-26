@@ -119,6 +119,30 @@ define(
                assert.isFalse(pNav.hasMoreData('up'), 'Method hasMoreData returns incorrect value after load down');
             });
 
+            it('set state', () => {
+               const pNav = new PageQueryParamsController.default({
+                  pageSize: 4
+               });
+
+               assert.equal(pNav.getAllDataCount(), undefined);
+
+               const newState = {
+                  getItems() {
+                     return {
+                        getMetaData() {
+                           return {
+                              more: 8
+                           };
+                        }
+                     };
+                  }
+               };
+               const stateChanged = pNav.setState(newState);
+
+               assert.isTrue(stateChanged);
+               assert.equal(pNav.getAllDataCount(), 8);
+            });
+
             describe('loading edges', () => {
                const TOTAL_ITEMS = 100;
                const PAGE_SIZE = 5;
