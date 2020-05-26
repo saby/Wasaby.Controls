@@ -4,7 +4,7 @@
       <div class="controls-DropdownList__applyButton controls-Menu__applyButton_theme-{{_options.theme}}">
          <Controls.buttons:Button viewMode="functionalButton"
                                   icon="icon-Yes"
-                                  iconSize="m"
+                                  iconSize="s"
                                   iconStyle="contrast"
                                   buttonStyle="success"
                                   attr:class="controls-Menu__applyButton"
