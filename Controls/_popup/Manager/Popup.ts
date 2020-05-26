@@ -253,14 +253,6 @@ class Popup extends Control<IPopupControlOptions> {
         return this._options.id;
     }
 
-    // Для совместимости новых окон и старого индикатора:
-    // Чтобы событие клавиатуры в окне не стопилось, нужно правильно рассчитать индексы в методе getMaxZWindow WS.Core/core/WindowManager.js
-    // В старых окнах есть метод getZIndex, а в новых нет. Поэтому, чтобы метод находил правильный максимальный z-index, добавляю геттер
-
-    getZIndex(): number {
-        return this._options.zIndex;
-    }
-
     private _isResized(oldOptions: IPopupOptions, newOptions: IPopupOptions): boolean {
         const {position: oldPosition, hidden: oldHidden}: IPopupOptions = oldOptions;
         const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
@@ -270,6 +262,15 @@ class Popup extends Control<IPopupControlOptions> {
         const hasHiddenChanged: boolean = oldHidden !== newHidden;
 
         return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged || (hasHiddenChanged && newHidden === false);
+    }
+
+    // TODO Compatible
+    // Для совместимости новых окон и старого индикатора:
+    // Чтобы событие клавиатуры в окне не стопилось, нужно правильно рассчитать индексы в методе getMaxZWindow WS.Core/core/WindowManager.js
+    // В старых окнах есть метод getZIndex, а в новых нет. Поэтому, чтобы метод находил правильный максимальный z-index, добавляю геттер
+
+    getZIndex(): number {
+        return this._options.zIndex;
     }
 
     static getDefaultOptions(): IPopupControlOptions {
