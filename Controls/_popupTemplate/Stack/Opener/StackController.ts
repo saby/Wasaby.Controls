@@ -48,6 +48,7 @@ class StackController extends BaseController {
             if (isSinglePopup) {
                 this._updateSideBarVisibility();
             }
+            return true;
         }
 
         // Если стековое окно 1, то перерисовок звать не надо, позиция и размеры проставились до маунта.
