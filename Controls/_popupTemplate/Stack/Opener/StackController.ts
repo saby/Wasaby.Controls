@@ -20,6 +20,44 @@ import {Bus} from 'Env/Event';
  */
 
 const ACCORDEON_MIN_WIDTH = 50;
+let stackParentCoords: IPopupPosition;
+
+const calcStackParentCoords = () => {
+    if (stackParentCoords) {
+        return stackParentCoords;
+    }
+    let stackRoot: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
+    if (!isNewEnvironment()) {
+        stackRoot = document.querySelector('.ws-float-area-stack-root');
+        const isNewPageTemplate = document.body.classList.contains('ws-new-page-template');
+        const contentIsBody = stackRoot === document.body;
+        if (!contentIsBody && !isNewPageTemplate && stackRoot) {
+            stackRoot = stackRoot.parentElement as HTMLDivElement;
+        }
+    }
+    const targetCoords = TargetCoords.get(stackRoot || document.body);
+    // calc with scroll, because stack popup has fixed position only on desktop and can scroll with page
+    const leftPageScroll = detection.isMobilePlatform ? 0 : targetCoords.leftScroll;
+    stackParentCoords = {
+        top: Math.max(targetCoords.top, 0),
+        right: document.documentElement.clientWidth - targetCoords.right + leftPageScroll
+    };
+    return stackParentCoords;
+};
+
+if (document) {
+    if (document.body) {
+        calcStackParentCoords();
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            calcStackParentCoords();
+        });
+    }
+    window.addEventListener('resize', () => {
+        stackParentCoords = null;
+        calcStackParentCoords();
+    }, true);
+}
 
 class StackController extends BaseController {
     TYPE: string = 'Stack';
@@ -98,6 +136,11 @@ class StackController extends BaseController {
 
     resizeInner(): boolean {
         return false;
+    }
+
+    resizeOuter(): boolean {
+        stackParentCoords = null;
+        return super.resizeOuter.apply(this, arguments);
     }
 
     popupResizingLine(item: IPopupItem, offset: number): void {
@@ -335,22 +378,7 @@ class StackController extends BaseController {
     }
 
     private _getStackParentCoords(): IPopupPosition {
-        let stackRoot: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
-        if (!isNewEnvironment()) {
-            stackRoot = document.querySelector('.ws-float-area-stack-root');
-            const isNewPageTemplate = document.body.classList.contains('ws-new-page-template');
-            const contentIsBody = stackRoot === document.body;
-            if (!contentIsBody && !isNewPageTemplate && stackRoot) {
-                stackRoot = stackRoot.parentElement;
-            }
-        }
-        const targetCoords = TargetCoords.get(stackRoot || document.body);
-        // calc with scroll, because stack popup has fixed position only on desktop and can scroll with page
-        const leftPageScroll = detection.isMobilePlatform ? 0 : targetCoords.leftScroll;
-        return {
-            top: Math.max(targetCoords.top, 0),
-            right: document.documentElement.clientWidth - targetCoords.right + leftPageScroll
-        };
+        return calcStackParentCoords();
     }
 
     private _showPopup(item: IPopupItem): void {
