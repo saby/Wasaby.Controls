@@ -4,7 +4,7 @@
       <div class="controls-DropdownList__applyButton {{_options.applyButtonAlign}}">
          <Controls.buttons:Button viewMode="functionalButton"
                                   icon="icon-Yes"
-                                  iconSize="s"
+                                  iconSize="{{iconSize}}"
                                   iconStyle="contrast"
                                   buttonStyle="success"
                                   attr:class="controls-Menu__applyButton"
@@ -13,7 +13,7 @@
       </div>
    </ws:template>
    <ws:if data="{{_applyButtonVisible && _options.applyButtonAlign === 'top'}}">
-      <ws:partial template="applyButton" attr:class="controls-Menu__applyButton-top_theme-{{_options.theme}}" inlineHeight="menuapplytop"></ws:partial>
+      <ws:partial template="applyButton" attr:class="controls-Menu__applyButton-top_theme-{{_options.theme}}" iconSize="s" inlineHeight="menuapplytop"></ws:partial>
    </ws:if>
    <Controls.scroll:Container attr:class="controls-ScrollContainer__flex
                                           controls-Menu__scroll
@@ -61,7 +61,7 @@
             </div>
          </ws:else>
          <ws:if data="{{_applyButtonVisible && _options.applyButtonAlign !== 'top'}}">
-            <ws:partial template="applyButton" attr:class="controls-Menu__applyButton_theme-{{_options.theme}}" inlineHeight="menuapply"></ws:partial>
+            <ws:partial template="applyButton" attr:class="controls-Menu__applyButton_theme-{{_options.theme}}" iconSize="m" inlineHeight="menuapply"></ws:partial>
          </ws:if>
       </div>
    </ws:if>
