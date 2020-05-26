@@ -97,8 +97,11 @@ var _private = {
 
    /**
     * Контрол предоставляет пользователю возможность выбрать между двумя или более вкладками.
-    *
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FTabs%2FButtons">Демо-пример</a>.
+    * 
+    * @remark
+    * Полезные ссылки:
+    * * <a href="/materials/Controls-demo/app/Controls-demo%2FTabs%2FButtons">демо-пример</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_tabs.less">переменные тем оформления</a>
     *
     * @class Controls/_tabs/Buttons
     * @extends Core/Control

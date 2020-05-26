@@ -12,7 +12,12 @@ import Deferred = require('Core/Deferred');
  * * 'stack' — используйте опции {@link Controls/popup:Stack}
  * * 'dialog' — используйте опции {@link Controls/popup:Dialog}
  * * 'sticky' — используйте опции {@link Controls/popup:Sticky}
- * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FEdit%2FOpener">Демо-пример</a>
+ * 
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FEdit%2FOpener">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/#step4">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * 
  * @class Controls/_popup/Opener/Edit
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IEdit

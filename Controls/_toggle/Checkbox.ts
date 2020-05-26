@@ -13,8 +13,12 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
 
 /**
  * Контрол, позволяющий пользователю управлять параметром с двумя состояниями — включено и отключено.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2Ftoggle%2FCheckbox%2FIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2Ftoggle%2FCheckbox%2FIndex">Демо-пример</a>.
  *
  * @class Controls/_toggle/Checkbox
  * @extends Core/Control

@@ -7,8 +7,13 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
 
 /**
  * Список элементов, отображаемых в виде плиток. Может загружать данные из источника данных.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FDemo">Демо-пример</a>.
- * Подробное описание и инструкцию по настройке смотрите <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>здесь</a>.
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FDemo">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list/tile/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_tile.less">переменные тем оформления tile</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
+ * 
  *
  * @class Controls/_tile/View
  * @extends Controls/list:View
