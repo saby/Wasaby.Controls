@@ -93,11 +93,11 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     keyProperty?: string;
     displayProperty?: string;
     multiSelectVisibility?: string;
-    leftSpacing: string;
-    rightSpacing: string;
-    rowSpacing: string;
-    searchValue: string;
-    editingConfig: any;
+    leftSpacing?: string;
+    rightSpacing?: string;
+    rowSpacing?: string;
+    searchValue?: string;
+    editingConfig?: any;
     unique?: boolean;
     importantItemProperties?: string[];
     itemActionsProperty?: string;
