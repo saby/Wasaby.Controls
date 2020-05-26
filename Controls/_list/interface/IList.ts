@@ -100,7 +100,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#loadingIndicatorTemplate
- * @cfg {string|Function} Определяет шаблон индикатора загрузки данных.
+ * @cfg {string|Function} Определяет шаблон индикатора загрузки данных. В данный момент этот шаблон работает только для индикатора, который отображается при подгрузке по скролу.
  * @default Controls/list:LoadingIndicatorTemplate
  */
 
