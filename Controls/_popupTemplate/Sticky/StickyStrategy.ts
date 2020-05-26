@@ -377,8 +377,8 @@ interface IPosition {
          return {
             offsetLeft: 0,
             offsetTop: 0,
-            pageLeft: 0,
-            pageTop: 0,
+            pageLeft: window && window.scrollX,
+            pageTop: window && window.scrollY,
             width: document && document.body.clientWidth,
             height: document && document.body.clientHeight
          };
