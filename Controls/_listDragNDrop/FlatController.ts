@@ -165,22 +165,28 @@ export class FlatController implements IDragNDropListController{
       }
    }
 
+   /**
+    * Возвращает выбранные элементы, где
+    * в выбранные добавлен элемент, за который начали drag-n-drop, если он отсутствовал,
+    * выбранные элементы отсортированы по порядку их следования в модели(по индексам перед началом drag-n-drop),
+    * из исключенных элементов удален элемент, за который начали drag-n-drop, если он присутствовал
+    *
+    * @param selectedKeys
+    * @param excludedKeys
+    * @param dragKey
+    */
    getSelectionForDragNDrop(selectedKeys, excludedKeys, dragKey) {
-      let
-         selected,
-         excluded,
-         dragItemIndex;
+      const allSelected = selectedKeys.indexOf(null) !== -1;
 
-      selected = cClone(selectedKeys) || [];
-      // TODO dnd исправить, dragKey нужно вставлять на свое место в зависимости от индекса в списке
-      dragItemIndex = selected.indexOf(dragKey);
-      if (dragItemIndex === -1) {
-         selected.unshift(dragKey);
+      const selected = cClone(selectedKeys) || [];
+      if (selected.indexOf(dragKey) === -1 && !allSelected) {
+         selected.push(dragKey);
       }
+      this._sortKeys(selected);
 
-      excluded = cClone(excludedKeys) || [];
-      dragItemIndex = excluded.indexOf(dragKey);
-      if (dragItemIndex !== -1) { // TODO dnd протестировать, точно ли это нужно
+      const excluded = cClone(excludedKeys) || [];
+      const dragItemIndex = excluded.indexOf(dragKey);
+      if (dragItemIndex !== -1) {
          excluded.splice(dragItemIndex, 1);
       }
 
@@ -188,6 +194,20 @@ export class FlatController implements IDragNDropListController{
          selected: selected,
          excluded: excluded
       };
+   }
+
+   /**
+    * Сортировать список ключей элементов
+    * Ключи сортируются по порядку, в котором они идут в списке
+    * @param keys
+    * @private
+    */
+   private _sortKeys(keys: number|string[]) {
+      keys.sort((a, b) => {
+         const indexA = this._model.getIndexByKey(a),
+            indexB = this._model.getIndexByKey(b);
+         return indexA > indexB ? 1 : -1
+      });
    }
 
    private _processItemMouseEnterWithDragNDrop(itemData: CollectionItem<Model>, notifyChangeDragTarget: Function): void {
