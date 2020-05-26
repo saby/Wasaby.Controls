@@ -172,6 +172,11 @@ export class FlatController implements IDragNDropListController{
          dragItemIndex;
 
       selected = cClone(selectedKeys) || [];
+      // TODO dnd исправить, dragKey нужно вставлять на свое место в зависимости от индекса в списке
+      dragItemIndex = selected.indexOf(dragKey);
+      if (dragItemIndex === -1) {
+         selected.unshift(dragKey);
+      }
 
       excluded = cClone(excludedKeys) || [];
       dragItemIndex = excluded.indexOf(dragKey);
