@@ -2507,7 +2507,13 @@ define([
                      title: '123'
                   }
                ],
-               viewModelConstructor: lists.ListViewModel
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6
+                  }
+               }
             },
             baseControl = new lists.BaseControl(cfg);
 
@@ -2563,6 +2569,14 @@ define([
 
             baseControl._notify = originNotify;
             baseControl._updateItemActions = originUpdate;
+         });
+         it('update sourceController onListChange', function() {
+            sandbox.stub(lists.BaseControl._private, 'prepareFooter');
+
+            baseControl._listViewModel.getItems().getMetaData().more = 5;
+            lists.BaseControl._private.onListChange(baseControl, null, 'collectionChanged');
+
+            sinon.assert.calledOnce(lists.BaseControl._private.prepareFooter);
          });
          it('update on recreating source', async function() {
             let newSource = new sourceLib.Memory({
