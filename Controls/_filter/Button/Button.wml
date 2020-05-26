@@ -2,7 +2,7 @@
    {{_isItemsChanged && _text ? ' controls-FilterButton__state_changed controls-FilterButton_' + _options.alignment + '__state_changed_theme' + _options.theme}}"
      name="panelTarget">
    <div class="controls-FilterButton__wrapper">
-      <div if="{{_options.lineSpaceTemplate || _text}}" class="controls-FilterButton__textLine-wrapper_theme-{{_options.theme}}">
+      <div if="{{_options.lineSpaceTemplate || _text}}" class="controls-FilterButton__textLine-wrapper controls-FilterButton__textLine-wrapper_theme-{{_options.theme}}">
          <ws:if data="{{_text}}">
             <div class="controls-FilterButton__text-wrapper controls-FilterButton__text-wrapper_state_{{_getFilterState()}}"
                  on:click="openDetailPanel()"
