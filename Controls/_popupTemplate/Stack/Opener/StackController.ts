@@ -50,7 +50,9 @@ class StackController extends BaseController {
             }
         }
 
-        return true;
+        // Если стековое окно 1, то перерисовок звать не надо, позиция и размеры проставились до маунта.
+        // Если окон больше, то перерисовка должна быть, меняются классы, видимость.
+        return !isSinglePopup;
     }
 
     elementUpdateOptions(item: IPopupItem, container: HTMLDivElement): boolean|Promise<boolean> {
