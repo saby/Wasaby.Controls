@@ -4,14 +4,14 @@
         <div class="ws-flexbox ws-flex-wrap">
 
             <div class="controlsDemo__cell controlsDemo__fixedWidth-s_theme-{{_options.theme}} controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m">
-                <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру M</div>
+                <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру S</div>
                 <Controls.treeGrid:View
                         keyProperty="id"
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
                         parentProperty="parent"
                         nodeProperty="type">
-                    <ws:itemPadding top="m" bottom="M"/>
+                    <ws:itemPadding top="s" bottom="S"/>
                 </Controls.treeGrid:View>
             </div>
 
