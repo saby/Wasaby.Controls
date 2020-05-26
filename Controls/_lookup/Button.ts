@@ -47,7 +47,17 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
 
 /*
  * @name Controls/_lookup/Button#showSelectorCaption
- * @cfg {String} Заголовок кнопки для выбора записей из справочника
+ * @cfg {String} Заголовок кнопки, открывающей окно выбора записей из справочника
+ * @example
+ * <pre class="brush: html">
+ * <Controls.lookup:Selector
+ *    source="{{_sourceButton}}"
+ *    displayProperty="title"
+ *    keyProperty="id"
+ *    showSelectorCaption="+компания"
+ *    caption="Выберите компанию">
+ * </Controls.lookup:Selector>
+ * </pre>
  */
 
 var Button = Control.extend({
