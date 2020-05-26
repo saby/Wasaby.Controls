@@ -20,6 +20,8 @@ import * as scrollToElement from 'Controls/Utils/scrollToElement';
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
 import {LocalStorageNative} from 'Browser/Storage';
+import Observer from './IntersectionObserver/Observer';
+import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 
 /**
  * Контейнер с тонким скроллом.
@@ -739,6 +741,9 @@ let
 
          Bus.globalChannel().unsubscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
          this._lockScrollPositionUntilKeyboardShown = null;
+
+         this._observer.destroy();
+         this._observer = null;
       },
 
       _shadowVisible(position: POSITION) {
@@ -1266,7 +1271,30 @@ let
          // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
          // Не запускаем перерисовку, если контрол скрыт
          return !!this._container.closest('.ws-hidden');
-      }
+      },
+
+       // Intersection observer
+
+       _initObserver(): void {
+           if (!this._observer) {
+               this._observer = new Observer(this._intersectHandler.bind(this));
+           }
+       },
+
+       _intersectionObserverRegisterHandler(event: SyntheticEvent, intersectionObserverObject: IIntersectionObserverObject): void {
+           this._initObserver();
+           this._observer.register(this._container, intersectionObserverObject);
+           event.stopImmediatePropagation();
+       },
+
+       _intersectionObserverUnregisterHandler(event: SyntheticEvent, instId: string, observerName: string): void {
+           this._observer.unregister(instId, observerName);
+           event.stopImmediatePropagation();
+       },
+
+       _intersectHandler(items): void {
+           this._notify('intersect', [items]);
+       }
    });
 
 Scroll.getDefaultOptions = function() {
