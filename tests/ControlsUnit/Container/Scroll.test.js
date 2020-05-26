@@ -271,8 +271,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'disabled',
-                  stateDown: 'normal'
+                  stateUp: false,
+                  stateDown: true
                });
             });
             it('Content at the middle', function() {
@@ -285,8 +285,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'normal',
-                  stateDown: 'normal'
+                  stateUp: true,
+                  stateDown: true
                });
             });
             it('Content at the bottom', function() {
@@ -299,8 +299,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'normal',
-                  stateDown: 'disabled'
+                  stateUp: true,
+                  stateDown: false
                });
             });
          });
