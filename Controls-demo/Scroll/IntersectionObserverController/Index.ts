@@ -1,6 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Scroll/IntersectionObserverController/IntersectionObserverController');
-import 'css!Controls-demo/Controls-demo';
 
 export default class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
@@ -11,4 +10,5 @@ export default class DemoControl extends Control<IControlOptions> {
         }
     }
     static _theme: string[] = ['Controls/Classes'];
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

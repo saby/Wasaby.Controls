@@ -211,7 +211,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && itemsModelCurrent.style === 'master';
+        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && (itemsModelCurrent.style === 'master' || itemsModelCurrent.style === 'masterClassic');
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -231,7 +231,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         itemsModelCurrent.getMarkerClasses = (): string => {
             const style = this._options.style || 'default';
-            return `controls-ListView__itemV_marker controls-ListView__itemV_marker_${style}_theme-${self._options.theme}`;
+            return `controls-ListView__itemV_marker
+                    controls-ListView__itemV_marker_${style}_theme-${self._options.theme}
+                    controls-ListView__itemV_marker_${style}_topPadding-${itemsModelCurrent.itemPadding.top}_theme-${self._options.theme}
+                    controls-ListView__itemV_marker_${style}_bottomPadding-${itemsModelCurrent.itemPadding.bottom}_theme-${self._options.theme}`;
         };
 
         if (itemsModelCurrent.isGroup) {

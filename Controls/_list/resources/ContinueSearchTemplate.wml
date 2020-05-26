@@ -1,0 +1,29 @@
+<ws:template name="searchIcon">
+    <div class="controls-BaseControl__continueSearch_icon controls-icon icon-Search2 controls-icon_size-{{iconSize}}_theme-{{_options.theme}}"></div>
+</ws:template>
+
+<ws:template name="searchWithoutFooter">
+    <div class="controls-BaseControl__continueSearch_wrapper_theme-{{_options.theme}} ws-inline-flexbox ws-align-items-center">
+        <ws:partial template="searchIcon" iconSize="m"/>
+        <ws:partial template="{{_options.contentTemplate}}"/>
+    </div>
+</ws:template>
+
+<ws:template name="searchWithFooter">
+    <ws:partial template="searchIcon" iconSize="l"/>
+    <div>
+        <div class="controls-BaseControl__continueSearch_wrapper_theme-{{_options.theme}} ws-inline-flexbox ws-align-items-center">
+            <ws:partial template="{{_options.contentTemplate}}"/>
+        </div>
+        <ws:partial template="{{_options.footerTemplate}}"/>
+    </div>
+</ws:template>
+
+<div class="controls-BaseControl__continueSearch controls-BaseControl__continueSearch_theme-{{_options.theme}} ws-flexbox ws-justify-content-center">
+    <ws:if data="{{_options.footerTemplate}}">
+        <ws:partial template="searchWithFooter"/>
+    </ws:if>
+    <ws:else>
+        <ws:partial template="searchWithoutFooter"/>
+    </ws:else>
+</div>
