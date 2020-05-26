@@ -482,11 +482,6 @@ var _private = {
          chain.factory(data).each(function(item) {
             let itemId = item.get(_private.getKeyProperty(self));
             historyData.ids.push(itemId);
-
-            // TODO Delete after https://online.sbis.ru/opendoc.html?guid=77601764-a451-4da1-8afb-89ce1161b96f
-            if (meta.parentKey) {
-               _private.getSourceByMeta(self, meta).update({id: itemId}, meta);
-            }
          });
          recentData = data;
       } else {
@@ -500,9 +495,7 @@ var _private = {
       }
 
       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
-      if (!meta.parentKey) { // TODO Delete after https://online.sbis.ru/opendoc.html?guid=77601764-a451-4da1-8afb-89ce1161b96f
-         return _private.getSourceByMeta(self, meta).update(historyData, meta);
-      }
+      return _private.getSourceByMeta(self, meta).update(historyData, meta);
    },
 
    getRawHistoryItem: function (self, id, hId) {

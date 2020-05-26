@@ -76,10 +76,10 @@ var _private = {
 
     updateHistory: function (self, data, meta) {
       if (meta.parentKey) {
-         _private.callQuery(self, 'AddHierarchy', {
+         _private.callQuery(self, 'AddHierarchyList', {
             history_id: self._historyId,
             parent1: meta.parentKey,
-            id: data.id
+            ids: data.ids
          });
       } else if (data.ids) {
          _private.callQuery(self, _private.getMethodNameByIdType('AddList', 'AddIntList', data.ids[0]), {
