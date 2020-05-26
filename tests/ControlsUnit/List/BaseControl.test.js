@@ -3468,7 +3468,9 @@ define([
                      viewConfig: {
                         pagingMode: 'direct'
                      }
-                  }
+                  },
+                   selectedKeys: [],
+                   excludedKeys: []`
                },
                ctrl = new lists.BaseControl();
             let dragNDropStarted = false;
