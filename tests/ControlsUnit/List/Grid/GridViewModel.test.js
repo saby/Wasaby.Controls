@@ -1252,13 +1252,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ladderViewModel._model._stopIndex = 4;
             ladderViewModel._ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
             ladderViewModel._model._curIndex = 0;
-            const current = ladderViewModel.getCurrent();
+            let current = ladderViewModel.getCurrent();
 
             assert.isUndefined(current.styleLadderHeading, 'shouldn\'t assign ladder');
 
             
             ladderViewModel._model._curIndex = 2;
-            const current = ladderViewModel.getCurrent();
+            current = ladderViewModel.getCurrent();
 
             assert.isOk(current.styleLadderHeading, 'should assign ladder');
          });
