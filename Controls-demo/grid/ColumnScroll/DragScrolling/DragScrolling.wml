@@ -14,12 +14,12 @@
                 <Controls.list:Container>
                     <Controls.operations:Container>
                         <Controls.scroll:Container attr:class="controlsDemo__inline-flex"
-                                                   attr:style="width: 700px;">
+                                                   attr:style="width: 700px; height: 500px;">
                             <Controls.grid:View
                                     header="{{_header}}"
                                     columns="{{_columns}}"
                                     multiSelectVisibility="onhover"
-                                    rowSeparatorVisibility="{{true}}"
+                                    rowSeparatorSize="s"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     itemsDragNDrop="{{ _itemsDragNDrop }}"
                                     on:dragStart="_dragStart()"
