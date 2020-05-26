@@ -24,8 +24,14 @@ import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/Input
          }
       },
 
-      _getReadOnlyField: function() {
-         return this._getField();
+      _getReadOnlyField(): HTMLElement {
+         // В поле связи с единичным выбором не строится input
+         // Подробнее в комментарии в методе _getField
+         if (this._options.isInputVisible) {
+            return InputRenderLookup.superclass._getReadOnlyField.call(this);
+         } else {
+            return this._getDefaultInput();
+         }
       },
 
       _getDefaultInput: function() {
