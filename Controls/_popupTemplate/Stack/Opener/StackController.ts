@@ -27,7 +27,7 @@ const calcStackParentCoords = () => {
         return stackParentCoords;
     }
     let stackRoot: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
-    if (!isNewEnvironment()) {
+    if (!stackRoot && !isNewEnvironment()) {
         stackRoot = document.querySelector('.ws-float-area-stack-root');
         const isNewPageTemplate = document.body.classList.contains('ws-new-page-template');
         const contentIsBody = stackRoot === document.body;
