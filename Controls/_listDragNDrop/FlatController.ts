@@ -9,6 +9,7 @@ export interface IModel {
    calculateDragTargetPosition(itemData);
    getItemDataByItem();
    _prepareDisplayItemForAdd(); // TODO жесткая хрень, надо понять для чего
+   getIndexByKey(key: number|string): number;
 
    // это будет один метод в старой и новой модели, вроде это уже написано, надо заюзать
    getCollection();
@@ -20,7 +21,7 @@ export interface IModel {
     */
    setDragTargetPosition(dragPosition): void;
    setDragItemData();
-   setDragEntity();
+   setDragEntity(entity);
 
    getDragEntity();
    getDragItemData();
