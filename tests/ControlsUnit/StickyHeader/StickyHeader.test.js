@@ -1,9 +1,11 @@
 define([
+   'Env/Env',
    'Controls/_scroll/StickyHeader/_StickyHeader',
    'Controls/_scroll/StickyHeader/Utils',
    'Controls/scroll',
    'Core/core-merge'
 ], function(
+   EnvLib,
    StickyHeaderLib,
    StickyHeaderUtils,
    scroll,
@@ -275,6 +277,8 @@ define([
          });
          it('should consider borders', function() {
             const component = createComponent(StickyHeader, {});
+            const oldIsServerSide = EnvLib.constants.isServerSide;
+            EnvLib.constants.isServerSide = false;
             component._container = {};
             sinon.stub(component, '_getComputedStyle').returns({ 'border-top-width': '1px', 'border-bottom-width': '1px' });
             component._model = { fixedPosition: '' };
@@ -287,6 +291,7 @@ define([
             };
             assert.strictEqual(component._getObserverStyle('top'), 'top: -6px;');
             assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -7px;');
+            EnvLib.constants.isServerSide = oldIsServerSide;
             sinon.restore();
          });
       });
