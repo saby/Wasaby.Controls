@@ -1222,6 +1222,46 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(2, Object.keys(ladder.ladder).length);
          });
 
+         it('shouldn\'t assign ladder if there is no ladder for current item', () => {
+            const date1 = new Date(2017, 0, 1);
+            const date2 = new Date(2017, 0, 3);
+            const ladderViewModel = new gridMod.GridViewModel({
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', date: date1, photo: '1.png' },
+                     { id: 1, title: 'i1', date: date1, photo: '1.png' },
+                     { id: 2, title: 'i2', date: date1, photo: '1.png' },
+                     { id: 3, title: 'i3', date: date2, photo: '2.png' }
+                  ]
+               }),
+               keyProperty: 'id',
+               columns: [{
+                  width: '1fr',
+                  displayProperty: 'title'
+               }, {
+                  width: '1fr',
+                  template: 'wml!MyTestDir/Photo',
+                  stickyProperty: 'photo'
+               }],
+               ladderProperties: ['date'],
+               virtualScrolling: true
+            });
+
+            ladderViewModel._model._startIndex = 2;
+            ladderViewModel._model._stopIndex = 4;
+            ladderViewModel._ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
+            ladderViewModel._model._curIndex = 0;
+            let current = ladderViewModel.getCurrent();
+
+            assert.isUndefined(current.styleLadderHeading, 'shouldn\'t assign ladder');
+
+            
+            ladderViewModel._model._curIndex = 2;
+            current = ladderViewModel.getCurrent();
+
+            assert.isOk(current.styleLadderHeading, 'should assign ladder');
+         });
          it('prepareLadder should reset cache of updated items', function () {
             const date1 = new Date(2017, 0, 1);
             const date2 = new Date(2017, 0, 3);
