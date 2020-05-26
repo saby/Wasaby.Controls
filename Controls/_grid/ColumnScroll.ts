@@ -6,12 +6,14 @@ import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {debounce} from 'Types/function';
 import {isFullGridSupport} from './utils/GridLayoutUtil';
+import {DragScroll} from './DragScroll';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 interface IColumnScroll {
     _children: {
-        content: HTMLElement
+        content: HTMLElement,
+        dragScroll: DragScroll
     };
 }
 
@@ -111,9 +113,7 @@ const
          return shadowState.indexOf(position) !== - 1;
       },
       calculateShadowClasses(shadowState: string, position: string, theme: string, backgroundStyle: string): string {
-         let shadowClasses = `js-controls-ColumnScroll__shadow`
-                            + ` js-controls-ColumnScroll__shadow_${position}`
-                            + ` controls-ColumnScroll__shadow_theme-${theme}`
+         let shadowClasses = `controls-ColumnScroll__shadow_theme-${theme}`
                             + ` controls-ColumnScroll__shadow-${position}_theme-${theme}`
                             + ` controls-horizontal-gradient-${backgroundStyle || 'default'}_theme-${theme}`;
          if (!_private.isShadowVisible(shadowState, position)) {
@@ -134,7 +134,7 @@ const
          }
          return shadowStyles;
       },
-      drawTransform (self, position) {
+      drawTransform(self, position): void {
          // This is the fastest synchronization method scroll position and cell transform.
          // Scroll position synchronization via VDOM is much slower.
 
@@ -142,17 +142,13 @@ const
          // зафиксированных ячеек
          let newHTML =
              // Скроллируется таблица
-             `.${self._transformSelector} { transform: translateX(-${position}px); }` +
+             `.${self._transformSelector}>.controls-Grid_columnScroll { transform: translateX(-${position}px); }` +
 
              // Не скроллируем зафиксированные колонки
              `.${self._transformSelector} .controls-Grid__cell_fixed { transform: translateX(${position}px); }` +
 
              // Не скроллируем скроллбар
-             `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
-
-             // Не скроллируем тени. ScaleX -1 отражает тень по вертикали, чтобы не писать разные стили для теней.
-             `.${self._transformSelector} .js-controls-ColumnScroll__shadow_start { transform: translateX(${position}px); }` +
-             `.${self._transformSelector} .js-controls-ColumnScroll__shadow_end { transform: translateX(${position}px) scaleX(-1); }`;
+             `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }`;
 
           // Не скроллируем операции над записью
           if (isFullGridSupport()) {
@@ -381,6 +377,25 @@ const
           const hasOption = typeof this._options.dragScrolling === 'boolean';
           const isDisplayColumnScroll = !!this._children.content && this._isDisplayColumnScroll();
           return isDisplayColumnScroll && (hasOption ? this._options.dragScrolling : !this._options.itemsDragNDrop);
+       },
+
+       _onViewMouseDown(e): void {
+           this._children.dragScroll?.onViewMouseDown(e);
+       },
+       _onViewTouchStart(e): void {
+           this._children.dragScroll?.onViewTouchStart(e);
+       },
+       _onViewMouseMove(e): void {
+           this._children.dragScroll?.onViewMouseMove(e);
+       },
+       _onViewTouchMove(e): void {
+           this._children.dragScroll?.onViewTouchMove(e);
+       },
+       _onViewMouseUp(e): void {
+           this._children.dragScroll?.onViewMouseUp(e);
+       },
+       _onViewTouchEnd(e): void {
+           this._children.dragScroll?.onViewTouchEnd(e);
        }
    });
 ColumnScroll._theme = ['Controls/grid', 'Controls/Classes'];

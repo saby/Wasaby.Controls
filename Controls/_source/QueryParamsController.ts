@@ -72,8 +72,8 @@ export default class QueryParamsController implements IQueryParamsController {
         this.getController(root).setEdgeState(direction);
     }
 
-    setState(model: Collection<Record>, root?: Key): void {
-        this.getController(root).setState(model);
+    setState(model: Collection<Record>, root?: Key): boolean {
+        return this.getController(root).setState(model);
     }
 
     updateQueryProperties(list?: RecordSet, direction?: Direction, root?: Key): void {

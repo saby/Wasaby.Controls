@@ -7,9 +7,13 @@ import {INotificationPopupOptions, INotificationOpener} from '../interface/INoti
 
 /**
  * Контрол, открывающий окно, которое позиционируется в правом нижнем углу окна браузера. Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
+ * 
  * @remark
- * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ здесь}.
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FNotificationDemo%2FNotificationDemo">демо-пример</a>.
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FNotificationDemo%2FNotificationDemo">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/notification/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * 
  * @class Controls/_popup/Opener/Notification
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener

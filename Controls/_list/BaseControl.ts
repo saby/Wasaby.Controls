@@ -579,6 +579,20 @@ const _private = {
             afterAddItems(countCurrentItems, addedItems);
         };
 
+        const loadCallback = (addedItems, countCurrentItems) => {
+            if (direction === 'down') {
+                beforeAddItems(addedItems);
+                if (self._options.useNewModel) {
+                    self._listViewModel.getCollection().append(addedItems);
+                } else {
+                    self._listViewModel.appendItems(addedItems);
+                }
+                afterAddItems(countCurrentItems, addedItems);
+            } else if (direction === 'up') {
+                drawItemsUp(countCurrentItems, addedItems);
+            }
+        };
+
         _private.showIndicator(self, direction);
 
         if (self._sourceController) {
@@ -605,16 +619,19 @@ const _private = {
                 }
 
                 self._inertialScrolling.callAfterScrollStopped(() => {
-                    if (direction === 'down') {
-                        beforeAddItems(addedItems);
-                        if (self._options.useNewModel) {
-                            self._listViewModel.getCollection().append(addedItems);
-                        } else {
-                            self._listViewModel.appendItems(addedItems);
-                        }
-                        afterAddItems(countCurrentItems, addedItems);
-                    } else if (direction === 'up') {
-                        drawItemsUp(countCurrentItems, addedItems);
+                    // todo remove "if" by https://online.sbis.ru/opendoc.html?guid=87707f3b-3dc8-45f9-9797-e43508f4fa7e
+                    if (self._options.task1179374792) {
+                        // Приходится делать таймаут для того, чтобы добавление элементов произошло гарантированно ПОСЛЕ
+                        // отрисовки пересчитанного _pagingVisible и не в процессе фазы обновления (doAfterUpdate).
+                        // Так же см. скриншот, приложенный к реквесту в ошибке:
+                        // https://online.sbis.ru/opendoc.html?guid=b6715c2a-704a-414b-b764-ea2aa4b9776b
+                        setTimeout(() => {
+                            _private.doAfterUpdate(self, () => {
+                                loadCallback(addedItems, countCurrentItems);
+                            });
+                        });
+                    } else {
+                        loadCallback(addedItems, countCurrentItems);
                     }
                 });
 
@@ -830,6 +847,18 @@ const _private = {
         }
     },
 
+    calcTriggerVisibility(self, scrollParams, triggerOffset, direction: 'up' | 'down'): boolean {
+        if (direction === 'up') {
+            return scrollParams.scrollTop < triggerOffset * 1.3;
+        } else {
+            let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
+            if (self._pagingVisible) {
+                bottomScroll -= 32;
+            }
+            return bottomScroll < triggerOffset * 1.3;
+        }
+    },
+    
     needShowPagingByScrollSize: function(self, viewSize: number, viewPortSize: number): boolean {
         let result = false;
 
@@ -856,6 +885,11 @@ const _private = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
             };
+            const scrollParams = {
+                scrollTop: self._scrollTop,
+                clientHeight: self._viewPortSize,
+                scrollHeight: self._viewSize
+            }
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
             // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
@@ -867,15 +901,11 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=e0927a79-c520-4864-8d39-d99d36767b31
             // поэтому приходится вычислять видны ли они на экране
             if (!visbilityTriggerUp) {
-                visbilityTriggerUp = self._scrollTop > self._loadOffsetTop * 1.3;
+                visbilityTriggerUp = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetTop, 'up');
             }
 
             if (!visbilityTriggerDown && self._viewSize && self._viewPortSize) {
-                let bottomScroll = self._viewSize - self._viewPortSize - self._scrollTop;
-                if (self._pagingVisible) {
-                    bottomScroll -= 32;
-                }
-                visbilityTriggerDown = bottomScroll < self._loadOffsetBottom * 1.3;
+                visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');;
             }
 
             if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
@@ -1196,7 +1226,11 @@ const _private = {
         if (changesType === 'collectionChanged' || newModelChanged) {
             //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {
-                self._sourceController.setState(self._listViewModel);
+                const stateChanged = self._sourceController.setState(self._listViewModel);
+
+                if (stateChanged) {
+                    _private.prepareFooter(self, self._options.navigation, self._sourceController);
+                }
             }
             if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
@@ -3133,6 +3167,7 @@ BaseControl.getDefaultOptions = function() {
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
         loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
+        continueSearchTemplate: 'Controls/list:ContinueSearchTemplate',
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {}

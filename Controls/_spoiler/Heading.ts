@@ -31,6 +31,10 @@ export interface IHeadingOptions extends IControlOptions, IExpandableOptions, IF
      * Первый элемент соответствует expanded = true.
      * Второй элемент соответствует expanded = false.
      * Для изменения пары заголовков нужно передать новый массив.
+     * 
+     * Полезные ссылки:
+     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_spoiler.less">переменные тем оформления</a>
+     * 
      * @demo Controls-demo/Spoiler/Heading/Captions/Index
      */
     captions: TCaptions;

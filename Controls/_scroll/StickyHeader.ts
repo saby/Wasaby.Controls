@@ -11,6 +11,9 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
        * Прилипание происходит в момент пересечения верхней или нижней части контента и родительского контейнера.
        * @remark
        * Фиксация заголовка в браузере IE версии ниже 16 не поддерживается.
+       * 
+       * Полезные ссылки:
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
        *
        * @public
        * @extends Core/Control

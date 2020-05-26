@@ -104,6 +104,26 @@ export interface IList {
  * @default Controls/list:LoadingIndicatorTemplate
  */
 
+/**
+ * @name Controls/_list/interface/IList#continueSearchTemplate
+ * @cfg {string|Function} Шаблон отображения блока, который отображается при прерывании итеративного поиска.
+ * @default Controls/list:ContinueSearchTemplate
+ * @demo Controls-demo/list_new/Searching/PortionedSearch/Index
+ * @example
+ * <pre>
+ *     <Controls.list:View>
+ *        <ws:loadingIndicatorTemplate>
+ *            <ws:partial template="Controls/list:LoadingIndicatorTemplate"
+ *                        scope="{{loadingIndicatorTemplate}}">
+ *               <ws:footerTemplate>
+ *                  <div>Дополнительная информация при итеративном поиске</div>
+ *               </ws:footerTemplate>
+ *            </ws:partial>
+ *        </ws:loadingIndicatorTemplate>
+ *     </Controls.list:View>
+ * </pre>
+ */
+
 /*ENG
  * @name Controls/_list/interface/IList#contextMenuVisibility
  * @cfg {Boolean} Determines whether context menu should be shown on right-click.
@@ -478,7 +498,7 @@ export interface IList {
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @example
  * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
- * 
+ *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.list:View
@@ -492,7 +512,7 @@ export interface IList {
  *     ...
  * </Controls.list:View>
  * </pre>
- * 
+ *
  * <pre class="brush: js">
  * // TypeScript
  *  ...
@@ -693,6 +713,7 @@ export interface IList {
 /**
  * @typedef {String} Style
  * @variant master Двухколоночный реестр.
+ * @variant masterClassic Режим отображения мастера, в котором отмеченная маркером строка имеет контрастный фон.
  * @variant default Плоский список.
  */
 
@@ -705,6 +726,7 @@ export interface IList {
 /*ENG
  * @typedef {String} Style
  * @variant master Stylizes control as MasterDetail
+ * @variant masterClassic Stylizes control as MasterDetail in which the line marked with a marker has a contrasting background
  * @variant default Simple list
  */
 

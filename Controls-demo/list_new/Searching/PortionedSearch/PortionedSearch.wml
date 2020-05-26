@@ -19,6 +19,14 @@
                         </ws:footerTemplate>
                     </ws:partial>
                 </ws:loadingIndicatorTemplate>
+                <ws:continueSearchTemplate>
+                    <ws:partial template="Controls/list:ContinueSearchTemplate"
+                                scope="{{continueSearchTemplate}}">
+                        <ws:footerTemplate>
+                            <div>Дополнительная информация при итеративном поиске</div>
+                        </ws:footerTemplate>
+                    </ws:partial>
+                </ws:continueSearchTemplate>
             </Controls.list:View>
         </Controls.scroll:HotKeysContainer>
     </Controls.scroll:Container>

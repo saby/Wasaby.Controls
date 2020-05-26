@@ -246,7 +246,7 @@ define(
                menuControl._context = {
                   isTouch: { isTouch: false }
                };
-               handleStub = sandbox.stub(menuControl, 'handleCurrentItem');
+               handleStub = sandbox.stub(menuControl, 'startOpeningTimeout');
             });
 
             it('on groupItem', function() {
@@ -269,6 +269,19 @@ define(
                   contents: new entity.Model()
                }), {});
                assert.isTrue(handleStub.notCalled);
+            });
+
+            it('close opened menu', function() {
+               let isClosed = false;
+               menuControl._children.Sticky = {
+                  close: () => { isClosed = true; }
+               };
+               menuControl.subMenu = true;
+               menuControl._itemMouseEnter('mouseenter', new display.CollectionItem({
+                  contents: new entity.Model()
+               }), { target: 'targetTest', nativeEvent: 'nativeEvent' });
+               assert.isTrue(handleStub.calledOnce);
+               assert.isTrue(isClosed);
             });
 
             sinon.restore();
@@ -325,6 +338,7 @@ define(
          it('_footerMouseEnter', function() {
             let isClosed = false;
             let menuControl = getMenu();
+            menuControl.subMenu = true;
             let event = {
                nativeEvent: {}
             };
@@ -343,6 +357,7 @@ define(
             menuControl.isMouseInOpenedItemArea = function() {
                return true;
             };
+            menuControl._subDropdownItem = true;
             isClosed = false;
             menuControl._footerMouseEnter(event);
             assert.isFalse(isClosed);
