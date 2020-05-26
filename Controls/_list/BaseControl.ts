@@ -629,17 +629,25 @@ var _private = {
                 }
 
                 self._inertialScrolling.callAfterScrollStopped(() => {
-                    if (direction === 'down') {
-                        beforeAddItems(addedItems);
-                        if (self._options.useNewModel) {
-                            self._listViewModel.getCollection().append(addedItems);
-                        } else {
-                            self._listViewModel.appendItems(addedItems);
-                        }
-                        afterAddItems(countCurrentItems, addedItems);
-                    } else if (direction === 'up') {
-                        drawItemsUp(countCurrentItems, addedItems);
-                    }
+                    // Приходится делать таймаут для того, чтобы добавление элементов произошло гарантированно ПОСЛЕ
+                    // отрисовки пересчитанного _pagingVisible и не в процессе фазы обновления (doAfterUpdate).
+                    // Так же см. скриншот, приложенный к реквесту в ошибке:
+                    // https://online.sbis.ru/opendoc.html?guid=b6715c2a-704a-414b-b764-ea2aa4b9776b
+                    setTimeout(() => {
+                        _private.doAfterUpdate(self, () => {
+                            if (direction === 'down') {
+                                beforeAddItems(addedItems);
+                                if (self._options.useNewModel) {
+                                    self._listViewModel.getCollection().append(addedItems);
+                                } else {
+                                    self._listViewModel.appendItems(addedItems);
+                                }
+                                afterAddItems(countCurrentItems, addedItems);
+                            } else if (direction === 'up') {
+                                drawItemsUp(countCurrentItems, addedItems);
+                            }
+                        });
+                    });
                 });
 
                 return addedItems;
