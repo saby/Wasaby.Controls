@@ -2159,21 +2159,6 @@ define([
             };
             assert.isFalse(calcTriggerVisibility({_pagingVisible: true}, scrollParams, 100, 'down'), 'down trigger shouldn\'t be visible');
          });
-         
-         it('edges', () => {
-            let scrollParams = {
-               scrollTop: 100,
-               clientHeight: 300,
-               scrollHeight: 600
-            };
-            assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger should be visible');
-            scrollParams = {
-               scrollTop: 200,
-               clientHeight: 300,
-               scrollHeight: 600
-            };
-            assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'down'), 'down trigger shouldn\'t be visible');
-         });
 
       });
       it('needShowPagingByScrollSize', function() {
