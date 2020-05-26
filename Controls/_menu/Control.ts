@@ -8,7 +8,7 @@ import {RecordSet, List} from 'Types/collection';
 import {ICrudPlus, PrefetchProxy} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
-import {Collection, Search, CollectionItem, SelectionController, ItemActionsController} from 'Controls/display';
+import {Collection, Search, CollectionItem, SelectionController} from 'Controls/display';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
