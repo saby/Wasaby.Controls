@@ -1334,7 +1334,12 @@ var
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
-            if (stickyColumn && current.isFullGridSupport()  && !current.dragTargetPosition && current.index !== -1) {
+            // лесенка не хранится для элементов вне текущего диапазона startIndex - stopIndex
+            if (stickyColumn && 
+                current.isFullGridSupport() && 
+                !current.dragTargetPosition && 
+                current.index !== -1 && 
+                self._ladder.stickyLadder[current.index]) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
             }
 
