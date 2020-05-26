@@ -25,5 +25,5 @@ export function readWithAdditionalFields(
         (targetSource as IOptions).setOptions(options);
     }
 
-    return (targetSource as ICrud).read(key, metaData as object);
+    return (source as ICrud).read(key, metaData as object);
 }
