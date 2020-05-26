@@ -108,7 +108,7 @@ class PageQueryParamsController implements IQueryParamsController {
         const stateChanged = this.getAllDataCount() !== more;
 
         if (stateChanged) {
-            this._more.setMoreMeta(more);
+            this._more = more;
         }
 
         return stateChanged;
