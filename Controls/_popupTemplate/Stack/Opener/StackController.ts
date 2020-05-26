@@ -29,6 +29,7 @@ class StackController extends BaseController {
 
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         const isSinglePopup = this._stack.getCount() < 2;
+
         if (isSinglePopup) {
             this._prepareSizeWithoutDOM(item);
         } else {
@@ -48,6 +49,9 @@ class StackController extends BaseController {
             if (isSinglePopup) {
                 this._updateSideBarVisibility();
             }
+        }
+
+        if (item.popupOptions.isCompoundTemplate) {
             return true;
         }
 
