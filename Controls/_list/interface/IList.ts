@@ -713,7 +713,7 @@ export interface IList {
 /**
  * @typedef {String} Style
  * @variant master Двухколоночный реестр.
- * @variant masterClassic Классическое отображение двухколоночного реестра.
+ * @variant masterClassic Режим отображения мастера, где отмеченная маркером строка имеет контрастный фон.
  * @variant default Плоский список.
  */
 
@@ -726,7 +726,7 @@ export interface IList {
 /*ENG
  * @typedef {String} Style
  * @variant master Stylizes control as MasterDetail
- * @variant masterClassic Stylizes control as classic MasterDetail
+ * @variant masterClassic Stylizes control as MasterDetail with marked line has a contrasting background
  * @variant default Simple list
  */
 
