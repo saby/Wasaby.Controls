@@ -2,7 +2,6 @@ import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
 
 import template = require('wml!Controls/_listRender/View/View');
 
-import { debounce } from 'Types/function';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { create as diCreate } from 'Types/di';
@@ -17,7 +16,8 @@ import {
 import {
     Controller as ItemActionsController,
     TItemActionVisibilityCallback,
-    IItemAction} from 'Controls/itemActions';
+    IItemAction,
+    TItemActionsPosition} from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import { load as libraryLoad } from 'Core/library';
@@ -37,12 +37,12 @@ export interface IViewOptions extends IControlOptions {
     itemActions?: any[];
     itemActionVisibility?: 'onhover'|'delayed'|'visible';
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
-    itemActionsPosition?: string;
+    itemActionsPosition?: TItemActionsPosition;
     itemActionsProperty?: string;
     style?: string;
     itemActionsClass?: string;
 
-    actionAlignment?: string;
+    actionAlignment?: 'horizontal'|'vertical';
     actionCaptionPosition?: 'right'|'bottom'|'none';
 
     editingConfig?: any;
@@ -394,22 +394,22 @@ export default class View extends Control<IViewOptions> {
      * Инициализирует контрорллере и обновляет в нём данные
      * @private
      */
-    protected _updateItemActions(): void {
+    protected _updateItemActions(options: IViewOptions): void {
         if (!this._itemActionsController) {
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._collection.getEditingConfig();
         this._itemActionsController.update({
             collection: this._collection,
-            itemActions: this._options.itemActions,
-            itemActionsProperty: this._options.itemActionsProperty,
-            visibilityCallback: this._options.itemActionVisibilityCallback,
-            itemActionsPosition: this._options.itemActionsPosition,
-            style: this._options.style,
-            theme: this._options.theme,
-            actionAlignment: this._options.actionAlignment,
-            actionCaptionPosition: this._options.actionCaptionPosition,
-            itemActionsClass: this._options.itemActionsClass,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style: options.itemActionVisibility === 'visible' ? 'transparent' : options.style,
+            theme: options.theme,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility
         });
@@ -420,7 +420,8 @@ export default class View extends Control<IViewOptions> {
             itemActionsPosition: 'inside',
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
-            style: 'default'
+            style: 'default',
+            itemActionVisibility: 'onhover'
         };
     }
 }

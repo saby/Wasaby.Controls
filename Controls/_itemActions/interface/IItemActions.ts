@@ -191,7 +191,7 @@ export type IMenuActionHandler = (event: SyntheticEvent, action: string, data: M
 export interface IMenuConfig {
     opener: Element | Control<object, unknown>;
     template: string;
-    actionOnScroll: string;
+    actionOnScroll: 'none'|'track'|'close';
     target: {
         getBoundingClientRect(): ClientRect;
     };

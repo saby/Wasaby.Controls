@@ -67,9 +67,9 @@ export interface IItemActionsControllerOptions {
     itemActionsPosition?: TItemActionsPosition;
     /**
      * Стиль отображения контейнера controls-itemActionsV.
-     * Варианты: 'master' | 'default'
+     * Варианты: 'master' | 'default' | 'transparent'
      */
-    style?: 'master'|'default';
+    style?: 'master'|'default'|'transparent';
     /**
      * Класс для установки контейнеру controls-itemActionsV.
      * По умолчанию 'controls-itemActionsV_position_bottomRight'
