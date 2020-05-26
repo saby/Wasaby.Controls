@@ -785,6 +785,7 @@ define(
             };
             popupTemplate.StackController._stack.clear();
             popupTemplate.StackController._stack.add(item);
+            popupTemplate.StackController._isNewEnvironment = () => true;
             let result = popupTemplate.StackController.elementCreated(item);
             assert.equal(result, false);
 
