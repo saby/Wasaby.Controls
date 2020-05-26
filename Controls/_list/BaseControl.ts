@@ -60,6 +60,7 @@ import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
+import {IList} from "./interface/IList";
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -284,11 +285,6 @@ const _private = {
 
                     if (self._markerController) {
                         _private.updateMarkerController(self, self._options);
-                    }
-
-                    if (self._options.itemActionVisibility === 'visible') {
-                        self._showActions = true;
-                        self._updateItemActions(self._options);
                     }
 
                     if (self._sourceController) {
@@ -2020,6 +2016,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         newOptions.dataLoadCallback(self._items);
                     }
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
+
+                    self._initVisibleItemActions(newOptions);
                     return;
                 }
                 if (receivedError) {
@@ -2054,6 +2052,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         }
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
+
+                    self._initVisibleItemActions(newOptions);
 
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
@@ -2610,7 +2610,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     /**
-     * Выполняется из шаблона при mouseenter
+     * Инициализирует опции при mouseenter в шаблоне контрола
      * @private
      */
     _initItemActions(): void {
@@ -2622,13 +2622,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     /**
+     * инициализирует опции записи при загрузке контрола
+     * @param options
+     * @private
+     */
+    _initVisibleItemActions(options: IList): void {
+        if (options.itemActionVisibility === 'visible') {
+            this._showActions = true;
+            this._updateItemActions(options);
+        }
+    },
+
+    /**
      * Необходимо передавать опции для случая, когда в результате изменения модели меняются параметры
      * для показа ItemActions и их нужно поменять до отрисовки.
      * @param options
      * @private
      */
-    _updateItemActions(options: any): void {
-        console.log('пытаемся показать');
+    _updateItemActions(options: IList): void {
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (this.__error || !this._listViewModel) {
@@ -2653,17 +2664,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility
         });
-        const item = this._listViewModel.at(0);
-        if (item.getActions().length) {
-            console.log(item.getActions());
-        }
-        console.log('пытаемся показать');
         if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
                 this._listViewModel.resetCachedItemData(recordKey);
             });
             this._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
-            console.log('показали');
         }
     },
 

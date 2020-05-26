@@ -36,7 +36,7 @@
         <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
 
-<!--    <ws:if data="{{itemData.shouldDisplayActions()}}">-->
+    <ws:if data="{{itemData.shouldDisplayActions()}}">
         <ws:if data="{{itemData.isSwiped()}}">
             <ws:partial template="{{swipeTemplate}}"
                         itemData="{{itemData}}"
@@ -49,7 +49,7 @@
                         itemData="{{itemData}}"
                         highlightOnHover="{{highlightOnHover}}"/>
         </ws:else>
-<!--    </ws:if>-->
+    </ws:if>
 </ws:template>
 <ws:if data="{{itemData.isSticky}}">
    <ws:partial template="itemOutputTpl">
