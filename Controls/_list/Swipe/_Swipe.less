@@ -44,14 +44,18 @@
   pointer-events: auto;
 }
 
-.controls-Swipe_theme-@{themeName} {
-  align-items: center;
-  display: inline-flex;
-  height: 100%;
-  overflow: hidden;
-  box-sizing: border-box;
-  background-color: transparent;
-  background-image: linear-gradient(to right, transparent, @shadow-color_swipe @shadow-blur_swipe, @background-color_swipe @shadow-blur_swipe, @background-color_swipe 100%);
+.controls-BaseControl_showActions_delayed,
+.controls-BaseControl_showActions_onhover,
+.controls-BaseControl_showActions_visible {
+   .controls-Swipe_theme-@{themeName} {
+      align-items: center;
+      display: inline-flex;
+      height: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      background-color: transparent;
+      background-image: linear-gradient(to right, transparent, @shadow-color_swipe @shadow-blur_swipe, @background-color_swipe @shadow-blur_swipe, @background-color_swipe 100%);
+   }
 }
 
 .controls-Swipe__action {
