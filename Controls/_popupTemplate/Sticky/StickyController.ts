@@ -239,6 +239,7 @@ class StickyController extends BaseController {
         } else {
             this._printTargetRemovedWarn();
         }
+        return true;
     }
 
     elementUpdated(item, container) {
