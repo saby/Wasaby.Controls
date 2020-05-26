@@ -24,6 +24,13 @@ import {LocalStorageNative} from 'Browser/Storage';
 /**
  * Контейнер с тонким скроллом.
  * Для контрола требуется {@link Controls/_scroll/Scroll/Context context}.
+ * 
+ * @remark
+ * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
+ * Для корректной работы внутри WS3 необходимо поместить контрол в контроллер Controls/dragnDrop:Compound, который обеспечит работу функционала Drag-n-Drop.
+ * 
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
  *
  * @class Controls/_scroll/Container
  * @extends Core/Control
@@ -31,9 +38,6 @@ import {LocalStorageNative} from 'Browser/Storage';
  * @public
  * @author Красильников А.С.
  * @category Container
- * @remark
- * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
- * Для корректной работы внутри WS3 необходимо поместить контрол в контроллер Controls/dragnDrop:Compound, который обеспечит работу функционала Drag-n-Drop.
  * @demo Controls-demo/Container/Scroll
  *
  */

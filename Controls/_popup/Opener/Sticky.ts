@@ -17,7 +17,10 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
 /**
  * Контрол, открывающий всплывающее окно, которое позиционнируется относительно вызывающего элемента.
  * @remark
- * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ здесь}.
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/sticky/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * 
  * @class Controls/_popup/Opener/Sticky
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener

@@ -11,6 +11,11 @@ import Util from './Util';
 
 /**
  * Интерфейс опций контрола {@link Controls/spoiler:View}.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_spoiler.less">переменные тем оформления</a>
+ * 
  * @interface Controls/_spoiler/IViewOptions
  * @public
  * @author Красильников А.С.

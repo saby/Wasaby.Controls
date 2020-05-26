@@ -104,6 +104,26 @@ export interface IList {
  * @default Controls/list:LoadingIndicatorTemplate
  */
 
+/**
+ * @name Controls/_list/interface/IList#continueSearchTemplate
+ * @cfg {string|Function} Шаблон отображения блока, который отображается при прерывании итеративного поиска.
+ * @default Controls/list:ContinueSearchTemplate
+ * @demo Controls-demo/list_new/Searching/PortionedSearch/Index
+ * @example
+ * <pre>
+ *     <Controls.list:View>
+ *        <ws:loadingIndicatorTemplate>
+ *            <ws:partial template="Controls/list:LoadingIndicatorTemplate"
+ *                        scope="{{loadingIndicatorTemplate}}">
+ *               <ws:footerTemplate>
+ *                  <div>Дополнительная информация при итеративном поиске</div>
+ *               </ws:footerTemplate>
+ *            </ws:partial>
+ *        </ws:loadingIndicatorTemplate>
+ *     </Controls.list:View>
+ * </pre>
+ */
+
 /*ENG
  * @name Controls/_list/interface/IList#contextMenuVisibility
  * @cfg {Boolean} Determines whether context menu should be shown on right-click.

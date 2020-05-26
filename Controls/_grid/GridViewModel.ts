@@ -1399,7 +1399,9 @@ var
             };
             const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
-            controls-GridView__itemV_marker-${style}_theme-${self._options.theme}`;
+            controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${self._options.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${self._options.theme}`;
 
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
@@ -1472,6 +1474,7 @@ var
                 const currentColumn: any = {
                         item: current.item,
                         style: current.style,
+                        backgroundStyle: current.backgroundStyle,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,

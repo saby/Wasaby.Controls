@@ -78,7 +78,11 @@ var _private = {
 
 /**
  * Контейнер для списка в выпадающем блоке автодополнения.
- * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>здесь</a>.
+ * 
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/suggest/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggestPopup.less">переменные тем оформления</a>
+ * 
  *
  * @class Controls/_suggestPopup/List
  * @extends Core/Control
