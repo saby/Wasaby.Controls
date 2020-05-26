@@ -132,21 +132,35 @@ const
          }
          return shadowStyles;
       },
-      drawTransform (self, position) {
-         // This is the fastest synchronization method scroll position and cell transform.
-         // Scroll position synchronization via VDOM is much slower.
-         let newHTML = `.${self._transformSelector} .controls-Grid__cell_transform { transform: translateX(-${position}px); }`;
+       drawTransform(self, position): void {
+           // This is the fastest synchronization method scroll position and cell transform.
+           // Scroll position synchronization via VDOM is much slower.
 
-         if (!isFullGridSupport()) {
-             const maxTranslate = self._contentSize - self._contentContainerSize;
-             newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(-${maxTranslate}px); }`;
-         }
+           // Горизонтальный скролл передвигает всю таблицу, но компенсирует скролл для некоторых ячеек, например для
+           // зафиксированных ячеек
+           let newHTML =
+               // Скроллируется таблица
+               `.${self._transformSelector} .controls-Grid_columnScroll { transform: translateX(-${position}px); }` +
 
-         if (self._children.contentStyle.innerHTML !== newHTML) {
-            self._children.contentStyle.innerHTML = newHTML;
-         }
+               // Не скроллируем зафиксированные колонки
+               `.${self._transformSelector} .controls-Grid__cell_fixed { transform: translateX(${position}px); }` +
 
-      },
+               // Не скроллируем скроллбар
+               `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }`;
+
+           // Не скроллируем операции над записью
+           if (isFullGridSupport()) {
+               newHTML += `.${self._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
+           } else {
+               const maxTranslate = self._contentSize - self._contentContainerSize;
+               newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(${position - maxTranslate}px); }`;
+           }
+
+           if (self._children.contentStyle.innerHTML !== newHTML) {
+               self._children.contentStyle.innerHTML = newHTML;
+           }
+
+       },
        /**
         * Скрывает/показывает горизонтальный скролл и шапку таблицы (display: none),
         * чтобы, из-за особенностей sticky элементов, которые лежат внутри grid-layout,
