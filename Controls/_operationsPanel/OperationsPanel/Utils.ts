@@ -1,6 +1,7 @@
 import toolbars = require('Controls/toolbars');
 import {showType} from 'Controls/Utils/Toolbar';
 import getWidthUtil = require('Controls/Utils/getWidth');
+import { Logger } from 'UI/Utils';
 
 
    var MENU_WIDTH = 0;
@@ -24,20 +25,32 @@ import getWidthUtil = require('Controls/Utils/getWidth');
       },
 
       getItemsSizes: function(items, visibleKeys, theme, itemTemplate, itemTemplateProperty) {
-         var
-            measurer = document.createElement('div'),
-            itemsSizes = [],
-            itemsMark = '';
+         const measurer = document.createElement('div');
+         const itemsSizes = [];
+         let itemsMark = '';
+         let item;
+         let buttonTemplateOptions;
 
          visibleKeys.forEach(function(key) {
-            const item = items.getRecordById(key);
+            item = items.getRecordById(key);
+            buttonTemplateOptions = toolbars.getButtonTemplateOptionsByItem(item);
+
+            if (itemTemplateProperty &&
+                item.get(itemTemplateProperty) &&
+                !buttonTemplateOptions.caption &&
+                !buttonTemplateOptions.icon) {
+               Logger.error(
+                   'OperationsPanel: при использовании своего шаблона отображения операции (itemTemplateProperty) ' +
+                   'необходимо задать caption и/или icon на каждой операции для корректных расчётов размеров');
+            }
+
             itemsMark += toolbars.ItemTemplate({
                item,
                size: 'm',
                itemsSpacing: 'medium',
                theme,
                buttonTemplate: toolbars.getButtonTemplate(),
-               buttonTemplateOptions: toolbars.getButtonTemplateOptionsByItem(item),
+               buttonTemplateOptions,
                contentTemplate: _private.getContentTemplate(item, itemTemplate, itemTemplateProperty)
             });
          });
