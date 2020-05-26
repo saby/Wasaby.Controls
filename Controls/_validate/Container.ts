@@ -27,6 +27,7 @@ export interface IValidateConfig {
 const _private = {
 
     openInfoBox(self) {
+        _private.clearCloseId(self);
         if (self._validationResult && self._validationResult.length && !self._isOpened) {
             self._isOpened = true;
             const cfg = {
@@ -82,6 +83,13 @@ const _private = {
         }, 300);
     },
 
+    clearCloseId(self): void {
+        if (self._closeId) {
+            clearTimeout(self._closeId);
+            self._closeId = null;
+        }
+    },
+
     forceCloseInfoBox(self) {
         const delay = 0;
         if (self._isNewEnvironment) {
@@ -108,7 +116,7 @@ class ValidateContainer extends Control {
     _isOpened: boolean = false;
     _contentActive: boolean = false;
     _currentValue: any;
-    _validationResult: ValidResult;
+    _validationResult: ValidResult = null;
     _isNewEnvironment: boolean;
     _closeId: number;
 
@@ -225,7 +233,7 @@ class ValidateContainer extends Control {
     validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
-            this.setValidationResult(undefined);
+            this.setValidationResult(null);
             this._callValidators(validators, validateConfig).then(resolve);
         });
 
@@ -240,14 +248,16 @@ class ValidateContainer extends Control {
      * @see validate
      */
     setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
-        this._validationResult = validationResult;
-        if (!(validationResult instanceof Promise)) {
-            this._forceUpdate();
-        }
-        if (validationResult && !config.hideInfoBox) {
-            _private.openInfoBox(this);
-        } else if (this._isOpened && validationResult === null) {
-            _private.closeInfoBox(this);
+        if (this._validationResult !== validationResult) {
+            this._validationResult = validationResult;
+            if (!(validationResult instanceof Promise)) {
+                this._forceUpdate();
+            }
+            if (validationResult && !config.hideInfoBox) {
+                _private.openInfoBox(this);
+            } else if (this._isOpened && validationResult === null) {
+                _private.closeInfoBox(this);
+            }
         }
     }
 
@@ -264,7 +274,7 @@ class ValidateContainer extends Control {
     }
 
     _hoverHandler(): void {
-        clearTimeout(this._closeId);
+        _private.clearCloseId(this);
         if (!this._isOpened) {
             _private.openInfoBox(this);
         }
@@ -278,6 +288,7 @@ class ValidateContainer extends Control {
 
     _focusInHandler(): void {
         this._contentActive = true;
+        _private.clearCloseId(this);
         if (!this._isOpened) {
             _private.openInfoBox(this);
         }
@@ -308,7 +319,7 @@ class ValidateContainer extends Control {
     }
 
     _hoverInfoboxHandler(): void {
-        clearTimeout(this._closeId);
+        _private.clearCloseId(this);
     }
 
     _valueChangedHandler(event: Event, value: any): void {
