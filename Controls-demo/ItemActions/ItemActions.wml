@@ -4,7 +4,7 @@
             <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                      state="/Controls-demo/app/:app"
                                      app="Controls-demo/ItemActions/ListVisible/Index">
-                <a href="{{content.href}}">Опции записи всегда видимы в плоском списке</a>
+                <a href="{{content.href}}">Опции записи всегда видимы</a>
             </Router.router:Reference>
             <Controls-demo.ItemActions.ListVisible.Index/>
         </div>
@@ -13,29 +13,9 @@
             <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                      state="/Controls-demo/app/:app"
                                      app="Controls-demo/ItemActions/ListDelayed/Index">
-                <a href="{{content.href}}">Опции записи видимы c задержкой 100мс в плоском списке</a>
+                <a href="{{content.href}}">Опции записи видимы c задержкой 100мс</a>
             </Router.router:Reference>
             <Controls-demo.ItemActions.ListDelayed.Index/>
-        </div>
-    </div>
-
-    <div class="controlsDemo__wrapper controlsDemo__flexRow controlsDemo__flexRow_noWrap">
-        <div class="controlsDemo__cell">
-            <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
-                                     state="/Controls-demo/app/:app"
-                                     app="Controls-demo/ItemActions/GridVisible/Index">
-                <a href="{{content.href}}">Опции записи всегда видимы в таблице</a>
-            </Router.router:Reference>
-            <Controls-demo.ItemActions.GridVisible.Index/>
-        </div>
-
-        <div class="controlsDemo__cell">
-            <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
-                                     state="/Controls-demo/app/:app"
-                                     app="Controls-demo/ItemActions/GridDelayed/Index">
-                <a href="{{content.href}}">Опции записи видимы c задержкой 100мс в таблице</a>
-            </Router.router:Reference>
-            <Controls-demo.ItemActions.GridDelayed.Index/>
         </div>
     </div>
 </div>

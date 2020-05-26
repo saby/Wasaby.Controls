@@ -1,9 +1,0 @@
-<div class="controlsDemo__wrapper controlsDemo__itemActions_grid_visible">
-    <Controls.grid:View
-            keyProperty="id"
-            source="{{_viewSource}}"
-            itemActions="{{_itemActions}}"
-            itemActionVisibility="{{_itemActionVisibility}}"
-            columns="{{_columns}}">
-    </Controls.grid:View>
-</div>
