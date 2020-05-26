@@ -64,7 +64,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     */
 
    /**
-    * @name Controls/_filterPopup/DetailPanel#topTemplate Шаблон, который отображает в шапке панели фильтров.
+    * @name Controls/_filterPopup/DetailPanel#topTemplate Шаблон, который отображает панели фильтров в шапке.
     */
 
 
