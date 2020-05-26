@@ -9,7 +9,12 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Поле ввода с выпадающим списком с возможностью автодополнения.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">Демо-пример</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less">переменные тем оформления</a>
+ * 
  *
  * @class Controls/_suggest/Selector
  * @extends Controls/input:Text

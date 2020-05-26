@@ -14,8 +14,14 @@ import PropertyGridItem from './PropertyGridItem';
 
 /**
  * Контрол, который позволяет пользователям просматривать и редактировать свойства объекта.
+ * 
+ * @remark
  * Вы можете использовать стандартные редакторы PropertyGrid или специальные редакторы.
  * По умолчанию propertyGrid будет автоматически генерировать все свойства для данного объекта.
+ * 
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_propertyGrid.less">переменные тем оформления</a>
+ * 
  * @class Controls/_propertyGrid/PropertyGrid
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IPropertyGrid
