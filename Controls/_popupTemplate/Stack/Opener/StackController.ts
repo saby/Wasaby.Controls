@@ -45,7 +45,7 @@ class StackController extends BaseController {
             this._updateItemPosition(item);
         }
 
-        if (!this._isNewEnvironment()) {
+        if (!isNewEnvironment()) {
             if (isSinglePopup) {
                 this._updateSideBarVisibility();
             }
@@ -123,10 +123,6 @@ class StackController extends BaseController {
             item.position = position;
             this._updatePopupOptions(item);
         }
-    }
-
-    private _isNewEnvironment(): boolean {
-        return isNewEnvironment();
     }
 
     private _update(): void {
