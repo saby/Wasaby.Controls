@@ -395,14 +395,14 @@ let
          const {scrollTop, clientHeight, scrollHeight} = self._children.content;
 
          if (scrollTop <= 0) {
-            self._pagingState.stateUp = 'disabled';
-            self._pagingState.stateDown = 'normal';
+            self._pagingState.stateUp = false;
+            self._pagingState.stateDown = true;
          } else if (scrollTop + clientHeight >= scrollHeight) {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'disabled';
+            self._pagingState.stateUp = true;
+            self._pagingState.stateDown = false;
          } else {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'normal';
+            self._pagingState.stateUp = true;
+            self._pagingState.stateDown = true;
          }
       },
 
