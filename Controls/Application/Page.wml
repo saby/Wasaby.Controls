@@ -61,7 +61,6 @@
                                                                      draggingTemplateOptions="{{content.draggingTemplateOptions}}"
                                                                      draggingTemplate="{{content.draggingTemplate}}"/>
                                                       </ws:if>
-
                                                       <Controls.popup:Container attr:id="popup"
                                                                                 eventHandler="{{content._managerEventHandler}}"/>
                                                    </ws:if>
