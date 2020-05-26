@@ -835,6 +835,18 @@ const _private = {
         }
     },
 
+    calcTriggerVisibility(self, scrollParams, triggerOffset, direction: 'up' | 'down'): boolean {
+        if (direction === 'up') {
+            return scrollParams.scrollTop < triggerOffset * 1.3;
+        } else {
+            let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
+            if (self._pagingVisible) {
+                bottomScroll -= 32;
+            }
+            return bottomScroll < triggerOffset * 1.3;
+        }
+    },
+
     needShowPagingByScrollSize: function(self, doubleRatio) {
         let result = false;
 
@@ -850,6 +862,11 @@ const _private = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
             };
+            const scrollParams = {
+                scrollTop: self._scrollTop,
+                clientHeight: self._viewPortSize,
+                scrollHeight: self._viewSize
+            }
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
             // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
@@ -861,15 +878,11 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=e0927a79-c520-4864-8d39-d99d36767b31
             // поэтому приходится вычислять видны ли они на экране
             if (!visbilityTriggerUp) {
-                visbilityTriggerUp = self._scrollTop > self._loadOffsetTop * 1.3;
+                visbilityTriggerUp = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetTop, 'up');
             }
 
             if (!visbilityTriggerDown && self._viewSize && self._viewPortSize) {
-                let bottomScroll = self._viewSize - self._viewPortSize - self._scrollTop;
-                if (self._pagingVisible) {
-                    bottomScroll -= 32;
-                }
-                visbilityTriggerDown = bottomScroll < self._loadOffsetBottom * 1.3;
+                visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');;
             }
 
             if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
@@ -3159,6 +3172,7 @@ BaseControl.getDefaultOptions = function() {
         selectedKeys: defaultSelectedKeys,
         excludedKeys: defaultExcludedKeys,
         loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
+        continueSearchTemplate: 'Controls/list:ContinueSearchTemplate',
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {},
