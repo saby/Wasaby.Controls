@@ -68,7 +68,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     * @cfg {String|Function} Шаблон отображения заголовка на Панели фильтров.
     */
 
-
    /**
     * @event Controls/_filterPopup/DetailPanel#sendResult Происходит при клике по кнопке "Отобрать".
     * @param {Object} filter Объект фильтра {'filter_id': 'filter_value'}.
