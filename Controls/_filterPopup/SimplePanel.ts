@@ -70,7 +70,7 @@ var _private = {
         });
         return pDef.done().getResult().addCallback(() => {
             const displayItems = items.filter((item) => {
-                return item.items?.getCount() > 1;
+                return item.items?.getCount() > 1 || item.hasMoreButton;
             });
             return displayItems.length ? displayItems : [items[0]];
         });
