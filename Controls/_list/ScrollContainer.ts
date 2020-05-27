@@ -703,15 +703,6 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    /**
-     * Обновление режима тени, в зависимости от размеров виртуальных распорок
-     * @remark Так как при виртуальном скроллировании отображается только некоторый "видимый" набор записей
-     * то scrollContainer будет неверно рассчитывать наличие тени, поэтому управляем режимом тени вручную
-     */
-    private _updateShadowMode(): void {
-        this._notify('updateShadowMode', [this._placeholders]);
-    }
-
     private _updateTriggerOffset(scrollHeight: number, viewportHeight: number): void {
         this._triggerOffset =
             (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
