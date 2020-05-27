@@ -60,8 +60,10 @@ export default class PortionedSearch<PortionedSearchOptions> {
     }
 
     stopSearch(): void {
-        this._clearTimer();
-        this._stopSearch();
+        if (!this._isSearchContinued()) {
+            this._clearTimer();
+            this._stopSearch();
+        }
     }
 
     private _startTimer(): void {
