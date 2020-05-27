@@ -917,10 +917,6 @@ let
          }
       },
 
-       _scrollStateChangedHandler(): void {
-          //console.log('_scrollStateChangedHandler');
-       },
-
       _scrollbarTaken() {
          if (this._showScrollbarOnHover && (this._displayState.canScroll || this._displayState.canHorizontalScroll)) {
             this._notify('scrollbarTaken', [], { bubbling: true });
@@ -1202,7 +1198,6 @@ let
             this._topPlaceholderSize = placeholdersSizes.top;
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
             this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
-            this._children.scrollWatcher2.updatePlaceholdersSize(placeholdersSizes);
          }
       },
 

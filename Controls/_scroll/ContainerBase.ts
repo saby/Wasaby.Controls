@@ -1,10 +1,11 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls/_scroll/Scroll/Watcher/Watcher2');
-import {Registrar} from 'Controls/event';
+import template = require('wml!Controls/_scroll/Scroll/ContainerBase/ContainerBase');
+import {Registrar} from '../event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 
-interface IWatcher2 extends IControlOptions {
+
+interface IContainerBaseOptions extends IControlOptions {
     scrollMode?: string;
     task1178703223?: any;
 }
@@ -36,10 +37,10 @@ interface IState {
     viewPortRect: ClientRect;
 }
 
-export default class Watcher2 extends Control<IWatcher2> {
+export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _template: TemplateFunction = template;
     protected _container: HTMLElement = null;
-    protected _options: IWatcher2;
+    protected _options: IContainerBaseOptions;
 
     private _state: IState = null;
     private _oldState: IState = null;
@@ -50,7 +51,6 @@ export default class Watcher2 extends Control<IWatcher2> {
 
     private _topPlaceholderSize: number;
     private _bottomPlaceholderSize: number;
-    private _scrollTopTimer: number = null;
 
     _beforeMount(options: IControlOptions): void {
         this._registrar = new Registrar({register: 'scrollContainer'});
@@ -86,69 +86,23 @@ export default class Watcher2 extends Control<IWatcher2> {
         this.onScrollContainer();
     }
 
-    _doScrollHandler(e: SyntheticEvent, scrollParam: string): void {
-        this.doScroll(scrollParam);
-        //e.stopPropagation(); раскоменитить
-    }
-
     _registerIt(event: SyntheticEvent, registerType: string, component: any,
                 callback: () => void, triggers: object): void {
-        //TODO заменить listScroll потом на что нибудь вроде containerScroll и удалить notify register
-        if (registerType === 'listScroll') {
+        if (registerType === 'containerScroll') {
             this._registrar.register(event, component, callback);
-            this._notify('register', ['listScroll', component, callback, triggers], {bubbling: true});
             this._onRegisterNewComponent(component);
         }
     }
 
     _unRegisterIt(e: SyntheticEvent, registerType: string, component: any): void {
-        if (registerType === 'listScroll') {
+        if (registerType === 'containerScroll') {
             this._registrar.unregister(e, component);
         }
     }
 
-    doScroll(scrollParam: string): void {
-        this._updateState();
-        if (scrollParam === 'top') {
-            this.setScrollTop(0);
-        } else {
-           const currentScrollTop = this._state.scrollTop + (this._isVirtualPlaceholderMode() ?
-               this._topPlaceholderSize : 0);
-           if (scrollParam === 'bottom') {
-               this.setScrollTop(this._state.scrollHeight - this._state.clientHeight);
-           } else if (scrollParam === 'pageUp') {
-               this.setScrollTop(currentScrollTop - this._state.clientHeight);
-           } else if (scrollParam === 'pageDown') {
-               this.setScrollTop(currentScrollTop + this._state.clientHeight);
-           }
-        }
-    }
-
     setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
-        if (this._isVirtualPlaceholderMode() && !withoutPlaceholder) {
-            this._updateState();
-            const realScrollTop = scrollTop - this._topPlaceholderSize;
-            const scrollTopOverflow = this._state.scrollHeight - realScrollTop - this._state.clientHeight < 0;
-            const applyScrollTop = () => {
-                this._container.scrollTop = realScrollTop;
-            };
-            if (realScrollTop >= 0 && !scrollTopOverflow) {
-                this._container.scrollTop = realScrollTop;
-            } else if (this._topPlaceholderSize === 0 && realScrollTop < 0 || scrollTopOverflow &&
-                this._bottomPlaceholderSize === 0) {
-                applyScrollTop();
-            } else {
-                this._sendByRegistrar('virtualScrollMove', {
-                    scrollTop,
-                    scrollHeight: this._state.scrollHeight,
-                    clientHeight: this._state.clientHeight,
-                    applyScrollTopCallback: applyScrollTop
-                });
-            }
-        } else {
+        if (!this._isVirtualPlaceholderMode() && withoutPlaceholder) {
             this._container.scrollTop = scrollTop;
-            // в watcher1 в onScrollContainer передается withObserver = false, значит вызовется sendEdgePositions,
-            // в других случаях withObserver = true, значит получается sendEdgePositions вызван не будет (?)
             this.onScrollContainer();
         }
     }
@@ -162,43 +116,10 @@ export default class Watcher2 extends Control<IWatcher2> {
         if (this._state.scrollTop === this._oldState.scrollTop) {
             return;
         }
-
         this._sendByRegistrar('scrollStateChanged', {
             state: this._state,
             oldState: this._oldState
         });
-
-        if (this._state.verticalPosition !== this._oldState.verticalPosition) {
-            setTimeout(() => {
-                this._sendByRegistrar('scrollMove', {
-                    scrollTop: this._state.scrollTop,
-                    position: this._state.verticalPosition,
-                    clientHeight: this._state.clientHeight,
-                    scrollHeight: this._state.scrollHeight
-                });
-            }, 0);
-        }
-
-        // если не почистить таймер, то может выполняться таймер из ветки ниже, т.к. он с паузой 100
-        if (this._scrollTopTimer) {
-            clearTimeout(this._scrollTopTimer);
-            this._scrollTopTimer = null;
-        } else {
-            if (!this._scrollTopTimer) {
-                this._scrollTopTimer = setTimeout(() => {
-                    if (this._scrollTopTimer) {
-                        this._sendByRegistrar('scrollMove', {
-                            scrollTop: this._state.scrollTop,
-                            position: this._state.verticalPosition,
-                            clientHeight: this._state.clientHeight,
-                            scrollHeight: this._state.scrollHeight
-                        });
-                        clearTimeout(this._scrollTopTimer);
-                        this._scrollTopTimer = null;
-                    }
-                }, 100);
-            }
-        }
     }
 
     _getVerticalPosition(): string {
@@ -230,11 +151,6 @@ export default class Watcher2 extends Control<IWatcher2> {
         return this._topPlaceholderSize || this._bottomPlaceholderSize;
     }
 
-    updatePlaceholdersSize(placeholdersSizes: any): void {
-        this._topPlaceholderSize = placeholdersSizes.top;
-        this._bottomPlaceholderSize = placeholdersSizes.bottom;
-    }
-
     _onRegisterNewComponent(component: any): void {
         this._updateState();
         if (this._calcCanScroll) {
@@ -243,13 +159,6 @@ export default class Watcher2 extends Control<IWatcher2> {
                 oldState: this._oldState
             });
         }
-
-        this._registrar.startOnceTarget(component, 'viewportResize', {
-            scrollHeight: this._state.scrollHeight,
-            scrollTop: this._state.scrollTop,
-            clientHeight: this._state.clientHeight,
-            rect: this._container.getBoundingClientRect()
-        });
     }
 
     _onResizeContainer(): void {
@@ -258,23 +167,6 @@ export default class Watcher2 extends Control<IWatcher2> {
             this._sendByRegistrar('scrollStateChanged', {
                 state: this._state,
                 oldState: this._oldState
-            });
-        }
-
-        if (this._oldState.scrollHeight !== this._state.scrollHeight) {
-            this._sendByRegistrar('viewportResize', {
-                scrollHeight: this._state.scrollHeight,
-                scrollTop: this._state.scrollTop,
-                clientHeight: this._state.clientHeight,
-                rect: this._container.getBoundingClientRect()
-            });
-        }
-
-        if ((this._oldState.clientHeight !== this._state.clientHeight) ||
-            (this._oldState.scrollHeight !== this._state.scrollHeight)) {
-            this._sendByRegistrar('scrollResize', {
-                clientHeight: this._state.clientHeight,
-                scrollHeight: this._state.scrollHeight
             });
         }
     }
@@ -329,6 +221,4 @@ export default class Watcher2 extends Control<IWatcher2> {
     _calcCanScroll(): boolean {
         return this._container.scrollHeight - this._container.clientHeight > 1;
     }
-
-    // TODO Все события которые всплывают из внутренних контролов оставляем, но переносим из скрол контейнера в watcher. saveScrollPosition, restoreScrollPosition, scrollToElement, updatePlaceholdersSize
 }
