@@ -1,4 +1,7 @@
-<Controls.popup:Sticky name="suggestPopup" scope="{{_popupOptions}}" on:result="_onResult()">
+<Controls.popup:Sticky name="suggestPopup"
+                       scope="{{_popupOptions}}"
+                       on:result="_onResult()"
+                       className="controls-Suggest__suggestionsContainer_popup_{{_options.suggestPopupOptions.direction.vertical || 'bottom'}}">
    <ws:template>
       <ws:partial template="Controls/_suggestPopup/Layer/__PopupContent"
                   name="popupContent"
