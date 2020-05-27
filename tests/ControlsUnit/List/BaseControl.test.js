@@ -3470,7 +3470,7 @@ define([
                      }
                   },
                    selectedKeys: [],
-                   excludedKeys: []`
+                   excludedKeys: []
                },
                ctrl = new lists.BaseControl();
             let dragNDropStarted = false;
