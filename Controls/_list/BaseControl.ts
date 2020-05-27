@@ -2865,16 +2865,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragEnd: function(event, dragObject) {
         if (this._dndListController) {
-            if (this._dndListController instanceof FlatController) {
-                // тут удалена првоерка на новую модель
-                const targetPosition = this._listViewModel.getDragTargetPosition();
-                if (targetPosition) {
-                    this._dndListController.dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
-                }
-            } else {
+            // тут удалена првоерка на новую модель
+            const targetPosition = this._listViewModel.getDragTargetPosition();
+            if (targetPosition) {
+                this._dndListController.dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            }
+            if (this._dndListController instanceof TreeController) {
                 // TODO dnd перенести в TreeControl, наверное просто после того как здесь вызывается метод для плоского контроллера
                 // занотифаить для TreeControl и он вызовет метод в деревянном контроллере
-                this._dndListController.stopCountDownForExpandNode()
+                this._dndListController.stopCountDownForExpandNode();
             }
         }
 
@@ -2991,9 +2990,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
+            this._dndListController.unprocessedDragEnteredItem = null;
             if (this._dndListController instanceof FlatController) {
-                this._dndListController.unprocessedDragEnteredItem = null;
-            } else {
                 // TODO dnd перенести в TreeControl, наверное просто после того как здесь вызывается метод для плоского контроллера
                 // занотифаить для TreeControl и он вызовет метод в деревянном контроллере
                 this._dndListController.stopCountDownForExpandNode()
