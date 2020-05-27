@@ -20,50 +20,28 @@ import {Bus} from 'Env/Event';
  */
 
 const ACCORDEON_MIN_WIDTH = 50;
-let stackParentCoords: IPopupPosition;
-
-const calcStackParentCoords = () => {
-    if (stackParentCoords) {
-        return stackParentCoords;
-    }
-    let stackRoot: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
-    if (!stackRoot && !isNewEnvironment()) {
-        stackRoot = document.querySelector('.ws-float-area-stack-root');
-        const isNewPageTemplate = document.body.classList.contains('ws-new-page-template');
-        const contentIsBody = stackRoot === document.body;
-        if (!contentIsBody && !isNewPageTemplate && stackRoot) {
-            stackRoot = stackRoot.parentElement as HTMLDivElement;
-        }
-    }
-    const targetCoords = TargetCoords.get(stackRoot || document.body);
-    // calc with scroll, because stack popup has fixed position only on desktop and can scroll with page
-    const leftPageScroll = detection.isMobilePlatform ? 0 : targetCoords.leftScroll;
-    stackParentCoords = {
-        top: Math.max(targetCoords.top, 0),
-        right: document.documentElement.clientWidth - targetCoords.right + leftPageScroll
-    };
-    return stackParentCoords;
-};
-
-if (document) {
-    if (document.body) {
-        calcStackParentCoords();
-    } else {
-        document.addEventListener('DOMContentLoaded', () => {
-            calcStackParentCoords();
-        });
-    }
-    window.addEventListener('resize', () => {
-        stackParentCoords = null;
-        calcStackParentCoords();
-    }, true);
-}
 
 class StackController extends BaseController {
     TYPE: string = 'Stack';
     _stack: collection.List<IPopupItem> = new collection.List();
 
     private _sideBarVisible: boolean = true;
+    constructor(): void {
+        super();
+        if (document) {
+            if (document.body) {
+                StackController.calcStackParentCoords();
+            } else {
+                document.addEventListener('DOMContentLoaded', () => {
+                    StackController.calcStackParentCoords();
+                });
+            }
+            window.addEventListener('resize', () => {
+                StackController.stackParentCoords = null;
+                StackController.calcStackParentCoords();
+            }, true);
+        }
+    }
 
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         const isSinglePopup = this._stack.getCount() < 2;
@@ -139,7 +117,7 @@ class StackController extends BaseController {
     }
 
     resizeOuter(): boolean {
-        stackParentCoords = null;
+        StackController.stackParentCoords = null;
         return super.resizeOuter.apply(this, arguments);
     }
 
@@ -378,7 +356,7 @@ class StackController extends BaseController {
     }
 
     private _getStackParentCoords(): IPopupPosition {
-        return calcStackParentCoords();
+        return StackController.calcStackParentCoords();
     }
 
     private _showPopup(item: IPopupItem): void {
@@ -513,6 +491,31 @@ class StackController extends BaseController {
             this._sideBarVisible = isVisible;
             Bus.channel('navigation').notify('accordeonVisibilityStateChange', this._sideBarVisible);
         }
+    }
+
+    private static stackParentCoords: IPopupPosition;
+
+    static calcStackParentCoords(): IPopupPosition {
+        if (StackController.stackParentCoords) {
+            return StackController.stackParentCoords;
+        }
+        let stackRoot: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
+        if (!stackRoot && !isNewEnvironment()) {
+            stackRoot = document.querySelector('.ws-float-area-stack-root');
+            const isNewPageTemplate = document.body.classList.contains('ws-new-page-template');
+            const contentIsBody = stackRoot === document.body;
+            if (!contentIsBody && !isNewPageTemplate && stackRoot) {
+                stackRoot = stackRoot.parentElement as HTMLDivElement;
+            }
+        }
+        const targetCoords = TargetCoords.get(stackRoot || document.body);
+        // calc with scroll, because stack popup has fixed position only on desktop and can scroll with page
+        const leftPageScroll = detection.isMobilePlatform ? 0 : targetCoords.leftScroll;
+        StackController.stackParentCoords = {
+            top: Math.max(targetCoords.top, 0),
+            right: document.documentElement.clientWidth - targetCoords.right + leftPageScroll
+        };
+        return StackController.stackParentCoords;
     }
 }
 
