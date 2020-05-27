@@ -1932,63 +1932,56 @@ define([
             await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
             ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
 
-            // скроллпэйджиг контроллер создается асинхронном
-            //setTimeout(function() {
-               assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
+            assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-               // прокручиваем к низу, проверяем состояние пэйджинга
-               lists.BaseControl._private.handleListScrollSync(ctrl, 600);
+            // прокручиваем к низу, проверяем состояние пэйджинга
+            lists.BaseControl._private.handleListScrollSync(ctrl, 600);
 
-               assert.deepEqual({
-                  backwardEnabled: true,
-                  forwardEnabled: false
-               }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
+            assert.deepEqual({
+               backwardEnabled: true,
+               forwardEnabled: false
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
-               lists.BaseControl._private.handleListScrollSync(ctrl, 200);
-               assert.deepEqual({
-                  backwardEnabled: true,
-                  forwardEnabled: true
-               }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+            lists.BaseControl._private.handleListScrollSync(ctrl, 200);
+            assert.deepEqual({
+               backwardEnabled: true,
+               forwardEnabled: true
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
-               ctrl._pagingVisible = true;
-               ctrl._abortSearch();
-               assert.deepEqual({
-                  backwardEnabled: true,
-                  forwardEnabled: false
-               }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+            ctrl._pagingVisible = true;
+            ctrl._abortSearch();
+            assert.deepEqual({
+               backwardEnabled: true,
+               forwardEnabled: false
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
 
-               lists.BaseControl._private.handleListScrollSync(ctrl, 200);
-               assert.deepEqual({
-                  backwardEnabled: true,
-                  forwardEnabled: false
-               }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
-               lists.BaseControl._private.getPortionedSearch(ctrl).reset();
+            lists.BaseControl._private.handleListScrollSync(ctrl, 200);
+            assert.deepEqual({
+               backwardEnabled: true,
+               forwardEnabled: false
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+            lists.BaseControl._private.getPortionedSearch(ctrl).reset();
 
-               // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
-               // и еще раз доскроллили до конца, то самое время блокировать кнопки.
-               lists.BaseControl._private.handleListScrollSync(ctrl, 400);
-               assert.deepEqual({
-                  backwardEnabled: true,
-                  forwardEnabled: false
-               }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+            // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
+            // и еще раз доскроллили до конца, то самое время блокировать кнопки.
+            lists.BaseControl._private.handleListScrollSync(ctrl, 400);
+            assert.deepEqual({
+               backwardEnabled: true,
+               forwardEnabled: false
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
 
-               lists.BaseControl._private.handleListScrollSync(ctrl, 200);
+            lists.BaseControl._private.handleListScrollSync(ctrl, 200);
 
-               await lists.BaseControl._private.onScrollHide(ctrl);
-               // assert.deepEqual({
-               //    backwardEnabled: true,
-               //    forwardEnabled: true
-               // }, ctrl._pagingCfg, 'Wrong state of paging after scrollHide');
-               assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
-               assert.isFalse(ctrl._cachedPagingState, 'Wrong state _cachedPagingState after scrollHide');
+            await lists.BaseControl._private.onScrollHide(ctrl);
+            assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
+            assert.isFalse(ctrl._cachedPagingState, 'Wrong state _cachedPagingState after scrollHide');
 
-               lists.BaseControl._private.handleListScrollSync(ctrl, 200);
+            lists.BaseControl._private.handleListScrollSync(ctrl, 200);
 
-               setTimeout(function() {
-                  assert.isFalse(ctrl._pagingVisible);
-                  //done();
-               }, 100);
+            setTimeout(function() {
+               assert.isFalse(ctrl._pagingVisible);
+            }, 100);
          });
       });
 
@@ -2149,10 +2142,6 @@ define([
                }
             }
          };
-         var heightParams = {
-            scrollHeight: 400,
-            clientHeight: 1000
-         };
          var baseControl = new lists.BaseControl(cfg);
          baseControl._sourceController = {
             nav: false,
@@ -2166,25 +2155,31 @@ define([
             down: true
          };
 
-         var res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
+         var res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
          assert.isFalse(res, 'Wrong paging state');
 
          baseControl._sourceController.nav = true;
-         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
          assert.isFalse(res, 'Wrong paging state');
 
          baseControl._loadTriggerVisibility = {
             up: false,
             down: false
          };
-         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
          assert.isTrue(res, 'Wrong paging state');
 
          //one time true - always true
          baseControl._sourceController.nav = false;
-         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, false);
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
          assert.isTrue(res, 'Wrong paging state');
 
+         baseControl._cachedPagingState = false;
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
+         assert.isFalse(res, 'Wrong paging state');
+
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 2000, 800);
+         assert.isTrue(res, 'Wrong paging state');
       });
 
       it('scrollToEdge without load', function(done) {

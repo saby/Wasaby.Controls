@@ -860,12 +860,12 @@ const _private = {
     },
 
     needShowPagingByScrollSize: function(self, viewSize: number, viewPortSize: number): boolean {
-        let result = false;
+        let result = self._pagingVisible;
 
         const proportion = (viewSize / viewPortSize);
 
         
-        // если условия выше не прошли, то начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
+        // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
         if (!result) {
             result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
         }
