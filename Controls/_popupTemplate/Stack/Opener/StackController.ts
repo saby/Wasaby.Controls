@@ -29,6 +29,7 @@ class StackController extends BaseController {
 
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         const isSinglePopup = this._stack.getCount() < 2;
+
         if (isSinglePopup) {
             this._prepareSizeWithoutDOM(item);
         } else {
@@ -50,7 +51,13 @@ class StackController extends BaseController {
             }
         }
 
-        return true;
+        if (item.popupOptions.isCompoundTemplate) {
+            return true;
+        }
+
+        // Если стековое окно 1, то перерисовок звать не надо, позиция и размеры проставились до маунта.
+        // Если окон больше, то перерисовка должна быть, меняются классы, видимость.
+        return !isSinglePopup;
     }
 
     elementUpdateOptions(item: IPopupItem, container: HTMLDivElement): boolean|Promise<boolean> {
