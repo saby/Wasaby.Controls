@@ -2974,6 +2974,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // или в TreeControl создать новый контроллер у которого будут только необходимые методы и работать с ним
         // 2 случай наверное лучше.
         // Только получается что у нас будет 2 контроллера: плоский-который выполняет основную логику и деревянный который выполняет логику только в TreeControl
+        // если в TreeControl создать свой контроллер, то он не будет знать состояния плоского контроллера и за данными придется обращаться к плоскому контроллеру
+        // может все-таки лучше из TreeControl звать метод у контроллера, который находится в BaseControl.
         if (this._dndListController instanceof TreeController) {
             const targetPosition = this._dndListController.getTargetPosition(itemData, nativeEvent);
 
