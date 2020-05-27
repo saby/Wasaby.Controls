@@ -16,6 +16,7 @@
             cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
             cupidatat non proident, sunt in culpa qui officia deserunt mollit
             anim id est laborum.
+            <Controls.event:Listener event="scrollStateChanged" on:scrollStateChanged="scrollStateChangedHandler()"/>
         </div>
     </Controls.scroll:ContainerBase>
 </div>

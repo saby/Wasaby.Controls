@@ -24,30 +24,25 @@
                     on:scroll="_scrollHandler()"
                     on:wheel="_wheelHandler()"
                     >
-<!--                  <Controls.event:Listener-->
-<!--                          event="dataError"-->
-<!--                          on:dataError="_onDataError()"/>-->
-                    <span class="controls-Scroll__contentObserver" name="contentObserver">
-                        <ws:partial template="{{_options.content}}"
-                                    scope="{{_options}}"
-                                    attr:class="controls-Scroll__userContent"
-                                    on:saveScrollPosition="_saveScrollPosition()"
-                                    on:scrollToElement="_scrollToElement()"
-                                    on:updatePlaceholdersSize="_updatePlaceholdersSize()"
-                                    on:restoreScrollPosition="_restoreScrollPosition()"
-                                    on:updateShadowMode="_updateShadowMode()"
-                                    on:selectedKeysChanged="selectedKeysChanged()"
-                                    on:excludedKeysChanged="excludedKeysChanged()"
-                                    on:itemClick="itemClick()"
-                                    on:itemMouseDown="_tmplNotify('itemMouseDown')"
-                                    on:rootChanged="_tmplNotify('rootChanged')"
-                                    on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
-                                    on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
-                                    on:checkboxClick="_tmplNotify('checkboxClick')"
-                                    on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
-                                    on:actionClick="_tmplNotify('actionClick')"
-                                    on:editArrowClick="_tmplNotify('editArrowClick')"/>
-                    </span>
+                     <ws:partial template="{{_options.content}}"
+                                 scope="{{_options}}"
+                                 attr:class="controls-Scroll__userContent"
+                                 on:saveScrollPosition="_saveScrollPosition()"
+                                 on:scrollToElement="_scrollToElement()"
+                                 on:updatePlaceholdersSize="_updatePlaceholdersSize()"
+                                 on:restoreScrollPosition="_restoreScrollPosition()"
+                                 on:updateShadowMode="_updateShadowMode()"
+                                 on:selectedKeysChanged="selectedKeysChanged()"
+                                 on:excludedKeysChanged="excludedKeysChanged()"
+                                 on:itemClick="itemClick()"
+                                 on:itemMouseDown="_tmplNotify('itemMouseDown')"
+                                 on:rootChanged="_tmplNotify('rootChanged')"
+                                 on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
+                                 on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
+                                 on:checkboxClick="_tmplNotify('checkboxClick')"
+                                 on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
+                                 on:actionClick="_tmplNotify('actionClick')"
+                                 on:editArrowClick="_tmplNotify('editArrowClick')"/>
                </span>
          </Controls._scroll.StickyHeader.Controller>
       </Controls.event:Register>

@@ -6,5 +6,9 @@ import 'css!Controls-demo/Scroll/ContainerBase/Style';
 export default class ContainerBaseDemo extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
 
+    scrollStateChangedHandler(e): void {
+        console.log('scrollStateChangedHandler');
+    }
+
     static _theme: string[] = ['Controls/Classes'];
 }
