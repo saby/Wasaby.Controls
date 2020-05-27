@@ -335,6 +335,29 @@ define(
             assert.isFalse(result);
          });
 
+         it('_separatorMouseEnter', function() {
+            let isClosed = false;
+            let menuControl = getMenu();
+            menuControl._children = {
+               Sticky: { close: () => { isClosed = true; } }
+            };
+
+            menuControl.subMenu = true;
+            menuControl._subDropdownItem = true;
+            menuControl.setSubMenuPosition = function() {};
+            menuControl.isMouseInOpenedItemArea = function() {
+               return true;
+            };
+            menuControl._separatorMouseEnter('mouseenter', { nativeEvent: {} });
+            assert.isFalse(isClosed);
+
+            menuControl._subDropdownItem = false;
+            menuControl._separatorMouseEnter('mouseenter', { nativeEvent: {} });
+            assert.isTrue(isClosed);
+
+
+         });
+
          it('_footerMouseEnter', function() {
             let isClosed = false;
             let menuControl = getMenu();
