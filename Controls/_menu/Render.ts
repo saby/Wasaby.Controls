@@ -58,6 +58,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
         this._notify(eventName, args);
     }
 
+    protected _separatorMouseEnter(event: SyntheticEvent<MouseEvent>): void {
+        this._notify('separatorMouseEnter', [event]);
+    }
+
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: Model, sourceEvent: SyntheticEvent<MouseEvent>): void {
         e.stopPropagation();
         if (item instanceof Model) {
