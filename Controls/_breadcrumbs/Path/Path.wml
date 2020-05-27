@@ -1,6 +1,6 @@
 <Controls._breadcrumbs.View items="{{_options.items}}"
                       visibleItems="{{_visibleItems}}"
-                      backgroundStyle="{{_options.backgroundStyle}}"
+                      backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                       keyProperty="{{_options.keyProperty}}"
                       displayProperty="{{_options.displayProperty}}"
                       itemTemplate="{{_options.itemTemplate}}"

@@ -1,0 +1,15 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Controls.toolbars:View
+                source="{{_buttonsSource}}"
+                keyProperty="id"
+                groupProperty="group"
+                parentProperty="parent"
+                nodeProperty="@parent"
+        >
+            <ws:groupTemplate>
+                <ws:partial template="Controls/dropdown:GroupTemplate" showText="{{true}}"/>
+            </ws:groupTemplate>
+        </Controls.toolbars:View>
+    </div>
+</div>

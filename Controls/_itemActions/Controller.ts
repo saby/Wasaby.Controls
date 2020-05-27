@@ -88,7 +88,8 @@ export interface IItemActionsControllerOptions {
 
 /**
  * Контроллер, управляющий состоянием ItemActions в коллекции
- * @Author Пуханов В, Аверкиев П.А
+ * @class Controls/_itemActions/Controller
+ * @author Аверкиев П.А
  */
 export class Controller {
     private _collection: IItemActionsCollection;

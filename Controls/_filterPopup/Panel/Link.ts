@@ -1,6 +1,5 @@
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
-import 'css!theme?Controls/filterPopup';
 
 /**
  * Кнопка-ссылка на панели фильтров.
@@ -8,6 +7,7 @@ import 'css!theme?Controls/filterPopup';
  * @extends Core/Control
  * @control
  * @public
+ * @author Золотова Э.Е.
  * @example
  * Пример использования контрола на панели фильтра в блоке "Еще можно отобрать"
  * AdditionalItemTemplate.wml
@@ -20,22 +20,9 @@ import 'css!theme?Controls/filterPopup';
  * </pre>
  */
 
-/*
- * Control filter link
- * @class Controls/_filterPopup/Panel/Link
- * @extends Core/Control
- * @control
- * @public
- */
-
 /**
  * @name Controls/_filterPopup/Panel/Link#caption
  * @cfg {Object} Caption Текст кнопки-ссылки.
- */
-
-/*
- * @name Controls/_filterPopup/Panel/Link#caption
- * @cfg {Object} Caption
  */
 
 /**
@@ -58,13 +45,13 @@ import 'css!theme?Controls/filterPopup';
  * </pre>
  */
 
-var FilterLink = Control.extend({
-   _template: template,
-
-   _clickHandler: function() {
+class FilterLink extends Control<IControlOptions> {
+   protected _template: TemplateFunction = template;
+   protected  _clickHandler(): void {
       this._notify('visibilityChanged', [true]);
    }
 
-});
+   static _theme: string[] = ['Controls/filterPopup'];
+}
 
-export = FilterLink;
+export default FilterLink;

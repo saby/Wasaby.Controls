@@ -65,7 +65,6 @@ var _private = {
       self._loading = false;
       if (_private.isSearchViewMode(self) && self._searchValue) {
          self._searchValue = '';
-         self._misspellValue = '';
 
          if (self._options.parentProperty) {
             _deleteServiceFilters(self._options, filter);
@@ -150,6 +149,7 @@ var _private = {
       if (_private.isSearchViewMode(self) && !self._searchValue) {
          self._viewMode = self._previousViewMode;
          self._previousViewMode = null;
+         self._misspellValue = '';
       }
       if (self._options.dataLoadCallback) {
          self._options.dataLoadCallback(data);
@@ -233,17 +233,15 @@ var _private = {
       return !checkedValue;
    },
 
-   needStartSearch(self, options, needUpdateRoot, needRecreateSearchController, searchValue: string): boolean {
-      const isSearchValueChanged = _private.isSearchValueChanged(self, searchValue);
+   needStartSearchBySearchValueChanged(self, options: object, searchValue: string): boolean {
       const isSearchValueShorterThenMinLength = _private.isSearchValueShort(options.minSearchLength, searchValue);
-      const startSearchWithNewSourceController = searchValue && needRecreateSearchController;
-      const needStartSearchBySearchValueChanged =
-          isSearchValueChanged &&
+      const isSearchValueChanged = _private.isSearchValueChanged(self, searchValue);
+      return isSearchValueChanged &&
           (!isSearchValueShorterThenMinLength || (_private.isSearchViewMode(self) && !searchValue && self._searchValue));
+   },
 
-      return needStartSearchBySearchValueChanged &&
-             !needUpdateRoot ||
-             startSearchWithNewSourceController;
+   startSearchWithNewSourceController(searchValue: string, needRecreateSearchController: boolean): boolean {
+      return searchValue && needRecreateSearchController;
    },
 
    isSearchViewMode(self): boolean {
@@ -414,9 +412,14 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
             this._searchController.setSorting(newOptions.sorting);
          }
       }
-      if (_private.needStartSearch(this, newOptions, needUpdateRoot, needRecreateSearchController, searchValue)) {
-         _private.startSearch(this, searchValue);
-         if (searchValue !== this._inputSearchValue) {
+
+      const isNewSourceController = _private.startSearchWithNewSourceController(searchValue, needRecreateSearchController);
+
+      if (_private.needStartSearchBySearchValueChanged(this, newOptions, searchValue) || isNewSourceController) {
+         if (!needUpdateRoot || isNewSourceController) {
+            _private.startSearch(this, searchValue);
+         }
+         if (_private.isInputSearchValueChanged(this, searchValue)) {
             _private.setInputSearchValue(this, searchValue);
          }
       }

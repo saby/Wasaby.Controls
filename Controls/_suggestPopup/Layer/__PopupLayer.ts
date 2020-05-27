@@ -35,9 +35,6 @@ var _private = {
          targetPoint: {
             vertical: 'bottom'
          },
-         eventHandlers: {
-            onResult: self._onResult
-         },
          resizeCallback: self._resizeCallback
       };
       self._popupOptions = {...config, ...options.suggestPopupOptions || {}};
@@ -49,7 +46,6 @@ var __PopupLayer = Control.extend({
    _template: template,
 
    _beforeMount: function(options) {
-      this._onResult = this._onResult.bind(this);
       this._resizeCallback = this._resizeCallback.bind(this);
       _private.setPopupOptions(this, options);
    },
@@ -72,7 +68,7 @@ var __PopupLayer = Control.extend({
       this._children.suggestPopup.close();
    },
 
-   _onResult: function(position) {
+   _onResult(event, position): void {
       // fix suggest position after show
       this._popupOptions.direction = {
          vertical: position.direction.vertical,

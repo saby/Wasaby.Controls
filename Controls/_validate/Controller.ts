@@ -61,7 +61,7 @@ class Form extends Control<IControlOptions> {
 
             // Walking through object with errors and focusing first not valid field.
             for (key in this._validates) {
-                if (!this._validates[key]._options.readOnly) {
+                if (this._validates.hasOwnProperty(key) && !this._validates[key]._options.readOnly) {
                     if (results[resultCounter]) {
                         needValid = this._validates[key];
                     }

@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/SelectedCollection/Popup');
-import 'css!theme?Controls/popup';
 
 /**
  *
@@ -47,7 +46,7 @@ import 'css!theme?Controls/popup';
          }
       });
 
-      itemHiddenTemplate._theme = ['Controls/lookup'];
+      itemHiddenTemplate._theme = ['Controls/lookup', 'Controls/popup'];
 
       export = itemHiddenTemplate;
 

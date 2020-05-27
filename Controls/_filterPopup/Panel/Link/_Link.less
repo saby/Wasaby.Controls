@@ -1,26 +1,38 @@
 .controls-FilterLink {
    display: inline-flex;
-   height: @item_height_filterPanel;
    align-items: center;
 }
 
+.controls-FilterLink_theme-@{themeName} {
+   height: @item_height_filterPanel;
+}
+
 .controls-FilterLink__text {
-   color: @item_text-color_filterPanel;
-   font-size: @item_font-size_filterPanel;
    cursor: pointer;
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
 }
 
+.controls-FilterLink__text_theme-@{themeName} {
+   color: @item_text-color_filterPanel;
+   font-size: @item_font-size_filterPanel;
+}
+
 .ws-is-hover {
    .controls-FilterLink__text:hover {
-      color: @item_hover_text-color_filterPanel;
       text-decoration: underline;
+   }
+
+   .controls-FilterLink__text_theme-@{themeName}:hover {
+      color: @item_hover_text-color_filterPanel;
    }
 }
 
 .controls-FilterLink__text:active {
-   color: @item_active_text-color_filterPanel;
    text-decoration: underline;
+}
+
+.controls-FilterLink__text_theme-@{themeName}:active {
+   color: @item_active_text-color_filterPanel;
 }

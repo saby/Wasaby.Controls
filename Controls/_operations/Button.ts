@@ -57,7 +57,7 @@ class OperationsButton extends Control<IOperationsButtonOptions> implements IExp
    }
    protected _onClick(): void {
       if (!this._options.readOnly) {
-         this._notify('expandedChanged', [!this._expanded]);
+         this._notify('expandedChanged', [!this._options.expanded]);
          if (this._options.useStore) {
             Store.dispatch('operationsPanelExpanded', !this._expanded);
          }

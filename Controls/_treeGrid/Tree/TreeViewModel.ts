@@ -777,7 +777,6 @@ var
             this._expandedItems = [];
             this._display.setRoot(root);
             this._options.root = root;
-            this.updateMarker(this._markedKey);
             this._nextModelVersion();
         },
         setNodeProperty(nodeProperty: string): void {
