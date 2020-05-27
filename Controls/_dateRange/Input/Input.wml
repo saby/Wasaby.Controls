@@ -39,6 +39,7 @@
       autoComplete="{{_options.autoComplete}}"
       style="{{_options.style}}"
       validationStatus="{{_options.validationStatus}}"
+      _yearSeparatesCenturies="{{_rangeModel.startValue}}"
       autocompleteType="end"
       valueValidators="{{_endValueValidators}}"
       validateByFocusOut="{{_options.validateByFocusOut}}"

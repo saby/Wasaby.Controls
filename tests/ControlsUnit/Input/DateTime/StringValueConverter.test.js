@@ -132,12 +132,17 @@ define([
             { mask: 'HH:mm', stringValue: '24:60', value: new Date(1904, 0, 1, 23, 59, 0) },
             { mask: 'HH:mm', stringValue: '80:10', value: new Date(1904, 0, 1, 23, 10, 0) },
 
-            { mask: 'HH:mm', stringValue: '10:20', value: new Date(2000, 1, 2, 10, 20, 0), baseDate: new Date(2000, 1, 2, 3, 4, 0) }
+            { mask: 'HH:mm', stringValue: '10:20', value: new Date(2000, 1, 2, 10, 20, 0), baseDate: new Date(2000, 1, 2, 3, 4, 0) },
+
+            // correct centuries
+            { mask: 'DD.MM.YY', stringValue: '11.12.36', value: new Date(2036, 11, 11), yearSeparatesCenturies: new Date(2020, 1, 1) },
+            { mask: 'DD.MM.YY', stringValue: '11.12.97', value: new Date(1997, 11, 11), yearSeparatesCenturies: new Date(1996, 1, 1) },
+            { mask: 'DD.MM.YY', stringValue: '11.12.05', value: new Date(2005, 11, 11), yearSeparatesCenturies: new Date(1996, 1, 1) }
          ].forEach(function(test) {
             it(`should return ${test.value} if "${test.stringValue}" is passed`, function() {
                let converter = new input.StringValueConverter(),
                   rDate;
-               converter.update(cMerge({ mask: test.mask, dateConstructor: Date }, options, { preferSource: true }));
+               converter.update(cMerge({ mask: test.mask, dateConstructor: Date, yearSeparatesCenturies: test.yearSeparatesCenturies }, options, { preferSource: true }));
                rDate = converter.getValueByString(test.stringValue, test.baseDate, test.autocomplete || true);
                assert(dateUtils.isDatesEqual(rDate, test.value), `${rDate} is not equal ${test.value}`);
             });
