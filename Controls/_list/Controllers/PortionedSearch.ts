@@ -59,10 +59,16 @@ export default class PortionedSearch<PortionedSearchOptions> {
         this._options.searchContinueCallback();
     }
 
+    stopSearch(): void {
+        if (!this._isSearchContinued()) {
+            this._clearTimer();
+            this._stopSearch();
+        }
+    }
+
     private _startTimer(): void {
         this._searchTimer = setTimeout(() => {
-            this._setSearchState(SEARCH_STATES.STOPPED);
-            this._options.searchStopCallback();
+            this._stopSearch();
         }, MAX_SEARCH_DURATION);
     }
 
@@ -83,5 +89,10 @@ export default class PortionedSearch<PortionedSearchOptions> {
 
     private _isSearchContinued(): boolean {
         return this._getSearchState() === SEARCH_STATES.CONTINUED;
+    }
+
+    private _stopSearch(): void {
+        this._setSearchState(SEARCH_STATES.STOPPED);
+        this._options.searchStopCallback();
     }
 }
