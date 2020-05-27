@@ -924,8 +924,6 @@ define([
          });
 
          var dataLoadFired = false;
-         var portionSearchTimerReseted = false;
-         var portionSearchReseted = false;
          var beforeLoadToDirectionCalled = false;
 
          var cfg = {
@@ -971,13 +969,20 @@ define([
          ctrl._loadingIndicatorState = 'down';
          ctrl._hideIndicatorOnTriggerHideDirection = 'down';
 
+         ctrl._items.setMetaData({
+            iterative: true
+         });
+         ctrl._portionedSearchInProgress = true;
+
          // Up trigger became visible, no changes to indicator
          ctrl.triggerVisibilityChangedHandler(null, 'up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
+         assert.isFalse(ctrl._showContinueSearchButton);
 
-         // Down trigger became hidden, hide the indicator
+         // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler(null, 'down', false);
          assert.isNull(ctrl._loadingIndicatorState);
+         assert.isTrue(ctrl._showContinueSearchButton);
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
