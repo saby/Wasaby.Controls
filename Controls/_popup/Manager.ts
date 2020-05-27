@@ -320,13 +320,12 @@ class Manager extends Control<IManagerOptions> {
             // Register new popup
             this._fireEventHandler(item, 'onOpen');
             this._prepareIsTouchData(item);
-            item.controller._elementCreated(item, this._getItemContainer(id));
+            return item.controller._elementCreated(item, this._getItemContainer(id));
             // if it's CompoundTemplate, then compoundArea notify event, when template will ready.
             // notify this event on popupBeforePaintOnMount, cause we need synchronous reaction on created popup
             // if (!item.popupOptions.isCompoundTemplate) {
             //     this._notify('managerPopupCreated', [item, this._popupItems], {bubbling: true});
             // }
-            return true;
         }
         return false;
     }
