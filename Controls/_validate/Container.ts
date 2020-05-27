@@ -233,7 +233,7 @@ class ValidateContainer extends Control {
     validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
-            this.setValidationResult(null);
+            this.setValidationResult(null, validateConfig);
             this._callValidators(validators, validateConfig).then(resolve);
         });
 
@@ -253,10 +253,12 @@ class ValidateContainer extends Control {
             if (!(validationResult instanceof Promise)) {
                 this._forceUpdate();
             }
-            if (validationResult && !config.hideInfoBox) {
-                _private.openInfoBox(this);
-            } else if (this._isOpened && validationResult === null) {
-                _private.closeInfoBox(this);
+            if (!config.hideInfoBox) {
+                if (validationResult) {
+                    _private.openInfoBox(this);
+                } else if (this._isOpened) {
+                    _private.closeInfoBox(this);
+                }
             }
         }
     }

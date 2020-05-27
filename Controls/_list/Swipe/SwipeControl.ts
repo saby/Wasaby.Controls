@@ -158,21 +158,23 @@ export default class SwipeControl extends Control {
       this._setMeasurer(this._options.actionAlignment);
       const menuButtonVisibility = (this._options.contextMenuConfig && (this._options.contextMenuConfig.footerTemplate
                                    || this._options.contextMenuConfig.headerTemplate)) ? 'visible' : 'adaptive';
-      const itemActions = this._options.useNewModel
+      let itemActions = this._options.useNewModel
          ? (this._currentItemData.getActions().all ? this._currentItemData.getActions().all : [])
          : (this._currentItemData.itemActions ? this._currentItemData.itemActions.all : []);
 
 
       if (this._options.showEditArrow) {
          if (!this._options.editArrowVisibilityCallback || this._options.editArrowVisibilityCallback(this._currentItemData.actionsItem)){
-            let editArrow = {
-               id: 'view',
-               icon: 'icon-Forward',
-               title: rk('Просмотреть'),
-               showType: ShowType.TOOLBAR,
-               handler: this.editArrowHandler.bind(this)
-            };
-            itemActions = [editArrow, ...itemActions];
+            if (!itemActions.find((action) => action.id === 'view')) {
+               let editArrow = {
+                  id: 'view',
+                  icon: 'icon-Forward',
+                  title: rk('Просмотреть'),
+                  showType: ShowType.TOOLBAR,
+                  handler: this.editArrowHandler.bind(this)
+               };
+               itemActions = [editArrow, ...itemActions];
+            }
          }
       }
 
