@@ -22,6 +22,16 @@ export default {
     },
     shouldRedraw: function (currentItems, newItems) {
         return currentItems !== newItems;
+    },
+    getItemData: function (index, items) {
+        var
+            currentItem = items[index],
+            count = items.length;
+        return {
+            getPropValue: ItemsUtil.getPropertyValue,
+            item: currentItem,
+            hasArrow: count > 1 && index !== 0
+        };
     }
 
 };
