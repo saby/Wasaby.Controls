@@ -173,14 +173,15 @@ var BaseLookupView = Control.extend({
 
     },
 
-    _resize: function () {
-        var
-            oldFieldWrapperWidth = this._getFieldWrapperWidth(),
-            newFieldWrapperWidth = this._getFieldWrapperWidth(true);
+    _resize(): void {
+        if (this._isNeedCalculatingSizes(this._options)) {
+            const oldFieldWrapperWidth = this._getFieldWrapperWidth();
+            const newFieldWrapperWidth = this._getFieldWrapperWidth(true);
 
-        // if hidden, then there is no reason to recalc the sizes
-        if (newFieldWrapperWidth > 0 && this._isNeedCalculatingSizes(this._options) && newFieldWrapperWidth !== oldFieldWrapperWidth) {
-            this._calculatingSizes(this._options);
+            // if hidden, then there is no reason to recalc the sizes
+            if (newFieldWrapperWidth > 0 && newFieldWrapperWidth !== oldFieldWrapperWidth) {
+                this._calculatingSizes(this._options);
+            }
         }
     },
 
