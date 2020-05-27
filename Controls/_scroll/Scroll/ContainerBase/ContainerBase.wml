@@ -1,12 +1,16 @@
 <div class="controls-Scroll_containerBase">
     <Controls.event:Register name="scrollStateChanged" register="scrollStateChanged">
-        <ws:partial
-                template="{{_options.content}}"
-                scope="{{_options}}"
-                on:controlResize="_resizeHandler()"
-                on:register="_registerIt()"
-                on:scroll="_scrollHandler()"
-                on:unregister="_unRegisterIt()"
-        />
+        <div class="controls-Scroll_content"
+             on:scroll="_scrollHandler()">
+            <div class="controls-Scroll__contentObserver" name="contentObserver">
+                <ws:partial
+                    attr:class="controls-Scroll_userContent"
+                    template="{{_options.content}}"
+                    scope="{{_options}}"
+                    on:controlResize="_resizeHandler()"
+                    on:register="_registerIt()"
+                    on:unregister="_unRegisterIt()"/>
+            </div>
+        </div>
     </Controls.event:Register>
 </div>
