@@ -620,7 +620,7 @@ var _Controller = Control.extend({
          this._menuSource = new PrefetchProxy({
             target: this._source,
             data: {
-               query: items.clone()
+               query: items.clone(true)
             }
          });
       } else {
