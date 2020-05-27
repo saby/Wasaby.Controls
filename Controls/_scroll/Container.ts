@@ -503,7 +503,7 @@ let
          var
             self = this,
             def;
-         
+
          if (!constants.isServerSide) {
              this._enableScrollbar = getEnableScrollbar();
          }
