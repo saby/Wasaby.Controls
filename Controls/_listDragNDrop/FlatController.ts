@@ -29,6 +29,8 @@ export interface IModel {
 }
 
 export interface IDragNDropListController {
+   // TODO dnd нужно исправить интерфейс
+
    update(useNewModel: boolean, model: IModel);
 
    startDragNDrop(itemData, items, dragControlId, notifyDragStart);
@@ -75,81 +77,38 @@ export class FlatController implements IDragNDropListController{
       this._model = model;
    }
 
-   startDragNDrop(itemData, items, dragControlId, notifyDragStart) {
-      const dragStartResult = notifyDragStart(items);
-      if (dragStartResult) {
-         if (dragControlId) {
-            dragStartResult.dragControlId = dragControlId;
-         }
-         this._draggingItem = itemData;
-      }
-      return dragStartResult;
-   }
+   set draggingItem(val) { this._draggingItem = val; }
 
-   handleMouseMove(itemData, nativeEvent, notifyChangeDragTarget) {
-      // в плоской делать вроде тут нечего
-   }
+   set unprocessedDragEnteredItem(val) { this._unprocessedDragEnteredItem = val; }
 
-   handleMouseLeave() {
-      this._unprocessedDragEnteredItem = null;
-   }
+   set dragEndResult(val) { this._dragEndResult = val; }
 
-   handleMouseEnter(
-      event: SyntheticEvent<MouseEvent>,
-      itemData: CollectionItem<Model>,
-      notifyChangeDragTarget: Function
-   ): void {
-      this._unprocessedDragEnteredItem = itemData;
-      this._processItemMouseEnterWithDragNDrop(itemData, notifyChangeDragTarget);
-   }
+   get dragEntity() { return this._useNewModel ? this._draggingEntity : this._model.getDragEntity(); }
 
-   handleDragStart(dragObject, notifyChangeDragTarget: Function): void {
-      if (this._useNewModel) {
-         this._draggingEntity = dragObject.entity;
+   get unprocessedDragEnteredItem() { return this._unprocessedDragEnteredItem; }
+
+   get dragEndResult() { return this._dragEndResult; }
+
+   // TODO dnd может в setter переделать когда модели будут совместимы по интерфейсу
+   setDraggingItem(dragEntity, dragEnterResult = null) {
+      let draggingItem;
+
+      // TODO dnd какая-то хрень, не понимаю что тут делается
+      if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
+         draggingItem = this._model._prepareDisplayItemForAdd(dragEnterResult);
       } else {
-         this._model.setDragEntity(dragObject.entity);
-         this._model.setDragItemData(this._model.getItemDataByItem(this._draggingItem.dispItem));
+         draggingItem = this._draggingItem.dispItem;
 
-         // Cобытие mouseEnter на записи может сработать до dragStart.
-         // И тогда перемещение при наведении не будет обработано.
-         // В таком случае обрабатываем наведение на запись сейчас.
-         //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
-         if (this._unprocessedDragEnteredItem) {
-            this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem, notifyChangeDragTarget);
+         if (dragEnterResult === true) {
+            this._model.setDragEntity(dragEntity);
          }
       }
-   }
 
-   handleDragEnter(dragObject, notifyDragEnter: Function) {
-      if (
-         dragObject && !this._useNewModel &&
-         !this._model.getDragEntity() &&
-         cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
-      ) {
-         const dragEnterResult = notifyDragEnter(dragObject.entity);
-
-         if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-            const draggingItemProjection = this._model._prepareDisplayItemForAdd(dragEnterResult);
-            this._model.setDragItemData(this._model.getItemDataByItem(draggingItemProjection));
-            this._model.setDragEntity(dragObject.entity);
-         } else if (dragEnterResult === true) {
-            this._model.setDragEntity(dragObject.entity);
-         }
-      }
-   }
-
-   handleDragLeave() {
-      if (!this._useNewModel) {
-         this._model.setDragTargetPosition(null);
-      }
-   }
-
-   handleDragEnd(dragObject, notifyDragEnd) {
-      if (!this._useNewModel) {
-         const targetPosition = this._model.getDragTargetPosition();
-         if (targetPosition) {
-            this._dragEndResult = notifyDragEnd(dragObject.entity, targetPosition);
-         }
+      if (this._useNewModel) {
+         this._draggingEntity = dragEntity;
+      } else {
+         this._model.setDragItemData(this._model.getItemDataByItem(draggingItem));
+         this._model.setDragEntity(dragEntity);
       }
    }
 
@@ -157,13 +116,33 @@ export class FlatController implements IDragNDropListController{
       //Reset the state of the dragndrop after the movement on the source happens.
       if (this._dragEndResult instanceof Promise) {
          showIndicator();
-         this._dragEndResult.addBoth(function() {
+         this._dragEndResult.addBoth(() => {
             this._resetDragFields();
             hideIndicator();
          });
       } else {
          this._resetDragFields();
       }
+   }
+
+   getDragPosition(itemData) {
+      const dragEntity = this.dragEntity;
+
+      /*
+         {
+            data: CollectionItem<Model>,
+            item: Model,
+            index: number - индекс перетаскиваемого элемента
+         }
+         data.getContents() = item - и зачем хранить одну и ту инфу 2 раза я не понял
+      */
+      let dragPosition;
+      if (dragEntity) {
+         dragPosition = this._useNewModel ?
+            { position: 'before', item: itemData.getContents() } :
+            this._model.calculateDragTargetPosition(itemData);
+      }
+      return dragPosition;
    }
 
    /**
@@ -197,6 +176,17 @@ export class FlatController implements IDragNDropListController{
       };
    }
 
+   reset() {
+      if (this._useNewModel) {
+         this._draggingEntity = null;
+         this._draggingItem = null;
+      } else {
+         this._model.setDragTargetPosition(null);
+         this._model.setDragItemData(null);
+         this._model.setDragEntity(null);
+      }
+   }
+
    /**
     * Сортировать список ключей элементов
     * Ключи сортируются по порядку, в котором они идут в списке
@@ -209,42 +199,5 @@ export class FlatController implements IDragNDropListController{
             indexB = this._model.getIndexByKey(b);
          return indexA > indexB ? 1 : -1
       });
-   }
-
-   private _processItemMouseEnterWithDragNDrop(itemData: CollectionItem<Model>, notifyChangeDragTarget: Function): void {
-      const dragEntity = this._useNewModel ? this._draggingEntity : this._model.getDragEntity();
-
-      /*
-         {
-            data: CollectionItem<Model>,
-            item: Model,
-            index: number - индекс перетаскиваемого элемента
-         }
-         data.getContents() = item - и зачем хранить одну и ту инфу 2 раза я не понял
-      */
-      let dragPosition;
-      if (dragEntity) {
-         dragPosition = this._useNewModel ?
-            { position: 'before', item: itemData.getContents() } :
-            this._model.calculateDragTargetPosition(itemData);
-         /* this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) */
-         if (dragPosition && notifyChangeDragTarget(dragEntity, dragPosition) !== false) {
-            if (!this._useNewModel) {
-               this._model.setDragTargetPosition(dragPosition);
-            }
-         }
-         this._unprocessedDragEnteredItem = null;
-      }
-   }
-
-   private _resetDragFields() {
-      if (this._useNewModel) {
-         this._draggingEntity = null;
-         this._draggingItem = null;
-      } else {
-         this._model.setDragTargetPosition(null);
-         this._model.setDragItemData(null);
-         this._model.setDragEntity(null);
-      }
    }
 }

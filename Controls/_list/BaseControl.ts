@@ -4,63 +4,65 @@ import cClone = require('Core/core-clone');
 import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
-
-import {constants, detection} from 'Env/Env';
-
-import {IObservable, RecordSet} from 'Types/collection';
-import {isEqual} from 'Types/object';
-import {ICrud, Memory} from 'Types/source';
-import {debounce} from 'Types/function';
-import {create as diCreate} from 'Types/di';
-import {Model, relation} from 'Types/entity';
-import {IHashMap} from 'Types/declarations';
-
-import {SyntheticEvent} from 'Vdom/Vdom';
-import {Logger} from 'UI/Utils';
-
-import {TouchContextField} from 'Controls/context';
-import {Controller as SourceController} from 'Controls/source';
-import {error as dataSourceError} from 'Controls/dataSource';
-import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
-import { Sticky } from 'Controls/popup';
-
 // Utils imports
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
-import {CollectionItem, EditInPlaceController, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
-import {Controller as ItemActionsController, IItemAction} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
-import ListViewModel from 'Controls/_list/ListViewModel';
 import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
+
+import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
+import { constants, detection } from 'Env/Env';
+
+import { IObservable, RecordSet } from 'Types/collection';
+import { isEqual } from 'Types/object';
+import { ICrud, Memory } from 'Types/source';
+import { debounce } from 'Types/function';
+import { create as diCreate } from 'Types/di';
+import { Model, relation } from 'Types/entity';
+import { IHashMap } from 'Types/declarations';
+
+import { SyntheticEvent } from 'Vdom/Vdom';
+import { Logger } from 'UI/Utils';
+
+import { TouchContextField } from 'Controls/context';
+import { Controller as SourceController } from 'Controls/source';
+import { error as dataSourceError } from 'Controls/dataSource';
+import { IBaseSourceConfig, INavigationOptionValue, INavigationSourceConfig } from 'Controls/interface';
+import { Sticky } from 'Controls/popup';
+import { ANIMATION_STATE, CollectionItem, EditInPlaceController, GroupItem } from 'Controls/display';
+import { Controller as ItemActionsController, IItemAction } from 'Controls/itemActions';
+import ListViewModel from 'Controls/_list/ListViewModel';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
-import {ISwipeEvent} from 'Controls/listRender';
+import { ISwipeEvent } from 'Controls/listRender';
 
-import {IDirection} from './interface/IVirtualScroll';
+import { IDirection } from './interface/IVirtualScroll';
 import InertialScrolling from './resources/utils/InertialScrolling';
-import {CssClassList} from '../Utils/CssClassList';
+import { CssClassList } from '../Utils/CssClassList';
 import {
-   FlatSelectionStrategy,
-   TreeSelectionStrategy,
-   ISelectionStrategy,
-   ITreeSelectionStrategyOptions,
-   IFlatSelectionStrategyOptions,
-   ISelectionControllerResult,
-   SelectionController
+    FlatSelectionStrategy,
+    IFlatSelectionStrategyOptions,
+    ISelectionControllerResult,
+    ISelectionStrategy,
+    ITreeSelectionStrategyOptions,
+    SelectionController,
+    TreeSelectionStrategy
 } from 'Controls/multiselection';
-import {getStickyHeadersHeight} from 'Controls/scroll';
+import { getStickyHeadersHeight } from 'Controls/scroll';
 import { MarkerController } from 'Controls/marker';
-
-import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
-import { IDragNDropListController, TreeController as DndTreeController, FlatController as DndFlatController } from 'Controls/listDragNDrop';
+import {
+    FlatController,
+    IDragNDropListController,
+    TreeController,
+} from 'Controls/listDragNDrop';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -357,7 +359,7 @@ const _private = {
             !domEvent.target.closest('.controls-DragNDrop__notDraggable');
     },
     startDragNDrop(self, domEvent, itemData): void {
-        // TODO dnd росто проверить что контроллер создан
+        // TODO dnd росто проверить что контроллер создан и вызвать у него метод првоеряющий что можно драгать
         if (_private.canStartDragNDrop(domEvent, self._options, self._context?.isTouch?.isTouch)) {
             const key = self._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
 
@@ -370,18 +372,18 @@ const _private = {
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
             // количество записей будет отдавать selectionController https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
             getItemsBySelection(selection, self._options.source, recordSet, self._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
-                const notifyDragStart = (items) => {
-                    return self._notify('dragStart', [items]);
-                }
+                const dragStartResult = self._notify('dragStart', [items]);
 
-                const dragStartResult = self._dndListController.startDragNDrop(itemData, items, self._options.dragControlId, notifyDragStart);
                 if (dragStartResult) {
+                    if (self._options.dragControlId) {
+                        dragStartResult.dragControlId = self._options.dragControlId;
+                    }
+                    self._dndListController.draggingItem = itemData;
                     self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
                 }
             });
         }
     },
-
 
     resolveIndicatorStateAfterReload: function(self, list, navigation):void {
         if (!self._isMounted) {
@@ -1817,9 +1819,9 @@ const _private = {
             const notifyTreeControlMouseMove = (dragEntity) => {
                 return self._notify('draggingItemMouseMove', [dragEntity]);
             }
-            return new DndTreeController(options.useNewModel, self._listViewModel, notifyTreeControlMouseMove);
+            return new TreeController(options.useNewModel, self._listViewModel, notifyTreeControlMouseMove);
         } else {
-            return new DndFlatController(options.useNewModel, self._listViewModel);
+            return new FlatController(options.useNewModel, self._listViewModel);
         }
     }
 };
@@ -2840,22 +2842,40 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragStart: function(event, dragObject, domEvent) {
-        const notifyChangeDragTarget = (dragEntity, dragPosition) => {
-            return this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]);
-        }
-
         if (this._dndListController) {
-            this._dndListController.handleDragStart(dragObject, notifyChangeDragTarget);
+            this._dndListController.setDraggingItem(dragObject.entity);
+
+            const itemData = this._dndListController.unprocessedDragEnteredItem;
+            if (itemData) {
+                // TODO dnd в _itemMouseEnter дупликат
+                const dragPosition = this._dndListController.getDragPosition(itemData);
+                if (dragPosition) {
+                    const changeDragTargetResult = this._notify('changeDragTarget', [dragObject.entity, dragPosition.item, dragPosition.position]);
+                    if (changeDragTargetResult !== false) {
+                        this._listViewModel.setDragTargetPosition(targetPosition);
+                    }
+                }
+
+                if (this._dndListController.dragEntity) {
+                    this._dndListController.unprocessedDragEnteredItem = null;
+                }
+            }
         }
     },
 
     _dragEnd: function(event, dragObject) {
-        const notifyDragEnd = (dragEntity, targetPosition) => {
-            this._notify('dragEnd', [dragEntity, targetPosition.item, targetPosition.position])
-        }
-
         if (this._dndListController) {
-            this._dndListController.handleDragEnd(dragObject, notifyDragEnd);
+            if (this._dndListController instanceof FlatController) {
+                // тут удалена првоерка на новую модель
+                const targetPosition = this._listViewModel.getDragTargetPosition();
+                if (targetPosition) {
+                    this._dndListController.dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+                }
+            } else {
+                // TODO dnd перенести в TreeControl, наверное просто после того как здесь вызывается метод для плоского контроллера
+                // занотифаить для TreeControl и он вызовет метод в деревянном контроллере
+                this._dndListController.stopCountDownForExpandNode()
+            }
         }
 
         // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
@@ -2880,34 +2900,60 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _dragEnter: function(event, dragObject) {
-        const notifyDragEnter = () => {
-            return this._notify('dragEnter', [dragObject.entity]);
-        }
-
         if (this._dndListController) {
-            this._dndListController.handleDragEnter(dragObject, notifyDragEnter);
+            // TODO dnd что-то сделать с этим условием
+            if (
+               dragObject && !this._useNewModel &&
+               !this._listViewMovel.getDragEntity() &&
+               cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
+            ) {
+                this._dndListController.handleDragEnter(dragObject, notifyDragEnter);
+
+                const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
+                this._dndListController.setDraggingItem(dragObject.entity, dragEnterResult);
+            }
         }
     },
 
     _dragLeave: function() {
-        if (this._dndListController) {
-            this._dndListController.handleDragLeave();
+        if (!this._useNewModel) {
+            this._listViewMovel.setDragTargetPosition(null);
         }
     },
 
     _documentDragEnd: function() {
         if (this._dndListController) {
-            this._dndListController.handleDocumentDragEnd(this.showIndicator, this.hideIndicator);
+            const dragEndResult = this._dndListController.dragEndResult;
+            if (dragEndResult instanceof Promise) {
+                this.showIndicator();
+                dragEndResult.addBoth(() => {
+                    this._dndListController.reset();
+                    this.hideIndicator();
+                });
+            } else {
+                this._dndListController.reset();
+            }
         }
     },
 
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        const notifyChangeDragTarget = (dragEntity, dragPosition) => {
-            return this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]);
-        }
-
         if (this._dndListController) {
-            this._dndListController.handleMouseEnter(event, itemData, notifyChangeDragTarget)
+            // TODO dnd хз, надо разобраться
+            this._dndListController.unprocessedDragEnteredItem = itemData;
+
+            // TODO dnd в _dragStart дупликат
+            const dragPosition = this._dndListController.getDragPosition(itemData);
+            if (dragPosition) {
+                const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, dragPosition.item, dragPosition.position]);
+                if (changeDragTargetResult !== false) {
+                    this._listViewModel.setDragTargetPosition(dragPosition);
+                }
+            }
+
+            // TODO dnd хз, надо разобраться
+            if (this._dndListController.dragEntity) {
+                this._dndListController.unprocessedDragEnteredItem = null;
+            }
         }
 
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
@@ -2924,18 +2970,34 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._showActions = true;
         }
 
-        const notifyChangeDragTarget = (dragEntity, dragPosition) => {
-            return this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]);
-        }
+        // TODO dnd переместить в TreeControl. Понять как лучше создавать TreeController
+        // также его наследовать от FlatController и из TreeControl вызывать у него нужные методы
+        // или в TreeControl создать новый контроллер у которого будут только необходимые методы и работать с ним
+        // 2 случай наверное лучше.
+        // Только получается что у нас будет 2 контроллера: плоский-который выполняет основную логику и деревянный который выполняет логику только в TreeControl
+        if (this._dndListController instanceof TreeController) {
+            const targetPosition = this._dndListController.getTargetPosition(itemData, nativeEvent);
 
-        if (this._dndListController) {
-            this._dndListController.handleMouseMove(itemData, nativeEvent, notifyChangeDragTarget);
+            if (targetPosition) {
+                const changeDragTargetResult = this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]);
+                if (changeDragTargetResult !== false) {
+                    this._listViewModel.setDragTargetPosition(targetPosition);
+                }
+            }
+
+            this._dndListController.startCountDownForExpandNode(itemData)
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
-            this._dndListController.handleMouseLeave(itemData, nativeEvent);
+            if (this._dndListController instanceof FlatController) {
+                this._dndListController.unprocessedDragEnteredItem = null;
+            } else {
+                // TODO dnd перенести в TreeControl, наверное просто после того как здесь вызывается метод для плоского контроллера
+                // занотифаить для TreeControl и он вызовет метод в деревянном контроллере
+                this._dndListController.stopCountDownForExpandNode()
+            }
         }
     },
     _sortingChanged: function(event, propName) {

@@ -11,9 +11,9 @@ export default class TreeController extends FlatController {
    constructor(useNewModel: boolean, model: IModel, notifyExpandNode: Function) {
       super(useNewModel, model);
       this._notifyExpandNode = notifyExpandNode;
-   }
+   }j
 
-   handleMouseMove(itemData, event, notifyChangeDragTarget) {
+   getTargetPosition(itemData, event) {
       if (!itemData.dispItem.isNode()) {
          return;
       }
@@ -35,28 +35,22 @@ export default class TreeController extends FlatController {
             if (this._model.getDragItemData()) {
                position = topOffset < DRAG_MAX_OFFSET ? 'before' : 'after';
                dragTargetPosition = this._model.calculateDragTargetPosition(itemData, position);
-
-               if (dragTargetPosition && notifyChangeDragTarget(this._model.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position) !== false) {
-                  this._model.setDragTargetPosition(dragTargetPosition);
-               }
-            }
-            if (itemData.item.get(itemData.nodeProperty) !== null && (!this._expandOnDragData || this._expandOnDragData !== itemData) && !itemData.isExpanded) {
-               this._clearTimeoutForExpandOnDrag();
-               this._expandOnDragData = itemData;
-               this._setTimeoutForExpandOnDrag(this._expandOnDragData);
             }
          }
       }
+
+      return dragTargetPosition;
    }
 
-   handleMouseLeave() {
-      super.handleMouseLeave();
-      this._clearTimeoutForExpandOnDrag();
-      this._expandOnDragData = null;
+   startCountDownForExpandNode(itemData) {
+      if (itemData.item.get(itemData.nodeProperty) !== null && (!this._expandOnDragData || this._expandOnDragData !== itemData) && !itemData.isExpanded) {
+         this._clearTimeoutForExpandOnDrag();
+         this._expandOnDragData = itemData;
+         this._setTimeoutForExpandOnDrag(this._expandOnDragData);
+      }
    }
 
-   handleDragEnd(dragObject, notifyDragEnd) {
-      super.handleDragEnd(dragObject, notifyDragEnd);
+   stopCountDownForExpandNode() {
       this._clearTimeoutForExpandOnDrag();
    }
 
