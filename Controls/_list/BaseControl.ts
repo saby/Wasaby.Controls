@@ -1175,7 +1175,7 @@ const _private = {
         }
     },
 
-    isPortionedLoad(self, items = self._items): boolean {
+    isPortionedLoad(self, items?: RecordSet = self._items): boolean {
         const loadByMetaData = items && items.getMetaData()[PORTIONED_LOAD_META_FIELD];
         const loadBySearchValue = !!self._options.searchValue;
         return loadByMetaData || loadBySearchValue;
@@ -2138,6 +2138,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._loadTriggerVisibility[direction] = state;
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
             _private.hideIndicator(this);
+
+            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
+                _private.getPortionedSearch(this).stopSearch();
+            }
         }
         if (_private.needScrollPaging(this._options.navigation)) {
             const doubleRatio = (this._viewSize / this._viewPortSize) > MIN_SCROLL_PAGING_PROPORTION;

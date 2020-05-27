@@ -109,5 +109,14 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          clock.tick(22000);
          assert.isTrue(searchStopped);
       });
+
+      it('stopSearch', () => {
+         portionedSearchController.startSearch();
+         clock.tick(9000);
+         assert.isFalse(searchStopped);
+
+         portionedSearchController.stopSearch();
+         assert.isTrue(searchStopped);
+      });
    });
 });
