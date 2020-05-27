@@ -73,7 +73,6 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * * <a href="/doc/platform/developmentapl/interface-development/controls/buttons-switches/buttons-links/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_buttons.less">переменные тем оформления</a>
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex">Демо-пример</a>.
  *
  * @class Controls/_buttons/Button
  * @extends Core/Control
