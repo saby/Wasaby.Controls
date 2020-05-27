@@ -30,12 +30,12 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       const _innerHTMLTemplateStr = '.controls-ColumnScroll__transform-1234567890 .controls-Grid_columnScroll { transform: translateX(-{value}); }' +
          '.controls-ColumnScroll__transform-1234567890 .controls-Grid__cell_fixed { transform: translateX({value}); }' +
          '.controls-ColumnScroll__transform-1234567890 .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX({value}); }' +
+         '.controls-ColumnScroll__transform-1234567890 .controls-GridView__footer { transform: translateX({value}); }' +
          '.controls-ColumnScroll__transform-1234567890 .controls-Grid__itemAction { transform: translateX({value}); }';
+
       const _innerHTMLReplaceValueRegExp = new RegExp('{value}', 'g');
 
-      const getInnerHTMLWithValue = (value) => {
-         return _innerHTMLTemplateStr.replace(_innerHTMLReplaceValueRegExp, value);
-      };
+      const getInnerHTMLWithValue = (value) => _innerHTMLTemplateStr.replace(_innerHTMLReplaceValueRegExp, value);
 
       columnScroll._children = {
          contentStyle: {
