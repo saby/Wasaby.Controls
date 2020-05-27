@@ -106,7 +106,7 @@ export interface IQueryParamsController {
      * @param model
      * TODO Probably Deprecated
      */
-    setState(model: Collection<Record>): void;
+    setState(model: Collection<Record>): boolean;
 
     /**
      * Устанавливает текущую страницу в контроллере

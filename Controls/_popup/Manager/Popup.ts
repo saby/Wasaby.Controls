@@ -264,6 +264,15 @@ class Popup extends Control<IPopupControlOptions> {
         return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged || (hasHiddenChanged && newHidden === false);
     }
 
+    // TODO Compatible
+    // Для совместимости новых окон и старого индикатора:
+    // Чтобы событие клавиатуры в окне не стопилось, нужно правильно рассчитать индексы в методе getMaxZWindow WS.Core/core/WindowManager.js
+    // В старых окнах есть метод getZIndex, а в новых нет. Поэтому, чтобы метод находил правильный максимальный z-index, добавляю геттер
+
+    getZIndex(): number {
+        return this._options.zIndex;
+    }
+
     static getDefaultOptions(): IPopupControlOptions {
         return {
             content: PopupContent,

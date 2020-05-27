@@ -575,9 +575,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       });
       it('_calculateShadowClasses', function() {
          assert.equal(columnScroll._calculateShadowClasses('start'),
-            'js-controls-ColumnScroll__shadow js-controls-ColumnScroll__shadow_start controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default controls-ColumnScroll__shadow_invisible');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default controls-ColumnScroll__shadow_invisible');
          assert.equal(columnScroll._calculateShadowClasses('end'),
-            'js-controls-ColumnScroll__shadow js-controls-ColumnScroll__shadow_end controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default');
       });
       it('_resizeHandler', function() {
          let isStickyElementsToggled = false;
@@ -961,9 +961,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(columnScroll._calculateShadowStyles('start'), 'left: 100px;');
          assert.equal(columnScroll._calculateShadowStyles('end'), '');
          assert.equal(columnScroll._calculateShadowClasses('start'),
-            'js-controls-ColumnScroll__shadow js-controls-ColumnScroll__shadow_start controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default');
          assert.equal(columnScroll._calculateShadowClasses('end'),
-            'js-controls-ColumnScroll__shadow js-controls-ColumnScroll__shadow_end controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default');
          assert.equal(columnScroll._children.contentStyle.innerHTML, getInnerHTMLWithValue('100px'));
 
          // Scroll to 200px (to the end of content)
@@ -973,9 +973,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(columnScroll._calculateShadowStyles('start'), 'left: 100px;');
          assert.equal(columnScroll._calculateShadowStyles('end'), '');
          assert.equal(columnScroll._calculateShadowClasses('start'),
-            'js-controls-ColumnScroll__shadow js-controls-ColumnScroll__shadow_start controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default');
          assert.equal(columnScroll._calculateShadowClasses('end'),
-            'js-controls-ColumnScroll__shadow js-controls-ColumnScroll__shadow_end controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default controls-ColumnScroll__shadow_invisible');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default controls-ColumnScroll__shadow_invisible');
          assert.equal(columnScroll._children.contentStyle.innerHTML, getInnerHTMLWithValue('250px'));
       });
 

@@ -498,7 +498,7 @@ export interface IList {
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @example
  * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
- * 
+ *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.list:View
@@ -512,7 +512,7 @@ export interface IList {
  *     ...
  * </Controls.list:View>
  * </pre>
- * 
+ *
  * <pre class="brush: js">
  * // TypeScript
  *  ...
@@ -713,6 +713,7 @@ export interface IList {
 /**
  * @typedef {String} Style
  * @variant master Двухколоночный реестр.
+ * @variant masterClassic Режим отображения мастера, в котором отмеченная маркером строка имеет контрастный фон.
  * @variant default Плоский список.
  */
 
@@ -725,6 +726,7 @@ export interface IList {
 /*ENG
  * @typedef {String} Style
  * @variant master Stylizes control as MasterDetail
+ * @variant masterClassic Stylizes control as MasterDetail in which the line marked with a marker has a contrasting background
  * @variant default Simple list
  */
 
