@@ -678,7 +678,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         ItemActionsController.assignActions(
             this._listModel,
             actionsGetter,
-            options.theme
+            options.theme,
+            options.itemActionVisibilityCallback
         );
     }
 
