@@ -112,19 +112,6 @@ export class FlatController implements IDragNDropListController{
       }
    }
 
-   handleDocumentDragEnd(showIndicator: Function, hideIndicator: Function) {
-      //Reset the state of the dragndrop after the movement on the source happens.
-      if (this._dragEndResult instanceof Promise) {
-         showIndicator();
-         this._dragEndResult.addBoth(() => {
-            this._resetDragFields();
-            hideIndicator();
-         });
-      } else {
-         this._resetDragFields();
-      }
-   }
-
    getDragPosition(itemData) {
       const dragEntity = this.dragEntity;
 

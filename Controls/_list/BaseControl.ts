@@ -2978,7 +2978,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             const targetPosition = this._dndListController.getTargetPosition(itemData, nativeEvent);
 
             if (targetPosition) {
-                const changeDragTargetResult = this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]);
+                const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, targetPosition.item, targetPosition.position]);
                 if (changeDragTargetResult !== false) {
                     this._listViewModel.setDragTargetPosition(targetPosition);
                 }
