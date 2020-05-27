@@ -5,8 +5,6 @@
          <Controls._scroll.StickyHeader.Controller
             name="stickyController"
             on:fixed="_fixedHandler()">
-            <Controls._scroll.Scroll.Watcher2 scope="{{_options}}" name="scrollWatcher2" on:scrollStateChanged="_scrollStateChangedHandler()">
-
             <!--Реализация области блоков требует наличия следующей структуры: controls-BlockLayout > controls-BlockLayout__blockGroup.
             Добавляем класс controls-BlockLayout__blockGroup, для того чтобы была соблюдена структура, когда используется controls-BlockLayout на контейнере.
             Таким образом мы избавляемся от лишней вложенности.
@@ -51,8 +49,6 @@
                                     on:editArrowClick="_tmplNotify('editArrowClick')"/>
                     </span>
                </span>
-            </Controls._scroll.Scroll.Watcher2>
-
          </Controls._scroll.StickyHeader.Controller>
       </Controls.event:Register>
    </Controls._scroll.Scroll.Watcher>
