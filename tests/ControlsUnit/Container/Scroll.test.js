@@ -530,22 +530,22 @@ define(
                scroll._scrollMoveHandler({}, {
                   position: 'up'
                });
-               assert.equal('disabled', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(false, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateDown, 'Wrong paging state');
             });
             it('down', function() {
                scroll._scrollMoveHandler({}, {
                   position: 'down'
                });
-               assert.equal('normal', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('disabled', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(false, scroll._pagingState.stateDown, 'Wrong paging state');
             });
             it('middle', function() {
                scroll._scrollMoveHandler({}, {
                   position: 'middle'
                });
-               assert.equal('normal', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateDown, 'Wrong paging state');
             });
 
          });

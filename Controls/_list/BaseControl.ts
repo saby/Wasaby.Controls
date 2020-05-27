@@ -858,7 +858,7 @@ const _private = {
             return bottomScroll < triggerOffset * 1.3;
         }
     },
-    
+
     needShowPagingByScrollSize: function(self, viewSize: number, viewPortSize: number): boolean {
         let result = false;
 
@@ -1059,21 +1059,22 @@ const _private = {
         return !!self._showLoadingIndicatorImage;
     },
 
+    updateScrollPagingController(self, scrollParams) {
+        if (self._scrollPagingCtr) {
+            self._scrollPagingCtr.updateScrollParams(scrollParams);
+        } else {
+            _private.getScrollPagingController(self, scrollParams).then((scrollPagingCtr) => {
+                self._scrollPagingCtr = scrollPagingCtr;
+                self._scrollPagingCtr.updateScrollParams(scrollParams);
+            });
+        }
+    },
+
     /**
      * Обработать прокрутку списка виртуальным скроллом
      */
     handleListScroll: function(self, params) {
-        if (_private.needScrollPaging(self._options.navigation)) {
-            return _private.getScrollPagingController(self, {
-                scrollTop: self._scrollTop,
-                scrollHeight: params.scrollHeight,
-                clientHeight: params.clientHeight
-            }).then((scrollPagingCtr) => {
-                self._scrollPagingCtr = scrollPagingCtr;
-                self._scrollPagingCtr.handleScroll(params.position);
-                
-            });
-        }
+        
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
@@ -1106,6 +1107,14 @@ const _private = {
 
         self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
+        if (_private.needScrollPaging(self._options.navigation)) {
+            const scrollParams = {
+                scrollTop: self._scrollTop,
+                scrollHeight: self._viewSize,
+                clientHeight: self._viewPortSize
+            };
+            _private.updateScrollPagingController(self, scrollParams);
+        }
     },
 
     getPortionedSearch(self): PortionedSearch {
@@ -2106,13 +2115,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     scrollResizeHandler(_: SyntheticEvent<Event>, params: object): void {
         if (_private.needScrollPaging(this._options.navigation)) {
-            const scrollParams = {...params, scrollTop: this._scrollTop};
             // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
             // поэтому нужен таймаут
-            _private.getScrollPagingController(this, scrollParams).then((scrollPagingCtr) => {
-                this._scrollPagingCtr = scrollPagingCtr;
-                this._scrollPagingCtr.updateScrollParams(scrollParams);
-            });
             this._needPagingTimeout = setTimeout(() => {
                 this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
             }, 18);
@@ -2156,6 +2160,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _viewResize(): void {
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
+        if (_private.needScrollPaging(this._options.navigation)) {
+            const scrollParams = {scrollHeight: this._viewSize, clientHeight: this._viewPortSize, scrollTop: this._scrollTop};
+            
+            _private.updateScrollPagingController(this, scrollParams);
+        }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
     },
 
