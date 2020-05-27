@@ -523,9 +523,14 @@
    transform: translateZ(0);
 }
 
+// TODO После https://online.sbis.ru/opendoc.html?guid=83aacafa-5b11-4615-9424-46d724b3793e
+//  вернуть как было в задаче https://online.sbis.ru/opendoc.html?guid=ecf7bb3e-a806-4477-9efa-dfc176195197
+.controls-background-masterClassic_theme-@{themeName}.controls-Grid__row-cell_selected-masterClassic_theme-@{themeName},
+.controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
+   background-color: @masterClassic_item_selected_background-color_list;
+}
 .controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
    z-index: 1;
-   background-color: @masterClassic_item_selected_background-color_list;
 
    &:before {
       content: '';
