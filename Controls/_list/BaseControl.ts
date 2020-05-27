@@ -2904,7 +2904,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // TODO dnd что-то сделать с этим условием
             if (
                dragObject && !this._useNewModel &&
-               !this._listViewMovel.getDragEntity() &&
+               !this._listViewModel.getDragEntity() &&
                cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
             ) {
                 this._dndListController.handleDragEnter(dragObject, notifyDragEnter);
@@ -2917,7 +2917,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragLeave: function() {
         if (!this._useNewModel) {
-            this._listViewMovel.setDragTargetPosition(null);
+            this._listViewModel.setDragTargetPosition(null);
         }
     },
 

@@ -251,6 +251,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (this._dragEntity) {
             dragItems = this._dragEntity.getItems();
+            // TODO dnd теперь элемент за который тащим не на первом месте находится
             if (dragItems[0] === itemsModelCurrent.key) {
                 itemsModelCurrent.isDragging = true;
             }
