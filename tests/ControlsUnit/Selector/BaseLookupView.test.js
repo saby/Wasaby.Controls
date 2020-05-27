@@ -533,11 +533,12 @@ define([
          newFieldWrapperWidth = 400;
          lookupView._resize();
          assert.isTrue(isCalculatingSizes);
+         assert.isTrue(wrapperWidthCalled);
 
          wrapperWidthCalled = false;
          lookupView._isNeedCalculatingSizes = () => false;
          lookupView._resize();
-         assert.isTrue(wrapperWidthCalled);
+         assert.isFalse(wrapperWidthCalled);
       });
    });
 });
