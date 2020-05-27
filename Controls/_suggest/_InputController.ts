@@ -158,12 +158,14 @@ var _private = {
    },
 
    shouldShowSuggest: function(self, searchResult) {
-      var hasItems = searchResult && searchResult.data.getCount();
+      const hasItems = searchResult && searchResult.data.getCount();
+      const isSuggestHasTabs = self._tabsSelectedKey !== null;
 
       /* do not suggest if:
        * 1) loaded list is empty and empty template option is doesn't set
        * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
-      return hasItems || (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
+      return hasItems ||
+             (!self._options.historyId || self._searchValue || isSuggestHasTabs) && self._options.emptyTemplate;
    },
    processResultData: function(self, resultData) {
       self._searchResult = resultData;
@@ -332,7 +334,6 @@ var SuggestLayout = Control.extend({
    _searchValue: '',
    _inputValue: '',
    _isFooterShown: false,
-   _tabsSource: null,
    _filter: null,
    _tabsSelectedKey: null,
    _historyKeys: null,
@@ -367,7 +368,6 @@ var SuggestLayout = Control.extend({
    },
    _beforeUnmount: function() {
       this._searchResult = null;
-      this._tabsSource = null;
       this._searchStart = null;
       this._searchEnd = null;
       this._searchErrback = null;
