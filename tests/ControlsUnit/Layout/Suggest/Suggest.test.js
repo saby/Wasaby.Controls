@@ -15,11 +15,13 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       };
 
       var getComponentObject = function() {
-         var self = {};
-         self._options = {};
-         self._options.suggestTemplate = {};
-         self._options.footerTemplate = {};
-         return self;
+         const controller = new suggestMod._InputController();
+         const options = {
+            suggestTemplate: {},
+            footerTemplate: {}
+         };
+         controller.saveOptions(options);
+         return controller;
       };
 
       var getContainer = function(size) {
@@ -206,6 +208,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          //emptyTemplate is set, search - is set, historyId is set
          self._searchValue = '123';
          self._options.historyId = '123';
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
+
+         self._tabsSelectedKey = 'testTab';
+         self._searchValue = '';
          assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
          assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
 
