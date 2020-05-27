@@ -2,9 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_scroll/Scroll/ContainerBase/ContainerBase');
 import {Registrar} from 'Controls/event';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import isEmpty = require('Core/helpers/Object/isEmpty');
-import Scrollbar from "./Scroll/Scrollbar";
-
 
 interface IContainerBaseOptions extends IControlOptions {
     scrollMode?: string;
@@ -75,7 +72,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _sendByRegistrar(eventType: string, params: object): void {
-        this._registrar.start(eventType, params);
+        this._registrar.start(params);
         this._notify(eventType, [params]);
     }
 
@@ -194,19 +191,19 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _updateState(): boolean {
-        if (!this._state || this._state.scrollTop !== this._children.contentObserver.scrollTop ||
-            this._state.scrollLeft !== this._children.contentObserver.scrollLeft ||
-            this._state.clientHeight !== this._children.contentObserver.clientHeight ||
+        if (!this._state || this._state.scrollTop !== this._container.scrollTop ||
+            this._state.scrollLeft !== this._container.scrollLeft ||
+            this._state.clientHeight !== this._container.clientHeight ||
             this._state.scrollHeight !== this._children.contentObserver.scrollHeight ||
-            this._state.clientWidth !== this._children.contentObserver.clientWidth ||
+            this._state.clientWidth !== this._container.clientWidth ||
             this._state.scrollWidth !== this._children.contentObserver.scrollWidth) {
                 this._oldState = {...this._state};
                 this._state = {
-                    scrollTop: this._children.contentObserver.scrollTop,
-                    scrollLeft: this._children.contentObserver.scrollLeft,
-                    clientHeight: this._children.contentObserver.clientHeight,
+                    scrollTop: this._container.scrollTop,
+                    scrollLeft: this._container.scrollLeft,
+                    clientHeight: this._container.clientHeight,
                     scrollHeight: this._children.contentObserver.scrollHeight,
-                    clientWidth: this._children.contentObserver.clientWidth,
+                    clientWidth: this._container.clientWidth,
                     scrollWidth: this._children.contentObserver.scrollWidth,
                     verticalPosition: this._getVerticalPosition(),
                     horizontalPosition: this._getHorizontalPosition(),
