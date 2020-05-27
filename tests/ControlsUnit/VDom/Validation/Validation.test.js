@@ -77,6 +77,12 @@ define([
          validCtrl._isOpened = false;
          validCtrl.setValidationResult('Error 404');
          assert.deepEqual(validCtrl._isOpened, true);
+
+         // вызов с hideInfobox = true не закрывает инфобокс
+         validCtrl.setValidationResult(null, validConfig);
+         assert.deepEqual(validCtrl._isOpened, true);
+
+         // вызов с hideInfobox = true не октрывает инфобокс
          validCtrl._isOpened = false;
          validCtrl.setValidationResult('Error 404', validConfig);
          assert.deepEqual(validCtrl._isOpened, false);
