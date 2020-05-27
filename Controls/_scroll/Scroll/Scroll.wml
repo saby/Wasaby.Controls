@@ -12,38 +12,38 @@
             соответствии с блочной структурой. Набор групп определяется для каждого типа тега отдельно.
             Поэтому тег контента должен отличаться от остальных. Например подойдет span.
             https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/containers/blocks/-->
-               <span name="content"
-                    style="{{_displayState.heightFix ? '' : _contentStyles}}"
-                    class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-{{_options.theme}}
-                              {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
-                              {{_displayState.hasScroll ? 'controls-Scroll__content_possibleScroll'}}
-                              {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' :
-                               _classTypeScroll}}
-                              {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
-                    on:controlResize="_resizeHandler()"
-                    on:scroll="_scrollHandler()"
-                    on:wheel="_wheelHandler()"
-                    >
-                     <ws:partial template="{{_options.content}}"
-                                 scope="{{_options}}"
-                                 attr:class="controls-Scroll__userContent"
-                                 on:saveScrollPosition="_saveScrollPosition()"
-                                 on:scrollToElement="_scrollToElement()"
-                                 on:updatePlaceholdersSize="_updatePlaceholdersSize()"
-                                 on:restoreScrollPosition="_restoreScrollPosition()"
-                                 on:updateShadowMode="_updateShadowMode()"
-                                 on:selectedKeysChanged="selectedKeysChanged()"
-                                 on:excludedKeysChanged="excludedKeysChanged()"
-                                 on:itemClick="itemClick()"
-                                 on:itemMouseDown="_tmplNotify('itemMouseDown')"
-                                 on:rootChanged="_tmplNotify('rootChanged')"
-                                 on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
-                                 on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
-                                 on:checkboxClick="_tmplNotify('checkboxClick')"
-                                 on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
-                                 on:actionClick="_tmplNotify('actionClick')"
-                                 on:editArrowClick="_tmplNotify('editArrowClick')"/>
-               </span>
+            <span name="content"
+                 style="{{_displayState.heightFix ? '' : _contentStyles}}"
+                 class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-{{_options.theme}}
+                           {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
+                           {{_displayState.hasScroll ? 'controls-Scroll__content_possibleScroll'}}
+                           {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' :
+                            _classTypeScroll}}
+                           {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
+                 on:controlResize="_resizeHandler()"
+                 on:scroll="_scrollHandler()"
+                 on:wheel="_wheelHandler()"
+                 >
+                  <ws:partial template="{{_options.content}}"
+                              scope="{{_options}}"
+                              attr:class="controls-Scroll__userContent"
+                              on:saveScrollPosition="_saveScrollPosition()"
+                              on:scrollToElement="_scrollToElement()"
+                              on:updatePlaceholdersSize="_updatePlaceholdersSize()"
+                              on:restoreScrollPosition="_restoreScrollPosition()"
+                              on:updateShadowMode="_updateShadowMode()"
+                              on:selectedKeysChanged="selectedKeysChanged()"
+                              on:excludedKeysChanged="excludedKeysChanged()"
+                              on:itemClick="itemClick()"
+                              on:itemMouseDown="_tmplNotify('itemMouseDown')"
+                              on:rootChanged="_tmplNotify('rootChanged')"
+                              on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
+                              on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
+                              on:checkboxClick="_tmplNotify('checkboxClick')"
+                              on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
+                              on:actionClick="_tmplNotify('actionClick')"
+                              on:editArrowClick="_tmplNotify('editArrowClick')"/>
+            </span>
          </Controls._scroll.StickyHeader.Controller>
       </Controls.event:Register>
    </Controls._scroll.Scroll.Watcher>
