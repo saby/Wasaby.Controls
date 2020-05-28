@@ -1836,7 +1836,7 @@ var
             this._model.setAvatarPosition(position)
         },
         resetDraggedItems(): void {
-            this.model.resetDraggedItems();
+            this._model.resetDraggedItems();
         },
         getAvatarPosition(): object {
             return this._model.getAvatarPosition();

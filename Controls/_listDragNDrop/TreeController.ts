@@ -43,7 +43,12 @@ export default class TreeController extends FlatController {
    }
 
    startCountDownForExpandNode(itemData) {
-      if (itemData.item.get(itemData.nodeProperty) !== null && (!this._expandOnDragData || this._expandOnDragData !== itemData) && !itemData.isExpanded) {
+      // проверяем что навели на узел, что для него уже не запущен timeout, что он не раскрыт
+      // и что навели не на перетаскиваемый элемент
+      if (itemData.item.get(itemData.nodeProperty) !== null
+         && (!this._expandOnDragData || this._expandOnDragData !== itemData)
+         && !itemData.isExpanded
+         && this._avatarItem.key !== itemData.key) {
          this._clearTimeoutForExpandOnDrag();
          this._expandOnDragData = itemData;
          this._setTimeoutForExpandOnDrag(this._expandOnDragData);

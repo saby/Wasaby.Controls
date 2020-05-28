@@ -40,6 +40,7 @@ export class FlatController implements IDragNDropListController{
    protected _avatarItem;
    private _avatarPosition;
    private _draggedItems;
+   private _isDragging = false;
 
    constructor(protected _model: IModel) {}
 
@@ -61,6 +62,7 @@ export class FlatController implements IDragNDropListController{
    }
 
    startDragNDrop() {
+      this._isDragging = true;
       this._model.setDraggedItems(this._avatarItem, this._draggedItems);
 
       // проставляем изначальную позицию аватара
@@ -113,6 +115,7 @@ export class FlatController implements IDragNDropListController{
    }
 
    reset() {
+      this._isDragging = false;
       this._avatarItem = null;
       this._draggedItems = null;
       this._dragEndResult = null;
@@ -122,7 +125,7 @@ export class FlatController implements IDragNDropListController{
    }
 
    isDragging(): boolean {
-      return !!this._avatarItem;
+      return this._isDragging;
    }
 
    /**

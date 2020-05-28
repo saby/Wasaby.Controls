@@ -2849,7 +2849,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragEnd: function(event, dragObject) {
         if (this._dndListController) {
-            // тут удалена првоерка на новую модель
             const targetPosition = this._dndListController.getCurrentDragPosition();
             if (targetPosition) {
                 // TODO dnd может лучше это хранить в baseControl
@@ -2959,7 +2958,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // Только получается что у нас будет 2 контроллера: плоский-который выполняет основную логику и деревянный который выполняет логику только в TreeControl
         // если в TreeControl создать свой контроллер, то он не будет знать состояния плоского контроллера и за данными придется обращаться к плоскому контроллеру
         // может все-таки лучше из TreeControl звать метод у контроллера, который находится в BaseControl.
-        if (this._dndListController instanceof TreeController) {
+        if (this._dndListController instanceof TreeController && this._dndListController.isDragging()) {
             const targetPosition = this._dndListController.calculateDragPosition(itemData, nativeEvent);
 
             if (targetPosition) {
