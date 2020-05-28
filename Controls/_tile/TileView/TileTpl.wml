@@ -77,13 +77,11 @@
 </ws:template>
 
 <ws:if data="{{invisible}}">
-   <div attr:class="controls-TileView__item controls-TileView__item_theme-{{theme}} controls-TileView__item_invisible"
-        attr:style="{{'-ms-flex-preferred-size: ' + (dynamicWidth ? '100%; ' : (((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; ')) + 'flex-basis: ' + (dynamicWidth ? '100%; ' : (((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; '))}}">
-   </div>
+   <div attr:class="controls-TileView__item controls-TileView__item_theme-{{theme}} controls-TileView__item_invisible" attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}"></div>
 </ws:if>
 <ws:else>
    <ws:if data="{{itemData.tileMode === 'dynamic'}}">
-      <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + (dynamicWidth ? '100%; ' : (((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; ')) + 'flex-basis: ' + (dynamicWidth ? '100%; ' : (((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; ')) + 'height: ' + (height ? height : (itemData.itemsHeight + 'px;')) + 'max-width: ' + (maxWidth || ((width || itemData.defaultItemWidth) + 'px;'))}}">
+      <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + (height || itemData.itemsHeight) + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
          <ws:partial template="defaultContentTpl">
             <ws:imageWrapper>
                <ws:partial template="imageWrapperTpl" attr:class="{{( titleStyle === undefined && hasTitle ) || titleStyle === 'partial' ? 'controls-TileView__imageWrapper_reduced_theme-' + theme}} {{itemData.isAnimated ? ' controls-TileView__item_animated'}}" attr:style="{{'height: ' + (itemData.isAnimated && itemData.zoomCoefficient ? itemData.zoomCoefficient * itemData.itemsHeight : itemData.itemsHeight) + 'px;'}}">
