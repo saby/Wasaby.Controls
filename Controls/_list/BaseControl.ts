@@ -2191,6 +2191,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             container.addEventListener('dragstart', this._nativeDragStart);
         }
         this._loadedItems = null;
+        this._notifyOnDrawItems();
     },
 
     _beforeUpdate: function(newOptions) {
@@ -2455,17 +2456,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
+    _notifyOnDrawItems(): void {
+        if (this._shouldNotifyOnDrawItems) {
+            this._notify('drawItems');
+            this._shouldNotifyOnDrawItems = false;
+            this._itemsChanged = false;
+        }
+    },
+
     _afterUpdate: function(oldOptions) {
         this._updateInProgress = false;
         if (this._shouldUpdateItemActions && this._itemActionsInitialized) {
             this._shouldUpdateItemActions = false;
             this._updateItemActions();
         }
-        if (this._shouldNotifyOnDrawItems) {
-            this._notify('drawItems');
-            this._shouldNotifyOnDrawItems = false;
-            this._itemsChanged = false;
-        }
+        this._notifyOnDrawItems();
         if (this._delayedSelect && this._children.selectionController) {
             this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
             this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);

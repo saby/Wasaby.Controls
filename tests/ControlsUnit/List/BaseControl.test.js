@@ -2134,7 +2134,7 @@ define([
             };
             assert.isFalse(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger shouldn\'t be visible');
          });
-         
+
          it('down', () => {
             let scrollParams = {
                scrollTop: 300,
@@ -5467,6 +5467,28 @@ define([
          instance.saveOptions({...cfg, itemsDragNDrop: false});
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'itemMouseLeave');
+      });
+
+      it('should fire "drawItems" in afterMount', async function() {
+         let
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+               viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source
+             },
+             instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         instance._container = {};
+         let fakeNotify = sandbox.spy(instance, '_notify')
+             .withArgs('drawItems');
+         instance._afterMount(cfg);
+         assert.isTrue(fakeNotify.calledOnce);
       });
 
       it('should fire "drawItems" event if collection has changed', async function() {
