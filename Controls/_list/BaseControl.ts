@@ -358,10 +358,10 @@ const _private = {
             !cfg.readOnly &&
             !domEvent.target.closest('.controls-DragNDrop__notDraggable');
     },
-    startDragNDrop(self, domEvent, itemData): void {
+    startDragNDrop(self, domEvent, draggedItem): void {
         // TODO dnd росто проверить что контроллер создан и вызвать у него метод првоеряющий что можно драгать
         if (_private.canStartDragNDrop(domEvent, self._options, self._context?.isTouch?.isTouch)) {
-            const key = self._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+            const key = self._options.useNewModel ? draggedItem.getContents().getKey() : draggedItem.key;
 
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
@@ -378,7 +378,7 @@ const _private = {
                     if (self._options.dragControlId) {
                         dragStartResult.dragControlId = self._options.dragControlId;
                     }
-                    self._dndListController.draggingItem = itemData;
+                    self._dndListController.setDraggedItems(draggedItem, items);
                     self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
                 }
             });
@@ -2843,8 +2843,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragStart: function(event, dragObject, domEvent) {
         if (this._dndListController) {
-            this._dndListController.setDraggingItem(dragObject.entity);
-
             const itemData = this._dndListController.unprocessedDragEnteredItem;
             if (itemData) {
                 // TODO dnd в _itemMouseEnter дупликат
@@ -2852,7 +2850,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (dragPosition) {
                     const changeDragTargetResult = this._notify('changeDragTarget', [dragObject.entity, dragPosition.item, dragPosition.position]);
                     if (changeDragTargetResult !== false) {
-                        this._listViewModel.setDragTargetPosition(targetPosition);
+                        this._dndListController.changeAvatarPosition();
                     }
                 }
 
@@ -2906,17 +2904,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                !this._listViewModel.getDragEntity() &&
                cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
             ) {
-                this._dndListController.handleDragEnter(dragObject, notifyDragEnter);
-
                 const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
-                this._dndListController.setDraggingItem(dragObject.entity, dragEnterResult);
+
+                this._dndListController.changeAvatarPosition(dragEnterResult);
             }
         }
     },
 
     _dragLeave: function() {
-        if (!this._useNewModel) {
-            this._listViewModel.setDragTargetPosition(null);
+        if (this._dndListController) {
+            this._dndListController.resetAvatarPosition();
         }
     },
 
@@ -2945,7 +2942,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (dragPosition) {
                 const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, dragPosition.item, dragPosition.position]);
                 if (changeDragTargetResult !== false) {
-                    this._listViewModel.setDragTargetPosition(dragPosition);
+                    this._listViewModel.setAvatarPosition(dragPosition);
                 }
             }
 
@@ -2993,7 +2990,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
             this._dndListController.unprocessedDragEnteredItem = null;
-            if (this._dndListController instanceof FlatController) {
+            if (this._dndListController instanceof TreeController) {
                 // TODO dnd перенести в TreeControl, наверное просто после того как здесь вызывается метод для плоского контроллера
                 // занотифаить для TreeControl и он вызовет метод в деревянном контроллере
                 this._dndListController.stopCountDownForExpandNode()

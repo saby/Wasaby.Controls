@@ -29,6 +29,7 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
+import DragStrategy from "./itemsStrategy/Drag";
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -2111,6 +2112,46 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // endregion
 
+    // region Drag-N-Drop
+
+    /**
+     * Задать "призрачный" элемент, который отображается при перетаскивании, и перетаскиваемые элементы
+     * @param avatarKey ключ "призрачного" элемента
+     * @param draggedKeys список ключей перетаскиваемых элементов
+     */
+    setDraggedItems(avatarKey: number|string, draggedKeys: Array<number|string>): void {
+        const avatarStartIndex = this.getIndexByKey(avatarKey);
+
+        this.appendStrategy(DragStrategy, {
+            draggedItemsKeys: draggedKeys,
+            avatarItemKey: avatarKey,
+            avatarIndex: avatarStartIndex
+        });
+    }
+
+    /**
+     * Задать "призрачный" элемент, который отображается при перетаскивании
+     * @param key ключ элемента
+     */
+    setAvatarKey(key: number|string): void {
+        // TODO dnd наверное нужно передавать новый индекс
+        const strategy = this.getStrategyInstance(DragStrategy) as DragStrategy<unknown>;
+        const avatarIndex = this.getIndexByKey(key);
+        if (strategy) {
+            strategy.avatarIndex = avatarIndex;
+            this.nextVersion();
+        }
+    }
+
+    /**
+     * Сбросить перетаскиваемые элементы
+     */
+    resetDraggedItems(): void {
+        this.removeStrategy(DragStrategy);
+    }
+
+    // endregion
+
     getDisplayProperty(): string {
         return this._$displayProperty;
     }
@@ -2398,6 +2439,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     getMarkerVisibility(): string {
         return this._$markerVisibility;
     }
+
+
 
     // region SerializableMixin
 

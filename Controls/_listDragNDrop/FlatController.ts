@@ -70,6 +70,9 @@ export class FlatController implements IDragNDropListController{
    // и после того как документ перетащили, то смотрим не нужно ли что-то подождать и если есть промис то ожидаем
    private _dragEndResult;
 
+   private _avatarItem;
+   private _draggedItems;
+
    constructor(private _useNewModel: boolean, protected _model: IModel) {}
 
    update(useNewModel: boolean, model: IModel) {
@@ -81,55 +84,33 @@ export class FlatController implements IDragNDropListController{
 
    set unprocessedDragEnteredItem(val) { this._unprocessedDragEnteredItem = val; }
 
-   set dragEndResult(val) { this._dragEndResult = val; }
-
-   get dragEntity() { return this._useNewModel ? this._draggingEntity : this._model.getDragEntity(); }
-
    get unprocessedDragEnteredItem() { return this._unprocessedDragEnteredItem; }
+
+   set dragEndResult(val) { this._dragEndResult = val; }
 
    get dragEndResult() { return this._dragEndResult; }
 
-   // TODO dnd может в setter переделать когда модели будут совместимы по интерфейсу
-   setDraggingItem(dragEntity, dragEnterResult = null) {
-      let draggingItem;
+   setDraggedItems(avatarItem, draggedItems) {
+      this._avatarItem = avatarItem;
+      this._draggedItems = draggedItems;
+      this._model.setDraggedItems(avatarItem, draggedItems);
+   }
 
-      // TODO dnd какая-то хрень, не понимаю что тут делается
+   changeAvatarPosition(dragEnterResult) {
+      let draggingItem;
       if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
          draggingItem = this._model._prepareDisplayItemForAdd(dragEnterResult);
       } else {
          draggingItem = this._draggingItem.dispItem;
-
-         if (dragEnterResult === true) {
-            this._model.setDragEntity(dragEntity);
-         }
       }
 
-      if (this._useNewModel) {
-         this._draggingEntity = dragEntity;
-      } else {
-         this._model.setDragItemData(this._model.getItemDataByItem(draggingItem));
-         this._model.setDragEntity(dragEntity);
-      }
+      draggingItem = this._model.getItemDataByItem(draggingItem);
+      const newPosition = this._model.calculateDragTargetPosition(draggingItem);
+      this._model.setAvatarPosition(newPosition);
    }
 
-   getDragPosition(itemData) {
-      const dragEntity = this.dragEntity;
-
-      /*
-         {
-            data: CollectionItem<Model>,
-            item: Model,
-            index: number - индекс перетаскиваемого элемента
-         }
-         data.getContents() = item - и зачем хранить одну и ту инфу 2 раза я не понял
-      */
-      let dragPosition;
-      if (dragEntity) {
-         dragPosition = this._useNewModel ?
-            { position: 'before', item: itemData.getContents() } :
-            this._model.calculateDragTargetPosition(itemData);
-      }
-      return dragPosition;
+   resetAvatarPosition() {
+      this._model.setAvatarPosition(null);
    }
 
    /**
@@ -163,15 +144,23 @@ export class FlatController implements IDragNDropListController{
       };
    }
 
+   getDragPosition(itemData) {
+      /*
+         {
+            data: CollectionItem<Model>,
+            item: Model,
+            index: number - индекс перетаскиваемого элемента
+         }
+         data.getContents() = item - и зачем хранить одну и ту инфу 2 раза я не понял
+      */
+      let dragPosition = this._useNewModel
+         ? { position: 'before', item: itemData.getContents() }
+         : this._model.calculateDragTargetPosition(itemData);
+      return dragPosition;
+   }
+
    reset() {
-      if (this._useNewModel) {
-         this._draggingEntity = null;
-         this._draggingItem = null;
-      } else {
-         this._model.setDragTargetPosition(null);
-         this._model.setDragItemData(null);
-         this._model.setDragEntity(null);
-      }
+      this._model.resetDraggedItems(this._avatarItem, this._draggedItems);
    }
 
    /**
