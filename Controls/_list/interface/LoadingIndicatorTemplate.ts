@@ -3,6 +3,10 @@ import {TemplateFunction} from 'UI/Base';
 /**
  * Шаблон, который по умолчанию используется для отображения индикатора загрузки в списочных контролах.
  *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
+ * 
  * @class Controls/list:LoadingIndicatorTemplate
  * @author Михайлов С.Е.
  * @public
