@@ -17,7 +17,8 @@ import DateUtil = require('Controls/Utils/Date');
  */
 var _private = {
    setStartValue: function(self, value) {
-      if (DateUtil.isDatesEqual(self._startValue, value)) {
+      const startValueResetTime = DateUtil.normalizeDate(self._startValue);
+      if (DateUtil.isDatesEqual(startValueResetTime, value)) {
          return false;
       }
       self._startValue = value;
@@ -25,7 +26,8 @@ var _private = {
       return true;
    },
    setEndValue: function(self, value) {
-      if (DateUtil.isDatesEqual(self._endValue, value)) {
+      const endValueResetTime = DateUtil.normalizeDate(self._endValue);
+      if (DateUtil.isDatesEqual(endValueResetTime, value)) {
          return false;
       }
       self._endValue = value;
