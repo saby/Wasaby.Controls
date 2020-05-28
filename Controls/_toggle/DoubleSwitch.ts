@@ -16,7 +16,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * 
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FSwitch%2FstandartDemoSwitch">демо-пример</a>
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2ftoggle%2fDoubleSwitch%2fIndex">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
  *
  *
@@ -35,7 +35,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
 /*
  * Switch with two captions and with support two orientation.
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FSwitch%2FstandartDemoSwitch">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2ftoggle%2fDoubleSwitch%2fIndex">Demo-example</a>.
  *
  * @class Controls/_toggle/DoubleSwitch
  * @extends Core/Control
