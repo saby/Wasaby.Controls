@@ -1,5 +1,10 @@
 /**
  * Шаблон, используемый по умолчанию для построения подвала {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/autocompletion/index/ автодополнения}.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggestPopup.less">переменные тем оформления</a>
+ * 
  * @class Controls/suggestPopup:FooterTemplate
  * @author Герасимов А.М.
  * @see Controls/suggestPopup

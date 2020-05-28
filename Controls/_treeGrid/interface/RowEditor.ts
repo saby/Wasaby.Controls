@@ -1,5 +1,10 @@
 /**
  * Шаблон, который используют для настройки отображения элемента контрола {@link Controls/treeGrid:View Дерево} в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tree/edit/ режиме редактирования}.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_treeGrid.less">переменные тем оформления</a>
+ * 
  * @class Controls/treeGrid:RowEditor
  * @author Авраменко А.С.
  * @see Controls/treeGrid:View#itemTemplate

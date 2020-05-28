@@ -2,6 +2,12 @@ import {TFontWeight} from 'Controls/_interface/IFontWeight';
 
 /**
  * Шаблон, который по умолчанию используется для отображения ячеек итогов в контроле {@link Controls/grid:View Таблица}.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_grid.less">переменные тем оформления grid</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a> 
+ * 
  * @class Controls/grid:ResultColumnTemplate
  * @author Авраменко А.С.
  * @example
