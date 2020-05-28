@@ -2923,20 +2923,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (this._dndListController) {
-            // TODO dnd хз, надо разобраться
             this._dndListController.unprocessedDragEnteredItem = itemData;
 
-            // TODO dnd в _dragStart дупликат
-            const dragPosition = this._dndListController.calculateDragPosition(itemData);
-            if (dragPosition) {
-                const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, dragPosition.item, dragPosition.position]);
-                if (changeDragTargetResult !== false) {
-                    this._dndListController.changeAvatarPosition(dragPosition);
+            if (this._dndListController.isDragging()) {
+                const dragPosition = this._dndListController.calculateDragPosition(itemData, nativeEvent);
+                if (dragPosition) {
+                    const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, dragPosition.item, dragPosition.position]);
+                    if (changeDragTargetResult !== false) {
+                        this._dndListController.changeAvatarPosition(dragPosition);
+                    }
                 }
-            }
 
-            // TODO dnd хз, надо разобраться
-            if (this._dndListController._avatarItem) {
                 this._dndListController.unprocessedDragEnteredItem = null;
             }
         }
@@ -2949,7 +2946,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (
            !this._options.useNewModel &&
-           (!this._options.itemsDragNDrop || !this._listViewModel.getDragEntity() && !this._listViewModel.getDragItemData()) &&
+           (this._dndListController && this._dndListController.isDragging()) &&
            !this._showActions
         ) {
             this._showActions = true;
@@ -2963,7 +2960,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // если в TreeControl создать свой контроллер, то он не будет знать состояния плоского контроллера и за данными придется обращаться к плоскому контроллеру
         // может все-таки лучше из TreeControl звать метод у контроллера, который находится в BaseControl.
         if (this._dndListController instanceof TreeController) {
-            const targetPosition = this._dndListController.calculateDragTargetPosition(itemData, nativeEvent);
+            const targetPosition = this._dndListController.calculateDragPosition(itemData, nativeEvent);
 
             if (targetPosition) {
                 const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, targetPosition.item, targetPosition.position]);

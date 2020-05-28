@@ -121,6 +121,10 @@ export class FlatController implements IDragNDropListController{
       this._model.resetDraggedItems();
    }
 
+   isDragging(): boolean {
+      return !!this._avatarItem;
+   }
+
    /**
     * Сортировать список ключей элементов
     * Ключи сортируются по порядку, в котором они идут в списке
@@ -146,7 +150,7 @@ export class FlatController implements IDragNDropListController{
       if (this._avatarPosition) {
          prevIndex = this._avatarPosition.index;
       } else if (this._avatarItem) {
-         prevIndex = this._avatarPosition.index;
+         prevIndex = this._avatarItem.index;
       }
 
       if (prevIndex === -1) {

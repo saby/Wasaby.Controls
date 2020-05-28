@@ -293,7 +293,6 @@ var
                     if (!current.hasMultiSelect) {
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
                     }
-                    // TODO: Исправить по ошибке https://online.sbis.ru/opendoc.html?guid=e4de50e3-8071-49bf-8cd1-69944e8704e5
                     if (self._options.rowSeparatorVisibility) {
                         const separatorSize = self._options.rowSeparatorSize;
                         const isWideSeparator = separatorSize && separatorSize.toLowerCase() === 'l';
@@ -637,56 +636,58 @@ var
                 itemData.index = this._display.getIndex(itemData.dispItem);
             }
         },
-        setDragEntity: function(entity) {
-            var item;
 
-            if (entity) {
-                //Collapse all the nodes that we move.
-                entity.getItems().forEach(function(id) {
-                    item = this.getItemById(id, this._options.keyProperty);
+        // TODO dnd указать везде типы
+        setDraggedItems(avatarItem: object, draggedKeys: Array<number|string>): void {
+            if (draggedKeys) {
+                // Collapse all the nodes that we move.
+                draggedKeys.forEach(function(id) {
+                    let item = this.getItemById(id, this._options.keyProperty);
 
-                    //Not all of the moved items can be in the current recordSet
+                    // Not all of the moved items can be in the current recordSet
                     if (item) {
                         this.toggleExpanded(item, false);
                     }
                 }, this);
             }
 
-            TreeViewModel.superclass.setDragEntity.apply(this, arguments);
-        },
-        setDragItemData: function(itemDragData) {
-            var getVersionOrigin;
-
             //Displays the movable item as closed
-            if (itemDragData) {
-                itemDragData.isExpanded = false;
+            if (avatarItem) {
+                avatarItem.isExpanded = false;
 
-                getVersionOrigin = itemDragData.getVersion;
-                itemDragData.getVersion = function() {
-                    return getVersionOrigin() + '_LEVEL_' + itemDragData.level;
+                const getVersionOrigin = avatarItem.getVersion;
+                avatarItem.getVersion = function() {
+                    return getVersionOrigin() + '_LEVEL_' + avatarItem.level;
                 };
             }
-            TreeViewModel.superclass.setDragItemData.apply(this, arguments);
+
+            TreeViewModel.superclass.setDraggedItems.apply(this, arguments);
         },
-
-
-        setDragTargetPosition: function(targetPosition) {
-            if (targetPosition && targetPosition.position === 'on') {
-
+        setAvatarPosition(position: object): void {
+            if (position && position.position === 'on') {
                 //When an item is moved to a folder, the fake record should be displayed at the previous position.
                 //If do not display the fake entry, there will be a visual jump of the interface.
-                this._setPrevDragTargetPosition(targetPosition);
+                this._setPrevDragTargetPosition(position);
             } else {
                 this._prevDragTargetPosition = null;
 
                 //The fake item must be displayed at the correct level.
-                if (targetPosition) {
-                    this._draggingItemData.level = targetPosition.data.level;
+                if (position) {
+                    this._draggingItemData.level = position.data.level;
                 }
             }
-            TreeViewModel.superclass.setDragTargetPosition.apply(this, arguments);
-        },
 
+            TreeViewModel.superclass.setAvatarPosition.apply(this, arguments);
+        },
+        resetDraggedItems(): void {
+            TreeViewModel.superclass.resetDraggedItems.apply(this, arguments);
+        },
+        getAvatarPosition(): object {
+            TreeViewModel.superclass.getAvatarPosition.apply(this, arguments);
+        },
+        getDragItemData(): object {
+            TreeViewModel.superclass.getDragItemData.apply(this, arguments);
+        },
         _setPrevDragTargetPosition: function(targetPosition) {
             if (!this._prevDragTargetPosition) {
                 if (this._dragTargetPosition) {
@@ -700,6 +701,10 @@ var
                     };
                 }
             }
+        },
+        // TODO dnd указать возвращаемый тип (тип позиции)
+        getPrevDragTargetPosition(): any {
+            return this._dragTargetPosition;
         },
 
         setHasMoreStorage: function(hasMoreStorage) {
@@ -725,6 +730,7 @@ var
             this._expandedItems = [];
             this._display.setRoot(root);
             this._options.root = root;
+            this.updateMarker(this._markedKey);
             this._nextModelVersion();
         },
         setNodeProperty(nodeProperty: string): void {

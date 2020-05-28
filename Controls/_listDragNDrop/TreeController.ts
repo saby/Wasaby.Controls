@@ -1,5 +1,4 @@
 import { FlatController, IModel } from "./FlatController";
-import { ItemsUtil } from "../list";
 
 const DRAG_MAX_OFFSET = 15,
    EXPAND_ON_DRAG_DELAY = 1000;
@@ -9,8 +8,8 @@ export default class TreeController extends FlatController {
    private _timeoutForExpandOnDrag;
    private readonly _notifyExpandNode;
 
-   constructor(useNewModel: boolean, model: IModel, notifyExpandNode: Function) {
-      super(useNewModel, model);
+   constructor(model: IModel, notifyExpandNode: Function) {
+      super(model);
       this._notifyExpandNode = notifyExpandNode;
    }
 
@@ -55,20 +54,38 @@ export default class TreeController extends FlatController {
       this._clearTimeoutForExpandOnDrag();
    }
 
-   protected _calculateDragTargetPosition(itemData, position) {
-
-   }
-
-   calculateDragTargetPosition: function(targetData, position) {
+   protected _calculateDragTargetPosition(targetData, position) {
       var result;
 
       //If you hover over the dragged item, and the current position is on the folder,
       //then you need to return the position that was before the folder.
-      if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
-         result = this._prevDragTargetPosition || null;
+      const prevDragTargetPosition = this._model.getPrevDragTargetPosition();
+      if (this._avatarItem && this._avatarItem.index === targetData.index) {
+         result = prevDragTargetPosition || null;
       } else if (targetData.dispItem.isNode()) {
          if (position === 'after' || position === 'before') {
-            result = this._calculateDragTargetPosition(targetData, position);
+            let startPosition,
+               // TODO dnd было this._expandedItems.indexOf(ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty))
+               afterExpandedNode = position === 'after' && this._model.getExpandedItems().indexOf(targetData.dispItem.getContents().getKey()) !== -1;
+
+            //The position should not change if the record is dragged from the
+            //bottom/top to up/down and brought to the bottom/top of the folder.
+            if (prevDragTargetPosition) {
+               if (prevDragTargetPosition.index === targetData.index) {
+                  startPosition = prevDragTargetPosition.position;
+               } else {
+                  startPosition = prevDragTargetPosition.index < targetData.index ? 'before' : 'after';
+               }
+            }
+
+            if (position !== startPosition && !afterExpandedNode) {
+               result = {
+                  index: targetData.index,
+                  item: targetData.item,
+                  data: targetData,
+                  position: position
+               };
+            }
          } else {
             result = {
                index: targetData.index,
@@ -78,40 +95,11 @@ export default class TreeController extends FlatController {
             };
          }
       } else {
-         result = TreeViewModel.superclass.calculateDragTargetPosition.apply(this, arguments);
+         result = super._calculateDragTargetPosition(targetData, position);
       }
 
       return result;
-   },
-
-   _calculateDragTargetPosition: function(itemData, position) {
-      var
-         result,
-         startPosition,
-         afterExpandedNode = position === 'after' && this._expandedItems.indexOf(ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)) !== -1;
-
-      //The position should not change if the record is dragged from the
-      //bottom/top to up/down and brought to the bottom/top of the folder.
-      if (this._prevDragTargetPosition) {
-         if (this._prevDragTargetPosition.index === itemData.index) {
-            startPosition = this._prevDragTargetPosition.position;
-         } else {
-            startPosition = this._prevDragTargetPosition.index < itemData.index ? 'before' : 'after';
-         }
-      }
-
-      if (position !== startPosition && !afterExpandedNode) {
-         result = {
-            index: itemData.index,
-            item: itemData.item,
-            data: itemData,
-            position: position
-         };
-      }
-
-      return result;
-   },
-
+   }
 
    private _setTimeoutForExpandOnDrag(itemData) {
       this._timeoutForExpandOnDrag = setTimeout(() => {
