@@ -3,6 +3,8 @@ import { TItemKey } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { itemsStrategy } from 'Controls/display';
 
+const findPredicate = (item) =>  item.isEditing();
+
 export default class Controller {
     private _model: IEditInPlaceModel;
 
@@ -44,11 +46,11 @@ export default class Controller {
         this._model.removeStrategy(itemsStrategy.AddInPlace);
     }
 
-    isEditing(): boolean {
-        return !!this.getEditedItem();
+    getEditedItem(): IEditInPlaceItem {
+        return this._model.find(findPredicate);
     }
 
-    getEditedItem(): IEditInPlaceItem {
-        return this._model.find((item) => item.isEditing());
+    static isEditing(model: IEditInPlaceModel): boolean {
+        return model.some(findPredicate);
     }
 }
