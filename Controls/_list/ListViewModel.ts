@@ -159,7 +159,7 @@ var _private = {
 
 const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _markedItem: null,
-    _dragEntity: null,
+    _dragItems: null,
     _draggingItemData: null,
     _dragTargetPosition: null,
     _selectedKeys: null,
@@ -168,7 +168,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _reloadedKeys: null,
     _singleItemReloadCount: 0,
     _editingItemData: null,
-    _isDragging: false,
 
     constructor(cfg): void {
         const self = this;
@@ -251,15 +250,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.item = this._editingItemData.item;
         }
 
-        if (this._isDragging) {
-            if (itemsModelCurrent.dispItem.isDragged()) {
+        if (this._dragItems) {
+            if (this._draggingItemData.key === itemsModelCurrent.key) {
                 itemsModelCurrent.isDragging = true;
             }
-
-            if (itemsModelCurrent.dispItem.isVisible() === false) {
-                itemsModelCurrent.isVisible = false;
+            if (this._dragItems.indexOf(itemsModelCurrent.key) !== -1) {
+                itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
             }
-
             if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                 itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
                 itemsModelCurrent.draggingItemData = this._draggingItemData;
@@ -285,7 +282,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _calcItemVersion: function(item, key) {
         var version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
 
-        if (this._draggingItemData && this._draggingItemData.key === key) {
+        if (this._dragItems && this._dragItems.indexOf(key) !== -1) {
             version = 'DRAG_ITEM_' + version;
         }
 
@@ -430,72 +427,20 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setDraggedItems(avatarItem: object, draggedKeys: Array<number|string>): void {
-        this._isDragging = true; // TODO может заменить на _draggingItemData
-
-/*        // удаляем ключ аватара из списка перетаскиваемых элементов
-        draggedKeys = cClone(draggedKeys);
-        const avatarIndex = draggedKeys.indexOf(avatarItem.key);
-        draggedKeys.splice(avatarIndex, 1);*/
-
-        // проставляем перетаскиваемые элементы, чтобы их скрыть
-        this._setDraggedItems(draggedKeys, true);
-
-        // проставляем аватар
-        const sourceAvatarItem = this.getItemDataByItem(avatarItem);
-        this._draggingItemData = sourceAvatarItem;
-        sourceAvatarItem.setDragged(true, true);
-
-        // проставляем позицию аватара
-        const startPosition = this.calculateDragTargetPosition(avatarItem);
-        this.setAvatarPosition(startPosition);
+        this._dragItems = draggedKeys;
+        this._draggingItemData = avatarItem;
     },
     setAvatarPosition(position: object): void {
         this._dragTargetPosition = position;
         this._nextModelVersion(true);
     },
-    resetDraggedItems(avatarItem: object, draggedKeys: Array<number|string>): void {
-        this._isDragging = false;
-
-/*
-        // удаляем ключ аватара из списка перетаскиваемых элементов
-        draggedKeys = cClone(draggedKeys);
-        const avatarIndex = draggedKeys.indexOf(avatarItem.key);
-        draggedKeys.splice(avatarIndex, 1);
-*/
-
-        const sourceAvatarItem = this.getItemDataByItem(avatarItem);
-        sourceAvatarItem.setDragged(false, true);
-
+    resetDraggedItems(): void {
         this._draggingItemData = null;
-
-        this._setDraggedItems(draggedKeys, false);
-
+        this._dragItems = null;
         this.setAvatarPosition(null);
     },
-    _setDraggedItems(draggedKeys: Array<number|string>, dragged: boolean): void {
-        draggedKeys.forEach((key) =>{
-            const item: CollectionItem<Model> = this.getItemBySourceKey(key);
-            item.setVisible(!dragged, true)
-        });
-    },
-
-    setDragEntity: function(entity) {
-        if (this._dragEntity !== entity) {
-            this._dragEntity = entity;
-            this._nextModelVersion(true);
-        }
-    },
-
-    getDragEntity: function() {
-        return this._dragEntity;
-    },
-
-    setDragItemData: function(itemData) {
-        this._draggingItemData = itemData;
-    },
-
-    getDragItemData: function() {
-        return this._draggingItemData;
+    getAvatarPosition(): object {
+        return this._dragTargetPosition;
     },
 
     // TODO dnd вынести в контроллер
@@ -531,15 +476,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             data: targetData,
             position: position
         };
-    },
-
-    setDragTargetPosition: function(position) {
-        this._dragTargetPosition = position;
-        this._nextModelVersion(true);
-    },
-
-    getDragTargetPosition: function() {
-        return this._dragTargetPosition;
     },
 
     setSwipeItem: function(itemData) {

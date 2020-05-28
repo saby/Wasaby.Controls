@@ -1819,9 +1819,9 @@ const _private = {
             const notifyTreeControlMouseMove = (dragEntity) => {
                 return self._notify('draggingItemMouseMove', [dragEntity]);
             }
-            return new TreeController(options.useNewModel, self._listViewModel, notifyTreeControlMouseMove);
+            return new TreeController(self._listViewModel, notifyTreeControlMouseMove);
         } else {
-            return new FlatController(options.useNewModel, self._listViewModel);
+            return new FlatController(self._listViewModel);
         }
     }
 };
@@ -2245,7 +2245,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._dndListController) {
-            this._dndListController.update(newOptions.useNewModel, this._listViewModel);
+            this._dndListController.update(this._listViewModel);
         }
 
         if (newOptions.groupMethod !== this._options.groupMethod) {
@@ -2843,29 +2843,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragStart: function(event, dragObject, domEvent) {
         if (this._dndListController) {
-            const itemData = this._dndListController.unprocessedDragEnteredItem;
-            if (itemData) {
-                // TODO dnd в _itemMouseEnter дупликат
-                const dragPosition = this._dndListController.getDragPosition(itemData);
-                if (dragPosition) {
-                    const changeDragTargetResult = this._notify('changeDragTarget', [dragObject.entity, dragPosition.item, dragPosition.position]);
-                    if (changeDragTargetResult !== false) {
-                        this._dndListController.changeAvatarPosition();
-                    }
-                }
-
-                if (this._dndListController.dragEntity) {
-                    this._dndListController.unprocessedDragEnteredItem = null;
-                }
-            }
+            this._dndListController.startDragNDrop();
         }
     },
 
     _dragEnd: function(event, dragObject) {
         if (this._dndListController) {
             // тут удалена првоерка на новую модель
-            const targetPosition = this._listViewModel.getDragTargetPosition();
+            const targetPosition = this._dndListController.getCurrentDragPosition();
             if (targetPosition) {
+                // TODO dnd может лучше это хранить в baseControl
                 this._dndListController.dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
             }
             if (this._dndListController instanceof TreeController) {
@@ -2898,22 +2885,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
     _dragEnter: function(event, dragObject) {
         if (this._dndListController) {
-            // TODO dnd что-то сделать с этим условием
-            if (
-               dragObject && !this._useNewModel &&
-               !this._listViewModel.getDragEntity() &&
-               cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
-            ) {
+            if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
                 const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
-                this._dndListController.changeAvatarPosition(dragEnterResult);
+                if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
+                    let draggingItem = this._model._prepareDisplayItemForAdd(dragEnterResult);
+                    draggingItem = this._model.getItemDataByItem(draggingItem);
+                    let newPosition = this._dndListController.calculateDragPosition(draggingItem);
+
+                    this._dndListController.setDraggedItems(draggingItem, dragObject.entity.getItems());
+                    this._dndListController.changeAvatarPosition(newPosition);
+                }
             }
         }
     },
 
     _dragLeave: function() {
         if (this._dndListController) {
-            this._dndListController.resetAvatarPosition();
+            this._dndListController.changeAvatarPosition(null);
         }
     },
 
@@ -2938,16 +2927,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._dndListController.unprocessedDragEnteredItem = itemData;
 
             // TODO dnd в _dragStart дупликат
-            const dragPosition = this._dndListController.getDragPosition(itemData);
+            const dragPosition = this._dndListController.calculateDragPosition(itemData);
             if (dragPosition) {
                 const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, dragPosition.item, dragPosition.position]);
                 if (changeDragTargetResult !== false) {
-                    this._listViewModel.setAvatarPosition(dragPosition);
+                    this._dndListController.changeAvatarPosition(dragPosition);
                 }
             }
 
             // TODO dnd хз, надо разобраться
-            if (this._dndListController.dragEntity) {
+            if (this._dndListController._avatarItem) {
                 this._dndListController.unprocessedDragEnteredItem = null;
             }
         }

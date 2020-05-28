@@ -2115,30 +2115,25 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     // region Drag-N-Drop
 
     /**
-     * Задать "призрачный" элемент, который отображается при перетаскивании, и перетаскиваемые элементы
-     * @param avatarKey ключ "призрачного" элемента
+     *
+     * @param avatarItem "призрачный" элемент
      * @param draggedKeys список ключей перетаскиваемых элементов
      */
-    setDraggedItems(avatarKey: number|string, draggedKeys: Array<number|string>): void {
-        const avatarStartIndex = this.getIndexByKey(avatarKey);
+    setDraggedItems(avatarItem: object, draggedKeys: Array<number|string>): void {
+        const avatarStartIndex = this.getIndexByKey(avatarItem.key);
 
         this.appendStrategy(DragStrategy, {
             draggedItemsKeys: draggedKeys,
-            avatarItemKey: avatarKey,
+            avatarItemKey: avatarItem.key,
             avatarIndex: avatarStartIndex
         });
     }
 
-    /**
-     * Задать "призрачный" элемент, который отображается при перетаскивании
-     * @param key ключ элемента
-     */
-    setAvatarKey(key: number|string): void {
-        // TODO dnd наверное нужно передавать новый индекс
+    setAvatarPosition(position: object): void {
         const strategy = this.getStrategyInstance(DragStrategy) as DragStrategy<unknown>;
-        const avatarIndex = this.getIndexByKey(key);
         if (strategy) {
-            strategy.avatarIndex = avatarIndex;
+            // TODO dnd по идее нужно указывать еще куда вставлять относительно данного индекса, но может в новой модели это не нужно
+            strategy.avatarIndex = position.index;
             this.nextVersion();
         }
     }
@@ -2148,6 +2143,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     resetDraggedItems(): void {
         this.removeStrategy(DragStrategy);
+    }
+
+    getAvatarPosition(): object {
+        // TODO dnd создать и вернуть текущую позицию перетаскиваемого элемента
     }
 
     // endregion

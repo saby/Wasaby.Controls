@@ -1,57 +1,31 @@
 import cClone = require('Core/core-clone');
-import cInstance = require('Core/core-instance');``
 import { CollectionItem } from "Controls/display";
-import { SyntheticEvent } from "Vdom/Vdom";
 import { Model } from "Types/entity";
 import { ItemsEntity } from "Controls/dragnDrop";
 
 export interface IModel {
+   setDraggedItems(avatarItem, draggedItems): void;
+   setAvatarPosition(position): void;
+   resetDraggedItems(): void;
+
    calculateDragTargetPosition(itemData);
-   getItemDataByItem();
-   _prepareDisplayItemForAdd(); // TODO жесткая хрень, надо понять для чего
+   getItemDataByItem(item);
+
    getIndexByKey(key: number|string): number;
-
-   // это будет один метод в старой и новой модели, вроде это уже написано, надо заюзать
-   getCollection();
-   getItems();
-
-   /*
-      по идее все эти сеттеры и геттеры нужны только для старой модели, так как в новой модели это не хранится
-      но вопрос: они влияют на версию, то есть это нужно доабвить в новую модель или как-то вытащить из старой
-    */
-   setDragTargetPosition(dragPosition): void;
-   setDragItemData();
-   setDragEntity(entity);
-
-   getDragEntity();
-   getDragItemData();
-   getDragTargetPosition();
 }
 
 export interface IDragNDropListController {
-   // TODO dnd нужно исправить интерфейс
-
    update(useNewModel: boolean, model: IModel);
 
-   startDragNDrop(itemData, items, dragControlId, notifyDragStart);
+   startDragNDrop(avatarItem, draggedItems): void;
 
-   handleMouseMove(itemData, nativeEvent, notifyChangeDragTarget);
+   changeAvatarPosition(newPosition?): void;
 
-   handleMouseLeave();
-
-   handleMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, notifyChangeDragTarget: Function): void;
-
-   handleDragStart(dragObject, notifyChangeDragTarget: Function): void;
-
-   handleDragEnter(dragObject, notifyDragEnter: Function);
-
-   handleDragLeave();
-
-   handleDragEnd(dragObject, notifyDragEnd);
-
-   handleDocumentDragEnd(showIndicator: Function, hideIndicator: Function);
+   getDragPosition(itemData): object;
 
    getSelectionForDragNDrop(selectedKeys, excludedKeys, dragKey);
+
+   reset(): void;
 }
 
 export class FlatController implements IDragNDropListController{
@@ -71,16 +45,14 @@ export class FlatController implements IDragNDropListController{
    private _dragEndResult;
 
    private _avatarItem;
+   private _avatarPosition;
    private _draggedItems;
 
-   constructor(private _useNewModel: boolean, protected _model: IModel) {}
+   constructor(protected _model: IModel) {}
 
-   update(useNewModel: boolean, model: IModel) {
-      this._useNewModel = useNewModel;
+   update(model: IModel) {
       this._model = model;
    }
-
-   set draggingItem(val) { this._draggingItem = val; }
 
    set unprocessedDragEnteredItem(val) { this._unprocessedDragEnteredItem = val; }
 
@@ -90,27 +62,22 @@ export class FlatController implements IDragNDropListController{
 
    get dragEndResult() { return this._dragEndResult; }
 
-   setDraggedItems(avatarItem, draggedItems) {
+   setDraggedItems(avatarItem, draggedItems): void {
       this._avatarItem = avatarItem;
       this._draggedItems = draggedItems;
-      this._model.setDraggedItems(avatarItem, draggedItems);
    }
 
-   changeAvatarPosition(dragEnterResult) {
-      let draggingItem;
-      if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-         draggingItem = this._model._prepareDisplayItemForAdd(dragEnterResult);
-      } else {
-         draggingItem = this._draggingItem.dispItem;
-      }
+   startDragNDrop() {
+      this._model.setDraggedItems(this._avatarItem, this._draggedItems);
 
-      draggingItem = this._model.getItemDataByItem(draggingItem);
-      const newPosition = this._model.calculateDragTargetPosition(draggingItem);
+      // проставляем изначальную позицию аватара
+      const startPosition = this.calculateDragPosition(this._avatarItem);
+      this.changeAvatarPosition(startPosition);
+   }
+
+   changeAvatarPosition(newPosition) {
+      this._avatarPosition = newPosition;
       this._model.setAvatarPosition(newPosition);
-   }
-
-   resetAvatarPosition() {
-      this._model.setAvatarPosition(null);
    }
 
    /**
@@ -144,23 +111,21 @@ export class FlatController implements IDragNDropListController{
       };
    }
 
-   getDragPosition(itemData) {
-      /*
-         {
-            data: CollectionItem<Model>,
-            item: Model,
-            index: number - индекс перетаскиваемого элемента
-         }
-         data.getContents() = item - и зачем хранить одну и ту инфу 2 раза я не понял
-      */
-      let dragPosition = this._useNewModel
-         ? { position: 'before', item: itemData.getContents() }
-         : this._model.calculateDragTargetPosition(itemData);
-      return dragPosition;
+   calculateDragPosition(itemData) {
+      return this._model.calculateDragTargetPosition(itemData);
+   }
+
+   getCurrentDragPosition() {
+      return this._avatarPosition;
    }
 
    reset() {
-      this._model.resetDraggedItems(this._avatarItem, this._draggedItems);
+      this._avatarItem = null;
+      this._draggedItems = null;
+      this._dragEndResult = null;
+      this._unprocessedDragEnteredItem = null;
+      this._avatarPosition = null;
+      this._model.resetDraggedItems();
    }
 
    /**
@@ -169,11 +134,43 @@ export class FlatController implements IDragNDropListController{
     * @param keys
     * @private
     */
-   private _sortKeys(keys: number|string[]) {
+   private _sortKeys(keys: Array<number|string>) {
       keys.sort((a, b) => {
          const indexA = this._model.getIndexByKey(a),
             indexB = this._model.getIndexByKey(b);
          return indexA > indexB ? 1 : -1
       });
+   }
+
+   protected calculateDragTargetPosition(targetData) {
+      let position, prevIndex = -1;
+
+      //If you hover on a record that is being dragged, then the position should not change.
+      if (this._avatarItem && this._avatarItem.index === targetData.index) {
+         return null;
+      }
+
+      if (this._avatarPosition) {
+         prevIndex = this._avatarPosition.index;
+      } else if (this._avatarItem) {
+         prevIndex = this._avatarPosition.index;
+      }
+
+      if (prevIndex === -1) {
+         position = 'before';
+      } else if (targetData.index > prevIndex) {
+         position = 'after';
+      } else if (targetData.index < prevIndex) {
+         position = 'before';
+      } else if (targetData.index === prevIndex) {
+         position = this._avatarPosition.position === 'after' ? 'before' : 'after';
+      }
+
+      return {
+         index: targetData.index,
+         item: targetData.item,
+         data: targetData,
+         position: position
+      };
    }
 }
