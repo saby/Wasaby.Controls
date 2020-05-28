@@ -218,7 +218,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
-            this._container.style.top = `${value}px`;
+            fastUpdate.mutate(() => {
+                this._container.style.top = `${value}px`;
+            });
             this._forceUpdate();
         }
     }

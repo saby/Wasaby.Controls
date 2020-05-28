@@ -275,13 +275,13 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         this._checkOpenedMenu(event.nativeEvent);
     }
 
-    protected _separatorMouseEnter(event: SyntheticEvent<MouseEvent>): void {
-        this._checkOpenedMenu(event.nativeEvent);
+    protected _separatorMouseEnter(event: SyntheticEvent<MouseEvent>, sourceEvent: SyntheticEvent<MouseEvent>): void {
+        this._checkOpenedMenu(sourceEvent.nativeEvent);
     }
 
     private _checkOpenedMenu(nativeEvent: MouseEvent, newItem?: CollectionItem<Model>): void {
         const needCloseSubMenu = this.subMenu && this._subDropdownItem && (!newItem || newItem !== this._subDropdownItem);
-        if (!this._isNeedKeepMenuOpen(needCloseSubMenu, nativeEvent)) {
+        if (!this._isNeedKeepMenuOpen(needCloseSubMenu, nativeEvent) && needCloseSubMenu) {
             this._closeSubMenu();
         }
     }

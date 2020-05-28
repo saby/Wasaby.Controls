@@ -33,7 +33,6 @@ import {CollectionItem, VirtualScrollController, GroupItem, ANIMATION_STATE} fro
 import {Controller as ItemActionsController, IItemAction} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
-import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
 import ListViewModel from 'Controls/_list/ListViewModel';
 import ScrollPagingController = require('Controls/_list/Controllers/ScrollPaging');
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
@@ -43,6 +42,7 @@ import {ISwipeEvent} from 'Controls/listRender';
 
 import {EditInPlaceController} from '../editInPlace';
 
+import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {CssClassList} from '../Utils/CssClassList';
@@ -1177,7 +1177,7 @@ const _private = {
         }
     },
 
-    isPortionedLoad(self, items = self._items): boolean {
+    isPortionedLoad(self, items?: RecordSet = self._items): boolean {
         const loadByMetaData = items && items.getMetaData()[PORTIONED_LOAD_META_FIELD];
         const loadBySearchValue = !!self._options.searchValue;
         return loadByMetaData || loadBySearchValue;
@@ -1386,7 +1386,7 @@ const _private = {
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
         _private.prepareFooter(self, self._options.navigation, self._sourceController);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
-            GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
+            groupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
         }
     },
 
@@ -1394,7 +1394,7 @@ const _private = {
         var
             result = new Deferred();
         if (config.historyIdCollapsedGroups || config.groupHistoryId) {
-            GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
+            groupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
                 result.callback(collapsedGroupsFromStore || config.collapsedGroups);
             });
         } else {
@@ -2140,6 +2140,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._loadTriggerVisibility[direction] = state;
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
             _private.hideIndicator(this);
+
+            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
+                _private.getPortionedSearch(this).stopSearch();
+            }
         }
         if (_private.needScrollPaging(this._options.navigation)) {
             const doubleRatio = (this._viewSize / this._viewPortSize) > MIN_SCROLL_PAGING_PROPORTION;

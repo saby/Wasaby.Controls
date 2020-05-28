@@ -78,6 +78,21 @@ define(
                   done();
                });
             });
+            it('returns item with 1 element with hasMore data', (done) => {
+               const item = util.object.clone(defaultItemsConfig[0]);
+               const record = item.items.at(0);
+               item.items.clear();
+               item.hasMoreButton = true;
+               item.items.add(record);
+               const items = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [item]
+               });
+               filterPopup.SimplePanel._private.getItems({}, items).then((resultItems) => {
+                  assert.isTrue(resultItems.length === 1);
+                  done();
+               });
+            });
          });
 
          it('_beforeMount', function() {

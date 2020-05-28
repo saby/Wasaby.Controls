@@ -29,7 +29,7 @@ var Component = BaseSelector.extend({
          ...getOptions.getCommonOptions(this),
          target: container,
          template: 'Controls/datePopup',
-         className: 'controls-PeriodDialog__picker',
+         className: 'controls-PeriodDialog__picker_theme-' + this._options.theme,
          templateOptions: {
             ...getOptions.getTemplateOptions(this),
             headerType: 'link',

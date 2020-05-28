@@ -75,7 +75,8 @@ import dateUtils = require('Controls/Utils/Date');
          this._stringValueConverter.update({
             replacer: this._replacer,
             mask: options.mask,
-            dateConstructor: options.dateConstructor
+            dateConstructor: options.dateConstructor,
+            yearSeparatesCenturies: options._yearSeparatesCenturies
          });
          if (this._mask !== options.mask || !dateUtils.isDatesEqual(this._value, options.value)) {
             this._mask = options.mask;

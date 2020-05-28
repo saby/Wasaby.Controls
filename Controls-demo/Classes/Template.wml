@@ -57,6 +57,11 @@
             <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_style-readonly_theme-{{_options.theme}}</div>
             <span class="icon-Author controls-icon controls-icon_style-readonly_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
         </div>
+        <div>
+            <div class="controls-text-label_theme-{{_options.theme}}">controls-icon_highlightOnHover_theme-{{_options.theme}}</div>
+            <span class="icon-Author controls-icon controls-icon_style-secondary_theme-{{_options.theme}}
+                controls-icon_highlightOnHover_theme-{{_options.theme}} controls-icon_size-s_theme-{{_options.theme}}"></span>
+        </div>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-default_theme-{_options.theme}}">controls-text-default_theme-{{_options.theme}}</div>
