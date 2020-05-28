@@ -213,7 +213,8 @@
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
 
-            <ws:partial template="fullView" name="listView" attr:class="{{(_showActions || _options.useNewModel) && !_itemActionsMenuId ? 'controls-BaseControl_showActions_' + _options.itemActionVisibility}}"/>
+            <ws:partial template="fullView" name="listView"
+                        attr:class="{{(_showActions || _options.useNewModel) && !_itemActionsMenuId ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionVisibility}}"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
