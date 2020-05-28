@@ -22,6 +22,7 @@ define([
          return mv;
       },
       options = {
+         calculateHeadersOffsets: false
       };
 
    describe('Controls/_scroll/StickyHeader/Group', function() {

@@ -2,12 +2,14 @@ define([
    'Env/Env',
    'Controls/_scroll/StickyHeader/_StickyHeader',
    'Controls/_scroll/StickyHeader/Utils',
+   'Controls/_scroll/StickyHeader/FastUpdate',
    'Controls/scroll',
    'Core/core-merge'
 ], function(
    EnvLib,
    StickyHeaderLib,
    StickyHeaderUtils,
+   FastUpdateLib,
    scroll,
    coreMerge
 ) {
@@ -15,6 +17,7 @@ define([
    'use strict';
 
    const StickyHeader = StickyHeaderLib.default;
+   const FastUpdate = FastUpdateLib.default;
 
    const
       createComponent = function(Component, cfg) {
@@ -214,9 +217,11 @@ define([
             assert.strictEqual(component._stickyHeadersHeight.top, null);
             component.top = 20;
             assert.strictEqual(component._stickyHeadersHeight.top, 20);
-            assert.strictEqual(component._container.style.top, '20px');
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
+            return FastUpdate._promise.then(() => {
+               assert.strictEqual(component._container.style.top, '20px');
+            });
          });
 
          it('should not force update if top did not changed', function () {
