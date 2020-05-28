@@ -7,7 +7,7 @@
                      style="z-index: {{item.currentZIndex}};">
                 </div>
             </ws:if>
-            <UI.HotKeys:Dispatcher>
+            <UI.HotKeys:Dispatcher attr:key="{{item.id}}" >
                 <Controls._popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
                                                theme="{{_options.theme}}"
                                                on:deactivated="_popupDeactivated(item.id)"
