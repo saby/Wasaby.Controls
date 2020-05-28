@@ -1,9 +1,9 @@
-import {detection, constants} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import {debounce, delay as runDelayed} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IPopupOptions} from 'Controls/_popup/interface/IPopup';
-import {RegisterClass, UnregisterUtil, RegisterUtil} from 'Controls/event';
+import {RegisterClass, RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 import * as template from 'wml!Controls/_popup/Manager/Popup';
 import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
@@ -198,15 +198,42 @@ class Popup extends Control<IPopupControlOptions> {
         }
     }
 
-    protected _showIndicatorHandler(event: SyntheticEvent<MouseEvent>): string {
-        const args = Array.prototype.slice.call(arguments, 1);
-        event.stopPropagation();
+    protected _showIndicatorHandler(event: Event): string {
+        const args = this._prepareEventArs(event, arguments);
         const config = args[0];
         if (typeof config === 'object') {
             config.popupId = this._options.id;
         }
         // catch showIndicator and add popupId property for Indicator.
         return this._notify('showIndicator', args, {bubbling: true}) as string;
+    }
+
+    protected _registerPendingHandler(event: Event): string {
+        const args = this._prepareEventArs(event, arguments);
+        const config = args[1] || {};
+        config.root = this._options.id;
+        args[1] = config;
+        // catch showIndicator and add popupId property for Indicator.
+        return this._notify('registerPending', args, {bubbling: true}) as string;
+    }
+
+    protected _finishPendingOperationsHandler(event: Event): string {
+        const args = Array.prototype.slice.call(arguments, 1);
+        args[1] = args[1] || this._options.id;
+        // catch showIndicator and add popupId property for Indicator.
+        return this._notify('registerPending', args, {bubbling: true}) as string;
+    }
+
+    protected _cancelFinishingPendingHandler(event: Event): string {
+        const args = this._prepareEventArs(event, arguments);
+        args[0] = args[0] || this._options.id;
+        // catch showIndicator and add popupId property for Indicator.
+        return this._notify('registerPending', args, {bubbling: true}) as string;
+    }
+
+    private _prepareEventArs(event: Event, args: IArguments): unknown[] {
+        event.stopPropagation();
+        return Array.prototype.slice.call(args, 1);
     }
 
     protected _scrollHandler(): void {

@@ -632,20 +632,20 @@ class Manager extends Control<IManagerOptions> {
                             popupCallback: Function,
                             pendingCallback: Function,
                             pendingsFinishedCallback: Function): void {
-        const registrator = this._getPopupContainer().getPendingById(popupId);
+        const registrator = this._getPopupContainer().getPending();
         const item = this._findItemById(popupId);
         if (item && registrator) {
             popupCallback && popupCallback();
 
             if (registrator) {
-                const hasRegisterPendings = registrator._hasRegisteredPendings();
+                const hasRegisterPendings = registrator._hasRegisteredPendings(popupId);
                 if (hasRegisterPendings) {
                     pendingCallback && pendingCallback();
                 }
                 if (item.removePending) {
                     return item.removePending;
                 }
-                item.removePending = registrator.finishPendingOperations();
+                item.removePending = registrator.finishPendingOperations(false, false, popupId);
 
                 // TODO: Compatible Пендинги от совместимости старого FormController'a не
                 // попадают в _hasRegisteredPendings,
@@ -723,9 +723,9 @@ class Manager extends Control<IManagerOptions> {
         // Если пытаются перейти по аккордеону, то закрываем все открытые окна
         // Если есть пендинги - отменяем переход.
         this._popupItems.each((item) => {
-            const registrator = this._getPopupContainer().getPendingById(item.id);
+            const registrator = this._getPopupContainer().getPending();
             if (registrator) {
-                if (registrator._hasRegisteredPendings()) {
+                if (registrator._hasRegisteredPendings(item.id)) {
                     hasPendings = true;
                 }
             }

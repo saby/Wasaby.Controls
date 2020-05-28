@@ -1,19 +1,21 @@
-<div class="controls-PopupContainer" id="popup">
-   <ws:for data="index, item in _popupItems">
-      <ws:if data="{{index === _overlayId}}">
-         <div class="controls-Container__overlay" on:mousedown="_overlayClickHandler()"
-              style="z-index: {{item.currentZIndex}};"></div>
-      </ws:if>
-      <Controls.Pending name="{{item.id}}_registrator" attr:key="{{item.id}}" class="ws-float-area-stack-panel-overflow">
-         <UI.HotKeys:Dispatcher>
-            <Controls._popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
-                                           theme="{{_options.theme}}"
-                                           on:deactivated="_popupDeactivated(item.id)"
-                                           on:activated="_popupActivated(item.id)"
-                                           attr:class="controls-Container__popup
+<Controls.Pending name="pending" class="ws-float-area-stack-panel-overflow">
+    <div class="controls-PopupContainer" id="popup">
+        <ws:for data="index, item in _popupItems">
+            <ws:if data="{{index === _overlayId}}">
+                <div class="controls-Container__overlay"
+                     on:mousedown="_overlayClickHandler()"
+                     style="z-index: {{item.currentZIndex}};">
+                </div>
+            </ws:if>
+            <UI.HotKeys:Dispatcher>
+                <Controls._popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
+                                               theme="{{_options.theme}}"
+                                               on:deactivated="_popupDeactivated(item.id)"
+                                               on:activated="_popupActivated(item.id)"
+                                               attr:class="controls-Container__popup
                    {{_popupItems.getCount() - 1 === index ? 'controls-Scroll_webkitOverflowScrollingTouch'}}
                    {{item.popupOptions.className}} {{item.position.hidden ? 'ws-invisible'}}"
-                                           attr:style="z-index: {{item.currentZIndex}};
+                                               attr:style="z-index: {{item.currentZIndex}};
                    position: {{item.position.position !== undefined ? item.position.position : 'absolute'}};
                    left: {{item.position.left === undefined ? 'auto' : item.position.left + 'px'}};
                    right: {{item.position.right === undefined ? 'auto' : item.position.right + 'px'}};
@@ -25,10 +27,10 @@
                    max-height: {{item.position.maxHeight !== undefined ? item.position.maxHeight + 'px'}};
                    min-height: {{item.position.minHeight !== undefined ? item.position.minHeight + 'px'}};
                    height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};"
-                                           scope="{{item.popupOptions}}"
-                                           position="{{item.position}}"
-            />
-         </UI.HotKeys:Dispatcher>
-      </Controls.Pending>
-   </ws:for>
-</div>
+                                               scope="{{item.popupOptions}}"
+                                               position="{{item.position}}"
+                />
+            </UI.HotKeys:Dispatcher>
+        </ws:for>
+    </div>
+</Controls.Pending>
