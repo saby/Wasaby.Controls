@@ -68,7 +68,7 @@ class Store implements IStore {
     }
 
     // обновляем название актуального контекста в зависимости от урла (сейчас это делает OnlineSbisRu/_router/Router)
-    _updateStoreContext(contextName): void {
+    updateStoreContext(contextName): void {
         this.state.activeContext = contextName;
         if (!this.state[this.state.activeContext]) {
             this.state[this.state.activeContext] = {};
@@ -121,7 +121,7 @@ class Store implements IStore {
 
     private _removeCallback(id: string): void {
         const [ctxName, propertyName, index]: string[] = id.split(ID_SEPARATOR);
-        this.state[ctxName]['_' + propertyName].callbacks = this.state[ctxName]['_' + propertyName].callbacks.reduce(
+        this.state[ctxName][propertyName].callbacks = this.state[ctxName][propertyName].callbacks.reduce(
             (acc, callbackObj) => {
                 if (callbackObj.id !== index) {
                     acc.push(callbackObj);
