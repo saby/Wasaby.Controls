@@ -388,8 +388,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     protected _showMenu(event: SyntheticEvent<UIEvent>): void {
         if (!this._options.readOnly) {
-
-            // 1 раз создаем конфиг для меню при открытии.
             if (!this._isLoadMenuItems) {
                 this._setMenuItems();
                 this._isLoadMenuItems = true;
