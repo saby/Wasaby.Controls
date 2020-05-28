@@ -1,18 +1,18 @@
-import { IEditInPlaceCollection } from './interface';
-
-import AddInPlaceStrategy from '../itemsStrategy/AddInPlace';
+import { IEditInPlaceModel, IEditInPlaceItem, IOptions } from './interface';
+import { TItemKey } from 'Controls/display';
 import { Model } from 'Types/entity';
-import { IEditingConfig } from '../Collection';
+import { itemsStrategy } from 'Controls/display';
 
 export default class Controller {
+    private _model: IEditInPlaceModel;
 
-    beginEdit(
-        collection: IEditInPlaceCollection,
-        key: TItemKey,
-        editingContents?: unknown
-    ): void {
-        const oldEditItem = getEditedItem(collection);
-        const newEditItem = collection.getItemBySourceKey(key);
+    constructor(options: IOptions) {
+        this._model = options.model;
+    }
+
+    beginEdit(key: TItemKey, editingContents?: unknown): void {
+        const oldEditItem = this.getEditedItem();
+        const newEditItem = this._model.getItemBySourceKey(key);
 
         if (oldEditItem) {
             oldEditItem.setEditing(false);
@@ -21,38 +21,34 @@ export default class Controller {
             newEditItem.setEditing(true, editingContents);
         }
 
-        collection.nextVersion();
+        this._model.nextVersion();
     }
 
-    endEdit(collection: IEditInPlaceCollection): void {
-        beginEdit(collection, null);
+    endEdit(): void {
+        this.beginEdit(null);
     }
 
-    beginAdd(
-        collection: IEditInPlaceCollection,
-        record: Model
-    ): void {
-        const editingConfig = collection.getEditingConfig();
+    beginAdd(record: Model): void {
+        const editingConfig = this._model.getEditingConfig();
 
         // TODO support tree
         const addIndex = editingConfig?.addPosition === 'top' ? 0 : Number.MAX_SAFE_INTEGER;
 
-        collection.appendStrategy(AddInPlaceStrategy, {
+        this._model.appendStrategy(itemsStrategy.AddInPlace, {
             contents: record,
             addIndex
         });
     }
 
-    endAdd(collection: IEditInPlaceCollection): void {
-        collection.removeStrategy(AddInPlaceStrategy);
+    endAdd(): void {
+        this._model.removeStrategy(itemsStrategy.AddInPlace);
     }
 
-    isEditing(collection: IEditInPlaceCollection): boolean {
-        return !!this.getEditedItem(collection);
+    isEditing(): boolean {
+        return !!this.getEditedItem();
     }
 
-    getEditedItem(collection: IEditInPlaceCollection): IEditInPlaceItem {
-        return collection.find((item) => item.isEditing());
+    getEditedItem(): IEditInPlaceItem {
+        return this._model.find((item) => item.isEditing());
     }
 }
-

@@ -29,7 +29,7 @@ import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
-import {CollectionItem, EditInPlaceController, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
+import {CollectionItem, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
 import {Controller as ItemActionsController, IItemAction} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
@@ -40,6 +40,8 @@ import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import {ISwipeEvent} from 'Controls/listRender';
+
+import {EditInPlaceController} from '../editInPlace';
 
 import {IDirection} from './interface/IVirtualScroll';
 import InertialScrolling from './resources/utils/InertialScrolling';
@@ -1533,7 +1535,7 @@ const _private = {
     needBottomPadding: function(options, items, listViewModel) {
         const isEditing =
             options.useNewModel
-            ? EditInPlaceController.isEditing(listViewModel)
+            ? this._getEditInPlaceController().isEditing(listViewModel)
             : !!listViewModel.getEditingItemData();
         return (
             !!items &&
@@ -1609,7 +1611,7 @@ const _private = {
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
             const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
-                self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
+                self._options.useNewModel ? this._getEditInPlaceController().isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
             );
             if (isEditing) {
                 self._children.editInPlace.cancelEdit();
@@ -2515,7 +2517,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const noData = !listViewModel.getCount();
         const noEdit =
             this._options.useNewModel
-            ? !EditInPlaceController.isEditing(listViewModel)
+            ? !this._getEditInPlaceController().isEditing(listViewModel)
             : !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
@@ -3144,6 +3146,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     handleSelectionControllerResult(result: ISelectionControllerResult): void {
        _private.handleSelectionControllerResult(this, result);
+    },
+
+    _getEditInPlaceController(): EditInPlaceController {
+        return this._editInPlaceController || (this._editInPlaceController = new EditInPlaceController({
+            model: this._listViewModel
+        }));
     }
 });
 

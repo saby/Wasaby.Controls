@@ -1,13 +1,12 @@
 import { IStrategyCollection, IBaseCollection } from 'Controls/display';
-import CollectionItem from "../_display/CollectionItem";
-
+import { CollectionItem } from 'Controls/display';
 
 export interface IEditInPlaceItem {
     setEditing(editing: boolean, editingContents?: unknown): void;
     isEditing(): boolean;
 }
 
-export interface IEditInPlaceCollection
+export interface IEditInPlaceModel
     extends IBaseCollection<IEditInPlaceItem>, IStrategyCollection<IEditInPlaceItem> {
     getEditingConfig(): IEditingConfig;
 }
@@ -28,4 +27,8 @@ export interface IEditingConfig {
     autoAdd?: boolean;
     sequentialEditing?: boolean;
     item?: CollectionItem<any>;
+}
+
+export interface IOptions {
+    model: IEditInPlaceModel;
 }
