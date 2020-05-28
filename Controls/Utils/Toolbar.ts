@@ -87,5 +87,11 @@ export function getMenuItems<T extends Record>(items: RecordSet<T> | T[]): Chain
    });
 }
 export function needShowMenu(items: RecordSet): boolean {
-    return items.getIndexByValue('showType', this.showType.MENU) !== -1 || items.getIndexByValue('showType', this.showType.MENU_TOOLBAR) !== -1;
+    let isNeedShowToolbar = false;
+    items.forEach( item => {
+       if (item.get('showType') !== this.showType.TOOLBAR) {
+          isNeedShowToolbar = true;
+       }
+    });
+    return isNeedShowToolbar;
 }
