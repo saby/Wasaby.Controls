@@ -14,10 +14,6 @@ export default class TreeController extends FlatController {
    }
 
    calculateDragPosition(itemData, event) {
-      if (!itemData.dispItem.isNode()) {
-         return;
-      }
-
       let
          position,
          topOffset,
@@ -46,9 +42,9 @@ export default class TreeController extends FlatController {
       // проверяем что навели на узел, что для него уже не запущен timeout, что он не раскрыт
       // и что навели не на перетаскиваемый элемент
       if (itemData.item.get(itemData.nodeProperty) !== null
-         && (!this._expandOnDragData || this._expandOnDragData !== itemData)
-         && !itemData.isExpanded
-         && this._avatarItem.key !== itemData.key) {
+            && (!this._expandOnDragData || this._expandOnDragData !== itemData)
+            && !itemData.isExpanded
+            && this._avatarItem.key !== itemData.key) {
          this._clearTimeoutForExpandOnDrag();
          this._expandOnDragData = itemData;
          this._setTimeoutForExpandOnDrag(this._expandOnDragData);

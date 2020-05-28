@@ -2843,7 +2843,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragStart: function(event, dragObject, domEvent) {
         if (this._dndListController) {
-            this._dndListController.startDragNDrop();
+            this._dndListController.startDragNDrop(event);
         }
     },
 

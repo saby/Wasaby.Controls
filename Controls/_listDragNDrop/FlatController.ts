@@ -61,12 +61,12 @@ export class FlatController implements IDragNDropListController{
       this._draggedItems = draggedItems;
    }
 
-   startDragNDrop() {
+   startDragNDrop(event?) {
       this._isDragging = true;
       this._model.setDraggedItems(this._avatarItem, this._draggedItems);
 
       // проставляем изначальную позицию аватара
-      const startPosition = this.calculateDragPosition(this._avatarItem);
+      const startPosition = this.calculateDragPosition(this._avatarItem, event);
       this.changeAvatarPosition(startPosition);
    }
 
@@ -106,7 +106,7 @@ export class FlatController implements IDragNDropListController{
       };
    }
 
-   calculateDragPosition(itemData) {
+   calculateDragPosition(itemData, event?) {
       return this._calculateDragTargetPosition(itemData);
    }
 
