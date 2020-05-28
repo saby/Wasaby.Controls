@@ -320,6 +320,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _beforeUpdate(newOptions: IToolbarOptions): void {
+        if (this._options.source !== newOptions.source) {
+            this._isLoadMenuItems = false;
+        }
         if (this._needChangeState(newOptions)) {
             this._setState(newOptions);
         }
