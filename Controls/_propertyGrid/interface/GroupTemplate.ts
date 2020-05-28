@@ -1,10 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для отображения группы в {@link Controls/propertyGrid:PropertyGrid редакторе свойств}.
  * 
- * @remark
- * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_propertyGrid.less">переменные тем оформления</a>
- * 
  * @class Controls/propertyGrid:GroupTemplate
  * @author Герасимов А.М.
  * @public

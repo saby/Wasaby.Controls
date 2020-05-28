@@ -9,11 +9,6 @@ export type TCursor = 'default' | 'pointer' | 'right';
 /**
  * Шаблон, который по умолчанию используется для отображения ячеек в контроле {@link Controls/grid:View Таблица}.
  * 
- * @remark
- * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_grid.less">переменные тем оформления grid</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a> 
- * 
  * @class Controls/grid:ColumnTemplate
  * @author Авраменко А.С.
  * @see Controls/_grid/interface/IGridControl/Column.typedef
