@@ -44,13 +44,8 @@ var Component = BaseSelector.extend({
    },
 
    _onResult: function(value) {
-      this._notify('valueChanged', [value]);
       this._children.opener.close();
       this._forceUpdate();
-   },
-
-   _rangeChangedHandler: function(event, value) {
-      this._notify('valueChanged', [value]);
    },
 
    shiftBack: function () {

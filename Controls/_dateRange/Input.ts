@@ -16,13 +16,13 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
 
 /**
  * Поле ввода периода дат.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FRange">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/date-time/date/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a>
- * 
+ *
  * @class Controls/_dateRange/Input
  * @extends Core/Control
  * @mixes Controls/_input/interface/IBase
@@ -72,7 +72,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         this._rangeModel.update(options);
         proxyModelEvents(
             this, this._rangeModel,
-            ['startValueChanged', 'endValueChanged', 'rangeChanged', 'valueChanged']
+            ['startValueChanged', 'endValueChanged', 'rangeChanged']
         );
         this._rangeModel.subscribe('rangeChanged', this._updateValidators.bind(this));
         this._updateValidators(options);
