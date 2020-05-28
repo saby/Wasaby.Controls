@@ -26,7 +26,7 @@ var _private = {
             });
             return nodes.map(node => node.getContents().getId());
         } else {
-            return <Array<T>>expandedItems;
+            return <Array<T>> expandedItems;
         }
     }
 };

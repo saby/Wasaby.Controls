@@ -442,40 +442,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     getAvatarPosition(): object {
         return this._dragTargetPosition;
     },
-
-    // TODO dnd вынести в контроллер
-    calculateDragTargetPosition: function(targetData) {
-        var
-            position,
-            prevIndex = -1;
-
-        //If you hover on a record that is being dragged, then the position should not change.
-        if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
-            return null;
-        }
-
-        if (this._dragTargetPosition) {
-            prevIndex = this._dragTargetPosition.index;
-        } else if (this._draggingItemData) {
-            prevIndex = this._draggingItemData.index;
-        }
-
-        if (prevIndex === -1) {
-            position = 'before';
-        } else if (targetData.index > prevIndex) {
-            position = 'after';
-        } else if (targetData.index < prevIndex) {
-            position = 'before';
-        } else if (targetData.index === prevIndex) {
-            position = this._dragTargetPosition.position === 'after' ? 'before' : 'after';
-        }
-
-        return {
-            index: targetData.index,
-            item: targetData.item,
-            data: targetData,
-            position: position
-        };
+    getDragItemData(): object {
+        return this._draggingItemData;
     },
 
     setSwipeItem: function(itemData) {

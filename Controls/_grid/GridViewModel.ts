@@ -1825,36 +1825,24 @@ var
             this._model.setSelectedItems(items, selected);
         },
 
-        setDragTargetPosition: function(position) {
-            this._model.setDragTargetPosition(position);
-        },
-
-        getDragTargetPosition: function() {
-            return this._model.getDragTargetPosition();
-        },
-
-        setDragEntity: function(entity) {
-            this._model.setDragEntity(entity);
-        },
-
-        getDragEntity: function() {
-            return this._model.getDragEntity();
-        },
-
-        setDragItemData: function(itemData) {
-            this._model.setDragItemData(itemData);
+        setDraggedItems(avatarItem: object, draggedKeys: Array<number|string>): void {
+            this._model.setDraggedItems(avatarItem, draggedKeys);
             if (_private.hasStickyColumn(this)) {
                 this._setHeader(this._options.header);
                 this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             }
         },
-
-        getDragItemData: function() {
-            return this._model.getDragItemData();
+        setAvatarPosition(position: object): void {
+            this._model.setAvatarPosition(position)
         },
-
-        calculateDragTargetPosition: function(targetData, position) {
-            return this._model.calculateDragTargetPosition(targetData, position);
+        resetDraggedItems(): void {
+            this.model.resetDraggedItems();
+        },
+        getAvatarPosition(): object {
+            return this._model.getAvatarPosition();
+        },
+        getDragItemData(): object {
+            return this._model.getDragItemData();
         },
 
         getActiveItem: function() {

@@ -1,4 +1,5 @@
 import { FlatController, IModel } from "./FlatController";
+import { ItemsUtil } from "../list";
 
 const DRAG_MAX_OFFSET = 15,
    EXPAND_ON_DRAG_DELAY = 1000;
@@ -11,9 +12,9 @@ export default class TreeController extends FlatController {
    constructor(useNewModel: boolean, model: IModel, notifyExpandNode: Function) {
       super(useNewModel, model);
       this._notifyExpandNode = notifyExpandNode;
-   }j
+   }
 
-   getTargetPosition(itemData, event) {
+   calculateDragPosition(itemData, event) {
       if (!itemData.dispItem.isNode()) {
          return;
       }
@@ -32,9 +33,9 @@ export default class TreeController extends FlatController {
          bottomOffset = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
 
          if (topOffset < DRAG_MAX_OFFSET || bottomOffset < DRAG_MAX_OFFSET) {
-            if (this._model.getDragItemData()) {
+            if (this._avatarItem) {
                position = topOffset < DRAG_MAX_OFFSET ? 'before' : 'after';
-               dragTargetPosition = this._model.calculateDragTargetPosition(itemData, position);
+               dragTargetPosition = this._calculateDragTargetPosition(itemData, position);
             }
          }
       }
@@ -53,6 +54,64 @@ export default class TreeController extends FlatController {
    stopCountDownForExpandNode() {
       this._clearTimeoutForExpandOnDrag();
    }
+
+   protected _calculateDragTargetPosition(itemData, position) {
+
+   }
+
+   calculateDragTargetPosition: function(targetData, position) {
+      var result;
+
+      //If you hover over the dragged item, and the current position is on the folder,
+      //then you need to return the position that was before the folder.
+      if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
+         result = this._prevDragTargetPosition || null;
+      } else if (targetData.dispItem.isNode()) {
+         if (position === 'after' || position === 'before') {
+            result = this._calculateDragTargetPosition(targetData, position);
+         } else {
+            result = {
+               index: targetData.index,
+               position: 'on',
+               item: targetData.item,
+               data: targetData
+            };
+         }
+      } else {
+         result = TreeViewModel.superclass.calculateDragTargetPosition.apply(this, arguments);
+      }
+
+      return result;
+   },
+
+   _calculateDragTargetPosition: function(itemData, position) {
+      var
+         result,
+         startPosition,
+         afterExpandedNode = position === 'after' && this._expandedItems.indexOf(ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)) !== -1;
+
+      //The position should not change if the record is dragged from the
+      //bottom/top to up/down and brought to the bottom/top of the folder.
+      if (this._prevDragTargetPosition) {
+         if (this._prevDragTargetPosition.index === itemData.index) {
+            startPosition = this._prevDragTargetPosition.position;
+         } else {
+            startPosition = this._prevDragTargetPosition.index < itemData.index ? 'before' : 'after';
+         }
+      }
+
+      if (position !== startPosition && !afterExpandedNode) {
+         result = {
+            index: itemData.index,
+            item: itemData.item,
+            data: itemData,
+            position: position
+         };
+      }
+
+      return result;
+   },
+
 
    private _setTimeoutForExpandOnDrag(itemData) {
       this._timeoutForExpandOnDrag = setTimeout(() => {

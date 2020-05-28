@@ -29,13 +29,6 @@ export interface IDragNDropListController {
 }
 
 export class FlatController implements IDragNDropListController{
-   // это то что перетаскиваем, прикладники сверху сюда что-то могут положить,
-   // но обязательно есть items - список перетаскиваемых элементов
-   private _draggingEntity: ItemsEntity;
-
-   // элемент который перетаскивают, наверное это фантомный элемент
-   private _draggingItem: CollectionItem<Model>;
-
    // этот элемент тут запоминается, пока на нем стрелка мыши
    // и после dragStart этот элемент берется как перетаскиваемый и здесь обнуляется
    private _unprocessedDragEnteredItem: CollectionItem<Model>;
@@ -44,7 +37,7 @@ export class FlatController implements IDragNDropListController{
    // и после того как документ перетащили, то смотрим не нужно ли что-то подождать и если есть промис то ожидаем
    private _dragEndResult;
 
-   private _avatarItem;
+   protected _avatarItem;
    private _avatarPosition;
    private _draggedItems;
 
@@ -112,7 +105,7 @@ export class FlatController implements IDragNDropListController{
    }
 
    calculateDragPosition(itemData) {
-      return this._model.calculateDragTargetPosition(itemData);
+      return this._calculateDragTargetPosition(itemData);
    }
 
    getCurrentDragPosition() {
@@ -142,7 +135,7 @@ export class FlatController implements IDragNDropListController{
       });
    }
 
-   protected calculateDragTargetPosition(targetData) {
+   protected _calculateDragTargetPosition(targetData) {
       let position, prevIndex = -1;
 
       //If you hover on a record that is being dragged, then the position should not change.
