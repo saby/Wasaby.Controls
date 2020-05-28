@@ -402,7 +402,10 @@
 
 .ws-is-mobile-chrome-ios .controls-ListView__item__marked_master_theme-@{themeName},
 .ws-is-desktop-safari .controls-ListView__item__marked_master_theme-@{themeName},
-.ws-is-mobile-safari .controls-ListView__item__marked_master_theme-@{themeName} {
+.ws-is-mobile-safari .controls-ListView__item__marked_master_theme-@{themeName},
+.ws-is-mobile-chrome-ios .controls-ListView__item__marked_masterClassic_theme-@{themeName},
+.ws-is-desktop-safari .controls-ListView__item__marked_masterClassic_theme-@{themeName},
+.ws-is-mobile-safari .controls-ListView__item__marked_masterClassic_theme-@{themeName} {
    // ave safari 13
    // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
    // иначе все position: absolute элементы внутри position: sticky
@@ -464,12 +467,11 @@
 .controls-ListView__itemV_marker_master_theme-@{themeName} {
    position: absolute;
    width: @master-marker_thickness_list;
-   height: auto;
+   height: 100%;
    display: inline-flex;
    align-items: baseline;
-   top: 0;
+   top: initial;
    left: 0;
-   bottom: 0;
 }
 
 .controls-ListView__itemV_marker_master_theme-@{themeName}:before {
@@ -479,6 +481,7 @@
 
 .controls-ListView__itemV_marker_master_theme-@{themeName}:after {
    content: '';
+   display: inline-block;
    background-color: @master-marker_color_list;
    width: @master-marker_thickness_list;
    height: @master-marker_height_list;

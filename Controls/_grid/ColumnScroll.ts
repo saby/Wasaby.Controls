@@ -113,9 +113,7 @@ const
          return shadowState.indexOf(position) !== - 1;
       },
       calculateShadowClasses(shadowState: string, position: string, theme: string, backgroundStyle: string): string {
-         let shadowClasses = `js-controls-ColumnScroll__shadow`
-                            + ` js-controls-ColumnScroll__shadow_${position}`
-                            + ` controls-ColumnScroll__shadow_theme-${theme}`
+         let shadowClasses = `controls-ColumnScroll__shadow_theme-${theme}`
                             + ` controls-ColumnScroll__shadow-${position}_theme-${theme}`
                             + ` controls-horizontal-gradient-${backgroundStyle || 'default'}_theme-${theme}`;
          if (!_private.isShadowVisible(shadowState, position)) {
@@ -136,7 +134,7 @@ const
          }
          return shadowStyles;
       },
-      drawTransform (self, position) {
+      drawTransform(self, position): void {
          // This is the fastest synchronization method scroll position and cell transform.
          // Scroll position synchronization via VDOM is much slower.
 
@@ -149,8 +147,11 @@ const
              // Не скроллируем зафиксированные колонки
              `.${self._transformSelector} .controls-Grid__cell_fixed { transform: translateX(${position}px); }` +
 
-             // Не скроллируем скроллбар
-             `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }`;
+               // Не скроллируем скроллбар
+               `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
+
+               // не скроллируем подвал таблицы
+               `.${self._transformSelector} .controls-GridView__footer { transform: translateX(${position}px); }`;
 
           // Не скроллируем операции над записью
           if (isFullGridSupport()) {

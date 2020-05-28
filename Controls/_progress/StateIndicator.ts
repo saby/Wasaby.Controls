@@ -25,7 +25,12 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /**
  * Диаграмма состояния процесса.
  * Позволяет получить наглядную информацию по состоянию выполнения некоторого процесса в разрезе нескольких категорий.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FStateIndicator%2FStandartStateIndicatorDemo">Демо-пример</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FStateIndicator%2FStandartStateIndicatorDemo">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less">переменные тем оформления</a>
+ * 
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
@@ -96,7 +101,8 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /**
  * @name Controls/_progress/StateIndicator#data
  * @cfg {Array.<IndicatorCategory>} Массив категорий диаграммы.
- * <pre class="brush:html">
+ * @example
+ * <pre class="brush: html">
  *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
  * @remark
@@ -106,6 +112,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /*
  * @name Controls/_progress/StateIndicator#data
  * @cfg {Array.<IndicatorCategory>} Array of indicator categories
+ * @example
  * <pre class="brush:html">
  *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>

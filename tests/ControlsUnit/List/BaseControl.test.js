@@ -910,8 +910,6 @@ define([
          });
 
          var dataLoadFired = false;
-         var portionSearchTimerReseted = false;
-         var portionSearchReseted = false;
          var beforeLoadToDirectionCalled = false;
 
          var cfg = {
@@ -957,13 +955,20 @@ define([
          ctrl._loadingIndicatorState = 'down';
          ctrl._hideIndicatorOnTriggerHideDirection = 'down';
 
+         ctrl._items.setMetaData({
+            iterative: true
+         });
+         ctrl._portionedSearchInProgress = true;
+
          // Up trigger became visible, no changes to indicator
          ctrl.triggerVisibilityChangedHandler(null, 'up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
+         assert.isFalse(ctrl._showContinueSearchButton);
 
-         // Down trigger became hidden, hide the indicator
+         // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler(null, 'down', false);
          assert.isNull(ctrl._loadingIndicatorState);
+         assert.isTrue(ctrl._showContinueSearchButton);
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
@@ -2547,7 +2552,13 @@ define([
                      title: '123'
                   }
                ],
-               viewModelConstructor: lists.ListViewModel
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6
+                  }
+               }
             },
             baseControl = new lists.BaseControl(cfg);
 
@@ -2569,6 +2580,14 @@ define([
          afterEach(() => {
             actionsUpdateCount = 0;
          });
+          it('update sourceController onListChange', function() {
+              sandbox.stub(lists.BaseControl._private, 'prepareFooter');
+
+              baseControl._listViewModel.getItems().getMetaData().more = 5;
+              lists.BaseControl._private.onListChange(baseControl, null, 'collectionChanged');
+
+              sinon.assert.calledOnce(lists.BaseControl._private.prepareFooter);
+          });
          it('control in error state, should not call update', function() {
             baseControl.__error = true;
             baseControl._updateItemActions();

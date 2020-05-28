@@ -63,7 +63,7 @@ define([
       it('cleanValid', () => {
          var validCtrl = new validateMod.Container();
          validCtrl._valueChangedHandler(null, 'test');
-         assert.deepEqual(validCtrl._validationResult, undefined);
+         assert.deepEqual(validCtrl._validationResult, null);
          validCtrl._validationResult = 'Error';
          validCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(validCtrl._validationResult, 'Error');
@@ -77,6 +77,12 @@ define([
          validCtrl._isOpened = false;
          validCtrl.setValidationResult('Error 404');
          assert.deepEqual(validCtrl._isOpened, true);
+
+         // вызов с hideInfobox = true не закрывает инфобокс
+         validCtrl.setValidationResult(null, validConfig);
+         assert.deepEqual(validCtrl._isOpened, true);
+
+         // вызов с hideInfobox = true не октрывает инфобокс
          validCtrl._isOpened = false;
          validCtrl.setValidationResult('Error 404', validConfig);
          assert.deepEqual(validCtrl._isOpened, false);
