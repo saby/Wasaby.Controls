@@ -6,7 +6,7 @@ import {descriptor, Record} from 'Types/entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Opener as DropdownOpener} from 'Controls/dropdown';
 import {Controller as SourceController} from 'Controls/source';
-import {IShowType, showType, getMenuItems} from 'Controls/Utils/Toolbar';
+import {IShowType, showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
 import {
@@ -266,7 +266,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         const menuItems = Toolbar._calcMenuItems(this._actualItems);
         this._menuItems = menuItems;
         this._menuSource = this._createPrefetchProxy(this._source, menuItems);
-        this._needShowMenu = Boolean(menuItems && menuItems.getCount());
     }
 
     private _setStateByItems(items: TItems, source: ICrudPlus): void {
@@ -275,9 +274,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
          * TODO: Можно удалить после выполнения https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be
          */
         this._actualItems = ActualAPI.items(items);
-        // const actualItems = ActualAPI.items(items);
         this._items = this._actualItems;
         this._source = this._createPrefetchProxy(source, this._actualItems);
+        this._needShowMenu = needShowMenu(this._actualItems);
     }
 
     private _setStateBySource(source: ICrudPlus): Promise<TItems> {
