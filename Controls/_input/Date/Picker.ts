@@ -11,7 +11,8 @@ import getOptions from 'Controls/Utils/datePopupUtils';
     * @remark
     * Полезные ссылки:
     * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FPicker">демо-пример</a>
-    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления input</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления dateRange</a>
     *
     * @class Controls/_input/Date/Picker
     * @extends Core/Control

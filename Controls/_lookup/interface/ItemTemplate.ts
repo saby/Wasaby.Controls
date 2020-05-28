@@ -1,8 +1,5 @@
 /**
  * Шаблон, который по умолчанию используется для отображения выбранных значений в контролах {@link Controls/lookup:Input} и {@link Controls/lookup:Selector}.
- * @remark
- * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
  * 
  * @class Controls/lookup:ItemTemplate
  * @author Герасимов А.М.
