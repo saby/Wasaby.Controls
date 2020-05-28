@@ -30,6 +30,20 @@ class MenuRender extends Control<IMenuRenderOptions> {
         }
     }
 
+    protected _beforeUnmount(): void {
+        this.removeEmptyItemFromCollection();
+    }
+
+    private removeEmptyItemFromCollection(): void {
+        const options = this._options;
+        const listModel = options.listModel;
+        const emptyItem = options.emptyText && listModel.getItemBySourceKey(options.emptyKey);
+
+        if (emptyItem) {
+            listModel.getCollection().remove(emptyItem.getContents());
+        }
+    }
+
     protected _isEmptyItem(treeItem: TreeItem<Model>): boolean {
         return this._options.emptyText && treeItem.getContents().getId() === this._options.emptyKey;
     }
