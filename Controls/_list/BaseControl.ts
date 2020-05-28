@@ -2965,7 +2965,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (targetPosition) {
                 const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, targetPosition.item, targetPosition.position]);
                 if (changeDragTargetResult !== false) {
-                    this._listViewModel.setDragTargetPosition(targetPosition);
+                    this._dndListController.changeAvatarPosition(targetPosition);
                 }
             }
 
