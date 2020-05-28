@@ -145,15 +145,16 @@ const
                // Не скроллируем зафиксированные колонки
                `.${self._transformSelector} .controls-Grid__cell_fixed { transform: translateX(${position}px); }` +
 
-               // Не скроллируем скроллбар
-               `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
-
                // не скроллируем подвал таблицы
                `.${self._transformSelector} .controls-GridView__footer { transform: translateX(${position}px); }`;
 
            // Не скроллируем операции над записью
            if (isFullGridSupport()) {
-               newHTML += `.${self._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
+               // Cкроллируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
+               // table-layout скроллбар лежит вне таблицы
+               newHTML +=
+                   `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
+                   `.${self._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
            } else {
                const maxTranslate = self._contentSize - self._contentContainerSize;
                newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(${position - maxTranslate}px); }`;
@@ -378,6 +379,9 @@ const
           const hasOption = typeof this._options.dragScrolling === 'boolean';
           const isDisplayColumnScroll = !!this._children.content && this._isDisplayColumnScroll();
           return isDisplayColumnScroll && (hasOption ? this._options.dragScrolling : !this._options.itemsDragNDrop);
+       },
+       _isFullGridSupport() {
+           return isFullGridSupport();
        }
    });
 ColumnScroll._theme = ['Controls/grid', 'Controls/Classes'];
