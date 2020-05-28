@@ -672,7 +672,7 @@ var
                 this._prevDragTargetPosition = null;
 
                 //The fake item must be displayed at the correct level.
-                if (position) {
+                if (position && this._draggingItemData) {
                     this._draggingItemData.level = position.data.level;
                 }
             }
@@ -683,10 +683,10 @@ var
             TreeViewModel.superclass.resetDraggedItems.apply(this, arguments);
         },
         getAvatarPosition(): object {
-            TreeViewModel.superclass.getAvatarPosition.apply(this, arguments);
+            return TreeViewModel.superclass.getAvatarPosition.apply(this, arguments);
         },
         getDragItemData(): object {
-            TreeViewModel.superclass.getDragItemData.apply(this, arguments);
+            return TreeViewModel.superclass.getDragItemData.apply(this, arguments);
         },
         _setPrevDragTargetPosition: function(targetPosition) {
             if (!this._prevDragTargetPosition) {

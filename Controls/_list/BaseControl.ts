@@ -2959,7 +2959,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // если в TreeControl создать свой контроллер, то он не будет знать состояния плоского контроллера и за данными придется обращаться к плоскому контроллеру
         // может все-таки лучше из TreeControl звать метод у контроллера, который находится в BaseControl.
         if (this._dndListController instanceof TreeController && this._dndListController.isDragging()) {
-            const targetPosition = this._dndListController.calculateDragPosition(itemData, nativeEvent);
+            const targetPosition = this._dndListController.getPositionRelativeNode(itemData, nativeEvent);
 
             if (targetPosition) {
                 const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, targetPosition.item, targetPosition.position]);

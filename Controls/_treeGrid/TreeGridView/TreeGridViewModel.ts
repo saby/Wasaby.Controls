@@ -229,6 +229,25 @@ var
             this._model.setHasMoreStorage(hasMoreStorage);
         },
 
+       setDraggedItems(avatarItem: object, draggedKeys: Array<number|string>): void {
+          this._model.setDraggedItems(avatarItem, draggedKeys);
+       },
+       setAvatarPosition(position: object): void {
+          this._model.setAvatarPosition(position);
+       },
+       resetDraggedItems(): void {
+          this._model.resetDraggedItems();
+       },
+       getAvatarPosition(): object {
+          return this._model.getAvatarPosition();
+       },
+       getDragItemData(): object {
+          return this._model.getDragItemData();
+       },
+       getPrevDragTargetPosition(): any {
+          return this._model.getPrevDragTargetPosition();
+       },
+
         destroy: function () {
             this._model.unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
             TreeGridViewModel.superclass.destroy.apply(this, arguments);

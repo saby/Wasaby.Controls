@@ -13,23 +13,30 @@ export default class TreeController extends FlatController {
       this._notifyExpandNode = notifyExpandNode;
    }
 
-   calculateDragPosition(itemData, event) {
-      let
-         position,
-         topOffset,
-         bottomOffset,
-         dragTargetRect,
-         dragTargetPosition,
-         dragTarget = event.target.closest('.js-controls-TreeView__dragTargetNode');
+   /**
+    * Если водим по узлу, то в зависимости от того в какой части контрола мы находимся,
+    * меняется позиция перемещаемого элемента
+    * То есть, если мышка близко к верхней части, то элемент перемещаем перед текущим,
+    * если по центру то на текущем, если ближе к низу, то после
+    * @param itemData
+    * @param event
+    */
+   getPositionRelativeNode(itemData, event) {
+      if (!itemData.dispItem.isNode()) {
+         return;
+      }
+
+      let dragTargetPosition;
+      const dragTarget = event.target.closest('.js-controls-TreeView__dragTargetNode');
 
       if (dragTarget) {
-         dragTargetRect = dragTarget.getBoundingClientRect();
-         topOffset = event.nativeEvent.pageY - dragTargetRect.top;
-         bottomOffset = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
+         const dragTargetRect = dragTarget.getBoundingClientRect();
+         const topOffset = event.nativeEvent.pageY - dragTargetRect.top;
+         const bottomOffset = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
 
          if (topOffset < DRAG_MAX_OFFSET || bottomOffset < DRAG_MAX_OFFSET) {
             if (this._avatarItem) {
-               position = topOffset < DRAG_MAX_OFFSET ? 'before' : 'after';
+               const position = topOffset < DRAG_MAX_OFFSET ? 'before' : 'after';
                dragTargetPosition = this._calculateDragTargetPosition(itemData, position);
             }
          }
@@ -56,7 +63,7 @@ export default class TreeController extends FlatController {
    }
 
    protected _calculateDragTargetPosition(targetData, position) {
-      var result;
+      let result;
 
       //If you hover over the dragged item, and the current position is on the folder,
       //then you need to return the position that was before the folder.
@@ -96,7 +103,7 @@ export default class TreeController extends FlatController {
             };
          }
       } else {
-         result = super._calculateDragTargetPosition(targetData, position);
+         result = super._calculateDragTargetPosition(targetData);
       }
 
       return result;
