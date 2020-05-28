@@ -18,7 +18,7 @@ export interface IRadioGroupOptions extends IControlOptions,
     * 
     * @remark
     * Полезные ссылки:
-    * * <a href="/materials/Controls-demo/app/Controls-demo%2FSwitch%2FstandartDemoSwitch">демо-пример</a>
+    * * <a href="/materials/Controls-demo/app/Controls-demo%2Ftoggle%2fRadioGroup%2fIndex">демо-пример</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
     *
     *
@@ -32,13 +32,13 @@ export interface IRadioGroupOptions extends IControlOptions,
     * @public
     * @author Красильников А.С.
     * @category Toggle
-    * @demo Controls-demo/toggle/RadioGroup/Index
+    * @demo Controls-demo/toggle/RadioGroup/Base/Index
     */
 
    /*
     * Controls are designed to give users a choice among two or more settings.
     *
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FSwitch%2FstandartDemoSwitch">Demo-example</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2Ftoggle%2fRadioGroup%2fIndex">Demo-example</a>.
     *
     * @class Controls/_toggle/RadioGroup
     * @extends Core/Control
@@ -49,7 +49,7 @@ export interface IRadioGroupOptions extends IControlOptions,
     * @public
     * @author Красильников А.С.
     * @category Toggle
-    * @demo Controls-demo/toggle/RadioGroup/Index
+    * @demo Controls-demo/toggle/RadioGroup/Base/Index
     */
 
 class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, ISingleSelectable, IToggleGroup {
