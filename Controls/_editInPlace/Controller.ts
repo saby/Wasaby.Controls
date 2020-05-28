@@ -51,6 +51,6 @@ export default class Controller {
     }
 
     static isEditing(model: IEditInPlaceModel): boolean {
-        return !!this._model.find(findPredicate);
+        return !!model.find(findPredicate);
     }
 }
