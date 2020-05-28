@@ -14,10 +14,13 @@ interface IScrollParams {
     scrollTop: number;
     scrollHeight: number;
 }
-
+interface IPagingCfg { 
+    backwardEnabled: boolean, 
+    forwardEnabled: boolean
+}
 interface IScrollPagingOptions {
     scrollParams: IScrollParams,
-    pagingCfgTrigger({ backwardEnabled, forwardEnabled }):void;
+    pagingCfgTrigger(IPagingCfg):void;
 }
 
 export default class ScrollPagingController {
@@ -67,21 +70,6 @@ export default class ScrollPagingController {
                 forwardEnabled: false
             });
             this._curState = 'bottom';
-        }
-
-    };
-
-    public handleScroll(direction: 'up' | 'down' | 'middle') {
-        switch (direction) {
-            case 'up':
-                this.handleScrollTop();
-                break;
-            case 'down':
-                this.handleScrollBottom();
-                break;
-            case 'middle':
-                this.handleScrollMiddle();
-                break;
         }
     };
     

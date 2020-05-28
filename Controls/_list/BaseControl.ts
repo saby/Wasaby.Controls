@@ -933,11 +933,12 @@ const _private = {
             self._viewPortRect = params.viewPortRect;
 
             if (_private.needScrollPaging(self._options.navigation)) {
-                _private.getScrollPagingController(self, {
+                const scrollParams = {
                     scrollTop: self._scrollTop,
                     scrollHeight: params.scrollHeight,
                     clientHeight: params.clientHeight
-                }).then((scrollPagingCtr) => {
+                };
+                _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPagingCtr) => {
                     self._scrollPagingCtr = scrollPagingCtr;
                     self._pagingVisible = _private.needShowPagingByScrollSize(self, params.scrollHeight, params.clientHeight);
                 });
@@ -956,11 +957,13 @@ const _private = {
             self._isScrollShown = false;
         });
     },
-    getScrollPagingController: function(self, scrollParams) {
+    getScrollPagingControllerWithCallback: function(self, scrollParams, callback) {
         if (self._scrollPagingCtr) {
-            return Promise.resolve(self._scrollPagingCtr);
+            callback(self._scrollPagingCtr);
         } else {
-            return _private.createScrollPagingController(self, scrollParams);
+            _private.createScrollPagingController(self, scrollParams).then((scrollPaging) => {
+                callback(scrollPaging);
+            });
         }
     },
     createScrollPagingController: function(self, scrollParams) {
@@ -1059,15 +1062,10 @@ const _private = {
         return !!self._showLoadingIndicatorImage;
     },
 
-    updateScrollPagingController(self, scrollParams) {
-        if (self._scrollPagingCtr) {
-            self._scrollPagingCtr.updateScrollParams(scrollParams);
-        } else {
-            _private.getScrollPagingController(self, scrollParams).then((scrollPagingCtr) => {
-                self._scrollPagingCtr = scrollPagingCtr;
-                self._scrollPagingCtr.updateScrollParams(scrollParams);
-            });
-        }
+    updateScrollPagingButtons(self, scrollParams) {
+        _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
+            scrollPaging.updateScrollParams(scrollParams);
+        });
     },
 
     /**
@@ -1113,7 +1111,7 @@ const _private = {
                 scrollHeight: self._viewSize,
                 clientHeight: self._viewPortSize
             };
-            _private.updateScrollPagingController(self, scrollParams);
+            _private.updateScrollPagingButtons(self, scrollParams);
         }
     },
 
@@ -2163,7 +2161,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (_private.needScrollPaging(this._options.navigation)) {
             const scrollParams = {scrollHeight: this._viewSize, clientHeight: this._viewPortSize, scrollTop: this._scrollTop};
             
-            _private.updateScrollPagingController(this, scrollParams);
+            _private.updateScrollPagingButtons(this, scrollParams);
         }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
     },

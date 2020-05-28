@@ -58,43 +58,6 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 }, result, 'Wrong pagingCfg after ctor');
             });
         });
-        describe('scroll', function () {
-            var result;
-            var spInstance = new ScrollPaging_1.default({
-                scrollParams: {
-                    scrollTop: 0,
-                    scrollHeight: 150,
-                    clientHeight: 50
-                },
-                pagingCfgTrigger: function (cfg) {
-                    result = cfg;
-                }
-            });
-            it('middle', function () {
-                spInstance.handleScroll('middle');
-                chai_1.assert.equal('middle', spInstance._curState, 'Wrong curState after scroll');
-                chai_1.assert.deepEqual({
-                    backwardEnabled: true,
-                    forwardEnabled: true,
-                }, result, 'Wrong pagingCfg after scroll');
-            });
-            it('top', function () {
-                spInstance.handleScroll('up');
-                chai_1.assert.equal('top', spInstance._curState, 'Wrong curState after scroll to top');
-                chai_1.assert.deepEqual({
-                    backwardEnabled: false,
-                    forwardEnabled: true,
-                }, result, 'Wrong pagingCfg after scroll');
-            });
-            it('bottom', function () {
-                spInstance.handleScroll('down');
-                chai_1.assert.equal('bottom', spInstance._curState, 'Wrong curState after scroll to bottom');
-                chai_1.assert.deepEqual({
-                    backwardEnabled: true,
-                    forwardEnabled: false,
-                }, result, 'Wrong pagingCfg after scroll');
-            });
-        });
         describe('updateScrollParams', function () {
             var result;
             var spInstance = new ScrollPaging_1.default({
