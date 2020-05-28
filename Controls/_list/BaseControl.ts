@@ -1535,7 +1535,7 @@ const _private = {
     needBottomPadding: function(self, options, items, listViewModel) {
         const isEditing =
             options.useNewModel
-            ? self._getEditInPlaceController().isEditing()
+            ? EditInPlaceController.isEditing(listViewModel)
             : !!listViewModel.getEditingItemData();
         return (
             !!items &&
@@ -1611,7 +1611,7 @@ const _private = {
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
             const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
-                self._options.useNewModel ? self._getEditInPlaceController().isEditing() : !!self._listViewModel.getEditingItemData()
+                self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
             );
             if (isEditing) {
                 self._children.editInPlace.cancelEdit();
@@ -3150,12 +3150,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     handleSelectionControllerResult(result: ISelectionControllerResult): void {
        _private.handleSelectionControllerResult(this, result);
-    },
-
-    _getEditInPlaceController(): EditInPlaceController {
-        return this._editInPlaceController || (this._editInPlaceController = new EditInPlaceController({
-            model: this._listViewModel
-        }));
     }
 });
 
