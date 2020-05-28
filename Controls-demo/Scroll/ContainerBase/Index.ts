@@ -30,6 +30,7 @@ export default class ContainerBaseDemo extends Control<IControlOptions> {
     _changeHeightAddContentHandler(): void {
         this._heightAdded = !this._heightAdded;
         this._contentAdded = !this._contentAdded;
+        this._changeScrollTopHandler();
     }
 
     _changeScrollTopHandler(): void {
