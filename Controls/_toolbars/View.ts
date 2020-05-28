@@ -142,7 +142,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _nodeProperty: string = null;
     protected _parentProperty: string = null;
     protected _menuOptions: object = null;
+    protected _isLoadMenuItems: boolean = false;
     protected _buttonTemplate: TemplateFunction = getButtonTemplate();
+    protected _actualItems = null;
 
     protected _template: TemplateFunction = template;
 
@@ -260,20 +262,22 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         });
     }
 
+    private _setMenuItems(): void {
+        const menuItems = Toolbar._calcMenuItems(this._actualItems);
+        this._menuItems = menuItems;
+        this._menuSource = this._createPrefetchProxy(this._source, menuItems);
+        this._needShowMenu = Boolean(menuItems && menuItems.getCount());
+    }
+
     private _setStateByItems(items: TItems, source: ICrudPlus): void {
         this._fullItemsList = items;
         /**
          * TODO: Можно удалить после выполнения https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be
          */
-        const actualItems = ActualAPI.items(items);
-
-        const menuItems = Toolbar._calcMenuItems(actualItems);
-
-        this._items = actualItems;
-        this._menuItems = menuItems;
-        this._source = this._createPrefetchProxy(source, actualItems);
-        this._menuSource = this._createPrefetchProxy(source, menuItems);
-        this._needShowMenu = Boolean(menuItems && menuItems.getCount());
+        this._actualItems = ActualAPI.items(items);
+        // const actualItems = ActualAPI.items(items);
+        this._items = this._actualItems;
+        this._source = this._createPrefetchProxy(source, this._actualItems);
     }
 
     private _setStateBySource(source: ICrudPlus): Promise<TItems> {
@@ -342,6 +346,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _closeHandler(): void {
         this._notify('menuClosed', [], {bubbling: true});
         this._setStateByItems(this._fullItemsList, this._options.source);
+        this._setMenuItems();
     }
 
     protected _itemClickHandler(event: SyntheticEvent<MouseEvent>, item: TItem): void {
@@ -384,6 +389,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     protected _showMenu(event: SyntheticEvent<UIEvent>): void {
         if (!this._options.readOnly) {
+
+            // 1 раз создаем конфиг для меню при открытии.
+            if (!this._isLoadMenuItems) {
+                this._setMenuItems();
+                this._isLoadMenuItems = true;
+            }
             this._notify('menuOpened', [], {bubbling: true});
             this._openMenu(this._getMenuConfig());
         }
