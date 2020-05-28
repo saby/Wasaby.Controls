@@ -14,7 +14,7 @@ define('Controls-demo/Input/Lookup/Lookup',
       var Lookup = Control.extend({
          _template: template,
          _value: '',
-         _value1: '',
+         _value1: 'readOnlyValue',
          _value2: '',
          _value3: '',
          _value4: '',
