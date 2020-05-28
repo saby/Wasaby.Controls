@@ -177,6 +177,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
             if (this._options.calculateHeadersOffsets) {
                 this._updateTopBottom(data);
+            } else {
+                data.inst[POSITION.top] = this._offset[POSITION.top];
+                data.inst[POSITION.bottom] = this._offset[POSITION.bottom];
             }
 
             if (this._isFixed) {
