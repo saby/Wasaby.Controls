@@ -29,9 +29,6 @@
             </ws:if>
             <Controls.event:Listener event="scrollStateChanged" on:scrollStateChanged="scrollStateChangedHandler()"/>
         </div>
-        <div>
-            12345
-        </div>
     </Controls.scroll:ContainerBase>
     <div class="eventResult">
         <div class="controlsDemo__wrapper__padding">События:</div>
