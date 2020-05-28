@@ -2021,7 +2021,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     } else {
                         self._items = self._listViewModel.getItems();
                     }
-                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
+                    self._needBottomPadding = _private.needBottomPadding(self, newOptions, self._items, self._listViewModel);
                     if (self._pagingNavigation) {
                         var hasMoreData = self._items.getMetaData().more;
                         _private.updatePagingData(self, hasMoreData);
@@ -2067,7 +2067,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
                     }
-                    self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
+                    self._needBottomPadding = _private.needBottomPadding(self, newOptions, data, self._listViewModel);
 
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
@@ -2209,7 +2209,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         var self = this;
-        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
+        this._needBottomPadding = _private.needBottomPadding(this, newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
 
@@ -2317,7 +2317,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             // return result here is for unit tests
             return _private.reload(self, newOptions).addCallback(() => {
-                this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
+                this._needBottomPadding = _private.needBottomPadding(self, newOptions, this._items, this._listViewModel);
             });
         }
 
