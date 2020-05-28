@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import * as EditInPlaceController from 'Controls/_editInPlace/EditInPlace';
+import * as EditInPlaceController from 'Controls/_editInPlace/Controller';
 import AddInPlaceStrategy from 'Controls/_display/itemsStrategy/AddInPlace';
 
 describe('Controls/_display/controllers/EditInPlace', () => {
