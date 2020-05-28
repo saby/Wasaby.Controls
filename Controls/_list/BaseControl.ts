@@ -1532,10 +1532,10 @@ const _private = {
         }
     },
 
-    needBottomPadding: function(options, items, listViewModel) {
+    needBottomPadding: function(self, options, items, listViewModel) {
         const isEditing =
             options.useNewModel
-            ? this._getEditInPlaceController().isEditing(listViewModel)
+            ? self._getEditInPlaceController().isEditing()
             : !!listViewModel.getEditingItemData();
         return (
             !!items &&
@@ -1611,7 +1611,7 @@ const _private = {
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
             const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
-                self._options.useNewModel ? this._getEditInPlaceController().isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
+                self._options.useNewModel ? self._getEditInPlaceController().isEditing() : !!self._listViewModel.getEditingItemData()
             );
             if (isEditing) {
                 self._children.editInPlace.cancelEdit();
@@ -2521,7 +2521,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         const noData = !listViewModel.getCount();
         const noEdit =
             this._options.useNewModel
-            ? !this._getEditInPlaceController().isEditing(listViewModel)
+            ? !this._getEditInPlaceController().isEditing()
             : !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
