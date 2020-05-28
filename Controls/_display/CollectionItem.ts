@@ -97,8 +97,6 @@ export default class CollectionItem<T> extends mixin<
 
     protected _$dragged: boolean;
 
-    protected _$visible: boolean;
-
     protected _instancePrefix: string;
 
     /**
@@ -398,21 +396,6 @@ export default class CollectionItem<T> extends mixin<
         this._nextVersion();
         if (!silent) {
             this._notifyItemChangeToOwner('dragged');
-        }
-    }
-
-    isVisible(): boolean {
-        return this._$visible;
-    }
-
-    setVisible(visible: boolean, silent?: boolean): void {
-        if (this._$visible === visible) {
-            return;
-        }
-        this._$visible = visible;
-        this._nextVersion();
-        if (!silent) {
-            this._notifyItemChangeToOwner('visible');
         }
     }
 
