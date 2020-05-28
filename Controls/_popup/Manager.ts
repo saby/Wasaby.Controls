@@ -493,6 +493,15 @@ class Manager extends Control<IManagerOptions> {
         return false;
     }
 
+    _workspaceResize(): boolean {
+        // todo https://online.sbis.ru/opendoc.html?guid=3d0ce839-6e49-4afe-a1c5-f08e5f0fa17c
+        if (requirejs.defined('Controls/popupTemplate')) {
+            const StackController = requirejs('Controls/popupTemplate').StackController;
+            return StackController.workspaceResize();
+        }
+        return false;
+    }
+
     protected _popupDragEnd(id: string, offset: number): boolean {
         const element = this.find(id);
         if (element) {
