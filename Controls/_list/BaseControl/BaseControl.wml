@@ -126,7 +126,6 @@
                 source="{{_sourceController}}"
                 useNewModel="{{ _options.useNewModel }}">
             <ws:partial
-                    attr:class="{{_itemActionsMenuId !== null ? 'controls-itemActionsV_invisible'}}"
                     name="{{name}}"
                     template="{{ _options.content }}"
                     scope="{{_options}}"
@@ -155,7 +154,6 @@
                             scope="{{ _listViewModel.getActionsTemplateConfig() }}"
                             itemActionsClass="{{_options.itemActionsClass}}"
                             itemData="{{ itemActionsTemplate.currentItem }}" />
-                    <!-- using || instead of ws:if because template is constantly being updated otherwise -->
                 </ws:itemActionsTemplate>
                 <ws:swipeTemplate>
                     <ws:partial
@@ -164,7 +162,6 @@
                             swipeConfig="{{ _listViewModel.getSwipeConfig() }}"
                             animationState="{{ _listViewModel.getSwipeAnimation() }}"
                             itemData="{{ swipeTemplate.currentItem }}" />
-                    <!-- using || instead of ws:if because template is constantly being updated otherwise -->
                 </ws:swipeTemplate>
                <ws:tagTemplate>
                   <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
@@ -216,7 +213,8 @@
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
 
-            <ws:partial template="fullView" name="listView" attr:class="{{(_showActions || _options.useNewModel) ? 'controls-BaseControl_showActions'}}"/>
+            <ws:partial template="fullView" name="listView"
+                        attr:class="{{(_showActions || _options.useNewModel) && !_itemActionsMenuId ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionVisibility}}"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>

@@ -16,7 +16,8 @@ import {
 import {
     Controller as ItemActionsController,
     TItemActionVisibilityCallback,
-    IItemAction} from 'Controls/itemActions';
+    IItemAction,
+    TItemActionsPosition} from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import { load as libraryLoad } from 'Core/library';
@@ -24,7 +25,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 
 import { constants } from 'Env/Env';
 
-import {ISwipeEvent} from './Render';
+import { ISwipeEvent } from './Render';
 import { MarkerController, TVisibility, Visibility } from 'Controls/marker';
 
 export interface IViewOptions extends IControlOptions {
@@ -34,13 +35,14 @@ export interface IViewOptions extends IControlOptions {
     render: string;
 
     itemActions?: any[];
+    itemActionVisibility?: 'onhover'|'delayed'|'visible';
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
-    itemActionsPosition?: string;
+    itemActionsPosition?: TItemActionsPosition;
     itemActionsProperty?: string;
     style?: string;
     itemActionsClass?: string;
 
-    actionAlignment?: string;
+    actionAlignment?: 'horizontal'|'vertical';
     actionCaptionPosition?: 'right'|'bottom'|'none';
 
     editingConfig?: any;
@@ -48,6 +50,8 @@ export interface IViewOptions extends IControlOptions {
     markerVisibility: TVisibility;
     markedKey: number|string;
 }
+
+const ITEM_ACTION_VISIBILITY_DELAY = 100;
 
 export default class View extends Control<IViewOptions> {
     protected _template: TemplateFunction = template;
@@ -64,6 +68,11 @@ export default class View extends Control<IViewOptions> {
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
+
+        if (options.itemActionVisibility === 'visible') {
+            this._updateItemActions(options);
+        }
+
         if (options.markerVisibility !== Visibility.Hidden) {
             this._markerController = new MarkerController({
                 model: this._collection,
@@ -121,11 +130,11 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * При наведении на запись в списке мы должны показать операции
+     * По событию youch мы должны показать операции
      * @param e
      * @private
      */
-    protected _onRenderMouseEnter(e: SyntheticEvent<MouseEvent>): void {
+    protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
         this._updateItemActions();
     }
 
@@ -134,8 +143,12 @@ export default class View extends Control<IViewOptions> {
      * @param e
      * @private
      */
-    protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
-        this._updateItemActions();
+    protected _onRenderMouseEnter(e: SyntheticEvent<TouchEvent>): void {
+        if (this._options.itemActionVisibility !== 'start') {
+            if (!this._collection.isActionsAssigned()) {
+                this._updateItemActions(this._options);
+            }
+        }
     }
 
     /**
@@ -271,7 +284,7 @@ export default class View extends Control<IViewOptions> {
      */
     private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
         let contents = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
+        if (Array.isArray(contents)) {
             contents = contents[contents.length - 1];
         }
         // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
@@ -335,7 +348,7 @@ export default class View extends Control<IViewOptions> {
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
         let contents = item?.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
+        if (Array.isArray(contents)) {
             contents = contents[contents.length - 1];
         }
         const itemKey = contents?.getKey();
@@ -381,22 +394,22 @@ export default class View extends Control<IViewOptions> {
      * Инициализирует контрорллере и обновляет в нём данные
      * @private
      */
-    protected _updateItemActions(): void {
+    protected _updateItemActions(options: IViewOptions): void {
         if (!this._itemActionsController) {
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._collection.getEditingConfig();
         this._itemActionsController.update({
             collection: this._collection,
-            itemActions: this._options.itemActions,
-            itemActionsProperty: this._options.itemActionsProperty,
-            visibilityCallback: this._options.itemActionVisibilityCallback,
-            itemActionsPosition: this._options.itemActionsPosition,
-            style: this._options.style,
-            theme: this._options.theme,
-            actionAlignment: this._options.actionAlignment,
-            actionCaptionPosition: this._options.actionCaptionPosition,
-            itemActionsClass: this._options.itemActionsClass,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style: options.itemActionVisibility === 'visible' ? 'transparent' : options.style,
+            theme: options.theme,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility
         });
@@ -407,7 +420,8 @@ export default class View extends Control<IViewOptions> {
             itemActionsPosition: 'inside',
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
-            style: 'default'
+            style: 'default',
+            itemActionVisibility: 'onhover'
         };
     }
 }

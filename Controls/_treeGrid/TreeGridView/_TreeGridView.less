@@ -400,9 +400,12 @@
       color: @master_hidden-node_expander_hover_icon-color_treeGrid;
    }
 
-   .controls-BaseControl_showActions {
-      .controls-Grid__row:hover > .controls-TreeGrid__row-cell_theme-@{themeName} > .controls-TreeGridView__row-cell_innerWrapper > .controls-itemActionsV {
-         display: inline-block;
+   .controls-BaseControl_showActions_visible .controls-Grid__row,
+   .controls-BaseControl_showActions_onhover .controls-Grid__row:hover,
+   .controls-BaseControl_showActions_delayed .controls-Grid__row:hover {
+      & > .controls-TreeGrid__row-cell_theme-@{themeName} > .controls-TreeGridView__row-cell_innerWrapper > .controls-itemActionsV {
+         visibility: visible;
+         opacity: 1;
       }
    }
 }
