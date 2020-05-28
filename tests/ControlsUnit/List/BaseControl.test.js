@@ -3799,7 +3799,6 @@ define([
                }
             };
             item = item = {
-               _$active: false,
                getContents: () => ({
                   getKey: () => 2
                })
@@ -3821,6 +3820,19 @@ define([
             assert.isTrue(fakeEvent.nativeEvent.prevented);
             assert.isFalse(fakeEvent.propagating);
          });
+
+         // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
+         it('should correctly work with breadcrumbs', () => {
+            const breadcrumbItem = {
+               '[Controls/_display/BreadcrumbsItem]': true,
+               getContents: () => ['fake', 'fake', 'fake', {
+                  getKey: () => 2
+               }]
+            };
+            instance._onItemContextMenu(null, breadcrumbItem, fakeEvent);
+            assert(instance._listViewModel.getActiveItem(), item);
+         });
+
       });
 
       it('resolveIndicatorStateAfterReload', function() {
