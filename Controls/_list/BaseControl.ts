@@ -168,6 +168,19 @@ const getData = (crudResult: ICrudResult): Promise<any> => {
     return Promise.reject(crudResult.error);
 };
 
+/**
+ * Возвращает contents записи.
+ * Если запись - breadcrumbs, то берётся последняя Model из списка contents
+ * @param item
+ */
+const getItemContents = function(item: CollectionItem<Model>): Model {
+    let contents = item.getContents();
+    if (item['[Controls/_display/BreadcrumbsItem]']) {
+        contents = contents[(contents as any).length - 1];
+    }
+    return contents;
+};
+
 const _private = {
     isNewModelItemsChange: (action, newItems) => {
         return action && (action !== 'ch' || newItems && !newItems.properties);
@@ -1319,10 +1332,7 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
-        let contents = item.getContents();
-        if (Array.isArray(contents)) {
-            contents = contents[contents.length - 1];
-        }
+        let contents = getItemContents(item);
         const itemKey = contents?.getKey();
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
         if (menuConfig) {
@@ -2689,10 +2699,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _onItemContextMenu(e: SyntheticEvent<Event>, item: CollectionItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
         clickEvent.stopPropagation();
-        let contents = item.getContents();
-        if (Array.isArray(contents)) {
-            contents = contents[contents.length - 1];
-        }
+        let contents = getItemContents(item);
         const key = contents ? contents.getKey() : item.key;
         this.setMarkedKey(key);
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
@@ -2707,7 +2714,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, item: CollectionItem<Model>): void {
         event.stopPropagation();
-        const key = item.getContents ? item.getContents().getId() : item.key;
+        let contents = getItemContents(item);
+        const key = contents ? contents.getKey() : item.key;
         this.setMarkedKey(key);
 
         if (action && !action._isMenu && !action['parent@']) {

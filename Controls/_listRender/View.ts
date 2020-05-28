@@ -270,10 +270,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
-        let contents = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
-            contents = contents[contents.length - 1];
-        }
+        let contents = View._getItemContents(item);
         // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
@@ -334,12 +331,8 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
-        let contents = item?.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
-            contents = contents[contents.length - 1];
-        }
-        const itemKey = contents?.getKey();
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
+        let contents = View._getItemContents(item);
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(contents?.getKey(), clickEvent, action, opener, isContextMenu);
         if (menuConfig) {
             clickEvent.nativeEvent.preventDefault();
             clickEvent.stopImmediatePropagation();
@@ -403,6 +396,19 @@ export default class View extends Control<IViewOptions> {
             editingToolbarVisible: editingConfig?.toolbarVisibility
         });
     }
+
+    /**
+     * Возвращает contents записи.
+     * Если запись - breadcrumbs, то берётся последняя Model из списка contents
+     * @param item
+     */
+    private static _getItemContents(item: CollectionItem<Model>): Model {
+        let contents = item?.getContents();
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
+            contents = contents[(contents as any).length - 1];
+        }
+        return contents;
+    };
 
     static getDefaultOptions(): Partial<IViewOptions> {
         return {
