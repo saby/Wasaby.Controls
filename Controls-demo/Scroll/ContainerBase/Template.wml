@@ -1,5 +1,5 @@
-<div class="PageWrap">
-    <div class="description-block">Controls.scroll:ContainerBase</div>
+<div class="controlsDemo__wrapper__padding-left">
+    <div class="description-block controlsDemo__cell">Controls.scroll:ContainerBase</div>
     <Controls.scroll:ContainerBase
             attr:class="baseContainer {{_heightAdded ? 'heightClass'}}"
             name="containerBase">
@@ -29,9 +29,12 @@
             </ws:if>
             <Controls.event:Listener event="scrollStateChanged" on:scrollStateChanged="scrollStateChangedHandler()"/>
         </div>
+        <div>
+            12345
+        </div>
     </Controls.scroll:ContainerBase>
     <div class="eventResult">
-        <div class="eventContainerHeader">События:</div>
+        <div class="controlsDemo__wrapper__padding">События:</div>
         <Controls.scroll:Container attr:class="eventContainer">
             <div>
                 <ws:for data="key, value in _eventStore">
@@ -41,7 +44,7 @@
         </Controls.scroll:Container>
     </div>
     <div class="eventResult">
-        <div class="eventContainerHeader">state:</div>
+        <div class="controlsDemo__wrapper__padding">state:</div>
         <Controls.scroll:Container attr:class="eventContainer">
             <div>
                 <ws:for data="key, value in _state">
@@ -50,7 +53,7 @@
             </div>
         </Controls.scroll:Container>
     </div>
-    <div class="buttonContainer">
+    <div class="controlsDemo__wrapper">
         <Controls.buttons:Button
                 attr:class="addContent_button"
                 caption="Добавить контент"
