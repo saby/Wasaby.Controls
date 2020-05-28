@@ -102,6 +102,10 @@
    pointer-events: none;
    height: @shadow_thickness_scroll;
    // todo removed by https://online.sbis.ru/opendoc.html?guid=d709421e-3c9f-428e-8f6b-f0012cd62aa9
+   // Внутри зафиксированных заголовков таблицы для абсолютно спозиционированной тени IPAD расчитывает размеры
+   // от ближайшего relative-родителя и получается n-теней шириной с таблицу (где n-количество фиксированных заголовков)
+   // Из-за этого размер таблицы увеличивается на ширину этих n-теней и показывается горизонтальный скролл, а скроллить
+   // на самом деле нечего.
    right: unset !important; // https://online.sbis.ru/opendoc.html?guid=35eff486-ed1a-44d6-a3fe-207901fb7577
 }
 .controls-Scroll__shadow_top {
