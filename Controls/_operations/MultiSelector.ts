@@ -1,39 +1,15 @@
-import Control = require('Core/Control');
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_operations/MultiSelector/MultiSelector');
+import {IMultiSelectableOptions} from 'Controls/interface';
 
+export interface IMultiSelectorOptions extends IMultiSelectableOptions, IControlOptions {
+    isAllSelected: boolean;
+    selectedKeysCount: number | null;
+}
 
-var MultiSelector = Control.extend({
-      _template: template,
-      _multiSelectStatus: undefined,
+class MultiSelector extends Control<IMultiSelectorOptions> {
+    protected _template: TemplateFunction = template;
+    static _theme: string[] = ['Controls/operations'];
+}
 
-      _beforeMount: function(newOptions) {
-         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount, newOptions.isAllSelected);
-      },
-
-      _beforeUpdate: function(newOptions) {
-         this._updateSelection(newOptions.selectedKeys, newOptions.excludedKeys, newOptions.selectedKeysCount, newOptions.isAllSelected);
-      },
-
-      _updateSelection: function(selectedKeys, excludedKeys, count, isAllSelected) {
-         const hasSelected = selectedKeys.length;
-
-         if (hasSelected && isAllSelected) {
-            this._multiSelectStatus = true;
-         } else if (hasSelected && (count > 0 || count === null)) {
-            this._multiSelectStatus = null;
-         } else {
-            this._multiSelectStatus = false;
-         }
-      },
-
-      _onCheckBoxClick: function() {
-         this._notify('selectedTypeChanged', [this._multiSelectStatus === false ? 'selectAll' : 'unselectAll'], {
-            bubbling: true
-         });
-      }
-   });
-
-   MultiSelector._theme = ['Controls/operations'];
-
-   export = MultiSelector;
-
+export default MultiSelector;

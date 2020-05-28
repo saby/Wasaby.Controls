@@ -1,0 +1,5 @@
+<Controls.toggle:Checkbox
+        readOnly="{{false}}"
+        value="{{_checkboxValue}}"
+        triState="{{true}}"
+        on:valueChangedrc-="_onCheckBoxClick()"/>
