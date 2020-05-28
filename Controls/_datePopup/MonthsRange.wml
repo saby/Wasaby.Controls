@@ -7,7 +7,7 @@
    on:itemClick="_onItemClick()"
 >
    <ws:yearHeaderTemplate>
-      <div class="controls-PeriodDialog-MonthsRange__header">
+      <div class="controls-PeriodDialog-MonthsRange__header controls-PeriodDialog-MonthsRange__header_theme-{{_options.theme}}">
          {{ _formatDate(yearHeaderTemplate.date, 'YYYY') }}
       </div>
    </ws:yearHeaderTemplate>

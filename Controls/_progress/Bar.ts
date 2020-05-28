@@ -9,13 +9,18 @@ export interface IBarOptions extends IControlOptions {
 /**
  * Базовый индикатор выполнения процесса.
  * Отображает полосу прогресса выполнения.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less">переменные тем оформления</a>
+ * 
  * @class Controls/_progress/Bar
  * @extends Core/Control
  * @author Колесов В.А.
  *
  * @public
  *
- * @demo Controls-demo/Indicator/ProgressBar/ProgressBar
+ * @demo Controls-demo/progress/Bar/Index
  *
  */
 
@@ -27,7 +32,7 @@ export interface IBarOptions extends IControlOptions {
  *
  * @public
  *
- * @demo Controls-demo/Indicator/ProgressBar/ProgressBar
+ * @demo Controls-demo/progress/Bar/Index
  *
  */
 

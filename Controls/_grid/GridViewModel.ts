@@ -1399,7 +1399,9 @@ var
             };
             const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
-            controls-GridView__itemV_marker-${style}_theme-${self._options.theme}`;
+            controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${self._options.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${self._options.theme}`;
 
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
@@ -1410,7 +1412,12 @@ var
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
-            if (stickyColumn && current.isFullGridSupport()  && !current.dragTargetPosition && current.index !== -1) {
+            // лесенка не хранится для элементов вне текущего диапазона startIndex - stopIndex
+            if (stickyColumn && 
+                current.isFullGridSupport() && 
+                !current.dragTargetPosition && 
+                current.index !== -1 && 
+                self._ladder.stickyLadder[current.index]) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
             }
 

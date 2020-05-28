@@ -1,9 +1,13 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-import TouchKeyboardHelper from 'Controls/Utils/TouchKeyboardHelper';
-import cMerge = require('Core/core-merge');
-import Env = require('Env/Env');
+import * as cMerge from 'Core/core-merge';
+import {detection} from 'Env/Env';
+let TouchKeyboardHelper = {};
+
+if (detection.isMobileIOS && detection.IOSVersion === 12) {
+   import('Controls/Utils/TouchKeyboardHelper').then((module) => TouchKeyboardHelper = module);
+}
 
 interface IPosition {
     left?: Number;
@@ -163,14 +167,14 @@ interface IPosition {
       },
 
       isIOS13() {
-         return this._isMobileIOS() && Env.detection.IOSVersion > 12;
+         return this._isMobileIOS() && detection.IOSVersion > 12;
       },
       isIOS12() {
-         return this._isMobileIOS() && Env.detection.IOSVersion === 12;
+         return this._isMobileIOS() && detection.IOSVersion === 12;
       },
 
        _isMobileIOS() {
-          return Env.detection.isMobileIOS;
+          return detection.isMobileIOS;
        },
 
       calculatePosition: function(popupCfg: Object, targetCoords: Object, direction: String): IPosition {
@@ -373,8 +377,8 @@ interface IPosition {
          return {
             offsetLeft: 0,
             offsetTop: 0,
-            pageLeft: 0,
-            pageTop: 0,
+            pageLeft: window && window.scrollX,
+            pageTop: window && window.scrollY,
             width: document && document.body.clientWidth,
             height: document && document.body.clientHeight
          };

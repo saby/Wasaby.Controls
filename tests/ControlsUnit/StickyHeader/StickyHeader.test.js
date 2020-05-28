@@ -1,9 +1,11 @@
 define([
+   'Env/Env',
    'Controls/_scroll/StickyHeader/_StickyHeader',
    'Controls/_scroll/StickyHeader/Utils',
    'Controls/scroll',
    'Core/core-merge'
 ], function(
+   EnvLib,
    StickyHeaderLib,
    StickyHeaderUtils,
    scroll,
@@ -42,7 +44,6 @@ define([
                offsetParent: null,
                closest: sinon.stub().returns(true)
             };
-            sinon.stub(component, '_initResizeObserver');
             sinon.stub(component, '_createObserver');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             assert.isUndefined(component._observer);
@@ -82,7 +83,6 @@ define([
             component._container = {
                closest: sinon.stub().returns(true)
             };
-            sinon.stub(component, '_initResizeObserver');
             sinon.stub(component, '_createObserver');
             sinon.stub(StickyHeaderUtils, 'isHidden').returns(true);
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
@@ -275,6 +275,8 @@ define([
          });
          it('should consider borders', function() {
             const component = createComponent(StickyHeader, {});
+            const oldIsServerSide = EnvLib.constants.isServerSide;
+            EnvLib.constants.isServerSide = false;
             component._container = {};
             sinon.stub(component, '_getComputedStyle').returns({ 'border-top-width': '1px', 'border-bottom-width': '1px' });
             component._model = { fixedPosition: '' };
@@ -287,6 +289,7 @@ define([
             };
             assert.strictEqual(component._getObserverStyle('top'), 'top: -6px;');
             assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -7px;');
+            EnvLib.constants.isServerSide = oldIsServerSide;
             sinon.restore();
          });
       });

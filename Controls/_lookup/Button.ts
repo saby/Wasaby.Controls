@@ -4,10 +4,16 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
 
 /**
  * Кнопка-ссылка с возможностью выбора значений из справочника.
+ *
+ * @remark
  * Выбранные значения отображаются в виде текста с кнопкой удаления.
  * Поддерживает одиночный и множественный выбор.
- * Подробное описание и инструкции по настройке контрола можно найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/directory/lookup/'>здесь</a>
- * Здесь вы можете увидеть <a href="/materials/Controls-demo/app/Engine-demo%2FSelectorButton">демонстрационный пример</a>.
+ *
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Engine-demo%2FSelectorButto">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
+ *
  *
  * @class Controls/_lookup/Button
  * @extends Core/Control
@@ -43,6 +49,20 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/Buttons/SelectorButtonPG
+ */
+/*
+ * @name Controls/_lookup/Button#showSelectorCaption
+ * @cfg {String} Заголовок кнопки, открывающей окно выбора записей из справочника
+ * @example
+ * <pre class="brush: html">
+ * <Controls.lookup:Selector
+ *    source="{{_sourceButton}}"
+ *    displayProperty="title"
+ *    keyProperty="id"
+ *    showSelectorCaption="+компания"
+ *    caption="Выберите компанию">
+ * </Controls.lookup:Selector>
+ * </pre>
  */
 
 var Button = Control.extend({

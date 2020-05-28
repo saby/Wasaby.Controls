@@ -7,7 +7,6 @@ import proxyModelEvents from 'Controls/Utils/proxyModelEvents';
 import dateUtils = require('Controls/Utils/Date');
 import MonthsRangeItem from './MonthsRangeItem';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRange');
-import 'css!theme?Controls/datePopup';
 
 /**
  * Component that allows you to select a period of multiple months.
@@ -75,7 +74,7 @@ class Component extends Control {
         }
     }
 }
-
+Component._theme = ['Controls/datePopup'];
 Component.SELECTION_VEIW_TYPES = MonthsRangeItem.SELECTION_VEIW_TYPES;
 
 Component.getDefaultOptions = function() {
