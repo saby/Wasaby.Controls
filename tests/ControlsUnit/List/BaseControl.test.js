@@ -13,8 +13,9 @@ define([
    'Env/Env',
    'Core/core-clone',
    'Types/entity',
+   'Controls/popup',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity) {
+], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -2130,7 +2131,7 @@ define([
             };
             assert.isFalse(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger shouldn\'t be visible');
          });
-         
+
          it('down', () => {
             let scrollParams = {
                scrollTop: 300,
@@ -3729,6 +3730,97 @@ define([
          selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [3], 4);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [3]);
+      });
+
+      describe('ItemActions menu', () => {
+         let instance;
+         let fakeEvent;
+         let item;
+
+         beforeEach(async() => {
+            const cfg = {
+               items: new collection.RecordSet({
+                  rawData: [
+                     {
+                        id: 1,
+                        title: 'item 1'
+                     },
+                     {
+                        id: 2,
+                        title: 'item 2'
+                     }
+                  ],
+                  keyProperty: 'id'
+               }),
+               itemActions: [
+                  {
+                     id: 2,
+                     showType: 0
+                  }
+               ],
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  idProperty: 'id'
+               },
+               markedKey: null,
+               viewModelConstructor: lists.ListViewModel,
+               source: source
+            };
+            instance = new lists.BaseControl(cfg);
+            fakeEvent = {
+               immediatePropagating: true,
+               propagating: true,
+               nativeEvent: {
+                  prevented: false,
+                  preventDefault: function() {
+                     this.prevented = true;
+                  }
+               },
+               stopImmediatePropagation: function() {
+                  this.immediatePropagating = false;
+               },
+               stopPropagation: function() {
+                  this.propagating = false;
+               },
+               target: {
+                  getBoundingClientRect: () => ({
+                     top: 100,
+                     bottom: 100,
+                     left: 100,
+                     right: 100,
+                     width: 100,
+                     height: 100
+                  }),
+                  closest: () => 'elem'
+               }
+            };
+            item = item = {
+               _$active: false,
+               getContents: () => ({
+                  getKey: () => 2
+               })
+            };
+            instance.saveOptions(cfg);
+            instance._children = {
+               scrollController: {
+                  scrollToItem: () => {}
+               }
+            };
+            await instance._beforeMount(cfg);
+            instance._updateItemActions(cfg);
+         });
+
+         // Не показываем контекстное меню браузера, если мы должны показать кастомное меню
+         it('should prevent default context menu', () => {
+            popup.Sticky.openPopup = (config) => Promise.resolve(1);
+            instance._onItemContextMenu(null, item, fakeEvent);
+            assert.isTrue(fakeEvent.nativeEvent.prevented);
+            assert.isFalse(fakeEvent.propagating);
+         });
       });
 
       it('resolveIndicatorStateAfterReload', function() {

@@ -122,4 +122,57 @@ describe('Controls/_listRender/View', () => {
 
         assert.isTrue(oldCollectionDestroyed);
     });
+
+    // Не показываем контекстное меню браузера, если мы должны показать кастомное меню
+    it('should prevent default context menu', () => {
+        const view = new View(defaultCfg);
+        const item = {
+            _$active: false,
+            getContents: () => ({
+                getKey: () => 2
+            }),
+            setActive: function() {
+                this._$active = true;
+            },
+            getActions: () => ({
+                all: [{
+                    id: 2,
+                    showType: 0
+                }]
+            })
+        };
+        view._collection = {
+            getEditingConfig: () => null,
+            setActionsTemplateConfig: () => null,
+            getItemBySourceKey: () => item,
+            setActiveItem: () => {}
+        };
+        const fakeEvent = {
+            propagating: true,
+            nativeEvent: {
+                prevented: false,
+                preventDefault: function() {
+                    this.prevented = true;
+                }
+            },
+            stopImmediatePropagation: function() {
+                this.propagating = false;
+            },
+            target: {
+                getBoundingClientRect: () => ({
+                    top: 100,
+                    bottom: 100,
+                    left: 100,
+                    right: 100,
+                    width: 100,
+                    height: 100
+                }),
+                closest: () => 'elem'
+            }
+        };
+        view._updateItemActions();
+        view._onItemContextMenu(null, item, fakeEvent);
+        assert.isTrue(fakeEvent.nativeEvent.prevented);
+        assert.isFalse(fakeEvent.propagating);
+    });
 });
