@@ -1,15 +1,16 @@
 <div class="controls-PeriodDialog-DateRangeItem">
    <ws:if data="{{_isStickySupport}}">
-      <div class="controls-PeriodDialog-DateRangeItem__months"
+      <div class="controls-PeriodDialog-DateRangeItem__months controls-PeriodDialog-DateRangeItem__months_theme-{{_options.theme}}"
          on:wheel="_wheelHandler()" on:swipe="_swipeHandler()">
          <ws:for data="month in 12">
-            <div class="controls-PeriodDialog-DateRangeItem__months-btn"
+            <div class="controls-PeriodDialog-DateRangeItem__months-btn controls-PeriodDialog-DateRangeItem__months-btn_theme-{{_options.theme}}"
                  on:click="_scrollToMonth(date.getFullYear(), month)"
                  >
                {{ _formatMonth(month) }}
             </div>
          </ws:for>
-         <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
+         <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn
+                     controls-PeriodDialog-DateRangeItem__months-nextyearBtn_theme-{{_options.theme}}"
               on:click="_scrollToMonth(date.getFullYear() + 1, 0)"
                >
             {{ date.getFullYear() + 1 }}
@@ -19,7 +20,7 @@
    <div class="controls-PeriodDialog-DateRangeItem__monthList">
       <div
          for="month in 12"
-         class="controls-PeriodDialog-DateRangeItem__monthList_monthWrapper"
+         class="controls-PeriodDialog-DateRangeItem__monthList_monthWrapper_theme-{{_options.theme}}"
          >
          <ws:partial template="Controls/calendar:MonthListMonthTemplate"
                date="{{ _getMonth(date.getFullYear(), month) }}"
@@ -31,7 +32,7 @@
             </ws:headerTemplate>
             <ws:bodyTemplate>
                <Controls.calendar:MonthView
-                  attr:class="controls-DateRangeBigChoose-DateRangePicker__item"
+                  attr:class="controls-DateRangeBigChoose-DateRangePicker__item_theme-{{_options.theme}}"
                   monthViewModel="{{_monthViewModel}}"
                   showCaption="{{true}}"
                   selectionType="{{_options.selectionType}}"
@@ -61,8 +62,10 @@
                   on:itemMouseLeave="_proxyEvent()"
                >
                   <ws:captionTemplate>
-                     <div class="controls-PeriodDialog-DateRangeItem__monthList_title{{
-                     _monthSelectionEnabled ? ' controls-PeriodDialog-DateRangeItem__monthList_title_selectable'}}"
+                     <div class="controls-PeriodDialog-DateRangeItem__monthList_title
+                     controls-PeriodDialog-DateRangeItem__monthList_title_theme-{{_options.theme}}
+                     {{_monthSelectionEnabled ? ' controls-PeriodDialog-DateRangeItem__monthList_title_selectable
+                     controls-PeriodDialog-DateRangeItem__monthList_title_selectable_theme-' + _options.theme}}"
                           on:click="_monthCaptionClick(date, month)">
                         {{ _formatMonth(month) }}
                      </div>

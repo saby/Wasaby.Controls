@@ -1,6 +1,6 @@
 import * as getDimensions from 'Controls/Utils/getDimensions';
 
-export function get(target: HTMLDivElement) {
+export function get(target: HTMLElement) {
     if (!target) {
         throw new Error('Target parameter is required');
     }

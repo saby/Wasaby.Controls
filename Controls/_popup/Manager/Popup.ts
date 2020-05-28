@@ -3,6 +3,7 @@ import {debounce, delay as runDelayed} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IPopupOptions} from 'Controls/_popup/interface/IPopup';
+import {RegisterClass, UnregisterUtil, RegisterUtil} from 'Controls/event';
 
 import * as template from 'wml!Controls/_popup/Manager/Popup';
 import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
@@ -57,6 +58,7 @@ class Popup extends Control<IPopupControlOptions> {
     // _moduleName must be specified manually for them.
     // It is necessary for checking relationship between popups.
     protected _moduleName: string = 'Controls/_popup/Manager/Popup';
+    private _resizeRegister: RegisterClass;
 
     private _closeByESC(event: SyntheticEvent<KeyboardEvent>): void {
         if (event.nativeEvent.keyCode === constants.key.esc) {
@@ -71,6 +73,7 @@ class Popup extends Control<IPopupControlOptions> {
     protected _beforeMount(options: IPopupControlOptions): void {
         this._stringTemplate = typeof options.template === 'string';
         this._compatibleTemplateName = this._getCompatibleTemplateName(options);
+        this._resizeRegister = new RegisterClass({register: 'controlResize'});
 
         this._controlResizeHandler = debounce(this._controlResizeHandler.bind(this), RESIZE_DELAY, true);
         this._scrollHandler = debounce(this._scrollHandler.bind(this), SCROLL_DELAY);
@@ -86,7 +89,8 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _afterMount(): void {
-
+        RegisterUtil(this, 'controlResize', this._controlResizeOuterHandler.bind(this));
+        RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
         this._isPopupMounted = true;
 
         /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
@@ -110,19 +114,36 @@ class Popup extends Control<IPopupControlOptions> {
         this._notify('popupAfterUpdated', [this._options.id], {bubbling: true});
 
         if (this._isResized(oldOptions, this._options)) {
-            const eventCfg = {
-                type: 'controlResize',
-                target: this,
-                _bubbling: false
-            };
-            this._children.resizeDetect.start(new SyntheticEvent(null, eventCfg));
+            this._startResizeRegister();
         }
     }
 
+    private _startResizeRegister(event?: SyntheticEvent): void {
+        const eventCfg = {
+            type: 'controlResize',
+            target: this,
+            _bubbling: false
+        };
+        const customEvent = new SyntheticEvent(null, eventCfg);
+        this._resizeRegister.start(event || customEvent);
+    }
+
     protected _beforeUnmount(): void {
+        if (this._resizeRegister) {
+            this._resizeRegister.destroy();
+        }
+        UnregisterUtil(this, 'scroll');
+        UnregisterUtil(this, 'controlResize');
         this._notify('popupDestroyed', [this._options.id], {bubbling: true});
     }
 
+    protected _registerHandler(event, registerType, component, callback, config): void {
+        this._resizeRegister.register(event, registerType, component, callback, config);
+    }
+
+    protected _unregisterHandler(event, registerType, component, config): void {
+        this._resizeRegister.unregister(event, component, config);
+    }
     /**
      * Close popup
      * @function Controls/_popup/Manager/Popup#_close
@@ -156,7 +177,7 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _animated(event: SyntheticEvent<AnimationEvent>): void {
-        this._children.resizeDetect.start(event);
+        this._startResizeRegister(event);
         this._notify('popupAnimated', [this._options.id], {bubbling: true});
     }
 
@@ -262,6 +283,15 @@ class Popup extends Control<IPopupControlOptions> {
         const hasHiddenChanged: boolean = oldHidden !== newHidden;
 
         return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged || (hasHiddenChanged && newHidden === false);
+    }
+
+    // TODO Compatible
+    // Для совместимости новых окон и старого индикатора:
+    // Чтобы событие клавиатуры в окне не стопилось, нужно правильно рассчитать индексы в методе getMaxZWindow WS.Core/core/WindowManager.js
+    // В старых окнах есть метод getZIndex, а в новых нет. Поэтому, чтобы метод находил правильный максимальный z-index, добавляю геттер
+
+    getZIndex(): number {
+        return this._options.zIndex;
     }
 
     static getDefaultOptions(): IPopupControlOptions {

@@ -460,10 +460,14 @@ var _private = {
          if (item) {
             const isRecent = item.get('recent');
             const isPinned = item.get('pinned');
+            const isFrequent = item.get('frequent');
 
-            if (isRecent && !isPinned) {
-               moveRecentItemToTop(item);
+            if (isFrequent || isRecent && !isPinned) {
                updateResult = true;
+
+               if (isRecent) {
+                  moveRecentItemToTop(item);
+               }
             }
          }
       }
