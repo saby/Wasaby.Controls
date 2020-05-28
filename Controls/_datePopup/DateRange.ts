@@ -10,7 +10,6 @@ import dateUtils = require('Controls/Utils/Date');
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/DateRange');
 import 'wml!Controls/_datePopup/DateRangeItem';
-import 'css!theme?Controls/datePopup';
 
 /**
  * Component that allows you to select periods of multiple days.
@@ -160,14 +159,14 @@ var Component = BaseControl.extend([EventProxy], {
 
     _getSeparatorCssClass: function(): string {
         return this._isStickySupport ?
-            'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-sticky-support' :
-            'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-not-sticky-support';
+            'controls-PeriodDialog-DateRangeItem__separator-sticky-support' :
+            'controls-PeriodDialog-DateRangeItem__separator-not-sticky-support';
     }
 
 });
 
 Component._private = _private;
-
+Component._theme = ['Controls/datePopup'];
 // Component.EMPTY_CAPTIONS = IPeriodSimpleDialog.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function() {
