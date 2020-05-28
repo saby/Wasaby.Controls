@@ -21,6 +21,8 @@
       <div class="{{_calculateShadowClasses('end')}}"></div>
    </ws:if>
 
+   <!-- При table-layout скроллбар нужно выводить вне таблицы. Т.к. таблица имеет transform:translateX, абсолютно -->
+   <!-- спозиционированные элементы позиционируются относительно ее. Скроллбар должен занимать ширину видимой области таблицы. -->
    <ws:if data="{{_isDisplayColumnScroll() && !_isFullGridSupport()}}">
       <Controls._scroll.Scroll.Scrollbar
               name="columnScrollbar"
