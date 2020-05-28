@@ -1,8 +1,8 @@
-import { TItemKey, IBaseCollection, IStrategyCollection } from '../interface';
+import { TItemKey, IBaseCollection, IStrategyCollection } from '../_display/interface';
 
-import AddInPlaceStrategy from '../itemsStrategy/AddInPlace';
+import AddInPlaceStrategy from '../_display/itemsStrategy/AddInPlace';
 import { Model } from 'Types/entity';
-import { IEditingConfig } from '../Collection';
+import { IEditingConfig } from '../_display/Collection';
 
 export interface IEditInPlaceItem {
     setEditing(editing: boolean, editingContents?: unknown): void;
