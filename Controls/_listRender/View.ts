@@ -51,8 +51,6 @@ export interface IViewOptions extends IControlOptions {
     markedKey: number|string;
 }
 
-const ITEM_ACTION_VISIBILITY_DELAY = 100;
-
 export default class View extends Control<IViewOptions> {
     protected _template: TemplateFunction = template;
     protected _tmplNotify: Function = tmplNotify;
