@@ -1,12 +1,12 @@
-import { assert } from 'chai';
-import { Record } from 'Types/entity';
-import { RecordSet } from 'Types/collection';
-import { SyntheticEvent } from 'Vdom/Vdom';
-import { Collection, CollectionItem } from 'Controls/display';
-import { IOptions as ICollectionOptions } from 'Controls/_display/Collection';
+import {assert} from 'chai';
+import {Record} from 'Types/entity';
+import {RecordSet} from 'Types/collection';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {ANIMATION_STATE, Collection, CollectionItem} from 'Controls/display';
+import {IOptions as ICollectionOptions} from 'Controls/_display/Collection';
 
-import { Controller as ItemActionsController, IItemActionsControllerOptions } from 'Controls/_itemActions/Controller';
-import { IItemAction, IItemActionsItem, TItemActionShowType } from 'Controls/_itemActions/interface/IItemActions';
+import {Controller as ItemActionsController, IItemActionsControllerOptions} from 'Controls/_itemActions/Controller';
+import {IItemAction, IItemActionsItem, TItemActionShowType} from 'Controls/_itemActions/interface/IItemActions';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
 const itemActions: IItemAction[] = [
@@ -422,6 +422,8 @@ describe('Controls/_itemActions/Controller', () => {
         });
     });
 
+
+
     describe('prepareActionsMenuConfig()', () => {
         let clickEvent: SyntheticEvent<MouseEvent>;
         let target: HTMLElement;
@@ -516,5 +518,36 @@ describe('Controls/_itemActions/Controller', () => {
             const config = itemActionsController.prepareActionsMenuConfig(3, clickEvent, itemActions[3], null, false);
             assert.deepEqual(config.target.getBoundingClientRect(), target.getBoundingClientRect());
         });
+    });
+
+    // см. этот же тест в Collection.test.ts
+    describe('setActiveItem(), getActiveItem()', () => {
+        it('deactivates old active item', () => {
+            const testingItem = collection.getItemBySourceKey(1);
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(1));
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(2));
+            assert.isFalse(testingItem.isActive());
+        });
+        it('activates new active item', () => {
+            const testingItem = collection.getItemBySourceKey(2);
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(1));
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(2));
+            assert.isTrue(testingItem.isActive());
+        });
+        it('correctly returns active item', () => {
+            const testingItem = collection.getItemBySourceKey(2);
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(2));
+            assert.equal(itemActionsController.getActiveItem(), testingItem);
+        });
+    });
+
+    describe('setSwipeAnimation(), getSwipeAnimation()', () => {
+        it('should correctly set animation state', () => {
+            itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.CLOSE, 'Incorrect animation state !== close');
+
+            itemActionsController.setSwipeAnimation(ANIMATION_STATE.OPEN);
+            assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.OPEN, 'Incorrect animation state !== open');
+        })
     });
 });

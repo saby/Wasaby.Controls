@@ -160,7 +160,7 @@ export class Controller {
             this._updateSwipeConfig(actionsContainerHeight);
         }
 
-        this._collection.setSwipeAnimation(ANIMATION_STATE.OPEN);
+        this.setSwipeAnimation(ANIMATION_STATE.OPEN);
     }
 
     /**
@@ -248,6 +248,36 @@ export class Controller {
             nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
             autofocus: false
         };
+    }
+
+    /**
+     * Устанавливает активный Item в коллекции
+     * @param item
+     */
+    setActiveItem(item: IItemActionsItem) {
+        this._collection.setActiveItem(item);
+    }
+
+    /**
+     * Возвращает текущий активный Item
+     */
+    getActiveItem(): IItemActionsItem {
+        return this._collection.getActiveItem();
+    }
+
+    /**
+     * Устанавливает текущее сосяние анимации в модель
+     * @param animation
+     */
+    setSwipeAnimation(animation: ANIMATION_STATE): void {
+        this._collection.setSwipeAnimation(animation);
+    }
+
+    /**
+     * Возвраащет текущее состояние анимации из модели
+     */
+    getSwipeAnimation(): ANIMATION_STATE {
+        return this._collection.getSwipeAnimation();
     }
 
     /**

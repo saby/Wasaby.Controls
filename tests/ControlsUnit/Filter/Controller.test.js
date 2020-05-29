@@ -1069,34 +1069,42 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
             testField: 'testValue',
             PrefetchSessionId: 'test'
          };
-         const sandbox = sinon.createSandbox();
-
-         let isDeletedFromHistory = false;
-         let historyItems = null;
-
-         sandbox.replace(Filter._private, 'getHistoryItems', () => Promise.resolve());
-         sandbox.replace(Filter._private, 'getHistoryByItems', () => historyItems);
-         sandbox.replace(Filter._private, 'deleteFromHistory', () => isDeletedFromHistory = true);
 
          controller._filter = filter;
          controller._notify = () => {};
 
-         return new Promise((resolve) => {
-            controller.resetPrefetch().then(() => {
-               assert.isTrue(controller._filter !== filter);
-               assert.deepEqual(controller._filter, {testField: 'testValue'});
-               assert.isFalse(isDeletedFromHistory);
+         controller.resetPrefetch();
+         assert.isTrue(controller._filter !== filter);
+         assert.deepEqual(controller._filter, {testField: 'testValue'});
 
-               historyItems = ['testItem'];
-               controller.resetPrefetch().then(() => {
-                  assert.deepEqual(controller._filter, {testField: 'testValue'});
-                  assert.isTrue(isDeletedFromHistory);
+         controller.resetPrefetch();
+         assert.deepEqual(controller._filter, {testField: 'testValue'});
+      });
 
-                  sandbox.restore();
-                  resolve();
-               });
-            });
+      it('_dataLoadErrback', () => {
+         const controller = new Filter();
+         const sandbox = sinon.createSandbox();
+         const historyItems = {
+            data: {
+               items: [],
+               prefetchParams: {
+                  PrefetchSessionId: 'test'
+               }
+            }
+         };
+
+         controller._filter = {};
+         controller._isFilterChanged = true;
+         controller.saveOptions({
+            historyId: 'TEST_HISTORY_ID'
          });
+
+         sandbox.replace(Filter._private, 'getHistoryByItems', () => historyItems);
+
+         controller._dataLoadErrback();
+         assert.deepEqual(controller._filter, {PrefetchSessionId: 'test'});
+
+         sandbox.restore();
       });
    });
 

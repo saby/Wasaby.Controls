@@ -181,7 +181,7 @@ export default class View extends Control<IViewOptions> {
             this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
             break;
         default:
-            this._collection.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
             this._collection.nextVersion();
             break;
         }
@@ -305,7 +305,7 @@ export default class View extends Control<IViewOptions> {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
-                const item = this._collection.getActiveItem();
+                const item = this._itemActionsController.getActiveItem();
                 this._handleItemActionClick(action, clickEvent, item);
             }
         }
@@ -321,7 +321,7 @@ export default class View extends Control<IViewOptions> {
         // Actions dropdown can start closing after the view itself was unmounted already, in which case
         // the model would be destroyed and there would be no need to process the action itself
         if (this._collection && !this._collection.destroyed) {
-            this._collection.setActiveItem(null);
+            this._itemActionsController.setActiveItem(null);
             this._itemActionsController.deactivateSwipe();
             this._itemActionsMenuId = null;
         }
@@ -350,7 +350,7 @@ export default class View extends Control<IViewOptions> {
             const onResult = this._itemActionsMenuResultHandler.bind(this);
             const onClose = this._itemActionsMenuCloseHandler.bind(this);
             menuConfig.eventHandlers = {onResult, onClose};
-            this._collection.setActiveItem(item);
+            this._itemActionsController.setActiveItem(item);
             Sticky.openPopup(menuConfig).then((popupId) => {
                 this._itemActionsMenuId = popupId;
             });
@@ -362,7 +362,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _closeActionsMenu(): void {
-        this._collection.setActiveItem(null);
+        this._itemActionsController.setActiveItem(null);
         this._itemActionsController.deactivateSwipe();
         Sticky.closePopup(this._itemActionsMenuId);
         this._itemActionsMenuId = null;

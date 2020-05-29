@@ -159,6 +159,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     setSwipeConfig(config: ISwipeConfig): void;
     getSwipeConfig(): ISwipeConfig;
     setSwipeAnimation(state: ANIMATION_STATE): void;
+    getSwipeAnimation(): ANIMATION_STATE;
 
     /**
      * Было решено переместить get/setActiveItem в коллекцию, т.к.
