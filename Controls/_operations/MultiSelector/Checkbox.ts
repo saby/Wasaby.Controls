@@ -9,6 +9,21 @@ export interface IMultiSelectorCheckboxOptions extends IMultiSelectableOptions, 
 
 type TCheckboxValue = boolean | null;
 
+/**
+ * Контрол, который отображает чекбокс, позволяющий произвести массовую отметку записей в списке.
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/operations/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less">переменные тем оформления</a>
+ *
+ * @class Controls/_operations/MultiSelector/Checkbox
+ * @extends Core/Control
+ * @control
+ * @public
+ * @author Герасимов А.М.
+ * @demo Controls-demo/operations/MultiSelectorCheckbox/Index
+ */
+
 export default class MultiSelectorCheckBox extends Control<IMultiSelectorCheckboxOptions> {
     protected _template: TemplateFunction = template;
     protected _checkboxValue: TCheckboxValue = false;

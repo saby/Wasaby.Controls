@@ -7,6 +7,7 @@
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
  * @includes SimpleMultiSelector Controls/_operations/__MultiSelector
+ * @includes MultiSelectorCheckbox Controls/_operations/MultiSelector/Checkbox
  * @public
  * @author Крайнов Д.О.
  */
@@ -19,6 +20,7 @@
  * @includes Button Controls/_operations/Button
  * @includes Controller Controls/_operations/Controller
  * @includes Container Controls/_operations/Container
+ * @includes MultiSelectorCheckbox Controls/_operations/MultiSelector/Checkbox
  * @public
  * @author Крайнов Д.О.
  */
