@@ -7,7 +7,7 @@ import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import {editing as constEditing} from 'Controls/Constants';
 import { error as dataSourceError } from 'Controls/dataSource';
 
-let displayLib: typeof import('Controls/display');
+let editInPlaceLib: typeof import('Controls/editInPlace');
 
 enum PendingInputRenderState {
     Null,
@@ -435,7 +435,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
             }
         }
         if (newOptions.useNewModel) {
-            displayLib = require('Controls/display');
+            editInPlaceLib = require('Controls/editInPlace');
         }
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
     },
@@ -674,7 +674,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
     _setEditingItemData: function (item, listModel, options) {
         if (!item) {
             if (options.useNewModel) {
-                displayLib.EditInPlaceController.endEdit(listModel);
+                editInPlaceLib.EditInPlaceController.endEdit(listModel);
             } else {
                 listModel._setEditingItemData(null);
             }
@@ -705,7 +705,7 @@ var EditInPlace = Control.extend(/** @lends Controls/_list/EditInPlace.prototype
         }
 
         if (options.useNewModel) {
-            displayLib.EditInPlaceController.beginEdit(listModel, item.getId(), item);
+            editInPlaceLib.EditInPlaceController.beginEdit(listModel, item.getId(), item);
         } else {
             this._editingItemData = listModel.getItemDataByItem(editingItemProjection);
 

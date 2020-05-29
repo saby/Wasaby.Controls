@@ -1,64 +1,50 @@
-import { TItemKey, IBaseCollection, IStrategyCollection } from '../_display/interface';
-
-import AddInPlaceStrategy from '../_display/itemsStrategy/AddInPlace';
+import { IEditInPlaceModel, IEditInPlaceItem} from './interface';
+import { TItemKey } from 'Controls/display';
 import { Model } from 'Types/entity';
-import { IEditingConfig } from '../_display/Collection';
+import { default as AddInPlaceStrategy } from './AddInPlace';
 
-export interface IEditInPlaceItem {
-    setEditing(editing: boolean, editingContents?: unknown): void;
-    isEditing(): boolean;
-}
+const findPredicate = (item) =>  item.isEditing();
 
-export interface IEditInPlaceCollection
-    extends IBaseCollection<IEditInPlaceItem>, IStrategyCollection<IEditInPlaceItem> {
-    getEditingConfig(): IEditingConfig;
-}
+export default class Controller {
+    static beginEdit(model: IEditInPlaceModel, key: TItemKey, editingContents?: unknown): void {
+        const oldEditItem = Controller.getEditedItem(model);
+        const newEditItem = model.getItemBySourceKey(key);
 
-export function beginEdit(
-    collection: IEditInPlaceCollection,
-    key: TItemKey,
-    editingContents?: unknown
-): void {
-    const oldEditItem = getEditedItem(collection);
-    const newEditItem = collection.getItemBySourceKey(key);
+        if (oldEditItem) {
+            oldEditItem.setEditing(false);
+        }
+        if (newEditItem) {
+            newEditItem.setEditing(true, editingContents);
+        }
 
-    if (oldEditItem) {
-        oldEditItem.setEditing(false);
-    }
-    if (newEditItem) {
-        newEditItem.setEditing(true, editingContents);
+        model.nextVersion();
     }
 
-    collection.nextVersion();
-}
+    static endEdit(model: IEditInPlaceModel): void {
+        Controller.beginEdit(model, null);
+    }
 
-export function endEdit(collection: IEditInPlaceCollection): void {
-    beginEdit(collection, null);
-}
+    static beginAdd(model: IEditInPlaceModel,  record: Model): void {
+        const editingConfig = model.getEditingConfig();
 
-export function beginAdd(
-    collection: IEditInPlaceCollection,
-    record: Model
-): void {
-    const editingConfig = collection.getEditingConfig();
+        // TODO support tree
+        const addIndex = editingConfig?.addPosition === 'top' ? 0 : Number.MAX_SAFE_INTEGER;
 
-    // TODO support tree
-    const addIndex = editingConfig?.addPosition === 'top' ? 0 : Number.MAX_SAFE_INTEGER;
+        model.appendStrategy(AddInPlaceStrategy, {
+            contents: record,
+            addIndex
+        });
+    }
 
-    collection.appendStrategy(AddInPlaceStrategy, {
-        contents: record,
-        addIndex
-    });
-}
+    static endAdd(model: IEditInPlaceModel): void {
+        model.removeStrategy(AddInPlaceStrategy);
+    }
 
-export function endAdd(collection: IEditInPlaceCollection): void {
-    collection.removeStrategy(AddInPlaceStrategy);
-}
+    static getEditedItem(model: IEditInPlaceModel): IEditInPlaceItem {
+        return model.find(findPredicate);
+    }
 
-export function isEditing(collection: IEditInPlaceCollection): boolean {
-    return !!getEditedItem(collection);
-}
-
-export function getEditedItem(collection: IEditInPlaceCollection): IEditInPlaceItem {
-    return collection.find((item) => item.isEditing());
+    static isEditing(model: IEditInPlaceModel): boolean {
+        return !!model.find(findPredicate);
+    }
 }

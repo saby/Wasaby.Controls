@@ -29,7 +29,7 @@ import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
-import {CollectionItem, EditInPlaceController, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
+import {CollectionItem, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
 import {Controller as ItemActionsController, IItemAction} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
@@ -39,6 +39,8 @@ import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import {ISwipeEvent} from 'Controls/listRender';
+
+import {EditInPlaceController} from '../editInPlace';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
