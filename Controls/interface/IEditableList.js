@@ -24,12 +24,12 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Object} ItemEditOptions
-    * @property {Types/entity:Record} [options.item] Запись с исходными данными.
+    * @property {Types/entity:Model} [options.item] Запись с исходными данными.
     */
 
    /*
     * @typedef {Object} ItemEditOptions
-    * @property {Types/entity:Record} [options.item] Record with initial data.
+    * @property {Types/entity:Model} [options.item] Record with initial data.
     */
 
    /**
