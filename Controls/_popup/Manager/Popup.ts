@@ -142,7 +142,7 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _unregisterHandler(event, registerType, component, config): void {
-        this._resizeRegister.unregister(event, component, config);
+        this._resizeRegister.unregister(event, registerType, component, config);
     }
     /**
      * Close popup
