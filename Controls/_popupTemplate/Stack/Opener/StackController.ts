@@ -128,6 +128,11 @@ class StackController extends BaseController {
         return super.resizeOuter.apply(this, arguments);
     }
 
+    workspaceResize(): boolean {
+        StackController.stackParentCoords = null;
+        return !!this._stack.getCount();
+    }
+
     popupResizingLine(item: IPopupItem, offset: number): void {
         item.popupOptions.stackWidth += offset;
         item.popupOptions.width += offset;

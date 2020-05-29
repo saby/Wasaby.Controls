@@ -190,12 +190,12 @@ define([
 
          LoadingInd._stack.add({ delay: undefined });
          LoadingInd._toggleIndicator(true, config);
-         assert.equal(LoadingInd._isOverlayVisible, true);
+         assert.equal(LoadingInd._isOverlayVisible, false);
          assert.equal(LoadingInd._isMessageVisible, false);
 
          LoadingInd._stack.clear();
          LoadingInd._toggleIndicator(true, config);
-         assert.equal(LoadingInd._isOverlayVisible, true);
+         assert.equal(LoadingInd._isOverlayVisible, false);
          assert.equal(LoadingInd._isMessageVisible, false);
 
          LoadingInd._toggleIndicatorVisible = function() {

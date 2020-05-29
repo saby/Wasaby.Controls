@@ -421,13 +421,18 @@
 
    &:before {
       content: '\200b';
-      font-size: @master_item_selected_font-size_list;
+      font-size: @item_font-size_2xl_grid;
    }
 }
 
+// TODO После https://online.sbis.ru/opendoc.html?guid=83aacafa-5b11-4615-9424-46d724b3793e
+//  вернуть как было в задаче https://online.sbis.ru/opendoc.html?guid=ecf7bb3e-a806-4477-9efa-dfc176195197
+.controls-background-masterClassic_theme-@{themeName}.controls-ListView__item__marked_masterClassic_theme-@{themeName},
+.controls-ListView__item__marked_masterClassic_theme-@{themeName} {
+   background-color: @masterClassic_item_selected_background-color_list;
+}
 .controls-ListView__item__marked_masterClassic_theme-@{themeName} {
    z-index: 1;
-   background-color: @masterClassic_item_selected_background-color_list;
 
    &:before {
       content: '\200b';
@@ -472,9 +477,15 @@
    left: 0;
 }
 
+.ws-is-ie11 .controls-ListView__itemV_marker_master_theme-@{themeName} {
+   top: 0;
+   bottom: 0;
+   height: auto;
+}
+
 .controls-ListView__itemV_marker_master_theme-@{themeName}:before {
    content: '\200b';
-   font-size: @master_item_selected_font-size_list;
+   font-size: @item_font-size_2xl_grid;
 }
 
 .controls-ListView__itemV_marker_master_theme-@{themeName}:after {

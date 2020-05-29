@@ -2206,6 +2206,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         // для связи с контроллером ПМО
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
+        this._notifyOnDrawItems();
     },
 
     _beforeUpdate: function(newOptions) {
@@ -2480,13 +2481,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _afterUpdate(oldOptions): void {
-        this._updateInProgress = false;
+    _notifyOnDrawItems(): void {
         if (this._shouldNotifyOnDrawItems) {
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
         }
+    },
+
+    _afterUpdate(oldOptions): void {
+        this._updateInProgress = false;
+        this._notifyOnDrawItems();
 
         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
