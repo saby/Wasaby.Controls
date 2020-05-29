@@ -1,4 +1,4 @@
 <Controls.buttons:Button
         caption="Доп. операции"
         iconSize="s" icon="icon-Settings"
-        viewMode="linkButton" fontColorStyle="link"/>
+        viewMode="linkButton" fontSize="m" fontColorStyle="link"/>

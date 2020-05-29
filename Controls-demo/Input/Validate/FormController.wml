@@ -90,7 +90,7 @@
                      </ws:validators>
                      <ws:content>
                         <Controls.validate:Highlighter>
-                           <Controls.buttons:Button readOnly="{{false}}" caption="Выбрать адрес" fontColorStyle="link" viewMode="linkButton" fontSize="m"/>
+                           <Controls.buttons:Button readOnly="{{false}}" caption="Выбрать адрес" fontColorStyle="link" viewMode="linkButton" fontSize="m" fontSize="m"/>
                         </Controls.validate:Highlighter>
                      </ws:content>
                   </Controls.validate:Container>
@@ -100,7 +100,7 @@
                      </ws:validators>
                      <ws:content>
                         <Controls.validate:Highlighter>
-                           <Controls.buttons:Button readOnly="{{false}}" icon="icon-Send" iconSize="s" iconStyle="secondary" caption="Отправить" fontColorStyle="link" viewMode="linkButton" fontSize="m"/>
+                           <Controls.buttons:Button readOnly="{{false}}" icon="icon-Send" iconSize="s" iconStyle="secondary" caption="Отправить" fontColorStyle="link" viewMode="linkButton" fontSize="m" fontSize="m"/>
                         </Controls.validate:Highlighter>
                      </ws:content>
                   </Controls.validate:Container>
@@ -120,13 +120,13 @@
                      </ws:validators>
                      <ws:content>
                         <Controls.validate:Highlighter>
-                           <Controls.buttons:Button readOnly="{{false}}" iconSize="m" icon="icon-Save" fontColorStyle="link" viewMode="linkButton" fontSize="m"/>
+                           <Controls.buttons:Button readOnly="{{false}}" iconSize="m" icon="icon-Save" fontColorStyle="link" viewMode="linkButton" fontSize="m" fontSize="m"/>
                         </Controls.validate:Highlighter>
                      </ws:content>
                   </Controls.validate:Container>
-                  <Controls.buttons:Button caption="Проверить данные" attr:style="margin: 10px 0 0 16px;" name="updateButton" on:click="_clickHandler()"
+                  <Controls.buttons:Button caption="Проверить данные" attr:fontColorStyle="margin: 10px 0 0 16px;" name="updateButton" on:click="_clickHandler()"
                                                                                                                       attr:class="ControlsDemo-ValidateInfobox_submit"/>
-                  <Controls.buttons:Button caption="Очистить валидацию" attr:style="margin: 10px 0 0 16px;" name="cleanValid" on:click="_cleanValid()"
+                  <Controls.buttons:Button caption="Очистить валидацию" attr:fontColorStyle="margin: 10px 0 0 16px;" name="cleanValid" on:click="_cleanValid()"
                                            attr:class="ControlsDemo-ValidateInfobox_submit"/>
                </div>
             </div>

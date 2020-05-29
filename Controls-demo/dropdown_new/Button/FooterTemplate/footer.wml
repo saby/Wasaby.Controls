@@ -1,3 +1,3 @@
 <div>
-    <Controls.buttons:Button caption="+ Задача" viewMode="linkButton" fontColorStyle="link"/>
+    <Controls.buttons:Button caption="+ Задача" viewMode="linkButton" fontSize="m" fontColorStyle="link"/>
 </div>

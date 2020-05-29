@@ -41,7 +41,7 @@
          <div class="controls-InfoBoxDemo-targets controls-InfoBoxDemo__{{item.items[0].cfg.size}}">
             <ws:for data="config in item.items">
                <div class="controls-InfoBoxDemo-icon">
-                  <Controls.buttons:Button viewMode="linkButton" fontColorStyle="link"
+                  <Controls.buttons:Button viewMode="linkButton" fontSize="m" fontColorStyle="link"
                                            iconSize="{{config.cfg.iconSize}}"
                                            inlineHeight="{{config.cfg.inlineHeight}}"
                                            attr:class="controls-InfoBoxDemo__{{config.cfg.size}}-{{config.cfg.targetSide}}"
