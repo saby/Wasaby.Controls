@@ -43,7 +43,12 @@ define([
             sinon.assert.calledWith(
                component._notify,
                'intersectionObserverRegister',
-               [component.getInstanceId(), options.observerName, component._container, options.data],
+               [sinon.match({
+                  instId: component.getInstanceId(),
+                  observerName: options.observerName,
+                  element: component._container,
+                  data: options.data
+               })],
                { bubbling: true }
             );
             sandbox.restore();
@@ -60,7 +65,7 @@ define([
             sinon.assert.calledWith(
                component._notify,
                'intersectionObserverUnregister',
-               [component.getInstanceId()],
+               [component.getInstanceId(), options.observerName],
                { bubbling: true }
             );
             sandbox.restore();
