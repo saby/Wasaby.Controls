@@ -34,9 +34,6 @@ var _private = {
    },
    notifyRangeChanged: function(self, start: Date, end: Date): void {
       self._notify('rangeChanged', [start, end]);
-
-      // To compatible with validation container
-      self._notify('valueChanged', [[start, end]]);
    },
    createDate: function(self, date: Date): void {
       return new self._dateConstructor(date);
