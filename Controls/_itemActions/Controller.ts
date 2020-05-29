@@ -16,7 +16,8 @@ import {
     TItemActionsSize,
     IItemAction,
     TItemActionsPosition,
-    TActionCaptionPosition
+    TActionCaptionPosition,
+    TEditArrowVisibilityCallback
 } from './interface/IItemActions';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
@@ -84,6 +85,14 @@ export interface IItemActionsControllerOptions {
      * Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
      */
     actionCaptionPosition?: TActionCaptionPosition;
+    /**
+     * Опция записи, которую необходимо тображать в свайпе, если есть editArrow
+     */
+    editArrowAction: IItemAction;
+    /**
+     * Видимость Опция записи, которую необходимо тображать в свайпе, если есть editArrow
+     */
+    editArrowVisibilityCallback: TEditArrowVisibilityCallback
 }
 
 /**
@@ -95,7 +104,9 @@ export class Controller {
     private _collection: IItemActionsCollection;
     private _commonItemActions: IItemAction[];
     private _itemActionsProperty: string;
-    private _visibilityCallback: TItemActionVisibilityCallback;
+    private _itemActionVisibilityCallback: TItemActionVisibilityCallback;
+    private _editArrowVisibilityCallback: TEditArrowVisibilityCallback;
+    private _editArrowAction: IItemAction;
     private _theme: string;
 
     /**
@@ -108,15 +119,17 @@ export class Controller {
     update(options: IItemActionsControllerOptions): Array<number | string> {
         let result: Array<number | string> = [];
         this._theme = options.theme;
+        this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
+        this._editArrowAction = options.editArrowAction;
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
-            this._visibilityCallback !== options.visibilityCallback
+            this._itemActionVisibilityCallback !== options.visibilityCallback
         ) {
             this._collection = options.collection;
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
-            this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
+            this._itemActionVisibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
         }
         if (this._commonItemActions || this._itemActionsProperty) {
             result = this._assignActions();
@@ -353,7 +366,7 @@ export class Controller {
             Controller._fixActionIcon(Controller._fixActionStyle(action), this._theme)
         ));
         return fixedActions.filter((action) =>
-            this._visibilityCallback(action, contents)
+            this._itemActionVisibilityCallback(action, contents)
         );
     }
 
@@ -363,8 +376,14 @@ export class Controller {
             return;
         }
 
-        const actions = item.getActions().all;
+        let actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
+
+        if (this._editArrowAction && this._editArrowVisibilityCallback(item)) {
+            if (!actions.find((action) => action.id === 'view')) {
+                actions = [this._editArrowAction, ...actions];
+            }
+        }
 
         let swipeConfig = Controller._calculateSwipeConfig(
             actions,

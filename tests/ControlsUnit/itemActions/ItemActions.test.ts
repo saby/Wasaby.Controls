@@ -137,7 +137,7 @@ describe('Controls/_itemActions/Controller', () => {
     }
 
     function initializeControllerOptions(options?: IItemActionsControllerOptions): IItemActionsControllerOptions {
-        const result = {
+        return {
             collection,
             itemActions: options ? options.itemActions : null,
             itemActionsProperty: options ? options.itemActionsProperty : null,
@@ -147,9 +147,10 @@ describe('Controls/_itemActions/Controller', () => {
             theme: options ? options.theme : 'default',
             actionAlignment: options ? options.actionAlignment : null,
             actionCaptionPosition: options ? options.actionCaptionPosition : null,
-            editingToolbarVisible: options ? options.editingToolbarVisible : false
+            editingToolbarVisible: options ? options.editingToolbarVisible : false,
+            editArrowAction: options ? options.editArrowAction : false,
+            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null
         };
-        return result;
     }
 
     beforeEach(() => {
@@ -380,6 +381,31 @@ describe('Controls/_itemActions/Controller', () => {
             assert.notExists(activeItem, 'Item \'active\' flag has not been reset');
             assert.notExists(swipedItem, 'Item \'swiped\' flag has not been reset');
             assert.notExists(config, 'Collection\'s swipe config has not been reset');
+        });
+
+        // T2.10. При свайпе добавляется editArrow в набор операций, вызывается editArrowVisibilityCallback.
+        it('should call add editArrow for every item action when necessary', () => {
+            const editArrowAction: IItemAction = {
+                id: 'view',
+                icon: '',
+                showType: TItemActionShowType.TOOLBAR,
+            };
+            let callbackIsCalled = false;
+            const editArrowVisibilityCallback = () => {
+                callbackIsCalled = true;
+                return true;
+            };
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions,
+                theme: 'default',
+                editArrowAction,
+                editArrowVisibilityCallback
+            }));
+            itemActionsController.activateSwipe(1, 50);
+            const config = collection.getSwipeConfig();
+            assert.exists(config, 'Swipe activation should make configuration');
+            assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
     });
 
