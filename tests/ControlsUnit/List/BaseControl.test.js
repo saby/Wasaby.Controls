@@ -3784,9 +3784,19 @@ define([
                   closest: () => 'elem'
                }
             };
-            item = item = {
+            item =  item = {
+               _$active: false,
                getContents: () => ({
                   getKey: () => 2
+               }),
+               setActive: function() {
+                  this._$active = true;
+               },
+               getActions: () => ({
+                  all: [{
+                     id: 2,
+                     showType: 0
+                  }]
                })
             };
             instance.saveOptions(cfg);
@@ -3811,9 +3821,19 @@ define([
          it('should correctly work with breadcrumbs', () => {
             const breadcrumbItem = {
                '[Controls/_display/BreadcrumbsItem]': true,
+               _$active: false,
                getContents: () => ['fake', 'fake', 'fake', {
                   getKey: () => 2
-               }]
+               }],
+               setActive: function() {
+                  this._$active = true;
+               },
+               getActions: () => ({
+                  all: [{
+                     id: 2,
+                     showType: 0
+                  }]
+               })
             };
             instance._onItemContextMenu(null, breadcrumbItem, fakeEvent);
             assert(instance._listViewModel.getActiveItem(), item);

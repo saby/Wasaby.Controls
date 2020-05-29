@@ -332,9 +332,7 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
-        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
-        let contents = View._getItemContents(item);
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(contents?.getKey(), clickEvent, action, opener, isContextMenu);
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
         if (menuConfig) {
             clickEvent.nativeEvent.preventDefault();
             clickEvent.stopImmediatePropagation();
