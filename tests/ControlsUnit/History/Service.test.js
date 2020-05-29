@@ -1,5 +1,5 @@
 /* global assert */
-define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env'], (history, Deferred, Env, ApplicationEnv) => {
+define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env', 'UI/Utils'], (history, Deferred, Env, ApplicationEnv, {Logger}) => {
 
    describe('Controls/history:Service', () => {
       let stores;
@@ -45,6 +45,8 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env'], (his
 
       it('query without history id', (done) => {
          const service = new history.Service({historyIds: []});
+         const sandbox = sinon.createSandbox();
+         sinon.stub(Logger, 'error');
          let isSourceCalled = false;
 
          service._historyDataSource = {
@@ -55,6 +57,8 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env'], (his
 
          service.query().then(null, () => {
             assert.isFalse(isSourceCalled);
+            assert.isTrue(Logger.error.calledOnce);
+            sandbox.restore();
             done();
          });
       });
