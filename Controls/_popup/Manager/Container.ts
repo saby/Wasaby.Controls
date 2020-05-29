@@ -61,8 +61,8 @@ class Container extends Control<IControlOptions> {
         }
     }
 
-    getPendingById(id: string): Control {
-        return this._children[id + '_registrator'] as Control;
+    getPending(): Control {
+        return this._children.pending as Control;
     }
 
     protected _popupDeactivated(event: Event, popupId: string, data: boolean): void {
