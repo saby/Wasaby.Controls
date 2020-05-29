@@ -720,7 +720,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setSelectedItems(items: Model[], selected: boolean|null): void {
-        // говнокод для совместимости с новой моделью
+        // Код для совместимости с новой моделью
         // вместо false ставим undefined,
         // чтобы не сломалось показывание только при наведении
         items.forEach((item) => {

@@ -41,7 +41,10 @@
                            on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
                            on:actionClick="_tmplNotify('actionClick')"
                            on:editArrowClick="_tmplNotify('editArrowClick')"
-                           on:navigationParamsChanged="_tmplNotify('navigationParamsChanged')"/>
+                           on:navigationParamsChanged="_tmplNotify('navigationParamsChanged')"
+                           on:intersectionObserverRegister="_intersectionObserverRegisterHandler()"
+                           on:intersectionObserverUnregister="_intersectionObserverUnregisterHandler()"
+                        />
             </span>
          </Controls._scroll.StickyHeader.Controller>
       </Controls.event:Register>
