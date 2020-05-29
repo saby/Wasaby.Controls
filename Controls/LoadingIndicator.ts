@@ -352,14 +352,13 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         if (this._options.overlay === 'none') {
             return;
         }
+        this._clearToggleEventTimerId();
         if (toggle) {
-            this._clearOverlayTimerId();
             this._toggleEventTimerId = setTimeout(() => {
                 this._toggleEventTimerId = null;
                 this._toggleEventSubscribe(toggle);
             }, delay);
         } else {
-            this._clearOverlayTimerId();
             this._toggleEventSubscribe(toggle);
         }
     }
