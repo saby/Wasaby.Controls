@@ -1,6 +1,6 @@
 import cClone = require('Core/core-clone');
 import { IDragPosition, IFlatController, IFlatItem, IFlatModel, ISelection, TKey, TPosition } from './interface';
-import { SyntheticEvent } from '../../application/Vdom/Vdom';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 
 export class FlatController implements IFlatController{

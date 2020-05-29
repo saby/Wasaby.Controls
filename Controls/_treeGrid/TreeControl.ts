@@ -12,6 +12,7 @@ import {saveConfig} from 'Controls/Application/SettingsController';
 import {Map} from 'Types/shim';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {MouseButtons, MouseUp} from './../Utils/MouseEventHelper';
+import { IDndTreeController } from 'Controls/listDragNDrop';
 
 var
     HOT_KEYS = {
@@ -585,6 +586,35 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             item = this._children.baseControl.getViewModel().getItemById(key, this._options.keyProperty);
         _private.toggleExpanded(this, item);
     },
+
+
+    _dragEnd(): void {
+        const dndController: IDndTreeController = this._children.baseControl.getDragNDropListController();
+        dndController.stopCountDownForExpandNode();
+    },
+    _draggingItemMouseMove(e, itemData, nativeEvent): void {
+        e.stopPropagation();
+
+        const dndController: IDndTreeController = this._children.baseControl.getDragNDropListController();
+        const targetPosition = dndController.getPositionRelativeNode(itemData, nativeEvent);
+
+        if (targetPosition) {
+            const changeDragTargetResult = this._notify('changeDragTarget', [dndController.dragEntity, targetPosition.item, targetPosition.position]);
+            if (changeDragTargetResult !== false) {
+                dndController.setAvatarPosition(targetPosition);
+            }
+        }
+
+        dndController.startCountDownForExpandNode(itemData, (itemData) => _private.toggleExpanded(this, itemData.dispItem));
+    },
+    _draggingItemMouseLeave(e): void {
+        e.stopPropagation();
+
+        const dndController: IDndTreeController = this._children.baseControl.getDragNDropListController();
+        dndController.stopCountDownForExpandNode()
+    },
+
+
     _onExpanderMouseDown(e, key, dispItem) {
         if (MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
             this._mouseDownExpanderKey = key;
@@ -663,11 +693,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
 
     _markedKeyChangedHandler: function(event, key) {
         this._notify('markedKeyChanged', [key]);
-    },
-
-    _draggingItemMouseMove(e, itemData){
-        e.stopPropagation();
-        _private.toggleExpanded(this, itemData.dispItem);
     },
 
     _onItemClick: function(e, item, originalEvent, columnIndex: number) {

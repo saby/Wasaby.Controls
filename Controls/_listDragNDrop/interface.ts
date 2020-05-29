@@ -8,7 +8,7 @@ export type TKey = number|string
 export interface IDragPosition {
    index: number;
    position: TPosition;
-   item: object;
+   item: object; // TODO dnd указать тип
    data: object;
 }
 
@@ -60,7 +60,7 @@ export interface IFlatController {
 export interface ITreeController extends IFlatController {
    getPositionRelativeNode(itemData: ITreeItem, event: SyntheticEvent<MouseEvent>): IDragPosition;
 
-   startCountDownForExpandNode(itemData: ITreeItem): void;
+   startCountDownForExpandNode(itemData: ITreeItem, expandNode: Function): void;
 
    stopCountDownForExpandNode(): void;
 }

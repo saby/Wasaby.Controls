@@ -8,15 +8,13 @@ const DRAG_MAX_OFFSET = 15,
 export default class TreeController extends FlatController implements ITreeController {
    private _expandOnDragData: ITreeItem;
    private _timeoutForExpandOnDrag;
-   private readonly _notifyExpandNode: Function;
 
    protected _unprocessedDragEnteredItem: ITreeItem;
    protected _model: ITreeModel;
    protected _avatarItem: ITreeItem;
 
-   constructor(model: ITreeModel, canStartDragNDropOption: boolean|Function, notifyExpandNode: Function) {
+   constructor(model: ITreeModel, canStartDragNDropOption: boolean|Function) {
       super(model, canStartDragNDropOption);
-      this._notifyExpandNode = notifyExpandNode;
    }
 
    /**
@@ -51,7 +49,7 @@ export default class TreeController extends FlatController implements ITreeContr
       return dragTargetPosition;
    }
 
-   startCountDownForExpandNode(itemData: ITreeItem): void {
+   startCountDownForExpandNode(itemData: ITreeItem, expandNode: Function): void {
       // проверяем что навели на узел, что для него уже не запущен timeout, что он не раскрыт
       // и что навели не на перетаскиваемый элемент
       if (itemData.item.get(itemData.nodeProperty) !== null
@@ -60,7 +58,7 @@ export default class TreeController extends FlatController implements ITreeContr
             && this._avatarItem.key !== itemData.key) {
          this._clearTimeoutForExpandOnDrag();
          this._expandOnDragData = itemData;
-         this._setTimeoutForExpandOnDrag(this._expandOnDragData);
+         this._setTimeoutForExpandOnDrag(this._expandOnDragData, expandNode);
       }
    }
 
@@ -115,9 +113,9 @@ export default class TreeController extends FlatController implements ITreeContr
       return result;
    }
 
-   private _setTimeoutForExpandOnDrag(itemData): void {
+   private _setTimeoutForExpandOnDrag(itemData: ITreeItem, expandNode: Function): void {
       this._timeoutForExpandOnDrag = setTimeout(() => {
-            this._notifyExpandNode(itemData);
+            expandNode(itemData);
          }, EXPAND_ON_DRAG_DELAY);
    }
 

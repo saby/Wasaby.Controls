@@ -59,9 +59,10 @@ import 'wml!Controls/_list/BaseControl/Footer';
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
 import {
-    FlatController,
-    IDragNDropListController,
-    TreeController,
+    DndFlatController,
+    DndTreeController,
+    IDndTreeController,
+    IDndFlatController
 } from 'Controls/listDragNDrop';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
@@ -1804,14 +1805,11 @@ const _private = {
         });
     },
 
-    createDndListController(self: any, options: any): IDragNDropListController {
+    createDndListController(self: any, options: any): IDndFlatController|IDndTreeController {
         if (options.parentProperty) {
-            const notifyTreeControlMouseMove = (dragEntity) => {
-                return self._notify('draggingItemMouseMove', [dragEntity]);
-            }
-            return new TreeController(self._listViewModel, options.canStartDragNDrop, notifyTreeControlMouseMove);
+            return new DndTreeController(self._listViewModel, options.canStartDragNDrop);
         } else {
-            return new FlatController(self._listViewModel, options.canStartDragNDrop);
+            return new DndFlatController(self._listViewModel, options.canStartDragNDrop);
         }
     }
 };
@@ -2841,19 +2839,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._dndListController) {
             const targetPosition = this._dndListController.getCurrentDragPosition();
             if (targetPosition) {
-                // TODO dnd может лучше это хранить в baseControl
                 this._dndListController.dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
-            }
-            if (this._dndListController instanceof TreeController) {
-                // TODO dnd перенести в TreeControl, наверное просто после того как здесь вызывается метод для плоского контроллера
-                // занотифаить для TreeControl и он вызовет метод в деревянном контроллере
-                this._dndListController.stopCountDownForExpandNode();
             }
         }
 
         // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
         // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
         this._showActions = false;
+    },
+
+    getDragNDropListController(): IDndFlatController|IDndTreeController {
+        return this._dndListController;
     },
 
     handleKeyDown(event): void {
@@ -2945,36 +2941,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._showActions = true;
         }
 
-        // TODO dnd переместить в TreeControl. Понять как лучше создавать TreeController
-        // также его наследовать от FlatController и из TreeControl вызывать у него нужные методы
-        // или в TreeControl создать новый контроллер у которого будут только необходимые методы и работать с ним
-        // 2 случай наверное лучше.
-        // Только получается что у нас будет 2 контроллера: плоский-который выполняет основную логику и деревянный который выполняет логику только в TreeControl
-        // если в TreeControl создать свой контроллер, то он не будет знать состояния плоского контроллера и за данными придется обращаться к плоскому контроллеру
-        // может все-таки лучше из TreeControl звать метод у контроллера, который находится в BaseControl.
-        if (this._dndListController instanceof TreeController && this._dndListController.isDragging()) {
-            const targetPosition = this._dndListController.getPositionRelativeNode(itemData, nativeEvent);
-
-            if (targetPosition) {
-                const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, targetPosition.item, targetPosition.position]);
-                if (changeDragTargetResult !== false) {
-                    this._dndListController.setAvatarPosition(targetPosition);
-                }
-            }
-
-            this._dndListController.startCountDownForExpandNode(itemData)
+        if (this._dndListController instanceof DndTreeController && this._dndListController.isDragging()) {
+            this._notify('draggingItemMouseMove', [itemData, nativeEvent]);
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         console.log('mouse leave ' + itemData.key);
 
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
-        if (this._dndListController) {
+        if (this._dndListController && this._dndListController.isDragging()) {
             this._dndListController.unprocessedDragEnteredItem = null;
-            if (this._dndListController instanceof TreeController) {
-                // TODO dnd перенести в TreeControl, наверное просто после того как здесь вызывается метод для плоского контроллера
-                // занотифаить для TreeControl и он вызовет метод в деревянном контроллере
-                this._dndListController.stopCountDownForExpandNode()
+
+            if (this._dndListController instanceof DndTreeController) {
+                this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
             }
         }
     },

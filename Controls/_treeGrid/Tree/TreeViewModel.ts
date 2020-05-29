@@ -4,6 +4,7 @@ import _entity = require('Types/entity');
 import collection = require('Types/collection');
 import {isEqual} from 'Types/object';
 import {TemplateFunction} from 'UI/Base';
+import { IDragPosition } from '../../../application/Controls/_listDragNDrop/interface';
 
 var
     _private = {
@@ -637,8 +638,7 @@ var
             }
         },
 
-        // TODO dnd указать везде типы
-        setDraggedItems(avatarItem: object, draggedKeys: Array<number|string>): void {
+        setDraggedItems(avatarItem: any, draggedKeys: Array<number|string>): void {
             if (draggedKeys) {
                 // Collapse all the nodes that we move.
                 draggedKeys.forEach(function(id) {
@@ -663,7 +663,7 @@ var
 
             TreeViewModel.superclass.setDraggedItems.apply(this, arguments);
         },
-        setAvatarPosition(position: object): void {
+        setAvatarPosition(position: IDragPosition): void {
             if (position && position.position === 'on') {
                 //When an item is moved to a folder, the fake record should be displayed at the previous position.
                 //If do not display the fake entry, there will be a visual jump of the interface.
@@ -682,13 +682,13 @@ var
         resetDraggedItems(): void {
             TreeViewModel.superclass.resetDraggedItems.apply(this, arguments);
         },
-        getAvatarPosition(): object {
+        getAvatarPosition(): IDragPosition {
             return TreeViewModel.superclass.getAvatarPosition.apply(this, arguments);
         },
         getDragItemData(): object {
             return TreeViewModel.superclass.getDragItemData.apply(this, arguments);
         },
-        _setPrevDragTargetPosition: function(targetPosition) {
+        _setPrevDragTargetPosition(targetPosition: IDragPosition): void {
             if (!this._prevDragTargetPosition) {
                 if (this._dragTargetPosition) {
                     this._prevDragTargetPosition = this._dragTargetPosition;
@@ -702,8 +702,7 @@ var
                 }
             }
         },
-        // TODO dnd указать возвращаемый тип (тип позиции)
-        getPrevDragTargetPosition(): any {
+        getPrevDragTargetPosition(): IDragPosition {
             return this._dragTargetPosition;
         },
 
