@@ -3118,7 +3118,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // if (this._options.multiSelectVisibility !== 'hidden') {
             //     this._listViewModel.setRightSwipedItem(itemData);
             // }
-            this._listViewModel.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
             this._listViewModel.nextVersion();
             _private.setMarkedKey(this, key);
         }
@@ -3133,7 +3133,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
-        if (e.nativeEvent.animationName === 'rightSwipe' && this._listViewModel.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
+        if (e.nativeEvent.animationName === 'rightSwipe' && this._itemActionsController.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
             const item = this._itemActionsController.getSwipeItem();
             if (!this._options.itemActions && item) {
                 this._notify('itemSwipe', [item, e]);

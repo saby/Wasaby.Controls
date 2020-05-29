@@ -175,7 +175,7 @@ export default class View extends Control<IViewOptions> {
             this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
             break;
         default:
-            this._collection.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
             this._collection.nextVersion();
             break;
         }

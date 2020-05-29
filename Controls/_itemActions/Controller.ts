@@ -147,7 +147,7 @@ export class Controller {
             this._updateSwipeConfig(actionsContainerHeight);
         }
 
-        this._collection.setSwipeAnimation(ANIMATION_STATE.OPEN);
+        this.setSwipeAnimation(ANIMATION_STATE.OPEN);
     }
 
     /**
@@ -250,6 +250,21 @@ export class Controller {
      */
     getActiveItem(): IItemActionsItem {
         return this._collection.getActiveItem();
+    }
+
+    /**
+     * Устанавливает текущее сосяние анимации в модель
+     * @param animation
+     */
+    setSwipeAnimation(animation: ANIMATION_STATE): void {
+        this._collection.setSwipeAnimation(animation);
+    }
+
+    /**
+     * Возвраащет текущее состояние анимации из модели
+     */
+    getSwipeAnimation(): ANIMATION_STATE {
+        return this._collection.getSwipeAnimation();
     }
 
     /**

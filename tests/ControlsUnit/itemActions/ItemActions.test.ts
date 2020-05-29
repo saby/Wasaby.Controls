@@ -1,12 +1,12 @@
-import { assert } from 'chai';
-import { Record } from 'Types/entity';
-import { RecordSet } from 'Types/collection';
-import { SyntheticEvent } from 'Vdom/Vdom';
-import { Collection, CollectionItem } from 'Controls/display';
-import { IOptions as ICollectionOptions } from 'Controls/_display/Collection';
+import {assert} from 'chai';
+import {Record} from 'Types/entity';
+import {RecordSet} from 'Types/collection';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {ANIMATION_STATE, Collection, CollectionItem} from 'Controls/display';
+import {IOptions as ICollectionOptions} from 'Controls/_display/Collection';
 
-import { Controller as ItemActionsController, IItemActionsControllerOptions } from 'Controls/_itemActions/Controller';
-import { IItemAction, IItemActionsItem, TItemActionShowType } from 'Controls/_itemActions/interface/IItemActions';
+import {Controller as ItemActionsController, IItemActionsControllerOptions} from 'Controls/_itemActions/Controller';
+import {IItemAction, IItemActionsItem, TItemActionShowType} from 'Controls/_itemActions/interface/IItemActions';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
 const itemActions: IItemAction[] = [
@@ -500,5 +500,13 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.setActiveItem(collection.getItemBySourceKey(2));
             assert.equal(itemActionsController.getActiveItem(), testingItem);
         });
+    });
+
+    describe('setSwipeAnimation(), getSwipeAnimation()', () => {
+        itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+        assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.CLOSE, 'Incorrect animation state !== close');
+
+        itemActionsController.setSwipeAnimation(ANIMATION_STATE.OPEN);
+        assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.OPEN, 'Incorrect animation state !== open');
     });
 });
