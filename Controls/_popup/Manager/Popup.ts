@@ -221,14 +221,14 @@ class Popup extends Control<IPopupControlOptions> {
         const args = Array.prototype.slice.call(arguments, 1);
         args[1] = args[1] || this._options.id;
         // catch showIndicator and add popupId property for Indicator.
-        return this._notify('registerPending', args, {bubbling: true}) as string;
+        return this._notify('finishPendingOperations', args, {bubbling: true}) as string;
     }
 
     protected _cancelFinishingPendingHandler(event: Event): string {
         const args = this._prepareEventArs(event, arguments);
         args[0] = args[0] || this._options.id;
         // catch showIndicator and add popupId property for Indicator.
-        return this._notify('registerPending', args, {bubbling: true}) as string;
+        return this._notify('cancelFinishingPending', args, {bubbling: true}) as string;
     }
 
     private _prepareEventArs(event: Event, args: IArguments): unknown[] {
