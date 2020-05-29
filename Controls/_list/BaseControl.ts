@@ -349,18 +349,8 @@ const _private = {
         return resDeferred;
     },
 
-    // TODO dnd по этому условию проверять стоит ли создавать контроллер, а часть наверное вынести в контроллер
-    canStartDragNDrop(domEvent: any, cfg: any, isTouch: boolean): boolean {
-        return !isTouch &&
-            (!cfg.canStartDragNDrop || cfg.canStartDragNDrop()) &&
-            cfg.itemsDragNDrop &&
-            !(domEvent.nativeEvent.button) &&
-            !cfg.readOnly &&
-            !domEvent.target.closest('.controls-DragNDrop__notDraggable');
-    },
     startDragNDrop(self, domEvent, draggedItem): void {
-        // TODO dnd росто проверить что контроллер создан и вызвать у него метод првоеряющий что можно драгать
-        if (_private.canStartDragNDrop(domEvent, self._options, self._context?.isTouch?.isTouch)) {
+        if (!self._options.readOnly && self._dndListController && self._dndListController.canStartDragNDrop(domEvent, self._context?.isTouch?.isTouch)) {
             const key = self._options.useNewModel ? draggedItem.getContents().getKey() : draggedItem.key;
 
             //Support moving with mass selection.
@@ -1819,9 +1809,9 @@ const _private = {
             const notifyTreeControlMouseMove = (dragEntity) => {
                 return self._notify('draggingItemMouseMove', [dragEntity]);
             }
-            return new TreeController(self._listViewModel, notifyTreeControlMouseMove);
+            return new TreeController(self._listViewModel, options.canStartDragNDrop, notifyTreeControlMouseMove);
         } else {
-            return new FlatController(self._listViewModel);
+            return new FlatController(self._listViewModel, options.canStartDragNDrop);
         }
     }
 };
@@ -2245,7 +2235,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._dndListController) {
-            this._dndListController.update(this._listViewModel);
+            this._dndListController.update(this._listViewModel, newOptions.canStartDragNDrop);
         }
 
         if (newOptions.groupMethod !== this._options.groupMethod) {
@@ -2843,7 +2833,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragStart: function(event, dragObject, domEvent) {
         if (this._dndListController) {
-            this._dndListController.startDragNDrop(event);
+            this._dndListController.startDragNDrop();
         }
     },
 
@@ -2893,7 +2883,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     let newPosition = this._dndListController.calculateDragPosition(draggingItem);
 
                     this._dndListController.setDraggedItems(draggingItem, dragObject.entity.getItems());
-                    this._dndListController.changeAvatarPosition(newPosition);
+                    this._dndListController.setAvatarPosition(newPosition);
                 }
             }
         }
@@ -2901,7 +2891,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _dragLeave: function() {
         if (this._dndListController) {
-            this._dndListController.changeAvatarPosition(null);
+            this._dndListController.setAvatarPosition(null);
         }
     },
 
@@ -2921,6 +2911,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
+        console.log('mouse enter ' + itemData.key);
+
         if (this._dndListController) {
             this._dndListController.unprocessedDragEnteredItem = itemData;
 
@@ -2929,7 +2921,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 if (dragPosition) {
                     const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, dragPosition.item, dragPosition.position]);
                     if (changeDragTargetResult !== false) {
-                        this._dndListController.changeAvatarPosition(dragPosition);
+                        this._dndListController.setAvatarPosition(dragPosition);
                     }
                 }
 
@@ -2941,6 +2933,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {
+        console.log('mouse move ' + itemData.key);
+
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
 
         if (
@@ -2964,7 +2958,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (targetPosition) {
                 const changeDragTargetResult = this._notify('changeDragTarget', [this._dndListController.dragEntity, targetPosition.item, targetPosition.position]);
                 if (changeDragTargetResult !== false) {
-                    this._dndListController.changeAvatarPosition(targetPosition);
+                    this._dndListController.setAvatarPosition(targetPosition);
                 }
             }
 
@@ -2972,6 +2966,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
+        console.log('mouse leave ' + itemData.key);
+
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
             this._dndListController.unprocessedDragEnteredItem = null;

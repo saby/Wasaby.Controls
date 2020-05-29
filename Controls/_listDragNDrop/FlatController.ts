@@ -1,51 +1,32 @@
 import cClone = require('Core/core-clone');
-import { CollectionItem } from "Controls/display";
-import { Model } from "Types/entity";
-import { ItemsEntity } from "Controls/dragnDrop";
+import { IDragPosition, IFlatController, IFlatItem, IFlatModel, ISelection, TKey, TPosition } from './interface';
+import { SyntheticEvent } from '../../application/Vdom/Vdom';
 
-export interface IModel {
-   setDraggedItems(avatarItem, draggedItems): void;
-   setAvatarPosition(position): void;
-   resetDraggedItems(): void;
 
-   calculateDragTargetPosition(itemData);
-   getItemDataByItem(item);
-
-   getIndexByKey(key: number|string): number;
-}
-
-export interface IDragNDropListController {
-   update(useNewModel: boolean, model: IModel);
-
-   startDragNDrop(avatarItem, draggedItems): void;
-
-   changeAvatarPosition(newPosition?): void;
-
-   getDragPosition(itemData): object;
-
-   getSelectionForDragNDrop(selectedKeys, excludedKeys, dragKey);
-
-   reset(): void;
-}
-
-export class FlatController implements IDragNDropListController{
+export class FlatController implements IFlatController{
    // этот элемент тут запоминается, пока на нем стрелка мыши
    // и после dragStart этот элемент берется как перетаскиваемый и здесь обнуляется
-   private _unprocessedDragEnteredItem: CollectionItem<Model>;
+   protected _unprocessedDragEnteredItem: IFlatItem;
 
    // это то что прикладники вернули на dragEnd
    // и после того как документ перетащили, то смотрим не нужно ли что-то подождать и если есть промис то ожидаем
-   private _dragEndResult;
+   private _dragEndResult: Promise<any>;
 
-   protected _avatarItem;
-   private _avatarPosition;
-   private _draggedItems;
-   private _isDragging = false;
+   protected _model: IFlatModel;
+   protected _avatarItem: IFlatItem;
+   private _canStartDragNDropOption: boolean|Function;
+   private _avatarPosition: IDragPosition;
+   private _draggedItems: Array<TKey|null>;
+   private _isDragging: boolean = false;
 
-   constructor(protected _model: IModel) {}
-
-   update(model: IModel) {
+   constructor(model: IFlatModel, canStartDragNDropOption: boolean|Function) {
       this._model = model;
+      this._canStartDragNDropOption = canStartDragNDropOption;
+   }
+
+   update(model: IFlatModel, canStartDragNDropOption: boolean|Function) {
+      this._model = model;
+      this._canStartDragNDropOption = canStartDragNDropOption;
    }
 
    set unprocessedDragEnteredItem(val) { this._unprocessedDragEnteredItem = val; }
@@ -56,21 +37,26 @@ export class FlatController implements IDragNDropListController{
 
    get dragEndResult() { return this._dragEndResult; }
 
-   setDraggedItems(avatarItem, draggedItems): void {
+   setDraggedItems(avatarItem: IFlatItem, draggedItems: Array<TKey>): void {
       this._avatarItem = avatarItem;
       this._draggedItems = draggedItems;
    }
 
-   startDragNDrop(event?) {
+   canStartDragNDrop(event: SyntheticEvent<MouseEvent>, isTouch: boolean): boolean {
+      return (!this._canStartDragNDropOption || typeof this._canStartDragNDropOption === 'function' && this._canStartDragNDropOption())
+         && !event.nativeEvent.button && !event.target.closest('.controls-DragNDrop__notDraggable') && !isTouch;
+   }
+
+   startDragNDrop(): void {
       this._isDragging = true;
       this._model.setDraggedItems(this._avatarItem, this._draggedItems);
 
       // проставляем изначальную позицию аватара
-      const startPosition = this.calculateDragPosition(this._avatarItem, event);
-      this.changeAvatarPosition(startPosition);
+      const startPosition = this.calculateDragPosition(this._avatarItem);
+      this.setAvatarPosition(startPosition);
    }
 
-   changeAvatarPosition(newPosition) {
+   setAvatarPosition(newPosition: IDragPosition): void {
       this._avatarPosition = newPosition;
       this._model.setAvatarPosition(newPosition);
    }
@@ -85,7 +71,7 @@ export class FlatController implements IDragNDropListController{
     * @param excludedKeys
     * @param dragKey
     */
-   getSelectionForDragNDrop(selectedKeys, excludedKeys, dragKey) {
+   getSelectionForDragNDrop(selectedKeys: Array<TKey|null>, excludedKeys: Array<TKey|null>, dragKey: TKey): ISelection {
       const allSelected = selectedKeys.indexOf(null) !== -1;
 
       const selected = cClone(selectedKeys) || [];
@@ -106,15 +92,15 @@ export class FlatController implements IDragNDropListController{
       };
    }
 
-   calculateDragPosition(itemData, event?) {
+   calculateDragPosition(itemData: IFlatItem): IDragPosition {
       return this._calculateDragTargetPosition(itemData);
    }
 
-   getCurrentDragPosition() {
+   getCurrentDragPosition(): IDragPosition {
       return this._avatarPosition;
    }
 
-   reset() {
+   reset(): void {
       this._isDragging = false;
       this._avatarItem = null;
       this._draggedItems = null;
@@ -134,7 +120,7 @@ export class FlatController implements IDragNDropListController{
     * @param keys
     * @private
     */
-   private _sortKeys(keys: Array<number|string>) {
+   private _sortKeys(keys: Array<number|string>): void {
       keys.sort((a, b) => {
          const indexA = this._model.getIndexByKey(a),
             indexB = this._model.getIndexByKey(b);
@@ -142,8 +128,8 @@ export class FlatController implements IDragNDropListController{
       });
    }
 
-   protected _calculateDragTargetPosition(targetData) {
-      let position, prevIndex = -1;
+   protected _calculateDragTargetPosition(targetData: IFlatItem, position?: TPosition): IDragPosition {
+      let prevIndex = -1;
 
       //If you hover on a record that is being dragged, then the position should not change.
       if (this._avatarItem && this._avatarItem.index === targetData.index) {
