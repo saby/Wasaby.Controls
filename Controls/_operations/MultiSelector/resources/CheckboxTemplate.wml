@@ -2,4 +2,5 @@
         readOnly="{{false}}"
         value="{{_checkboxValue}}"
         triState="{{true}}"
-        on:click="_onCheckBoxClick()"/>
+        on:click="_onCheckBoxClick()"
+        attr:class="controls-MultiSelector__checkbox"/>
