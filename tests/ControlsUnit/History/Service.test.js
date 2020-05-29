@@ -43,6 +43,22 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env'], (his
          Env.constants.isBrowserPlatform = isBrowser;
       });
 
+      it('query without history id', (done) => {
+         const service = new history.Service({historyIds: []});
+         let isSourceCalled = false;
+
+         service._historyDataSource = {
+            call: () => {
+               isSourceCalled = false;
+            }
+         };
+
+         service.query().then(null, () => {
+            assert.isFalse(isSourceCalled);
+            done();
+         });
+      });
+
       it('destroy', () => {
          const service = new history.Service({ historyId: 'testId' });
          let methodName;
