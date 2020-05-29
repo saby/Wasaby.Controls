@@ -45,6 +45,10 @@ export class Controller {
       this._updateModel(this._selection);
    }
 
+   /**
+    * Обновить состояние контроллера
+    * @param options
+    */
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
       const itemsChanged = modelChanged ? true : options.model.getCollection() !== this._model.getCollection();
@@ -107,6 +111,7 @@ export class Controller {
       return result;   }
 
    handleAddItems(addedItems: Record[]): ISelectionControllerResult {
+      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
       this._updateModel(this._selection);
       return {
          selectedKeysDiff: { keys: [], added: [], removed: [] },
@@ -120,6 +125,7 @@ export class Controller {
       const oldSelection = clone(this._selection);
       this._remove(this._getItemsKeys(removedItems));
 
+      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
       this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }

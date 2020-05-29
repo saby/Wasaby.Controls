@@ -2,12 +2,14 @@ define([
    'Env/Env',
    'Controls/_scroll/StickyHeader/_StickyHeader',
    'Controls/_scroll/StickyHeader/Utils',
+   'Controls/_scroll/StickyHeader/FastUpdate',
    'Controls/scroll',
    'Core/core-merge'
 ], function(
    EnvLib,
    StickyHeaderLib,
    StickyHeaderUtils,
+   FastUpdateLib,
    scroll,
    coreMerge
 ) {
@@ -15,6 +17,7 @@ define([
    'use strict';
 
    const StickyHeader = StickyHeaderLib.default;
+   const FastUpdate = FastUpdateLib.default;
 
    const
       createComponent = function(Component, cfg) {
@@ -41,13 +44,12 @@ define([
          it('should not create a observer if the control was created invisible, and must create after it has become visible', function () {
             const component = createComponent(StickyHeader, options);
             component._container = {
-               offsetParent: null,
-               closest: sinon.stub().returns(true)
+               closest: () => true
             };
             sinon.stub(component, '_createObserver');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             assert.isUndefined(component._observer);
-            component._container.offsetParent = {};
+            component._container.closest = () => false;
             component._resizeHandler();
             sinon.assert.called(component._createObserver);
             sinon.restore();
@@ -61,7 +63,7 @@ define([
                component = createComponent(StickyHeader, options);
 
             component._container = {
-               offsetParent: 0
+               closest: () => false
             };
             component._model = {
                destroy: sinon.fake()
@@ -212,9 +214,11 @@ define([
             assert.strictEqual(component._stickyHeadersHeight.top, null);
             component.top = 20;
             assert.strictEqual(component._stickyHeadersHeight.top, 20);
-            assert.strictEqual(component._container.style.top, '20px');
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
+            return FastUpdate._promise.then(() => {
+               assert.strictEqual(component._container.style.top, '20px');
+            });
          });
 
          it('should not force update if top did not changed', function () {
@@ -330,7 +334,7 @@ define([
          it('should notify fixed event', function() {
             const component = createComponent(StickyHeader, {});
             component._container = {
-               offsetParent: 0,
+               closest: () => false,
                offsetHeight: 10
             }
             sinon.stub(component, '_notify');
@@ -356,7 +360,7 @@ define([
             const component = createComponent(StickyHeader, {});
             component._height = 10;
             component._container = {
-               offsetParent: null,
+               closest: () => true,
                offsetHeight: 0
             }
             sinon.stub(component, '_notify');

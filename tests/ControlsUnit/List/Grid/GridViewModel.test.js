@@ -2438,11 +2438,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.isUndefined(event.result, 'Change action should not update prefix version with ladder');
 
             model._onCollectionChangeFn(event, collection.IObservable.ACTION_ADD);
-            assert.strictEqual(event.result, 'updatePrefix', 'Add action should update prefix version with ladder');
+            assert.isUndefined(event.result, 'Add action should not update prefix version with ladder');
 
             event.result = undefined;
             model._onCollectionChangeFn(event, collection.IObservable.ACTION_REMOVE);
-            assert.strictEqual(event.result, 'updatePrefix', 'Remove action should update prefix version with ladder');
+            assert.isUndefined(event.result, 'Remove action should not update prefix version with ladder');
          });
       });
 

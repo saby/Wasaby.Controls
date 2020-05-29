@@ -25,7 +25,7 @@ const EventRegistrator = Control.extend({
       this._register.register(event, registerType, component, callback, config);
    },
    _unRegisterIt(event, registerType, component, config: IRegistrarConfig = {}): void {
-      this._register.unregister(event, component, config);
+      this._register.unregister(event, registerType, component, config);
    },
    start(): void {
       this._register.start.apply(this._register, arguments);

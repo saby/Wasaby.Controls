@@ -8,7 +8,7 @@
         />
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label_theme-{{_options.theme}}">readonly</div>
+        <div class="controls-text-label_theme-{{_options.theme}}">readOnly</div>
         <Controls.toggle:RadioGroup
                 bind:selectedKey="_selectedKey2"
                 keyProperty="id"

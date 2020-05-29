@@ -50,13 +50,11 @@ define([
 
                model.subscribe(`${field}Changed`, callback);
                model.subscribe('rangeChanged', rangeChangedCallback);
-               model.subscribe('valueChanged', valueChangedCallback);
                model[field] = value;
 
                assert.strictEqual(model[field], value);
                assert(callback.calledOnce, `${field}Changed callback called ${callback.callCount} times`);
                assert(rangeChangedCallback.calledOnce, `rangeChangedCallback callback called ${callback.callCount} times`);
-               assert(valueChangedCallback.calledOnce, `valueChangedCallback callback called ${callback.callCount} times`);
             });
 
             it(`should not update ${field} if value did not changed`, function() {

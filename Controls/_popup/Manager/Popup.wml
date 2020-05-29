@@ -25,6 +25,8 @@
             on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
             on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
             on:controlResize="_controlResizeHandler()"
-            on:showIndicator="_showIndicatorHandler()">
-    </ws:partial>
+            on:showIndicator="_showIndicatorHandler()"
+            on:registerPending="_registerPendingHandler()"
+            on:cancelFinishingPending="_cancelFinishingPendingHandler()"
+            on:finishPendingOperations="_finishPendingOperationsHandler()" />
 </div>
