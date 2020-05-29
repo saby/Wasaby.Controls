@@ -2,12 +2,21 @@ import Component from '../Controller';
 import {IResizeObserver} from '../interfaces';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
+/**
+ * Класс который следит за изменеием высот фиксированных заголовков. Используется ResizeObserver там
+ * где он поддерживается. На остальных платформах используется подписка на событие controlResize.
+ */
+
+interface IHeightEntry {
+    key: HTMLElement;
+    value: number;
+}
+
 export default class StickyHeaderResizeObserver {
     private readonly _controller: Component;
     private readonly _resizeObserverSupported: boolean = false;
     private _resizeObserver: IResizeObserver;
-    private _elementsHeight: object[] = [];
-    private _firstResize: boolean = true;
+    private _elementsHeight: IHeightEntry[] = [];
 
     constructor(controller: Component) {
         this._controller = controller;
@@ -27,17 +36,23 @@ export default class StickyHeaderResizeObserver {
             this._resizeObserver = new ResizeObserver((entries) => {
                 let heightChanged = false;
                 for (const entry of entries) {
-                    heightChanged = this._elementsHeight.some((elemHeight) => {
-                        if (elemHeight.key === entry.target && elemHeight.value !== entry.contentRect.height) {
-                            elemHeight.value = entry.contentRect.height;
-                            return true;
-                        } else {
-                            return false;
-                        }
+                    const heightEntry: IHeightEntry = this._elementsHeight.find((item: IHeightEntry) => {
+                        return item.key === entry.target;
                     });
+
+                    if (heightEntry) {
+                        if (heightEntry.value !== entry.contentRect.height) {
+                            heightEntry.value = entry.contentRect.height;
+                            heightChanged = true;
+                        }
+                    } else {
+                        // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
+                        // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
+                        // этого элемента мы еще не сохранили.
+                        this._elementsHeight.push({key: entry.target, value: entry.contentRect.height});
+                    }
                 }
-                if (heightChanged || this._firstResize) {
-                    this._firstResize = false;
+                if (heightChanged) {
                     this._controller._resizeHandler();
                 }
             });
@@ -58,7 +73,6 @@ export default class StickyHeaderResizeObserver {
             const stickyHeaders = this._getStickyHeaderElements(container);
             stickyHeaders.forEach((elem: HTMLElement) => {
                 this._resizeObserver.observe(elem);
-                this._elementsHeight.push({key: elem, value: elem.getBoundingClientRect().height});
             });
         }
     }
