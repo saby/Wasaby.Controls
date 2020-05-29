@@ -359,6 +359,19 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isUndefined(config.twoColumns);
         });
 
+        // T2.4.1 Если actionAlignment был принудительно изменён, необходимо обновлять конфиг ItemActions
+        it('should Update itemTemplateConfig when actionAlignment has been forced to change from vertical to horizontal', () => {
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions: horizontalOnlyItemActions,
+                theme: 'default',
+                actionAlignment: 'vertical'
+            }));
+            itemActionsController.activateSwipe(3, 50);
+            const config = collection.getActionsTemplateConfig();
+            assert.equal(config.actionAlignment, 'horizontal');
+        });
+
         // T2.6. Устанавливается swiped элемент коллекции
         // T2.7. Устанавливается активный элемент коллекции
         // T2.8. Метод getSwipedItem возвращает корректный swiped элемент

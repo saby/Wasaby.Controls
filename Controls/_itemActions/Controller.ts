@@ -396,12 +396,14 @@ export class Controller {
             actionsTemplateConfig.actionAlignment !== 'horizontal' &&
             Controller._needsHorizontalMeasurement(swipeConfig)
         ) {
+            actionsTemplateConfig.actionAlignment = 'horizontal';
             swipeConfig = Controller._calculateSwipeConfig(
                 actions,
-                'horizontal',
+                actionsTemplateConfig.actionAlignment,
                 actionsContainerHeight,
                 actionsTemplateConfig.actionCaptionPosition
             );
+            this._collection.setActionsTemplateConfig(actionsTemplateConfig);
         }
 
         Controller._setItemActions(item, swipeConfig.itemActions);
