@@ -93,10 +93,8 @@
    </ws:if>
    <ws:if data="{{_pagingState.visible}}">
          <Controls.paging:Paging class="controls-Scroll__paging"
-                            stateBegin="{{_pagingState.stateUp}}"
-                            statePrev="{{_pagingState.stateUp}}"
-                            stateEnd="{{_pagingState.stateDown}}"
-                            stateNext="{{_pagingState.stateDown}}"
+                            backwardEnabled="{{_pagingState.stateUp}}"
+                            forwardEnabled="{{_pagingState.stateDown}}"
                             on:onArrowClick="_arrowClickHandler()"/>
    </ws:if>
 

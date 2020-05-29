@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell">
+        <Controls.slider:Range
+                maxValue="{{100}}"
+                minValue="{{0}}"
+                bind:startValue="_startValue"
+                bind:endValue="_endValue"
+                borderVisible="{{true}}"
+        />
+    </div>
+</div>
