@@ -20,8 +20,6 @@ export {
     IItemActionsCollection,
     TActionClickCallback,
     IItemActionsContainer,
-    IMenuActionHandler,
-    IMenuConfig,
     IItemAction,
     TItemActionShowType,
     TItemActionsPosition

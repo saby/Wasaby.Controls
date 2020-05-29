@@ -11,13 +11,13 @@ import {
     IItemActionsTemplateOptions,
     IItemActionsContainer,
     IMenuTemplateOptions,
-    IMenuConfig,
     TItemActionShowType,
     TItemActionsSize,
     IItemAction,
     TItemActionsPosition,
     TActionCaptionPosition
 } from './interface/IItemActions';
+import { IStickyPopupOptions } from 'Controls/popup';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
 import { Utils } from './Utils';
@@ -180,7 +180,7 @@ export class Controller {
         parentAction: IItemAction,
         opener: Element | Control<object, unknown>,
         isContextMenu: boolean
-    ): IMenuConfig {
+    ): IStickyPopupOptions {
         const item = this._collection.getItemBySourceKey(itemKey);
         if (!item) {
             return;

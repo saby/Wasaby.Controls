@@ -144,7 +144,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     protected _onRenderMouseEnter(e: SyntheticEvent<TouchEvent>): void {
-        if (this._options.itemActionVisibility !== 'start') {
+        if (this._options.itemActionVisibility !== 'visible') {
             if (!this._collection.isActionsAssigned()) {
                 this._updateItemActions(this._options);
             }
