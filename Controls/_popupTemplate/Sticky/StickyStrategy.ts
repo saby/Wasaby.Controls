@@ -6,7 +6,7 @@ import {detection} from 'Env/Env';
 let TouchKeyboardHelper = {};
 
 if (detection.isMobileIOS && detection.IOSVersion === 12) {
-   import('Controls/Utils/TouchKeyboardHelper').then((module) => TouchKeyboardHelper = module);
+   import('Controls/Utils/TouchKeyboardHelper').then((module) => TouchKeyboardHelper = module.default);
 }
 
 interface IPosition {
