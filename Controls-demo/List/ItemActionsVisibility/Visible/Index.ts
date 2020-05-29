@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IItemAction} from 'Controls/itemActions';
 import {Memory} from 'Types/source';
 
-import * as template from 'wml!Controls-demo/ItemActions/ListVisible/ListItemActions';
+import * as template from 'wml!Controls-demo/List/ItemActionsVisibility/Visible/ItemActions';
 
 import {menuItemActions, srcData} from '../resources';
 

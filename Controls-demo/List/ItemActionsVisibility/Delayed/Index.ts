@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IItemAction} from 'Controls/itemActions';
 import {Memory} from 'Types/source';
 
-import * as template from 'wml!Controls-demo/ItemActions/ListDelayed/ListItemActions';
+import * as template from 'wml!Controls-demo/List/ItemActionsVisibility/Delayed/ItemActions';
 
 import {menuToolbarItemActions, srcData} from '../resources';
 
