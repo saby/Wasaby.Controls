@@ -238,6 +238,21 @@ export class Controller {
     }
 
     /**
+     * Устанавливает активный Item в коллекции
+     * @param item
+     */
+    setActiveItem(item: IItemActionsItem) {
+        this._collection.setActiveItem(item);
+    }
+
+    /**
+     * Возвращает текущий активный Item
+     */
+    getActiveItem(): IItemActionsItem {
+        return this._collection.getActiveItem();
+    }
+
+    /**
      * Вычисляет операции над записью для каждого элемента коллекции
      * Для старой модели listViewModel возвращает массив id изменённых значений
      * TODO Когда мы перестанем использовать старую listViewModel,

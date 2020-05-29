@@ -383,6 +383,8 @@ describe('Controls/_itemActions/Controller', () => {
         });
     });
 
+
+
     describe('prepareActionsMenuConfig()', () => {
         let clickEvent: SyntheticEvent<MouseEvent>;
         let target: HTMLElement;
@@ -476,6 +478,27 @@ describe('Controls/_itemActions/Controller', () => {
         it('should set config.target as copy of clickEvent.target.getBoundingClientRect()', () => {
             const config = itemActionsController.prepareActionsMenuConfig(3, clickEvent, itemActions[3], null, false);
             assert.deepEqual(config.target.getBoundingClientRect(), target.getBoundingClientRect());
+        });
+    });
+
+    // см. этот же тест в Collection.test.ts
+    describe('setActiveItem(), getActiveItem()', () => {
+        it('deactivates old active item', () => {
+            const testingItem = collection.getItemBySourceKey(1);
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(1));
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(2));
+            assert.isFalse(testingItem.isActive());
+        });
+        it('activates new active item', () => {
+            const testingItem = collection.getItemBySourceKey(2);
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(1));
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(2));
+            assert.isTrue(testingItem.isActive());
+        });
+        it('correctly returns active item', () => {
+            const testingItem = collection.getItemBySourceKey(2);
+            itemActionsController.setActiveItem(collection.getItemBySourceKey(2));
+            assert.equal(itemActionsController.getActiveItem(), testingItem);
         });
     });
 });
