@@ -3,7 +3,7 @@
                controls-listTemplates__imageTemplate_image_viewMode-{{_options.viewMode}}"
         src="{{_options.src}}"/>
    <div class="controls-listTemplates__imageTemplate_image_effect-{{_options.effect}}"
-        style="{{_options.effect === 'gradient' ? 'background: linear-gradient(to bottom, transparent 0%,' + {{_options.gradientColor || '#ffffff'}} + ' 100%);'}}"></div>
+        style="{{_options.effect === 'gradient' ? 'background: linear-gradient(to bottom, transparent 0%,' + (_options.gradientColor || '#ffffff') + ' 100%);' : ''}}"></div>
    <svg class="clip-svg" width="0" height="0">
       <defs>
          <clipPath id="controls-listTemplates__imageTemplate_ellipse" clipPathUnits="objectBoundingBox">

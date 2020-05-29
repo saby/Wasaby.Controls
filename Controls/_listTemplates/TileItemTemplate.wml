@@ -1,5 +1,5 @@
 <ws:template name="imageTemplate">
-   <ws:partial template="wml!ViewTemplates/_render/DefaultImageTemplate"
+   <ws:partial template="wml!Controls/_listTemplates/DefaultImageTemplate"
                src="{{_options.itemData.item[_options.imageProperty]}}"
                imageHeight="{{_options.itemData.tileSize.imageHeight}}"
                viewMode="{{_options.viewMode}}"
