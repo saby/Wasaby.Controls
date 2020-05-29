@@ -395,14 +395,14 @@ let
          const {scrollTop, clientHeight, scrollHeight} = self._children.content;
 
          if (scrollTop <= 0) {
-            self._pagingState.stateUp = 'disabled';
-            self._pagingState.stateDown = 'normal';
+            self._pagingState.stateUp = false;
+            self._pagingState.stateDown = true;
          } else if (scrollTop + clientHeight >= scrollHeight) {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'disabled';
+            self._pagingState.stateUp = true;
+            self._pagingState.stateDown = false;
          } else {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'normal';
+            self._pagingState.stateUp = true;
+            self._pagingState.stateDown = true;
          }
       },
 
@@ -538,8 +538,8 @@ let
             // paging buttons are invisible. Control calculates height and shows buttons after mounting.
             this._pagingState = {
                visible: false,
-               stateUp: 'disabled',
-               stateDown: 'normal'
+               stateUp: false,
+               stateDown: true
             };
          } else {
             this._pagingState = {};
@@ -948,14 +948,14 @@ let
       _scrollMoveHandler: function(e, scrollData) {
          if (this._pagingState.visible) {
             if (scrollData.position === 'up') {
-               this._pagingState.stateUp = 'disabled';
-               this._pagingState.stateDown = 'normal';
+               this._pagingState.stateUp = false;
+               this._pagingState.stateDown = true;
             } else if (scrollData.position === 'down') {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'disabled';
+               this._pagingState.stateUp = true;
+               this._pagingState.stateDown = false;
             } else {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'normal';
+               this._pagingState.stateUp = true;
+               this._pagingState.stateDown = true;
             }
             this._forceUpdate();
          }
