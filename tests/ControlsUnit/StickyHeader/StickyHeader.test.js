@@ -44,13 +44,12 @@ define([
          it('should not create a observer if the control was created invisible, and must create after it has become visible', function () {
             const component = createComponent(StickyHeader, options);
             component._container = {
-               offsetParent: null,
-               closest: sinon.stub().returns(true)
+               closest: () => true
             };
             sinon.stub(component, '_createObserver');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             assert.isUndefined(component._observer);
-            component._container.offsetParent = {};
+            component._container.closest = () => false;
             component._resizeHandler();
             sinon.assert.called(component._createObserver);
             sinon.restore();
@@ -64,7 +63,7 @@ define([
                component = createComponent(StickyHeader, options);
 
             component._container = {
-               offsetParent: 0
+               closest: () => false
             };
             component._model = {
                destroy: sinon.fake()
@@ -335,7 +334,7 @@ define([
          it('should notify fixed event', function() {
             const component = createComponent(StickyHeader, {});
             component._container = {
-               offsetParent: 0,
+               closest: () => false,
                offsetHeight: 10
             }
             sinon.stub(component, '_notify');
@@ -361,7 +360,7 @@ define([
             const component = createComponent(StickyHeader, {});
             component._height = 10;
             component._container = {
-               offsetParent: null,
+               closest: () => true,
                offsetHeight: 0
             }
             sinon.stub(component, '_notify');
