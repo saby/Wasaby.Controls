@@ -77,6 +77,7 @@ define(
          it('_beforeMount', () => {
             menu._beforeMount(config);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-medium_popup');
+            assert.isTrue(menu._hasItems);
          });
 
          it('_beforeUpdate', function() {
