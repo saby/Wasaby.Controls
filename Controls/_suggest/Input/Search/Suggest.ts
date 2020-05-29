@@ -13,7 +13,7 @@ import 'Controls/search';
  * 
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FSuggest%2FSearchInpu">демо-пример</a>
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FSuggest%2FSearchInput">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/suggest/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less">переменные тем оформления</a>
  *
