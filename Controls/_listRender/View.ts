@@ -270,6 +270,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
+        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         let contents = View._getItemContents(item);
         // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
@@ -331,6 +332,7 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
+        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         let contents = View._getItemContents(item);
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(contents?.getKey(), clickEvent, action, opener, isContextMenu);
         if (menuConfig) {
@@ -400,6 +402,8 @@ export default class View extends Control<IViewOptions> {
     /**
      * Возвращает contents записи.
      * Если запись - breadcrumbs, то берётся последняя Model из списка contents
+     * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+     *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
      * @param item
      */
     private static _getItemContents(item: CollectionItem<Model>): Model {
