@@ -271,8 +271,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'disabled',
-                  stateDown: 'normal'
+                  stateUp: false,
+                  stateDown: true
                });
             });
             it('Content at the middle', function() {
@@ -285,8 +285,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'normal',
-                  stateDown: 'normal'
+                  stateUp: true,
+                  stateDown: true
                });
             });
             it('Content at the bottom', function() {
@@ -299,8 +299,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'normal',
-                  stateDown: 'disabled'
+                  stateUp: true,
+                  stateDown: false
                });
             });
          });
@@ -530,22 +530,22 @@ define(
                scroll._scrollMoveHandler({}, {
                   position: 'up'
                });
-               assert.equal('disabled', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(false, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateDown, 'Wrong paging state');
             });
             it('down', function() {
                scroll._scrollMoveHandler({}, {
                   position: 'down'
                });
-               assert.equal('normal', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('disabled', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(false, scroll._pagingState.stateDown, 'Wrong paging state');
             });
             it('middle', function() {
                scroll._scrollMoveHandler({}, {
                   position: 'middle'
                });
-               assert.equal('normal', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateDown, 'Wrong paging state');
             });
 
          });
