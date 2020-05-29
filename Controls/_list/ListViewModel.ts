@@ -237,7 +237,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             this._options.style === 'master' || this._options.style === 'masterClassic';
     },
 
-    _isStickingItem(itemData: { isSticky?: boolean, isGroup?: boolean }): boolean {
+    _isStickedItem(itemData: { isSticky?: boolean, isGroup?: boolean }): boolean {
         return itemData.isSticky || itemData.isGroup;
     },
 
@@ -249,7 +249,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             let idx = startIndex;
             while (idx >= 0) {
                 const itemData = this.getItemDataByItem(this._display.at(idx));
-                if (this._isStickingItem(itemData)) {
+                if (this._isStickedItem(itemData)) {
                     return idx;
                 }
                 idx--;
