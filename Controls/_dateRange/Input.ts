@@ -74,7 +74,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         this._rangeModel.update(options);
         proxyModelEvents(
             this, this._rangeModel,
-            ['startValueChanged', 'endValueChanged', 'rangeChanged', 'valueChanged']
+            ['startValueChanged', 'endValueChanged', 'rangeChanged']
         );
         this._rangeModel.subscribe('rangeChanged', this._updateValidators.bind(this));
         this._updateValidators(options);
