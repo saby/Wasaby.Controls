@@ -12,7 +12,7 @@ export default class TreeController extends FlatController {
       //If you hover over the dragged item, and the current position is on the folder,
       //then you need to return the position that was before the folder.
       if (this._draggingItem && this._draggingItem.index === target.index) {
-         result = this._model._prevDragTargetPosition || null;
+         result = this._model.getPrevDragPosition() || null;
       } else if (target.dispItem.isNode()) {
          if (position === 'after' || position === 'before') {
             result = this._calculateDragTargetPosition(target, position);
@@ -35,15 +35,16 @@ export default class TreeController extends FlatController {
       let
          result,
          startPosition,
-         afterExpandedNode = position === 'after' && this._model._expandedItems.indexOf(itemData.dispItem.getContents().getKey()) !== -1;
+         afterExpandedNode = position === 'after' && this._model.getExpandedItems().indexOf(itemData.dispItem.getContents().getKey()) !== -1;
 
       //The position should not change if the record is dragged from the
       //bottom/top to up/down and brought to the bottom/top of the folder.
-      if (this._model._prevDragTargetPosition) {
-         if (this._model._prevDragTargetPosition.index === itemData.index) {
-            startPosition = this._model._prevDragTargetPosition.position;
+      const prevDragPosition = this._model.getPrevDragPosition();
+      if (prevDragPosition) {
+         if (prevDragPosition.index === itemData.index) {
+            startPosition = prevDragPosition.position;
          } else {
-            startPosition = this._model._prevDragTargetPosition.index < itemData.index ? 'before' : 'after';
+            startPosition = prevDragPosition.index < itemData.index ? 'before' : 'after';
          }
       }
 

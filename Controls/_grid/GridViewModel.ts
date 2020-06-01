@@ -1860,6 +1860,14 @@ var
             return this._model.calculateDragTargetPosition(targetData, position);
         },
 
+        getExpandedItems() {
+            return this._model.getExpandedItems();
+        },
+
+        getPrevDragPosition(): IDragPosition {
+            return this._model.getPrevDragPosition();
+        },
+
         getActiveItem: function() {
             return this._model.getActiveItem();
         },

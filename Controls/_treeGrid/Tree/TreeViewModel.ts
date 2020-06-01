@@ -755,6 +755,14 @@ var
             TreeViewModel.superclass.setDragTargetPosition.apply(this, arguments);
         },
 
+        getPrevDragPosition(): IDragPosition {
+            return this._prevDragTargetPosition;
+        },
+
+        getExpandedItems() {
+            return this._expandedItems;
+        },
+
         _setPrevDragTargetPosition: function(targetPosition) {
             if (!this._prevDragTargetPosition) {
                 if (this._dragTargetPosition) {
