@@ -1,3 +1,5 @@
+import instance from "../../../Controls/Store";
+
 define([
    'Controls/_operations/__MultiSelector',
    'Types/entity'
@@ -246,38 +248,59 @@ define([
          assert.isTrue(eventQueue[0].eventOptions.bubbling);
       });
 
-      it('_getCount', async() => {
-         let instance = new MultiSelector.default();
+      describe('_getCount', () => {
+         const testSelectedItemsCount = 5;
          const selection = {
             selected: ['test'],
             excluded: []
          };
-         let selectionCountConfig = {
-             rpc: {
-                 call: () => {
-                     return Promise.resolve({
-                         getRow: () => {
-                             return {
-                                 get: () => 'TEST_DATA_COUNT'
-                             };
-                         }
-                     });
-                 },
-                 getAdapter: () => {
-                     return new entity.adapter.Json();
-                 }
-             }
+         const selectionCountConfig = {
+            rpc: {
+               call: () => {
+                  return Promise.resolve({
+                     getRow: () => {
+                        return {
+                           get: () => testSelectedItemsCount
+                        };
+                     }
+                  });
+               },
+               getAdapter: () => {
+                  return new entity.adapter.Json();
+               }
+            };
          };
-         instance._options.selectedCountConfig = selectionCountConfig;
-         instance._children = {
-            countIndicator: {
-               show: function () {},
-               hide: function () {}
+         let instance;
+
+         beforeEach(() => {
+            instance = new MultiSelector.default();
+            instance._options.selectedCountConfig = selectionCountConfig;
+            instance._children = {
+               countIndicator: {
+                  show: function () {},
+                  hide: function () {}
+               }
+            };
+         });
+
+         it('_getCount returns promise<count>', () => {
+            return new Promise((resolve) => {
+               instance._getCount(selection, null, selectionCountConfig).then((count) => {
+                  assert.equal(count, testSelectedItemsCount);
+                  resolve();
+               });
+            });
+         });
+
+         it('promise is canceled on second getCount call', () => {
+            let isCountPromiseCanceled = false;
+            instance._getCount(selection, null, selectionCountConfig)
+            instance._countPromise.cancel = () => {
+               isCountPromiseCanceled = true;
             }
-         };
-         instance._menuCaption = 'Отмечено: 3';
-         instance._getCount(selection, null, selectionCountConfig);
-         assert.equal(instance._menuCaption, 'Отмечено: 3');
+            instance._getCount(selection, null, selectionCountConfig);
+            assert.isTrue(isCountPromiseCanceled);
+         });
       });
    });
 });
