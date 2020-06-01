@@ -73,17 +73,20 @@ export default class extends Control{
             source: this._source
          }
       };
-   },
+   }
 
    protected selectedKeysChanged1(e, key) {
       this._textSingle = 'Выбран ключ: ' + key;
-   },
+   }
+
    protected selectedKeysChanged2(e, keys) {
       this._textMultiply = 'Выбраны ключи: ' + keys.join(', ');
-   },
+   }
+
    protected selectedKeysChanged3(e, keys) {
       this._textMultiply2 = 'Выбраны ключи: ' + keys.join(', ');
-   },
+   }
+
    protected selectedKeysChanged4(e, keys) {
       this._textMultiply3 = 'Выбраны ключи: ' + keys.join(', ');
    }
