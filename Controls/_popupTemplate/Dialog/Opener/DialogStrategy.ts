@@ -86,10 +86,10 @@ export = {
         if (popupOptions.maximize) {
             return windowValue;
         }
-        if (value >= availableMaxSize) {
+        if (value > availableMaxSize) {
             value = Math.max(availableMaxSize, availableMinSize);
         }
-        if (value <= availableMinSize) {
+        if (value < availableMinSize) {
             value = availableMinSize;
         }
         return value;
