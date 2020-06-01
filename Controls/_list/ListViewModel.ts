@@ -13,6 +13,7 @@ import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfi
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction} from 'Controls/itemActions';
+// TODO dnd указать правильный путь
 import { IDragPosition, IFlatItem } from '../_listDragNDrop/interface';
 
 const ITEMACTIONS_POSITION_CLASSES = {
@@ -459,6 +460,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setDragTargetPosition: function(position) {
+        console.log(position ? position.index + ' ' + position.position : position)
         this._dragTargetPosition = position;
         this._nextModelVersion(true);
     },
