@@ -232,6 +232,32 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemsModelCurrent;
     },
 
+    _isSupportStickyItem(): boolean {
+        return this._options.stickyHeader && (this._options.groupingKeyCallback || this._options.groupProperty) ||
+            this._options.style === 'master' || this._options.style === 'masterClassic';
+    },
+
+    _isStickedItem(itemData: { isSticky?: boolean, isGroup?: boolean }): boolean {
+        return itemData.isSticky || itemData.isGroup;
+    },
+
+    _getCurIndexForReset(startIndex: number): number {
+        if (this._isSupportStickyItem() && startIndex > 0) {
+            // Если поддерживается sticky элементов, то индекс не просто нужно сбросить на 0, а взять индекс ближайшего
+            // к startIndex застиканного элемента, если таковой имеется. Если же его нет, то оставляем 0.
+            // https://online.sbis.ru/opendoc.html?guid=28edae33-62ba-46ae-882c-2bc282b4ee75
+            let idx = startIndex;
+            while (idx >= 0) {
+                const itemData = this.getItemDataByItem(this._display.at(idx));
+                if (this._isStickedItem(itemData)) {
+                    return idx;
+                }
+                idx--;
+            }
+        }
+        return startIndex;
+    },
+
     isShouldBeDrawnItem: function(item) {
         var isInRange = ListViewModel.superclass.isShouldBeDrawnItem.apply(this, arguments);
         return isInRange || (item?.isGroup && item?.isStickyHeader) || item?.isSticky;
