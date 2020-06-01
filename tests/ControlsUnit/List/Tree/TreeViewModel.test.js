@@ -24,6 +24,9 @@ define([
             getId: function() {
                return self._id;
             },
+            getKey: function() {
+               return self._id;
+            },
             get: function() {
                return self._isNode;
             }
