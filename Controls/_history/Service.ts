@@ -7,6 +7,7 @@ import Deferred = require('Core/Deferred');
 import coreClone = require('Core/core-clone');
 import DataStorage from './DataStorage';
 import LoadPromisesStorage from './LoadPromisesStorage';
+import {Logger} from 'UI/Utils';
 
 var STORAGES_USAGE = {};
 
@@ -40,15 +41,20 @@ var _private = {
             }
          });
       } else {
-         resultDef = _private.callQuery(self, 'UnionMultiHistoryIndexesList', {
-            params: {
-               historyIds: self._historyId ? [self._historyId] : self._historyIds,
-               pinned: {count: self._pinned ? Constants.MAX_HISTORY : 0},
-               frequent: {count: self._frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0},
-               recent: {count: self._recent || Constants.MAX_HISTORY},
-               getObjectData: self._dataLoaded
-            }
-         });
+         if (self._historyId || self._historyIds && self._historyIds.length) {
+            resultDef = _private.callQuery(self, 'UnionMultiHistoryIndexesList', {
+               params: {
+                  historyIds: self._historyId ? [self._historyId] : self._historyIds,
+                  pinned: {count: self._pinned ? Constants.MAX_HISTORY : 0},
+                  frequent: {count: self._frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0},
+                  recent: {count: self._recent || Constants.MAX_HISTORY},
+                  getObjectData: self._dataLoaded
+               }
+            });
+         } else {
+            Logger.error('Controls/history: Не установлен идентификатор истории (опция historyId)', self);
+            resultDef = Promise.reject();
+         }
       }
       return resultDef;
    },

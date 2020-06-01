@@ -22,7 +22,8 @@
    }
 }
 
-.controls-Button__close__icon_link-theme_@{themeName} {
+.controls-Button__close__icon_link-theme_@{themeName},
+.controls-Button__close__icon_linkButton-theme_@{themeName} {
    background-image: @icon_background-image_closeButton_link;
    height: @icon-size_closeButton_link;
    width: @icon-size_closeButton_link;
@@ -63,14 +64,16 @@
    box-sizing: border-box;
 }
 
-.controls-Button__close_link-theme_@{themeName} {
+.controls-Button__close_link-theme_@{themeName},
+.controls-Button__close_linkButton-theme_@{themeName} {
    font-family: @icon_font-family_m;
    width: @width_closeButton_link;
    height: @height_closeButton_link;
 }
 
 .ws-is-hover{
-   .controls-Button__close__icon_link-theme_@{themeName}:hover {
+   .controls-Button__close__icon_link-theme_@{themeName}:hover,
+   .controls-Button__close__icon_linkButton-theme_@{themeName}:hover {
       background-image: @icon_hovered_background-image_closeButton_link;
    }
 

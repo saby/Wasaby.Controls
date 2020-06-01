@@ -911,6 +911,7 @@ define([
 
          var dataLoadFired = false;
          var beforeLoadToDirectionCalled = false;
+         var shadowVisibility = true;
 
          var cfg = {
             viewName: 'Controls/List/ListView',
@@ -949,7 +950,13 @@ define([
             up: false,
             down: true
          };
-
+         ctrl._notify = (eventName, eventsArgs) => {
+            if (eventName === 'updateShadowMode') {
+               shadowVisibility = eventsArgs[0];
+            }
+         };
+         ctrl._isScrollShown = true;
+         ctrl._shadowVisibility = {};
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
          ctrl._loadingIndicatorState = 'down';
@@ -969,6 +976,7 @@ define([
          ctrl.triggerVisibilityChangedHandler(null, 'down', false);
          assert.isNull(ctrl._loadingIndicatorState);
          assert.isTrue(ctrl._showContinueSearchButton);
+         assert.equal(shadowVisibility.bottom, 'auto');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
