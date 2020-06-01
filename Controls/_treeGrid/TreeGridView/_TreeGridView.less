@@ -131,8 +131,10 @@
    padding-top: (@expander_height_treeGrid - @master_hidden-node_expander_icon-size_treeGrid) / 2;
 }
 
-// Костыль, связанный с тем, что на ios в safari стрелка экспандера поднимается на 2px над базовой линией
+// Костыль, связанный с тем, что в FireFox и на ios в safari стрелка экспандера поднимается на 1px над базовой линией
 // см. обсуждение в https://online.sbis.ru/opendoc.html?guid=bebdaf88-37a2-4804-b05d-daebb03c3320
+// + https://online.sbis.ru/opendoc.html?guid=c29f8faa-c188-43e3-9555-0314604ecc2d
+.ws-is-firefox,
 .ws-is-mobile-safari {
    .controls-TreeGrid__row-expander_node_master_theme-@{themeName}:before {
       padding-top: ((@expander_height_treeGrid - @master_node_expander_icon-size_treeGrid) / 2) + 1;
