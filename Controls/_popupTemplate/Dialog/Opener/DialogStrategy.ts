@@ -50,8 +50,8 @@ export = {
             dif = (item.position.top + containerSizes.height) - windowData.height;
             top -= Math.max(0, dif);
         } else {
-            width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width, popupOptions.maxWidth);
-            height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height, popupOptions.maxHeight);
+            width = this._calculateValue(popupOptions, containerSizes.width, windowData.width, popupOptions.width, popupOptions.maxWidth, popupOptions.minWidth);
+            height = this._calculateValue(popupOptions, containerSizes.height, windowData.height, popupOptions.height, popupOptions.maxHeight, popupOptions.minHeight);
             left = this._getLeftCoord(windowData.width, width || containerSizes.width, popupOptions) + (windowData.scrollLeft || 0);
 
             // Если диалоговое окно открыто через touch, то позиционируем его в самом верху экрана.
@@ -79,15 +79,20 @@ export = {
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
         };
     },
-    _calculateValue: function (popupOptions, containerValue, windowValue, popupValue, maxValue) {
-        const availableSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
+    _calculateValue: function (popupOptions, containerValue, windowValue, popupValue, maxValue: number | undefined, minValue: number | undefined) {
+        let value = popupValue;
+        const availableMaxSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
+        const availableMinSize = minValue ? minValue : 0;
         if (popupOptions.maximize) {
             return windowValue;
         }
-        if (containerValue >= availableSize || popupValue >= availableSize) {
-            return availableSize;
+        if (containerValue >= availableMaxSize || popupValue >= availableMaxSize) {
+            value = Math.max(availableMaxSize, availableMinSize);
         }
-        return popupValue;
+        if (containerValue < availableMinSize || popupValue < availableMinSize) {
+            value = availableMinSize;
+        }
+        return value;
     },
     _getLeftCoord: function (wWidth, width, popupOptions) {
         if (popupOptions.maximize) {
