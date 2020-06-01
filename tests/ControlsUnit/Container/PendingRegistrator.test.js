@@ -46,6 +46,8 @@ define(
             let def1 = new Deferred();
             let def2 = new Deferred();
             let def3 = new Deferred();
+            const baseRoot = null;
+            const firstRoot = 1;
 
             Registrator._beforeMount();
             Registrator._children = {
@@ -57,16 +59,18 @@ define(
                }
             };
             Registrator._registerPendingHandler(null, def1, {});
-            Registrator._registerPendingHandler(null, def2, { showLoadingIndicator: true });
+            Registrator._registerPendingHandler(null, def2, { showLoadingIndicator: true, root: firstRoot });
             Registrator._registerPendingHandler(null, def3, {});
-
-            assert.equal(Object.keys(Registrator._pendings).length, 3);
+            assert.equal(Object.keys(Registrator._pendings).length, 2);
+            assert.equal(Object.keys(Registrator._pendings[baseRoot]).length, 2);
+            assert.equal(Object.keys(Registrator._pendings[firstRoot]).length, 1);
 
             def1.callback();
             def2.callback();
             def3.callback();
 
-            assert.equal(Object.keys(Registrator._pendings).length, 0);
+            assert.equal(Object.keys(Registrator._pendings[baseRoot]).length, 0);
+            assert.equal(Object.keys(Registrator._pendings[firstRoot]).length, 0);
 
             Registrator._beforeUnmount();
             Registrator.destroy();

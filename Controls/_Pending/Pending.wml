@@ -1,5 +1,4 @@
-<Controls.LoadingIndicator name="loadingIndicator">
-   <ws:partial template="{{_options.content}}" on:registerPending="_registerPendingHandler()"
-               on:finishPendingOperations="_finishPendingHandler()"
-               on:cancelFinishingPending="_cancelFinishingPending()"/>
-</Controls.LoadingIndicator>
+<ws:partial template="{{_options.content}}"
+            on:registerPending="_registerPendingHandler()"
+            on:finishPendingOperations="_finishPendingHandler()"
+            on:cancelFinishingPending="_cancelFinishingPendingHandler()"/>
