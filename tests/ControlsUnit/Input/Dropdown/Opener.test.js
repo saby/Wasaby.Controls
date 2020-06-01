@@ -41,13 +41,15 @@ define(
          };
 
          it('get template', () => {
-            let opener = getOpener(config);
+            let cfg = {...config};
+            cfg.template = 'Controls/popupTemplate:StickyController';
+            let opener = getOpener(cfg);
             let controllerName = 'Controls/popupTemplate:StickyController';
 
             // первый раз загрузка
-            opener._requireModules(config, controllerName).addCallback(() => {
+            opener._requireModules(cfg, controllerName).addCallback(() => {
                // второй раз из кэша рекваера
-               opener._requireModules(config, controllerName).addCallback(() => {
+               opener._requireModules(cfg, controllerName).addCallback(() => {
                   assert.isTrue(true);
                });
             });
