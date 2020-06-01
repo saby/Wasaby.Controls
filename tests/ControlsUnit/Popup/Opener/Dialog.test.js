@@ -99,7 +99,7 @@ define(
             sizesTest.width = 700;
             let position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
             assert.equal(position.left, 0);
-            assert.equal(position.width, 500);
+            assert.equal(position.width, 600);
          });
 
          it('dialog popupoptions sizes config', () => {
