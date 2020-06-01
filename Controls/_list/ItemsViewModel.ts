@@ -295,6 +295,8 @@ var ItemsViewModel = BaseViewModel.extend({
             itemData.key = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty);
         }
 
+        itemData.instanceId = dispItem.getInstanceId();
+
         if (this._options.groupingKeyCallback || this._options.groupProperty) {
             if (this._isGroup(itemData.item)) {
                 itemData.isGroup = true;
