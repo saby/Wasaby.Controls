@@ -70,7 +70,6 @@ define(
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
             assert.equal(isHideIndicatorCall, true);
-            assert.equal(opener._openPopupTimerId, null);
 
             isHideIndicatorCall = false;
             opener._indicatorId = null;
@@ -78,7 +77,6 @@ define(
             opener._options.closePopupBeforeUnmount = false;
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
-            assert.equal(opener._openPopupTimerId, '145');
             assert.equal(isHideIndicatorCall, false);
             opener.destroy();
          });
