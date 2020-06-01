@@ -82,7 +82,8 @@ describe('Controls/list_clean/ListViewModel', () => {
                 items,
                 keyProperty: 'key',
                 markedKey: null,
-                virtualScrollConfig: {}
+                virtualScrollConfig: {},
+                supportVirtualScroll: true
             });
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
@@ -111,7 +112,8 @@ describe('Controls/list_clean/ListViewModel', () => {
                 keyProperty: 'key',
                 markedKey: null,
                 stickyHeader: true,
-                virtualScrollConfig: {}
+                virtualScrollConfig: {},
+                supportVirtualScroll: true
             });
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
@@ -144,6 +146,7 @@ describe('Controls/list_clean/ListViewModel', () => {
                 markedKey: null,
                 stickyHeader: true,
                 virtualScrollConfig: {},
+                supportVirtualScroll: true,
                 groupingKeyCallback: (item) => {
                     return item.get('group');
                 }
@@ -183,7 +186,8 @@ describe('Controls/list_clean/ListViewModel', () => {
                 markedKey: null,
                 stickyHeader: true,
                 style: 'master',
-                virtualScrollConfig: {}
+                virtualScrollConfig: {},
+                supportVirtualScroll: true
             });
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
@@ -226,7 +230,8 @@ describe('Controls/list_clean/ListViewModel', () => {
                 markedKey: null,
                 stickyHeader: true,
                 style: 'masterClassic',
-                virtualScrollConfig: {}
+                virtualScrollConfig: {},
+                supportVirtualScroll: true
             });
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
