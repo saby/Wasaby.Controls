@@ -29,7 +29,7 @@
          currentNode="{{currentNode}}"/>
    </ws:if>
 </ws:template>
-<ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup && (currentNode === undefined || listModel.getCurrent().item[listModel.getCurrent().parentProperty] === currentNode.item.getId()) ;">
+<ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup && (currentNode === undefined || listModel.getCurrent().item[listModel.getCurrent().parentProperty] === currentNode.key()) ;">
    <ws:if data="{{listModel.getCurrent().item[listModel.getCurrent().nodeProperty] !== null}}">
       <ws:partial template="nodeOutputLocalTemplate" currentNode="{{listModel.getCurrent()}}"/>
    </ws:if>
