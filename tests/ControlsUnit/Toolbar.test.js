@@ -3,9 +3,10 @@ define(
       'Controls/toolbars',
       'Types/entity',
       'Types/collection',
-      'Types/source'
+      'Types/source',
+      'Controls/popup'
    ],
-   (toolbars, entity, collection, sourceLib) => {
+   (toolbars, entity, collection, sourceLib, popupLib) => {
       describe('Toolbar', () => {
          let defaultItems = [
             {
@@ -153,14 +154,19 @@ define(
                });
             });
             it('open menu', function() {
-               let isOpened = false;
+               let isOpened = false, popupId;
                toolbar._notify = (e) => {
                   isOpened = true;
                   assert.equal(e, 'menuOpened');
                };
-               toolbar._children.menuOpener = {
-                  close: setTrue.bind(this, assert),
-                  open: setTrue.bind(this, assert)
+               popupLib.Sticky = {
+                  closePopup: setTrue.bind(this, assert),
+                  openPopup: () => {
+                     return new Promise((resolve) => {
+                        setTrue.bind(this, assert);
+                        resolve();
+                     })
+                  }
                };
                toolbar._children.menuTarget = {
                   _container: 'target'
@@ -274,7 +280,11 @@ define(
                      _items: { getIndexByValue: () => {} }
                   },
                   expectedConfig = {
+                     id: undefined,
                      opener: testSelf,
+                     template: 'Controls/menu:Popup',
+                     closeOnOutsideClick: true,
+                     actionOnScroll: 'close',
                      className: 'controls-Toolbar__popup__icon_theme-default popupClassName',
                      targetPoint: {
                         horizontal: 'left',
@@ -407,33 +417,30 @@ define(
                      },
                      _menuSource: recordForMenu
                   },
-                  config = {
-                     className: 'popupClassName controls-Toolbar__popup__list_theme-default',
-                     target: 'menuTarget',
-                     templateOptions: {
-                        iconSize: 'm',
-                        keyProperty: 'id',
-                        nodeProperty: '@parent',
-                        parentProperty: 'parent',
-                        source: recordForMenu,
-                        additionalProperty: 'additional',
-                        itemTemplateProperty: 'itp',
-                        groupTemplate: 'groupTemplate',
-                        groupingKeyCallback: 'groupingKeyCallback',
-                        groupProperty: undefined,
-                        footerContentTemplate: undefined,
-                        itemActions: undefined,
-                        itemActionVisibilityCallback: undefined
-                     }
+                  templateOptions = {
+                     iconSize: 'm',
+                     keyProperty: 'id',
+                     nodeProperty: '@parent',
+                     parentProperty: 'parent',
+                     source: recordForMenu,
+                     additionalProperty: 'additional',
+                     itemTemplateProperty: 'itp',
+                     groupTemplate: 'groupTemplate',
+                     groupingKeyCallback: 'groupingKeyCallback',
+                     groupProperty: undefined,
+                     footerContentTemplate: undefined,
+                     itemActions: undefined,
+                     itemActionVisibilityCallback: undefined
                   };
-               assert.deepEqual((new toolbars.View())._getMenuConfig.call(testSelf), config);
+               assert.deepEqual((new toolbars.View())._getMenuConfig.call(testSelf).templateOptions, templateOptions);
             });
             it('toolbar closed by his parent', () => {
                let isMenuClosed = false;
                toolbar._nodeProperty = '@parent';
-               toolbar._children.menuOpener.close = function() {
+               popupLib.Sticky.closePopup = function() {
                   isMenuClosed = true;
                };
+               toolbar._popupId = 'test';
                toolbar._resultHandler('itemClick', itemWithOutMenu);
                assert.equal(isMenuClosed, true, 'toolbar closed, but his submenu did not');
             });

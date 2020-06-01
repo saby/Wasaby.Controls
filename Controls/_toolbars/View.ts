@@ -131,12 +131,12 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
 
 /**
  * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FToolbar%2FBase%2FIndex">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toolbars.less">переменные тем оформления</a>
- * 
+ *
  *
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
@@ -171,8 +171,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _template: TemplateFunction = template;
 
     _children: {
-        menuTarget: HTMLElement,
-        menuOpener: StickyOpener
+        menuTarget: HTMLElement
     };
 
     readonly '[Controls/_interface/IHierarchy]': boolean = true;
@@ -190,24 +189,30 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
-        return {
-            className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
-            templateOptions: {
-                source: this._menuSource,
-                iconSize: options.iconSize,
-                keyProperty: options.keyProperty,
-                nodeProperty: options.nodeProperty,
-                parentProperty: options.parentProperty,
-                groupTemplate: options.groupTemplate,
-                itemActions: options.itemActions,
-                itemActionVisibilityCallback: options.itemActionVisibilityCallback,
-                groupProperty: options.groupProperty,
-                groupingKeyCallback: options.groupingKeyCallback,
-                additionalProperty: options.additionalProperty,
-                itemTemplateProperty: options.itemTemplateProperty,
-                footerContentTemplate: options.popupFooterTemplate
-            },
-            target: this._children.menuTarget
+        return {...this._menuOptions, ...{
+                id: this._popupId,
+                opener: this,
+                className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
+                template: 'Controls/menu:Popup',
+                closeOnOutsideClick: true,
+                actionOnScroll: 'close',
+                templateOptions: {
+                    source: this._menuSource,
+                    iconSize: options.iconSize,
+                    keyProperty: options.keyProperty,
+                    nodeProperty: options.nodeProperty,
+                    parentProperty: options.parentProperty,
+                    groupTemplate: options.groupTemplate,
+                    itemActions: options.itemActions,
+                    itemActionVisibilityCallback: options.itemActionVisibilityCallback,
+                    groupProperty: options.groupProperty,
+                    groupingKeyCallback: options.groupingKeyCallback,
+                    additionalProperty: options.additionalProperty,
+                    itemTemplateProperty: options.itemTemplateProperty,
+                    footerContentTemplate: options.popupFooterTemplate
+                },
+                target: this._children.menuTarget
+            }
         };
     }
 
@@ -220,34 +225,39 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (this._items.getIndexByValue(options.parentProperty, root) === -1) {
             source = options.source;
         }
-        return {
-            opener: this,
-            className: `controls-Toolbar__popup__${Toolbar._typeItem(item)}_theme-${options.theme} ${Toolbar._menuItemClassName(item)}`,
-            targetPoint: {
-                vertical: 'top',
-                horizontal: 'left'
-            },
-            direction: {
-                horizontal: 'right'
-            },
-            templateOptions: {
-                source,
-                root,
-                groupTemplate: options.groupTemplate,
-                groupProperty: options.groupProperty,
-                groupingKeyCallback: options.groupingKeyCallback,
-                keyProperty: options.keyProperty,
-                parentProperty: options.parentProperty,
-                nodeProperty: options.nodeProperty,
-                iconSize: options.iconSize,
-                itemTemplateProperty: options.itemTemplateProperty,
-                showHeader: item.get('showHeader'),
-                closeButtonVisibility: !item.get('showHeader'),
-                headConfig: {
-                    icon: item.get('icon'),
-                    caption: item.get('title'),
-                    iconSize: item.get('iconSize'),
-                    iconStyle: item.get('iconStyle')
+        return {...this._menuOptions, ...{
+                id: this._popupId,
+                opener: this,
+                className: `controls-Toolbar__popup__${Toolbar._typeItem(item)}_theme-${options.theme} ${Toolbar._menuItemClassName(item)}`,
+                template: 'Controls/menu:Popup',
+                closeOnOutsideClick: true,
+                actionOnScroll: 'close',
+                targetPoint: {
+                    vertical: 'top',
+                    horizontal: 'left'
+                },
+                direction: {
+                    horizontal: 'right'
+                },
+                templateOptions: {
+                    source,
+                    root,
+                    groupTemplate: options.groupTemplate,
+                    groupProperty: options.groupProperty,
+                    groupingKeyCallback: options.groupingKeyCallback,
+                    keyProperty: options.keyProperty,
+                    parentProperty: options.parentProperty,
+                    nodeProperty: options.nodeProperty,
+                    iconSize: options.iconSize,
+                    itemTemplateProperty: options.itemTemplateProperty,
+                    showHeader: item.get('showHeader'),
+                    closeButtonVisibility: !item.get('showHeader'),
+                    headConfig: {
+                        icon: item.get('icon'),
+                        caption: item.get('title'),
+                        iconSize: item.get('iconSize'),
+                        iconStyle: item.get('iconStyle')
+                    }
                 }
             }
         };
@@ -264,7 +274,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             },
             eventHandlers: {
                 onResult: this._resultHandler,
-                onClose: this._closeHandler
+                onClose: () => {
+                    this._popupId = null;
+                    this._closeHandler();
+                }
             },
             templateOptions: {
                 closeButtonVisibility: true
@@ -329,7 +342,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _openMenu(config): void {
-        this._children.menuOpener.open(config, this);
+        StickyOpener.openPopup(config, this).then((popupId) => {
+            this._popupId = popupId;
+        });
     }
 
     protected _beforeMount(options: IToolbarOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
@@ -361,8 +376,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             /**
              * menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
              */
-            if (this._children.menuOpener && !item.get(this._nodeProperty)) {
-                this._children.menuOpener.close();
+            if (this._popupId && !item.get(this._nodeProperty)) {
+                StickyOpener.closePopup(this._popupId);
             }
         }
     }
