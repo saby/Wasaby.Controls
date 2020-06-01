@@ -1,5 +1,3 @@
-import instance from "../../../Controls/Store";
-
 define([
    'Controls/_operations/__MultiSelector',
    'Types/entity'
