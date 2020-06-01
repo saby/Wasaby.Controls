@@ -49,14 +49,11 @@ export default class FlatController {
       this._entity = entity;
 
       // TODO dnd наверное нужно изменить draggingItem. Но учесть что из startDrag он и может придти
-      draggedItem = draggedItem
+      const draggedItemData = draggedItem
          ? this._model.getItemDataByItem(draggedItem)
-         : this._model.getItemDataByItem(this._draggingItemData.dispItem); // TODO dnd точно ли нужжно вызывать тут этот метод если у нас и так itemData хранится
+         : this._draggingItemData;
 
-      this._model.setDraggedItems(draggedItem, entity);
-      // TODO dnd если что тут порядок другой и это по идее должно влиять. Раньше меняется модель до того как проставилось 2-ое
-      /*this._model.setDragEntity(dragObject.entity);
-      this._model.setDragItemData(this._listViewModel.getItemDataByItem(this._draggingItemData.dispItem));*/
+      this._model.setDraggedItems(draggedItemData, entity);
    }
 
    setDragPosition(position: IDragPosition): void {
