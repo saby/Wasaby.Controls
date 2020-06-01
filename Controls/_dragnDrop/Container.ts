@@ -915,9 +915,11 @@ import entity = require('Types/entity');
          _documentDragging: false,
          _insideDragging: false,
          _endDragNDropTimer: null,
+         _draggedKey: null,
 
-         startDragNDrop: function(entity, mouseDownEvent, options: IStartDragOptions = {immediately: false}) {
+         startDragNDrop: function(entity, mouseDownEvent, options: IStartDragOptions = {immediately: false}, draggedKey) {
             this._dragEntity = entity;
+            this._draggedKey = draggedKey;
             this._startEvent = mouseDownEvent.nativeEvent;
             this._startImmediately = options.immediately;
             if (this._options.resetTextSelection) {
@@ -995,8 +997,7 @@ import entity = require('Types/entity');
 
          _documentDragStart: function(dragObject) {
             if (this._insideDragging) {
-               // TODO dnd убедиться что entity нигде не перезапишется, а то может лучше ключ хранить в отдельном поле
-               this._notify('dragStart', [dragObject, dragObject.entity.draggedKey]);
+               this._notify('dragStart', [dragObject, this._draggedKey]);
             } else {
                this._dragEntity = dragObject.entity;
             }

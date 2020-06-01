@@ -350,7 +350,7 @@ const _private = {
     startDragNDrop(self, domEvent, itemData): void {
         if (!self._options.readOnly && self._options.itemsDragNDrop
                 && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)) {
-            const key = self._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+            const key = itemData.getContents().getKey();
 
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
@@ -369,8 +369,7 @@ const _private = {
                     if (self._options.dragControlId) {
                         dragStartResult.dragControlId = self._options.dragControlId;
                     }
-                    dragStartResult.draggedKey = key;
-                    self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
+                    self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent, { immediately: false }, key);
                 }
             });
         }

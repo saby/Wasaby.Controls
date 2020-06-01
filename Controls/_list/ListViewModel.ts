@@ -252,12 +252,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (this._dragEntity) {
             dragItems = this._dragEntity.getItems();
-            // TODO dnd теперь он не первый в списке. Добавить в dragEntity ключ который перетаскивается
-            if (dragItems[0] === itemsModelCurrent.key) {
+            if (this._draggingItemData.key === itemsModelCurrent.key) {
                 itemsModelCurrent.isDragging = true;
             }
             if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
-                itemsModelCurrent.isVisible = dragItems[0] === itemsModelCurrent.key ? !this._dragTargetPosition : false;
+                itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
             }
             if (this._draggingItemData && this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                 itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
@@ -485,7 +484,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setDragTargetPosition: function(position) {
-        console.log(position ? position.index + ' ' + position.position : position)
         this._dragTargetPosition = position;
         this._nextModelVersion(true);
     },
