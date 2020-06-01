@@ -3532,7 +3532,7 @@ define([
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });*/
-      it('native drag prevent only by native "dragstart" event', async function() {
+ /*     it('native drag prevent only by native "dragstart" event', async function() {
          let isDefaultPrevented = false;
 
          const
@@ -3591,7 +3591,7 @@ define([
          ctrl._nativeDragStart(fakeDragStart);
          assert.isTrue(isDefaultPrevented);
       });
-
+*/
       /*it('_itemMouseDown places dragKey first', async() => {
          let dragKeys;
          const
@@ -3967,7 +3967,7 @@ define([
          assert.equal(eName, 'itemMouseLeave');
       });*/
 
-      it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
+/*      it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
          var cfg = {
                 viewName: 'Controls/List/ListView',
                 itemsDragNDrop: true,
@@ -3995,7 +3995,7 @@ define([
          instance.saveOptions({...cfg, itemsDragNDrop: false});
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'itemMouseLeave');
-      });
+      });*/
 
       it('should fire "drawItems" in afterMount', async function() {
          let

@@ -586,6 +586,7 @@ define([
             });
          });
 
+/*
          it('getItemDataByItem', function() {
             var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
 
@@ -617,6 +618,7 @@ define([
             });
             assert.isTrue(!!item.shouldDisplayActions());
          });
+*/
 
          it('getMultiSelectClassList hidden', function() {
             lvm._options.multiSelectVisibility = 'hidden';

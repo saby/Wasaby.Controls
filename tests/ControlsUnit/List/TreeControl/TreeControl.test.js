@@ -361,6 +361,7 @@ define([
             }
          }
 
+/*
          it('clearTimeoutForExpandOnDrag on dragEnd', function(done) {
             treeControl._setTimeoutForExpandOnDrag(itemData);
             assert.isFalse(toggleExpandedCalled);
@@ -372,7 +373,9 @@ define([
                done();
             }, 1000);
          });
+*/
 
+/*
          it('clearTimeoutForExpandOnDrag on itemMouseLeave', function(done) {
             itemData = {isExpanded: false};
             toggleExpandedCalled = false;
@@ -387,8 +390,9 @@ define([
                done();
             }, 1000);
          });
+*/
 
-         it('ExpandOnDrag on collapsed', function(done) {
+        /* it('ExpandOnDrag on collapsed', function(done) {
             itemData = {isExpanded: false};
             toggleExpandedCalled = false;
             treeControl._setTimeoutForExpandOnDrag(itemData);
@@ -409,8 +413,9 @@ define([
                assert.isFalse(toggleExpandedCalled);
                done();
             }, 1000);
-         });
+         });*/
       });
+/*
       it('nodeMouseMove does not call setDragTargetPosition if dragItemData is null', function() {
          let tree = correctCreateTreeControl({
             columns: [],
@@ -463,6 +468,7 @@ define([
          tree._nodeMouseMove(nodeItem, event);
          assert.isFalse(setDragTargetPositionCalled);
       });
+*/
 
       it('TreeControl.toggleExpanded with sorting', function() {
          let treeControl = correctCreateTreeControl({

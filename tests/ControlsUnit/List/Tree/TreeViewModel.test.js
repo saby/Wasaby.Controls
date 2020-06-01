@@ -793,7 +793,7 @@ define([
             assert.isTrue(tvm.getDragItemData().getVersion().indexOf('_LEVEL_2') !== -1);
          });
 
-         describe('setDragTargetPosition', function() {
+/*         describe('setDragTargetPosition', function() {
             var itemData, dragTargetPosition;
 
             it('on node without prev state', function() {
@@ -808,7 +808,7 @@ define([
 
                assert.equal(tvm._prevDragTargetPosition.data.key, '567');
                assert.equal(tvm._prevDragTargetPosition.position, 'after');
-            });
+            });*/
 
             /*it('on node', function() {
                //move item 567
@@ -840,42 +840,43 @@ define([
                assert.equal(dragTargetPosition.position, 'before');
             });*/
 
-            it('on node', function() {
+            /*it('on node', function() {
                itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
                dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'on');
-            });
+            });*/
 
-            it('before node', function() {
+            /*it('before node', function() {
                itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
                dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'before');
-            });
+            });*/
 
-            it('after node', function() {
+           /* it('after node', function() {
                itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
                dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'after');
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'after');
-            });
+            });*/
 
-            it('before expanded node', function() {
+            /*it('before expanded node', function() {
                tvm.toggleExpanded(tvm.getItemById('123', 'id'), true);
                itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
                dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'before');
-            });
+            });*/
 
-            it('after expanded node', function() {
+            /*it('after expanded node', function() {
                tvm.toggleExpanded(tvm.getItemById('123', 'id'), true);
                itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
                dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'after');
                assert.equal(dragTargetPosition, undefined);
-            });
+            });*/
 
+/*
             it('move down node', function() {
                //move item 567
                tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
@@ -898,6 +899,7 @@ define([
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'after');
             });
+*/
 
            /* it('move up item', function() {
                //move item 567
@@ -922,6 +924,7 @@ define([
                assert.equal(dragTargetPosition.position, 'before');
             });*/
 
+/*
             it('move to draggableItem', function() {
                var
                   prevDragTargetPosition,
@@ -954,7 +957,9 @@ define([
                assert.equal(prevDragTargetPosition.index, dragTargetPosition.index);
                assert.equal(prevDragTargetPosition.position, dragTargetPosition.position);
             });
+*/
 
+/*
             it('move to draggableFolder', function() {
                var item = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
 
@@ -974,6 +979,7 @@ define([
                dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
                assert.isNull(dragTargetPosition);
             });
+*/
          });
       });
 
