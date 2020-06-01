@@ -154,7 +154,7 @@ define(
                });
             });
             it('open menu', function() {
-               let isOpened = false, popupId;
+               let isOpened = false;
                toolbar._notify = (e) => {
                   isOpened = true;
                   assert.equal(e, 'menuOpened');
@@ -165,7 +165,7 @@ define(
                      return new Promise((resolve) => {
                         setTrue.bind(this, assert);
                         resolve();
-                     })
+                     });
                   }
                };
                toolbar._children.menuTarget = {
