@@ -70,6 +70,7 @@ import ActualApi from 'Controls/_buttons/ActualApi';
 var Button = Control.extend({
    _template: template,
    _tmplNotify: tmplNotify,
+   _hasItems: true,
 
    constructor: function () {
       Button.superclass.constructor.apply(this, arguments);
