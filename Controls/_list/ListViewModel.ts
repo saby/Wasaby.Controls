@@ -13,8 +13,7 @@ import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfi
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction} from 'Controls/itemActions';
-// TODO dnd указать правильный путь
-import { IDragPosition, IFlatItem } from '../_listDragNDrop/interface';
+import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
 const ITEMACTIONS_POSITION_CLASSES = {
     bottomRight: 'controls-itemActionsV_position_bottomRight',
@@ -428,7 +427,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true, 'activeItemChanged');
     },
 
-    setDraggedItems(draggedItem: IFlatItem, dragEntity: any): void {
+    setDraggedItems(draggedItem: IFlatItemData, dragEntity): void {
         this.setDragItemData(draggedItem);
         this.setDragEntity(dragEntity);
     },

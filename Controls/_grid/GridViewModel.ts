@@ -26,7 +26,8 @@ import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil'
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
-import { IDragPosition, IFlatItem } from '../_listDragNDrop/interface';
+import { ItemsEntity } from 'Controls/dragnDrop';
+import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -1814,18 +1815,14 @@ var
             this._model.setSelectedItems(items, selected);
         },
 
-        setDraggedItems(draggedItem: IFlatItem, dragEntity: any): void {
-            this.setDragItemData(draggedItem);
-            this.setDragEntity(dragEntity);
+        setDraggedItems(draggedItem: IFlatItemData, dragEntity: ItemsEntity): void {
+            this._model.setDraggedItems(draggedItem, dragEntity);
         },
         setDragPosition(position: IDragPosition): void {
-            this.setDragTargetPosition(position);
+            this._model.setDragPosition(position);
         },
         resetDraggedItems(): void {
-            this._dragEntity = null;
-            this._draggingItemData = null;
-            this._dragTargetPosition = null;
-            this._nextModelVersion(true);
+            this._model.resetDraggedItems();
         },
 
         setDragTargetPosition: function(position) {
@@ -1854,14 +1851,6 @@ var
 
         getDragItemData: function() {
             return this._model.getDragItemData();
-        },
-
-        calculateDragTargetPosition: function(targetData, position) {
-            return this._model.calculateDragTargetPosition(targetData, position);
-        },
-
-        getExpandedItems() {
-            return this._model.getExpandedItems();
         },
 
         getPrevDragPosition(): IDragPosition {

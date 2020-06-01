@@ -348,8 +348,8 @@ const _private = {
         return resDeferred;
     },
     startDragNDrop(self, domEvent, itemData): void {
-        if (!self._options.readOnly && self._dndListController
-                && self._dndListController.canStartDragNDrop(domEvent, self._context?.isTouch?.isTouch)) {
+        if (!self._options.readOnly && self._options.itemsDragNDrop
+                && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)) {
             const key = self._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
 
             //Support moving with mass selection.
@@ -358,7 +358,7 @@ const _private = {
                 selected: self._options.selectedKeys,
                 excluded: self._options.excludedKeys
             };
-            selection = self._dndListController.getSelectionForDragNDrop(selection, key);
+            selection = DndFlatController.getSelectionForDragNDrop(self._listViewModel, selection, key);
             const recordSet = self._listViewModel.getCollection();
 
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
@@ -369,12 +369,8 @@ const _private = {
                     if (self._options.dragControlId) {
                         dragStartResult.dragControlId = self._options.dragControlId;
                     }
+                    dragStartResult.draggedKey = key;
                     self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
-
-                    // TODO dnd мы запомнили это значение, но не обязательно начнется перетаскивание
-                    // оно точно начинается по событию dragStart. Может до туда прокидывать это значение
-                    // или возможно в entity хранится это значение
-                    self._dndListController.draggingItem = itemData;
                 }
             });
         }
@@ -1638,13 +1634,6 @@ const _private = {
             model.setHasMoreData(hasMoreData);
         }
     },
-    notifyIfDragging(self, eName, itemData, nativeEvent) {
-        const model = self.getViewModel();
-        // TODO Make available for new model as well
-        if (!self._options.useNewModel && (model.getDragEntity() || model.getDragItemData())) {
-            self._notify(eName, [itemData, nativeEvent]);
-        }
-    },
     jumpToEnd(self) {
         const lastItem =
             self._options.useNewModel
@@ -1789,9 +1778,9 @@ const _private = {
 
     createDndListController(self: any, options: any): DndFlatController|DndTreeController {
         if (options.parentProperty) {
-            return new DndTreeController(self._listViewModel, options.canStartDragNDrop);
+            return new DndTreeController(self._listViewModel);
         } else {
-            return new DndFlatController(self._listViewModel, options.canStartDragNDrop);
+            return new DndFlatController(self._listViewModel);
         }
     }
 };
@@ -1981,10 +1970,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             if (newOptions.markerVisibility !== 'hidden') {
                 self._markerController = _private.createMarkerController(self, newOptions);
-            }
-
-            if (newOptions.itemsDragNDrop) {
-                self._dndListController = _private.createDndListController(self, newOptions);
             }
 
             if (newOptions.source) {
@@ -2825,16 +2810,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         event.preventDefault();
     },
 
-    _dragStart: function(event, dragObject, domEvent) {
-        this._dndListController.startDrag(dragObject.entity);
+    _dragStart: function(event, dragObject, draggedKey) {
+        if (!this._dndListController) {
+            this._dndListController = _private.createDndListController(this, this._options);
+        }
 
-        // TODO dnd забить пока хер на это. Должно работать без этого
+        this._dndListController.startDrag(draggedKey, dragObject.entity);
+
         // Cобытие mouseEnter на записи может сработать до dragStart.
         // И тогда перемещение при наведении не будет обработано.
         // В таком случае обрабатываем наведение на запись сейчас.
         //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
         if (this._unprocessedDragEnteredItem) {
-            this._processItemMouseEnterWithDragNDrop(event, this._unprocessedDragEnteredItem);
+            this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
         }
     },
 
@@ -2884,8 +2872,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _dragLeave: function() {
-        // TODO dnd проверить точно ли это нужно. Так как на enter ы поставим новую позицию.
-        // а этот вызов вызовет лишнюю перерисовку. Но наверное это нужно когда мы уводим с контейнера
         this._dndListController.setDragPosition(null);
     },
 
@@ -2908,21 +2894,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return this._dndListController;
     },
 
-    _processItemMouseEnterWithDragNDrop(_, itemData) {
+    _processItemMouseEnterWithDragNDrop(itemData) {
         let dragPosition;
         if (this._dndListController.isDragging()) {
             dragPosition = this._dndListController.calculateDragPosition(itemData);
-            if (dragPosition && this._notify('changeDragTarget', [this._dndListController.dragEntity, dragPosition.item, dragPosition.position]) !== false) {
+            if (dragPosition && this._notify('changeDragTarget', [this._dndListController.getDragPosition(), dragPosition.item, dragPosition.position]) !== false) {
                     this._dndListController.setDragPosition(dragPosition);
             }
             this._unprocessedDragEnteredItem = null;
         }
     },
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        if (this._options.itemsDragNDrop) {
+        if (this._dndListController) {
             this._unprocessedDragEnteredItem = itemData;
-            // TODO dnd пока забить на этот костыль
-            this._processItemMouseEnterWithDragNDrop(event, itemData);
+            this._processItemMouseEnterWithDragNDrop(itemData);
         }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
@@ -2939,9 +2924,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
-        if (this._options.itemsDragNDrop) {
+        if (this._dndListController) {
             this._unprocessedDragEnteredItem = null;
-            _private.notifyIfDragging(this, 'draggingItemMouseLeave', itemData, nativeEvent);
+            if (this._dndListController && this._dndListController.isDragging()) {
+                this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
+            }
         }
     },
     _sortingChanged: function(event, propName) {

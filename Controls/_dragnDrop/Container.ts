@@ -909,7 +909,7 @@ import entity = require('Types/entity');
 
       var DragNDropController = Control.extend({
          _template: template,
-         _dragEntity: undefined,
+         _dragEntity: undefined, // хранит список перетаскиваемых элементов и ключ элемента, за который потащили (draggedKey)
          _startEvent: undefined,
          _startImmediately: null,
          _documentDragging: false,
@@ -995,7 +995,8 @@ import entity = require('Types/entity');
 
          _documentDragStart: function(dragObject) {
             if (this._insideDragging) {
-               this._notify('dragStart', [dragObject]);
+               // TODO dnd убедиться что entity нигде не перезапишется, а то может лучше ключ хранить в отдельном поле
+               this._notify('dragStart', [dragObject, dragObject.entity.draggedKey]);
             } else {
                this._dragEntity = dragObject.entity;
             }

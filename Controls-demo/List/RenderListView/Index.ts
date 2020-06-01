@@ -2,7 +2,7 @@ import { Control, TemplateFunction } from 'UI/Base';
 
 import template = require('wml!Controls-demo/List/RenderListView/RenderListView');
 import { RecordSet } from 'Types/collection';
-import { EditInPlaceController, Collection, DragCommands } from 'Controls/display';
+import { EditInPlaceController, Collection } from 'Controls/display';
 import { Model } from 'Types/entity';
 
 interface IRenderListViewChildren {
@@ -114,25 +114,28 @@ export default class RenderListViewDemo extends Control {
 
         const avatarItemKey = parseInt(this._children.dragAvatarKeyInput.value, 10);
 
-        if (!Number.isNaN(avatarItemKey)) {
+        // TODO dnd переписать на новые методы в модели
+        /*if (!Number.isNaN(avatarItemKey)) {
             const startCommand = new DragCommands.Start(dragItemKeys, avatarItemKey);
             startCommand.execute(this._collection);
             this._isDrag = true;
-        }
+        }*/
     }
 
     protected _moveDrag(): void {
         const newIndex = parseInt(this._children.dragAvatarPositionInput.value, 10);
-        if (!Number.isNaN(newIndex)) {
+        // TODO dnd переписать на новые методы в модели
+        /*if (!Number.isNaN(newIndex)) {
             const moveCommand = new DragCommands.Move(newIndex);
             moveCommand.execute(this._collection);
-        }
+        }*/
     }
 
     protected _stopDrag(): void {
-        const stopCommand = new DragCommands.Stop();
+        // TODO dnd переписать на новые методы в модели
+        /*const stopCommand = new DragCommands.Stop();
         stopCommand.execute(this._collection);
-        this._isDrag = false;
+        this._isDrag = false;*/
     }
 
     private _generateListItems(count: number) {
