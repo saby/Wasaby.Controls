@@ -592,6 +592,10 @@ const _private = {
             } else if (direction === 'up') {
                 drawItemsUp(countCurrentItems, addedItems);
             }
+
+            if (!_private.hasMoreData(self, self._sourceController, direction) && !addedItems.getCount()) {
+                _private.updateShadowMode(self, self._shadowVisibility);
+            }
         };
 
         _private.showIndicator(self, direction);
@@ -1126,6 +1130,10 @@ const _private = {
                 self._showContinueSearchButton = true;
                 self._sourceController.cancelLoading();
                 _private.hideIndicator(self);
+
+                if (self._isScrollShown) {
+                    _private.updateShadowMode(self, self._shadowVisibility);
+                }
             },
             searchResetCallback: () => {
                 self._portionedSearchInProgress = false;
@@ -1347,7 +1355,7 @@ const _private = {
                 onResult: self._onItemActionsMenuResult,
                 onClose: self._onItemActionsMenuClose
             };
-            self._listViewModel.setActiveItem(item);
+            self._itemActionsController.setActiveItem(item);
             Sticky.openPopup(menuConfig).then((popupId) => {
                 self._itemActionsMenuId = popupId;
             });
@@ -1359,7 +1367,7 @@ const _private = {
      * @private
      */
     closeActionsMenu(self: any): void {
-        self._listViewModel.setActiveItem(null);
+        self._itemActionsController.setActiveItem(null);
         self._itemActionsController.deactivateSwipe();
         _private.closePopup(self);
     },
@@ -2780,7 +2788,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
-                const item = this._listViewModel.getActiveItem();
+                const item = this._itemActionsController.getActiveItem();
                 _private.handleItemActionClick(this, action, clickEvent, item);
             }
         }
@@ -2791,7 +2799,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onItemActionsMenuClose(clickEvent: SyntheticEvent<MouseEvent>): void {
-        this._listViewModel.setActiveItem(null);
+        this._itemActionsController.setActiveItem(null);
         this._itemActionsController.deactivateSwipe();
         this._itemActionsMenuId = null;
     },
@@ -3145,7 +3153,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // if (this._options.multiSelectVisibility !== 'hidden') {
             //     this._listViewModel.setRightSwipedItem(itemData);
             // }
-            this._listViewModel.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
             this._listViewModel.nextVersion();
             _private.setMarkedKey(this, key);
         }
@@ -3160,7 +3168,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
-        if (e.nativeEvent.animationName === 'rightSwipe' && this._listViewModel.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
+        if (e.nativeEvent.animationName === 'rightSwipe' && this._itemActionsController.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
             const item = this._itemActionsController.getSwipeItem();
             if (!this._options.itemActions && item) {
                 this._notify('itemSwipe', [item, e]);

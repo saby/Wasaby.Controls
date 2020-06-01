@@ -4432,7 +4432,7 @@ describe('Controls/_display/Collection', () => {
         });
     });
 
-    // TODO возможно, это уйдёт из Collection
+    // возможно, это уйдёт из Collection
     describe('setActiveItem(), getActiveItem()', () => {
         let rs: RecordSet;
         let display: CollectionDisplay<unknown>;

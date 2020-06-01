@@ -24,12 +24,12 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Object} ItemEditOptions
-    * @property {Types/entity:Record} [options.item] Запись с исходными данными.
+    * @property {Types/entity:Model} [options.item] Запись с исходными данными.
     */
 
    /*
     * @typedef {Object} ItemEditOptions
-    * @property {Types/entity:Record} [options.item] Record with initial data.
+    * @property {Types/entity:Model} [options.item] Record with initial data.
     */
 
    /**
@@ -54,7 +54,7 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * @property {AddPositionOption} [addPosition] Позиция редактирования по месту.
-    * @property {Types/entity:Record} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
+    * @property {Types/entity:Model} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
     * Такая запись должна присутствовать в {@link Types/source:DataSet}, который получен от источника данных и отрисован контролом.
     * Когда выполнено это условие, после редактирования такой записи она удачно сохраняется в источнике данных.
     *
@@ -129,18 +129,18 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
     * @property {Boolean} [toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
     * @property {AddPosition} [addPosition] Editing in place position.
-    * @property {Types/entity:Record} [item=undefined] If present, editing of this item will begin on first render.
+    * @property {Types/entity:Model} [item=undefined] If present, editing of this item will begin on first render.
     */
 
    /**
-    * @typedef {String|Types/entity:Record|Core/Deferred} ItemEditResult
+    * @typedef {String|Types/entity:Model|Core/Deferred} ItemEditResult
     * @variant cancel Отменить начало редактирования.
     * @variant options Параметры редактирования.
     * @variant deferred Используется для асинхронной подготовки редактируемой записи. Необходимо выполнить deffered с {@link ItemEditOptions ItemEditOptions} или 'Cancel'. Если процесс занимает слишком много времени, будет показан индикатор загрузки.
     */
 
    /*
-    * @typedef {String|Types/entity:Record|Core/Deferred} ItemEditResult
+    * @typedef {String|Types/entity:Model|Core/Deferred} ItemEditResult
     * @variant cancel Cancel start of editing.
     * @variant options Options of editing.
     * @variant deferred Deferred is used for asynchronous preparation of edited record. It is necessary to fullfill deferred with {@link ItemEditOptions ItemEditOptions} or 'Cancel'. If deferred takes too long to resolve then loading indicator will be shown.
@@ -295,7 +295,7 @@ define('Controls/interface/IEditableList', [
    /**
     * @event Controls/interface/IEditableList#afterBeginEdit Происходит после начала редактирования\добавления.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Types/entity:Record} item Редактируемая запись.
+    * @param {Types/entity:Model} item Редактируемая запись.
     * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
     * @remark
     * Подпишитесь на событие, если необходимо что-либо сделать после начала редактирования (например, скрыть кнопку "Добавить").
@@ -323,7 +323,7 @@ define('Controls/interface/IEditableList', [
    /*
     * @event Controls/interface/IEditableList#afterBeginEdit Occurs after the start of editing\adding.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
-    * @param {Types/entity:Record} item Editing record.
+    * @param {Types/entity:Model} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
     * @remark
     * This event is useful if you want to do something after the editing has started, for example hide an add button.
@@ -351,7 +351,7 @@ define('Controls/interface/IEditableList', [
    /**
     * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением редактирования или добавления записи.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Types/entity:Record} item Редактируемая запись.
+    * @param {Types/entity:Model} item Редактируемая запись.
     * @param {Boolean} willSave Определяет, будут ли сохранены изменения в редактируемом элементе.
     * @param {Boolean} isAdd Аргумент принимает значение true, если событие произошло перед добавлением записи, и false — в случае редактирования.
     * @returns {EndEditResult}
@@ -384,7 +384,7 @@ define('Controls/interface/IEditableList', [
    /*
     * @event Controls/interface/IEditableList#beforeEndEdit Occurs before the end of editing\adding.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
-    * @param {Types/entity:Record} item Editing record.
+    * @param {Types/entity:Model} item Editing record.
     * @param {Boolean} willSave Determines whether changes to editing item will be saved.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
     * @returns {EndEditResult}
@@ -416,7 +416,7 @@ define('Controls/interface/IEditableList', [
    /**
     * @event Controls/interface/IEditableList#afterEndEdit Происходит после завершения редактирования\добавления.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Types/entity:Record} item Редактируемая запись.
+    * @param {Types/entity:Model} item Редактируемая запись.
     * @param {Boolean} isAdd Флаг, который позволяет различать редактирование и добавление.
     * @remark
     * Подпишитесь на событие, если необходимо что-либо сделать после завершения редактирования (например, показать кнопку "Добавить").
@@ -444,7 +444,7 @@ define('Controls/interface/IEditableList', [
    /*
     * @event Controls/interface/IEditableList#afterEndEdit Occurs after the end of editing\adding.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
-    * @param {Types/entity:Record} item Editing record.
+    * @param {Types/entity:Model} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
     * @remark
     * This event is useful if you want to do something after the end of editing, for example show an add button.
