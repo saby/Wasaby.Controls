@@ -74,6 +74,8 @@ export default class ScrollContainer extends Control<IOptions> {
 
     private _updateShadowModeAfterMount: Function|null = null;
 
+    private _updateShadowModeAfterMount: Function|null = null;
+
     private _triggerVisibility: ITriggerState = {up: false, down: false};
 
     // В браузерах кроме хрома иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
