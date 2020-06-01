@@ -591,6 +591,10 @@ const _private = {
             } else if (direction === 'up') {
                 drawItemsUp(countCurrentItems, addedItems);
             }
+
+            if (!_private.hasMoreData(self, self._sourceController, direction) && !addedItems.getCount()) {
+                _private.updateShadowMode(self, self._shadowVisibility);
+            }
         };
 
         _private.showIndicator(self, direction);
@@ -1125,6 +1129,10 @@ const _private = {
                 self._showContinueSearchButton = true;
                 self._sourceController.cancelLoading();
                 _private.hideIndicator(self);
+
+                if (self._isScrollShown) {
+                    _private.updateShadowMode(self, self._shadowVisibility);
+                }
             },
             searchResetCallback: () => {
                 self._portionedSearchInProgress = false;
