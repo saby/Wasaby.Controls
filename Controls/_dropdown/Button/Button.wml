@@ -35,11 +35,10 @@
                         buttonStyle="{{_options.buttonStyle}}"
                         contrastBackground="{{_options.contrastBackground}}"
                         viewMode="{{_options.viewMode}}"
-                        tooltip="{{_options.tooltip}}"
-
-                        fontColorStyle="{{_options.style}}"
-                        transparent="{{_options.transparent}}"
+                        style="{{_options.style}}"
                         size="{{_options.size}}"
+                        tooltip="{{_options.tooltip}}"
+                        transparent="{{_options.transparent}}"
                 />
             </ws:else>
         </ws:content>

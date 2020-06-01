@@ -31,9 +31,9 @@
                                   attr:class="controls-Selectorbutton_link"
                                   viewMode="link"
                                   caption="{{_options.caption}}"
-                                  fontColorStyle="{{_options.fontColorStyle}}"
+                                  style="{{_options.style}}"
                                   fontSize="{{_options.fontSize}}"
-                                  fontColorStyle="{{_options.style}}"
+                                  fontColorStyle="{{_options.fontColorStyle}}"
                                   on:click="_open()"/>
       </ws:else>
    </ws:else>
