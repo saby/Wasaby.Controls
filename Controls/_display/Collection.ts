@@ -46,7 +46,9 @@ export interface ISplicedArray<T> extends Array<T> {
 
 export enum ANIMATION_STATE {
     CLOSE = 'close',
-    OPEN = 'open'
+    OPEN = 'open',
+    NONE = 'none',
+    RIGHT_SWIPE = 'right-swipe'
 }
 
 type FilterFunction<S> = (

@@ -1754,10 +1754,6 @@ var
             this._model.setSwipeItem(itemData);
         },
 
-        setRightSwipedItem: function(itemData) {
-            this._model.setRightSwipedItem(itemData);
-        },
-
         // TODO: Исправить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
         setRowSeparatorVisibility: function(rowSeparatorVisibility) {
             this._options.rowSeparatorVisibility = rowSeparatorVisibility;

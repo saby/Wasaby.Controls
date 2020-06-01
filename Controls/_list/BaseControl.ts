@@ -3068,7 +3068,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.setMarkedKey(this, key);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            if (item.isSwiped()) {
+            if (item.isSwiped() && this._listViewModel.getSwipeAnimation() === ANIMATION_STATE.OPEN) {
                 this._listViewModel.setSwipeAnimation(ANIMATION_STATE.CLOSE);
                 this._listViewModel.nextVersion();
             } else {
@@ -3083,7 +3083,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 // TODO https://online.sbis.ru/opendoc.html?guid=c30fd644-a1b9-4b66-85fb-f4d8a67ff877
                 // Animation should be played only if checkboxes are visible.
                 if (this._options.multiSelectVisibility !== 'hidden') {
-                    this._listViewModel.setRightSwipedItem(item);
+                    this._listViewModel.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
                 }
                 _private.setMarkedKey(this, key);
             }

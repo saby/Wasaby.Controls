@@ -156,6 +156,7 @@ export class Controller {
         this._setSwipeItem(null);
         this._collection.setActiveItem(null);
         this._collection.setSwipeConfig(null);
+        this._collection.setSwipeAnimation(ANIMATION_STATE.NONE);
     }
 
     /**

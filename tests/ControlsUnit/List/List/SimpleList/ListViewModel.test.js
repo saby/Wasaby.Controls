@@ -760,29 +760,6 @@ define([
          assert.equal(lv.getMarkedKey(), 1);
       });
 
-      it('setRightSwipedItem', function() {
-         var
-            cfg = {
-               items: data,
-               keyProperty: 'id',
-               displayProperty: 'title',
-               selectedKeys: [1],
-               markedKey: null
-            },
-            itemData = {
-               test: 'test'
-            },
-            nextVersionCalled = false;
-
-         var lv = new lists.ListViewModel(cfg);
-         lv._nextVersion = function() {
-            nextVersionCalled = true;
-         };
-         lv.setRightSwipedItem(itemData);
-         assert.equal(lv._rightSwipedItem, itemData);
-         assert.isTrue(nextVersionCalled, 'setRightSwipedItem should change the version of the model');
-      });
-
       it('setActiveItem should not change version of the model if the item is already active', function() {
          var
             cfg = {
