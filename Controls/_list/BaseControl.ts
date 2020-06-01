@@ -1849,7 +1849,7 @@ const _private = {
                 useNewModel: options.useNewModel,
                 listView: self,
                 notify: (name, args, params) => {
-                    self._notify(name, args, params);
+                    return self._notify(name, args, params);
                 },
                 forceUpdate: () => {
                     self._forceUpdate();
@@ -3217,6 +3217,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _onKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent): void {
         if (this._editInPlace) {
             this._editInPlace.onKeyDown(e, nativeEvent);
+        }
+    },
+
+    _onRowDeactivated(e: SyntheticEvent, eventOptions: any): void {
+        if (this._editInPlace) {
+            this._editInPlace.onRowDeactivated(e, eventOptions);
         }
     }
 });

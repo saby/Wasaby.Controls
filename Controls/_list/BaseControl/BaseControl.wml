@@ -143,6 +143,7 @@
                     on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
                     on:afterEndEdit="_onAfterEndEdit()"
                     on:editingRowKeyDown="_onKeyDown()"
+                    on:onRowDeactivated="_onRowDeactivated()"
                     >
                 <ws:itemActionsTemplate>
                     <ws:partial

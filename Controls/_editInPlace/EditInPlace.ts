@@ -120,14 +120,11 @@ const _private = {
             return _private.updateModel(self, commit).finally((result) => {
                 self._hideIndicator();
                 return result;
-            }).then(
-                () => {
-                    return _private.afterEndEdit(self, commit);
-                },
-                (error) => {
-                    return Promise.resolve({cancelled: true});
-                }
-            );
+            }).then(() => {
+                return _private.afterEndEdit(self, commit);
+            }).catch((error) => {
+                return Promise.resolve({cancelled: true});
+            });
         }
     },
 
@@ -181,7 +178,7 @@ const _private = {
             _private.acceptChanges(self);
         }
 
-        return Deferred.success();
+        return Promise.resolve();
     },
 
     processError(self: EditInPlace, error: Error): Promise<Error> {
@@ -363,7 +360,7 @@ const _private = {
 
     beginEditCallback(self: EditInPlace, newOptions): IEditingConfig {
         if (newOptions && newOptions.cancelled) {
-            return Deferred.success({cancelled: true});
+            return Promise.resolve({cancelled: true});
         }
         return _private.afterBeginEdit(self, newOptions);
     },
@@ -513,7 +510,7 @@ export default class EditInPlace {
         if (!this._editingItem || !this._editingItem.isEqual(options.item)) {
             return this.commitEdit().then((res) => {
                 if (res && res.validationFailed) {
-                    return Deferred.success();
+                    return Promise.resolve();
                 }
                 return _private.beginEdit(self, options).then((newOptions) => {
                     return _private.beginEditCallback(self, newOptions);
@@ -528,11 +525,11 @@ export default class EditInPlace {
         const self = this;
         return this.commitEdit().then((res) => {
             if (res && res.validationFailed) {
-                return Deferred.success();
+                return Promise.resolve();
             }
             return _private.beginEdit(self, options || {}, true).then((newOptions) => {
                 if (newOptions && newOptions.cancelled) {
-                    return Deferred.success({cancelled: true});
+                    return Promise.resolve({cancelled: true});
                 }
                 return _private.afterBeginEdit(self, newOptions, true);
             });
@@ -552,12 +549,12 @@ export default class EditInPlace {
                 for (const key in result) {
                     if (result.hasOwnProperty(key) && result[key]) {
                         self._isCommitInProcess = false;
-                        return Deferred.success({validationFailed: true});
+                        return Promise.resolve({validationFailed: true});
                     }
                 }
                 return _private.endItemEdit(self, true).then((result) => {
                     self._isCommitInProcess = false;
-                    return Deferred.success({validationFailed: result && result.cancelled});
+                    return Promise.resolve({validationFailed: result && result.cancelled});
                 });
             });
         }
@@ -837,7 +834,7 @@ export default class EditInPlace {
         }
     }
 
-    _onRowDeactivated(e, eventOptions: any): void {
+    onRowDeactivated(e: SyntheticEvent, eventOptions: any): void {
         if (eventOptions.isTabPressed) {
             _private.editNextRow(this, !eventOptions.isShiftKey);
         }
