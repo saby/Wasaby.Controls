@@ -2674,8 +2674,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             editingToolbarVisible: editingConfig?.toolbarVisibility
         });
         if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
-            itemActionsChangeResult.forEach((recordKey: number | string) => {
-                this._listViewModel.resetCachedItemData(recordKey);
+            itemActionsChangeResult.forEach((instanceId) => {
+                this._listViewModel.resetCachedItemData(instanceId);
             });
             this._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
         }

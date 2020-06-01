@@ -1333,17 +1333,17 @@ var
             };
         },
 
-        isCachedItemData: function(itemKey) {
-            return this._model.isCachedItemData(itemKey);
+        isCachedItemData: function(instanceId) {
+            return this._model.isCachedItemData(instanceId);
         },
-        getCachedItemData: function(itemKey) {
-            return this._model.getCachedItemData(itemKey);
+        getCachedItemData: function(instanceId) {
+            return this._model.getCachedItemData(instanceId);
         },
-        setCachedItemData: function(itemKey, cache) {
+        setCachedItemData: function(instanceId, cache) {
             this._model.setCachedItemData(itemKey, cache);
         },
-        resetCachedItemData: function(itemKey?) {
-            this._model.resetCachedItemData(itemKey);
+        resetCachedItemData: function(instanceId?) {
+            this._model.resetCachedItemData(instanceId);
         },
         _getDisplayItemCacheKey(dispItem) {
             return this._model._getDisplayItemCacheKey(dispItem);

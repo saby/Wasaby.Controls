@@ -469,35 +469,24 @@ var ItemsViewModel = BaseViewModel.extend({
         }
         return shouldUpdate;
     },
-
-    _convertItemKeyToCacheKey: function(itemKey) {
-        // Model can have an item with the key 1 and a group with the key "1".
-        // We need to differentiate between them in cache, so we add an _str postfix
-        // to the string ids (for cache only)
-        if (typeof itemKey === 'string') {
-            return itemKey + '_str';
-        }
-        return itemKey;
-    },
     _getDisplayItemCacheKey: function(dispItem) {
-        const key = ItemsUtil.getDisplayItemKey(dispItem, this._options.keyProperty);
-        return this._convertItemKeyToCacheKey(key);
+        return dispItem.getInstanceId();
     },
-    isCachedItemData: function(itemKey) {
+    isCachedItemData: function(instanceId) {
         return (
-            typeof itemKey !== 'undefined' &&
-            typeof this._itemDataCache[itemKey] !== 'undefined'
+            typeof instanceId !== 'undefined' &&
+            typeof this._itemDataCache[instanceId] !== 'undefined'
         );
     },
-    getCachedItemData: function(itemKey) {
-        return this._itemDataCache[itemKey];
+    getCachedItemData: function(instanceId) {
+        return this._itemDataCache[instanceId];
     },
-    setCachedItemData: function(itemKey, cache) {
-        this._itemDataCache[itemKey] = cache;
+    setCachedItemData: function(instanceId, cache) {
+        this._itemDataCache[instanceId] = cache;
     },
-    resetCachedItemData: function(itemKey?) {
-        if (typeof itemKey !== 'undefined') {
-            delete this._itemDataCache[itemKey];
+    resetCachedItemData: function(instanceId?) {
+        if (typeof instanceId !== 'undefined') {
+            delete this._itemDataCache[instanceId];
         } else {
             this._itemDataCache = {};
         }
