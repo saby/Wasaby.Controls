@@ -254,7 +254,8 @@ describe('Controls/list_clean/ListViewModel', () => {
                 stickyHeader: true,
                 stickyMarkedItem: false,
                 style: 'master',
-                virtualScrollConfig: {}
+                virtualScrollConfig: {},
+                supportVirtualScroll: true
             });
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
@@ -277,7 +278,8 @@ describe('Controls/list_clean/ListViewModel', () => {
                 stickyHeader: true,
                 stickyMarkedItem: false,
                 style: 'masterClassic',
-                virtualScrollConfig: {}
+                virtualScrollConfig: {},
+                supportVirtualScroll: true
             });
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
