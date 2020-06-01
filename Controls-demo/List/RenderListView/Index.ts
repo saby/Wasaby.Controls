@@ -114,28 +114,26 @@ export default class RenderListViewDemo extends Control {
 
         const avatarItemKey = parseInt(this._children.dragAvatarKeyInput.value, 10);
 
-        // TODO dnd переписать на новые методы в модели
-        /*if (!Number.isNaN(avatarItemKey)) {
-            const startCommand = new DragCommands.Start(dragItemKeys, avatarItemKey);
-            startCommand.execute(this._collection);
+        if (!Number.isNaN(avatarItemKey)) {
+            const avatarItem = this._collection.getItemBySourceKey(avatarItemKey);
+            const draggedEntity = { getItems() { return dragItemKeys; } };
+            this._collection.setDraggedItems(avatarItem, draggedEntity);
+
             this._isDrag = true;
-        }*/
+        }
     }
 
     protected _moveDrag(): void {
         const newIndex = parseInt(this._children.dragAvatarPositionInput.value, 10);
-        // TODO dnd переписать на новые методы в модели
-        /*if (!Number.isNaN(newIndex)) {
-            const moveCommand = new DragCommands.Move(newIndex);
-            moveCommand.execute(this._collection);
-        }*/
+        if (!Number.isNaN(newIndex)) {
+            const newPosition = { index: newIndex };
+            this._collection.setDragPosition(newPosition);
+        }
     }
 
     protected _stopDrag(): void {
-        // TODO dnd переписать на новые методы в модели
-        /*const stopCommand = new DragCommands.Stop();
-        stopCommand.execute(this._collection);
-        this._isDrag = false;*/
+        this._collection.resetDraggedItems();
+        this._isDrag = false;
     }
 
     private _generateListItems(count: number) {

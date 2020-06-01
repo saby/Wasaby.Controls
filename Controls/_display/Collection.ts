@@ -31,6 +31,7 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import { IDragPosition } from 'Controls/listDragNDrop';
 import DragStrategy from './itemsStrategy/Drag';
+import { ItemsEntity } from 'Controls/dragnDrop';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -2116,7 +2117,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // region Drag-N-Drop
 
-    setDraggedItems(draggedItem, dragEntity): void {
+    setDraggedItems(draggedItem: T, dragEntity: ItemsEntity): void {
         // TODO dnd когда будет выполнен полный переход на новую модель,
         // то можно будет передать на только нужные параметры(ключ аватара и список перетаскиваемых ключей)
         const avatarKey = draggedItem.getContents().getKey();
