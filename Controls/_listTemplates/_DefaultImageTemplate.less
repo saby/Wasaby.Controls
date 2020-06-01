@@ -1,0 +1,35 @@
+.controls-listTemplates__imageTemplate_image_viewMode-circle {
+   border-radius: 50%;
+}
+.controls-listTemplates__imageTemplate_image_effect-gradient {
+   position: absolute;
+   pointer-events: none;
+   height: 30%;
+   width: 100%;
+   bottom: 0;
+   left: 0;
+}
+
+.controls-listTemplates__imageTemplate_image_viewMode-ellipse {
+   clip-path: url("#controls-listTemplates__imageTemplate_ellipse");
+}
+
+.controls-listTemplates__imageTemplate {
+   overflow: hidden;
+   box-sizing: border-box;
+   position: relative;
+   display: flex;
+   flex-shrink: 1;
+}
+
+.controls-listTemplates__imageTemplate::after {
+   content: "";
+   display: block;
+   padding-bottom: 100%;
+}
+
+.controls-listTemplates__imageTemplate_image {
+   height: 100%;
+   width: 100%;
+   object-fit: cover;
+}
