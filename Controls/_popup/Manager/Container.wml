@@ -1,5 +1,5 @@
 <Controls.Pending name="pending">
-    <div class="controls-PopupContainer ws-float-area-stack-panel-overflow" id="popup" style="position: initial">
+    <div class="controls-PopupContainer ws-float-area-stack-panel-overflow" id="popup" style="position: static">
         <ws:for data="index, item in _popupItems">
             <ws:if data="{{index === _overlayId}}">
                 <div class="controls-Container__overlay"
