@@ -156,7 +156,10 @@ var
             }
         },
         getExpanderPaddingClasses: function(expanderSize, theme, isNodeFooter) {
-            let expanderPaddingClasses = `controls-TreeGrid__row-expanderPadding controls-TreeGrid__${isNodeFooter ? 'node-footer' : 'row'}-expanderPadding` + `_theme-${theme}`;
+            let expanderPaddingClasses = `controls-TreeGrid__row-expanderPadding`;
+            if (!(isNodeFooter && expanderSize === 'null')) {
+                expanderPaddingClasses += ` controls-TreeGrid__${isNodeFooter ? 'node-footer' : 'row'}-expanderPadding_theme-${theme}`;
+            }
             expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${theme}`;
             return expanderPaddingClasses;
         },

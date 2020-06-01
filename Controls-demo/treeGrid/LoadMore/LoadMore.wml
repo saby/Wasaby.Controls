@@ -6,5 +6,10 @@
             parentProperty="parent"
             allowEmptySelection="{{false}}"
             navigation="{{_navigation}}"
-            nodeProperty="type"/>
+            useNewNodeFooters="{{ true }}"
+            nodeProperty="type">
+        <ws:nodeFooterTemplate>
+            <ws:partial template="Controls/treeGrid:NodeFooterTemplate" colspan="{{ false }}" attr:class="customClass" />
+        </ws:nodeFooterTemplate>
+    </Controls.treeGrid:View>
 </div>

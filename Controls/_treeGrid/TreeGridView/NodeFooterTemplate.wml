@@ -1,0 +1,92 @@
+
+
+<ws:template name="padding">
+    <ws:for data="i in footer.level">
+        <div class="controls-TreeGrid__row-levelPadding {{footer.getLevelIndentClasses(footer.getExpanderSize(expanderSize), levelIndentSize)}}"></div>
+    </ws:for>
+
+    <div class="{{footer.getExpanderPaddingClasses(footer.getExpanderSize(expanderSize), theme, true)}}"></div>
+</ws:template>
+
+
+<ws:template name="hasMoreButton">
+    <Controls.buttons:Button attr:class="controls-TreeGrid__nodeFooterLoadMore js-controls-TreeGrid__nodeFooter__LoadMoreButton"
+                             fontSize="xs"
+                             viewMode="link"
+                             fontColorStyle="listMore"
+                             caption="{{rk('Еще') + '...'}}"
+                             readOnly="{{false}}"/>
+</ws:template>
+
+
+<ws:template name="custom_colspan">
+    <!-- custom_colspan. Выводится просто дивка. Сюда можно повесить классы. -->
+    <div class="{{ footer.classes }}" style="{{ footer.colspanStyles  }}">
+        <ws:partial template="padding"/>
+        <ws:partial template="{{ content }}"/>
+    </div>
+</ws:template>
+
+<ws:template name="custom_separated">
+    <!-- custom_separated. Выводится columnTemplate.-->
+    <ws:for data="index,column in footer.columns">
+        <div class="{{ footer.getColumnClasses(index, _options) }}" attr:key="nodeFooter_{{footer.key}}_column_{{index}}">
+            <ws:partial template="padding" if="{{ index === 0 }}"/>
+            <ws:if data="{{ content }}">
+                <ws:partial template="{{ content }}" if="{{ index === 0 }}"/>
+            </ws:if>
+            <ws:else data="{{ columnTemplate }}">
+                <ws:partial template="{{ columnTemplate }}" columnIndex="{{ index }}"/>
+            </ws:else>
+        </div>
+    </ws:for>
+</ws:template>
+
+<ws:template name="hasMore_colspan">
+    <!-- hasMore_colspan. Сюда можно повесить классы. -->
+    <div class="{{ footer.classes }}" style="{{ footer.colspanStyles  }}">
+        <ws:partial template="padding"/>
+        <ws:partial template="hasMoreButton"/>
+    </div>
+</ws:template>
+
+<ws:template name="hasMore_separated">
+    <!-- hasMore_separated. Контент в первой колонке. Сюда можно повесить классы. -->
+    <ws:for data="index,column in footer.columns">
+        <div class="{{ footer.getColumnClasses(index, _options) }}" attr:key="nodeFooter_{{footer.key}}_column_{{index}}">
+            <ws:if data="{{ index === 0 }}">
+                <ws:partial template="padding"/>
+                <ws:partial template="hasMoreButton"/>
+            </ws:if>
+        </div>
+    </ws:for>
+</ws:template>
+
+
+
+<!-- Не выводим подвал, если это не кнопка еще и при этом не был переопределен контент. -->
+<!-- В таком случае подвал просто не ожидается прикладным разработчиком. -->
+<ws:if data="{{ !(!footer.hasMoreStorage && !(colspan !== false ? !!content : (!!content || !!columnTemplate))) }}">
+
+    <div if="{{ footer.multiSelectVisibility !== 'hidden' }}"></div>
+
+    <!-- Подвал во всю строку -->
+    <ws:if data="{{ colspan !== false }}">
+        <ws:if data="{{ footer.hasMoreStorage }}">
+            <ws:partial template="hasMore_colspan"/>
+        </ws:if>
+        <ws:else data="{{ content }}">
+            <ws:partial template="custom_colspan"/>
+        </ws:else>
+    </ws:if>
+
+    <!-- Подвал разделен на ячейки -->
+    <ws:else>
+        <ws:if data="{{ footer.hasMoreStorage }}">
+            <ws:partial template="hasMore_separated"/>
+        </ws:if>
+        <ws:else>
+            <ws:partial template="custom_separated"/>
+        </ws:else>
+    </ws:else>
+</ws:if>
