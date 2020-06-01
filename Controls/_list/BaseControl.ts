@@ -3068,22 +3068,25 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.setMarkedKey(this, key);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            // After the right swipe the item should get selected. (Кусок старого кода)
-            if (!this._selectionController) {
-                this._createSelectionController();
-            }
-            const result = this._selectionController.toggleItem(key);
-            _private.handleSelectionControllerResult(this, result);
-            this._notify('checkboxClick', [key, item.isSelected()]);
+            if (item.isSwiped()) {
+                this._listViewModel.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+                this._listViewModel.nextVersion();
+            } else {
+                // After the right swipe the item should get selected. (Кусок старого кода)
+                if (!this._selectionController) {
+                    this._createSelectionController();
+                }
+                const result = this._selectionController.toggleItem(key);
+                _private.handleSelectionControllerResult(this, result);
+                this._notify('checkboxClick', [key, item.isSelected()]);
 
-            // TODO https://online.sbis.ru/opendoc.html?guid=c30fd644-a1b9-4b66-85fb-f4d8a67ff877
-            // Animation should be played only if checkboxes are visible.
-            if (this._options.multiSelectVisibility !== 'hidden') {
-                this._listViewModel.setRightSwipedItem(item);
+                // TODO https://online.sbis.ru/opendoc.html?guid=c30fd644-a1b9-4b66-85fb-f4d8a67ff877
+                // Animation should be played only if checkboxes are visible.
+                if (this._options.multiSelectVisibility !== 'hidden') {
+                    this._listViewModel.setRightSwipedItem(item);
+                }
+                _private.setMarkedKey(this, key);
             }
-            this._listViewModel.setSwipeAnimation(ANIMATION_STATE.CLOSE);
-            this._listViewModel.nextVersion();
-            _private.setMarkedKey(this, key);
         }
         if (!this._options.itemActions && item.isSwiped()) {
             this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
