@@ -185,3 +185,24 @@
  *    </Controls.tile:View>
  * </pre>
  */
+/**
+ * @name Controls/_tile/interface/ITile#tileSize
+ * @cfg {String} Минимальный размер плитки с динамическим видом отображения.
+ * @variant small
+ * @variant medium
+ * @variant large
+ * @example
+ * <pre class="brush: html">
+ *    <Controls.tile:View source="{{_viewSource}}"
+ *                   keyProperty="id"
+ *                   parentProperty="Раздел"
+ *                   tileSize="small"
+ *                   nodeProperty="Раздел@"
+ *                   tileMode="dynamic">
+ *       <ws:itemTemplate>
+ *          ...
+ *       </ws:itemTemplate>
+ *    </Controls.tile:View>
+ * </pre>
+ */
+
