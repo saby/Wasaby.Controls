@@ -240,5 +240,51 @@ describe('Controls/list_clean/ListViewModel', () => {
                 { start: 4, current: 1 }
             ]);
         });
+
+        it('With virtual scroll. With support stickyHeader and style="master" and stickyMarkedItem=false.', () => {
+            const listViewModel = new ListViewModel({
+                items,
+                keyProperty: 'key',
+                markedKey: null,
+                stickyHeader: true,
+                stickyMarkedItem: false,
+                style: 'master',
+                virtualScrollConfig: {}
+            });
+            checkCase(listViewModel, [
+                { start: 0, current: 0 },
+                { start: 2, current: 2 },
+                { start: 4, current: 4 }
+            ]);
+            listViewModel.setMarkedKey(2);
+            checkCase(listViewModel, [
+                { start: 0, current: 0 },
+                { start: 2, current: 2 },
+                { start: 4, current: 4 }
+            ]);
+        });
+
+        it('With virtual scroll. With support stickyHeader and style="masterClassic" and stickyMarkedItem=false.', () => {
+            const listViewModel = new ListViewModel({
+                items,
+                keyProperty: 'key',
+                markedKey: null,
+                stickyHeader: true,
+                stickyMarkedItem: false,
+                style: 'masterClassic',
+                virtualScrollConfig: {}
+            });
+            checkCase(listViewModel, [
+                { start: 0, current: 0 },
+                { start: 2, current: 2 },
+                { start: 4, current: 4 }
+            ]);
+            listViewModel.setMarkedKey(2);
+            checkCase(listViewModel, [
+                { start: 0, current: 0 },
+                { start: 2, current: 2 },
+                { start: 4, current: 4 }
+            ]);
+        });
     });
 });
