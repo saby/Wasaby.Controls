@@ -4,6 +4,8 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
    describe('Controls/_lookup/showSelector', function() {
       let lastPopupOptions;
       let isShowSelector = false;
+      let stubOpenPopup;
+
       const getBaseController = function() {
          const baseController = new BaseController();
 
@@ -15,16 +17,24 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
                width: 100
             }
          };
-         popup.Stack = {
-            openPopup: function(popupOptions) {
-               isShowSelector = true;
-               lastPopupOptions = popupOptions;
-               return Promise.resolve();
-            }
-         };
 
          return baseController;
       };
+
+      before(function() {
+         stubOpenPopup = sinon.stub(popup.Stack, 'openPopup');
+         stubOpenPopup.callsFake(function(popupOptions) {
+            isShowSelector = true;
+            lastPopupOptions = popupOptions;
+            return Promise.resolve();
+         });
+      });
+
+      after(function() {
+         stubOpenPopup.restore();
+
+         stubOpenPopup = undefined;
+      });
 
       it('showSelector without params', function() {
          const baseController = getBaseController();
