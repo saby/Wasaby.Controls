@@ -16,7 +16,7 @@ export default class extends Control{
             filter: function(item, queryFilter) {
                 var selectionFilterFn = function(item, filter) {
                     var isSelected = false;
-                    var itemId = item.get('Companies');
+                    var itemId = item.get('id');
 
                     filter.selection.get('marked').forEach(function(selectedId) {
                         if (selectedId === itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
