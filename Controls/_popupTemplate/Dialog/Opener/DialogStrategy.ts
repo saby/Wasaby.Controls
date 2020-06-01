@@ -82,20 +82,17 @@ export = {
     _calculateValue: function (popupOptions, containerValue, windowValue, popupValue, maxValue: number, minValue: number) {
         const availableMaxSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
         const availableMinSize = minValue ? minValue : 0;
+        let value = popupValue;
         if (popupOptions.maximize) {
             return windowValue;
         }
         if (containerValue >= availableMaxSize || popupValue >= availableMaxSize) {
-            if (availableMaxSize >= availableMinSize) {
-                return availableMaxSize;
-            } else {
-                return availableMinSize;
-            }
+            value = availableMaxSize;
         }
-        if (containerValue <= availableMinSize || popupValue <= availableMinSize) {
+        if (value < availableMinSize) {
             return availableMinSize;
         }
-        return popupValue;
+        return value;
     },
     _getLeftCoord: function (wWidth, width, popupOptions) {
         if (popupOptions.maximize) {
