@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import { IOpener, IBaseOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
-import BaseOpenerUtil from './BaseOpenerUtil';
+import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
 import * as CoreMerge from 'Core/core-merge';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
