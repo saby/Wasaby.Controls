@@ -3431,7 +3431,7 @@ define([
          ctrl._itemMouseDown({}, { key: 1 }, { nativeEvent: { button: 0 } });
          assert.isNull(ctrl._draggingItem);
       });
-/*      describe('mouseDown with different buttons', function() {
+      describe('mouseDown with different buttons', function() {
          it('dragNDrop do not start on right or middle mouse button', async function() {
             var source = new sourceLib.Memory({
                keyProperty: 'id',
@@ -3483,28 +3483,45 @@ define([
                return true;
             };
             ctrl._children = {
-               dragNDropController: {
+               dragNDropContainer: {
                   startDragNDrop: function() {
                      dragNDropStarted = true;
                   }
                }
             };
-            ctrl._itemMouseDown({}, { key: 1 }, domEvent);
+
+            const itemData = {
+               getContents() {
+                  return {
+                     getKey() {
+                        return 1;
+                     }
+                  };
+               },
+               key: 1
+            };
+            ctrl._itemMouseDown({}, itemData, domEvent);
             assert.isFalse(dragNDropStarted);
             domEvent.nativeEvent.button = 1;
-            ctrl._itemMouseDown({}, { key: 1 }, domEvent);
+            ctrl._itemMouseDown({}, itemData, domEvent);
             assert.isFalse(dragNDropStarted);
             domEvent.nativeEvent.button = 0;
-            ctrl._itemMouseDown({}, { key: 1 }, domEvent);
+            ctrl._itemMouseDown({}, itemData, domEvent);
             assert.isTrue(dragNDropStarted);
          });
-      });*/
+      });
 
-      /*it('_dragEnter only works with ItemsEntity', function() {
+      it('_dragEnter only works with ItemsEntity', function() {
          const ctrl = new lists.BaseControl({});
 
          ctrl._listViewModel = {
             getDragEntity: () => null
+         };
+
+         ctrl._dndListController = {
+            isDragging() {
+               return true;
+            }
          };
 
          let
@@ -3531,8 +3548,8 @@ define([
          ctrl._dragEnter({}, goodDragObject);
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
-      });*/
- /*     it('native drag prevent only by native "dragstart" event', async function() {
+      });
+      it('native drag prevent only by native "dragstart" event', async function() {
          let isDefaultPrevented = false;
 
          const
@@ -3583,75 +3600,26 @@ define([
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
 
+         const itemData = {
+            getContents() {
+               return {
+                  getKey() {
+                     return 1;
+                  }
+               };
+            },
+            key: 1
+         };
+
          // по mouseDown нельзя вызывать preventDefault, иначе сломается фокусировка
-         ctrl._itemMouseDown({}, { key: 1 }, fakeMouseDown);
+         ctrl._itemMouseDown({}, itemData, fakeMouseDown);
          assert.isFalse(isDefaultPrevented);
 
          // По dragStart нужно вызывать preventDefault
          ctrl._nativeDragStart(fakeDragStart);
          assert.isTrue(isDefaultPrevented);
       });
-*/
-      /*it('_itemMouseDown places dragKey first', async() => {
-         let dragKeys;
-         const
-            cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [null],
-                  excludedKeys: []
-               },
-               viewModelConstructor: lists.ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     hasMore: false
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               },
-               selectedKeys: [null],
-               excludedKeys: [],
-               readOnly: false,
-               itemsDragNDrop: true
-            },
-            ctrl = new lists.BaseControl(),
-            fakeMouseDown = {
-               nativeEvent: {
-                  button: 0
-               },
-               target: {
-                  closest: () => false
-               },
-               preventDefault: () => isDefaultPrevented = true
-            };
-
-         ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-
-         ctrl._notify = (eventName, eventArgs) => {
-            if (eventName === 'dragStart') {
-               dragKeys = eventArgs[0];
-            }
-         };
-
-         ctrl._itemMouseDown({}, { key: 4 }, fakeMouseDown);
-         // First item in dragKeys should be the dragged item's key even if it
-         // is not first in the recordset
-         assert.strictEqual(dragKeys[0], 4);
-      });*/
-
-      /*it('_documentDragEnd', function() {
+      it('_documentDragEnd', function() {
          var
             dragEnded,
             ctrl = new lists.BaseControl();
@@ -3668,8 +3636,11 @@ define([
          ctrl._viewPortRect = { top: 0 }
          //dragend without deferred
          dragEnded = false;
-         ctrl._documentDragEndHandler = function() {
-            dragEnded = true;
+
+         ctrl._dndListController = {
+            endDrag() {
+               dragEnded = true;
+            }
          };
          ctrl._documentDragEnd();
          assert.isTrue(dragEnded);
@@ -3685,45 +3656,7 @@ define([
             assert.isTrue(dragEnded);
             assert.isFalse(!!ctrl._loadingState);
          });
-
-
-      });*/
-
-      /*it('getSelectionForDragNDrop', function() {
-         var selection;
-
-         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 4);
-         assert.deepEqual(selection.selected, [4, 1, 2, 3]);
-         assert.deepEqual(selection.excluded, []);
-
-         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 2);
-         assert.deepEqual(selection.selected, [2, 1, 3]);
-         assert.deepEqual(selection.excluded, []);
-
-         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 3);
-         assert.deepEqual(selection.selected, [3, 1, 2]);
-         assert.deepEqual(selection.excluded, [4]);
-
-         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 5);
-         assert.deepEqual(selection.selected, [5, 1, 2, 3]);
-         assert.deepEqual(selection.excluded, [4]);
-
-         selection = lists.BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 4);
-         assert.deepEqual(selection.selected, [4, 1, 2, 3]);
-         assert.deepEqual(selection.excluded, []);
-
-         selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [4], 4);
-         assert.deepEqual(selection.selected, [null]);
-         assert.deepEqual(selection.excluded, []);
-
-         selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [], 4);
-         assert.deepEqual(selection.selected, [null]);
-         assert.deepEqual(selection.excluded, []);
-
-         selection = lists.BaseControl._private.getSelectionForDragNDrop([null], [3], 4);
-         assert.deepEqual(selection.selected, [null]);
-         assert.deepEqual(selection.excluded, [3]);
-      });*/
+      });
 
       it('resolveIndicatorStateAfterReload', function() {
          let listViewModelCount = 0;
@@ -3938,7 +3871,7 @@ define([
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 50);
       });
 
-      /*it('_itemMouseMove: notify draggingItemMouseMove', async function() {
+      it('_itemMouseMove: notify draggingItemMouseMove', async function() {
          var cfg = {
                 viewName: 'Controls/List/ListView',
                 itemsDragNDrop: true,
@@ -3960,14 +3893,22 @@ define([
          instance._notify = (eventName) => {
             eName = eventName;
          };
+
+         instance._dndListController = {
+            isDragging() {
+               return true;
+            }
+         };
+
          instance._itemMouseMove({}, {});
          assert.equal(eName, 'draggingItemMouseMove');
-         instance.saveOptions({...cfg, itemsDragNDrop: false});
+
+         instance._dndListController = null;
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'itemMouseLeave');
-      });*/
+      });
 
-/*      it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
+      it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
          var cfg = {
                 viewName: 'Controls/List/ListView',
                 itemsDragNDrop: true,
@@ -3989,13 +3930,20 @@ define([
             eName = eventName;
          };
          instance._listViewModel.getDragItemData = () => ({});
-         instance._itemMouseLeave({}, {});
-         assert.equal(eName, 'draggingItemMouseLeave');
-         eName = null;
-         instance.saveOptions({...cfg, itemsDragNDrop: false});
+
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'itemMouseLeave');
-      });*/
+         eName = null;
+
+         instance._dndListController = {
+            isDragging() {
+               return true;
+            }
+         };
+
+         instance._itemMouseLeave({}, {});
+         assert.equal(eName, 'draggingItemMouseLeave');
+      });
 
       it('should fire "drawItems" in afterMount', async function() {
          let

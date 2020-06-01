@@ -355,9 +355,9 @@ const _private = {
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             let selection = {
-                selected: self._options.selectedKeys,
-                excluded: self._options.excludedKeys
-            };
+                selected: self._options.selectedKeys || [],
+                excluded: self._options.excludedKeys || []
+            };1
             selection = DndFlatController.getSelectionForDragNDrop(self._listViewModel, selection, key);
             const recordSet = self._listViewModel.getCollection();
 
