@@ -318,7 +318,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         clearTimeout(this.delayTimeout);
         this._updateZIndex(config);
         if (visible) {
-            this._toggleOverlayAsync(true, config);
+            this._toggleEvents(true);
             if (force) {
                 this._toggleIndicatorVisible(true, config);
             } else {
@@ -336,23 +336,21 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             // if we dont't have indicator in stack, then hide overlay
             if (this._stack.getCount() === 0) {
                 this._toggleIndicatorVisible(false);
-                this._toggleOverlayAsync(false, {});
+                this._toggleEvents(false);
             }
         }
         this._forceUpdate();
     }
 
-    private _toggleOverlayAsync(toggle: boolean, config: ILoadingIndicatorOptions): void {
-        // контролы, которые при ховере показывают окно, теряют свой ховер при показе оверлея,
-        // что влечет за собой вызов обработчиков на mouseout + визуально дергается ховер таргета.
-        // Делаю небольшую задержку, если окно не имеет в себе асинхронного кода, то оно успеет показаться раньше
-        // чем покажется оверлей. Актуально для инфобокса, превьюера и выпадающего списка.
-        // Увеличил до 100мс, за меньшее время не во всех браузерах успевает отрсиоваться окно даже без асинхронных фаз
-        this._clearOverlayTimerId();
-        const delay = Math.min(this._getDelay(config), 100);
-        this._toggleOverlayTimerId = setTimeout(() => {
-            this._toggleOverlay(toggle, config);
-        }, delay);
+    private _toggleEvents(toggle: boolean): void {
+        const action = toggle ? 'addEventListener' : 'removeEventListener';
+        const events = ['mousedown', 'mouseup', 'click', 'keydown', 'keyup'];
+        // TODO https://online.sbis.ru/opendoc.html?guid=157084a2-d702-40b9-b54e-1a42853c301e
+        for (const event of events) {
+            if (window) {
+                window[action](event, LoadingIndicator._eventsHandler, true);
+            }
+        }
     }
 
     private _toggleOverlay(toggle: boolean, config: ILoadingIndicatorOptions): void {
@@ -370,9 +368,11 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             this._clearOverlayTimerId();
             this._isMessageVisible = true;
             this._isOverlayVisible = true;
+            this._toggleEvents(false);
             this._updateProperties(config);
         } else {
             this._isMessageVisible = false;
+            this._isOverlayVisible = false;
         }
         this._redrawOverlay();
     }
@@ -471,6 +471,13 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     private _getThemedClassName(simpleClassName: string): string {
         return simpleClassName + ' ' + simpleClassName + '_theme-' + this.theme;
     }
+
+    static _eventsHandler(event: Event): void {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+    }
+
     static _theme: string[] = ['Controls/_LoadingIndicator/LoadingIndicator'];
 }
 
