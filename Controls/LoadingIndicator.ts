@@ -377,6 +377,11 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         for (const event of events) {
             if (window) {
                 window[action](event, LoadingIndicator._eventsHandler, true);
+                // В оффлайне стрельнул баг: если отписываться с флагом true(несмотря на такую же подписку)
+                // отписка от события не произойдет. вызываю дополнительно отписку без флага.
+                if (!toggle) {
+                    window[action](event, LoadingIndicator._eventsHandler);
+                }
             }
         }
     }
