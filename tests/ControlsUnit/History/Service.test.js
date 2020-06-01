@@ -43,10 +43,9 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env', 'UI/U
          Env.constants.isBrowserPlatform = isBrowser;
       });
 
-      it('query without history id', (done) => {
+      it('query without history id', () => {
          const service = new history.Service({historyIds: []});
          const sandbox = sinon.createSandbox();
-         sinon.stub(Logger, 'error');
          let isSourceCalled = false;
 
          service._historyDataSource = {
@@ -55,11 +54,14 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env', 'UI/U
             }
          };
 
-         service.query().then(null, () => {
-            assert.isFalse(isSourceCalled);
-            assert.isTrue(Logger.error.calledOnce);
-            sandbox.restore();
-            done();
+         return new Promise((resolve) => {
+            sandbox.stub(Logger, 'error');
+            service.query().then(null, () => {
+               assert.isFalse(isSourceCalled);
+               assert.isTrue(Logger.error.calledOnce);
+               sandbox.restore();
+               resolve();
+            });
          });
       });
 
