@@ -5,28 +5,28 @@
      on:keydown="_keyDown()"
      templateName="{{ _compatibleTemplateName}}"
      template="{{ _stringTemplate ? _options.template}}">
-   <Controls.event:Register name="resizeDetect" register="controlResize">
-      <ws:partial
-         attr:class="controls-Popup__template{{_options.hidden ? ' ws-hidden'}}"
-         template="{{_options.content}}"
-         scope="{{_options}}"
-         opener="{{null}}"
-         __key="{{_options.id}}_content"
-         name="{{_options.id}}_content"
-         on:sendResult="_sendResult()"
-         on:close="_close()"
-         on:popupDragEnd="_popupDragEnd()"
-         on:popupDragStart="_popupDragStart()"
-         on:popupResizingLine="_popupResizingLine()"
-         on:popupMouseEnter="_popupMouseEnter()"
-         on:popupMouseLeave="_popupMouseLeave()"
-         on:maximized="_maximized()"
-         on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
-         on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
-         on:controlResize="_controlResizeHandler()"
-         on:showIndicator="_showIndicatorHandler()">
-      </ws:partial>
-   </Controls.event:Register>
-   <Controls.event:Listener event="controlResize" on:controlResize="_controlResizeOuterHandler()"/>
-   <Controls.event:Listener event="scroll" on:scroll="_scrollHandler()"/>
+    <ws:partial
+            attr:class="controls-Popup__template{{_options.hidden ? ' ws-hidden'}}"
+            template="{{_options.content}}"
+            scope="{{_options}}"
+            opener="{{null}}"
+            __key="{{_options.id}}_content"
+            name="{{_options.id}}_content"
+            on:sendResult="_sendResult()"
+            on:close="_close()"
+            on:popupDragEnd="_popupDragEnd()"
+            on:popupDragStart="_popupDragStart()"
+            on:popupResizingLine="_popupResizingLine()"
+            on:popupMouseEnter="_popupMouseEnter()"
+            on:popupMouseLeave="_popupMouseLeave()"
+            on:maximized="_maximized()"
+            on:register="_registerHandler()"
+            on:unregister="_unregisterHandler()"
+            on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
+            on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
+            on:controlResize="_controlResizeHandler()"
+            on:showIndicator="_showIndicatorHandler()"
+            on:registerPending="_registerPendingHandler()"
+            on:cancelFinishingPending="_cancelFinishingPendingHandler()"
+            on:finishPendingOperations="_finishPendingOperationsHandler()" />
 </div>

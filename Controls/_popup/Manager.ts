@@ -320,13 +320,12 @@ class Manager extends Control<IManagerOptions> {
             // Register new popup
             this._fireEventHandler(item, 'onOpen');
             this._prepareIsTouchData(item);
-            item.controller._elementCreated(item, this._getItemContainer(id));
+            return item.controller._elementCreated(item, this._getItemContainer(id));
             // if it's CompoundTemplate, then compoundArea notify event, when template will ready.
             // notify this event on popupBeforePaintOnMount, cause we need synchronous reaction on created popup
             // if (!item.popupOptions.isCompoundTemplate) {
             //     this._notify('managerPopupCreated', [item, this._popupItems], {bubbling: true});
             // }
-            return true;
         }
         return false;
     }
@@ -494,6 +493,15 @@ class Manager extends Control<IManagerOptions> {
         return false;
     }
 
+    _workspaceResize(): boolean {
+        // todo https://online.sbis.ru/opendoc.html?guid=3d0ce839-6e49-4afe-a1c5-f08e5f0fa17c
+        if (requirejs.defined('Controls/popupTemplate')) {
+            const StackController = requirejs('Controls/popupTemplate').StackController;
+            return StackController.workspaceResize();
+        }
+        return false;
+    }
+
     protected _popupDragEnd(id: string, offset: number): boolean {
         const element = this.find(id);
         if (element) {
@@ -633,20 +641,20 @@ class Manager extends Control<IManagerOptions> {
                             popupCallback: Function,
                             pendingCallback: Function,
                             pendingsFinishedCallback: Function): void {
-        const registrator = this._getPopupContainer().getPendingById(popupId);
+        const registrator = this._getPopupContainer().getPending();
         const item = this._findItemById(popupId);
         if (item && registrator) {
             popupCallback && popupCallback();
 
             if (registrator) {
-                const hasRegisterPendings = registrator._hasRegisteredPendings();
+                const hasRegisterPendings = registrator._hasRegisteredPendings(popupId);
                 if (hasRegisterPendings) {
                     pendingCallback && pendingCallback();
                 }
                 if (item.removePending) {
                     return item.removePending;
                 }
-                item.removePending = registrator.finishPendingOperations();
+                item.removePending = registrator.finishPendingOperations(undefined, undefined, popupId);
 
                 // TODO: Compatible Пендинги от совместимости старого FormController'a не
                 // попадают в _hasRegisteredPendings,
@@ -724,9 +732,9 @@ class Manager extends Control<IManagerOptions> {
         // Если пытаются перейти по аккордеону, то закрываем все открытые окна
         // Если есть пендинги - отменяем переход.
         this._popupItems.each((item) => {
-            const registrator = this._getPopupContainer().getPendingById(item.id);
+            const registrator = this._getPopupContainer().getPending();
             if (registrator) {
-                if (registrator._hasRegisteredPendings()) {
+                if (registrator._hasRegisteredPendings(item.id)) {
                     hasPendings = true;
                 }
             }

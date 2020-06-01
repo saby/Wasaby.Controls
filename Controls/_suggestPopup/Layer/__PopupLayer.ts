@@ -7,8 +7,6 @@ import template = require('wml!Controls/_suggestPopup/Layer/__PopupLayer');
 import getZIndex = require('Controls/Utils/getZIndex');
 import {detection} from 'Env/Env';
 
-var POPUP_CLASS_NAME = 'controls-Suggest__suggestionsContainer_popup';
-
 var _private = {
    openPopup(self, opener, options): void {
        // !!closeOnOutsideClick не добавлять, иначе саггест закрывается при клике на саггест
@@ -21,14 +19,9 @@ var _private = {
       opener.open({...dynamicConfig, ...self._popupOptions});
    },
 
-   getPopupClassName: function(verAlign) {
-      return POPUP_CLASS_NAME + '_' + verAlign;
-   },
-
    setPopupOptions: function(self, options) {
       const config =  {
          autofocus: false,
-         className: _private.getPopupClassName('bottom'),
          direction: {
             vertical: 'bottom'
          },
@@ -81,7 +74,6 @@ var __PopupLayer = Control.extend({
 
       // position.corner fixed by https://online.sbis.ru/opendoc.html?guid=b7a05d49-4a68-423f-81d0-70374f875a22
       this._popupOptions.targetPoint = position.targetPoint;
-      this._popupOptions.className = _private.getPopupClassName(position.direction.vertical);
       this._popupOptions.fittingMode = 'fixed';
 
       // update popup's options

@@ -30,6 +30,20 @@ class MenuRender extends Control<IMenuRenderOptions> {
         }
     }
 
+    protected _beforeUnmount(): void {
+        this.removeEmptyItemFromCollection();
+    }
+
+    private removeEmptyItemFromCollection(): void {
+        const options = this._options;
+        const listModel = options.listModel;
+        const emptyItem = options.emptyText && listModel.getItemBySourceKey(options.emptyKey);
+
+        if (emptyItem) {
+            listModel.getCollection().remove(emptyItem.getContents());
+        }
+    }
+
     protected _isEmptyItem(treeItem: TreeItem<Model>): boolean {
         return this._options.emptyText && treeItem.getContents().getId() === this._options.emptyKey;
     }
@@ -56,6 +70,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
         e.stopPropagation();
         const args = Array.prototype.slice.call(arguments, 2);
         this._notify(eventName, args);
+    }
+
+    protected _separatorMouseEnter(event: SyntheticEvent<MouseEvent>): void {
+        this._notify('separatorMouseEnter', [event]);
     }
 
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: Model, sourceEvent: SyntheticEvent<MouseEvent>): void {

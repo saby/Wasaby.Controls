@@ -3,7 +3,6 @@ import {Date as WSDate} from 'Types/entity';
 import {DateRangeModel, rangeSelection as rangeSelectionUtils} from 'Controls/dateRange';
 import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_datePopup/YearsRange');
-import 'css!theme?Controls/datePopup';
 
 /**
  * Component that allows you to select periods that are multiples of years.
@@ -128,10 +127,11 @@ var Component = BaseControl.extend({
 
         if (itemValue === this._year) {
             css.push('controls-PeriodDialog-Years__item-displayed');
+            css.push('controls-PeriodDialog-Years__item-displayed_theme-' + this._options.theme);
         } else if (itemValue === (new Date()).getFullYear()) {
             css.push('controls-PeriodDialog-Years__item-current');
         } else {
-            css.push('controls-PeriodDialog-Years__rangeBtn-regular');
+            css.push('controls-PeriodDialog-Years__rangeBtn-regular_theme-' + this._options.theme);
         }
         return css.join(' ');
     }
@@ -145,6 +145,7 @@ Component.getDefaultOptions = function() {
        dateConstructor: WSDate
    };
 };
+Component._theme = ['Controls/datePopup'];
 
 // Component.getOptionTypes = function() {
 //    return coreMerge({}, IPeriodSimpleDialog.getOptionTypes());

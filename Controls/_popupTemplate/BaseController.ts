@@ -156,6 +156,10 @@ abstract class BaseController {
         return this._elementUpdated(item, container);
     }
 
+    protected workspaceResize(): boolean {
+        return false;
+    }
+
     protected needRecalcOnKeyboardShow(): boolean {
         return false;
     }

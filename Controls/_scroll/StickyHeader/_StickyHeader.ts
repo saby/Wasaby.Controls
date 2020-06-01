@@ -204,7 +204,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     get height(): number {
         const container: HTMLElement = this._container;
-        if (container.offsetParent !== null) {
+        if (!isHidden(container)) {
             this._height = container.offsetHeight;
         }
         return this._height;
@@ -218,7 +218,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
-            this._container.style.top = `${value}px`;
+            fastUpdate.mutate(() => {
+                this._container.style.top = `${value}px`;
+            });
             this._forceUpdate();
         }
     }
@@ -259,7 +261,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // в самом верху скролируемой области, то верхний тригер останется невидимым, т.е. сбытия не будет.
         // Что бы самостоятельно не рассчитывать положение тригеров, мы просто пересоздадим обсервер когда заголовок
         // станет видимым.
-        if (this._container.offsetParent === null) {
+        if (isHidden(this._container)) {
             this._needUpdateObserver = true;
             return;
         }
@@ -329,7 +331,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _fixationStateChangeHandler(newPosition: POSITION, prevPosition: POSITION): void {
         // If the header is hidden we cannot calculate its current height.
         // Use the height that it had before it was hidden.
-        if (this._container.offsetParent !== null) {
+        if (!isHidden(this._container)) {
             this._height = this._container.offsetHeight;
         }
         this._isFixed = !!newPosition;

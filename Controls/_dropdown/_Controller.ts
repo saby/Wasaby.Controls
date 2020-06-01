@@ -300,6 +300,23 @@ var _private = {
    },
 
    getPopupOptions(self, popupOptions?): object {
+      let baseConfig = {...self._options};
+      const ignoreOptions = [
+         'iWantBeWS3',
+         '_$createdFromCode',
+         '_logicParent',
+         'theme',
+         'vdomCORE',
+         'name',
+         'esc'
+      ];
+
+      for (let i = 0; i < ignoreOptions.length; i++) {
+         const option = ignoreOptions[i];
+         if (self._options[option] !== undefined) {
+            delete baseConfig[option];
+         }
+      }
       let templateOptions = {
          closeButtonVisibility: false,
          emptyText: self._getEmptyText(),
@@ -316,13 +333,11 @@ var _private = {
              undefined,
          hasMoreButton: self._sourceController.hasMoreData('down'),
          selectorOpener: self._children.selectorOpener,
-         selectorDialogResult: self._onSelectorTemplateResult.bind(self),
-         iWantBeWS3: false // FIXME https://online.sbis.ru/opendoc.html?guid=9bd2e071-8306-4808-93a7-0e59829a317a
+         selectorDialogResult: self._onSelectorTemplateResult.bind(self)
       };
-      let options = {...self._options};
       const config = {
          id: self._popupId,
-         templateOptions: Object.assign(options, templateOptions),
+         templateOptions: Object.assign(baseConfig, templateOptions),
          className: self._options.popupClassName,
          template: 'Controls/menu:Popup',
          actionOnScroll: 'close',
@@ -620,7 +635,7 @@ var _Controller = Control.extend({
          this._menuSource = new PrefetchProxy({
             target: this._source,
             data: {
-               query: items.clone()
+               query: items.clone(true)
             }
          });
       } else {

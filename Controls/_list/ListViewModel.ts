@@ -13,7 +13,7 @@ import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfi
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction} from 'Controls/itemActions';
-import cClone = require('Core/core-clone');
+import { IDragPosition, IFlatItem } from '../_listDragNDrop/interface';
 
 const ITEMACTIONS_POSITION_CLASSES = {
     bottomRight: 'controls-itemActionsV_position_bottomRight',
@@ -159,7 +159,7 @@ var _private = {
 
 const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _markedItem: null,
-    _dragItems: null,
+    _dragEntity: null,
     _draggingItemData: null,
     _dragTargetPosition: null,
     _selectedKeys: null,
@@ -250,19 +250,20 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.item = this._editingItemData.item;
         }
 
-        if (this._dragItems) {
-            if (this._draggingItemData.key === itemsModelCurrent.key) {
+        if (this._dragEntity) {
+            dragItems = this._dragEntity.getItems();
+            // TODO dnd теперь он не первый в списке. Добавить в dragEntity ключ который перетаскивается
+            if (dragItems[0] === itemsModelCurrent.key) {
                 itemsModelCurrent.isDragging = true;
             }
-            if (this._dragItems.indexOf(itemsModelCurrent.key) !== -1) {
-                itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
+            if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
+                itemsModelCurrent.isVisible = dragItems[0] === itemsModelCurrent.key ? !this._dragTargetPosition : false;
             }
-            if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
+            if (this._draggingItemData && this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                 itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
                 itemsModelCurrent.draggingItemData = this._draggingItemData;
             }
         }
-
         return itemsModelCurrent;
     },
 
@@ -282,7 +283,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _calcItemVersion: function(item, key) {
         var version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
 
-        if (this._dragItems && this._dragItems.indexOf(key) !== -1) {
+        if (this._dragEntity && this._dragEntity.getItems().indexOf(key) !== -1) {
             version = 'DRAG_ITEM_' + version;
         }
 
@@ -426,24 +427,43 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true, 'activeItemChanged');
     },
 
-    setDraggedItems(avatarItem: object, draggedKeys: Array<number|string>): void {
-        this._dragItems = draggedKeys;
-        this._draggingItemData = avatarItem;
+    setDraggedItems(draggedItem: IFlatItem, dragEntity: any): void {
+        this.setDragItemData(draggedItem);
+        this.setDragEntity(dragEntity);
     },
-    setAvatarPosition(position: object): void {
+    setDragPosition(position: IDragPosition): void {
+        this.setDragTargetPosition(position);
+    },
+    resetDraggedItems(): void {
+        this._dragEntity = null;
+        this._draggingItemData = null;
+        this._dragTargetPosition = null;
+        this._nextModelVersion(true);
+    },
+
+    setDragEntity: function(entity) {
+        if (this._dragEntity !== entity) {
+            this._dragEntity = entity;
+            this._nextModelVersion(true);
+        }
+    },
+    getDragEntity: function() {
+        return this._dragEntity;
+    },
+
+    setDragItemData: function(itemData) {
+        this._draggingItemData = itemData;
+    },
+    getDragItemData: function() {
+        return this._draggingItemData;
+    },
+
+    setDragTargetPosition: function(position) {
         this._dragTargetPosition = position;
         this._nextModelVersion(true);
     },
-    resetDraggedItems(): void {
-        this._draggingItemData = null;
-        this._dragItems = null;
-        this.setAvatarPosition(null);
-    },
-    getAvatarPosition(): object {
+    getDragTargetPosition: function() {
         return this._dragTargetPosition;
-    },
-    getDragItemData(): object {
-        return this._draggingItemData;
     },
 
     setSwipeItem: function(itemData) {
@@ -679,7 +699,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setSelectedItems(items: Model[], selected: boolean|null): void {
-        // говнокод для совместимости с новой моделью
+        // Код для совместимости с новой моделью
         // вместо false ставим undefined,
         // чтобы не сломалось показывание только при наведении
         items.forEach((item) => {

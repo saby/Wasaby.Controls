@@ -26,6 +26,7 @@ import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil'
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
+import { IDragPosition, IFlatItem } from '../_listDragNDrop/interface';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -601,18 +602,6 @@ var
             this._onCollectionChangeFn = function(event, action) {
                 this._updateLastItemKey();
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
-                // When item is added to or removed from the grid with ladder support, we have to recalculate
-                // ladder styles for every cell, so we need to update prefix version
-                if (
-                    this._isSupportLadder(this._options.ladderProperties) &&
-                    (
-                        action === collection.IObservable.ACTION_ADD ||
-                        action === collection.IObservable.ACTION_REMOVE
-                    ) &&
-                    !this._options.columnScroll
-                ) {
-                    event.setResult('updatePrefix');
-                }
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
@@ -1825,24 +1814,50 @@ var
             this._model.setSelectedItems(items, selected);
         },
 
-        setDraggedItems(avatarItem: object, draggedKeys: Array<number|string>): void {
-            this._model.setDraggedItems(avatarItem, draggedKeys);
+        setDraggedItems(draggedItem: IFlatItem, dragEntity: any): void {
+            this.setDragItemData(draggedItem);
+            this.setDragEntity(dragEntity);
+        },
+        setDragPosition(position: IDragPosition): void {
+            this.setDragTargetPosition(position);
+        },
+        resetDraggedItems(): void {
+            this._dragEntity = null;
+            this._draggingItemData = null;
+            this._dragTargetPosition = null;
+            this._nextModelVersion(true);
+        },
+
+        setDragTargetPosition: function(position) {
+            this._model.setDragTargetPosition(position);
+        },
+
+        getDragTargetPosition: function() {
+            return this._model.getDragTargetPosition();
+        },
+
+        setDragEntity: function(entity) {
+            this._model.setDragEntity(entity);
+        },
+
+        getDragEntity: function() {
+            return this._model.getDragEntity();
+        },
+
+        setDragItemData: function(itemData) {
+            this._model.setDragItemData(itemData);
             if (_private.hasStickyColumn(this)) {
                 this._setHeader(this._options.header);
                 this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             }
         },
-        setAvatarPosition(position: object): void {
-            this._model.setAvatarPosition(position)
-        },
-        resetDraggedItems(): void {
-            this._model.resetDraggedItems();
-        },
-        getAvatarPosition(): object {
-            return this._model.getAvatarPosition();
-        },
-        getDragItemData(): object {
+
+        getDragItemData: function() {
             return this._model.getDragItemData();
+        },
+
+        calculateDragTargetPosition: function(targetData, position) {
+            return this._model.calculateDragTargetPosition(targetData, position);
         },
 
         getActiveItem: function() {

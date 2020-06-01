@@ -65,6 +65,8 @@ export default class ScrollContainer extends Control<IOptions> {
     private _triggerOffset: number = 0;
     private _lastScrollTop: number = 0;
 
+    private _updateShadowModeAfterMount: Function|null = null;
+
     private _triggerVisibility: ITriggerState = {up: false, down: false};
 
     // В браузерах кроме хрома иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
@@ -129,6 +131,10 @@ export default class ScrollContainer extends Control<IOptions> {
             this._registerObserver();
         }
         this._afterRenderHandler();
+        if (this._updateShadowModeAfterMount) {
+            this._updateShadowModeAfterMount();
+            this._updateShadowModeAfterMount = null;
+        }
     }
 
     protected _beforeUpdate(options: IOptions): void {
@@ -441,6 +447,15 @@ export default class ScrollContainer extends Control<IOptions> {
                 up: start > 0,
                 down: stop < collection.getCount()
             }]);
+        } else {
+            // Обновление режима отображения тени в должно вызываться, иначе изначальное отображение будет неверным.
+            // https://online.sbis.ru/opendoc.html?guid=a3d69022-e68d-41d2-95c6-b9a8877190e9
+            this._updateShadowModeAfterMount = () => {
+                this._notify('updateShadowMode', [{
+                    up: start > 0,
+                    down: stop < collection.getCount()
+                }]);
+            };
         }
     }
 
@@ -701,15 +716,6 @@ export default class ScrollContainer extends Control<IOptions> {
         if (this.__mounted) {
             this._notify('updatePlaceholdersSize', [placeholders], {bubbling: true});
         }
-    }
-
-    /**
-     * Обновление режима тени, в зависимости от размеров виртуальных распорок
-     * @remark Так как при виртуальном скроллировании отображается только некоторый "видимый" набор записей
-     * то scrollContainer будет неверно рассчитывать наличие тени, поэтому управляем режимом тени вручную
-     */
-    private _updateShadowMode(): void {
-        this._notify('updateShadowMode', [this._placeholders]);
     }
 
     private _updateTriggerOffset(scrollHeight: number, viewportHeight: number): void {

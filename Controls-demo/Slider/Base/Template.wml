@@ -1,0 +1,60 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Slider/Base/Base/Index' }}">
+            <a href="{{content.href}}">Базовая настройка слайдера</a>
+        </Router.router:Reference>
+        <Controls-demo.Slider.Base.Base.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Slider/Base/ScaleStep/Index' }}">
+            <a href="{{content.href}}">Настройка шага шкалы</a>
+        </Router.router:Reference>
+        <Controls-demo.Slider.Base.ScaleStep.Index/>
+    </div>
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Slider/Base/BorderVisible/Index' }}">
+            <a href="{{content.href}}">Настройка границы</a>
+        </Router.router:Reference>
+        <Controls-demo.Slider.Base.BorderVisible.Index/>
+    </div>
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Slider/Base/Size/Index' }}">
+            <a href="{{content.href}}">Настройка размера слайдера</a>
+        </Router.router:Reference>
+        <Controls-demo.Slider.Base.Size.Index/>
+    </div>
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Slider/Base/Precision/Index' }}">
+            <a href="{{content.href}}">Настройка формата значения слайдера</a>
+        </Router.router:Reference>
+        <Controls-demo.Slider.Base.Precision.Index/>
+    </div>
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Slider/Base/TooltipFormatter/Index' }}">
+            <a href="{{content.href}}">Настройка форматирования подсказки</a>
+        </Router.router:Reference>
+        <Controls-demo.Slider.Base.TooltipFormatter.Index/>
+    </div>
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/Slider/Base/TooltipVisible/Index' }}">
+            <a href="{{content.href}}">Настройка отображения всплывающий подсказки</a>
+        </Router.router:Reference>
+        <Controls-demo.Slider.Base.TooltipVisible.Index/>
+    </div>
+
+</div>

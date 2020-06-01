@@ -88,12 +88,12 @@ var _private = {
 
     reorderMove: function (self, items, target, position) {
         var
-            movedIndex,
-            movedItem,
-            parentProperty = self._options.parentProperty,
-            targetId = _private.getIdByItem(self, target),
-            targetItem = _private.getModelByItem(self, targetId),
-            targetIndex = self._items.getIndex(targetItem);
+           movedIndex,
+           movedItem,
+           parentProperty = self._options.parentProperty,
+           targetId = _private.getIdByItem(self, target),
+           targetItem = _private.getModelByItem(self, targetId),
+           targetIndex = self._items.getIndex(targetItem);
 
         items.forEach(function (item) {
             movedItem = _private.getModelByItem(self, item);
