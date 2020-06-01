@@ -2,12 +2,12 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton');
    /**
     * Кнопка для закрытия всплывающих окон и диалогов.
-    * 
+    *
     * @remark
     * Полезные ссылки:
     * * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FstandartDemoButton">демо-пример</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
-    * 
+    *
     * @class Controls/_popupTemplate/CloseButton
     * @extends Core/Control
     * @control
@@ -22,12 +22,12 @@ import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton')
     * @name Controls/_popupTemplate/CloseButton#viewMode
     * @cfg {String} Устанавливает вид отображения кнопки.
     * @variant toolButton Отображение как кнопки панели инструментов.
-    * @variant link Отображение кнопки в виде ссылки.
+    * @variant linkButton Отображение кнопки в виде ссылки.
     * @default toolButton
     * @example
     * Отображение в виде ссылки:
     * <pre>
-    *    <Controls.popupTemplate:CloseButton viewMode="link"/>
+    *    <Controls.popupTemplate:CloseButton viewMode="linkButton"/>
     * </pre>
     * Отображение как кнопки панели инструментов:
     * <pre>
