@@ -79,14 +79,21 @@ export = {
             maxWidth: Math.min(popupOptions.maxWidth || windowData.width, windowData.width)
         };
     },
-    _calculateValue: function (popupOptions, containerValue, windowValue, popupValue, maxValue, minValue: number) {
-        let availableSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
-        availableSize = minValue ? Math.max(minValue, availableSize) : availableSize;
+    _calculateValue: function (popupOptions, containerValue, windowValue, popupValue, maxValue: number, minValue: number) {
+        const availableMaxSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
+        const availableMinSize = minValue ? minValue : 0;
         if (popupOptions.maximize) {
             return windowValue;
         }
-        if (containerValue >= availableSize || popupValue >= availableSize) {
-            return availableSize;
+        if (containerValue >= availableMaxSize || popupValue >= availableMaxSize) {
+            if (availableMaxSize >= availableMinSize) {
+                return availableMaxSize;
+            } else {
+                return availableMinSize;
+            }
+        }
+        if (containerValue <= availableMinSize || popupValue <= availableMinSize) {
+            return availableMinSize;
         }
         return popupValue;
     },
