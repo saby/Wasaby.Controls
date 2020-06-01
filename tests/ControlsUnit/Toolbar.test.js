@@ -280,11 +280,7 @@ define(
                      _items: { getIndexByValue: () => {} }
                   },
                   expectedConfig = {
-                     id: undefined,
                      opener: testSelf,
-                     template: 'Controls/menu:Popup',
-                     closeOnOutsideClick: true,
-                     actionOnScroll: 'close',
                      className: 'controls-Toolbar__popup__icon_theme-default popupClassName',
                      targetPoint: {
                         horizontal: 'left',
@@ -430,7 +426,8 @@ define(
                      groupProperty: undefined,
                      footerContentTemplate: undefined,
                      itemActions: undefined,
-                     itemActionVisibilityCallback: undefined
+                     itemActionVisibilityCallback: undefined,
+                     closeButtonVisibility: true
                   };
                assert.deepEqual((new toolbars.View())._getMenuConfig.call(testSelf).templateOptions, templateOptions);
             });

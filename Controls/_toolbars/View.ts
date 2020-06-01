@@ -190,12 +190,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
         return {...this._menuOptions, ...{
-                id: this._popupId,
                 opener: this,
                 className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
-                template: 'Controls/menu:Popup',
-                closeOnOutsideClick: true,
-                actionOnScroll: 'close',
                 templateOptions: {
                     source: this._menuSource,
                     iconSize: options.iconSize,
@@ -209,7 +205,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                     groupingKeyCallback: options.groupingKeyCallback,
                     additionalProperty: options.additionalProperty,
                     itemTemplateProperty: options.itemTemplateProperty,
-                    footerContentTemplate: options.popupFooterTemplate
+                    footerContentTemplate: options.popupFooterTemplate,
+                    closeButtonVisibility: true
                 },
                 target: this._children.menuTarget
             }
@@ -226,12 +223,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             source = options.source;
         }
         return {...this._menuOptions, ...{
-                id: this._popupId,
                 opener: this,
                 className: `controls-Toolbar__popup__${Toolbar._typeItem(item)}_theme-${options.theme} ${Toolbar._menuItemClassName(item)}`,
-                template: 'Controls/menu:Popup',
-                closeOnOutsideClick: true,
-                actionOnScroll: 'close',
                 targetPoint: {
                     vertical: 'top',
                     horizontal: 'left'
@@ -279,9 +272,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                     this._closeHandler();
                 }
             },
-            templateOptions: {
-                closeButtonVisibility: true
-            }
+            template: 'Controls/menu:Popup',
+            closeOnOutsideClick: true,
+            actionOnScroll: 'close',
+            id: this._popupId
         };
     }
 
