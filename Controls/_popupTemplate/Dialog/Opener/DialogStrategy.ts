@@ -80,18 +80,15 @@ export = {
         };
     },
     _calculateValue: function (popupOptions, containerValue, windowValue, popupValue, maxValue, minValue: number) {
-        const availableSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
-        let value = popupValue;
+        let availableSize = maxValue ? Math.min(windowValue, maxValue) : windowValue;
+        availableSize = minValue ? Math.max(minValue, availableSize) : availableSize;
         if (popupOptions.maximize) {
-            value = windowValue;
+            return windowValue;
         }
         if (containerValue >= availableSize || popupValue >= availableSize) {
-            value = availableSize;
+            return availableSize;
         }
-        if (value < minValue) {
-            return minValue;
-        }
-        return value;
+        return popupValue;
     },
     _getLeftCoord: function (wWidth, width, popupOptions) {
         if (popupOptions.maximize) {
