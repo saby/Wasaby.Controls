@@ -369,7 +369,7 @@ const _private = {
                     if (self._options.dragControlId) {
                         dragStartResult.dragControlId = self._options.dragControlId;
                     }
-                    self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent, { immediately: false }, key);
+                    self._children.dragNDropContainer.startDragNDrop(dragStartResult, domEvent, { immediately: false }, key);
                 }
             });
         }

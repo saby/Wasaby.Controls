@@ -453,6 +453,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setDraggedItems(draggedItem: IFlatItemData, dragEntity): void {
+        console.log(draggedItem.key);
         this.setDragItemData(draggedItem);
         this.setDragEntity(dragEntity);
     },
