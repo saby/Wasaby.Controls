@@ -810,7 +810,7 @@ define([
                assert.equal(tvm._prevDragTargetPosition.position, 'after');
             });
 
-            it('on node', function() {
+            /*it('on node', function() {
                //move item 567
                tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
                tvm.setDragEntity(dragEntity);
@@ -827,18 +827,18 @@ define([
 
                assert.equal(tvm._prevDragTargetPosition.data.key, '456');
                assert.equal(tvm._prevDragTargetPosition.position, 'before');
-            });
+            });*/
          });
 
          describe('calculateDragTargetPosition', function() {
             var itemData, dragTargetPosition;
 
-            it('not node', function() {
+/*            it('not node', function() {
                itemData = tvm.getItemDataByItem(tvm.getItemById('567', 'id'));
                dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'before');
-            });
+            });*/
 
             it('on node', function() {
                itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
@@ -899,7 +899,7 @@ define([
                assert.equal(dragTargetPosition.position, 'after');
             });
 
-            it('move up item', function() {
+           /* it('move up item', function() {
                //move item 567
                tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
                tvm.setDragEntity(dragEntity);
@@ -920,7 +920,7 @@ define([
                dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'before');
-            });
+            });*/
 
             it('move to draggableItem', function() {
                var

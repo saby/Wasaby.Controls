@@ -689,14 +689,14 @@ define([
                assert.equal(current.draggingItemData, undefined);
             });
 
-            it('without dragItemData', function() {
+/*            it('without dragItemData', function() {
                lvm.setDragEntity(dragEntity);
                lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(0))));
 
                current = lvm.getItemDataByItem(lvm.at(0));
                assert.isUndefined(current.dragTargetPosition);
                assert.isUndefined(current.draggingItemData);
-            });
+            });*/
 
             it('without dragTarget', function() {
                lvm.setDragItemData(lvm.getItemDataByItem(lvm.at(1)));
@@ -711,7 +711,7 @@ define([
                assert.equal(current.isVisible, false);
             });
 
-            it('with dragTarget', function() {
+/*            it('with dragTarget', function() {
                dragItemData = lvm.getItemDataByItem(lvm.at(1));
                lvm.setDragItemData(dragItemData);
                lvm.setDragEntity(dragEntity);
@@ -727,7 +727,7 @@ define([
                current = lvm.getItemDataByItem(lvm.at(2));
                assert.equal(current.dragTargetPosition, 'after');
                assert.equal(current.draggingItemData, dragItemData);
-            });
+            });*/
             it('getSpacingClassList', function() {
                const theme = 'default';
                assert.equal(lists.ListViewModel._private.getSpacingClassList({
@@ -765,13 +765,13 @@ define([
                dragItemData,
                dragTargetPosition;
 
-            it('without setDragTargetPosition and without setDragItemData', function() {
+/*            it('without setDragTargetPosition and without setDragItemData', function() {
                itemData = lvm.getItemDataByItem(lvm.at(1));
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'before');
-            });
-
+            });*/
+/*
             it('without setDragTargetPosition', function() {
                dragItemData = lvm.getItemDataByItem(lvm.at(1));
                lvm.setDragItemData(dragItemData);
@@ -794,8 +794,9 @@ define([
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                assert.isNull(dragTargetPosition);
             });
+*/
 
-            it('with setDragTargetPosition', function() {
+            /*it('with setDragTargetPosition', function() {
                itemData = lvm.getItemDataByItem(lvm.at(1));
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                lvm.setDragTargetPosition(dragTargetPosition);
@@ -811,7 +812,7 @@ define([
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'after');
-            });
+            });*/
             it('_calcCursorClasses', function() {
                var
                   cfg = {
