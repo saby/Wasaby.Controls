@@ -86,7 +86,7 @@ var
             if (items) {
                 rootItems = self._hierarchyRelation.getChildren(self._display.getRoot().getContents(), items);
                 for (var idx = 0; idx < rootItems.length; idx++) {
-                    if (_private.hasChildItem(self, rootItems[idx].getId())) {
+                    if (_private.hasChildItem(self, rootItems[idx].getKey())) {
                         thereIsChildItem = true;
                         break;
                     }
@@ -135,7 +135,7 @@ var
 
                     // removedItems[idx].isNode - fast check on item type === 'group'
                     if (removedItems[idx].isNode && removedItems[idx].getContents().get(self._options.nodeProperty) !== null) {
-                        _private.removeNodeFromExpandedIfNeed(self, removedItems[idx].getContents().getId());
+                        _private.removeNodeFromExpandedIfNeed(self, removedItems[idx].getContents().getKey());
                     }
                 }
             }
@@ -221,7 +221,7 @@ var
         collapseChildNodes: function(self, nodeId) {
             self._hierarchyRelation.getChildren(nodeId, self._items).forEach(function(item) {
                 var
-                    itemId = item.getId();
+                    itemId = item.getKey();
                 _private.removeFromArray(self._expandedItems, itemId);
                 _private.collapseChildNodes(self, itemId);
             });
@@ -341,9 +341,9 @@ var
             const isLastChild = (parent, child) => {
                 const isLastInParent = (dispItem) => {
                     const _parentItem = dispItem.getParent().getContents();
-                    const _parentKey = _parentItem && _parentItem.getId();
+                    const _parentKey = _parentItem && _parentItem.getKey();
                     const _parentChildren = self._hierarchyRelation.getChildren(_parentKey, self._items);
-                    return !!_parentChildren.length && _parentChildren[_parentChildren.length - 1].getId() === dispItem.getContents().getId();
+                    return !!_parentChildren.length && _parentChildren[_parentChildren.length - 1].getKey() === dispItem.getContents().getKey();
                 };
 
                 let result = true;
@@ -356,9 +356,9 @@ var
                 } else {
                     do {
                         // У корня ключ null, берем его
-                        const parentKey = currParent.getContents() && currParent.getContents().getId();
+                        const parentKey = currParent.getContents() && currParent.getContents().getKey();
                         const parentChilds = self._hierarchyRelation.getChildren(parentKey, self._items);
-                        if (parentChilds[parentChilds.length - 1].getId() === currentChild.getContents().getId()) {
+                        if (parentChilds[parentChilds.length - 1].getKey() === currentChild.getContents().getKey()) {
                             currentChild = currParent;
                             currParent = currParent.getParent();
                         } else {
@@ -384,7 +384,7 @@ var
                 !(current.isExpanded && current.hasChildren)
                 ) {
                 const parentItem = dispParent.getContents();
-                const parentId = parentItem.getId();
+                const parentId = parentItem.getKey();
                 if (self._hasMoreStorage && self._hasMoreStorage[parentId]) {
                     fillNodeFooter({
                         key: parentId,
@@ -476,7 +476,7 @@ var
 
         isExpanded: function(dispItem) {
             var
-                itemId = dispItem.getContents().getId();
+                itemId = dispItem.getContents().getKey();
             return _private.isExpandAll(this._expandedItems) ? (this._collapsedItems.indexOf(itemId) === -1)
                 : (this._expandedItems.indexOf(itemId) !== -1);
         },
@@ -491,7 +491,7 @@ var
 
         toggleExpanded: function(dispItem, expanded) {
             var
-                itemId = dispItem.getContents().getId(),
+                itemId = dispItem.getContents().getKey(),
                 parentId = dispItem.getContents().get(this._options.parentProperty),
                 currentExpanded = this.isExpanded(dispItem);
 
@@ -803,7 +803,7 @@ var
             let childrenCount = curNodeChildren.getCount();
 
             curNodeChildren.forEach((child: TreeItem) => {
-                const childId = child.getContents().getId();
+                const childId = child.getContents().getKey();
 
                 // Заменить на TreeItem.isExpanded(), пока он не работает, возвращает false.
                 const isNodeExpanded = child.isNode() && (
