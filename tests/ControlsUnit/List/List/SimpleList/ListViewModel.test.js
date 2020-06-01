@@ -568,7 +568,7 @@ define([
          var dragItemData, dragEntity, target, lvm, current;
 
          beforeEach(function() {
-            dragItemData = {};
+            dragItemData = {key: 2};
             dragEntity = {
                items: [2, 3],
                getItems: function() {
@@ -586,7 +586,6 @@ define([
             });
          });
 
-/*
          it('getItemDataByItem', function() {
             var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
 
@@ -594,7 +593,7 @@ define([
             assert.isUndefined(item.dragTargetPosition);
             assert.isUndefined(item.isDragging);
 
-            lvm.setDragEntity(dragEntity);
+            lvm.setDraggedItems(dragItemData, dragEntity);
             lvm._markedKey = 2;
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
@@ -618,7 +617,6 @@ define([
             });
             assert.isTrue(!!item.shouldDisplayActions());
          });
-*/
 
          it('getMultiSelectClassList hidden', function() {
             lvm._options.multiSelectVisibility = 'hidden';
@@ -691,14 +689,14 @@ define([
                assert.equal(current.draggingItemData, undefined);
             });
 
-/*            it('without dragItemData', function() {
-               lvm.setDragEntity(dragEntity);
-               lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(0))));
+            it('without dragItemData', function() {
+               lvm.setDraggedItems(dragItemData, dragEntity);
+               lvm.setDragTargetPosition(null);
 
                current = lvm.getItemDataByItem(lvm.at(0));
                assert.isUndefined(current.dragTargetPosition);
                assert.isUndefined(current.draggingItemData);
-            });*/
+            });
 
             it('without dragTarget', function() {
                lvm.setDragItemData(lvm.getItemDataByItem(lvm.at(1)));
@@ -713,23 +711,28 @@ define([
                assert.equal(current.isVisible, false);
             });
 
-/*            it('with dragTarget', function() {
+            it('with dragTarget', function() {
                dragItemData = lvm.getItemDataByItem(lvm.at(1));
-               lvm.setDragItemData(dragItemData);
-               lvm.setDragEntity(dragEntity);
+               lvm.setDraggedItems(dragItemData, dragEntity);
 
                // move up
-               lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(0))));
+               lvm.setDragPosition({
+                  index: 0,
+                  position: 'before'
+               });
                current = lvm.getItemDataByItem(lvm.at(0));
                assert.equal(current.dragTargetPosition, 'before');
                assert.equal(current.draggingItemData, dragItemData);
 
                // move down
-               lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(2))));
+               lvm.setDragTargetPosition({
+                  index: 2,
+                  position: 'after'
+               });
                current = lvm.getItemDataByItem(lvm.at(2));
                assert.equal(current.dragTargetPosition, 'after');
                assert.equal(current.draggingItemData, dragItemData);
-            });*/
+            });
             it('getSpacingClassList', function() {
                const theme = 'default';
                assert.equal(lists.ListViewModel._private.getSpacingClassList({
@@ -759,77 +762,6 @@ define([
                assert.equal(lvm.getItemDataByItem(lvm._display.at(0)).searchValue, 'test');
                lvm.setSearchValue(null);
             });
-         });
-
-         describe('calculateDragTargetPosition', function() {
-            var
-               itemData,
-               dragItemData,
-               dragTargetPosition;
-
-/*            it('without setDragTargetPosition and without setDragItemData', function() {
-               itemData = lvm.getItemDataByItem(lvm.at(1));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'before');
-            });*/
-/*
-            it('without setDragTargetPosition', function() {
-               dragItemData = lvm.getItemDataByItem(lvm.at(1));
-               lvm.setDragItemData(dragItemData);
-               lvm.setDragEntity(dragEntity);
-
-               // before dragItemData
-               itemData = lvm.getItemDataByItem(lvm.at(0));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'before');
-
-               // after dragItemData
-               itemData = lvm.getItemDataByItem(lvm.at(2));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'after');
-
-               // on dragItemData
-               itemData = lvm.getItemDataByItem(lvm.at(1));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.isNull(dragTargetPosition);
-            });
-*/
-
-            /*it('with setDragTargetPosition', function() {
-               itemData = lvm.getItemDataByItem(lvm.at(1));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               lvm.setDragTargetPosition(dragTargetPosition);
-
-               // move up
-               itemData = lvm.getItemDataByItem(lvm.at(0));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'before');
-
-               // move down
-               itemData = lvm.getItemDataByItem(lvm.at(1));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'after');
-            });*/
-            it('_calcCursorClasses', function() {
-               var
-                  cfg = {
-                     items: new collection.RecordSet({
-                        rawData: data,
-                        keyProperty: 'id'
-                     }),
-                     keyProperty: 'id',
-                     displayProperty: 'title'
-                  },
-                  model = new lists.ListViewModel(cfg);
-               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-default', model._calcCursorClasses(false, 'default'));
-               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses(true, 'pointer'));
-               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses());
-            })
          });
       });
    });
