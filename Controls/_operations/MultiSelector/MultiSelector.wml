@@ -1,9 +1,9 @@
 <div class="controls-operationsPanelV__multiSelector">
-    <Controls.toggle:Checkbox
-            readOnly="{{false}}"
-            value="{{_multiSelectStatus}}"
-            triState="{{true}}"
-            on:valueChanged="_onCheckBoxClick()"/>
+    <Controls._operations.MultiSelector.Checkbox
+            selectedKeys="{{ _options.selectedKeys }}"
+            selectedKeysCount="{{ _options.selectedKeysCount }}"
+            isAllSelected="{{_options.isAllSelected}}"
+    />
     <Controls._operations.__MultiSelector selectedKeys="{{ _options.selectedKeys }}"
                                           excludedKeys="{{ _options.excludedKeys }}"
                                           selectedKeysCount="{{ _options.selectedKeysCount }}"
