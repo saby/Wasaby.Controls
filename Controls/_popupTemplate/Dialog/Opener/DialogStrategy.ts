@@ -89,7 +89,7 @@ export = {
         if (containerValue >= availableMaxSize || popupValue >= availableMaxSize) {
             value = Math.max(availableMaxSize, availableMinSize);
         }
-        if (containerValue < availableMinSize || popupValue < availableMaxSize) {
+        if (containerValue < availableMinSize || popupValue < availableMinSize) {
             value = availableMinSize;
         }
         return value;
