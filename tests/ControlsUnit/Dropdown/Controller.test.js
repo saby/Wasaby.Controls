@@ -530,6 +530,20 @@ define(
             assert.isUndefined(item);
          });
 
+         it('loadDependencies', async() => {
+            const controller = getDropdownController(config);
+            let items;
+            let menuSource;
+
+            await controller.loadDependencies();
+            items = controller._items;
+            menuSource = controller._menuSource;
+
+            await controller.loadDependencies();
+            assert.isTrue(items === controller._items, 'items changed on second loadDependencies with same options');
+            assert.isTrue(menuSource === controller._menuSource, 'source changed on second loadDependencies with same options');
+         });
+
          it('check empty item update', () => {
             let dropdownController = getDropdownController(config),
                selectedItems = [];
