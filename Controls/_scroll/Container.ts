@@ -1270,7 +1270,8 @@ Scroll.getDefaultOptions = function() {
       topShadowVisibility: SHADOW_VISIBILITY.AUTO,
       bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
       scrollbarVisible: true,
-      scrollMode: 'vertical'
+      scrollMode: 'vertical',
+      _scrollbarVisibleHard: true
    };
 };
 
