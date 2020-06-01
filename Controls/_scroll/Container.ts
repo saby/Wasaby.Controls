@@ -501,7 +501,7 @@ let
             def;
 
          if (!constants.isServerSide) {
-             this._enableScrollbar = getEnableScrollbar();
+             this._enableScrollbar = getEnableScrollbar(options._scrollbarVisibleHard);
          }
 
          if ('shadowVisible' in options) {
@@ -959,7 +959,7 @@ let
 
       _mouseenterHandler: function(event) {
          this._scrollbarTaken(true);
-         if (this._enableScrollbar !== getEnableScrollbar()) {
+         if (this._enableScrollbar !== getEnableScrollbar(this._options._scrollbarVisibleHard)) {
              this._enableScrollbar = getEnableScrollbar();
              this._forceUpdate();
          }
@@ -1270,7 +1270,8 @@ Scroll.getDefaultOptions = function() {
       topShadowVisibility: SHADOW_VISIBILITY.AUTO,
       bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
       scrollbarVisible: true,
-      scrollMode: 'vertical'
+      scrollMode: 'vertical',
+      _scrollbarVisibleHard: true
    };
 };
 
@@ -1297,12 +1298,12 @@ function setEnableScrollbar(value: boolean): void {
     LocalStorageNative.setItem('enableScrollbar', JSON.stringify(value));
 }
 
-function getEnableScrollbar(): void {
+function getEnableScrollbar(scrollbarVisibleHard: boolean = false): void {
     if (enableScrollbar === null) {
         enableScrollbar = JSON.parse(LocalStorageNative.getItem('enableScrollbar'));
         enableScrollbar = enableScrollbar === null ? true : enableScrollbar;
     }
-    return enableScrollbar;
+    return scrollbarVisibleHard ? scrollbarVisibleHard : enableScrollbar;
 }
 
 let enableScrollbar = null;
