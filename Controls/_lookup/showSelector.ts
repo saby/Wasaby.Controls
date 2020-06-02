@@ -15,7 +15,7 @@ interface PopupOptions {
  * @returns {Promise}
  */
 export default function(self, popupOptions, multiSelect) {
-    if (!self._openingSelector || self._openingSelector.resolved) {
+    if (!self._openingSelector) {
         let
             selectorTemplate = self._options.selectorTemplate,
             defaultPopupOptions: PopupOptions = merge({
@@ -25,10 +25,16 @@ export default function(self, popupOptions, multiSelect) {
                 closeOnOutsideClick: true,
                 isCompoundTemplate: self._options.isCompoundTemplate,
                 eventHandlers: {
+                    onOpen: () => {
+                        self._openingSelector = null;
+                    },
                     onResult: (result) => {
                         self._selectCallback(null, result);
                     },
-                    onClose: self._closeHandler.bind(self)
+                    onClose: () => {
+                        self._openingSelector = null;
+                        self._closeHandler.bind(self);
+                    }
                 }
             }, selectorTemplate && selectorTemplate.popupOptions || {});
 
