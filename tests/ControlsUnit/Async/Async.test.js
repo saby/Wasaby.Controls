@@ -25,7 +25,7 @@ define([
          Env.IoC.bind('ILogger', originalLogger);
       });
 
-      typeof window === 'undefined' && it('Loading synchronous server-side', function() {
+      typeof window === 'undefined' && it.skip('Loading synchronous server-side', function() {
          let options = {
             templateName: 'ControlsUnit/Async/TestControlSync',
             templateOptions: {}
@@ -40,7 +40,7 @@ define([
          assert.equal(async.optionsForComponent.resolvedTemplate, TestControlSync);
       });
 
-      typeof window === 'undefined' && it('Loading synchronous server-side faild', function () {
+      typeof window === 'undefined' && it.skip('Loading synchronous server-side faild', function () {
          var options = {
             templateName: 'ControlsUnit/Async/Fail/TestControlSync',
             templateOptions: {}
@@ -57,7 +57,7 @@ define([
          });
       }).timeout(4000);
 
-      it('Loading synchronous client-side', function() {
+      it.skip('Loading synchronous client-side', function() {
          let options = {
             templateName: 'ControlsUnit/Async/TestControlSync',
             templateOptions: {}
@@ -76,7 +76,7 @@ define([
          Env.constants.compat = oldCompat;
       });
 
-      it('Loading synchronous client-side faild', function() {
+      it.skip('Loading synchronous client-side faild', function() {
          var options = {
             templateName: 'ControlsUnit/Async/Fail/TestControlSync',
             templateOptions: {}
@@ -92,7 +92,7 @@ define([
          });
       }).timeout(4000);
 
-      it('Loading asynchronous client-side', function() {
+      it.skip('Loading asynchronous client-side', function() {
          var options = {
             templateName: 'ControlsUnit/Async/TestControlAsync',
             templateOptions: {}
@@ -110,7 +110,7 @@ define([
          return promise;
       }).timeout(3000);
 
-      it('Loading asynchronous from library client-side', function() {
+      it.skip('Loading asynchronous from library client-side', function() {
          var options = {
             templateName: 'ControlsUnit/Async/TestLibraryAsync:ExportControl',
             templateOptions: {}
@@ -128,7 +128,7 @@ define([
          return promise;
       }).timeout(3000);
 
-      it('Loading asynchronous client-side faild', function() {
+      it.skip('Loading asynchronous client-side faild', function() {
          let options = {
             templateName: 'ControlsUnit/Async/Fail/TestControlAsync',
             templateOptions: {}
