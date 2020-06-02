@@ -216,7 +216,7 @@ type GetSourceResult = {
 
             _private.resolveOptions(this, options);
             this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
-            this._resizeRegister = new RegisterClass({register: 'dataError'});
+            this._errorRegister = new RegisterClass({register: 'dataError'});
 
             // isNewEnvironment - проверка в 20.11хх, в 20.2ххх удалена
             // Нужна для редкого случая, когда на старой странице на сервере строится wasaby контрол,
