@@ -98,6 +98,12 @@ let CRUD = Control.extend({
         });
 
         return def;
+    },
+
+    _beforeUnmount: function() {
+        if (this._indicatorId) {
+            this._notify('hideIndicator', [this._indicatorId], { bubbling: true });
+        }
     }
 });
 
