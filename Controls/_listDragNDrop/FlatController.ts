@@ -41,12 +41,7 @@ export default class FlatController {
 
    startDrag(draggedKey: TKey, entity: ItemsEntity): void {
       const draggedItem = this._model.getItemBySourceKey(draggedKey);
-      this._draggingItemData = this._model.getItemDataByItem(draggedItem);
-
-      // это перетаскиваемый элемент, поэтому чтобы на него навесился нужный css класс isDragging = true
-      this._draggingItemData.isDragging = true;
-
-      this.setDraggedItems(entity, this._draggingItemData.dispItem)
+      this.setDraggedItems(entity, draggedItem)
    }
 
    setDraggedItems(entity: ItemsEntity, draggedItem: CollectionItem<Model> = null): void {
@@ -54,6 +49,7 @@ export default class FlatController {
 
       if (draggedItem) {
          this._draggingItemData = this._model.getItemDataByItem(draggedItem);
+         // это перетаскиваемый элемент, поэтому чтобы на него навесился нужный css класс isDragging = true
          this._draggingItemData.isDragging = true;
       }
 
