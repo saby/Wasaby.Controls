@@ -1,3 +1,5 @@
+import rk = require('i18n!Controls');
+
 // Core imports
 import Control = require('Core/Control');
 import cClone = require('Core/core-clone');
@@ -30,7 +32,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
 import {CollectionItem, EditInPlaceController, VirtualScrollController, GroupItem, ANIMATION_STATE} from 'Controls/display';
-import {Controller as ItemActionsController, IItemAction} from 'Controls/itemActions';
+import {Controller as ItemActionsController, IItemAction, TItemActionShowType} from 'Controls/itemActions';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import ListViewModel from 'Controls/_list/ListViewModel';
@@ -857,12 +859,12 @@ const _private = {
 
         const proportion = (viewSize / viewPortSize);
 
-        
+
         // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
         if (!result) {
             result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
         }
-        
+
         // если все данные поместились на один экран, то скрываем пэйджинг
         if (result) {
             result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
@@ -904,7 +906,7 @@ const _private = {
             if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
                 result = true;
 
-                // Если пэйджинг был показан из-за hasMore, то запоминаем это, 
+                // Если пэйджинг был показан из-за hasMore, то запоминаем это,
                 // чтобы не скрыть после полной загрузки, даже если не набралось на две страницы.
                 self._cachedPagingState = true;
             }
@@ -912,7 +914,7 @@ const _private = {
 
         if (self._cachedPagingState === true) {
             result = true;
-        } 
+        }
 
         return result;
     },
@@ -936,7 +938,7 @@ const _private = {
                     self._pagingVisible = _private.needShowPagingByScrollSize(self, params.scrollHeight, params.clientHeight);
                 });
             }
-            
+
         });
     },
 
@@ -1037,7 +1039,7 @@ const _private = {
      * Обработать прокрутку списка виртуальным скроллом
      */
     handleListScroll: function(self, params) {
-        
+
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
@@ -1283,7 +1285,9 @@ const _private = {
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>): void {
-        const contents = item?.getContents();
+        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
+        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+        let contents = _private.getPlainItemContents(item);
 
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
@@ -1308,9 +1312,10 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
-        const itemKey = item?.getContents()?.getKey();
-        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, self, isContextMenu);
+        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (menuConfig) {
+            clickEvent.nativeEvent.preventDefault();
+            clickEvent.stopImmediatePropagation();
             menuConfig.eventHandlers = {
                 onResult: self._onItemActionsMenuResult,
                 onClose: self._onItemActionsMenuClose
@@ -1330,6 +1335,19 @@ const _private = {
         self._itemActionsController.setActiveItem(null);
         self._itemActionsController.deactivateSwipe();
         _private.closePopup(self);
+    },
+
+    /**
+     * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+     *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+     * @param item
+     */
+    getPlainItemContents(item: CollectionItem<Model>) {
+        let contents = item.getContents();
+        if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+            contents = contents[(contents as any).length - 1];
+        }
+        return contents;
     },
 
     /**
@@ -2136,7 +2154,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._viewSize = container.clientHeight;
         if (_private.needScrollPaging(this._options.navigation)) {
             const scrollParams = {scrollHeight: this._viewSize, clientHeight: this._viewPortSize, scrollTop: this._scrollTop};
-            
+
             _private.updateScrollPagingButtons(this, scrollParams);
         }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
@@ -2635,6 +2653,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         const editingConfig = this._listViewModel.getEditingConfig();
         const isActionsAssigned = this._listViewModel.isActionsAssigned();
+        let editArrowAction: IItemAction;
+        if (options.showEditArrow) {
+            editArrowAction = {
+                id: 'view',
+                icon: 'icon-Forward',
+                title: rk('Просмотреть'),
+                showType: TItemActionShowType.TOOLBAR,
+                handler: (item) => {
+                    this._notify('editArrowClick', [item]);
+                }
+            };
+        }
         const itemActionsChangeResult = this._itemActionsController.update({
             collection: this._listViewModel,
             itemActions: options.itemActions,
@@ -2647,7 +2677,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             actionCaptionPosition: options.actionCaptionPosition,
             itemActionsClass: options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisible: editingConfig?.toolbarVisibility
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editArrowAction,
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback
         });
         if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
@@ -2690,14 +2722,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onItemContextMenu(e: SyntheticEvent<Event>, item: CollectionItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
-        clickEvent.preventDefault();
         clickEvent.stopPropagation();
-        let contents = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
-            contents = contents[contents.length - 1];
-        }
+        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
+        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+        let contents = _private.getPlainItemContents(item);
+        const key = contents ? contents.getKey() : item.key;
+        this.setMarkedKey(key);
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
-        _private.setMarkedKey(this, contents.getKey());
     },
 
     /**
@@ -2709,7 +2740,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, item: CollectionItem<Model>): void {
         event.stopPropagation();
-        const key = item.getContents ? item.getContents().getId() : item.key;
+        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
+        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+        let contents = _private.getPlainItemContents(item);
+        const key = contents ? contents.getKey() : item.key;
         this.setMarkedKey(key);
 
         if (action && !action._isMenu && !action['parent@']) {

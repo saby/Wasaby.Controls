@@ -212,7 +212,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && (itemsModelCurrent.style === 'master' || itemsModelCurrent.style === 'masterClassic');
+        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && this._isSupportStickyMarkedItem();
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -266,9 +266,14 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemsModelCurrent;
     },
 
+    _isSupportStickyMarkedItem(): boolean {
+        return this._options.stickyMarkedItem !== false &&
+            (this._options.style === 'master' || this._options.style === 'masterClassic');
+    },
+
     _isSupportStickyItem(): boolean {
         return this._options.stickyHeader && (this._options.groupingKeyCallback || this._options.groupProperty) ||
-            this._options.style === 'master' || this._options.style === 'masterClassic';
+            this._isSupportStickyMarkedItem();
     },
 
     _isStickedItem(itemData: { isSticky?: boolean, isGroup?: boolean }): boolean {
