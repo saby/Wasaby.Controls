@@ -15,38 +15,41 @@ interface PopupOptions {
  * @returns {Promise}
  */
 export default function(self, popupOptions, multiSelect) {
-    let
-        selectorTemplate = self._options.selectorTemplate,
-        defaultPopupOptions: PopupOptions = merge({
-            opener: self,
-            template: self._options.selectorTemplate.templateName,
-            closeOnOutsideClick: true,
-            isCompoundTemplate: self._options.isCompoundTemplate,
-            eventHandlers: {
-                onResult: (result) => {
-                    self._selectCallback(null, result);
-                },
-                onClose: self._closeHandler.bind(self)
-            }
-        }, selectorTemplate && selectorTemplate.popupOptions || {}),
-        popupId;
-
-    if (popupOptions && popupOptions.template || selectorTemplate) {
-        defaultPopupOptions.templateOptions = merge({
-            selectedItems: self._getItems().clone(),
-            multiSelect: multiSelect,
-            handlers: {
-                onSelectComplete: function (event, result) {
-                    StackOpener.closePopup(popupId);
-                    if (self._options.isCompoundTemplate) {
+    if (!self._openingSelector || self._openingSelector.resolved) {
+        let
+            selectorTemplate = self._options.selectorTemplate,
+            defaultPopupOptions: PopupOptions = merge({
+                id: self._popupId,
+                opener: self,
+                template: self._options.selectorTemplate.templateName,
+                closeOnOutsideClick: true,
+                isCompoundTemplate: self._options.isCompoundTemplate,
+                eventHandlers: {
+                    onResult: (result) => {
                         self._selectCallback(null, result);
+                    },
+                    onClose: self._closeHandler.bind(self);
+                }
+            }, selectorTemplate && selectorTemplate.popupOptions || {});
+
+        if (popupOptions && popupOptions.template || selectorTemplate) {
+            defaultPopupOptions.templateOptions = merge({
+                selectedItems: self._getItems().clone(),
+                multiSelect: multiSelect,
+                handlers: {
+                    onSelectComplete: function (event, result) {
+                        StackOpener.closePopup(self._popupId);
+                        if (self._options.isCompoundTemplate) {
+                            self._selectCallback(null, result);
+                        }
                     }
                 }
-            }
-        }, selectorTemplate.templateOptions || {});
+            }, selectorTemplate.templateOptions || {});
 
-        return StackOpener.openPopup(merge(defaultPopupOptions, popupOptions || {})).then((id) => {
-            popupId = id;
-        });
+            self._openingSelector = StackOpener.openPopup(merge(defaultPopupOptions, popupOptions || {})).then((id) => {
+                self._popupId = id;
+            });
+        }
+        return self._openingSelector;
     }
 }
