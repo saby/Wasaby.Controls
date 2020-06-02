@@ -35,7 +35,6 @@ export default class TreeController extends FlatController {
     * Проверяет получено ли событие из узла, на который наведен элемент при drag-n-drop
     * @remark
     * Мышь считается внутри узла, если смещение от верха или от низа меньше DRAG_MAX_OFFSET
-    * На узле должен быть навешан класс .js-controls-TreeView__dragTargetNode
     * Если не передать offset, то он будет посчитан
     * @rem
     * @param event {SyntheticEvent<MouseEvent>} событие клика на узел
@@ -151,7 +150,7 @@ export default class TreeController extends FlatController {
    private _calculateOffset(event: SyntheticEvent<MouseEvent>): IOffset {
       const result = { top: null, bottom: null };
 
-      const dragTarget = event.target.closest('.js-controls-TreeView__dragTargetNode');
+      const dragTarget = event.target;
       if (dragTarget) {
          const dragTargetRect = dragTarget.getBoundingClientRect();
          result.top = event.nativeEvent.pageY - dragTargetRect.top;
