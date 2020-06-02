@@ -18,6 +18,16 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
+    * @name Controls/interface/IDropdown#historyId
+    * @cfg {String} Уникальный идентификатор для сохранения истории выбора записей.
+    * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#history">здесь</a>.
+    * @example
+    * <pre>
+    *    <Controls.dropdown:Input historyId="myHistoryId"/>
+    * </pre>
+    */
+
+   /**
     * @name Controls/interface/IDropdown#dropdownClassName
     * @cfg {String} Класс, который навешивается на выпадающий список.
     * @example
