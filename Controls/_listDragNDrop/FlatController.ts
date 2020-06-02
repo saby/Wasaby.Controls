@@ -18,6 +18,7 @@ export interface IFlatModel {
 }
 
 export interface IFlatItemData {
+   isDragging: boolean;
    index: number;
    item: Model;
    key: TKey;
@@ -42,13 +43,16 @@ export default class FlatController {
       const draggedItem = this._model.getItemBySourceKey(draggedKey);
       this._draggingItemData = this._model.getItemDataByItem(draggedItem);
 
+      // это перетаскиваемый элемент, поэтому чтобы на него навесился нужный css класс isDragging = true
+      this._draggingItemData.isDragging = true;
+
       this.setDraggedItems(entity, this._draggingItemData.dispItem)
    }
 
    setDraggedItems(entity: ItemsEntity, draggedItem: CollectionItem<Model> = null): void {
       this._entity = entity;
 
-      // TODO dnd наверное нужно изменить draggingItem. Но учесть что из startDrag он и может придти
+      // TODO dnd наверное нужно изменить draggingItemData. Но раньше этого не делалось
       const draggedItemData = draggedItem
          ? this._model.getItemDataByItem(draggedItem)
          : this._draggingItemData;
