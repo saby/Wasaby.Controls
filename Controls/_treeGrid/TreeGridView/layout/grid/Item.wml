@@ -121,7 +121,7 @@
          <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}} {{itemData.getColspanForColumnScroll().actions}}" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}_actions"/>
       </ws:if>
       <div style="display: contents">
-         <div attr:class="{{currentColumn.classList.base.replace('controls-Grid__cell_fixed', '')}} {{currentColumn.classList.columnScroll}}
+         <div attr:class="{{currentColumn.classList.base.replace('controls-Grid__cell_fixed', '')}} {{currentColumn.classList.columnScroll}} {{ cellClass || '' }}
                           {{currentColumn.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left}}
                           {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
                           {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
@@ -132,7 +132,7 @@
             <ws:partial template="columnContentWrapper"/>
          </div>
          <div attr:class="{{currentColumn.classList.base.replace('controls-Grid__cell_fixed', '')}} {{currentColumn.classList.columnScroll}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
-                                   {{currentColumn.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left}}
+                                   {{currentColumn.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left}} {{ cellClass || '' }}
                                    {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
                                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
                                    {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
@@ -145,7 +145,7 @@
          <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}}" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}_actions"/>
       </ws:if>
       <ws:if data="{{(colspan === false && !!colspanLength) ? ( (currentColumn.columnIndex <= (itemData.hasMultiSelect ? 1 : 0)) || (currentColumn.columnIndex >= ((itemData.hasMultiSelect ? 1 : 0) + colspanLength))) : true}}">
-         <div attr:class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
+         <div attr:class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{ cellClass || '' }}
                              {{ currentColumn.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}
                              {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
                              {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
