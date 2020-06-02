@@ -2,10 +2,11 @@ import rk = require('i18n!Controls');
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_operations/__MultiSelector';
 import {Memory} from 'Types/source';
-import {Model} from 'Types/entity';
+import {Model, CancelablePromise} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TKeysSelection, ISelectionObject} from 'Controls/interface';
 import {default as getCountUtil, IGetCountCallParams} from 'Controls/_operations/MultiSelector/getCount';
+import {LoadingIndicator} from 'Controls/LoadingIndicator';
 
 const DEFAULT_CAPTION = rk('Отметить');
 const DEFAULT_ITEMS = [
@@ -31,7 +32,18 @@ const SHOW_ALL_ITEM =  {
    title: rk('Показать все')
 };
 
+interface IMultiSelectorChildren {
+   countIndicator: LoadingIndicator;
+}
+
+interface IMultiSelectorMenuItem {
+   id: string;
+   title: string;
+}
+
 type TCount = null|number|void;
+type CountPromise = CancelablePromise<TCount>;
+type MultiSelectorMenuItems = IMultiSelectorMenuItem[];
 
 export interface IMultiSelectorOptions extends IControlOptions {
    selectedKeys: TKeysSelection;
@@ -47,6 +59,8 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    protected _menuSource: Memory = null;
    protected _sizeChanged: boolean = false;
    protected _menuCaption: string = null;
+   protected _countPromise: CountPromise = null;
+   protected _children: IMultiSelectorChildren;
 
    protected _beforeMount(options: IMultiSelectorOptions): Promise<TCount> {
       this._menuSource = this._getMenuSource(options);
@@ -78,7 +92,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       }
    }
 
-   private _getAdditionalMenuItems(options: IMultiSelectorOptions): object[] {
+   private _getAdditionalMenuItems(options: IMultiSelectorOptions): MultiSelectorMenuItems {
       const additionalItems = [];
 
       if (options.selectionViewMode === 'selected') {
@@ -98,7 +112,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       });
    }
 
-   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions, counterConfigChanged: boolean): Promise<TCount> {
+   private _updateMenuCaptionByOptions(options: IMultiSelectorOptions, counterConfigChanged?: boolean): Promise<TCount> {
       const selectedKeys = options.selectedKeys;
       const excludedKeys = options.excludedKeys;
       const selection = this._getSelection(selectedKeys, excludedKeys);
@@ -119,7 +133,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       }
    }
 
-   private _getMenuCaption({selected, excluded}: ISelectionObject, count: TCount, isAllSelected: boolean): string {
+   private _getMenuCaption({selected}: ISelectionObject, count: TCount, isAllSelected: boolean): string {
       const hasSelected = !!selected.length;
       let caption;
 
@@ -149,15 +163,28 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       if (!this._options.selectedCountConfig || this._isCorrectCount(count)) {
          countResult = count === undefined ? selection.selected.length : count;
       } else {
-         this._children.countIndicator.show();
-         countResult = getCountUtil.getCount(selection, selectionCountConfig).then((result: number): number => {
-            if (this._children.countIndicator) {
-               this._children.countIndicator.hide();
-            }
-            return result;
-         });
+         countResult = this._getCountBySourceCall(selection, selectionCountConfig);
       }
       return countResult;
+   }
+
+   private _getCountBySourceCall(selection, selectionCountConfig): CountPromise {
+      if (this._countPromise) {
+         this._countPromise.cancel();
+      }
+
+      this._children.countIndicator.show();
+      this._countPromise = new CancelablePromise(getCountUtil.getCount(selection, selectionCountConfig));
+      return this._countPromise.promise.then(
+          (result: number): number => {
+             if (this._children.countIndicator) {
+                this._children.countIndicator.hide();
+             }
+             this._countPromise = null;
+             return result;
+          },
+          (error) => error
+      );
    }
 
    private _getSelection(selectedKeys: TKeysSelection, excludedKeys: TKeysSelection): ISelectionObject {

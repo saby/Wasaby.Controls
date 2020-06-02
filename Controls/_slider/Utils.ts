@@ -50,7 +50,7 @@ export default {
         let targetX = 0;
         if (event.type === 'mousedown' || event.type === 'mousemove') {
             targetX = event.nativeEvent.pageX;
-        } else if (event.type === 'touchstart') {
+        } else if (event.type === 'touchstart' || event.type === 'touchmove') {
             targetX = event.nativeEvent.touches[0].pageX;
         } else {
             Logger.error('Slider: Event type must be mousedown of touchstart.');
