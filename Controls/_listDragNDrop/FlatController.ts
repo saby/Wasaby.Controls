@@ -52,12 +52,12 @@ export default class FlatController {
    setDraggedItems(entity: ItemsEntity, draggedItem: CollectionItem<Model> = null): void {
       this._entity = entity;
 
-      // TODO dnd наверное нужно изменить draggingItemData. Но раньше этого не делалось
-      const draggedItemData = draggedItem
-         ? this._model.getItemDataByItem(draggedItem)
-         : this._draggingItemData;
+      if (draggedItem) {
+         this._draggingItemData = this._model.getItemDataByItem(draggedItem);
+         this._draggingItemData.isDragging = true;
+      }
 
-      this._model.setDraggedItems(draggedItemData, entity);
+      this._model.setDraggedItems(this._draggingItemData, entity);
    }
 
    setDragPosition(position: IDragPosition): void {

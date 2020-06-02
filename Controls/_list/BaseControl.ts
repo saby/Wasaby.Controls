@@ -2904,6 +2904,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
+                // TODO dnd нужно разобраться для чего это. Так как на wi про эту ситуацию ни слова
+                // если это будет не нужно, то убрать 2-ой параметр в методе DndFlatController.setDraggedItems
                 const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
                 this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
             } else if (dragEnterResult === true) {
