@@ -1,17 +1,6 @@
 <div attr:class="controls-SelectedCollection__collection controls-SelectedCollection__collection_{{_options.itemsLayout !== 'oneRow' ? 'multiLine' : 'singleLine'}} controls-SelectedCollection__collection-{{_options.itemsLayout}}"
      attr:style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
    <ws:if data="{{_options.items.getCount() > _options.maxVisibleItems}}">
-      <Controls.popup:Sticky
-            name="infoBox"
-            attr:class="controls-SelectedCollection_sticky"
-            closeOnOutsideClick="{{true}}"
-            actionOnScroll="close"
-            template="Controls/lookupPopup:Collection"
-            on:close="_notifyHandler('closeInfoBox')">
-         <!--toDo https://online.sbis.ru/open_dialog.html?guid=619e58be-2885-4a7e-80f5-7415c5bff2ca-->
-         <ws:direction vertical="bottom" horizontal="right"/>
-         <ws:targetPoint vertical="bottom" horizontal="left"/>
-      </Controls.popup:Sticky>
       <span name="infoBoxLink"
             attr:style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout, !(_options.readOnly && !_options.maxVisibleItems))}}"
             attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed_theme-' + _options.theme}} {{_options.counterClassName}}"
