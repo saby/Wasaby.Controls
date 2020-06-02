@@ -3117,9 +3117,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Возвращает видимость опций записи.
      * @private
      */
-    _isVisibleItemActions(): boolean {
-        return (this._showActions || this._options.useNewModel) &&
-            (!this._itemActionsMenuId || this._options.itemActionVisibility === 'visible');
+    _isVisibleItemActions(showActions: boolean, itemActionsMenuId: number): boolean {
+        return (showActions || this._options.useNewModel) &&
+            (!itemActionsMenuId || this._options.itemActionVisibility === 'visible');
     },
 
     _createSelectionController(): void {

@@ -1,4 +1,6 @@
-<div class="controls-BaseControl {{!_isVisibleItemActions() ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionVisibility}}' controls-BaseControl__renderContainer">
+<div class="controls-BaseControl
+   {{!_isVisibleItemActions(itemActionsMenuId) ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionVisibility}}'
+   controls-BaseControl__renderContainer">
    <ws:partial
       name="renderer"
       template="{{ _options.render }}"
