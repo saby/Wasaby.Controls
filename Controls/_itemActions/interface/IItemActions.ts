@@ -120,10 +120,9 @@ export interface IItemAction {
 
 export type TActionClickCallback = (clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, contents: Model) => void;
 
-export type TItemActionVisibilityCallback = (
-    action: IItemAction,
-    item: unknown
-) => boolean;
+export type TItemActionVisibilityCallback = (action: IItemAction, item: unknown) => boolean;
+
+export type TEditArrowVisibilityCallback = (item: unknown) => boolean;
 
 export interface IItemActionsContainer {
     all: IItemAction[];
