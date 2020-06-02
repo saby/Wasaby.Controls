@@ -58,17 +58,19 @@ class ModuleLoader {
         return promiseResult.then(loadFromModule);
     }
 
-    loadSync(name: string): Module {
+    loadSync(name: string, error: any = Error()): Module {
         const parsedInfo = libHelper.parse(name);
         let loaded;
         try {
             loaded = this.requireSync(parsedInfo.name);
         } catch (e) {
             IoC.resolve('ILogger').error("Couldn't load module " + parsedInfo.name, e);
+            error.message = `Couldn't load module 1 ${parsedInfo.name} Error: ${e.message}`;
             return null;
         }
         if (!loaded) {
             IoC.resolve('ILogger').error("Couldn't load module 2" + parsedInfo.name);
+            error.message = `Couldn't load module 2 ${parsedInfo.name}`;
             return null;
         }
         return this.getFromLib(loaded, parsedInfo);
