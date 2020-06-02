@@ -74,10 +74,11 @@ describe('Controls/_display/TreeItem', () => {
             assert.strictEqual(level2.getLevel(), level1.getLevel() + 1);
         });
 
-        it('should return 0 for root if it\'s enumerable', () => {
+        it('should start counter with value given by getRootLevel() method', () => {
+            const rootLevel = 3;
             const OwnerWithRoot = function(): void {
-                this.isRootEnumerable = () => true;
                 this.getRoot = () => root;
+                this.getRootLevel = () => rootLevel;
             };
             const owner = new OwnerWithRoot();
             const root = new TreeItem({owner});
@@ -90,28 +91,7 @@ describe('Controls/_display/TreeItem', () => {
                 owner
             });
 
-            assert.strictEqual(root.getLevel(), 0);
-            assert.strictEqual(level1.getLevel(), root.getLevel() + 1);
-            assert.strictEqual(level2.getLevel(), level1.getLevel() + 1);
-        });
-
-        it('should return -1 for root if it\'s not enumerable', () => {
-            const OwnerWithRoot = function(): void {
-                this.isRootEnumerable = () => false;
-                this.getRoot = () => root;
-            };
-            const owner = new OwnerWithRoot();
-            const root = new TreeItem({owner});
-            const level1 = new TreeItem({
-                parent: root,
-                owner
-            });
-            const level2 = new TreeItem({
-                parent: level1,
-                owner
-            });
-
-            assert.strictEqual(root.getLevel(), -1);
+            assert.strictEqual(root.getLevel(), rootLevel);
             assert.strictEqual(level1.getLevel(), root.getLevel() + 1);
             assert.strictEqual(level2.getLevel(), level1.getLevel() + 1);
         });

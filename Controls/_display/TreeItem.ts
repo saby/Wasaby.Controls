@@ -117,6 +117,7 @@ export default class TreeItem<T> extends mixin<
      * Возвращает уровень вложенности относительно корня
      */
     getLevel(): number {
+        // If this is not a root then increase parent's level
         const parent = this._$parent;
         if (parent) {
             let parentLevel = 0;
@@ -128,13 +129,9 @@ export default class TreeItem<T> extends mixin<
             return parentLevel + 1;
         }
 
-        // If this is an actual root then check that it's enumerable
+        // If this is a root then get its level from owner
         const owner = this.getOwner();
-        const itsRoot = owner && owner.getRoot() === this;
-        if (itsRoot && !owner.isRootEnumerable()) {
-            return -1;
-        }
-        return 0;
+        return owner ? owner.getRootLevel() : 0;
     }
 
     /**
