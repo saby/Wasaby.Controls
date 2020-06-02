@@ -33,7 +33,7 @@ export default function(self, popupOptions, multiSelect) {
                     },
                     onClose: () => {
                         self._openingSelector = null;
-                        self._closeHandler.bind(self);
+                        self._closeHandler();
                     }
                 }
             }, selectorTemplate && selectorTemplate.popupOptions || {});
