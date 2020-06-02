@@ -65,10 +65,10 @@ class ModuleLoader {
             loaded = this.requireSync(parsedInfo.name);
         } catch (e) {
             IoC.resolve('ILogger').error("Couldn't load module " + parsedInfo.name, e);
-            return [null, parsedInfo.name, e];
+            return null;
         }
         if (!loaded) {
-            return [null, parsedInfo.name];
+            return null;
         }
         return this.getFromLib(loaded, parsedInfo);
     }
