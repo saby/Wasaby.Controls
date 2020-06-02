@@ -2961,7 +2961,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._showActions = true;
         }
 
-        if (this._dndListController && this._dndListController.isDragging()) {
+        if (this._dndListController instanceof DndTreeController && this._dndListController.isDragging()) {
             this._notify('draggingItemMouseMove', [itemData, nativeEvent]);
         }
     },
@@ -2969,7 +2969,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = null;
-            if (this._dndListController && this._dndListController.isDragging()) {
+            if (this._dndListController instanceof DndTreeController && this._dndListController.isDragging()) {
                 this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
             }
         }

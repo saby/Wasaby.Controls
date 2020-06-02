@@ -12,6 +12,7 @@ import {saveConfig} from 'Controls/Application/SettingsController';
 import {Map} from 'Types/shim';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {MouseButtons, MouseUp} from './../Utils/MouseEventHelper';
+import { DndTreeController } from '../listDragNDrop';
 
 var
     HOT_KEYS = {
@@ -682,7 +683,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     },
     _dragEnd: function() {
         const dndListController = this._children.baseControl.getDndListController();
-        dndListController.stopCountDownForExpandNode();
+        if (dndListController instanceof DndTreeController) {
+            dndListController.stopCountDownForExpandNode();
+        }
     },
 
     _expandNodeOnDrag: function(itemData) {

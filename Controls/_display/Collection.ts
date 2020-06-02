@@ -2119,7 +2119,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setDraggedItems(draggedItem: T, dragEntity: ItemsEntity): void {
         // TODO dnd когда будет выполнен полный переход на новую модель,
-        // то можно будет передать на только нужные параметры(ключ аватара и список перетаскиваемых ключей)
+        // то можно будет передать только нужные параметры(ключ аватара и список перетаскиваемых ключей)
         const avatarKey = draggedItem.getContents().getKey();
         const avatarStartIndex = this.getIndexByKey(avatarKey);
 

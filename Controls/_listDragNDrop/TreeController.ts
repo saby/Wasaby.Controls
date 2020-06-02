@@ -26,7 +26,6 @@ export default class TreeController extends FlatController {
    protected _model: ITreeModel;
    protected _draggingItemData: ITreeItemData;
    private _timeoutForExpandOnDrag: NodeJS.Timeout;
-   private _expandOnDragData: ITreeItemData;
 
    constructor(model: ITreeModel) {
       super(model);
@@ -96,10 +95,10 @@ export default class TreeController extends FlatController {
    }
 
    startCountDownForExpandNode(itemData: ITreeItemData, expandNode: Function): void {
-      if (itemData.item.get(itemData.nodeProperty) !== null && (!this._expandOnDragData || this._expandOnDragData !== itemData) && !itemData.isExpanded) {
+      if (itemData.dispItem.isNode() && !itemData.isExpanded
+            && this._draggingItemData.key !== itemData.key) {
          this._clearTimeoutForExpandOnDrag();
-         this._expandOnDragData = itemData;
-         this._setTimeoutForExpandOnDrag(this._expandOnDragData, expandNode);
+         this._setTimeoutForExpandOnDrag(itemData, expandNode);
       }
    }
 
@@ -118,7 +117,6 @@ export default class TreeController extends FlatController {
          clearTimeout(this._timeoutForExpandOnDrag);
          this._timeoutForExpandOnDrag = null;
       }
-      this._expandOnDragData = null;
    }
 
    private _calculateDragTargetPosition(itemData: ITreeItemData, position: TPosition): IDragPosition {
