@@ -356,12 +356,17 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          var footerTpl;
 
          requirejs(['Controls/suggestPopup'], function(result) {
+            let compat = Env.constants.compat;
+            Env.constants.compat = true;
+
             footerTpl = result.FooterTemplate;
 
             assert.equal(footerTpl(), '<div class="controls-Suggest__footer"></div>');
             assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore'}), '<div class="controls-Suggest__footer">testShowMore</div>');
             assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore', showSelectorButtonTemplate: 'testShowSelector'}), '<div class="controls-Suggest__footer">testShowMoretestShowSelector</div>');
             done();
+
+            Env.constants.compat = compat;
          });
       });
 

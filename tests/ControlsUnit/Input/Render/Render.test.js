@@ -65,7 +65,12 @@ define(
             });
          });
          describe('Template', function() {
-            var template = TemplateUtil.clearTemplate(new input.Render({})._template);
+            var template = TemplateUtil.clearTemplate(new input.Render({})._template), compat;
+
+            before(function() {
+               compat = Env.constants.compat;
+               Env.constants.compat = true;
+            });
 
             beforeEach(function() {
                ctrl._options = {
@@ -79,6 +84,11 @@ define(
                };
                ctrl._beforeMount(ctrl._options);
             });
+
+            after(function() {
+               Env.constants.compat = compat;
+            });
+
             it('In the content template passed the placeholder template', function() {
                ctrl._options.placeholder = 'test placeholder';
 
