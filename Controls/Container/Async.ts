@@ -151,7 +151,7 @@ class Async extends Control<IOptions, TStateRecivied> {
    _loadContentSync(name: string, options: IControlOptions): TStateRecivied {
       const loaded = moduleLoader.loadSync(name);
       if (loaded === null) {
-         return generateErrorMsg(name);
+         return generateErrorMsg(name, 'error sync');
       }
 
       this._insertComponent(loaded, options, name);
@@ -168,7 +168,7 @@ class Async extends Control<IOptions, TStateRecivied> {
       const result = promise.then<TStateRecivied, TStateRecivied>((loaded) => {
          this.canUpdate = true;
          if (loaded === null) {
-            this.error = generateErrorMsg(name);
+            this.error = generateErrorMsg(name, 'error async');
             this.userErrorMessage = rk('У СБИС возникла проблема');
             return this.error;
          }
@@ -177,7 +177,7 @@ class Async extends Control<IOptions, TStateRecivied> {
          return true;
       }, (err) => {
          this.canUpdate = true;
-         this.error = generateErrorMsg(name);
+         this.error = generateErrorMsg(name, err.message);
          this.userErrorMessage = rk('У СБИС возникла проблема');
          return err;
       });
