@@ -20,10 +20,19 @@ import * as scrollToElement from 'Controls/Utils/scrollToElement';
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
 import {LocalStorageNative} from 'Browser/Storage';
+import Observer from './IntersectionObserver/Observer';
+import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 
 /**
  * Контейнер с тонким скроллом.
  * Для контрола требуется {@link Controls/_scroll/Scroll/Context context}.
+ * 
+ * @remark
+ * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
+ * Для корректной работы внутри WS3 необходимо поместить контрол в контроллер Controls/dragnDrop:Compound, который обеспечит работу функционала Drag-n-Drop.
+ * 
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
  *
  * @class Controls/_scroll/Container
  * @extends Core/Control
@@ -31,9 +40,6 @@ import {LocalStorageNative} from 'Browser/Storage';
  * @public
  * @author Красильников А.С.
  * @category Container
- * @remark
- * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
- * Для корректной работы внутри WS3 необходимо поместить контрол в контроллер Controls/dragnDrop:Compound, который обеспечит работу функционала Drag-n-Drop.
  * @demo Controls-demo/Container/Scroll
  *
  */
@@ -391,14 +397,14 @@ let
          const {scrollTop, clientHeight, scrollHeight} = self._children.content;
 
          if (scrollTop <= 0) {
-            self._pagingState.stateUp = 'disabled';
-            self._pagingState.stateDown = 'normal';
+            self._pagingState.stateUp = false;
+            self._pagingState.stateDown = true;
          } else if (scrollTop + clientHeight >= scrollHeight) {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'disabled';
+            self._pagingState.stateUp = true;
+            self._pagingState.stateDown = false;
          } else {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'normal';
+            self._pagingState.stateUp = true;
+            self._pagingState.stateDown = true;
          }
       },
 
@@ -501,7 +507,7 @@ let
             def;
 
          if (!constants.isServerSide) {
-             this._enableScrollbar = getEnableScrollbar();
+             this._enableScrollbar = getEnableScrollbar(options._scrollbarVisibleHard);
          }
 
          if ('shadowVisible' in options) {
@@ -534,8 +540,8 @@ let
             // paging buttons are invisible. Control calculates height and shows buttons after mounting.
             this._pagingState = {
                visible: false,
-               stateUp: 'disabled',
-               stateDown: 'normal'
+               stateUp: false,
+               stateDown: true
             };
          } else {
             this._pagingState = {};
@@ -735,6 +741,11 @@ let
 
          Bus.globalChannel().unsubscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
          this._lockScrollPositionUntilKeyboardShown = null;
+
+         if(this._observer) {
+             this._observer.destroy();
+             this._observer = null;
+         }
       },
 
       _shadowVisible(position: POSITION) {
@@ -805,7 +816,7 @@ let
          let marginTop = parseInt(computedStyle.marginTop, 10);
          let marginRight = parseInt(computedStyle.marginRight, 10);
 
-         this._contentStyles = this._styleHideScrollbar.replace(/-?\d+/g, function(found) {
+         this._contentStyles = this._styleHideScrollbar.replace(/-?[1-9]\d*/g, function(found) {
             return parseInt(found, 10) + marginRight;
          });
 
@@ -944,14 +955,14 @@ let
       _scrollMoveHandler: function(e, scrollData) {
          if (this._pagingState.visible) {
             if (scrollData.position === 'up') {
-               this._pagingState.stateUp = 'disabled';
-               this._pagingState.stateDown = 'normal';
+               this._pagingState.stateUp = false;
+               this._pagingState.stateDown = true;
             } else if (scrollData.position === 'down') {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'disabled';
+               this._pagingState.stateUp = true;
+               this._pagingState.stateDown = false;
             } else {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'normal';
+               this._pagingState.stateUp = true;
+               this._pagingState.stateDown = true;
             }
             this._forceUpdate();
          }
@@ -959,7 +970,7 @@ let
 
       _mouseenterHandler: function(event) {
          this._scrollbarTaken(true);
-         if (this._enableScrollbar !== getEnableScrollbar()) {
+         if (this._enableScrollbar !== getEnableScrollbar(this._options._scrollbarVisibleHard)) {
              this._enableScrollbar = getEnableScrollbar();
              this._forceUpdate();
          }
@@ -1262,7 +1273,34 @@ let
          // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
          // Не запускаем перерисовку, если контрол скрыт
          return !!this._container.closest('.ws-hidden');
-      }
+      },
+
+       // Intersection observer
+
+       _initObserver(): void {
+           if (!this._observer) {
+               this._observer = new Observer(this._intersectHandler.bind(this));
+           }
+       },
+
+       _intersectionObserverRegisterHandler(event: SyntheticEvent, intersectionObserverObject: IIntersectionObserverObject): void {
+           this._initObserver();
+           this._observer.register(this._container, intersectionObserverObject);
+           if (!intersectionObserverObject.observerName) {
+               event.stopImmediatePropagation();
+           }
+       },
+
+       _intersectionObserverUnregisterHandler(event: SyntheticEvent, instId: string, observerName: string): void {
+           this._observer.unregister(instId, observerName);
+           if (!observerName) {
+               event.stopImmediatePropagation();
+           }
+       },
+
+       _intersectHandler(items): void {
+           this._notify('intersect', [items]);
+       }
    });
 
 Scroll.getDefaultOptions = function() {
@@ -1270,7 +1308,8 @@ Scroll.getDefaultOptions = function() {
       topShadowVisibility: SHADOW_VISIBILITY.AUTO,
       bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
       scrollbarVisible: true,
-      scrollMode: 'vertical'
+      scrollMode: 'vertical',
+      _scrollbarVisibleHard: true
    };
 };
 
@@ -1297,12 +1336,12 @@ function setEnableScrollbar(value: boolean): void {
     LocalStorageNative.setItem('enableScrollbar', JSON.stringify(value));
 }
 
-function getEnableScrollbar(): void {
+function getEnableScrollbar(scrollbarVisibleHard: boolean = false): void {
     if (enableScrollbar === null) {
         enableScrollbar = JSON.parse(LocalStorageNative.getItem('enableScrollbar'));
         enableScrollbar = enableScrollbar === null ? true : enableScrollbar;
     }
-    return enableScrollbar;
+    return scrollbarVisibleHard ? scrollbarVisibleHard : enableScrollbar;
 }
 
 let enableScrollbar = null;

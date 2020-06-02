@@ -183,25 +183,6 @@ define(
             assert.equal(data._prefetchSource._$data.query, sourceData);
          });
 
-         it('update equal source', function(done) {
-            var
-               items,
-               config = {source: source, keyProperty: 'id'},
-               data = getDataWithConfig(config);
-
-            data._beforeMount(config).addCallback(function() {
-               items = data._items;
-
-               data._beforeUpdate({source: new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: sourceDataEdited
-               }), idProperty: 'id'}).addCallback(function() {
-                  assert.isTrue(data._items === items);
-                  done();
-               });
-            });
-         });
-
          it('_itemsReadyCallbackHandler', async function() {
             const options = {source: source, keyProperty: 'id'};
             let data = getDataWithConfig(options);
@@ -275,7 +256,6 @@ define(
                const newList = new collection.RecordSet();
                data._itemsChanged(event, newList);
                assert.isTrue(propagationStopped);
-               assert.equal(data._items, newList);
                done();
             });
          });
@@ -292,6 +272,17 @@ define(
                   resolve();
                });
             });
+         });
+
+         it('rootChanged', async () => {
+            const config = {source: source, keyProperty: 'id', filter: {test: 'test'}, root: '123', parentProperty: 'root'};
+            const data = getDataWithConfig(config);
+
+            await data._beforeMount(config);
+            const newConfig = {...config};
+            delete newConfig.root;
+            data._beforeUpdate(newConfig);
+            assert.isTrue(!data._dataOptionsContext.filter.root);
          });
 
          it('query returns error', function(done) {
@@ -530,6 +521,13 @@ define(
             options.root = null;
             lists.DataContainer._private.resolveOptions(self, options);
             assert.deepEqual(self._filter, {test: 123});
+
+            self._options.root = undefined;
+            options.root = null;
+            delete self._options.filter['root'];
+            filter = self._filter;
+            lists.DataContainer._private.resolveOptions(self, options);
+            assert.isTrue(filter === self._filter);
          });
          it('_private.isEqualItems', function() {
 

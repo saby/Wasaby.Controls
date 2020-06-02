@@ -1,7 +1,6 @@
+import rk = require('i18n!Controls');
+
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
-
-import template = require('wml!Controls/_listRender/View/View');
-
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { create as diCreate } from 'Types/di';
@@ -10,14 +9,16 @@ import { Sticky } from 'Controls/popup';
 import {
     Collection,
     CollectionItem,
-    MarkerCommands,
     ICollectionCommand,
     ANIMATION_STATE
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
     TItemActionVisibilityCallback,
-    IItemAction} from 'Controls/itemActions';
+    TEditArrowVisibilityCallback,
+    IItemAction,
+    TItemActionShowType
+} from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import { load as libraryLoad } from 'Core/library';
@@ -26,6 +27,9 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { constants } from 'Env/Env';
 
 import {ISwipeEvent} from './Render';
+import { MarkerController, TVisibility, Visibility } from 'Controls/marker';
+
+import template = require('wml!Controls/_listRender/View/View');
 
 export interface IViewOptions extends IControlOptions {
     items: RecordSet;
@@ -44,6 +48,11 @@ export interface IViewOptions extends IControlOptions {
     actionCaptionPosition?: 'right'|'bottom'|'none';
 
     editingConfig?: any;
+
+    markerVisibility: TVisibility;
+    markedKey: number|string;
+    showEditArrow: boolean;
+    editArrowVisibilityCallback: TEditArrowVisibilityCallback
 }
 
 export default class View extends Control<IViewOptions> {
@@ -57,8 +66,17 @@ export default class View extends Control<IViewOptions> {
     // Идентификатор текущего открытого popup
     private _itemActionsMenuId: string = null;
 
+    private _markerController: MarkerController = null;
+
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
+        if (options.markerVisibility !== Visibility.Hidden) {
+            this._markerController = new MarkerController({
+                model: this._collection,
+                markerVisibility: options.markerVisibility,
+                markedKey: options.markedKey
+            });
+        }
         return libraryLoad(options.render).then(() => null);
     }
 
@@ -75,6 +93,18 @@ export default class View extends Control<IViewOptions> {
 
         if (options.editingConfig !== this._options.editingConfig || options.editingConfig && collectionRecreated) {
             this._collection.setEditingConfig(options.editingConfig);
+        }
+
+        if (options.markedKey !== this._options.markedKey
+           || options.markerVisibility !== this._options.markerVisibility
+           || collectionRecreated) {
+            if (this._markerController) {
+                this._markerController.update({
+                    model: this._collection,
+                    markerVisibility: options.markerVisibility,
+                    markedKey: options.markedKey
+                });
+            }
         }
 
         // UC: Record might be editing on page load, then we should initialize Item Actions.
@@ -126,8 +156,9 @@ export default class View extends Control<IViewOptions> {
         item: Model,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        const moveMarker = new MarkerCommands.Mark(item.getKey());
-        this._executeCommands([moveMarker]);
+        if (this._markerController) {
+            this._markerController.setMarkedKey(item.getKey());
+        }
         // TODO fire 'markedKeyChanged' event
     }
 
@@ -162,7 +193,7 @@ export default class View extends Control<IViewOptions> {
             if (this._options.multiSelectVisibility !== 'hidden') {
                 this._collection.setRightSwipedItem();
             }
-            this._collection.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
             this._collection.nextVersion();
             //             _private.setMarkedKey(this, key);
         }
@@ -191,8 +222,9 @@ export default class View extends Control<IViewOptions> {
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        const moveMarker = new MarkerCommands.Mark(item.getContents().getKey());
-        this._executeCommands([moveMarker]);
+        if (this._markerController) {
+            this._markerController.setMarkedKey(item.getContents().getKey());
+        }
         // TODO fire 'markedKeyChanged' event
 
         if (action && !action._isMenu && !action['parent@']) {
@@ -229,16 +261,18 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         keyDownEvent: SyntheticEvent<KeyboardEvent>
     ): void {
-        const commands: Array<ICollectionCommand<unknown>> = [];
         switch (keyDownEvent.nativeEvent.keyCode) {
         case constants.key.down:
-            commands.push(new MarkerCommands.MarkNext());
+            if (this._markerController) {
+                this._markerController.moveMarkerToNext();
+            }
             break;
         case constants.key.up:
-            commands.push(new MarkerCommands.MarkPrevious());
+            if (this._markerController) {
+                this._markerController.moveMarkerToPrev();
+            }
             break;
         }
-        this._executeCommands(commands);
         // TODO fire 'markedKeyChanged' event if needed
     }
 
@@ -254,10 +288,8 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
-        let contents = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
-            contents = contents[contents.length - 1];
-        }
+        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
+        let contents = View._getItemContents(item);
         // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
@@ -283,7 +315,7 @@ export default class View extends Control<IViewOptions> {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
-                const item = this._collection.getActiveItem();
+                const item = this._itemActionsController.getActiveItem();
                 this._handleItemActionClick(action, clickEvent, item);
             }
         }
@@ -299,7 +331,7 @@ export default class View extends Control<IViewOptions> {
         // Actions dropdown can start closing after the view itself was unmounted already, in which case
         // the model would be destroyed and there would be no need to process the action itself
         if (this._collection && !this._collection.destroyed) {
-            this._collection.setActiveItem(null);
+            this._itemActionsController.setActiveItem(null);
             this._itemActionsController.deactivateSwipe();
             this._itemActionsMenuId = null;
         }
@@ -318,17 +350,15 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
-        let contents = item?.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
-            contents = contents[contents.length - 1];
-        }
-        const itemKey = contents?.getKey();
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
+        if (menuConfig) {
+            clickEvent.nativeEvent.preventDefault();
+            clickEvent.stopImmediatePropagation();
         if (menuConfig) {
             const onResult = this._itemActionsMenuResultHandler.bind(this);
             const onClose = this._itemActionsMenuCloseHandler.bind(this);
             menuConfig.eventHandlers = {onResult, onClose};
-            this._collection.setActiveItem(item);
+            this._itemActionsController.setActiveItem(item);
             Sticky.openPopup(menuConfig).then((popupId) => {
                 this._itemActionsMenuId = popupId;
             });
@@ -340,7 +370,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _closeActionsMenu(): void {
-        this._collection.setActiveItem(null);
+        this._itemActionsController.setActiveItem(null);
         this._itemActionsController.deactivateSwipe();
         Sticky.closePopup(this._itemActionsMenuId);
         this._itemActionsMenuId = null;
@@ -370,6 +400,18 @@ export default class View extends Control<IViewOptions> {
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._collection.getEditingConfig();
+        let editArrowAction: IItemAction;
+        if (this._options.showEditArrow) {
+            editArrowAction = {
+                id: 'view',
+                icon: 'icon-Forward',
+                title: rk('Просмотреть'),
+                showType: TItemActionShowType.TOOLBAR,
+                handler: (item) => {
+                    this._notify('editArrowClick', [item]);
+                }
+            };
+        }
         this._itemActionsController.update({
             collection: this._collection,
             itemActions: this._options.itemActions,
@@ -382,9 +424,26 @@ export default class View extends Control<IViewOptions> {
             actionCaptionPosition: this._options.actionCaptionPosition,
             itemActionsClass: this._options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisible: editingConfig?.toolbarVisibility
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editArrowAction,
+            editArrowVisibilityCallback: this._options.editArrowVisibilityCallback
         });
     }
+
+    /**
+     * Возвращает contents записи.
+     * Если запись - breadcrumbs, то берётся последняя Model из списка contents
+     * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+     *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+     * @param item
+     */
+    private static _getItemContents(item: CollectionItem<Model>): Model {
+        let contents = item?.getContents();
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
+            contents = contents[(contents as any).length - 1];
+        }
+        return contents;
+    };
 
     static getDefaultOptions(): Partial<IViewOptions> {
         return {

@@ -140,14 +140,26 @@ var ItemsViewModel = BaseViewModel.extend({
         return ItemsUtil.getDefaultDisplayFlat(items, cfg, filter);
     },
 
-    reset: function() {
-        this._startIndex = Boolean(this._options?.virtualScrollConfig) && !!this._startIndex ? this._startIndex : 0;
-        this._curIndex = 0;
+    setSupportVirtualScroll: function(value) {
+        this._options.supportVirtualScroll = value;
+    },
+
+    _isSupportVirtualScroll: function() {
+        return Boolean(this._options?.virtualScrollConfig) && this._options.supportVirtualScroll;
+    },
+
+    _getCurIndexForReset(startIndex: number): number {
+        return startIndex;
+    },
+
+    reset(): void {
+        this._startIndex = this._isSupportVirtualScroll() && !!this._startIndex ? this._startIndex : 0;
+        this._curIndex = this._getCurIndexForReset(this._startIndex);
     },
 
     isEnd: function() {
         var endIndex;
-        if (Boolean(this._options?.virtualScrollConfig)) {
+        if (this._isSupportVirtualScroll()) {
             endIndex = !!this._stopIndex ? this._stopIndex : 0;
         } else {
             endIndex = (this._display ? this._display.getCount() : 0);
@@ -183,7 +195,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     isLast: function() {
         var lastIndex;
-        if (Boolean(this._options.virtualScrollConfig)) {
+        if (this._isSupportVirtualScroll()) {
             lastIndex = this._stopIndex - 1;
         } else {
             lastIndex = (this._display ? this._display.getCount() - 1 : 0);
@@ -426,22 +438,22 @@ var ItemsViewModel = BaseViewModel.extend({
         // method may be implemented
     },
 
-    _updateSubscriptionOnMetaChange(oldItems: RecordSet | null, newItems: RecordSet | null, isRecordSetEqual?: boolean): void {
-        const execCommand = (items, command: 'subscribe' | 'unsubscribe') => {
-            if (items && cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
-                if (!isRecordSetEqual) {
-                    items[command]('onPropertyChange', this._onMetaDataChanged);
-                }
-
-                const meta = items.getMetaData();
-                if (meta && meta.results && cInstance.instanceOfModule(meta.results, 'Types/entity:Model')) {
-                    meta.results[command]('onPropertyChange', this._onMetaDataChanged);
-                }
+    _execUpdateSubscriptionOnMetaChange(items: RecordSet, command: 'subscribe' | 'unsubscribe', isRecordSetEqual?: boolean): void {
+        if (items && cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
+            if (!isRecordSetEqual) {
+                items[command]('onPropertyChange', this._onMetaDataChanged);
             }
-        };
 
-        execCommand(oldItems, 'unsubscribe');
-        execCommand(newItems, 'subscribe');
+            const meta = items.getMetaData();
+            if (meta && meta.results && cInstance.instanceOfModule(meta.results, 'Types/entity:Model')) {
+                meta.results[command]('onPropertyChange', this._onMetaDataChanged);
+            }
+        }
+    },
+
+    _updateSubscriptionOnMetaChange(oldItems: RecordSet | null, newItems: RecordSet | null, isRecordSetEqual?: boolean): void {
+        this._execUpdateSubscriptionOnMetaChange(oldItems, 'unsubscribe', isRecordSetEqual);
+        this._execUpdateSubscriptionOnMetaChange(newItems, 'subscribe', isRecordSetEqual);
     },
 
     _onMetaDataChanged(): void {
@@ -568,7 +580,9 @@ var ItemsViewModel = BaseViewModel.extend({
         let shouldAppend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
-            shouldAppend = items.getCount() > 0;
+
+            // (this._items.getCount() === 0) для того чтоб emptyTemplate перерисовался
+            shouldAppend = (items.getCount() > 0) || (this._items.getCount() === 0);
         }
         if (shouldAppend) {
             this._items.append(items);
@@ -590,7 +604,9 @@ var ItemsViewModel = BaseViewModel.extend({
         let shouldPrepend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
-            shouldPrepend = items.getCount() > 0;
+
+            // (this._items.getCount() === 0) для того чтоб emptyTemplate перерисовался
+            shouldPrepend = (items.getCount() > 0) || (this._items.getCount() === 0);
         }
         if (shouldPrepend) {
             this._items.prepend(items);
@@ -610,11 +626,13 @@ var ItemsViewModel = BaseViewModel.extend({
             this.reset();
             while (this.isEnd()) {
                 const index = this.getCurrentIndex();
-                callback.call(
-                    context,
-                    this.getCurrent(),
-                    index
-                );
+                if (this.isShouldBeDrawnItem()) {
+                    callback.call(
+                        context,
+                        this.getCurrent(),
+                        index
+                    );
+                }
                 this.goToNext();
             }
             return;
@@ -668,7 +686,10 @@ var ItemsViewModel = BaseViewModel.extend({
             this._display.destroy();
             this._display = null;
         }
-        this._items = null;
+        if (this._items) {
+            this._execUpdateSubscriptionOnMetaChange(this._items, 'unsubscribe');
+            this._items = null;
+        }
         this._itemDataCache = null;
         this._curIndex = null;
         this._onCollectionChangeFnc = null;
@@ -681,6 +702,11 @@ var ItemsViewModel = BaseViewModel.extend({
     getHasMoreData: function() {
         return this._hasMoreData;
     },
+
+    setTheme(theme: string): void {
+        this._options.theme = theme;
+        this.resetCachedItemData();
+    }
 });
 
 export = ItemsViewModel;

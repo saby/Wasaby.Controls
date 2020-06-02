@@ -245,7 +245,7 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName}:not(.controls-Grid__row-ladder-cell) {
       background-color: @item_hover_background-color_list;
    }
-   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-listItem_theme-@{themeName} {
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-default_theme-@{themeName} {
       background-color: @item_hover_background-color_list;
    }
    .controls-BaseControl_showActions .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row:hover {
@@ -275,7 +275,10 @@
    .controls-Grid__editArrow-wrapper_theme-@{themeName} {
       visibility: visible;
    }
-
+   .controls-Grid__editArrow_theme-@{themeName}:hover {
+      fill: @edit-arrow_hover_icon-color_grid;
+   }
+   
 }
 
 .controls-Grid__row-cell-background-editing_theme-@{themeName} {
@@ -511,13 +514,55 @@
 }
 
 .ws-is-mobile-chrome-ios .controls-Grid__row-cell_selected-master_theme-@{themeName},
+.ws-is-mobile-chrome-ios .controls-Grid__row-cell_selected-masterClassic_theme-@{themeName},
 .ws-is-desktop-safari .controls-Grid__row-cell_selected-master_theme-@{themeName},
-.ws-is-mobile-safari .controls-Grid__row-cell_selected-master_theme-@{themeName} {
+.ws-is-desktop-safari .controls-Grid__row-cell_selected-masterClassic_theme-@{themeName},
+.ws-is-mobile-safari .controls-Grid__row-cell_selected-master_theme-@{themeName},
+.ws-is-mobile-safari .controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
    // ave safari 13
    // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
    // иначе все position: absolute элементы внутри position: sticky
    // начинают сроиться относительно родителя уровнем выше
    transform: translateZ(0);
+}
+
+// TODO После https://online.sbis.ru/opendoc.html?guid=83aacafa-5b11-4615-9424-46d724b3793e
+//  вернуть как было в задаче https://online.sbis.ru/opendoc.html?guid=ecf7bb3e-a806-4477-9efa-dfc176195197
+.controls-background-masterClassic_theme-@{themeName}.controls-Grid__row-cell_selected-masterClassic_theme-@{themeName},
+.controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
+   background-color: @masterClassic_item_selected_background-color_list;
+}
+.controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
+   z-index: 1;
+
+   &:before {
+      content: '';
+      z-index: 2;
+      box-sizing: border-box;
+      border-width: @masterClassic_item_selected_border-thickness_list 0 @masterClassic_item_selected_border-thickness_list 0;
+      border-style: solid;
+      border-color: @masterClassic_item_selected_border-top-color_list transparent @masterClassic_item_selected_border-bottom-color_list transparent;
+      box-shadow: @masterClassic_item_selected_box-shadow_list;
+      width: ~'calc(100% + @{master_separator_thickness_list})';
+      position: absolute;
+      left: 0;
+      pointer-events: none;
+      top: -@masterClassic_item_selected_border-thickness_list;
+      bottom: -@masterClassic_item_selected_border-thickness_list;
+   }
+}
+
+.controls-Grid__row-cell_selected__last-masterClassic_theme-@{themeName} {
+   &:after {
+      content: '';
+      z-index: 1;
+      height: 100%;
+      top: 0;
+      width: @master_separator_thickness_list;
+      position: absolute;
+      right: -@master_separator_thickness_list;
+      background-color: @masterClassic_item_selected_background-color_list;
+   }
 }
 
 .controls-Grid__row-cell_selected-master_theme-@{themeName} {
@@ -528,19 +573,40 @@
 
 .controls-GridView__itemV_marker-master_theme-@{themeName} {
    position: absolute;
+   display: inline-flex;
+   align-items: baseline;
+   width: @master-marker_thickness_list;
+   top: initial;
+   left: 0;
+   height: 100%;
+}
+
+.ws-is-ie11 .controls-GridView__itemV_marker-master_theme-@{themeName} {
+   top: 0;
+   bottom: 0;
+   height: auto;
+}
+
+.controls-GridView__itemV_marker-master_theme-@{themeName}:before {
+   content: '\200b';
+   font-size: @item_font-size_2xl_grid;
+}
+
+.controls-GridView__itemV_marker-master_theme-@{themeName}:after {
+   content: '';
+   display: inline-block;
+   background-color: @master-marker_color_list;
    width: @master-marker_thickness_list;
    height: @master-marker_height_list;
-   background-color: @master-marker_color_list;
-   top: calc(50% - @item-separator_s_thickness_list);
-   left: 0;
-   transform: translateY(-50%);
 }
 
 .ws-is-hover {
-   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
+   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName},
+   .controls-Grid__row_masterClassic_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
       background-color: @master_item_hover_background-color_list;
    }
-   .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-background-master_theme-@{themeName} {
+   .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-background-master_theme-@{themeName},
+   .controls-Grid__row_highlightOnHover_masterClassic_theme-@{themeName}:hover .controls-background-masterClassic_theme-@{themeName} {
       background-color: @master_item_hover_background-color_list;
    }
 }
@@ -635,8 +701,8 @@
 
 .controls-Grid__editArrow_theme-@{themeName} {
    position: relative;
-   background: @item_hover_background-color_list;
    z-index: 1;
+   fill: @edit-arrow_icon-color_grid;
    .icon(@edit-arrow_icon-size_grid)
 }
 
@@ -645,6 +711,10 @@
 }
 
 .controls-Grid__editArrow_style-master_background_theme-@{themeName} {
+   background-color: @master_item_hover_background-color_list;
+}
+
+.controls-Grid__editArrow_style-masterClassic_background_theme-@{themeName} {
    background-color: @master_item_hover_background-color_list;
 }
 

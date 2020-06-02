@@ -145,8 +145,12 @@ var _private = {
           });
       }
    },
-   shouldSearch: function(self, value) {
-      return self._inputActive && value && value.length >= self._options.minSearchLength;
+   shouldSearch(self, value): boolean {
+      return self._inputActive && _private.isValueLengthLongerThenMinSearchLength(value, self._options);
+   },
+
+   isValueLengthLongerThenMinSearchLength(value, options): boolean {
+     return value && value.length >= options.minSearchLength;
    },
 
    prepareValue: function(self, value) {
@@ -154,12 +158,14 @@ var _private = {
    },
 
    shouldShowSuggest: function(self, searchResult) {
-      var hasItems = searchResult && searchResult.data.getCount();
+      const hasItems = searchResult && searchResult.data.getCount();
+      const isSuggestHasTabs = self._tabsSelectedKey !== null;
 
       /* do not suggest if:
        * 1) loaded list is empty and empty template option is doesn't set
        * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
-      return hasItems || (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
+      return hasItems ||
+             (!self._options.historyId || self._searchValue || isSuggestHasTabs) && self._options.emptyTemplate;
    },
    processResultData: function(self, resultData) {
       self._searchResult = resultData;
@@ -328,7 +334,6 @@ var SuggestLayout = Control.extend({
    _searchValue: '',
    _inputValue: '',
    _isFooterShown: false,
-   _tabsSource: null,
    _filter: null,
    _tabsSelectedKey: null,
    _historyKeys: null,
@@ -356,11 +361,13 @@ var SuggestLayout = Control.extend({
       this._searchDelay = options.searchDelay;
       this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
+      if (_private.isValueLengthLongerThenMinSearchLength(options.value, options)) {
+         _private.setSearchValue(this, options.value);
+      }
       _private.setFilter(this, options.filter, options);
    },
    _beforeUnmount: function() {
       this._searchResult = null;
-      this._tabsSource = null;
       this._searchStart = null;
       this._searchEnd = null;
       this._searchErrback = null;
@@ -407,7 +414,7 @@ var SuggestLayout = Control.extend({
       }
 
       if (this._options.validationStatus !== newOptions.validationStatus &&
-          _private.isInvalidValidationStatus(newOptions)) {
+          _private.isInvalidValidationStatus(newOptions) && !_private.isInvalidValidationStatus(this._options)) {
          _private.close(this, newOptions);
       }
    },

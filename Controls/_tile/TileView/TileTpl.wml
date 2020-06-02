@@ -7,6 +7,7 @@
 
 <ws:template name="defaultContentTpl">
    <div attr:class="controls-TileView__itemContent controls-TileView__itemContent_theme-{{theme}} {{titleStyle === 'accent' ? 'controls-TileView__itemContent_accent'}}
+               {{height === 'auto' ? 'controls-TileView__item_autoHeight'}}
                {{highlightOnHover === true ? ' controls-TileView__itemContent_highlightOnHover_theme-' + theme}}
                js-controls-SwipeControl__actionsContainer
                {{!!itemData.isActive() ? ' controls-TileView__item_active_theme-' + theme}}
@@ -21,7 +22,7 @@
                {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility) + '_theme-' + theme}}
                {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isSelected ?
                   ' controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-' + theme :
-                  ' controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-' + theme}}
+                  border !== false ? ' controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-' + theme}}
                {{itemData.canShowActions ? ' controls-ListView__item_showActions'}}"
         attr:style="{{itemData.position ? itemData.position}} ">
       <ws:partial if="{{itemData.hasMultiSelect}}"
@@ -58,12 +59,10 @@
                   template="{{itemActionsTemplate}}"
                   highlightOnHover="{{highlightOnHover}}"
                   itemData="{{itemData}}"
-                  isTile="{{true}}"
                   itemActionsClass="{{itemActionsClass ? itemActionsClass : 'controls-TileView__itemActions_theme-' + theme + ' controls-TileView__itemActions_bottomRight'}}"/>
       <ws:partial if="{{itemData.isSwiped() && itemData.shouldDisplayActions()}}"
                   template="{{swipeTemplate}}"
                   itemData="{{itemData}}"
-                  isTile="{{true}}"
                   itemActionsTemplate="{{itemActionsTemplate}}"/>
    </div>
 </ws:template>
@@ -83,7 +82,7 @@
 </ws:if>
 <ws:else>
    <ws:if data="{{itemData.tileMode === 'dynamic'}}">
-      <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
+      <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + (height || itemData.itemsHeight) + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
          <ws:partial template="defaultContentTpl">
             <ws:imageWrapper>
                <ws:partial template="imageWrapperTpl" attr:class="{{( titleStyle === undefined && hasTitle ) || titleStyle === 'partial' ? 'controls-TileView__imageWrapper_reduced_theme-' + theme}} {{itemData.isAnimated ? ' controls-TileView__item_animated'}}" attr:style="{{'height: ' + (itemData.isAnimated && itemData.zoomCoefficient ? itemData.zoomCoefficient * itemData.itemsHeight : itemData.itemsHeight) + 'px;'}}">

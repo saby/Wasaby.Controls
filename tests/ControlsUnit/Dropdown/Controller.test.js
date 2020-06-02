@@ -7,9 +7,10 @@ define(
       'Controls/history',
       'Core/Deferred',
       'Types/entity',
-      'Core/core-instance'
+      'Core/core-instance',
+      'Controls/popup'
    ],
-   (dropdown, sourceLib, clone, collection, history, Deferred, entity, cInstance) => {
+   (dropdown, sourceLib, clone, collection, history, Deferred, entity, cInstance, popup) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -150,13 +151,8 @@ define(
 
          it('_keyDown', function() {
             let dropdownController = getDropdownController(config),
-               closed = false, isOpened = true, isStopped = false;
-            dropdownController._children = {
-               DropdownOpener: {
-                  isOpened: () => {return isOpened;},
-                  close: () => {closed = true; }
-               }
-            };
+               closed = false, isStopped = false;
+            popup.Sticky.closePopup = () => {closed = true; };
             let event = {
                nativeEvent: {
                   keyCode: 28
@@ -171,12 +167,14 @@ define(
 
             // Тестируем нажатие esc, когда выпадающий список открыт
             isStopped = false;
+            dropdownController._popupId = 'test';
             event.nativeEvent.keyCode = 27;
             dropdownController._keyDown(event);
             assert.isTrue(closed);
             assert.isTrue(isStopped);
 
             // Тестируем нажатие esc, когда выпадающий список закрыт
+            dropdownController._popupId = null;
             isOpened = false;
 
             isStopped = false;
@@ -254,16 +252,7 @@ define(
             beforeEach(function() {
                opened = false;
                dropdownController = getDropdownController(config);
-               dropdownController._children = {
-                  DropdownOpener: {
-                     open: function() {
-                        opened = true;
-                     },
-                     isOpened: function() {
-                        return opened;
-                     }
-                  }
-               };
+               popup.Sticky.openPopup = () => {opened = true;};
 
                updatedItems = clone(items);
                updatedItems.push({
@@ -273,16 +262,20 @@ define(
             });
 
             it('new templateOptions', function() {
-               dropdownController._depsDeferred = {};
+               dropdownController._loadItemsTempPromise = {};
                dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
-               assert.isNull(dropdownController._depsDeferred);
+               assert.isNull(dropdownController._loadMenuTempPromise);
                assert.isFalse(opened);
+
+               dropdownController._open = function() {
+                  opened = true;
+               };
 
                dropdownController._isOpened = true;
                dropdownController._items = itemsRecords.clone();
                dropdownController._source = 'testSource';
                dropdownController._sourceController = {hasMoreData: ()=>{}};
-               dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined });
+               dropdownController._beforeUpdate({ ...config, headTemplate: 'headTemplate.wml', source: undefined })
                assert.isTrue(opened);
             });
 
@@ -344,24 +337,22 @@ define(
                   });
                });
             });
-
             it('new source and dropdown is open', () => {
                dropdownController._items = itemsRecords.clone();
                dropdownController._isOpened = true;
                dropdownController._sourceController = { hasMoreData: () => {}, isLoading: () => {} };
-               return new Promise((resolve) => {
-                  dropdownController._beforeUpdate({
-                     selectedKeys: [2],
+               dropdownController._open = function() {
+                  opened = true;
+               };
+               dropdownController._beforeUpdate({
+                  selectedKeys: [2],
+                  keyProperty: 'id',
+                  source: new sourceLib.Memory({
                      keyProperty: 'id',
-                     source: new sourceLib.Memory({
-                        keyProperty: 'id',
-                        data: updatedItems
-                     })
-                  }).addCallback(() => {
-                     assert.equal(dropdownController._items.getCount(), updatedItems.length);
-                     assert.isTrue(opened);
-                     resolve();
-                  });
+                     data: updatedItems
+                  })
+               }).addCallback(() => {
+                  assert.isTrue(opened);
                });
             });
 
@@ -451,9 +442,7 @@ define(
                let readOnlyConfig = clone(config),
                   isClosed = false;
 
-               dropdownController._children.DropdownOpener = {
-                  close: () => {isClosed = true;}
-               };
+               popup.Sticky.closePopup = () => {isClosed = true; };
                readOnlyConfig.readOnly = true;
                dropdownController._beforeUpdate(readOnlyConfig);
                assert.isTrue(isClosed);
@@ -472,7 +461,7 @@ define(
                   isFooterClicked = true;
                }
             };
-            dropdownController._onResult(null, 'footerClick');
+            dropdownController._onResult('footerClick');
             assert.isFalse(isClosed);
             assert.isTrue(isFooterClicked);
          });
@@ -486,14 +475,8 @@ define(
 
             dropdownController._beforeMount(configLazyLoad);
             dropdownController._items = itemsRecords.clone();
-            dropdownController._children.DropdownOpener = {
-               close: function() {
-                  closed = true;
-               },
-               open: function() {
-                  opened = true;
-               }
-            };
+            popup.Sticky.closePopup = () => {closed = true; };
+            popup.Sticky.openPopup = () => {opened = true; };
 
             dropdownController._notify = (e, eventResult) => {
                assert.equal(e, 'selectedItemsChanged');
@@ -506,25 +489,26 @@ define(
             };
 
             // returned false from handler and no hierarchy
-            dropdownController._onResult(null, 'itemClick', dropdownController._items.at(4));
+            dropdownController._onResult('itemClick', dropdownController._items.at(4));
             assert.isFalse(closed);
 
             // returned undefined from handler and there is hierarchy
             closed = false;
             closeByNodeClick = false;
-            dropdownController._onResult(null, 'itemClick', dropdownController._items.at(5));
+            dropdownController._onResult('itemClick', dropdownController._items.at(5));
             assert.isFalse(closed);
 
             // returned undefined from handler and no hierarchy
             closed = false;
+            dropdownController._popupId = 'test';
             closeByNodeClick = undefined;
-            dropdownController._onResult(null, 'itemClick', dropdownController._items.at(4));
+            dropdownController._onResult('itemClick', dropdownController._items.at(4));
             assert.isTrue(closed);
 
             // returned true from handler and there is hierarchy
             closed = false;
             closeByNodeClick = undefined;
-            dropdownController._onResult(null, 'itemClick', dropdownController._items.at(5));
+            dropdownController._onResult('itemClick', dropdownController._items.at(5));
             assert.isTrue(closed);
          });
 
@@ -544,6 +528,20 @@ define(
 
             item = dropdown._Controller._private.getItemByKey(itemsWithoutKeyProperty, 'anyTestId', 'id');
             assert.isUndefined(item);
+         });
+
+         it('loadDependencies', async() => {
+            const controller = getDropdownController(config);
+            let items;
+            let menuSource;
+
+            await controller.loadDependencies();
+            items = controller._items;
+            menuSource = controller._menuSource;
+
+            await controller.loadDependencies();
+            assert.isTrue(items === controller._items, 'items changed on second loadDependencies with same options');
+            assert.isTrue(menuSource === controller._menuSource, 'source changed on second loadDependencies with same options');
          });
 
          it('check empty item update', () => {
@@ -583,44 +581,63 @@ define(
                open: () => { opened = true;}
             };
             dropdownController._sourceController = { hasMoreData: () => false, load: () => Deferred.success(itemsRecords.clone()) };
-            dropdownController._open();
-            assert.isTrue(opened);
+            dropdownController._open().then(function() {
+               assert.isTrue(opened);
+            });
 
             // items is empty recordSet
             opened = false;
             dropdownController._items.clear();
-            dropdownController._open();
-            assert.isFalse(opened);
+            dropdownController._open().then(function() {
+               assert.isFalse(opened);
+            });
 
             // items = null
             opened = false;
             dropdownController._items = null;
-            dropdownController._open();
-            assert.isFalse(opened);
+            dropdownController._open().then(function() {
+               assert.isFalse(opened);
+            });
 
             // items's count = 1 + emptyText
             opened = false;
             dropdownController._items = new collection.RecordSet({keyProperty: 'id', rawData: [{id: '1', title: 'first'}]});
             dropdownController._options.emptyText = 'Not selected';
-            dropdownController._open();
-            assert.isTrue(opened);
+            dropdownController._open().then(function() {
+               assert.isTrue(opened);
+            });
 
             // update items in _menuSource
             const newItems = new collection.RecordSet({keyProperty: 'id', rawData: [{id: '1', title: 'first'}]});
             dropdownController._menuSource = null;
             dropdownController._items = newItems;
-            dropdownController._open();
-            assert.deepEqual(dropdownController._menuSource.getData().query.getRawData(), newItems.getRawData());
+            dropdownController._open().then(function() {
+               assert.deepEqual(dropdownController._menuSource.getData().query.getRawData(), newItems.getRawData());
+            });
+
+            //new source and dropdown is open
+            updatedItems = clone(items);
+            dropdownController._items = itemsRecords.clone();
+            dropdownController._isOpened = true;
+            dropdownController.source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: updatedItems
+            });
+            dropdownController._sourceController = { hasMoreData: () => {}, isLoading: () => {} };
+            dropdownController._open().then(function() {
+               assert.equal(dropdownController._items.getCount(), updatedItems.length);
+               assert.isTrue(opened);
+            });
          });
 
-         it('_private::requireTemplates', (done) => {
+         it('_private::loadItemsTemplates', (done) => {
             let dropdownController = getDropdownController(config);
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',
                rawData: []
             });
-            dropdown._Controller._private.requireTemplates(dropdownController, config).addCallback(() => {
-               assert.isTrue(dropdownController._depsDeferred.isReady());
+            dropdown._Controller._private.loadItemsTemplates(dropdownController, config).addCallback(() => {
+               assert.isTrue(dropdownController._loadItemsTempPromise.isReady());
                done();
             });
          });
@@ -689,8 +706,9 @@ define(
                   selectedItems = data[0];
                }
             };
-            dropdownController._open();
-            assert.deepEqual(selectedItems, [item.at(0)]);
+            dropdownController._open().then(function() {
+               assert.deepEqual(selectedItems, [item.at(0)]);
+            });
          });
 
          it('_open lazyLoad', () => {
@@ -879,7 +897,7 @@ define(
             assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
-         it('_clickHandler', () => {
+         it('_mouseDownHandler', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             dropdownController._beforeMount(configLazyLoad);
             let opened = false;
@@ -890,34 +908,40 @@ define(
             dropdownController._items = items2;
             dropdownController._source = 'testSource';
             dropdownController._sourceController = { hasMoreData: () => false };
-            dropdownController._children.DropdownOpener = {
-               close: function() {
-                  opened = false;
-               },
-               open: function() {
-                  opened = true;
-               },
-               isOpened: function() {
-                  return opened;
-               }
-            };
-            let stopped;
-            let event = {stopPropagation: () => {stopped = true;}};
-            dropdownController._clickHandler(event);
-            assert.isTrue(opened);
-            assert.isTrue(stopped);
+            popup.Sticky.closePopup = () => {opened = false; };
+            popup.Sticky.openPopup = () => {opened = true; };
 
-            dropdownController._clickHandler(event);
+            dropdownController._open = function() {
+               opened = true;
+            };
+            dropdownController._mouseDownHandler();
+            assert.isTrue(opened);
+
+            dropdownController._popupId = 'test';
+            dropdownController._mouseDownHandler();
             assert.isFalse(opened);
          });
 
+         it('_clickHandler', () => {
+            const dropdownController = getDropdownController();
+            let eventStopped = false;
+            const event = {
+               stopPropagation: () => { eventStopped = true; }
+            };
+
+            dropdownController._clickHandler(event);
+            assert.isTrue(eventStopped);
+         });
+
          it('_beforeUnmount', function() {
-            let isCanceled = false;
+            let isCanceled = false, opened = true;
             let dropdownController = getDropdownController(configLazyLoad);
+            popup.Sticky.closePopup = () => {opened = false;};
             dropdownController._sourceController = {cancelLoading: () => { isCanceled = true }};
             dropdownController._beforeUnmount();
             assert.isFalse(!!dropdownController._sourceController);
             assert.isTrue(isCanceled);
+            assert.isFalse(opened);
          });
 
          it('openMenu', () => {
@@ -930,14 +954,11 @@ define(
                keyProperty: 'id',
                rawData: items
             });
-            dropdownController._children.DropdownOpener = {
-               open: (cfg) => {
-                  openConfig = cfg;
-               }
-            };
+            popup.Sticky.closePopup = () => {closed = true; };
 
-            dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
+            dropdownController.openMenu({ testOption: 'testValue' }).then(function() {
+               assert.equal(openConfig.testOption, 'testValue');
+            });
 
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',
@@ -949,19 +970,15 @@ define(
             openConfig = null;
             dropdownController._options.footerTemplate = {};
 
-            dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
+            dropdownController.openMenu({ testOption: 'testValue' }).then(function() {
+               assert.equal(openConfig.testOption, 'testValue');
+            });
          });
 
          it('closeMenu', () => {
             let dropdownController = getDropdownController(config);
             let closed = false;
-
-            dropdownController._children.DropdownOpener = {
-               close: () => {
-                  closed = true;
-               }
-            };
+            popup.Sticky.closePopup = () => {closed = true; };
 
             dropdownController.closeMenu();
             assert.isTrue(closed);
@@ -1132,7 +1149,7 @@ define(
                   filter: {}
                });
 
-               dropdownController._onResult(null, 'applyClick', items);
+               dropdownController._onResult('applyClick', items);
                assert.deepEqual(selectedItems, items);
             });
 
@@ -1167,7 +1184,7 @@ define(
                item.set('originalId', item.getId());
                item.set('id', item.getId() + '_history');
                assert.equal(item.getId(), '6_history');
-               dropdownController._onResult(null, 'itemClick', item);
+               dropdownController._onResult('itemClick', item);
                assert.equal(resultItems[0].getId(), '6');
                assert.isTrue(updated);
 
@@ -1179,7 +1196,7 @@ define(
                   },
                   keyProperty: 'id'
                });
-               dropdownController._onResult(null, 'itemClick', item);
+               dropdownController._onResult('itemClick', item);
                assert.equal(resultItems[0].getId(), '5');
                assert.isFalse(updated);
             });
@@ -1217,7 +1234,7 @@ define(
                closed = false;
                assert.equal(item.getId(), '6_history');
                dropdownController._source = historySource;
-               dropdownController._onResult(null, 'pinClick', item);
+               dropdownController._onResult('pinClick', item);
                assert.isFalse(closed);
                assert.equal(resultItem.getId(), '6');
             });

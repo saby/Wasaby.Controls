@@ -22,6 +22,7 @@ define([
          return mv;
       },
       options = {
+         calculateHeadersOffsets: false
       };
 
    describe('Controls/_scroll/StickyHeader/Group', function() {
@@ -236,7 +237,10 @@ define([
       });
 
       describe('_stickyRegisterHandler', function() {
-         let data = {
+         const event = {
+            stopImmediatePropagation: sinon.fake()
+         }
+         const data = {
             id: 2,
             inst: {
                _container: {}
@@ -253,12 +257,7 @@ define([
          });
 
          it('should stopImmediatePropagation event', function() {
-            const
-               component = createComponent(scroll.Group, options);
-            let event = {
-               blockUpdate: false,
-               stopImmediatePropagation: sinon.fake()
-            };
+            const component = createComponent(scroll.Group, options);
             component._stickyRegisterHandler(event, data, true);
             sinon.assert.calledOnce(event.stopImmediatePropagation);
          });
@@ -274,23 +273,21 @@ define([
             assert.property(component._headers, data.id);
          });
          it('should unregister deleted header', function() {
-            const
-               component = createComponent(scroll.Group, options);
-            let event = {
-                  blockUpdate: false,
-                  stopImmediatePropagation: sinon.fake()
-               };
+            const component = createComponent(scroll.Group, options);
             component._headers[data.id] = { id: data.id };
             component._stickyRegisterHandler(event, data, false);
             assert.isUndefined(component._headers[data.id]);
          });
 
+         it('should\'t update top/bottom if calculateHeadersOffsets option is equals false', function() {
+            const component = createComponent(scroll.Group, {...options, calculateHeadersOffsets: false});
+            sinon.stub(component, '_updateTopBottom');
+            component._stickyRegisterHandler(event, data, true);
+            sinon.assert.notCalled(component._updateTopBottom);
+         });
+
          it('should generate event on first header registered', function() {
-            const
-               component = createComponent(scroll.Group, options),
-               event = {
-                  stopImmediatePropagation: sinon.fake()
-               };
+            const component = createComponent(scroll.Group, options);
 
             sinon.stub(component, '_notify');
             component._stickyRegisterHandler(event, data, true);
@@ -300,11 +297,7 @@ define([
          });
 
          it('should not generate event on second header registered', function() {
-            const
-               component = createComponent(scroll.Group, options),
-               event = {
-                  stopImmediatePropagation: sinon.fake()
-               };
+            const component = createComponent(scroll.Group, options);
             component._stickyRegisterHandler(event, data, true);
             sinon.stub(component, '_notify');
             component._stickyRegisterHandler(event, { id: 3, inst: data.inst }, true);
@@ -313,11 +306,7 @@ define([
          });
 
          it('should generate event on last header unregistered', function() {
-            const
-               component = createComponent(scroll.Group, options),
-               event = {
-                  stopImmediatePropagation: sinon.fake()
-               };
+            const component = createComponent(scroll.Group, options);
             component._stickyRegisterHandler(event, data, true);
             sinon.stub(component, '_notify');
             component._stickyRegisterHandler(event, data, false);
@@ -326,11 +315,7 @@ define([
          });
 
          it('should not generate event on not last header unregistered', function() {
-            const
-               component = createComponent(scroll.Group, options),
-               event = {
-                  stopImmediatePropagation: sinon.fake()
-               };
+            const component = createComponent(scroll.Group, options);
             component._stickyRegisterHandler(event, data, true);
             component._stickyRegisterHandler(event, { id: 3, inst: data.inst }, true);
             sinon.stub(component, '_notify');
@@ -341,12 +326,7 @@ define([
          });
 
          it('should notify stickyFixed if group already fixed', function() {
-            const
-               component = createComponent(scroll.Group, options);
-            let event = {
-               blockUpdate: false,
-               stopImmediatePropagation: sinon.fake()
-            };
+            const component = createComponent(scroll.Group, options);
             component._children = {
                stickyFixed: {
                   start: sinon.fake()

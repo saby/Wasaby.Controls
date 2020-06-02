@@ -18,7 +18,11 @@ import 'Controls/decorator';
  * Вы можете настроить {@link minLines минимальное} и {@link maxLines максимальное} количество строк.
  * Когда вводимый текст превысит ограничение {@link maxLines}, в поле появится скролл и оно перестанет увеличиваться по высоте.
  * Вы можете переместить текст в следующую строку с помощью {@link newLineKey горячих клавиш}.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">Демо-пример</a>.
+ * 
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/input/text/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
  *
  * @class Controls/_input/Area
  * @extends Controls/_input/Text
@@ -80,6 +84,12 @@ import 'Controls/decorator';
  * @cfg {Number} Maximum number of lines.
  * @remark
  * A value between 1 and 10 is supported.
+ */
+
+/**
+ * @name Controls/_input/Area#footerTemplate
+ * @cfg {String|TemplateFunction} Строка или шаблон, содержащие контент подвала, который будет отображаться в многострочном поле.
+ * @demo Controls-demo/Input/FooterTemplate/Index
  */
 
 var _private = {

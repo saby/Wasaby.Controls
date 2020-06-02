@@ -14,15 +14,19 @@ import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
+import {Model} from 'Types/entity';
 
       /**
        * Контрол "Быстрый фильтр". Использует выпадающие списки для выбора параметров фильтрации.
        *
        * @remark
-       * См. <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>
-       * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
-       * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
-       *
+       * Полезные ссылки:
+       * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>
+       * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
+       * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
+       * 
        * @class Controls/_filter/Fast
        * @extends Core/Control
        * @mixes Controls/interface/IFastFilter
@@ -91,7 +95,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             itemConfig.itemTemplate = properties.itemTemplate;
             itemConfig.itemTemplateProperty = properties.itemTemplateProperty;
             itemConfig.headerTemplate = properties.headerTemplate;
-            itemConfig.footerContentTemplate = properties.footerTemplate;
+            itemConfig.footerContentTemplate = properties.footerTemplate || properties.footerContentTemplate;
             itemConfig.multiSelect = properties.multiSelect;
             itemConfig.emptyText = properties.emptyText;
             itemConfig.selectorTemplate = properties.selectorTemplate;
@@ -217,7 +221,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
              if (historyUtils.isHistorySource(currentFilter._source)) {
                  currentFilter._source.update(items, historyUtils.getMetaHistory());
 
-                 if (currentFilter._sourceController && currentFilter._source.getItems) {
+                 if (currentFilter._sourceController && currentFilter._source.getItems()) {
                      currentFilter._items = currentFilter._source.getItems();
                  }
              }
@@ -242,6 +246,8 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
                   _private.onSelectorResult(this._configs[this._indexOpenedFilter], items);
                } else if (action === 'selectorDialogOpened') {
                   this._afterSelectorOpenCallback(items);
+                  this._children.DropdownOpener.close();
+                  return;
                } else {
                   _private.updateHistory(this._configs[this.lastOpenIndex], items);
                }
@@ -375,6 +381,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
          _beforeMount: function(options, context, receivedState) {
             this._configs = [];
             this._onResult = _private.onResult.bind(this);
+            this._selectorOpenCallback = this._selectorOpenCallback.bind(this);
 
             var resultDef;
 
@@ -393,6 +400,18 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             }
             this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
             return resultDef;
+         },
+          // TODO: убрать по задаче: https://online.sbis.ru/opendoc.html?guid=637922a8-7d23-4d18-a7f2-b58c7cfb3cb0
+         _selectorOpenCallback() {
+            const value = getPropValue(this._items.at(this.lastOpenIndex), 'value');
+            const selectedKeys = value instanceof Array ? value : [value];
+            let selectedItems = chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
+               const itemId = item.getKey();
+               return itemId !== null && selectedKeys.includes(itemId);
+            }).value();
+            return new collection.List({
+                items: selectedItems
+            });
          },
 
          _beforeUpdate: function(newOptions) {
@@ -461,7 +480,9 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             if (this._configs[index]._needQuery) {
                this._configs[index]._needQuery = false;
                _private.loadItemsFromSource(this._configs[index], getPropValue(this._items.at(index), 'properties')).addCallback(() => {
-                  open(config);
+                   _private.loadNewItems(this, this._items, this._configs).addCallback(() => {
+                       open(config);
+                   });
                });
             } else {
                open(config);

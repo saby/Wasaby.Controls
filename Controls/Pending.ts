@@ -119,24 +119,27 @@ import ParallelDeferred = require('Core/ParallelDeferred');
       _pendings: null,
       _parallelDef: null,
       _beforeMount: function() {
-         var self = this;
          if (typeof window !== 'undefined') {
-            self._beforeUnloadHandler = function(event) {
+            this._beforeUnloadHandler = (event) => {
                // We shouldn't close the tab if there are any pendings
-               if (self._hasRegisteredPendings()) {
+               if (this._hasPendings()) {
                   event.preventDefault();
                   event.returnValue = '';
                } else {
-                  window.removeEventListener('beforeunload', self._beforeUnloadHandler);
+                  window.removeEventListener('beforeunload', this._beforeUnloadHandler);
                }
             };
-            window.addEventListener('beforeunload', self._beforeUnloadHandler);
+            window.addEventListener('beforeunload', this._beforeUnloadHandler);
          }
          this._pendings = {};
+         this._parallelDef = {};
       },
-      _registerPendingHandler: function(e, def, config) {
-         config = config || {};
-         this._pendings[cnt] = {
+      _registerPendingHandler: function(e, def, config = {}) {
+         const root = config.root || null;
+         if (!this._pendings[root]) {
+            this._pendings[root] = {};
+         }
+         this._pendings[root][cnt] = {
 
             // its Promise what signalling about pending finish
             def: def,
@@ -153,32 +156,44 @@ import ParallelDeferred = require('Core/ParallelDeferred');
          };
          if (config.showLoadingIndicator && !def.isReady()) {
             // show indicator if Promise still not finished on moment of registration
-            this._pendings[cnt].loadingIndicatorId = this._children.loadingIndicator.show({ id: this._pendings[cnt].loadingIndicatorId });
+            const indicatorConfig = {id: this._pendings[root][cnt].loadingIndicatorId};
+            this._pendings[root][cnt].loadingIndicatorId = this._notify('showIndicator', [indicatorConfig], {bubbling: true});
          }
 
          def.addBoth(function(cnt, res) {
-            this._unregisterPending(cnt);
+            this._unregisterPending(root, cnt);
             return res;
          }.bind(this, cnt));
 
          cnt++;
       },
-      _unregisterPending: function(id) {
+      _unregisterPending: function(root, id) {
          // hide indicator if no more pendings with indicator showing
-         this._hideIndicators();
-         delete this._pendings[id];
+         this._hideIndicators(root);
+         delete this._pendings[root][id];
 
          // notify if no more pendings
-         if (!this._hasRegisteredPendings()) {
+         if (!this._hasRegisteredPendings(root)) {
             this._notify('pendingsFinished', [], { bubbling: true });
          }
       },
-      _hasRegisteredPendings: function() {
-         var self = this;
-         var hasPendings = false;
-         Object.keys(this._pendings).forEach(function(key) {
-            var pending = self._pendings[key];
-            var isValid = true;
+
+      _hasPendings: function() {
+         let hasPending = false;
+         Object.keys(this._pendings).forEach((root) => {
+            if (this._hasRegisteredPendings(root)) {
+               hasPending = true;
+            }
+         });
+         return hasPending;
+      },
+
+      _hasRegisteredPendings: function(root = null) {
+         let hasPending = false;
+         const pendingRoot = this._pendings[root] || {};
+         Object.keys(pendingRoot).forEach((key) => {
+            const pending = pendingRoot[key];
+            let isValid = true;
             if (pending.validate) {
                isValid = pending.validate();
             } else if (pending.validateCompatible) {
@@ -188,27 +203,28 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 
             // We have at least 1 active pending
             if (isValid) {
-               hasPendings = true;
+               hasPending = true;
             }
          });
-         return hasPendings;
+         return hasPending;
       },
-      _hideIndicators: function() {
-         var self = this;
-         Object.keys(this._pendings).forEach(function(key) {
-            if (self._pendings[key].loadingIndicatorId) {
-               self._children.loadingIndicator.hide(self._pendings[key].loadingIndicatorId);
+      _hideIndicators: function(root) {
+         const pending = this._pendings[root];
+         Object.keys(pending).forEach((key) => {
+            const indicatorId = pending[key].loadingIndicatorId;
+            if (indicatorId) {
+               this._notify('hideIndicator', [indicatorId], {bubbling: true});
             }
          });
       },
 
-      _finishPendingHandler: function(event, forceFinishValue) {
+      _finishPendingHandler: function(event, forceFinishValue, root) {
          // Текущая реализация пендингов расчитана на их завершение сверху->вниз. Т.е. при дестрое родительских областей.
          // редактирование по месту, ввиду своих особенностей работы, завершает пендинги снизу->вверх(через событие),
          // что ломает уже существующие пендинги, который должны запускаться только в завершающей фазе (к примеру при
          // закрытии окна). Добавляю флаг чтобы различать эти завершения.
          // https://online.sbis.ru/opendoc.html?guid=78c34d53-8705-4e25-bbb5-0033e81d6152
-         return this.finishPendingOperations(forceFinishValue, true);
+         return this.finishPendingOperations(forceFinishValue, true, root);
       },
 
       /**
@@ -232,15 +248,16 @@ import ParallelDeferred = require('Core/ParallelDeferred');
        * @param forceFinishValue this argument use as argument of onPendingFail.
        * @returns {Deferred} Promise resolving when all pendings will be resolved
        */
-      finishPendingOperations: function(forceFinishValue, isInside?: boolean) {
+
+      finishPendingOperations: function(forceFinishValue, isInside?: boolean, root = null) {
          var resultDeferred = new Deferred(),
             parallelDef = new ParallelDeferred(),
             pendingResults = [];
 
-         var self = this;
-         Object.keys(this._pendings).forEach(function(key) {
-            var pending = self._pendings[key];
-            var isValid = true;
+         const pendingRoot = this._pendings[root] || {};
+         Object.keys(pendingRoot).forEach((key) => {
+            const pending = pendingRoot[key];
+            let isValid = true;
             if (pending.validate) {
                isValid = pending.validate(isInside);
             } else if (pending.validateCompatible) { //todo compatible
@@ -257,34 +274,36 @@ import ParallelDeferred = require('Core/ParallelDeferred');
          });
 
          // cancel previous query of pending finish. create new query.
-         this._cancelFinishingPending();
-         this._parallelDef = parallelDef.done().getResult();
+         this._cancelFinishingPending(root);
+         this._parallelDef[root] = parallelDef.done().getResult();
 
-         this._parallelDef.addCallback(function(results) {
+         this._parallelDef[root].addCallback((results) => {
             if (typeof results === 'object') {
-               for (var resultIndex in results) {
+               for (const resultIndex in results) {
                   if (results.hasOwnProperty(resultIndex)) {
-                     var result = results[resultIndex];
+                     const result = results[resultIndex];
                      pendingResults.push(result);
                   }
                }
             }
-
-            self._parallelDef = null;
+            this._parallelDef[root] = null;
 
             resultDeferred.callback(pendingResults);
-         }).addErrback(function(e) {
+         }).addErrback((e) => {
             resultDeferred.errback(e);
             return e;
          });
 
          return resultDeferred;
       },
-      _cancelFinishingPending: function() {
-         if (this._parallelDef) {
+      _cancelFinishingPendingHandler: function(event, root) {
+         return this._cancelFinishingPending(root);
+      },
+      _cancelFinishingPending: function(root = null) {
+         if (this._parallelDef && this._parallelDef[root]) {
             // its need to cancel result Promise of parallel defered. reset state of Promise to achieve it.
-            this._parallelDef._fired = -1;
-            this._parallelDef.cancel();
+            this._parallelDef[root]._fired = -1;
+            this._parallelDef[root].cancel();
          }
       },
       _beforeUnmount: function() {

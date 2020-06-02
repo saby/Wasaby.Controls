@@ -39,7 +39,8 @@
    padding-right: @expander_default_padding-right_treeGrid;
 }
 
-.controls-TreeGrid__row_master-expander_size_default_theme-@{themeName} {
+.controls-TreeGrid__row_master-expander_size_default_theme-@{themeName},
+.controls-TreeGrid__row_masterClassic-expander_size_default_theme-@{themeName}, {
    padding-top: @expander_default_padding-top_treeGrid;
    padding-bottom: @expander_default_padding-bottom_treeGrid;
    padding-left: @expander_default_padding-left_treeGrid;
@@ -52,7 +53,8 @@
 //https://online.sbis.ru/opendoc.html?guid=fd048300-3223-4bb5-8982-db3a14a05996
 
 .ws-is-ie {
-   .controls-Grid__cell_master .controls-TreeGrid__row-expander_size_default_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_default_theme-@{themeName} {
+   .controls-Grid__cell_master .controls-TreeGrid__row-expander_size_default_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_default_theme-@{themeName},
+   .controls-Grid__cell_masterClassic .controls-TreeGrid__row-expander_size_default_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_default_theme-@{themeName} {
       padding-top: @expander_s_padding-top_treeGrid - 1;
       padding-bottom: @item_padding-bottom_s_grid - 1;
    }
@@ -129,6 +131,23 @@
    padding-top: (@expander_height_treeGrid - @master_hidden-node_expander_icon-size_treeGrid) / 2;
 }
 
+// Костыль, связанный с тем, что в FireFox и на ios в safari стрелка экспандера поднимается на 1px над базовой линией,
+// а в IE - наоборот, становится ниже на 1 px.
+// См. обсуждение в https://online.sbis.ru/opendoc.html?guid=bebdaf88-37a2-4804-b05d-daebb03c3320
+// + https://online.sbis.ru/opendoc.html?guid=c29f8faa-c188-43e3-9555-0314604ecc2d
+.ws-is-firefox,
+.ws-is-mobile-safari {
+   .controls-TreeGrid__row-expander_node_master_theme-@{themeName}:before {
+      padding-top: ((@expander_height_treeGrid - @master_node_expander_icon-size_treeGrid) / 2) + 1;
+   }
+}
+.ws-is-ie10,
+.ws-is-ie11 {
+   .controls-TreeGrid__row-expander_node_master_theme-@{themeName}:before {
+      padding-top: ((@expander_height_treeGrid - @master_node_expander_icon-size_treeGrid) / 2) + 1;
+   }
+}
+
 .controls-TreeGrid__row-expander_theme-@{themeName}:before {
    user-select: none;
    flex-shrink: 0;
@@ -136,6 +155,7 @@
    overflow: hidden;
    text-align: center;
    position: absolute;
+   font-weight: normal; // https://online.sbis.ru/opendoc.html?guid=c9f0873b-3b20-4b73-a084-f67cc2c3071f
 }
 .controls-TreeGrid__row-expander_node_default_collapsed_theme-@{themeName}:before,
 .controls-TreeGrid__row-expander_node_master_collapsed_theme-@{themeName}:before {
@@ -158,7 +178,7 @@
    .controls-TreeGrid__row-expander__spacingTop_default_theme-@{themeName} {
       margin-top: @item_padding-top_default_grid;
    }
-   .controls-TreeGrid__row-expander__spacingTop_m_theme-@{themeName} {
+   .controls-TreeGrid__row-expander__spacingTop_s_theme-@{themeName} {
       margin-top: @item_padding-top_s_grid;
    }
    .controls-TreeGrid__row-expander__spacingTop_l_theme-@{themeName} {
@@ -170,7 +190,7 @@
    .controls-TreeGrid__row-expander__spacingTop_default_theme-@{themeName} {
       margin-top: @item_padding-top_default_grid - @item-separator_s_thickness_list;
    }
-   .controls-TreeGrid__row-expander__spacingTop_m_theme-@{themeName} {
+   .controls-TreeGrid__row-expander__spacingTop_s_theme-@{themeName} {
       margin-top: @item_padding-top_s_grid - @item-separator_s_thickness_list;
    }
    .controls-TreeGrid__row-expander__spacingTop_l_theme-@{themeName} {
@@ -182,7 +202,7 @@
    .controls-TreeGrid__row-expander__spacingTop_default_theme-@{themeName} {
       margin-top: @item_padding-top_default_grid - @item-separator_l_thickness_list;
    }
-   .controls-TreeGrid__row-expander__spacingTop_m_theme-@{themeName} {
+   .controls-TreeGrid__row-expander__spacingTop_s_theme-@{themeName} {
       margin-top: @item_padding-top_s_grid - @item-separator_l_thickness_list;
    }
    .controls-TreeGrid__row-expander__spacingTop_l_theme-@{themeName} {
@@ -190,10 +210,10 @@
    }
 }
 
-.controls-TreeGrid__row_-expander__spacingBottom_default_theme-@{themeName} {
+.controls-TreeGrid__row-expander__spacingBottom_default_theme-@{themeName} {
    margin-bottom: @item_padding-bottom_default_grid;
 }
-.controls-TreeGrid__row-expander__spacingBottom_m_theme-@{themeName} {
+.controls-TreeGrid__row-expander__spacingBottom_s_theme-@{themeName} {
    margin-bottom: @item_padding-bottom_s_grid;
 }
 .controls-TreeGrid__row-expander__spacingBottom_l_theme-@{themeName} {
@@ -255,13 +275,18 @@
    margin-left: @_hierarchy_offset_xl_treeGrid;
 }
 .controls-TreeGrid__row-cell_default_theme-@{themeName}.controls-TreeGrid__row-cell__node_theme-@{themeName},
+.controls-TreeGrid__row-cell_masterClassic_theme-@{themeName}.controls-TreeGrid__row-cell__node_theme-@{themeName},
 .controls-TreeGrid__row-cell__node_theme-@{themeName} .controls-EditingTemplateText_theme-@{themeName} {
   font-size: @node_font-size_treeGrid;
 }
+
+.controls-TreeGrid__row-cell_masterClassic_theme-@{themeName}.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName},
 .controls-TreeGrid__row-cell_default_theme-@{themeName}.controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName},
 .controls-TreeGrid__row-cell__hiddenNode_theme-@{themeName} .controls-EditingTemplateText_theme-@{themeName} {
   font-size: @hidden-node_font-size_treeGrid;
 }
+
+.controls-TreeGrid__row-cell_masterClassic_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName},
 .controls-TreeGrid__row-cell_default_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName},
 .controls-TreeGrid__row-cell__item_theme-@{themeName} .controls-EditingTemplateText_theme-@{themeName} {
   font-size: @item_font-size_m_grid;

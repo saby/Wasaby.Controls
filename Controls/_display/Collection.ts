@@ -28,6 +28,7 @@ import {create, register} from 'Types/di';
 import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
+import * as VirtualScrollController from './controllers/VirtualScroll';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -94,11 +95,11 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     keyProperty?: string;
     displayProperty?: string;
     multiSelectVisibility?: string;
-    leftSpacing: string;
-    rightSpacing: string;
-    rowSpacing: string;
-    searchValue: string;
-    editingConfig: any;
+    leftSpacing?: string;
+    rightSpacing?: string;
+    rowSpacing?: string;
+    searchValue?: string;
+    editingConfig?: any;
     unique?: boolean;
     importantItemProperties?: string[];
     itemActionsProperty?: string;
@@ -968,6 +969,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this.getIndexByInstanceId(item.getInstanceId());
     }
 
+    getStartIndex(): number {
+        return VirtualScrollController.getStartIndex(this);
+    }
+
+    getStopIndex(): number {
+        return VirtualScrollController.getStopIndex(this);
+    }
+
     /**
      * Возвращает количество элементов проекции.
      * @param {Boolean} [skipGroups=false] Не считать группы
@@ -1188,7 +1197,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает предыдущий элемент относительно item
-     * @param {Controls/_display/CollectionItem} index элемент проекции
+     * @param {Controls/_display/CollectionItem} item элемент проекции
      * @return {Controls/_display/CollectionItem}
      */
     getPrevious(item: T): T {
@@ -1198,6 +1207,22 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             false,
             true
         );
+    }
+
+    getNextByKey(key: string|number): T {
+        const item = this.getItemBySourceKey(key);
+        return this.getNext(item);
+    }
+    getPrevByKey(key: string|number): T {
+        const item = this.getItemBySourceKey(key);
+        return this.getPrevious(item);
+    }
+
+    getNextByIndex(index: number): T {
+        return this.at(index + 1);
+    }
+    getPrevByIndex(index: number): T {
+        return this.at(index - 1);
     }
 
     /**
@@ -2120,6 +2145,29 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$rowSpacing = itemPadding.top;
         this._$leftSpacing = itemPadding.left;
         this._$rightSpacing = itemPadding.right;
+    }
+
+    setMarkedKey(key: string|number, status: boolean): void {
+        const item = this.getItemBySourceKey(key);
+        if (item) {
+            item.setMarked(status);
+        }
+        this.nextVersion();
+    }
+
+    getValidItemForMarker(index: number): S {
+        const item = this.getItemBySourceIndex(index);
+
+        // TODO неправильная логика у getPRev и getNext для этого места
+        const prevValidItem = this.getPrevious(item);
+        const nextValidItem = this.getNext(item);
+        if (nextValidItem !== undefined) {
+            return nextValidItem.getContents();
+        } else if (prevValidItem !== undefined) {
+            return prevValidItem.getContents();
+        } else {
+            return null;
+        }
     }
 
     getRowSpacing(): string {

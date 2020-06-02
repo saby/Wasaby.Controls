@@ -1,9 +1,11 @@
-define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], function(showSelector, BaseController) {
+define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Controls/popup'], function(showSelector, BaseController, popup) {
    'use strict';
 
    describe('Controls/_lookup/showSelector', function() {
       let lastPopupOptions;
       let isShowSelector = false;
+      let stubOpenPopup;
+
       const getBaseController = function() {
          const baseController = new BaseController();
 
@@ -15,16 +17,24 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
                width: 100
             }
          };
-         baseController._children.selectorOpener = {
-            open: function(popupOptions) {
-               isShowSelector = true;
-               lastPopupOptions = popupOptions;
-               return Promise.resolve();
-            }
-         };
-         
+
          return baseController;
       };
+
+      before(function() {
+         stubOpenPopup = sinon.stub(popup.Stack, 'openPopup');
+         stubOpenPopup.callsFake(function(popupOptions) {
+            isShowSelector = true;
+            lastPopupOptions = popupOptions;
+            return Promise.resolve();
+         });
+      });
+
+      after(function() {
+         stubOpenPopup.restore();
+
+         stubOpenPopup = undefined;
+      });
 
       it('showSelector without params', function() {
          const baseController = getBaseController();
@@ -73,7 +83,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
          baseController._selectCallback = () => {
             selectCompleted = true;
          };
-         baseController._children.selectorOpener.close = () => {
+         popup.Stack.closePopup = () => {
             selectorClosed = true;
             assert.isFalse(selectCompleted);
          };
@@ -87,7 +97,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
          const baseController = getBaseController();
          const sandbox = sinon.createSandbox();
          const stub = sandbox.stub(baseController, '_selectCallback');
-         baseController._children.selectorOpener.close = () => {};
+         popup.Stack.closePopup = () => {};
          baseController._options.isCompoundTemplate = false;
          showSelector.default(baseController, undefined, true);
          lastPopupOptions.templateOptions.handlers.onSelectComplete();

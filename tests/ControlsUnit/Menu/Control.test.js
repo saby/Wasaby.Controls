@@ -84,6 +84,17 @@ define(
             });
          });
 
+         describe('_beforeUpdate', () => {
+            it('source is changed', async() => {
+               const menuControl = getMenu();
+               const newMenuOptions = { ...defaultOptions };
+
+               newMenuOptions.source = new source.Memory();
+               await menuControl._beforeUpdate(newMenuOptions);
+               assert.isTrue(menuControl._notifyResizeAfterRender);
+            });
+         });
+
          describe('getCollection', function() {
             let menuControl = new menu.Control();
             let items = new collection.RecordSet({
@@ -229,13 +240,16 @@ define(
          describe('_itemMouseEnter', function() {
             let menuControl, handleStub;
             let sandbox = sinon.createSandbox();
+            let collectionItem = new display.CollectionItem({
+               contents: new entity.Model()
+            });
 
             beforeEach(() => {
                menuControl = getMenu();
                menuControl._context = {
                   isTouch: { isTouch: false }
                };
-               handleStub = sandbox.stub(menuControl, 'handleCurrentItem');
+               handleStub = sandbox.stub(menuControl, 'startOpeningTimeout');
             });
 
             it('on groupItem', function() {
@@ -244,9 +258,7 @@ define(
             });
 
             it('on collectionItem', function() {
-               menuControl._itemMouseEnter('mouseenter', new display.CollectionItem({
-                  contents: new entity.Model()
-               }), { target: 'targetTest', nativeEvent: 'nativeEvent' });
+               menuControl._itemMouseEnter('mouseenter', collectionItem, { target: 'targetTest', nativeEvent: 'nativeEvent' });
                assert.isTrue(handleStub.calledOnce);
                assert.equal(menuControl._hoveredTarget, 'targetTest');
                assert.equal(menuControl._enterEvent, 'nativeEvent');
@@ -254,10 +266,31 @@ define(
 
             it('on touch devices', function() {
                menuControl._context.isTouch.isTouch = true;
-               menuControl._itemMouseEnter('mouseenter', new display.CollectionItem({
-                  contents: new entity.Model()
-               }), {});
+               menuControl._itemMouseEnter('mouseenter', collectionItem, {});
                assert.isTrue(handleStub.notCalled);
+            });
+
+            describe('close opened menu', function() {
+               let isClosed = false;
+               beforeEach(() => {
+                  menuControl._children.Sticky = {
+                     close: () => { isClosed = true; }
+                  };
+                  menuControl.subMenu = true;
+               });
+
+               it('subMenu is close', function() {
+                  menuControl._itemMouseEnter('mouseenter', collectionItem, { target: 'targetTest', nativeEvent: 'nativeEvent' });
+                  assert.isTrue(handleStub.calledOnce);
+                  assert.isFalse(isClosed);
+               });
+
+               it('subMenu is open, mouse on current item = subDropdownItem', function() {
+                  this._subDropdownItem = collectionItem;
+                  menuControl._itemMouseEnter('mouseenter', collectionItem, { target: 'targetTest', nativeEvent: 'nativeEvent' });
+                  assert.isTrue(handleStub.calledOnce);
+                  assert.isFalse(isClosed);
+               });
             });
 
             sinon.restore();
@@ -311,9 +344,45 @@ define(
             assert.isFalse(result);
          });
 
+         describe('_separatorMouseEnter', function() {
+            let isClosed, isMouseInArea = true, menuControl = getMenu();
+            beforeEach(() => {
+               isClosed = false;
+               menuControl._children = {
+                  Sticky: { close: () => { isClosed = true; } }
+               };
+
+               menuControl.subMenu = true;
+               menuControl.setSubMenuPosition = function() {};
+               menuControl.isMouseInOpenedItemArea = function() {
+                  return isMouseInArea;
+               };
+            });
+
+            it('isMouseInOpenedItemArea = true', function() {
+               menuControl._subDropdownItem = true;
+               menuControl._separatorMouseEnter('mouseenter', { nativeEvent: {} });
+               assert.isFalse(isClosed);
+            });
+
+            it('isMouseInOpenedItemArea = true, subMenu is close', function() {
+               menuControl._subDropdownItem = false;
+               menuControl._separatorMouseEnter('mouseenter', { nativeEvent: {} });
+               assert.isFalse(isClosed);
+            });
+
+            it('isMouseInOpenedItemArea = false', function() {
+               menuControl._subDropdownItem = true;
+               isMouseInArea = false;
+               menuControl._separatorMouseEnter('mouseenter', { nativeEvent: {} });
+               assert.isTrue(isClosed);
+            });
+         });
+
          it('_footerMouseEnter', function() {
             let isClosed = false;
             let menuControl = getMenu();
+            menuControl.subMenu = true;
             let event = {
                nativeEvent: {}
             };
@@ -332,6 +401,7 @@ define(
             menuControl.isMouseInOpenedItemArea = function() {
                return true;
             };
+            menuControl._subDropdownItem = true;
             isClosed = false;
             menuControl._footerMouseEnter(event);
             assert.isFalse(isClosed);

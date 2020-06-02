@@ -37,8 +37,7 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
 
          layer._beforeUpdate({showContent: true});
          assert.isFalse(layer._shouldScrollToBottom);
-         assert.isTrue(layer._showContent);
-         assert.isNull(layer._pendingShowContent);
+         assert.isTrue(layer._pendingShowContent);
 
          layer._showContent = false;
          layer._beforeUpdate(optionsReverseList);
@@ -75,8 +74,13 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
          layer._afterUpdate(oldOptions);
 
          assert.isTrue(resized);
-         assert.isTrue(resultSended);
+         assert.isFalse(resultSended);
          assert.isFalse(layer._showContent);
+
+         layer._showContent = true;
+         layer._afterUpdate(oldOptions);
+
+         assert.isTrue(resultSended);
 
          resultSended = false;
          layer._positionFixed = true;
@@ -87,9 +91,11 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
          assert.isNull(layer._pendingShowContent);
 
          layer.saveOptions(oldOptions);
+         layer._showContent = true;
          layer._positionFixed = false;
          layer._afterUpdate(oldOptions);
-         assert.isFalse(resultSended);
+         assert.isTrue(resultSended);
+         assert.isTrue(layer._positionFixed);
       });
 
       it('resize', function() {

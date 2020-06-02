@@ -4,6 +4,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
 /**
  * Обертка для контрола выбора периодов, с помощью которой периоды могут быть связаны.
  * Используется в сочетании с {@link Controls/_dateRange/RelationController RelationController}.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a> 
  *
  * @class Controls/_dateRange/RelationWrapper
  * @extends Core/Control
@@ -33,7 +37,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
 
 /**
  * @name Controls/_dateRange/RelationWrapper#content
- * @cfg {Content} Содержимое контрола. Контрол реализует {@link Controls/_dateRange/interfaces/IInput}.
+ * @cfg {Content} Содержимое контрола. Контрол реализует {@link Controls/_dateRange/interfaces/IDateRange}.
  * @example
  * <pre class="brush: html">
  *    <Controls.dateRange:RelationController
@@ -61,7 +65,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
 
 /*
  * @name Controls/_dateRange/RelationWrapper#content
- * @cfg {Content} Control contents. Must be a control that implement {@link Controls/_dateRange/interfaces/IInput} interface.
+ * @cfg {Content} Control contents. Must be a control that implement {@link Controls/_dateRange/interfaces/IDateRange} interface.
  * @example
  * <pre>
  *    <Controls.dateRange:RelationController
@@ -103,7 +107,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  * @name Controls/_dateRange/RelationWrapper#relationMode
  * @cfg {RelationMode} Тип привязки.
  * @example
- * В этом примере изменение первого поля ввода только пересчитывает второе поле ввода, если тип периода изменяется или он становится после второго. 
+ * В этом примере изменение первого поля ввода только пересчитывает второе поле ввода, если тип периода изменяется или он становится после второго.
  * Но изменения во втором поле ввода всегда изменяют первое.
  * <pre class="brush: html">
  *    <Controls.dateRange:RelationController

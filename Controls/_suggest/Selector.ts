@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Selector/Selector');
 import Merge = require('Core/core-merge');
-import {Controller} from 'Controls/source';
+import {CrudWrapper} from 'Controls/dataSource';
 import {Service, Source} from 'Controls/history';
 import {object} from 'Types/util';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
@@ -9,7 +9,12 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Поле ввода с выпадающим списком с возможностью автодополнения.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">Демо-пример</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less">переменные тем оформления</a>
+ * 
  *
  * @class Controls/_suggest/Selector
  * @extends Controls/input:Text
@@ -20,6 +25,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  * @control
+ * @author Герасимов А.М.
  * @public
  */
 
@@ -43,10 +49,10 @@ var _private = {
    loadSelectedItem: function(self, options) {
       var filter = {};
       filter[options.keyProperty] = options.selectedKey;
-      self._sourceController = new Controller({
+      self._crudWrapper = new CrudWrapper({
          source: options.source
       });
-      return self._sourceController.load(filter).addCallback(function(items) {
+      return self._crudWrapper.query({filter}).then((items) => {
          _private.setValue(self, items.at(0), options.displayProperty);
          return items.at(0);
       });

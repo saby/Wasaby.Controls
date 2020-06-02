@@ -8,13 +8,16 @@ import dateUtils = require('Controls/Utils/Date');
 import componentTmpl = require('wml!Controls/_shortDatePicker/DateLitePopup');
 import listTmpl = require('wml!Controls/_shortDatePicker/List');
 import ItemWrapper = require('wml!Controls/_shortDatePicker/ItemWrapper');
-import 'css!theme?Controls/shortDatePicker';
 import {date as formatDate} from 'Types/formatter';
 import monthTmpl = require('wml!Controls/_shortDatePicker/monthTemplate');
 import {Logger} from 'UI/Utils';
 
 /**
  * Контрол выбора даты или периода.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_shortDatePicker.less">переменные тем оформления</a>
  *
  * @class Controls/shortDatePicker
  * @extends Core/Control
@@ -163,6 +166,19 @@ var Component = BaseControl.extend({
                 break;
             }
         }
+        // При нажатии кнопки 'Вниз' у типа 'Только года', мы отнимаем ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX,
+        // если мы попали за границы displayedRanges, берем за основу вычислений ближайший элемент снизу.
+        if (index === undefined) {
+            for (let i = this._displayedRanges.length - 1; i >= 0; i--) {
+                if (this._displayedRanges[i][1] < new Date(year, 0) && this._displayedRanges[i][1] !== null) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index === undefined) {
+                return year;
+            }
+        }
         //Проверяем год, на который переходим. Если оне не попадает в тот же массив что и year - ищем ближайших год на
         //который можно перейти в следующем массиве
         if (this._hitsDiplayedRange(year + delta, index)) {
@@ -192,8 +208,9 @@ var Component = BaseControl.extend({
             //для того чтобы установить _position
             const yearToSet = this._getDisplayedYear(yearToCheck, delta) + ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX;
             this.setYear(yearToSet);
+        } else {
+            this.setYear(this._getDisplayedYear(year, delta));
         }
-        this.setYear(this._getDisplayedYear(year, delta));
     },
 
     _onYearMouseLeave: function () {
@@ -232,25 +249,25 @@ var Component = BaseControl.extend({
 
     _getWidthCssClass: function () {
         if (this._options.chooseHalfyears) {
-            return 'controls-PeriodLiteDialog__width-big';
+            return 'controls-PeriodLiteDialog__width-big_theme-' + this._options.theme;
         }
         if (this._options.chooseQuarters || this._options.chooseMonths) {
-            return 'controls-PeriodLiteDialog__width-medium';
+            return 'controls-PeriodLiteDialog__width-medium_theme-' + this._options.theme;
         }
-        return 'controls-PeriodLiteDialog__width-small';
+        return 'controls-PeriodLiteDialog__width-small_theme-' + this._options.theme;
     },
 
     _getListCssClasses: function () {
         if (this._options.chooseHalfyears) {
-            return 'controls-PeriodLiteDialog-item controls-PeriodLiteDialog__fullYear-list';
+            return 'controls-PeriodLiteDialog-item controls-PeriodLiteDialog__fullYear-list_theme-' + this._options.theme;
         }
         if (this._options.chooseMonths) {
-            return 'controls-PeriodLiteDialog__vLayout controls-PeriodLiteDialog__text-align-center ' +
-                'controls-PeriodLiteDialog__month-list';
+            return 'controls-PeriodLiteDialog__vLayout_theme-' + this._options.theme +
+                ' controls-PeriodLiteDialog__text-align-center controls-PeriodLiteDialog__month-list_theme-' + this._options.theme;
         }
         if (this._options.chooseQuarters) {
-            return 'controls-PeriodLiteDialog__vLayout controls-PeriodLiteDialog__text-align-center ' +
-                ' controls-PeriodLiteDialog__quarter-list';
+            return 'controls-PeriodLiteDialog__vLayout_theme-' + this._options.theme +
+                ' controls-PeriodLiteDialog__text-align-center controls-PeriodLiteDialog__quarter-list_theme-' + this._options.theme;
         }
         return '';
     },
@@ -271,7 +288,7 @@ var Component = BaseControl.extend({
             css.push('controls-PeriodLiteDialog__year-clickable');
         }
         if (this._options.chooseMonths && this._options.chooseQuarters && this._options.chooseHalfyears) {
-            css.push('controls-PeriodLiteDialog__year-medium');
+            css.push('controls-PeriodLiteDialog__year-medium_theme-' + this._options.theme);
         } else if (this._options.chooseMonths) {
             css.push('controls-PeriodLiteDialog__year-center-lite');
         }
@@ -282,10 +299,11 @@ var Component = BaseControl.extend({
         var css = [],
             date = this._options.startValue;
         if (!dateUtils.isValidDate(date) || (year !== date.getFullYear())) {
-            css.push('controls-PeriodLiteDialog__vLayoutItem-clickable');
+            css.push('controls-PeriodLiteDialog__vLayoutItem-clickable_theme-' + this._options.theme);
         }
         if (dateUtils.isValidDate(date) && (year === date.getFullYear())) {
             css.push('controls-PeriodLiteDialog__selectedYear');
+            css.push('controls-PeriodLiteDialog__selectedYear_theme-' + this._options.theme);
         }
         return css.join(' ');
     }
@@ -303,6 +321,7 @@ Component.getDefaultOptions = function () {
         dateConstructor: WSDate
     };
 };
+Component._theme = ['Controls/shortDatePicker'];
 
 Component.getOptionTypes = function () {
     return coreMerge({}, IPeriodSimpleDialog.getOptionTypes());

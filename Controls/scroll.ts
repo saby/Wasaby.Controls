@@ -2,7 +2,6 @@
  * Библиотека контролов, которые позволяют организовать скроллирование областей. Содержит контейнер для скроллирования и механизм фиксации заголовков.
  * @library Controls/scroll
  * @includes Container Controls/_scroll/Container
- * @includes Watcher Controls/_scroll/Scroll/Watcher
  * @includes StickyHeader Controls/_scroll/StickyHeader
  * @includes _scrollContext Controls/_scroll/Scroll/Context
  * @includes HotKeysContainer Controls/_scroll/HotKeysContainer
@@ -17,7 +16,6 @@
  * Search library
  * @library Controls/scroll
  * @includes Container Controls/_scroll/Container
- * @includes Watcher Controls/_scroll/Scroll/Watcher
  * @includes StickyHeader Controls/_scroll/StickyHeader
  * @includes _scrollContext Controls/_scroll/Scroll/Context
  * @includes HotKeysContainer Controls/_scroll/HotKeysContainer
@@ -41,6 +39,7 @@ import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObs
 
 import Group from 'Controls/_scroll/StickyHeader/Group';
 import {isStickySupport, getNextId as getNextStickyId, getOffset as getStickyOffset} from 'Controls/_scroll/StickyHeader/Utils';
+import {getHeadersHeight as getStickyHeadersHeight} from 'Controls/_scroll/StickyHeader/Utils/getHeadersHeight';
 import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
 
 export {
@@ -54,6 +53,7 @@ export {
    isStickySupport,
    getNextStickyId,
    getStickyOffset,
+   getStickyHeadersHeight,
    Group,
    HotKeysContainer,
    IntersectionObserverController,

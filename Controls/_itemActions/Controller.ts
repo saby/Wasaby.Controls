@@ -16,7 +16,8 @@ import {
     TItemActionsSize,
     IItemAction,
     TItemActionsPosition,
-    TActionCaptionPosition
+    TActionCaptionPosition,
+    TEditArrowVisibilityCallback
 } from './interface/IItemActions';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
@@ -84,17 +85,28 @@ export interface IItemActionsControllerOptions {
      * Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
      */
     actionCaptionPosition?: TActionCaptionPosition;
+    /**
+     * Опция записи, которую необходимо тображать в свайпе, если есть editArrow
+     */
+    editArrowAction: IItemAction;
+    /**
+     * Видимость Опция записи, которую необходимо тображать в свайпе, если есть editArrow
+     */
+    editArrowVisibilityCallback: TEditArrowVisibilityCallback
 }
 
 /**
  * Контроллер, управляющий состоянием ItemActions в коллекции
- * @Author Пуханов В, Аверкиев П.А
+ * @class Controls/_itemActions/Controller
+ * @author Аверкиев П.А
  */
 export class Controller {
     private _collection: IItemActionsCollection;
     private _commonItemActions: IItemAction[];
     private _itemActionsProperty: string;
-    private _visibilityCallback: TItemActionVisibilityCallback;
+    private _itemActionVisibilityCallback: TItemActionVisibilityCallback;
+    private _editArrowVisibilityCallback: TEditArrowVisibilityCallback;
+    private _editArrowAction: IItemAction;
     private _theme: string;
 
     /**
@@ -107,15 +119,17 @@ export class Controller {
     update(options: IItemActionsControllerOptions): Array<number | string> {
         let result: Array<number | string> = [];
         this._theme = options.theme;
+        this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
+        this._editArrowAction = options.editArrowAction;
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
-            this._visibilityCallback !== options.visibilityCallback
+            this._itemActionVisibilityCallback !== options.visibilityCallback
         ) {
             this._collection = options.collection;
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
-            this._visibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
+            this._itemActionVisibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
         }
         if (this._commonItemActions || this._itemActionsProperty) {
             result = this._assignActions();
@@ -146,7 +160,7 @@ export class Controller {
             this._updateSwipeConfig(actionsContainerHeight);
         }
 
-        this._collection.setSwipeAnimation(ANIMATION_STATE.OPEN);
+        this.setSwipeAnimation(ANIMATION_STATE.OPEN);
     }
 
     /**
@@ -168,20 +182,19 @@ export class Controller {
 
     /**
      * Собирает конфиг выпадающего меню операций
-     * @param itemKey Ключ элемента коллекции, для которого выполняется действие
+     * @param item элемент коллекции, для которого выполняется действие
      * @param clickEvent событие клика
      * @param parentAction Родительская операция с записью
      * @param opener: контрол или элемент - опенер для работы системы автофокусов
      * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
      */
     prepareActionsMenuConfig(
-        itemKey: TItemKey,
+        item: IItemActionsItem,
         clickEvent: SyntheticEvent<MouseEvent>,
         parentAction: IItemAction,
         opener: Element | Control<object, unknown>,
         isContextMenu: boolean
     ): IMenuConfig {
-        const item = this._collection.getItemBySourceKey(itemKey);
         if (!item) {
             return;
         }
@@ -238,6 +251,36 @@ export class Controller {
     }
 
     /**
+     * Устанавливает активный Item в коллекции
+     * @param item
+     */
+    setActiveItem(item: IItemActionsItem) {
+        this._collection.setActiveItem(item);
+    }
+
+    /**
+     * Возвращает текущий активный Item
+     */
+    getActiveItem(): IItemActionsItem {
+        return this._collection.getActiveItem();
+    }
+
+    /**
+     * Устанавливает текущее сосяние анимации в модель
+     * @param animation
+     */
+    setSwipeAnimation(animation: ANIMATION_STATE): void {
+        this._collection.setSwipeAnimation(animation);
+    }
+
+    /**
+     * Возвраащет текущее состояние анимации из модели
+     */
+    getSwipeAnimation(): ANIMATION_STATE {
+        return this._collection.getSwipeAnimation();
+    }
+
+    /**
      * Вычисляет операции над записью для каждого элемента коллекции
      * Для старой модели listViewModel возвращает массив id изменённых значений
      * TODO Когда мы перестанем использовать старую listViewModel,
@@ -250,6 +293,8 @@ export class Controller {
         this._collection.setEventRaising(false, true);
         this._collection.each((item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
+                // TODO При переписывании моделей надо убрать эту проверку. item.getContents() должен возвращать Record
+                //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
                 let contents = item.getContents();
                 if (item['[Controls/_display/BreadcrumbsItem]']) {
                     contents = contents[contents.length - 1];
@@ -353,7 +398,7 @@ export class Controller {
             Controller._fixActionIcon(Controller._fixActionStyle(action), this._theme)
         ));
         return fixedActions.filter((action) =>
-            this._visibilityCallback(action, contents)
+            this._itemActionVisibilityCallback(action, contents)
         );
     }
 
@@ -363,8 +408,14 @@ export class Controller {
             return;
         }
 
-        const actions = item.getActions().all;
+        let actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
+
+        if (this._editArrowAction && this._editArrowVisibilityCallback(item)) {
+            if (!actions.find((action) => action.id === 'view')) {
+                actions = [this._editArrowAction, ...actions];
+            }
+        }
 
         let swipeConfig = Controller._calculateSwipeConfig(
             actions,
@@ -377,12 +428,14 @@ export class Controller {
             actionsTemplateConfig.actionAlignment !== 'horizontal' &&
             Controller._needsHorizontalMeasurement(swipeConfig)
         ) {
+            actionsTemplateConfig.actionAlignment = 'horizontal';
             swipeConfig = Controller._calculateSwipeConfig(
                 actions,
-                'horizontal',
+                actionsTemplateConfig.actionAlignment,
                 actionsContainerHeight,
                 actionsTemplateConfig.actionCaptionPosition
             );
+            this._collection.setActionsTemplateConfig(actionsTemplateConfig);
         }
 
         Controller._setItemActions(item, swipeConfig.itemActions);

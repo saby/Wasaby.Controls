@@ -7,6 +7,11 @@ import 'Controls/popupTemplate';
 
       /**
        * Контрол-контейнер, который обеспечивает связь поля ввода и списка внутри выпадающего блока.
+       * 
+       * @remark
+       * Полезные ссылки:
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggestPopup.less">переменные тем оформления</a>
+       * 
        * @example
        * JavaScript
        * <pre class="brush: js">
@@ -34,7 +39,7 @@ import 'Controls/popupTemplate';
        * </pre>
        * @class Controls/_suggestPopup/List
        * @extends Controls/Control
-       * @author Герасимов Александр
+       * @author Герасимов А.М.
        * @control
        * @public
        */

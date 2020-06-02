@@ -1,4 +1,3 @@
-import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
 import {SyntheticEvent} from "Vdom/Vdom";
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
@@ -11,6 +10,10 @@ import fastUpdate from './FastUpdate';
  * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
  * several headers fixed at the same level, which should simultaneously stick and stick out.
  * Behaves like one fixed header.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
  *
  * @extends Core/Control
  * @class Controls/_scroll/StickyHeader/Group
@@ -47,7 +50,11 @@ interface IOffsetCache {
     [key: string]: number;
 }
 
-export default class Group extends Control<IControlOptions> {
+interface IStickyHeaderGroupOptions extends IControlOptions {
+    calculateHeadersOffsets?: boolean;
+}
+
+export default class Group extends Control<IStickyHeaderGroupOptions> {
     protected _template: TemplateFunction = template;
     private _index: number = null;
     protected _isStickySupport: boolean = false;
@@ -172,7 +179,12 @@ export default class Group extends Control<IControlOptions> {
                 bottom: 0
             };
 
-            this._updateTopBottom(data);
+            if (this._options.calculateHeadersOffsets) {
+                this._updateTopBottom(data);
+            } else {
+                data.inst[POSITION.top] = this._offset[POSITION.top];
+                data.inst[POSITION.bottom] = this._offset[POSITION.bottom];
+            }
 
             if (this._isFixed) {
                 this._children.stickyFixed.start([data.id].concat(this._stickyHeadersIds[data.position]));
@@ -255,5 +267,11 @@ export default class Group extends Control<IControlOptions> {
             }],
             {bubbling: true}
         );
+    }
+
+    static getDefaultOptions(): Partial<IStickyHeaderGroupOptions> {
+        return {
+            calculateHeadersOffsets: true
+        };
     }
 }

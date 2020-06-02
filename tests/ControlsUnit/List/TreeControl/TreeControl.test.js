@@ -50,6 +50,7 @@ define([
          treeBeforeUpdate.apply(treeControl, arguments);
          baseControl._beforeUpdate(treeControl._options);
       };
+
       return treeControl;
    }
 
@@ -267,6 +268,7 @@ define([
             rawData: rawData,
             keyProperty: 'key'
          }));
+         model.setMarkedKey(1);
          treeGrid.TreeControl._private.expandMarkedItem(treeControl);
          model.setMarkedKey(2);
          treeGrid.TreeControl._private.expandMarkedItem(treeControl);
@@ -823,7 +825,6 @@ define([
                treeControl._afterUpdate({filter: {}, source: source});
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
-                  assert.equal(12, treeViewModel._model._root);
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
                   assert.isTrue(sourceControllersCleared);
@@ -835,8 +836,6 @@ define([
                }, 20);
             }, 10);
          });
-
-
       });
 
       it('clearSourceControllersForNotExpandedNodes', function() {
@@ -991,47 +990,47 @@ define([
          assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
       });
 
-      it('List navigation by keys', function(done) {
-         // mock function working with DOM
-         listMod.BaseControl._private.scrollToItem = function() {};
+      describe('List nafigation', function() {
+         var stubScrollToItem;
 
-         var
-            stopImmediateCalled = false,
-
-            lnSource = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: [
-                  { id: 1, type: true, parent: null },
-                  { id: 2, type: true, parent: 1 }
-               ]
-            }),
-            lnCfg = {
-               viewName: 'Controls/List/TreeGridView',
-               source: lnSource,
-               keyProperty: 'id',
-               parentProperty: 'parent',
-               nodeProperty: 'type',
-               markedKey: 1,
-               columns: [],
-               viewModelConstructor: treeGrid.ViewModel
-            },
-            lnTreeControl = correctCreateTreeControl(lnCfg),
-            treeGridViewModel = lnTreeControl._children.baseControl.getViewModel();
-
-         setTimeout(function () {
-            assert.deepEqual([], treeGridViewModel._model._expandedItems);
-
-            lnTreeControl._onTreeViewKeyDown({
-               stopImmediatePropagation: function() {
-                  stopImmediateCalled = true;
-               },
-               target: {closest() { return false; }},
-               nativeEvent: {
-                  keyCode: Env.constants.key.right
-               }
+         before(function() {
+            stubScrollToItem = sinon.stub(listMod.BaseControl._private, 'scrollToItem');
+            stubScrollToItem.callsFake(function() {
+               // mock function working with DOM
             });
+         });
+
+         after(function() {
+            stubScrollToItem.restore();
+            stubScrollToItem = undefined;
+         });
+
+         it('by keys', function(done) {
+            var
+               stopImmediateCalled = false,
+
+               lnSource = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: [
+                     { id: 1, type: true, parent: null },
+                     { id: 2, type: true, parent: 1 }
+                  ]
+               }),
+               lnCfg = {
+                  viewName: 'Controls/List/TreeGridView',
+                  source: lnSource,
+                  keyProperty: 'id',
+                  parentProperty: 'parent',
+                  nodeProperty: 'type',
+                  markedKey: 1,
+                  columns: [],
+                  viewModelConstructor: treeGrid.ViewModel
+               },
+               lnTreeControl = correctCreateTreeControl(lnCfg),
+               treeGridViewModel = lnTreeControl._children.baseControl.getViewModel();
+
             setTimeout(function () {
-               assert.deepEqual([1], treeGridViewModel._model._expandedItems);
+               assert.deepEqual([], treeGridViewModel._model._expandedItems);
 
                lnTreeControl._onTreeViewKeyDown({
                   stopImmediatePropagation: function() {
@@ -1039,15 +1038,28 @@ define([
                   },
                   target: {closest() { return false; }},
                   nativeEvent: {
-                     keyCode: Env.constants.key.left
+                     keyCode: Env.constants.key.right
                   }
                });
-               assert.deepEqual([], treeGridViewModel._model._expandedItems);
+               setTimeout(function () {
+                  assert.deepEqual([1], treeGridViewModel._model._expandedItems);
 
-               assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-               done();
+                  lnTreeControl._onTreeViewKeyDown({
+                     stopImmediatePropagation: function() {
+                        stopImmediateCalled = true;
+                     },
+                     target: {closest() { return false; }},
+                     nativeEvent: {
+                        keyCode: Env.constants.key.left
+                     }
+                  });
+                  assert.deepEqual([], treeGridViewModel._model._expandedItems);
+
+                  assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
+                  done();
+               }, 1);
             }, 1);
-         }, 1);
+         });
       });
       it('TreeControl._beforeUpdate name of property', function() {
          var
@@ -1169,6 +1181,22 @@ define([
                      return null;
                   }
                };
+            },
+            getChildren: function() {
+               return {
+                  getCount() {
+                     return null;
+                  }
+               };
+            },
+            getCollection: function () {
+               return new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               });
+            },
+            getItemBySourceItem: function () {
+               return null;
             }
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
@@ -1662,7 +1690,8 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
-               }
+               },
+               setMarkedKey(key) { treeGridViewModel._model._markedKey = key; }
             }
          };
 
@@ -1710,7 +1739,8 @@ define([
                stopImmediatePropagation: function(){}
             },
             treeControl = new treeGrid.TreeControl(cfg),
-            treeGridViewModel = new treeGrid.ViewModel(cfg);
+            treeGridViewModel = new treeGrid.ViewModel(cfg),
+            expectedMarkedKey = 1;
          treeControl.saveOptions(cfg);
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
@@ -1721,6 +1751,9 @@ define([
             baseControl: {
                getViewModel: function() {
                   return treeGridViewModel;
+               },
+               setMarkedKey(key) {
+                  assert.equal(key, expectedMarkedKey);
                }
             }
          };
@@ -1729,11 +1762,9 @@ define([
 
          treeControl._mouseDownExpanderKey = 0;
          treeControl._onExpanderMouseUp(e, 0, treeGridViewModel.at(0));
-         assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
          treeControl._mouseDownExpanderKey = 1;
          treeControl._onExpanderMouseUp(e, 1, treeGridViewModel.at(1));
-         assert.deepEqual(1, treeGridViewModel._model._markedKey);
 
          treeGrid.TreeControl._private.toggleExpanded = savedMethod;
       });

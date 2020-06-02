@@ -10,13 +10,18 @@ import getOptions from 'Controls/Utils/datePopupUtils';
 /**
  * Контрол позволяет пользователю выбрать диапазон дат с начальным и конечным значениями в календаре.
  * Выбор происходит с помощью панели большого выбора периода.
- * В отличии от {@link Controls/_dateRange/RangeSelector быстрого выбора периода} позволяет выбирать произвольный диапазон дат.
+ * 
+ * @remark
+ * В отличии от {@link Controls/_dateRange/LiteSelector быстрого выбора периода} позволяет выбирать произвольный диапазон дат.
+ * 
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a> 
  *
  * @class Controls/_dateRange/RangeSelector
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/ISelector
- * @mixes Controls/_dateRange/interfaces/IInput
+ * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IFontColorStyle
@@ -76,15 +81,15 @@ var Component = BaseSelector.extend({
     _getPopupOptions: function() {
         const container = this._children.linkView.getPopupTarget();
         const ranges = this._options.ranges;
-        let className = 'controls-DatePopup__selector-marginTop ';
+        let className = 'controls-DatePopup__selector-marginTop_theme-' + this._options.theme;
         if (this._options.popupClassName) {
            className += `${this._options.popupClassName} `;
         }
         if ((ranges && ('days' in ranges || 'weeks' in ranges)) ||
             ((!ranges || isEmpty(ranges)) && this._options.minRange === 'day')) {
-            className += 'controls-DatePopup__selector-marginLeft';
+            className += ' controls-DatePopup__selector-marginLeft_theme-' + this._options.theme;
         } else {
-            className += 'controls-DatePopup__selector-marginLeft-withoutModeBtn';
+            className += ' controls-DatePopup__selector-marginLeft-withoutModeBtn_theme-' + this._options.theme;
         }
         return {
             ...getOptions.getCommonOptions(this),

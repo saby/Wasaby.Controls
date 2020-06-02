@@ -32,8 +32,8 @@ var _private = {
       }
    },
 
-   getCounterWidth: function(itemsCount) {
-      return selectedCollectionUtils.getCounterWidth(itemsCount);
+   getCounterWidth(itemsCount: number, theme: string, fontSize: string): number {
+      return selectedCollectionUtils.getCounterWidth(itemsCount, theme, fontSize);
    },
 
    getMaxVisibleItems: function(items, itemsSizes, availableWidth, counterWidth) {
@@ -201,6 +201,7 @@ var LookupView = BaseLookupView.extend({
    _fieldWrapperWidth: null,
    _fieldWrapperMinHeight: null,
    _maxVisibleItems: null,
+   _multiLineState: false,
 
    _beforeMount: function() {
       LookupView.superclass._beforeMount.apply(this, arguments);
@@ -224,8 +225,9 @@ var LookupView = BaseLookupView.extend({
          allItemsInOneRow = false,
          maxVisibleItems = newOptions.maxVisibleItems,
          rightFieldWrapperWidth = 0,
+         availableWidth = null,
          inputWidth, lastRowCollectionWidth,
-         itemsSizesLastRow, availableWidth, lastSelectedItems,
+         itemsSizesLastRow, lastSelectedItems,
          itemsCount = newOptions.items.getCount(),
          multiLineState = newOptions.multiLine && itemsCount,
          isShowCounter = _private.isShowCounter(multiLineState, itemsCount, maxVisibleItems);
@@ -233,7 +235,7 @@ var LookupView = BaseLookupView.extend({
       if (this._isNeedCalculatingSizes(newOptions)) {
          // in mode read only and single line, counter does not affect the collection
          if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
-            counterWidth = _private.getCounterWidth(itemsCount);
+            counterWidth = _private.getCounterWidth(itemsCount, newOptions.theme, newOptions.fontSize);
          }
 
          fieldWrapperWidth = this._getFieldWrapperWidth();

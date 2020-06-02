@@ -10,6 +10,7 @@ import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import 'Types/entity';
+import {ListView} from 'Controls/list';
 
 var
       HOT_KEYS = {
@@ -26,12 +27,14 @@ var
       VIEW_NAMES = {
          search: SearchView,
          tile: null,
-         table: TreeGridView
+         table: TreeGridView,
+         list: ListView
       },
       VIEW_MODEL_CONSTRUCTORS = {
          search: SearchGridViewModel,
          tile: null,
-         table: TreeGridViewModel
+         table: TreeGridViewModel,
+         list: TreeGridViewModel
       },
       _private = {
          setRoot: function(self, root, dataRoot = null) {
@@ -276,11 +279,15 @@ var
     * Контрол "Иерархический проводник".
     * Отображает данные иерархического списка, узел которого можно развернуть и перейти в него.
     * Позволяет переключать отображение элементов в режимы "таблица", "список" и "плитка".
-    * Инструкции по настройке контрола доступны в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководстве разработчика</a>.
     *
-    * Примечание:
+    * @remark
     * Сортировка применяется к запросу к источнику данных. Полученные от источника записи дополнительно не сортируются.
-    *
+    * 
+    * Полезные ссылки:
+    * * <a href="/doc/platform/developmentapl/interface-development/controls/list/explorer/">руководство разработчика</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less">переменные тем оформления explorer</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
+    * 
     * Демо-примеры:
     * <ul>
     *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Иерархический проводник в режимах "список" и "плитка"</a></li>

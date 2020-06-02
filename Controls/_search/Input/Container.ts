@@ -1,6 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_search/Input/Container');
 import {constants} from 'Env/Env';
+import {default as Store} from 'Controls/Store';
 
 /**
  * Контрол используют в качестве контейнера для {@link Controls/search:Input}. Он обеспечивает передачу текстового значения, введённого в Controls/search:Input, в {@link Controls/search:Controller}.
@@ -11,8 +12,10 @@ import {constants} from 'Env/Env';
  * @control
  * @public
  * @remark
- * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
- * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less">переменные тем оформления</a>
  */
 
 /*
@@ -47,7 +50,11 @@ var SearchContainer = Control.extend(/** @lends Controls/_search/Input/Container
    },
 
    _notifySearch: function (value, force) {
-      this._notify('search', [value || '', force], {bubbling: true});
+      if (this._options.useStore) {
+         Store.dispatch('searchValue', value);
+      } else {
+          this._notify('search', [value || '', force], {bubbling: true});
+      }
    },
 
    _valueChanged: function (event, value) {

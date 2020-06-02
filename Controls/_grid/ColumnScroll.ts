@@ -6,12 +6,14 @@ import {isEqualWithSkip} from 'Controls/_grid/utils/GridIsEqualUtil';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {debounce} from 'Types/function';
 import {isFullGridSupport} from './utils/GridLayoutUtil';
+import {DragScroll} from './DragScroll';
 
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 interface IColumnScroll {
     _children: {
-        content: HTMLElement
+        content: HTMLElement,
+        dragScroll: DragScroll
     };
 }
 
@@ -132,21 +134,39 @@ const
          }
          return shadowStyles;
       },
-      drawTransform (self, position) {
+      drawTransform(self, position): void {
          // This is the fastest synchronization method scroll position and cell transform.
          // Scroll position synchronization via VDOM is much slower.
-         let newHTML = `.${self._transformSelector} .controls-Grid__cell_transform { transform: translateX(-${position}px); }`;
 
-         if (!isFullGridSupport()) {
-             const maxTranslate = self._contentSize - self._contentContainerSize;
-             newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(-${maxTranslate}px); }`;
-         }
+         // Горизонтальный скролл передвигает всю таблицу, но компенсирует скролл для некоторых ячеек, например для
+         // зафиксированных ячеек
+         let newHTML =
+             // Скроллируется таблица
+             `.${self._transformSelector}>.controls-Grid_columnScroll { transform: translateX(-${position}px); }` +
 
-         if (self._children.contentStyle.innerHTML !== newHTML) {
-            self._children.contentStyle.innerHTML = newHTML;
-         }
+             // Не скроллируем зафиксированные колонки
+             `.${self._transformSelector} .controls-Grid__cell_fixed { transform: translateX(${position}px); }` +
 
-      },
+               // не скроллируем подвал таблицы
+               `.${self._transformSelector} .controls-GridView__footer { transform: translateX(${position}px); }`;
+
+           // Не скроллируем операции над записью
+           if (isFullGridSupport()) {
+               // Cкроллируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
+               // table-layout скроллбар лежит вне таблицы
+               newHTML +=
+                   `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
+                   `.${self._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
+           } else {
+               const maxTranslate = self._contentSize - self._contentContainerSize;
+               newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(${position - maxTranslate}px); }`;
+           }
+
+           if (self._children.contentStyle.innerHTML !== newHTML) {
+               self._children.contentStyle.innerHTML = newHTML;
+           }
+
+       },
        /**
         * Скрывает/показывает горизонтальный скролл и шапку таблицы (display: none),
         * чтобы, из-за особенностей sticky элементов, которые лежат внутри grid-layout,
@@ -361,6 +381,28 @@ const
           const hasOption = typeof this._options.dragScrolling === 'boolean';
           const isDisplayColumnScroll = !!this._children.content && this._isDisplayColumnScroll();
           return isDisplayColumnScroll && (hasOption ? this._options.dragScrolling : !this._options.itemsDragNDrop);
+       },
+
+       _onViewMouseDown(e): void {
+           this._children.dragScroll?.onViewMouseDown(e);
+       },
+       _onViewTouchStart(e): void {
+           this._children.dragScroll?.onViewTouchStart(e);
+       },
+       _onViewMouseMove(e): void {
+           this._children.dragScroll?.onViewMouseMove(e);
+       },
+       _onViewTouchMove(e): void {
+           this._children.dragScroll?.onViewTouchMove(e);
+       },
+       _onViewMouseUp(e): void {
+           this._children.dragScroll?.onViewMouseUp(e);
+       },
+       _onViewTouchEnd(e): void {
+           this._children.dragScroll?.onViewTouchEnd(e);
+       },
+       _isFullGridSupport() {
+           return isFullGridSupport();
        }
    });
 ColumnScroll._theme = ['Controls/grid', 'Controls/Classes'];

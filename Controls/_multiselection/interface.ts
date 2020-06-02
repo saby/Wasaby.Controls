@@ -5,16 +5,60 @@ import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStr
 import { RecordSet } from 'Types/collection';
 import { Controller as SourceController } from 'Controls/source';
 
+/**
+ * Интерфейс описывающий модель, используемую в контроллере множественного выбора
+ *
+ * @interface Controls/multiselection/ISelectionModel
+ * @public
+ * @author Панихин К.А.
+ */
 export interface ISelectionModel extends IBaseCollection<CollectionItem<Model>> {
+   /**
+    * Проверить, можно ли загрузить еще данные
+    *
+    * @method
+    * @public
+    * @return {boolean}
+    */
    getHasMoreData(): boolean;
 
+   /**
+    * Получить текущий корневой элемент
+    * @remark
+    * Верхним корневым элементом является null
+    * В плоской стратегии корневой элемент всегда null
+    * @method
+    * @public
+    * @return {CollectionItem<Model>} Данные корнего элемента
+    */
    getRoot(): CollectionItem<Model>;
 
+   /**
+    * Получить список элементов
+    * @method
+    * @public
+    * @return {RecordSet} писок элементов
+    */
    getCollection(): RecordSet;
 
+   /**
+    * Задать выбранные элементы
+    * @method
+    * @public
+    * @param {Array<CollectionItem<Model>>} items Список элементов
+    * @param {boolean} selected Состояние переданных элементов
+    * @void
+    */
    setSelectedItems(items: Array<CollectionItem<Model>>, selected: boolean): void;
 }
 
+/**
+ * Интерфейс описывающий опции для контроллера множественного выбора
+ *
+ * @interface Controls/multiselection/ISelectionControllerOptions
+ * @public
+ * @author Панихин К.А.
+ */
 export interface ISelectionControllerOptions {
    model: ISelectionModel;
    selectedKeys: TKeys;
@@ -23,6 +67,13 @@ export interface ISelectionControllerOptions {
    strategyOptions?: ITreeSelectionStrategyOptions;
 }
 
+/**
+ * Интерфейс описывающий опции для деревянной стратегии множественного выбора
+ *
+ * @interface Controls/multiselection/ITreeSelectionStrategyOptions
+ * @public
+ * @author Панихин К.А.
+ */
 export interface ITreeSelectionStrategyOptions {
    selectAncestors: boolean;
    selectDescendants: boolean;
@@ -32,6 +83,13 @@ export interface ITreeSelectionStrategyOptions {
    items: RecordSet;
 }
 
+/**
+ * Интерфейс описывающий опции для плоской стратегии множественного выбора
+ *
+ * @interface Controls/multiselection/IFlatSelectionStrategyOptions
+ * @public
+ * @author Панихин К.А.
+ */
 export interface IFlatSelectionStrategyOptions {
    items: RecordSet;
 }

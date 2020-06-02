@@ -3,9 +3,10 @@ define(
       'Controls/toolbars',
       'Types/entity',
       'Types/collection',
-      'Types/source'
+      'Types/source',
+      'Controls/popup'
    ],
-   (toolbars, entity, collection, sourceLib) => {
+   (toolbars, entity, collection, sourceLib, popupLib) => {
       describe('Toolbar', () => {
          let defaultItems = [
             {
@@ -139,7 +140,6 @@ define(
                toolbar._beforeMount(config, null, records);
                assert.equal(toolbar._items, records);
                assert.equal(!!toolbar._needShowMenu, true);
-               assert.equal(toolbar._menuItems.getCount(), 4);
             });
             it('need show menu', function() {
                return new Promise((resolve) => {
@@ -148,7 +148,6 @@ define(
                      source: config.source
                   }).addCallback(() => {
                      assert.equal(!!toolbar._needShowMenu, true);
-                     assert.equal(toolbar._menuItems.getCount(), 4);
                      assert.equal(toolbar._items.getCount(), defaultItems.length);
                      resolve();
                   });
@@ -160,9 +159,14 @@ define(
                   isOpened = true;
                   assert.equal(e, 'menuOpened');
                };
-               toolbar._children.menuOpener = {
-                  close: setTrue.bind(this, assert),
-                  open: setTrue.bind(this, assert)
+               popupLib.Sticky = {
+                  closePopup: setTrue.bind(this, assert),
+                  openPopup: () => {
+                     return new Promise((resolve) => {
+                        setTrue.bind(this, assert);
+                        resolve();
+                     });
+                  }
                };
                toolbar._children.menuTarget = {
                   _container: 'target'
@@ -409,31 +413,31 @@ define(
                      },
                      _menuSource: recordForMenu
                   },
-                  config = {
-                     className: 'popupClassName controls-Toolbar__popup__list_theme-default',
-                     target: 'menuTarget',
-                     templateOptions: {
-                        iconSize: 'm',
-                        keyProperty: 'id',
-                        nodeProperty: '@parent',
-                        parentProperty: 'parent',
-                        source: recordForMenu,
-                        additionalProperty: 'additional',
-                        itemTemplateProperty: 'itp',
-                        groupTemplate: 'groupTemplate',
-                        groupingKeyCallback: 'groupingKeyCallback',
-                        groupProperty: undefined,
-                        footerContentTemplate: undefined
-                     }
+                  templateOptions = {
+                     iconSize: 'm',
+                     keyProperty: 'id',
+                     nodeProperty: '@parent',
+                     parentProperty: 'parent',
+                     source: recordForMenu,
+                     additionalProperty: 'additional',
+                     itemTemplateProperty: 'itp',
+                     groupTemplate: 'groupTemplate',
+                     groupingKeyCallback: 'groupingKeyCallback',
+                     groupProperty: undefined,
+                     footerContentTemplate: undefined,
+                     itemActions: undefined,
+                     itemActionVisibilityCallback: undefined,
+                     closeButtonVisibility: true
                   };
-               assert.deepEqual((new toolbars.View())._getMenuConfig.call(testSelf), config);
+               assert.deepEqual((new toolbars.View())._getMenuConfig.call(testSelf).templateOptions, templateOptions);
             });
             it('toolbar closed by his parent', () => {
                let isMenuClosed = false;
                toolbar._nodeProperty = '@parent';
-               toolbar._children.menuOpener.close = function() {
+               popupLib.Sticky.closePopup = function() {
                   isMenuClosed = true;
                };
+               toolbar._popupId = 'test';
                toolbar._resultHandler('itemClick', itemWithOutMenu);
                assert.equal(isMenuClosed, true, 'toolbar closed, but his submenu did not');
             });

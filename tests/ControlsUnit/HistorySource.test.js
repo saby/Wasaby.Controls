@@ -315,7 +315,6 @@ define(
                   keyProperty: 'id'
                });
                historyMod.Source._private.initHistory(hSource, newData, hSource._oldItems);
-               hSource._historyItems = null;
                historyItems = hSource.getItems();
                assert.equal(historyItems.at(0).get('title'), 'Запись 5');
                assert.equal(historyItems.at(1).get('title'), 'Запись 4');
@@ -454,6 +453,21 @@ define(
                hSource2.update(myItem, meta);
                assert.deepEqual(myItem, updatedData);
 
+            });
+            it('prepareItems', (done) => {
+               let historySource = new historyMod.Source(config);
+               let query = new sourceLib.Query().where({
+                  $_history: true
+               });
+               historySource.query(query).addCallback(() => {
+                  let currentItems = historySource.getItems();
+                  let newItems = historySource.prepareItems(new collection.RecordSet({
+                      rawData: items,
+                      keyProperty: 'id'
+                  }));
+                  assert.notEqual(currentItems, newItems);
+                  done();
+               });
             });
             it('prepareHistoryItems', function(done) {
                let newData = new sourceLib.DataSet({

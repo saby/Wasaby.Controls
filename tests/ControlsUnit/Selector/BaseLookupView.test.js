@@ -511,10 +511,12 @@ define([
             lookupView = new Lookup(),
             oldFieldWrapperWidth = 500,
             newFieldWrapperWidth = 500,
-            isCalculatingSizes = false;
+            isCalculatingSizes = false,
+            wrapperWidthCalled = false;
 
          lookupView._isNeedCalculatingSizes = () => true;
          lookupView._getFieldWrapperWidth = (recount) => {
+            wrapperWidthCalled = true;
             return recount ? newFieldWrapperWidth : oldFieldWrapperWidth;
          };
          lookupView._calculatingSizes = () => {
@@ -531,6 +533,12 @@ define([
          newFieldWrapperWidth = 400;
          lookupView._resize();
          assert.isTrue(isCalculatingSizes);
+         assert.isTrue(wrapperWidthCalled);
+
+         wrapperWidthCalled = false;
+         lookupView._isNeedCalculatingSizes = () => false;
+         lookupView._resize();
+         assert.isFalse(wrapperWidthCalled);
       });
    });
 });

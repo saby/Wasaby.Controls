@@ -29,7 +29,7 @@ define('Controls/Application',
     *
     * @control
     * @public
-    * @author Белотелов Н.В.
+    * @author Санников К.А.
     */
 
    /*
@@ -46,7 +46,7 @@ define('Controls/Application',
     *
     * @control
     * @public
-    * @author Белотелов Н.В.
+    * @author Санников К.А.
     */
 
    function(Base,
@@ -148,7 +148,7 @@ define('Controls/Application',
           * @private
           */
          /* eslint-enable */
-         _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
+         _scrollingClass: Env.detection.isMobileIOS ? 'controls-Scroll_webkitOverflowScrollingTouch' : '',
 
          _dragClass: 'ws-is-no-drag',
 

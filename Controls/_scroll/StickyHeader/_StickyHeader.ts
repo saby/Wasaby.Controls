@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
-import {detection} from 'Env/Env';
+import {detection, constants} from 'Env/Env';
 import {descriptor} from 'Types/entity';
 import Context = require('Controls/_scroll/StickyHeader/Context');
 import {
@@ -88,7 +88,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
      * @private
      */
     private _observer: IntersectionObserver;
-    private _resizeObserver: IResizeObserver;
 
     private _model: Model;
 
@@ -174,7 +173,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._initObserver();
 
         this._updateBottomShadowStyle();
-        this._initResizeObserver();
     }
 
     protected _beforeUnmount(): void {
@@ -191,13 +189,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._observer.disconnect();
         }
 
-        if (this._resizeObserver) {
-            this._resizeObserver.disconnect();
-        }
-
         this._observeHandler = undefined;
         this._observer = undefined;
-        this._resizeObserver = undefined;
         this._notify('stickyRegister', [{id: this._index}, false], {bubbling: true});
     }
 
@@ -211,7 +204,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     get height(): number {
         const container: HTMLElement = this._container;
-        if (container.offsetParent !== null) {
+        if (!isHidden(container)) {
             this._height = container.offsetHeight;
         }
         return this._height;
@@ -225,7 +218,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
-            this._container.style.top = `${value}px`;
+            fastUpdate.mutate(() => {
+                this._container.style.top = `${value}px`;
+            });
             this._forceUpdate();
         }
     }
@@ -266,7 +261,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // в самом верху скролируемой области, то верхний тригер останется невидимым, т.е. сбытия не будет.
         // Что бы самостоятельно не рассчитывать положение тригеров, мы просто пересоздадим обсервер когда заголовок
         // станет видимым.
-        if (this._container.offsetParent === null) {
+        if (isHidden(this._container)) {
             this._needUpdateObserver = true;
             return;
         }
@@ -293,15 +288,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         );
         this._observer.observe(children.observationTargetTop);
         this._observer.observe(children.observationTargetBottom);
-    }
-
-    private _initResizeObserver(): void {
-        if (typeof window !== 'undefined' && window.ResizeObserver) {
-            this._resizeObserver = new ResizeObserver(() => {
-                this._selfResizeHandler();
-            });
-            this._resizeObserver.observe(this._container);
-        }
     }
 
     /**
@@ -345,7 +331,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _fixationStateChangeHandler(newPosition: POSITION, prevPosition: POSITION): void {
         // If the header is hidden we cannot calculate its current height.
         // Use the height that it had before it was hidden.
-        if (this._container.offsetParent !== null) {
+        if (!isHidden(this._container)) {
             this._height = this._container.offsetHeight;
         }
         this._isFixed = !!newPosition;
@@ -455,6 +441,16 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (position === POSITION.top && this._options.offsetTop && this._options.shadowVisibility === SHADOW_VISIBILITY.visible) {
             coord += this._options.offsetTop;
         }
+        // Учитываем бордеры на фиксированных заголовках
+        // Во время серверной верстки на страницах на ws3 в this._container находится какой то объект...
+        // https://online.sbis.ru/opendoc.html?guid=ea21ab20-8346-4092-ac24-5ac6198ed2b8
+        if (this._container && !constants.isServerSide) {
+            const styles = this._getComputedStyle();
+            const borderWidth = parseInt(styles[`border-${position}-width`], 10);
+            if (borderWidth) {
+                coord += borderWidth;
+            }
+        }
 
         // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
         const container: HTMLElement = this._getNormalizedContainer();
@@ -490,7 +486,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 // Модель еще не существует, значит заголвок только что создан и контроллер сказал
                 // заголовку что он зафиксирован. Обновим тень вручную что бы не было скачков.
                 fastUpdate.mutate(() => {
-                    if (this._children.shadowBottom) {
+                    if (this._children.shadowBottom &&
+                            this._context.stickyHeader.shadowPosition.indexOf(POSITION.top) !== -1) {
                         this._children.shadowBottom.classList.remove('ws-invisible');
                     }
                 });

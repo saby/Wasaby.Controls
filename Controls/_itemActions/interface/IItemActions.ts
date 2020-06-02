@@ -120,10 +120,9 @@ export interface IItemAction {
 
 export type TActionClickCallback = (clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, contents: Model) => void;
 
-export type TItemActionVisibilityCallback = (
-    action: IItemAction,
-    item: unknown
-) => boolean;
+export type TItemActionVisibilityCallback = (action: IItemAction, item: unknown) => boolean;
+
+export type TEditArrowVisibilityCallback = (item: unknown) => boolean;
 
 export interface IItemActionsContainer {
     all: IItemAction[];
@@ -160,6 +159,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     setSwipeConfig(config: ISwipeConfig): void;
     getSwipeConfig(): ISwipeConfig;
     setSwipeAnimation(state: ANIMATION_STATE): void;
+    getSwipeAnimation(): ANIMATION_STATE;
 
     /**
      * Было решено переместить get/setActiveItem в коллекцию, т.к.

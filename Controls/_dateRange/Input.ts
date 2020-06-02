@@ -16,11 +16,18 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
 
 /**
  * Поле ввода периода дат.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FRange">Демо-пример</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FRange">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/date-time/date/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a>
+ * 
  * @class Controls/_dateRange/Input
  * @extends Core/Control
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
+ * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/interface/IDateMask
@@ -40,6 +47,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @extends Core/Control
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
+ * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/interface/IDateMask
  *
@@ -66,7 +74,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         this._rangeModel.update(options);
         proxyModelEvents(
             this, this._rangeModel,
-            ['startValueChanged', 'endValueChanged', 'rangeChanged', 'valueChanged']
+            ['startValueChanged', 'endValueChanged', 'rangeChanged']
         );
         this._rangeModel.subscribe('rangeChanged', this._updateValidators.bind(this));
         this._updateValidators(options);
@@ -93,7 +101,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
             ...getOptions.getCommonOptions(this),
             target: this._container,
             template: 'Controls/datePopup',
-            className: 'controls-PeriodDialog__picker',
+            className: 'controls-PeriodDialog__picker_theme-' + this._options.theme,
             templateOptions: {
                 ...getOptions.getDateRangeTemplateOptions(this),
                 selectionType: this._options.selectionType,

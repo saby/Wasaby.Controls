@@ -7,9 +7,8 @@ import getPrefetchSource from './getPrefetchSource';
 import {ContextOptions} from 'Controls/context';
 import {isEqual} from "Types/object";
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
-import GroupUtil = require('Controls/_list/resources/utils/GroupUtil');
 
-
+import {groupUtil} from 'Controls/dataSource';
 import {ICrud, PrefetchProxy} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {TArrayGroupId, prepareFilterCollapsedGroups} from 'Controls/_list/Controllers/Grouping';
@@ -22,8 +21,11 @@ type GetSourceResult = {
 
       /**
        * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
+       *
        * @remark
-       * См. <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>.
+       * Полезные ссылки:
+       * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
        *
        * @class Controls/_list/Data
        * @mixes Controls/_interface/IFilter
@@ -108,7 +110,7 @@ type GetSourceResult = {
                   resolve(self._filter);
                } else {
                   // restoreCollapsedGroups всегда завершается через Promise.resolve()
-                  GroupUtil.restoreCollapsedGroups(groupHistoryId).then((collapsedGroups?: TArrayGroupId) => {
+                  groupUtil.restoreCollapsedGroups(groupHistoryId).then((collapsedGroups?: TArrayGroupId) => {
                      resolve(prepareFilterCollapsedGroups(collapsedGroups, self._filter || {}));
                   });
                }
@@ -143,8 +145,9 @@ type GetSourceResult = {
 
                if (options.parentProperty) {
                   const hasRootInOptions = options.root;
+                  const hasRootInFilter = self._filter && self._filter[options.parentProperty];
 
-                  if (hasRootInOptions || rootChanged) {
+                  if ((hasRootInFilter || hasRootInOptions) && rootChanged) {
                      const newFilter = clone(options.filter);
 
                      if (hasRootInOptions) {
@@ -249,6 +252,7 @@ type GetSourceResult = {
             if (this._options.source !== newOptions.source) {
                this._loading = true;
                return _private.createPrefetchSource(this, null, null, _private.getGroupHistoryId(newOptions)).addCallback((result) => {
+                  this._items = null;
                   _private.resolvePrefetchSourceResult(this, result);
                   _private.updateDataOptions(this, this._dataOptionsContext);
                   this._dataOptionsContext.updateConsumers();
@@ -259,7 +263,8 @@ type GetSourceResult = {
             } else if (!isEqual(newOptions.filter, this._options.filter) ||
                        !isEqual(newOptions.navigation, this._options.navigation) ||
                        newOptions.sorting !== this._options.sorting ||
-                       newOptions.keyProperty !== this._options.keyProperty) {
+                       newOptions.keyProperty !== this._options.keyProperty ||
+                       newOptions.root !== this._options.root) {
                _private.updateDataOptions(this, this._dataOptionsContext);
                this._dataOptionsContext.updateConsumers();
             }
@@ -303,8 +308,7 @@ type GetSourceResult = {
             });
 
             _private.resolvePrefetchSourceResult(this, {
-               source: source,
-               data: items
+               source
             });
 
             _private.updateDataOptions(this, this._dataOptionsContext);

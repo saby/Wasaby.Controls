@@ -25,24 +25,29 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /**
  * Диаграмма состояния процесса.
  * Позволяет получить наглядную информацию по состоянию выполнения некоторого процесса в разрезе нескольких категорий.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FStateIndicator%2FStandartStateIndicatorDemo">Демо-пример</a>.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2fprogress%2fStateIndicator%2fBase%2fIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less">переменные тем оформления</a>
+ *
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
  *
  * @public
- * @demo Controls-demo/StateIndicator/StateIndicatorDemo
+ * @demo Controls-demo/progress/StateIndicator/Base/Index
  */
 
 /*
  * Progress state indicator
- * <a href="/materials/Controls-demo/app/Controls-demo%2FStateIndicator%2FStandartStateIndicatorDemo">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2fprogress%2fStateIndicator%2fBase%2fIndex">Демо-пример</a>.
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
  *
  * @public
- * @demo Controls-demo/StateIndicator/StateIndicatorDemo
+ * @demo Controls-demo/progress/StateIndicator/Base/Index.ts
  */
 
 /**
@@ -70,6 +75,16 @@ export interface IStateIndicatorOptions extends IControlOptions {
  */
 
 /**
+ * @name Controls/_progress/StateIndicator#sectorSize
+ * @cfg {String} Размер одного сектора диаграммы.
+ * @variant s
+ * @variant m
+ * @variant l
+ * @default m
+ * @demo Controls-demo/progress/StateIndicator/SectorSize/Index
+ */
+
+/**
  * @typedef {Object} IndicatorCategory
  * @property {Number} [value=0] Процент от соответствующей категории.
  * @property {String} [className=''] Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
@@ -86,7 +101,8 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /**
  * @name Controls/_progress/StateIndicator#data
  * @cfg {Array.<IndicatorCategory>} Массив категорий диаграммы.
- * <pre class="brush:html">
+ * @example
+ * <pre class="brush: html">
  *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
  * @remark
@@ -96,6 +112,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /*
  * @name Controls/_progress/StateIndicator#data
  * @cfg {Array.<IndicatorCategory>} Array of indicator categories
+ * @example
  * <pre class="brush:html">
  *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
  * </pre>
@@ -118,6 +135,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
    protected _colorState: number[];
    private _colors: string[];
    private _numSectors: number = 10;
+   private _percentageDifferences: number[] = [];
 
    private _checkData(opts: IStateIndicatorOptions): void {
       let sum = 0;
@@ -159,6 +177,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       let itemValue;
       let itemNumSectors;
       let excess;
+      this._percentageDifferences = [];
 
       if (opts.scale <= 0 || opts.scale > maxPercentValue) {
          correctScale = defaultScaleValue;
@@ -170,6 +189,8 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
             // convert to number, ignore negative ones
             itemValue = Math.max(0, + opts.data[i].value || 0);
             itemNumSectors = Math.floor(itemValue / sectorSize);
+            const percentageDeviation = itemValue - sectorSize * itemNumSectors;
+            this._percentageDifferences.push(percentageDeviation);
             if (itemValue > 0 && itemNumSectors === 0) {
                // if state value is positive and corresponding sector number is 0, increase it by 1 (look specification)
                itemNumSectors = 1;
@@ -193,12 +214,28 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       opts.data.forEach((item) => {
          sum += item.value;
       });
-
-      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то прибавим сектор к наибольшему значению.
+      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то будем прибавлять сектор к такому элементу, у которого процентное отклонение больше остальных.
       if (totalSectorsUsed < _numSectors && sum === maxPercentValue) {
-         colorValues.splice(longestValueStart, 0,  colorValues[longestValueStart]);
+         while (totalSectorsUsed !== _numSectors) {
+            const maxDeviationIndex = this._getMaxPercentageDeviationIndex();
+            colorValues.splice(colorValues.indexOf(maxDeviationIndex + 1), 0,  maxDeviationIndex + 1);
+            totalSectorsUsed++;
+            this._percentageDifferences[maxDeviationIndex] -= sectorSize;
+         }
       }
       return colorValues;
+   }
+
+   private _getMaxPercentageDeviationIndex(): number {
+      let maxDeviation = this._percentageDifferences[0];
+      let maxDeviationIndex = 0;
+      for (let i = 1; i < this._percentageDifferences.length; i++) {
+         if (this._percentageDifferences[i] > maxDeviation) {
+            maxDeviation = this._percentageDifferences[i];
+            maxDeviationIndex = i;
+         }
+      }
+      return maxDeviationIndex;
    }
 
    private _applyNewState(opts: IStateIndicatorOptions): void {
@@ -232,14 +269,16 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       return {
          theme: 'default',
          scale: 10,
-         data: [{value: 0, title: '', className: ''}]
+         data: [{value: 0, title: '', className: ''}],
+         sectorSize: 'm'
       };
    }
 
    static getOptionTypes(): object {
       return {
          scale: EntityDescriptor(Number),
-         data: EntityDescriptor(Array)
+         data: EntityDescriptor(Array),
+         sectorSize: EntityDescriptor(String)
       };
    }
 }

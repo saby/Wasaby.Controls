@@ -16,6 +16,11 @@ let CRUD = Control.extend({
             this._dataSource = cfg.dataSource;
         }
     },
+    _beforeUpdate(newOptions): void {
+        if (this._options.dataSource !== newOptions.dataSource) {
+            this._dataSource = newOptions.dataSource;
+        }
+    },
 
     create(initValues) {
         let def = this._dataSource.create(initValues);
@@ -23,11 +28,11 @@ let CRUD = Control.extend({
         this._notify('registerPending', [def, {showLoadingIndicator: this._options.showLoadingIndicator}], {bubbling: true});
 
         let self = this;
-        def.addCallback(function(record) {
+        def.addCallback(function (record) {
             self._notify('createSuccessed', [record]);
             return record;
         });
-        def.addErrback(function(e) {
+        def.addErrback(function (e) {
             self._notify('createFailed', [e]);
             return e;
         });
@@ -54,26 +59,28 @@ let CRUD = Control.extend({
         return def;
     },
 
-    update(record: Model, isNewRecord: boolean, config?: object): Promise<any> {
-        let def;
+    update(record: Model, isNewRecord: boolean, config?: unknown): Promise<void> | null {
+        const updateMetaData = config?.additionalData;
+
         if (record.isChanged() || isNewRecord) {
-            def = this._dataSource.update(record);
-
-            this._notify('registerPending', [def, {showLoadingIndicator: this._options.showLoadingIndicator}], {bubbling: true});
-            let self = this;
-            def.addCallback(function(key) {
-                self._notify('updateSuccessed', [record, key, config]);
-                return key;
-            });
-
-            def.addErrback(function(e) {
-                self._notify('updateFailed', [e, record]);
-                return e;
-            });
-        } else {
-            def = null;
+            const resultUpdate = this._dataSource.update(record, updateMetaData);
+            const argsPending = [
+                resultUpdate, {
+                    showLoadingIndicator: this._options.showLoadingIndicator
+                }
+            ];
+            this._notify('registerPending', argsPending, {bubbling: true});
+            resultUpdate.addCallback((key) => {
+                    this._notify('updateSuccessed', [record, key, config]);
+                    return key;
+                }).addErrback((error) => {
+                    this._notify('updateFailed', [error, record]);
+                    return error;
+                });
+            return resultUpdate;
         }
-        return def;
+
+        return null;
     },
 
     delete(record, destroyMeta) {
@@ -82,10 +89,10 @@ let CRUD = Control.extend({
         this._notify('registerPending', [def, {showLoadingIndicator: this._options.showLoadingIndicator}], {bubbling: true});
 
         let self = this;
-        def.addCallback(function() {
+        def.addCallback(function () {
             self._notify('deleteSuccessed', [record]);
         });
-        def.addErrback(function(e) {
+        def.addErrback(function (e) {
             self._notify('deleteFailed', [e]);
             return e;
         });

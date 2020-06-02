@@ -105,6 +105,7 @@ var _private = {
          const recent = this.prepareHistoryItems(self, row.get('recent'), sourceItems);
          const frequent = this.prepareHistoryItems(self, row.get('frequent'), sourceItems);
 
+         self._historyItems = null;
          self._history = {
             pinned: pinned,
             frequent: frequent,
@@ -459,10 +460,14 @@ var _private = {
          if (item) {
             const isRecent = item.get('recent');
             const isPinned = item.get('pinned');
+            const isFrequent = item.get('frequent');
 
-            if (isRecent && !isPinned) {
-               moveRecentItemToTop(item);
+            if (isFrequent || isRecent && !isPinned) {
                updateResult = true;
+
+               if (isRecent) {
+                  moveRecentItemToTop(item);
+               }
             }
          }
       }
@@ -646,6 +651,7 @@ var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin
    },
 
    prepareItems: function(items) {
+      this._historyItems = null;
       this._oldItems = items.clone();
       return this.getItems();
    },

@@ -1,11 +1,17 @@
 import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {Logger} from 'UI/Utils';
 import {IDialogOpener, IDialogPopupOptions} from 'Controls/_popup/interface/IDialog';
+import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
+
 /**
  * Контрол, открывающий всплывающее окно, которое позиционируется по центру экрана.
+ *
  * @remark
- * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup здесь}.
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">демо-пример</a>.
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ *
  * @class Controls/_popup/Opener/Dialog
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener
@@ -17,21 +23,7 @@ import {IDialogOpener, IDialogPopupOptions} from 'Controls/_popup/interface/IDia
  * @public
  */
 
-/*
- * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/ See more}
- * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">Demo-example</a>.
- * @class Controls/_popup/Opener/Dialog
- * @extends Controls/_popup/Opener/BaseOpener
- * @mixes Controls/_popup/interface/IBaseOpener
- * @mixes Controls/_popup/interface/IDialog
- * @control
- * @author Красильников А.С.
- * @category Popup
- * @demo Controls-demo/Popup/Opener/DialogPG
- * @public
- */
-
-interface IDialogOpenerOptions extends IDialogPopupOptions, IBaseOpenerOptions {}
+interface IDialogOpenerOptions extends IDialogPopupOptions, IBaseOpenerOptions, IPropStorageOptions {}
 
 const getDialogConfig = (config: IDialogOpenerOptions): IDialogOpenerOptions => {
     config = config || {};
@@ -43,7 +35,7 @@ const getDialogConfig = (config: IDialogOpenerOptions): IDialogOpenerOptions => 
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
 
-class Dialog extends BaseOpener<IDialogOpenerOptions> implements IDialogOpener {
+class Dialog extends BaseOpener<IDialogOpenerOptions> implements IDialogOpener, IPropStorage {
     readonly '[Controls/_popup/interface/IDialogOpener]': boolean;
 
     open(popupOptions: IDialogOpenerOptions): Promise<string | undefined> {

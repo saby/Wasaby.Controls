@@ -8,7 +8,11 @@ import { TKeySelection as TKey } from 'Controls/interface';
 /** 
  * Контрол используется для организации множественного выбора. 
  * Он обеспечивает связь между Controls/operationsPanel:Containter и {@link Controls/list:Containter}.
- * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/operations/'>здесь</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/operations/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less">переменные тем оформления</a>
  *
  * @class Controls/_operations/Controller
  * @extends Core/Control
@@ -37,6 +41,8 @@ export default class MultiSelector extends Control {
    protected _isAllSelected: boolean = false;
    protected _listMarkedKey: TKey = null;
    protected _notifyHandler: Function = tmplNotify;
+   protected _isOperationsPanelOpened: boolean = false;
+   protected _savedListMarkedKey: TKey = null;
 
    protected _beforeMount() {
       this._itemOpenHandler = this._itemOpenHandler.bind(this);
@@ -71,11 +77,31 @@ export default class MultiSelector extends Control {
    }
 
    protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: TKey): void {
-      this._listMarkedKey = markedKey;
+      this._setListMarkedKey(markedKey);
       this._notify('markedKeyChanged', [markedKey]);
    }
 
    protected _markedKeyChangedHandler(event: SyntheticEvent<null>): void {
       event.stopPropagation();
+   }
+
+   protected _operationsPanelOpen(): void {
+      this._isOperationsPanelOpened = true;
+      if (this._savedListMarkedKey) {
+         this._setListMarkedKey(this._savedListMarkedKey);
+      }
+   }
+
+   protected _operationsPanelClose(): void {
+      this._isOperationsPanelOpened = false;
+   }
+
+   private _setListMarkedKey(key: TKey): void {
+      if (this._isOperationsPanelOpened) {
+         this._listMarkedKey = key;
+         this._savedListMarkedKey = null;
+      } else {
+         this._savedListMarkedKey = key;
+      }
    }
 }

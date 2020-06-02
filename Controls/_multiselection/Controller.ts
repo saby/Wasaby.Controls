@@ -45,6 +45,10 @@ export class Controller {
       this._updateModel(this._selection);
    }
 
+   /**
+    * Обновить состояние контроллера
+    * @param options
+    */
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
       const itemsChanged = modelChanged ? true : options.model.getCollection() !== this._model.getCollection();
@@ -57,8 +61,8 @@ export class Controller {
 
       const oldSelection = clone(this._selection);
       if (selectionChanged) {
-         this._selectedKeys = options.selectedKeys;
-         this._excludedKeys = options.excludedKeys;
+         this._selectedKeys = options.selectedKeys.slice();
+         this._excludedKeys = options.excludedKeys.slice();
          this._updateModel(this._selection);
       } else if (itemsChanged || modelChanged) {
          this._updateModel(this._selection);
@@ -107,6 +111,7 @@ export class Controller {
       return result;   }
 
    handleAddItems(addedItems: Record[]): ISelectionControllerResult {
+      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
       this._updateModel(this._selection);
       return {
          selectedKeysDiff: { keys: [], added: [], removed: [] },
@@ -120,6 +125,7 @@ export class Controller {
       const oldSelection = clone(this._selection);
       this._remove(this._getItemsKeys(removedItems));
 
+      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
       this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
@@ -143,8 +149,8 @@ export class Controller {
    }
 
    private _remove(keys: TKeys): void {
-      this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys, keys);
-      this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys, keys);
+      this._excludedKeys = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys.slice(), keys);
+      this._selectedKeys = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys.slice(), keys);
    }
 
    private _getItemStatus(key: TKey): boolean {
@@ -156,7 +162,7 @@ export class Controller {
    }
 
    private _getItemsKeys(items: Array<CollectionItem<Record>>): TKeys {
-      return items.map((item) => item.getContents().getId());
+      return items.map((item) => item.getContents ? item.getContents().getId() : item.getId());
    }
 
    private _isSelectionChanged(selectedKeys: TKeys, excludedKeys: TKeys): boolean {

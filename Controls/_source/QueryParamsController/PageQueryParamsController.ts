@@ -97,8 +97,21 @@ class PageQueryParamsController implements IQueryParamsController {
      * Allows manual set of current controller state using Collection<Record>
      * @param model
      */
-    setState(model: Collection<Record>): void {
+    setState(model: Collection<Record>): boolean {
         // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+        const items = model.getItems();
+        if (!items.getMetaData) {
+            return false;
+        }
+
+        const more = items.getMetaData().more;
+        const stateChanged = this.getAllDataCount() !== more;
+
+        if (stateChanged) {
+            this._more = more;
+        }
+
+        return stateChanged;
     }
 
     /**

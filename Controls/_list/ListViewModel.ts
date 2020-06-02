@@ -12,7 +12,6 @@ import { Model } from 'Types/entity';
 import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
-import {detection} from 'Env/Env';
 import {IItemAction} from 'Controls/itemActions';
 
 const ITEMACTIONS_POSITION_CLASSES = {
@@ -44,9 +43,9 @@ var _private = {
     getSpacingClassList: function(cfg) {
         let classList = '';
         const itemPadding = _private.getItemPadding(cfg);
-        const style = cfg.style || 'default';
+        const style = cfg.style === 'masterClassic' || !cfg.style ? 'default' : cfg.style;
 
-        classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}`;
+        classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${cfg.theme}`;
         classList += ` controls-ListView__item-rightPadding_${itemPadding.right}_theme-${cfg.theme}`;
@@ -90,28 +89,6 @@ var _private = {
         const right = `controls-ListView__groupContent__rightPadding_${current.itemPadding.right}_theme-${theme}`;
         const left =  `controls-ListView__groupContent__leftPadding_${current.hasMultiSelect ? 'withCheckboxes' : current.itemPadding.left}_theme-${theme}`;
         return {right, left};
-    },
-    // itemActions classes only For Edge
-    getItemActionsClasses(itemData, itemActionsPosition, actionMenuIsShown, theme): string {
-        const th = `_theme-${theme}`;
-        let classList = 'controls-itemActionsV' + ' controls-itemActionsV_full_item_size';
-        classList += itemData.isActive() && actionMenuIsShown ? ' controls-itemActionsV_visible' : '';
-        classList += itemData.isSwiped() ? ' controls-itemActionsV_swiped' : '';
-        classList += itemData.itemActionsColumnScrollDraw ? ' controls-itemActionsV_columnScrollDraw' : '';
-        return classList;
-    },
-    getItemActionsWrapperClasses(itemData, itemActionsPosition, highlightOnHover, style,
-        itemActionsClass, itemPadding, toolbarVisibility, theme): string {
-        const th = `_theme-${theme}`;
-        let classList = 'controls-itemActionsV__wrapper';
-        classList += '  controls-itemActionsV__wrapper_absolute';
-        classList += itemData.isEditing ? ` controls-itemActionsV_editing${th}` : '';
-        classList += itemData.isEditing && toolbarVisibility ? ' controls-itemActionsV_editingToolbarVisible' : '';
-        classList += ` controls-itemActionsV_${itemActionsPosition}${th}`;
-        classList += itemActionsPosition !== 'outside' ? itemActionsClass ? ' ' + itemActionsClass : ' controls-itemActionsV_position_bottomRight' : '';
-        classList += highlightOnHover !== false ? ' controls-itemActionsV_style_' + (style ? style : 'default') + th : '';
-        classList += _private.getItemActionsContainerPaddingClass(itemActionsClass, itemPadding, theme);
-        return classList;
     },
 
     getItemActionsContainerPaddingClass(classes: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
@@ -195,13 +172,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         const self = this;
         ListViewModel.superclass.constructor.apply(this, arguments);
 
-        if (this._items && cfg.markerVisibility !== 'hidden') {
-            if (cfg.markedKey !== null || cfg.markerVisibility === 'always' || cfg.markerVisibility === 'visible') {
-                this._markedKey = cfg.markedKey;
-                this.updateMarker(cfg.markedKey);
-            }
-        }
-
         this._selectedKeys = cfg.selectedKeys || [];
 
         // TODO надо ли?
@@ -240,7 +210,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && itemsModelCurrent.style === 'master';
+        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && this._isSupportStickyMarkedItem();
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -250,7 +220,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle || this._options.style;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
-            itemsModelCurrent.virtualScrollConfig = Boolean(this._options.virtualScrollConfig);
+            itemsModelCurrent.virtualScrollConfig = this._isSupportVirtualScroll();
         }
 
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
@@ -260,17 +230,16 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         itemsModelCurrent.getMarkerClasses = (): string => {
             const style = this._options.style || 'default';
-            return `controls-ListView__itemV_marker controls-ListView__itemV_marker_${style}_theme-${self._options.theme}`;
+            return `controls-ListView__itemV_marker
+                    controls-ListView__itemV_marker_${style}_theme-${self._options.theme}
+                    controls-ListView__itemV_marker_${style}_topPadding-${itemsModelCurrent.itemPadding.top}_theme-${self._options.theme}
+                    controls-ListView__itemV_marker_${style}_bottomPadding-${itemsModelCurrent.itemPadding.bottom}_theme-${self._options.theme}`;
         };
 
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
 
-        // itemActionsClassesForEdge
-        itemsModelCurrent.isIE12 = detection.isIE12;
-        itemsModelCurrent.getItemActionsClasses = _private.getItemActionsClasses;
-        itemsModelCurrent.getItemActionsWrapperClasses = _private.getItemActionsWrapperClasses;
         itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
 
         // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
@@ -295,9 +264,40 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemsModelCurrent;
     },
 
+    _isSupportStickyMarkedItem(): boolean {
+        return this._options.stickyMarkedItem !== false &&
+            (this._options.style === 'master' || this._options.style === 'masterClassic');
+    },
+
+    _isSupportStickyItem(): boolean {
+        return this._options.stickyHeader && (this._options.groupingKeyCallback || this._options.groupProperty) ||
+            this._isSupportStickyMarkedItem();
+    },
+
+    _isStickedItem(itemData: { isSticky?: boolean, isGroup?: boolean }): boolean {
+        return itemData.isSticky || itemData.isGroup;
+    },
+
+    _getCurIndexForReset(startIndex: number): number {
+        if (this._isSupportStickyItem() && startIndex > 0) {
+            // Если поддерживается sticky элементов, то индекс не просто нужно сбросить на 0, а взять индекс ближайшего
+            // к startIndex застиканного элемента, если таковой имеется. Если же его нет, то оставляем 0.
+            // https://online.sbis.ru/opendoc.html?guid=28edae33-62ba-46ae-882c-2bc282b4ee75
+            let idx = startIndex;
+            while (idx >= 0) {
+                const itemData = this.getItemDataByItem(this._display.at(idx));
+                if (this._isStickedItem(itemData)) {
+                    return idx;
+                }
+                idx--;
+            }
+        }
+        return startIndex;
+    },
+
     isShouldBeDrawnItem: function(item) {
         var isInRange = ListViewModel.superclass.isShouldBeDrawnItem.apply(this, arguments);
-        return isInRange || (item.isGroup && item.isStickyHeader) || item.isSticky;
+        return isInRange || (item?.isGroup && item?.isStickyHeader) || item?.isSticky;
     },
 
     _calcCursorClasses: function(clickable, cursor) {
@@ -341,56 +341,26 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
-    setMarkedKey: function(key, byOptions) {
-        if (byOptions) {
-            this._options.markedKey = key;
-        }
-        if (key === this._markedKey) {
+    setMarkedKey: function(key, status) {
+        // status - для совместимости с новой моделью
+        // если он false, то markedKey менять не нужно,
+        // мы его поменяем на следующем вызове со status=true
+        if (this._markedKey === key || status === false) {
             return;
         }
+
         const changedItems = [
             this.getItemById(this._markedKey),
             this.getItemById(key)
         ];
         this._markedKey = key;
         this._savedMarkedKey = undefined;
-        this._updateMarker(key);
         this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
         this._notify('onMarkedKeyChanged', this._markedKey);
     },
 
-    _updateMarker: function(markedKey):void {
-        this._markedKey = markedKey;
-        if (this._options.markerVisibility === 'hidden' ||
-            this._options.markerVisibility === 'onactivated' && this._markedKey === null) {
-            return;
-        }
-
-        const isMarkedItemInRecordSet = _private.getItemByMarkedKey(this, markedKey);
-        // If record with key equal markedKey not found in recordSet, set markedKey equal key first record in recordSet
-        if (!isMarkedItemInRecordSet) {
-            if (this.getCount()) {
-                this._markedKey = this._items.at(0).getId();
-            } else {
-                this._markedKey = null;
-            }
-        }
-    },
-
-    updateMarker: function(markedKey):void {
-        const curMarkedKey = this._markedKey;
-        this._updateMarker(markedKey);
-        if (curMarkedKey !== this._markedKey) {
-            this._notify('onMarkedKeyChanged', this._markedKey);
-            this._nextModelVersion(true);
-        }
-    },
-
     setMarkerVisibility: function(markerVisibility) {
         this._options.markerVisibility = markerVisibility;
-        if (this._markedKey === null && markerVisibility === 'visible') {
-            this.updateMarker(null);
-        }
         this._nextModelVersion();
     },
 
@@ -432,6 +402,18 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             prevItemId--;
         }
     },
+
+    // для совместимости с новой моделью
+    getNextByKey(key: string|number): Model {
+        const nextKey = this.getNextItemKey(key);
+        return this.getItemBySourceKey(nextKey);
+    },
+    // для совместимости с новой моделью
+    getPrevByKey(key: string|number): Model {
+        const nextKey = this.getPreviousItemKey(key);
+        return this.getItemBySourceKey(nextKey);
+    },
+
     getMarkedKey: function() {
         return this._markedKey;
     },
@@ -576,32 +558,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setItems: function(items) {
         var currentItems = this.getItems();
-
         ListViewModel.superclass.setItems.apply(this, arguments);
-
-        //we should try to set markedKey by options, if there were no items before
-        //this._markedKey setted in constructor only if items were in constructor config
-        this.updateMarker(currentItems ? this._markedKey : this._options.markedKey);
         this._nextModelVersion();
     },
 
     _onBeginCollectionChange: function(action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         _private.updateIndexes(this, 0, this.getCount());
-        if (action === IObservable.ACTION_REMOVE && removedItems && removedItems.length) {
-            const curenMarkerIndex = this.getIndexByKey(this._markedKey);
-            const curentItem = _private.getItemByMarkedKey(this, this._markedKey);
-            if (this._markedKey && curenMarkerIndex === -1 && !curentItem) {
-                const prevValidItem = this.getPreviousItem(removedItemsIndex);
-                const nextValidItem = this.getNextItem(removedItemsIndex);
-                if (nextValidItem) {
-                    this.updateMarker(nextValidItem);
-                } else if (prevValidItem) {
-                    this.updateMarker(prevValidItem);
-                } else {
-                    this.updateMarker(null);
-                }
-            }
-        }
     },
     isValidItemForMarkedKey: function (item) {
         return !this._isGroup(item) && item.getId;
@@ -626,15 +588,27 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             nextIndex++;
         }
     },
-    setMarkerOnValidItem: function(index) {
-        const prevValidItem = this.getPreviousItem(index);
-        const nextValidItem = this.getNextItem(index);
-        if (nextValidItem !== undefined) {
-            this.setMarkedKey(nextValidItem);
-        } else if (prevValidItem !== undefined) {
-            this.setMarkedKey(prevValidItem);
+
+    // для совместимости с новой моделью
+    getNextByIndex(index: number): Model {
+        const id = this.getNextItem(index);
+        return this.getItemBySourceKey(id);
+    },
+    // для совместимости с новой моделью
+    getPrevByIndex(index: number): Model {
+        const id = this.getPreviousItem(index);
+        return this.getItemBySourceKey(id);
+    },
+
+    getValidItemForMarker: function(index) {
+        const prevValidItemKey = this.getPreviousItem(index);
+        const nextValidItemKey = this.getNextItem(index);
+        if (nextValidItemKey !== undefined) {
+            return this.getItemBySourceKey(nextValidItemKey);
+        } else if (prevValidItemKey !== undefined) {
+            return this.getItemBySourceKey(prevValidItemKey);
         } else {
-            this.setMarkedKey(null);
+            return null;
         }
     },
     _setEditingItemData: function(itemData) {
@@ -765,7 +739,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setSelectedItems(items: Model[], selected: boolean|null): void {
-        // говнокод для совместимости с новой моделью
+        // Код для совместимости с новой моделью
         // вместо false ставим undefined,
         // чтобы не сломалось показывание только при наведении
         items.forEach((item) => {

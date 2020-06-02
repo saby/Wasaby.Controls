@@ -3,7 +3,6 @@ import {ICrud, QueryOrderSelector, QueryWhere} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {ViewConfig, Controller as ErrorController} from 'Controls/_dataSource/error';
-import {ISourceErrorConfig} from 'Controls/_dataSource/SourceCrudInterlayer';
 import {IPagingOptions} from 'Controls/_paging/Paging';
 import {Direction} from 'Controls/_source/interface/IAdditionalQueryParams';
 
@@ -42,15 +41,6 @@ export interface ISourceControlOptions extends IControlOptions {
      */
     navigation?: INavigationOptionValue<INavigationSourceConfig>;
 
-    /**
-     * @name Controls/_list/SourceControl#errorConfig
-     * @cfg {Controls/_dataSource/SourceCrudInterlayer:ISourceErrorConfig} настройки для отображения ошибки
-     */
-    /*
-     * @name Controls/_list/SourceControl#errorConfig
-     * @cfg {Controls/_dataSource/SourceCrudInterlayer:ISourceErrorConfig} error display configuration
-     */
-    errorConfig?: ISourceErrorConfig;
 
     /**
      * @name Controls/_list/SourceControl#errorController
@@ -85,10 +75,14 @@ export interface ISourceControlOptions extends IControlOptions {
 
 /**
  * Контрол, который предоставляет возможность загрузить данные для списков и перемещаться по ним, использую навигацию Page/Position.
+ * 
  * @remark
  * Принимает настройки для постраничной навигации и загружает данные, используя
  * NavigationControl для управления состояния навигации и SourceCrudInterlayer для обработки ошибки загрузки данных.
- * В случае ошибки загрузки данных показывает стран6ицу с ошибкой
+ * В случае ошибки загрузки данных показывает стран6ицу с ошибкой.
+ * 
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
  *
  * @class Controls/list:SourceControl
  *

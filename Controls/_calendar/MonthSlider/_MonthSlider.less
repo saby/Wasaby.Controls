@@ -40,7 +40,7 @@
    //height: 100%;
 }
 
-.controls-MonthSlider__header-button {
+.controls-MonthSlider__header-button_theme-@{themeName} {
    .icon(@arrow_icon-size_monthSlider);
    color: @arrow_icon-color_monthSlider;
    &:hover {
@@ -48,13 +48,18 @@
    }
 }
 
-.controls-MonthSlider__home-button {
-   margin-left: @margin-left_MonthSlider-home-button; // нет алиаса
+.controls-MonthSlider__home-button_theme-@{themeName} {
+   width: @monthview_item_width_monthSlider;
 }
 
-.controls-MonthSlider__header-title {
+.controls-MonthSlider__home-button {
+   display: flex;
+   justify-content: center;
+}
+
+.controls-MonthSlider__header-title_theme-@{themeName} {
    font-size: @heading_font-size_monthSlider;
-   min-width: @min-width_MonthSlider-header-title; // нет алиаса
+   min-width: @value_min-width_MonthSlider;
    color: @heading_text-color_monthSlider;
 }
 

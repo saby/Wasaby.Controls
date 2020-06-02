@@ -244,7 +244,7 @@ var
         getItemColumnCellClasses: function(current, theme) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'relativeCellWrapper', 'columnContent');
-            const style = current.style || 'default';
+            let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             const backgroundStyle = current.backgroundStyle || current.style || 'default';
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
@@ -276,6 +276,7 @@ var
             }
 
             if (current._isSelected) {
+                style = current.style || 'default';
                 classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
@@ -323,17 +324,6 @@ var
         },
 
         calcLadderVersion(ladder = {}, index): string {
-
-            function getItemsLadderVersion(ladder) {
-                let ladderVersion = '';
-
-                Object.keys(ladder).forEach((ladderProperty) => {
-                    ladderVersion += (ladder[ladderProperty].ladderLength || 0) + '_';
-                });
-
-                return ladderVersion;
-            }
-
             let
                 version = '',
                 simpleLadder = ladder.ladder && ladder.ladder[index],
@@ -343,7 +333,7 @@ var
                 version += 'LP_';
             }
             if (stickyLadder) {
-                version += 'SP_' + getItemsLadderVersion(stickyLadder);
+                version += 'SP_' + (stickyLadder.ladderLength || 0);
             }
 
             return version;
@@ -412,21 +402,36 @@ var
             if (!self._isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
-            if (self._options.stickyColumn) {
+            if (!self._ladder || self._options.stickyColumn) {
                 self.resetCachedItemData();
             }
 
             const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
-
-            return prepareLadder({
+            const startIndex = self.getStartIndex();
+            const stopIndex = hasVirtualScroll ? self.getStopIndex() : displayStopIndex;
+            const newLadder: any = prepareLadder({
                 ladderProperties: self._options.ladderProperties,
-                startIndex: self.getStartIndex(),
-                stopIndex: hasVirtualScroll ? self.getStopIndex() : displayStopIndex,
+                startIndex,
+                stopIndex,
                 display: self.getDisplay(),
                 columns: self._options.columns,
                 stickyColumn: self._options.stickyColumn
             });
+            //Нужно сбросить кэш для записей, у которых поменялась конфигурация лесенки
+            if (self._ladder) {
+                for (let i = startIndex; i < stopIndex ; i++) {
+                    if (!isEqual(newLadder.stickyLadder[i], self._ladder.stickyLadder[i]) ||
+                        !isEqual(newLadder.ladder[i], self._ladder.ladder[i])) {
+
+                        const dispItem = self.getItemById(self.getItems()?.at(i)?.getId());
+                        if (dispItem) {
+                            self.resetCachedItemData(self._getDisplayItemCacheKey(dispItem));
+                        }
+                    }
+                }
+            }
+            return newLadder;
         },
         getTableCellStyles(currentColumn): string {
             let styles = '';
@@ -596,18 +601,6 @@ var
             this._onCollectionChangeFn = function(event, action) {
                 this._updateLastItemKey();
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
-                // When item is added to or removed from the grid with ladder support, we have to recalculate
-                // ladder styles for every cell, so we need to update prefix version
-                if (
-                    this._isSupportLadder(this._options.ladderProperties) &&
-                    (
-                        action === collection.IObservable.ACTION_ADD ||
-                        action === collection.IObservable.ACTION_REMOVE
-                    ) &&
-                    !this._options.columnScroll
-                ) {
-                    event.setResult('updatePrefix');
-                }
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
@@ -630,8 +623,9 @@ var
         _isSupportLadder(ladderProperties: []): boolean {
             return isSupportLadder(ladderProperties);
         },
+
         setTheme(theme: string): void {
-            this._options.theme = theme;
+            this._model.setTheme(theme);
         },
 
         _updateLastItemKey(): void {
@@ -1212,7 +1206,9 @@ var
         getItemById: function(id, keyProperty) {
             return this._model.getItemById(id, keyProperty);
         },
-
+        setSupportVirtualScroll: function(value) {
+            this._model.setSupportVirtualScroll(value);
+        },
         setMarkedKey: function(key, byOptions) {
             this._model.setMarkedKey(key, byOptions);
         },
@@ -1244,8 +1240,8 @@ var
         getNextItemKey: function() {
             return this._model.getNextItemKey.apply(this._model, arguments);
         },
-        setMarkerOnValidItem: function(index) {
-            this._model.setMarkerOnValidItem(index);
+        getValidItemForMarker: function(index) {
+            return this._model.getValidItemForMarker(index);
         },
         setIndexes: function(startIndex, stopIndex) {
             return this._model.setIndexes(startIndex, stopIndex);
@@ -1349,6 +1345,9 @@ var
         resetCachedItemData: function(itemKey?) {
             this._model.resetCachedItemData(itemKey);
         },
+        _getDisplayItemCacheKey(dispItem) {
+            return this._model._getDisplayItemCacheKey(dispItem);
+        },
 
         getItemDataByItem(dispItem) {
             const self = this;
@@ -1386,8 +1385,11 @@ var
             current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
                 return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
             };
+            const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
-            controls-GridView__itemV_marker-${current.style || 'default'}_theme-${self._options.theme}`;
+            controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${self._options.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${self._options.theme}`;
 
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
@@ -1398,7 +1400,12 @@ var
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
-            if (stickyColumn && current.isFullGridSupport()  && !current.dragTargetPosition && current.index !== -1) {
+            // лесенка не хранится для элементов вне текущего диапазона startIndex - stopIndex
+            if (stickyColumn && 
+                current.isFullGridSupport() && 
+                !current.dragTargetPosition && 
+                current.index !== -1 && 
+                self._ladder.stickyLadder[current.index]) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
             }
 
@@ -1460,6 +1467,7 @@ var
                 const currentColumn: any = {
                         item: current.item,
                         style: current.style,
+                        backgroundStyle: current.backgroundStyle,
                         dispItem: current.dispItem,
                         keyProperty: current.keyProperty,
                         displayProperty: current.displayProperty,
@@ -1527,6 +1535,19 @@ var
 
         getNext: function() {
             return this._model.getNext();
+        },
+
+        getNextByKey: function() {
+            return this._model.getNextByKey.apply(this._model, arguments);
+        },
+        getPrevByKey: function() {
+            return this._model.getPrevByKey.apply(this._model, arguments);
+        },
+        getNextByIndex: function() {
+            return this._model.getNextByIndex.apply(this._model, arguments);
+        },
+        getPrevByIndex: function() {
+            return this._model.getPrevByIndex.apply(this._model, arguments);
         },
 
         isLast: function() {
@@ -1859,7 +1880,7 @@ var
         getFooterStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
                 const offsetForMultiSelect: number = +(this.getMultiSelectVisibility() !== 'hidden');
-                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
+                const offsetForStickyColumn: number = +(this.shouldAddStickyLadderCell());
 
                 return GridLayoutUtil.getColumnStyles({
                     columnStart: 0,

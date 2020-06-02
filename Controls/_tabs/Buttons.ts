@@ -5,16 +5,16 @@ import Control = require('Core/Control');
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 import {Logger} from 'UI/Utils';
-import {Controller as SourceController} from 'Controls/source';
+import {CrudWrapper} from 'Controls/dataSource';
 import {factory} from 'Types/chain';
 import * as cInstance from 'Core/core-instance';
 
 var _private = {
       initItems: function(source, instance) {
-         instance._sourceController = new SourceController({
+         instance._crudWrapper = new CrudWrapper({
             source: source
          });
-         return instance._sourceController.load().addCallback(function(items) {
+         return instance._crudWrapper.query({}).then((items) => {
             var
                leftOrder = 1,
                rightOrder = 30,
@@ -97,8 +97,11 @@ var _private = {
 
    /**
     * Контрол предоставляет пользователю возможность выбрать между двумя или более вкладками.
-    *
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FTabs%2FButtons">Демо-пример</a>.
+    * 
+    * @remark
+    * Полезные ссылки:
+    * * <a href="/materials/Controls-demo/app/Controls-demo%2FTabs%2FButtons">демо-пример</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_tabs.less">переменные тем оформления</a>
     *
     * @class Controls/_tabs/Buttons
     * @extends Core/Control

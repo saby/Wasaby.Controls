@@ -78,7 +78,11 @@ define(
 
          it('stack shadow', () => {
             let baseGetItemPosition = popupTemplate.StackController._getItemPosition;
-            popupTemplate.StackController._getItemPosition = items => (items.position);
+            popupTemplate.StackController._updateItemPosition = (popupItem) => {
+               if (!popupItem.position) {
+                  popupItem.position = {};
+               }
+            };
             popupTemplate.StackController._stack.add({
                position: { width: 720 },
                popupOptions: { stackClassName: '' }
@@ -314,10 +318,11 @@ define(
             let baseGetItemPosition = popupTemplate.StackController._getItemPosition;
             popupTemplate.StackController._getItemPosition = items => (items.position);
             popupTemplate.StackController._stack.clear();
-            popupTemplate.StackController._stack.add({
+            popupTemplate.StackController._getDefaultConfig({
                position: { stackWidth: 720 },
                popupOptions: { className: '' }
             });
+            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.className.indexOf('controls-Stack__last-item') >= 0);
             popupTemplate.StackController._update();
             assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.className.indexOf('controls-Stack__last-item') >= 0);
             popupTemplate.StackController._stack.add({
@@ -746,5 +751,46 @@ define(
             // для аккордеона нет места
             assert.equal(Controller._sideBarVisible, false);
          });
+
+         it('test stack getPanelWidth. When the width of the panel with the property "isCompoundTemplate: true" is greater than the width of the browser window', () => {
+            const item = {
+               popupOptions: {
+                  isStack: true,
+                  minWidth: 950,
+                  maxWidth: 1150,
+                  width: 950,
+                  isCompoundTemplate: true
+               }
+            };
+            StackStrategy.getParentPosition = () => {
+               return undefined;
+            };
+            let tCoords = {
+               right: 150,
+               top: 0
+            };
+            // document.body.clientWidth = 1024, maxPanelWidth = 1024 - 100 = 924
+            const panelWidth = StackStrategy._private.getPanelWidth(item, tCoords, 924);
+            assert.equal(panelWidth, 950);
+            /* Так как окно спозиционируется с координатами right: 150 с шириной 950 - то панель не влезет в окно браузера.
+            Если панель не уместилась по ширине, то позиционирование панели осуществляется от правого края экрана.
+            Проверяем координаты right. */
+            assert.equal(tCoords.right, 0);
+         });
+
+         it('stack need redraw after created', () => {
+            const item = {
+               position: { stackWidth: 720 },
+               popupOptions: { className: '' }
+            };
+            popupTemplate.StackController._stack.clear();
+            popupTemplate.StackController._stack.add(item);
+            let result = popupTemplate.StackController.elementCreated(item);
+            assert.equal(result, false);
+
+            popupTemplate.StackController._stack.add(item);
+            result = popupTemplate.StackController.elementCreated(item);
+            assert.equal(result, true);
+         })
       });
    });

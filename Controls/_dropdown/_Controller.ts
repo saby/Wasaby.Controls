@@ -2,6 +2,7 @@
 import Control = require('Core/Control');
 // @ts-ignore
 import template = require('wml!Controls/_dropdown/_Controller');
+import {Sticky as StickyOpener} from 'Controls/popup';
 import chain = require('Types/chain');
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
@@ -15,6 +16,9 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+
+const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
 var _private = {
    createSourceController: function(self, options) {
@@ -99,6 +103,12 @@ var _private = {
           });
    },
 
+   resetLoadPromises(self) {
+      self._loadMenuTempPromise = null;
+      self._loadItemsPromise = null;
+      self._loadItemsTempPromise = null;
+   },
+
    getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
       let item;
 
@@ -181,7 +191,7 @@ var _private = {
       }
    },
 
-   onResult: function (event, action, data, popupId) {
+   onResult: function (action, data) {
       switch (action) {
          case 'pinClick':
             _private.pinClick(this, data);
@@ -215,7 +225,7 @@ var _private = {
    },
 
    closeDropdownList: function (self) {
-      self._children.DropdownOpener.close();
+      StickyOpener.closePopup(self._popupId);
       self._isOpened = false;
    },
 
@@ -247,19 +257,28 @@ var _private = {
       }
    },
 
-   requireTemplates: function(self, options) {
-      if (!self._depsDeferred) {
-         let templatesToLoad = _private.getItemsTemplates(self, options);
-         let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
+   loadItemsTemplates: function(self, options) {
+      if (!self._loadItemsTempPromise) {
+         const templatesToLoad = _private.getItemsTemplates(self, options);
+         self._loadItemsTempPromise = mStubs.require(templatesToLoad);
+      }
+      return self._loadItemsTempPromise;
+   },
 
+   loadMenuTemplates(self, options: object) {
+      if (!self._loadMenuTempPromise) {
+         let templatesToLoad = ['Controls/menu'];
+         let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
          templates.forEach((template) => {
             if (typeof options[template] === 'string') {
                templatesToLoad.push(options[template]);
             }
          });
-         self._depsDeferred = mStubs.require(templatesToLoad);
+         self._loadMenuTempPromise = mStubs.require(templatesToLoad).then((loadedDeps) => {
+            return loadedDeps[0].Control.loadCSS(options.theme);
+         });
       }
-      return self._depsDeferred;
+      return self._loadMenuTempPromise;
    },
 
    getItemsTemplates: function(self, options) {
@@ -281,26 +300,61 @@ var _private = {
    },
 
    getPopupOptions(self, popupOptions?): object {
+      let baseConfig = {...self._options};
+      const ignoreOptions = [
+         'iWantBeWS3',
+         '_$createdFromCode',
+         '_logicParent',
+         'theme',
+         'vdomCORE',
+         'name',
+         'esc'
+      ];
+
+      for (let i = 0; i < ignoreOptions.length; i++) {
+         const option = ignoreOptions[i];
+         if (self._options[option] !== undefined) {
+            delete baseConfig[option];
+         }
+      }
+      let templateOptions = {
+         closeButtonVisibility: false,
+         emptyText: self._getEmptyText(),
+         allowPin: self._options.allowPin && self._hasHistory(),
+         headerTemplate: self._options.headTemplate || self._options.headerTemplate,
+         footerContentTemplate: self._options.footerContentTemplate || self._options.footerTemplate,
+         items: self._items,
+         source: self._menuSource,
+         filter: self._filter,
+         // FIXME self._container[0] delete after
+         // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+         width: self._options.width !== undefined ?
+             (self._container[0] || self._container).offsetWidth :
+             undefined,
+         hasMoreButton: self._sourceController.hasMoreData('down'),
+         selectorOpener: self._children.selectorOpener,
+         selectorDialogResult: self._onSelectorTemplateResult.bind(self)
+      };
       const config = {
-         templateOptions: {
-            items: self._items,
-            source: self._menuSource,
-            filter: self._filter,
-            // FIXME self._container[0] delete after
-            // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-            width: self._options.width !== undefined ?
-                (self._container[0] || self._container).offsetWidth :
-                undefined,
-            hasMoreButton: self._sourceController.hasMoreData('down'),
-            selectorOpener: self._children.selectorOpener,
-            selectorDialogResult: self._onSelectorTemplateResult.bind(self)
-         },
+         id: self._popupId,
+         templateOptions: Object.assign(baseConfig, templateOptions),
+         className: self._options.popupClassName,
+         template: 'Controls/menu:Popup',
+         actionOnScroll: 'close',
          target: self._container,
          targetPoint: self._options.targetPoint,
          opener: self,
          fittingMode: {
             vertical: 'adaptive',
             horizontal: 'overflow'
+         },
+         eventHandlers: {
+            onOpen: self._onOpen,
+            onClose: () => {
+               self._popupId = null;
+               self._onClose();
+            },
+            onResult: self._onResult
          },
          autofocus: false,
          closeOnOutsideClick: true
@@ -399,7 +453,7 @@ var _private = {
 var _Controller = Control.extend({
    _template: template,
    _items: null,
-   _depsDeferred: null,
+   _loadItemsTempPromise: null,
 
    _beforeMount: function (options, context, receivedState) {
       let result;
@@ -443,13 +497,17 @@ var _Controller = Control.extend({
       return result;
    },
 
+   _afterMount: function() {
+      RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
+   },
+
    _beforeUpdate: function (newOptions) {
       if (newOptions.readOnly && newOptions.readOnly !== this._options.readOnly) {
          _private.closeDropdownList(this);
       }
 
       if (_private.templateOptionsChanged(newOptions, this._options)) {
-         this._depsDeferred = null;
+         this._loadMenuTempPromise = null;
          if (this._isOpened) {
             this._open();
          }
@@ -457,12 +515,14 @@ var _Controller = Control.extend({
       if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
           !isEqual(newOptions.navigation, this._options.navigation) ||
           !isEqual(newOptions.filter, this._options.filter)) {
-
          if (this._sourceController && !this._sourceController.isLoading()) {
             this._source = null;
             this._sourceController = null;
          }
 
+         if (newOptions.source !== this._options.source) {
+            _private.resetLoadPromises(this);
+         }
          if (newOptions.lazyItemsLoading && !this._isOpened) {
             /* source changed, items is not actual now */
             this._setItems(null);
@@ -479,62 +539,86 @@ var _Controller = Control.extend({
    },
 
    _keyDown: function(event) {
-      if (event.nativeEvent.keyCode === Env.constants.key.esc && this._children.DropdownOpener.isOpened()) {
+      if (event.nativeEvent.keyCode === Env.constants.key.esc && this._popupId) {
          _private.closeDropdownList(this);
          event.stopPropagation();
       }
+   },
+
+   _loadItems() {
+      if (this._items) {
+         // Обновляем данные в источнике, нужно для работы истории
+         this._setItems(this._items);
+         this._loadItemsPromise = Promise.resolve();
+      } else if (!this._loadItemsPromise || this._loadItemsPromise.resolved && !this._items) {
+         if (this._options.source && !this._items) {
+            this._loadItemsPromise = _private.loadItems(this, this._options);
+         }
+      }
+      return this._loadItemsPromise;
+   },
+
+   loadDependencies(): Promise<void> {
+      const deps = [_private.loadMenuTemplates(this, this._options)];
+
+      if (!this._items) {
+         deps.push(this._loadItems());
+      }
+
+      return Promise.all(deps).then(() => {
+         return _private.loadItemsTemplates(this, this._options);
+       });
    },
 
    _open(popupOptions?: object): void {
       if (this._options.readOnly) {
          return;
       }
-
-      const open = (): void => {
-         let config = _private.getPopupOptions(this, popupOptions);
-         _private.requireTemplates(this, this._options).addCallback(() => {
-            this._isOpened = true;
-            this._children.DropdownOpener.open(config, this);
-         });
-      };
-
-      const itemsLoadCallback = (items: RecordSet): void => {
-         const count = items.getCount();
-
+      return this.loadDependencies().then( () => {
+         const count = this._items.getCount();
          if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
-            open();
+            let config = _private.getPopupOptions(this, popupOptions);
+            this._isOpened = true;
+            StickyOpener.openPopup(config, this).then((popupId) => {
+               this._popupId = popupId;
+            });
          } else if (count === 1) {
             this._notify('selectedItemsChanged', [
-               [items.at(0)]
+               [this._items.at(0)]
             ]);
          }
-      };
-
-      if (this._options.source && !this._items) {
-         _private.loadItems(this, this._options).addCallback((items) => {
-            itemsLoadCallback(items);
-            return items;
-         });
-      } else if (this._items) {
-         // Обновляем данные в источнике, нужно для работы истории
-         this._setItems(this._items);
-         itemsLoadCallback(this._items);
-      }
+      });
    },
 
    _onSelectorTemplateResult: function(event, selectedItems) {
       let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
-      this._onResult(event, 'selectorResult', result);
+      this._onResult('selectorResult', result);
    },
 
-   _clickHandler: function(event) {
+   _clickHandler(event: SyntheticEvent): void {
       // stop bubbling event, so the list does not handle click event.
       event.stopPropagation();
-      var opener = this._children.DropdownOpener;
-      if (opener.isOpened()) {
+   },
+
+   _mouseDownHandler(): void {
+      if (this._popupId) {
          _private.closeDropdownList(this);
       } else {
          this._open();
+      }
+   },
+
+   _mouseEnterHandler: function() {
+      this._loadDependenciesTimer = setTimeout(this.loadDependencies.bind(this), PRELOAD_DEPENDENCIES_HOVER_DELAY);
+   },
+
+   _mouseLeaveHandler: function() {
+      clearTimeout(this._loadDependenciesTimer);
+   },
+
+   _scrollHandler: function() {
+      if (this._popupId) {
+         _private.closeDropdownList(this);
       }
    },
 
@@ -544,23 +628,26 @@ var _Controller = Control.extend({
          this._sourceController = null;
       }
       this._setItems(null);
+      _private.closeDropdownList(this);
+      UnregisterUtil(this, 'scroll');
    },
 
    _getEmptyText: function () {
       return dropdownUtils.prepareEmpty(this._options.emptyText);
    },
 
-   _setItems: function(items) {
+   _setItems(items: RecordSet|null): void {
       if (items) {
          this._menuSource = new PrefetchProxy({
             target: this._source,
             data: {
-               query: items.clone()
+               query: items
             }
          });
+      } else {
+         this._loadItemsPromise = null;
       }
       this._items = items;
-      this._depsDeferred = null;
    },
 
    _hasHistory(): boolean {
@@ -572,7 +659,7 @@ var _Controller = Control.extend({
    },
 
    openMenu(popupOptions?: object): void {
-      this._open(popupOptions);
+      return this._open(popupOptions);
    },
 
    closeMenu(): void {

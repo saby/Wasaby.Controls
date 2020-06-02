@@ -15,26 +15,30 @@ const maxPercentValue = 100;
 
 /**
  * Базовый слайдер с одним подвижным ползунком для выбора значения.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fBase%2fIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_slider.less">переменные тем оформления</a>
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FSlider%2FBase%2FStandartSliderBaseDemo">Демо-пример</a>.
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Base
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
- * @demo Controls-demo/Slider/Base/SliderBaseDemo
+ * @demo Controls-demo/Slider/Base/Base/Index
  */
 
 /*
  * Basic slider with single movable point for choosing value.
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FSlider%2FBase%2FStandartSliderBaseDemo">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fBase%2fIndex">Demo-example</a>.
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Base
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
- * @demo Controls-demo/Slider/Base/SliderBaseDemo
+ * @demo Controls-demo/Slider/Base/Base/Index
  */
 
 /**

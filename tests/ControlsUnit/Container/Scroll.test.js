@@ -271,8 +271,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'disabled',
-                  stateDown: 'normal'
+                  stateUp: false,
+                  stateDown: true
                });
             });
             it('Content at the middle', function() {
@@ -285,8 +285,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'normal',
-                  stateDown: 'normal'
+                  stateUp: true,
+                  stateDown: true
                });
             });
             it('Content at the bottom', function() {
@@ -299,8 +299,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'normal',
-                  stateDown: 'disabled'
+                  stateUp: true,
+                  stateDown: false
                });
             });
          });
@@ -487,7 +487,7 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
+                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden controls-StickyHeaderController">' +
                   '<div class="controls-Scroll__userContent">test</div>' +
                   '</span>' +
                   '<div></div>' +
@@ -497,7 +497,7 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar" style="margin-right: -15px;">' +
+                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-StickyHeaderController" style="margin-right: -15px;">' +
                   '<div class="controls-Scroll__userContent">test</div>' +
                   '</span>' +
                   '<div></div>' +
@@ -530,22 +530,22 @@ define(
                scroll._scrollMoveHandler({}, {
                   position: 'up'
                });
-               assert.equal('disabled', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(false, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateDown, 'Wrong paging state');
             });
             it('down', function() {
                scroll._scrollMoveHandler({}, {
                   position: 'down'
                });
-               assert.equal('normal', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('disabled', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(false, scroll._pagingState.stateDown, 'Wrong paging state');
             });
             it('middle', function() {
                scroll._scrollMoveHandler({}, {
                   position: 'middle'
                });
-               assert.equal('normal', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateDown, 'Wrong paging state');
             });
 
          });
