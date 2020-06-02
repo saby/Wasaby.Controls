@@ -150,8 +150,8 @@ class Async extends Control<IOptions, TStateRecivied> {
 
    _loadContentSync(name: string, options: IControlOptions): TStateRecivied {
       const loaded = moduleLoader.loadSync(name);
-      if (loaded[0] === null) {
-         return generateErrorMsg(name, `Error sync ${loaded[1]}: ${loaded[2]}`);
+      if (loaded === null) {
+         return generateErrorMsg(name, 'Error sync');
       }
 
       this._insertComponent(loaded, options, name);

@@ -103,6 +103,8 @@ class ModuleLoader {
     }
 
     private requireSync(name: string): Module {
+        requirejs.undef(name);
+
         return require(name);
     }
 
