@@ -311,11 +311,17 @@ var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin], {
       const storageData = DataStorage.read(historyId);
       let resultDef;
 
+      function getHistoryDataSet() {
+         return new DataSet({
+            rawData: self.getHistory(historyId)
+         })
+      }
+
       if (storageDef) {
          resultDef = new Deferred();
          // create new deferred, so in the first callback function, the result of the query will be changed
          storageDef.addBoth(() => {
-            resultDef.callback(self.getHistory(historyId));
+            resultDef.callback(getHistoryDataSet());
          });
       } else if (!storageDef && !storageData) {
          resultDef = _private.load(this);
@@ -326,9 +332,7 @@ var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin], {
             return res;
          });
       } else {
-         resultDef = Deferred.success(new DataSet({
-            rawData: self.getHistory(historyId)
-         }));
+         resultDef = Deferred.success(getHistoryDataSet());
       }
       _private.incrementUsage(this);
       return resultDef;
