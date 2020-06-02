@@ -1174,6 +1174,23 @@ define(
 
                assert.deepEqual(view._configs.document.popupItems.getRawData(), expectedResult);
                assert.equal(view._configs.document.items.getCount(), 10);
+
+               view._source[0].editorOptions.source = new history.Source({
+                  originSource: new sourceLib.Memory({
+                     keyProperty: 'key',
+                     data: []
+                  }),
+                  historySource: new history.Service({
+                     historyId: 'TEST_HISTORY_ID'
+                  })
+               });
+               let historyItems;
+               view._source[0].editorOptions.source.prepareItems = (items) => {
+                  historyItems = items;
+                  return items;
+               };
+               filter.View._private.setItems(view._configs.document, view._source[0], chain.factory(newItems).toArray());
+               assert.deepEqual(historyItems.getRawData(), expectedResult);
             });
          });
 

@@ -122,4 +122,95 @@ describe('Controls/_listRender/View', () => {
 
         assert.isTrue(oldCollectionDestroyed);
     });
+
+    describe('ItemActions', () => {
+        let view: View;
+        let item: any;
+        let fakeEvent: any;
+
+        beforeEach(() => {
+            view = new View(defaultCfg);
+            item = {
+                _$active: false,
+                getContents: () => ({
+                    getKey: () => 2
+                }),
+                setActive: function() {
+                    this._$active = true;
+                },
+                getActions: () => ({
+                    all: [{
+                        id: 2,
+                        showType: 0
+                    }]
+                })
+            };
+            view._collection = {
+                _$activeItem: null,
+                getEditingConfig: () => null,
+                setActionsTemplateConfig: () => null,
+                getItemBySourceKey: () => item,
+                setEventRaising: (val1, val2) => null,
+                each: (val) => null,
+                setActionsAssigned: (val) => null,
+                setActiveItem(_item: any): void {
+                    this._$activeItem = _item;
+                },
+                getActiveItem(): any {
+                    return this._$activeItem;
+                }
+            };
+            fakeEvent = {
+                propagating: true,
+                nativeEvent: {
+                    prevented: false,
+                    preventDefault(): void {
+                        this.prevented = true;
+                    }
+                },
+                stopImmediatePropagation(): void {
+                    this.propagating = false;
+                },
+                target: {
+                    getBoundingClientRect: () => ({
+                        top: 100,
+                        bottom: 100,
+                        left: 100,
+                        right: 100,
+                        width: 100,
+                        height: 100
+                    }),
+                    closest: () => 'elem'
+                }
+            };
+            const cfg = {
+                itemActions: [
+                    {
+                        id: 2,
+                        showType: 0
+                    }
+                ]
+            };
+            view._updateItemActions(cfg);
+        });
+
+        // Не показываем контекстное меню браузера, если мы должны показать кастомное меню
+        it('should prevent default context menu', () => {
+            view._onItemContextMenu(null, item, fakeEvent);
+            assert.isTrue(fakeEvent.nativeEvent.prevented);
+            assert.isFalse(fakeEvent.propagating);
+        });
+
+        // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
+        it('should correctly work with breadcrumbs', () => {
+            const breadcrumbItem = Object.assign(item, {
+                '[Controls/_display/BreadcrumbsItem]': true,
+                getContents: () => ['fake', 'fake', 'fake', {
+                    getKey: () => 2
+                }]
+            });
+            view._onItemContextMenu(null, breadcrumbItem, fakeEvent);
+            assert(view._collection.getActiveItem(), item);
+        });
+    });
 });

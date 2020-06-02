@@ -558,8 +558,14 @@ var _Controller = Control.extend({
       return this._loadItemsPromise;
    },
 
-   loadDependencies(): void {
-      return Promise.all([_private.loadMenuTemplates(this, this._options), this._loadItems()]).then( () => {
+   loadDependencies(): Promise<void> {
+      const deps = [_private.loadMenuTemplates(this, this._options)];
+
+      if (!this._items) {
+         deps.push(this._loadItems());
+      }
+
+      return Promise.all(deps).then(() => {
          return _private.loadItemsTemplates(this, this._options);
        });
    },
@@ -630,12 +636,12 @@ var _Controller = Control.extend({
       return dropdownUtils.prepareEmpty(this._options.emptyText);
    },
 
-   _setItems: function(items) {
+   _setItems(items: RecordSet|null): void {
       if (items) {
          this._menuSource = new PrefetchProxy({
             target: this._source,
             data: {
-               query: items.clone(true)
+               query: items
             }
          });
       } else {

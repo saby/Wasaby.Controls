@@ -148,9 +148,13 @@ var ItemsViewModel = BaseViewModel.extend({
         return Boolean(this._options?.virtualScrollConfig) && this._options.supportVirtualScroll;
     },
 
-    reset: function() {
+    _getCurIndexForReset(startIndex: number): number {
+        return startIndex;
+    },
+
+    reset(): void {
         this._startIndex = this._isSupportVirtualScroll() && !!this._startIndex ? this._startIndex : 0;
-        this._curIndex = 0;
+        this._curIndex = this._getCurIndexForReset(this._startIndex);
     },
 
     isEnd: function() {

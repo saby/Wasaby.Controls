@@ -94,6 +94,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     protected mods: Array<string> | string;
     protected delay: number;
     protected delayTimeout: number;
+    private _toggleEventTimerId: number;
 
     protected _beforeMount(cfg: ILoadingIndicatorOptions): void {
         this.mods = [];
@@ -319,7 +320,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         clearTimeout(this.delayTimeout);
         this._updateZIndex(config);
         if (visible) {
-            this._toggleEvents(true);
+            this.isGlobal ? this._toggleEvents(true) : this._toggleOverlayAsync(true, config);
             if (force) {
                 this._toggleIndicatorVisible(true, config);
             } else {
@@ -337,19 +338,61 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             // if we dont't have indicator in stack, then hide overlay
             if (this._stack.getCount() === 0) {
                 this._toggleIndicatorVisible(false);
-                this._toggleEvents(false);
+                this.isGlobal ? this._toggleEvents(false) : this._toggleOverlayAsync(false);
             }
         }
         this._forceUpdate();
     }
 
     private _toggleEvents(toggle: boolean): void {
+        // TODO https://online.sbis.ru/opendoc.html?guid=157084a2-d702-40b9-b54e-1a42853c301e
+        // TODO в 4000 можно попробовать убрать таймаут, сейчас вернул его, чтобы не менять поведение перед выпуском
+        const delay = 100;
+
+        // Если оверлей отключен - блокировать ничего не надо
+        if (this.overlay === 'none') {
+            return;
+        }
+
+        this._clearToggleEventTimerId();
+        if (toggle) {
+            this._toggleEventTimerId = setTimeout(() => {
+                this._toggleEventTimerId = null;
+                this._toggleEventSubscribe(toggle);
+            }, delay);
+        } else {
+            this._toggleEventSubscribe(toggle);
+        }
+    }
+
+    private _toggleOverlayAsync(toggle: boolean, config: ILoadingIndicatorOptions = {}): void {
+        const delay = 100;
+
+        // Если индикатор локальный, то блокировать события не надо, достаточно показать оверлей
+        this._clearOverlayTimerId();
+        this._toggleOverlayTimerId = setTimeout(() => {
+            this._toggleOverlay(toggle, config);
+        }, delay);
+    }
+
+    _clearToggleEventTimerId(): void {
+        if (this._toggleEventTimerId) {
+            clearTimeout(this._toggleEventTimerId);
+            this._toggleEventTimerId = null;
+        }
+    }
+
+    private _toggleEventSubscribe(toggle: boolean): void {
         const action = toggle ? 'addEventListener' : 'removeEventListener';
         const events = ['mousedown', 'mouseup', 'click', 'keydown', 'keyup'];
-        // TODO https://online.sbis.ru/opendoc.html?guid=157084a2-d702-40b9-b54e-1a42853c301e
         for (const event of events) {
             if (window) {
                 window[action](event, LoadingIndicator._eventsHandler, true);
+                // В оффлайне стрельнул баг: если отписываться с флагом true(несмотря на такую же подписку)
+                // отписка от события не произойдет. вызываю дополнительно отписку без флага.
+                if (!toggle) {
+                    window[action](event, LoadingIndicator._eventsHandler);
+                }
             }
         }
     }

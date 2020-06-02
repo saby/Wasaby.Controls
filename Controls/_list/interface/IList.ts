@@ -50,7 +50,19 @@ type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
-
+/**
+ * @typedef {String} TItemActionVisibility
+ * @variant onhover Инициализируется и отображается сразу после первого наведению на любую запись списка
+ * @variant visible Инициализируется и отображается при рендеринге записей
+ * @variant delayed Инициализируется и отображается после первого наведению на любую запись списка только если курсор мыши задержался на записи более, чем на 500mc
+ */
+/*
+ * @typedef {String} TItemActionVisibility
+ * @variant onhover ItemActions will be Initialized and displayed right after mouseenter over Item
+ * @variant visible ItemActions will be Initialized and displayed on control mount
+ * @variant delayed ItemActions will be Initialized and displayed after mouseenter with 500ms delay over Item
+ */
+type TItemActionVisibility = 'onhover'|'delayed'|'visible';
 interface IItemPadding {
     top?: TVerticalItemPadding;
     bottom?: TVerticalItemPadding;
@@ -68,9 +80,11 @@ export interface IList {
     itemActionsPosition?: TItemActionsPosition;
     actionAlignment?: TActionAlignment;
     actionCaptionPosition?: TActionCaptionPosition;
+    itemActionVisibility?: TItemActionVisibility;
     itemActionVisibilityCallback?: (action: IItemAction, item) => boolean;
     itemActionsProperty?: string;
     markedKey?: string|number;
+    stickyMarkedItem?: boolean;
     markerVisibility?: TMarkerVisibility;
     uniqueKeys?: boolean;
     itemsReadyCallback?: (items) => void;
@@ -486,6 +500,21 @@ export interface IList {
  */
 
 /**
+ * @name Controls/_list/interface/IList#itemActionVisibility
+ * @cfg {TItemActionVisibility} Настройка способа отображения опций записи
+ * @variant onhover Инициализируется и отображается сразу после первого наведению на любую запись списка
+ * @variant visible Инициализируется и отображается при рендеринге записей
+ * @variant delayed Инициализируется и отображается после первого наведению на любую запись списка только если курсор мыши задержался на записи более, чем на 500mc
+ */
+/*
+ * @name Controls/_list/interface/IList#itemActionVisibility
+ * @cfg {TItemActionVisibility} Setting of ItemActions visibility
+ * @variant onhover ItemActions will be Initialized and displayed right after mouseenter over Item
+ * @variant visible ItemActions will be Initialized and displayed on control mount
+ * @variant delayed ItemActions will be Initialized and displayed after mouseenter with 500ms delay over Item
+ */
+
+/**
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
  * @cfg {Function} Функция обратного вызова для определения видимости опций записи.
  * @remark
@@ -629,6 +658,15 @@ export interface IList {
  * @cfg {Number} Identifier of the marked collection item.
  * @remark
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#stickyMarkedItem
+ * @cfg {Boolean} Позволяет включать/отключать прилипание выбранного элемента.
+ * @remark
+ * Опция актуальна только для стиля "Мастер".
+ * @see style
+ * @default true
  */
 
 /**
