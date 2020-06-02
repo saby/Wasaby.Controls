@@ -320,7 +320,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         clearTimeout(this.delayTimeout);
         this._updateZIndex(config);
         if (visible) {
-            this._toggleEvents(true);
+            this.isGlobal ? this._toggleEvents(true) : this._toggleOverlayAsync(true, config);
             if (force) {
                 this._toggleIndicatorVisible(true, config);
             } else {
@@ -338,7 +338,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             // if we dont't have indicator in stack, then hide overlay
             if (this._stack.getCount() === 0) {
                 this._toggleIndicatorVisible(false);
-                this._toggleEvents(false);
+                this.isGlobal ? this._toggleEvents(false) : this._toggleOverlayAsync(false);
             }
         }
         this._forceUpdate();
@@ -350,9 +350,10 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         const delay = 100;
 
         // Если оверлей отключен - блокировать ничего не надо
-        if (this._options.overlay === 'none') {
+        if (this.overlay === 'none') {
             return;
         }
+
         this._clearToggleEventTimerId();
         if (toggle) {
             this._toggleEventTimerId = setTimeout(() => {
@@ -362,6 +363,16 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         } else {
             this._toggleEventSubscribe(toggle);
         }
+    }
+
+    private _toggleOverlayAsync(toggle: boolean, config: ILoadingIndicatorOptions = {}): void {
+        const delay = 100;
+
+        // Если индикатор локальный, то блокировать события не надо, достаточно показать оверлей
+        this._clearOverlayTimerId();
+        this._toggleOverlayTimerId = setTimeout(() => {
+            this._toggleOverlay(toggle, config);
+        }, delay);
     }
 
     _clearToggleEventTimerId(): void {
