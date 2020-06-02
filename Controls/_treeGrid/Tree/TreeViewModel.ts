@@ -289,20 +289,29 @@ var
             self._notify('expandedItemsChanged', self._expandedItems);
         },
 
-        collapseChildNodes(self: ITreeViewModel, dispItem: TreeDisplayItem): void {
-            const uniqueKeys = self._options.uniqueKeys;
-            const dispItemKey = _private.getDispItemKey(dispItem, false);
-            self._hierarchyRelation.getChildren(dispItemKey, self._items).forEach((childItem) => {
-                const childItemKey = childItem.getKey();
-                const childDispItem = self.getItemById(childItemKey);
+        recursiveCollapseChildNodes(self: ITreeViewModel, dispItem: TreeDisplayItem): void {
+            _private.removeItemFromKeysArray(dispItem, self._expandedItems, self._options.uniqueKeys);
+            _private.collapseChildNodes(self, dispItem);
+        },
 
-                // hierarchyRelation возвращает все дочерние элементы (даже если они просто лежат в recordSet и не были
-                // ранее развернуты), т.о. childDispItem может отсутствовать.
-                if (childDispItem) {
-                    _private.removeItemFromKeysArray(childDispItem, self._expandedItems, uniqueKeys);
-                    _private.collapseChildNodes(self, childDispItem);
-                }
-            });
+        collapseChildNodes(self: ITreeViewModel, dispItem: TreeDisplayItem): void {
+            if (self._options.uniqueKeys) {
+                const dispItemKey = _private.getDispItemKey(dispItem, false);
+                self._hierarchyRelation.getChildren(dispItemKey, self._items).forEach((childItem) => {
+                    const childItemKey = childItem.getKey();
+                    const childDispItem = self.getItemById(childItemKey);
+
+                    // hierarchyRelation возвращает все дочерние элементы (даже если они просто лежат в recordSet и
+                    // не были ранее развернуты), т.о. childDispItem может отсутствовать.
+                    if (childDispItem) {
+                        _private.recursiveCollapseChildNodes(self, childDispItem);
+                    }
+                });
+            } else {
+                self._display.getChildren(dispItem).forEach((childDispItem) => {
+                    _private.recursiveCollapseChildNodes(self, childDispItem);
+                });
+            }
         },
 
         collapseNode(self: ITreeViewModel, dispItem: TreeDisplayItem): void {
