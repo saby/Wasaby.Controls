@@ -42,6 +42,26 @@
            <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
        </div>
    </ws:if>
+    <ws:else data="{{ colspan === false && !!colspanLength}}">
+        <ws:if data="{{ currentColumn.columnIndex === (itemData.hasMultiSelect ? 1 : 0) }}">
+            <div class="controls-Grid__row-cell_colspaned
+         {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).top}}
+         {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).bottom}}
+         {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).right}}">
+                <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
+            </div>
+        </ws:if>
+        <ws:else data="{{ currentColumn.columnIndex >= (colspanLength + (itemData.hasMultiSelect ? 1 : 0)) }}">
+            <ws:partial template="{{currentColumn.template}}"
+                        editArrowTemplate="{{editArrowTemplate}}"
+                        attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
+                              {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
+                              {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
+                        ladderWrapper="{{currentColumn.ladderWrapper}}"
+                        expanderTemplate="{{itemData.expanderTemplate}}"
+                        itemData="{{currentColumn}}" />
+        </ws:else>
+    </ws:else>
    <ws:else>
        <ws:partial template="{{currentColumn.template}}"
                    editArrowTemplate="{{editArrowTemplate}}"
@@ -85,23 +105,25 @@
 </ws:template>
 
 <ws:template name="colTpl">
-   <td class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
-              {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
-              {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
-              {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-              {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
-              controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-       style="{{ currentColumn.tableCellStyles }}"
-       colspan="{{itemData.getColspanFor((itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
-       <div class="controls-TreeGridView__row-cell_innerWrapper
-                   {{ currentColumn.classList.relativeCellWrapper }}
-                   {{itemData.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}">
-           <ws:partial template="columnContentWrapper"/>
-           <div if="{{!!itemData.dragTargetNode}}"
-                class="controls-TreeGridView__dragTargetNode_theme-{{_options.theme}} {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first_theme-' + _options.theme}}
-                       {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last_theme-' + _options.theme}}"></div>
-       </div>
-   </td>
+    <ws:if data="{{colspan === false && !!colspanLength ? ( (currentColumn.columnIndex <= (itemData.hasMultiSelect ? 1 : 0)) || (currentColumn.columnIndex >= ((itemData.hasMultiSelect ? 1 : 0) + colspanLength))) : true}}">
+       <td class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
+                  {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
+                  {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
+                  {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
+                  {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
+                  controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
+           style="{{ currentColumn.tableCellStyles }}"
+           colspan="{{(colspan === false && !!colspanLength) ? (currentColumn.columnIndex === (itemData.hasMultiSelect ? 1 : 0) ? colspanLength : 1) : itemData.getColspanFor((itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
+           <div class="controls-TreeGridView__row-cell_innerWrapper
+                       {{ currentColumn.classList.relativeCellWrapper }}
+                       {{itemData.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}">
+               <ws:partial template="columnContentWrapper"/>
+               <div if="{{!!itemData.dragTargetNode}}"
+                    class="controls-TreeGridView__dragTargetNode_theme-{{_options.theme}} {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first_theme-' + _options.theme}}
+                           {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last_theme-' + _options.theme}}"></div>
+           </div>
+       </td>
+    </ws:if>
 
     <!-- При скролле колонок операции над записью выводятся в отдельной ячейке после всех ячеек строки. -->
     <!-- Позиционируются прижатыми к правому краю с помощью отрицательного translateX на максимально возможную величину -->

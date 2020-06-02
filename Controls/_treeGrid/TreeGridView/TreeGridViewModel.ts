@@ -142,6 +142,8 @@ var
                 current._treeGridViewModelCached = true;
             }
 
+            current.getPartialColspanStyles = (columnStart, columnSpan) => GridLayoutUtil.getColumnStyles({ columnStart, columnSpan });
+
             current.isLastColumn = isLastColumn;
 
             current.getCurrentColumn = function () {
