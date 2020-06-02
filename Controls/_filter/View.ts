@@ -289,6 +289,9 @@ var _private = {
                 }
             });
             config.popupItems.assign(resultItems);
+            if (isHistorySource(item.editorOptions.source)) {
+                config.popupItems = item.editorOptions.source.prepareItems(config.popupItems);
+            }
         } else {
             config.popupItems = getItemsWithHistory(config.popupItems || config.items.clone(), newItems,
                 config.sourceController, item.editorOptions.source, config.keyProperty);
