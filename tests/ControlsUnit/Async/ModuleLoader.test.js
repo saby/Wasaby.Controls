@@ -113,7 +113,7 @@ define([
          });
       });
 
-      it('loadSync success', function () {
+      it.skip('loadSync success', function () {
          var ml = new ModuleLoader();
          var syncModule = ml.loadSync('ControlsUnit/Async/TestModuleSync');
          assert.strictEqual(syncModule, TestModuleSync, 'Loaded module is wrong');
