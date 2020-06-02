@@ -266,7 +266,7 @@ define([
                getAdapter: () => {
                   return new entity.adapter.Json();
                }
-            };
+            }
          };
          let instance;
 
