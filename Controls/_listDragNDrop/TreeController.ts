@@ -46,7 +46,7 @@ export default class TreeController extends FlatController {
       }
 
       if (offset) {
-         if (offset.top < DRAG_MAX_OFFSET || offset.bottom < DRAG_MAX_OFFSET) {
+         if (offset.top > 0 && offset.top < DRAG_MAX_OFFSET || offset.bottom > 0 && offset.bottom < DRAG_MAX_OFFSET) {
             return true;
          }
       }
@@ -71,8 +71,6 @@ export default class TreeController extends FlatController {
    calculateDragPosition(targetItemData: ITreeItemData, position: TPosition): IDragPosition {
       let result;
 
-      //If you hover over the dragged item, and the current position is on the folder,
-      //then you need to return the position that was before the folder.
       if (this._draggingItemData && this._draggingItemData.index === targetItemData.index) {
          result = this._model.getPrevDragPosition() || null;
       } else if (targetItemData.dispItem.isNode()) {
@@ -94,8 +92,7 @@ export default class TreeController extends FlatController {
    }
 
    startCountDownForExpandNode(itemData: ITreeItemData, expandNode: Function): void {
-      if (itemData.dispItem.isNode() && !itemData.isExpanded
-            && this._draggingItemData.key !== itemData.key) {
+      if (itemData.dispItem.isNode() && !itemData.isExpanded && this._draggingItemData.key !== itemData.key) {
          this._clearTimeoutForExpandOnDrag();
          this._setTimeoutForExpandOnDrag(itemData, expandNode);
       }
@@ -106,9 +103,7 @@ export default class TreeController extends FlatController {
    }
 
    private _setTimeoutForExpandOnDrag(itemData: ITreeItemData, expandNode: Function): void {
-      this._timeoutForExpandOnDrag = setTimeout(() => {
-            expandNode(itemData);
-         }, EXPAND_ON_DRAG_DELAY);
+      this._timeoutForExpandOnDrag = this._timeoutForExpand(itemData, expandNode);
    }
 
    private _clearTimeoutForExpandOnDrag(): void {
@@ -116,6 +111,13 @@ export default class TreeController extends FlatController {
          clearTimeout(this._timeoutForExpandOnDrag);
          this._timeoutForExpandOnDrag = null;
       }
+   }
+
+   // вынес, чтобы замокать в unit тесте и не делать паузы в unit-е
+   private _timeoutForExpand(itemData: ITreeItemData, expandNode: Function): NodeJS.Timeout {
+      return setTimeout(() => {
+         expandNode(itemData);
+      }, EXPAND_ON_DRAG_DELAY);
    }
 
    private _calculateDragTargetPosition(itemData: ITreeItemData, position: TPosition): IDragPosition {
@@ -148,11 +150,13 @@ export default class TreeController extends FlatController {
    }
 
    private _calculateOffset(event: SyntheticEvent<MouseEvent>): IOffset {
-      const result = { top: null, bottom: null };
+      let result = null;
 
       const dragTarget = event.target;
       if (dragTarget) {
          const dragTargetRect = dragTarget.getBoundingClientRect();
+
+         result = { top: null, bottom: null }
          result.top = event.nativeEvent.pageY - dragTargetRect.top;
          result.bottom = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
       }
