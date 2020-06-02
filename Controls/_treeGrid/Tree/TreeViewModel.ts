@@ -614,6 +614,7 @@ var
                 }
             }
 
+           current.useNewNodeFooters = this._options.useNewNodeFooters;
            if (current.item.get) {
                _private.setNodeFooterIfNeed(this, current);
            }
