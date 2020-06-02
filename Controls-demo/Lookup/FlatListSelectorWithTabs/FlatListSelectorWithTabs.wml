@@ -13,9 +13,9 @@
                 <ws:Array>
                     <ws:Object id="Companies">
                         <ws:itemTemplate>
-                            <ws:partial name="s"
-                                        template="Controls-demo/Lookup/FlatListSelectorWithTabs/resources/CompaniesTemplate"
+                            <ws:partial template="Controls-demo/Lookup/FlatListSelectorWithTabs/resources/CompaniesTemplate"
                                         selectComplete="{{_selectComplete}}"
+                                        multiSelect="{{_options.multiSelect}}"
                                         filter="{{_options.filter}}"/>
                         </ws:itemTemplate>
                     </ws:Object>
@@ -23,6 +23,7 @@
                         <ws:itemTemplate>
                             <ws:partial template="Controls-demo/Lookup/FlatListSelectorWithTabs/resources/DepartmentsTemplate"
                                         selectComplete="{{_selectComplete}}"
+                                        multiSelect="{{_options.multiSelect}}"
                                         filter="{{_options.filter}}"/>
                         </ws:itemTemplate>
                     </ws:Object>

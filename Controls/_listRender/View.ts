@@ -1,7 +1,6 @@
+import rk = require('i18n!Controls');
+
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
-
-import template = require('wml!Controls/_listRender/View/View');
-
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { create as diCreate } from 'Types/di';
@@ -16,8 +15,11 @@ import {
 import {
     Controller as ItemActionsController,
     TItemActionVisibilityCallback,
+    TEditArrowVisibilityCallback,
     IItemAction,
-    TItemActionsPosition} from 'Controls/itemActions';
+    TItemActionShowType,
+    TItemActionsPosition
+} from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import { load as libraryLoad } from 'Core/library';
@@ -27,6 +29,8 @@ import { constants } from 'Env/Env';
 
 import { ISwipeEvent } from './Render';
 import { MarkerController, TVisibility, Visibility } from 'Controls/marker';
+
+import template = require('wml!Controls/_listRender/View/View');
 
 export interface IViewOptions extends IControlOptions {
     items: RecordSet;
@@ -49,6 +53,8 @@ export interface IViewOptions extends IControlOptions {
 
     markerVisibility: TVisibility;
     markedKey: number|string;
+    showEditArrow: boolean;
+    editArrowVisibilityCallback: TEditArrowVisibilityCallback
 }
 
 export default class View extends Control<IViewOptions> {
@@ -281,10 +287,8 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
-        let contents = item.getContents();
-        if (Array.isArray(contents)) {
-            contents = contents[contents.length - 1];
-        }
+        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
+        let contents = View._getItemContents(item);
         // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
@@ -345,13 +349,10 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
-        let contents = item?.getContents();
-        if (Array.isArray(contents)) {
-            contents = contents[contents.length - 1];
-        }
-        const itemKey = contents?.getKey();
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(itemKey, clickEvent, action, opener, isContextMenu);
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
         if (menuConfig) {
+            clickEvent.nativeEvent.preventDefault();
+            clickEvent.stopImmediatePropagation();
             const onResult = this._itemActionsMenuResultHandler.bind(this);
             const onClose = this._itemActionsMenuCloseHandler.bind(this);
             menuConfig.eventHandlers = {onResult, onClose};
@@ -397,6 +398,18 @@ export default class View extends Control<IViewOptions> {
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._collection.getEditingConfig();
+        let editArrowAction: IItemAction;
+        if (this._options.showEditArrow) {
+            editArrowAction = {
+                id: 'view',
+                icon: 'icon-Forward',
+                title: rk('Просмотреть'),
+                showType: TItemActionShowType.TOOLBAR,
+                handler: (item) => {
+                    this._notify('editArrowClick', [item]);
+                }
+            };
+        }
         this._itemActionsController.update({
             collection: this._collection,
             itemActions: options.itemActions,
@@ -409,9 +422,26 @@ export default class View extends Control<IViewOptions> {
             actionCaptionPosition: options.actionCaptionPosition,
             itemActionsClass: options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisible: editingConfig?.toolbarVisibility
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editArrowAction,
+            editArrowVisibilityCallback: this._options.editArrowVisibilityCallback
         });
     }
+
+    /**
+     * Возвращает contents записи.
+     * Если запись - breadcrumbs, то берётся последняя Model из списка contents
+     * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+     *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+     * @param item
+     */
+    private static _getItemContents(item: CollectionItem<Model>): Model {
+        let contents = item?.getContents();
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
+            contents = contents[(contents as any).length - 1];
+        }
+        return contents;
+    };
 
     static getDefaultOptions(): Partial<IViewOptions> {
         return {

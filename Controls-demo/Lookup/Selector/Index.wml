@@ -1,0 +1,114 @@
+<div class="controls-demo-selector-button">
+   <div class="controlsDemo__wrapper">
+      <h4>Single selection from one directory</h4>
+      <Controls.lookup:Selector
+              source="{{_sourceButton}}"
+              displayProperty="title"
+              keyProperty="id"
+              caption="Выберите компанию"
+              bind:selectedKeys="_selectedKeys"
+              on:selectedKeysChanged="selectedKeysChanged1()"
+              selectorTemplate="{{_selectorTemplate}}">
+      </Controls.lookup:Selector>
+      <div>{{_textSingle}}</div>
+   </div>
+
+   <div class="controlsDemo__wrapper">
+      <h4>Reuqire single selection</h4>
+      <Controls.lookup:Selector
+            source="{{_sourceButton}}"
+            displayProperty="title"
+            keyProperty="id"
+            caption="Выберите компанию"
+            bind:selectedKeys="_selectedKeys4"
+            selectorTemplate="{{_selectorTemplate}}">
+         <ws:itemTemplate>
+            <ws:partial template="Controls/lookup:ItemTemplate" crossTemplate="{{null}}"/>
+         </ws:itemTemplate>
+      </Controls.lookup:Selector>
+   </div>
+
+   <div class="controlsDemo__wrapper">
+      <h4>Multiple selection from one directory</h4>
+      <Controls.lookup:Selector
+              source="{{_sourceButton}}"
+              displayProperty="title"
+              keyProperty="id"
+              multiSelect="{{true}}"
+              caption="Выберите компанию"
+              bind:selectedKeys="_selectedKeys2"
+              on:selectedKeysChanged="selectedKeysChanged2()"
+              selectorTemplate="{{_selectorTemplate}}">
+            <ws:templateOptions source="{{_source}}" multiSelect="{{true}}"/>
+      </Controls.lookup:Selector>
+      <div>{{_textMultiply}}</div>
+   </div>
+
+   <div class="controlsDemo__wrapper">
+      <h4>Multiple selection from one directory</h4>
+      <Controls.lookup:Selector
+              source="{{_sourceButton}}"
+              displayProperty="title"
+              keyProperty="id"
+              multiSelect="{{true}}"
+              caption="Выберите компанию"
+              bind:selectedKeys="_selectedKeysAll"
+              on:selectedKeysChanged="selectedKeysChanged3()"
+              selectorTemplate="{{_selectorTemplate}}">
+            <ws:templateOptions source="{{_source}}" multiSelect="{{true}}"/>
+      </Controls.lookup:Selector>
+      <div>{{_textMultiply2}}</div>
+   </div>
+
+   <div class="controlsDemo__wrapper">
+      <h4>Multiple selection from several directory</h4>
+      <Controls.lookup:Selector
+            source="{{_sourceButton}}"
+            displayProperty="title"
+            keyProperty="id"
+            multiSelect="{{true}}"
+            caption="Выберите компанию"
+            bind:selectedKeys="_selectedKeys3"
+            on:selectedKeysChanged="selectedKeysChanged4()"
+            selectorTemplate="{{_selectorTemplateWithTabs}}">
+      </Controls.lookup:Selector>
+      <div>{{_textMultiply3}}</div>
+   </div>
+
+   <div class="controlsDemo__wrapper">
+      <h4>Empty single selection read only</h4>
+      <Controls.lookup:Selector
+            source="{{_sourceButton}}"
+            displayProperty="title"
+            keyProperty="id"
+            caption="Выберите компанию"
+            readOnly="{{true}}"
+            bind:selectedKeys="_selectedKeys5">
+      </Controls.lookup:Selector>
+   </div>
+
+   <div class="controlsDemo__wrapper">
+      <h4>Single selection read only</h4>
+      <Controls.lookup:Selector
+            source="{{_sourceButton}}"
+            displayProperty="title"
+            keyProperty="id"
+            caption="Выберите компанию"
+            readOnly="{{true}}"
+            bind:selectedKeys="_selectedKeys6">
+      </Controls.lookup:Selector>
+   </div>
+
+   <div class="controlsDemo__wrapper">
+      <h4>Multiple selection with read only</h4>
+      <Controls.lookup:Selector
+            source="{{_sourceButton}}"
+            displayProperty="title"
+            keyProperty="id"
+            multiSelect="{{true}}"
+            caption="Выберите компанию"
+            readOnly="{{true}}"
+            bind:selectedKeys="_selectedKeysAll2">
+      </Controls.lookup:Selector>
+   </div>
+</div>

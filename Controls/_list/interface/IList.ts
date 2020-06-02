@@ -84,6 +84,7 @@ export interface IList {
     itemActionVisibilityCallback?: (action: IItemAction, item) => boolean;
     itemActionsProperty?: string;
     markedKey?: string|number;
+    stickyMarkedItem?: boolean;
     markerVisibility?: TMarkerVisibility;
     uniqueKeys?: boolean;
     itemsReadyCallback?: (items) => void;
@@ -657,6 +658,15 @@ export interface IList {
  * @cfg {Number} Identifier of the marked collection item.
  * @remark
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#stickyMarkedItem
+ * @cfg {Boolean} Позволяет включать/отключать прилипание выбранного элемента.
+ * @remark
+ * Опция актуальна только для стиля "Мастер".
+ * @see style
+ * @default true
  */
 
 /**
