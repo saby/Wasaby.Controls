@@ -1,4 +1,5 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { isEqual } from 'Types/object';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import { Record } from 'Types/entity';

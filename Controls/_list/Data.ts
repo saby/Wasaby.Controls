@@ -7,7 +7,7 @@ import getPrefetchSource from './getPrefetchSource';
 import {ContextOptions} from 'Controls/context';
 import {isEqual} from "Types/object";
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
-
+import {RegisterClass} from 'Controls/event';
 import {groupUtil} from 'Controls/dataSource';
 import {ICrud, PrefetchProxy} from 'Types/source';
 import {RecordSet} from 'Types/collection';
@@ -205,10 +205,10 @@ type GetSourceResult = {
       };
 
       var Data = Control.extend(/** @lends Controls/_list/Data.prototype */{
-
          _template: template,
          _loading: false,
          _itemsReadyCallback: null,
+         _errorRegister: null,
 
          _beforeMount: function(options, context, receivedState:RecordSet|undefined):Deferred<GetSourceResult>|void {
             let self = this;
@@ -216,6 +216,7 @@ type GetSourceResult = {
 
             _private.resolveOptions(this, options);
             this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
+            this._resizeRegister = new RegisterClass({register: 'dataError'});
 
             // isNewEnvironment - проверка в 20.11хх, в 20.2ххх удалена
             // Нужна для редкого случая, когда на старой странице на сервере строится wasaby контрол,
@@ -268,6 +269,21 @@ type GetSourceResult = {
                _private.updateDataOptions(this, this._dataOptionsContext);
                this._dataOptionsContext.updateConsumers();
             }
+         },
+
+         _beforeUnmount(): void {
+            if (this._errorRegister) {
+               this._errorRegister.destroy();
+               this._errorRegister = null;
+            }
+         },
+
+         _registerHandler(event, registerType, component, callback, config): void {
+            this._errorRegister.register(event, registerType, component, callback, config);
+         },
+
+         _unregisterHandler(event, registerType, component, config): void {
+            this._errorRegister.unregister(event, component, config);
          },
 
          _itemsReadyCallbackHandler(items): void {
@@ -323,7 +339,7 @@ type GetSourceResult = {
          },
 
          _onDataError: function(event, errbackConfig) {
-            this._children.dataErrorRegistrar.start(errbackConfig);
+            this._errorRegister.start(errbackConfig);
          }
       });
 
