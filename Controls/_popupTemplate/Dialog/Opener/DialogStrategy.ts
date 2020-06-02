@@ -85,7 +85,10 @@ export = {
         const availableMinSize = minValue ? minValue : 0;
         if (popupOptions.maximize) {
             return windowValue;
+        } else if (!containerValue && !popupValue) { // Если считаем размеры до построения контрола и размеры не задали на опциях
+            return undefined;
         }
+
         if (containerValue >= availableMaxSize || popupValue >= availableMaxSize) {
             value = Math.max(availableMaxSize, availableMinSize);
         }
