@@ -1,9 +1,9 @@
 <ws:template name="defaultCellContent">
     <ws:if data="{{itemData.column.needSearchHighlight}}">
-        <Controls.decorator:Highlight highlight="{{itemData.searchValue}}">
-            <ws:text>
+        <Controls.decorator:Highlight highlightedValue="{{itemData.searchValue}}">
+            <ws:value>
                 <ws:String>{{itemData.item[itemData.column.displayProperty]}}</ws:String>
-            </ws:text>
+            </ws:value>
         </Controls.decorator:Highlight>
     </ws:if>
     <ws:else>

@@ -1,6 +1,8 @@
 <ws:if data="{{ column.result }}">
    <Controls.decorator:Money value="{{column.result}}"
-                             style="{{column.displayProperty === 'sum' ? 'accentResults' : 'noAccentResults'}}"
+                             fontColorStyle="{{column.displayProperty === 'sum' ? 'results' : 'unaccented'}}"
+                             fontSize="l"
+                             fontWeight="bold"
                              delimiters="{{true}}"/>
 </ws:if>
 <ws:else>
