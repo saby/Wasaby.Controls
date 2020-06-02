@@ -47,7 +47,7 @@
                    editArrowTemplate="{{editArrowTemplate}}"
                    attr:class=" {{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                                 {{currentColumn.column.compatibleValign ? ' controls-Grid__cell_valign_' + (currentColumn.column.compatibleValign || 'top') + ' controls-Grid__cell-content_full-height' : ''}}
-                                {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
+                                {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}"
                    ladderWrapper="{{currentColumn.ladderWrapper}}"
                    expanderTemplate="{{itemData.expanderTemplate}}"
                    itemData="{{currentColumn}}"/>

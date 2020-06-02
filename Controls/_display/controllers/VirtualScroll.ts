@@ -1,4 +1,4 @@
-import { IBaseCollection } from '../interface';
+import { IBaseCollection } from '../interface/ICollection';
 import { IViewIterator } from '../Collection';
 import { EnumeratorCallback } from 'Types/collection';
 

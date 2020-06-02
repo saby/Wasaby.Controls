@@ -148,6 +148,8 @@ export interface IItemActionsItem {
     isActive(): boolean;
     setSwiped(swiped: boolean): void;
     isSwiped(): boolean;
+    setRightSwiped(swiped: boolean): void;
+    isRightSwiped(): boolean;
 }
 
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {

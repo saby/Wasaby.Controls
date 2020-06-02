@@ -1,3 +1,4 @@
+import { TemplateFunction } from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
@@ -29,6 +30,7 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
+import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -36,20 +38,12 @@ const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editingContents', 'animated', 'canShowActions', 'expanded'];
 
-export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
-}
+
 
 export type SourceCollection<T> = T[] | ISourceCollection<T>;
 
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
-}
-
-export enum ANIMATION_STATE {
-    CLOSE = 'close',
-    OPEN = 'open',
-    NONE = 'none',
-    RIGHT_SWIPE = 'right-swipe'
 }
 
 type FilterFunction<S> = (
@@ -404,7 +398,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     SerializableMixin,
     VersionableMixin,
     EventRaisingMixin
-) implements IEnumerable<T>, IList<T> {
+) implements ICollection<S, T>, IEnumerable<T>, IList<T> {
     /**
      * Возвращать локализованные значения
      */

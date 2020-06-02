@@ -179,23 +179,9 @@ export default class View extends Control<IViewOptions> {
         if (swipeEvent.nativeEvent.direction === 'left') {
             this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
         }
-        if (swipeEvent.nativeEvent.direction === 'right') {
-            //  After the right swipe the item should get selected. (Кусок старого кода)
-            // if (!this._selectionController) {
-            //     this._createSelectionController();
-            // }
-            // const result = this._selectionController.toggleItem(key);
-            // _private.handleSelectionControllerResult(this, result);
-            // this._notify('checkboxClick', [key, item.isSelected()]);
-
-            // TODO https://online.sbis.ru/opendoc.html?guid=c30fd644-a1b9-4b66-85fb-f4d8a67ff877
-            // Animation should be played only if checkboxes are visible.
-            if (this._options.multiSelectVisibility !== 'hidden') {
-                this._collection.setRightSwipedItem();
-            }
+        if (swipeEvent.nativeEvent.direction === 'right' && item.isSwiped()) {
             this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
             this._collection.nextVersion();
-            //             _private.setMarkedKey(this, key);
         }
     }
 

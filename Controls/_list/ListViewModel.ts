@@ -132,6 +132,14 @@ var _private = {
         itemsModelCurrent.isSwiped = (): boolean => (
             itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : false
         );
+        itemsModelCurrent.setRightSwiped = (state: boolean): void => {
+            if (itemsModelCurrent.dispItem.setRightSwiped !== undefined) {
+                itemsModelCurrent.dispItem.setRightSwiped(state);
+            }
+        };
+        itemsModelCurrent.isRightSwiped = (): boolean => (
+            itemsModelCurrent.dispItem.isRightSwiped !== undefined ? itemsModelCurrent.dispItem.isRightSwiped() : false
+        );
         itemsModelCurrent.getContents = () => (
             itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
         );

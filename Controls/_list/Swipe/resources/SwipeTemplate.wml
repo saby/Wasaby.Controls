@@ -8,7 +8,7 @@
         <div class="controls-itemActionsV_swipe_animationContainer">
             <div class="controls-Swipe_theme-{{itemData.theme}}
                 controls-Swipe_{{ animationState }}_theme-{{ itemData.theme }}"
-                on:animationend="_onSwipeAnimationEnd()">
+                on:animationend="_onActionsSwipeAnimationEnd()">
                 <div class="controls-Swipe_{{swipeConfig.twoColumns ? 'columns' : actionAlignment}}_theme-{{itemData.theme}}">
 
                     <ws:if data="{{swipeConfig.twoColumns}}">

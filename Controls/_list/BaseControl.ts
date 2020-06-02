@@ -636,9 +636,9 @@ const _private = {
                                 loadCallback(addedItems, countCurrentItems);
                             });
                         });
-                        } else {
+                    } else {
                         loadCallback(addedItems, countCurrentItems);
-                        }
+                    }
                 });
 
                 // Скрываем ошибку после успешной загрузки данных
@@ -912,7 +912,7 @@ const _private = {
 
             if (!visbilityTriggerDown && self._viewSize && self._viewPortSize) {
                 visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');;
-                }
+            }
 
             if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
                 result = true;
@@ -1181,7 +1181,7 @@ const _private = {
             portionedSearch.reset();
         } else if (loadedItems.getCount() && !_private.isLoadingIndicatorVisible(self) && self._loadingIndicatorTimer) {
                 _private.resetShowLoadingIndicatorTimer(self);
-            }
+        }
     },
 
     isPortionedLoad(self, items?: RecordSet = self._items): boolean {
@@ -1247,7 +1247,7 @@ const _private = {
 
                 if (stateChanged) {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
-            }
+                }
             }
             if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
@@ -1355,7 +1355,6 @@ const _private = {
         if (menuConfig) {
             clickEvent.nativeEvent.preventDefault();
             clickEvent.stopImmediatePropagation();
-        if (menuConfig) {
             menuConfig.eventHandlers = {
                 onResult: self._onItemActionsMenuResult,
                 onClose: self._onItemActionsMenuClose
@@ -3148,8 +3147,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.setMarkedKey(this, key);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            if (item.isSwiped() && this._listViewModel.getSwipeAnimation() === ANIMATION_STATE.OPEN) {
-                this._listViewModel.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            if (item.isSwiped()) {
+                this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
                 this._listViewModel.nextVersion();
             } else {
                 // After the right swipe the item should get selected. (Кусок старого кода)
@@ -3160,10 +3159,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 _private.handleSelectionControllerResult(this, result);
                 this._notify('checkboxClick', [key, item.isSelected()]);
 
-                // TODO https://online.sbis.ru/opendoc.html?guid=c30fd644-a1b9-4b66-85fb-f4d8a67ff877
                 // Animation should be played only if checkboxes are visible.
                 if (this._options.multiSelectVisibility !== 'hidden') {
-                    this._listViewModel.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
+                    this._itemActionsController.setRightSwipeItem(item.getContents().getKey());
                 }
                 _private.setMarkedKey(this, key);
             }
@@ -3174,17 +3172,30 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     /**
-     * Обработчик события окончания анимации свайпа по записи
+     * Обработчик, выполняемый после окончания анимации свайпа по опциям записи
      * @param e
      * @private
      */
-    _onSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
-        if (e.nativeEvent.animationName === 'rightSwipe' && this._itemActionsController.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
+    _onActionsSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
+        if (e.nativeEvent.animationName === 'itemActionsSwipeClose') {
             const item = this._itemActionsController.getSwipeItem();
-            if (!this._options.itemActions && item) {
-                this._notify('itemSwipe', [item, e]);
+            if (item) {
+                if (!this._options.itemActions) {
+                    this._notify('itemSwipe', [item, e]);
+                }
+                this._itemActionsController.deactivateSwipe();
             }
-            this._itemActionsController.deactivateSwipe();
+        }
+    },
+
+    /**
+     * Обработчик, выполняемый после окончания анимации свайпа по записи
+     * @param e
+     * @private
+     */
+    _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
+        if (e.nativeEvent.animationName === 'rightSwipe') {
+            this._itemActionsController.setRightSwipeItem(null);
         }
     },
 

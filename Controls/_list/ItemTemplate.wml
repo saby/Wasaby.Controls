@@ -25,7 +25,7 @@
    </ws:if>
 
     <ws:if data="{{contentTemplate}}">
-        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">
+        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}">
             <ws:partial template="{{contentTemplate}}"
                         itemData="{{itemData}}"
                         itemActionsTemplate="{{itemActionsTemplate}}"
@@ -33,7 +33,7 @@
         </div>
     </ws:if>
     <ws:else>
-        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
 
     <ws:if data="{{itemData.shouldDisplayActions()}}">

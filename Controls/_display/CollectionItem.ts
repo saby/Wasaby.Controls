@@ -1,19 +1,19 @@
 import {
     DestroyableMixin,
-    OptionsToPropertyMixin,
-    InstantiableMixin,
-    SerializableMixin,
     IInstantiable,
+    InstantiableMixin,
+    ISerializableState as IDefaultSerializableState,
     IVersionable,
-    ObservableMixin
+    ObservableMixin,
+    OptionsToPropertyMixin,
+    SerializableMixin
 } from 'Types/entity';
-import Collection, {ISourceCollection} from './Collection';
-import {ISerializableState as IDefaultSerializableState} from 'Types/entity';
 import {IList} from 'Types/collection';
 import {register} from 'Types/di';
 import {mixin} from 'Types/util';
-import { TemplateFunction } from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
+import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
 
 export interface IOptions<T> {
     contents?: T;
@@ -23,7 +23,7 @@ export interface IOptions<T> {
     actions?: any;
     swiped?: boolean;
     editingContents?: T;
-    owner?: Collection<T>;
+    owner?: ICollection<T, CollectionItem<T>>;
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {
@@ -67,7 +67,7 @@ export default class CollectionItem<T> extends mixin<
     /**
      * Коллекция, которой принадлежит элемент
      */
-    protected _$owner: Collection<T>;
+    protected _$owner: ICollection<T, CollectionItem<T>>;
 
     /**
      * Содержимое элемента коллекции
@@ -86,6 +86,8 @@ export default class CollectionItem<T> extends mixin<
     protected _$actions: any;
 
     protected _$swiped: boolean;
+
+    protected _$rightSwiped: boolean;
 
     protected _$editingContents: T;
 
@@ -151,7 +153,7 @@ export default class CollectionItem<T> extends mixin<
     /**
      * Возвращает коллекцию, которой принадлежит элемент
      */
-    getOwner(): Collection<T> {
+    getOwner(): ICollection<T, CollectionItem<T>> {
         return this._$owner;
     }
 
@@ -159,7 +161,7 @@ export default class CollectionItem<T> extends mixin<
      * Устанавливает коллекцию, которой принадлежит элемент
      * @param owner Коллекция, которой принадлежит элемент
      */
-    setOwner(owner: Collection<T>): void {
+    setOwner(owner: ICollection<T, CollectionItem<T>>): void {
         this._$owner = owner;
     }
 
@@ -346,8 +348,20 @@ export default class CollectionItem<T> extends mixin<
         return this.hasVisibleActions() && this._$actions.showed.some((action: any) => !!action.icon);
     }
 
+    isRightSwiped(): boolean {
+        return this._$rightSwiped;
+    }
+
+    setRightSwiped(swiped: boolean): boolean {
+        if (this._$rightSwiped === swiped) {
+            return;
+        }
+        this._$rightSwiped = swiped;
+        this._nextVersion();
+    }
+
     isSwiped(): boolean {
-        return this._$swiped;
+        return this._$swiped
     }
 
     setSwiped(swiped: boolean, silent?: boolean): void {
@@ -413,7 +427,7 @@ export default class CollectionItem<T> extends mixin<
         return `controls-itemActionsV_${itemActionsPosition}_theme-${theme}`;
     }
 
-    getContentClasses(theme: string, style: string): string {
+    getContentClasses(theme: string, style: string = 'default'): string {
         return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}`;
     }
 

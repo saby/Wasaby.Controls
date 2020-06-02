@@ -1,4 +1,4 @@
-import { TItemKey, IBaseCollection, ICollectionCommand, IStrategyCollection } from '../interface';
+import { TItemKey, IBaseCollection, ICollectionCommand, IStrategyCollection } from '../interface/ICollection';
 import {CollectionItem} from '../CollectionItem';
 import DragStrategy from '../itemsStrategy/Drag';
 
