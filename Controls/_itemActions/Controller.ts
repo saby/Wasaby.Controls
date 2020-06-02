@@ -181,20 +181,19 @@ export class Controller {
 
     /**
      * Собирает конфиг выпадающего меню операций
-     * @param itemKey Ключ элемента коллекции, для которого выполняется действие
+     * @param item элемент коллекции, для которого выполняется действие
      * @param clickEvent событие клика
      * @param parentAction Родительская операция с записью
      * @param opener: контрол или элемент - опенер для работы системы автофокусов
      * @param isContextMenu Флаг, указывающий на то, что расчёты производятся для контекстного меню
      */
     prepareActionsMenuConfig(
-        itemKey: TItemKey,
+        item: IItemActionsItem,
         clickEvent: SyntheticEvent<MouseEvent>,
         parentAction: IItemAction,
         opener: Element | Control<object, unknown>,
         isContextMenu: boolean
     ): IMenuConfig {
-        const item = this._collection.getItemBySourceKey(itemKey);
         if (!item) {
             return;
         }
@@ -293,6 +292,8 @@ export class Controller {
         this._collection.setEventRaising(false, true);
         this._collection.each((item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
+                // TODO При переписывании моделей надо убрать эту проверку. item.getContents() должен возвращать Record
+                //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
                 let contents = item.getContents();
                 if (item['[Controls/_display/BreadcrumbsItem]']) {
                     contents = contents[contents.length - 1];
