@@ -510,7 +510,7 @@ define([
                }).then(function() {
                   assert.instanceOf(eip._editingItem, entity.Model);
                   assert.isTrue(eip._isAdd);
-                  assert.equal(eip._editingItemData.level, 1);
+                  assert.equal(eip._editingItemData.level, 2);
                   assert.equal(eip._editingItemData.index, 4);
                });
             });

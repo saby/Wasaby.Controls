@@ -787,10 +787,10 @@ define([
             tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('123', 'id')));
 
             assert.isFalse(tvm.getDragItemData().isExpanded);
-            assert.include(tvm.getDragItemData().getVersion(), '_LEVEL_0');
+            assert.include(tvm.getDragItemData().getVersion(), '_LEVEL_1');
 
             tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('234', 'id')));
-            assert.include(tvm.getDragItemData().getVersion(), '_LEVEL_1');
+            assert.include(tvm.getDragItemData().getVersion(), '_LEVEL_2');
          });
 
          describe('setDragTargetPosition', function() {
