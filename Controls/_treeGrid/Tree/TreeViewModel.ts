@@ -701,10 +701,13 @@ var
             let version = TreeViewModel.superclass._calcItemVersion.apply(this, arguments);
             const dispItem = this.getItemById(key);
 
-            if (_private.isItemInKeysArray(dispItem, this._expandedItems, this._options.uniqueKeys)) {
-                version = 'EXPANDED_' + version;
-            } else if (_private.isItemInKeysArray(dispItem, this._collapsedItems, this._options.uniqueKeys)) {
-                version = 'COLLAPSED_' + version;
+            // При добавлении по месту в display нет добавляемого элемента и дополнительное версионирование не нужно.
+            if (dispItem) {
+                if (_private.isItemInKeysArray(dispItem, this._expandedItems, this._options.uniqueKeys)) {
+                    version = 'EXPANDED_' + version;
+                } else if (_private.isItemInKeysArray(dispItem, this._collapsedItems, this._options.uniqueKeys)) {
+                    version = 'COLLAPSED_' + version;
+                }
             }
 
             return version;
