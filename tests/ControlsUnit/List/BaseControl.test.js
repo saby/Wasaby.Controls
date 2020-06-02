@@ -14,8 +14,9 @@ define([
    'Core/core-clone',
    'Types/entity',
    'Controls/popup',
+   'Controls/listDragNDrop',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup) {
+], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -4018,10 +4019,9 @@ define([
             eName = eventName;
          };
 
-         instance._dndListController = {
-            isDragging() {
-               return true;
-            }
+         instance._dndListController = new listDragNDrop.DndTreeController(instance._listViewModel);
+         instance._dndListController.isDragging = function () {
+            return true;
          };
 
          instance._itemMouseMove({}, {});
@@ -4059,10 +4059,9 @@ define([
          assert.equal(eName, 'itemMouseLeave');
          eName = null;
 
-         instance._dndListController = {
-            isDragging() {
-               return true;
-            }
+         instance._dndListController = new listDragNDrop.DndTreeController(instance._listViewModel);
+         instance._dndListController.isDragging = function () {
+            return true;
          };
 
          instance._itemMouseLeave({}, {});
