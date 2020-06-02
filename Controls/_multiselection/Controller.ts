@@ -12,8 +12,6 @@ import {
 } from './interface';
 import clone = require('Core/core-clone');
 
-const ALL_SELECTION_VALUE = null;
-
 /**
  * @class Controls/_multiselector/SelectionController
  * @author Авраменко А.С.
@@ -31,7 +29,7 @@ export class Controller {
          excluded: this._excludedKeys
       };
    }
-   private set _selection(selection: ISelection): void {
+   private set _selection(selection: ISelection) {
       this._selectedKeys = selection.selected;
       this._excludedKeys = selection.excluded;
    }
@@ -67,7 +65,7 @@ export class Controller {
          this._excludedKeys = options.excludedKeys.slice();
       }
 
-      const clearSelection = this._isAllSelected(this._selection) && (rootChanged || filterChanged);
+      const clearSelection = this._strategy.isAllSelected(this._selection) && (rootChanged || filterChanged);
       if (clearSelection) {
          this._clearSelection();
       }
@@ -126,7 +124,7 @@ export class Controller {
          selectedKeysDiff: { keys: [], added: [], removed: [] },
          excludedKeysDiff: { keys: [], added: [], removed: [] },
          selectedCount: this._getCount(this._selection),
-         isAllSelected: this._isAllSelected(this._selection)
+         isAllSelected: this._strategy.isAllSelected(this._selection)
       };
    }
 
@@ -145,7 +143,7 @@ export class Controller {
       // если у нас изменился корень и этот корень выбран, то это значит, что мы зашли в него нажали Выбрать все
       // и вышли в родительский узел, по стандартам элементы должны стать невыбранными
       if (rootChanged && this._selectedKeys.includes(prevRootId) && this._excludedKeys.includes(prevRootId)
-            || this._isAllSelected(this._selection) && this._model.getCollection().getCount() === 0) {
+            || this._strategy.isAllSelected(this._selection) && this._model.getCollection().getCount() === 0) {
          this._clearSelection();
       }
 
@@ -207,7 +205,7 @@ export class Controller {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
          selectedCount: this._getCount(newSelection),
-         isAllSelected: this._isAllSelected(newSelection)
+         isAllSelected: this._strategy.isAllSelected(newSelection)
       };
    }
 
@@ -216,9 +214,5 @@ export class Controller {
       this._model.setSelectedItems(selectionForModel.get(true), true);
       this._model.setSelectedItems(selectionForModel.get(false), false);
       this._model.setSelectedItems(selectionForModel.get(null), null);
-   }
-
-   private _isAllSelected(selection: ISelection): boolean {
-      return selection.selected.includes(ALL_SELECTION_VALUE);
    }
 }
