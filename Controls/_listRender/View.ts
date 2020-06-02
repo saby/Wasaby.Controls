@@ -280,6 +280,14 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
+     * Возвращает видимость опций записи.
+     * @private
+     */
+    _isVisibleItemActions(): boolean {
+        return !this._itemActionsMenuId || this._options.itemActionVisibility === 'visible';
+    }
+
+    /**
      * Обрабатывает клик по конкретной операции
      * @param action
      * @param clickEvent

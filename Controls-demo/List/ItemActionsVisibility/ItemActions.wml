@@ -13,7 +13,7 @@
             <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                      state="/Controls-demo/app/:app"
                                      app="Controls-demo/List/ItemActionsVisibility/Delayed/Index">
-                <a href="{{content.href}}">Опции записи появляются при наведении c задержкой 100мс</a>
+                <a href="{{content.href}}">Опции записи появляются при наведении c задержкой 500мс</a>
             </Router.router:Reference>
             <Controls-demo.List.ItemActionsVisibility.Delayed.Index/>
         </div>

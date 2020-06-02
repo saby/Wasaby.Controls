@@ -871,12 +871,12 @@ const _private = {
 
         const proportion = (viewSize / viewPortSize);
 
-        
+
         // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
         if (!result) {
             result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
         }
-        
+
         // если все данные поместились на один экран, то скрываем пэйджинг
         if (result) {
             result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
@@ -918,7 +918,7 @@ const _private = {
             if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
                 result = true;
 
-                // Если пэйджинг был показан из-за hasMore, то запоминаем это, 
+                // Если пэйджинг был показан из-за hasMore, то запоминаем это,
                 // чтобы не скрыть после полной загрузки, даже если не набралось на две страницы.
                 self._cachedPagingState = true;
             }
@@ -926,7 +926,7 @@ const _private = {
 
         if (self._cachedPagingState === true) {
             result = true;
-        } 
+        }
 
         return result;
     },
@@ -950,7 +950,7 @@ const _private = {
                     self._pagingVisible = _private.needShowPagingByScrollSize(self, params.scrollHeight, params.clientHeight);
                 });
             }
-            
+
         });
     },
 
@@ -1079,7 +1079,7 @@ const _private = {
      * Обработать прокрутку списка виртуальным скроллом
      */
     handleListScroll: function(self, params) {
-        
+
     },
 
     setMarkerAfterScrolling: function(self, scrollTop) {
@@ -2198,7 +2198,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._viewSize = container.clientHeight;
         if (_private.needScrollPaging(this._options.navigation)) {
             const scrollParams = {scrollHeight: this._viewSize, clientHeight: this._viewPortSize, scrollTop: this._scrollTop};
-            
+
             _private.updateScrollPagingButtons(this, scrollParams);
         }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
@@ -3111,6 +3111,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             queryParamsCallback: this._notifyNavigationParamsChanged
         });
 
+    },
+
+    /**
+     * Возвращает видимость опций записи.
+     * @private
+     */
+    _isVisibleItemActions(): boolean {
+        return (this._showActions || this._options.useNewModel) &&
+            (!this._itemActionsMenuId || this._options.itemActionVisibility === 'visible');
     },
 
     _createSelectionController(): void {
