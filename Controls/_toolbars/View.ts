@@ -160,6 +160,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _items: TItems = null;
     protected _menuItems: TItems = null;
     protected _source: ICrudPlus = null;
+    protected _originalSource = null;
     protected _menuSource: ICrudPlus = null;
     protected _nodeProperty: string = null;
     protected _parentProperty: string = null;
@@ -285,6 +286,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _createPrefetchProxy(source: ICrudPlus, items: TItems): ICrudPlus {
+        // Если уже есть prefetchProxy дополнительная обертка не нужна
+        if (source instanceof PrefetchProxy) {
+            return source;
+        }
         return new PrefetchProxy({
             target: source,
             data: {
@@ -296,7 +301,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _setMenuItems(): void {
         const menuItems = Toolbar._calcMenuItems(this._actualItems);
         this._menuItems = menuItems;
-        this._menuSource = this._createPrefetchProxy(this._source, menuItems);
+        this._menuSource = this._createPrefetchProxy(this._originalSource, menuItems);
     }
 
     private _setStateByItems(items: TItems, source: ICrudPlus): void {
@@ -344,7 +349,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _beforeMount(options: IToolbarOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
         this._setState(options);
         this._menuOptions = this._getMenuOptions();
-
+        this._originalSource = options.source;
         if (receivedItems) {
             this._setStateByItems(receivedItems, options.source);
         } else if (options.source) {
@@ -357,6 +362,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._setState(newOptions);
         }
         if (this._hasSourceChanged(newOptions.source)) {
+            this._originalSource = newOptions.source;
             this._isLoadMenuItems = false;
             this._setStateBySource(newOptions.source);
         }
