@@ -68,6 +68,7 @@ class ModuleLoader {
             return null;
         }
         if (!loaded) {
+            IoC.resolve('ILogger').error("Couldn't load module 2" + parsedInfo.name);
             return null;
         }
         return this.getFromLib(loaded, parsedInfo);
@@ -103,7 +104,10 @@ class ModuleLoader {
     }
 
     private requireSync(name: string): Module {
-        requirejs.undef(name);
+
+        if (typeof window === 'undefined') {
+            requirejs.undef(name);
+        }
 
         return require(name);
     }
