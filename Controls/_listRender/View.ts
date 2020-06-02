@@ -1,7 +1,6 @@
+import rk = require('i18n!Controls');
+
 import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
-
-import template = require('wml!Controls/_listRender/View/View');
-
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { create as diCreate } from 'Types/di';
@@ -16,7 +15,10 @@ import {
 import {
     Controller as ItemActionsController,
     TItemActionVisibilityCallback,
-    IItemAction} from 'Controls/itemActions';
+    TEditArrowVisibilityCallback,
+    IItemAction,
+    TItemActionShowType
+} from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
 import { load as libraryLoad } from 'Core/library';
@@ -26,6 +28,8 @@ import { constants } from 'Env/Env';
 
 import {ISwipeEvent} from './Render';
 import { MarkerController, TVisibility, Visibility } from 'Controls/marker';
+
+import template = require('wml!Controls/_listRender/View/View');
 
 export interface IViewOptions extends IControlOptions {
     items: RecordSet;
@@ -47,6 +51,8 @@ export interface IViewOptions extends IControlOptions {
 
     markerVisibility: TVisibility;
     markedKey: number|string;
+    showEditArrow: boolean;
+    editArrowVisibilityCallback: TEditArrowVisibilityCallback
 }
 
 export default class View extends Control<IViewOptions> {
@@ -386,6 +392,18 @@ export default class View extends Control<IViewOptions> {
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._collection.getEditingConfig();
+        let editArrowAction: IItemAction;
+        if (this._options.showEditArrow) {
+            editArrowAction = {
+                id: 'view',
+                icon: 'icon-Forward',
+                title: rk('Просмотреть'),
+                showType: TItemActionShowType.TOOLBAR,
+                handler: (item) => {
+                    this._notify('editArrowClick', [item]);
+                }
+            };
+        }
         this._itemActionsController.update({
             collection: this._collection,
             itemActions: this._options.itemActions,
@@ -398,7 +416,9 @@ export default class View extends Control<IViewOptions> {
             actionCaptionPosition: this._options.actionCaptionPosition,
             itemActionsClass: this._options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisible: editingConfig?.toolbarVisibility
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editArrowAction,
+            editArrowVisibilityCallback: this._options.editArrowVisibilityCallback
         });
     }
 
