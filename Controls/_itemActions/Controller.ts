@@ -11,7 +11,6 @@ import {
     IItemActionsTemplateOptions,
     IItemActionsContainer,
     IMenuTemplateOptions,
-    IMenuConfig,
     TItemActionShowType,
     TItemActionsSize,
     IItemAction,
@@ -19,6 +18,7 @@ import {
     TActionCaptionPosition,
     TEditArrowVisibilityCallback
 } from './interface/IItemActions';
+import { IStickyPopupOptions } from 'Controls/popup';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
 import { Utils } from './Utils';
@@ -68,9 +68,9 @@ export interface IItemActionsControllerOptions {
     itemActionsPosition?: TItemActionsPosition;
     /**
      * Стиль отображения контейнера controls-itemActionsV.
-     * Варианты: 'master' | 'default'
+     * Варианты: 'master' | 'default' | 'transparent'
      */
-    style?: 'master'|'default';
+    style?: 'master'|'default'|'transparent';
     /**
      * Класс для установки контейнеру controls-itemActionsV.
      * По умолчанию 'controls-itemActionsV_position_bottomRight'
@@ -193,7 +193,7 @@ export class Controller {
         parentAction: IItemAction,
         opener: Element | Control<object, unknown>,
         isContextMenu: boolean
-    ): IMenuConfig {
+    ): IStickyPopupOptions {
         if (!item) {
             return;
         }
