@@ -2671,7 +2671,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _initItemActions(): void {
-        if (this._options.itemActionVisibility !== 'visible') {
+        if (this._options.itemActionsVisibility !== 'visible') {
             if (!this._listViewModel.isActionsAssigned()) {
                 this._updateItemActions(this._options);
             }
@@ -2684,7 +2684,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _initVisibleItemActions(options: IList): void {
-        if (options.itemActionVisibility === 'visible') {
+        if (options.itemActionsVisibility === 'visible') {
             this._showActions = true;
             this._updateItemActions(options);
         }
@@ -2725,7 +2725,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             itemActionsProperty: options.itemActionsProperty,
             visibilityCallback: options.itemActionVisibilityCallback,
             itemActionsPosition: options.itemActionsPosition,
-            style: options.itemActionVisibility === 'visible' ? 'transparent' : options.style,
+            style: options.itemActionsVisibility === 'visible' ? 'transparent' : options.style,
             theme: options.theme,
             actionAlignment: options.actionAlignment,
             actionCaptionPosition: options.actionCaptionPosition,
@@ -3119,7 +3119,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _isVisibleItemActions(showActions: boolean, itemActionsMenuId: number): boolean {
         return (showActions || this._options.useNewModel) &&
-            (!itemActionsMenuId || this._options.itemActionVisibility === 'visible');
+            (!itemActionsMenuId || this._options.itemActionsVisibility === 'visible');
     },
 
     _createSelectionController(): void {
@@ -3259,7 +3259,7 @@ BaseControl.getDefaultOptions = function() {
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {},
-        itemActionVisibility: 'onhover'
+        itemActionsVisibility: 'onhover'
     };
 };
 export = BaseControl;

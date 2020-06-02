@@ -1,5 +1,5 @@
 <div class="controls-BaseControl
-   {{!_isVisibleItemActions(itemActionsMenuId) ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionVisibility}}'
+   {{!_isVisibleItemActions(itemActionsMenuId) ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}'
    controls-BaseControl__renderContainer">
    <ws:partial
       name="renderer"

@@ -10,7 +10,7 @@ export default class ListVisibleItemActions extends Control<IControlOptions> {
    protected _itemActions: IItemAction[] = menuItemActions;
    protected _template: TemplateFunction = template;
    protected _viewSource: Memory;
-   protected _itemActionVisibility: string = 'visible';
+   protected _itemActionsVisibility: string = 'visible';
 
    protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
       this._viewSource = new Memory({

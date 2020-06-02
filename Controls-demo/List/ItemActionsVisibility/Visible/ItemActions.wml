@@ -3,7 +3,7 @@
             keyProperty="id"
             source="{{_viewSource}}"
             itemActions="{{_itemActions}}"
-            itemActionVisibility="{{_itemActionVisibility}}">
+            itemActionsVisibility="{{_itemActionsVisibility}}">
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">
                 <ws:contentTemplate>

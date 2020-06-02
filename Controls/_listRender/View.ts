@@ -39,7 +39,7 @@ export interface IViewOptions extends IControlOptions {
     render: string;
 
     itemActions?: any[];
-    itemActionVisibility?: 'onhover'|'delayed'|'visible';
+    itemActionsVisibility?: 'onhover'|'delayed'|'visible';
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
     itemActionsPosition?: TItemActionsPosition;
     itemActionsProperty?: string;
@@ -73,7 +73,7 @@ export default class View extends Control<IViewOptions> {
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
 
-        if (options.itemActionVisibility === 'visible') {
+        if (options.itemActionsVisibility === 'visible') {
             this._updateItemActions(options);
         }
 
@@ -148,7 +148,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     protected _onRenderMouseEnter(e: SyntheticEvent<TouchEvent>): void {
-        if (this._options.itemActionVisibility !== 'visible') {
+        if (this._options.itemActionsVisibility !== 'visible') {
             if (!this._collection.isActionsAssigned()) {
                 this._updateItemActions(this._options);
             }
@@ -284,7 +284,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     _isVisibleItemActions(itemActionsMenuId: number): boolean {
-        return !itemActionsMenuId || this._options.itemActionVisibility === 'visible';
+        return !itemActionsMenuId || this._options.itemActionsVisibility === 'visible';
     }
 
     /**
@@ -424,7 +424,7 @@ export default class View extends Control<IViewOptions> {
             itemActionsProperty: options.itemActionsProperty,
             visibilityCallback: options.itemActionVisibilityCallback,
             itemActionsPosition: options.itemActionsPosition,
-            style: options.itemActionVisibility === 'visible' ? 'transparent' : options.style,
+            style: options.itemActionsVisibility === 'visible' ? 'transparent' : options.style,
             theme: options.theme,
             actionAlignment: options.actionAlignment,
             actionCaptionPosition: options.actionCaptionPosition,
@@ -457,7 +457,7 @@ export default class View extends Control<IViewOptions> {
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
             style: 'default',
-            itemActionVisibility: 'onhover'
+            itemActionsVisibility: 'onhover'
         };
     }
 }

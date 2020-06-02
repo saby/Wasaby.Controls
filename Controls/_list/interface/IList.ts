@@ -51,18 +51,18 @@ type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
 /**
- * @typedef {String} TItemActionVisibility
+ * @typedef {String} TItemActionsVisibility
  * @variant onhover Инициализируется и отображается сразу после первого наведению на любую запись списка
  * @variant visible Инициализируется и отображается при рендеринге записей
  * @variant delayed Инициализируется и отображается после первого наведению на любую запись списка только если курсор мыши задержался на записи более, чем на 500mc
  */
 /*
- * @typedef {String} TItemActionVisibility
+ * @typedef {String} TItemActionsVisibility
  * @variant onhover ItemActions will be Initialized and displayed right after mouseenter over Item
  * @variant visible ItemActions will be Initialized and displayed on control mount
  * @variant delayed ItemActions will be Initialized and displayed after mouseenter with 500ms delay over Item
  */
-type TItemActionVisibility = 'onhover'|'delayed'|'visible';
+type TItemActionsVisibility = 'onhover'|'delayed'|'visible';
 interface IItemPadding {
     top?: TVerticalItemPadding;
     bottom?: TVerticalItemPadding;
@@ -80,7 +80,7 @@ export interface IList {
     itemActionsPosition?: TItemActionsPosition;
     actionAlignment?: TActionAlignment;
     actionCaptionPosition?: TActionCaptionPosition;
-    itemActionVisibility?: TItemActionVisibility;
+    itemActionsVisibility?: TItemActionsVisibility;
     itemActionVisibilityCallback?: (action: IItemAction, item) => boolean;
     itemActionsProperty?: string;
     markedKey?: string|number;
@@ -500,15 +500,15 @@ export interface IList {
  */
 
 /**
- * @name Controls/_list/interface/IList#itemActionVisibility
- * @cfg {TItemActionVisibility} Настройка способа отображения опций записи
+ * @name Controls/_list/interface/IList#itemActionsVisibility
+ * @cfg {TItemActionsVisibility} Настройка способа отображения опций записи
  * @variant onhover Инициализируется и отображается сразу после первого наведению на любую запись списка
  * @variant visible Инициализируется и отображается при рендеринге записей
  * @variant delayed Инициализируется и отображается после первого наведению на любую запись списка только если курсор мыши задержался на записи более, чем на 500mc
  */
 /*
- * @name Controls/_list/interface/IList#itemActionVisibility
- * @cfg {TItemActionVisibility} Setting of ItemActions visibility
+ * @name Controls/_list/interface/IList#itemActionsVisibility
+ * @cfg {TItemActionsVisibility} Setting of ItemActions visibility
  * @variant onhover ItemActions will be Initialized and displayed right after mouseenter over Item
  * @variant visible ItemActions will be Initialized and displayed on control mount
  * @variant delayed ItemActions will be Initialized and displayed after mouseenter with 500ms delay over Item
