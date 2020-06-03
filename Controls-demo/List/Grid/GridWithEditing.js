@@ -154,7 +154,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
             }
          ];
       },
-      _beginAdd() {
+      _beginAdd: function() {
          this._children.list.beginAdd({
             item: new entity.Model({
                keyProperty: 'id',
