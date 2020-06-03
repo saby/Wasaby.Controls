@@ -8,9 +8,8 @@ import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Stack as StackOpener} from 'Controls/popup';
+import {Stack as StackOpener, IStackPopupOptions} from 'Controls/popup';
 import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
-import {IStackPopupOptions} from 'Controls/popup';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
