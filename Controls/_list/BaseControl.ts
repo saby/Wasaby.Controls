@@ -2134,7 +2134,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
                     if (self._editInPlace && self._listViewModel) {
-                        self._editInPlace.beforeMount(newOptions, self._listViewModel, self._children.formController);
+                        self._editInPlace.beforeMount({...{listViewModel: self._listViewModel}, ...newOptions});
                     }
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
@@ -2268,7 +2268,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._editInPlace) {
-            this._editInPlace.afterMount();
+            this._editInPlace.afterMount(this._listViewModel, this._children.formController);
         }
         // для связи с контроллером ПМО
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});

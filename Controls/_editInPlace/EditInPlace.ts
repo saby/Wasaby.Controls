@@ -451,10 +451,9 @@ export default class EditInPlace {
         return this._options.notify(name, args, params);
     }
 
-    beforeMount(newOptions: any, listModel: ViewModel<Model>, formController: any): void {
-        if (newOptions.editingConfig) {
-            this._options.listModel = newOptions.listModel || listModel;
-            this._formController = formController;
+    beforeMount(newOptions: any): void {
+        if (newOptions.editingConfig && newOptions.listModel) {
+            this._options.listModel = newOptions.listModel;
             if (newOptions.editingConfig.item) {
                 this._editingItem = newOptions.editingConfig.item;
                 this._setEditingItemData(this._editingItem, this._options.listModel, newOptions);
@@ -475,7 +474,9 @@ export default class EditInPlace {
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
     }
 
-    afterMount(): void {
+    afterMount(listModel: ViewModel<Model>, formContontroller: any): void {
+        this._formController = formContontroller;
+        this._options.listModel = listModel;
         this._notify('registerFormOperation', [{
             save: this._formOperationHandler.bind(this, true),
             cancel: this._formOperationHandler.bind(this, false),
@@ -752,7 +753,7 @@ export default class EditInPlace {
             editingItemProjection = listModel.getItemBySourceKey(
                 this._editingItem.get(listModel.getKeyProperty())
             );
-        } else {
+        } else  {
             editingItemProjection = listModel.getItemById(
                 this._editingItem.get(listModel._options.keyProperty),
                 listModel._options.keyProperty
