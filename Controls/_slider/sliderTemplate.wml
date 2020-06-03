@@ -38,6 +38,14 @@
                              controls-Slider__line__full controls-Slider__line__full{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}"
                     style="left:{{_lineData.position}}%; width:{{_lineData.width}}%;">
                </div>
+               <ws:if data="{{_options.intervals}}">
+                  <ws:for data="key, interval in _intervals">
+                     <div
+                             class="controls-Slider__event"
+                             style="left:{{interval.left}}px; width:{{interval.width}}px; background-color:#{{interval.color}};">
+                     </div>
+                  </ws:for>
+               </ws:if>
             </div>
          </Controls.dragnDrop:Container>
       </div>
