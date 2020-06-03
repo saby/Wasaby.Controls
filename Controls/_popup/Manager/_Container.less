@@ -22,3 +22,17 @@
    // for inheritance
    height: 100%;
 }
+
+//TODO: Compatible
+.controls-PopupContainer {
+   &.ws-float-area-stack-panel-overflow {
+      position: static!important;
+   }
+}
+
+//TODO: Compatible
+.ws-is-mobile-android {
+   .controls-PopupContainer.ws-float-area-stack-panel-overflow {
+      transform: none!important;
+   }
+}

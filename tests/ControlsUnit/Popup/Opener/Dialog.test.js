@@ -94,6 +94,22 @@ define(
             assert.equal(position.width, undefined);
             assert.equal(position.height, 300);
          });
+         it('dialog positioning before mounting with minHeight', () => {
+            let windowData = {
+               width: 700,
+               height: 700,
+               scrollTop: 0
+            };
+            let popupOptions = {
+               minHeight: 200
+            };
+            let containerSizes = {
+               width: 0,
+               height: 0
+            };
+            let position = DialogStrategy.getPosition(windowData, containerSizes, { popupOptions: popupOptions });
+            assert.equal(position.height, undefined);
+         });
 
          it('dialog positioning overflow popup config', () => {
             let popupOptions = {
