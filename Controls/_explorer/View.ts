@@ -119,10 +119,12 @@ var
             if (self._firstLoad) {
                resolver(result);
                self._firstLoad = false;
-               _private.fillRestoredMarkedKeysByBreadCrumbs(_private.getDataRoot(self),
+               _private.fillRestoredMarkedKeysByBreadCrumbs(
+                   self,
+                   _private.getDataRoot(self),
                    self._breadCrumbsItems,
-                   self._restoredMarkedKeys,
-                   self._options.parentProperty);
+                   self._restoredMarkedKeys
+               );
             }
          },
          dataLoadErrback: function(self, cfg, error) {
@@ -136,13 +138,13 @@ var
             _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
          },
-         fillRestoredMarkedKeysByBreadCrumbs: function(root, breadCrumbs, restoredMarkedKeys, parentProperty) {
+         fillRestoredMarkedKeysByBreadCrumbs: function(self, root, breadCrumbs, restoredMarkedKeys) {
             restoredMarkedKeys[root] = {
                markedKey: null
             };
             if (breadCrumbs && breadCrumbs.forEach) {
                breadCrumbs.forEach((crumb) => {
-                  const parentKey = crumb.get(parentProperty);
+                  const parentKey = crumb.get(self._options.parentProperty);
                   const crumbKey = crumb.getKey();
                   restoredMarkedKeys[crumbKey] = {
                      parent: parentKey,
@@ -150,6 +152,10 @@ var
                   };
                   if (restoredMarkedKeys[parentKey]) {
                      restoredMarkedKeys[parentKey].markedKey = crumbKey;
+
+                     if (_private.isCursorNavigation(self._options.navigation)) {
+                        self._restoredMarkedKeys[parentKey].cursorPosition = _private.getCursorPositionFor(crumb, self._options.navigation);
+                     }
                   }
                });
             }
@@ -308,7 +314,7 @@ var
 
          restorePositionNavigation(self, itemId): void {
             if (self._restoredMarkedKeys[itemId]) {
-               this._navigation.sourceConfig.position = self._restoredMarkedKeys[itemId].cursorPosition;
+               self._navigation.sourceConfig.position = self._restoredMarkedKeys[itemId].cursorPosition;
             }
          }
       };
