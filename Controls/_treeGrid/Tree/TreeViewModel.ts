@@ -706,9 +706,8 @@ var
             return current;
         },
 
-        _calcItemVersion(item: Model, key: TItemKey): string {
+        _calcItemVersion(item: Model, key: TItemKey, dispItem: TreeDisplayItem): string {
             let version = TreeViewModel.superclass._calcItemVersion.apply(this, arguments);
-            const dispItem = this.getItemById(key);
 
             // При добавлении по месту в display нет добавляемого элемента и дополнительное версионирование не нужно.
             if (dispItem) {

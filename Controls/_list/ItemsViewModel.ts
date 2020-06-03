@@ -287,7 +287,7 @@ var ItemsViewModel = BaseViewModel.extend({
                 rightSpacing: this._options.rightSpacing || this._options.rightPadding,
                 _preferVersionAPI: true,
                 getVersion: function() {
-                    return self._calcItemVersion(itemData.item, itemData.key);
+                    return self._calcItemVersion(itemData.item, itemData.key, itemData.dispItem);
                 }
             };
 

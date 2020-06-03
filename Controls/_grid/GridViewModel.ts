@@ -1432,7 +1432,7 @@ var
             current.columnIndex = 0;
 
             current.getVersion = function() {
-                return self._calcItemVersion(current.item, current.key, current.index);
+                return self._calcItemVersion(current.item, current.key, current.dispItem, current.index);
             };
 
             current.resetColumnIndex = () => {
@@ -1653,8 +1653,8 @@ var
             this._model.setItemActionVisibilityCallback(callback);
         },
 
-        _calcItemVersion(item, key, index): string {
-            let version: string = this._model._calcItemVersion(item, key) + (item.getKey ? item.getKey() : '');
+        _calcItemVersion(item, key, dispItem, index): string {
+            let version: string = this._model._calcItemVersion(item, key, dispItem) + (item.getKey ? item.getKey() : '');
 
             if (this._lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
