@@ -752,7 +752,7 @@ export default class EditInPlace {
             editingItemProjection = listModel.getItemBySourceKey(
                 this._editingItem.get(listModel.getKeyProperty())
             );
-        } else if(this._editingItem) {
+        } else {
             editingItemProjection = listModel.getItemById(
                 this._editingItem.get(listModel._options.keyProperty),
                 listModel._options.keyProperty

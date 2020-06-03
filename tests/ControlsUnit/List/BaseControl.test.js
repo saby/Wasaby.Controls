@@ -2517,7 +2517,7 @@ define([
             }),
             cfg = {
                editingConfig: {
-                  item: { id: 1 }
+                  item: new entity.Model({rawData: { id: 1 }})
                },
                viewName: 'Controls/List/ListView',
                source: source,
