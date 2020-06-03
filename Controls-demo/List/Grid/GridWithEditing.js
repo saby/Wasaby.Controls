@@ -154,9 +154,9 @@ define('Controls-demo/List/Grid/GridWithEditing', [
             }
          ];
       },
-      _beginAdd: function() {
-         this._children.list.beginAdd({
-            item: new entity.Model({
+      _beforeBeginEdit: function(e, options, isAdd) {
+         if (isAdd) {
+            return new entity.Model({
                keyProperty: 'id',
                rawData: {
                   'id': ++this._itemId,
@@ -168,8 +168,8 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                   'reserve': null,
                   'costPrice': 0
                }
-            })
-         });
+            });
+         }
       },
       _showAction: function(action, item) {
          if (item.get('id') === '471329') {
