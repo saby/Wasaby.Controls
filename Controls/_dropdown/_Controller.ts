@@ -191,19 +191,19 @@ var _private = {
       }
    },
 
-   onResult: function (action, data) {
+   onResult: function (action, data, nativeEvent) {
       switch (action) {
          case 'pinClick':
             _private.pinClick(this, data);
             break;
          case 'applyClick':
-            this._notify('selectedItemsChanged', [data]);
+            this._notify('selectedItemsChanged', [data, nativeEvent]);
             _private.updateHistory(this, data);
             _private.closeDropdownList(this);
             break;
          case 'itemClick':
             data = _private.prepareItem(data, this._options.keyProperty, this._source);
-            var res = this._notify('selectedItemsChanged', [[data]]);
+            var res = this._notify('selectedItemsChanged', [[data], nativeEvent]);
 
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
@@ -213,7 +213,7 @@ var _private = {
             break;
          case 'selectorResult':
             _private.onSelectorResult(this, data);
-            this._notify('selectedItemsChanged', [data]);
+            this._notify('selectedItemsChanged', [data, nativeEvent]);
             break;
          case 'selectorDialogOpened':
             this._initSelectorItems = data;
