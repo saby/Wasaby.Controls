@@ -235,7 +235,8 @@ define([
                submit: function () {
                   validateCalled = true;
                   return Deferred.success();
-               }
+               },
+               setValidationResult: () => undefined;
             };
             await eip.beginEdit({
                item: listModel.at(0).getContents()
