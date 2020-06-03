@@ -36,7 +36,7 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env', 'UI/U
          const expectedData = 'test';
          service.saveHistory('testId', expectedData);
          nextQuery.addCallback((data) => {
-            assert.equal(data, expectedData);
+            assert.equal(data.getRawData(), expectedData);
             done();
          });
          loadDeferred.callback();

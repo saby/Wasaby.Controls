@@ -23,7 +23,12 @@ define(
          });
          describe('Template', function() {
             describe('ReadOnly', function() {
-               var template;
+               var template, compat;
+
+               before(function() {
+                  compat = Env.constants.compat;
+                  Env.constants.compat = true;
+               });
 
                beforeEach(function() {
                   ctrl._beforeMount({
@@ -31,6 +36,11 @@ define(
                   });
                   template = TemplateUtil.clearTemplate(ctrl._readOnlyField.template);
                });
+
+               after(function() {
+                  Env.constants.compat = compat;
+               });
+
                it('Insert in the text field "Hi https://www.google.ru/"', function() {
                   ctrl._readOnlyField.scope.value = 'Hi https://www.google.ru/';
                   ctrl._readOnlyField.scope.options = {
