@@ -5089,14 +5089,20 @@ define([
                const itemData = { item: {} };
                baseControl._listViewModel.setDragItemData = () => {};
                baseControl._listViewModel.getItemDataByItem = () => { return { item: {} };};
-               baseControl._options.itemsDragNDrop = true;
+               baseControl._dndListController = {
+                  isDragging() { return false; },
+                  startDrag() {},
+                  calculateDragPosition() {}
+               };
                baseControl._draggingItem = { dispItem: {} };
                baseControl._unprocessedDragEnteredItem = null;
                baseControl._itemMouseEnter(event, itemData, originalEvent);
                assert.equal(baseControl._unprocessedDragEnteredItem, itemData, 'should save itemData');
+
+               baseControl._dndListController.isDragging = function() { return true; }
                baseControl._dragStart(dragEvent, dragObject);
                assert.isNull(baseControl._unprocessedDragEnteredItem, 'should reset itemData after processing');
-               baseControl._options.itemsDragNDrop = false;
+               baseControl._dndListController = null;
             });
          });
 
