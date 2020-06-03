@@ -137,9 +137,24 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    }
 
    private _checkOptions(opts: ISliderBaseOptions): void {
+      const {minValue, maxValue, value, intervals} = opts;
       Utils.checkOptions(opts);
-      if (opts.value < opts.minValue || opts.value > opts.maxValue) {
+      if (value < minValue || value > maxValue) {
          Logger.error('Slider: value must be in the range [minValue..maxValue].', this);
+      }
+
+      if (intervals?.length) {
+         intervals.forEach(({start, end}) => {
+            if (start > end) {
+               Logger.error('Slider: start of the interval must be less than end.');
+            }
+            if (start <= minValue || start >= maxValue) {
+               Logger.error('Slider: start of the interval must be between minValue and maxValue.');
+            }
+            if (end <= minValue || end >= maxValue) {
+               Logger.error('Slider: end of the interval must be between minValue and maxValue.');
+            }
+         });
       }
    }
 

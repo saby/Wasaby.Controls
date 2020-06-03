@@ -36,26 +36,11 @@ export default {
         return parseFloat(val.toFixed(perc));
     },
     checkOptions(opts: ISliderBaseOptions | ISliderRangeOptions): void {
-        const {minValue, maxValue, scaleStep, intervals} = opts;
-        if (minValue >= maxValue) {
+        if (opts.minValue >= opts.maxValue) {
             Logger.error('Slider: minValue must be less than maxValue.');
         }
-        if (scaleStep < 0) {
+        if (opts.scaleStep < 0) {
             Logger.error('Slider: scaleStep must positive.');
-        }
-
-        if (intervals.length) {
-            intervals.forEach(({start, end}) => {
-                if (start > end) {
-                    Logger.error('Slider: start of the interval must be less than end.');
-                }
-                if (start <= minValue || start >= maxValue) {
-                    Logger.error('Slider: start of the interval must be between minValue and maxValue.');
-                }
-                if (end <= minValue || end >= maxValue) {
-                    Logger.error('Slider: end of the interval must be between minValue and maxValue.');
-                }
-            });
         }
     },
     getScaleData(minValue: number, maxValue: number, scaleStep: number): IScaleData[] {
@@ -82,7 +67,7 @@ export default {
         return targetX;
     },
 
-    convertIntervals(intervals: IInterval[], startValue: number, endValue: number): IPositionedInterval[] {
+    convertIntervals(intervals: IInterval[] = [], startValue: number, endValue: number): IPositionedInterval[] {
         const ratio = maxPercentValue / (endValue - startValue);
         return intervals.map((interval) => {
             const start = Math.round((interval.start - startValue) * ratio);
