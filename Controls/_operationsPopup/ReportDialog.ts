@@ -60,8 +60,10 @@ import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDial
       _beforeMount: function(cfg) {
          if (cfg.operationsCount === cfg.operationsSuccess) {
             this._message = format({
-               count: cfg.operationsCount
-            }, rk('$count$s$ записей успешно обработаны'));
+               count: cfg.operationsCount,
+               record: rk("запись(-и,-ей)", cfg.operationsCount),
+               process: rk("обработана(-ы)", "ReportDialog", cfg.operationsCount)
+            }, rk('$count$s$ $record$s$ успешно $process$s$'));
          } else if (!cfg.errors || !cfg.errors.length) {
             this._message = rk('Выполнение операции завершилось ошибкой');
          } else {
