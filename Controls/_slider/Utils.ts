@@ -2,6 +2,8 @@ import {Logger} from 'UI/Utils';
 import {ISliderBaseOptions} from './Base';
 import {ISliderRangeOptions} from './Range';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {IInterval} from './interface/IInterval';
+
 export interface IScaleData {
     value: number;
     position: number;
@@ -14,6 +16,13 @@ export interface IPointData {
    name: string;
    position: number;
 }
+
+export interface IPositionedInterval {
+    color: string;
+    left: number;
+    width: number;
+}
+
 export type IPointDataList = IPointData[];
 const maxPercentValue = 100;
 const stepDenominator = 2;
@@ -27,11 +36,26 @@ export default {
         return parseFloat(val.toFixed(perc));
     },
     checkOptions(opts: ISliderBaseOptions | ISliderRangeOptions): void {
-        if (opts.minValue >= opts.maxValue) {
+        const {minValue, maxValue, scaleStep, intervals} = opts;
+        if (minValue >= maxValue) {
             Logger.error('Slider: minValue must be less than maxValue.');
         }
-        if (opts.scaleStep < 0) {
+        if (scaleStep < 0) {
             Logger.error('Slider: scaleStep must positive.');
+        }
+
+        if (intervals.length) {
+            intervals.forEach(({start, end}) => {
+                if (start > end) {
+                    Logger.error('Slider: start of the interval must be less than end.');
+                }
+                if (start <= minValue || start >= maxValue) {
+                    Logger.error('Slider: start of the interval must be between minValue and maxValue.');
+                }
+                if (end <= minValue || end >= maxValue) {
+                    Logger.error('Slider: end of the interval must be between minValue and maxValue.');
+                }
+            });
         }
     },
     getScaleData(minValue: number, maxValue: number, scaleStep: number): IScaleData[] {
@@ -56,5 +80,28 @@ export default {
             Logger.error('Slider: Event type must be mousedown of touchstart.');
         }
         return targetX;
+    },
+
+    convertIntervals(intervals: IInterval[], startValue: number, endValue: number): IPositionedInterval[] {
+        const ratio = maxPercentValue / (endValue - startValue);
+        return intervals.map((interval) => {
+            const start = Math.round((interval.start - startValue) * ratio);
+            const end = Math.round((interval.end - startValue) * ratio);
+            const intervalWidth = end - start;
+
+            return {
+                color: interval.color,
+                left: start,
+                width: intervalWidth
+            };
+        }).sort((eventFirst, eventSecond) => {
+            if (eventFirst.left < eventSecond.left) {
+                return -1;
+            }
+            if (eventFirst.left > eventSecond.left) {
+                return 1;
+            }
+            return 0;
+        });
     }
 };

@@ -4,19 +4,13 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ISlider, ISliderOptions} from './interface/ISlider';
 import SliderBase from './_SliderBase';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
-import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
+import {IScaleData, ILineData, IPointDataList, IPositionedInterval, default as Utils} from './Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IInterval} from './interface/IInterval';
 
 export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
    value: number;
    intervals: IInterval[];
-}
-
-interface IPositionedInterval {
-   color: string;
-   left: number;
-   width: number;
 }
 
 const maxPercentValue = 100;
@@ -111,8 +105,6 @@ const maxPercentValue = 100;
  * </pre>
  */
 
-const MIN_INTERVAL_WIDTH = 1;
-
 class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
@@ -158,6 +150,7 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _beforeMount(options: ISliderBaseOptions): void {
       this._checkOptions(options);
       this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+      this._intervals = Utils.convertIntervals(options.intervals, options.minValue, options.maxValue);
       this._value = options.value === undefined ? options.maxValue : options.value;
       this._pointData = [{name: 'point', position: 100}, {name: 'tooltip', position: 0}];
       this._lineData = {position: 0, width: 100};
@@ -171,20 +164,12 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
       }
 
       if (this._options.intervals !== options.intervals) {
-         const width = this._container.offsetWidth;
-         const ratio = Base.getRatio(width, options.maxValue, options.minValue);
-         this._intervals = Base.convertIntervals(options.intervals, options.minValue, ratio);
+         this._intervals = Utils.convertIntervals(options.intervals, options.minValue, options.maxValue);
       }
 
       this._value = options.value === undefined ? options.maxValue : Math.min(options.maxValue, options.value);
       this._render(options.minValue, options.maxValue, this._value);
       this._renderTooltip(options.minValue, options.maxValue, this._tooltipPosition);
-   }
-
-   protected _afterMount(): void {
-      const width = this._container.offsetWidth;
-      const ratio = Base.getRatio(width, this._options.maxValue, this._options.minValue);
-      this._intervals = Base.convertIntervals(this._options.intervals, this._options.minValue, ratio);
    }
 
    protected _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
@@ -207,41 +192,12 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
 
    static _theme: string[] = ['Controls/slider'];
 
-   static getRatio(controlWidth: number, max: number, min: number): number {
-      return controlWidth / (max - min);
-   }
-
-   static convertIntervals(intervals: IInterval[], startValue: number, ratio: number): IPositionedInterval[] {
-      return intervals.map((interval) => {
-         const start = Math.round((interval.start - startValue) * ratio);
-         const end = Math.round((interval.end - startValue) * ratio);
-
-         let intervalWidth = end - start;
-         if (intervalWidth < MIN_INTERVAL_WIDTH) {
-            intervalWidth = MIN_INTERVAL_WIDTH;
-         }
-
-         return {
-            color: interval.color,
-            left: start,
-            width: intervalWidth
-         };
-      }).sort((eventFirst, eventSecond) => {
-         if (eventFirst.left < eventSecond.left) {
-            return -1;
-         }
-         if (eventFirst.left > eventSecond.left) {
-            return 1;
-         }
-         return 0;
-      });
-   }
-
    static getDefaultOptions(): object {
       return {
          ...{
             theme: 'default',
-            value: undefined
+            value: undefined,
+            intervals: []
          }, ...SliderBase.getDefaultOptions()
       };
 
@@ -250,7 +206,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    static getOptionTypes(): object {
       return {
          ...{
-            value: EntityDescriptor(Number)
+            value: EntityDescriptor(Number),
+            intervals: EntityDescriptor(Array)
          }, ...SliderBase.getOptionTypes()
       };
 
