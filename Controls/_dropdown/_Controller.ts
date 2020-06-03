@@ -647,14 +647,12 @@ var _Controller = Control.extend({
    },
 
    _createMenuSource(items: RecordSet): void {
-      if (!this._menuSource) {
-         this._menuSource = new PrefetchProxy({
-            target: this._source,
-            data: {
-               query: items
-            }
-         });
-      }
+      this._menuSource = new PrefetchProxy({
+         target: this._source,
+         data: {
+            query: items
+         }
+      });
    },
 
    _hasHistory(): boolean {
