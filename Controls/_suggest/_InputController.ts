@@ -10,6 +10,7 @@ import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Stack as StackOpener} from 'Controls/popup';
 import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
+import {IStackPopupOptions} from 'Controls/popup';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -300,7 +301,7 @@ var _private = {
              options.validationStatus === 'invalidAccent';
    },
 
-   getSelectorOptions(self, filter): object {
+   getSelectorOptions(self, filter): IStackPopupOptions {
       return {
          opener: self,
          template: 'Controls/suggestPopup:Dialog',
