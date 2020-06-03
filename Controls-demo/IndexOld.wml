@@ -189,7 +189,7 @@
          </a>
          <br />
          <Router.router:Reference state="Controls-demo/app/:app" app="{{ 'Controls-demo/List/ItemActionsVisibility/Index' }}">
-            <a href="{{content.href}}">ItemActionVisibility (delayed/visible)</a>
+            <a href="{{content.href}}">itemActionsVisibility (delayed/visible)</a>
          </Router.router:Reference>
       </div>
       <h1>DragNDrop</h1>
