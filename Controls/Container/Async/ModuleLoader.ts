@@ -110,7 +110,7 @@ class ModuleLoader {
 
         if (!result) {
             //@ts-ignore
-            const module = requirejs.s.contexts._registary[name];
+            const module = requirejs.s.contexts._.registry[name];
 
             if (module && module.error) {
                 throw module.error;
