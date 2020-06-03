@@ -1,10 +1,10 @@
 <ws:partial template="wml!Controls/_list/EditInPlace/baseEditingTemplate" scope="{{ _options }}">
     <ws:viewTemplate>
         <ws:if data="{{ value !== null && itemData.searchValue }}">
-            <Controls.decorator:Highlight highlight="{{ itemData.searchValue }}">
-                <ws:text>
+            <Controls.decorator:Highlight highlightedValue="{{ itemData.searchValue }}">
+                <ws:value>
                     <ws:String>{{ value }}</ws:String>
-                </ws:text>
+                </ws:value>
             </Controls.decorator:Highlight>
         </ws:if>
         <ws:else>
