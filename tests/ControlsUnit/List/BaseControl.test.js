@@ -3004,7 +3004,7 @@ define([
                }
             };
             var ctrl = new lists.BaseControl(cfg);
-            ctrl._editInPlace: {
+            ctrl._editInPlace = {
                beginEdit: function(options) {
                   assert.equal(options, opt);
                   return cDeferred.success();
@@ -3994,7 +3994,8 @@ define([
          instance._editInPlace = {
             cancelEdit: () => {
                cancelClosed = true;
-            }
+            },
+            beforeUpdate: () => undefined
          };
          instance._beforeUpdate(cfg);
          assert.isTrue(cancelClosed);

@@ -1649,7 +1649,7 @@ const _private = {
         const oldSourceCfg = oldNavigation && oldNavigation.sourceConfig ? oldNavigation.sourceConfig : {};
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
-            const isEditing = !!self._children.editInPlace && !!self._listViewModel && (
+            const isEditing = !!self._editInPlace && !!self._listViewModel && (
                 self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
             );
             if (isEditing) {
@@ -2303,8 +2303,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 newOptions.viewModelConstructor !== this._viewModelConstructor
             )
         ) {
-            if (this._children.editInPlace && this._listViewModel.getEditingItemData()) {
-                this._children.editInPlace.cancelEdit();
+            if (this._editInPlace && this._listViewModel.getEditingItemData()) {
+                this._editInPlace.cancelEdit();
             }
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
