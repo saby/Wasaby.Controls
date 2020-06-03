@@ -457,7 +457,7 @@ export default class EditInPlace {
             this._formController = formController;
             if (newOptions.editingConfig.item) {
                 this._editingItem = newOptions.editingConfig.item;
-                this._setEditingItemData(this._editingItem, newOptions.listModel, newOptions);
+                this._setEditingItemData(this._editingItem, this._options.listModel, newOptions);
                 if (!this._isAdd) {
                     if (newOptions.useNewModel) {
                         this._originalItem = this._options.listModel.getItemBySourceKey(
