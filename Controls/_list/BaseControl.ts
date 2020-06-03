@@ -2011,10 +2011,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.createEditInPlace(self, newOptions);
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.beforeMount(newOptions, this._listViewModel, this._children.formController);
-        }
-
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             let viewModelConfig = cClone(newOptions);
             if (collapsedGroups) {
@@ -2044,6 +2040,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                 }
             }
+
             if (self._listViewModel) {
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
@@ -2111,6 +2108,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
+                    if (self._editInPlace && self._listViewModel) {
+                        self._editInPlace.beforeMount(newOptions, self._listViewModel, self._children.formController);
+                    }
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
                     // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
