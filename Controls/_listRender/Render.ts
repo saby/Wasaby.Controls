@@ -98,7 +98,6 @@ export default class Render extends Control<IRenderOptions> {
             !EditInPlaceController.isEditing(this._options.listModel)
         ) {
             this._notify('itemContextMenu', [item, e, false]);
-            e.preventDefault();
             e.stopPropagation();
         }
     }

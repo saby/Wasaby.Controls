@@ -184,7 +184,7 @@ define(
             };
 
             Manager._getPopupContainer = () => ({
-               getPendingById: () => Pending
+               getPending: () => Pending
             });
 
             Manager.remove(id1);

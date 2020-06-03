@@ -1,146 +1,87 @@
-/**
- * Created by kraynovdo on 20.02.2018.
- */
-/**
- * Created by kraynovdo on 07.02.2018.
- */
-define([
-   'Controls/_list/Controllers/ScrollPaging',
-   'Types/source',
-   'Core/core-instance'
-], function(ScrollPaging, sourceLib, cInstance){
-   describe('Controls.Controllers.ScrollPaging', function () {
-      var data, source;
-      beforeEach(function() {
-         data = [
-            {
-               id : 1,
-               title : 'Первый',
-               type: 1
-            },
-            {
-               id : 2,
-               title : 'Второй',
-               type: 2
-            },
-            {
-               id : 3,
-               title : 'Третий',
-               type: 2
-            }
-         ];
-         source = new sourceLib.Memory({
-            data: data,
-            keyProperty: 'id'
-         });
-
-      });
-
-      it('constructor', function () {
-         var result;
-         var spInstance = new ScrollPaging({
-            scrollParams: {
-               scrollTop: 0,
-               scrollHeight: 100,
-               clientHeight: 50
-            },
-            pagingCfgTrigger: function(cfg) {
-               result = cfg;
-            }
-         });
-         assert.equal('top', spInstance._curState, 'Wrong curState after ctor');
-
-         assert.deepEqual({
-            stateBegin: 'disabled',
-            statePrev: 'disabled',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after ctor');
-      });
-
-      it('scroll', function () {
-         var result;
-         var spInstance = new ScrollPaging({
-            scrollParams: {
-               scrollTop: 0,
-               scrollHeight: 100,
-               clientHeight: 50
-            },
-            pagingCfgTrigger: function(cfg) {
-               result = cfg;
-            }
-         });
-
-         spInstance.handleScroll();
-         assert.equal('middle', spInstance._curState, 'Wrong curState after scroll');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScrollTop(false);
-         assert.equal('top', spInstance._curState, 'Wrong curState after scroll to top');
-         assert.deepEqual({
-            stateBegin: 'disabled',
-            statePrev: 'disabled',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScrollBottom(false);
-         assert.equal('bottom', spInstance._curState, 'Wrong curState after scroll to bottom');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'disabled',
-            stateEnd: 'disabled'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScroll();//to reset _curState
-         spInstance.handleScrollBottom(true);
-         assert.equal('middle', spInstance._curState, 'Wrong curState after scroll to bottom');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScrollEdge('up', {down: true, up: false});
-         assert.equal('top', spInstance._curState, 'Wrong curState after scroll to edge up');
-         assert.deepEqual({
-            stateBegin: 'disabled',
-            statePrev: 'disabled',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScrollEdge('down', {down: false, up: true});
-         assert.equal('bottom', spInstance._curState, 'Wrong curState after scroll to edge down');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'disabled',
-            stateEnd: 'disabled'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScroll();//to reset _curState
-         spInstance.handleScrollEdge('down', {down: true, up: false});
-         assert.equal('middle', spInstance._curState, 'Wrong curState after scroll to edge down');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-      });
-
-      it('_private.getStateByHasMore', function() {
-         assert.equal(ScrollPaging._private.getStateByHasMoreData(true), 'normal');
-         assert.equal(ScrollPaging._private.getStateByHasMoreData(false), 'disabled');
-      });
-   })
+define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports", "chai", "Controls/_list/Controllers/ScrollPaging"], function (require, exports, chai_1, ScrollPaging_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    describe('Controls.Controllers.ScrollPaging', function () {
+        describe('constructor', function () {
+            it('top position', function () {
+                var result;
+                var spInstance = new ScrollPaging_1.default({
+                    scrollParams: {
+                        scrollTop: 0,
+                        scrollHeight: 150,
+                        clientHeight: 50
+                    },
+                    pagingCfgTrigger: function (cfg) {
+                        result = cfg;
+                    }
+                });
+                chai_1.assert.equal('top', spInstance._curState, 'Wrong curState after ctor');
+                chai_1.assert.deepEqual({
+                    backwardEnabled: false,
+                    forwardEnabled: true,
+                }, result, 'Wrong pagingCfg after ctor');
+            });
+            it('middle position', function () {
+                var result;
+                var spInstance = new ScrollPaging_1.default({
+                    scrollParams: {
+                        scrollTop: 50,
+                        scrollHeight: 150,
+                        clientHeight: 50
+                    },
+                    pagingCfgTrigger: function (cfg) {
+                        result = cfg;
+                    }
+                });
+                chai_1.assert.equal('middle', spInstance._curState, 'Wrong curState after ctor');
+                chai_1.assert.deepEqual({
+                    backwardEnabled: true,
+                    forwardEnabled: true,
+                }, result, 'Wrong pagingCfg after ctor');
+            });
+            it('top position', function () {
+                var result;
+                var spInstance = new ScrollPaging_1.default({
+                    scrollParams: {
+                        scrollTop: 100,
+                        scrollHeight: 150,
+                        clientHeight: 50
+                    },
+                    pagingCfgTrigger: function (cfg) {
+                        result = cfg;
+                    }
+                });
+                chai_1.assert.equal('bottom', spInstance._curState, 'Wrong curState after ctor');
+                chai_1.assert.deepEqual({
+                    backwardEnabled: true,
+                    forwardEnabled: false,
+                }, result, 'Wrong pagingCfg after ctor');
+            });
+        });
+        describe('updateScrollParams', function () {
+            var result;
+            var spInstance = new ScrollPaging_1.default({
+                scrollParams: {
+                    scrollTop: 150,
+                    scrollHeight: 250,
+                    clientHeight: 50
+                },
+                pagingCfgTrigger: function (cfg) {
+                    result = cfg;
+                }
+            });
+            it('make big window and reach bottom', function () {
+                spInstance.updateScrollParams({
+                    scrollTop: 150,
+                    scrollHeight: 250,
+                    clientHeight: 100
+                });
+                chai_1.assert.equal('bottom', spInstance._curState, 'Wrong curState after updateScrollParams');
+                chai_1.assert.deepEqual({
+                    backwardEnabled: true,
+                    forwardEnabled: false,
+                }, result, 'Wrong pagingCfg after scroll');
+            });
+        });
+    });
 });

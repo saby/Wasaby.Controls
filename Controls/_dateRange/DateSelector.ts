@@ -37,6 +37,7 @@ var Component = BaseSelector.extend({
             dayTemplate: this._options.dayTemplate,
             closeButtonEnabled: true,
             rangeselect: false,
+            selectionType: 'single',
             range: this._options.range,
             quantum: null
          }

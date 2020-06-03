@@ -19,10 +19,8 @@ export interface IPagingOptions extends IControlOptions {
      * @cfg {Number} Номер выбранной страницы.
      */
     selectedPage?: number;
-    stateBegin: TButtonState;
-    stateEnd: TButtonState;
-    stateNext: TButtonState;
-    statePrev: TButtonState;
+    backwardEnabled: boolean;
+    forwardEnabled: boolean;
 }
 
 /**
@@ -43,34 +41,29 @@ export interface IPagingOptions extends IControlOptions {
  */
 class Paging extends Control<IPagingOptions> {
     protected _template: TemplateFunction = pagingTemplate;
-    protected _stateBegin: TButtonState = 'normal';
-    protected _stateEnd: TButtonState = 'normal';
-    protected _stateNext: TButtonState = 'normal';
-    protected _statePrev: TButtonState = 'normal';
+    protected _stateBackward: TButtonState = 'normal';
+    protected _stateForward: TButtonState = 'normal';
 
     private _initArrowDefaultStates(config: IPagingOptions): void {
-        this._stateBegin = config.stateBegin || 'disabled';
-        this._stateEnd = config.stateEnd || 'disabled';
-        this._stateNext = config.stateNext || 'disabled';
-        this._statePrev = config.statePrev || 'disabled';
+        this._stateBackward = this._getState(config.backwardEnabled);
+        this._stateForward = this._getState(config.forwardEnabled);
     }
 
+    private _getState(isEnabled: boolean) {
+        return isEnabled ? 'normal' : 'disabled';
+    }
     private _initArrowStateBySelectedPage(config: IPagingOptions): void {
         const page = config.selectedPage;
         if (page <= 1) {
-            this._stateBegin = 'disabled';
-            this._statePrev = 'disabled';
+            this._stateBackward = this._getState(false);
         } else {
-            this._stateBegin = 'normal';
-            this._statePrev = 'normal';
+            this._stateBackward = this._getState(true);
         }
 
         if (page >= config.pagesCount) {
-            this._stateEnd = 'disabled';
-            this._stateNext = 'disabled';
+            this._stateForward = this._getState(false);
         } else {
-            this._stateEnd = 'normal';
-            this._stateNext = 'normal';
+            this._stateForward = this._getState(true);
         }
     }
 
@@ -101,9 +94,9 @@ class Paging extends Control<IPagingOptions> {
         this._changePage(digit);
     }
 
-    protected _arrowClick(e: SyntheticEvent<Event>, btnName: string): void {
+    protected _arrowClick(e: SyntheticEvent<Event>, btnName: string, direction: string): void {
         let targetPage: number;
-        if (this['_state' + btnName] !== 'normal') {
+        if (this['_state' + direction] !== 'normal') {
             return;
         }
         if (this._options.showDigits) {

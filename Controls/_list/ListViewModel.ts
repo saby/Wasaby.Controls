@@ -211,7 +211,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && (itemsModelCurrent.style === 'master' || itemsModelCurrent.style === 'masterClassic');
+        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && this._isSupportStickyMarkedItem();
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -263,6 +263,37 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
         }
         return itemsModelCurrent;
+    },
+
+    _isSupportStickyMarkedItem(): boolean {
+        return this._options.stickyMarkedItem !== false &&
+            (this._options.style === 'master' || this._options.style === 'masterClassic');
+    },
+
+    _isSupportStickyItem(): boolean {
+        return this._options.stickyHeader && (this._options.groupingKeyCallback || this._options.groupProperty) ||
+            this._isSupportStickyMarkedItem();
+    },
+
+    _isStickedItem(itemData: { isSticky?: boolean, isGroup?: boolean }): boolean {
+        return itemData.isSticky || itemData.isGroup;
+    },
+
+    _getCurIndexForReset(startIndex: number): number {
+        if (this._isSupportStickyItem() && startIndex > 0) {
+            // Если поддерживается sticky элементов, то индекс не просто нужно сбросить на 0, а взять индекс ближайшего
+            // к startIndex застиканного элемента, если таковой имеется. Если же его нет, то оставляем 0.
+            // https://online.sbis.ru/opendoc.html?guid=28edae33-62ba-46ae-882c-2bc282b4ee75
+            let idx = startIndex;
+            while (idx >= 0) {
+                const itemData = this.getItemDataByItem(this._display.at(idx));
+                if (this._isStickedItem(itemData)) {
+                    return idx;
+                }
+                idx--;
+            }
+        }
+        return startIndex;
     },
 
     isShouldBeDrawnItem: function(item) {
@@ -720,7 +751,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setSelectedItems(items: Model[], selected: boolean|null): void {
-        // говнокод для совместимости с новой моделью
+        // Код для совместимости с новой моделью
         // вместо false ставим undefined,
         // чтобы не сломалось показывание только при наведении
         items.forEach((item) => {
