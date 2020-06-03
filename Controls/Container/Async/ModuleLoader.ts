@@ -106,12 +106,18 @@ class ModuleLoader {
     }
 
     private requireSync(name: string): Module {
+        const result = require(name);
 
-        if (typeof window === 'undefined') {
-            requirejs.undef(name);
+        if (!result) {
+            //@ts-ignore
+            const module = requirejs.s.contexts._registary[name];
+
+            if (module && module.error) {
+                throw module.error;
+            }
         }
 
-        return require(name);
+        return result;
     }
 
     private requireAsync(name: string): Promise<undefined> {
