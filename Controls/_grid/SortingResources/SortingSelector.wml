@@ -5,6 +5,7 @@
             on:selectedKeysChanged="_selectedKeysChangedHandler()"
             keyProperty="id"
             displayProperty="title"
+            fontColorStyle="{{_options.fontColorStyle}}"
             itemPadding="{{_itemPadding}}"
             source="{{_source}}">
         <ws:headerTemplate>
