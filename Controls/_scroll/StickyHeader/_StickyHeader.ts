@@ -473,7 +473,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                     offsetHeight -= MOBILE_GAP_FIX_OFFSET;
                 }
                 this._bottomShadowStyle =
-                     `bottom: unset; right: unset; top:${offsetHeight}px; width:${offsetWidth}px;`;
+                    `bottom: unset; right: unset; top:${offsetHeight}px; width:${offsetWidth}px;`;
+                // this._bottomShadowStyle =
+                //      `bottom: unset; right: unset; top:${this._children.wrapper.offsetHeight}px; width:${offsetWidth}px;`;
                 this._topShadowStyle = `right: unset; width:${offsetWidth}px;`;
             }
         }

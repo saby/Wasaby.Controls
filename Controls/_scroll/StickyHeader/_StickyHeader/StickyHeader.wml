@@ -5,6 +5,7 @@
    {{_options.backgroundVisible ? 'controls-StickyHeader__background'}}
    controls-StickyHeader_position" style="{{_getStyle() + (_options.style || '')}}">
    <!--We use visibility style instead of "if" statement to prevent jumps when scrolling on iPad-->
+   <div name="wrapper" class="controls-StickyHeader__wrapper">
    <ws:if data="{{_isShadowVisible('top') || _isMobileIOS}}">
       <div class="controls-Scroll__shadow{{!!_isSafari13? '-safari13'}} controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal
                   {{ !_isShadowVisible('top') && _isMobileIOS ? ' ws-invisible' }}"
@@ -27,4 +28,5 @@
           style="{{_bottomShadowStyle}}"
           name="shadowBottom"></div>
    </ws:if>
+      </div>
 </div>
