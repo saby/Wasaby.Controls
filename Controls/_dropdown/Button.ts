@@ -6,14 +6,14 @@ import ActualApi from 'Controls/_buttons/ActualApi';
 
 /**
  * Контрол «Кнопка с меню».
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FMenu%2FMenu">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/button/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления dropdown</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
- * 
+ *
  * @class Controls/_dropdown/Button
  * @extends Core/Control
  * @mixes Controls/_menu/interface/IMenuPopup
@@ -105,10 +105,10 @@ var Button = Control.extend({
       }
    },
 
-   _onItemClickHandler: function (event, result) {
+   _onItemClickHandler: function (event, result, nativeEvent) {
       //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
-      const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0]]);
-      const menuItemActivateResult = this._notify('menuItemActivate', [result[0]]);
+      const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0], nativeEvent]);
+      const menuItemActivateResult = this._notify('menuItemActivate', [result[0], nativeEvent]);
       let handlerResult;
 
       // (false || undefined) === undefined
