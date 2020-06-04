@@ -843,7 +843,8 @@ var Filter = Control.extend({
             this._children.StickyOpener.close();
         }
         factory(this._source).each(function(item) {
-            // Fast filters could not be reset from the filter button.
+            // Быстрые фильтры и фильтр выбора периода
+            // не должны сбрасываться по клику на крестик строки выбранных параметров
             if (!_private.isFrequentItem(item) && item.type !== 'dateRange') {
                 item.value = item.resetValue;
                 if (object.getPropertyValue(item, 'visibility') !== undefined) {
