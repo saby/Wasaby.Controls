@@ -63,7 +63,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
             }
          },
          nativeEvent: {
-            pageY: 60
+            pageY: 70
          }
       };
       assert.isFalse(controller.isInsideDragTargetNode({}));
@@ -166,7 +166,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       controller.calculateDragPositionRelativeNode(targetNodeData, event);
 
       // undefined - так как startDrag не был вызван
-      assert.isTrue(calculateDragPositionSpy.withArgs(targetNodeData, 'before').calledOnce,
+      assert.isTrue(calculateDragPositionSpy.withArgs(targetNodeData, 'after').calledOnce,
          'calculateDragPosition не вызвался или вызвался с неверными параметрами');
    });
 

@@ -707,10 +707,6 @@ var
             return this._prevDragTargetPosition;
         },
 
-        getExpandedItems() {
-            return this._expandedItems;
-        },
-
         _setPrevDragTargetPosition: function(targetPosition) {
             if (!this._prevDragTargetPosition) {
                 if (this._dragTargetPosition) {
