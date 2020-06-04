@@ -57,7 +57,7 @@
                ranges="{{content.ranges}}">
             <Controls.dateRange:RangeShortSelector attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector1"/>
          </Controls.dateRange:RelationWrapper>
-         <Controls.dateRange:RelationButton 
+         <Controls.dateRange:RelationButton
                attr:class="controlsDemo-dateRange-RelationController__relationButton demo-dateRange-RelationController__{{_bindType2}}"
                bind:value="_bindType2"/>
          <Controls.dateRange:RelationWrapper
@@ -85,7 +85,7 @@
                number="{{0}}"
                ranges="{{content.ranges}}"
                relationMode="byCapacity">
-            <Controls.dateRange:RangeShortSelector styleMode="info" attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector1"/>
+            <Controls.dateRange:RangeShortSelector fontColorStyle="label" attr:class="controlsDemo-dateRange-RelationController__selector demo-dateRange-RelationController__selector1"/>
          </Controls.dateRange:RelationWrapper>
          <Controls.dateRange:RelationWrapper
                number="{{1}}"
