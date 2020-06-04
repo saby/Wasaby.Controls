@@ -3167,7 +3167,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
                 // Animation should be played only if checkboxes are visible.
                 if (this._options.multiSelectVisibility !== 'hidden') {
-                    this._itemActionsController.setRightSwipeItem(item.getContents().getKey());
+                    this._itemActionsController.activateRightSwipe(item.getContents().getKey());
                 }
                 _private.setMarkedKey(this, key);
             }
@@ -3201,7 +3201,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
-            this._itemActionsController.setRightSwipeItem(null);
+            this._itemActionsController.deactivateSwipe();
             this._listViewModel.nextVersion();
         }
     },

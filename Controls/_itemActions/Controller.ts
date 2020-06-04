@@ -184,16 +184,9 @@ export class Controller {
      * Устанавливает состояние элемента rightSwiped
      * @param itemKey
      */
-    setRightSwipeItem(itemKey: TItemKey) {
-        const oldSwipeItem = this._collection.find((item) => item.isRightSwiped());
-        const newSwipeItem = this._collection.getItemBySourceKey(itemKey);
-
-        if (oldSwipeItem) {
-            oldSwipeItem.setRightSwiped(false);
-        }
-        if (newSwipeItem) {
-            newSwipeItem.setRightSwiped(true);
-        }
+    activateRightSwipe(itemKey: TItemKey) {
+        this._setSwipeItem(itemKey);
+        this.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
     }
 
     /**

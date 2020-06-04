@@ -31,7 +31,6 @@ export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, 
 export enum ANIMATION_STATE {
     CLOSE = 'close',
     OPEN = 'open',
-    NONE = 'none',
     RIGHT_SWIPE = 'right-swipe'
 }
 

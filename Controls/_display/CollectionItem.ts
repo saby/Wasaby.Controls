@@ -87,8 +87,6 @@ export default class CollectionItem<T> extends mixin<
 
     protected _$swiped: boolean;
 
-    protected _$rightSwiped: boolean;
-
     protected _$editingContents: T;
 
     protected _$active: boolean;
@@ -348,20 +346,18 @@ export default class CollectionItem<T> extends mixin<
         return this.hasVisibleActions() && this._$actions.showed.some((action: any) => !!action.icon);
     }
 
+    /**
+     * Элемент коллеекции свайпнут вправо (происходит анимация right-swipe)
+     */
     isRightSwiped(): boolean {
-        return this._$rightSwiped;
+        return this._$swiped && this.getOwner().getSwipeAnimation() === ANIMATION_STATE.RIGHT_SWIPE;
     }
 
-    setRightSwiped(swiped: boolean): boolean {
-        if (this._$rightSwiped === swiped) {
-            return;
-        }
-        this._$rightSwiped = swiped;
-        this._nextVersion();
-    }
-
+    /**
+     * Элемент коллекции свайпнут влево (состояние анимации open или close)
+     */
     isSwiped(): boolean {
-        return this._$swiped
+        return this._$swiped && this.getOwner().getSwipeAnimation() !== ANIMATION_STATE.RIGHT_SWIPE;
     }
 
     setSwiped(swiped: boolean, silent?: boolean): void {
