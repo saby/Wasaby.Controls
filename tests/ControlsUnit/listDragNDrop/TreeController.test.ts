@@ -52,7 +52,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       controller.startDrag(5, new ItemsEntity( { items: [5] } ));
    });
 
-   it('isInsideDragTargetNode', () => {
+/*   it('isInsideDragTargetNode', () => {
       const event = {
          target: {
             getBoundingClientRect() {
@@ -74,7 +74,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
 
       event.nativeEvent.pageY = 90;
       assert.isFalse(controller.isInsideDragTargetNode(event));
-   });
+   });*/
 
    describe('calculateDragPosition', () => {
       it('hover on dragged item', () => {
@@ -146,7 +146,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
 
    });
 
-   it('calculateDragPositionRelativeNode', () => {
+/*   it('calculateDragPositionRelativeNode', () => {
       const calculateDragPositionSpy = spy(controller, 'calculateDragPosition');
       const event = {
          target: {
@@ -168,7 +168,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       // undefined - так как startDrag не был вызван
       assert.isTrue(calculateDragPositionSpy.withArgs(targetNodeData, 'before').calledOnce,
          'calculateDragPosition не вызвался или вызвался с неверными параметрами');
-   });
+   });*/
 
    describe('startCountDownForExpandNode', () => {
       let expandNodeCalled = false, nodeItemData;
