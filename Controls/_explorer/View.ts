@@ -120,10 +120,11 @@ var
                resolver(result);
                self._firstLoad = false;
                _private.fillRestoredMarkedKeysByBreadCrumbs(
-                   self,
                    _private.getDataRoot(self),
                    self._breadCrumbsItems,
-                   self._restoredMarkedKeys
+                   self._restoredMarkedKeys,
+                   self._options.parentProperty,
+                   self._options.navigation
                );
             }
          },
@@ -138,13 +139,13 @@ var
             _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
          },
-         fillRestoredMarkedKeysByBreadCrumbs: function(self, root, breadCrumbs, restoredMarkedKeys) {
+         fillRestoredMarkedKeysByBreadCrumbs: function(root, breadCrumbs, restoredMarkedKeys, parentProperty, navigation) {
             restoredMarkedKeys[root] = {
                markedKey: null
             };
             if (breadCrumbs && breadCrumbs.forEach) {
                breadCrumbs.forEach((crumb) => {
-                  const parentKey = crumb.get(self._options.parentProperty);
+                  const parentKey = crumb.get(parentProperty);
                   const crumbKey = crumb.getKey();
                   restoredMarkedKeys[crumbKey] = {
                      parent: parentKey,
@@ -153,8 +154,8 @@ var
                   if (restoredMarkedKeys[parentKey]) {
                      restoredMarkedKeys[parentKey].markedKey = crumbKey;
 
-                     if (_private.isCursorNavigation(self._options.navigation)) {
-                        self._restoredMarkedKeys[parentKey].cursorPosition = _private.getCursorPositionFor(crumb, self._options.navigation);
+                     if (_private.isCursorNavigation(navigation)) {
+                        restoredMarkedKeys[parentKey].cursorPosition = _private.getCursorPositionFor(crumb, navigation);
                      }
                   }
                });
