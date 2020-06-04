@@ -39,7 +39,6 @@
 export {default as IBind} from './_display/IBind';
 export {default as TreeChildren} from './_display/TreeChildren';
 export {default as Abstract} from './_display/Abstract';
-export {ANIMATION_STATE, IBaseCollection, ICollectionCommand, TItemKey} from './_display/interface/ICollection';
 export {default as Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig} from './_display/Collection';
 export {default as CollectionItem} from './_display/CollectionItem';
 export {default as Enum} from './_display/Enum';
@@ -52,6 +51,9 @@ export {default as Ladder} from './_display/Ladder';
 export {default as Search} from './_display/Search';
 export {default as Tree} from './_display/Tree';
 export {default as TreeItem} from './_display/TreeItem';
+
+export {ANIMATION_STATE} from './_display/interface/ICollection';
+export {IBaseCollection, TItemKey} from './_display/interface';
 
 export {default as TileCollection} from './_display/TileCollection';
 export {default as TileCollectionItem} from './_display/TileCollectionItem';

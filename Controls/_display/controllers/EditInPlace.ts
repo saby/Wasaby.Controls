@@ -1,4 +1,4 @@
-import { TItemKey, IBaseCollection, IStrategyCollection } from '../interface/ICollection';
+import { TItemKey, IBaseCollection, IStrategyCollection } from '../interface';
 
 import AddInPlaceStrategy from '../itemsStrategy/AddInPlace';
 import { Model } from 'Types/entity';

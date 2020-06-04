@@ -38,10 +38,6 @@ const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editingContents', 'animated', 'canShowActions', 'expanded'];
 
-
-
-export type SourceCollection<T> = T[] | ISourceCollection<T>;
-
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
 }

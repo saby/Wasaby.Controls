@@ -1,39 +1,44 @@
 import {DestroyableMixin, ObservableMixin} from "Types/entity";
-import IItemsStrategy from '../IItemsStrategy';
 import {IEnumerable} from "../Abstract";
-
-export type TItemKey = string | number;
-
-export interface IBaseCollection<T> {
-    each(cb: (item: T) => void): void;
-    getItemBySourceKey(key: TItemKey): T;
-    getCount(): number;
-    find(predicate: (item: T) => boolean): T;
-    getNext(item: T): T;
-    getPrevious(item: T): T;
-    nextVersion(): void;
-}
-
-export interface IStrategyCollection<T> {
-    appendStrategy(strategy: Function, options?: object): void;
-    getStrategyInstance(strategy: Function): IItemsStrategy<unknown, T>;
-    removeStrategy(strategy: Function): void;
-}
-
-export interface ICollectionCommand<T> {
-    execute(collection: IBaseCollection<T>): void;
-}
-
+import {IBaseCollection} from "../interface";
 
 export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
 }
 
+/*
+ * @typedef {Enum} ANIMATION_STATE
+ * @description Состояние анимации свайпа
+ * @variant open Открывается ItemActions по свайпу
+ * @variant close Закрывается ItemActions по свайпу
+ * @variant right-swipe Элемент свайпнут вправо.
+ */
+/*
+ * @typedef {Enum} ANIMATION_STATE
+ * @variant open ItemActions are opening
+ * @variant close ItemActions are closing
+ * @variant right-swipe item has been swiped rights
+ */
 export enum ANIMATION_STATE {
     CLOSE = 'close',
     OPEN = 'open',
     RIGHT_SWIPE = 'right-swipe'
 }
 
+
+/*
+ * Интерфейс коллекции, по которому CollectionItem обращается к Collection
+ *
+ * @interface Controls/_display/interface/ICollection
+ * @private
+ * @author Аверкиев П.А.
+ */
+/*
+ * Collection interface to call Collection methods from CollectionItem
+ *
+ * @interface Controls/_display/interface/ICollection
+ * @private
+ * @author Аверкиев П.А.
+ */
 export interface ICollection<S, T> extends IBaseCollection<T> {
     getCollection(): ISourceCollection<S>;
     getDisplayProperty(): string;

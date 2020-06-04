@@ -265,9 +265,9 @@ const _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
-                        if (self._items) {
-                           self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
-                        }
+                    if (self._items) {
+                       self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                    }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
@@ -282,7 +282,7 @@ const _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
-                        self._items.subscribe('onCollectionChange', self._onItemsChanged);
+                    self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._markerController) {
                         _private.updateMarkerController(self, self._options);
@@ -406,8 +406,8 @@ const _private = {
             // because of IntersectionObserver will trigger only after DOM redraw, we should'n hide indicator
             // otherwise empty template will shown
             if (needShowIndicatorByNavigation && needShowIndicatorByMeta) {
-                    _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
-                } else {
+                _private.showIndicator(self, hasMoreDataDown ? 'down' : 'up');
+            } else {
                 _private.hideIndicator(self);
             }
         } else {
@@ -483,19 +483,19 @@ const _private = {
         }
     },
     spaceHandler: function(self, event) {
-            const model = self.getViewModel();
-            let toggledItemId = model.getMarkedKey();
+        const model = self.getViewModel();
+        let toggledItemId = model.getMarkedKey();
 
-            if (!model.getItemById(toggledItemId) && model.getCount()) {
-                toggledItemId = model.at(0).getContents().getId();
-            }
+        if (!model.getItemById(toggledItemId) && model.getCount()) {
+            toggledItemId = model.at(0).getContents().getId();
+        }
 
-            if (toggledItemId) {
+        if (toggledItemId) {
             if (self._selectionController) {
                 self._selectionController.toggleItem(toggledItemId);
             }
-                _private.moveMarkerToNext(self, event);
-            }
+            _private.moveMarkerToNext(self, event);
+        }
     },
     prepareFooter: function(self, navigation, sourceController) {
         var
@@ -1266,7 +1266,7 @@ const _private = {
                   case IObservable.ACTION_ADD:
                      result = self._selectionController.handleAddItems(newItems);
                      break;
-        }
+               }
                self.handleSelectionControllerResult(result);
             }
         }
@@ -2993,21 +2993,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _processItemMouseEnterWithDragNDrop(_, itemData) {
-            const dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
-            let dragPosition;
-            if (dragEntity) {
-                dragPosition = this._options.useNewModel ?
+        const dragEntity = this._options.useNewModel ? this._draggingEntity : this._listViewModel.getDragEntity();
+        let dragPosition;
+        if (dragEntity) {
+            dragPosition = this._options.useNewModel ?
                     {position: 'before', item: itemData.getContents()} :
                     this._listViewModel.calculateDragTargetPosition(itemData);
-                if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false) {
-                    if (this._options.useNewModel) {
-                        this._draggingTargetItem = dragPosition.item;
-                    } else {
-                        this._listViewModel.setDragTargetPosition(dragPosition);
-                    }
+            if (dragPosition && this._notify('changeDragTarget', [dragEntity, dragPosition.item, dragPosition.position]) !== false) {
+                if (this._options.useNewModel) {
+                    this._draggingTargetItem = dragPosition.item;
+                } else {
+                    this._listViewModel.setDragTargetPosition(dragPosition);
                 }
-            this._unprocessedDragEnteredItem = null;
             }
+            this._unprocessedDragEnteredItem = null;
+        }
     },
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (this._options.itemsDragNDrop) {

@@ -9,7 +9,6 @@ import { Sticky } from 'Controls/popup';
 import {
     Collection,
     CollectionItem,
-    ICollectionCommand,
     ANIMATION_STATE
 } from 'Controls/display';
 import {
@@ -262,10 +261,6 @@ export default class View extends Control<IViewOptions> {
         // TODO fire 'markedKeyChanged' event if needed
     }
 
-    protected _executeCommands(commands: Array<ICollectionCommand<unknown>>): void {
-        commands.forEach((command) => command.execute(this._collection));
-    }
-
     /**
      * Обрабатывает клик по конкретной операции
      * @param action
@@ -337,9 +332,6 @@ export default class View extends Control<IViewOptions> {
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
-        if (menuConfig) {
-            clickEvent.nativeEvent.preventDefault();
-            clickEvent.stopImmediatePropagation();
         if (menuConfig) {
             const onResult = this._itemActionsMenuResultHandler.bind(this);
             const onClose = this._itemActionsMenuCloseHandler.bind(this);
