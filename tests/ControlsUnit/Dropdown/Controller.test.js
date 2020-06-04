@@ -1155,10 +1155,11 @@ define(
             });
 
             it('_private::onResult itemClick on history item', function() {
-               let resultItems, updated, closeByNodeClick = true;
+               let resultItems, updated, closeByNodeClick = true, testEvent;
                dropdownController._notify = function (e, d) {
                   if (e === 'selectedItemsChanged') {
                      resultItems = d[0];
+                     testEvent = d[1];
                      return closeByNodeClick;
                   }
                };
@@ -1182,11 +1183,17 @@ define(
                   },
                   keyProperty: 'id'
                });
+
+               let nativeEvent = {
+                  keyCode: 28
+               };
+
                item.set('originalId', item.getId());
                item.set('id', item.getId() + '_history');
                assert.equal(item.getId(), '6_history');
-               dropdownController._onResult('itemClick', item);
+               dropdownController._onResult('itemClick', item, nativeEvent);
                assert.equal(resultItems[0].getId(), '6');
+               assert.deepEqual(testEvent, nativeEvent);
                assert.isTrue(updated);
 
                updated = false;

@@ -10,6 +10,7 @@ import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/Counte
 import {SyntheticEvent} from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
 import {RecordSet} from 'Types/collection';
+import { Sticky, IStickyPopupOptions } from 'Controls/popup';
 
 /**
  * Контрол, отображающий коллекцию элементов.
@@ -36,7 +37,18 @@ import {RecordSet} from 'Types/collection';
 const JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption';
 const JS_CLASS_CROSS_ITEM = '.js-controls-SelectedCollection__item__cross';
 
-class SelectedCollection extends Control<IControlOptions> {
+export interface ISelectedCollectionOptions extends IControlOptions{
+   displayProperty: string;
+   items: RecordSet;
+   maxVisibleItems: number;
+   itemTemplate: TemplateFunction;
+}
+
+interface ISelectedCollectionChildren {
+   infoBoxLink: HTMLElement;
+}
+
+class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _template: TemplateFunction = template;
    protected _visibleItems: unknown[] = 0;
    protected _notifyHandler: (event: SyntheticEvent, eventName: string) => void = tmplNotify;
@@ -46,6 +58,8 @@ class SelectedCollection extends Control<IControlOptions> {
    protected _contentTemplate: TemplateFunction = ContentTemplate;
    protected _crossTemplate: TemplateFunction = CrossTemplate;
    protected _counterTemplate: TemplateFunction = CounterTemplate;
+   protected _children: ISelectedCollectionChildren;
+   protected _infoBoxStickyId: string = null;
 
    protected _beforeMount(options: IControlOptions): void {
       this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
@@ -60,8 +74,9 @@ class SelectedCollection extends Control<IControlOptions> {
       if (this._isShowCounter(itemsCount, newOptions.maxVisibleItems)) {
          this._counterWidth = newOptions._counterWidth ||
                               this._getCounterWidth(itemsCount, newOptions.readOnly, newOptions.itemsLayout);
-      } else if (this._children.infoBox && this._children.infoBox.isOpened()) {
+      } else if (this._infoBoxStickyId) {
          this._notify('closeInfoBox');
+         Sticky.closePopup(this._infoBoxStickyId);
       }
    }
 
@@ -101,21 +116,40 @@ class SelectedCollection extends Control<IControlOptions> {
    }
 
    protected _openInfoBox(): void {
-      const config: Object = {
+      const config: IStickyPopupOptions = {
          target: this._children.infoBoxLink,
          opener: this,
+         closeOnOutsideClick: true,
+         actionOnScroll: 'close',
          width: this._container.offsetWidth,
+         template: 'Controls/lookupPopup:Collection',
+         direction: {
+            vertical: 'bottom',
+            horizontal: 'right'
+         },
+         targetPoint: {
+            vertical: 'bottom',
+            horizontal: 'left'
+         },
          templateOptions: {
             items: this._options.items.clone(),
             readOnly: this._options.readOnly,
             displayProperty: this._options.displayProperty,
             itemTemplate: this._options.itemTemplate,
             clickCallback: this._clickCallbackPopup
+         },
+         eventHandlers: {
+            onClose: () => {
+               this._infoBoxStickyId = null;
+            }
          }
       };
 
       this._notify('openInfoBox', [config]);
-      this._children.infoBox.open(config);
+
+      Sticky.openPopup(config).then((popupId) => {
+         this._infoBoxStickyId = popupId;
+      });
    }
 
    private _getVisibleItems(items: RecordSet, maxVisibleItems: number): unknown[]  {
