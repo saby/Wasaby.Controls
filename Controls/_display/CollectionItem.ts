@@ -347,7 +347,7 @@ export default class CollectionItem<T> extends mixin<
     }
 
     /**
-     * Элемент коллеекции свайпнут вправо (происходит анимация right-swipe)
+     * Элемент коллеекции свайпнут вправо (состояние анимации right-swipe)
      */
     isRightSwiped(): boolean {
         return this._$swiped && this.getOwner().getSwipeAnimation() === ANIMATION_STATE.RIGHT_SWIPE;
