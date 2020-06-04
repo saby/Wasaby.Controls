@@ -702,6 +702,14 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
                 dndListController.setDragPosition(dragTargetPosition);
             }
+
+            /*
+                Если мы сверху меняем позицию на before, то есть перед этим узлом вставляем элемент,
+                то почему-то не срабатывает mouseLeave
+             */
+            if (dragTargetPosition.position === 'before') {
+                dndListController.stopCountDownForExpandNode();
+            }
         }
 
         if (dndListController.isInsideDragTargetNode(event)) {

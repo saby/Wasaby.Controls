@@ -4,7 +4,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { TreeItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 
-const DRAG_MAX_OFFSET = 13,
+const DRAG_MAX_OFFSET = 10,
       EXPAND_ON_DRAG_DELAY = 1000;
 
 export interface ITreeModel extends IFlatModel {
@@ -47,7 +47,7 @@ export default class TreeController extends FlatController {
       }
 
       if (offset) {
-         if (offset.top > 0 && offset.top < DRAG_MAX_OFFSET || offset.bottom > 0 && offset.bottom < DRAG_MAX_OFFSET) {
+         if (offset.top > DRAG_MAX_OFFSET && offset.bottom > DRAG_MAX_OFFSET) {
             return true;
          }
       }
@@ -60,7 +60,7 @@ export default class TreeController extends FlatController {
 
       const offset = this._calculateOffset(event);
       if (offset) {
-         if (this._draggingItemData && this.isInsideDragTargetNode(event, offset)) {
+         if (this._draggingItemData && !this.isInsideDragTargetNode(event, offset)) {
             const position = offset.top < DRAG_MAX_OFFSET ? 'before' : 'after';
             dragPosition = this.calculateDragPosition(itemData, position);
          }
