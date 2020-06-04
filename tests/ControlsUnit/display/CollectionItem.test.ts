@@ -393,6 +393,7 @@ describe('Controls/_display/CollectionItem', () => {
         beforeEach(() => {
             given = {};
             owner = {
+                _swipeAnimation: null,
                 notifyItemChange(item: CollectionItem<string>, property: string): void {
                     given.item = item;
                     given.property = property;

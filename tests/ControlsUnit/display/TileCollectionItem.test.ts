@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { TileCollectionItem } from 'Controls/display';
+import {CollectionItem, TileCollectionItem} from 'Controls/display';
 
 interface IChangedData<T> {
     item?: TileCollectionItem<T>;
@@ -264,6 +264,7 @@ describe('Controls/_display/TileCollectionItem', () => {
 
     describe('.getTileContentClasses()', () => {
         const owner = {
+            _swipeAnimation: null,
             getTileScalingMode(): string {
                 return 'dynamic';
             },
@@ -272,6 +273,12 @@ describe('Controls/_display/TileCollectionItem', () => {
             },
             getMarkerVisibility(): string {
                 return 'onactivated';
+            },
+            getSwipeAnimation() {
+                return this._swipeAnimation;
+            },
+            setSwipeAnimation(animation) {
+                this._swipeAnimation = animation;
             }
         };
 
