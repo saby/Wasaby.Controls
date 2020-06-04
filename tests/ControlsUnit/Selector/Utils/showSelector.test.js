@@ -118,5 +118,13 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
          showSelector.default(baseController, {});
          assert.isFalse(isShowSelector);
       });
+
+      it('showSelector without selectorTemplate', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = null;
+         baseController._openingSelector = null;
+
+         assert.isNull(showSelector.default(baseController, {}));
+      });
    });
 });
