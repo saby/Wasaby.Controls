@@ -8,6 +8,10 @@
 <div class="controls-SpoilerHeading__wrapper
                controls-SpoilerHeading__wrapper_theme-{{_options.theme}}
                controls-fontsize-{{_options.fontSize}}_theme-{{_options.theme}}">
+    <!--Базовая линия контрола определяется либо текстом, либо иконкой, в зависимости
+        от расположения в верстке. Иконка должна иметь такую же базовую линию как у
+        текста. Для этого добавляем пустой символ, который задаст базовую линию.-->
+    <div class="controls-SpoilerHeading__icon-baseline">&#65279;</div>
     <div class="controls-SpoilerHeading__iconWrapper
                   controls-SpoilerHeading__iconWrapper_theme-{{_options.theme}}">
         <ws:partial template="{{_icon}}"
