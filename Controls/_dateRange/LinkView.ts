@@ -171,7 +171,7 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
          this._viewMode = newOption.viewMode;
          this._styleMode = newOption.styleMode || this._defaultStyleMap[newOption.viewMode];
          if (newOption.styleMode) {
-            Logger.warn('LinkView: Используется устаревшая опция styleMode, используйте опцию fontColorStyle', this);
+            Logger.error('LinkView: Используется устаревшая опция styleMode, используйте опцию fontColorStyle', this);
          }
          if (newOption.fontColorStyle) {
             this._fontColorStyle = newOption.fontColorStyle;
