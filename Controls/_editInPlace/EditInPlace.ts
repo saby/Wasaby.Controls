@@ -37,7 +37,7 @@ const _private = {
     afterBeginEdit(self: EditInPlace, options: IEditingConfig, isAdd: boolean): IEditingConfig {
         self._editingItem = options.item.clone();
         self._editingItem.acceptChanges();
-        self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
+        self._setEditingItemData(self._editingItem, self._options.listViewModel, self._options);
         self._notify('afterBeginEdit', [self._editingItem, isAdd]);
         self._options.updateItemActions && self._options.updateItemActions();
         return options;
@@ -132,18 +132,18 @@ const _private = {
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        if (self._isAdd && commit && self._options.listModel.getCount() > 1) {
+        if (self._isAdd && commit && self._options.listViewModel.getCount() > 1) {
             // TODO переделать на marker.Controller, когда этот контрол будет переводиться в контроллер
-            self._options.listModel.setMarkedKey(self._editingItem.getId());
+            self._options.listViewModel.setMarkedKey(self._editingItem.getId());
         }
         if (self._options.useNewModel) {
-            self._options.listModel.getCollection().acceptChanges();
+            self._options.listViewModel.getCollection().acceptChanges();
         } else {
-            self._options.listModel.acceptChanges();
+            self._options.listViewModel.acceptChanges();
         }
         _private.resetVariables(self);
         if (!self._destroyed) {
-            self._setEditingItemData(null, self._options.listModel, self._options);
+            self._setEditingItemData(null, self._options.listViewModel, self._options);
         }
         // Нотифицировать о событии "После завершения редактирования" нужно после очистки editingItemData,
         // т.к. все остальные контролы проверяют наличие запущенного редактирования именно по ней.
@@ -202,9 +202,9 @@ const _private = {
     acceptChanges(self: EditInPlace): void {
         if (self._isAdd) {
             if (self._options.useNewModel) {
-                self._options.listModel.getCollection().append([self._editingItem]);
+                self._options.listViewModel.getCollection().append([self._editingItem]);
             } else {
-                self._options.listModel.appendItems([self._editingItem]);
+                self._options.listViewModel.appendItems([self._editingItem]);
             }
         } else {
             self._originalItem.merge(self._editingItem);
@@ -214,7 +214,7 @@ const _private = {
     resetVariables(self) {
         if (self._editingItem) {
             self._editingItem.unsubscribe('onPropertyChange', self._resetValidation);
-            self._options.listModel.unsubscribe('onCollectionChange', self._updateIndex);
+            self._options.listViewModel.unsubscribe('onCollectionChange', self._updateIndex);
         }
         self._originalItem = null;
         self._editingItem = null;
@@ -225,37 +225,37 @@ const _private = {
         return self._formController.submit();
     },
 
-    hasParentInItems(item, listModel) {
+    hasParentInItems(item, listViewModel) {
         // TODO No parents in new model for now for now
-        if (!listModel['[Controls/_display/Collection']) {
-            return !!listModel._options.parentProperty && listModel.getItemById(item.get(listModel._options.parentProperty));
+        if (!listViewModel['[Controls/_display/Collection']) {
+            return !!listViewModel._options.parentProperty && listViewModel.getItemById(item.get(listViewModel._options.parentProperty));
         }
     },
 
     editNextRow(self: EditInPlace, editNextRow: boolean, addAnyway: boolean = false) {
-        const index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
+        const index = _private.getEditingItemIndex(self, self._editingItem, self._options.listViewModel);
         const editingConfig = self._options.editingConfig || {};
 
         if (editNextRow) {
-            if (!self._isAdd && _private.getNext(self._editingItem, index, self._options.listModel)) {
+            if (!self._isAdd && _private.getNext(self._editingItem, index, self._options.listViewModel)) {
                 return self.beginEdit({
-                    item: _private.getNext(self._editingItem, index, self._options.listModel)
+                    item: _private.getNext(self._editingItem, index, self._options.listViewModel)
                 });
             } else if (addAnyway || editingConfig.autoAdd) {
                 return self.beginAdd();
             } else {
                 return self.commitEdit();
             }
-        } else if (_private.getPrevious(self._editingItem, index, self._options.listModel)) {
+        } else if (_private.getPrevious(self._editingItem, index, self._options.listViewModel)) {
             return self.beginEdit({
-                item: _private.getPrevious(self._editingItem, index, self._options.listModel)
+                item: _private.getPrevious(self._editingItem, index, self._options.listViewModel)
             });
         } else {
             return self.commitEdit();
         }
     },
 
-    getNext(editingItem, index, listModel) {
+    getNext(editingItem, index, listViewModel) {
         let
             offset = 1,
             result,
@@ -263,16 +263,16 @@ const _private = {
             parentIndex,
             count;
 
-        if (_private.hasParentInItems(editingItem, listModel)) {
-            parentId = editingItem.get(listModel._options.parentProperty);
-            parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
-            count = parentIndex + listModel.getChildren(parentId).length + 1;
+        if (_private.hasParentInItems(editingItem, listViewModel)) {
+            parentId = editingItem.get(listViewModel._options.parentProperty);
+            parentIndex = listViewModel.getIndexBySourceItem(listViewModel.getItemById(parentId, listViewModel._options.keyProperty).getContents());
+            count = parentIndex + listViewModel.getChildren(parentId).length + 1;
         } else {
-            count = listModel.getCount();
+            count = listViewModel.getCount();
         }
 
         while (index + offset < count) {
-            result = listModel.at(index + offset).getContents();
+            result = listViewModel.at(index + offset).getContents();
             if (result instanceof entity.Record) {
                 return result;
             }
@@ -280,7 +280,7 @@ const _private = {
         }
     },
 
-    getPrevious(editingItem, index, listModel) {
+    getPrevious(editingItem, index, listViewModel) {
         let
             offset = -1,
             result,
@@ -288,16 +288,16 @@ const _private = {
             parentIndex,
             count;
 
-        if (_private.hasParentInItems(editingItem, listModel)) {
-            parentId = editingItem.get(listModel._options.parentProperty);
-            parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
+        if (_private.hasParentInItems(editingItem, listViewModel)) {
+            parentId = editingItem.get(listViewModel._options.parentProperty);
+            parentIndex = listViewModel.getIndexBySourceItem(listViewModel.getItemById(parentId, listViewModel._options.keyProperty).getContents());
             count = parentIndex + 1;
         } else {
             count = 0;
         }
 
         while (index + offset >= count) {
-            result = listModel.at(index + offset).getContents();
+            result = listViewModel.at(index + offset).getContents();
             if (result instanceof entity.Record) {
                 return result;
             }
@@ -305,38 +305,38 @@ const _private = {
         }
     },
 
-    getEditingItemIndex(self: EditInPlace, editingItem: Model, listModel: ViewModel<Model>, defaultIndex: Number|undefined): Number {
-        let index = defaultIndex !== undefined ? defaultIndex : listModel.getCount();
+    getEditingItemIndex(self: EditInPlace, editingItem: Model, listViewModel: ViewModel<Model>, defaultIndex: Number|undefined): Number {
+        let index = defaultIndex !== undefined ? defaultIndex : listViewModel.getCount();
         let originalItem;
         let parentId;
         let parentIndex;
-        const groupProperty = listModel.getGroupProperty();
+        const groupProperty = listViewModel.getGroupProperty();
 
         // TODO no hasParentInItems for new model at the moment
         if (self._options.useNewModel) {
-            originalItem = listModel.getItemBySourceKey(editingItem.get(listModel.getKeyProperty()));
+            originalItem = listViewModel.getItemBySourceKey(editingItem.get(listViewModel.getKeyProperty()));
         } else {
-            originalItem = listModel.getItemById(
-                editingItem.get(listModel._options.keyProperty),
-                listModel._options.keyProperty
+            originalItem = listViewModel.getItemById(
+                editingItem.get(listViewModel._options.keyProperty),
+                listViewModel._options.keyProperty
             );
         }
 
         if (originalItem) {
-            index = listModel.getIndexByKey(originalItem.getContents().getKey());
-        } else if (_private.hasParentInItems(editingItem, listModel)) {
-            parentId = editingItem.get(listModel._options.parentProperty);
-            parentIndex = listModel.getIndexByKey(
-                listModel.getItemById(
+            index = listViewModel.getIndexByKey(originalItem.getContents().getKey());
+        } else if (_private.hasParentInItems(editingItem, listViewModel)) {
+            parentId = editingItem.get(listViewModel._options.parentProperty);
+            parentIndex = listViewModel.getIndexByKey(
+                listViewModel.getItemById(
                     parentId,
-                    listModel._options.keyProperty
+                    listViewModel._options.keyProperty
                 ).getContents().getKey()
             );
-            index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listModel.getDisplayChildrenCount(parentId)) + 1;
-        } else if (listModel._options.groupingKeyCallback || groupProperty) {
-            const groupId = groupProperty ? editingItem.get(groupProperty) : listModel._options.groupingKeyCallback(editingItem);
+            index = parentIndex + (defaultIndex !== undefined ? defaultIndex : listViewModel.getDisplayChildrenCount(parentId)) + 1;
+        } else if (listViewModel._options.groupingKeyCallback || groupProperty) {
+            const groupId = groupProperty ? editingItem.get(groupProperty) : listViewModel._options.groupingKeyCallback(editingItem);
             const isAddInTop = self._options.editingConfig && self._options.editingConfig.addPosition === 'top';
-            index = _private.getItemIndexWithGrouping(listModel.getDisplay(), groupId, isAddInTop);
+            index = _private.getItemIndexWithGrouping(listViewModel.getDisplay(), groupId, isAddInTop);
         }
 
         return index;
@@ -405,7 +405,7 @@ export interface IEditingOptions {
     editingConfig?: IEditingConfig;
     keyProperty?: String|Number;
     errorController?: typeof dataSourceError;
-    listModel?: ViewModel<Model>;
+    listViewModel?: ViewModel<Model>;
     readOnly?: boolean;
     useNewModel?: boolean;
     multiSelectVisibility?: boolean;
@@ -439,7 +439,7 @@ export default class EditInPlace {
     _clickItemInfo: any;
     _pendingInputRenderState: any;
     _isCommitInProcess: boolean;
-    _listModel: ViewModel<Model>;
+    _listViewModel: ViewModel<Model>;
 
     constructor(options: IEditingOptions = <IEditingOptions> { }) {
         this._updateIndex = this._updateIndex.bind(this);
@@ -453,20 +453,20 @@ export default class EditInPlace {
     }
 
     beforeMount(newOptions: any): void {
-        if (newOptions.editingConfig && newOptions.listModel) {
-            this._options.listModel = newOptions.listModel;
+        if (newOptions.editingConfig && newOptions.listViewModel) {
+            this._options.listViewModel = newOptions.listViewModel;
             if (newOptions.editingConfig.item) {
                 this._editingItem = newOptions.editingConfig.item;
-                this._setEditingItemData(this._editingItem, this._options.listModel, newOptions);
+                this._setEditingItemData(this._editingItem, this._options.listViewModel, newOptions);
                 if (!this._isAdd) {
                     if (newOptions.useNewModel) {
-                        this._originalItem = this._options.listModel.getItemBySourceKey(
-                            this._editingItem.get(this._options.listModel.getKeyProperty())
+                        this._originalItem = this._options.listViewModel.getItemBySourceKey(
+                            this._editingItem.get(this._options.listViewModel.getKeyProperty())
                         ).getContents();
                     } else {
-                        this._originalItem = this._options.listModel.getItemById(
-                            this._editingItem.get(this._options.listModel._options.keyProperty),
-                            this._options.listModel._options.keyProperty
+                        this._originalItem = this._options.listViewModel.getItemById(
+                            this._editingItem.get(this._options.listViewModel._options.keyProperty),
+                            this._options.listViewModel._options.keyProperty
                         ).getContents();
                     }
                 }
@@ -475,9 +475,9 @@ export default class EditInPlace {
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
     }
 
-    afterMount(listModel: ViewModel<Model>, formContontroller: any): void {
+    afterMount(listViewModel: ViewModel<Model>, formContontroller: any): void {
         this._formController = formContontroller;
-        this._options.listModel = listModel;
+        this._options.listViewModel = listViewModel;
         this._notify('registerFormOperation', [{
             save: this._formOperationHandler.bind(this, true),
             cancel: this._formOperationHandler.bind(this, false),
@@ -643,7 +643,7 @@ export default class EditInPlace {
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
         if (this._editingItemData) {
             if (this._options.multiSelectVisibility !== newOptions.multiSelectVisibility) {
-                this._setEditingItemData(this._editingItemData.item, newOptions.listModel, newOptions);
+                this._setEditingItemData(this._editingItemData.item, newOptions.listViewModel, newOptions);
             }
         }
 
@@ -728,12 +728,12 @@ export default class EditInPlace {
         }
     }
 
-    _setEditingItemData(item, listModel, options): void {
+    _setEditingItemData(item, listViewModel, options): void {
         if (!item) {
             if (options.useNewModel) {
-                EditInPlaceController.endEdit(listModel);
+                EditInPlaceController.endEdit(listViewModel);
             } else {
-                listModel._setEditingItemData(null);
+                listViewModel._setEditingItemData(null);
             }
             this._editingItemData = null;
             return;
@@ -749,33 +749,33 @@ export default class EditInPlace {
 
         let editingItemProjection;
         if (options.useNewModel) {
-            editingItemProjection = listModel.getItemBySourceKey(
-                this._editingItem.get(listModel.getKeyProperty())
+            editingItemProjection = listViewModel.getItemBySourceKey(
+                this._editingItem.get(listViewModel.getKeyProperty())
             );
         } else  {
-            editingItemProjection = listModel.getItemById(
-                this._editingItem.get(listModel._options.keyProperty),
-                listModel._options.keyProperty
+            editingItemProjection = listViewModel.getItemById(
+                this._editingItem.get(listViewModel._options.keyProperty),
+                listViewModel._options.keyProperty
             );
         }
 
         if (!editingItemProjection) {
             this._isAdd = true;
             if (options.useNewModel) {
-                editingItemProjection = listModel.createItem(item);
+                editingItemProjection = listViewModel.createItem(item);
             } else {
-                editingItemProjection = listModel._prepareDisplayItemForAdd(item);
+                editingItemProjection = listViewModel._prepareDisplayItemForAdd(item);
             }
         }
 
         if (options.useNewModel) {
-            EditInPlaceController.beginEdit(listModel, item.getId(), item);
+            EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
-            this._editingItemData = listModel.getItemDataByItem(editingItemProjection);
+            this._editingItemData = listViewModel.getItemDataByItem(editingItemProjection);
 
             // TODO Make sure all of this is available in the new model
-            if (this._isAdd && _private.hasParentInItems(this._editingItem, listModel)) {
-                this._editingItemData.level = listModel.getItemById(
+            if (this._isAdd && _private.hasParentInItems(this._editingItem, listViewModel)) {
+                this._editingItemData.level = listViewModel.getItemById(
                     item.get(this._editingItemData.parentProperty)
                 ).getLevel() + 1;
             }
@@ -787,17 +787,17 @@ export default class EditInPlace {
                 this._editingItemData.index = _private.getEditingItemIndex(
                     this,
                     item,
-                    listModel,
+                    listViewModel,
                     _private.getAddPosition(options)
                 );
                 this._editingItemData.addPosition = options.editingConfig && options.editingConfig.addPosition;
                 this._editingItemData.drawActions = options.editingConfig && options.editingConfig.toolbarVisibility;
             }
 
-            listModel._setEditingItemData(this._editingItemData);
+            listViewModel._setEditingItemData(this._editingItemData);
         }
 
-        listModel.subscribe('onCollectionChange', this._updateIndex);
+        listViewModel.subscribe('onCollectionChange', this._updateIndex);
     }
 
     commitAndMoveNextRow(): void {
@@ -825,7 +825,7 @@ export default class EditInPlace {
             this._editingItemData.index = _private.getEditingItemIndex(
                 this,
                 this._editingItem,
-                this._options.listModel,
+                this._options.listViewModel,
                 _private.getAddPosition(this._options)
             );
         }

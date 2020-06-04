@@ -1852,7 +1852,7 @@ const _private = {
         if (options.editingConfig) {
             self._editInPlace = new EditInPlace(<IEditingOptions> {
                 editingConfig: options.editingConfig,
-                listModel: self._listViewModel,
+                listViewModel: self._listViewModel,
                 multiSelectVisibility: options.multiSelectVisibility,
                 errorController: self.__errorController,
                 source: self._sourceController,
@@ -2069,6 +2069,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 self._markerController = _private.createMarkerController(self, newOptions);
             }
 
+            if (self._editInPlace && self._listViewModel) {
+                self._editInPlace.beforeMount({...{listViewModel: self._listViewModel}, ...newOptions});
+            }
+
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
@@ -2128,9 +2132,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
-                    if (self._editInPlace && self._listViewModel) {
-                        self._editInPlace.beforeMount({...{listViewModel: self._listViewModel}, ...newOptions});
-                    }
+
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
                     // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
