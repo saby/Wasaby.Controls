@@ -60,18 +60,24 @@ define(
          let menu = new dropdown.Button(config);
 
          it('check item click', () => {
-            menu._notify = (e) => {
+            let testEvent;
+            menu._notify = (e, d) => {
                assert.isTrue(e === 'menuItemActivate' || e === 'onMenuItemActivate');
+               testEvent = d[1];
                if (e === 'onMenuItemActivate') {
                   return false;
                }
             };
+            let nativeEvent = {
+               keyCode: 28
+            };
             let eventResult = menu._onItemClickHandler('itemClick', [{
                id: '1',
                title: 'Запись 1'
-            }]);
+            }], nativeEvent);
 
             assert.isFalse(eventResult);
+            assert.deepEqual(testEvent, nativeEvent);
          });
 
          it('_beforeMount', () => {

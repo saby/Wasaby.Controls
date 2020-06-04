@@ -620,24 +620,9 @@ var ItemsViewModel = BaseViewModel.extend({
      * метод this.setItems() и this._display ещё не установлен после последнего сброса в null.
      */
     each(callback: collection.EnumeratorCallback<Record>, context?: object): void {
-        if (!this._display) {
-            // TODO https://online.sbis.ru/opendoc.html?guid=bb8b7062-2ddb-4102-bc6e-f98043d607d7
-            console.error('listViewModel.each() _display methods should not call before _display (re-)initialization');
-            this.reset();
-            while (this.isEnd()) {
-                const index = this.getCurrentIndex();
-                if (this.isShouldBeDrawnItem()) {
-                    callback.call(
-                        context,
-                        this.getCurrent(),
-                        index
-                    );
-                }
-                this.goToNext();
-            }
-            return;
+        if (this._display) {
+            this._display.each(callback, context);
         }
-        this._display.each(callback, context);
     },
 
     /**
@@ -647,19 +632,9 @@ var ItemsViewModel = BaseViewModel.extend({
      * метод this.setItems() и this._display ещё не установлен после последнего сброса в null.
      */
     find(predicate: (item: Model) => boolean): Model {
-        if (!this._display) {
-            // TODO https://online.sbis.ru/opendoc.html?guid=bb8b7062-2ddb-4102-bc6e-f98043d607d7
-            console.error('listViewModel.find() _display methods should not call before _display (re-)initialization');
-            this.reset();
-            while (this.isEnd()) {
-                const current = this.getCurrent();
-                if (predicate(current)) {
-                    return current;
-                }
-                this.goToNext();
-            }
+        if (this._display) {
+            return this._display.find(predicate);
         }
-        return this._display.find(predicate);
     },
 
     // New Model compatibility
