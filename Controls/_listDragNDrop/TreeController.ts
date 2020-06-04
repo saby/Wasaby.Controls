@@ -5,7 +5,7 @@ import { TreeItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 
 const DRAG_MAX_OFFSET = 13,
-      EXPAND_ON_DRAG_DELAY = 1000;
+      EXPAND_ON_DRAG_DELAY = 900;
 
 export interface ITreeModel extends IFlatModel {
    getPrevDragPosition(): IDragPosition;
