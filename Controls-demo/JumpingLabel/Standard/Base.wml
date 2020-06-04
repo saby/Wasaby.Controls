@@ -1,0 +1,42 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" caption="Enter your name"
+                                            contrastBackground="{{contrastBackground}}">
+         <Controls.input:Text/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.input:Money attr:class="controlsDemo__input" placeholder="Enter the amount" borderVisibility="partial"
+                            horizontalPadding="{{contrastBackground ? 'xs' : 'null'}}" tagStyle="success"
+                            textAlign="right"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.input:Area attr:class="controlsDemo__input" placeholder="Enter the text" borderVisibility="partial"
+                           horizontalPadding="{{contrastBackground ? 'xs' : 'null'}}" maxLines="{{4}}"/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" caption="Enter the password"
+                                            contrastBackground="{{contrastBackground}}">
+         <Controls.input:Password revealable="{{true}}"/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+   <!--<div class="controlsDemo__cell">
+      <Controls.jumpingLabel:SelectionContainer attr:class="controlsDemo__input" caption="Enter your name">
+         <Controls.lookup:Input
+            keyProperty="id"
+            searchParam="title"
+            source="{{source}}"
+            bind:value="_value"
+            bind:selectedKeys="_selectedKeys">
+            <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+            <ws:navigation source="page" view="page">
+               <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
+            </ws:navigation>
+            <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
+            <ws:itemTemplate>
+               <ws:partial template="Controls/lookup:ItemTemplate" displayProperty="title"></ws:partial>
+            </ws:itemTemplate>
+         </Controls.lookup:Input>
+      </Controls.jumpingLabel:SelectionContainer>
+   </div>-->
+</div>
