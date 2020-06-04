@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper__padding-left controlsDemo_fixedWidth800">
     <div class="controlsDemo_ColumnsView_itemTemplate-title controlsDemo__cell">Controls.scroll:ContainerBase</div>
-    <Controls.scroll:ContainerBase
-            attr:class="baseContainer {{_heightAdded ? 'controlsDemo__height400'}} {{_widthAdded ? 'controlsDemo_fixedWidth350'}} controlsDemo__height300 controlsDemo_fixedWidth300"
+    <Controls._scroll.ContainerBase
+            attr:class="overflowContainer {{_heightAdded ? 'controlsDemo__height400'}} {{_widthAdded ? 'controlsDemo_fixedWidth350'}} controlsDemo__height300 controlsDemo_fixedWidth300"
             name="containerBase">
         <div class="controlsDemo_fixedWidth350">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -29,53 +29,43 @@
             </ws:if>
             <Controls.event:Listener event="scrollStateChanged" on:scrollStateChanged="scrollStateChangedHandler()"/>
         </div>
-    </Controls.scroll:ContainerBase>
+    </Controls._scroll.ContainerBase>
     <div class="controlsDemo__inline-block">
-        <div class="controlsDemo__wrapper__padding">События:</div>
-        <Controls.scroll:Container attr:class="controlsDemo__height300 controlsDemo_fixedWidth300">
-            <div>
-                <ws:for data="key, value in _eventStore">
-                    <div>{{key + ') ' + value}}</div>
-                </ws:for>
-            </div>
-        </Controls.scroll:Container>
+        <div>События:</div>
+        <div class="controlsDemo__height300 controlsDemo_fixedWidth300 overflowContainer">
+            <ws:for data="key, value in _eventStore">
+                <div>{{key + ') ' + value}}</div>
+            </ws:for>
+        </div>
     </div>
-    <div class="controlsDemo__inline-block">
-        <div class="controlsDemo__wrapper__padding">state:</div>
-        <Controls.scroll:Container attr:class="controlsDemo__height300 controlsDemo_fixedWidth300">
-            <div>
-                <ws:for data="key, value in _state">
-                    <div class="{{key}}">{{key + ': ' + value}}</div>
-                </ws:for>
-            </div>
-        </Controls.scroll:Container>
+    <div class="controlsDemo__inline-block controlsDemo__vertical-top">
+        <div>state:</div>
+        <span class="controlsDemo_fixedWidth300">
+            <ws:for data="key, value in _state">
+                <div class="{{key}}">{{key + ': ' + value}}</div>
+            </ws:for>
+        </span>
     </div>
     <div class="controlsDemo__wrapper">
-        <Controls.buttons:Button
-                attr:class="addContent_button"
-                caption="Добавить контент"
-                on:click="_addContentHandler()"/>
-        <Controls.buttons:Button
-                attr:class="changeHeightContent_button"
-                caption="Изменить высоту"
-                on:click="_changeHeightContentHandler()"/>
-        <Controls.buttons:Button
-                attr:class="changeWidthContent_button"
-                caption="Изменить ширину"
-                on:click="_changeWidthContentHandler()"/>
-        <Controls.buttons:Button
-                attr:class="changeScrollTop_button"
-                caption="Изменить scrollTop"
-                on:click="_changeScrollTopHandler()"/>
+        <span
+            class="addContent_button controlsDemo__button"
+            on:click="_addContentHandler()">Добавить контент</span>
+        <span
+            class="changeHeightContent_button controlsDemo__button"
+            on:click="_changeHeightContentHandler()">Изменить высоту</span>
+        <span
+            class="changeWidthContent_button controlsDemo__button"
+            on:click="_changeWidthContentHandler()">Изменить ширину</span>
+        <span
+            class="changeScrollTop_button controlsDemo__button"
+            on:click="_changeScrollTopHandler()">Изменить scrollTop</span>
     </div>
     <div class="controlsDemo__wrapper">
-        <Controls.buttons:Button
-                attr:class="changeHeightAddContent_button"
-                caption="Изменить размеры, scrollTop, scrollLeft, добавить контент"
-                on:click="_changeHeightAddContentHandler()"/>
-        <Controls.buttons:Button
-                attr:class="changeScrollLeft_button"
-                caption="Изменить scrollLeft"
-                on:click="_changeScrollLeftHandler()"/>
+        <span
+            class="changeHeightAddContent_button controlsDemo__button"
+            on:click="_changeHeightAddContentHandler()">Изменить размеры, scrollTop, scrollLeft, добавить контент</span>
+        <span
+            class="changeScrollLeft_button controlsDemo__button"
+            on:click="_changeScrollLeftHandler()">Изменить scrollLeft</span>
     </div>
 </div>

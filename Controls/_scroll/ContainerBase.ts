@@ -3,14 +3,10 @@ import template = require('wml!Controls/_scroll/Scroll/ContainerBase/ContainerBa
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RegisterClass} from 'Controls/event';
 import {getVerticalPosition, getHorizontalPosition, canScroll} from 'Controls/_scroll/Scroll/Utils';
+import ResizeObserverUtil from 'Controls/Utils/ResizeObserverUtil';
 
 interface IContainerBaseOptions extends IControlOptions {
     scrollMode?: string;
-}
-
-interface IResizeObserver {
-    observe: (el: HTMLElement) => void;
-    disconnect: () => void;
 }
 
 interface IState {
@@ -36,21 +32,23 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     private _registrars: any = [];
 
-    private _resizeObserver: IResizeObserver;
+    private _stickyHeaderObserver: ResizeObserverUtil;
 
     private _resizeObserverSupported: boolean;
 
     _beforeMount(): void {
+        this._stickyHeaderObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
         this._resizeObserverSupported = typeof window !== 'undefined' && window.ResizeObserver;
         this._registrars.scrollStateChanged = new RegisterClass({register: 'scrollStateChanged'});
-        // событие viewportResize используется только в списках
+        // событие viewportResize используется только в списках.
         this._registrars.viewportResize = new RegisterClass({register: 'viewportResize'});
         this._registrars.scrollResize = new RegisterClass({register: 'scrollResize'});
         this._registrars.scrollMove = new RegisterClass({register: 'scrollMove'});
     }
 
     _afterMount(): void {
-        this._initializeResizeHandler();
+        this._stickyHeaderObserver.observe(this._container);
+        this._stickyHeaderObserver.observe(this._children.contentObserver);
         this._updateStateAndGenerateEvents({
             scrollTop: 0,
             scrollLeft: 0
@@ -58,7 +56,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _beforeUnmount(): void {
-        this._terminateResizeHandler();
+        this._stickyHeaderObserver.terminate();
         for (const registrar of this._registrars) {
             registrar.destroy();
         }
@@ -117,11 +115,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _updateStateAndGenerateEvents(newState: IState): void {
         const isStateUpdated = this._updateState(newState);
         if (isStateUpdated) {
+            // Новое событие
             this._sendByRegistrar('scrollStateChanged', {
                 state: {...this._state},
                 oldState: {...this._oldState}
             });
 
+            // Старое событие
             if ((this._state.clientHeight !== this._oldState.clientHeight) ||
                 (this._state.scrollHeight !== this._oldState.scrollHeight)) {
                 this._sendByRegistrar('scrollResize', {
@@ -130,6 +130,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 });
             }
 
+            // Старое событие
             if (this._oldState.clientHeight !== this._state.clientHeight) {
                 this._sendByRegistrar('viewportResize', {
                     scrollHeight: this._state.scrollHeight,
@@ -139,6 +140,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 });
             }
 
+            // Старое событие
             if (this._oldState.verticalPosition !== this._state.verticalPosition) {
                 this._sendByRegistrar('scrollMove', {
                     scrollTop: this._state.scrollTop,
@@ -155,36 +157,19 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._notify(eventType, [params]);
     }
 
-    _initializeResizeHandler(): void {
-        if (this._resizeObserverSupported) {
-            this._resizeObserver = new ResizeObserver((entries) => {
-                const newState: IState = {};
-                for (const entry of entries) {
-                    if (entry.target === this._container) {
-                        newState.clientHeight = entry.contentRect.height;
-                        newState.clientWidth = entry.contentRect.width;
-                    }
-                    if (entry.target === this._children.contentObserver) {
-                        newState.scrollHeight = entry.contentRect.height;
-                        newState.scrollWidth = entry.contentRect.width;
-                    }
-                }
-                this._onResizeContainer(newState);
-            });
-            this._resizeObserver.observe(this._container);
-            this._resizeObserver.observe(this._children.contentObserver);
-        } else {
-            this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
+    _resizeObserverCallback(entries: any): void {
+        const newState: IState = {};
+        for (const entry of entries) {
+            if (entry.target === this._container) {
+                newState.clientHeight = entry.contentRect.height;
+                newState.clientWidth = entry.contentRect.width;
+            }
+            if (entry.target === this._children.contentObserver) {
+                newState.scrollHeight = entry.contentRect.height;
+                newState.scrollWidth = entry.contentRect.width;
+            }
         }
-    }
-
-    _terminateResizeHandler(): void {
-        if (this._resizeObserverSupported) {
-            this._resizeObserver.disconnect();
-            this._resizeObserver = null;
-        } else {
-            this._notify('unregister', ['controlResize', this], {bubbling: true});
-        }
+        this._onResizeContainer(newState);
     }
 
     _getFullStateFromDOM(): IState {

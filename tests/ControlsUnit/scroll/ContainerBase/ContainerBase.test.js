@@ -1,5 +1,5 @@
 define([
-   'Controls/scroll'
+   'Controls/_scroll/ContainerBase'
 ], function(
    containerBase
 ) {
@@ -8,7 +8,7 @@ define([
    describe('Controls/scroll:ContainerBase', function() {
       describe('updateState', function() {
          it('should not update state if unchanged state arrives', function() {
-            var inst = new containerBase.ContainerBase();
+            var inst = new containerBase.default();
             inst._state = {
                scrollTop: 0
             };
@@ -16,7 +16,7 @@ define([
          });
 
          it('should update state if changed state arrives', function() {
-            var inst = new containerBase.ContainerBase();
+            var inst = new containerBase.default();
             const sandBox = sinon.createSandbox();
             sandBox.stub(inst, '_updateCalculatedState');
             inst._state = {
