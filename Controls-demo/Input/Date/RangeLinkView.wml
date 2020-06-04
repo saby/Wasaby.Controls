@@ -7,7 +7,7 @@
                 chooseHalfyears="{{false}}"
                 chooseMonths="{{false}}"
                 viewMode="selector"
-                styleMode="info"
+                fontColorStyle="unaccented"
                 attr:test_name="quarters_range"
         />
     </div>

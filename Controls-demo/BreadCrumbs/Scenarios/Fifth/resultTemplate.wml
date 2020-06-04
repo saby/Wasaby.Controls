@@ -1,7 +1,9 @@
 <ws:if data="{{ column.result }}">
    <Controls.decorator:Money value="{{column.result}}"
-                             style="accentResults"
-                             delimiters="{{true}}"/>
+                             fontColorStlye="results"
+                             fontSize="l"
+                             fontWeight="bold"
+                             useGrouping="{{true}}"/>
 </ws:if>
 <ws:else>
 <invisible-node />
