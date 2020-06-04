@@ -19,7 +19,7 @@ define([
 ) {
    const EditInPlace = EditInPlaceModule.default;
    describe('Controls.List.EditInPlace', function() {
-      var eip, items, newItem, listModel, listModelWithGroups, data, treeData, treeModel;
+      var eip, items, newItem, listModel, listModelWithGroups, data, treeData, treeModel, source;
       beforeEach(function() {
          data = [
             {
@@ -134,9 +134,16 @@ define([
                return item.get('type');
             }
          });
+         source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: items
+         });
          eip = new EditInPlace({
             notify: () => undefined,
-            forceUpdate: () => undefined
+            forceUpdate: () => undefined,
+            listView: {
+               getSourceController: () => source
+            }
          });
          eip._formController = {
             submit: function() {
@@ -294,10 +301,6 @@ define([
          });
 
          it('afterBeginEdit', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: items
-            });
             let afterBeginEditNotified = false;
             Object.assign(eip._options,{
                listModel: listModel,
@@ -350,11 +353,6 @@ define([
 
       describe('beginAdd', function() {
          it('new item should not take itemActions from existing items', async function() {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: items
-            });
-
             Object.assign(eip._options,{
                listModel: listModel,
                source: source
@@ -375,11 +373,6 @@ define([
          });
 
          it('Without handler', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: items
-            });
-
             Object.assign(eip._options,{
                listModel: listModel,
                source: source
@@ -397,11 +390,6 @@ define([
                rawData: [],
                keyProperty: 'id'
             }));
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: listModel._items
-            });
-
             Object.assign(eip._options,{
                listModel: listModel,
                source: source
@@ -416,10 +404,6 @@ define([
          });
 
          it('Object without item', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: items
-            });
             eip._options.notify = function(e) {
                if (e === 'beforeBeginEdit') {
                   return {
@@ -441,11 +425,6 @@ define([
          });
 
          it('afterBeginEdit', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: items
-            });
-
             Object.assign(eip._options,{
                listModel: listModel,
                source: source
@@ -465,11 +444,6 @@ define([
          });
 
          it('adding item was changed before begin add', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: treeModel._items
-            });
-
             Object.assign(eip._options,{
                listModel: treeModel,
                source: source
@@ -490,11 +464,6 @@ define([
          });
 
          it('add item to a folder', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: treeModel._items
-            });
-
             Object.assign(eip._options,{
                listModel: treeModel,
                source: source
@@ -517,11 +486,6 @@ define([
          });
 
          it('add item to the top of the list', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: items
-            });
-
             Object.assign(eip._options,{
                listModel: listModel,
                source: source,
@@ -539,11 +503,6 @@ define([
          });
 
          it('add item to a folder to the top of the list', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: treeModel._items
-            });
-
             Object.assign(eip._options,{
                listModel: treeModel,
                source: source,
@@ -575,14 +534,8 @@ define([
             * 3 --services--
             * 4    Третий
             * */
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: items
-            });
-
             Object.assign(eip._options,{
                listModel: listModelWithGroups,
-               source: source,
                editingConfig: {
                   addPosition: 'top'
                }
@@ -620,11 +573,6 @@ define([
             * 3 --services--
             * 4    Третий
             * */
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: items
-            });
-
             Object.assign(eip._options,{
                listModel: listModelWithGroups,
                source: source,
@@ -836,13 +784,8 @@ define([
          });
 
          it('With source', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: data
-            });
             Object.assign(eip._options,{
-               listModel: listModel,
-               source: source
+               listModel: listModel
             });
 
             eip.beginEdit({
@@ -860,10 +803,6 @@ define([
          });
 
          it('Add item', function(done) {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: data
-            });
             Object.assign(eip._options,{
                listModel: listModel,
                source: source
@@ -910,10 +849,6 @@ define([
 
 
          it('Add in top without sequentialEditing. Should not edit second record after adding.', async function() {
-            var source = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: data
-            });
             Object.assign(eip._options,{
                listModel: listModel,
                source: source,
@@ -1047,10 +982,6 @@ define([
 
             it('Cancel', function(done) {
                var
-                   source = new sourceLib.Memory({
-                      keyProperty: 'id',
-                      data: data
-                   }),
                    isIndicatorHasBeenShown = false,
                    isIndicatorHasBeenHiden = false;
 
@@ -1083,10 +1014,6 @@ define([
 
          describe('afterEndEdit', function() {
             it('add item', function(done) {
-               var source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data
-               });
                Object.assign(eip._options,{
                   listModel: listModel,
                   source: source
@@ -1117,10 +1044,6 @@ define([
             });
 
             it('edit item', function(done) {
-               var source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data
-               });
                Object.assign(eip._options,{
                   listModel: listModel,
                   source: source
@@ -1143,11 +1066,6 @@ define([
             });
 
             it('destroyed in process of end edit item (stack closed for ex.)', function(done) {
-               var source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data
-               });
-
                Object.assign(eip._options,{
                   listModel: listModel,
                   source: source
@@ -1180,11 +1098,6 @@ define([
             });
 
             it('accept changes on recordset', function(done) {
-               var source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data
-               });
-
                Object.assign(eip._options,{
                   listModel: listModel,
                   source: source
@@ -1205,15 +1118,10 @@ define([
 
          describe('update model', function () {
             let
-                source,
                 sourceUpdated;
 
             beforeEach(function () {
                sourceUpdated = false;
-               source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data
-               });
                source.update = () => {
                   sourceUpdated = true;
                   return Deferred.success({})
@@ -2158,11 +2066,6 @@ define([
 
       describe('commitAndMoveNextRow (commitEdit by itemAction click)', () => {
          it('commit edit existing record without autoAddByApplyButton', async function () {
-            let
-               source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data
-               });
             Object.assign(eip._options,{
                listModel: listModel,
             });
@@ -2178,11 +2081,6 @@ define([
          });
 
          it('commit edit existing record with autoAddByApplyButton', async function () {
-            let
-               source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data,
-               });
             Object.assign(eip._options,{
                listModel: listModel,
                editingConfig: {
@@ -2201,11 +2099,6 @@ define([
          });
 
          it('commit edit new record without autoAddByApplyButton', async function () {
-            let
-               source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data
-               });
             Object.assign(eip._options,{
                listModel: listModel,
                source
@@ -2222,11 +2115,6 @@ define([
          });
 
          it('commit edit new record with autoAddByApplyButton', async function () {
-            let
-               source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data
-               });
             Object.assign(eip._options,{
                listModel: listModel,
                source,
@@ -2280,11 +2168,7 @@ define([
 
          it('multiSelectVisibility on list has been changed while editing', async function () {
             let
-                isItemDataRegenerated = false,
-                source = new sourceLib.Memory({
-                   keyProperty: 'id',
-                   data: items
-                });
+                isItemDataRegenerated = false;
 
             Object.assign(eip._options,{
                listModel: listModel,
@@ -2327,11 +2211,6 @@ define([
       });
 
       it('index of a new item should update if the list gets changed', async function() {
-         const source = new sourceLib.Memory({
-            keyProperty: 'id',
-            data: items
-         });
-
          Object.assign(eip._options,{
             listModel: listModel,
             source: source

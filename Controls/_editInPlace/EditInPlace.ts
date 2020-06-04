@@ -151,7 +151,7 @@ const _private = {
         // что завершено редактирование и можно позвать перезагрузку списка для обновления результатов каждой строки.
         // Однако сам список считает что редактирование еще активно и падает при перезагрузке.
         self._notify('afterEndEdit', afterEndEditArgs);
-        self._options.updateItemActions ?? self._options.updateItemActions();
+        self._options.updateItemActions && self._options.updateItemActions();
     },
 
     createModel(self: EditInPlace, options) {
