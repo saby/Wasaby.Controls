@@ -2,7 +2,9 @@
     <ws:viewTemplate>
         <Controls.decorator:Money
                 value="{{ value }}"
-                style="{{ style }}"
+                fontColorStyle="{{ fontColorStyle }}"
+                fontSize="{{ fontSize }}"
+                fontWeight="{{ fontWeight }}"
                 showEmptyDecimals="{{ showEmptyDecimals }}"
                 useGrouping="{{ useGrouping }}"
                 tooltip="{{ tooltip }}"

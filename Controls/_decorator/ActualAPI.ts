@@ -60,7 +60,7 @@ export function styleOptions(style: string): IActualMoneyFont {
 
 export function moneyStyle(options: IMoneyOptions): IActualMoneyFont {
     if ('style' in options) {
-        Logger.warn('Controls.decorator:Money - опция style устарела, используйте опции fontSize, fontWeight, fontColorStyle.');
+        Logger.error('Controls.decorator:Money - опция style устарела, используйте опции fontSize, fontWeight, fontColorStyle.');
         return styleOptions(options.style);
     }
 
@@ -74,7 +74,7 @@ export function moneyStyle(options: IMoneyOptions): IActualMoneyFont {
 export function wrapURLsValue(text?: string, value?: string, useLogging: boolean = false): string {
     if (typeof text === 'string') {
         if (useLogging) {
-            Logger.warn('Controls.decorator:WrapURLs - опция text устарела, используйте опцию value.');
+            Logger.error('Controls.decorator:WrapURLs - опция text устарела, используйте опцию value.');
         }
         return text;
     }
@@ -85,7 +85,7 @@ export function wrapURLsValue(text?: string, value?: string, useLogging: boolean
 export function phoneValue(number?: string, value?: string, useLogging: boolean = false): string {
     if (typeof number === 'string') {
         if (useLogging) {
-            Logger.warn('Controls.decorator:Phone - опция number устарела, используйте опцию value.');
+            Logger.error('Controls.decorator:Phone - опция number устарела, используйте опцию value.');
         }
         return number;
     }
@@ -96,7 +96,7 @@ export function phoneValue(number?: string, value?: string, useLogging: boolean 
 export function numberValue(number: number, value?: string | number | null, useLogging: boolean = false): string | number | null {
     if (typeof number === 'number') {
         if (useLogging) {
-            Logger.warn('Controls.decorator:Number - опция number устарела, используйте опцию value.');
+            Logger.error('Controls.decorator:Number - опция number устарела, используйте опцию value.');
         }
         return number;
     }
@@ -107,7 +107,7 @@ export function numberValue(number: number, value?: string | number | null, useL
 export function moneyUseGrouping(delimiters?: boolean, useGrouping?: boolean, useLogging: boolean = false): boolean {
     if (typeof delimiters === 'boolean') {
         if (useLogging) {
-            Logger.warn('Controls.decorator:Money - опция delimiters устарела, используйте опцию useGrouping.');
+            Logger.error('Controls.decorator:Money - опция delimiters устарела, используйте опцию useGrouping.');
         }
         return delimiters;
     }
@@ -118,7 +118,7 @@ export function moneyUseGrouping(delimiters?: boolean, useGrouping?: boolean, us
 export function moneyValue(number: number, value?: string | number | null, useLogging: boolean = false): string | number | null {
     if (typeof number === 'number') {
         if (useLogging) {
-            Logger.warn('Controls.decorator:Money - опция number устарела, используйте опцию value.');
+            Logger.error('Controls.decorator:Money - опция number устарела, используйте опцию value.');
         }
         return number;
     }
@@ -129,7 +129,7 @@ export function moneyValue(number: number, value?: string | number | null, useLo
 export function moneyOptions(options: {title?: string, tooltip?: string}, useLogging: boolean = false): {tooltip?: string} {
     if ('title' in options) {
         if (useLogging) {
-            Logger.warn('Controls.decorator:Money - опция title устарела, используйте опцию tooltip.');
+            Logger.error('Controls.decorator:Money - опция title устарела, используйте опцию tooltip.');
         }
         return {
             tooltip: options.title
@@ -148,28 +148,28 @@ export function highlightOptions(options: IHighlightOptions, useLogging: boolean
     let {value, highlightedValue, className, highlightMode} = options;
     if (typeof options.text === 'string') {
         if (useLogging) {
-            Logger.warn('Controls.decorator:Highlight - опция text устарела, используйте опцию value.');
+            Logger.error('Controls.decorator:Highlight - опция text устарела, используйте опцию value.');
         }
         value = options.text;
     }
 
     if (typeof options.highlight === 'string') {
         if (useLogging) {
-            Logger.warn('Controls.decorator:Highlight - опция highlight устарела, используйте опцию value.');
+            Logger.error('Controls.decorator:Highlight - опция highlight устарела, используйте опцию highlightedValue.');
         }
         highlightedValue = options.highlight;
     }
 
     if (typeof options.class === 'string') {
         if (useLogging) {
-            Logger.warn('Controls.decorator:Highlight - опция class устарела, используйте опцию className.');
+            Logger.error('Controls.decorator:Highlight - опция class устарела, используйте опцию className.');
         }
         className = options.class;
     }
 
     if (typeof options.searchMode === 'string') {
         if (useLogging) {
-            Logger.warn('Controls.decorator:Highlight - опция searchMode устарела, используйте опцию highlightMode.');
+            Logger.error('Controls.decorator:Highlight - опция searchMode устарела, используйте опцию highlightMode.');
         }
         highlightMode = options.searchMode;
     }
