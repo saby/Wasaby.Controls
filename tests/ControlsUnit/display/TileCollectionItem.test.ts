@@ -371,6 +371,12 @@ describe('Controls/_display/TileCollectionItem', () => {
             },
             getDisplayProperty(): string {
                 return this._displayProperty;
+            },
+            getSwipeAnimation() {
+                return this._swipeAnimation;
+            },
+            setSwipeAnimation(animation) {
+                this._swipeAnimation = animation;
             }
         };
 
