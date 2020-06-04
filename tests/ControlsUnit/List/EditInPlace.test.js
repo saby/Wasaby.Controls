@@ -2199,7 +2199,7 @@ define([
             },
             submit: function() {
                return Deferred.success();
-            },
+            }
          }
          return eip.beginEdit({
             item: listModel.at(0).getContents()
