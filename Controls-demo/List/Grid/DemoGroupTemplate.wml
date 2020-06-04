@@ -7,7 +7,7 @@
    <ws:rightTemplate>
       <ws:partial template="Controls/list:GroupContentResultsTemplate" itemData="{{itemData}}">
          <ws:contentTemplate>
-            <Controls.decorator:Money value="{{itemData.metaData.groupResults[itemData.item]}}" style="group" useGrouping="{{false}}"/>
+            <Controls.decorator:Money value="{{itemData.metaData.groupResults[itemData.item]}}" fontColorStyle="group" useGrouping="{{false}}"/>
          </ws:contentTemplate>
       </ws:partial>
    </ws:rightTemplate>
