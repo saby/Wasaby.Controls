@@ -25,7 +25,7 @@
                 useNewNodeFooters="{{ true }}"
                 navigation="{{_navigation}}">
             <ws:nodeFooterTemplate>
-                <ws:partial template="Controls/treeGrid:NodeFooterTemplate" colspan="{{ false }}" cellClass="customClass" />
+                <ws:partial template="Controls/treeGrid:NodeFooterTemplate" colspan="{{ false }}" cellClassName="customClass" />
             </ws:nodeFooterTemplate>
         </Controls.treeGrid:View>
     </div>
@@ -43,7 +43,7 @@
                 useNewNodeFooters="{{ true }}"
                 navigation="{{_navigation}}">
             <ws:nodeFooterTemplate>
-                <ws:partial template="Controls/treeGrid:NodeFooterTemplate" cellClass="customClass">
+                <ws:partial template="Controls/treeGrid:NodeFooterTemplate" cellClassName="customClass">
                     <Controls.list:AddButton caption="Добавить товар" />
                 </ws:partial>
             </ws:nodeFooterTemplate>
@@ -64,7 +64,7 @@
                 useNewNodeFooters="{{ true }}"
                 navigation="{{_navigation}}">
             <ws:nodeFooterTemplate>
-                <ws:partial template="Controls/treeGrid:NodeFooterTemplate" colspan="{{ false }}" cellClass="customClass">
+                <ws:partial template="Controls/treeGrid:NodeFooterTemplate" colspan="{{ false }}" cellClassName="customClass">
                     <Controls.list:AddButton caption="Добавить товар" />
                 </ws:partial>
             </ws:nodeFooterTemplate>
