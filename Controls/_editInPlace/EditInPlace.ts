@@ -39,6 +39,7 @@ const _private = {
         self._editingItem.acceptChanges();
         self._setEditingItemData(self._editingItem, self._options.listModel, self._options);
         self._notify('afterBeginEdit', [self._editingItem, isAdd]);
+        self._options.updateItemActions && self._options.updateItemActions();
         return options;
     },
 
@@ -144,17 +145,18 @@ const _private = {
         if (!self._destroyed) {
             self._setEditingItemData(null, self._options.listModel, self._options);
         }
-
-        // Нотифицировать о событии "После завершения редактирования" нужно после очистки editingItemData,
+        ировать о событ
+        // Нотифиции "После завершения редактирования" нужно после очистки editingItemData,
         // т.к. все остальные контролы проверяют наличие запущенного редактирования именно по ней.
         // Нотификация до очистки приводит к проблемам. Например, в обработчике события afterEndEdit ожидается,
         // что завершено редактирование и можно позвать перезагрузку списка для обновления результатов каждой строки.
         // Однако сам список считает что редактирование еще активно и падает при перезагрузке.
         self._notify('afterEndEdit', afterEndEditArgs);
+        self._options.updateItemActions ?? self._options.updateItemActions();
     },
 
     createModel(self: EditInPlace, options) {
-        return self._options.source.create().then((item) => {
+        return self.getSource().create().then((item) => {
             options.item = item;
             return options;
         }).catch((error: Error) => {
@@ -164,8 +166,8 @@ const _private = {
 
     updateModel(self: EditInPlace, commit) {
         if (commit && (self._isAdd || self._editingItem.isChanged())) {
-            if (self._options.source) {
-                return self._options.source.update(self._editingItem).then(() => {
+            if (self.getSource()) {
+                return self.getSource().update(self._editingItem).then(() => {
                     _private.acceptChanges(self);
                 }).catch((error: Error) => {
                     self._isCommitInProcess = false;
@@ -411,7 +413,7 @@ export interface IEditingOptions {
     notify?: any;
     forceUpdate?: any;
     listView?: any;
-    source?: any;
+    updateItemActions?: Function;
 }
 
 /**
@@ -638,10 +640,8 @@ export default class EditInPlace {
         return result;
     }
 
-    beforeUpdate(newOptions: any, listModel: ViewModel<Model>, formController: any): void {
+    beforeUpdate(newOptions: any): void {
         this._sequentialEditing = _private.getSequentialEditing(newOptions);
-        this._options.listModel = listModel;
-        this._formController = formController;
         if (this._editingItemData) {
             if (this._options.multiSelectVisibility !== newOptions.multiSelectVisibility) {
                 this._setEditingItemData(this._editingItemData.item, newOptions.listModel, newOptions);
@@ -869,6 +869,10 @@ export default class EditInPlace {
 
     _forceUpdate(): void {
         this._options.forceUpdate();
+    }
+
+    getSource(): any {
+        return this._options.listView.getSourceController();
     }
 
     static _theme: string[];

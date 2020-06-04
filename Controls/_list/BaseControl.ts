@@ -44,21 +44,6 @@ import {ISwipeEvent} from 'Controls/listRender';
 
 import {EditInPlaceController, IEditingOptions, EditInPlace} from '../editInPlace';
 
-/*
-<Controls._list.EditInPlace
-    name="editInPlace"
-editingConfig="{{_options.editingConfig}}"
-on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-on:afterBeginEdit="_onAfterBeginEdit()"
-on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-on:afterEndEdit="_onAfterEndEdit()"
-listModel="{{_listViewModel}}"
-multiSelectVisibility="{{_options.multiSelectVisibility}}"
-errorController="{{ __errorController }}"
-source="{{_sourceController}}"
-useNewModel="{{ _options.useNewModel }}">
-*/
-
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
 import InertialScrolling from './resources/utils/InertialScrolling';
@@ -1878,6 +1863,16 @@ const _private = {
                 },
                 forceUpdate: () => {
                     self._forceUpdate();
+                },
+                updateItemActions: () => {
+                    /*
+                    * TODO: KINGO
+                    * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
+                    * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
+                    * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
+                    * _canUpdateItemsActions приведет к показу неактуальных операций.
+                    */
+                    self._updateItemActions(self._options);
                 }
             });
         }
@@ -2783,31 +2778,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             });
             this._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
         }
-    },
-
-    _onAfterEndEdit(event: SyntheticEvent, item: Model, isAdd: boolean) {
-        this._notify('afterEndEdit', [item, isAdd]);
-        this._updateItemActions(this._options);
-    },
-
-    /**
-     * Обработчик создания/редактирования записи
-     * @param event
-     * @param item
-     * @param isAdd
-     * @private
-     */
-    _onAfterBeginEdit(event: SyntheticEvent, item: Model, isAdd: boolean) {
-        const result = this._notify('afterBeginEdit', [item, isAdd]);
-        /*
-        * TODO: KINGO
-        * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
-        * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
-        * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-        * _canUpdateItemsActions приведет к показу неактуальных операций.
-        */
-        this._updateItemActions(this._options);
-        return result;
     },
 
     /**
