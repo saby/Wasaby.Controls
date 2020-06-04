@@ -2069,10 +2069,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 self._markerController = _private.createMarkerController(self, newOptions);
             }
 
-            if (self._editInPlace && self._listViewModel) {
-                self._editInPlace.beforeMount({...{listViewModel: self._listViewModel}, ...newOptions});
-            }
-
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
@@ -2129,10 +2125,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         if (self._listViewModel) {
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
+
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
-
+                    if (self._editInPlace && self._listViewModel) {
+                        self._editInPlace.beforeMount({...{listViewModel: self._listViewModel}, ...newOptions});
+                    }
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
                     // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
