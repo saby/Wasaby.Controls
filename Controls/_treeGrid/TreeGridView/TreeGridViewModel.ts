@@ -142,6 +142,15 @@ var
                 current._treeGridViewModelCached = true;
             }
 
+            current.getColspanType = (tmplOptions) => {
+                if (tmplOptions.colspan === true) {
+                    return 'full';
+                } else if (tmplOptions.colspan === false && !!tmplOptions.colspanLength) {
+                    return 'partial';
+                } else {
+                    return 'none';
+                }
+            };
             current.getPartialColspanStyles = (columnStart, columnSpan) => GridLayoutUtil.getColumnStyles({ columnStart, columnSpan });
 
             current.isLastColumn = isLastColumn;
