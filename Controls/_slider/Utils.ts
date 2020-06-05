@@ -8,13 +8,15 @@ export interface IScaleData {
     value: number;
     position: number;
 }
+
 export interface ILineData {
-   position: number;
-   width: number;
+    position: number;
+    width: number;
 }
+
 export interface IPointData {
-   name: string;
-   position: number;
+    name: string;
+    position: number;
 }
 
 export interface IPositionedInterval {
@@ -79,14 +81,16 @@ export default {
                 left: start,
                 width: intervalWidth
             };
-        }).sort((eventFirst, eventSecond) => {
-            if (eventFirst.left < eventSecond.left) {
+        }).sort((intervalFirst, intervalSecond) => {
+            if (intervalFirst.left < intervalSecond.left) {
                 return -1;
             }
-            if (eventFirst.left > eventSecond.left) {
+            if (intervalFirst.left > intervalSecond.left) {
                 return 1;
             }
-            return 0;
+
+            return intervalFirst.width === intervalSecond.width ? 0 :
+                intervalFirst.width > intervalSecond.width ? -1 : 1;
         });
     }
 };
