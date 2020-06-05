@@ -144,7 +144,7 @@ export interface IColumn {
     valign?: TCellVerticalAlign;
     /**
      * @name Controls/grid:IColumn#stickyProperty
-     * @cfg {String} Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
+     * @cfg {String | Array} Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы. Чтобы сделать прилипание по двум полям в одной колонке, нужно передать массив из двух строк.
      * @default undefined
      */
     stickyProperty?: string;
