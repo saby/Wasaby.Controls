@@ -2281,7 +2281,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._editInPlace) {
-            this._editInPlace.prepareHtmlInput(this._listViewModel, this._children.formController);
+            this._editInPlace.registerFormOperation(this._listViewModel, this._children.formController);
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
                 this._updateItemActions(this._options);
             }

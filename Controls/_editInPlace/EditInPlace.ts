@@ -477,7 +477,7 @@ export default class EditInPlace {
         this._sequentialEditing = _private.getSequentialEditing(editingConfig);
     }
 
-    afterMount(listViewModel: ViewModel<Model>, formContontroller: any): void {
+    registerFormOperation(listViewModel: ViewModel<Model>, formContontroller: any): void {
         this._formController = formContontroller;
         this._options.listViewModel = listViewModel;
         this._notify('registerFormOperation', [{
