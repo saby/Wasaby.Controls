@@ -3231,6 +3231,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
+            this._itemActionsController.deactivateSwipe();
             this._listViewModel.nextVersion();
         }
     },
