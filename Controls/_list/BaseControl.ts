@@ -2095,8 +2095,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         newOptions.dataLoadCallback(self._items);
                     }
 
-                    if (self._editInPlace && self._listViewModel) {
-                        self._editInPlace.beforeMount({...{listViewModel: self._listViewModel}, ...newOptions});
+                    if (self._editInPlace) {
+                        self._editInPlace.createEditingData(
+                            newOptions.editingConfig,
+                            newOptions.listViewModel || self._listViewModel,
+                            newOptions.useNewModel
+                        );
                     }
 
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
@@ -2138,8 +2142,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
-                    if (self._editInPlace && self._listViewModel) {
-                        self._editInPlace.beforeMount({...{listViewModel: self._listViewModel}, ...newOptions});
+                    if (self._editInPlace) {
+                        self._editInPlace.createEditingData(
+                            newOptions.editingConfig,
+                            newOptions.listViewModel || self._listViewModel,
+                            newOptions.useNewModel
+                        );
                     }
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
@@ -2606,7 +2614,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._editInPlace) {
-            this._editInPlace.afterUpdate();
+            this._editInPlace.prepareHtmlInput();
         }
     },
 

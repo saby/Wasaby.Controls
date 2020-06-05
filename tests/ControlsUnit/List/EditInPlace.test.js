@@ -165,39 +165,32 @@ define([
          items = undefined;
       });
 
-      describe('_beforeMount', function() {
+      describe('createEditingData', function() {
          it('Edit', async function() {
-            await eip.beforeMount({
-               listViewModel: listViewModel,
-               editingConfig: {
+            eip._editingConfig =
+            await eip.createEditingData({
                   item: listViewModel.at(0).getContents()
-               }
-            });
+               }, listViewModel
+            );
             assert.equal(listViewModel.at(0).getContents(), eip._editingItem);
             assert.equal(listViewModel.at(0).getContents(), eip._originalItem);
          });
 
          it('Add', async function() {
-            await eip.beforeMount({
-               listViewModel: listViewModel,
-               editingConfig: {
-                  item: newItem,
-                  toolbarVisibility: true
-               }
-            });
+            await eip.createEditingData( {
+               item: newItem,
+               toolbarVisibility: true
+            }, listViewModel);
             assert.equal(newItem, eip._editingItem);
             assert.isTrue(eip._isAdd);
             assert.isTrue(eip._editingItemData.drawActions);
          });
 
          it('Adding to the top of the list', async function() {
-            await eip.beforeMount({
-               listViewModel: listViewModel,
-               editingConfig: {
+            await eip.createEditingData({
                   item: newItem,
                   addPosition: 'top'
-               }
-            });
+               }, listViewModel);
             assert.equal(newItem, eip._editingItem);
             assert.isTrue(eip._isAdd);
             assert.equal(0, eip._editingItemData.index);
@@ -1867,7 +1860,7 @@ define([
                   editOnClick: true
                }
             });
-            await eip.onItemClick({
+            await eip.beginEditByClick({
                stopPropagation: function() {
                   clickPropagationStopped = true;
                }
@@ -1900,7 +1893,7 @@ define([
                   editOnClick: true
                }
             });
-            eip.onItemClick({
+            eip.beginEditByClick({
                stopPropagation: function() {
                   clickPropagationStopped = true;
                }
@@ -1930,7 +1923,7 @@ define([
                }
             });
 
-            eip.onItemClick({}, newItem, {
+            eip.beginEditByClick({}, newItem, {
                target: {
                   closest: function() {
                      return true;
@@ -1955,7 +1948,7 @@ define([
                }
             });
 
-            eip.onItemClick({}, newItem, {
+            eip.beginEditByClick({}, newItem, {
                target: {
                   closest: function() {
                      return false;
@@ -1973,7 +1966,7 @@ define([
             eip.beginEdit = function() {
                throw new Error('beginEdit shouldn\'t be called if editOnClick is false');
             };
-            eip.onItemClick({}, newItem);
+            eip.beginEditByClick({}, newItem);
          });
 
          it('readOnly, commitEdit', function() {
@@ -1987,7 +1980,7 @@ define([
                readOnly: true
             });
 
-            eip.onItemClick({}, newItem, {
+            eip.beginEditByClick({}, newItem, {
                target: {
                   closest: function() {
                      return true;
@@ -2012,7 +2005,7 @@ define([
                readOnly: true
             });
 
-            eip.onItemClick({}, newItem, {
+            eip.beginEditByClick({}, newItem, {
                target: {
                   closest: function() {
                      return false;
@@ -2136,15 +2129,15 @@ define([
          });
       });
 
-      describe('_beforeUpdate', function() {
+      describe('updateEditingData', function() {
          it('editingConfig has sequential editing', function() {
-            eip.beforeUpdate({
+            eip.updateEditingData({
                editingConfig: {
                   sequentialEditing: false
                }
             });
             assert.isFalse(eip._sequentialEditing);
-            eip.beforeUpdate({
+            eip.updateEditingData({
                editingConfig: {
                   sequentialEditing: true
                }
@@ -2153,7 +2146,7 @@ define([
          });
 
          it('editingConfig doesn\'t have sequential editing', function() {
-            eip.beforeUpdate({
+            eip.updateEditingData({
                editingConfig: {
 
                }
@@ -2162,7 +2155,7 @@ define([
          });
 
          it('editing config doesn\'t exist', function() {
-            eip.beforeUpdate({});
+            eip.updateEditingData({});
             assert.isTrue(eip._sequentialEditing);
          });
 
@@ -2177,13 +2170,13 @@ define([
 
             await eip.beginAdd();
 
-            eip._setEditingItemData = (editingItem, model, options) => {
+            eip._setEditingItemData = (editingItem) => {
                isItemDataRegenerated = true;
                assert.equal(editingItem, eip._editingItemData.item);
-               assert.equal(options.multiSelectVisibility, 'visible');
+               assert.equal(eip._options.multiSelectVisibility, 'visible');
             };
 
-            eip.beforeUpdate({multiSelectVisibility: 'visible', listViewModel: listViewModel});
+            eip.updateEditingData({multiSelectVisibility: 'visible', listViewModel: listViewModel});
             assert.isTrue(isItemDataRegenerated);
          });
       });
@@ -2200,7 +2193,7 @@ define([
             submit: function() {
                return Deferred.success();
             }
-         }
+         };
          return eip.beginEdit({
             item: listViewModel.at(0).getContents()
          }).then(() => {

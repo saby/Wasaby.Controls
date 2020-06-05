@@ -37,7 +37,7 @@ const _private = {
     afterBeginEdit(self: EditInPlace, options: IEditingConfig, isAdd: boolean): IEditingConfig {
         self._editingItem = options.item.clone();
         self._editingItem.acceptChanges();
-        self._setEditingItemData(self._editingItem, self._options.listViewModel, self._options);
+        self._setEditingItemData(self._editingItem);
         self._notify('afterBeginEdit', [self._editingItem, isAdd]);
         self._options.updateItemActions && self._options.updateItemActions();
         return options;
@@ -143,7 +143,7 @@ const _private = {
         }
         _private.resetVariables(self);
         if (!self._destroyed) {
-            self._setEditingItemData(null, self._options.listViewModel, self._options);
+            self._setEditingItemData(null);
         }
         // Нотифицировать о событии "После завершения редактирования" нужно после очистки editingItemData,
         // т.к. все остальные контролы проверяют наличие запущенного редактирования именно по ней.
@@ -342,19 +342,18 @@ const _private = {
         return index;
     },
 
-    getSequentialEditing(newOptions: IEditingOptions): boolean {
+    getSequentialEditing(editingConfig: IEditingConfig): boolean {
         // TODO: опция editingConfig.sequentialEditing по умолчанию должна быть true. Но она находится внутри объекта,
         // а при вызове getDefaultOptions объекты не мержатся. Нужно либо на стороне ws делать мерж объектов, либо
         // делать 5 опций на списке, либо вот такой костыль:
-        if (newOptions.editingConfig && typeof newOptions.editingConfig.sequentialEditing !== 'undefined') {
-            return newOptions.editingConfig.sequentialEditing;
+        if (editingConfig && typeof editingConfig.sequentialEditing !== 'undefined') {
+            return editingConfig.sequentialEditing;
         }
         return true;
     },
 
-    getAddPosition(options) {
-        return options.editingConfig && options.editingConfig.addPosition === 'top' &&
-        !options.editingConfig.autoAdd ? 0 : undefined;
+    getAddPosition(editingConfig: IEditingConfig): 0 | undefined {
+        return editingConfig && editingConfig.addPosition === 'top' && !editingConfig.autoAdd ? 0 : undefined;
     },
 
     beginEditCallback(self: EditInPlace, newOptions): IEditingConfig {
@@ -453,27 +452,29 @@ export default class EditInPlace {
         return this._options.notify(name, args, params);
     }
 
-    beforeMount(newOptions: any): void {
-        if (newOptions.editingConfig && newOptions.listViewModel) {
-            this._options.listViewModel = newOptions.listViewModel;
-            if (newOptions.editingConfig.item) {
-                this._editingItem = newOptions.editingConfig.item;
-                this._setEditingItemData(this._editingItem, this._options.listViewModel, newOptions);
+    createEditingData(editingConfig: IEditingConfig, listViewModel: ViewModel<Model>, useNewModel: boolean): void {
+        if (editingConfig && listViewModel) {
+            this._options.listViewModel = listViewModel;
+            this._options.editingConfig = editingConfig;
+            this._options.useNewModel = useNewModel;
+            if (editingConfig.item) {
+                this._editingItem = editingConfig.item;
+                this._setEditingItemData(this._editingItem);
                 if (!this._isAdd) {
-                    if (newOptions.useNewModel) {
-                        this._originalItem = this._options.listViewModel.getItemBySourceKey(
-                            this._editingItem.get(this._options.listViewModel.getKeyProperty())
+                    if (useNewModel) {
+                        this._originalItem = listViewModel.getItemBySourceKey(
+                            this._editingItem.get(listViewModel.getKeyProperty())
                         ).getContents();
                     } else {
-                        this._originalItem = this._options.listViewModel.getItemById(
-                            this._editingItem.get(this._options.listViewModel._options.keyProperty),
-                            this._options.listViewModel._options.keyProperty
+                        this._originalItem = listViewModel.getItemById(
+                            this._editingItem.get(listViewModel._options.keyProperty),
+                            listViewModel._options.keyProperty
                         ).getContents();
                     }
                 }
             }
         }
-        this._sequentialEditing = _private.getSequentialEditing(newOptions);
+        this._sequentialEditing = _private.getSequentialEditing(editingConfig);
     }
 
     afterMount(listViewModel: ViewModel<Model>, formContontroller: any): void {
@@ -591,12 +592,7 @@ export default class EditInPlace {
         }
     }
 
-    onItemClick(
-        e: SyntheticEvent<MouseEvent>,
-        item: Model,
-        originalEvent: MouseEvent
-    ): Promise<any> {
-        const self = this;
+    beginEditByClick(e: SyntheticEvent<MouseEvent>, item: Model, originalEvent: MouseEvent): Promise<any> {
         let result;
         if (
             this._options.editingConfig &&
@@ -614,7 +610,7 @@ export default class EditInPlace {
                         // TODO KINGO. Заполняем информацию по клику только если редактирование по месту запустилось,
                         // т.к. только в таком случае нужно восстанавливать курсор по координатам клика
                         // (в _afterUpdate).
-                        self._clickItemInfo = {
+                        this._clickItemInfo = {
                             clientX: originalEvent.nativeEvent.clientX,
                             clientY: originalEvent.nativeEvent.clientY,
                             item
@@ -627,8 +623,8 @@ export default class EditInPlace {
                         // Именно в этом обновлении можно проставлять фокус и каретку.
                         // Не должно и не будет работать в случае, если внутри шаблона редактора поле ввода вставляется
                         // через Controls.Container.Async.
-                        self._pendingInputRenderState = PendingInputRenderState.PendingRender;
-                        self._forceUpdate();
+                        this._pendingInputRenderState = PendingInputRenderState.PendingRender;
+                        this._forceUpdate();
                     }
                 });
                 // The click should not bubble over the editing controller to ensure correct control works.
@@ -640,11 +636,15 @@ export default class EditInPlace {
         return result;
     }
 
-    beforeUpdate(newOptions: any): void {
-        this._sequentialEditing = _private.getSequentialEditing(newOptions);
+    updateEditingData(options: IEditingOptions): void {
+        this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
         if (this._editingItemData) {
-            if (this._options.multiSelectVisibility !== newOptions.multiSelectVisibility) {
-                this._setEditingItemData(this._editingItemData.item, newOptions.listViewModel, newOptions);
+            if (this._options.multiSelectVisibility !== options.multiSelectVisibility) {
+                this._options.listViewModel = options.listViewModel;
+                this._options.editingConfig = options.editingConfig;
+                this._options.useNewModel = options.useNewModel;
+                this._options.multiSelectVisibility = options.multiSelectVisibility;
+                this._setEditingItemData(this._editingItemData.item);
             }
         }
 
@@ -654,7 +654,7 @@ export default class EditInPlace {
         }
     }
 
-    afterUpdate(): void {
+    prepareHtmlInput(): void {
         let target, fakeElement, targetStyle, offset, currentWidth, previousWidth, lastLetterWidth, hasHorizontalScroll;
 
         // Выставляем каретку и активируем поле только после начала редактирования
@@ -729,9 +729,12 @@ export default class EditInPlace {
         }
     }
 
-    _setEditingItemData(item, listViewModel, options): void {
+    _setEditingItemData(item: Model): void {
+        let listViewModel = this._options.listViewModel;
+        let editingConfig = this._options.editingConfig;
+        let useNewModel =  this._options.useNewModel;
         if (!item) {
-            if (options.useNewModel) {
+            if (useNewModel) {
                 EditInPlaceController.endEdit(listViewModel);
             } else {
                 listViewModel._setEditingItemData(null);
@@ -749,7 +752,7 @@ export default class EditInPlace {
         }
 
         let editingItemProjection;
-        if (options.useNewModel) {
+        if (useNewModel) {
             editingItemProjection = listViewModel.getItemBySourceKey(
                 this._editingItem.get(listViewModel.getKeyProperty())
             );
@@ -762,14 +765,14 @@ export default class EditInPlace {
 
         if (!editingItemProjection) {
             this._isAdd = true;
-            if (options.useNewModel) {
+            if (useNewModel) {
                 editingItemProjection = listViewModel.createItem(item);
             } else {
                 editingItemProjection = listViewModel._prepareDisplayItemForAdd(item);
             }
         }
 
-        if (options.useNewModel) {
+        if (useNewModel) {
             EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
             this._editingItemData = listViewModel.getItemDataByItem(editingItemProjection);
@@ -789,13 +792,13 @@ export default class EditInPlace {
                     this,
                     item,
                     listViewModel,
-                    _private.getAddPosition(options)
+                    _private.getAddPosition(editingConfig)
                 );
-                this._editingItemData.addPosition = options.editingConfig && options.editingConfig.addPosition;
-                this._editingItemData.drawActions = options.editingConfig && options.editingConfig.toolbarVisibility;
+                this._editingItemData.addPosition = editingConfig && editingConfig.addPosition;
+                this._editingItemData.drawActions = editingConfig && editingConfig.toolbarVisibility;
             }
 
-            listViewModel._setEditingItemData(this._editingItemData);
+            listViewModel._setEditingItemData(this._editingItemData, useNewModel);
         }
 
         listViewModel.subscribe('onCollectionChange', this._updateIndex);
@@ -827,7 +830,7 @@ export default class EditInPlace {
                 this,
                 this._editingItem,
                 this._options.listViewModel,
-                _private.getAddPosition(this._options)
+                _private.getAddPosition(this._options.editingConfig)
             );
         }
     }
