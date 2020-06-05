@@ -151,7 +151,8 @@ describe('Controls/_itemActions/Controller', () => {
             actionCaptionPosition: options ? options.actionCaptionPosition : null,
             editingToolbarVisible: options ? options.editingToolbarVisible : false,
             editArrowAction: options ? options.editArrowAction : false,
-            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null
+            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
+            contextMenuConfig: options ? options.contextMenuConfig: null
         };
     }
 
