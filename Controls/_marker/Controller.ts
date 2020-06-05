@@ -40,11 +40,18 @@ export class Controller {
     * @return {string|number} новый ключ маркера
     */
    setMarkedKey(key: TKey): TKey {
-      if (key === undefined || this._markedKey === key || !this._model) {
+      if (this._markedKey === key || !this._model) {
          return;
       }
 
       this._model.setMarkedKey(this._markedKey, false);
+
+      if (key === undefined) {
+         this._markedKey = undefined;
+         // Чтобы в старой модели сбросить ключ, в новой модели ничего не изменится от этого вызова
+         this._model.setMarkedKey(undefined, true);
+         return undefined;
+      }
 
       const itemExistsInModel = !!this._model.getItemBySourceKey(key);
       if (itemExistsInModel) {
