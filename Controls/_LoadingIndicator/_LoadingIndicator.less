@@ -10,16 +10,20 @@
    background-color: @overlay_background-color_loadingIndicator;
 }
 
+// По правилам работы с z-index-ами платформенные решения находятся в диапазоне 16-30.
+// https://docs.google.com/document/d/1jKYv2go53aYc-zjOhUERS0CzvfihVJ5ZdRrbN-WL9WA/edit
+// Так как индикатор должен перекрывать layout-Browser__hint , навешиваем ему z-index 17, а layout-Browser__hint - 16.
+
 // Необходимо навесить z-index на индикатор и контент для правильный работы контекста z-index`ов
 // Крутилка должна быть всегда выше контента и не завязана на его внутренние z-index'ы
-// Добавляю контенту z-index = 1, крутилке z-index = 2.
+// Добавляю контенту z-index = 17, крутилке z-index = 18.
 .controls-loading-indicator_content {
-   z-index: 1;
+   z-index: 17;
    position: relative;
 }
 
 .controls-loading-indicator_local {
-   z-index: 2;
+   z-index: 18;
 }
 
 .controls-loading-indicator_global {
