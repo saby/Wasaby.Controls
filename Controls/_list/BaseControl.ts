@@ -3261,9 +3261,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
        _private.handleSelectionControllerResult(this, result);
     },
 
-    _onKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent): void {
+    _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent): void {
         if (this._editInPlace) {
-            this._editInPlace.onKeyDown(e, nativeEvent);
+            switch (nativeEvent.keyCode) {
+                case 13: // Enter
+                    // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+                    this._editInPlace.editNextRow()
+                    e.stopPropagation();
+                    break;
+                case 27: // Esc
+                    // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+                    e.stopPropagation();
+                    return this._editInPlace.cancelEdit();
+                    break;
+            }
         }
     },
 

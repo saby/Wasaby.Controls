@@ -3995,7 +3995,7 @@ define([
             cancelEdit: () => {
                cancelClosed = true;
             },
-            beforeUpdate: () => undefined
+            updateEditingData: () => undefined
          };
          instance._beforeUpdate(cfg);
          assert.isTrue(cancelClosed);

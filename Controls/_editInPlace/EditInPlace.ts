@@ -567,28 +567,17 @@ export default class EditInPlace {
         }) : _private.endItemEdit(this, false);
     }
 
-    onKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent): Promise<any> {
-        switch (nativeEvent.keyCode) {
-            case 13: // Enter
-                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
-                e.stopPropagation();
-                if (this._isAdd) {
-                    return _private.editNextRow(
-                        this,
-                        true,
-                        !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton
-                    );
-                } else if (this._options.editingConfig && !this._sequentialEditing) {
-                    return this.commitEdit();
-                } else {
-                    return _private.editNextRow(this, true);
-                }
-                break;
-            case 27: // Esc
-                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
-                e.stopPropagation();
-                return this.cancelEdit();
-                break;
+    editNextRow(): Promise<any> {
+        if (this._isAdd) {
+            return _private.editNextRow(
+                this,
+                true,
+                !!this._options.editingConfig && !!this._options.editingConfig.autoAddByApplyButton
+            );
+        } else if (this._options.editingConfig && !this._sequentialEditing) {
+            return this.commitEdit();
+        } else {
+            return _private.editNextRow(this, true);
         }
     }
 

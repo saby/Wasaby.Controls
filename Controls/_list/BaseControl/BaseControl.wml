@@ -140,7 +140,7 @@
                     on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
                     on:itemSwipe="_onItemSwipe()"
                     on:dragStart="_notifyHandler('dragStart')"
-                    on:editingRowKeyDown="_onKeyDown()"
+                    on:editingRowKeyDown="_onEditingRowKeyDown()"
                     on:onRowDeactivated="_onRowDeactivated()"
                     >
                 <ws:itemActionsTemplate>

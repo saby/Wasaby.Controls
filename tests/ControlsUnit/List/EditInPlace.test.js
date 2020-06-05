@@ -1235,28 +1235,7 @@ define([
          });
       });
 
-      describe('_onKeyDown', function() {
-         it('Enter', function() {
-            let isPropagationStopped = false;
-            eip.beginEdit = function(options) {
-               assert.equal(options.item, listViewModel.at(1).getContents());
-            };
-            Object.assign(eip._options,{
-               listViewModel: listViewModel
-            });
-            eip._editingItem = listViewModel.at(0).getContents();
-            eip._setEditingItemData(listViewModel.at(0).getContents(), eip._options.listViewModel, eip._options);
-            eip.onKeyDown({
-               stopPropagation: function() {
-                  isPropagationStopped = true;
-               }
-            }, {
-               keyCode: 13,
-               stopPropagation: function() {}
-            });
-            assert.isTrue(isPropagationStopped);
-         });
-
+      describe('editNextRow', function() {
          it('Enter with autoAddByApplyButton', async function() {
             eip.beginEdit = function(options) {
                assert.equal(options.item, listViewModel.at(1).getContents());
@@ -1270,12 +1249,7 @@ define([
             eip._editingItem = listViewModel.at(0).getContents();
 
             eip._setEditingItemData(listViewModel.at(0).getContents(), eip._options.listViewModel, eip._options);
-            await eip.onKeyDown({
-               stopPropagation: function() {}
-            }, {
-               keyCode: 13,
-               stopPropagation: function() {}
-            });
+            await eip.editNextRow();
             assert.isNull(eip._editingItem);
          });
 
@@ -1294,12 +1268,7 @@ define([
             });
             eip._editingItem = listViewModel.at(2).getContents();
             eip._setEditingItemData(listViewModel.at(2).getContents(), eip._options.listViewModel, eip._options);
-            eip.onKeyDown({
-               stopPropagation: function() {}
-            }, {
-               keyCode: 13,
-               stopPropagation: function() {}
-            });
+            eip.editNextRow();
          });
 
          it('Enter on last item, autoAdd', function(done) {
@@ -1315,12 +1284,7 @@ define([
             eip._sequentialEditing = true;
             eip._editingItem = listViewModel.at(2).getContents();
             eip._setEditingItemData(listViewModel.at(2).getContents(), eip._options.listViewModel, eip._options);
-            eip.onKeyDown({
-               stopPropagation: function() {}
-            }, {
-               keyCode: 13,
-               stopPropagation: function() {}
-            });
+            eip.editNextRow();
          });
 
          it('Enter on adding item', async function() {
@@ -1360,12 +1324,7 @@ define([
 
             assert.equal(eip._editingItem.getId(), newItem.getId());
 
-            await eip.onKeyDown({
-               stopPropagation: function() {}
-            }, {
-               keyCode: 13,
-               stopPropagation: function() {}
-            });
+            await eip.editNextRow();
 
             assert.equal(eip._editingItem.getId(), secondAddItem.getId());
          });
@@ -1388,32 +1347,7 @@ define([
             });
             eip._editingItem = listViewModel.at(0).getContents();
             eip._setEditingItemData(listViewModel.at(0).getContents(), eip._options.listViewModel, eip._options);
-            eip.onKeyDown({
-               stopPropagation: function() {}
-            }, {
-               keyCode: 13,
-               stopPropagation: function() {}
-            });
-         });
-
-         it('Esc', function(done) {
-            eip.cancelEdit = function() {
-               done();
-            };
-            Object.assign(eip._options,{
-               listViewModel: listViewModel,
-               editingConfig: {
-                  sequentialEditing: false
-               }
-            });
-            eip._editingItem = listViewModel.at(0).getContents();
-            eip._setEditingItemData(listViewModel.at(0).getContents(), eip._options.listViewModel, eip._options);
-            eip.onKeyDown({
-               stopPropagation: function() {}
-            }, {
-               keyCode: 27,
-               stopPropagation: function() {}
-            });
+            eip.editNextRow();
          });
 
          it('Tab', function(done) {
@@ -1656,12 +1590,7 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(1).getContents();
                eip._setEditingItemData(treeModel.at(1).getContents(), eip._options.listViewModel, eip._options);
-               eip.onKeyDown({
-                  stopPropagation: function() {}
-               }, {
-                  keyCode: 13,
-                  stopPropagation: function() {}
-               });
+               eip.editNextRow();
             });
 
             it('Enter inside a second folder', function() {
@@ -1677,12 +1606,7 @@ define([
                treeModel.setExpandedItems([1, 2]);
                eip._editingItem = treeModel.at(5).getContents();
                eip._setEditingItemData(treeModel.at(5).getContents(), eip._options.listViewModel, eip._options);
-               eip.onKeyDown({
-                  stopPropagation: function() {}
-               }, {
-                  keyCode: 13,
-                  stopPropagation: function() {}
-               });
+               eip.editNextRow();
             });
 
             it('Enter on last item inside a folder', function(done) {
@@ -1701,12 +1625,7 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(3).getContents();
                eip._setEditingItemData(treeModel.at(3).getContents(), eip._options.listViewModel, eip._options);
-               eip.onKeyDown({
-                  stopPropagation: function() {}
-               }, {
-                  keyCode: 13,
-                  stopPropagation: function() {}
-               });
+               eip.editNextRow();
             });
 
             it('Enter on last item inside a folder, autoAdd', function(done) {
@@ -1723,12 +1642,7 @@ define([
                eip._sequentialEditing = true;
                eip._editingItem = treeModel.at(3).getContents();
                eip._setEditingItemData(treeModel.at(3).getContents(), eip._options.listViewModel, eip._options);
-               eip.onKeyDown({
-                  stopPropagation: function() {}
-               }, {
-                  keyCode: 13,
-                  stopPropagation: function() {}
-               });
+               eip.editNextRow();
             });
 
             it('Enter inside a folder, sequentialEditing: false', function(done) {
@@ -1750,7 +1664,7 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(1).getContents();
                eip._setEditingItemData(treeModel.at(1).getContents(), eip._options.listViewModel, eip._options);
-               eip.onKeyDown({
+               eip.editNextRow({
                   stopPropagation: function() {}
                }, {
                   keyCode: 13,
