@@ -32,6 +32,10 @@
         <Controls.buttons:Button viewMode="linkButton" caption="Button" fontColorStyle="label"></Controls.buttons:Button>
     </div>
     <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=info</div>
+        <Controls.buttons:Button viewMode="linkButton" caption="Button" fontColorStyle="info"></Controls.buttons:Button>
+    </div>
+    <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=default</div>
         <Controls.buttons:Button viewMode="linkButton" caption="Button" fontColorStyle="default"></Controls.buttons:Button>
     </div>
