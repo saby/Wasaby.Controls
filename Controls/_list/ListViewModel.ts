@@ -132,6 +132,9 @@ var _private = {
         itemsModelCurrent.isSwiped = (): boolean => (
             itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : false
         );
+        itemsModelCurrent.isRightSwiped = (): boolean => (
+            itemsModelCurrent.dispItem.isRightSwiped !== undefined ? itemsModelCurrent.dispItem.isRightSwiped() : false
+        );
         itemsModelCurrent.getContents = () => (
             itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
         );
@@ -205,7 +208,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         // TODO USE itemsModelCurrent.isSelected()
         itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
-        itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
         itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
         itemsModelCurrent.searchValue = this._options.searchValue;
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
@@ -523,17 +525,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
            this._swipeItem = itemData;
            this._nextModelVersion(true);
         }
-    },
-
-    /**
-     * задаёт Для Item controls-ListView__item_rightSwipeAnimation
-     * для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f
-     * надо понять, надо это или нет.
-     * Если надо, то реализовать в новой модели
-     */
-    setRightSwipedItem: function(itemData) {
-        this._rightSwipedItem = itemData;
-        this._nextModelVersion();
     },
 
     setHoveredItem: function(item){

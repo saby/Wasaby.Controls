@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 
-import { CollectionItem } from 'Controls/display';
+import {ANIMATION_STATE, CollectionItem} from 'Controls/display';
+import {ICollection} from "../../../Controls/_display/interface/ICollection";
 
 interface IChangedData<T> {
     item?: CollectionItem<T>;
@@ -385,26 +386,59 @@ describe('Controls/_display/CollectionItem', () => {
         });
     });
 
-    it('.setSwiped()', () => {
-        const given: IChangedData<string> = {};
-        const owner = {
-            notifyItemChange(item: CollectionItem<string>, property: string): void {
-                given.item = item;
-                given.property = property;
-            }
-        };
+    describe('isSwiped variants', () => {
+        let given: IChangedData<string>;
+        let owner: ICollection<any, CollectionItem<any>>;
+        let item: CollectionItem<any>;
+        beforeEach(() => {
+            given = {};
+            owner = {
+                _swipeAnimation: null,
+                notifyItemChange(item: CollectionItem<string>, property: string): void {
+                    given.item = item;
+                    given.property = property;
+                },
+                getSwipeAnimation() {
+                    return this._swipeAnimation;
+                },
+                setSwipeAnimation(animation) {
+                    this._swipeAnimation = animation;
+                }
+            };
+            item = new CollectionItem({ owner });
+        });
 
-        const item = new CollectionItem({ owner });
-        assert.isFalse(item.isSwiped());
+        // Версия должна измениться после setSwiped()
+        it('should update item\'s version on setSwiped()', () => {
+            const prevVersion = item.getVersion();
+            item.setSwiped(true);
+            assert.isAbove(item.getVersion(), prevVersion);
+        });
 
-        const prevVersion = item.getVersion();
+        // Модельдолжна сообщить корректное событие после setSwiped()
+        it('should fire change event on setSwiped()', () => {
+            item.setSwiped(true);
+            assert.strictEqual(given.item, item);
+            assert.strictEqual(given.property, 'swiped');
+        });
 
-        item.setSwiped(true);
-        assert.isTrue(item.isSwiped());
-        assert.isAbove(item.getVersion(), prevVersion);
+        // isSwiped() должен вернуть true, тогда и только тогда когда анимация выставлена в close/open
+        it('isSwiped() should only be true when animation is set to open/close', () => {
+            item.getOwner().setSwipeAnimation(ANIMATION_STATE.OPEN);
 
-        assert.strictEqual(given.item, item);
-        assert.strictEqual(given.property, 'swiped');
+            item.setSwiped(true);
+            assert.isFalse(item.isRightSwiped(), 'Item cannot be right-swiped when animation was set to open/close');
+            assert.isTrue(item.isSwiped(), 'Item should be left-swiped when animation was set to open/close');
+        });
+
+        // isRightSwiped() должен вернуть true, тогда и только тогда когда анимация выставлена в right-swipe
+        it('isRightSwiped() should only be true when animation is set to right-swipe', () => {
+            item.getOwner().setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
+
+            item.setSwiped(true);
+            assert.isTrue(item.isRightSwiped(), 'Item should be right-swiped when animation was set to right-swipe');
+            assert.isFalse(item.isSwiped(), 'Item cannot be left-swiped when animation was set to right-swipe');
+        });
     });
 
     it('.setActive()', () => {

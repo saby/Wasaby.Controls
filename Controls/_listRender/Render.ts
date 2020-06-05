@@ -120,7 +120,7 @@ export default class Render extends Control<IRenderOptions> {
         this._notify('itemSwipe', [item, e, swipeContainer?.clientHeight]);
     }
 
-    protected _onAnimationEnd(e: SyntheticEvent<null>): void {
+    protected _onActionsSwipeAnimationEnd(e: SyntheticEvent<null>): void {
         this._notify('closeSwipe', [e]);
     }
 

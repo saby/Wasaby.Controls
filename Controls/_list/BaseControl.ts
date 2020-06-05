@@ -199,7 +199,7 @@ const _private = {
         if (self._updateInProgress) {
             if (self._callbackAfterUpdate) {
                 self._callbackAfterUpdate.push(callback);
-            } else {
+        } else {
                 self._callbackAfterUpdate = [callback];
             }
         } else {
@@ -266,9 +266,9 @@ const _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
-                        if (self._items) {
-                           self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
-                        }
+                    if (self._items) {
+                       self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                    }
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
@@ -283,7 +283,7 @@ const _private = {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
                     }
-                        self._items.subscribe('onCollectionChange', self._onItemsChanged);
+                    self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._markerController) {
                         _private.updateMarkerController(self, self._options);
@@ -440,7 +440,7 @@ const _private = {
         if (key !== undefined && self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
             _private.scrollToItem(self, key);
-            }
+        }
     },
     moveMarkerToNext: function (self, event) {
         if (self._markerController) {
@@ -484,19 +484,19 @@ const _private = {
         }
     },
     spaceHandler: function(self, event) {
-            const model = self.getViewModel();
-            let toggledItemId = model.getMarkedKey();
+        const model = self.getViewModel();
+        let toggledItemId = model.getMarkedKey();
 
-            if (!model.getItemById(toggledItemId) && model.getCount()) {
-                toggledItemId = model.at(0).getContents().getId();
-            }
+        if (!model.getItemById(toggledItemId) && model.getCount()) {
+            toggledItemId = model.at(0).getContents().getId();
+        }
 
-            if (toggledItemId) {
+        if (toggledItemId) {
             if (self._selectionController) {
                 self._selectionController.toggleItem(toggledItemId);
             }
-                _private.moveMarkerToNext(self, event);
-            }
+            _private.moveMarkerToNext(self, event);
+        }
     },
     prepareFooter: function(self, navigation, sourceController) {
         var
@@ -933,11 +933,11 @@ const _private = {
 
     onScrollShow: function(self, params) {
         _private.doAfterUpdate(self, () => {
-            // ToDo option "loadOffset" is crutch for contacts.
-            // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
-            self._isScrollShown = true;
+        // ToDo option "loadOffset" is crutch for contacts.
+        // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
+        self._isScrollShown = true;
 
-            self._viewPortRect = params.viewPortRect;
+        self._viewPortRect = params.viewPortRect;
 
             if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
@@ -1089,7 +1089,7 @@ const _private = {
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
             self._markedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
-        self._setMarkerAfterScroll = false;
+            self._setMarkerAfterScroll = false;
         }
     },
 
@@ -1267,7 +1267,7 @@ const _private = {
                   case IObservable.ACTION_ADD:
                      result = self._selectionController.handleAddItems(newItems);
                      break;
-        }
+               }
                self.handleSelectionControllerResult(result);
             }
         }
@@ -1819,8 +1819,8 @@ const _private = {
       // при подписке на модель событие remove летит еще и при скрытии элементов
 
        let selectionControllerResult;
-         switch (action) {
-            case IObservable.ACTION_REMOVE:
+       switch (action) {
+           case IObservable.ACTION_REMOVE:
                if (self._selectionController) {
                    selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
                }
@@ -1828,7 +1828,7 @@ const _private = {
                    self._markerController.handleRemoveItems(removedItemsIndex);
                }
                break;
-         }
+       }
        this.handleSelectionControllerResult(self, selectionControllerResult);
    },
 
@@ -1846,7 +1846,7 @@ const _private = {
             markerVisibility: options.markerVisibility,
             markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
         });
-      }
+    }
 };
 
 /**
@@ -1986,7 +1986,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._inertialScrolling = new InertialScrolling();
 
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
-
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
 
@@ -2803,6 +2802,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         let contents = _private.getPlainItemContents(item);
         const key = contents ? contents.getKey() : item.key;
         this.setMarkedKey(key);
+
         if (action && !action._isMenu && !action['parent@']) {
             _private.handleItemActionClick(this, action, event, item);
         } else {
@@ -3183,24 +3183,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.setMarkedKey(this, key);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            // After the right swipe the item should get selected. (Кусок старого кода)
-            if (!this._selectionController) {
-                this._createSelectionController();
-            }
-            const result = this._selectionController.toggleItem(key);
-            _private.handleSelectionControllerResult(this, result);
-            this._notify('checkboxClick', [key, item.isSelected()]);
+            if (item.isSwiped()) {
+                this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+                this._listViewModel.nextVersion();
+            } else {
+                // After the right swipe the item should get selected. (Кусок старого кода)
+                if (!this._selectionController) {
+                    this._createSelectionController();
+                }
+                const result = this._selectionController.toggleItem(key);
+                _private.handleSelectionControllerResult(this, result);
+                this._notify('checkboxClick', [key, item.isSelected()]);
 
-            // TODO Проверить. Код ниже задавал Для Item controls-ListView__item_rightSwipeAnimation
-            //  для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f.
-            //  Надо, то реализовать в новой модели.
-            // Animation should be played only if checkboxes are visible.
-            // if (this._options.multiSelectVisibility !== 'hidden') {
-            //     this._listViewModel.setRightSwipedItem(itemData);
-            // }
-            this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
-            this._listViewModel.nextVersion();
-            _private.setMarkedKey(this, key);
+                // Animation should be played only if checkboxes are visible.
+                if (this._options.multiSelectVisibility !== 'hidden') {
+                    this._itemActionsController.activateRightSwipe(item.getContents().getKey());
+                }
+                _private.setMarkedKey(this, key);
+            }
         }
         if (!this._options.itemActions && item.isSwiped()) {
             this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
@@ -3208,17 +3208,30 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     /**
-     * Обработчик события окончания анимации свайпа по записи
+     * Обработчик, выполняемый после окончания анимации свайпа по опциям записи
      * @param e
      * @private
      */
-    _onSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
-        if (e.nativeEvent.animationName === 'rightSwipe' && this._itemActionsController.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
+    _onActionsSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
+        if (e.nativeEvent.animationName === 'itemActionsSwipeClose') {
             const item = this._itemActionsController.getSwipeItem();
-            if (!this._options.itemActions && item) {
-                this._notify('itemSwipe', [item, e]);
+            if (item) {
+                if (!this._options.itemActions) {
+                    this._notify('itemSwipe', [item, e]);
+                }
+                this._itemActionsController.deactivateSwipe();
             }
-            this._itemActionsController.deactivateSwipe();
+        }
+    },
+
+    /**
+     * Обработчик, выполняемый после окончания анимации свайпа по записи
+     * @param e
+     * @private
+     */
+    _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
+        if (e.nativeEvent.animationName === 'rightSwipe') {
+            this._listViewModel.nextVersion();
         }
     },
 

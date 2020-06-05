@@ -37,7 +37,7 @@
                      editArrowTemplate="{{editArrowTemplate}}"
                      ladderWrapper="{{currentColumn.ladderWrapper}}"
                      attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
-                     {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}
+                     {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}
                      {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}"
                      itemData="{{currentColumn}}"
                      tagTemplate="{{tagTemplate}}"/>
