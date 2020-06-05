@@ -176,7 +176,7 @@
          </div>
       </ws:if>
    </ws:else>
-   <ws:partial template="stickyLadderByIndex" currentColumn="{{currentColumn}}" index="{{0}}"/>
+   <ws:partial template="stickyLadderByIndex" currentColumn="{{currentColumn}}" index="{{1}}"/>
    <ws:if data="{{itemData.columnScroll && itemData.itemActionsDrawPosition === 'after' }}">
       <ws:if data="{{ itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode) }}">
          <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.itemActionsGridCellStyles}}" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}_actions"/>
