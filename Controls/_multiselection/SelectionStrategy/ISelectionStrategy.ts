@@ -75,4 +75,10 @@ export default interface ISelectionStrategy {
     * @param options
     */
    update(options: ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions): void;
+
+   /**
+    * Проверяет все ли выбраны элементы
+    * @param selection текущее состояние выбранных ключей
+    */
+   isAllSelected(selection: ISelection): boolean;
 }

@@ -18,6 +18,7 @@ import clone = require('Core/core-clone');
  */
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
+const ALL_SELECTION_VALUE = null;
 
 export class TreeSelectionStrategy implements ISelectionStrategy {
    private _hierarchyRelation: relation.Hierarchy;
@@ -200,6 +201,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       return countItemsSelected;
+   }
+
+   isAllSelected(selection: ISelection): boolean {
+      return selection.selected.includes(ALL_SELECTION_VALUE) && selection.excluded.includes(ALL_SELECTION_VALUE)
+            && selection.excluded.length === 1;
    }
 
    private _unselectParentNodes(selection: ISelection, parentId: TKey): void {

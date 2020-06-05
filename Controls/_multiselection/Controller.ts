@@ -12,8 +12,6 @@ import {
 } from './interface';
 import clone = require('Core/core-clone');
 
-const ALL_SELECTION_VALUE = null;
-
 /**
  * @class Controls/_multiselector/SelectionController
  * @author Авраменко А.С.
@@ -117,7 +115,7 @@ export class Controller {
          selectedKeysDiff: { keys: [], added: [], removed: [] },
          excludedKeysDiff: { keys: [], added: [], removed: [] },
          selectedCount: this._getCount(this._selection),
-         isAllSelected: this._isAllSelected(this._selection)
+         isAllSelected: this._strategy.isAllSelected(this._selection)
       };
    }
 
@@ -197,7 +195,7 @@ export class Controller {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
          selectedCount: this._getCount(newSelection),
-         isAllSelected: this._isAllSelected(newSelection)
+         isAllSelected: this._strategy.isAllSelected(newSelection)
       };
    }
 
@@ -206,9 +204,5 @@ export class Controller {
       this._model.setSelectedItems(selectionForModel.get(true), true);
       this._model.setSelectedItems(selectionForModel.get(false), false);
       this._model.setSelectedItems(selectionForModel.get(null), null);
-   }
-
-   private _isAllSelected(selection: ISelection): boolean {
-      return selection.selected.includes(ALL_SELECTION_VALUE) && selection.excluded.includes(ALL_SELECTION_VALUE);
    }
 }
