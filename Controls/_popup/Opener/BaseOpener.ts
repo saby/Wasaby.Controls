@@ -63,7 +63,9 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             const cfg: TBaseOpenerOptions = this._getConfig(popupOptions);
             // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
             if (cfg.isCompoundTemplate) {
-                this._compatibleOpen(cfg, controller);
+                BaseOpenerUtil.loadCompatibleLayer(() => {
+                    this._openPopup(cfg, controller);
+                });
             } else {
                 this._openPopup(cfg, controller);
             }
@@ -237,16 +239,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     protected _getCurrentPopupId(): string {
         return this._popupId;
-    }
-
-    private _compatibleOpen(cfg: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
-        return new Promise((resolve) => {
-            requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (Layer) => {
-                Layer.load().addCallback(() => {
-                    this._openPopup(cfg, controller).then((popupId: string) => resolve(popupId));
-                });
-            });
-        });
     }
 
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
