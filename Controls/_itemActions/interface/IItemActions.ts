@@ -184,6 +184,7 @@ export interface IMenuTemplateOptions extends IContextMenuConfig {
     headConfig?: {
         caption: string;
         icon: string;
+        iconSize: string;
     };
 }
 
