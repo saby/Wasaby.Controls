@@ -43,8 +43,8 @@
                <ws:if data="{{_options.intervals}}">
                   <ws:for data="key, interval in _intervals">
                      <div
-                             class="controls-Slider__event"
-                             style="left:{{interval.left}}%; width:{{interval.width}}%; background-color:#{{interval.color}};">
+                             class="controls-Slider__interval controls-Slider__interval_{{interval.color}}_theme-{{_options.theme}}"
+                             style="left:{{interval.left}}%; width:{{interval.width}}%;">
                      </div>
                   </ws:for>
                </ws:if>

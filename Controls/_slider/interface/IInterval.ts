@@ -13,19 +13,23 @@
  */
 
 export interface IInterval {
-   color: string;
-   start: number;
-   end: number;
+    color: string;
+    start: number;
+    end: number;
 }
 
 /**
  * @name Controls/_slider/interface/IInterval#color
- * @cfg {String} Цвет интервала.
+ * @cfg {String} Цвет интервала. Может принимать одно из предопределенных значений: link, primary,
+ * secondary, success, warning, danger, unaccented, label или другое значение, стили для
+ * которого должны быть описаны по шаблону controls-Slider__interval_[string]-@{themeName}
  */
 
 /*
  * @name Controls/_slider/interface/IInterval#color
- * @cfg {String} Interval color.
+ * @cfg {String} Interval color. Can be one of defaults values: link, primary,
+ * secondary, success, warning, danger, unaccented, label or other which styles must be described by template
+ * controls-Slider__interval_[string]-@{themeName}
  */
 
 /**

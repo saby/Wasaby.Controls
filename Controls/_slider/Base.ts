@@ -75,7 +75,7 @@ const maxPercentValue = 100;
  *       <ws:intervals>
  *          <ws:Array>
  *             <ws:Object
- *                color="#ff0000"
+ *                color="success"
  *                start={{10}}
  *                end={{40}}
  *             </ws:Object>
@@ -95,7 +95,7 @@ const maxPercentValue = 100;
  *       <ws:intervals>
  *          <ws:Array>
  *             <ws:Object
- *                color="#ff0000"
+ *                color="success"
  *                start={{10}}
  *                end={{40}}
  *             </ws:Object>
