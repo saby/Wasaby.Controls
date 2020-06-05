@@ -78,6 +78,7 @@ export default interface ISelectionStrategy {
 
    /**
     * Проверяет все ли выбраны элементы
+    * @remark В деревянной стратегии проверяет, что выбрано все в текущем узле
     * @param selection текущее состояние выбранных ключей
     */
    isAllSelected(selection: ISelection): boolean;
