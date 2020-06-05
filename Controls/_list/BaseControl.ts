@@ -1877,6 +1877,8 @@ const _private = {
             });
         }
     }
+
+
 };
 
 /**
@@ -2092,6 +2094,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
                     }
+
+                    if (self._editInPlace && self._listViewModel) {
+                        self._editInPlace.beforeMount({...{listViewModel: self._listViewModel}, ...newOptions});
+                    }
+
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                     return;
                 }
@@ -2101,6 +2108,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
                     return _private.showError(self, receivedError);
                 }
+
+
                 return _private.reload(self, newOptions).addCallback((result) => {
 
                     // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
@@ -2265,7 +2274,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._editInPlace) {
             this._editInPlace.afterMount(this._listViewModel, this._children.formController);
+            if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
+                this._updateItemActions(this._options);
+            }
         }
+
         // для связи с контроллером ПМО
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
         this._notifyOnDrawItems();

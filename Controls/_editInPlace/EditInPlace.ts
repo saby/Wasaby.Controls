@@ -407,6 +407,7 @@ export interface IEditingOptions {
     errorController?: typeof dataSourceError;
     listViewModel?: ViewModel<Model>;
     readOnly?: boolean;
+    toolbarVisibility?: boolean;
     useNewModel?: boolean;
     multiSelectVisibility?: boolean;
     notify?: any;
@@ -872,6 +873,10 @@ export default class EditInPlace {
 
     getSource(): any {
         return this._options.listView.getSourceController();
+    }
+
+    shouldShowToolbar(): boolean {
+        return !!this._options.editingConfig.toolbarVisibility;
     }
 
     static _theme: string[];
