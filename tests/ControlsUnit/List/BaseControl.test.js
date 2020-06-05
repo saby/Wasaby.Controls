@@ -2517,7 +2517,7 @@ define([
             }),
             cfg = {
                editingConfig: {
-                  item: { id: 1 }
+                  item: new entity.Model({rawData: { id: 1 }})
                },
                viewName: 'Controls/List/ListView',
                source: source,
@@ -3004,12 +3004,10 @@ define([
                }
             };
             var ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  beginEdit: function(options) {
-                     assert.equal(options, opt);
-                     return cDeferred.success();
-                  }
+            ctrl._editInPlace = {
+               beginEdit: function(options) {
+                  assert.equal(options, opt);
+                  return cDeferred.success();
                }
             };
             var result = ctrl.beginEdit(opt);
@@ -3047,12 +3045,10 @@ define([
                }
             };
             var ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  beginAdd: function(options) {
-                     assert.equal(options, opt);
-                     return cDeferred.success();
-                  }
+            ctrl._editInPlace = {
+               beginAdd: function(options) {
+                  assert.equal(options, opt);
+                  return cDeferred.success();
                }
             };
             var result = ctrl.beginAdd(opt);
@@ -3087,11 +3083,9 @@ define([
                }
             };
             var ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  cancelEdit: function() {
-                     return cDeferred.success();
-                  }
+            ctrl._editInPlace = {
+               cancelEdit: function() {
+                  return cDeferred.success();
                }
             };
             var result = ctrl.cancelEdit();
@@ -3160,11 +3154,9 @@ define([
                }
             };
             var ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  commitEdit: function() {
-                     return cDeferred.success();
-                  }
+            ctrl._editInPlace = {
+               commitEdit: function() {
+                  return cDeferred.success();
                }
             };
             var result = ctrl.commitEdit();
@@ -3202,11 +3194,9 @@ define([
             let result;
 
             const ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  commitAndMoveNextRow: function () {
-                     result = commitAndMoveDef;
-                  }
+            ctrl._editInPlace = {
+               commitAndMoveNextRow: function () {
+                  result = commitAndMoveDef;
                }
             };
             ctrl._commitEditActionHandler();
@@ -3328,11 +3318,9 @@ define([
                   getEditingItemData: () => ({})
                },
                _options: {},
-               _children: {
-                  editInPlace: {
-                     cancelEdit: function() {
-                        isCanceled = true;
-                     }
+               _editInPlace: {
+                  cancelEdit: function() {
+                     isCanceled = true;
                   }
                }
             };
@@ -4003,12 +3991,11 @@ define([
          await instance._beforeMount(cfg);
          instance._listViewModel.getEditingItemData = () => ({});
          instance._viewModelConstructor = {};
-         instance._children = {
-            editInPlace: {
-               cancelEdit: () => {
-                  cancelClosed = true;
-               }
-            }
+         instance._editInPlace = {
+            cancelEdit: () => {
+               cancelClosed = true;
+            },
+            updateEditingData: () => undefined
          };
          instance._beforeUpdate(cfg);
          assert.isTrue(cancelClosed);
