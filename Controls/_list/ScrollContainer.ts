@@ -47,6 +47,13 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
     _triggerPositionCoefficient: number;
 }
 
+/**
+ * Контейнер управляющий операциями скролла в списке.
+ * @class Controls/_list/ScrollContainer
+ * @control
+ * @private
+ * @author Авраменко А.С.
+ */
 export default class ScrollContainer extends Control<IOptions> {
     protected _template: TemplateFunction = template;
     protected _children: {
@@ -64,6 +71,8 @@ export default class ScrollContainer extends Control<IOptions> {
     private _viewportHeight: number = 0;
     private _triggerOffset: number = 0;
     private _lastScrollTop: number = 0;
+
+    private _updateShadowModeAfterMount: Function|null = null;
 
     private _updateShadowModeAfterMount: Function|null = null;
 

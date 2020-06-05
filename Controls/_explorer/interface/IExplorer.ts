@@ -19,6 +19,7 @@
  * @variant table Таблица.
  * @variant search Режим поиска.
  * @variant tile Плитка.
+ * @variant list Список.
  */
 
 /*

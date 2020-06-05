@@ -3,6 +3,7 @@ import {IPopupItem, IPopupOptions, IPopupSizes, IPopupPosition} from 'Controls/p
 import {detection} from 'Env/Env';
 import * as Deferred from 'Core/Deferred';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
+import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 
 interface IDialogItem extends IPopupItem {
     popupOptions: IDialogOptions;
@@ -14,6 +15,7 @@ interface IDialogOptions extends IPopupOptions {
     maximize: boolean;
     top: number;
     left: number;
+    propStorageId: string;
 }
 
 interface IWindow {
@@ -84,24 +86,14 @@ class DialogController extends BaseController {
         return (new Deferred()).callback();
     }
 
-    getDefaultConfig(item: IDialogItem): void {
-        // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
-        const sizes: IPopupSizes = {
-            width: 0,
-            height: 0
-        };
-        let defaultCoordinate: number = -10000;
-        this._prepareConfig(item, sizes);
-
-        // Error on ios when position: absolute container is created outside the screen and stretches the page
-        // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
-        if (this._isIOS12()) {
-            defaultCoordinate = 0;
-            item.position.hidden = true;
+    getDefaultConfig(item: IDialogItem): void|Promise<void> {
+        if (item.popupOptions.propStorageId) {
+            return this._getPopupCoords(item).then(() => {
+                this._getDefaultConfig(item);
+            });
+        } else {
+            this._getDefaultConfig(item);
         }
-
-        item.position.top = defaultCoordinate;
-        item.position.left = defaultCoordinate;
     }
 
     popupDragStart(item: IDialogItem, container: HTMLDivElement, offset: IDragOffset): void {
@@ -120,6 +112,7 @@ class DialogController extends BaseController {
     }
 
     popupDragEnd(item: IDialogItem): void {
+        this._savePopupCoords(item);
         delete item.startPosition;
     }
 
@@ -181,6 +174,53 @@ class DialogController extends BaseController {
                 }
             }
         }
+    }
+
+    private _getPopupCoords(item: IDialogItem): Promise<undefined> {
+        return new Promise((resolve) => {
+            const propStorageId = item.popupOptions.propStorageId;
+            if (propStorageId) {
+                getSettings([propStorageId]).then((storage) => {
+                    if (storage && storage[propStorageId]) {
+                        item.popupOptions.top = storage[propStorageId].top;
+                        item.popupOptions.left = storage[propStorageId].left;
+                    }
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        });
+    }
+
+    private _savePopupCoords(item: IDialogItem): void {
+        const propStorageId = item.popupOptions.propStorageId;
+        if (propStorageId && item.position.top >= 0 && item.position.left >= 0) {
+            setSettings({[propStorageId]: {
+                    top: item.position.top,
+                    left: item.position.left
+                }});
+        }
+    }
+
+    private _getDefaultConfig(item: IDialogItem): void {
+        // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
+        const sizes: IPopupSizes = {
+            width: 0,
+            height: 0
+        };
+        let defaultCoordinate: number = -10000;
+        this._prepareConfig(item, sizes);
+
+        // Error on ios when position: absolute container is created outside the screen and stretches the page
+        // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
+        if (this._isIOS12()) {
+            defaultCoordinate = 0;
+            item.position.hidden = true;
+        }
+        // Get top and left coordinate from propStorageId
+        item.position.top = item.popupOptions.top || defaultCoordinate;
+        item.position.left = item.popupOptions.left || defaultCoordinate;
     }
 
     private _getWindowSize(): IWindow {

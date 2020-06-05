@@ -530,6 +530,20 @@ define(
             assert.isUndefined(item);
          });
 
+         it('loadDependencies', async() => {
+            const controller = getDropdownController(config);
+            let items;
+            let menuSource;
+
+            await controller.loadDependencies();
+            items = controller._items;
+            menuSource = controller._menuSource;
+
+            await controller.loadDependencies();
+            assert.isTrue(items === controller._items, 'items changed on second loadDependencies with same options');
+            assert.isTrue(menuSource === controller._menuSource, 'source changed on second loadDependencies with same options');
+         });
+
          it('check empty item update', () => {
             let dropdownController = getDropdownController(config),
                selectedItems = [];
@@ -568,6 +582,7 @@ define(
             };
             dropdownController._sourceController = { hasMoreData: () => false, load: () => Deferred.success(itemsRecords.clone()) };
             dropdownController._open().then(function() {
+               assert.isTrue(!!dropdownController._menuSource);
                assert.isTrue(opened);
             });
 
@@ -1140,10 +1155,11 @@ define(
             });
 
             it('_private::onResult itemClick on history item', function() {
-               let resultItems, updated, closeByNodeClick = true;
+               let resultItems, updated, closeByNodeClick = true, testEvent;
                dropdownController._notify = function (e, d) {
                   if (e === 'selectedItemsChanged') {
                      resultItems = d[0];
+                     testEvent = d[1];
                      return closeByNodeClick;
                   }
                };
@@ -1167,11 +1183,17 @@ define(
                   },
                   keyProperty: 'id'
                });
+
+               let nativeEvent = {
+                  keyCode: 28
+               };
+
                item.set('originalId', item.getId());
                item.set('id', item.getId() + '_history');
                assert.equal(item.getId(), '6_history');
-               dropdownController._onResult('itemClick', item);
+               dropdownController._onResult('itemClick', item, nativeEvent);
                assert.equal(resultItems[0].getId(), '6');
+               assert.deepEqual(testEvent, nativeEvent);
                assert.isTrue(updated);
 
                updated = false;

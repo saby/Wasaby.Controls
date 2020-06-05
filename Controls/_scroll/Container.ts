@@ -495,8 +495,6 @@ let
 
       _isMounted: false,
 
-       _enableScrollbar: true,
-
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
       },
@@ -505,10 +503,6 @@ let
          var
             self = this,
             def;
-
-         if (!constants.isServerSide) {
-             this._enableScrollbar = getEnableScrollbar();
-         }
 
          if ('shadowVisible' in options) {
             Logger.warn('Controls/scroll:Container: Опция shadowVisible устарела, используйте topShadowVisibility и bottomShadowVisibility.', self);
@@ -885,13 +879,6 @@ let
          }
       },
 
-       _wheelHandler(event: SyntheticEvent): void {
-          if (enableScrollbar) {
-              // В рамках оптимизации для устройств на которых есть колесико мыши отключаем показ скролбара.
-              setEnableScrollbar(false);
-          }
-       },
-
       _keydownHandler: function(ev) {
          // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
          if (!ev.nativeEvent.isTrusted) {
@@ -970,10 +957,6 @@ let
 
       _mouseenterHandler: function(event) {
          this._scrollbarTaken(true);
-         if (this._enableScrollbar !== getEnableScrollbar()) {
-             this._enableScrollbar = getEnableScrollbar();
-             this._forceUpdate();
-         }
       },
 
       _mouseleaveHandler: function(event) {
@@ -1002,8 +985,7 @@ let
       },
 
       _scrollbarVisibility: function() {
-         return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._displayState.canScroll && this._showScrollbarOnHover
-         && this._enableScrollbar);
+         return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._displayState.canScroll && this._showScrollbarOnHover);
       },
 
        _horizontalScrollbarVisibility() {
@@ -1330,19 +1312,22 @@ Scroll.contextTypes = function() {
 
 Scroll._private = _private;
 
-function setEnableScrollbar(value: boolean): void {
-    enableScrollbar = value;
-    LocalStorageNative.setItem('enableScrollbar', JSON.stringify(value));
-}
-
-function getEnableScrollbar(): void {
-    if (enableScrollbar === null) {
-        enableScrollbar = JSON.parse(LocalStorageNative.getItem('enableScrollbar'));
-        enableScrollbar = enableScrollbar === null ? true : enableScrollbar;
-    }
-    return enableScrollbar;
-}
-
-let enableScrollbar = null;
+// Добавлялись по задаче https://online.sbis.ru/opendoc.html?guid=1c831383-36a7-474b-9832-35e08a424034
+// Функционал был эксперементальным. Закоментировали, т.к не исключаем, что это может понадбиться в будущем.
+// https://online.sbis.ru/opendoc.html?guid=251ce7fe-0b79-4c02-83db-1b82be76c693
+// function setEnableScrollbar(value: boolean): void {
+//     enableScrollbar = value;
+//     LocalStorageNative.setItem('enableScrollbar', JSON.stringify(value));
+// }
+//
+// function getEnableScrollbar(scrollbarVisibleHard: boolean = false): void {
+//     if (enableScrollbar === null) {
+//         enableScrollbar = JSON.parse(LocalStorageNative.getItem('enableScrollbar'));
+//         enableScrollbar = enableScrollbar === null ? true : enableScrollbar;
+//     }
+//     return scrollbarVisibleHard ? scrollbarVisibleHard : enableScrollbar;
+// }
+//
+// let enableScrollbar = null;
 
 export = Scroll;

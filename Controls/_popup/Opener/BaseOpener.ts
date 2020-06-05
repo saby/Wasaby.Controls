@@ -1,14 +1,13 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import { IOpener, IBaseOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
+import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
 import * as CoreMerge from 'Core/core-merge';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
-import {parse as parserLib, load} from 'Core/library';
 import {Logger} from 'UI/Utils';
 import { DefaultOpenerFinder } from 'UI/Focus';
-import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import rk = require('i18n!Controls');
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 
@@ -33,7 +32,6 @@ export interface IBaseOpenerOptions extends IBasePopupOptions, IControlOptions {
 }
 
 const OPEN_POPUP_DEBOUNCE_DELAY: number = 10;
-let ManagerWrapperCreatingPromise; // TODO: Compatible
 
 class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     extends Control<TBaseOpenerOptions> implements IOpener, IBaseOpener {
@@ -45,7 +43,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     private _indicatorId: string = '';
     private _loadModulesPromise: Promise<ILoadDependencies|Error>;
     private _openerUpdateCallback: Function;
-    private _openPopupTimerId: number;
 
     protected _afterMount(): void {
         this._openerUpdateCallback = this._updatePopup.bind(this);
@@ -57,10 +54,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         this._toggleIndicator(false);
         this._openerUnmounted = true;
         if (this._options.closePopupBeforeUnmount) {
-            if (this._openPopupTimerId) {
-                clearTimeout(this._openPopupTimerId);
-                this._openPopupTimerId = null;
-            }
             ManagerController.remove(this._popupId);
         }
     }
@@ -104,30 +97,41 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         return !!ManagerController.find(this._getCurrentPopupId());
     }
 
-    /* Защита от множественного вызова. собираем все синхронные вызовы, открываем окно с последним конфигом */
-    private _showDialog(template: Control, cfg: IBasePopupOptions, controller: Control, resolve: Function): void {
-        if (this._openPopupTimerId) {
-            clearTimeout(this._openPopupTimerId);
-        }
-        this._openPopupTimerId = setTimeout(() => {
-            this._openPopupTimerId = null;
-            BaseOpener.showDialog(template, cfg, controller, this).addCallback((id: string) => {
-                this._popupId = id;
-                resolve(id);
-            });
-        }, OPEN_POPUP_DEBOUNCE_DELAY);
-    }
-
     private _openPopup(cfg: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
-            this._requireModules(cfg, controller).then((result: ILoadDependencies) => {
-                cfg.id = this._getCurrentPopupId();
-                this._showDialog(result.template, cfg, result.controller, resolve);
-            }).catch(() => {
-                this._toggleIndicator(false);
-                resolve();
-            });
+            const syncResult: ILoadDependencies = this._getModulesSync(cfg, controller);
+            // Если зависимости загружены, действуем синхронно, без промисов
+            if (syncResult) {
+                this._loadDepsCallback(cfg, syncResult, resolve);
+            } else {
+                this._requireModules(cfg, controller).then((result: ILoadDependencies) => {
+                    this._loadDepsCallback(cfg, result, resolve);
+                }).catch(() => {
+                    this._toggleIndicator(false);
+                    resolve();
+                });
+            }
         }));
+    }
+
+    _loadDepsCallback(cfg: TBaseOpenerOptions, result: ILoadDependencies, resolve: Function): void {
+        cfg.id = this._getCurrentPopupId();
+        BaseOpener.showDialog(result.template, cfg, result.controller, this).addCallback((id: string) => {
+            this._popupId = id;
+            resolve(id);
+        });
+    }
+
+    private _getModulesSync(config: TBaseOpenerOptions, controller: string): ILoadDependencies|null {
+        const templateModule = BaseOpenerUtil.getModule(config.template);
+        const controllerModule = BaseOpenerUtil.getModule(controller);
+        if (templateModule && controllerModule) {
+            return {
+                template: templateModule,
+                controller: controllerModule
+            };
+        }
+        return null;
     }
 
     private _requireModules(cfg: TBaseOpenerOptions, controller: string): Promise<ILoadDependencies|Error> {
@@ -254,7 +258,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         }
 
         if (!BaseOpener.isNewEnvironment()) {
-            BaseOpener.getManager().then(() => {
+            BaseOpenerUtil.getManagerWithCallback(() => {
                 // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
                 // Если topPopup, то zIndex менеджер высчитает сам
 
@@ -300,7 +304,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             });
         } else if (BaseOpener.isVDOMTemplate(rootTpl) &&
             !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
-            BaseOpener.getManager().then(() => {
+            BaseOpenerUtil.getManagerWithCallback(() => {
                 BaseOpener._openPopup(cfg, controller, def);
             });
         } else {
@@ -351,29 +355,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
      * @private
      */
     static requireModule(module: string|Control): Promise<Control> {
-        if (typeof module === 'string') {
-            const parsedModule = parserLib(module);
-            const isDefined = require.defined(parsedModule.name);
-            let mod = isDefined && require(parsedModule.name);
-            // Если кто-то позвал загрузку модуля, но она еще не отстрелила, require может вернуть пустой объект
-            if (!isDefined || isEmpty(mod)) {
-                return load(module);
-            }
-            if (parsedModule.path.length) {
-                parsedModule.path.forEach((property) => {
-                    if (mod && typeof mod === 'object' && property in mod) {
-                        mod = mod[property];
-                    }
-                });
-            }
-
-            // It's not a library notation so mind the default export for ES6 modules
-            if (mod && mod.__esModule && mod.default) {
-                mod = mod.default;
-            }
-            return Promise.resolve(mod);
-        }
-        return Promise.resolve(module);
+        return BaseOpenerUtil.requireModule(module);
     }
 
     static getConfig(options: IBaseOpenerOptions, popupOptions: IBaseOpenerOptions): IBaseOpenerOptions {
@@ -450,36 +432,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     // TODO Compatible
     static getManager(): Promise<void> {
-        if (!ManagerWrapperCreatingPromise) {
-            if (!isNewEnvironment()) {
-                const managerContainer = document.createElement('div');
-                managerContainer.classList.add('controls-PopupContainer');
-                document.body.insertBefore(managerContainer, document.body.firstChild);
-
-                ManagerWrapperCreatingPromise = new Promise((resolve, reject) => {
-                    require(['Core/Creator', 'Controls/compatiblePopup'], (Creator, compatiblePopup) => {
-                        Creator(compatiblePopup.ManagerWrapper, {}, managerContainer).then(resolve);
-                    }, reject);
-                });
-            } else {
-                // Защита от случаев, когда позвали открытие окна до полного построения страницы
-                if (ManagerController.getManager()) {
-                    return Promise.resolve();
-                } else {
-                    ManagerWrapperCreatingPromise = new Promise((resolve) => {
-                        const intervalDelay: number = 20;
-                        const intervalId: number = setInterval(() => {
-                            if (ManagerController.getManager()) {
-                                clearInterval(intervalId);
-                                resolve();
-                            }
-                        }, intervalDelay);
-                    });
-                }
-            }
-        }
-
-        return ManagerWrapperCreatingPromise;
+        return BaseOpenerUtil.getManager();
     }
 }
 

@@ -7,6 +7,7 @@ import Deferred = require('Core/Deferred');
 import coreClone = require('Core/core-clone');
 import DataStorage from './DataStorage';
 import LoadPromisesStorage from './LoadPromisesStorage';
+import {Logger} from 'UI/Utils';
 
 var STORAGES_USAGE = {};
 
@@ -40,15 +41,20 @@ var _private = {
             }
          });
       } else {
-         resultDef = _private.callQuery(self, 'UnionMultiHistoryIndexesList', {
-            params: {
-               historyIds: self._historyId ? [self._historyId] : self._historyIds,
-               pinned: {count: self._pinned ? Constants.MAX_HISTORY : 0},
-               frequent: {count: self._frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0},
-               recent: {count: self._recent || Constants.MAX_HISTORY},
-               getObjectData: self._dataLoaded
-            }
-         });
+         if (self._historyId || self._historyIds && self._historyIds.length) {
+            resultDef = _private.callQuery(self, 'UnionMultiHistoryIndexesList', {
+               params: {
+                  historyIds: self._historyId ? [self._historyId] : self._historyIds,
+                  pinned: {count: self._pinned ? Constants.MAX_HISTORY : 0},
+                  frequent: {count: self._frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0},
+                  recent: {count: self._recent || Constants.MAX_HISTORY},
+                  getObjectData: self._dataLoaded
+               }
+            });
+         } else {
+            Logger.error('Controls/history: Не установлен идентификатор истории (опция historyId)', self);
+            resultDef = Promise.reject();
+         }
       }
       return resultDef;
    },
@@ -76,10 +82,10 @@ var _private = {
 
     updateHistory: function (self, data, meta) {
       if (meta.parentKey) {
-         _private.callQuery(self, 'AddHierarchy', {
+         _private.callQuery(self, 'AddHierarchyList', {
             history_id: self._historyId,
             parent1: meta.parentKey,
-            id: data.id
+            ids: data.ids
          });
       } else if (data.ids) {
          _private.callQuery(self, _private.getMethodNameByIdType('AddList', 'AddIntList', data.ids[0]), {
@@ -305,11 +311,17 @@ var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin], {
       const storageData = DataStorage.read(historyId);
       let resultDef;
 
+      function getHistoryDataSet() {
+         return new DataSet({
+            rawData: self.getHistory(historyId)
+         })
+      }
+
       if (storageDef) {
          resultDef = new Deferred();
          // create new deferred, so in the first callback function, the result of the query will be changed
          storageDef.addBoth(() => {
-            resultDef.callback(self.getHistory(historyId));
+            resultDef.callback(getHistoryDataSet());
          });
       } else if (!storageDef && !storageData) {
          resultDef = _private.load(this);
@@ -320,9 +332,7 @@ var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin], {
             return res;
          });
       } else {
-         resultDef = Deferred.success(new DataSet({
-            rawData: self.getHistory(historyId)
-         }));
+         resultDef = Deferred.success(getHistoryDataSet());
       }
       _private.incrementUsage(this);
       return resultDef;

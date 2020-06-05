@@ -382,7 +382,8 @@ class StickyController extends BaseController {
             } else if (item.popupOptions.restrictiveContainer instanceof HTMLElement) {
                 restrictiveContainer = item.popupOptions.restrictiveContainer;
             } else if (typeof item.popupOptions.restrictiveContainer === 'string') {
-                restrictiveContainer = document.querySelector(item.popupOptions.restrictiveContainer);
+                // ищем ближайшего
+                restrictiveContainer = item.popupOptions.target.closest(item.popupOptions.restrictiveContainer);
             }
 
             if (restrictiveContainer) {

@@ -10,7 +10,7 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * Поддерживает одиночный и множественный выбор.
  *
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Engine-demo%2FSelectorButto">демо-пример</a>
+ * * <a href="/materials/Controls-demo/app/Engine-demo%2FSelectorButton">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
  *

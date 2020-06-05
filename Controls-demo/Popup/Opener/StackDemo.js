@@ -34,6 +34,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
                templateOptions: {
                   draggable: true
                },
+               propStorageId: 'draggableDialog',
                maxHeight: 700,
                width: 600,
                minWidth: 500

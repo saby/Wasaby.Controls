@@ -20,10 +20,9 @@ export {
     IItemActionsCollection,
     TActionClickCallback,
     IItemActionsContainer,
-    IMenuActionHandler,
-    IMenuConfig,
     IItemAction,
-    TItemActionShowType
+    TItemActionShowType,
+    TItemActionsPosition
 } from './_itemActions/interface/IItemActions';
 export {Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';

@@ -50,7 +50,19 @@ type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
-
+/**
+ * @typedef {String} TItemActionsVisibility
+ * @variant onhover Операции над записью отображаются при наведении на запись;
+ * @variant visible Операции над записью отображены изначально.
+ * @variant delayed Операции над записью отображаются при наведении на запись и удержании над ней курсора мыши в течение 500 мс.
+ */
+/*
+ * @typedef {String} TItemActionsVisibility
+ * @variant onhover ItemActions will be Initialized and displayed right after mouseenter over Item
+ * @variant visible ItemActions will be Initialized and displayed on control mount
+ * @variant delayed ItemActions will be Initialized and displayed after mouseenter with 500ms delay over Item
+ */
+type TItemActionsVisibility = 'onhover'|'delayed'|'visible';
 interface IItemPadding {
     top?: TVerticalItemPadding;
     bottom?: TVerticalItemPadding;
@@ -68,9 +80,11 @@ export interface IList {
     itemActionsPosition?: TItemActionsPosition;
     actionAlignment?: TActionAlignment;
     actionCaptionPosition?: TActionCaptionPosition;
+    itemActionsVisibility?: TItemActionsVisibility;
     itemActionVisibilityCallback?: (action: IItemAction, item) => boolean;
     itemActionsProperty?: string;
     markedKey?: string|number;
+    stickyMarkedItem?: boolean;
     markerVisibility?: TMarkerVisibility;
     uniqueKeys?: boolean;
     itemsReadyCallback?: (items) => void;
@@ -486,6 +500,21 @@ export interface IList {
  */
 
 /**
+ * @name Controls/_list/interface/IList#itemActionsVisibility
+ * @cfg {TItemActionsVisibility} Настройка способа отображения опций записи
+ * @variant onhover Операции над записью отображаются при наведении на запись;
+ * @variant visible Операции над записью отображены изначально.
+ * @variant delayed Операции над записью отображаются при наведении на запись и удержании над ней курсора мыши в течение 500 мс.
+ */
+/*
+ * @name Controls/_list/interface/IList#itemActionsVisibility
+ * @cfg {TItemActionsVisibility} Setting of ItemActions visibility
+ * @variant onhover ItemActions will be Initialized and displayed right after mouseenter over Item
+ * @variant visible ItemActions will be Initialized and displayed on control mount
+ * @variant delayed ItemActions will be Initialized and displayed after mouseenter with 500ms delay over Item
+ */
+
+/**
  * @name Controls/_list/interface/IList#itemActionVisibilityCallback
  * @cfg {Function} Функция обратного вызова для определения видимости опций записи.
  * @remark
@@ -629,6 +658,15 @@ export interface IList {
  * @cfg {Number} Identifier of the marked collection item.
  * @remark
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#stickyMarkedItem
+ * @cfg {Boolean} Позволяет включать/отключать прилипание выбранного элемента.
+ * @remark
+ * Опция актуальна только для стиля "Мастер".
+ * @see style
+ * @default true
  */
 
 /**
@@ -946,8 +984,16 @@ export interface IList {
 /**
  * @name Controls/_list/interface/IList#backgroundStyle
  * @cfg {String} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
- * @remark
+ * @variant master Предназначен для настройки фона masterDetail (Берётся из свойства style)
+ * @variant infoBox Предназначен для настройки фона infoBox
+ * @variant stack Предназначен для настройки фона стековой панели
+ * @variant masterClassic
+ * @variant detailContrast
+ * @variant listItem
+ * @variant stackHeader
  * @default default
+ * @remark 
+ * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
  */
 
 /*ENG

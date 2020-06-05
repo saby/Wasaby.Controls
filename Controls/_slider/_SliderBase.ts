@@ -19,7 +19,7 @@ class SliderBase extends Control<ISliderBaseOptions> {
         return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
     }
 
-   _onMouseMove(event: SyntheticEvent<MouseEvent>): void {
+    _mouseMoveAndTouchMoveHandler(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
             this._tooltipPosition = this._getValue(event);
             this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
@@ -27,7 +27,7 @@ class SliderBase extends Control<ISliderBaseOptions> {
         }
     }
 
-    _onMouseLeave(event: SyntheticEvent<MouseEvent>): void {
+    _mouseLeaveAndTouchEndHandler(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
             this._tooltipValue = null;
             this._tooltipPosition = null;

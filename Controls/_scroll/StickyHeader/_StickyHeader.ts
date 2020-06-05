@@ -138,7 +138,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _afterUpdate(): void {
-        this._updateBottomShadowStyle();
+        this.updateBottomShadowStyle();
     }
 
     protected _beforePaintOnMount(): void {
@@ -172,7 +172,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         this._initObserver();
 
-        this._updateBottomShadowStyle();
+        this.updateBottomShadowStyle();
     }
 
     protected _beforeUnmount(): void {
@@ -247,7 +247,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._initObserver();
         }
         if (this._isSafari13) {
-            this._updateBottomShadowStyle();
+            this.updateBottomShadowStyle();
         }
     }
 
@@ -461,7 +461,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return position + ': -' + coord + 'px;';
     }
 
-    protected _updateBottomShadowStyle(): void {
+    updateBottomShadowStyle(): void {
         if (this._isSafari13) {
             const container: HTMLElement = this._getNormalizedContainer();
             // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
@@ -486,7 +486,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 // Модель еще не существует, значит заголвок только что создан и контроллер сказал
                 // заголовку что он зафиксирован. Обновим тень вручную что бы не было скачков.
                 fastUpdate.mutate(() => {
-                    if (this._children.shadowBottom) {
+                    if (this._children.shadowBottom &&
+                            this._context.stickyHeader.shadowPosition.indexOf(POSITION.top) !== -1) {
                         this._children.shadowBottom.classList.remove('ws-invisible');
                     }
                 });

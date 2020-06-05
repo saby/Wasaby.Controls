@@ -1,17 +1,23 @@
 define(
    [
       'Controls/scroll',
+      'Env/Env',
       'ControlsUnit/resources/TemplateUtil',
       'Controls/_scroll/StickyHeader/_StickyHeader'
    ],
-   function(scroll, TemplateUtil, _StickyHeaderLib) {
+   function(scroll, Env, TemplateUtil, _StickyHeaderLib) {
 
       'use strict';
 
       const  _StickyHeader = _StickyHeaderLib.default;
 
       describe('Controls.StickyHeader.Template', function() {
-         var ctrl, template, inst;
+         var ctrl, template, inst, compat;
+
+         before(function() {
+            compat = Env.constants.compat;
+            Env.constants.compat = true;
+         });
 
          beforeEach(function() {
             inst = {
@@ -28,6 +34,10 @@ define(
                },
                _model: {}
             };
+         });
+
+         after(function() {
+            Env.constants.compat = compat;
          });
 
          describe('StickyHeader', function() {

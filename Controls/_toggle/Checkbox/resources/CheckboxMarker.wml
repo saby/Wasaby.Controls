@@ -1,4 +1,4 @@
-<div class="{{_options.value === null && _options.triState ? 'controls-Checkbox__icon-tristate_theme-' + (_options.theme)+
+<div class="{{_options.value === null && _options.triState ? 'controls-Checkbox__icon-tristate controls-Checkbox__icon-tristate_theme-' + (_options.theme)+
              ' controls-Checkbox__icon-tristate-color__' + (_options.readOnly ? 'disabled':'enabled')+ '_theme-'+(_options.theme)}}
              controls-Checkbox__icon-border-color__{{_options.readOnly ? 'disabled': 'enabled'}}_theme-{{_options.theme}}
              controls-Checkbox__iconWrapper

@@ -1,5 +1,5 @@
 /* global assert */
-define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env'], (history, Deferred, Env, ApplicationEnv) => {
+define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env', 'UI/Utils'], (history, Deferred, Env, ApplicationEnv, {Logger}) => {
 
    describe('Controls/history:Service', () => {
       let stores;
@@ -36,11 +36,33 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env'], (his
          const expectedData = 'test';
          service.saveHistory('testId', expectedData);
          nextQuery.addCallback((data) => {
-            assert.equal(data, expectedData);
+            assert.equal(data.getRawData(), expectedData);
             done();
          });
          loadDeferred.callback();
          Env.constants.isBrowserPlatform = isBrowser;
+      });
+
+      it('query without history id', () => {
+         const service = new history.Service({historyIds: []});
+         const sandbox = sinon.createSandbox();
+         let isSourceCalled = false;
+
+         service._historyDataSource = {
+            call: () => {
+               isSourceCalled = false;
+            }
+         };
+
+         return new Promise((resolve) => {
+            sandbox.stub(Logger, 'error');
+            service.query().then(null, () => {
+               assert.isFalse(isSourceCalled);
+               assert.isTrue(Logger.error.calledOnce);
+               sandbox.restore();
+               resolve();
+            });
+         });
       });
 
       it('destroy', () => {

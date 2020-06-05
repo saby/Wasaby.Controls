@@ -60,17 +60,23 @@ define([
       });
 
       it('_beforeMount', function() {
-         mover._beforeMount({
+         const options = {
+            source: 'testSource',
             moveDialogTemplate: {
                templateName: 'testTemplateName',
                templateOptions: {
                   testOptions: 'testValueOfOption'
                }
             }
-         }, {});
+         };
+         const contextOptions = {
+            dataOptions: options
+         };
+         mover._beforeMount(options, contextOptions);
 
          assert.equal(mover._moveDialogTemplate, 'testTemplateName');
          assert.deepEqual(mover._moveDialogOptions, { testOptions: 'testValueOfOption' });
+         assert.equal(mover._source, 'testSource');
 
          mover._beforeMount({ moveDialogTemplate: 'testTemplate' }, {});
          assert.equal(mover._moveDialogTemplate, 'testTemplate');

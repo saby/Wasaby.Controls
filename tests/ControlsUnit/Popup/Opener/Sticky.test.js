@@ -839,15 +839,15 @@ define(
             let getBody = StickyStrategy._private.getBody;
 
             StickyStrategy._private.getBody = () => ({
-               clientHeight: 100,
-               clientWidth: 100
-            });
+               height: 100,
+               width: 100
+               });
 
 
-            let popupCfg = {
-               restrictiveContainerCoords: {
-                  bottom: 50,
-                  right: 60
+         let popupCfg = {
+            restrictiveContainerCoords: {
+               bottom: 50,
+               right: 60
                },
                config: {
                   maxWidth: 300,

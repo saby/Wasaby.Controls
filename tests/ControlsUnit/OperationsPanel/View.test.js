@@ -5,7 +5,8 @@ define([
 	'Controls/_operationsPanel/OperationsPanel/Utils',
    'Controls/toolbars',
    'Types/entity',
-   'Types/collection'
+   'Types/collection',
+   'UI/Utils'
 ], function(
    View,
 	ViewPanel,
@@ -13,10 +14,9 @@ define([
    WidthUtils,
    toolbars,
    entity,
-   collection
+   collection,
+   {Logger}
 ) {
-   'use strict';
-
    function mockFillItemsType(itemsSizes) {
       return function fillItemsType(keyProperty, parentProperty, items, availableWidth) {
          var
@@ -467,6 +467,96 @@ define([
             );
          });
 
+      });
+
+      describe('getButtonTemplateOptionsForItem', () => {
+         let itemWithCaptionAndIcon = new entity.Model({
+            keyProperty: 'id',
+            rawData: {
+               id: 'testId',
+               caption: 'testCaption',
+               icon: 'testIcon'
+            }
+         });
+         let itemWithItemTemplateProperty = new entity.Model({
+            keyProperty: 'id',
+            rawData: {
+               id: 'testId',
+               caption: 'testCaption',
+               icon: 'testIcon',
+               templateProperty: 'testTemplateProperty'
+            }
+         });
+         let itemWithItemTemplatePropertyWithoutCaption = new entity.Model({
+            keyProperty: 'id',
+            rawData: {
+               id: 'testId',
+               templateProperty: 'testTemplateProperty'
+            }
+         });
+         let getExpectedOptions = () => {
+            return {
+               _hoverIcon: true,
+               _buttonStyle: 'secondary',
+               _contrastBackground: false,
+               _fontSize: 'm',
+               _hasIcon: true,
+               _caption: undefined,
+               _stringCaption: true,
+               _captionPosition: 'right',
+               _icon: undefined,
+               _iconSize: 'm',
+               _iconStyle: '',
+               _fontColorStyle: undefined,
+               _height: undefined,
+               _viewMode: undefined,
+               readOnly: undefined
+            };
+         };
+         let sandbox;
+
+         beforeEach(() => {
+            sandbox = sinon.createSandbox();
+            sandbox.stub(Logger, 'error');
+         });
+
+         afterEach(() => {
+            sandbox.restore();
+         });
+
+         it('get options for item with caption and icon', () => {
+            const expectedOptions = getExpectedOptions();
+            expectedOptions._icon = 'testIcon';
+            expectedOptions._caption = 'testCaption';
+            assert.deepEqual(
+               WidthUtils._private.getButtonTemplateOptionsForItem(itemWithCaptionAndIcon),
+               expectedOptions
+            );
+            assert.isTrue(Logger.error.notCalled);
+         });
+
+         it('get options for item with itemTemplateProperty and without caption', () => {
+            const expectedOptions = getExpectedOptions();
+            expectedOptions._hasIcon = false;
+            expectedOptions._stringCaption = false;
+            expectedOptions._iconSize = '';
+            assert.deepEqual(
+               WidthUtils._private.getButtonTemplateOptionsForItem(itemWithItemTemplatePropertyWithoutCaption, 'templateProperty'),
+               expectedOptions
+            );
+            assert.isTrue(Logger.error.calledOnce);
+         });
+
+         it('get options for item with caption, icon and itemTemplateProperty', () => {
+            const expectedOptions = getExpectedOptions();
+            expectedOptions._icon = 'testIcon';
+            expectedOptions._caption = 'testCaption';
+            assert.deepEqual(
+               WidthUtils._private.getButtonTemplateOptionsForItem(itemWithItemTemplateProperty),
+               expectedOptions
+            );
+            assert.isTrue(Logger.error.notCalled);
+         });
       });
 
       it('setShowType', () => {

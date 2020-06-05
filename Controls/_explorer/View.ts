@@ -9,7 +9,14 @@ import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridView
 import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
-import 'Types/entity';
+import {Model} from 'Types/entity';
+import {ListView} from 'Controls/list';
+import {isEqual} from 'Types/object';
+import {
+   INavigationSourceConfig,
+   INavigationPositionSourceConfig as IPositionSourceConfig,
+   INavigationOptionValue as INavigation
+}  from '../_interface/INavigation';
 
 var
       HOT_KEYS = {
@@ -26,12 +33,14 @@ var
       VIEW_NAMES = {
          search: SearchView,
          tile: null,
-         table: TreeGridView
+         table: TreeGridView,
+         list: ListView
       },
       VIEW_MODEL_CONSTRUCTORS = {
          search: SearchGridViewModel,
          tile: null,
-         table: TreeGridViewModel
+         table: TreeGridViewModel,
+         list: TreeGridViewModel
       },
       _private = {
          setRoot: function(self, root, dataRoot = null) {
@@ -46,12 +55,17 @@ var
          },
          setRestoredKeyObject: function(self, root) {
             const curRoot = _private.getRoot(self, self._options.root);
-            self._restoredMarkedKeys[root] = {
+            const rootId = root.getId();
+            self._restoredMarkedKeys[rootId] = {
                parent: curRoot,
                markedKey: null
             };
             if (self._restoredMarkedKeys[curRoot]) {
-               self._restoredMarkedKeys[curRoot].markedKey = root;
+               self._restoredMarkedKeys[curRoot].markedKey = rootId;
+
+               if (_private.isCursorNavigation(self._options.navigation)) {
+                  self._restoredMarkedKeys[curRoot].cursorPosition = _private.getCursorPositionFor(root, self._options.navigation);
+               }
             }
          },
           cleanRestoredKeyObject: function(self, root) {
@@ -105,10 +119,13 @@ var
             if (self._firstLoad) {
                resolver(result);
                self._firstLoad = false;
-               _private.fillRestoredMarkedKeysByBreadCrumbs(_private.getDataRoot(self),
+               _private.fillRestoredMarkedKeysByBreadCrumbs(
+                   _private.getDataRoot(self),
                    self._breadCrumbsItems,
                    self._restoredMarkedKeys,
-                   self._options.parentProperty);
+                   self._options.parentProperty,
+                   self._options.navigation
+               );
             }
          },
          dataLoadErrback: function(self, cfg, error) {
@@ -122,7 +139,7 @@ var
             _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
          },
-         fillRestoredMarkedKeysByBreadCrumbs: function(root, breadCrumbs, restoredMarkedKeys, parentProperty) {
+         fillRestoredMarkedKeysByBreadCrumbs: function(root, breadCrumbs, restoredMarkedKeys, parentProperty, navigation) {
             restoredMarkedKeys[root] = {
                markedKey: null
             };
@@ -136,6 +153,10 @@ var
                   };
                   if (restoredMarkedKeys[parentKey]) {
                      restoredMarkedKeys[parentKey].markedKey = crumbKey;
+
+                     if (_private.isCursorNavigation(navigation)) {
+                        restoredMarkedKeys[parentKey].cursorPosition = _private.getCursorPositionFor(crumb, navigation);
+                     }
                   }
                });
             }
@@ -269,6 +290,33 @@ var
             if (cfg.searchNavigationMode !== 'expand') {
                self._children.treeControl.resetExpandedItems();
             }
+         },
+
+         isCursorNavigation(navigation: INavigation<INavigationSourceConfig>): boolean {
+            return !!navigation && navigation.source === 'position';
+         },
+
+         /**
+          * Собирает курсор для навигации относительно заданной записи.
+          * @param item - запись, для которой нужно "собрать" курсор
+          * @param positionNavigation - конфигурация курсорной навигации
+          */
+         getCursorPositionFor(item: Model, positionNavigation: INavigation<IPositionSourceConfig>): IPositionSourceConfig['position'] {
+            const position: unknown[] = [];
+            const optField = positionNavigation.sourceConfig.field;
+            const fields: string[] = (optField instanceof Array) ? optField : [optField];
+
+            fields.forEach((field) => {
+               position.push(item.get(field));
+            });
+
+            return position;
+         },
+
+         restorePositionNavigation(self, itemId): void {
+            if (self._restoredMarkedKeys[itemId]) {
+               self._navigation.sourceConfig.position = self._restoredMarkedKeys[itemId].cursorPosition;
+            }
          }
       };
 
@@ -279,12 +327,12 @@ var
     *
     * @remark
     * Сортировка применяется к запросу к источнику данных. Полученные от источника записи дополнительно не сортируются.
-    * 
+    *
     * Полезные ссылки:
     * * <a href="/doc/platform/developmentapl/interface-development/controls/list/explorer/">руководство разработчика</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less">переменные тем оформления explorer</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
-    * 
+    *
     * Демо-примеры:
     * <ul>
     *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
@@ -392,6 +440,7 @@ var
       _itemsPromise: null,
       _itemsResolver: null,
       _markerForRestoredScroll: null,
+      _navigation: null,
 
       _resolveItemsPromise() {
          this._itemsResolver();
@@ -418,12 +467,30 @@ var
          };
 
          this._dragControlId = randomId();
+         this._navigation = cfg.navigation;
          return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
          //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
          if (this._isGoingFront && this._options.hasOwnProperty('root') && cfg.root === this._options.root) {
             this._isGoingFront = false;
+         }
+
+         /*
+         * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.
+         * Чтобы список мог восстановить позицию скрола по отмеченой записи, она должна быть в наборе данных.
+         * Чтобы обеспечить ее присутствие, нужно загружать именно ту страницу, на которой она есть.
+         * Восстановление работает только при курсорной навигации.
+         * Если в момент возвращения из папки был изменен тип навигации, не нужно восстанавливать, иначе будут смешаны опции
+         * курсорной и постраничной навигаций.
+         * */
+         const isNavigationHasBeenChanged = !isEqual(this._options.navigation, cfg.navigation);
+
+         if (this._isGoingBack && _private.isCursorNavigation(this._options.navigation) && !isNavigationHasBeenChanged) {
+            const newRootId = _private.getRoot(this, this._options.root);
+            _private.restorePositionNavigation(this, newRootId);
+         } else if (isNavigationHasBeenChanged) {
+            this._navigation = cfg.navigation;
          }
 
          if (
@@ -491,7 +558,7 @@ var
 
          const changeRoot = () => {
              // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся
-            _private.setRestoredKeyObject(this, item.getId());
+            _private.setRestoredKeyObject(this, item);
             _private.setRoot(this, item.getId());
             this._isGoingFront = true;
          };

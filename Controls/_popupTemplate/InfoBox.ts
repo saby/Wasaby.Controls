@@ -5,12 +5,12 @@ import {ValidationStatus, IValidationStatus, IValidationStatusOptions} from 'Con
 
 /**
  * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/infobox/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
- * 
+ *
  * @class Controls/_popupTemplate/InfoBox
  * @extends Core/Control
  * @control
@@ -104,10 +104,11 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
  * @cfg {String} Устанавливает стиль отображения всплывающей подсказки.
  * @default secondary
  * @variant warning
+ * @variant info
+ * @variant unaccented
  * @variant secondary
  * @variant success
  * @variant danger
- * @default secondary
  */
 /**
  * @name Controls/_popupTemplate/InfoBox#stickyPosition

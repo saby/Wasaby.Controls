@@ -2,10 +2,39 @@ define(
    [
       'Controls/_popupTemplate/Dialog/Opener/DialogStrategy',
       'Controls/_popupTemplate/Dialog/Opener/DialogController',
-      'Controls/_popup/Opener/Dialog'
+      'Controls/_popup/Opener/Dialog',
+      'Controls/Application/SettingsController',
    ],
-   (DialogStrategy, DialogController, DialogOpener) => {
+   (DialogStrategy, DialogController, DialogOpener, SettingsController) => {
       'use strict';
+      const mockedSettingsController = {
+         storage: {
+            'testDialogPosition': {
+               top: 200,
+               left: 500
+            }
+         },
+         getSettings: function(propStorageIds) {
+            var result = {};
+            return new Promise((resolve) => {
+               propStorageIds.forEach((id) => {
+                  result[id] = this.storage[id];
+               });
+               resolve(result);
+            });
+         },
+         setSettings: function(config) {
+            for (let id in config) {
+               if (config.hasOwnProperty(id)) {
+                  for (let prop in config[id]) {
+                     if (config.hasOwnProperty(id)) {
+                        this.storage[id][prop] = config[id][prop];
+                     }
+                  }
+               }
+            }
+         }
+      };
 
 
       describe('Controls/_popup/Opener/Dialog', () => {
@@ -46,7 +75,7 @@ define(
             assert.equal(position.top, 470);
             assert.equal(position.left, 880);
 
-            let sizesCopy = {...sizes};
+            let sizesCopy = { ...sizes };
             sizesCopy.height = 2000;
             DialogStrategy.getPosition(windowData, sizesCopy, { popupOptions: {} });
             position = DialogStrategy.getPosition(windowData, sizesCopy, { popupOptions: {} });
@@ -64,6 +93,22 @@ define(
             assert.equal(position.left, 50);
             assert.equal(position.width, undefined);
             assert.equal(position.height, 300);
+         });
+         it('dialog positioning before mounting with minHeight', () => {
+            let windowData = {
+               width: 700,
+               height: 700,
+               scrollTop: 0
+            };
+            let popupOptions = {
+               minHeight: 200
+            };
+            let containerSizes = {
+               width: 0,
+               height: 0
+            };
+            let position = DialogStrategy.getPosition(windowData, containerSizes, { popupOptions: popupOptions });
+            assert.equal(position.height, undefined);
          });
 
          it('dialog positioning overflow popup config', () => {
@@ -99,7 +144,7 @@ define(
             sizesTest.width = 700;
             let position = DialogStrategy.getPosition(windowData, sizesTest, { popupOptions });
             assert.equal(position.left, 0);
-            assert.equal(position.width, 500);
+            assert.equal(position.width, 600);
          });
 
          it('dialog popupoptions sizes config', () => {
@@ -323,6 +368,55 @@ define(
             assert.equal(position.minWidth, 10);
             assert.equal(position.minHeight, 10);
             assert.equal(position.maxHeight, 100);
+         });
+
+         it('propStorageId initialized', (done) => {
+            SettingsController.setController(mockedSettingsController);
+
+            let item = {
+               popupOptions: {
+                  propStorageId: 'testDialogPosition'
+               }
+            };
+
+            // get position from storage by propstorageid
+            DialogController.getDefaultConfig(item).then(() => {
+               try {
+                  assert.strictEqual(item.position.top, 200);
+                  assert.strictEqual(item.position.left, 500);
+                  assert.strictEqual(item.popupOptions.top, 200);
+                  assert.strictEqual(item.popupOptions.left, 500);
+                  done();
+               } catch (e) {
+                  done(e);
+               }
+            });
+         });
+
+         it('propStorageId after dragndrop', (done) => {
+            SettingsController.setController(mockedSettingsController);
+
+            let item = {
+               popupOptions: {
+                  propStorageId: 'testDialogPosition'
+               },
+               position: {
+                  top: 244,
+                  left: 111,
+               }
+            };
+
+            // check position after dragndrop
+            DialogController.popupDragEnd(item);
+            DialogController.getDefaultConfig(item).then(() => {
+               try {
+                  assert.equal(item.popupOptions.top, 244);
+                  assert.equal(item.popupOptions.left, 111);
+                  done();
+               } catch (e) {
+                  done(e);
+               }
+            });
          });
       });
    }
