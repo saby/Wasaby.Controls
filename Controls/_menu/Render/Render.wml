@@ -25,7 +25,7 @@
    </ws:multiSelectTpl>
    <ws:groupTemplate>
       <ws:if data="{{_options.groupTemplate && (_options.groupProperty || _options.groupingKeyCallback) && _isGroupVisible(groupTemplate.item)}}">
-         <ws:partial template="{{_options.groupTemplate}}" itemData="{{groupTemplate.item}}" />
+         <ws:partial template="{{_options.groupTemplate}}" itemData="{{groupTemplate.item}}" on:mouseenter="_separatorMouseEnter()" />
       </ws:if>
    </ws:groupTemplate>
 </Controls.listRender:Render>
