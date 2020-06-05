@@ -70,6 +70,21 @@ import { Logger } from 'UI/Utils';
          return itemsSizes;
       },
 
+      getButtonTemplateOptionsForItem(item, itemTemplateProperty) {
+         const buttonOptions = toolbars.getButtonTemplateOptionsByItem(item);
+
+         if (itemTemplateProperty &&
+             item.get(itemTemplateProperty) &&
+             !buttonOptions._caption &&
+             !buttonOptions._icon) {
+            Logger.error(
+                'OperationsPanel: при использовании своего шаблона отображения операции (itemTemplateProperty) ' +
+                'необходимо задать caption и/или icon на каждой операции для корректных расчётов размеров');
+         }
+
+         return buttonOptions;
+      },
+
       setShowType: function(items, type) {
          items.each(function (item) {
             item.set('showType', type);
