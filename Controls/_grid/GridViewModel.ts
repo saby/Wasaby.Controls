@@ -23,7 +23,7 @@ import { Model } from 'Types/entity';
 import { IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
-import {createClassListCollection} from "../Utils/CssClassList";
+import { CssClassList, createClassListCollection } from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
 
@@ -541,6 +541,25 @@ var
                     classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
                 }
             }
+        },
+        getRowClasses(itemData, tmplOptions: {
+            clickable?: boolean; // DEPRECATED
+            cursor?: 'default' | 'pointer';
+            highlightOnHover?: boolean;
+            marker?: boolean;
+        }): string {
+            const style = itemData.style || 'default';
+            const theme = itemData.theme;
+
+            const highlightAllowed = tmplOptions.highlightOnHover !== false;
+
+            const classList = new CssClassList()
+                .add('controls-Grid__row')
+                .add(`controls-Grid__row_${style}_theme-${theme}`)
+                .add(`controls-Grid__row_highlightOnHover_${style}_theme-${theme}`, highlightAllowed)
+                .add(itemData.calcCursorClasses(tmplOptions.clickable, tmplOptions.cursor));
+
+            return classList.compile();
         }
     },
 
@@ -1376,6 +1395,7 @@ var
             current.rowSeparatorSize = this._options.rowSeparatorSize;
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
+            current.getRowClasses = (tmplOptions) => _private.getRowClasses(current, tmplOptions);
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup)
@@ -1401,10 +1421,10 @@ var
 
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
             // лесенка не хранится для элементов вне текущего диапазона startIndex - stopIndex
-            if (stickyColumn && 
-                current.isFullGridSupport() && 
-                !current.dragTargetPosition && 
-                current.index !== -1 && 
+            if (stickyColumn &&
+                current.isFullGridSupport() &&
+                !current.dragTargetPosition &&
+                current.index !== -1 &&
                 self._ladder.stickyLadder[current.index]) {
                 current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
             }

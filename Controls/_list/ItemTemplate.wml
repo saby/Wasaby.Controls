@@ -1,10 +1,5 @@
 <ws:template name="itemOutputTpl">
-    <ws:partial attr:class="{{ itemData.getRowClasses({
-                    'clickable': clickable,
-                    'cursor': cursor,
-                    'marker': marker,
-                    'highlightOnHover': highlightOnHover
-                }) }}"
+    <ws:partial attr:class="{{ itemData.getRowClasses({ 'clickable': clickable, 'cursor': cursor, 'marker': marker, 'highlightOnHover': highlightOnHover }) }}"
                 attr:key="{{ itemData.item.getId() }}"
                 template="{{ content }}"
                 theme="{{ _options.theme }}"/>
