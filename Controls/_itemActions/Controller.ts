@@ -83,11 +83,11 @@ export interface IItemActionsControllerOptions {
     /**
      * Опция записи, которую необходимо тображать в свайпе, если есть editArrow
      */
-    editArrowAction: IItemAction;
+    editArrowAction?: IItemAction;
     /**
      * Видимость Опция записи, которую необходимо тображать в свайпе, если есть editArrow
      */
-    editArrowVisibilityCallback: TEditArrowVisibilityCallback
+    editArrowVisibilityCallback?: TEditArrowVisibilityCallback
 }
 
 /**
