@@ -72,11 +72,6 @@ export interface IItemActionsControllerOptions {
      */
     style?: 'master'|'default';
     /**
-     * Класс для установки контейнеру controls-itemActionsV.
-     * По умолчанию 'controls-itemActionsV_position_bottomRight'
-     */
-    itemActionsClass?: string;
-    /**
      * Выравнивание опций записи, когда они отображаются в режиме swipe
      * Варианты: 'horizontal' | 'vertical'
      */
@@ -141,8 +136,7 @@ export class Controller {
             size: options.iconSize || DEFAULT_ACTION_SIZE,
             toolbarVisibility: options.editingToolbarVisible,
             actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
-            actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
-            itemActionsClass: options.itemActionsClass
+            actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
         });
         return result;
     }
@@ -380,8 +374,7 @@ export class Controller {
             size: options.size,
             itemActionsPosition: options.itemActionsPosition,
             actionAlignment: options.actionAlignment,
-            actionCaptionPosition: options.actionCaptionPosition,
-            itemActionsClass: options.itemActionsClass
+            actionCaptionPosition: options.actionCaptionPosition
         });
     }
 
