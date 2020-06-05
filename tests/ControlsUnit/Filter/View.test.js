@@ -1111,12 +1111,12 @@ define(
                let eventResult = {
                   action: 'itemClick',
                   id: 'document',
-                  selectedKeys: { '-1': [1], '-2': [-2, 4] }
+                  selectedKeys: { '-1': [1], '-2': [-2] }
                };
                view._configs.document.multiSelect = false;
-               view._resultHandler('resultEvent', eventResult);
+
+               filter.View._private.itemClick.call(view, eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [1], '-2': [-2]});
-               assert.deepStrictEqual(filterChanged, {document: {'-1': [1], '-2': [-2]}});
             });
 
             it ('applyClick', function () {
