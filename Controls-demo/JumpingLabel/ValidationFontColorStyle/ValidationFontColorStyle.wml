@@ -1,0 +1,28 @@
+<div class="controlsDemo__wrapper controlsDemo__flex">
+   <div class="controlsDemo__cell">
+      <Controls.validate:InputContainer name="inputContainer1" attr:class="controlsDemo__input">
+         <ws:validators>
+            <ws:Function value="{{_valueIsEmail1}}">Controls/validate:isEmail</ws:Function>
+         </ws:validators>
+         <ws:content>
+            <Controls.jumpingLabel:InputContainer caption="Enter your email" validationFontColorStyle="default"
+                                                  value="{{_valueIsEmail1}}}">
+               <Controls.input:Text bind:value="_valueIsEmail1"/>
+            </Controls.jumpingLabel:InputContainer>
+         </ws:content>
+      </Controls.validate:InputContainer>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.validate:InputContainer name="inputContainer2" attr:class="controlsDemo__input">
+         <ws:validators>
+            <ws:Function value="{{_valueIsEmail2}}">Controls/validate:isEmail</ws:Function>
+         </ws:validators>
+         <ws:content>
+            <Controls.jumpingLabel:InputContainer caption="Enter your email" validationFontColorStyle="accent"
+                                                  value="{{_valueIsEmail1}}}">
+               <Controls.input:Text bind:value="_valueIsEmail2"/>
+            </Controls.jumpingLabel:InputContainer>
+         </ws:content>
+      </Controls.validate:InputContainer>
+   </div>
+</div>

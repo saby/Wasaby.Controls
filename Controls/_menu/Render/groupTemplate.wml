@@ -1,5 +1,5 @@
 <ws:if data="{{showText !== true}}">
-   <div class="controls-Menu__group_separator-container_theme-{{_options.theme}}" on:mouseenter="_proxyEvent('separatorMouseEnter')">
+   <div class="controls-Menu__group_separator-container_theme-{{_options.theme}}">
       <div class="controls-Menu__group_separator_theme-{{_options.theme}}"></div>
    </div>
 </ws:if>
