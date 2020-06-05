@@ -322,7 +322,15 @@ var
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
         },
+        getItemsLadderVersion(ladder) {
+            let ladderVersion = '';
 
+            Object.keys(ladder).forEach((ladderProperty) => {
+                ladderVersion += (ladder[ladderProperty].ladderLength || 0) + '_';
+            });
+
+            return ladderVersion;
+        },
         calcLadderVersion(ladder = {}, index): string {
             let
                 version = '',
@@ -333,7 +341,7 @@ var
                 version += 'LP_';
             }
             if (stickyLadder) {
-                version += 'SP_' + (stickyLadder.ladderLength || 0);
+                version += 'SP_' + _private.getItemsLadderVersion(stickyLadder);
             }
 
             return version;
@@ -1406,7 +1414,13 @@ var
                 !current.dragTargetPosition && 
                 current.index !== -1 && 
                 self._ladder.stickyLadder[current.index]) {
-                current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
+
+                    let stickyProperties = self._options.columns[0]?.stickyProperty;
+                    if (stickyProperties && !(stickyProperties instanceof Array)) {
+                        stickyProperties = [stickyProperties];
+                    }
+                    current.stickyProperties = stickyProperties;
+                    current.stickyLadder = self._ladder.stickyLadder[current.index];
             }
 
             // TODO: Разобраться, зачем это. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
@@ -1434,7 +1448,29 @@ var
             current.getVersion = function() {
                 return self._calcItemVersion(current.item, current.key, current.index);
             };
-
+            current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
+                let result = '';
+                const index = current.stickyProperties.indexOf(stickyProperty);
+                const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+                    index === 1 && !hasMainCell || 
+                    index === 0 && hasMainCell)) {
+                    result += ' controls-Grid__row-cell__ladder-content_displayNoneForLadder';
+                }
+                if (stickyProperty === ladderProperty && index === 1) {
+                    result += ' controls-Grid__row-cell__ladder-content_additional';
+                }
+                return result;
+            };
+            
+            current.getAdditionalLadderClasses = () => {
+                let result = '';
+                const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                if (!hasMainCell) {
+                    result += ' controls-Grid__row-cell__ladder-spacing_theme-' + self._options.theme;
+                }
+                return result;
+            };
             current.resetColumnIndex = () => {
                 current.columnIndex = 0;
             };
@@ -1479,6 +1515,7 @@ var
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
+                        getLadderContentClasses: current.getLadderContentClasses,
                         getVersion: function () {
                            return _private.calcItemColumnVersion(self, current.getVersion(), this.columnIndex, this.index);
                         },

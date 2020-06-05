@@ -248,6 +248,9 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-default_theme-@{themeName} {
       background-color: @item_hover_background-color_list;
    }
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} {
+      background-color: @item_hover_background-color_list;
+   }
    .controls-BaseControl_showActions .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row:hover {
       > .controls-Grid__row-cell,
       > .controls-itemActionsV__container,
@@ -290,18 +293,44 @@
    }
 }
 
-.controls-Grid__row-cell__content_hiddenForLadder {
-   visibility: hidden;
+.controls-Grid__row-additional_ladderWrapper {
+   position: absolute;
+   top: 0;
+   bottom: 0;
 }
 
+.controls-Grid__row-cell__ladder-content_displayNoneForLadder {
+   display: none;
+}
+.controls-Grid__row-cell__ladder-content_hiddenForLadder,
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} .controls-Grid__row-cell__ladder-content {
+   visibility: hidden;
+}
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} {
+   z-index: 1;
+}
+.controls-Grid__row-cell__ladder-spacing_theme-@{themeName} {
+   top: @inline_height_default !important;
+}
+.controls-Grid__row-cell__ladder-content_additional {
+   position: absolute;
+}
+
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} .controls-Grid__row-cell__ladder-content
 .controls-Grid__row-ladder-cell {
    pointer-events: none;
    position: relative;
-   z-index: 2;
+   z-index: 1;
+}
+.controls-Grid__row-ladder-cell {
+   position: relative;
 }
 
 .controls-Grid__row-ladder-cell__content_default_theme-@{themeName} {
    top: 0;
+   &:before {
+      position: absolute;
+   }
 }
 .controls-Grid__row-ladder-cell__content_m_theme-@{themeName} {
    top: @item_padding-top_s_grid;
@@ -455,7 +484,7 @@
 .controls-Grid__cell_spacingBackButton_with_multiSelection_theme-@{themeName} {
    margin-left: -@click-area_width_checkbox;
 }
-
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName},
 .controls-GridView__item_active_theme-@{themeName} {
    background-color: @item_hover_background-color_list;
 }
@@ -610,6 +639,7 @@
       background-color: @master_item_hover_background-color_list;
    }
 }
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName},
 .controls-background-listItem_theme-@{themeName} {
    background-color: @background-color;
 }

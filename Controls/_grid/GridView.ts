@@ -28,7 +28,7 @@ import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 
 import {Logger} from 'UI/Utils';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
-import { shouldAddStickyLadderCell } from 'Controls/_grid/utils/GridLadderUtil';
+import { stickyLadderCellsCount, getStickyColumn } from 'Controls/_grid/utils/GridLadderUtil';
 import {debounce as cDebounce} from 'Types/function';
 
 const DEBOUNCE_HOVERED_CELL_CHANGED = 150;
@@ -50,11 +50,16 @@ var
         },
 
         getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
-            let columnsWidths: string[] = hasMultiSelect ? ['max-content'] : [];
-            if (shouldAddStickyLadderCell(columns, self._options.stickyColumn, self._options.listModel.getDragItemData())) {
-                columnsWidths = columnsWidths.concat(['0px']);
+            let initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
+            let columnsWidths: string[] = [];
+            const stickyCellsCount = stickyLadderCellsCount(columns, self._options.stickyColumn, self._options.listModel.getDragItemData());
+            if (stickyCellsCount === 1) {
+                columnsWidths = ['0px'].concat(initialWidths);
+            } else if (stickyCellsCount === 2) {
+                columnsWidths = ['0px', initialWidths[0]].concat(['0px']).concat(initialWidths.slice(1))
+            } else {
+                columnsWidths = initialWidths;
             }
-            columnsWidths = columnsWidths.concat(columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth())));
             if (shouldAddActionsCell({
                 hasColumnScroll: !!self._options.columnScroll,
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
@@ -62,7 +67,9 @@ var
             })) {
                 columnsWidths = columnsWidths.concat(['0px']);
             }
-
+            if (hasMultiSelect) {
+                columnsWidths = ['max-content'].concat(columnsWidths);
+            } 
             return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
         },
 
