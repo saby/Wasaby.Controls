@@ -23,19 +23,26 @@ define([
 
    describe('Controls/_lookup/BaseLookupView', function() {
       it('_beforeMount', function() {
-         var lookup = new Lookup();
-         lookup._beforeMount({multiLine: true, maxVisibleItems: 10, readOnly: true, multiSelect: true});
+         const lookup = new Lookup();
+         let options;
+
+         options = {multiLine: true, maxVisibleItems: 10, readOnly: true, multiSelect: true};
+         lookup._beforeMount(options);
          assert.equal(lookup._maxVisibleItems, 10);
 
-         lookup._beforeMount({items: getItems(5), readOnly: true, multiSelect: true});
+         options = {items: getItems(5), readOnly: true, multiSelect: true};
+         lookup._beforeMount(options);
          assert.equal(lookup._maxVisibleItems, 5);
 
-         lookup._beforeMount({items: getItems(5), readOnly: true});
+         options = {items: getItems(5), readOnly: true};
+         lookup._beforeMount(options);
          assert.equal(lookup._maxVisibleItems, 1);
 
-         lookup._beforeMount({items: getItems(5), value: 'test'});
+         options = {items: getItems(5), value: 'test'};
+         lookup._beforeMount(options);
+         lookup.saveOptions(options);
          assert.equal(lookup._maxVisibleItems, 1);
-         assert.equal(lookup._inputValue, 'test');
+         assert.equal(lookup._getInputValue(options), 'test');
       });
 
       it('_afterUpdate', function() {
@@ -70,11 +77,12 @@ define([
       });
 
       it('_beforeUpdate', function() {
-         var
-            isCalculatingSizes = false,
-            items = new collection.List(),
-            lookup = new Lookup(),
-            isInputActive = true;
+         const items = new collection.List();
+         const lookup = new Lookup();
+         let isCalculatingSizes = false;
+         let isInputActive = true;
+         let options;
+         let inputValue;
 
          lookup._suggestState = true;
          lookup._isInputActive = function() {
@@ -83,11 +91,14 @@ define([
          lookup._calculatingSizes = function() {
             isCalculatingSizes = true;
          };
+         lookup._notify = function(eventName, eventArgs) {
+            if (eventName === 'valueChanged') {
+               inputValue = eventArgs[0];
+            }
+         };
 
          lookup._listOfDependentOptions = ['multiLine', 'readOnly'];
-         lookup._inputValue = lookup._options.value = '';
          lookup._beforeUpdate({value: 'test'});
-         assert.equal(lookup._inputValue, 'test');
          assert.isFalse(isCalculatingSizes);
          assert.isTrue(lookup._suggestState);
 
@@ -99,7 +110,6 @@ define([
             value: ''
          });
 
-         assert.equal(lookup._inputValue, 'test');
          assert.isTrue(isCalculatingSizes);
          assert.isFalse(lookup._suggestState);
 
@@ -111,35 +121,25 @@ define([
             value: ''
          });
 
-         assert.equal(lookup._inputValue, '');
          assert.isTrue(isCalculatingSizes);
 
          // Проверка на сброс поля ввода при изменении коллекции
-         lookup._inputValue = 'not reset value';
+         lookup._options.value = 'not reset value';
          lookup._beforeUpdate({
             items: new collection.List(),
             readOnly: !lookup._options.readOnly,
-            value: lookup._options.value
+            value: 'not reset value'
          });
-         assert.equal(lookup._inputValue, '');
+         assert.equal(inputValue, '');
 
-         lookup._inputValue = 'not reset value';
+         lookup._options.value = inputValue = 'not reset value';
          lookup._beforeUpdate({
             items: new collection.List(),
             readOnly: !lookup._options.readOnly,
             value: lookup._options.value,
             comment: 'testComment'
          });
-         assert.equal(lookup._inputValue, 'not reset value');
-
-         // Если передали новое value, то применится оно и сбоса не будет
-         lookup._inputValue = 'not reset value';
-         lookup._beforeUpdate({
-            items: new collection.List(),
-            readOnly: !lookup._options.readOnly,
-            value: 'new value'
-         });
-         assert.equal(lookup._inputValue, 'new value');
+         assert.equal(inputValue, 'not reset value');
       });
 
       it('_changeValueHandler', function() {
@@ -316,6 +316,7 @@ define([
          lookup._beforeMount({
             value: 'not empty valeue'
          });
+         lookup._options.value = 'not empty valeue';
          lookup._keyDown(null, eventBackspace);
          assert.isFalse(isNotifyRemoveItems);
          assert.isFalse(isNotifyShowSelector);
@@ -367,24 +368,28 @@ define([
       });
 
       it('private:resetInputValue', function() {
-         var
-            isValueChanged = false,
-            self = {
-               _inputValue: '',
-               _notify: function(eventName) {
-                  if (eventName === 'valueChanged') {
-                     isValueChanged = true;
-                  }
-               }
-            };
+         const lookup = new Lookup();
+         const sandbox = sinon.createSandbox();
+         const stub = sandbox.stub(lookup, '_notify');
+         lookup.saveOptions({
+            value: ''
+         });
 
-         Lookup._private.resetInputValue(self);
-         assert.isFalse(isValueChanged);
+         Lookup._private.resetInputValue(lookup);
+         assert.isTrue(stub.notCalled);
 
-         self._inputValue = 'notEmpty';
-         Lookup._private.resetInputValue(self);
-         assert.equal(self._inputValue, '');
-         assert.isTrue(isValueChanged);
+         lookup.saveOptions({
+            value: 'notEmpty'
+         });
+         Lookup._private.resetInputValue(lookup);
+         assert.isTrue(stub.calledWith('valueChanged', ['']));
+
+         lookup.saveOptions({});
+         lookup._inputValue = 'notEmpty';
+         Lookup._private.resetInputValue(lookup);
+         assert.equal(lookup._inputValue, '');
+
+         sandbox.restore();
       });
 
       it('private:activate', function() {
