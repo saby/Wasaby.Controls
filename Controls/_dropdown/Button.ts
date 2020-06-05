@@ -81,7 +81,7 @@ var Button = Control.extend({
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
    },
 
-   _beforeMount: function (options,recievedState) {
+   _beforeMount: function (options, recievedState) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       this._updateState(options);
       this._controller = new _Controller({ ...options, ...{
@@ -152,10 +152,6 @@ var Button = Control.extend({
       }
 
       return handlerResult;
-   },
-
-   _onFooterClickHandler(data) {
-      this._notify('footerClick', [data]);
    },
 
    _onSelectorTemplateResult(data) {
