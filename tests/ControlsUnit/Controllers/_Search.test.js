@@ -131,6 +131,21 @@ define(
             assert.isTrue(searchStarted);
          });
 
+         it('.search with 0 delay', function() {
+            var searchStarted = false;
+            var search = new searchLib._Search({
+               source: source,
+               searchDelay: 0,
+               searchStartCallback: () => {
+                  searchStarted = true;
+               }
+            });
+
+
+            search.search({}, true);
+            assert.isTrue(searchStarted);
+         });
+
          it('abort Search', function() {
             var search = new searchLib._Search(
                {
