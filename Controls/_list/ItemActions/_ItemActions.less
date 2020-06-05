@@ -122,22 +122,6 @@
   margin: 0 @item_offset_itemActions;
 }
 
-.controls-itemActionsV__action_iconStyle_danger_theme-@{themeName} {
-   color: @danger_color;
-}
-
-.controls-itemActionsV__action_iconStyle_success_theme-@{themeName} {
-   color: @success_color;
-}
-
-.controls-itemActionsV__action_iconStyle_secondary_theme-@{themeName} {
-   color: @secondary_icon-color;
-}
-
-.controls-itemActionsV__action_iconStyle_warning_theme-@{themeName} {
-   color: @warning_color;
-}
-
 //since Opener does not know the specific size of the icon
 .controls-itemActionsV__popup .icon-size_theme-@{themeName}{
   .icon-size-without-important(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
@@ -167,30 +151,6 @@
    .controls-itemActionsV__action:hover .controls-itemActionsV__action_title_theme-@{themeName} {
       color: @item_hover_text-color_itemActions;
       text-decoration: underline;
-   }
-
-   .controls-itemActionsV__action_iconStyle_danger_theme-@{themeName}:hover {
-      color: @danger_color;
-   }
-
-   .controls-itemActionsV__action_iconStyle_success_theme-@{themeName}:hover {
-      color: @success_color;
-   }
-
-   .controls-itemActionsV__action_iconStyle_secondary_theme-@{themeName}:hover {
-      color: @secondary_hover_icon-color;
-   }
-
-   .controls-itemActionsV__action_iconStyle_warning_theme-@{themeName}:hover {
-      color: @warning_color;
-   }
-
-   .controls-itemActionsV__action_iconStyle_danger_theme-@{themeName}:hover {
-      border-color: @danger_color;
-   }
-
-   .controls-itemActionsV__action_iconStyle_success_theme-@{themeName}:hover {
-      border-color: @success_color;
    }
 }
 

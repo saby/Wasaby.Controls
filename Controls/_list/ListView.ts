@@ -11,8 +11,7 @@ import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapp
 import {isEqual} from "Types/object";
 import 'wml!Controls/_list/resources/ItemOutput';
 
-var
-    DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
+const DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
 var _private = {
     checkDeprecated: function(cfg, self) {
