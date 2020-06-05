@@ -153,7 +153,6 @@
                     <ws:partial
                             template="{{_itemActionsTemplate}}"
                             scope="{{ _listViewModel.getActionsTemplateConfig() }}"
-                            itemActionsClass="{{_options.itemActionsClass}}"
                             itemData="{{ itemActionsTemplate.currentItem }}" />
                     <!-- using || instead of ws:if because template is constantly being updated otherwise -->
                 </ws:itemActionsTemplate>
