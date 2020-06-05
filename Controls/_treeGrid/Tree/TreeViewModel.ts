@@ -4,6 +4,8 @@ import _entity = require('Types/entity');
 import collection = require('Types/collection');
 import {isEqual} from 'Types/object';
 import {TemplateFunction} from 'UI/Base';
+import { IDragPosition, ITreeItemData } from 'Controls/listDragNDrop';
+import { ItemsEntity } from 'Controls/dragnDrop';
 
 var
     _private = {
@@ -287,25 +289,6 @@ var
                 template?: TemplateFunction,
                 hasMoreStorage?: boolean
             }) => {
-                const getFooterClasses = () => {
-                    let classes = `controls-TreeGrid__nodeFooterContent controls-TreeGrid__nodeFooterContent_theme-${theme} ` +
-                        `controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
-                    if (!current.hasMultiSelect) {
-                        classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
-                    }
-                    // TODO: Исправить по ошибке https://online.sbis.ru/opendoc.html?guid=e4de50e3-8071-49bf-8cd1-69944e8704e5
-                    if (self._options.rowSeparatorVisibility) {
-                        const separatorSize = self._options.rowSeparatorSize;
-                        const isWideSeparator = separatorSize && separatorSize.toLowerCase() === 'l';
-                        classes += ` controls-TreeGrid__nodeFooterContent_withRowSeparator${isWideSeparator ? '-l' : ''}_theme-${theme}`;
-                        classes += ` controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${isWideSeparator ? 'l' : 's'}_theme-${theme}`;
-                        classes += ` controls-TreeGrid__nodeFooterContent_padding-top-${isWideSeparator ? 'l' : 's'}_theme-${theme}`;
-                    } else {
-                        classes += ` controls-TreeGrid__nodeFooterContent_withoutRowSeparator_theme-${theme} controls-TreeGrid__nodeFooterContent_padding-top-s_theme-${theme} controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s_theme${theme}`;
-                    }
-                    return classes;
-                };
-
                 current.nodeFooters.push({
                     key: params.key,
                     item: params.dispItem.getContents(),
@@ -314,7 +297,6 @@ var
                     getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
                     multiSelectVisibility: current.multiSelectVisibility,
                     template: params.template,
-                    classes: getFooterClasses(),
                     hasMoreStorage: !!params.hasMoreStorage,
                     getExpanderSize: (tplExpanderSize) => tplExpanderSize || self._options.expanderSize
                 });
@@ -614,6 +596,7 @@ var
                 }
             }
 
+           current.useNewNodeFooters = this._options.useNewNodeFooters;
            if (current.item.get) {
                _private.setNodeFooterIfNeed(this, current);
            }
@@ -630,6 +613,21 @@ var
             }
 
             return version;
+        },
+
+        setDraggedItems(draggedItem: ITreeItemData, dragEntity: ItemsEntity): void {
+            this.setDragItemData(draggedItem);
+            this.setDragEntity(dragEntity);
+        },
+        setDragPosition(position: IDragPosition): void {
+            this.setDragTargetPosition(position);
+        },
+        resetDraggedItems(): void {
+            this._dragEntity = null;
+            this._draggingItemData = null;
+            this._dragTargetPosition = null;
+            this._prevDragTargetPosition = null;
+            this._nextModelVersion(true);
         },
 
         setDragEntity: function(entity) {
@@ -669,59 +667,6 @@ var
             TreeViewModel.superclass.setDragItemData.apply(this, arguments);
         },
 
-        calculateDragTargetPosition: function(targetData, position) {
-            var result;
-
-            //If you hover over the dragged item, and the current position is on the folder,
-            //then you need to return the position that was before the folder.
-            if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
-                result = this._prevDragTargetPosition || null;
-            } else if (targetData.dispItem.isNode()) {
-                if (position === 'after' || position === 'before') {
-                    result = this._calculateDragTargetPosition(targetData, position);
-                } else {
-                    result = {
-                        index: targetData.index,
-                        position: 'on',
-                        item: targetData.item,
-                        data: targetData
-                    };
-                }
-            } else {
-                result = TreeViewModel.superclass.calculateDragTargetPosition.apply(this, arguments);
-            }
-
-            return result;
-        },
-
-        _calculateDragTargetPosition: function(itemData, position) {
-            var
-                result,
-                startPosition,
-                afterExpandedNode = position === 'after' && this._expandedItems.indexOf(ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)) !== -1;
-
-            //The position should not change if the record is dragged from the
-            //bottom/top to up/down and brought to the bottom/top of the folder.
-            if (this._prevDragTargetPosition) {
-                if (this._prevDragTargetPosition.index === itemData.index) {
-                    startPosition = this._prevDragTargetPosition.position;
-                } else {
-                    startPosition = this._prevDragTargetPosition.index < itemData.index ? 'before' : 'after';
-                }
-            }
-
-            if (position !== startPosition && !afterExpandedNode) {
-                result = {
-                    index: itemData.index,
-                    item: itemData.item,
-                    data: itemData,
-                    position: position
-                };
-            }
-
-            return result;
-        },
-
         setDragTargetPosition: function(targetPosition) {
             if (targetPosition && targetPosition.position === 'on') {
 
@@ -737,6 +682,10 @@ var
                 }
             }
             TreeViewModel.superclass.setDragTargetPosition.apply(this, arguments);
+        },
+
+        getPrevDragPosition(): IDragPosition {
+            return this._prevDragTargetPosition;
         },
 
         _setPrevDragTargetPosition: function(targetPosition) {
