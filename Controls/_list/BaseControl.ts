@@ -2281,7 +2281,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._editInPlace) {
-            this._editInPlace.afterMount(this._listViewModel, this._children.formController);
+            this._editInPlace.prepareHtmlInput(this._listViewModel, this._children.formController);
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
                 this._updateItemActions(this._options);
             }
@@ -2387,7 +2387,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._editInPlace) {
-            this._editInPlace.beforeUpdate(newOptions, this._listViewModel, this._children.formController);
+            this._editInPlace.updateEditingData(newOptions);
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -2704,7 +2704,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             return;
         }
         if (this._editInPlace) {
-            this._editInPlace.onItemClick(e, item, originalEvent);
+            this._editInPlace.beginEditByClick(e, item, originalEvent);
         }
 
     },
@@ -3266,7 +3266,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             switch (nativeEvent.keyCode) {
                 case 13: // Enter
                     // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
-                    this._editInPlace.editNextRow()
+                    this._editInPlace.editNextRow();
                     e.stopPropagation();
                     break;
                 case 27: // Esc
