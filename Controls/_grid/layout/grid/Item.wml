@@ -53,7 +53,7 @@
    <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{'transparent'}}"
                                  shadowVisibility="hidden"
                                  mode="replaceable">
-      <ws:partial template="columnContent" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}" attr:class="{{itemData.getClassesLadderHeading(currentColumn, _options.theme)}}"/>
+      <ws:partial template="columnContent" currentColumn="{{currentColumn}}" ladderWrapperClass="controls-Grid__cell-content-wrapper_ladder" stickyProperty="{{stickyProperty}}" attr:class="{{itemData.getClassesLadderHeading(currentColumn, _options.theme)}}"/>
    </Controls.scroll:StickyHeader>
 </ws:template>
 

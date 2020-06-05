@@ -1450,15 +1450,17 @@ var
             };
             current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
                 let result = '';
-                const index = current.stickyProperties.indexOf(stickyProperty);
-                const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
-                if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
-                    index === 1 && !hasMainCell || 
-                    index === 0 && hasMainCell)) {
-                    result += ' controls-Grid__row-cell__ladder-content_displayNoneForLadder';
-                }
-                if (stickyProperty === ladderProperty && index === 1) {
-                    result += ' controls-Grid__row-cell__ladder-content_additional';
+                if (current.stickyProperties) {
+                    const index = current.stickyProperties.indexOf(stickyProperty);
+                    const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                    if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+                        index === 1 && !hasMainCell || 
+                        index === 0 && hasMainCell)) {
+                        result += ' controls-Grid__row-cell__ladder-content_displayNoneForLadder';
+                    }
+                    if (stickyProperty === ladderProperty && index === 1 && hasMainCell) {
+                        result += ' controls-Grid__row-cell__ladder-content_additional-with-main';
+                    }
                 }
                 return result;
             };
