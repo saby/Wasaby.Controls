@@ -1,0 +1,17 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" caption="Enter your name">
+         <Controls.input:Text/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" value="{{_name}}" caption="Enter your name">
+         <Controls.input:Text bind:value="_name"/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" caption="Long long long long long long long long long long long">
+         <Controls.input:Text/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+</div>

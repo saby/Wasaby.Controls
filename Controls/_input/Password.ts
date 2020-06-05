@@ -4,11 +4,11 @@ import ViewModel = require('Controls/_input/Password/ViewModel');
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
 /**
  * Поле ввода пароля.
- * 
+ *
  * @remark
  * Контрол скрывает введенные символы и вместо них отображает символы-заменители.
  * Видимость введенного текста можно переключить, нажав на иконку 'eye'.
- * 
+ *
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/input/password/">руководство разработчика</a>
@@ -62,7 +62,7 @@ var _private = {
     },
 
     isVisibleButton: function () {
-        return !this._options.readOnly && this._options.value && this._options.revealable;
+        return !this._options.readOnly && this._viewModel.displayValue && this._options.revealable;
     },
 
     isVisiblePassword: function () {
@@ -105,6 +105,7 @@ var Password = Base.extend({
 
         this._rightFieldWrapper.template = passwordVisibilityButtonTemplate;
         this._rightFieldWrapper.scope.getTheme = _private.getTheme.bind(this);
+        this._rightFieldWrapper.scope.horizontalPadding = options.horizontalPadding;
         this._rightFieldWrapper.scope.isVisibleButton = _private.isVisibleButton.bind(this);
         this._rightFieldWrapper.scope.isVisiblePassword = _private.isVisiblePassword.bind(this);
     },

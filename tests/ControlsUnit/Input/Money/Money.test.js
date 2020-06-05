@@ -43,7 +43,8 @@ define(
                });
                ctrl._readOnlyField.scope.options = {
                   theme: 'default',
-                  precision: 2
+                  precision: 2,
+                  horizontalPadding: 'xs'
                };
                ctrl._readOnlyField.template = TemplateUtil.clearTemplate(ctrl._readOnlyField.template);
             });

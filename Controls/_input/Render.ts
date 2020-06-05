@@ -4,9 +4,11 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {
-   IHeight, IHeightOptions, IFontColorStyle,
-   IFontColorStyleOptions, IFontSize, IFontSizeOptions,
-   IBorderStyle, IBorderStyleOptions, IValidationStatus, IValidationStatusOptions
+    TBorderVisibility, IBorderVisibility, IBorderVisibilityOptions,
+    getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes,
+    IHeight, IHeightOptions, IFontColorStyle,
+    IFontColorStyleOptions, IFontSize, IFontSizeOptions,
+    IBorderStyle, IBorderStyleOptions, IValidationStatus, IValidationStatusOptions
 } from 'Controls/interface';
 
 import * as template from 'wml!Controls/_input/Render/Render';
@@ -24,7 +26,14 @@ type State =
     | 'secondary'
     | 'warning';
 
-interface IRenderOptions extends IControlOptions, IHeightOptions,
+export interface IBorder {
+    top: boolean;
+    right: boolean;
+    bottom: boolean;
+    left: boolean;
+}
+
+interface IRenderOptions extends IControlOptions, IHeightOptions, IBorderVisibilityOptions,
     IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions, IBorderStyleOptions {
     /**
      * @name Controls/_input/Render#multiline
@@ -59,6 +68,7 @@ interface IRenderOptions extends IControlOptions, IHeightOptions,
      */
     rightFieldWrapper?: TemplateFunction;
     state: string;
+    border: IBorder;
 }
 
 /**
@@ -73,13 +83,15 @@ interface IRenderOptions extends IControlOptions, IHeightOptions,
  * @mixes Controls/_input/interface/ITag
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/interface/IBorderStyle
+ * @mixes Controls/interface/IBorderVisibility
  *
  * @author Красильников А.С.
  * @private
  */
 
-class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize, IValidationStatus, IBorderStyle {
+class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize, IValidationStatus, IBorderStyle, IBorderVisibility {
     protected _tag: SVGElement | null = null;
+    private _border: IBorder = null;
     private _contentActive: boolean = false;
 
     protected _state: string;
@@ -91,13 +103,15 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     protected _template: TemplateFunction = template;
     protected _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
-   readonly '[Controls/_interface/IHeight]': true;
-   readonly '[Controls/_interface/IFontSize]': true;
-   readonly '[Controls/_interface/IFontColorStyle]': true;
-   readonly '[Controls/_interface/IValidationStatus]': true;
-   readonly '[Controls/interface/IBorderStyle]': true;
+    readonly '[Controls/_interface/IHeight]': boolean = true;
+    readonly '[Controls/_interface/IFontSize]': boolean = true;
+    readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
+    readonly '[Controls/_interface/IValidationStatus]': boolean = true;
+    readonly '[Controls/interface/IBorderStyle]': boolean = true;
+    readonly '[Controls/interface/IBorderVisibility]': boolean = true;
 
     private updateState(options: IRenderOptions): void {
+        this._border = Render._detectToBorder(options.borderVisibility, options.multiline);
         this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);
         this._inlineHeight = ActualAPI.inlineHeight(options.size, options.inlineHeight);
         this._fontColorStyle = ActualAPI.fontColorStyle(options.fontStyle, options.fontColorStyle);
@@ -156,8 +170,35 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         return detection.isIE || (detection.isWinXP && detection.yandex);
     }
 
-    static getDefaultTypes() {
+    private static _detectToBorder(borderVisibility: TBorderVisibility, multiline: boolean): IBorder {
+        switch (borderVisibility) {
+            case 'visible':
+                return {
+                    top: true,
+                    right: true,
+                    bottom: true,
+                    left: true
+                };
+            case 'partial':
+                return {
+                    top: multiline,
+                    right: false,
+                    bottom: true,
+                    left: false
+                };
+            case 'hidden':
+                return {
+                    top: false,
+                    right: false,
+                    bottom: false,
+                    left: false
+                };
+        }
+    }
+
+    static getDefaultTypes(): object {
         return {
+            ...getOptionBorderVisibilityTypes(),
             content: descriptor(Function).required(),
             rightFieldWrapper: descriptor(Function),
             leftFieldWrapper: descriptor(Function),
@@ -166,26 +207,12 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         };
     }
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): object {
         return {
+            ...getDefaultBorderVisibilityOptions(),
             state: ''
         };
     }
 }
 
 export default Render;
-
-/*
- * Control the rendering of text fields.
- *
- * @class Controls/_input/Render
- * @extends UI/_base/Control
- *
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- *
- * @public
- *
- * @author Krasilnikov A.S.
- */
