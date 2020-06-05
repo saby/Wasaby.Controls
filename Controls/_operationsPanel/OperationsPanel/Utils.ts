@@ -2,6 +2,7 @@ import toolbars = require('Controls/toolbars');
 import {showType} from 'Controls/Utils/Toolbar';
 import getWidthUtil = require('Controls/Utils/getWidth');
 import { Logger } from 'UI/Utils';
+import {Record} from 'Types/entity';
 
 
    var MENU_WIDTH = 0;
@@ -33,16 +34,7 @@ import { Logger } from 'UI/Utils';
 
          visibleKeys.forEach(function(key) {
             item = items.getRecordById(key);
-            buttonTemplateOptions = toolbars.getButtonTemplateOptionsByItem(item);
-
-            if (itemTemplateProperty &&
-                item.get(itemTemplateProperty) &&
-                !buttonTemplateOptions.caption &&
-                !buttonTemplateOptions.icon) {
-               Logger.error(
-                   'OperationsPanel: при использовании своего шаблона отображения операции (itemTemplateProperty) ' +
-                   'необходимо задать caption и/или icon на каждой операции для корректных расчётов размеров');
-            }
+            buttonTemplateOptions = _private.getButtonTemplateOptionsForItem(item, itemTemplateProperty);
 
             itemsMark += toolbars.ItemTemplate({
                item,
@@ -70,7 +62,7 @@ import { Logger } from 'UI/Utils';
          return itemsSizes;
       },
 
-      getButtonTemplateOptionsForItem(item, itemTemplateProperty) {
+      getButtonTemplateOptionsForItem(item: Record, itemTemplateProperty?: string): object {
          const buttonOptions = toolbars.getButtonTemplateOptionsByItem(item);
 
          if (itemTemplateProperty &&
