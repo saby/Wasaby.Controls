@@ -1,1 +1,1 @@
-export {default as EditInPlaceController} from './_editInPlace/Controller';
+export {default as EditInPlace} from './_editInPlace/EditInPlace';

@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 
-import EditInPlaceController from 'Controls/_editInPlace/Controller';
-import AddInPlaceStrategy from 'Controls/_editInPlace/AddInPlace';
+import * as EditInPlaceController from 'Controls/_display/controllers/EditInPlace';
+import AddInPlaceStrategy from 'Controls/_display/itemsStrategy/AddInPlace';
 
 describe('Controls/_display/controllers/EditInPlace', () => {
     function makeEditInPlaceItem(initialEditing: boolean) {
