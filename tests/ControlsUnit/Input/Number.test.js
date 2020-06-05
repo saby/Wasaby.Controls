@@ -44,7 +44,8 @@ define(
                onlyPositive: false,
                fontStyle: 'default',
                selectOnClick: false,
-               showEmptyDecimals: false
+               showEmptyDecimals: false,
+               horizontalPadding: 'xs'
             });
          });
          it('Checking types of options.', function() {
@@ -63,7 +64,8 @@ define(
                'selectOnClick',
                'inputCallback',
                'integersLength',
-               'showEmptyDecimals'
+               'showEmptyDecimals',
+               'horizontalPadding'
             ].sort());
          });
 

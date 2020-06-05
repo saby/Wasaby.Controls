@@ -36,7 +36,8 @@ define(
                textAlign: 'left',
                autoComplete: 'on',
                fontStyle: 'default',
-               selectOnClick: false
+               selectOnClick: false,
+               horizontalPadding: 'xs'
             });
          });
          it('Checking types of options.', function() {
@@ -51,7 +52,8 @@ define(
                'spellCheck',
                'revealable',
                'inputCallback',
-               'selectOnClick'
+               'selectOnClick',
+               'horizontalPadding'
             ].sort());
          });
          it('The model belongs to the "Controls/_input/Password/ViewModel" class.', function() {
