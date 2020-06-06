@@ -727,7 +727,7 @@ export default class EditInPlace {
         let useNewModel =  this._options.useNewModel;
         if (!item) {
             if (useNewModel) {
-                displayLib.EditInPlaceController.endEdit(listModel);
+                displayLib.EditInPlaceController.endEdit(listViewModel);
             } else {
                 listViewModel._setEditingItemData(null);
             }

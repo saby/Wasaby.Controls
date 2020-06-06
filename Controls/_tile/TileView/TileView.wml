@@ -9,7 +9,7 @@
                     swipeTemplate="{{_options.swipeTemplate}}"
                     groupTemplate="{{_groupTemplate}}"
                     multiSelectTpl="{{_options.multiSelectTpl}}"
-                    editingItemData="{{_listModel.getEditingItemData ? _listModel.getEditingItemData() : undefined}}"
+                    editingItemData="{{_listModel.getEditingItemData()}}"
                     isAdd="{{_options.isAdd}}"
                     itemOutputWrapper="{{_itemOutputWrapper}}"
                     itemTemplate="{{_itemTemplate}}"/>
