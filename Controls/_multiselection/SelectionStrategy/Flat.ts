@@ -30,7 +30,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    select(selection: ISelection, keys: TKeys): ISelection {
       const cloneSelection = clone(selection);
 
-      if (this.isAllSelected(cloneSelection)) {
+      if (this._isAllSelected(cloneSelection)) {
          ArraySimpleValuesUtil.removeSubArray(cloneSelection.excluded, keys);
       } else {
          ArraySimpleValuesUtil.addSubArray(cloneSelection.selected, keys);
@@ -42,7 +42,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    unselect(selection: ISelection, keys: TKeys): ISelection {
       const cloneSelection = clone(selection);
 
-      if (this.isAllSelected(cloneSelection)) {
+      if (this._isAllSelected(cloneSelection)) {
          ArraySimpleValuesUtil.addSubArray(cloneSelection.excluded, keys);
       } else {
          ArraySimpleValuesUtil.removeSubArray(cloneSelection.selected, keys);
@@ -79,7 +79,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    toggleAll(selection: ISelection, hasMoreData: boolean): ISelection {
       let cloneSelection = clone(selection);
 
-      if (this.isAllSelected(cloneSelection)) {
+      if (this._isAllSelected(cloneSelection)) {
          const excludedKeys: TKeys = cloneSelection.excluded.slice();
          cloneSelection = this.unselectAll(cloneSelection);
          cloneSelection = this.select(cloneSelection, excludedKeys);
@@ -99,11 +99,11 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       selectedItems.set(false, []);
       selectedItems.set(null, []);
 
-      const isAllSelected: boolean = this.isAllSelected(selection);
+      const _isAllSelected: boolean = this._isAllSelected(selection);
 
       this._items.forEach((item) => {
          const itemId: TKey = item.getId();
-         const selected = selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId);
+         const selected = selection.selected.includes(itemId) || _isAllSelected && !selection.excluded.includes(itemId);
 
          selectedItems.get(selected).push(item);
       });
@@ -115,7 +115,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       let countItemsSelected: number|null = null;
       const itemsCount = this._items instanceof Array ? this._items.length : this._items.getCount();
 
-      if (this.isAllSelected(selection)) {
+      if (this._isAllSelected(selection)) {
          if (!hasMoreData) {
             countItemsSelected = itemsCount - selection.excluded.length;
          }
@@ -127,6 +127,15 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    public isAllSelected(selection: ISelection): boolean {
+      return this._isAllSelected(selection) && selection.excluded.length === 0;
+   }
+
+   /**
+    * Проверяет присутствует ли в selected значение "Выбрано все"
+    * @param selection
+    * @private
+    */
+   private _isAllSelected(selection: ISelection): boolean {
       return selection.selected.includes(ALL_SELECTION_VALUE);
    }
 }
