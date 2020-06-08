@@ -320,77 +320,120 @@ define([
                [{
                   componentOptions: [new Date(2015, 0, 1), 1, {}, 2],
                   updateToRange: [new Date(2014, 1, 1), new Date(2014, 2, 0)],
-                  updatedRangesOptions: [new Date(2014, 1, 1), 12, 1, 2],
+                  updatedRangesOptionsCfg: [new Date(2014, 1, 1), 12, 1, 2],
                   relationType: 'byCapacity'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 3, {}, 2],
                   updateToRange: [new Date(2014, 3, 1), new Date(2014, 6, 0)],
-                  updatedRangesOptions: [new Date(2014, 3, 1), 12, 3, 2],
+                  updatedRangesOptionsCfg: [new Date(2014, 3, 1), 12, 3, 2],
                   relationType: 'byCapacity'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 6, {}, 2],
                   updateToRange: [new Date(2014, 6, 1), new Date(2014, 12, 0)],
-                  updatedRangesOptions: [new Date(2014, 6, 1), 12, 6, 2],
+                  updatedRangesOptionsCfg: [new Date(2014, 6, 1), 12, 6, 2],
                   relationType: 'byCapacity'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
                   updateToRange: [new Date(2013, 0, 1), new Date(2013, 1, 0)],
-                  updatedRangesOptions: [new Date(2013, 0, 1), 1, 1, 2],
+                  updatedRangesOptionsCfg: [new Date(2013, 0, 1), 1, 1, 2],
                   relationType: 'byCapacity'
                }, {
                   componentOptions: [new Date(2015, 2, 1), 1, {}, 2],
                   updateToRange: [new Date(2015, 0, 1), new Date(2015, 1, 0)],
-                  updatedRangesOptions: [new Date(2015, 0, 1), 3, 1, 2],
+                  updatedRangesOptionsCfg: [new Date(2015, 0, 1), 3, 1, 2],
                   relationType: 'byCapacity'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
                   updateToRange: [new Date(2013, 0, 1), new Date(2013, 12, 0)],
-                  updatedRangesOptions: [new Date(2013, 0, 1), 36, 12, 2],
+                  updatedRangesOptionsCfg: [new Date(2013, 0, 1), 36, 12, 2],
+                  relationType: 'byCapacity'
+               }, {
+                  componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
+                  updateToRange: [new Date(2019, 0, 1), new Date(2019, 0, 3)],
+                  updatedRangesOptions:
+                      [[new Date(2018, 0, 1), new Date(2018, 0, 3)], [new Date(2019, 0, 1), new Date(2019, 0, 3)]],
+                  controlNumber: 1,
+                  relationType: 'byCapacity'
+               }, {
+                  componentOptions: [new Date(2015, 0, 1), 24, {}, 2, 12],
+                  updateToRange: [new Date(2020, 0, 1), new Date(2020, 0, 3)],
+                  updatedRangesOptions:
+                      [[new Date(2018, 0, 1), new Date(2018, 0, 3)], [new Date(2020, 0, 1), new Date(2020, 0, 3)]],
+                  controlNumber: 1,
+                  relationType: 'byCapacity'
+               }, {
+                  componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
+                  updateToRange: [new Date(2019, 0, 1), new Date(2019, 0, 3)],
+                  updatedRangesOptions:
+                      [[new Date(2019, 0, 1), new Date(2019, 0, 3)], [new Date(2020, 0, 1), new Date(2020, 0, 3)]],
+                  controlNumber: 0,
+                  relationType: 'byCapacity'
+               }, {
+                  componentOptions: [new Date(2015, 0, 1), 24, {}, 2, 12],
+                  updateToRange: [new Date(2020, 0, 1), new Date(2020, 0, 3)],
+                  updatedRangesOptions:
+                      [[new Date(2020, 0, 1), new Date(2020, 0, 3)], [new Date(2022, 0, 1), new Date(2022, 0, 3)]],
+                  controlNumber: 0,
+                  relationType: 'byCapacity'
+               }, {
+                  componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
+                  updateToRange: [new Date(2010, 0, 1), new Date(2010, 0, 3)],
+                  updatedRangesOptions:
+                      [[new Date(2009, 0, 1), new Date(2009, 0, 3)], [new Date(2010, 0, 1), new Date(2010, 0, 3)]],
+                  controlNumber: 1,
+                  relationType: 'byCapacity'
+               }, {
+                  componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
+                  updateToRange: [new Date(2010, 0, 1), new Date(2010, 0, 3)],
+                  updatedRangesOptions:
+                      [[new Date(2010, 0, 1), new Date(2010, 0, 3)], [new Date(2011, 0, 1), new Date(2011, 0, 3)]],
+                  controlNumber: 0,
                   relationType: 'byCapacity'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 1, {}, 2],
                   updateToRange: [new Date(2014, 1, 1), new Date(2014, 2, 0)],
-                  updatedRangesOptions: [new Date(2014, 1, 1), 1, 1, 2],
+                  updatedRangesOptionsCfg: [new Date(2014, 1, 1), 1, 1, 2],
                   relationType: 'normal'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 3, {}, 2],
                   updateToRange: [new Date(2014, 3, 1), new Date(2014, 6, 0)],
-                  updatedRangesOptions: [new Date(2014, 3, 1), 3, 3, 2],
+                  updatedRangesOptionsCfg: [new Date(2014, 3, 1), 3, 3, 2],
                   relationType: 'normal'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 6, {}, 2],
                   updateToRange: [new Date(2014, 6, 1), new Date(2014, 12, 0)],
-                  updatedRangesOptions: [new Date(2014, 6, 1), 6, 6, 2],
+                  updatedRangesOptionsCfg: [new Date(2014, 6, 1), 6, 6, 2],
                   relationType: 'normal'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
                   updateToRange: [new Date(2013, 0, 1), new Date(2013, 1, 0)],
-                  updatedRangesOptions: [new Date(2013, 0, 1), 12, 1, 2],
+                  updatedRangesOptionsCfg: [new Date(2013, 0, 1), 12, 1, 2],
                   relationType: 'normal'
                }, {
                   componentOptions: [new Date(2015, 2, 1), 1, {}, 2],
                   updateToRange: [new Date(2015, 0, 1), new Date(2015, 1, 0)],
-                  updatedRangesOptions: [new Date(2015, 0, 1), 1, 1, 2],
+                  updatedRangesOptionsCfg: [new Date(2015, 0, 1), 1, 1, 2],
                   relationType: 'normal'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 12, {}, 2],
                   updateToRange: [new Date(2013, 0, 1), new Date(2013, 12, 0)],
-                  updatedRangesOptions: [new Date(2013, 0, 1), 12, 12, 2],
+                  updatedRangesOptionsCfg: [new Date(2013, 0, 1), 12, 12, 2],
                   relationType: 'normal'
                }, {
                   componentOptions: [new Date(2015, 0, 1), 15, {}, 2, 3],
                   updateToRange: [new Date(2015, 0, 1), new Date(2015, 6, 0)],
-                  updatedRangesOptions: [new Date(2015, 0, 1), 6, 6, 2],
+                  updatedRangesOptionsCfg: [new Date(2015, 0, 1), 6, 6, 2],
                   relationType: 'normal'
                }].forEach(function(test, testNumber) {
                   it(`Test ${testNumber}`, function() {
                      let
                         options = getOptions.apply(null, test.componentOptions),
                         component = calendarTestUtils.createComponent(RelationController, options),
-                        sandbox = sinon.sandbox.create();
+                        sandbox = sinon.createSandbox();
                      sandbox.stub(component, '_notify');
-                     component._onRelationWrapperRangeChanged(null, test.updateToRange[0], test.updateToRange[1], 0, test.relationType);
-                     let dates = createMonths.apply(null, test.updatedRangesOptions);
+                     component._onRelationWrapperRangeChanged(
+                         null, test.updateToRange[0], test.updateToRange[1], test.controlNumber || 0, test.relationType);
+                     let dates = test.updatedRangesOptions || createMonths.apply(null, test.updatedRangesOptionsCfg);
                      for (let [i, range] of component._model.ranges.entries()) {
                         assert.deepEqual(range, dates[i]);
                      }
