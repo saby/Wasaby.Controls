@@ -1,4 +1,8 @@
 <div class="controls-Render controls-Render_theme-{{_options.theme}}
+            {{_border.top ? 'controls-Render_border-top_theme-' + _options.theme : 'controls-Render_border-top-empty'}}
+            {{_border.right ? 'controls-Render_border-right_theme-' + _options.theme : 'controls-Render_border-right-empty'}}
+            {{_border.bottom ? 'controls-Render_border-bottom_theme-' + _options.theme : 'controls-Render_border-bottom-empty'}}
+            {{_border.left ? 'controls-Render_border-left_theme-' + _options.theme : 'controls-Render_border-left-empty'}}
             controls-Render-fontsize-{{_fontSize}}
             controls-Render_textAlign-{{_options.textAlign}}
             controls-Render{{_statePrefix}}_borderRadius-{{_inlineHeight}}_theme-{{_options.theme}}

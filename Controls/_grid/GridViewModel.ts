@@ -26,6 +26,8 @@ import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil'
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
+import { ItemsEntity } from 'Controls/dragnDrop';
+import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -322,7 +324,15 @@ var
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
         },
+        getItemsLadderVersion(ladder) {
+            let ladderVersion = '';
 
+            Object.keys(ladder).forEach((ladderProperty) => {
+                ladderVersion += (ladder[ladderProperty].ladderLength || 0) + '_';
+            });
+
+            return ladderVersion;
+        },
         calcLadderVersion(ladder = {}, index): string {
             let
                 version = '',
@@ -333,7 +343,7 @@ var
                 version += 'LP_';
             }
             if (stickyLadder) {
-                version += 'SP_' + (stickyLadder.ladderLength || 0);
+                version += 'SP_' + _private.getItemsLadderVersion(stickyLadder);
             }
 
             return version;
@@ -954,7 +964,8 @@ var
                 cellClasses += endRow - startRow > 1 ? ' controls-Grid__header-cell_justify_content_center' : '';
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ` controls-Grid__cell_header-content_border-bottom_theme-${this._options.theme}` : '';
 
-                if (startColumn - hasMultiSelect ? 1 : 0) {
+                // У первой колонки не рисуем вертикальные разделители. startColumn - конфигурация GridLayout, начинается с 1.
+                if (startColumn - (hasMultiSelect ? 2 : 1)) {
                     const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, startColumn - 1, this._options.columnSeparatorSize);
                     if (columnSeparatorSize !== null) {
                         cellClasses += ` controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
@@ -1058,6 +1069,7 @@ var
 
         getCurrentResultsColumn(): {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} {
             const columnIndex = this._curResultsColumnIndex;
+            const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
             const resultsColumn: {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} = {
                    column: this._resultsColumns[columnIndex],
                    index: columnIndex
@@ -1075,6 +1087,19 @@ var
                     stickyColumnsCount: this._options.stickyColumnsCount,
                     columnScroll: this._options.columnScroll
                 });
+            }
+
+            if (columnIndex > hasMultiSelect ? 1 : 0) {
+                const columnSeparatorSize = _private.getSeparatorForColumn(
+                    this._options.columns,
+                    columnIndex - (hasMultiSelect ? 1 : 0),
+                    this._options.columnSeparatorSize
+                );
+
+                if (columnSeparatorSize !== null) {
+                    cellClasses += ' controls-Grid__row-cell_withColumnSeparator';
+                    cellClasses += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${this._options.theme}`;
+                }
             }
 
             if (this._options.columnScroll) {
@@ -1376,6 +1401,7 @@ var
             current.rowSeparatorSize = this._options.rowSeparatorSize;
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
+            current.getSeparatorForColumn = _private.getSeparatorForColumn;
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup)
@@ -1401,12 +1427,18 @@ var
 
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
             // лесенка не хранится для элементов вне текущего диапазона startIndex - stopIndex
-            if (stickyColumn && 
-                current.isFullGridSupport() && 
-                !current.dragTargetPosition && 
-                current.index !== -1 && 
+            if (stickyColumn &&
+                current.isFullGridSupport() &&
+                !current.dragTargetPosition &&
+                current.index !== -1 &&
                 self._ladder.stickyLadder[current.index]) {
-                current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
+
+                    let stickyProperties = self._options.columns[0]?.stickyProperty;
+                    if (stickyProperties && !(stickyProperties instanceof Array)) {
+                        stickyProperties = [stickyProperties];
+                    }
+                    current.stickyProperties = stickyProperties;
+                    current.stickyLadder = self._ladder.stickyLadder[current.index];
             }
 
             // TODO: Разобраться, зачем это. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
@@ -1434,7 +1466,31 @@ var
             current.getVersion = function() {
                 return self._calcItemVersion(current.item, current.key, current.index);
             };
-
+            current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
+                let result = '';
+                if (current.stickyProperties) {
+                    const index = current.stickyProperties.indexOf(stickyProperty);
+                    const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                    if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+                        index === 1 && !hasMainCell || 
+                        index === 0 && hasMainCell)) {
+                        result += ' controls-Grid__row-cell__ladder-content_displayNoneForLadder';
+                    }
+                    if (stickyProperty === ladderProperty && index === 1 && hasMainCell) {
+                        result += ' controls-Grid__row-cell__ladder-content_additional-with-main';
+                    }
+                }
+                return result;
+            };
+            
+            current.getAdditionalLadderClasses = () => {
+                let result = '';
+                const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                if (!hasMainCell) {
+                    result += ' controls-Grid__row-cell__ladder-spacing_theme-' + self._options.theme;
+                }
+                return result;
+            };
             current.resetColumnIndex = () => {
                 current.columnIndex = 0;
             };
@@ -1479,6 +1535,7 @@ var
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
+                        getLadderContentClasses: current.getLadderContentClasses,
                         getVersion: function () {
                            return _private.calcItemColumnVersion(self, current.getVersion(), this.columnIndex, this.index);
                         },
@@ -1813,6 +1870,16 @@ var
             this._model.setSelectedItems(items, selected);
         },
 
+        setDraggedItems(draggedItem: IFlatItemData, dragEntity: ItemsEntity): void {
+            this._model.setDraggedItems(draggedItem, dragEntity);
+        },
+        setDragPosition(position: IDragPosition): void {
+            this._model.setDragPosition(position);
+        },
+        resetDraggedItems(): void {
+            this._model.resetDraggedItems();
+        },
+
         setDragTargetPosition: function(position) {
             this._model.setDragTargetPosition(position);
         },
@@ -1841,8 +1908,8 @@ var
             return this._model.getDragItemData();
         },
 
-        calculateDragTargetPosition: function(targetData, position) {
-            return this._model.calculateDragTargetPosition(targetData, position);
+        getPrevDragPosition(): IDragPosition {
+            return this._model.getPrevDragPosition();
         },
 
         getActiveItem: function() {

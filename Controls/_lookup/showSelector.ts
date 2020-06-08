@@ -1,11 +1,44 @@
-import merge = require('Core/core-merge');
-import {Stack as StackOpener} from 'Controls/popup';
+import {Stack as StackOpener, IStackPopupOptions} from 'Controls/popup';
 
-interface PopupOptions {
-    opener: any;
-    isCompoundTemplate: boolean;
-    templateOptions: any;
+function getPopupOptions(self): IStackPopupOptions {
+    const selectorTemplate = self._options.selectorTemplate;
+
+    return {
+        opener: self,
+        template: selectorTemplate && selectorTemplate.templateName,
+        closeOnOutsideClick: true,
+        isCompoundTemplate: self._options.isCompoundTemplate,
+        eventHandlers: {
+            onOpen: () => {
+                self._openingSelector = null;
+            },
+            onResult: (result) => {
+                self._selectCallback(null, result);
+            },
+            onClose: () => {
+                self._openingSelector = null;
+                self._closeHandler();
+            }
+        }
+    }
 }
+
+function getTemplateOptions(self, multiSelect) {
+    return {
+        selectedItems: self._getItems().clone(),
+        multiSelect: multiSelect,
+        handlers: {
+            onSelectComplete: function (event, result) {
+                StackOpener.closePopup(self._popupId);
+                if (self._options.isCompoundTemplate) {
+                    self._selectCallback(null, result);
+                }
+            }
+        }
+    }
+}
+
+
 
 /**
  * Open selector
@@ -15,38 +48,29 @@ interface PopupOptions {
  * @returns {Promise}
  */
 export default function(self, popupOptions, multiSelect) {
-    let
-        selectorTemplate = self._options.selectorTemplate,
-        defaultPopupOptions: PopupOptions = merge({
-            opener: self,
-            template: self._options.selectorTemplate.templateName,
-            closeOnOutsideClick: true,
-            isCompoundTemplate: self._options.isCompoundTemplate,
-            eventHandlers: {
-                onResult: (result) => {
-                    self._selectCallback(null, result);
-                },
-                onClose: self._closeHandler.bind(self)
-            }
-        }, selectorTemplate && selectorTemplate.popupOptions || {}),
-        popupId;
+    if (!self._openingSelector) {
+        const selectorTemplate = self._options.selectorTemplate;
+        const stackPopupOptions = getPopupOptions(self);
 
-    if (popupOptions && popupOptions.template || selectorTemplate) {
-        defaultPopupOptions.templateOptions = merge({
-            selectedItems: self._getItems().clone(),
-            multiSelect: multiSelect,
-            handlers: {
-                onSelectComplete: function (event, result) {
-                    StackOpener.closePopup(popupId);
-                    if (self._options.isCompoundTemplate) {
-                        self._selectCallback(null, result);
-                    }
-                }
-            }
-        }, selectorTemplate.templateOptions || {});
+        if (selectorTemplate && selectorTemplate.popupOptions) {
+            Object.assign(stackPopupOptions, selectorTemplate.popupOptions);
+        }
 
-        return StackOpener.openPopup(merge(defaultPopupOptions, popupOptions || {})).then((id) => {
-            popupId = id;
-        });
+        if (popupOptions && popupOptions.template || selectorTemplate) {
+            stackPopupOptions.templateOptions = getTemplateOptions(self, multiSelect);
+
+            if (selectorTemplate && selectorTemplate.templateOptions) {
+                Object.assign(stackPopupOptions.templateOptions, selectorTemplate.templateOptions);
+            }
+
+            if (popupOptions) {
+                Object.assign(stackPopupOptions, popupOptions);
+            }
+
+            self._openingSelector = StackOpener.openPopup(stackPopupOptions).then((id) => {
+                self._popupId = id;
+            });
+        }
+        return self._openingSelector;
     }
 }

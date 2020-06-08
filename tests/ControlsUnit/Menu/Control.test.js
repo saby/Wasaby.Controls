@@ -5,9 +5,10 @@ define(
       'Core/core-clone',
       'Controls/display',
       'Types/collection',
-      'Types/entity'
+      'Types/entity',
+      'Controls/Constants'
    ],
-   function(menu, source, Clone, display, collection, entity) {
+   function(menu, source, Clone, display, collection, entity, ControlsConstants) {
       describe('Menu:Control', function() {
          let defaultItems = [
             { key: 0, title: 'все страны' },
@@ -38,50 +39,67 @@ define(
          };
 
          let getMenu = function(config) {
-            let menuControl = new menu.Control();
+            const menuControl = new menu.Control(config);
             menuControl.saveOptions(config || defaultOptions);
             return menuControl;
          };
 
-         it('_loadItems', function() {
-            let menuControl = getMenu();
-            return new Promise((resolve) => {
-               menuControl.loadItems(defaultOptions).addCallback((items) => {
-                  assert.deepEqual(items.getRawData(), defaultItems);
-                  resolve();
+         describe('loadItems', () => {
+            it('loadItems returns items', () => {
+               let menuControl = getMenu();
+               return new Promise((resolve) => {
+                  menuControl.loadItems(defaultOptions).addCallback((items) => {
+                     assert.deepEqual(items.getRawData(), defaultItems);
+                     resolve();
+                  });
                });
             });
-         });
 
-         it('_loadItems check navigation', function() {
-            let menuControl = getMenu();
-            let menuOptions = Clone(defaultOptions);
-            menuOptions.navigation = {
-               view: 'page',
-               source: 'page',
-               sourceConfig: { pageSize: 2, page: 0, hasMore: false }
-            };
-            return new Promise((resolve) => {
-               menuControl.loadItems(menuOptions).addCallback((items) => {
-                  assert.equal(items.getCount(), 2);
-                  resolve();
+            it('with navigation', () => {
+               const menuOptions = Clone(defaultOptions);
+               menuOptions.navigation = {
+                  view: 'page',
+                  source: 'page',
+                  sourceConfig: { pageSize: 2, page: 0, hasMore: false }
+               };
+               const menuControl = getMenu(menuOptions);
+               return new Promise((resolve) => {
+                  menuControl.loadItems(menuOptions).addCallback((items) => {
+                     assert.equal(items.getCount(), 2);
+                     resolve();
+                  });
                });
             });
-         });
 
-         it('_loadItems check dataLoadCallback', function() {
-            let isDataLoadCallbackCalled = false;
-            let menuControl = getMenu();
-            let menuOptions = Clone(defaultOptions);
-            menuOptions.dataLoadCallback = () => {
-               isDataLoadCallbackCalled = true;
-            };
-            return new Promise((resolve) => {
-               menuControl.loadItems(menuOptions).addCallback(() => {
-                  assert.isTrue(isDataLoadCallbackCalled);
-                  resolve();
+            it('with dataLoadCallback in options', () => {
+               let isDataLoadCallbackCalled = false;
+               let menuControl = getMenu();
+               let menuOptions = Clone(defaultOptions);
+               menuOptions.dataLoadCallback = () => {
+                  isDataLoadCallbackCalled = true;
+               };
+               return new Promise((resolve) => {
+                  menuControl.loadItems(menuOptions).addCallback(() => {
+                     assert.isTrue(isDataLoadCallbackCalled);
+                     resolve();
+                  });
                });
             });
+
+            it('query returns error', () => {
+               const options = Clone(defaultOptions);
+               const menuControl = getMenu();
+
+               options.source.query = () => Promise.reject(new Error());
+
+               return new Promise((resolve) => {
+                  menuControl.loadItems(options).then(() => {
+                     assert.isNotNull(menuControl._errorConfig);
+                     resolve();
+                  });
+               });
+            });
+
          });
 
          describe('_beforeUpdate', () => {
@@ -276,7 +294,7 @@ define(
                   menuControl._children.Sticky = {
                      close: () => { isClosed = true; }
                   };
-                  menuControl.subMenu = true;
+                  menuControl._subMenu = true;
                });
 
                it('subMenu is close', function() {
@@ -352,7 +370,7 @@ define(
                   Sticky: { close: () => { isClosed = true; } }
                };
 
-               menuControl.subMenu = true;
+               menuControl._subMenu = true;
                menuControl.setSubMenuPosition = function() {};
                menuControl.isMouseInOpenedItemArea = function() {
                   return isMouseInArea;
@@ -382,7 +400,7 @@ define(
          it('_footerMouseEnter', function() {
             let isClosed = false;
             let menuControl = getMenu();
-            menuControl.subMenu = true;
+            menuControl._subMenu = true;
             let event = {
                nativeEvent: {}
             };
@@ -479,7 +497,7 @@ define(
             assert.strictEqual(selectorOptions.templateOptions.selectedItems.getCount(), 0);
          });
 
-         it('displayFilter', function() {
+         describe('displayFilter', function() {
             let menuControl = getMenu();
             let hierarchyOptions = {
                root: null
@@ -488,24 +506,62 @@ define(
                rawData: {key: '1', parent: null},
                keyProperty: 'key'
             });
-            let isVisible = menuControl.displayFilter(hierarchyOptions, item);
-            assert.isTrue(isVisible);
+            let isVisible;
 
             hierarchyOptions = {
                parentProperty: 'parent',
                nodeProperty: 'node',
                root: null
             };
-            isVisible = menuControl.displayFilter(hierarchyOptions, item);
-            assert.isTrue(isVisible);
+            it('item parent = null, root = null', function() {
+               isVisible = menuControl.displayFilter(hierarchyOptions, item);
+               assert.isTrue(isVisible);
+            });
 
-            item.set('parent', undefined);
-            isVisible = menuControl.displayFilter(hierarchyOptions, item);
-            assert.isTrue(isVisible);
+            it('item parent = undefined, root = null', function() {
+               item.set('parent', undefined);
+               isVisible = menuControl.displayFilter(hierarchyOptions, item);
+               assert.isTrue(isVisible);
+            });
 
-            item.set('parent', '1');
-            isVisible = menuControl.displayFilter(hierarchyOptions, item);
-            assert.isFalse(isVisible);
+            it('item parent = 1, root = null', function() {
+               item.set('parent', '1');
+               isVisible = menuControl.displayFilter(hierarchyOptions, item);
+               assert.isFalse(isVisible);
+            });
+         });
+
+         describe('groupMethod', function() {
+            let menuControl = getMenu();
+            let menuOptions = {groupProperty: 'group', root: null};
+            let groupId;
+            let item = new entity.Model({
+               rawData: {key: '1'},
+               keyProperty: 'key'
+            });
+
+            it('item hasn`t group', function() {
+               groupId = menuControl.groupMethod(menuOptions, item);
+               assert.equal(groupId, ControlsConstants.view.hiddenGroup);
+            });
+
+            it('group = 0', function() {
+               item.set('group', 0);
+               groupId = menuControl.groupMethod(menuOptions, item);
+               assert.equal(groupId, 0);
+            });
+
+            it('item is history', function() {
+               item.set('pinned', true);
+               groupId = menuControl.groupMethod(menuOptions, item);
+               assert.equal(groupId, ControlsConstants.view.hiddenGroup);
+            });
+
+            it('item is history, root = 2', function() {
+               menuOptions.root = 2;
+               groupId = menuControl.groupMethod(menuOptions, item);
+               assert.equal(groupId, ControlsConstants.view.hiddenGroup);
+            });
          });
 
          it('_changeIndicatorOverlay', function() {
@@ -567,7 +623,7 @@ define(
             it('menuOpened event', function() {
                const data = { container: 'subMenu' };
                menuControl._subMenuResult('click', 'menuOpened', data);
-               assert.deepEqual(menuControl.subMenu, data);
+               assert.deepEqual(menuControl._subMenu, data);
             });
             it('pinClick event', function() {
                menuControl._subMenuResult('click', 'pinClick', { item: 'item1' });

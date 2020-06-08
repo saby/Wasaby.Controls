@@ -10,6 +10,7 @@
                 source="{{_viewSource}}"
                 header="{{_header}}"
                 columns="{{_columns1}}"
+                multiSelectVisibility="visible"
                 rowSeparatorSize="{{ _rowSeparator1 ? 's' }}"
         />
     </div>
@@ -23,6 +24,7 @@
                 source="{{_viewSource}}"
                 header="{{_header}}"
                 columns="{{_columns2}}"
+                multiSelectVisibility="visible"
                 rowSeparatorSize="{{ _rowSeparator2 ? 's' }}"
                 columnSeparatorSize="{{ _columnSeparator2 ? 's' }}"
         />
@@ -37,6 +39,7 @@
                 source="{{_viewSource}}"
                 header="{{_header}}"
                 columns="{{_columns3}}"
+                multiSelectVisibility="visible"
                 rowSeparatorSize="{{ _rowSeparator3 ? 's' }}"
                 columnSeparatorSize="{{ _columnSeparator3 ? 's' }}">
         </Controls.grid:View>

@@ -11,7 +11,38 @@
 
 .controls-Render_theme-@{themeName} {
    border-style: @border-style_inputText;
-   border-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-top_theme-@{themeName} {
+   border-top-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-right_theme-@{themeName} {
+   border-right-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-bottom_theme-@{themeName} {
+   border-bottom-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-left_theme-@{themeName} {
+   border-left-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-top-empty {
+   border-top-width: 0;
+}
+
+.controls-Render_border-right-empty {
+   border-right-width: 0;
+}
+
+.controls-Render_border-bottom-empty {
+   border-bottom-width: 0;
+}
+
+.controls-Render_border-left-empty {
+   border-left-width: 0;
 }
 
 /**
@@ -145,7 +176,7 @@
 .controls-Render_state-invalid_theme-@{themeName}:focus-within {
    border-style: @invalid_border-style_inputText;
    border-color: @invalid_focus_border-color_inputText;
-   background-color: @invalid_focus_background-color;
+   background-color: @background-color_focus_inputText;
 }
 
 .controls-Render_state-invalidAccent-active_theme-@{themeName}:focus-within {
@@ -163,7 +194,7 @@
 .controls-Render_state-invalid-active_theme-@{themeName} {
    border-style: @invalid_border-style_inputText;
    border-color: @invalid_focus_border-color_inputText;
-   background-color: @invalid_focus_background-color;
+   background-color: @background-color_focus_inputText;
 }
 
 .controls-Render_state-invalidAccent-active_theme-@{themeName} {
@@ -182,7 +213,7 @@
 }
 
 .controls-Render_borderRadius {
-   @variants: xs, s, m, l, xl, 2xl, default;
+   @variants: xs, s, m, l, xl, 2 xl, default;
    .for(@variants, {
       &-@{_item}_theme-@{themeName} {
          border-radius: ~"@{border-radius_@{_item}_inputText}";
