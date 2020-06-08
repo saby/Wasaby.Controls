@@ -4514,6 +4514,17 @@ define([
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
             assert.equal(actionsOf0.all[0].title, '456', 'new actions for item at 0 pos. were not assigned');
          });
+
+         // при смене значения свойства readOnly необходимо делать переинициализвацию ItemActions
+         it('should update ItemActions when readOnly option has been changed', () => {
+            instance._beforeUpdate({
+               ...cfg,
+               source: instance._options.source,
+               readOnly: true,
+            });
+            const actionsOf0 = instance._listViewModel.at(0).getActions();
+            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+         });
       });
 
       it('_beforeMount with PrefetchProxy in source', function() {
@@ -5201,10 +5212,10 @@ define([
                   target: {},
                   nativeEvent: {}
                };
-               const event = { 
-                  stopPropagation: () => {} 
+               const event = {
+                  stopPropagation: () => {}
                };
-               const dragEvent = { 
+               const dragEvent = {
                   stopPropagation: () => {}
                };
                const dragObject = {

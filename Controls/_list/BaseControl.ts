@@ -2319,12 +2319,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
          * 2. Редактирование записи при загрузке (Может быть изменится после версии 20.5000, т.к. там появились опции, отображаемые всегда)
          * 3. Изменился коллбек видимости опции
          * 4. Модель была пересоздана
+         * 5. обновилась опция readOnly (относится к TreeControl)
          */
         if (
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
             ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
-            (newOptions.editingConfig && newOptions.editingConfig.item)
+            (newOptions.editingConfig && newOptions.editingConfig.item) ||
+            newOptions.readOnly !== this._options.readOnly
         ) {
             this._updateItemActions(newOptions);
         }
