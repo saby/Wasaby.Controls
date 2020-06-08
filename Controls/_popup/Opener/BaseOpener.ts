@@ -83,7 +83,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         const popupId: string = this._getCurrentPopupId();
         if (popupId) {
             (BaseOpener.closeDialog(popupId) as Promise<void>).then(() => {
-                this._popupId = null;
+                // Пока закрывали текущее окно, уже могли открыть новое с новым popupId.
+                // Если popupId новый, то не нужно чистить старое значение
+                if (!ManagerController.find(this._popupId)) {
+                    this._popupId = null;
+                }
             });
         }
     }
