@@ -1832,6 +1832,8 @@ const _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _updateShadowModeAfterMount: null,
+
     _updateInProgress: false,
     _groupingLoader: null,
 
@@ -2121,7 +2123,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     updateShadowModeHandler(_: SyntheticEvent<Event>, shadowVisibility: {down: boolean, up: boolean}): void {
         this._shadowVisibility = shadowVisibility;
-        _private.updateShadowMode(this, shadowVisibility);
+        if (this._isMounted) {
+            _private.updateShadowMode(this, shadowVisibility);
+        } else {
+            this._updateShadowModeAfterMount = () => {
+                _private.updateShadowMode(this, shadowVisibility);
+            };
+        }
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDirection): void {
@@ -2199,6 +2207,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // для связи с контроллером ПМО
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
         this._notifyOnDrawItems();
+        if (this._updateShadowModeAfterMount) {
+            this._updateShadowModeAfterMount();
+            this._updateShadowModeAfterMount = null;
+        }
     },
 
     _beforeUpdate: function(newOptions) {
