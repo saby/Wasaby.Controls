@@ -2,8 +2,8 @@
      attr:ws-no-focus="true">
    <Controls.scroll:Container
            attr:class="controls-ScrollContainer__flex controls-SimplePanel__scroll_theme_{{_options.theme}}"
-           topShadowVisibility="{{false}}"
-           bottomShadowVisibility="{{false}}"
+           topShadowVisibility="hidden"
+           bottomShadowVisibility="hidden"
            scrollbarVisible="{{false}}">
 
          <ws:for data="index, item in _items">
