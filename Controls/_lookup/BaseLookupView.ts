@@ -27,8 +27,8 @@ var _private = {
     },
 
     resetInputValue: function(self) {
-        if (self._inputValue !== '') {
-            self._inputValue = '';
+        if (self._getInputValue(self._options) !== '') {
+            self._setInputValue(self._options, '');
             _private.notifyValue(self, '');
         }
     },
@@ -63,7 +63,7 @@ var BaseLookupView = Control.extend({
     _needSetFocusInInput: false,
 
     _beforeMount: function (options) {
-        this._inputValue = options.value;
+        this._setInputValue(options, options.value);
         this._listOfDependentOptions = [];
 
         if (!options.multiSelect) {
@@ -94,7 +94,7 @@ var BaseLookupView = Control.extend({
         const itemsChanged = currentOptions.items !== newOptions.items;
 
         if (valueChanged) {
-            this._inputValue = newOptions.value;
+            this._setInputValue(newOptions, newOptions.value);
         } else if (itemsChanged && !newOptions.comment) {
             _private.resetInputValue(this);
         }
@@ -132,7 +132,7 @@ var BaseLookupView = Control.extend({
     },
 
     _changeValueHandler: function (event, value) {
-        this._inputValue = value;
+        this._setInputValue(this._options, value);
         _private.notifyValue(this, value);
     },
 
@@ -253,7 +253,7 @@ var BaseLookupView = Control.extend({
         if (keyCodeEvent === KEY_CODE_F2) {
             this._notify('showSelector');
         } else if (keyCodeEvent === constants.key.backspace &&
-            !this._inputValue && !this._isEmpty(this._options)) {
+            !this._getInputValue(this._options) && !this._isEmpty(this._options)) {
 
             //If press backspace, the input field is empty and there are selected entries -  remove last item
             this._notify('removeItem', [items.at(items.getCount() - 1)]);
@@ -276,14 +276,31 @@ var BaseLookupView = Control.extend({
 
    _isShowCollection: function() {
        return !this._isEmpty(this._options) && (this._maxVisibleItems || this._options.readOnly);
-   }
+   },
+
+    _getInputValue(options): string {
+        let result;
+
+        if (options.hasOwnProperty('value')) {
+            result = options.value;
+        } else {
+            result = this._inputValue;
+        }
+
+        return result;
+    },
+
+    _setInputValue(options, value: string): void {
+        if (!options.hasOwnProperty('value')) {
+            this._inputValue = value;
+        }
+    }
 });
 
 BaseLookupView._theme = ['Controls/lookup'];
 
 BaseLookupView.getDefaultOptions = function () {
     return {
-        value: '',
         displayProperty: 'title',
         multiSelect: false,
         maxVisibleItems: 7,

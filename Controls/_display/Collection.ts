@@ -119,16 +119,6 @@ export interface IItemActionsTemplateConfig {
     itemActionsClass?: string;
 }
 
-export interface IContextMenuConfig {
-    items?: RecordSet;
-    groupTemplate?: TemplateFunction|string;
-    groupProperty?: string;
-    itemTemplate?: TemplateFunction|string;
-    footerTemplate?: TemplateFunction|string;
-    headerTemplate?: TemplateFunction|string;
-    iconSize?: string;
-}
-
 export interface ISwipeConfig {
     itemActionsSize?: 's'|'m'|'l';
     itemActions?: {
@@ -595,8 +585,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$virtualScrolling: boolean;
 
     protected _$hasMoreData: boolean;
-
-    protected _$contextMenuConfig: IContextMenuConfig;
 
     protected _$compatibleReset: boolean;
 
@@ -2265,11 +2253,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setCompatibleReset(compatible: boolean): void {
         this._$compatibleReset = compatible;
-    }
-
-    // yet not used anywhere
-    getContextMenuConfig(): IContextMenuConfig {
-        return this._$contextMenuConfig;
     }
 
     setViewIterator(viewIterator: IViewIterator): void {
