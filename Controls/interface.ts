@@ -35,6 +35,7 @@
  * @includes ISearch Controls/_interface/ISearch
  * @includes ISelectorDialog Controls/_interface/ISelectorDialog
  * @includes ISelectionObject Controls/_interface/ISelectionObject
+ * @includes IBorderVisibility Controls/_interface/IBorderVisibility
  * @public
  * @author Крайнов Д.О.
  */
@@ -81,3 +82,4 @@ export {default as IOpenPopup} from './_interface/IOpenPopup';
 export {default as ISearch} from './_interface/ISearch';
 export {default as IFormOperation} from './_interface/IFormOperation';
 export {default as ISelectorDialog, ISelectorDialogOptions} from './_interface/ISelectorDialog';
+export {default as IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility, getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_interface/IBorderVisibility';

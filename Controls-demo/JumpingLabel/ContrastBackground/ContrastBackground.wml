@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell" style="padding: 4px;">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" caption="Enter your name"
+                                      contrastBackground="{{false}}">
+         <Controls.input:Text/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+   <div class="controlsDemo__cell controlsDemo__background">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" caption="Enter your name"
+                                      contrastBackground="{{true}}">
+         <Controls.input:Text/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+</div>
