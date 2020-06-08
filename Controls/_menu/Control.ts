@@ -21,6 +21,7 @@ import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {TouchContextField} from 'Controls/context';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 /**
  * Контрол меню.
@@ -64,7 +65,18 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _notifyResizeAfterRender: Boolean = false;
     private _itemActionsController: ItemActionsController;
 
-    protected _beforeMount(options: IMenuControlOptions, context: object, receivedState: RecordSet): Deferred<RecordSet> {
+    private _subMenu: HTMLElement;
+    private _hoveredItem: CollectionItem<Model>;
+    private _hoveredTarget: EventTarget;
+    private _enterEvent: MouseEvent;
+    private _subMenuPosition: DOMRect;
+    private _openSubMenuEvent: MouseEvent;
+    private _errorController: dataSourceError.Controller;
+    private _errorConfig: dataSourceError.ViewConfig|void;
+
+    protected _beforeMount(options: IMenuControlOptions,
+                           context?: object,
+                           receivedState?: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
         this._additionalFilter = this.additionalFilter.bind(this, options);
 
@@ -106,8 +118,14 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             this._sourceController.cancelLoading();
             this._sourceController = null;
         }
-        this._listModel.destroy();
-        this._listModel = null;
+        if (this._listModel) {
+            this._listModel.destroy();
+            this._listModel = null;
+        }
+        if (this._errorController) {
+            this._errorController.destroy();
+            this._errorController = null;
+        }
     }
 
     protected _mouseEnterHandler(): void {
@@ -132,7 +150,9 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
-    protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>, sourceEvent: SyntheticEvent<MouseEvent>): void {
+    protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>,
+                              item: CollectionItem<Model>,
+                              sourceEvent: SyntheticEvent<MouseEvent>): void {
         if (item.getContents() instanceof Model && !this.isTouch()) {
             this._clearClosingTimout();
             this.setItemParamsOnHandle(item, sourceEvent.target, sourceEvent.nativeEvent);
@@ -142,7 +162,10 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
-    protected _itemSwipe(e: SyntheticEvent<null>, item: CollectionItem<Model>, swipeEvent: SyntheticEvent<TouchEvent>, swipeContainerHeight: number): void {
+    protected _itemSwipe(e: SyntheticEvent<null>,
+                         item: CollectionItem<Model>,
+                         swipeEvent: SyntheticEvent<TouchEvent>,
+                         swipeContainerHeight: number): void {
         if (this._options.itemActions) {
             if (swipeEvent.nativeEvent.direction === 'left') {
                 this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
@@ -170,7 +193,9 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
-    protected _itemClick(event: SyntheticEvent<MouseEvent>, item: Model, sourceEvent: MouseEvent): void {
+    protected _itemClick(event: SyntheticEvent<MouseEvent>,
+                         item: Model,
+                         sourceEvent: SyntheticEvent<MouseEvent>): void {
         if (item.get('readOnly')) {
             return;
         }
@@ -234,7 +259,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         // }
     }
 
-    protected _changeIndicatorOverlay(event: SyntheticEvent<MouseEvent>, config: object): void {
+    protected _changeIndicatorOverlay(event: SyntheticEvent<MouseEvent>, config: { overlay: string }): void {
         config.overlay = 'none';
     }
 
@@ -258,9 +283,12 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         this._notify('moreButtonClick', [selectedItems]);
     }
 
-    protected _subMenuResult(event: SyntheticEvent<MouseEvent>, eventName: string, eventResult: Model|Node, nativeEvent: SyntheticEvent<MouseEvent>) {
+    protected _subMenuResult(event: SyntheticEvent<MouseEvent>,
+                             eventName: string,
+                             eventResult: Model|HTMLElement,
+                             nativeEvent: SyntheticEvent<MouseEvent>): void {
         if (eventName === 'menuOpened') {
-            this.subMenu = eventResult;
+            this._subMenu = eventResult as HTMLElement;
         } else if (eventName === 'subMenuMouseenter') {
             this._clearClosingTimout();
         } else {
@@ -280,7 +308,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private _checkOpenedMenu(nativeEvent: MouseEvent, newItem?: CollectionItem<Model>): void {
-        const needCloseSubMenu = this.subMenu && this._subDropdownItem && (!newItem || newItem !== this._subDropdownItem);
+        const needCloseSubMenu = this._subMenu && this._subDropdownItem &&
+            (!newItem || newItem !== this._subDropdownItem);
         if (!this._isNeedKeepMenuOpen(needCloseSubMenu, nativeEvent) && needCloseSubMenu) {
             this._closeSubMenu();
         }
@@ -314,7 +343,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private setSubMenuPosition(): void {
-        this._subMenuPosition = this.subMenu.getBoundingClientRect();
+        this._subMenuPosition = this._subMenu.getBoundingClientRect();
         if (this._subMenuPosition.x < this._openSubMenuEvent.clientX) {
             this._subMenuPosition.x += this._subMenuPosition.width;
         }
@@ -325,7 +354,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                               nativeEvent: MouseEvent): void {
         const needOpenDropDown = item.getContents().get(this._options.nodeProperty) &&
             !item.getContents().get('readOnly');
-        const needCloseDropDown = this.subMenu && this._subDropdownItem && this._subDropdownItem !== item;
+        const needCloseDropDown = this._subMenu && this._subDropdownItem && this._subDropdownItem !== item;
 
         const needKeepMenuOpen = this._isNeedKeepMenuOpen(needCloseDropDown, nativeEvent);
 
@@ -497,7 +526,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                 root: options.root
             });
         } else {
-            // В дереве не работает группировка, ждем решения по ошибке https://online.sbis.ru/opendoc.html?guid=f4a3be79-5ec5-45d2-b742-2d585c5c069d
+            // В дереве не работает группировка,
+            // ждем решения по ошибке https://online.sbis.ru/opendoc.html?guid=f4a3be79-5ec5-45d2-b742-2d585c5c069d
             listModel = new Collection({...collectionConfig,
                 filter: this.displayFilter.bind(this, options)
             });
@@ -528,7 +558,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
     private displayFilter(options: IMenuControlOptions, item: Model): boolean {
         let isVisible = true;
-        if (item.get && options.parentProperty && options.nodeProperty) {
+        if (item && item.get && options.parentProperty && options.nodeProperty) {
             let parent = item.get(options.parentProperty);
             if (parent === undefined) {
                 parent = null;
@@ -539,7 +569,9 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private groupMethod(options: IMenuControlOptions, item: Model): string {
-        return item.get(options.groupProperty) || constView.hiddenGroup;
+        const groupId = item.get(options.groupProperty);
+        const isHistoryItem = this.isHistoryItem(item) && this._options.root === null;
+        return groupId !== undefined && !isHistoryItem ? groupId : constView.hiddenGroup;
     }
 
     private setSelectedItems(listModel: Collection<Model>, keys: TSelectedKeys): void {
@@ -547,7 +579,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private getSourceController(
-        {source, navigation, keyProperty}: {source: ICrudPlus, navigation?: object, keyProperty: string}): SourceController {
+        {source, navigation, keyProperty}: IMenuControlOptions): SourceController {
         if (!this._sourceController) {
             this._sourceController = new SourceController({
                 source,
@@ -572,15 +604,19 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private loadItems(options: IMenuControlOptions): Deferred<RecordSet> {
         const filter = Clone(options.filter) || {};
         filter[options.parentProperty] = options.root;
-        return this.getSourceController(options).load(filter).addCallback((items) => {
-            if (options.dataLoadCallback) {
-                options.dataLoadCallback(items);
-            }
-            this.createViewModel(items, options);
-            this._moreButtonVisible = options.selectorTemplate && this.getSourceController(options).hasMoreData('down');
-            this._expandButtonVisible = this.isExpandButtonVisible(items, options.additionalProperty, options.root);
-            return items;
-        });
+        return this.getSourceController(options).load(filter).then(
+            (items) => {
+                if (options.dataLoadCallback) {
+                    options.dataLoadCallback(items);
+                }
+                this.createViewModel(items, options);
+                this._moreButtonVisible = options.selectorTemplate &&
+                    this.getSourceController(options).hasMoreData('down');
+                this._expandButtonVisible = this.isExpandButtonVisible(items, options.additionalProperty, options.root);
+                return items;
+            },
+            (error) => this._processError(error)
+        );
     }
 
     private isExpandButtonVisible(items: RecordSet, additionalProperty: string, root: string|number|null): boolean {
@@ -645,9 +681,9 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         return {...this._options, ...subMenuOptions};
     }
 
-    private getSourceSubMenu(root) {
+    private getSourceSubMenu(root: string|number|null): ICrudPlus {
         let source = this._options.source;
-        const collection =  this._listModel.getCollection();
+        const collection =  this._listModel.getCollection() as any as RecordSet<Model>;
         if (collection.getIndexByValue(this._options.parentProperty, root) !== -1) {
             source = new PrefetchProxy({
                 target: this._options.source,
@@ -697,6 +733,31 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             item.setSelected(state, true);
             collection.nextVersion();
         }
+    }
+
+    private _processError(error: Error): Promise<dataSourceError.ViewConfig|void> {
+        return this._getErrorController().process({
+            error,
+            theme: this._options.theme,
+            mode: dataSourceError.Mode.include
+        }).then((errorConfig) => {
+            if (errorConfig) {
+                errorConfig.options.size = 'medium';
+            }
+            this._showError(errorConfig);
+            return errorConfig;
+        });
+    }
+
+    private _showError(error: dataSourceError.ViewConfig|void): void {
+        this._errorConfig = error;
+    }
+
+    private _getErrorController(): dataSourceError.Controller {
+        if (!this._errorController) {
+            this._errorController = new dataSourceError.Controller({});
+        }
+        return this._errorController;
     }
 
     static _theme: string[] = ['Controls/menu'];

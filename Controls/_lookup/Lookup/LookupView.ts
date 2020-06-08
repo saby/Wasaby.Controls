@@ -266,7 +266,7 @@ var LookupView = BaseLookupView.extend({
    },
 
    _isInputVisible: function(options) {
-      return (!options.readOnly || this._inputValue && !options.multiSelect) &&
+      return (!options.readOnly || this._getInputValue(options) && !options.multiSelect) &&
          (this._isEmpty(options) || options.multiSelect || options.comment);
    },
 
@@ -296,7 +296,6 @@ var LookupView = BaseLookupView.extend({
 
 LookupView.getDefaultOptions = function() {
    return {
-      value: '',
       displayProperty: 'title',
       multiSelect: false,
       maxVisibleItems: 7

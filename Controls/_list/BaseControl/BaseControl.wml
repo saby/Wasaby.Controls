@@ -87,7 +87,7 @@
         on:dragEnter="_dragEnter()"
         on:documentDragEnd="_documentDragEnd()"
         draggingTemplate="{{_options.draggingTemplate}}"
-        name="dragNDropController"
+        name="dragNDropContainer"
     >
         <ws:content>
             <ws:partial template="{{viewContent}}" />
@@ -131,7 +131,7 @@
                     template="{{ _options.content }}"
                     scope="{{_options}}"
                     loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
-                    dragNDropControl="{{_children.dragNDropController}}"
+                    dragNDropControl="{{_children.dragNDropContainer}}"
                     _needBottomPadding="{{_needBottomPadding}}"
                     listModel="{{_listViewModel}}"
                     startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
@@ -151,20 +151,15 @@
                     on:dragStart="_notifyHandler('dragStart')">
                 <ws:itemActionsTemplate>
                     <ws:partial
-                            template="{{_itemActionsTemplate}}"
-                            scope="{{ _listViewModel.getActionsTemplateConfig() }}"
-                            itemActionsClass="{{_options.itemActionsClass}}"
-                            itemData="{{ itemActionsTemplate.currentItem }}" />
-                    <!-- using || instead of ws:if because template is constantly being updated otherwise -->
+                            template="{{ _itemActionsTemplate }}"
+                            scope="{{ _listViewModel.getActionsTemplateConfig() }}" />
                 </ws:itemActionsTemplate>
                 <ws:swipeTemplate>
                     <ws:partial
                             template="{{ _swipeTemplate }}"
                             scope="{{ _listViewModel.getActionsTemplateConfig() }}"
                             swipeConfig="{{ _listViewModel.getSwipeConfig() }}"
-                            animationState="{{ _listViewModel.getSwipeAnimation() }}"
-                            itemData="{{ swipeTemplate.currentItem }}" />
-                    <!-- using || instead of ws:if because template is constantly being updated otherwise -->
+                            animationState="{{ _listViewModel.getSwipeAnimation() }}" />
                 </ws:swipeTemplate>
                <ws:tagTemplate>
                   <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"

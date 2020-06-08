@@ -4,6 +4,8 @@ import {constants} from 'Env/Env';
 import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksPhoto';
 import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksDescription';
 import 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksReceived';
+import 'wml!Controls-demo/grid/resources/CellTemplates/LadderMultilineDateTime';
+import 'wml!Controls-demo/grid/resources/CellTemplates/LadderMultilineName';
 import * as baseEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/baseEditor';
 import * as moneyEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/moneyEditor';
 import * as numberEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/numberEditor';
@@ -719,6 +721,108 @@ function getCountriesStats() {
     }
 }
 
+function getMultilineLadder() {
+    return {
+        getData: () => [
+            {
+                id: 1,
+                date: '01 мая',
+                time: '06:02',
+                name: 'Колесов В.'
+            },
+            {
+                id: 3,
+                date: '01 мая',
+                time: '08:25',
+                name: 'Авраменко А.'
+            },
+            {
+                id: 30,
+                date: '01 мая',
+                time: '18:33',
+                name: 'Авраменко А.'
+            },
+            {
+                id: 5,
+                date: '02 мая',
+                time: '07:41',
+                name: 'Колесов В.'
+            },
+            {
+                id: 6,
+                date: '02 мая',
+                time: '08:25',
+                name: 'Авраменко А.'
+            },
+            {
+                id: 8,
+                date: '03 мая',
+                time: '09:41',
+                name: 'Колесов В.'
+            },
+            {
+                id: 9,
+                date: '03 мая',
+                time: '09:55',
+                name: 'Колесов В.'
+            },
+            {
+                id: 11,
+                date: '04 мая',
+                time: '06:02',
+                name: 'Колесов В.'
+            },
+            {
+                id: 13,
+                date: '04 мая',
+                time: '08:25',
+                name: 'Авраменко А.'
+            },
+            {
+                id: 14,
+                date: '04 мая',
+                time: '08:41',
+                name: 'Колесов В.'
+            },
+            {
+                id: 15,
+                date: '06 мая',
+                time: '07:41',
+                name: 'Колесов В.'
+            },
+            {
+                id: 17,
+                date: '06 мая',
+                time: '08:25',
+                name: 'Колесов В.'
+            },
+            {
+                id: 18,
+                date: '06 мая',
+                time: '09:41',
+                name: 'Колесов В.'
+            },
+            {
+                id: 19,
+                date: '06 мая',
+                time: '09:55',
+                name: 'Колесов В.'
+            }
+        ],
+        getColumns: () => [
+            {
+                template: 'wml!Controls-demo/grid/resources/CellTemplates/LadderMultilineDateTime',
+                width: '125px',
+                stickyProperty: ['date', 'time']
+            },
+            {
+                template: 'wml!Controls-demo/grid/resources/CellTemplates/LadderMultilineName',
+                width: '300px'
+            }
+        ]
+    };
+}
+
 function getTasks() {
     return {
         getData: () => [
@@ -958,7 +1062,7 @@ function getEditing() {
     return {
         getEditingData: () => [
             {
-                id: '1',
+                id: 1,
                 title: 'Время',
                 description: 'Погода',
                 price: '1',
@@ -968,7 +1072,7 @@ function getEditing() {
                 costPrice: '3'
             },
             {
-                id: '2',
+                id: 2,
                 title: 'Масса',
                 description: 'Скорость',
                 price: '1',
@@ -978,7 +1082,7 @@ function getEditing() {
                 costPrice: '3'
             },
             {
-                id: '3',
+                id: 3,
                 title: 'Давление',
                 description: 'Плотность',
                 price: '1',
@@ -1455,5 +1559,6 @@ export {
     countries,
     DragNDrop,
     cellPadding,
-    changeSourceData
+    changeSourceData,
+    getMultilineLadder
 }
