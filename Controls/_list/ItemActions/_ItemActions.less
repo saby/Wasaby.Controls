@@ -122,6 +122,14 @@
   margin: 0 @item_offset_itemActions;
 }
 
+.controls-action_iconStyle_secondary_theme-@{themeName} {
+  fill: @secondary_icon-color;
+  color: @secondary_icon-color;
+  &:hover {
+    fill: @secondary_hover_icon-color;
+    color: @secondary_hover_icon-color;
+  }
+}
 //since Opener does not know the specific size of the icon
 .controls-itemActionsV__popup .icon-size_theme-@{themeName}{
   .icon-size-without-important(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
