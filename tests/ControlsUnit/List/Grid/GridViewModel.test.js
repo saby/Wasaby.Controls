@@ -1260,7 +1260,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.isUndefined(current.stickyLadder, 'shouldn\'t assign ladder');
 
-            
+
             ladderViewModel._model._curIndex = 2;
             current = ladderViewModel.getCurrent();
 
@@ -1298,7 +1298,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, Object.keys(ladderViewModel._ladder.stickyLadder).length);
             assert.equal(4, Object.keys(ladderViewModel._ladder.ladder).length);
 
-            
+
             let resetCacheKey = null;
             let fullCacheReset = false;
             ladderViewModel.resetCachedItemData = (key) => {
@@ -1655,6 +1655,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
             const offset = gridViewModel._maxEndRow ? (gridViewModel._maxEndRow - 1 ) * gridViewModel._headerCellMinHeight : 0;
 
+            gridViewModel._options.columns[1].columnSeparatorSize = {
+               left: 's'
+            };
+
             function assertColumn(actual, expected) {
                assert.deepEqual(actual.column, expected.column);
                assert.equal(actual.index, expected.index);
@@ -1679,7 +1683,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: gridColumns[1],
-               cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__row-cell__content_halign_right controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default',
+               cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__row-cell__content_halign_right controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-s_theme-default',
                index: 2
             });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after third call "getCurrentResultsColumn()".');
@@ -1698,6 +1702,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" before "resetResultsColumns()".');
             gridViewModel.resetResultsColumns();
             assert.equal(0, gridViewModel._curResultsColumnIndex, 'Incorrect value "_curResultsColumnIndex" after "resetResultsColumns()".');
+
+            delete gridViewModel._options.columns[1].columnSeparatorSize;
          });
 
          it('first header cell with breadcrumbs should renders from first column', function () {
