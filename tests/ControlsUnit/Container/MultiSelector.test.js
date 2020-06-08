@@ -9,6 +9,7 @@ define([
    describe('Controls.Container.MultiSelector', function() {
       it('_selectedTypeChangedHandler', function() {
          var instance = new MultiSelector.Controller();
+         instance._beforeMount({});
          instance._selectedTypeRegister = {
             start: function(typeName) {
                assert.equal(typeName, 'toggleAll');

@@ -1,9 +1,9 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_operations/Controller/Controller');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import {RegisterClass} from 'Controls/event';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { TKeySelection as TKey } from 'Controls/interface';
+import {default as OperationsController} from 'Controls/_operations/_Controller';
 
 /** 
  * Контрол используется для организации множественного выбора. 
@@ -41,60 +41,48 @@ export default class MultiSelector extends Control {
    protected _isAllSelected: boolean = false;
    protected _listMarkedKey: TKey = null;
    protected _notifyHandler: Function = tmplNotify;
-   protected _isOperationsPanelOpened: boolean = false;
-   protected _savedListMarkedKey: TKey = null;
-   protected _selectedTypeRegister: RegisterClass = null;
+   private _operationsController: OperationsController = null;
 
-   protected _beforeMount() {
+   protected _beforeMount(options): void {
       this._itemOpenHandler = this._itemOpenHandler.bind(this);
-      this._selectedTypeRegister = new RegisterClass({register: 'selectedTypeChanged'});
+      this._operationsController = this._createOperationsController(options);
    }
 
-   protected _beforeUnmount() {
-      if (this._selectedTypeRegister) {
-         this._selectedTypeRegister.destroy();
-         this._selectedTypeRegister = null;
+   protected _beforeUpdate(options): void {
+      this._operationsController.update(options);
+   }
+
+   protected _beforeUnmount(): void {
+      if (this._operationsController) {
+         this._operationsController.destroy();
+         this._operationsController = null;
       }
    }
 
    protected _registerHandler(event, registerType, component, callback, config): void {
-      this._selectedTypeRegister.register(event, registerType, component, callback, config);
+      this._getOperationsController().registerHandler(event, registerType, component, callback, config);
    }
 
    protected _unregisterHandler(event, registerType, component, config): void {
-      this._selectedTypeRegister.unregister(event, component, config);
+      this._getOperationsController().unregisterHandler(event, component, config);
    }
 
    protected _selectedTypeChangedHandler(event: SyntheticEvent<null>, typeName: string): void {
-      if (typeName === 'all' || typeName === 'selected') {
-         this._notify('selectionViewModeChanged', [typeName]);
-      } else {
-         this._selectedTypeRegister.start(typeName);
-      }
+      this._getOperationsController().selectionTypeChanged(typeName);
    }
 
    protected _selectedKeysCountChanged(e, count: number|null, isAllSelected: boolean): void {
       e.stopPropagation();
       this._selectedKeysCount = count;
       this._isAllSelected = isAllSelected;
-
-      // TODO: по этой задаче сделаю так, что опции selectedKeysCount вообще не будет: https://online.sbis.ru/opendoc.html?guid=d9b840ba-8c99-49a5-98d3-78715d10d540
    }
 
-   protected _itemOpenHandler(newCurrentRoot: string|number|null, items, dataRoot = null): void {
-      let root: string|number|null = 'root' in this._options ? this._options.root : null;
-
-      if (newCurrentRoot !== root && this._options.selectionViewMode === 'selected') {
-         this._notify('selectionViewModeChanged', ['all']);
-      }
-
-      if (this._options.itemOpenHandler instanceof Function) {
-         return this._options.itemOpenHandler(newCurrentRoot, items, dataRoot);
-      }
+   protected _itemOpenHandler(newCurrentRoot, items, dataRoot = null): void {
+      return this._getOperationsController().itemOpenHandler(newCurrentRoot, items, dataRoot);
    }
 
-   protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: TKey): void {
-      this._setListMarkedKey(markedKey);
+   protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: Key): void {
+      this._listMarkedKey = this._getOperationsController(this._options).setListMarkedKey(markedKey);
       this._notify('markedKeyChanged', [markedKey]);
    }
 
@@ -103,22 +91,30 @@ export default class MultiSelector extends Control {
    }
 
    protected _operationsPanelOpen(): void {
-      this._isOperationsPanelOpened = true;
-      if (this._savedListMarkedKey) {
-         this._setListMarkedKey(this._savedListMarkedKey);
-      }
+      this._listMarkedKey = this._getOperationsController(this._options).setOperationsPanelVisible(true);
    }
 
    protected _operationsPanelClose(): void {
-      this._isOperationsPanelOpened = false;
+      this._getOperationsController(this._options).setOperationsPanelVisible(false);
    }
 
-   private _setListMarkedKey(key: TKey): void {
-      if (this._isOperationsPanelOpened) {
-         this._listMarkedKey = key;
-         this._savedListMarkedKey = null;
-      } else {
-         this._savedListMarkedKey = key;
+   private _createOperationsController(options) {
+      const controllerOptions = {
+         ...options,
+         ...{
+            selectionViewModeChangedCallback: (type) => {
+               this._notify('selectionViewModeChanged', [type]);
+            }
+         }
+      };
+      return new OperationsController(controllerOptions);
+   }
+
+   private _getOperationsController(): OperationsController {
+      if (!this._operationsController) {
+         this._operationsController = this._createOperationsController(this._options);
       }
+
+      return this._operationsController;
    }
 }
