@@ -184,15 +184,11 @@ var
             _private.setViewConfig(self, self._viewMode);
          },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
-            var currentRoot = _private.getRoot(self, cfg.root);
-            var dataRoot = _private.getDataRoot(self);
             var result;
 
             if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
                self._breadCrumbsItems = null;
-               if (dataRoot !== currentRoot) {
-                  _private.setRoot(self, dataRoot, dataRoot);
-               }
+               _private.updateRootOnViewModeChanged(self, viewMode, cfg);
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
@@ -271,6 +267,25 @@ var
             _private.setViewMode(self, viewMode, cfg);
             if (cfg.searchNavigationMode !== 'expand') {
                self._children.treeControl.resetExpandedItems();
+            }
+         },
+
+         setPendingViewMode(self, viewMode: string, options): void {
+            self._pendingViewMode = viewMode;
+
+            if (viewMode === 'search') {
+               _private.updateRootOnViewModeChanged(self, viewMode, options);
+            }
+         },
+
+         updateRootOnViewModeChanged(self, viewMode: string, options): void {
+            if (viewMode === 'search' && options.searchStartingWith === 'root') {
+               const currentRoot = _private.getRoot(self, options.root);
+               const dataRoot = _private.getDataRoot(self);
+
+               if (dataRoot !== currentRoot) {
+                  _private.setRoot(self, dataRoot, dataRoot);
+               }
             }
          }
       };
@@ -440,7 +455,7 @@ var
             // со старыми записями, а после загрузки новых получим еще одну перерисовку.
             // Вместо этого запомним, какой режим отображения от нас хотят, и проставим
             // его, когда новые записи будут установлены в модель (itemsSetCallback).
-            this._pendingViewMode = cfg.viewMode;
+            _private.setPendingViewMode(this, cfg.viewMode, cfg);
          } else if (isViewModeChanged && !this._pendingViewMode) {
             _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
          }
