@@ -1887,7 +1887,7 @@ const _private = {
                 options.useNewModel,
                 self.getSourceController()
             );
-            self._editingItemData = self._listViewModel.getEditingItemData();
+            self._editingItemData = self._editInPlace.getEditingItemData();
         }
     }
 
@@ -2391,7 +2391,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._editInPlace) {
             this._editInPlace.updateEditingData(newOptions);
-            this._editingItemData = this._listViewModel.getEditingItemData();
+            this._editingItemData = this._editInPlace.getEditingItemData();
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -2708,18 +2708,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             return;
         }
         if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, originalEvent).then((result) => {
-                if (result && !result.cancelled) {
-                    // После старта редактирования нужно установить фокус на поле ввода, каретку под курсор.
-                    // Старт редактирования может быть асинхронным (если из события beforeBeginEdit вернулся Promise)
-                    // и колбек отстреляет после EditInPlace._afterUpdate.
-                    // Необходимо запустить еще одно обновление, в котором гарантировано будет отрисовано поле ввода.
-                    // Именно в этом обновлении можно проставлять фокус и каретку.
-                    // Не должно и не будет работать в случае, если внутри шаблона редактора поле ввода вставляется
-                    // через Controls.Container.Async.
-                    this._forceUpdate();
-                }
-            });
+            this._editInPlace.beginEditByClick(e, item, originalEvent)ж
         }
 
     },

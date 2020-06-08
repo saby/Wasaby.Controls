@@ -639,6 +639,15 @@ export default class EditInPlace {
                         };
 
                         this._pendingInputRenderState = PendingInputRenderState.PendingRender;
+
+                        // После старта редактирования нужно установить фокус на поле ввода, каретку под курсор.
+                        // Старт редактирования может быть асинхронным (если из события beforeBeginEdit вернулся Promise)
+                        // и колбек отстреляет после EditInPlace._afterUpdate.
+                        // Необходимо запустить еще одно обновление, в котором гарантировано будет отрисовано поле ввода.
+                        // Именно в этом обновлении можно проставлять фокус и каретку.
+                        // Не должно и не будет работать в случае, если внутри шаблона редактора поле ввода вставляется
+                        // через Controls.Container.Async.
+                        this._forceUpdate();
                     }
                     return result;
                 });
@@ -896,6 +905,10 @@ export default class EditInPlace {
 
     shouldShowToolbar(): boolean {
         return !!this._options.editingConfig.toolbarVisibility;
+    }
+
+    getEditingItemData(): any {
+        return this._editingItemData;
     }
 
     static _theme: string[];
