@@ -424,23 +424,24 @@ var
          return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
+         const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
+         const isSearchViewMode = cfg.viewMode === 'search';
+         const isRootChanged = cfg.root !== this._options.root;
+
          //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
-         if (this._isGoingFront && this._options.hasOwnProperty('root') && cfg.root === this._options.root) {
+         if (this._isGoingFront && this._options.hasOwnProperty('root') && !isRootChanged) {
             this._isGoingFront = false;
          }
 
-         if (
-             cfg.viewMode !== 'search' &&
-             (cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
-             this._pendingViewMode && cfg.viewMode !== this._pendingViewMode)
-         ) {
+         if ((isViewModeChanged && (isSearchViewMode || isRootChanged)) ||
+             this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
             // со старыми записями, а после загрузки новых получим еще одну перерисовку.
             // Вместо этого запомним, какой режим отображения от нас хотят, и проставим
             // его, когда новые записи будут установлены в модель (itemsSetCallback).
             this._pendingViewMode = cfg.viewMode;
-         } else if (cfg.viewMode !== this._viewMode && !this._pendingViewMode) {
+         } else if (isViewModeChanged && !this._pendingViewMode) {
             _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
          }
 
