@@ -301,7 +301,6 @@ BaseLookupView._theme = ['Controls/lookup'];
 
 BaseLookupView.getDefaultOptions = function () {
     return {
-        value: '',
         displayProperty: 'title',
         multiSelect: false,
         maxVisibleItems: 7,

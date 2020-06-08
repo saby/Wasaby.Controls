@@ -296,7 +296,6 @@ var LookupView = BaseLookupView.extend({
 
 LookupView.getDefaultOptions = function() {
    return {
-      value: '',
       displayProperty: 'title',
       multiSelect: false,
       maxVisibleItems: 7
