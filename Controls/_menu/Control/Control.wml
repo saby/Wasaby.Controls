@@ -1,70 +1,73 @@
-<div class="controls-menu"
-     attr:ws-no-focus="true">
-   <ws:if data="{{_applyButtonVisible}}">
-      <div class="controls-DropdownList__applyButton controls-Menu__applyButton_theme-{{_options.theme}}">
-         <Controls.buttons:Button viewMode="functionalButton"
-                                  icon="icon-Yes"
-                                  iconSize="s"
-                                  iconStyle="contrast"
-                                  buttonStyle="success"
-                                  attr:class="controls-Menu__applyButton"
-                                  inlineHeight="menuapply"
-                                  on:click="_applySelection()"/>
-      </div>
-   </ws:if>
-   <Controls.scroll:Container attr:class="controls-ScrollContainer__flex
-                                          controls-Menu__scroll
-                                          controls-DropdownList__scroll
-                                          controls-Menu__scroll_theme-{{_options.theme}}"
-                              topShadowVisibility="hidden"
-                              bottomShadowVisibility="{{_options.footerContentTemplate ? 'auto' : 'hidden'}}">
-   <Controls._menu.Render scope="{{_options}}"
-                             listModel="{{_listModel}}"
-                             on:itemClick="_itemClick()"
-                             on:itemSwipe="_itemSwipe()"
-                             on:itemActionClick="_itemActionClick()"
-                             on:itemMouseEnter="_itemMouseEnter()"
-                             on:checkBoxClick="_checkBoxClick()"
-
-                             on:mouseenter="_mouseEnterHandler()"
-                             on:touchstart="_touchStartHandler()"
-
-                             on:mouseleave="_mouseLeaveHandler()"
-                             on:mousemove="_mouseMove()"
-                             on:separatorMouseEnter="_separatorMouseEnter()"
-                             on:pinClick="_pinClick()">
-      </Controls._menu.Render>
-   </Controls.scroll:Container>
-   <ws:if data="{{_moreButtonVisible || _expandButtonVisible}}">
-      <div class="controls-DropdownList__footer controls-Menu__footer_theme-{{_options.theme}}"
-                  on:mouseenter="_footerMouseEnter()">
-         <ws:if data="{{_moreButtonVisible}}">
-            <div class="controls-Menu__footer-moreButton
-                  {{(_options.multiSelect ? 'controls-Menu__footer_moreButton_multiSelect_theme-' : 'controls-Menu__footer_moreButton_theme-') + _options.theme}}">
-               <Controls.buttons:Button viewMode="link"
-                                        fontColorStyle="menuMore"
-                                        caption="{{_options.moreButtonCaption}}"
-                                        on:click="_openSelectorDialog()"/>
+<Controls.dataSource:error.Container viewConfig="{{_errorConfig}}">
+   <div class="controls-menu" attr:ws-no-focus="true">
+      <ws:if data="{{_listModel}}">
+         <ws:if data="{{_applyButtonVisible}}">
+            <div class="controls-DropdownList__applyButton controls-Menu__applyButton_theme-{{_options.theme}}">
+               <Controls.buttons:Button viewMode="functionalButton"
+                                        icon="icon-Yes"
+                                        iconSize="s"
+                                        iconStyle="contrast"
+                                        buttonStyle="success"
+                                        attr:class="controls-Menu__applyButton"
+                                        inlineHeight="menuapply"
+                                        on:click="_applySelection()"/>
             </div>
          </ws:if>
-         <ws:else data="{{_expandButtonVisible}}">
-            <div class="controls-DropdownList__additional-button
-                        controls-Menu__additional">
-               <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
-                  <ws:partial template="{{content.resolvedTemplate}}"
-                              bind:value="_expander"
-                              on:valueChanged="_toggleExpanded()"/>
-               </Controls.Container.Async>
+         <Controls.scroll:Container attr:class="controls-ScrollContainer__flex
+                                                controls-Menu__scroll
+                                                controls-DropdownList__scroll
+                                                controls-Menu__scroll_theme-{{_options.theme}}"
+                                    topShadowVisibility="hidden"
+                                    bottomShadowVisibility="{{_options.footerContentTemplate ? 'auto' : 'hidden'}}">
+         <Controls._menu.Render scope="{{_options}}"
+                                   listModel="{{_listModel}}"
+                                   on:itemClick="_itemClick()"
+                                   on:itemSwipe="_itemSwipe()"
+                                   on:itemActionClick="_itemActionClick()"
+                                   on:itemMouseEnter="_itemMouseEnter()"
+                                   on:checkBoxClick="_checkBoxClick()"
+
+                                   on:mouseenter="_mouseEnterHandler()"
+                                   on:touchstart="_touchStartHandler()"
+
+                                   on:mouseleave="_mouseLeaveHandler()"
+                                   on:mousemove="_mouseMove()"
+                                   on:separatorMouseEnter="_separatorMouseEnter()"
+                                   on:pinClick="_pinClick()">
+            </Controls._menu.Render>
+         </Controls.scroll:Container>
+         <ws:if data="{{_moreButtonVisible || _expandButtonVisible}}">
+            <div class="controls-DropdownList__footer controls-Menu__footer_theme-{{_options.theme}}"
+                        on:mouseenter="_footerMouseEnter()">
+               <ws:if data="{{_moreButtonVisible}}">
+                  <div class="controls-Menu__footer-moreButton
+                        {{(_options.multiSelect ? 'controls-Menu__footer_moreButton_multiSelect_theme-' : 'controls-Menu__footer_moreButton_theme-') + _options.theme}}">
+                     <Controls.buttons:Button viewMode="link"
+                                              fontColorStyle="menuMore"
+                                              caption="{{_options.moreButtonCaption}}"
+                                              on:click="_openSelectorDialog()"/>
+                  </div>
+               </ws:if>
+               <ws:else data="{{_expandButtonVisible}}">
+                  <div class="controls-DropdownList__additional-button
+                              controls-Menu__additional">
+                     <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
+                        <ws:partial template="{{content.resolvedTemplate}}"
+                                    bind:value="_expander"
+                                    on:valueChanged="_toggleExpanded()"/>
+                     </Controls.Container.Async>
+                  </div>
+               </ws:else>
             </div>
-         </ws:else>
-      </div>
-   </ws:if>
-   <Controls.popup:Sticky name="Sticky"
-                          actionOnScroll="close"
-                          closeOnOutsideClick="{{true}}"
-                          on:showIndicator="_changeIndicatorOverlay()"
-                          on:result="_subMenuResult()"
-                          on:close="_closeSubMenu()"
-                          template="Controls/menu:Popup"
-                          className="controls-DropdownList__subMenu controls-Menu__subMenu controls-Menu__subMenu_margin_theme-{{_options.theme}}"/>
-</div>
+         </ws:if>
+         <Controls.popup:Sticky name="Sticky"
+                                actionOnScroll="close"
+                                closeOnOutsideClick="{{true}}"
+                                on:showIndicator="_changeIndicatorOverlay()"
+                                on:result="_subMenuResult()"
+                                on:close="_closeSubMenu()"
+                                template="Controls/menu:Popup"
+                                className="controls-DropdownList__subMenu controls-Menu__subMenu controls-Menu__subMenu_margin_theme-{{_options.theme}}"/>
+      </ws:if>
+   </div>
+</Controls.dataSource:error.Container>

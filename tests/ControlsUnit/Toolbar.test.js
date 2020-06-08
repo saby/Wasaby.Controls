@@ -382,11 +382,11 @@ define(
                let itemsForMenu = [
                   {
                      id: '1',
-                     buttonIcon: 'myIcon'
+                     icon: 'myIcon'
                   },
                   {
                      id: '2',
-                     buttonIconStyle: 'secondary'
+                     iconStyle: 'secondary'
                   }
                ];
 
@@ -449,6 +449,14 @@ define(
                };
                toolbar._options.source = config.source;
                toolbar._closeHandler();
+            });
+            it('_setMenuItems', async() => {
+               let Toolbar = new toolbars.View(config);
+               await Toolbar._beforeMount(config);
+               Toolbar._setMenuItems();
+               assert.isTrue(Toolbar._menuSource instanceof sourceLib.PrefetchProxy);
+               assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
+               assert.isTrue(Toolbar._menuSource._$data.query instanceof collection.RecordSet);
             });
          });
          function setTrue(assert) {

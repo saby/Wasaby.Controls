@@ -1831,6 +1831,8 @@ const _private = {
  */
 
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _updateShadowModeAfterMount: null,
+
     _updateInProgress: false,
     _groupingLoader: null,
 
@@ -2113,7 +2115,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     updateShadowModeHandler(_: SyntheticEvent<Event>, shadowVisibility: {down: boolean, up: boolean}): void {
         this._shadowVisibility = shadowVisibility;
-        _private.updateShadowMode(this, shadowVisibility);
+        if (this._isMounted) {
+            _private.updateShadowMode(this, shadowVisibility);
+        } else {
+            this._updateShadowModeAfterMount = () => {
+                _private.updateShadowMode(this, shadowVisibility);
+            };
+        }
     },
 
     loadMore(_: SyntheticEvent<Event>, direction: IDirection): void {
@@ -2184,12 +2192,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._options.useNewModel) {
             return import('Controls/listRender').then((listRender) => {
                 this._itemActionsTemplate = listRender.itemActionsTemplate;
+                this._swipeTemplate = listRender.swipeTemplate;
             });
         }
 
         // для связи с контроллером ПМО
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
         this._notifyOnDrawItems();
+        if (this._updateShadowModeAfterMount) {
+            this._updateShadowModeAfterMount();
+            this._updateShadowModeAfterMount = null;
+        }
     },
 
     _beforeUpdate: function(newOptions) {
@@ -2683,7 +2696,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
-            editArrowVisibilityCallback: options.editArrowVisibilityCallback
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback,
+            contextMenuConfig: options.contextMenuConfig
         });
         if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {

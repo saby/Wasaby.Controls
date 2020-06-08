@@ -1,5 +1,6 @@
 import {isEqual} from 'Types/object';
 import {isFullGridSupport} from './GridLayoutUtil';
+import { find } from 'wasaby-cli/store/_repos/saby-ui/UI/_focus/DefaultOpenerFinder';
 
 interface IStickyColumnsParams {
     columns: [];
@@ -20,7 +21,9 @@ export function isSupportLadder(ladderProperties ?: []): boolean {
 export function shouldAddStickyLadderCell(columns, stickyColumn, draggingData): boolean {
     return !!getStickyColumn({ stickyColumn, columns }) && !draggingData;
 }
-
+export function stickyLadderCellsCount(columns, stickyColumn, draggingData): number {
+    return draggingData ? 0 : ( getStickyColumn({ stickyColumn, columns })?.property.length || 0 );
+}
 export function prepareLadder(params: IPrepareLadderParams): {} {
     var
         fIdx, idx, item, prevItem,
@@ -28,10 +31,9 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
         stickyColumn = getStickyColumn(params),
         supportLadder = isSupportLadder(ladderProperties),
         supportSticky = !!stickyColumn,
+        stickyProperties = [],
         ladder = {}, ladderState = {}, stickyLadder = {},
-        stickyLadderState = {
-            ladderLength: 1
-        };
+        stickyLadderState = {};
 
     if (!supportLadder && !stickyColumn) {
         return {};
@@ -66,6 +68,14 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
             };
         }
     }
+    if (supportSticky) {
+        stickyProperties = stickyColumn.property;
+        for (fIdx = 0; fIdx < stickyProperties.length; fIdx++) {
+            stickyLadderState[stickyProperties[fIdx]] = {
+                ladderLength: 1
+            };
+        }
+    }
 
     for (idx = params.stopIndex - 1; idx >= params.startIndex; idx--) {
         item = params.display.at(idx).getContents();
@@ -87,13 +97,16 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
 
         if (supportSticky) {
             stickyLadder[idx] = {};
-            processStickyLadder({
-                itemIndex: idx,
-                value: item.get(stickyColumn.property),
-                prevValue: prevItem ? prevItem.get(stickyColumn.property) : undefined,
-                state: stickyLadderState,
-                ladder: stickyLadder[idx]
-            });
+            for (fIdx = 0; fIdx < stickyProperties.length; fIdx++) {
+                stickyLadder[idx][stickyProperties[fIdx]] = {};
+                processStickyLadder({
+                    itemIndex: idx,
+                    value: item.get(stickyProperties[fIdx]),
+                    prevValue: prevItem ? prevItem.get(stickyProperties[fIdx]) : undefined,
+                    state: stickyLadderState[stickyProperties[fIdx]],
+                    ladder: stickyLadder[idx][stickyProperties[fIdx]]
+                });
+            }      
         }
     }
     return {
@@ -119,6 +132,9 @@ export function getStickyColumn(params: IStickyColumnsParams): object {
                 break;
             }
         }
+    }
+    if (result && !(result.property instanceof Array)) {
+        result.property = [result.property]
     }
     return result;
 }
