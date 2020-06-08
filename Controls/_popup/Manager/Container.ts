@@ -65,6 +65,15 @@ class Container extends Control<IControlOptions> {
         return this._children.pending as Control;
     }
 
+    // todo: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
+    protected _getItems(popupItems: List<IPopupItem>): List<IPopupItem> {
+        const reversePopupList: List<IPopupItem> = new List();
+        popupItems.each((item: IPopupItem) => {
+            reversePopupList.add(item, 0);
+        });
+        return reversePopupList;
+    }
+
     protected _popupDeactivated(event: Event, popupId: string, data: boolean): void {
         this._notify('popupDeactivated', [popupId, data], {bubbling: true});
     }

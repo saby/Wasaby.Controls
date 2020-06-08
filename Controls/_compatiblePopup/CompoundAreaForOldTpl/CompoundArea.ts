@@ -1081,7 +1081,7 @@ var CompoundArea = CompoundContainer.extend([
             popupConfig.modal = visible;
 
             // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
-            Controller.reindex();
+            Controller.getManager()._popupItems._nextVersion();
             Controller.update(id, popupConfig.popupOptions);
          }
 

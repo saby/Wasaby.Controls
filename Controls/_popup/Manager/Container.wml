@@ -1,6 +1,6 @@
 <Controls.Pending name="pending">
     <div class="controls-PopupContainer ws-float-area-stack-panel-overflow" id="popup">
-        <ws:for data="index, item in _popupItems">
+        <ws:for data="index, item in _getItems(_popupItems)">
             <ws:if data="{{index === _overlayId}}">
                 <div class="controls-Container__overlay"
                      on:mousedown="_overlayClickHandler()"
