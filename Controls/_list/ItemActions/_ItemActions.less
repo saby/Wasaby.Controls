@@ -135,6 +135,14 @@
   .icon-size-without-important(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
 }
 
+.controls-itemActionsV__action_icon_size_m_theme-@{themeName} {
+  .icon(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
+}
+
+.controls-itemActionsV__action_icon_size_s_theme-@{themeName} {
+   .icon-with-size(@item_icon-size_editing_itemActions, @item_icon_font-family_editing_itemsActions, @item_icon-size_itemActions);
+}
+
 .controls-itemActionsV__action_title_theme-@{themeName} {
    min-height: @item_caption_min-height_itemActions;
    color: @item_text-color_itemActions;
