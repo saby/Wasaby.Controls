@@ -13,6 +13,7 @@ interface IModuleInfo {
 }
 
 let ManagerWrapperCreatingPromise; // TODO: Compatible
+let isLayerCompatibleLoaded; // TODO: Compatible
 
 export default {
     requireModule(module: string|Control): Promise<Control> {
@@ -58,6 +59,26 @@ export default {
             return moduleClass;
         }
         return module;
+    },
+
+    loadCompatibleLayer(callback: Function): void {
+        const layerCompatibleModuleName: string = 'Lib/Control/LayerCompatible/LayerCompatible';
+        const loadedCallback = () => {
+            isLayerCompatibleLoaded = true;
+            callback();
+        };
+        if (!isLayerCompatibleLoaded) {
+            if (requirejs.defined(layerCompatibleModuleName)) {
+                const Layer = requirejs(layerCompatibleModuleName);
+                Layer.load().addCallback(loadedCallback);
+            } else {
+                requirejs([layerCompatibleModuleName], (Layer) => {
+                    Layer.load().addCallback(loadedCallback);
+                });
+            }
+        } else {
+            loadedCallback();
+        }
     },
 
     getManagerWithCallback(callback: Function): void {

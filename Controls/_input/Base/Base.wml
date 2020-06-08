@@ -1,4 +1,5 @@
 <Controls._input.Render attr:title="{{_tooltip}}"
+                        borderVisibility="{{_options.borderVisibility}}"
                         style="{{_options.style}}"
                         state="{{_renderStyle()}}"
                         viewModel="{{_viewModel}}"

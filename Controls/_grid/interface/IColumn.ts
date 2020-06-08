@@ -55,23 +55,23 @@ export type TCellVerticalAlign = 'top' | 'center' | 'bottom' | 'baseline';
 export type TOverflow = 'ellipsis' | 'none';
 
 /**
- * @typedef {Enum} TRowSeparatorSize
+ * @typedef {Enum} TColumnSeparatorSize
  * @description Ширина линии-разделителя колонок.
  * @variant s Размер тонкой линии-разделителя.
  * @variant null Без линии-разделителя.
  * @default null
  */
-type TRowSeparatorSize = 's' | null;
+type TColumnSeparatorSize = 's' | null;
 
 /**
- * @typedef {Object} TColumnRowSeparatorSize
+ * @typedef {Object} TColumnSeparatorSizeConfig
  * @description Ширина линии-разделителя колонок слева и справа.
- * @property {TRowSeparatorSize} left Ширина линии-разделителя колонок слева.
- * @property {TRowSeparatorSize} right Ширина линии-разделителя колонок справа.
+ * @property {TColumnSeparatorSize} left Ширина линии-разделителя колонок слева.
+ * @property {TColumnSeparatorSize} right Ширина линии-разделителя колонок справа.
  */
-type TColumnRowSeparatorSize = {
-    left?: TRowSeparatorSize;
-    right?: TRowSeparatorSize;
+type TColumnSeparatorSizeConfig = {
+    left?: TColumnSeparatorSize;
+    right?: TColumnSeparatorSize;
 };
 
 /**
@@ -144,7 +144,7 @@ export interface IColumn {
     valign?: TCellVerticalAlign;
     /**
      * @name Controls/grid:IColumn#stickyProperty
-     * @cfg {String} Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы.
+     * @cfg {String | Array} Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы. Чтобы сделать прилипание по двум полям в одной колонке, нужно передать массив из двух строк.
      * @default undefined
      */
     stickyProperty?: string;
@@ -155,14 +155,14 @@ export interface IColumn {
      */
     textOverflow?: TOverflow;
     /**
-     * @name Controls/grid:IColumn#rowSeparatorSize
-     * @cfg {TColumnRowSeparatorSize} Ширина вертикальных разделителей колонок
+     * @name Controls/grid:IColumn#columnSeparatorSize
+     * @cfg {TColumnSeparatorSizeConfig} Ширина вертикальных разделителей колонок
      * @default none
      * @remark
      * Ширину линии разделителя между двумя колонками можно задать на любой из них(левую или правую соответственно).
      * В случае, если одна и таже граница была определена на двух ячейках, приоретет отдается ячейки, для которой эта граница является левой.
-     * Опция {@link https://wi.sbis.ru/docs/js/Controls/grid/IColumn/options/rowSeparatorSize rowSeparatorSize на колонке}
-     * является приорететной по сравнению с опцией {@link https://wi.sbis.ru/docs/js/Controls/grid/View/options/rowSeparatorSize/ rowSeparatorSize на таблице}.
+     * Опция {@link https://wi.sbis.ru/docs/js/Controls/grid/IColumn/options/columnSeparatorSize columnSeparatorSize на колонке}
+     * является приорететной по сравнению с опцией {@link https://wi.sbis.ru/docs/js/Controls/grid/View/options/columnSeparatorSize/ columnSeparatorSize на таблице}.
      * @example
      * Разделитель только медлу первой и второй колонкой.
      * <pre class="brush: js">
@@ -182,7 +182,7 @@ export interface IColumn {
      * </Controls.grid:View>
      * </pre>
      */
-    rowSeparatorSize?: TColumnRowSeparatorSize;
+    columnSeparatorSize?: TColumnSeparatorSizeConfig;
     /**
      * @name Controls/grid:IColumn#cellPadding
      * @cfg {ICellPadding} Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.

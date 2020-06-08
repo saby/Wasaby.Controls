@@ -71,7 +71,11 @@
    background: @readonly_contrast_background-color_searchInput;
 }
 
-.controls-Search__field_theme_@{themeName}_margin {
+.controls-Search__field_theme_@{themeName}_margin-xs {
+   margin: 0 @reset-button_offset-left_searchInput 0 (@padding-left_searchInput - @border-thickness_inputText);
+}
+
+.controls-Search__field_theme_@{themeName}_margin-null {
    margin: 0 @reset-button_offset-left_searchInput 0 (@padding-left_searchInput - @border-thickness_inputText);
 }
 

@@ -359,7 +359,7 @@ var _private = {
 
 /**
  * Базовый класс для текстовых полей ввода.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
@@ -1091,6 +1091,7 @@ Base.getDefaultOptions = function () {
     return {
         tooltip: '',
         style: 'info',
+        horizontalPadding: 'xs',
         size: 'default',
         placeholder: '',
         textAlign: 'left',
@@ -1103,7 +1104,9 @@ Base.getDefaultOptions = function () {
 
 Base.getOptionTypes = function () {
     return {
-
+        horizontalPadding: entity.descriptor(String).oneOf([
+            'xs', 'null'
+        ]),
         value: entity.descriptor(String, null),
         tooltip: entity.descriptor(String),
         /*autoComplete: entity.descriptor(String).oneOf([

@@ -53,7 +53,7 @@ var _private = {
    },
 
    resolveSearchCall: function (self, callback, force) {
-      if (force) {
+      if (force || !self._searchDelay) {
          callback();
       } else {
          _private.callAfterDelay(self, callback);
