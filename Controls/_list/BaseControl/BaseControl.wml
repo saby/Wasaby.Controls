@@ -123,7 +123,7 @@
                     dragNDropControl="{{_children.dragNDropController}}"
                     _needBottomPadding="{{_needBottomPadding}}"
                     listModel="{{_listViewModel}}"
-                    editingItemData="{{_listModel.getEditingItemData()}}"
+                    editingItemData="{{_editingItemData}}"
                     startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
                     isAdd="{{_listViewModel.getEditingItemData() ? _listViewModel.getEditingItemData().isAdd : undefined}}"
                     on:markedKeyChanged="_notifyHandler('markedKeyChanged')"

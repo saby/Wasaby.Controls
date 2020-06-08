@@ -1856,9 +1856,9 @@ const _private = {
                 listViewModel: self._listViewModel,
                 multiSelectVisibility: options.multiSelectVisibility,
                 errorController: self.__errorController,
-                source: self._sourceController,
+                source: self.getSourceController(),
                 useNewModel: options.useNewModel,
-                listView: self,
+                theme: self._options.theme,
                 notify: (name, args, params) => {
                     return self._notify(name, args, params);
                 },
@@ -1877,8 +1877,18 @@ const _private = {
                 }
             });
         }
-    }
+    },
 
+    createEditingData(self: typeof BaseControl, options: any): void {
+        if (self._editInPlace) {
+            self._editInPlace.createEditingData(
+                options.editingConfig,
+                self._listViewModel,
+                options.useNewModel,
+                self.getSourceController()
+            );
+        }
+    }
 
 };
 
@@ -2096,13 +2106,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                         newOptions.dataLoadCallback(self._items);
                     }
 
-                    if (self._editInPlace) {
-                        self._editInPlace.createEditingData(
-                            newOptions.editingConfig,
-                            newOptions.listViewModel || self._listViewModel,
-                            newOptions.useNewModel
-                        );
-                    }
+                    _private.createEditingData(self, newOptions);
 
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                     return;
@@ -2140,13 +2144,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
-                    if (self._editInPlace) {
-                        self._editInPlace.createEditingData(
-                            newOptions.editingConfig,
-                            newOptions.listViewModel || self._listViewModel,
-                            newOptions.useNewModel
-                        );
-                    }
+                    _private.createEditingData(self, newOptions);
+
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
                     // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
@@ -2279,7 +2278,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._listViewModel, this._children.formController);
+            this._editInPlace.registerFormOperation(
+                this._listViewModel,
+                this._children.formController,
+                () => this.isDestroyed()
+            );
+
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
                 this._updateItemActions(this._options);
             }
@@ -2386,6 +2390,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._editInPlace) {
             this._editInPlace.updateEditingData(newOptions);
+            this._editingItemData = this._listViewModel.getEditingItemData();
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -2702,7 +2707,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             return;
         }
         if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, originalEvent);
+            this._editInPlace.beginEditByClick(e, item, originalEvent).then((result) => {
+                if (result && !result.cancelled) {
+                    // После старта редактирования нужно установить фокус на поле ввода, каретку под курсор.
+                    // Старт редактирования может быть асинхронным (если из события beforeBeginEdit вернулся Promise)
+                    // и колбек отстреляет после EditInPlace._afterUpdate.
+                    // Необходимо запустить еще одно обновление, в котором гарантировано будет отрисовано поле ввода.
+                    // Именно в этом обновлении можно проставлять фокус и каретку.
+                    // Не должно и не будет работать в случае, если внутри шаблона редактора поле ввода вставляется
+                    // через Controls.Container.Async.
+                    this._forceUpdate();
+                }
+            });
         }
 
     },

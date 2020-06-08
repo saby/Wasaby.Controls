@@ -10,7 +10,7 @@
              swipeTemplate="{{_options.swipeTemplate}}"
              groupTemplate="{{_groupTemplate}}"
              multiSelectTpl="{{_options.multiSelectTpl}}"
-             editingItemData="{{_listModel.getEditingItemData()}}"
+             editingItemData="{{_editingItemData}}"
              isAdd="{{_options.isAdd}}"
              itemOutputWrapper="{{_itemOutputWrapper}}"
              backgroundStyle="{{_options.backgroundStyle || _options.style}}"
