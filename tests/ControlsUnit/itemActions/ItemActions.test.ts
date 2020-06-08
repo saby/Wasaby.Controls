@@ -151,7 +151,8 @@ describe('Controls/_itemActions/Controller', () => {
             actionCaptionPosition: options ? options.actionCaptionPosition : null,
             editingToolbarVisible: options ? options.editingToolbarVisible : false,
             editArrowAction: options ? options.editArrowAction : false,
-            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null
+            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
+            contextMenuConfig: options ? options.contextMenuConfig: null
         };
     }
 
@@ -548,6 +549,23 @@ describe('Controls/_itemActions/Controller', () => {
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.deepEqual(config.target.getBoundingClientRect(), target.getBoundingClientRect());
         });
+
+        // T3.5. Если в контрол был передан contextMenuConfig, его нужно объединять с templateOptions для Sticky.openPopup(menuConfig)
+        it ('should merge contextMenuConfig with templateOptions for popup config', () => {
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions,
+                theme: 'default',
+                contextMenuConfig: {
+                    iconSize: 's',
+                    groupProperty: 'title'
+                }
+            }));
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.equal(config.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
+            assert.equal(config.templateOptions.headConfig.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
+        })
     });
 
     // см. этот же тест в Collection.test.ts

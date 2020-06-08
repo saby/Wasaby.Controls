@@ -43,6 +43,8 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
+      self._loadItemsPromise = null;
+      self._createMenuSource(error);
    },
 
    prepareFilterForQuery(self, options): object {
@@ -559,36 +561,45 @@ var _Controller = Control.extend({
       return this._loadItemsPromise;
    },
 
-   loadDependencies(): Promise<void> {
+   loadDependencies(): Promise<unknown> {
       const deps = [_private.loadMenuTemplates(this, this._options)];
 
       if (!this._items) {
-         deps.push(this._loadItems());
+         deps.push(this._loadItems().then(() => _private.loadItemsTemplates(this, this._options)));
       }
 
-      return Promise.all(deps).then(() => {
-         return _private.loadItemsTemplates(this, this._options);
-       });
+      return Promise.all(deps);
    },
 
    _open(popupOptions?: object): void {
       if (this._options.readOnly) {
          return;
       }
-      return this.loadDependencies().then( () => {
-         const count = this._items.getCount();
-         if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
-            this._createMenuSource(this._items);
-            this._isOpened = true;
-            StickyOpener.openPopup(_private.getPopupOptions(this, popupOptions)).then((popupId) => {
-               this._popupId = popupId;
-            });
-         } else if (count === 1) {
-            this._notify('selectedItemsChanged', [
-               [this._items.at(0)]
-            ]);
-         }
-      });
+      const openPopup = () => {
+         StickyOpener.openPopup(_private.getPopupOptions(this, popupOptions)).then((popupId) => {
+            this._popupId = popupId;
+         });
+      };
+
+      return this.loadDependencies().then(
+          () => {
+             const count = this._items.getCount();
+             if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
+                this._createMenuSource(this._items);
+                this._isOpened = true;
+                openPopup();
+             } else if (count === 1) {
+                this._notify('selectedItemsChanged', [
+                   [this._items.at(0)]
+                ]);
+             }
+          },
+          () => {
+             if (this._menuSource) {
+                openPopup();
+             }
+          }
+       );
    },
 
    _onSelectorTemplateResult: function(event, selectedItems) {
@@ -646,7 +657,7 @@ var _Controller = Control.extend({
       this._items = items;
    },
 
-   _createMenuSource(items: RecordSet): void {
+   _createMenuSource(items: RecordSet|Error): void {
       this._menuSource = new PrefetchProxy({
          target: this._source,
          data: {

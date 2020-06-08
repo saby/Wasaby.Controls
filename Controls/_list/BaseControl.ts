@@ -2184,6 +2184,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._options.useNewModel) {
             return import('Controls/listRender').then((listRender) => {
                 this._itemActionsTemplate = listRender.itemActionsTemplate;
+                this._swipeTemplate = listRender.swipeTemplate;
             });
         }
 
@@ -2683,7 +2684,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
-            editArrowVisibilityCallback: options.editArrowVisibilityCallback
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback,
+            contextMenuConfig: options.contextMenuConfig
         });
         if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {

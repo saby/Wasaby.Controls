@@ -13,7 +13,7 @@
 
 <ws:template name="cellContent">
     <ws:if data="{{contentTemplate}}">
-        <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}" editArrowTemplate="{{editArrowTemplate}}"/>
+        <ws:partial template="{{contentTemplate}}" stickyProperty="{{stickyProperty}}"  itemData="{{itemData}}" editArrowTemplate="{{editArrowTemplate}}"/>
     </ws:if>
     <ws:else>
         <ws:if data="{{itemData.column.textOverflow}}">

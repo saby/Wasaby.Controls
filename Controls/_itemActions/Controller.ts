@@ -22,6 +22,7 @@ import {
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
 import { Utils } from './Utils';
+import {IContextMenuConfig} from './interface/IContextMenuConfig';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -93,6 +94,10 @@ export interface IItemActionsControllerOptions {
      * Видимость Опция записи, которую необходимо тображать в свайпе, если есть editArrow
      */
     editArrowVisibilityCallback: TEditArrowVisibilityCallback
+    /**
+     * Конфигурация для контекстного меню опции записи.
+     */
+    contextMenuConfig: IContextMenuConfig
 }
 
 /**
@@ -107,6 +112,7 @@ export class Controller {
     private _itemActionVisibilityCallback: TItemActionVisibilityCallback;
     private _editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     private _editArrowAction: IItemAction;
+    private _contextMenuConfig: IContextMenuConfig;
     private _theme: string;
 
     /**
@@ -121,6 +127,7 @@ export class Controller {
         this._theme = options.theme;
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
         this._editArrowAction = options.editArrowAction;
+        this._contextMenuConfig = options.contextMenuConfig;
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
@@ -207,7 +214,6 @@ export class Controller {
         if (!item) {
             return;
         }
-
         const menuActions = this._getMenuActions(item, parentAction);
 
         if (!menuActions || menuActions.length === 0) {
@@ -223,11 +229,9 @@ export class Controller {
         const showHeader = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
         const headConfig = showHeader ? {
             caption: parentAction.title,
-            icon: parentAction.icon
+            icon: parentAction.icon,
+            iconSize: this._contextMenuConfig && this._contextMenuConfig.iconSize
         } : null;
-        // TODO Не реализовано в модели. По факту getContextMenuConfig() сейчас никак не используется
-        // const contextMenuConfig = this._collection.getContextMenuConfig();
-        // ...contextMenuConfig,
         const templateOptions: IMenuTemplateOptions = {
             source,
             keyProperty: 'id',
@@ -235,6 +239,7 @@ export class Controller {
             nodeProperty: 'parent@',
             dropdownClassName: 'controls-itemActionsV__popup',
             closeButtonVisibility: true,
+            ...this._contextMenuConfig,
             root: parentAction && parentAction.id,
             showHeader,
             headConfig

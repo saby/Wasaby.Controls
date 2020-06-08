@@ -237,17 +237,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   },
                   stickyLadder: {
                      0: {
-                        ladderLength: 2,
-                        headingStyle: 'grid-row: span 2'
+                        prop: {
+                           ladderLength: 2,
+                           headingStyle: 'grid-row: span 2'
+                        }
                      },
-                     1: {},
+                     1: {
+                        prop: {}
+                     },
                   }
                };
             assert.equal('LP_', gridMod.GridViewModel._private.calcLadderVersion(onlySimpleLadder, 0));
             assert.equal('LP_', gridMod.GridViewModel._private.calcLadderVersion(onlySimpleLadder, 1));
 
-            assert.equal('LP_SP_2', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 0));
-            assert.equal('LP_SP_0', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 1));
+            assert.equal('LP_SP_2_', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 0));
+            assert.equal('LP_SP_0_', gridMod.GridViewModel._private.calcLadderVersion(withSticky, 1));
 
 
          });
@@ -1019,30 +1023,50 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                9: { date: { } }
             },
             resultStickyLadder = {
-               "0": {
-                  "ladderLength": 3,
-                  "headingStyle": "grid-row: span 3"
+               0: { 
+                  photo: {
+                     ladderLength: 3,
+                     headingStyle: 'grid-row: span 3'
+                  }
                },
-               "1": {},
-               "2": {},
-               "3": {
-                  "ladderLength": 1,
-                  "headingStyle": "grid-row: span 1"
+               1: {
+                  photo: {}
                },
-               "4": {
-                  "ladderLength": 4,
-                  "headingStyle": "grid-row: span 4"
+               2: {
+                  photo: {}
                },
-               "5": {},
-               "6": {},
-               "7": {},
-               "8": {
-                  "ladderLength": 1,
-                  "headingStyle": "grid-row: span 1"
+               3: {
+                  photo: {
+                     ladderLength: 1,
+                     headingStyle: 'grid-row: span 1'
+                  }
                },
-               "9": {
-                  "ladderLength": 1,
-                  "headingStyle": "grid-row: span 1"
+               4: {
+                  photo: {
+                     ladderLength: 4,
+                     headingStyle: 'grid-row: span 4'
+                  }
+               },
+               5: {
+                  photo: {}
+               },
+               6: {
+                  photo: {}
+               },
+               7: {
+                  photo: {}
+               },
+               8: {
+                  photo: {
+                     ladderLength: 1,
+                     headingStyle: 'grid-row: span 1'
+                  }
+               },
+               9: {
+                  photo: {
+                     ladderLength: 1,
+                     headingStyle: 'grid-row: span 1'
+                  }
                }
             },
             ladderViewModel = new gridMod.GridViewModel({
@@ -1084,11 +1108,17 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             },
             newResultStickyLadder = {
                "0": {
-                  "ladderLength": 3,
-                  "headingStyle": "grid-row: span 3"
+                  photo: {
+                     "ladderLength": 3,
+                     "headingStyle": "grid-row: span 3"
+                  }
                },
-               "1": {},
-               "2": {}
+               "1": {
+                  photo: {}
+               },
+               "2": {
+                  photo: {}
+               }
             };
 
          ladderViewModel.setItems(newItems);
@@ -1228,13 +1258,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ladderViewModel._model._curIndex = 0;
             let current = ladderViewModel.getCurrent();
 
-            assert.isUndefined(current.styleLadderHeading, 'shouldn\'t assign ladder');
+            assert.isUndefined(current.stickyLadder, 'shouldn\'t assign ladder');
 
             
             ladderViewModel._model._curIndex = 2;
             current = ladderViewModel.getCurrent();
 
-            assert.isOk(current.styleLadderHeading, 'should assign ladder');
+            assert.isOk(current.stickyLadder, 'should assign ladder');
          });
          it('prepareLadder should reset cache of updated items', function () {
             const date1 = new Date(2017, 0, 1);
@@ -2091,12 +2121,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridModel._ladder = {
                stickyLadder: [
                   {
-                     headingStyle: '123'
+                     prop: {
+                        headingStyle: '123'
+                     }
                   }
                ]
             };
 
-            assert.equal(gridModel.getCurrent().styleLadderHeading, '123');
+            assert.equal(gridModel.getCurrent().stickyLadder.prop.headingStyle, '123');
          });
       });
 
