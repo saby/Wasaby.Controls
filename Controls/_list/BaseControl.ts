@@ -1887,6 +1887,7 @@ const _private = {
                 options.useNewModel,
                 self.getSourceController()
             );
+            self._editingItemData = self._listViewModel.getEditingItemData();
         }
     }
 

@@ -125,7 +125,7 @@
                     listModel="{{_listViewModel}}"
                     editingItemData="{{_editingItemData}}"
                     startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
-                    isAdd="{{_listViewModel.getEditingItemData() ? _listViewModel.getEditingItemData().isAdd : undefined}}"
+                    isAdd="{{_editingItemData ? _editingItemData.isAdd : undefined}}"
                     on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
                     on:itemClick="_onItemClick()"
                     on:groupClick="_onGroupClick()"
