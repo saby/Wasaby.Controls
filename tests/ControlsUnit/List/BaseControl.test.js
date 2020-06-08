@@ -1710,7 +1710,8 @@ define([
             _listViewModel: {
                getCount() { return this.count },
                count: 0
-            }
+            },
+            _isMounted: true
          };
 
          it('notifies with bubbling', () => {
@@ -6482,10 +6483,10 @@ define([
                   target: {},
                   nativeEvent: {}
                };
-               const event = { 
-                  stopPropagation: () => {} 
+               const event = {
+                  stopPropagation: () => {}
                };
-               const dragEvent = { 
+               const dragEvent = {
                   stopPropagation: () => {}
                };
                const dragObject = {
