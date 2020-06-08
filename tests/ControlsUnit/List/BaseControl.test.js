@@ -310,7 +310,9 @@ define([
       // поэтому приходится вычислять видны ли они на экране
       it('should recalculate triggers visibility when current up and down are not set or false', () => {
          const self = {
-            _options: {},
+            _options: {
+               recalculateTriggersVisibility: true
+            },
             _loadTriggerVisibility: {
                up: false,
                down: false

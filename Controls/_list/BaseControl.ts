@@ -680,17 +680,25 @@ var _private = {
             return;
         }
         if (self._needScrollCalculation) {
-            const scrollParams = {
-                clientHeight: self._viewPortSize,
-                scrollHeight: self._viewSize,
-                scrollTop: self._scrollTop
-            };
+            let triggerVisibilityUp;
+            let triggerVisibilityDown;
 
-            // Состояние триггеров не всегда соответствует действительности, приходится считать самим
-            let triggerVisibilityUp = self._loadTriggerVisibility.up || 
-                        _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetTop, 'up');
-            let triggerVisibilityDown = self._loadTriggerVisibility.down || 
-                        _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');
+            if (this._options.recalculateTriggersVisibility) {
+                const scrollParams = {
+                    clientHeight: self._viewPortSize,
+                    scrollHeight: self._viewSize,
+                    scrollTop: self._scrollTop
+                };
+
+                // Состояние триггеров не всегда соответствует действительности, приходится считать самим
+                triggerVisibilityUp = self._loadTriggerVisibility.up ||
+                    _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetTop, 'up');
+                triggerVisibilityDown = self._loadTriggerVisibility.down ||
+                    _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');
+            } else {
+                triggerVisibilityUp = self._loadTriggerVisibility.up;
+                triggerVisibilityDown = self._loadTriggerVisibility.down;
+            }
 
             // TODO Когда список становится пустым (например после поиска или смены фильтра),
             // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
@@ -3102,7 +3110,8 @@ BaseControl.getDefaultOptions = function() {
         markedKey: null,
         stickyHeader: true,
         virtualScrollMode: 'remove',
-        filter: {}
+        filter: {},
+        recalculateTriggersVisibility: false
     };
 };
 export = BaseControl;
