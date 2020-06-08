@@ -18,6 +18,9 @@ export type IPointDataList = IPointData[];
 const maxPercentValue = 100;
 const stepDenominator = 2;
 export default {
+    _defaultScaleFormatter(value: number): number {
+        return  value;
+    },
     getRatio(pos: number, left: number, width: number): number {
         return (pos - left) / width;
     },
@@ -34,15 +37,17 @@ export default {
             Logger.error('Slider: scaleStep must positive.');
         }
     },
-    getScaleData(minValue: number, maxValue: number, scaleStep: number): IScaleData[] {
+    getScaleData(minValue: number, maxValue: number, scaleStep: number, labelFormatter?: Function): IScaleData[] {
         const scaleData: IScaleData[] = [];
+        const formatter = labelFormatter ? labelFormatter : this._defaultScaleFormatter;
+
         if (scaleStep > 0) {
             const scaleRange = maxValue - minValue;
-            scaleData.push({value: minValue, position: 0});
+            scaleData.push({value: formatter(minValue), position: 0});
             for (let i = minValue + scaleStep; i <= maxValue - scaleStep / stepDenominator; i += scaleStep) {
-                scaleData.push({value: i, position: (i - minValue) / scaleRange * maxPercentValue});
+                scaleData.push({value: formatter(i), position: (i - minValue) / scaleRange * maxPercentValue});
             }
-            scaleData.push({value: maxValue, position: 100});
+            scaleData.push({value: formatter(maxValue), position: 100});
         }
         return scaleData;
     },
