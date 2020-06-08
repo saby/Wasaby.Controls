@@ -2708,7 +2708,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             return;
         }
         if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, originalEvent)ж
+            this._editInPlace.beginEditByClick(e, item, originalEvent);
         }
 
     },
