@@ -36,6 +36,7 @@
          <ws:partial template="{{currentColumn.template}}"
                      editArrowTemplate="{{editArrowTemplate}}"
                      ladderWrapper="{{currentColumn.ladderWrapper}}"
+                     stickyProperty="{{stickyProperty}}" 
                      attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                      {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}
                      {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}"
@@ -47,17 +48,38 @@
       <ws:partial template="itemActionsTemplateChooser"/>
    </ws:if>
 </ws:template>
+
+<ws:template name="ladderStickyHeader">
+   <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{'transparent'}}"
+                                 shadowVisibility="hidden"
+                                 mode="replaceable">
+      <ws:partial template="columnContent" currentColumn="{{currentColumn}}" ladderWrapperClass="controls-Grid__cell-content-wrapper_ladder" stickyProperty="{{stickyProperty}}" attr:class="{{itemData.getClassesLadderHeading(currentColumn, _options.theme)}}"/>
+   </Controls.scroll:StickyHeader>
+</ws:template>
+
 <ws:template name="stickyLadderTpl">
-   <ws:if data="{{itemData.styleLadderHeading && currentColumn.hiddenForLadder}}">
+   <ws:if data="{{itemData.stickyLadder[stickyProperty].headingStyle && currentColumn.hiddenForLadder}}">
       <div attr:class="controls-Grid__row-ladder-cell {{!!itemData.isActive() ? ' controls-GridView__item_active_theme-' + _options.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + _options.theme}} js-controls-SwipeControl__actionsContainer"
-           attr:key="{{itemData.key + '_sticky_ladder'}}"
-           attr:style="{{itemData.styleLadderHeading}}">
-         <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{backgroundStyle}}"
-                                       shadowVisibility="hidden"
-                                       mode="replaceable">
-            <ws:partial template="columnContent" currentColumn="{{currentColumn}}" attr:class="{{itemData.getClassesLadderHeading(currentColumn, _options.theme)}}"/>
-         </Controls.scroll:StickyHeader>
+           attr:key="{{itemData.key + stickyProperty + '_sticky_ladder'}}"
+           attr:style="{{itemData.stickyLadder[stickyProperty].headingStyle}}">
+         
+         <ws:if data="{{itemData.stickyProperties[index]}}">
+            <ws:if data="{{index === 1}}">
+               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -125px;">
+                  <ws:partial template="ladderStickyHeader" attr:class="{{itemData.getAdditionalLadderClasses()}}" attr:style="z-index: 1" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
+               </div>
+            </ws:if>
+            <ws:else>
+               <ws:partial template="ladderStickyHeader"  attr:style="z-index: 2" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
+            </ws:else>
+         </ws:if>
       </div>
+   </ws:if>
+</ws:template>
+
+<ws:template name="stickyLadderByIndex">
+   <ws:if data="{{itemData.stickyProperties[index]}}">
+      <ws:partial template="stickyLadderTpl" currentColumn="{{currentColumn}}" index="{{index}}" stickyProperty="{{itemData.stickyProperties[index]}}"/>
    </ws:if>
 </ws:template>
 <ws:template name="columnContentWrapper">
@@ -65,11 +87,11 @@
       <div attr:class="{{itemData.getMarkerClasses()}}"></div>
    </ws:if>
    <ws:partial template="columnContent"
-               attr:class="{{currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
-                           {{itemData.styleLadderHeading ? 'controls-Grid__row-cell__content_ladderHeader'}}"/>
+               attr:class="{{currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder_theme-' + _options.theme}}
+                           {{itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}"/>
 </ws:template>
 <ws:template name="colTpl">
-   <ws:partial template="stickyLadderTpl" currentColumn="{{currentColumn}}"/>
+   <ws:partial template="stickyLadderByIndex" currentColumn="{{currentColumn}}" index="{{0}}"/>
    <ws:if data="{{ itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan) && itemData.itemActionsDrawPosition === 'before' }}">
       <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.gridCellStyles}}"/>
    </ws:if>
@@ -87,6 +109,7 @@
          <ws:partial template="columnContentWrapper"/>
       </div>
    </ws:else>
+   <ws:partial template="stickyLadderByIndex" currentColumn="{{currentColumn}}" index="{{1}}"/>
    <ws:if data="{{ itemData.columnScroll && itemData.itemActionsDrawPosition === 'after' }}">
       <ws:if data="{{ itemData.isDrawActions(itemData, currentColumn, colspan) }}">
          <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.itemActionsGridCellStyles}}"/>

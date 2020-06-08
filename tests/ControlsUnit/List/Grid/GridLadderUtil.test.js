@@ -8,12 +8,12 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
       });
       it('getStickyColumn', function() {
          assert.deepEqual(Util.getStickyColumn({}), undefined);
-         assert.deepEqual(Util.getStickyColumn({ stickyColumn: { index: 1, property: 'sticky' } }), { index: 1, property: 'sticky' });
-         assert.deepEqual(Util.getStickyColumn({ stickyColumn: { index: 1, property: 'sticky' }, columns: [] }), { index: 1, property: 'sticky' });
-         assert.deepEqual(Util.getStickyColumn({ stickyColumn: { index: 1, property: 'sticky' }, columns: [{ title: 'photo' }] }), { index: 1, property: 'sticky' });
-         assert.deepEqual(Util.getStickyColumn({ stickyColumn: { index: 1, property: 'sticky' }, columns: [{ title: 'photo', stickyProperty: 'photo' }] }), { index: 1, property: 'sticky' });
-         assert.deepEqual(Util.getStickyColumn({ columns: [{ title: 'photo', stickyProperty: 'photo' }] }), { index: 0, property: 'photo' });
-         assert.deepEqual(Util.getStickyColumn({ columns: [{ title: 'title' }, { title: 'photo', stickyProperty: 'photo' }] }), { index: 1, property: 'photo' });
+         assert.deepEqual(Util.getStickyColumn({ stickyColumn: { index: 1, property: 'sticky' } }), { index: 1, property: ['sticky'] });
+         assert.deepEqual(Util.getStickyColumn({ stickyColumn: { index: 1, property: 'sticky' }, columns: [] }), { index: 1, property: ['sticky']});
+         assert.deepEqual(Util.getStickyColumn({ stickyColumn: { index: 1, property: 'sticky' }, columns: [{ title: 'photo' }] }), { index: 1, property: ['sticky'] });
+         assert.deepEqual(Util.getStickyColumn({ stickyColumn: { index: 1, property: 'sticky' }, columns: [{ title: 'photo', stickyProperty: 'photo' }] }), { index: 1, property: ['sticky'] });
+         assert.deepEqual(Util.getStickyColumn({ columns: [{ title: 'photo', stickyProperty: 'photo' }] }), { index: 0, property: ['photo'] });
+         assert.deepEqual(Util.getStickyColumn({ columns: [{ title: 'title' }, { title: 'photo', stickyProperty: 'photo' }] }), { index: 1, property: ['photo'] });
       });
       it('shouldAddStickyLadderCell', function() {
          assert.isFalse(Util.shouldAddStickyLadderCell());
@@ -65,30 +65,50 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
             9: { date: { } }
          };
          const resultStickyLadder = {
-            0: {
-               ladderLength: 3,
-               headingStyle: 'grid-row: span 3'
+            0: { 
+               photo: {
+                  ladderLength: 3,
+                  headingStyle: 'grid-row: span 3'
+               }
             },
-            1: {},
-            2: {},
+            1: {
+               photo: {}
+            },
+            2: {
+               photo: {}
+            },
             3: {
-               ladderLength: 1,
-               headingStyle: 'grid-row: span 1'
+               photo: {
+                  ladderLength: 1,
+                  headingStyle: 'grid-row: span 1'
+               }
             },
             4: {
-               ladderLength: 4,
-               headingStyle: 'grid-row: span 4'
+               photo: {
+                  ladderLength: 4,
+                  headingStyle: 'grid-row: span 4'
+               }
             },
-            5: {},
-            6: {},
-            7: {},
+            5: {
+               photo: {}
+            },
+            6: {
+               photo: {}
+            },
+            7: {
+               photo: {}
+            },
             8: {
-               ladderLength: 1,
-               headingStyle: 'grid-row: span 1'
+               photo: {
+                  ladderLength: 1,
+                  headingStyle: 'grid-row: span 1'
+               }
             },
             9: {
-               ladderLength: 1,
-               headingStyle: 'grid-row: span 1'
+               photo: {
+                  ladderLength: 1,
+                  headingStyle: 'grid-row: span 1'
+               }
             }
          };
          const ladder = Util.prepareLadder({

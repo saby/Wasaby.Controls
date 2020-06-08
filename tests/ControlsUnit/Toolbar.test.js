@@ -382,11 +382,11 @@ define(
                let itemsForMenu = [
                   {
                      id: '1',
-                     buttonIcon: 'myIcon'
+                     icon: 'myIcon'
                   },
                   {
                      id: '2',
-                     buttonIconStyle: 'secondary'
+                     iconStyle: 'secondary'
                   }
                ];
 
