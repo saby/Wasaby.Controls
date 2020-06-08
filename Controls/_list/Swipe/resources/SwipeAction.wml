@@ -8,7 +8,7 @@
             {{((action.iconStyle ? action.iconStyle : 'secondary') !== 'secondary') ?
             ('controls-icon_style-' + action.iconStyle) : ('controls-Swipe__action_iconStyle_secondary')}}_theme-{{theme}}">
    <ws:if data="{{needIcon(action, actionCaptionPosition, hasActionWithIcon)}}">
-      <i class="{{action.icon}} controls-icon controls-icon_size-{{itemActionsSize}}_theme-{{theme}} controls-Swipe__action_icon_size_m controls-Swipe__action_icon_swipe"/>
+      <i class="{{action.icon}} controls-icon controls-icon_size-{{itemActionsSize}}_theme-{{theme}} controls-Swipe__action_icon controls-Swipe__action_icon_swipe"/>
    </ws:if>
    <ws:if data="{{needTitle(action, actionCaptionPosition)}}">
         <span class="controls-Swipe__action_title_theme-{{theme}}
