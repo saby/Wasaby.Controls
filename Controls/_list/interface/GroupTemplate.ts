@@ -14,7 +14,7 @@
  *          separatorVisibility="{{ false }}"
  *          expanderVisible="{{ false }}"
  *          textAlign="left"
- *          fontSize="m"
+ *          fontSize="xs"
  *          scope="{{groupTemplate}}">
  *          <ws:contentTemplate>
  *             <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>

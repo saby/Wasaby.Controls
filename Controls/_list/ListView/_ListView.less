@@ -203,7 +203,6 @@
    > .controls-itemActionsV,
    .controls-itemActionsV_custom_theme-@{themeName} {
       opacity: 1;
-      visibility: visible;
    }
 }
 
@@ -266,6 +265,10 @@
 
 .controls-ListView__groupSeparator-right_theme-@{themeName} {
    margin-left: @grouping_expander_padding-right_list;
+}
+
+.controls-ListView__groupContent-text_default_theme-@{themeName} {
+   font-size: @grouping_expander_font-size_list;
 }
 
 .controls-ListView__groupContent-text_theme-@{themeName} {
