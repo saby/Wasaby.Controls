@@ -10,6 +10,7 @@ export interface IArrowButtonOptions {
  *
  * @interface Controls/_buttons/interface/IArrowButton
  * @public
+ * @author Красильников А.С.
  */
 
 export default interface IArrowButton {
