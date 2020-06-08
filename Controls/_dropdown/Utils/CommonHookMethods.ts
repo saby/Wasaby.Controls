@@ -1,6 +1,6 @@
 import isEmpty = require('Core/helpers/Object/isEmpty');
 
-function _beforeMountMethod(self, options, recievedState):void {
+function beforeMountMethod(self, options, recievedState): void {
     if (!options.lazyItemsLoading) {
         if (!recievedState || isEmpty(recievedState)) {
             return self._controller.loadItemsOnMount();
@@ -10,6 +10,12 @@ function _beforeMountMethod(self, options, recievedState):void {
     }
 }
 
-export {
-    _beforeMountMethod
+function afterMountMethod(self): void {
+    self._controller.setMenuPopupTarget(self._container);
+    self._controller.registerScrollEvent(self);
 }
+
+export {
+    beforeMountMethod,
+    afterMountMethod
+};

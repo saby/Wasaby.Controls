@@ -14,6 +14,8 @@ import {RecordSet} from 'Types/collection';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+import {SyntheticEvent} from "Vdom/Vdom";
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
@@ -129,7 +131,7 @@ var _private = {
          }
       };
 
-      if (!selectedKeys.length || selectedKeys[0] === null) {
+      if (!selectedKeys || !selectedKeys.length || selectedKeys[0] === null) {
          if (emptyText) {
             selectedItems.push(null);
          } else {
@@ -330,7 +332,7 @@ var _private = {
          // FIXME self._container[0] delete after
          // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
          width: self._options.width !== undefined ?
-             (self.container[0] || self.container).offsetWidth :
+             (self.target[0] || self.target).offsetWidth :
              undefined,
          hasMoreButton: self._sourceController.hasMoreData('down'),
          selectorOpener: StackOpener,
@@ -342,7 +344,7 @@ var _private = {
          className: self._options.popupClassName,
          template: 'Controls/menu:Popup',
          actionOnScroll: 'close',
-         target: self.container,
+         target: self.target,
          targetPoint: self._options.targetPoint,
          opener: self,
          fittingMode: {
@@ -499,6 +501,15 @@ var _Controller = Control.extend({
       });
    },
 
+   registerScrollEvent(parentControl): void {
+      this.parentControl = parentControl;
+      RegisterUtil(parentControl, 'scroll', this.handleScroll.bind(this));
+   },
+
+   setMenuPopupTarget(target): void {
+      this.target = target;
+   },
+
    update: function (newOptions) {
       this._options.width = newOptions.width;
       this._options.targetPoint = newOptions.targetPoint;
@@ -538,7 +549,7 @@ var _Controller = Control.extend({
       }
    },
 
-   _keyDown: function(event) {
+   handleKeyDown: function(event) {
       if (event.nativeEvent.keyCode === Env.constants.key.esc && this._popupId) {
          _private.closeDropdownList(this);
          event.stopPropagation();
@@ -593,7 +604,13 @@ var _Controller = Control.extend({
       this._onResult(this,'selectorResult', result);
    },
 
-   _mouseDownHandler(): void {
+   handleScroll: function() {
+      if (this._popupId) {
+         _private.closeDropdownList(this);
+      }
+   },
+
+   handleMouseDownOnMenuPopupTarget(): void {
       if (this._popupId) {
          _private.closeDropdownList(this);
       } else {
@@ -601,21 +618,22 @@ var _Controller = Control.extend({
       }
    },
 
-   _mouseEnterHandler: function() {
+   handleMouseEnterOnMenuPopupTarget: function() {
       this._loadDependenciesTimer = setTimeout(this.loadDependencies.bind(this), PRELOAD_DEPENDENCIES_HOVER_DELAY);
    },
 
-   _mouseLeaveHandler: function() {
+   handleMouseLeaveMenuPopupTarget: function() {
       clearTimeout(this._loadDependenciesTimer);
    },
 
-   _beforeUnmount: function() {
+   destroy: function() {
       if (this._sourceController) {
          this._sourceController.cancelLoading();
          this._sourceController = null;
       }
       this._setItems(null);
       _private.closeDropdownList(this);
+      UnregisterUtil(this.parentControl, 'scroll');
    },
 
    _getEmptyText: function () {

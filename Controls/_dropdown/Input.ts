@@ -7,8 +7,7 @@ import Utils = require('Types/util');
 import chain = require('Types/chain');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import {isEqual} from 'Types/object';
-import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-import {_beforeMountMethod} from 'Controls/_dropdown/Utils/CommonHookMethods';
+import {beforeMountMethod, afterMountMethod} from 'Controls/_dropdown/Utils/CommonHookMethods';
 import {SyntheticEvent} from "Vdom/Vdom";
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -298,7 +297,7 @@ var Input = Control.extend({
          }
       });
 
-      return _beforeMountMethod(this, options, recievedState);
+      return beforeMountMethod(this, options, recievedState);
    },
 
    _afterMount: function (options) {
@@ -307,8 +306,7 @@ var Input = Control.extend({
       if (options.showHeader && options.caption !== this._text) {
          this._forceUpdate();
       }
-      RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
-      this._controller.container = this._container;
+      afterMountMethod(this);
    },
 
    _beforeUpdate: function (options) {
@@ -350,9 +348,6 @@ var Input = Control.extend({
       }
    },
 
-   // Делаем через событие deactivated на Controller'e,
-   // т.к в Controller передается просто шаблон, а не контрол, который не обладает состоянием активности,
-   // и подписка на _deactivated на это шаблоне работать не будет
    _deactivated: function() {
       this.closeMenu();
    },
@@ -365,38 +360,32 @@ var Input = Control.extend({
       this._controller.closeMenu();
    },
 
-   _scrollHandler(): void {
-      if (this._controller._popupId) {
-         this.closeMenu();
-      }
-   },
-
    _handleClick(event: SyntheticEvent): void {
       // stop bubbling event, so the list does not handle click event.
       event.stopPropagation();
    },
 
    _handleMouseDown(event: SyntheticEvent): void {
-      this._controller._mouseDownHandler();
+      this._controller.handleMouseDownOnMenuPopupTarget();
    },
 
    _handleMouseEnter(event: SyntheticEvent): void {
-      this._controller._mouseEnterHandler();
+      this._controller.handleMouseEnterOnMenuPopupTarget();
    },
 
    _handleMouseLeave(event: SyntheticEvent): void {
-      this._controller._mouseLeaveHandler();
+      this._controller.handleMouseLeaveMenuPopupTarget();
    },
 
    _handleKeyDown(event: SyntheticEvent): void {
-      this._controller._keyDown(event);
+      this._controller.handleKeyDown(event);
    },
 
    _beforeUnmount(): void {
-      UnregisterUtil(this, 'scroll');
+      this._controller.destroy();
    },
 
-   _notifyInputEvent: function(eventName, data, additionData) {
+   _notifyInputEvent(eventName, data, additionData) {
       return this._notify(eventName, [data, additionData]);
    }
 });

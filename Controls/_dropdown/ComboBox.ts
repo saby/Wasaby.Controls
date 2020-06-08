@@ -4,8 +4,7 @@ import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
 import Utils = require('Types/util');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-import {_beforeMountMethod} from 'Controls/_dropdown/Utils/CommonHookMethods';
+import {afterMountMethod, beforeMountMethod} from 'Controls/_dropdown/Utils/CommonHookMethods';
 import _Controller = require('Controls/_dropdown/_Controller');
 import {SyntheticEvent} from "Vdom/Vdom";
 
@@ -118,7 +117,7 @@ var ComboBox = Control.extend({
          }
       });
 
-      return _beforeMountMethod(this, options, recievedState);
+      return beforeMountMethod(this, options, recievedState);
    },
 
    _afterMount: function () {
@@ -127,8 +126,7 @@ var ComboBox = Control.extend({
       };
       this._width = _private.getContainerNode(this._container).offsetWidth;
       this._forceUpdate();
-      RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
-      this._controller.container = this._container;
+      afterMountMethod(this);
    },
 
    _beforeUpdate: function (options) {
@@ -176,10 +174,8 @@ var ComboBox = Control.extend({
       this._children.controller.closeMenu();
    },
 
-   _scrollHandler(): void {
-      if (this._controller._popupId) {
-         this.closeMenu();
-      }
+   _notifyComboboxEvent: function(eventName, data, additionData) {
+      return this._notify(eventName, [data, additionData]);
    },
 
    _handleClick(event: SyntheticEvent): void {
@@ -188,29 +184,24 @@ var ComboBox = Control.extend({
    },
 
    _handleMouseDown(event: SyntheticEvent): void {
-      this._controller._mouseDownHandler();
+      this._controller.handleMouseDownOnMenuPopupTarget();
    },
 
    _handleMouseEnter(event: SyntheticEvent): void {
-      this._controller._mouseEnterHandler();
+      this._controller.handleMouseEnterOnMenuPopupTarget();
    },
 
    _handleMouseLeave(event: SyntheticEvent): void {
-      this._controller._mouseLeaveHandler();
+      this._controller.handleMouseLeaveMenuPopupTarget();
    },
 
    _handleKeyDown(event: SyntheticEvent): void {
-      this._controller._keyDown(event);
+      this._controller.handleKeyDown(event);
    },
 
    _beforeUnmount(): void {
-      UnregisterUtil(this, 'scroll');
-   },
-
-   _notifyComboboxEvent: function(eventName, data, additionData) {
-      return this._notify(eventName, [data, additionData]);
+      this._controller.destroy();
    }
-
 });
 
 ComboBox.getDefaultOptions = function () {
