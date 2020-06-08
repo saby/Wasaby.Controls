@@ -143,9 +143,10 @@ define([
       });
 
       it('_changeValueHandler', function() {
-         var
-            newValue = [],
-            lookup = new Lookup();
+         const lookup = new Lookup();
+         let newValue = [];
+
+         lookup.saveOptions(Lookup.getDefaultOptions());
 
          lookup._notify = function(event, value) {
             if (event === 'valueChanged') {
@@ -154,6 +155,7 @@ define([
          };
          lookup._changeValueHandler(null, 1);
          assert.deepEqual(newValue, [1]);
+         assert.equal(lookup._inputValue, 1);
       });
 
       it('_choose', function() {

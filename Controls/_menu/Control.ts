@@ -21,6 +21,7 @@ import {view as constView} from 'Controls/Constants';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {TouchContextField} from 'Controls/context';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 /**
  * Контрол меню.
@@ -70,6 +71,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _enterEvent: MouseEvent;
     private _subMenuPosition: DOMRect;
     private _openSubMenuEvent: MouseEvent;
+    private _errorController: dataSourceError.Controller;
+    private _errorConfig: dataSourceError.ViewConfig|void;
 
     protected _beforeMount(options: IMenuControlOptions,
                            context?: object,
@@ -115,8 +118,14 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             this._sourceController.cancelLoading();
             this._sourceController = null;
         }
-        this._listModel.destroy();
-        this._listModel = null;
+        if (this._listModel) {
+            this._listModel.destroy();
+            this._listModel = null;
+        }
+        if (this._errorController) {
+            this._errorController.destroy();
+            this._errorController = null;
+        }
     }
 
     protected _mouseEnterHandler(): void {
@@ -570,7 +579,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private getSourceController(
-        {source, navigation, keyProperty}: {source: ICrudPlus, navigation?: object, keyProperty: string}): SourceController {
+        {source, navigation, keyProperty}: IMenuControlOptions): SourceController {
         if (!this._sourceController) {
             this._sourceController = new SourceController({
                 source,
@@ -595,16 +604,19 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private loadItems(options: IMenuControlOptions): Deferred<RecordSet> {
         const filter = Clone(options.filter) || {};
         filter[options.parentProperty] = options.root;
-        return this.getSourceController(options).load(filter).addCallback((items) => {
-            if (options.dataLoadCallback) {
-                options.dataLoadCallback(items);
-            }
-            this.createViewModel(items, options);
-            this._moreButtonVisible = options.selectorTemplate &&
-                this.getSourceController(options).hasMoreData('down');
-            this._expandButtonVisible = this.isExpandButtonVisible(items, options.additionalProperty, options.root);
-            return items;
-        });
+        return this.getSourceController(options).load(filter).then(
+            (items) => {
+                if (options.dataLoadCallback) {
+                    options.dataLoadCallback(items);
+                }
+                this.createViewModel(items, options);
+                this._moreButtonVisible = options.selectorTemplate &&
+                    this.getSourceController(options).hasMoreData('down');
+                this._expandButtonVisible = this.isExpandButtonVisible(items, options.additionalProperty, options.root);
+                return items;
+            },
+            (error) => this._processError(error)
+        );
     }
 
     private isExpandButtonVisible(items: RecordSet, additionalProperty: string, root: string|number|null): boolean {
@@ -721,6 +733,31 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             item.setSelected(state, true);
             collection.nextVersion();
         }
+    }
+
+    private _processError(error: Error): Promise<dataSourceError.ViewConfig|void> {
+        return this._getErrorController().process({
+            error,
+            theme: this._options.theme,
+            mode: dataSourceError.Mode.include
+        }).then((errorConfig) => {
+            if (errorConfig) {
+                errorConfig.options.size = 'medium';
+            }
+            this._showError(errorConfig);
+            return errorConfig;
+        });
+    }
+
+    private _showError(error: dataSourceError.ViewConfig|void): void {
+        this._errorConfig = error;
+    }
+
+    private _getErrorController(): dataSourceError.Controller {
+        if (!this._errorController) {
+            this._errorController = new dataSourceError.Controller({});
+        }
+        return this._errorController;
     }
 
     static _theme: string[] = ['Controls/menu'];

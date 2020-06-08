@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {List} from 'Types/collection';
 import {IPopupItem} from 'Controls/_popup/interface/IPopup';
+import {dispatcherHandler} from 'UI/HotKeys';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import template = require('wml!Controls/_popup/Manager/Container');
 
@@ -72,6 +73,10 @@ class Container extends Control<IControlOptions> {
             reversePopupList.add(item, 0);
         });
         return reversePopupList;
+    }
+
+    protected _keyDownHandler(event: Event): void {
+        return dispatcherHandler(event);
     }
 
     protected _popupDeactivated(event: Event, popupId: string, data: boolean): void {

@@ -4,10 +4,13 @@ import IArrowButton from 'Controls/_buttons/interfaces/IArrowButton';
 /**
  * Графический контрол в виде стрелки, который предоставляет пользователю возможность простого запуска события при
  * нажатии на него.
- * @class Controls/_buttons/interface/ArrowButton
+ * @class Controls/_buttons/ArrowButton
  * @extends Core/Control
+ * @mixes Controls/_buttons/interface/IArrowButton
  * @control
  * @public
+ * @author Красильников А.С.
+ * @category Button
  * @demo Controls-demo/Buttons/ArrowButton/Index
  */
 class Component extends Control implements IArrowButton {
