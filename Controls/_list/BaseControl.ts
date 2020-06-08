@@ -683,7 +683,7 @@ var _private = {
             let triggerVisibilityUp;
             let triggerVisibilityDown;
 
-            if (this._options.recalculateTriggersVisibility) {
+            if (self._options.recalculateTriggersVisibility) {
                 const scrollParams = {
                     clientHeight: self._viewPortSize,
                     scrollHeight: self._viewSize,
