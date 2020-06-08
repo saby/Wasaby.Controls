@@ -208,10 +208,17 @@
 }
 
 .controls-Slider__interval {
-  margin-top: @marker_l_size_slider / 2 - 1;
   position: absolute;
   height: @track_thickness_slider;
   z-index: 1;
+
+  &_small_theme-@{themeName} {
+    margin-top: @marker_s_size_slider / 2 - @track_thickness_slider / 2;
+  }
+
+  &_big_theme-@{themeName} {
+    margin-top: @marker_l_size_slider / 2 - @track_thickness_slider / 2;
+  }
 
   &_link_theme-@{themeName} {
     background: @link_text-color;
@@ -239,9 +246,5 @@
 
   &_unaccented_theme-@{themeName} {
     background: @unaccented_color;
-  }
-
-  &_label_theme-@{themeName} {
-    background: @label_text-color;
   }
 }
