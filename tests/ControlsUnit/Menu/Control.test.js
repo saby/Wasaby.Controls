@@ -39,50 +39,67 @@ define(
          };
 
          let getMenu = function(config) {
-            let menuControl = new menu.Control();
+            const menuControl = new menu.Control(config);
             menuControl.saveOptions(config || defaultOptions);
             return menuControl;
          };
 
-         it('_loadItems', function() {
-            let menuControl = getMenu();
-            return new Promise((resolve) => {
-               menuControl.loadItems(defaultOptions).addCallback((items) => {
-                  assert.deepEqual(items.getRawData(), defaultItems);
-                  resolve();
+         describe('loadItems', () => {
+            it('loadItems returns items', () => {
+               let menuControl = getMenu();
+               return new Promise((resolve) => {
+                  menuControl.loadItems(defaultOptions).addCallback((items) => {
+                     assert.deepEqual(items.getRawData(), defaultItems);
+                     resolve();
+                  });
                });
             });
-         });
 
-         it('_loadItems check navigation', function() {
-            let menuControl = getMenu();
-            let menuOptions = Clone(defaultOptions);
-            menuOptions.navigation = {
-               view: 'page',
-               source: 'page',
-               sourceConfig: { pageSize: 2, page: 0, hasMore: false }
-            };
-            return new Promise((resolve) => {
-               menuControl.loadItems(menuOptions).addCallback((items) => {
-                  assert.equal(items.getCount(), 2);
-                  resolve();
+            it('with navigation', () => {
+               const menuOptions = Clone(defaultOptions);
+               menuOptions.navigation = {
+                  view: 'page',
+                  source: 'page',
+                  sourceConfig: { pageSize: 2, page: 0, hasMore: false }
+               };
+               const menuControl = getMenu(menuOptions);
+               return new Promise((resolve) => {
+                  menuControl.loadItems(menuOptions).addCallback((items) => {
+                     assert.equal(items.getCount(), 2);
+                     resolve();
+                  });
                });
             });
-         });
 
-         it('_loadItems check dataLoadCallback', function() {
-            let isDataLoadCallbackCalled = false;
-            let menuControl = getMenu();
-            let menuOptions = Clone(defaultOptions);
-            menuOptions.dataLoadCallback = () => {
-               isDataLoadCallbackCalled = true;
-            };
-            return new Promise((resolve) => {
-               menuControl.loadItems(menuOptions).addCallback(() => {
-                  assert.isTrue(isDataLoadCallbackCalled);
-                  resolve();
+            it('with dataLoadCallback in options', () => {
+               let isDataLoadCallbackCalled = false;
+               let menuControl = getMenu();
+               let menuOptions = Clone(defaultOptions);
+               menuOptions.dataLoadCallback = () => {
+                  isDataLoadCallbackCalled = true;
+               };
+               return new Promise((resolve) => {
+                  menuControl.loadItems(menuOptions).addCallback(() => {
+                     assert.isTrue(isDataLoadCallbackCalled);
+                     resolve();
+                  });
                });
             });
+
+            it('query returns error', () => {
+               const options = Clone(defaultOptions);
+               const menuControl = getMenu();
+
+               options.source.query = () => Promise.reject(new Error());
+
+               return new Promise((resolve) => {
+                  menuControl.loadItems(options).then(() => {
+                     assert.isNotNull(menuControl._errorConfig);
+                     resolve();
+                  });
+               });
+            });
+
          });
 
          describe('_beforeUpdate', () => {
