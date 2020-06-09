@@ -3072,8 +3072,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         let dragPosition;
         if (this._dndListController.isDragging()) {
             dragPosition = this._dndListController.calculateDragPosition(itemData);
-            if (dragPosition && this._notify('changeDragTarget', [this._dndListController.getDragPosition(), dragPosition.item, dragPosition.position]) !== false) {
-                    this._dndListController.setDragPosition(dragPosition);
+            if (dragPosition && this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
+                this._dndListController.setDragPosition(dragPosition);
             }
             this._unprocessedDragEnteredItem = null;
         }
