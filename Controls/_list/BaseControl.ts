@@ -1879,16 +1879,14 @@ const _private = {
 
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
-            virtualScrollConfig: options.virtualScrollConfig,
+            virtualScrollConfig: options.virtualScrollConfig || {},
             needScrollCalculation: options.needScrollCalculation,
-            collection: self._listViewModel.getCollection(),
+            collection: self._listViewModel.getItems(),
             activeElement: options.activeElement,
             notify: (name, args, params) => {
                 return self._notify(name, args, params);
             }
         });
-        self._scrollController.beforeMount(options);
-
     }
 
 };
@@ -2428,7 +2426,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._scrollController) {
-            this._scrollController.beforeUpdate();
+            this._scrollController.beforeUpdate({collection: newOptions.listViewModel?.getCollection(), ...newOptions});
         }
 
         if (filterChanged || recreateSource || sortingChanged) {

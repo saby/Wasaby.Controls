@@ -55,7 +55,7 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
  * @author Авраменко А.С.
  */
 export default class ScrollController {
-    protected _children: {
+    protected triggers: {
         topVirtualScrollTrigger: HTMLElement;
         bottomVirtualScrollTrigger: HTMLElement;
         topLoadTrigger: HTMLElement;
@@ -115,6 +115,8 @@ export default class ScrollController {
 
     constructor(options: any) {
         this._options = options;
+        this._initModelObserving(options);
+        this._initVirtualScroll(options);
     }
 
     private _throttledPositionChanged: Function = throttle((params) => {
@@ -125,15 +127,10 @@ export default class ScrollController {
         this._doAfterRender(params.applyScrollTopCallback);
     }, SCROLLMOVE_DELAY, true);
 
-    beforeMount(options: IOptions): void {
-        this._initModelObserving(options);
-        this._initVirtualScroll(options);
-    }
-
     protected _registerObserver(): void {
         if (!this._observerRegistered) {
             // @ts-ignore
-            this._children.scrollObserver.startRegister(this._children);
+            this._scrollObserver.startRegister(this._triggers);
             this._observerRegistered = true;
         }
     }
@@ -153,7 +150,7 @@ export default class ScrollController {
     }
 
     beforeUpdate(options: IOptions): void {
-        if (this._options.collection !== options.collection) {
+        if (options.collection && this._options.collection !== options.collection) {
             this._initModelObserving(options);
             this._initVirtualScroll(options);
         }
@@ -730,8 +727,8 @@ export default class ScrollController {
         this._triggerOffset =
             (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
             this._options._triggerPositionCoefficient;
-        this._children.topVirtualScrollTrigger.style.top = `${this._triggerOffset}px`;
-        this._children.bottomVirtualScrollTrigger.style.bottom = `${this._triggerOffset}px`;
+        this._triggers?.topVirtualScrollTrigger?.style.top = `${this._triggerOffset}px`;
+        this._triggers?.bottomVirtualScrollTrigger?.style.bottom = `${this._triggerOffset}px`;
         this._notify('triggerOffsetChanged', [this._triggerOffset, this._triggerOffset]);
     }
 
