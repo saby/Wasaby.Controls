@@ -186,24 +186,22 @@ export class NavigationController {
      * @param list {Types/collection:RecordSet} object containing meta information for current request
      * @param direction {Direction} nav direction ('up' or 'down')
      */
-    updateQueryProperties(list?: RecordSet, direction?: Direction): void {
-        const more = list.getMetaData().more;
-        let recordSetWithNavigation;
+    updateQueryProperties(
+        list: RecordSet,
+        id: TKey = null,
+        navigationConfig?: INavigationSourceConfig,
+        direction?: Direction): void {
 
-        if (more instanceof RecordSet) {
-            more.each((nav: NavigationRecord) => {
-                recordSetWithNavigation = new RecordSet();
-                recordSetWithNavigation.setMetaData({
-                    more: nav.get('nav_result')
-                });
-                this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction);
-            });
-        } else {
-            this.getController(root).updateQueryProperties(list, direction);
-        }
+        // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
+        const store = this._getStore(id);
+
+        const calculator = this._getCalculator();
+        return calculator.updateQueryProperties(store, list, navigationConfig, direction);
     }
 
-    updateQueryPropertiesHierarchical
+    updateQueryPropertiesHierarchical() {
+
+    }
 
     private _getStore(id: TKey): TNavigationStore {
         let resStore: TNavigationStore;
