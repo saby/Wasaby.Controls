@@ -25,10 +25,12 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
 import 'wml!Controls/_buttons/ButtonBase';
 
+export type IViewMode = 'button' | 'link' | 'toolButton' | 'functionalButton';
+
 export interface IButtonControlOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
        IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
        IButtonOptions {
-    viewMode?: 'button' | 'link' | 'toolButton' | 'functionalButton';
+    viewMode?: IViewMode;
     captionPosition: 'left' | 'right';
 }
 
