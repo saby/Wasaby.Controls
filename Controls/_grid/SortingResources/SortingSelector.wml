@@ -14,6 +14,7 @@
             emptyKey="{{_options.emptyKey}}"
             emptyText="{{_options.emptyText}}"
             footerContentTemplate="{{_options.footerContentTemplate}}"
+            fontColorStyle="{{_options.fontColorStyle}}"
             emptyTemplate="{{_options.emptyTemplate}}">
         <ws:headerTemplate>
             <ws:if data="{{_options.header}}">

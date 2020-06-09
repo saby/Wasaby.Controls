@@ -63,6 +63,27 @@ define([
          assert.deepEqual(expectedScale, scaleData, 'Case 3 getScaleData: WrongResult');
       });
 
+      it('getScaleData', function() {
+         const formatter = value => value * 2;
+
+         const expected = [{
+               position: 0,
+               value: 6
+            }, {
+               position: 33.33333333333333,
+               value: 8
+            }, {
+               position: 66.66666666666666,
+               value: 10
+            }, {
+               position: 100,
+               value: 12
+         }];
+         const actual = utils.default.getScaleData(3, 6, 1, formatter);
+         assert.deepEqual(actual, expected, 'Scale data with label formatter are not equal');
+      });
+
+
       it('convertIntervals', function() {
          it('should be return converted intervals', function() {
             let intervals = [{

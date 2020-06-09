@@ -126,14 +126,14 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    private _renderTooltip(minValue: number, maxValue: number, value: number): void {
       const rangeLength = maxValue - minValue;
       this._pointData[1].position =
-          Math.min(Math.max(value - minValue, 0), rangeLength) / rangeLength * maxPercentValue;
+         Math.min(Math.max(value - minValue, 0), rangeLength) / rangeLength * maxPercentValue;
    }
 
    private _needUpdate(oldOpts: ISliderBaseOptions, newOpts: ISliderBaseOptions): boolean {
       return (oldOpts.scaleStep !== newOpts.scaleStep ||
-          oldOpts.minValue !== newOpts.minValue ||
-          oldOpts.maxValue !== newOpts.maxValue ||
-          oldOpts.value !== newOpts.value);
+         oldOpts.minValue !== newOpts.minValue ||
+         oldOpts.maxValue !== newOpts.maxValue ||
+         oldOpts.value !== newOpts.value);
    }
 
    private _checkOptions(opts: ISliderBaseOptions): void {
@@ -164,7 +164,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
 
    protected _beforeMount(options: ISliderBaseOptions): void {
       this._checkOptions(options);
-      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
+          options.scaleLabelFormatter);
       this._intervals = Utils.convertIntervals(options.intervals, options.minValue, options.maxValue);
       this._value = options.value === undefined ? options.maxValue : options.value;
       this._pointData = [{name: 'point', position: 100}, {name: 'tooltip', position: 0}];
@@ -175,7 +176,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _beforeUpdate(options: ISliderBaseOptions): void {
       if (this._needUpdate(this._options, options)) {
          this._checkOptions(options);
-         this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+         this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
+             options.scaleLabelFormatter);
       }
 
       if (this._options.intervals !== options.intervals) {

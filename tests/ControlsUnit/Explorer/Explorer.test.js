@@ -461,6 +461,10 @@ define([
             instance._viewMode = cfg.viewMode;
 
             instance._beforeUpdate(cfg2);
+            assert.equal(instance._pendingViewMode, 'search');
+            assert.isFalse(resetExpandedItemsCalled);
+
+            explorerMod.View._private.itemsSetCallback(instance);
             assert.isTrue(resetExpandedItemsCalled);
 
             resetExpandedItemsCalled = false;
@@ -490,7 +494,7 @@ define([
 
             instance._beforeUpdate(cfg2);
             instance.saveOptions(cfg2);
-            assert.strictEqual(instance._viewMode, 'search');
+            assert.strictEqual(instance._pendingViewMode, 'search');
 
          });
 
