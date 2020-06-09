@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {Collection} from 'Controls/display';
-import VirtualScroll from '../_list/ScrollContainer/VirtualScroll';
+import VirtualScroll from './ScrollContainer/VirtualScroll';
 import {Record} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 import {
@@ -9,9 +9,9 @@ import {
     IRange,
     IDirection,
     ITriggerState
-} from '../_list/ScrollContainer/interfaces';
+} from './ScrollContainer/interfaces';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import InertialScrolling from '../_list/resources/utils/InertialScrolling';
+import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {throttle} from 'Types/function';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
@@ -32,7 +32,7 @@ interface ICompatibilityOptions {
     useNewModel: boolean;
 }
 
-interface IOptions extends IControlOptions, ICompatibilityOptions {
+export interface IOptions extends IControlOptions, ICompatibilityOptions {
     virtualScrollConfig: {
         pageSize?: number;
         segmentSize?: number;
@@ -44,16 +44,17 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
     collection: Collection<Record>;
     activeElement: string | number;
     _triggerPositionCoefficient: number;
+    _notify: (eventName: string, args?: unknown[], options?: { bubbling?: boolean }) => unknown;
 }
 
 /**
  * Контейнер управляющий операциями скролла в списке.
- * @class Controls/_list/ScrollContainer
+ * @class Controls/_list/ScrollController/ScrollController
  * @control
  * @private
  * @author Авраменко А.С.
  */
-export default class ScrollContainer extends Control<IOptions> {
+export default class ScrollController {
     protected _children: {
         topVirtualScrollTrigger: HTMLElement;
         bottomVirtualScrollTrigger: HTMLElement;
@@ -110,6 +111,12 @@ export default class ScrollContainer extends Control<IOptions> {
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
+    protected _options: any;
+
+    constructor(options: any) {
+        this._options = options;
+    }
+
     private _throttledPositionChanged: Function = throttle((params) => {
         const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
@@ -118,7 +125,7 @@ export default class ScrollContainer extends Control<IOptions> {
         this._doAfterRender(params.applyScrollTopCallback);
     }, SCROLLMOVE_DELAY, true);
 
-    protected _beforeMount(options: IOptions): void {
+    beforeMount(options: IOptions): void {
         this._initModelObserving(options);
         this._initVirtualScroll(options);
     }
@@ -131,8 +138,9 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    protected _afterMount(): void {
+    afterMount(container: any): void {
         this.__mounted = true;
+        this._container = container;
         this._viewResize(this._container.offsetHeight, false);
         if (this._options.needScrollCalculation) {
             this._registerObserver();
@@ -144,7 +152,7 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    protected _beforeUpdate(options: IOptions): void {
+    beforeUpdate(options: IOptions): void {
         if (this._options.collection !== options.collection) {
             this._initModelObserving(options);
             this._initVirtualScroll(options);
@@ -159,24 +167,24 @@ export default class ScrollContainer extends Control<IOptions> {
         this._isRendering = true;
     }
 
-    protected _afterUpdate(oldOptions: IOptions): void {
+    afterUpdate(): void {
         if (this._options.needScrollCalculation) {
             this._registerObserver();
         }
     }
 
-    protected _beforeRender(): void {
+    beforeRender(): void {
         if (this._virtualScroll.isNeedToRestorePosition) {
             this._notify('saveScrollPosition', [], {bubbling: true});
         }
     }
 
-    protected _afterRender(): void {
+    afterRender(): void {
         this._isRendering = false;
         this._afterRenderHandler();
     }
 
-    protected _beforeUnmount(): void {
+    beforeUnmount(): void {
         clearTimeout(this._checkTriggerVisibilityTimeout);
         // TODO убрать проверку в https://online.sbis.ru/opendoc.html?guid=fb8a3901-bddf-4552-ae9a-ed0299d3e46f
         if (!this._options.collection.destroyed) {
@@ -185,28 +193,17 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    protected _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
+    itemsContainerReady(itemsContainerGetter: Function): void {
         this._itemsContainerGetter = itemsContainerGetter;
     }
 
-    protected _stopBubblingEvent(event: SyntheticEvent<Event>): void {
-        // В некоторых кейсах (например ScrollViewer) внутри списков могут находиться
-        // другие списки, которые также будут нотифицировать события управления скроллом и тенью
-        // Необходимо их останавливать, чтобы скроллом управлял только самый верхний список
-        event.stopPropagation();
-    }
-
-    protected _viewResizeHandler(): void {
+    viewResize(): void {
         this._viewResize(this._container.offsetHeight);
         // TODO Совместимость необходимо удалить после переписывания baseControl
         this._notify('viewResize');
     }
 
-    protected _observeScrollHandler(
-        _: SyntheticEvent<Event>,
-        eventName: string,
-        params: IScrollParams
-    ): void {
+    observeScroll(eventName: string, params: IScrollParams): void {
         switch (eventName) {
             case 'virtualPageBottomStart':
                 this._triggerVisibilityChanged('down', true, params);
@@ -359,7 +356,7 @@ export default class ScrollContainer extends Control<IOptions> {
         this._subscribeToCollectionChange(options.collection, options.useNewModel);
 
         if (options.useNewModel) {
-            ScrollContainer._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
+            ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
         }
     }
 
@@ -693,6 +690,10 @@ export default class ScrollContainer extends Control<IOptions> {
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
         }
+    }
+
+    _notify() {
+        this._options.notify();
     }
 
     /**
