@@ -3546,6 +3546,61 @@ define([
          });
       });
 
+      it('_processItemMouseEnterWithDragNDrop', () => {
+         const ctrl = new lists.BaseControl({});
+         const dragEntity = { entity: 'entity' },
+               itemData = { itemData: 'itemData' },
+               dragPosition = {
+                  item: { item: 'item' },
+                  position: 'after'
+               };
+
+         let notifyResult = false,
+            notifyCalled = false,
+            setDragPositionCalled = false;
+
+         ctrl._dndListController = {
+            isDragging() {
+               return false;
+            },
+            getDragEntity() {
+               return dragEntity;
+            },
+            calculateDragPosition(item) {
+               assert.deepEqual(item, itemData);
+               return dragPosition;
+            },
+            setDragPosition(position) {
+               assert.deepEqual(position, dragPosition);
+               setDragPositionCalled = true;
+            }
+         };
+
+         ctrl._notify = (eventName, args) => {
+            notifyCalled = true;
+            assert.equal(eventName, 'changeDragTarget');
+            assert.deepEqual(args[0], dragEntity);
+            assert.deepEqual(args[1], { item: 'item' });
+            assert.equal(args[2], 'after');
+            return notifyResult;
+         };
+
+         ctrl._processItemMouseEnterWithDragNDrop(itemData);
+         assert.isFalse(notifyCalled);
+
+         ctrl._dndListController.isDragging = () => { return true; };
+         ctrl._processItemMouseEnterWithDragNDrop(itemData);
+         assert.isTrue(notifyCalled);
+         assert.isFalse(setDragPositionCalled);
+         assert.isNull(ctrl._unprocessedDragEnteredItem);
+
+         notifyResult = true;
+         ctrl._processItemMouseEnterWithDragNDrop(itemData);
+         assert.isTrue(notifyCalled);
+         assert.isTrue(setDragPositionCalled);
+         assert.isNull(ctrl._unprocessedDragEnteredItem);
+      });
+
       it('_dragEnter only works with ItemsEntity', function() {
          const ctrl = new lists.BaseControl({});
 
