@@ -2,8 +2,8 @@
     <ws:partial
             template="wml!Controls/_list/ItemActions/resources/ItemAction"
             itemData="{{itemData}}"
-            hasTitle="{{(!needShowTitle && !action.icon) || needShowTitle && needShowTitle(action)}}"
-            hasIcon="{{(!needShowIcon && action.icon) || needShowIcon && needShowIcon(action)}}"
+            hasTitle="{{(!action.showTitle && !action.icon) || action.showTitle}}"
+            hasIcon="{{(!action.showIcon && action.icon) || action.showIcon}}"
             tooltip="{{(action.tooltip || action.title)}}"
             size="{{size}}"
             action="{{action}}"/>

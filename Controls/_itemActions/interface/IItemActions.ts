@@ -5,6 +5,12 @@ import {IBaseCollection, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STA
 import {ISource} from 'Controls/interface';
 import {IContextMenuConfig} from "./IContextMenuConfig";
 
+/**
+ * @typedef {String} TItemActionShowType
+ * @variant 0 показывать опцию только в меню
+ * @variant 1 показывать опцию в меню и тулбаре
+ * @variant 2 показывать опцию только в тулбаре
+ */
 export enum TItemActionShowType {
     // show only in Menu
     MENU,
@@ -12,6 +18,20 @@ export enum TItemActionShowType {
     MENU_TOOLBAR,
     // show only in Toolbar
     TOOLBAR
+}
+
+/**
+ * @typedef {String} TActionDisplayMode
+ * @variant title показывать только заголовок
+ * @variant icon показывать только иконку
+ * @variant both показывать иконку и заголовок
+ * @variant auto если есть иконка, то показывать иконку, иначе заголовок
+ */
+export enum TActionDisplayMode {
+    TITLE = 'title',
+    ICON = 'icon',
+    BOTH = 'both',
+    AUTO = 'auto'
 }
 
 /**
@@ -31,16 +51,6 @@ export type TIconStyle = 'secondary'|'warning'|'danger'|'success';
  * @variant none Не будет отображаться.
  */
 export type TActionCaptionPosition = 'right'|'bottom'|'none';
-
-/**
- * @typedef {String} TActionDisplayMode
- * @variant title показывать только заголовок
- * @variant icon показывать только иконку
- * @variant both показывать иконку и заголовок
- * @variant auto если есть иконка, то показывать иконку, иначе заголовок
- * TODO duplicated from IList
- */
-export type TActionDisplayMode = 'title'|'icon'|'both'|'auto';
 
 /**
  * @typedef {String} TItemActionsPosition
@@ -110,13 +120,31 @@ export interface IItemAction {
      * Flag of parent
      */
     'parent@'?: boolean|null;
+
+    /**
+     * настройка отображения иконки и заголовка
+     */
     displayMode?: TActionDisplayMode;
+
+    /**
+     * Значение, которое показано в тултипе при наведении на опцию
+     */
     tooltip?: string;
 
     /**
      * Parent action id
      */
     parent?: string | number;
+
+    /**
+     * Это расчётное свойство. Используйте displayMode.
+     */
+    showTitle?: boolean;
+
+    /**
+     * Это расчётное свойство. Используйте displayMode.
+     */
+    showIcon?: boolean;
 }
 
 export type TActionClickCallback = (clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, contents: Model) => void;

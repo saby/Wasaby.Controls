@@ -6,7 +6,12 @@ import {ANIMATION_STATE, Collection, CollectionItem} from 'Controls/display';
 import {IOptions as ICollectionOptions} from 'Controls/_display/Collection';
 
 import {Controller as ItemActionsController, IItemActionsControllerOptions} from 'Controls/_itemActions/Controller';
-import {IItemAction, IItemActionsItem, TItemActionShowType} from 'Controls/_itemActions/interface/IItemActions';
+import {
+    IItemAction,
+    IItemActionsItem,
+    TActionDisplayMode,
+    TItemActionShowType
+} from 'Controls/_itemActions/interface/IItemActions';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
 const itemActions: IItemAction[] = [
@@ -26,6 +31,7 @@ const itemActions: IItemAction[] = [
         id: 3,
         icon: 'icon-Profile',
         title: 'Profile',
+        tooltip: 'This is awesome Profile you\'ve never seen',
         showType: TItemActionShowType.TOOLBAR
     },
     {
@@ -86,6 +92,38 @@ const horizontalOnlyItemActions: IItemAction[] = [
         icon: 'icon-EmptyMessage',
         title: 'message',
         showType: TItemActionShowType.MENU
+    }
+];
+
+// Варианты отображением иконки и текста
+const displayModeItemActions: IItemAction[] = [
+    {
+        id: 1,
+        icon: 'icon-PhoneNull',
+        title: 'phone',
+        showType: TItemActionShowType.TOOLBAR,
+        displayMode: TActionDisplayMode.ICON
+    },
+    {
+        id: 2,
+        icon: 'icon-EmptyMessage',
+        title: 'message',
+        showType: TItemActionShowType.TOOLBAR,
+        displayMode: TActionDisplayMode.TITLE
+    },
+    {
+        id: 3,
+        icon: 'icon-Profile',
+        title: 'Profile',
+        showType: TItemActionShowType.TOOLBAR,
+        displayMode: TActionDisplayMode.BOTH
+    },
+    {
+        id: 4,
+        icon: 'icon-Time',
+        title: 'Time management',
+        showType: TItemActionShowType.TOOLBAR,
+        displayMode: TActionDisplayMode.AUTO
     }
 ];
 
@@ -294,14 +332,59 @@ describe('Controls/_itemActions/Controller', () => {
                 theme: 'default',
             }));
             assert.exists(newCollection.getItemBySourceKey(6).getActions());
-        })
+        });
 
-        // T1.14. Должны адекватно набираться ItemActions для breadcrumbs (когда getContents() возвращает массив записей)
+        // T1.14 Необходимо корректно расчитывать showTitle, showIcon на основе displayMode
+        describe('displayMode calculations', () => {
+            beforeEach(() => {
+                itemActionsController.update(initializeControllerOptions({
+                    collection: collection,
+                    itemActions: displayModeItemActions,
+                    theme: 'default',
+                }));
+            });
+            // T1.14.1. Должны учитываться расчёты отображения icon при displayMode=icon
+            it('should consider showIcon calculations when displayMode=icon', () => {
+                const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+                assert.isTrue(actionsOf1.showed[0].showIcon, 'we expected to see icon here');
+                assert.isNotTrue(actionsOf1.showed[0].showTitle, 'we didn\'t expect to see title here');
+            });
+
+            // T1.14.2. Должны учитываться расчёты отображения title при displayMode=title
+            it('should consider showTitle calculations when displayMode=title', () => {
+                const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+                assert.isTrue(actionsOf1.showed[1].showTitle, 'we expected to see title here');
+                assert.isNotTrue(actionsOf1.showed[1].showIcon, 'we didn\'t expect to see icon here');
+            });
+
+            // T1.14.3. Должны учитываться расчёты отображения title и icon при displayMode=both
+            it('should consider showTitle calculations when displayMode=both', () => {
+                const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+                assert.isTrue(actionsOf1.showed[2].showTitle, 'we expected to see title here');
+                assert.isTrue(actionsOf1.showed[2].showIcon, 'we expected to see icon here');
+            });
+
+            // T1.14.4. Должны учитываться расчёты отображения title и icon при displayMode=auto
+            it('should consider showTitle calculations when displayMode=auto', () => {
+                const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+                assert.isTrue(actionsOf1.showed[3].showIcon, 'we expected to see icon here');
+                assert.isNotTrue(actionsOf1.showed[3].showTitle, 'we didn\'t expect to see title here');
+            });
+        });
+
+        // T1.15. Если не указано свойство опции tooltip, надо подставлять title
+        it('should change tooltip to title when no tooltip is set', () => {
+            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+            assert.equal(actionsOf1.showed[0].tooltip, 'message', 'tooltip should be the same as title here');
+            assert.equal(actionsOf1.showed[1].tooltip, 'This is awesome Profile you\'ve never seen', 'tooltip should be not the same as title here');
+        });
+
+        // T1.16. Должны адекватно набираться ItemActions для breadcrumbs (когда getContents() возвращает массив записей)
         // TODO возможно, это уйдёт из контроллера, т.к. по идее уровень абстракции в контроллере ниже и он не должен знать о breadcrumbs
         //  надо разобраться как в коллекцию добавить breadcrumbs
         // it('should set item actions when some items are breadcrumbs', () => {});
 
-        // T1.15. Должны адекватно набираться ItemActions если в списке элементов коллекции присутствуют группы
+        // T1.17. Должны адекватно набираться ItemActions если в списке элементов коллекции присутствуют группы
         // TODO возможно, это уйдёт из контроллера, т.к. по идее уровень абстракции в контроллере ниже и он не должен знать о группах
         //  надо разобраться как в коллекцию добавить group
         // it('should set item actions when some items are groups', () => {});

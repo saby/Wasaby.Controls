@@ -17,7 +17,7 @@ import {
     IItemAction,
     TItemActionsPosition,
     TActionCaptionPosition,
-    TEditArrowVisibilityCallback
+    TEditArrowVisibilityCallback, TActionDisplayMode
 } from './interface/IItemActions';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
@@ -396,15 +396,21 @@ export class Controller {
      * @private
      */
     private _collectActionsForContents(contents: Model): IItemAction[] {
-        const itemActions: IItemAction[] = this._itemActionsProperty
+        let itemActions: IItemAction[] = this._itemActionsProperty
                 ? contents.get(this._itemActionsProperty)
                 : this._commonItemActions;
         const fixedActions = itemActions.map((action) => (
             Controller._fixActionIcon(Controller._fixActionStyle(action), this._theme)
         ));
-        return fixedActions.filter((action) =>
+        itemActions = fixedActions.filter((action) =>
             this._itemActionVisibilityCallback(action, contents)
         );
+        return itemActions.map((action) => {
+            action.showIcon = Controller._needShowIcon(action);
+            action.showTitle = Controller._needShowTitle(action);
+            action.tooltip = Controller._getTooltip(action);
+            return action;
+        });
     }
 
     private _updateSwipeConfig(actionsContainerHeight: number): void {
@@ -502,6 +508,42 @@ export class Controller {
         );
     }
 
+    /**
+     * Рассчитывает значение для флага showIcon операции с записью
+     * @param action
+     * @private
+     */
+    private static _needShowIcon(action: IItemAction): boolean {
+        return !!action.icon && (action.displayMode !== TActionDisplayMode.TITLE);
+    }
+
+    /**
+     * Рассчитывает значение для флага showTitle операции с записью
+     * @param action
+     * @private
+     */
+    private static _needShowTitle(action: IItemAction): boolean {
+        return !!action.title && (action.displayMode === TActionDisplayMode.TITLE ||
+            action.displayMode === TActionDisplayMode.BOTH ||
+            (action.displayMode === TActionDisplayMode.AUTO ||
+                !action.displayMode) && !action.icon);
+    }
+
+    /**
+     * Возвращает значение для tooltip операции с записью
+     * @param action
+     * @private
+     */
+    private static _getTooltip(action: IItemAction): string|undefined {
+        return action.tooltip || action.title;
+    }
+
+    /**
+     * Устанавливает операции с записью для конкретного элемента коллекции
+     * @param item
+     * @param actions
+     * @private
+     */
     private static _setItemActions(
         item: IItemActionsItem,
         actions: IItemActionsContainer
