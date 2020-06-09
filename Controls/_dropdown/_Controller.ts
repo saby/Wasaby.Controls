@@ -348,7 +348,7 @@ var _private = {
          actionOnScroll: 'close',
          target: self.target,
          targetPoint: self._options.targetPoint,
-         opener: self,
+         opener: self.parentControl,
          fittingMode: {
             vertical: 'adaptive',
             horizontal: 'overflow'

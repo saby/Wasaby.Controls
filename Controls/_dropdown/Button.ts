@@ -130,7 +130,7 @@ var Button = Control.extend({
              headingIconSize: options.iconSize,
              headingIcon: options.icon,
              itemTemplate: options.itemTemplate,
-             dataLoadCallback: this._dataLoadCallback,
+             dataLoadCallback: this._dataLoadCallback.bind(this),
              popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
              hasIconPin: this._hasIconPin,
              allowPin: true,

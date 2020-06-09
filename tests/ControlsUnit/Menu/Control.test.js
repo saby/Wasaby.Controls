@@ -464,12 +464,11 @@ define(
             assert.deepStrictEqual(actualOptions.templateOptions.selectedItems.getCount(), 0);
             assert.strictEqual(actualOptions.templateOptions.option1, '1');
             assert.strictEqual(actualOptions.templateOptions.option2, '2');
-            assert.isOk(actualOptions.templateOptions.handlers.onSelectComplete);
-            assert.isFalse(actualOptions.hasOwnProperty('opener'));
+            assert.isOk(actualOptions.eventHandlers.onResult);
+            assert.isTrue(actualOptions.hasOwnProperty('opener'));
             assert.isTrue(opened);
 
-            actualOptions.templateOptions.handlers.onSelectComplete();
-            assert.isTrue(selectCompleted);
+            actualOptions.eventHandlers.onResult();
             assert.isTrue(closed);
          });
 
@@ -490,10 +489,10 @@ define(
             };
             items.push(emptyItem);
             emptyMenuControl._options.selectorOpener = {
-               openPopup: (tplOptions) => { selectorOptions = tplOptions; },
+               openPopup: (tplOptions) => { selectorOptions = tplOptions; return Promise.resolve()},
             };
             emptyMenuControl._listModel = getListModel(items);
-            emptyMenuControl._openSelectorDialog({return Promise.resolve()});
+            emptyMenuControl._openSelectorDialog({});
             assert.strictEqual(selectorOptions.templateOptions.selectedItems.getCount(), 0);
          });
 
