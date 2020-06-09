@@ -165,7 +165,10 @@ const ActualApi = {
          return options.contrastBackground;
       } else {
          if (typeof options.transparent !== 'undefined') {
-            // IoC.resolve('ILogger').warn('Button', 'Опция transparent устарела, используйте contrastBackground');
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Button: Используется устаревшая опция transparent". ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию contrastBackground.');
             return !options.transparent;
          } else {
             return false;
@@ -178,11 +181,16 @@ const ActualApi = {
       } else if (optionButtonStyle) {
          return optionButtonStyle;
       } else {
+         if (optionStyle) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Button: Используется устаревшая опция style". ' +
+               'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+               'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию buttonStyle.');
+         }
          if (calcStyle) {
             return calcStyle;
          } else {
             if (typeof optionStyle !== 'undefined') {
-               // IoC.resolve('ILogger').warn('Button', 'Опция style устарела, используйте buttonStyle и fontColorStyle');
                return optionStyle;
             } else {
                return 'secondary';
@@ -246,7 +254,10 @@ const ActualApi = {
          return options.fontSize;
       } else {
          if (typeof(options.size) !== 'undefined') {
-            // IoC.resolve('ILogger').warn('Button', 'Опция size устарела, используйте height и fontSize');
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Button: Используется устаревшая опция size". ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
             if (options.viewMode === 'button') {
                // кнопки l размера имеют шрифт xl в теме
                if (options.size === 'l') {
@@ -292,12 +303,18 @@ const ActualApi = {
       };
    },
 
-   actualHeight(optionSize: string, optionHeight: string, viewMode: string): string {
+   actualHeight(optionSize: string, optionHeight: string, viewMode: string, hasMsg: boolean = true): string {
       if (optionHeight) {
          return optionHeight;
       } else {
          let height = 'default';
          if (viewMode === 'button') {
+            if (hasMsg && optionSize) {
+               // TODO: будет удалено в версию после 5100
+               Logger.error('Button: Используется устаревшая опция size". ' +
+                   'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');
+            }
             switch (optionSize) {
                case 's': height = 'default'; break;
                case 'm': height = 'm'; break;
@@ -306,6 +323,12 @@ const ActualApi = {
             }
             return height;
          } else if (viewMode === 'toolButton' || viewMode === 'pushButton' || viewMode === 'functionalButton') {
+            if (hasMsg && optionSize) {
+               // TODO: будет удалено в версию после 5100
+               Logger.error('Button: Используется устаревшая опция size". ' +
+                   'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');
+            }
             switch (optionSize) {
                case 's': height = 'default'; break;
                case 'm': height = 'l'; break;

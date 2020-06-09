@@ -1092,11 +1092,12 @@ Base.getDefaultOptions = function () {
         tooltip: '',
         style: 'info',
         horizontalPadding: 'xs',
-        size: 'default',
+        inlineHeight: 'default',
         placeholder: '',
         textAlign: 'left',
         autoComplete: 'off',
-        fontStyle: 'default',
+        fontSize: 'default',
+        fontColorStyle: 'default',
         spellCheck: true,
         selectOnClick: false
     };
@@ -1126,17 +1127,6 @@ Base.getOptionTypes = function () {
          * https://online.sbis.ru/opendoc.html?guid=af7e16d7-139f-4414-b7af-9e3a1a0dae05
          * placeholder: entity.descriptor(String, Function, Array),
          */
-        size: entity.descriptor(String).oneOf([
-            's',
-            'm',
-            'l',
-            'default'
-        ]),
-        fontStyle: entity.descriptor(String).oneOf([
-            'default',
-            'primary',
-            'secondary'
-        ]),
         textAlign: entity.descriptor(String).oneOf([
             'left',
             'right'
