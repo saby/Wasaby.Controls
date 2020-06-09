@@ -48,7 +48,7 @@ export default class FlatController {
       this._entity = entity;
 
       if (draggedItem) {
-         this._draggingItemData = this._model.getItemDataByItem ? this._model.getItemDataByItem(draggedItem) : draggedItem;
+         this._draggingItemData = this._model.getItemDataByItem(draggedItem);
          // это перетаскиваемый элемент, поэтому чтобы на него навесился нужный css класс isDragging = true
          this._draggingItemData.isDragging = true;
       }
