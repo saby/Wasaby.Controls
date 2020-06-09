@@ -10,7 +10,7 @@ import {
 import Mode from './Mode';
 import { fetch } from 'Browser/Transport';
 import { IVersionable } from 'Types/entity';
-import Popup from './Popup';
+import Popup, { IPopupHelper } from './Popup';
 
 export type Config = {
     handlers?: Handler[];
@@ -55,9 +55,12 @@ const prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): H
     };
 };
 
-let popupHelper: Popup;
+let popupHelper: IPopupHelper;
 
-function getPopupHelper(): Popup {
+/**
+ * Получить экземпляр IPopupHelper, который контроллер ошибок использует по умолчанию, если ему не передали другого.
+ */
+export function getPopupHelper(): IPopupHelper {
     if (!popupHelper) {
         popupHelper = new Popup();
     }
@@ -103,7 +106,7 @@ function getPopupHelper(): Popup {
 export default class ErrorController {
     private __controller: ParkingController;
 
-    constructor(config: Config, private _popupHelper: Popup = getPopupHelper()) {
+    constructor(config: Config, private _popupHelper: IPopupHelper = getPopupHelper()) {
         this.__controller = new ParkingController({
             configField: ErrorController.CONFIG_FIELD,
             ...config
