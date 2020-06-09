@@ -3003,9 +3003,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _dragEnter: function(event, dragObject) {
+        // если мы утащим в другой список, то в нем нужно создать контроллер
+        if (!this._dndListController) {
+            this._dndListController = _private.createDndListController(this, this._options);
+        }
+
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (this._dndListController && dragObject && this._dndListController.isDragging()
-            && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
+        if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
