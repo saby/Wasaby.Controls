@@ -66,10 +66,20 @@ var BaseLookupView = Control.extend({
         this._setInputValue(options, options.value);
         this._listOfDependentOptions = [];
 
-        if (!options.multiSelect) {
+        /*
+        * На _beforeMount нам ещё не известны размеры поля,
+        * поэтому записи выводим только для ситуаций, который решаются на css'e.
+        * C помощью css'a можно вывести все записи в readOnly режиме,
+        * или 1-у запись в одиночном и множественном выборе.
+        * Для вывода нескольких записей нужна ширина поля.
+        * */
+        const itemsCount = options.items.getCount();
+        if (!options.multiSelect || itemsCount === 1) {
             this._maxVisibleItems = 1;
         } else if (options.multiLine) {
             this._maxVisibleItems = options.maxVisibleItems;
+        } else if (options.multiSelect && itemsCount > 1) {
+            this._maxVisibleItems = 0;
         } else {
             this._maxVisibleItems = options.items.getCount();
         }
