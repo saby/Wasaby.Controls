@@ -723,6 +723,24 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
+    /**
+     * Возвращает состояние editing для модели.
+     * New Model compatibility
+     */
+    isEditing(): boolean {
+        return this._display ? this._display.isEditing() : false;
+    },
+
+    /**
+     * Устанавливает состояние editing для модели.
+     * New Model compatibility
+     */
+    setEditing(editing): void {
+        if (this._display) {
+            this._display.setEditing(editing);
+        }
+    },
+
     updateSelection: function(selectedKeys) {
         this._selectedKeys = selectedKeys || [];
         this._nextModelVersion(true);

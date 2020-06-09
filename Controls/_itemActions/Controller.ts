@@ -289,7 +289,7 @@ export class Controller {
         const changedItemsIds: Array<number | string> = [];
         this._collection.setEventRaising(false, true);
         this._collection.each((item) => {
-            if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
+            if (!item.isActive() && !item['[Controls/_display/GroupItem]'] && (!this._collection.isEditing() || item.isEditing())) {
                 // TODO При переписывании моделей надо убрать эту проверку. item.getContents() должен возвращать Record
                 //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
                 let contents = item.getContents();

@@ -759,6 +759,7 @@ export default class EditInPlace {
         const editingConfig = this._options.editingConfig;
         const useNewModel =  this._options.useNewModel;
         if (!item) {
+            listViewModel.setEditing(false);
             if (useNewModel) {
                 displayLib.EditInPlaceController.endEdit(listViewModel);
             } else {
@@ -796,6 +797,8 @@ export default class EditInPlace {
                 editingItemProjection = listViewModel._prepareDisplayItemForAdd(item);
             }
         }
+
+        listViewModel.setEditing(true);
 
         if (useNewModel) {
             displayLib.EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
