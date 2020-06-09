@@ -1,6 +1,5 @@
 <Controls.popup:InfoboxTarget targetSide="bottom"
                               trigger="{{_needInfobox ? 'hover' : 'demand'}}"
-                              on:deactivated="_deactivated()"
                               on:click="_handleClick()"
                               on:mousedown="_handleMouseDown()"
                               on:mouseenter="_handleMouseEnter()"

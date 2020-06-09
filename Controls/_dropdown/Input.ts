@@ -304,10 +304,10 @@ var Input = Control.extend({
       return { ...options, ...{
             dataLoadCallback: this._dataLoadCallback,
             selectedKeys: options.selectedKeys || [],
-            popupClassName: 'theme_' + options.theme + (options.popupClassName || (options.showHeader || options.headerTemplate) ?
-                ' controls-DropdownList__margin-head' : options.multiSelect ?
-                    ' controls-DropdownList_multiSelect__margin' :  ' controls-DropdownList__margin'),
-            caption: options.caption || this._text,
+            popupClassName: options.popupClassName || (options.showHeader || options.headerTemplate ?
+                'controls-DropdownList__margin-head' : options.multiSelect ?
+                    'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') + ' theme_' + options.theme,
+            caption: this._text || options.caption,
             allowPin: false,
             selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
             notifyEvent: this._notifyInputEvent.bind(this),
@@ -346,10 +346,6 @@ var Input = Control.extend({
          this._hasMoreText = _private.getMoreText(items);
          this._tooltip = _private.getTooltip(items, this._options.displayProperty);
       }
-   },
-
-   _deactivated: function() {
-      this.closeMenu();
    },
 
    openMenu(popupOptions?: object): void {

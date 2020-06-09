@@ -15,7 +15,6 @@ import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-import {SyntheticEvent} from "Vdom/Vdom";
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
