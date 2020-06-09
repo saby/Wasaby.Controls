@@ -89,7 +89,7 @@ var Button = Control.extend({
    },
 
    _afterMount: function() {
-      afterMountMethod(this);
+      afterMountMethod(this, true);
    },
 
    _beforeUpdate: function (options) {

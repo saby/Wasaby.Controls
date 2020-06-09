@@ -10,8 +10,8 @@ function beforeMountMethod(self, options, recievedState): void {
     }
 }
 
-function afterMountMethod(self): void {
-    self._controller.setMenuPopupTarget(self._container);
+function afterMountMethod(self, needSetChildren): void {
+    self._controller.setMenuPopupTarget(needSetChildren ? self._container.children[0] : self._container);
     self._controller.registerScrollEvent(self);
 }
 
