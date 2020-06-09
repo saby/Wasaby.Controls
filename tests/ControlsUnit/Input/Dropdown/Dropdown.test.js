@@ -144,18 +144,6 @@ define(
             assert.isNull(ddl._icon);
          });
 
-         it('_deactivated', () => {
-            let ddl = getDropdown(config);
-            let closed = false;
-
-            ddl.closeMenu = () => {
-               closed = true;
-            };
-
-            ddl._deactivated();
-            assert.isTrue(closed);
-         });
-
          it('_private::getTooltip', function() {
             let ddl = getDropdown(config);
             ddl._prepareDisplayState([null]);

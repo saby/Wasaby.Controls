@@ -127,18 +127,6 @@ define(
             assert.equal(combobox._width, 250);
             assert.deepEqual(combobox._targetPoint, {vertical: 'bottom'});
          });
-
-         it('_deactivated', () => {
-            let combobox = getCombobox(config);
-            let closed = false;
-
-            combobox.closeMenu = () => {
-               closed = true;
-            };
-
-            combobox._deactivated();
-            assert.isTrue(closed);
-         });
       });
    }
 );
