@@ -452,8 +452,8 @@ define(
 
             let selectCompleted = false, closed = false, opened = false, actualOptions;
             menuControl._options.selectorOpener = {
-               open: (tplOptions) => { opened = true; actualOptions = tplOptions; },
-               close: () => { closed = true; }
+               openPopup: (tplOptions) => { opened = true; actualOptions = tplOptions; return Promise.resolve()},
+               closePopup: () => { closed = true; }
             };
             menuControl._options.selectorDialogResult = () => {selectCompleted = true};
 
@@ -490,10 +490,10 @@ define(
             };
             items.push(emptyItem);
             emptyMenuControl._options.selectorOpener = {
-               open: (tplOptions) => { selectorOptions = tplOptions; },
+               openPopup: (tplOptions) => { selectorOptions = tplOptions; },
             };
             emptyMenuControl._listModel = getListModel(items);
-            emptyMenuControl._openSelectorDialog({});
+            emptyMenuControl._openSelectorDialog({return Promise.resolve()});
             assert.strictEqual(selectorOptions.templateOptions.selectedItems.getCount(), 0);
          });
 
