@@ -1,3 +1,4 @@
+import * as clone from 'Core/core-clone';
 import { Control } from 'UI/Base';
 import { Memory } from 'Types/source';
 import { isEqual } from 'Types/object';
@@ -8,7 +9,6 @@ import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
     IItemActionsItem,
-    IItemActionsTemplateOptions,
     IItemActionsContainer,
     IMenuTemplateOptions,
     IMenuConfig,
@@ -142,15 +142,7 @@ export class Controller {
         if (this._commonItemActions || this._itemActionsProperty) {
             result = this._assignActions();
         }
-        this._calculateActionsTemplateConfig({
-            itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
-            style: options.style,
-            size: options.iconSize || DEFAULT_ACTION_SIZE,
-            toolbarVisibility: options.editingToolbarVisible,
-            actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
-            actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
-            itemActionsClass: options.itemActionsClass
-        });
+        this._calculateActionsTemplateConfig(options);
         return result;
     }
 
@@ -378,15 +370,15 @@ export class Controller {
     /**
      * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
      */
-    private _calculateActionsTemplateConfig(options: IItemActionsTemplateOptions): void {
+    private _calculateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
         this._collection.setActionsTemplateConfig({
-            toolbarVisibility: options.toolbarVisibility,
+            toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
-            size: options.size,
-            itemActionsPosition: options.itemActionsPosition,
-            actionAlignment: options.actionAlignment,
-            actionCaptionPosition: options.actionCaptionPosition,
-            itemActionsClass: options.itemActionsClass
+            itemActionsClass: options.itemActionsClass,
+            size: options.iconSize || DEFAULT_ACTION_SIZE,
+            itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
+            actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
+            actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
         });
     }
 
@@ -465,20 +457,27 @@ export class Controller {
     private _wrapActionsInContainer(
         actions: IItemAction[]
     ): IItemActionsContainer {
-        const showed = actions.filter(
-            (action) =>
-                !action.parent &&
-                (action.showType === TItemActionShowType.TOOLBAR ||
-                action.showType === TItemActionShowType.MENU_TOOLBAR)
-        );
-        if (this._isMenuButtonRequired(actions)) {
-            showed.push({
-                id: null,
-                icon: `icon-ExpandDown ${Controller._resolveItemActionClass(this._theme)}`,
-                style: 'secondary',
-                iconStyle: 'secondary',
-                _isMenu: true
-            });
+        let showed;
+        if (actions.length > 1) {
+            showed = actions.filter(
+                (action) =>
+                    !action.parent &&
+                    (
+                        action.showType === TItemActionShowType.TOOLBAR ||
+                        action.showType === TItemActionShowType.MENU_TOOLBAR
+                    )
+                );
+            if (this._isMenuButtonRequired(actions)) {
+                showed.push({
+                    id: null,
+                    icon: `icon-ExpandDown ${Controller._resolveItemActionClass(this._theme)}`,
+                    style: 'secondary',
+                    iconStyle: 'secondary',
+                    _isMenu: true
+                });
+            }
+        } else {
+            showed = clone(actions);
         }
         return {
             all: actions,
