@@ -3605,17 +3605,6 @@ define([
             notifiedEntity = dragEntity && dragEntity[0];
          };
 
-         ctrl._dragEnter({}, {
-            '[Controls/dragnDrop:ItemsEntity]': true
-         });
-         assert.isNull(notifiedEvent, 'Not set because dndListController is null');
-
-         ctrl._dndListController = {
-            isDragging() {
-               return true;
-            }
-         };
-
          ctrl._dragEnter({}, undefined);
          assert.isNull(notifiedEvent);
 
