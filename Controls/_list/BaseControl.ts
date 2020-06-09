@@ -2943,8 +2943,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _dragEnter: function(event, dragObject) {
-        if (
-            dragObject && this._dndListController.isDragging()
+        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
+        if (this._dndListController && dragObject && this._dndListController.isDragging()
             && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
@@ -2960,22 +2960,26 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _dragLeave: function() {
-        this._dndListController.setDragPosition(null);
+    _dragLeave(): void {
+        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
+        if (this._dndListController) {
+            this._dndListController.setDragPosition(null);
+        }
     },
 
-    _documentDragEnd: function() {
-        var self = this;
-
-        //Reset the state of the dragndrop after the movement on the source happens.
-        if (this._dragEndResult instanceof Promise) {
-            _private.showIndicator(self);
-            this._dragEndResult.addBoth(function() {
-                self._dndListController.endDrag();
-                _private.hideIndicator(self);
-            });
-        } else {
-            this._dndListController.endDrag();
+    _documentDragEnd(): void {
+        // Reset the state of the dragndrop after the movement on the source happens.
+        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
+        if (this._dndListController) {
+            if (this._dragEndResult instanceof Promise) {
+                _private.showIndicator(this);
+                this._dragEndResult.addBoth(() => {
+                    this._dndListController.endDrag();
+                    _private.hideIndicator(this);
+                });
+            } else {
+                this._dndListController.endDrag();
+            }
         }
     },
 
