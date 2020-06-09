@@ -41,7 +41,7 @@ export class Controller {
     */
    setMarkedKey(key: TKey): TKey {
       if (this._markedKey === key || !this._model) {
-         return;
+         return this._markedKey;
       }
 
       this._model.setMarkedKey(this._markedKey, false);
