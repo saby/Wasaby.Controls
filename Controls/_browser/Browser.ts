@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_browser/resources/BrowserTempalte';
+import * as template from 'wml!Controls/_browser/resources/BrowserTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 
