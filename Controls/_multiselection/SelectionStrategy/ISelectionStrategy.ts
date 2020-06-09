@@ -75,4 +75,13 @@ export default interface ISelectionStrategy {
     * @param options
     */
    update(options: ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions): void;
+
+   /**
+    * Проверяет все ли выбраны элементы
+    * @remark В деревянной стратегии проверяет, что выбрано все в текущем узле
+    * @param selection текущее состояние выбранных ключей
+    * @param hasMoreData имеются ли в модели еще не загруженные элементы
+    * @param itemsCount количество элементов в модели
+    */
+   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number): boolean;
 }
