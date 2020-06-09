@@ -158,17 +158,6 @@ export interface IItemActionsContainer {
     showed: IItemAction[];
 }
 
-export interface IItemActionsTemplateOptions {
-    style?: string;
-    itemActionsPosition: string;
-    actionAlignment?: string;
-    actionCaptionPosition: TActionCaptionPosition;
-    itemActionsClass?: string;
-    actionClickCallback?: TActionClickCallback;
-    size?: string;
-    toolbarVisibility?: boolean;
-}
-
 export interface IItemActionsItem {
     getActions(): IItemActionsContainer;
     getContents(): Model;

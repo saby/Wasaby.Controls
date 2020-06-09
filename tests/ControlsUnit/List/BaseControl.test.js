@@ -4547,6 +4547,17 @@ define([
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
             assert.equal(actionsOf0.all[0].title, '456', 'new actions for item at 0 pos. were not assigned');
          });
+
+         // при смене значения свойства readOnly необходимо делать переинициализвацию ItemActions
+         it('should update ItemActions when readOnly option has been changed', () => {
+            instance._beforeUpdate({
+               ...cfg,
+               source: instance._options.source,
+               readOnly: true,
+            });
+            const actionsOf0 = instance._listViewModel.at(0).getActions();
+            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+         });
       });
 
       it('_beforeMount with PrefetchProxy in source', function() {
@@ -4576,6 +4587,54 @@ define([
                   assert.isTrue(!receivedState);
                   resolve();
                });
+         });
+      });
+
+
+      describe('beforeUpdate', () => {
+         let cfg;
+         let instance;
+
+         beforeEach(() => {
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source,
+               viewModelConfig: {
+                  items: new collection.RecordSet({
+                     keyProperty: 'id',
+                     rawData: data
+                  }),
+                  keyProperty: 'id'
+               },
+               markerVisibility: 'hidden',
+               selectedKeys: [],
+               excludedKeys: []
+            };
+            instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
+         });
+
+         it('should create marker controller', async () => {
+            assert.isNull(instance._markerController);
+            const createMarkerControllerSpy = sinon.spy(lists.BaseControl._private, 'createMarkerController');
+            await instance._beforeUpdate({
+               ...cfg,
+               markerVisibility: 'visible'
+            });
+            assert.isTrue(createMarkerControllerSpy.calledOnce);
+         });
+
+         it('should create selection controller', async () => {
+            assert.isNull(instance._markerController);
+            const createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
+            await instance._beforeUpdate({
+               ...cfg,
+               selectedKeys: [1]
+            });
+            assert.isTrue(createSelectionControllerSpy.calledOnce);
          });
       });
 
