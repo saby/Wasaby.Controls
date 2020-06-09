@@ -461,9 +461,14 @@ describe('Controls/_itemActions/Controller', () => {
             assert.exists(config, 'Swipe activation should make configuration');
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
+
+        // T2.11 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
+        it('should right-swipe item on activateRightSwipe() method', () => {
+            itemActionsController.activateRightSwipe(1);
+            const item1 = collection.getItemBySourceKey(1);
+            assert.isTrue(item1.isRightSwiped());
+        });
     });
-
-
 
     describe('prepareActionsMenuConfig()', () => {
         let clickEvent: SyntheticEvent<MouseEvent>;
@@ -616,4 +621,6 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.OPEN, 'Incorrect animation state !== open');
         })
     });
+
+
 });
