@@ -305,7 +305,9 @@ export class Controller {
                     contents = contents[contents.length - 1];
                 }
                 const actionsForItem = this._collectActionsForContents(contents);
-                const itemChanged = Controller._setItemActions(item, this._wrapActionsInContainer(actionsForItem));
+                const wrappedActionsForItem = this._fixShownActionsDisplayOptions(this._wrapActionsInContainer(actionsForItem));
+
+                const itemChanged = Controller._setItemActions(item, wrappedActionsForItem);
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
                     changedItemsIds.push(contents.getKey());
@@ -396,21 +398,12 @@ export class Controller {
      * @private
      */
     private _collectActionsForContents(contents: Model): IItemAction[] {
-        let itemActions: IItemAction[] = this._itemActionsProperty
+        const itemActions: IItemAction[] = this._itemActionsProperty
                 ? contents.get(this._itemActionsProperty)
                 : this._commonItemActions;
-        const fixedActions = itemActions.map((action) => (
-            Controller._fixActionIcon(Controller._fixActionStyle(action), this._theme)
-        ));
-        itemActions = fixedActions.filter((action) =>
+        return itemActions.filter((action) =>
             this._itemActionVisibilityCallback(action, contents)
         );
-        return itemActions.map((action) => {
-            action.showIcon = Controller._needShowIcon(action);
-            action.showTitle = Controller._needShowTitle(action);
-            action.tooltip = Controller._getTooltip(action);
-            return action;
-        });
     }
 
     private _updateSwipeConfig(actionsContainerHeight: number): void {
@@ -480,7 +473,7 @@ export class Controller {
         if (this._isMenuButtonRequired(actions)) {
             showed.push({
                 id: null,
-                icon: `icon-ExpandDown ${Controller._resolveItemActionClass(this._theme)}`,
+                icon: `icon-ExpandDown`,
                 style: 'secondary',
                 iconStyle: 'secondary',
                 _isMenu: true
@@ -506,6 +499,26 @@ export class Controller {
                     action.showType === TItemActionShowType.MENU ||
                     action.showType === TItemActionShowType.MENU_TOOLBAR)
         );
+    }
+
+    /**
+     * Обновляет параметры отображения операций с записью
+     * @param actions
+     * @private
+     */
+    private _fixShownActionsDisplayOptions(actions: IItemActionsContainer): IItemActionsContainer {
+        if (actions.showed) {
+            actions.showed = actions.showed.map((action) => {
+                action.icon = Controller._fixActionIconClass(action.icon, this._theme);
+                action.style = Utils.getStyle(action.style, 'itemActions/Controller');
+                action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
+                action.showIcon = Controller._needShowIcon(action);
+                action.showTitle = Controller._needShowTitle(action);
+                action.tooltip = Controller._getTooltip(action);
+                return action;
+            });
+        }
+        return actions
     }
 
     /**
@@ -592,26 +605,11 @@ export class Controller {
         );
     }
 
-    /**
-     * Добавляет совместимость старых и новых названий стилей через Utils.getStyle()
-     * @param action
-     * @private
-     */
-    private static _fixActionStyle(action: IItemAction): IItemAction {
-        action.style = Utils.getStyle(action.style, 'itemActions/Controller');
-        action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
-        return action;
-    }
-
-    // todo скорее всего, переедет в шаблон
-    private static _fixActionIcon(action: IItemAction, theme: string): IItemAction {
-        if (!action.icon || action.icon.includes(this._resolveItemActionClass(theme))) {
-            return action;
+    private static _fixActionIconClass(icon: string, theme: string): string {
+        if (!icon || icon.includes(this._resolveItemActionClass(theme))) {
+            return icon;
         }
-        return {
-            ...action,
-            icon: `${action.icon} ${this._resolveItemActionClass(theme)}`
-        };
+        return `${icon} ${this._resolveItemActionClass(theme)}`
     }
 
     // todo скорее всего, переедет в шаблон
