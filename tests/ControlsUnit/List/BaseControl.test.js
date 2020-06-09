@@ -3590,10 +3590,6 @@ define([
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
 
-      it('_dragLeave', () => {
-
-      });
-
       it('native drag prevent only by native "dragstart" event', async function() {
          let isDefaultPrevented = false;
 
@@ -3681,6 +3677,9 @@ define([
          ctrl._viewPortRect = { top: 0 }
          //dragend without deferred
          dragEnded = false;
+
+         ctrl._documentDragEnd();
+         assert.isFalse(dragEnded, 'DndController was not created');
 
          ctrl._dndListController = {
             endDrag() {
