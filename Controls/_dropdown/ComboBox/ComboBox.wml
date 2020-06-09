@@ -1,31 +1,33 @@
-<Controls._dropdown.ComboBox.InputRender
-        name="content"
-        size="{{_options.size}}"
-        style="{{_options.style}}"
-        value="{{_value}}"
-        validationStatus="{{_options.validationStatus}}"
-        tooltip="{{_options.tooltip}}"
-        tagStyle="{{_options.tagStyle}}"
-        autoComplete="{{_options.autoComplete}}"
-        fontStyle="{{_options.fontStyle}}"
-        textAlign="{{_options.textAlign}}"
-        selectOnClick="{{_options.selectOnClick}}"
-        fontSize="{{_options.fontSize}}"
-        inlineHeight="{{_options.inlineHeight}}"
-        fontColorStyle="{{_options.fontColorStyle}}"
-        borderStyle="{{_options.borderStyle}}"
-        on:tagClick="_notifyHandler('tagClick')"
-        on:tagHover="_notifyHandler('tagHover')"
-        on:click="_handleClick()"
-        on:mousedown="_handleMouseDown()"
-        on:mouseenter="_handleMouseEnter()"
-        on:mouseleave="_handleMouseLeave()"
-        on:keydown="_handleKeyDown()"
-        placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
-        attr:class="controls-ComboBox-InputRender {{_isOpen ? 'controls-Popup__isolatedFocusingContext'}} controls-ComboBox {{_isOpen ? 'controls-ComboBox__opened'}}">
-   <ws:rightFieldWrapper>
-      <span if="{{!_options.readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
-         <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_isOpen ? 'CollapseLight' : 'ExpandLight'}}"></span>
-      </span>
-   </ws:rightFieldWrapper>
-</Controls._dropdown.ComboBox.InputRender>
+<div attr:class="controls-ComboBox {{_isOpen ? 'controls-ComboBox__opened'}}">
+   <Controls._dropdown.ComboBox.InputRender
+           name="content"
+           size="{{_options.size}}"
+           style="{{_options.style}}"
+           value="{{_value}}"
+           validationStatus="{{_options.validationStatus}}"
+           tooltip="{{_options.tooltip}}"
+           tagStyle="{{_options.tagStyle}}"
+           autoComplete="{{_options.autoComplete}}"
+           fontStyle="{{_options.fontStyle}}"
+           textAlign="{{_options.textAlign}}"
+           selectOnClick="{{_options.selectOnClick}}"
+           fontSize="{{_options.fontSize}}"
+           inlineHeight="{{_options.inlineHeight}}"
+           fontColorStyle="{{_options.fontColorStyle}}"
+           borderStyle="{{_options.borderStyle}}"
+           on:tagClick="_notifyHandler('tagClick')"
+           on:tagHover="_notifyHandler('tagHover')"
+           on:click="_handleClick()"
+           on:mousedown="_handleMouseDown()"
+           on:mouseenter="_handleMouseEnter()"
+           on:mouseleave="_handleMouseLeave()"
+           on:keydown="_handleKeyDown()"
+           placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
+           attr:class="controls-ComboBox-InputRender {{_isOpen ? 'controls-Popup__isolatedFocusingContext'}}">
+      <ws:rightFieldWrapper>
+         <span if="{{!_options.readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
+            <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_isOpen ? 'CollapseLight' : 'ExpandLight'}}"></span>
+         </span>
+      </ws:rightFieldWrapper>
+   </Controls._dropdown.ComboBox.InputRender>
+</div>

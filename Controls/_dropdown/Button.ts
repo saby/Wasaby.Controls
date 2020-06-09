@@ -93,12 +93,12 @@ var Button = Control.extend({
    },
 
    _beforeUpdate: function (options) {
+      this._controller.update(this._getControllerOptions(options));
       if (this._options.size !== options.size || this._options.icon !== options.icon ||
          this._options.viewMode !== options.viewMode) {
          this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       }
       this._updateState(options);
-      this._controller.update(this._getControllerOptions(options));
    },
 
    _updateState: function (options) {

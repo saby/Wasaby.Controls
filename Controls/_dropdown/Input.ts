@@ -307,7 +307,7 @@ var Input = Control.extend({
             popupClassName: options.popupClassName || (options.showHeader || options.headerTemplate ?
                 'controls-DropdownList__margin-head' : options.multiSelect ?
                     'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') + ' theme_' + options.theme,
-            caption: this._text || options.caption,
+            caption: options.caption || this._text ,
             allowPin: false,
             selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
             notifyEvent: this._notifyInputEvent.bind(this),

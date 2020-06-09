@@ -224,6 +224,7 @@ var _private = {
             break;
          case 'footerClick':
             self._options.notifyEvent('footerClick', data);
+            _private.closeDropdownList(this);
       }
    },
 
