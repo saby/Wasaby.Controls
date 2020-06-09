@@ -126,6 +126,7 @@
                     editingItemData="{{_editingItemData}}"
                     startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
                     isAdd="{{_editingItemData ? _editingItemData.isAdd : undefined}}"
+                    on:animationend="_onItemSwipeAnimationEnd()"
                     on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
                     on:itemClick="_onItemClick()"
                     on:groupClick="_onGroupClick()"

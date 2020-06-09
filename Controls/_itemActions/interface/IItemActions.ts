@@ -138,6 +138,7 @@ export interface IItemActionsItem {
     isActive(): boolean;
     setSwiped(swiped: boolean): void;
     isSwiped(): boolean;
+    isRightSwiped(): boolean;
     isEditing(): boolean;
 }
 

@@ -201,7 +201,7 @@ const _private = {
         if (self._updateInProgress) {
             if (self._callbackAfterUpdate) {
                 self._callbackAfterUpdate.push(callback);
-            } else {
+        } else {
                 self._callbackAfterUpdate = [callback];
             }
         } else {
@@ -430,7 +430,7 @@ const _private = {
         if (key !== undefined && self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
             _private.scrollToItem(self, key);
-        }
+            }
     },
     moveMarkerToNext: function (self, event) {
         if (self._markerController) {
@@ -938,11 +938,11 @@ const _private = {
 
     onScrollShow: function(self, params) {
         _private.doAfterUpdate(self, () => {
-            // ToDo option "loadOffset" is crutch for contacts.
-            // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
-            self._isScrollShown = true;
+        // ToDo option "loadOffset" is crutch for contacts.
+        // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
+        self._isScrollShown = true;
 
-            self._viewPortRect = params.viewPortRect;
+        self._viewPortRect = params.viewPortRect;
 
             if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
@@ -961,12 +961,12 @@ const _private = {
 
     onScrollHide: function(self) {
         _private.doAfterUpdate(self, () => {
-            if (self._pagingVisible) {
-                self._pagingVisible = false;
-                self._cachedPagingState = false;
-                self._forceUpdate();
-            }
-            self._isScrollShown = false;
+        if (self._pagingVisible) {
+            self._pagingVisible = false;
+            self._cachedPagingState = false;
+            self._forceUpdate();
+        }
+        self._isScrollShown = false;
         });
     },
     getScrollPagingControllerWithCallback: function(self, scrollParams, callback) {
@@ -1066,7 +1066,7 @@ const _private = {
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
             self._markedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
-            self._setMarkerAfterScroll = false;
+        self._setMarkerAfterScroll = false;
         }
     },
 
@@ -1158,7 +1158,7 @@ const _private = {
         if (!_private.hasMoreDataInAnyDirection(self, self._sourceController) || !isPortionedLoad) {
             portionedSearch.reset();
         } else if (loadedItems.getCount() && !_private.isLoadingIndicatorVisible(self) && self._loadingIndicatorTimer) {
-            _private.resetShowLoadingIndicatorTimer(self);
+                _private.resetShowLoadingIndicatorTimer(self);
         }
     },
 
@@ -1245,7 +1245,7 @@ const _private = {
                      result = self._selectionController.handleAddItems(newItems);
                      break;
                }
-                self.handleSelectionControllerResult(result);
+               self.handleSelectionControllerResult(result);
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -1721,7 +1721,7 @@ const _private = {
          return new TreeSelectionStrategy(strategyOptions);
       } else {
          return new FlatSelectionStrategy(strategyOptions);
-      }
+    }
    },
 
    getSelectionStrategyOptions(options: any, items: RecordSet): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
@@ -1789,8 +1789,8 @@ const _private = {
       // при подписке на модель событие remove летит еще и при скрытии элементов
 
        let selectionControllerResult;
-       switch (action) {
-           case IObservable.ACTION_REMOVE:
+         switch (action) {
+            case IObservable.ACTION_REMOVE:
                if (self._selectionController) {
                    selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
                }
@@ -1798,7 +1798,7 @@ const _private = {
                    self._markerController.handleRemoveItems(removedItemsIndex);
                }
                break;
-       }
+         }
        this.handleSelectionControllerResult(self, selectionControllerResult);
    },
 
@@ -1851,7 +1851,7 @@ const _private = {
                     * _canUpdateItemsActions приведет к показу неактуальных операций.
                     */
                     self._updateItemActions(self._options);
-                }
+    }
             });
         }
     },
@@ -2186,7 +2186,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     updateShadowModeHandler(_: SyntheticEvent<Event>, shadowVisibility: {down: boolean, up: boolean}): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
-            _private.updateShadowMode(this, shadowVisibility);
+        _private.updateShadowMode(this, shadowVisibility);
         } else {
             this._updateShadowModeAfterMount = () => {
                 _private.updateShadowMode(this, shadowVisibility);
@@ -2207,7 +2207,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
             if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
                 _private.getPortionedSearch(this).stopSearch();
-            }
+        }
         }
         if (_private.needScrollPaging(this._options.navigation)) {
             this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewPortSize);
@@ -2304,7 +2304,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.initializeNavigation(this, newOptions);
             if (this._listViewModel && this._listViewModel.setSupportVirtualScroll) {
                 this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
-            }
+        }
         }
         _private.updateNavigation(this);
 
@@ -2386,7 +2386,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else {
             if (newOptions.markerVisibility !== 'hidden') {
                 this._markerController = _private.createMarkerController(self, newOptions);
-            }
+        }
         }
 
         if (this._editInPlace) {
@@ -2440,7 +2440,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
             if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
                 this._selectionController = _private.createSelectionController(this, newOptions);
-            }
+        }
         }
     },
 
@@ -2964,11 +2964,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._dndListController.startDrag(draggedKey, dragObject.entity);
 
-        // Cобытие mouseEnter на записи может сработать до dragStart.
-        // И тогда перемещение при наведении не будет обработано.
-        // В таком случае обрабатываем наведение на запись сейчас.
-        //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
-        if (this._unprocessedDragEnteredItem) {
+            // Cобытие mouseEnter на записи может сработать до dragStart.
+            // И тогда перемещение при наведении не будет обработано.
+            // В таком случае обрабатываем наведение на запись сейчас.
+            //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
+            if (this._unprocessedDragEnteredItem) {
             this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
         }
     },
@@ -3023,23 +3023,23 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _dragLeave(): void {
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController) {
-            this._dndListController.setDragPosition(null);
+        this._dndListController.setDragPosition(null);
         }
     },
 
     _documentDragEnd(): void {
-        // Reset the state of the dragndrop after the movement on the source happens.
+        //Reset the state of the dragndrop after the movement on the source happens.
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController) {
-            if (this._dragEndResult instanceof Promise) {
+        if (this._dragEndResult instanceof Promise) {
                 _private.showIndicator(this);
                 this._dragEndResult.addBoth(() => {
                     this._dndListController.endDrag();
                     _private.hideIndicator(this);
-                });
-            } else {
-                this._dndListController.endDrag();
-            }
+            });
+        } else {
+            this._dndListController.endDrag();
+        }
         }
     },
 
@@ -3052,8 +3052,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._dndListController.isDragging()) {
             dragPosition = this._dndListController.calculateDragPosition(itemData);
             if (dragPosition && this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                this._dndListController.setDragPosition(dragPosition);
-            }
+                    this._dndListController.setDragPosition(dragPosition);
+                }
             this._unprocessedDragEnteredItem = null;
         }
     },
@@ -3081,7 +3081,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._unprocessedDragEnteredItem = null;
             if (this._dndListController instanceof DndTreeController && this._dndListController.isDragging()) {
                 this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
-            }
+        }
         }
     },
     _sortingChanged: function(event, propName) {
@@ -3200,24 +3200,24 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.setMarkedKey(this, key);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            // After the right swipe the item should get selected. (Кусок старого кода)
-            if (!this._selectionController) {
-                this._createSelectionController();
-            }
-            const result = this._selectionController.toggleItem(key);
-            _private.handleSelectionControllerResult(this, result);
-            this._notify('checkboxClick', [key, item.isSelected()]);
+            if (item.isSwiped()) {
+                this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+                this._listViewModel.nextVersion();
+            } else {
+                // After the right swipe the item should get selected. (Кусок старого кода)
+                if (!this._selectionController) {
+                    this._createSelectionController();
+                }
+                const result = this._selectionController.toggleItem(key);
+                _private.handleSelectionControllerResult(this, result);
+                this._notify('checkboxClick', [key, item.isSelected()]);
 
-            // TODO Проверить. Код ниже задавал Для Item controls-ListView__item_rightSwipeAnimation
-            //  для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f.
-            //  Надо, то реализовать в новой модели.
-            // Animation should be played only if checkboxes are visible.
-            // if (this._options.multiSelectVisibility !== 'hidden') {
-            //     this._listViewModel.setRightSwipedItem(itemData);
-            // }
-            this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
-            this._listViewModel.nextVersion();
-            _private.setMarkedKey(this, key);
+                // Animation should be played only if checkboxes are visible.
+                if (this._options.multiSelectVisibility !== 'hidden') {
+                    this._itemActionsController.activateRightSwipe(item.getContents().getKey());
+                }
+                _private.setMarkedKey(this, key);
+            }
         }
         if (!this._options.itemActions && item.isSwiped()) {
             this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
@@ -3225,17 +3225,31 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     /**
-     * Обработчик события окончания анимации свайпа по записи
+     * Обработчик, выполняемый после окончания анимации свайпа по опциям записи
      * @param e
      * @private
      */
-    _onSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
-        if (e.nativeEvent.animationName === 'rightSwipe' && this._itemActionsController.getSwipeAnimation() === ANIMATION_STATE.CLOSE) {
+    _onActionsSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
+        if (e.nativeEvent.animationName === 'itemActionsSwipeClose') {
             const item = this._itemActionsController.getSwipeItem();
-            if (!this._options.itemActions && item) {
-                this._notify('itemSwipe', [item, e]);
+            if (item) {
+                if (!this._options.itemActions) {
+                    this._notify('itemSwipe', [item, e]);
+                }
+                this._itemActionsController.deactivateSwipe();
             }
+        }
+    },
+
+    /**
+     * Обработчик, выполняемый после окончания анимации свайпа по записи
+     * @param e
+     * @private
+     */
+    _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
+        if (e.nativeEvent.animationName === 'rightSwipe') {
             this._itemActionsController.deactivateSwipe();
+            this._listViewModel.nextVersion();
         }
     },
 
@@ -3265,7 +3279,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     e.stopPropagation();
                     return this._editInPlace.cancelEdit();
                     break;
-            }
+    }
         }
     },
 

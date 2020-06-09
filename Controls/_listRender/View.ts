@@ -9,7 +9,6 @@ import { Sticky } from 'Controls/popup';
 import {
     Collection,
     CollectionItem,
-    ICollectionCommand,
     ANIMATION_STATE
 } from 'Controls/display';
 import {
@@ -176,14 +175,12 @@ export default class View extends Control<IViewOptions> {
         swipeEvent: SyntheticEvent<ISwipeEvent>,
         swipeContainerHeight: number
     ): void {
-        switch (swipeEvent.nativeEvent.direction) {
-        case 'left':
+        if (swipeEvent.nativeEvent.direction === 'left') {
             this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
-            break;
-        default:
+        }
+        if (swipeEvent.nativeEvent.direction === 'right' && item.isSwiped()) {
             this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
             this._collection.nextVersion();
-            break;
         }
     }
 
@@ -262,10 +259,6 @@ export default class View extends Control<IViewOptions> {
             break;
         }
         // TODO fire 'markedKeyChanged' event if needed
-    }
-
-    protected _executeCommands(commands: Array<ICollectionCommand<unknown>>): void {
-        commands.forEach((command) => command.execute(this._collection));
     }
 
     /**

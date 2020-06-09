@@ -12,6 +12,7 @@
  * @includes IContainer Controls/_dataSource/_error/IContainer
  * @includes IContainerConfig Controls/_dataSource/_error/IContainer.IContainerConfig
  * @includes IContainerConstructor Controls/_dataSource/_error/IContainer.IContainerConstructor
+ * @includes process Controls/_dataSource/_error/process
  * @public
  * @author Северьянов А.А.
  */
@@ -31,3 +32,4 @@ export {
     IContainerConstructor
 } from './_error/IContainer';
 export { default as Popup } from './_error/Popup';
+export { default as process} from './_error/process';
