@@ -48,7 +48,7 @@ export default class FlatController {
       this._entity = entity;
 
       if (draggedItem) {
-         this._draggingItemData = this._model.getItemDataByItem(draggedItem);
+         this._draggingItemData = this._model.getItemDataByItem ? this._model.getItemDataByItem(draggedItem) : draggedItem;
          // это перетаскиваемый элемент, поэтому чтобы на него навесился нужный css класс isDragging = true
          this._draggingItemData.isDragging = true;
       }
@@ -163,7 +163,7 @@ export default class FlatController {
       keys.sort((a, b) => {
          const indexA = model.getIndexByKey(a),
             indexB = model.getIndexByKey(b);
-         return indexA > indexB ? 1 : -1
+         return indexA > indexB ? 1 : -1;
       });
    }
 }
