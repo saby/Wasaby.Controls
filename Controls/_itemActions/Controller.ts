@@ -1,3 +1,4 @@
+import * as clone from 'Core/core-clone';
 import { Control } from 'UI/Base';
 import { Memory } from 'Types/source';
 import { isEqual } from 'Types/object';
@@ -8,7 +9,6 @@ import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
     IItemActionsItem,
-    IItemActionsTemplateOptions,
     IItemActionsContainer,
     IMenuTemplateOptions,
     IMenuConfig,
@@ -22,6 +22,7 @@ import {
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
 import { Utils } from './Utils';
+import {IContextMenuConfig} from './interface/IContextMenuConfig';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -93,6 +94,10 @@ export interface IItemActionsControllerOptions {
      * Видимость Опция записи, которую необходимо тображать в свайпе, если есть editArrow
      */
     editArrowVisibilityCallback: TEditArrowVisibilityCallback
+    /**
+     * Конфигурация для контекстного меню опции записи.
+     */
+    contextMenuConfig: IContextMenuConfig
 }
 
 /**
@@ -107,6 +112,7 @@ export class Controller {
     private _itemActionVisibilityCallback: TItemActionVisibilityCallback;
     private _editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     private _editArrowAction: IItemAction;
+    private _contextMenuConfig: IContextMenuConfig;
     private _theme: string;
 
     /**
@@ -121,6 +127,7 @@ export class Controller {
         this._theme = options.theme;
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
         this._editArrowAction = options.editArrowAction;
+        this._contextMenuConfig = options.contextMenuConfig;
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
@@ -135,15 +142,7 @@ export class Controller {
         if (this._commonItemActions || this._itemActionsProperty) {
             result = this._assignActions();
         }
-        this._calculateActionsTemplateConfig({
-            itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
-            style: options.style,
-            size: options.iconSize || DEFAULT_ACTION_SIZE,
-            toolbarVisibility: options.editingToolbarVisible,
-            actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
-            actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION,
-            itemActionsClass: options.itemActionsClass
-        });
+        this._calculateActionsTemplateConfig(options);
         return result;
     }
 
@@ -154,14 +153,13 @@ export class Controller {
      */
     activateSwipe(itemKey: TItemKey, actionsContainerHeight: number): void {
         this._setSwipeItem(itemKey);
+        this.setSwipeAnimation(ANIMATION_STATE.OPEN);
         const item = this._collection.getItemBySourceKey(itemKey);
         this._collection.setActiveItem(item);
 
         if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
         }
-
-        this.setSwipeAnimation(ANIMATION_STATE.OPEN);
     }
 
     /**
@@ -171,6 +169,7 @@ export class Controller {
         this._setSwipeItem(null);
         this._collection.setActiveItem(null);
         this._collection.setSwipeConfig(null);
+        this._collection.setSwipeAnimation(null);
     }
 
     /**
@@ -178,6 +177,15 @@ export class Controller {
      */
     getSwipeItem(): IItemActionsItem {
         return this._collection.find((item) => item.isSwiped());
+    }
+
+    /**
+     * Устанавливает состояние элемента rightSwiped
+     * @param itemKey
+     */
+    activateRightSwipe(itemKey: TItemKey) {
+        this._setSwipeItem(itemKey);
+        this.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
     }
 
     /**
@@ -198,7 +206,6 @@ export class Controller {
         if (!item) {
             return;
         }
-
         const menuActions = this._getMenuActions(item, parentAction);
 
         if (!menuActions || menuActions.length === 0) {
@@ -214,11 +221,9 @@ export class Controller {
         const showHeader = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
         const headConfig = showHeader ? {
             caption: parentAction.title,
-            icon: parentAction.icon
+            icon: parentAction.icon,
+            iconSize: this._contextMenuConfig && this._contextMenuConfig.iconSize
         } : null;
-        // TODO Не реализовано в модели. По факту getContextMenuConfig() сейчас никак не используется
-        // const contextMenuConfig = this._collection.getContextMenuConfig();
-        // ...contextMenuConfig,
         const templateOptions: IMenuTemplateOptions = {
             source,
             keyProperty: 'id',
@@ -226,6 +231,7 @@ export class Controller {
             nodeProperty: 'parent@',
             dropdownClassName: 'controls-itemActionsV__popup',
             closeButtonVisibility: true,
+            ...this._contextMenuConfig,
             root: parentAction && parentAction.id,
             showHeader,
             headConfig
@@ -373,15 +379,15 @@ export class Controller {
     /**
      * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
      */
-    private _calculateActionsTemplateConfig(options: IItemActionsTemplateOptions): void {
+    private _calculateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
         this._collection.setActionsTemplateConfig({
-            toolbarVisibility: options.toolbarVisibility,
+            toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
-            size: options.size,
-            itemActionsPosition: options.itemActionsPosition,
-            actionAlignment: options.actionAlignment,
-            actionCaptionPosition: options.actionCaptionPosition,
-            itemActionsClass: options.itemActionsClass
+            itemActionsClass: options.itemActionsClass,
+            size: options.iconSize || DEFAULT_ACTION_SIZE,
+            itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
+            actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
+            actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
         });
     }
 
@@ -460,20 +466,27 @@ export class Controller {
     private _wrapActionsInContainer(
         actions: IItemAction[]
     ): IItemActionsContainer {
-        const showed = actions.filter(
-            (action) =>
-                !action.parent &&
-                (action.showType === TItemActionShowType.TOOLBAR ||
-                action.showType === TItemActionShowType.MENU_TOOLBAR)
-        );
-        if (this._isMenuButtonRequired(actions)) {
-            showed.push({
-                id: null,
-                icon: `icon-ExpandDown ${Controller._resolveItemActionClass(this._theme)}`,
-                style: 'secondary',
-                iconStyle: 'secondary',
-                _isMenu: true
-            });
+        let showed;
+        if (actions.length > 1) {
+            showed = actions.filter(
+                (action) =>
+                    !action.parent &&
+                    (
+                        action.showType === TItemActionShowType.TOOLBAR ||
+                        action.showType === TItemActionShowType.MENU_TOOLBAR
+                    )
+                );
+            if (this._isMenuButtonRequired(actions)) {
+                showed.push({
+                    id: null,
+                    icon: `icon-ExpandDown ${Controller._resolveItemActionClass(this._theme)}`,
+                    style: 'secondary',
+                    iconStyle: 'secondary',
+                    _isMenu: true
+                });
+            }
+        } else {
+            showed = clone(actions);
         }
         return {
             all: actions,

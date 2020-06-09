@@ -20,8 +20,7 @@
                             _classTypeScroll}}
                            {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
                  on:controlResize="_resizeHandler()"
-                 on:scroll="_scrollHandler()"
-                 on:wheel="_wheelHandler()">
+                 on:scroll="_scrollHandler()">
                <ws:partial template="{{_options.content}}"
                            scope="{{_options}}"
                            attr:class="controls-Scroll__userContent"

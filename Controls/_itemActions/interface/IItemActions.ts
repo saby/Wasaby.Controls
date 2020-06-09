@@ -3,6 +3,7 @@ import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IBaseCollection, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {ISource} from 'Controls/interface';
+import {IContextMenuConfig} from "./IContextMenuConfig";
 
 export enum TItemActionShowType {
     // show only in Menu
@@ -129,17 +130,6 @@ export interface IItemActionsContainer {
     showed: IItemAction[];
 }
 
-export interface IItemActionsTemplateOptions {
-    style?: string;
-    itemActionsPosition: string;
-    actionAlignment?: string;
-    actionCaptionPosition: TActionCaptionPosition;
-    itemActionsClass?: string;
-    actionClickCallback?: TActionClickCallback;
-    size?: string;
-    toolbarVisibility?: boolean;
-}
-
 export interface IItemActionsItem {
     getActions(): IItemActionsContainer;
     getContents(): Model;
@@ -148,6 +138,7 @@ export interface IItemActionsItem {
     isActive(): boolean;
     setSwiped(swiped: boolean): void;
     isSwiped(): boolean;
+    isRightSwiped(): boolean;
 }
 
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
@@ -171,7 +162,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     getActiveItem(): IItemActionsItem;
 }
 
-export interface IMenuTemplateOptions {
+export interface IMenuTemplateOptions extends IContextMenuConfig {
     source: ISource;
     keyProperty: string;
     parentProperty: string;
@@ -183,6 +174,7 @@ export interface IMenuTemplateOptions {
     headConfig?: {
         caption: string;
         icon: string;
+        iconSize: string;
     };
 }
 

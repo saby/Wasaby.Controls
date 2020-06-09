@@ -73,6 +73,16 @@ const flatItemActions: IItemAction[] = [
     }
 ];
 
+// Нет опций для контекстного меню
+const onlyOneItemActions: IItemAction[] = [
+    {
+        id: 1,
+        icon: 'icon-PhoneNull',
+        title: 'phone',
+        showType: TItemActionShowType.MENU
+    }
+];
+
 // Только одна опция в тулбаре, одна - в контекстном меню
 const horizontalOnlyItemActions: IItemAction[] = [
     {
@@ -151,7 +161,8 @@ describe('Controls/_itemActions/Controller', () => {
             actionCaptionPosition: options ? options.actionCaptionPosition : null,
             editingToolbarVisible: options ? options.editingToolbarVisible : false,
             editArrowAction: options ? options.editArrowAction : false,
-            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null
+            editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
+            contextMenuConfig: options ? options.contextMenuConfig: null
         };
     }
 
@@ -250,6 +261,19 @@ describe('Controls/_itemActions/Controller', () => {
             const actionsOf4 = collection.getItemBySourceKey(4).getActions();
             assert.isNotNull(actionsOf4, 'actions were not set to item 4');
             assert.notEqual(actionsOf4.showed[0].title, 'phone', 'What the hell \'phone\' action is in \'showed\' array?');
+        });
+
+        // T1.8.1 При установке только одной опции нужно игнорировать showType и всё показывать как TOOLBAR
+        it('should ignore showType and show action as its showType was TOOLBAR when it is the only action in list', () => {
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions: onlyOneItemActions,
+                theme: 'default'
+            }));
+            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+            assert.isNotNull(actionsOf1, 'actions were not set to item 1');
+            assert.isNotTrue(actionsOf1.showed[actionsOf1.showed.length - 1]._isMenu, 'It seems, that sly menu button came here!');
+            assert.equal(actionsOf1.showed[actionsOf1.showed.length - 1].showType, TItemActionShowType.MENU, 'something strange happened to lonely item action...');
         });
 
         // T1.9. После установки набора операций, операции с иконками содержат в поле icon CSS класс “controls-itemActionsV__action_icon icon-size” (оч сомнительный тест)
@@ -437,9 +461,14 @@ describe('Controls/_itemActions/Controller', () => {
             assert.exists(config, 'Swipe activation should make configuration');
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
+
+        // T2.11 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
+        it('should right-swipe item on activateRightSwipe() method', () => {
+            itemActionsController.activateRightSwipe(1);
+            const item1 = collection.getItemBySourceKey(1);
+            assert.isTrue(item1.isRightSwiped());
+        });
     });
-
-
 
     describe('prepareActionsMenuConfig()', () => {
         let clickEvent: SyntheticEvent<MouseEvent>;
@@ -543,6 +572,23 @@ describe('Controls/_itemActions/Controller', () => {
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.deepEqual(config.target.getBoundingClientRect(), target.getBoundingClientRect());
         });
+
+        // T3.5. Если в контрол был передан contextMenuConfig, его нужно объединять с templateOptions для Sticky.openPopup(menuConfig)
+        it ('should merge contextMenuConfig with templateOptions for popup config', () => {
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions,
+                theme: 'default',
+                contextMenuConfig: {
+                    iconSize: 's',
+                    groupProperty: 'title'
+                }
+            }));
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.equal(config.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
+            assert.equal(config.templateOptions.headConfig.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
+        })
     });
 
     // см. этот же тест в Collection.test.ts
@@ -575,4 +621,6 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.OPEN, 'Incorrect animation state !== open');
         })
     });
+
+
 });

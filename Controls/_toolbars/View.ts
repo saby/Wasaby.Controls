@@ -276,6 +276,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             template: 'Controls/menu:Popup',
             closeOnOutsideClick: true,
             actionOnScroll: 'close',
+            fittingMode: {
+                vertical: 'adaptive',
+                horizontal: 'overflow'
+            },
             id: this._popupId
         };
     }
@@ -286,10 +290,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _createPrefetchProxy(source: ICrudPlus, items: TItems): ICrudPlus {
-        // Если уже есть prefetchProxy дополнительная обертка не нужна
-        if (source instanceof PrefetchProxy) {
-            return source;
-        }
         return new PrefetchProxy({
             target: source,
             data: {

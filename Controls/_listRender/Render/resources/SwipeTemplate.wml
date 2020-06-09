@@ -2,8 +2,8 @@
    <div attr:class="controls-itemActionsV_swipe_animationContainer">
       <div
          attr:class="controls-Swipe_theme-{{theme}}
-         controls-Swipe_{{ animationState }}_theme-{{ itemData.theme }}"
-         on:animationend="_onAnimationEnd()">
+         controls-Swipe_{{ animationState }}_theme-{{theme}}"
+         on:animationend="_onActionsSwipeAnimationEnd()">
          <div attr:class="controls-Swipe_{{ swipeConfig.twoColumns ? 'columns' : actionAlignment }}_theme-{{theme}}">
                <ws:if data="{{ swipeConfig.twoColumns }}">
                   <ws:partial
