@@ -1,7 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import * as template from 'wml!Controls/_list/ScrollContainer/ScrollContainer';
 import {Collection} from 'Controls/display';
-import VirtualScroll from './ScrollContainer/VirtualScroll';
+import VirtualScroll from '../_list/ScrollContainer/VirtualScroll';
 import {Record} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 import {
@@ -10,9 +9,9 @@ import {
     IRange,
     IDirection,
     ITriggerState
-} from './ScrollContainer/interfaces';
+} from '../_list/ScrollContainer/interfaces';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import InertialScrolling from './resources/utils/InertialScrolling';
+import InertialScrolling from '../_list/resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {throttle} from 'Types/function';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
@@ -55,7 +54,6 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
  * @author Авраменко А.С.
  */
 export default class ScrollContainer extends Control<IOptions> {
-    protected _template: TemplateFunction = template;
     protected _children: {
         topVirtualScrollTrigger: HTMLElement;
         bottomVirtualScrollTrigger: HTMLElement;
