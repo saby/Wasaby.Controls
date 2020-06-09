@@ -26,6 +26,7 @@
                 on:mouseenter="_handleMouseEnter()"
                 on:mouseleave="_handleMouseLeave()"
                 on:keydown="_handleKeyDown()"
+                on:deactivated="_deactivated()"
         />
     </ws:else>
 </div>
