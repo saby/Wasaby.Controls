@@ -193,20 +193,20 @@ var _private = {
       }
    },
 
-   onResult: function (self, action, data, nativeEvent) {
+   onResult: function (action, data, nativeEvent) {
       switch (action) {
          case 'pinClick':
             _private.pinClick(this, data);
             break;
          case 'applyClick':
-            self._options.notifySelectedItemsChanged(data, nativeEvent);
+            this._options.notifySelectedItemsChanged(data, nativeEvent);
             _private.updateHistory(this, data);
             _private.closeDropdownList(this);
             break;
          case 'itemClick':
             data = _private.prepareItem(data, this._options.keyProperty, this._source);
 
-            var res = self._options.notifySelectedItemsChanged([data], nativeEvent);
+            var res = this._options.notifySelectedItemsChanged([data], nativeEvent);
 
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
@@ -216,15 +216,17 @@ var _private = {
             break;
          case 'selectorResult':
             _private.onSelectorResult(this, data);
-            self._options.notifySelectedItemsChanged(data, nativeEvent);
+            this._options.notifySelectedItemsChanged(data, nativeEvent);
             break;
          case 'selectorDialogOpened':
             this._initSelectorItems = data;
             _private.closeDropdownList(this);
             break;
          case 'footerClick':
-            self._options.notifyEvent('footerClick', data);
-            _private.closeDropdownList(this);
+            this._options.notifyEvent('footerClick', data);
+            if (!this.parentControl._$active) {
+               _private.closeDropdownList(this);
+            }
       }
    },
 
@@ -359,9 +361,7 @@ var _private = {
                self._popupId = null;
                self._onClose();
             },
-            onResult: (action, data, nativeEvent) => {
-               self._onResult(self, action, data, nativeEvent);
-            }
+            onResult: self._onResult
          },
          autofocus: false,
          closeOnOutsideClick: true
@@ -611,7 +611,7 @@ var _Controller = Control.extend({
 
    _onSelectorTemplateResult: function(event, selectedItems) {
       let result = this._options.notifyEvent('selectorCallback', this._initSelectorItems, selectedItems) || selectedItems;
-      this._onResult(this,'selectorResult', result);
+      this._onResult('selectorResult', result);
    },
 
    handleScroll: function() {

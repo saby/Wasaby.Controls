@@ -374,7 +374,10 @@ define(
             let isClosed = false, isFooterClicked = false;
             // dropdownController._beforeMount(configLazyLoad);
             popup.Sticky.closePopup = () => {isClosed = true; };
-            dropdownController._onResult(dropdownController, 'footerClick');
+            dropdownController.parentControl = {
+               _$active: true
+            };
+            dropdownController._onResult('footerClick');
             assert.isFalse(isClosed);
             assert.isTrue(isFooterClicked);
          });
@@ -396,26 +399,26 @@ define(
             popup.Sticky.openPopup = () => {opened = true; };
 
             // returned false from handler and no hierarchy
-            dropdownController._onResult(dropdownController, 'itemClick', dropdownController._items.at(4));
+            dropdownController._onResult('itemClick', dropdownController._items.at(4));
             assert.isFalse(closed);
 
             // returned undefined from handler and there is hierarchy
             closed = false;
             closeByNodeClick = false;
-            dropdownController._onResult(dropdownController, 'itemClick', dropdownController._items.at(5));
+            dropdownController._onResult('itemClick', dropdownController._items.at(5));
             assert.isFalse(closed);
 
             // returned undefined from handler and no hierarchy
             closed = false;
             dropdownController._popupId = 'test';
             closeByNodeClick = undefined;
-            dropdownController._onResult(dropdownController, 'itemClick', dropdownController._items.at(4));
+            dropdownController._onResult('itemClick', dropdownController._items.at(4));
             assert.isTrue(closed);
 
             // returned true from handler and there is hierarchy
             closed = false;
             closeByNodeClick = undefined;
-            dropdownController._onResult(dropdownController, 'itemClick', dropdownController._items.at(5));
+            dropdownController._onResult('itemClick', dropdownController._items.at(5));
             assert.isTrue(closed);
          });
 
@@ -1029,12 +1032,8 @@ define(
 
             it('_private::onResult applyClick with history', function() {
                let selectedItems;
-               let dropdown = {
-                  _options: {
-                     notifySelectedItemsChanged: function(d) {
-                        selectedItems = d[0];
-                     }
-                  }
+               dropdownController._options.notifySelectedItemsChanged = function(d) {
+                  selectedItems = d[0];
                };
 
                dropdownController._items = itemsRecords.clone();
@@ -1045,7 +1044,7 @@ define(
                   filter: {}
                }).then((result) => {
                   dropdownController.setItemsOnMount(result);
-                  dropdownController._onResult(dropdown, 'applyClick', items);
+                  dropdownController._onResult('applyClick', items);
                   assert.deepEqual(selectedItems, items);
                });
             });
@@ -1053,14 +1052,10 @@ define(
             it('_private::onResult itemClick on history item', function() {
                let updated, resultItems, testEvent, closeByNodeClick = true;
 
-               let dropdown = {
-                  _options: {
-                     notifySelectedItemsChanged: function(d, e) {
-                        resultItems = d;
-                        testEvent = e;
-                        return closeByNodeClick;
-                     }
-                  }
+               dropdownController._options.notifySelectedItemsChanged = function(d, e) {
+                  resultItems = d;
+                  testEvent = e;
+                  return closeByNodeClick;
                };
 
                historySource.update = function () {
@@ -1091,7 +1086,7 @@ define(
                item.set('id', item.getId() + '_history');
                assert.equal(item.getId(), '6_history');
 
-               dropdownController._onResult(dropdown, 'itemClick', item, nativeEvent);
+               dropdownController._onResult('itemClick', item, nativeEvent);
 
                assert.equal(resultItems[0].getId(), '6');
                assert.deepEqual(testEvent, nativeEvent);
@@ -1105,7 +1100,7 @@ define(
                   },
                   keyProperty: 'id'
                });
-               dropdownController._onResult(dropdown, 'itemClick', item);
+               dropdownController._onResult('itemClick', item);
                assert.equal(resultItems[0].getId(), '5');
                assert.isFalse(updated);
             });
@@ -1138,7 +1133,7 @@ define(
                assert.equal(item.getId(), '6_history');
                dropdownController._source = historySource;
                dropdownController._options.source.update = () => {};
-               dropdownController._onResult(dropdownController, 'pinClick', item);
+               dropdownController._onResult('pinClick', item);
                assert.isFalse(closed);
             });
 
