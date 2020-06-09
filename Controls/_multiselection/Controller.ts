@@ -29,7 +29,7 @@ export class Controller {
          excluded: this._excludedKeys
       };
    }
-   private set _selection(selection: ISelection) {
+   private set _selection(selection: ISelection): void {
       this._selectedKeys = selection.selected;
       this._excludedKeys = selection.excluded;
    }
@@ -46,12 +46,9 @@ export class Controller {
    /**
     * Обновить состояние контроллера
     * @param options
-    * @param rootChanged
-    * @param filterChanged
     */
-   update(options: ISelectionControllerOptions, rootChanged: boolean, filterChanged: boolean): ISelectionControllerResult {
+   update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
-      const itemsChanged = modelChanged ? true : options.model.getCollection() !== this._model.getCollection();
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
 
@@ -63,17 +60,10 @@ export class Controller {
       if (selectionChanged) {
          this._selectedKeys = options.selectedKeys.slice();
          this._excludedKeys = options.excludedKeys.slice();
-      }
-
-      const clearSelection = this._strategy.isAllSelected(this._selection) && (rootChanged || filterChanged);
-      if (clearSelection) {
-         this._clearSelection();
-      }
-
-      if (selectionChanged || itemsChanged || modelChanged || clearSelection) {
+         this._updateModel(this._selection);
+      } else if (modelChanged) {
          this._updateModel(this._selection);
       }
-
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -124,7 +114,7 @@ export class Controller {
          selectedKeysDiff: { keys: [], added: [], removed: [] },
          excludedKeysDiff: { keys: [], added: [], removed: [] },
          selectedCount: this._getCount(this._selection),
-         isAllSelected: this._strategy.isAllSelected(this._selection)
+         isAllSelected: this._strategy.isAllSelected(this._selection, this._model.getHasMoreData())
       };
    }
 
@@ -142,8 +132,7 @@ export class Controller {
 
       // если у нас изменился корень и этот корень выбран, то это значит, что мы зашли в него нажали Выбрать все
       // и вышли в родительский узел, по стандартам элементы должны стать невыбранными
-      if (rootChanged && this._selectedKeys.includes(prevRootId) && this._excludedKeys.includes(prevRootId)
-            || this._strategy.isAllSelected(this._selection) && this._model.getCollection().getCount() === 0) {
+      if (rootChanged && this._selectedKeys.includes(prevRootId) && this._excludedKeys.includes(prevRootId)) {
          this._clearSelection();
       }
 
@@ -205,7 +194,7 @@ export class Controller {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
          selectedCount: this._getCount(newSelection),
-         isAllSelected: this._strategy.isAllSelected(newSelection)
+         isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getHasMoreData())
       };
    }
 

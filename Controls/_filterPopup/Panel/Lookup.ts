@@ -20,7 +20,6 @@ import 'Controls/lookup';
  * @extends Core/Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
- * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
@@ -36,6 +35,7 @@ import 'Controls/lookup';
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/interface/IInputField
  * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/_interface/ISelectorDialog
  * @control
  * @public
  * @author Герасимов А.М.

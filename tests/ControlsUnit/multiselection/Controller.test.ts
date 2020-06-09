@@ -3,26 +3,20 @@
 
 import { assert } from 'chai';
 import { SelectionController } from 'Controls/multiselection';
+import { ListViewModel } from 'Controls/list';
+import { RecordSet } from 'Types/collection';
+import { spy } from 'sinon';
+import { SearchGridViewModel} from 'Controls/treeGrid';
 
 describe('Controls/_multiselection/Controller', () => {
-   const model = {
-      items: [],
-      flag: false,
-      setSelectedItems(): void {
-         this.flag = true;
-      },
-      getHasMoreData(): boolean { return false; },
-      getCollection(): object {
-         return {
-            getCount() { return 0; }
-         };
-      },
-      getItemBySourceKey(): object {
-         return {
-            isSelected(): boolean { return false; }
-         };
-      }
-   };
+   const items = new RecordSet({
+      rawData: [
+         { id: 1 },
+         { id: 2 },
+         { id: 3 }
+      ],
+      keyProperty: 'id'
+   });
 
    const strategy = {
       unselect(): object { return { selected: [], excluded: [] }; },
@@ -34,176 +28,135 @@ describe('Controls/_multiselection/Controller', () => {
       getCount(): void {},
       getSelectionForModel(): object {
          return {
-            get(): object { return {}; }
+            get(): object { return []; }
          };
       },
       isAllSelected(): boolean {
-         return true;
+         return false;
       }
    };
 
-   let controller;
+   let controller, model;
 
    beforeEach(() => {
-      model.flag = false;
-      controller = new SelectionController({
-         model,
-         strategy,
-         selectedKeys: [],
-         excludedKeys: []
+      model = new ListViewModel({
+         items,
+         keyProperty: 'id'
       });
-   });
 
-   it('constructor', () => {
       controller = new SelectionController({
          model,
          strategy,
          selectedKeys: [],
          excludedKeys: []
       });
-      assert.equal(model.flag, true);
    });
 
    describe('update', () => {
       it('model changed', () => {
-         controller.update({
-            model: {
-               items: [],
-               flag: false,
-               setSelectedItems(): void { this.flag = true; },
-               getHasMoreData(): boolean { return false; },
-               getCollection(): number[] { return this.items; },
-               getItemBySourceKey(): object {
-                  return {
-                     isSelected(): boolean {
-                        return false;
-                     }
-                  };
-               }
-            },
-            selectedKeys: [],
-            excludedKeys: [],
-            strategyOptions: {}
+         model =  new ListViewModel({
+            items,
+            keyProperty: 'id'
          });
-         assert.equal(model.flag, true);
-      });
 
-      it('items changed', () => {
-         model.items = [1];
+         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+
          controller.update({
             model,
             selectedKeys: [],
             excludedKeys: [],
             strategyOptions: {}
          });
-         assert.equal(model.flag, true);
+
+         assert.isTrue(setSelectedItemsSpy.called);
       });
 
       it('selection changed', () => {
+         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
          controller.update({
             model,
             selectedKeys: [1],
             excludedKeys: [],
             strategyOptions: {}
          });
-         assert.equal(model.flag, true);
-      });
-
-      it ('root changed and all selected', () => {
-         const cfg = {
-            model,
-            strategy,
-            selectedKeys: [null],
-            excludedKeys: []
-         };
-         controller = new SelectionController(cfg);
-
-         controller.update(cfg, true);
-
-         assert.equal(model.flag, true);
-         assert.deepEqual(controller._selection, { selected: [], excluded: [] })
-      });
-
-      it ('filter changed and all selected', () => {
-         const cfg = {
-            model,
-            strategy,
-            selectedKeys: [null],
-            excludedKeys: []
-         };
-         controller = new SelectionController(cfg);
-
-         controller.update(cfg, false, true);
-
-         assert.equal(model.flag, true);
-         assert.deepEqual(controller._selection, { selected: [], excluded: [] });
+         assert.isTrue(setSelectedItemsSpy.called);
       });
    });
 
-   it('toggleItem', () => {
-      controller.toggleItem(1);
-      assert.equal(model.flag, true);
+   describe('toggleItem', () => {
+      it ('toggle', () => {
+         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+         controller.toggleItem(1);
+         assert.isTrue(setSelectedItemsSpy.called);
+      });
+
+      it('toggle breadcrumbs', () => {
+         model = new SearchGridViewModel({
+            items: new RecordSet({
+               rawData: [{
+                  id: 1,
+                  parent: null,
+                  nodeType: true,
+                  title: 'test_node'
+               }, {
+                  id: 2,
+                  parent: 1,
+                  nodeType: null,
+                  title: 'test_leaf'
+               }],
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            columns: [{}]
+         });
+         controller = new SelectionController({
+            model,
+            strategy,
+            selectedKeys: [],
+            excludedKeys: []
+         });
+
+         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+         controller.toggleItem(2);
+         assert.isTrue(setSelectedItemsSpy.called);
+      });
    });
 
    it('selectAll', () => {
+      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
       controller.selectAll();
-      assert.equal(model.flag, true);
+      assert.isTrue(setSelectedItemsSpy.called);
    });
 
    it('toggleAll', () => {
+      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
       controller.toggleAll();
-      assert.equal(model.flag, true);
+      assert.isTrue(setSelectedItemsSpy.called);
    });
 
    it('unselectAll', () => {
+      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
       controller.unselectAll();
-      assert.equal(model.flag, true);
+      assert.isTrue(setSelectedItemsSpy.called);
    });
 
    it('handleAddItems', () => {
+      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
       controller.handleAddItems([]);
-      assert.equal(model.flag, true);
+      assert.isTrue(setSelectedItemsSpy.called);
    });
 
    it('handleRemoveItems', () => {
+      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
       controller.handleRemoveItems([]);
-      assert.equal(model.flag, true);
+      assert.isTrue(setSelectedItemsSpy.called);
    });
 
-   describe('handleReset', () => {
-      it('not changes', () => {
-         controller.handleReset([]);
-         assert.equal(model.flag, true);
-      });
-
-      it('root changed', () => {
-         const cfg = {
-            model,
-            strategy,
-            selectedKeys: [1],
-            excludedKeys: [1]
-         };
-         controller = new SelectionController(cfg);
-
-         controller.handleReset([], true, 1);
-
-         assert.equal(model.flag, true);
-         assert.deepEqual(controller._selection, { selected: [], excluded: [] });
-      });
-
-      it('all selected and empty model', () => {
-         const cfg = {
-            model,
-            strategy,
-            selectedKeys: [null],
-            excludedKeys: []
-         };
-         controller = new SelectionController(cfg);
-
-         controller.handleReset([]);
-
-         assert.equal(model.flag, true);
-         assert.deepEqual(controller._selection, { selected: [], excluded: [] });
-      });
+   it('handleReset', () => {
+      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+      controller.handleReset([]);
+      assert.isTrue(setSelectedItemsSpy.called);
    });
 });
