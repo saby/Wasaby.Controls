@@ -17,7 +17,8 @@ import {
     IItemAction,
     TItemActionsPosition,
     TActionCaptionPosition,
-    TEditArrowVisibilityCallback, TActionDisplayMode
+    TEditArrowVisibilityCallback,
+    TActionDisplayMode
 } from './interface/IItemActions';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';

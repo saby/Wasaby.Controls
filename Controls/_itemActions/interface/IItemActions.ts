@@ -135,14 +135,19 @@ export interface IItemAction {
      * Parent action id
      */
     parent?: string | number;
+}
 
+/**
+ * Расширенный интерфейс IItemAction с полями для использования в шаблоне
+ */
+interface IShownItemAction extends IItemAction {
     /**
-     * Это расчётное свойство. Используйте displayMode.
+     * Показывать текст операции
      */
     showTitle?: boolean;
 
     /**
-     * Это расчётное свойство. Используйте displayMode.
+     * Показывать иконку операции
      */
     showIcon?: boolean;
 }
@@ -155,7 +160,7 @@ export type TEditArrowVisibilityCallback = (item: unknown) => boolean;
 
 export interface IItemActionsContainer {
     all: IItemAction[];
-    showed: IItemAction[];
+    showed: IShownItemAction[];
 }
 
 export interface IItemActionsItem {
