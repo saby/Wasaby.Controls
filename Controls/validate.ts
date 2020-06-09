@@ -2,6 +2,7 @@
  * Библиотека контролов, которые позволяют организовать {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ валидацию} данных на форме.
  * @library Controls/validate
  * @includes Controller Controls/_validate/Controller
+ * @includes ControllerClass Controls/_validate/ControllerClass
  * @includes Container Controls/_validate/Container
  * @includes InputContainer Controls/_validate/InputContainer
  * @includes isEmail Controls/_validate/Validators/IsEmail
@@ -36,6 +37,7 @@ import isValidDateRange from 'Controls/_validate/Validators/IsValidDateRange';
 import Highlighter = require('wml!Controls/_validate/Highlighter');
 
 export {default as Controller} from 'Controls/_validate/Controller';
+export {default as ControllerClass} from 'Controls/_validate/ControllerClass';
 export {default as Container} from 'Controls/_validate/Container';
 export {default as InputContainer} from 'Controls/_validate/InputContainer';
 export {default as DateRangeContainer} from 'Controls/_validate/DateRange';

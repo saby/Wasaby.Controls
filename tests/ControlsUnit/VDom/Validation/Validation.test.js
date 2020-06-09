@@ -98,12 +98,12 @@ define([
          FC.onValidateCreated({}, validator1);
          FC.onValidateCreated({}, validator2);
 
-         assert.equal(FC._validates.length, 2);
+         assert.equal(FC._validateController._validates.length, 2);
 
          FC.onValidateDestroyed({}, validator1);
          FC.onValidateDestroyed({}, validator2);
 
-         assert.equal(FC._validates.length, 0);
+         assert.equal(FC._validateController._validates.length, 0);
 
          FC.destroy();
       });
@@ -136,7 +136,7 @@ define([
          let validator3 = getValidator('Error');
          let validator4 = getValidator('Error');
 
-         FC._validates.push(validator1, validator2, validator3, validator4);
+         FC._validateController._validates.push(validator1, validator2, validator3, validator4);
          FC.submit().then(() => {
             assert.equal(validator3._activateCall, true);
             FC.destroy();
