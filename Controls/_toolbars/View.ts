@@ -276,6 +276,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             template: 'Controls/menu:Popup',
             closeOnOutsideClick: true,
             actionOnScroll: 'close',
+            fittingMode: {
+                vertical: 'adaptive',
+                horizontal: 'overflow'
+            },
             id: this._popupId
         };
     }

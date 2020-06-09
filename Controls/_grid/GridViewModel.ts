@@ -964,7 +964,8 @@ var
                 cellClasses += endRow - startRow > 1 ? ' controls-Grid__header-cell_justify_content_center' : '';
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ` controls-Grid__cell_header-content_border-bottom_theme-${this._options.theme}` : '';
 
-                if (startColumn - hasMultiSelect ? 1 : 0) {
+                // У первой колонки не рисуем вертикальные разделители. startColumn - конфигурация GridLayout, начинается с 1.
+                if (startColumn - (hasMultiSelect ? 2 : 1)) {
                     const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, startColumn - 1, this._options.columnSeparatorSize);
                     if (columnSeparatorSize !== null) {
                         cellClasses += ` controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
@@ -1068,6 +1069,7 @@ var
 
         getCurrentResultsColumn(): {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} {
             const columnIndex = this._curResultsColumnIndex;
+            const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
             const resultsColumn: {column: IHeaderCell, index: number, zIndex?: number, cellClasses?: string} = {
                    column: this._resultsColumns[columnIndex],
                    index: columnIndex
@@ -1085,6 +1087,19 @@ var
                     stickyColumnsCount: this._options.stickyColumnsCount,
                     columnScroll: this._options.columnScroll
                 });
+            }
+
+            if (columnIndex > hasMultiSelect ? 1 : 0) {
+                const columnSeparatorSize = _private.getSeparatorForColumn(
+                    this._options.columns,
+                    columnIndex - (hasMultiSelect ? 1 : 0),
+                    this._options.columnSeparatorSize
+                );
+
+                if (columnSeparatorSize !== null) {
+                    cellClasses += ' controls-Grid__row-cell_withColumnSeparator';
+                    cellClasses += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${this._options.theme}`;
+                }
             }
 
             if (this._options.columnScroll) {

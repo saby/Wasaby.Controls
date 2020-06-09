@@ -30,6 +30,7 @@ export default interface IFontColorStyle {
  * @variant unaccented
  * @variant link
  * @variant label
+ * @variant info
  * @variant default
  * @demo Controls-demo/Buttons/FontStyles/Index
  * @demo Controls-demo/Input/FontStyles/Index

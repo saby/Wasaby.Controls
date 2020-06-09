@@ -15,7 +15,7 @@ const maxPercentValue = 100;
 
 /**
  * Базовый слайдер с одним подвижным ползунком для выбора значения.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fBase%2fIndex">демо-пример</a>
@@ -107,7 +107,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
 
    protected _beforeMount(options: ISliderBaseOptions): void {
       this._checkOptions(options);
-      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
+          options.scaleLabelFormatter);
       this._value = options.value === undefined ? options.maxValue : options.value;
       this._pointData = [{name: 'point', position: 100}, {name: 'tooltip', position: 0}];
       this._lineData = {position: 0, width: 100};
@@ -117,7 +118,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _beforeUpdate(options: ISliderBaseOptions): void {
       if (this._needUpdate(this._options, options)) {
          this._checkOptions(options);
-         this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+         this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
+             options.scaleLabelFormatter);
       }
       this._value = options.value === undefined ? options.maxValue : Math.min(options.maxValue, options.value);
       this._render(options.minValue, options.maxValue, this._value);
