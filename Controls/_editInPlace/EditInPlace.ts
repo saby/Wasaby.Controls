@@ -812,7 +812,6 @@ export default class EditInPlace {
                 ).getLevel() + 1;
             }
 
-            this._editingItemData.isEditing = true;
             this._editingItemData.item = this._editingItem;
             if (this._isAdd) {
                 this._editingItemData.isAdd = this._isAdd;
