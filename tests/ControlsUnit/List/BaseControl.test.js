@@ -4580,6 +4580,54 @@ define([
       });
 
 
+      describe('beforeUpdate', () => {
+         let cfg;
+         let instance;
+
+         beforeEach(() => {
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source,
+               viewModelConfig: {
+                  items: new collection.RecordSet({
+                     keyProperty: 'id',
+                     rawData: data
+                  }),
+                  keyProperty: 'id'
+               },
+               markerVisibility: 'hidden',
+               selectedKeys: [],
+               excludedKeys: []
+            };
+            instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
+         });
+
+         it('should create marker controller', async () => {
+            assert.isNull(instance._markerController);
+            const createMarkerControllerSpy = sinon.spy(lists.BaseControl._private, 'createMarkerController');
+            await instance._beforeUpdate({
+               ...cfg,
+               markerVisibility: 'visible'
+            });
+            assert.isTrue(createMarkerControllerSpy.calledOnce);
+         });
+
+         it('should create selection controller', async () => {
+            assert.isNull(instance._markerController);
+            const createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
+            await instance._beforeUpdate({
+               ...cfg,
+               selectedKeys: [1]
+            });
+            assert.isTrue(createSelectionControllerSpy.calledOnce);
+         });
+      });
+
+
       it('_getLoadingIndicatorClasses', function() {
          const theme = 'default';
          function testCaseWithArgs(indicatorState, hasPaging, isPortionedSearchInProgress = false) {

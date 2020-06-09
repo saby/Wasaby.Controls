@@ -2324,6 +2324,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._markerController) {
             _private.updateMarkerController(this, newOptions);
+        } else {
+            if (newOptions.markerVisibility !== 'hidden') {
+                this._markerController = _private.createMarkerController(self, newOptions);
+            }
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -2366,6 +2370,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._selectionController) {
             _private.updateSelectionController(this, newOptions);
+        } else {
+            // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
+            if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
+                this._selectionController = _private.createSelectionController(this, newOptions);
+            }
         }
     },
 
