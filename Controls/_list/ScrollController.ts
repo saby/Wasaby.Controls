@@ -1,4 +1,4 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {IControlOptions} from 'UI/Base';
 import {Collection} from 'Controls/display';
 import VirtualScroll from './ScrollContainer/VirtualScroll';
 import {Record} from 'Types/entity';
@@ -10,7 +10,6 @@ import {
     IDirection,
     ITriggerState
 } from './ScrollContainer/interfaces';
-import {SyntheticEvent} from 'Vdom/Vdom';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {throttle} from 'Types/function';
