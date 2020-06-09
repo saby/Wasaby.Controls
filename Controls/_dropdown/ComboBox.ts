@@ -98,24 +98,7 @@ var ComboBox = Control.extend({
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
-      this._controller = new _Controller({...options, ...{
-            selectedKeys: [options.selectedKey],
-            marker: false,
-            popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup') + ' controls-ComboBox-popup_theme-' + options.theme,
-            typeShadow: 'suggestionsContainer',
-            close: this._onClose,
-            open: this._onOpen,
-            allowPin: false,
-            selectedItemsChangedCallback: this._setText,
-            theme: options.theme,
-            notifyEvent: this._notifyComboboxEvent.bind(this),
-            notifySelectedItemsChanged: this._selectedItemsChangedHandler.bind(this),
-            itemPadding: {
-               right: 'menu-xs',
-               left: 'menu-xs'
-            }
-         }
-      });
+      this._controller = new _Controller(this._getControllerOptions(options));
 
       return beforeMountMethod(this, options, recievedState);
    },
@@ -135,12 +118,30 @@ var ComboBox = Control.extend({
       if (this._width !== containerNode.offsetWidth) {
          this._width = containerNode.offsetWidth;
       }
-      this._controller.update({...options, ...{
+      this._controller.update(this._getControllerOptions(options));
+   },
+
+   _getControllerOptions(options) {
+      return { ...options, ...{
+            selectedKeys: [options.selectedKey],
+            marker: false,
+            popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup') + ' controls-ComboBox-popup_theme-' + options.theme,
+            typeShadow: 'suggestionsContainer',
+            close: this._onClose,
+            open: this._onOpen,
+            allowPin: false,
+            selectedItemsChangedCallback: this._setText,
+            theme: options.theme,
+            notifyEvent: this._notifyComboboxEvent.bind(this),
+            notifySelectedItemsChanged: this._selectedItemsChangedHandler.bind(this),
+            itemPadding: {
+               right: 'menu-xs',
+               left: 'menu-xs'
+            },
             width: this._width,
-            targetPoint: this._targetPoint,
-            selectedKeys: options.selectedKeys || []
+            targetPoint: this._targetPoint
          }
-      });
+      }
    },
 
    _selectedItemsChangedHandler: function (selectedItems, event) {

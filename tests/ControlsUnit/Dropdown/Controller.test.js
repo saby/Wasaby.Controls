@@ -189,6 +189,7 @@ define(
                dropdownController._items = itemsRecords.clone();
                dropdownController._source = 'testSource';
                dropdownController._sourceController = {hasMoreData: ()=>{}};
+               dropdownController._options = {};
                dropdownController.update({ ...config, headTemplate: 'headTemplate.wml', source: undefined })
                assert.isTrue(opened);
             });

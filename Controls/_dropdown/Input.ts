@@ -282,19 +282,7 @@ var Input = Control.extend({
    _beforeMount: function (options, recievedState) {
       this._prepareDisplayState = this._prepareDisplayState.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
-      this._controller = new _Controller({ ...options, ...{
-            dataLoadCallback: this._dataLoadCallback,
-            selectedKeys: options.selectedKeys || [],
-            popupClassName: 'theme_' + options.theme + (options.popupClassName || (options.showHeader || options.headerTemplate) ?
-                ' controls-DropdownList__margin-head' : options.multiSelect ?
-                    ' controls-DropdownList_multiSelect__margin' :  ' controls-DropdownList__margin'),
-            caption: options.caption || this._text,
-            allowPin: false,
-            selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
-            notifyEvent: this._notifyInputEvent.bind(this),
-            notifySelectedItemsChanged: this._selectedItemsChangedHandler.bind(this)
-         }
-      });
+      this._controller = new _Controller(this._getControllerOptions(options));
 
       return beforeMountMethod(this, options, recievedState);
    },
@@ -309,10 +297,23 @@ var Input = Control.extend({
    },
 
    _beforeUpdate: function (options) {
-      this._controller.update({ ...options, ...{
-            selectedItemsChangedCallback: this._prepareDisplayState.bind(this)
+      this._controller.update(this._getControllerOptions(options));
+   },
+
+   _getControllerOptions(options) {
+      return { ...options, ...{
+            dataLoadCallback: this._dataLoadCallback,
+            selectedKeys: options.selectedKeys || [],
+            popupClassName: 'theme_' + options.theme + (options.popupClassName || (options.showHeader || options.headerTemplate) ?
+                ' controls-DropdownList__margin-head' : options.multiSelect ?
+                    ' controls-DropdownList_multiSelect__margin' :  ' controls-DropdownList__margin'),
+            caption: options.caption || this._text,
+            allowPin: false,
+            selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
+            notifyEvent: this._notifyInputEvent.bind(this),
+            notifySelectedItemsChanged: this._selectedItemsChangedHandler.bind(this)
          }
-      });
+      }
    },
 
    _selectedItemsChangedHandler: function (items) {

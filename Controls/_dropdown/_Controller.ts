@@ -513,8 +513,6 @@ var _Controller = Control.extend({
    },
 
    update: function (newOptions) {
-      this._options.width = newOptions.width;
-      this._options.targetPoint = newOptions.targetPoint;
       if (newOptions.readOnly && newOptions.readOnly !== this._options.readOnly) {
          _private.closeDropdownList(this);
       }
@@ -549,6 +547,7 @@ var _Controller = Control.extend({
       } else if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
          _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
       }
+      this._options = newOptions;
    },
 
    handleKeyDown: function(event) {

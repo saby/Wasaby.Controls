@@ -83,18 +83,7 @@ var Button = Control.extend({
    _beforeMount: function (options, recievedState) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       this._updateState(options);
-      this._controller = new _Controller({ ...options, ...{
-            headerTemplate: options.headTemplate || this._options.headerTemplate,
-            headingCaption: options.caption,
-            headingIconSize: options.iconSize,
-            dataLoadCallback: this._dataLoadCallback,
-            popupClassName: options.popupClassName || this._offsetClassName,
-            hasIconPin: this._hasIconPin,
-            allowPin: true,
-            notifyEvent: this._notifyButtonEvent.bind(this),
-            notifySelectedItemsChanged: this._onItemClickHandler.bind(this)
-         }
-      });
+      this._controller = new _Controller(this._getControllerOptions(options));
 
       return beforeMountMethod(this, options, recievedState);
    },
@@ -109,7 +98,7 @@ var Button = Control.extend({
          this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       }
       this._updateState(options);
-      this._controller.update(options);
+      this._controller.update(this._getControllerOptions(options));
    },
 
    _updateState: function (options) {
@@ -131,6 +120,21 @@ var Button = Control.extend({
       return this._notify(eventName, [data, additionData]);
       if (!data) {
          this._tmplNotify(eventName);
+      }
+   },
+
+   _getControllerOptions(options) {
+      return { ...options, ...{
+             headerTemplate: options.headTemplate || options.headerTemplate,
+             headingCaption: options.caption,
+             headingIconSize: options.iconSize,
+             dataLoadCallback: this._dataLoadCallback,
+             popupClassName: (options.popupClassName || this._offsetClassName) + 'theme_' + options.theme,
+             hasIconPin: this._hasIconPin,
+             allowPin: true,
+             notifyEvent: this._notifyButtonEvent.bind(this),
+             notifySelectedItemsChanged: this._onItemClickHandler.bind(this)
+         }
       }
    },
 
