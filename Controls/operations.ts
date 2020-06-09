@@ -31,7 +31,7 @@ import {default as Button} from './_operations/Button';
 import MultiSelector from 'Controls/_operations/__MultiSelector';
 import FilterController from 'Controls/_operations/FilterController';
 import {default as MultiSelectorCheckbox} from 'Controls/_operations/MultiSelector/Checkbox';
-import {default as _Controller} from 'Controls/_operations/_Controller';
+import {default as ControllerClass} from 'Controls/_operations/ControllerClass';
 
 export {default as PanelContainer} from 'Controls/_operations/Panel/Container';
 
@@ -44,5 +44,5 @@ export {
    MultiSelector as SimpleMultiSelector,
    FilterController,
    MultiSelectorCheckbox,
-   _Controller
+   ControllerClass
 };

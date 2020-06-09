@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_browser/resources/BrowserTempalte';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {_Controller as OperationsController} from 'Controls/operations';
+import {ControllerClass as OperationsController} from 'Controls/operations';
 
 type Key = string|number|null;
 

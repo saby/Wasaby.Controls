@@ -3,7 +3,7 @@ import template = require('wml!Controls/_operations/Controller/Controller');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { TKeySelection as TKey } from 'Controls/interface';
-import {default as OperationsController} from 'Controls/_operations/_Controller';
+import {default as OperationsController} from 'Controls/_operations/ControllerClass';
 
 /** 
  * Контрол используется для организации множественного выбора. 
