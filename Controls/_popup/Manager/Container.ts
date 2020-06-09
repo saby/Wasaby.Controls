@@ -22,7 +22,7 @@ class Container extends Control<IControlOptions> {
      */
 
     protected _template: TemplateFunction = template;
-    protected _overlayId: number = null;
+    protected _overlayId: string;
     protected _zIndexStep: number = POPUP_ZINDEX_STEP;
     protected _popupItems: List<IPopupItem>;
 
@@ -36,10 +36,10 @@ class Container extends Control<IControlOptions> {
     /**
      * Set the index of popup, under which the overlay will be drawn
      * @function Controls/_popup/Manager/Container#setPopupItems
-     * @param {Integer} index индекс попапа
+     * @param {String} id индекс попапа
      */
-    setOverlay(index: number): void {
-        this._overlayId = index;
+    setOverlay(id: string): void {
+        this._overlayId = id;
     }
 
     /**
