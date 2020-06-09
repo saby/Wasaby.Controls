@@ -400,7 +400,13 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   isOpened: function() {
+   isOpened(): boolean {
+      if (!this._options.autoShow) {
+         const popupContainer = this._container.closest('.controls-Popup');
+         if (popupContainer) {
+            return !popupContainer.classList.contains('ws-hidden');
+         }
+      }
       return true;
    },
 
