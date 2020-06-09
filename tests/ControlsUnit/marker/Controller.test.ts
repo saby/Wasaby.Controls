@@ -3,288 +3,182 @@
 
 import { assert } from 'chai';
 import { MarkerController } from "Controls/marker";
+import { ListViewModel } from '../../../Controls/list';
+import { RecordSet } from '../../../application/Types/collection';
 
 describe('Controls/marker/Controller', () => {
-   const model = {
-      items: [
-         {id: 1, marked: false},
-         {id: 2, marked: false},
-         {id: 3, marked: false}
-      ],
-      setMarkedKey(key: number, status: boolean): void {
-         this.items.forEach((it) => {
-            if (it.id === key) {
-               it.marked = status;
-            }
-         });
-      },
-      getItemBySourceKey(key: number): object {
-         return this.items.find((it) => it.id === key);
-      },
-      getNextByKey(key: number): object {
-         return {
-            getContents(): object {
-               return {
-                  getKey(): number { return key + 1; }
-               };
-            }
-         };
-      },
-      getPrevByKey(key: number): object {
-         return {
-            getContents(): object {
-               return {
-                  getKey(): number { return key - 1; }
-               };
-            }
-         };
-      },
-      getNextByIndex(index: number): object {
-         return index === 1 ? {
-            getContents(): object {
-               return {
-                  getKey(): number { return 3; }
-               };
-            }
-         } : null;
-      },
-      getPrevByIndex(index: number): object {
-         return index === 2 ? {
-            getContents(): object {
-               return {
-                  getKey(): number { return 2; }
-               };
-            }
-         } : null;
-      },
-      getFirstItem(): object {
-         return {id: 1, marked: false, getKey(): number { return this.id; }};
-      },
-      getCount(): number {
-         return this.items.length;
-      },
-      getStartIndex(): number { return 0; },
-      getStopIndex(): number { return 3; },
-      getValidItemForMarker(index: number): object {
-         if (index > 2) {
-            return null;
-         }
-
-         return {
-            getContents(): object {
-               return {
-                  getKey(): number {
-                     // у нас ключи нумеруются с 1 по порядку
-                     return index + 1;
-                  }
-               };
-            }
-         }
-      }
-   };
-
-   let controller;
+   let controller, model;
 
    beforeEach(() => {
-      model.items = [
-         {id: 1, marked: false},
-         {id: 2, marked: false},
-         {id: 3, marked: false}
-      ];
-      controller = new MarkerController({model: model, markerVisibility: 'visible'})
+      model = new ListViewModel({
+         items: new RecordSet({
+            rawData: [
+               {id: 1},
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         })
+      });
+      controller = new MarkerController({ model, markerVisibility: 'visible', markedKey: undefined })
    });
 
    describe('constructor', () => {
       it('not pass markedKey', () => {
-         controller = new MarkerController({model: model})
+         controller = new MarkerController({ model, markerVisibility: 'visible', markedKey: undefined })
          assert.equal(controller._markedKey, undefined);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+         assert.equal(model.getMarkedKey(), undefined);
       });
 
       it('pass markedKey', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 1})
          assert.equal(controller._markedKey, 1);
          assert.equal(controller._markerVisibility, 'visible');
-         assert.deepEqual(model.items, [
-            {id: 1, marked: true},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+         assert.equal(model.getMarkedKey(), 1);
       });
    });
 
    describe('update', () => {
       it('change marked key', () => {
-         controller.update({model: model, markedKey: 2})
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: true},
-            {id: 3, marked: false}
-         ]);
+         const result = controller.update({model: model, markedKey: 2})
+         assert.equal(model.getMarkedKey(), 2);
+         assert.equal(result, 2);
       })
 
       it('pass null if markedKey was set', () => {
-         controller.setMarkedKey(1);
+         let result = controller.setMarkedKey(1);
          assert.equal(controller._markedKey, 1);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: true},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+         assert.equal(model.getMarkedKey(), 1);
+         assert.equal(result, 2);
 
-         controller.update({
+         result =  controller.update({
             model: model,
             markerVisibility: 'visible',
             markedKey: null
-         })
-         assert.equal(controller._markedKey, 1);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: true},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+         });
+         assert.equal(result, 1);
+         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('pass null if markedKey was not set', () => {
-         controller.update({
+         const result = controller.update({
             model: model,
             markerVisibility: 'visible',
             markedKey: null
          })
-         assert.equal(controller._markedKey, 1);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: true},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+         assert.equal(result, 1);
+         assert.equal(model.getMarkedKey(), 1);
       });
    });
 
    describe('setMarkedKey', () => {
       it('same key', () => {
          controller._markedKey = 2;
-         controller.setMarkedKey(2);
-         assert.equal(controller._markedKey, 2);
+         const result = controller.setMarkedKey(2);
+         assert.equal(result, 2);
       });
 
       it('null', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
-         controller.setMarkedKey(null);
+         const result = controller.setMarkedKey(null);
+         assert.equal(result, 1);
+         assert.equal(model.getMarkedKey(), 1);
+      });
 
-         assert.equal(controller._markedKey, 1);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: true},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+      it('undefined', () => {
+         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
+
+         const result = controller.setMarkedKey(undefined);
+         assert.equal(result, undefined);
+         assert.equal(model.getMarkedKey(), undefined);
       });
 
       it('change key', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 1});
 
-         controller.setMarkedKey(2);
-
-         assert.equal(controller._markedKey, 2);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: true},
-            {id: 3, marked: false}
-         ]);
+         const result = controller.setMarkedKey(2);
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
       });
 
       it('not exist item by key', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
-         controller.setMarkedKey(4);
-
-         assert.equal(controller._markedKey, 1);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: true},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+         const result = controller.setMarkedKey(4);
+         assert.equal(result, 1);
+         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('not exists item and onActivated visibility', () => {
-         controller = new MarkerController({model: model, markerVisibility: 'onActivated'});
+         controller = new MarkerController({model: model, markerVisibility: 'onactivated', markedKey: undefined});
 
-         controller.setMarkedKey(4);
-
-         assert.equal(controller._markedKey, undefined);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+         const result = controller.setMarkedKey(4);
+         assert.equal(result, undefined);
+         assert.equal(model.getMarkedKey(), undefined);
       });
    });
 
    it('move marker next', () => {
       controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
-      controller.moveMarkerToNext();
-
-      assert.equal(controller._markedKey, 3);
-      assert.deepEqual(model.items, [
-         {id: 1, marked: false},
-         {id: 2, marked: false},
-         {id: 3, marked: true}
-      ]);
+      const result = controller.moveMarkerToNext();
+      assert.equal(result, 3);
+      assert.equal(model.getMarkedKey(), 3);
    });
 
    it('move marker prev', () => {
       controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
-      controller.moveMarkerToPrev();
-
-      assert.equal(controller._markedKey, 1);
-      assert.deepEqual(model.items, [
-         {id: 1, marked: true},
-         {id: 2, marked: false},
-         {id: 3, marked: false}
-      ]);
+      const result = controller.moveMarkerToPrev();
+      assert.equal(result, 1);
+      assert.equal(model.getMarkedKey(), 1);
    });
 
    describe('handlerRemoveItems', () => {
       it('exists next item', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
-         model.items.splice(1, 1);
-         controller.handleRemoveItems(1);
+         model.setItems(new RecordSet({
+               rawData: [
+                  {id: 1},
+                  {id: 3}
+               ],
+               keyProperty: 'id'
+            }));
 
-         assert.equal(controller._markedKey, 3);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 3, marked: true}
-         ]);
+         const result = controller.handleRemoveItems(1);
+         assert.equal(result, 3);
+         assert.equal(model.getMarkedKey(), 3);
       });
 
       it('exists prev item, but not next', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
-         model.items.splice(2, 1);
-         controller.handleRemoveItems(2);
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 1},
+               {id: 2}
+            ],
+            keyProperty: 'id'
+         }));
 
-         assert.equal(controller._markedKey, 2);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: true}
-         ]);
+         const result = controller.handleRemoveItems(2);
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
       });
 
       it('not exists next and prev', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
-         model.items.splice(0, 3);
-         controller.handleRemoveItems(0);
+         model.setItems(new RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         }));
 
-         assert.equal(controller._markedKey, null);
-         assert.deepEqual(model.items, []);
+         const result = controller.handleRemoveItems(0);
+         assert.equal(result, null);
+         assert.equal(model.getMarkedKey(), null);
       });
    });
 
@@ -299,64 +193,40 @@ describe('Controls/marker/Controller', () => {
       ];
 
       it('offset 0', () => {
-         controller.setMarkerOnFirstVisibleItem(htmlItems, 0);
-         assert.equal(controller._markedKey, 1);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: true},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+         const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 0);
+         assert.equal(result, 1);
+         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('offset 1', () => {
-         controller.setMarkerOnFirstVisibleItem(htmlItems, 1);
-         assert.equal(controller._markedKey, 2);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: true},
-            {id: 3, marked: false}
-         ]);
+         const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 1);
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
       });
 
       it('offset 29', () => {
-         controller.setMarkerOnFirstVisibleItem(htmlItems, 29);
-         assert.equal(controller._markedKey, 2);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: true},
-            {id: 3, marked: false}
-         ]);
+         const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 29);
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
       });
 
       it ('offset 30', () => {
-         controller.setMarkerOnFirstVisibleItem(htmlItems, 30);
-         assert.equal(controller._markedKey, 2);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: true},
-            {id: 3, marked: false}
-         ]);
+         const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 30);
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
       });
 
       it ('offset 31', () => {
-         controller.setMarkerOnFirstVisibleItem(htmlItems, 31);
-         assert.equal(controller._markedKey, 3);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: false},
-            {id: 3, marked: true}
-         ]);
+         const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 31);
+         assert.equal(result, 3);
+         assert.equal(model.getMarkedKey(), 3);
       });
 
       it ('offset 31 and start index 2', () => {
          model.getStartIndex = () => { return 2; }
-         controller.setMarkerOnFirstVisibleItem(htmlItems, 31);
-         assert.equal(controller._markedKey, undefined);
-         assert.deepEqual(model.items, [
-            {id: 1, marked: false},
-            {id: 2, marked: false},
-            {id: 3, marked: false}
-         ]);
+         const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 31);
+         assert.equal(result, undefined);
+         assert.equal(model.getMarkedKey(), undefined);
       });
    });
 });
