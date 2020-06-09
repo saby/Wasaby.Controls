@@ -1,3 +1,5 @@
+import { spy } from 'sinon';
+
 /**
  * Created by kraynovdo on 23.10.2017.
  */
@@ -4576,6 +4578,45 @@ define([
                   assert.isTrue(!receivedState);
                   resolve();
                });
+         });
+      });
+
+
+      describe('beforeUpdate', () => {
+         let cfg;
+         let instance;
+
+         beforeEach(() => {
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source,
+               markerVisibility: 'hidden',
+               selectedKeys: []
+            };
+            instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+         });
+
+         it('should create marker controller', async () => {
+            assert.isNull(instance._markerController);
+            const createMarkerControllerSpy = spy(lists.BaseControl._private, 'createMarkerController');
+            await instance._beforeUpdate({
+               ...cfg,
+               markerVisibility: 'visible'
+            });
+            assert.isTrue(createMarkerControllerSpy.withArgs(instance, cfg).calledOnce);
+         });
+
+         it('should create selection controller', async () => {
+            assert.isNull(instance._markerController);
+            const createSelectionControllerSpy = spy(lists.BaseControl._private, 'createSelectionController');
+            await instance._beforeUpdate({
+               ...cfg,
+               selectedKeys: [1]
+            });
+            assert.isTrue(createSelectionControllerSpy.withArgs(instance, cfg).calledOnce);
          });
       });
 
