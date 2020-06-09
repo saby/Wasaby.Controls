@@ -99,11 +99,11 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       selectedItems.set(false, []);
       selectedItems.set(null, []);
 
-      const isAllSelected: boolean = this._isAllSelected(selection);
+      const _isAllSelected: boolean = this._isAllSelected(selection);
 
       this._items.forEach((item) => {
          const itemId: TKey = item.getId();
-         const selected = selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId);
+         const selected = selection.selected.includes(itemId) || _isAllSelected && !selection.excluded.includes(itemId);
 
          selectedItems.get(selected).push(item);
       });
@@ -126,6 +126,16 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
+   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number): boolean {
+      return this._isAllSelected(selection) && selection.excluded.length === 0
+         || !hasMoreData && itemsCount === this.getCount(selection, hasMoreData);
+   }
+
+   /**
+    * Проверяет присутствует ли в selected значение "Выбрано все"
+    * @param selection
+    * @private
+    */
    private _isAllSelected(selection: ISelection): boolean {
       return selection.selected.includes(ALL_SELECTION_VALUE);
    }

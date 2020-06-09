@@ -32,6 +32,9 @@ describe('Controls/_multiselection/Controller', () => {
          return {
             get(): object { return {}; }
          };
+      },
+      isAllSelected: function () {
+         return false;
       }
    };
 
