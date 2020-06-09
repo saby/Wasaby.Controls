@@ -293,6 +293,38 @@ define([
          sandbox.restore();
       });
 
+      // оказалось что нельзя доверять состоянию триггеров
+      // https://online.sbis.ru/opendoc.html?guid=e0927a79-c520-4864-8d39-d99d36767b31
+      // поэтому приходится вычислять видны ли они на экране
+      it('should recalculate triggers visibility when current up and down are not set or false', () => {
+         const self = {
+            _options: {},
+            _loadTriggerVisibility: {
+               up: false,
+               down: false
+            },
+            _needScrollCalculation: true,
+            getViewModel: () => ({
+               getCount: () => 3
+            })
+         };
+         const myFilter = {testField: 'testValue'};
+         const resultNavigation = 'testNavigation';
+         let upRecalculated = false;
+         let downRecalculated = false;
+         sandbox.replace(lists.BaseControl._private, 'calcTriggerVisibility', (self, scrollParams, triggerOffset, direction) => {
+            if (direction === 'up') {
+               upRecalculated = true;
+            } else {
+               downRecalculated = true;
+            }
+         });
+         lists.BaseControl._private.checkLoadToDirectionCapability(self, myFilter, resultNavigation);
+         assert.isTrue(upRecalculated, '_loadTriggerVisibility.up has not been recalculated');
+         assert.isTrue(downRecalculated, '_loadTriggerVisibility.down has not been recalculated');
+         sandbox.restore();
+      });
+
       describe('_private::loadToDirectionIfNeed', () => {
          const getInstanceMock = function() {
             return {
@@ -2519,7 +2551,7 @@ define([
             }),
             cfg = {
                editingConfig: {
-                  item: { id: 1 }
+                  item: new entity.Model({rawData: { id: 1 }})
                },
                viewName: 'Controls/List/ListView',
                source: source,
@@ -3006,12 +3038,10 @@ define([
                }
             };
             var ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  beginEdit: function(options) {
-                     assert.equal(options, opt);
-                     return cDeferred.success();
-                  }
+            ctrl._editInPlace = {
+               beginEdit: function(options) {
+                  assert.equal(options, opt);
+                  return cDeferred.success();
                }
             };
             var result = ctrl.beginEdit(opt);
@@ -3049,12 +3079,10 @@ define([
                }
             };
             var ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  beginAdd: function(options) {
-                     assert.equal(options, opt);
-                     return cDeferred.success();
-                  }
+            ctrl._editInPlace = {
+               beginAdd: function(options) {
+                  assert.equal(options, opt);
+                  return cDeferred.success();
                }
             };
             var result = ctrl.beginAdd(opt);
@@ -3089,11 +3117,9 @@ define([
                }
             };
             var ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  cancelEdit: function() {
-                     return cDeferred.success();
-                  }
+            ctrl._editInPlace = {
+               cancelEdit: function() {
+                  return cDeferred.success();
                }
             };
             var result = ctrl.cancelEdit();
@@ -3162,11 +3188,9 @@ define([
                }
             };
             var ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  commitEdit: function() {
-                     return cDeferred.success();
-                  }
+            ctrl._editInPlace = {
+               commitEdit: function() {
+                  return cDeferred.success();
                }
             };
             var result = ctrl.commitEdit();
@@ -3204,11 +3228,9 @@ define([
             let result;
 
             const ctrl = new lists.BaseControl(cfg);
-            ctrl._children = {
-               editInPlace: {
-                  commitAndMoveNextRow: function () {
-                     result = commitAndMoveDef;
-                  }
+            ctrl._editInPlace = {
+               commitAndMoveNextRow: function () {
+                  result = commitAndMoveDef;
                }
             };
             ctrl._commitEditActionHandler();
@@ -3330,11 +3352,9 @@ define([
                   getEditingItemData: () => ({})
                },
                _options: {},
-               _children: {
-                  editInPlace: {
-                     cancelEdit: function() {
-                        isCanceled = true;
-                     }
+               _editInPlace: {
+                  cancelEdit: function() {
+                     isCanceled = true;
                   }
                }
             };
@@ -3514,17 +3534,66 @@ define([
          });
       });
 
+      it('_processItemMouseEnterWithDragNDrop', () => {
+         const ctrl = new lists.BaseControl({});
+         const dragEntity = { entity: 'entity' },
+               itemData = { itemData: 'itemData' },
+               dragPosition = {
+                  item: { item: 'item' },
+                  position: 'after'
+               };
+
+         let notifyResult = false,
+            notifyCalled = false,
+            setDragPositionCalled = false;
+
+         ctrl._dndListController = {
+            isDragging() {
+               return false;
+            },
+            getDragEntity() {
+               return dragEntity;
+            },
+            calculateDragPosition(item) {
+               assert.deepEqual(item, itemData);
+               return dragPosition;
+            },
+            setDragPosition(position) {
+               assert.deepEqual(position, dragPosition);
+               setDragPositionCalled = true;
+            }
+         };
+
+         ctrl._notify = (eventName, args) => {
+            notifyCalled = true;
+            assert.equal(eventName, 'changeDragTarget');
+            assert.deepEqual(args[0], dragEntity);
+            assert.deepEqual(args[1], { item: 'item' });
+            assert.equal(args[2], 'after');
+            return notifyResult;
+         };
+
+         ctrl._processItemMouseEnterWithDragNDrop(itemData);
+         assert.isFalse(notifyCalled);
+
+         ctrl._dndListController.isDragging = () => { return true; };
+         ctrl._processItemMouseEnterWithDragNDrop(itemData);
+         assert.isTrue(notifyCalled);
+         assert.isFalse(setDragPositionCalled);
+         assert.isNull(ctrl._unprocessedDragEnteredItem);
+
+         notifyResult = true;
+         ctrl._processItemMouseEnterWithDragNDrop(itemData);
+         assert.isTrue(notifyCalled);
+         assert.isTrue(setDragPositionCalled);
+         assert.isNull(ctrl._unprocessedDragEnteredItem);
+      });
+
       it('_dragEnter only works with ItemsEntity', function() {
          const ctrl = new lists.BaseControl({});
 
          ctrl._listViewModel = {
             getDragEntity: () => null
-         };
-
-         ctrl._dndListController = {
-            isDragging() {
-               return true;
-            }
          };
 
          let
@@ -3534,6 +3603,17 @@ define([
          ctrl._notify = function(eventName, dragEntity) {
             notifiedEvent = eventName;
             notifiedEntity = dragEntity && dragEntity[0];
+         };
+
+         ctrl._dragEnter({}, {
+            '[Controls/dragnDrop:ItemsEntity]': true
+         });
+         assert.isNull(notifiedEvent, 'Not set because dndListController is null');
+
+         ctrl._dndListController = {
+            isDragging() {
+               return true;
+            }
          };
 
          ctrl._dragEnter({}, undefined);
@@ -3552,6 +3632,7 @@ define([
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
+
       it('native drag prevent only by native "dragstart" event', async function() {
          let isDefaultPrevented = false;
 
@@ -3639,6 +3720,9 @@ define([
          ctrl._viewPortRect = { top: 0 }
          //dragend without deferred
          dragEnded = false;
+
+         ctrl._documentDragEnd();
+         assert.isFalse(dragEnded, 'DndController was not created');
 
          ctrl._dndListController = {
             endDrag() {
@@ -3938,12 +4022,12 @@ define([
          await instance._beforeMount(cfg);
          instance._listViewModel.getEditingItemData = () => ({});
          instance._viewModelConstructor = {};
-         instance._children = {
-            editInPlace: {
-               cancelEdit: () => {
-                  cancelClosed = true;
-               }
-            }
+         instance._editInPlace = {
+            cancelEdit: () => {
+               cancelClosed = true;
+            },
+            updateEditingData: () => undefined,
+            getEditingItemData: () => {}
          };
          instance._beforeUpdate(cfg);
          assert.isTrue(cancelClosed);
@@ -4515,6 +4599,17 @@ define([
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
             assert.equal(actionsOf0.all[0].title, '456', 'new actions for item at 0 pos. were not assigned');
          });
+
+         // при смене значения свойства readOnly необходимо делать переинициализвацию ItemActions
+         it('should update ItemActions when readOnly option has been changed', () => {
+            instance._beforeUpdate({
+               ...cfg,
+               source: instance._options.source,
+               readOnly: true,
+            });
+            const actionsOf0 = instance._listViewModel.at(0).getActions();
+            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+         });
       });
 
       it('_beforeMount with PrefetchProxy in source', function() {
@@ -4544,6 +4639,54 @@ define([
                   assert.isTrue(!receivedState);
                   resolve();
                });
+         });
+      });
+
+
+      describe('beforeUpdate', () => {
+         let cfg;
+         let instance;
+
+         beforeEach(() => {
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source,
+               viewModelConfig: {
+                  items: new collection.RecordSet({
+                     keyProperty: 'id',
+                     rawData: data
+                  }),
+                  keyProperty: 'id'
+               },
+               markerVisibility: 'hidden',
+               selectedKeys: [],
+               excludedKeys: []
+            };
+            instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
+         });
+
+         it('should create marker controller', async () => {
+            assert.isNull(instance._markerController);
+            const createMarkerControllerSpy = sinon.spy(lists.BaseControl._private, 'createMarkerController');
+            await instance._beforeUpdate({
+               ...cfg,
+               markerVisibility: 'visible'
+            });
+            assert.isTrue(createMarkerControllerSpy.calledOnce);
+         });
+
+         it('should create selection controller', async () => {
+            assert.isNull(instance._markerController);
+            const createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
+            await instance._beforeUpdate({
+               ...cfg,
+               selectedKeys: [1]
+            });
+            assert.isTrue(createSelectionControllerSpy.calledOnce);
          });
       });
 

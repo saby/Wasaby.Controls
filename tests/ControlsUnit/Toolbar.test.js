@@ -458,6 +458,17 @@ define(
                assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
                assert.isTrue(Toolbar._menuSource._$data.query instanceof collection.RecordSet);
             });
+            it('_getMenuOptions - fittingMode', () => {
+               let Toolbar = new toolbars.View(config);
+               Toolbar._beforeMount(config);
+               //все остальное дублируется и проверяется в _getMenuConfigByItem
+               //TODO: https://online.sbis.ru/opendoc.html?guid=36b0e31d-a773-4e11-b3d5-196ffd07058c
+               let fittingMode = {
+                  vertical: 'adaptive',
+                  horizontal: 'overflow'
+               };
+               assert.deepEqual(Toolbar._menuOptions.fittingMode, fittingMode);
+            });
          });
          function setTrue(assert) {
             assert.equal(true, true);
