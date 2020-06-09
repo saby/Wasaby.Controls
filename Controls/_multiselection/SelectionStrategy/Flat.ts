@@ -126,8 +126,9 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   public isAllSelected(selection: ISelection): boolean {
-      return this._isAllSelected(selection) && selection.excluded.length === 0;
+   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number): boolean {
+      return this._isAllSelected(selection) && selection.excluded.length === 0
+         || !hasMoreData && itemsCount === this.getCount(selection, hasMoreData);
    }
 
    /**
