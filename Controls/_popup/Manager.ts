@@ -287,7 +287,8 @@ class Manager extends Control<IManagerOptions> {
     private _updateOverlay(): void {
         const indices = this._popupItems.getIndicesByValue('modal', true);
         const lastModalIndex = indices.length ? indices[indices.length - 1] : null;
-        ManagerController.getContainer().setOverlay(lastModalIndex ? this._popupItems.at(lastModalIndex) : null);
+        const lastModalItem = this._popupItems.at(lastModalIndex);
+        ManagerController.getContainer().setOverlay(lastModalItem?.id);
     }
 
     protected _pageScrolled(id: string): boolean {
