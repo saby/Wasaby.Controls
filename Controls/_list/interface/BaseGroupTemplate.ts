@@ -199,4 +199,10 @@ export default interface IBaseGroupTemplateOptions {
     * @default 'xs'
     */
    fontSize?: boolean;
+   /**
+    * @name Controls/list:BaseGroupTemplate#iconSize
+    * @cfg {string} Размер экспандера в названии группы/шаблоне
+    * @default 's'
+    */
+   iconSize?: boolean;
 }
