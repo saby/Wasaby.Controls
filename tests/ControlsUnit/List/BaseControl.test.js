@@ -3553,12 +3553,6 @@ define([
             getDragEntity: () => null
          };
 
-         ctrl._dndListController = {
-            isDragging() {
-               return true;
-            }
-         };
-
          let
             notifiedEvent = null,
             notifiedEntity = null;
@@ -3566,6 +3560,17 @@ define([
          ctrl._notify = function(eventName, dragEntity) {
             notifiedEvent = eventName;
             notifiedEntity = dragEntity && dragEntity[0];
+         };
+
+         ctrl._dragEnter({}, {
+            '[Controls/dragnDrop:ItemsEntity]': true
+         });
+         assert.isNull(notifiedEvent, 'Not set because dndListController is null');
+
+         ctrl._dndListController = {
+            isDragging() {
+               return true;
+            }
          };
 
          ctrl._dragEnter({}, undefined);
@@ -3584,6 +3589,7 @@ define([
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
+
       it('native drag prevent only by native "dragstart" event', async function() {
          let isDefaultPrevented = false;
 
@@ -3671,6 +3677,9 @@ define([
          ctrl._viewPortRect = { top: 0 }
          //dragend without deferred
          dragEnded = false;
+
+         ctrl._documentDragEnd();
+         assert.isFalse(dragEnded, 'DndController was not created');
 
          ctrl._dndListController = {
             endDrag() {
