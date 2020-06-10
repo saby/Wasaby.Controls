@@ -207,6 +207,11 @@ describe('Controls/_listDragNDrop/TreeController', () => {
          nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
          controller.startCountDownForExpandNode(nodeItemData, expandNode);
          assert.isTrue(expandNodeCalled);
+
+         expandNodeCalled = false;
+
+         controller.startCountDownForExpandNode(nodeItemData, expandNode);
+         assert.isFalse(expandNodeCalled, 'Hover on same node');
       });
 
       it('hover on dragged node', () => {

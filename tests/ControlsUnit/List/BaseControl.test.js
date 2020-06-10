@@ -3649,19 +3649,10 @@ define([
             notifiedEntity = dragEntity && dragEntity[0];
          };
 
-         ctrl._dragEnter({}, {
-            '[Controls/dragnDrop:ItemsEntity]': true
-         });
-         assert.isNull(notifiedEvent, 'Not set because dndListController is null');
-
-         ctrl._dndListController = {
-            isDragging() {
-               return true;
-            }
-         };
-
+         assert.isNull(ctrl._dndListController);
          ctrl._dragEnter({}, undefined);
          assert.isNull(notifiedEvent);
+         assert.isNotNull(ctrl._dndListController);
 
          const badDragObject = { entity: {} };
          ctrl._dragEnter({}, badDragObject);
