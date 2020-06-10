@@ -2,21 +2,14 @@
  * Библиотека контролов, отвечающих за отображение разных вариантов кнопок. Также библиотека содержит публичные интерфейсы, необходимые для работы кнопок.
  * @library Controls/buttons
  * @includes Button Controls/_buttons/Button
+ * @includes ArrowButton Controls/_buttons/ArrowButton
  * @includes IHref Controls/_buttons/interface/IHref
  * @includes IClick Controls/_buttons/interface/IClick
  * @includes IButton Controls/_buttons/interface/IButton
+ * @includes IArrowButton Controls/_buttons/interface/IArrowButton
  * @author Красильников А.С.
  */
 
-/*
- * Buttons library
- * @library Controls/buttons
- * @includes Button Controls/_buttons/Button
- * @includes IHref Controls/_buttons/interface/IHref
- * @includes IClick Controls/_buttons/interface/IClick
- * @includes IButton Controls/_buttons/interface/IButton
- * @author Красильников А.С.
- */
 import * as ButtonTemplate from 'wml!Controls/_buttons/ButtonBase';
 
 export {default as Button, cssStyleGeneration} from './_buttons/Button';
