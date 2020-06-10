@@ -114,6 +114,7 @@ export class Controller {
     private _editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     private _editArrowAction: IItemAction;
     private _contextMenuConfig: IContextMenuConfig;
+    private _iconSize: TItemActionsSize;
 
     private _theme: string;
 
@@ -130,6 +131,7 @@ export class Controller {
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
         this._editArrowAction = options.editArrowAction;
         this._contextMenuConfig = options.contextMenuConfig;
+        this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
@@ -220,11 +222,12 @@ export class Controller {
             data: menuActions,
             keyProperty: 'id'
         });
+        const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || this._iconSize;
         const showHeader = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
         const headConfig = showHeader ? {
             caption: parentAction.title,
             icon: parentAction.icon,
-            iconSize: this._contextMenuConfig && this._contextMenuConfig.iconSize
+            iconSize
         } : null;
         const templateOptions: IMenuTemplateOptions = {
             source,
@@ -236,7 +239,8 @@ export class Controller {
             ...this._contextMenuConfig,
             root: parentAction && parentAction.id,
             showHeader,
-            headConfig
+            headConfig,
+            iconSize
         };
         return {
             opener,
@@ -381,7 +385,7 @@ export class Controller {
             toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
             itemActionsClass: options.itemActionsClass,
-            size: options.iconSize || DEFAULT_ACTION_SIZE,
+            size: this._iconSize,
             itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
             actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
