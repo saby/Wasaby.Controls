@@ -2,18 +2,29 @@ import {Logger} from 'UI/Utils';
 import {ISliderBaseOptions} from './Base';
 import {ISliderRangeOptions} from './Range';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {IInterval} from './interface/IInterval';
+
 export interface IScaleData {
     value: number;
     position: number;
 }
+
 export interface ILineData {
-   position: number;
-   width: number;
+    position: number;
+    width: number;
 }
+
 export interface IPointData {
-   name: string;
-   position: number;
+    name: string;
+    position: number;
 }
+
+export interface IPositionedInterval {
+    color: string;
+    left: number;
+    width: number;
+}
+
 export type IPointDataList = IPointData[];
 const maxPercentValue = 100;
 const stepDenominator = 2;
@@ -61,5 +72,30 @@ export default {
             Logger.error('Slider: Event type must be mousedown of touchstart.');
         }
         return targetX;
+    },
+
+    convertIntervals(intervals: IInterval[] = [], startValue: number, endValue: number): IPositionedInterval[] {
+        const ratio = maxPercentValue / (endValue - startValue);
+        return intervals.map((interval) => {
+            const start = Math.round((interval.start - startValue) * ratio);
+            const end = Math.round((interval.end - startValue) * ratio);
+            const intervalWidth = end - start;
+
+            return {
+                color: interval.color,
+                left: start,
+                width: intervalWidth
+            };
+        }).sort((intervalFirst, intervalSecond) => {
+            if (intervalFirst.left < intervalSecond.left) {
+                return -1;
+            }
+            if (intervalFirst.left > intervalSecond.left) {
+                return 1;
+            }
+
+            return intervalFirst.width === intervalSecond.width ? 0 :
+                intervalFirst.width > intervalSecond.width ? -1 : 1;
+        });
     }
 };
