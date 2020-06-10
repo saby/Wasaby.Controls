@@ -392,6 +392,28 @@ define([
          });
       });
 
+      it('create controllers in reload', async () => {
+         const
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: new sourceLib.Memory({}),
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'hidden'
+            },
+            ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
+         assert.isNull(ctrl._markerController);
+         await lists.BaseControl._private.reload(ctrl, { ...ctrl._options, markerVisibility: 'visible' });
+         assert.isNotNull(ctrl._markerController);
+
+         assert.isNull(ctrl._selectionController);
+         await lists.BaseControl._private.reload(ctrl, { ...ctrl._options, selectedKeys: [5], excludedKeys: [] });
+         assert.isNotNull(ctrl._selectionController);
+      });
+
       it('setHasMoreData', async function() {
          var gridColumns = [
             {
