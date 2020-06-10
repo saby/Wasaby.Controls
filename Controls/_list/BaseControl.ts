@@ -298,7 +298,7 @@ const _private = {
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._markerController) {
-                        _private.updateMarkerController(self, self._options, itemsChanged);
+                        _private.updateMarkerController(self, self._options);
                     }
 
                     if (self._sourceController) {
@@ -1819,12 +1819,12 @@ const _private = {
         });
    },
 
-    updateMarkerController(self: any, options: any, itemsChanged: boolean): void {
+    updateMarkerController(self: any, options: any): void {
         self._markedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
             markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
-        }, itemsChanged);
+        });
     },
 
     createDndListController(self: any, options: any): DndFlatController|DndTreeController {
@@ -2396,7 +2396,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._markerController) {
-            _private.updateMarkerController(this, newOptions, false);
+            _private.updateMarkerController(this, newOptions);
         } else {
             if (newOptions.markerVisibility !== 'hidden') {
                 this._markerController = _private.createMarkerController(self, newOptions);

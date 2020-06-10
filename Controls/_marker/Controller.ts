@@ -18,16 +18,14 @@ export class Controller {
     * @param itemsChanged изменился список элементов
     * @return {number|string} измененный или нет ключ маркера
     */
-   update(options: IOptions, itemsChanged: boolean): TKey {
+   update(options: IOptions): TKey {
       const markerVisibilityChanged = this._markerVisibility !== options.markerVisibility;
 
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
       this.setMarkedKey(options.markedKey);
 
-      if (itemsChanged) {
-         this._updateMarker();
-      } else if (markerVisibilityChanged && this._markerVisibility === Visibility.Visible && this._markedKey === null) {
+      if (markerVisibilityChanged && this._markerVisibility === Visibility.Visible && this._markedKey === null) {
          // кейс возникает в suggest input.
          // В нем для проставления маркера на первый элемент после создания basecontrol передают visibility=Visible
          this._markedKey = this._setMarkerOnFirstItem();
@@ -43,13 +41,16 @@ export class Controller {
     * @return {string|number} новый ключ маркера
     */
    setMarkedKey(key: TKey): TKey {
-      if (key === undefined || this._markedKey === key || !this._model) {
+      if (key === undefined || !this._model) {
          return;
       }
 
-      this._model.setMarkedKey(this._markedKey, false);
-
       const itemExistsInModel = !!this._model.getItemBySourceKey(key);
+      if (this._markedKey === key && itemExistsInModel) {
+         return this._markedKey;
+      }
+
+      this._model.setMarkedKey(this._markedKey, false);
       if (itemExistsInModel) {
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
