@@ -92,10 +92,6 @@ export default {
         return this._callManager('show', arguments);
     },
 
-    reindex(): void {
-        this._callManager('reindex', arguments);
-    },
-
     isPopupCreating(id: string): boolean {
         const item = this.find(id);
         return item && (item.popupState === 'initializing' || item.popupState === 'creating');
