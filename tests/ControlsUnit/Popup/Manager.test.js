@@ -42,7 +42,7 @@ define(
                assert.equal(args[1], arg1);
             };
 
-            for (methodName of ['find', 'remove', 'update', 'show', 'reindex']) {
+            for (methodName of ['find', 'remove', 'update', 'show']) {
                popupMod.Controller[methodName](arg0, arg1);
             }
 
