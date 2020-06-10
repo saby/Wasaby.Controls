@@ -157,6 +157,12 @@ var _private = {
                 itemsModelCurrent.dispItem.setSelected(selected, silent);
             }
         };
+        itemsModelCurrent.setEditing = (editing: boolean): void => {
+            itemsModelCurrent.isEditing = editing;
+            if (itemsModelCurrent.dispItem.setEditing !== undefined) {
+                itemsModelCurrent.dispItem.setEditing(editing, itemsModelCurrent.item, true);
+            }
+        }
     }
 };
 
@@ -254,7 +260,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (this._dragEntity) {
             dragItems = this._dragEntity.getItems();
-            if (this._draggingItemData.key === itemsModelCurrent.key) {
+            if (this._draggingItemData && this._draggingItemData.key === itemsModelCurrent.key) {
                 itemsModelCurrent.isDragging = true;
             }
             if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
@@ -595,6 +601,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;
         this._editingItemData = itemData;
+        data.setEditing(itemData !== null);
         this._onCollectionChange(
            new EventObject('oncollectionchange', this._display),
            IObservable.ACTION_CHANGE,
@@ -711,6 +718,24 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setEventRaising(enabled: boolean, analyze: boolean): void {
         if (this._display) {
             this._display.setEventRaising(enabled, analyze);
+        }
+    },
+
+    /**
+     * Возвращает состояние editing для модели.
+     * New Model compatibility
+     */
+    isEditing(): boolean {
+        return this._display ? this._display.isEditing() : false;
+    },
+
+    /**
+     * Устанавливает состояние editing для модели.
+     * New Model compatibility
+     */
+    setEditing(editing): void {
+        if (this._display) {
+            this._display.setEditing(editing);
         }
     },
 
