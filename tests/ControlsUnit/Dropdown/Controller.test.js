@@ -544,6 +544,20 @@ define(
             assert.isTrue(menuSource === controller._menuSource, 'source changed on second loadDependencies with same options');
          });
 
+         it('loadDependencies, loadItemsTemplates', async() => {
+            const controller = getDropdownController(config);
+            let stub = sandbox.stub(dropdown._Controller._private, 'loadItemsTemplates');
+
+            // items not loaded, loadItemsTemplates was called
+            await controller.loadDependencies();
+            sinon.assert.calledOnce(stub);
+            stub.restore();
+
+            // items already loaded, loadItemsTemplates was called
+            await controller.loadDependencies();
+            sinon.assert.calledOnce(stub);
+         });
+
          it('check empty item update', () => {
             let dropdownController = getDropdownController(config),
                selectedItems = [];

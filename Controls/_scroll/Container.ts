@@ -774,13 +774,24 @@ let
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {
+          event.stopImmediatePropagation();
          // _shadowVisibilityByInnerComponents не используется в шаблоне,
          // поэтому св-во не является реактивным и для обновления надо позвать _forceUpdate
          // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
          // Не запускаем перерисовку, если контрол скрыт
-         if (!this._isHidden()) {
-            this._shadowVisibilityByInnerComponents = shadowVisibleObject;
-            this._forceUpdate();
+         if (this._isHidden()) {
+             return;
+         }
+         const oldValue = this._shadowVisibilityByInnerComponents;
+         this._shadowVisibilityByInnerComponents = {
+             ...oldValue,
+             ...shadowVisibleObject
+         };
+         for (let key of Object.keys(shadowVisibleObject)) {
+             if (shadowVisibleObject[key] && shadowVisibleObject[key] !== oldValue[key]) {
+                 this._forceUpdate();
+                 return;
+             }
          }
       },
 

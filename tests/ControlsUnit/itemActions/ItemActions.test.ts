@@ -200,7 +200,8 @@ describe('Controls/_itemActions/Controller', () => {
             editingToolbarVisible: options ? options.editingToolbarVisible : false,
             editArrowAction: options ? options.editArrowAction : false,
             editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
-            contextMenuConfig: options ? options.contextMenuConfig: null
+            contextMenuConfig: options ? options.contextMenuConfig: null,
+            iconSize: options ? options.iconSize: 'm',
         };
     }
 
@@ -610,7 +611,7 @@ describe('Controls/_itemActions/Controller', () => {
         // T3.2. Если в метод parentAction - это кнопка открытия меню, то config.templateOptions.showHeader будет false
         it('should set config.templateOptions.showHeader \'false\' when parentAction is _isMenu', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const actionsOf3 = collection.getItemBySourceKey(3).getActions();
+            const actionsOf3 = item3.getActions();
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
             assert.exists(config.templateOptions, 'Template options were not set when no isMenu parent passed');
             assert.isFalse(config.templateOptions.showHeader, 'showHeader should be false when isMenu parent passed');
@@ -671,7 +672,16 @@ describe('Controls/_itemActions/Controller', () => {
             assert.deepEqual(config.target.getBoundingClientRect(), target.getBoundingClientRect());
         });
 
-        // T3.5. Если в контрол был передан contextMenuConfig, его нужно объединять с templateOptions для Sticky.openPopup(menuConfig)
+        // T3.5. Если был установлен iconSize он должен примениться к templateOptions
+        it('should apply iconSize to templateOptions', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            assert.exists(config.templateOptions, 'Template options were not set');
+            assert.equal(config.templateOptions.iconSize, 'm', 'iconSize from templateOptions has not been applied');
+        });
+
+        // T3.6. Если в контрол был передан contextMenuConfig, его нужно объединять с templateOptions для Sticky.openPopup(menuConfig)
         it ('should merge contextMenuConfig with templateOptions for popup config', () => {
             itemActionsController.update(initializeControllerOptions({
                 collection,
@@ -686,7 +696,7 @@ describe('Controls/_itemActions/Controller', () => {
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.equal(config.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
             assert.equal(config.templateOptions.headConfig.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
-        })
+        });
     });
 
     // см. этот же тест в Collection.test.ts
