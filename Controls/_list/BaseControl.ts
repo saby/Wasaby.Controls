@@ -432,7 +432,7 @@ const _private = {
     },
 
     scrollToItem: function(self, key, toBottom, force) {
-        return self._scrollController.scrollToItem(key, toBottom, force);
+        return self._scrollController?.scrollToItem(key, toBottom, force);
     },
 
     setMarkedKey(self, key: string | number): void {
@@ -1881,7 +1881,7 @@ const _private = {
         self._scrollController = new ScrollController({
             virtualScrollConfig: options.virtualScrollConfig || {},
             needScrollCalculation: options.needScrollCalculation,
-            collection: self._listViewModel.getItems(),
+            collection: self._listViewModel,
             activeElement: options.activeElement,
             notify: (name, args, params) => {
                 return self._notify(name, args, params);
@@ -2426,7 +2426,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._scrollController) {
-            this._scrollController.beforeUpdate({collection: newOptions.listViewModel?.getCollection(), ...newOptions});
+            this._scrollController.beforeUpdate({collection: newOptions.listViewModel, ...newOptions});
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
