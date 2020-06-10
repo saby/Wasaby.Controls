@@ -663,14 +663,12 @@ export default class EditInPlace {
 
     updateEditingData(options: IEditingOptions): void {
         this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
+        this._options.source = options.source;
+        this._options.editingConfig = options.editingConfig;
+        this._options.useNewModel = options.useNewModel;
+        this._options.multiSelectVisibility = options.multiSelectVisibility;
         if (this._editingItemData) {
-            if (this._options.multiSelectVisibility !== options.multiSelectVisibility) {
-                this._options.listViewModel = options.listViewModel;
-                this._options.editingConfig = options.editingConfig;
-                this._options.useNewModel = options.useNewModel;
-                this._options.multiSelectVisibility = options.multiSelectVisibility;
-                this._setEditingItemData(this._editingItemData.item);
-            }
+            this._setEditingItemData(this._editingItemData.item);
         }
 
         if (this._pendingInputRenderState === PendingInputRenderState.PendingRender) {
@@ -759,13 +757,14 @@ export default class EditInPlace {
         const editingConfig = this._options.editingConfig;
         const useNewModel =  this._options.useNewModel;
         if (!item) {
-            listViewModel.setEditing(false);
             if (useNewModel) {
+                listViewModel.setEditing(false);
                 displayLib.EditInPlaceController.endEdit(listViewModel);
             } else {
                 listViewModel._setEditingItemData(null);
             }
             this._editingItemData = null;
+            this._editingItem = null;
             return;
         }
 
@@ -798,13 +797,12 @@ export default class EditInPlace {
             }
         }
 
-        listViewModel.setEditing(true);
-
         if (useNewModel) {
+            listViewModel.setEditing(true);
             displayLib.EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
             this._editingItemData = listViewModel.getItemDataByItem(editingItemProjection);
-
+            this._editingItemData.isEditing = true;
             // TODO Make sure all of this is available in the new model
             if (this._isAdd && _private.hasParentInItems(this._editingItem, listViewModel)) {
                 this._editingItemData.level = listViewModel.getItemById(
