@@ -482,10 +482,9 @@ const _private = {
             toggledItemId = model.at(0).getContents().getId();
         }
 
-        if (toggledItemId) {
-            if (self._selectionController) {
-                self._selectionController.toggleItem(toggledItemId);
-            }
+        if (toggledItemId && self._selectionController) {
+            const result = self._selectionController.toggleItem(toggledItemId);
+            _private.handleSelectionControllerResult(self, result);
             _private.moveMarkerToNext(self, event);
         }
     },
