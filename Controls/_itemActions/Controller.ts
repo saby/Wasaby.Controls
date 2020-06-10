@@ -17,7 +17,8 @@ import {
     IItemAction,
     TItemActionsPosition,
     TActionCaptionPosition,
-    TEditArrowVisibilityCallback
+    TEditArrowVisibilityCallback,
+    TActionDisplayMode
 } from './interface/IItemActions';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
@@ -301,7 +302,8 @@ export class Controller {
         this._collection.each((item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
                 const contents = Controller._getItemContents(item);
-                const itemChanged = Controller._setItemActions(item, this._getActionsContainer(item));
+				const actionsContainer = this._fixShownActionsDisplayOptions(this._getActionsContainer(item));
+                const itemChanged = Controller._setItemActions(item, actionsContainer);
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
                     changedItemsIds.push(contents.getKey());
@@ -396,10 +398,7 @@ export class Controller {
         const itemActions: IItemAction[] = this._itemActionsProperty
                 ? contents.get(this._itemActionsProperty)
                 : this._commonItemActions;
-        const fixedActions = itemActions.map((action) => (
-            Controller._fixActionIcon(Controller._fixActionStyle(action), this._theme)
-        ));
-        return fixedActions.filter((action) =>
+        return itemActions.filter((action) =>
             this._itemActionVisibilityCallback(action, contents)
         );
     }
@@ -465,8 +464,7 @@ export class Controller {
         if (this._collection.isEditing() && !item.isEditing()) {
             showed = []
         } else if (actions.length > 1) {
-            showed = actions.filter(
-                (action) =>
+            showed = actions.filter((action) =>
                     !action.parent &&
                     (
                         action.showType === TItemActionShowType.TOOLBAR ||
@@ -476,7 +474,7 @@ export class Controller {
             if (this._isMenuButtonRequired(actions)) {
                 showed.push({
                     id: null,
-                    icon: `icon-ExpandDown ${Controller._resolveItemActionClass(this._theme)}`,
+                    icon: `icon-ExpandDown`,
                     style: 'secondary',
                     iconStyle: 'secondary',
                     _isMenu: true
@@ -522,6 +520,62 @@ export class Controller {
         return contents;
     };
 
+    /**
+     * Обновляет параметры отображения операций с записью
+     * @param actions
+     * @private
+     */
+    private _fixShownActionsDisplayOptions(actions: IItemActionsContainer): IItemActionsContainer {
+        if (actions.showed) {
+            actions.showed = actions.showed.map((action) => {
+                action.icon = Controller._fixActionIconClass(action.icon, this._theme);
+                action.style = Utils.getStyle(action.style, 'itemActions/Controller');
+                action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
+                action.showIcon = Controller._needShowIcon(action);
+                action.showTitle = Controller._needShowTitle(action);
+                action.tooltip = Controller._getTooltip(action);
+                return action;
+            });
+        }
+        return actions
+    }
+
+    /**
+     * Рассчитывает значение для флага showIcon операции с записью
+     * @param action
+     * @private
+     */
+    private static _needShowIcon(action: IItemAction): boolean {
+        return !!action.icon && (action.displayMode !== TActionDisplayMode.TITLE);
+    }
+
+    /**
+     * Рассчитывает значение для флага showTitle операции с записью
+     * @param action
+     * @private
+     */
+    private static _needShowTitle(action: IItemAction): boolean {
+        return !!action.title && (action.displayMode === TActionDisplayMode.TITLE ||
+            action.displayMode === TActionDisplayMode.BOTH ||
+            (action.displayMode === TActionDisplayMode.AUTO ||
+                !action.displayMode) && !action.icon);
+    }
+
+    /**
+     * Возвращает значение для tooltip операции с записью
+     * @param action
+     * @private
+     */
+    private static _getTooltip(action: IItemAction): string|undefined {
+        return action.tooltip || action.title;
+    }
+
+    /**
+     * Устанавливает операции с записью для конкретного элемента коллекции
+     * @param item
+     * @param actions
+     * @private
+     */
     private static _setItemActions(
         item: IItemActionsItem,
         actions: IItemActionsContainer
@@ -570,29 +624,13 @@ export class Controller {
         );
     }
 
-    /**
-     * Добавляет совместимость старых и новых названий стилей через Utils.getStyle()
-     * @param action
-     * @private
-     */
-    private static _fixActionStyle(action: IItemAction): IItemAction {
-        action.style = Utils.getStyle(action.style, 'itemActions/Controller');
-        action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
-        return action;
+    private static _fixActionIconClass(icon: string, theme: string): string {
+        if (!icon || icon.includes(this._resolveItemActionClass(theme))) {
+            return icon;
     }
-
-    // todo скорее всего, переедет в шаблон
-    private static _fixActionIcon(action: IItemAction, theme: string): IItemAction {
-        if (!action.icon || action.icon.includes(this._resolveItemActionClass(theme))) {
-            return action;
+        return `${icon} ${this._resolveItemActionClass(theme)}`
         }
-        return {
-            ...action,
-            icon: `${action.icon} ${this._resolveItemActionClass(theme)}`
-        };
-    }
 
-    // todo скорее всего, переедет в шаблон
     private static _resolveItemActionClass(theme: string): string {
         return `controls-itemActionsV__action_icon_theme-${theme} icon-size_theme-${theme}`;
     }

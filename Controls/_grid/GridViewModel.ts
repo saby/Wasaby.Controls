@@ -283,7 +283,7 @@ var
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
-                if (!isFullGridSupport) {
+                if (!isFullGridSupport && !current.isEditing) {
                     classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
