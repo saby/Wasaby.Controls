@@ -20,23 +20,23 @@
 </ws:template>
 
 <ws:template name="colspanCell">
-   <div class="controls-Grid__row-cell_colspaned
+         <div class="controls-Grid__row-cell_colspaned
          {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).top}}
          {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).bottom}}
          {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).right}}">
-      <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
-   </div>
+            <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
+         </div>
 </ws:template>
 
 <ws:template name="separatedCell">
-   <ws:partial template="{{currentColumn.template}}"
-               editArrowTemplate="{{editArrowTemplate}}"
-               attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
-                           {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
-                           {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
-               ladderWrapper="{{currentColumn.ladderWrapper}}"
-               expanderTemplate="{{itemData.expanderTemplate}}"
-               itemData="{{currentColumn}}" />
+      <ws:partial template="{{currentColumn.template}}"
+                  editArrowTemplate="{{editArrowTemplate}}"
+                  attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
+                              {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
+                              {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}"
+                  ladderWrapper="{{currentColumn.ladderWrapper}}"
+                  expanderTemplate="{{itemData.expanderTemplate}}"
+                  itemData="{{currentColumn}}" />
 </ws:template>
 
 <ws:template name="partialColspanCell">
@@ -164,16 +164,16 @@
       </ws:if>
       <ws:if data="{{(colspan === false && !!colspanLength) ? ( (currentColumn.columnIndex <= (itemData.hasMultiSelect ? 1 : 0)) || (currentColumn.columnIndex >= ((itemData.hasMultiSelect ? 1 : 0) + colspanLength))) : true}}">
          <div attr:class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{ cellClassName || '' }}
-                             {{ currentColumn.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}
-                             {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
-                             {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
-                                      {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
-                                      {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-                                      controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
+                          {{ currentColumn.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}
+                          {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
+                          {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
+                                   {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
+                                   {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
+                                   controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
               attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode) }}
                           {{ (colspan === false && !!colspanLength) && (currentColumn.columnIndex === (itemData.hasMultiSelect ? 1 : 0)) ? itemData.getPartialColspanStyles(itemData.hasMultiSelect ? 1 : 0, colspanLength) }}">
-            <ws:partial template="columnContentWrapper"/>
-         </div>
+         <ws:partial template="columnContentWrapper"/>
+      </div>
       </ws:if>
    </ws:else>
    <ws:partial template="stickyLadderByIndex" currentColumn="{{currentColumn}}" index="{{1}}"/>

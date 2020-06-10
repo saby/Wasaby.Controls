@@ -153,14 +153,13 @@ export class Controller {
      */
     activateSwipe(itemKey: TItemKey, actionsContainerHeight: number): void {
         this._setSwipeItem(itemKey);
+        this.setSwipeAnimation(ANIMATION_STATE.OPEN);
         const item = this._collection.getItemBySourceKey(itemKey);
         this._collection.setActiveItem(item);
 
         if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
         }
-
-        this.setSwipeAnimation(ANIMATION_STATE.OPEN);
     }
 
     /**
@@ -170,6 +169,7 @@ export class Controller {
         this._setSwipeItem(null);
         this._collection.setActiveItem(null);
         this._collection.setSwipeConfig(null);
+        this._collection.setSwipeAnimation(null);
     }
 
     /**
@@ -177,6 +177,15 @@ export class Controller {
      */
     getSwipeItem(): IItemActionsItem {
         return this._collection.find((item) => item.isSwiped());
+    }
+
+    /**
+     * Устанавливает состояние элемента rightSwiped
+     * @param itemKey
+     */
+    activateRightSwipe(itemKey: TItemKey) {
+        this._setSwipeItem(itemKey);
+        this.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
     }
 
     /**

@@ -3751,6 +3751,140 @@ define([
          });
       });
 
+      describe('Calling animation handlers', () => {
+         let setRightSwipedItemCalled;
+         let ctrl;
+         beforeEach(() => {
+            setRightSwipedItemCalled = false;
+            ctrl = new lists.BaseControl();
+            ctrl._itemActionsController = {
+               deactivateSwipe: () => {
+                  setRightSwipedItemCalled = true;
+               },
+               getSwipeItem: () => ({ id: 1 })
+            };
+            ctrl._listViewModel = {
+               nextVersion: () => null
+            };
+         });
+
+         it('should call deactivateSwipe method on \'itemActionsSwipeClose\' event', () => {
+            ctrl._onActionsSwipeAnimationEnd({
+               nativeEvent: {
+                  animationName: 'test'
+               }
+            });
+            assert.isFalse(setRightSwipedItemCalled, 'swipe should not be deactivated on every animation end');
+            ctrl._onActionsSwipeAnimationEnd({
+               nativeEvent: {
+                  animationName: 'itemActionsSwipeClose'
+               }
+            });
+            assert.isTrue(setRightSwipedItemCalled, 'swipe should be deactivated on \'itemActionsSwipeClose\' animation end');
+         });
+
+         it('should call deactivateSwipe method on \'rightSwipe\' event', () => {
+            ctrl._onItemSwipeAnimationEnd({
+               nativeEvent: {
+                  animationName: 'test'
+               }
+            });
+            assert.isFalse(setRightSwipedItemCalled, 'swipe should not be deactivated on every animation end');
+            ctrl._onItemSwipeAnimationEnd({
+               nativeEvent: {
+                  animationName: 'rightSwipe'
+               }
+            });
+            assert.isTrue(setRightSwipedItemCalled, 'swipe should be deactivated on \'rightSwipe\' animation end');
+         });
+      });
+
+      describe('_onItemSwipe animation', function() {
+         let childEvent;
+         let itemData;
+         let instance;
+
+         function initTest(multiSelectVisibility) {
+            const cfg = {
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  idProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               source: source,
+               multiSelectVisibility: multiSelectVisibility,
+               selectedKeysCount: 1,
+               selectedKeys: [1],
+               excludedKeys: []
+            };
+            instance = new lists.BaseControl(cfg);
+            instance._children = {
+               itemActionsOpener: {
+                  close: function() {
+                  }
+               }
+            };
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._listViewModel.setItems(rs);
+            instance._children = {scrollController: { scrollToItem: () => null }};
+            instance._updateItemActions(cfg);
+         }
+
+         beforeEach(() => {
+            childEvent = {
+               stopPropagation: () => null,
+               target: {
+                  closest: () => ({ classList: { contains: () => true }, clientHeight: 10 })
+               },
+               nativeEvent: {
+                  direction: 'right'
+               }
+            };
+            itemData = {
+               _isSwiped: false,
+               key: 1,
+               getContents: () => ({ getKey: () => 1 }),
+               multiSelectStatus: false,
+               isRightSwiped() {
+                  return this._isSwiped && instance._listViewModel.getSwipeAnimation() === 'right-swipe';
+               },
+               setSwiped() {
+                  this._isSwiped = true;
+               },
+               isSwiped() {
+                  return this._isSwiped && instance._listViewModel.getSwipeAnimation() !== 'right-swipe';
+               },
+               isSelected: () => false
+            };
+         });
+
+         it('multiSelectVisibility: visible, should start animation', function() {
+            initTest('visible');
+            instance._onItemSwipe({}, itemData, childEvent);
+            const item1 = instance._listViewModel.getItemBySourceKey(itemData.getContents().getKey());
+            assert.isTrue(item1.isRightSwiped());
+         });
+
+         it('multiSelectVisibility: onhover, should start animation', function() {
+            initTest('onhover');
+            instance._onItemSwipe({}, itemData, childEvent);
+            const item1 = instance._listViewModel.getItemBySourceKey(itemData.getContents().getKey());
+            assert.isTrue(item1.isRightSwiped());
+         });
+
+         it('multiSelectVisibility: hidden, should not start animation', function() {
+            initTest('hidden');
+            instance._onItemSwipe({}, itemData, childEvent);
+            const item1 = instance._listViewModel.getItemBySourceKey(itemData.getContents().getKey());
+            assert.isFalse(item1.isRightSwiped());
+         });
+      });
+
       describe('ItemActions menu', () => {
          let instance;
          let fakeEvent;

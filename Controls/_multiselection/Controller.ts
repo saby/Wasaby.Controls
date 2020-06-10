@@ -49,7 +49,6 @@ export class Controller {
     */
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
-      const itemsChanged = modelChanged ? true : options.model.getCollection() !== this._model.getCollection();
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
 
@@ -62,7 +61,7 @@ export class Controller {
          this._selectedKeys = options.selectedKeys.slice();
          this._excludedKeys = options.excludedKeys.slice();
          this._updateModel(this._selection);
-      } else if (itemsChanged || modelChanged) {
+      } else if (modelChanged) {
          this._updateModel(this._selection);
       }
       return this._getResult(oldSelection, this._selection);
