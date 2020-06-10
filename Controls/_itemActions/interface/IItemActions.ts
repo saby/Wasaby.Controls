@@ -172,6 +172,7 @@ export interface IItemActionsItem {
     setSwiped(swiped: boolean): void;
     isSwiped(): boolean;
     isRightSwiped(): boolean;
+    isEditing(): boolean;
 }
 
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
@@ -193,6 +194,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
      */
     setActiveItem(item: IItemActionsItem): void;
     getActiveItem(): IItemActionsItem;
+    isEditing(): boolean;
 }
 
 export interface IMenuTemplateOptions extends IContextMenuConfig {
@@ -204,9 +206,10 @@ export interface IMenuTemplateOptions extends IContextMenuConfig {
     closeButtonVisibility: boolean;
     root: number | string;
     showHeader: boolean;
+    iconSize: TItemActionsSize;
     headConfig?: {
         caption: string;
         icon: string;
-        iconSize: string;
+        iconSize: TItemActionsSize;
     };
 }

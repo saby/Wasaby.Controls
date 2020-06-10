@@ -4,7 +4,7 @@ import { Memory } from 'Types/source';
 import { isEqual } from 'Types/object';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
-import { TItemKey, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
+import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem} from 'Controls/display';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
@@ -114,6 +114,8 @@ export class Controller {
     private _editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     private _editArrowAction: IItemAction;
     private _contextMenuConfig: IContextMenuConfig;
+    private _iconSize: TItemActionsSize;
+
     private _theme: string;
 
     /**
@@ -129,6 +131,7 @@ export class Controller {
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
         this._editArrowAction = options.editArrowAction;
         this._contextMenuConfig = options.contextMenuConfig;
+        this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
@@ -219,11 +222,12 @@ export class Controller {
             data: menuActions,
             keyProperty: 'id'
         });
+        const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || this._iconSize;
         const showHeader = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
         const headConfig = showHeader ? {
             caption: parentAction.title,
             icon: parentAction.icon,
-            iconSize: this._contextMenuConfig && this._contextMenuConfig.iconSize
+            iconSize
         } : null;
         const templateOptions: IMenuTemplateOptions = {
             source,
@@ -235,7 +239,8 @@ export class Controller {
             ...this._contextMenuConfig,
             root: parentAction && parentAction.id,
             showHeader,
-            headConfig
+            headConfig,
+            iconSize
         };
         return {
             opener,
@@ -300,16 +305,9 @@ export class Controller {
         this._collection.setEventRaising(false, true);
         this._collection.each((item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
-                // TODO При переписывании моделей надо убрать эту проверку. item.getContents() должен возвращать Record
-                //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-                let contents = item.getContents();
-                if (item['[Controls/_display/BreadcrumbsItem]']) {
-                    contents = contents[contents.length - 1];
-                }
-                const actionsForItem = this._collectActionsForContents(contents);
-                const wrappedActionsForItem = this._fixShownActionsDisplayOptions(this._wrapActionsInContainer(actionsForItem));
-
-                const itemChanged = Controller._setItemActions(item, wrappedActionsForItem);
+                const contents = Controller._getItemContents(item);
+				const actionsContainer = this._fixShownActionsDisplayOptions(this._getActionsContainer(item));
+                const itemChanged = Controller._setItemActions(item, actionsContainer);
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
                     changedItemsIds.push(contents.getKey());
@@ -387,7 +385,7 @@ export class Controller {
             toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
             itemActionsClass: options.itemActionsClass,
-            size: options.iconSize || DEFAULT_ACTION_SIZE,
+            size: this._iconSize,
             itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
             actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
@@ -396,10 +394,11 @@ export class Controller {
 
     /**
      * Набирает операции с записью для указанного элемента коллекции
-     * @param contents Types/entity:Model
+     * @param item IItemActionsItem
      * @private
      */
-    private _collectActionsForContents(contents: Model): IItemAction[] {
+    private _collectActionsForItem(item: IItemActionsItem): IItemAction[] {
+        const contents = Controller._getItemContents(item);
         const itemActions: IItemAction[] = this._itemActionsProperty
                 ? contents.get(this._itemActionsProperty)
                 : this._commonItemActions;
@@ -458,23 +457,24 @@ export class Controller {
     }
 
     /**
-     * Ищет операции, которые должны быть показаны только в тулбаре или в тулбаре и в меню и возвращает
-     * массив {showed, all}
-     * @param actions
+     * Набирает операции, которые должны быть показаны только в тулбаре или в тулбаре и в меню и возвращает
+     * объект {showed, all}
+     * @param item
      * @private
      */
-    private _wrapActionsInContainer(
-        actions: IItemAction[]
-    ): IItemActionsContainer {
+    private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
         let showed;
-        if (actions.length > 1) {
+        const actions = this._collectActionsForItem(item);
+        if (this._collection.isEditing() && !item.isEditing()) {
+            showed = []
+        } else if (actions.length > 1) {
             showed = actions.filter((action) =>
-                !action.parent &&
-                (
-                    action.showType === TItemActionShowType.TOOLBAR ||
-                    action.showType === TItemActionShowType.MENU_TOOLBAR
-                )
-            );
+                    !action.parent &&
+                    (
+                        action.showType === TItemActionShowType.TOOLBAR ||
+                        action.showType === TItemActionShowType.MENU_TOOLBAR
+                    )
+                );
             if (this._isMenuButtonRequired(actions)) {
                 showed.push({
                     id: null,
@@ -508,6 +508,21 @@ export class Controller {
                     action.showType === TItemActionShowType.MENU_TOOLBAR)
         );
     }
+
+    /**
+     * Возвращает contents записи.
+     * Если запись - breadcrumbs, то берётся последняя Model из списка contents
+     * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+     *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+     * @param item
+     */
+    private static _getItemContents(item: IItemActionsItem): Model {
+        let contents = item?.getContents();
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
+            contents = contents[(contents as any).length - 1];
+        }
+        return contents;
+    };
 
     /**
      * Обновляет параметры отображения операций с записью
@@ -616,9 +631,9 @@ export class Controller {
     private static _fixActionIconClass(icon: string, theme: string): string {
         if (!icon || icon.includes(this._resolveItemActionClass(theme))) {
             return icon;
-        }
-        return `${icon} ${this._resolveItemActionClass(theme)}`
     }
+        return `${icon} ${this._resolveItemActionClass(theme)}`
+        }
 
     private static _resolveItemActionClass(theme: string): string {
         return `controls-itemActionsV__action_icon_theme-${theme} icon-size_theme-${theme}`;

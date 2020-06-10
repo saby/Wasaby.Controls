@@ -269,7 +269,6 @@ const _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
-                    let itemsChanged = false;
                     if (self._items) {
                        self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
                     }
@@ -283,7 +282,6 @@ const _private = {
                         modelCollection.assign(list);
                         listModel.setCompatibleReset(false);
                         self._items = listModel.getCollection();
-                        itemsChanged = true;
                     } else {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
@@ -294,12 +292,11 @@ const _private = {
                         if (self._options.task1178907511) {
                             self._markedKeyForRestoredScroll = listModel.getMarkedKey();
                         }
-                        itemsChanged = true;
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._markerController) {
-                        _private.updateMarkerController(self, self._options, itemsChanged);
+                        _private.updateMarkerController(self, self._options);
                     }
 
                     if (self._sourceController) {
@@ -440,7 +437,7 @@ const _private = {
     setMarkedKey(self, key: string | number): void {
         if (key !== undefined && self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
-            _private.scrollToItem(self, key);
+            _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToNext: function (self, event) {
@@ -1805,7 +1802,7 @@ const _private = {
                    selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerController) {
-                   self._markerController.handleRemoveItems(removedItemsIndex);
+                   self._markedKey = self._markerController.handleRemoveItems(removedItemsIndex);
                }
                break;
        }
@@ -1820,12 +1817,12 @@ const _private = {
         });
    },
 
-    updateMarkerController(self: any, options: any, itemsChanged: boolean): void {
+    updateMarkerController(self: any, options: any): void {
         self._markedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
             markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
-        }, itemsChanged);
+        });
     },
 
     createDndListController(self: any, options: any): DndFlatController|DndTreeController {
@@ -2403,7 +2400,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._markerController) {
-            _private.updateMarkerController(this, newOptions, false);
+            _private.updateMarkerController(this, newOptions);
         } else {
             if (newOptions.markerVisibility !== 'hidden') {
                 this._markerController = _private.createMarkerController(self, newOptions);

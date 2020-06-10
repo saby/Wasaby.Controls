@@ -566,6 +566,8 @@ var _Controller = Control.extend({
 
       if (!this._items) {
          deps.push(this._loadItems().then(() => _private.loadItemsTemplates(this, this._options)));
+      } else {
+         deps.push(_private.loadItemsTemplates(this, this._options));
       }
 
       return Promise.all(deps);
