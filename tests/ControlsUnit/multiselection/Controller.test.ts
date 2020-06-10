@@ -66,7 +66,7 @@ describe('Controls/_multiselection/Controller', () => {
             selectedKeys: [],
             excludedKeys: [],
             strategyOptions: {}
-         });
+         }, false, false);
 
          assert.isTrue(setSelectedItemsSpy.called);
       });
@@ -78,8 +78,63 @@ describe('Controls/_multiselection/Controller', () => {
             selectedKeys: [1],
             excludedKeys: [],
             strategyOptions: {}
-         });
+         }, false, false);
          assert.isTrue(setSelectedItemsSpy.called);
+      });
+
+      it('root changed', () => {
+         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+         controller.update({
+            model,
+            strategy,
+            selectedKeys: [],
+            excludedKeys: []
+         }, true, false);
+         assert.isTrue(setSelectedItemsSpy.called);
+      });
+
+      it('filter changed', () => {
+         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+         controller.update({
+            model,
+            strategy,
+            selectedKeys: [],
+            excludedKeys: []
+         }, false, true);
+         assert.isTrue(setSelectedItemsSpy.called);
+      });
+
+      it('empty collection', () => {
+         model =  new ListViewModel({
+               items: new RecordSet({
+                  rawData: [],
+                  keyProperty: 'id'
+               }),
+            keyProperty: 'id'
+         });
+
+         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+         const result = controller.update({
+            model,
+            strategy,
+            selectedKeys: [],
+            excludedKeys: []
+         }, false, true);
+         assert.isTrue(setSelectedItemsSpy.called);
+         assert.deepEqual(result, {
+            selectedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            excludedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            selectedCount: undefined,
+            isAllSelected: false
+         });
       });
    });
 

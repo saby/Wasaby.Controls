@@ -46,8 +46,10 @@ export class Controller {
    /**
     * Обновить состояние контроллера
     * @param options
+    * @param rootChanged
+    * @param filterChanged
     */
-   update(options: ISelectionControllerOptions): ISelectionControllerResult {
+   update(options: ISelectionControllerOptions, rootChanged: boolean, filterChanged: boolean): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
@@ -60,10 +62,17 @@ export class Controller {
       if (selectionChanged) {
          this._selectedKeys = options.selectedKeys.slice();
          this._excludedKeys = options.excludedKeys.slice();
-         this._updateModel(this._selection);
-      } else if (modelChanged) {
+      }
+
+      const needClearSelection = filterChanged || rootChanged || this._model.getCount() === 0;
+      if (needClearSelection) {
+         this._clearSelection();
+      }
+
+      if (selectionChanged || modelChanged || needClearSelection) {
          this._updateModel(this._selection);
       }
+
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -193,7 +202,7 @@ export class Controller {
       return {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
-         selectedCount: this._getCount(newSelection),
+         selectedCount: selectionCount,
          isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getHasMoreData())
       };
    }
