@@ -2281,7 +2281,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._editInPlace.registerFormOperation(
                 this._listViewModel,
                 this._children.formController,
-                () => this.isDestroyed()
+                () => this._destroyed
             );
 
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
