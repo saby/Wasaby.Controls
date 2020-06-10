@@ -52,13 +52,17 @@ export class Controller {
          return undefined;
       }
 
-      const itemExistsInModel = !!this._model.getItemBySourceKey(key);
-      if (this._markedKey === key && itemExistsInModel) {
+      const item = this._model.getItemBySourceKey(key);
+      if (this._markedKey === key && item) {
+         // если список перестроится, то в модели сбросится маркер, а в контроллере сохранится
+         if (!item.isMarked()) {
+            this._model.setMarkedKey(key, true);
+         }
          return this._markedKey;
       }
 
       this._model.setMarkedKey(this._markedKey, false);
-      if (itemExistsInModel) {
+      if (item) {
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
       } else {
