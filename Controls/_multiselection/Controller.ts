@@ -125,7 +125,7 @@ export class Controller {
          selectedKeysDiff: { keys: [], added: [], removed: [] },
          excludedKeysDiff: { keys: [], added: [], removed: [] },
          selectedCount: this._getCount(this._selection),
-         isAllSelected: this._strategy.isAllSelected(this._selection, this._model.getHasMoreData())
+         isAllSelected: this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount())
       };
    }
 
@@ -205,7 +205,7 @@ export class Controller {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
          selectedCount: selectionCount,
-         isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getHasMoreData())
+         isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getHasMoreData(), this._model.getCount())
       };
    }
 

@@ -40,11 +40,18 @@ export class Controller {
     * @return {string|number} новый ключ маркера
     */
    setMarkedKey(key: TKey): TKey {
-      if (key === undefined || this._markedKey === key || !this._model) {
-         return;
+      if (this._markedKey === key || !this._model) {
+         return this._markedKey;
       }
 
       this._model.setMarkedKey(this._markedKey, false);
+
+      if (key === undefined) {
+         this._markedKey = undefined;
+         // Чтобы в старой модели сбросить ключ, в новой модели ничего не изменится от этого вызова
+         this._model.setMarkedKey(undefined, true);
+         return undefined;
+      }
 
       const itemExistsInModel = !!this._model.getItemBySourceKey(key);
       if (itemExistsInModel) {
@@ -100,7 +107,7 @@ export class Controller {
     * Ставит маркер на следующий элемент, при его отустствии на предыдущий, иначе сбрасывает маркер
     * @param removedItemsIndex
     */
-   handleRemoveItems(removedItemsIndex: number): void {
+   handleRemoveItems(removedItemsIndex: number): TKey {
       const nextItem = this._model.getNextByIndex(removedItemsIndex);
       const prevItem = this._model.getPrevByIndex(removedItemsIndex);
 
@@ -109,8 +116,10 @@ export class Controller {
       } else if (prevItem) {
          this.setMarkedKey(prevItem.getContents().getKey());
       } else {
-         this.setMarkedKey(null);
+         this.setMarkedKey(undefined);
       }
+
+      return this._markedKey;
    }
 
    /**
@@ -127,6 +136,8 @@ export class Controller {
       if (item) {
          const itemKey = item.getContents().getKey();
          this.setMarkedKey(itemKey);
+      } else {
+         this.setMarkedKey(undefined);
       }
 
       return this._markedKey;
