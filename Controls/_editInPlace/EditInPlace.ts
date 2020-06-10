@@ -759,6 +759,7 @@ export default class EditInPlace {
         const editingConfig = this._options.editingConfig;
         const useNewModel =  this._options.useNewModel;
         if (!item) {
+            listViewModel.setEditing(false);
             if (useNewModel) {
                 displayLib.EditInPlaceController.endEdit(listViewModel);
             } else {
@@ -797,6 +798,8 @@ export default class EditInPlace {
             }
         }
 
+        listViewModel.setEditing(true);
+
         if (useNewModel) {
             displayLib.EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
@@ -809,7 +812,6 @@ export default class EditInPlace {
                 ).getLevel() + 1;
             }
 
-            this._editingItemData.isEditing = true;
             this._editingItemData.item = this._editingItem;
             if (this._isAdd) {
                 this._editingItemData.isAdd = this._isAdd;
