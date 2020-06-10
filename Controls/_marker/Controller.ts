@@ -41,7 +41,7 @@ export class Controller {
     * @return {string|number} новый ключ маркера
     */
    setMarkedKey(key: TKey): TKey {
-      if (key === undefined || !this._model) {
+      if (!this._model) {
          return;
       }
 
