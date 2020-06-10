@@ -260,7 +260,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (this._dragEntity) {
             dragItems = this._dragEntity.getItems();
-            if (this._draggingItemData.key === itemsModelCurrent.key) {
+            if (this._draggingItemData && this._draggingItemData.key === itemsModelCurrent.key) {
                 itemsModelCurrent.isDragging = true;
             }
             if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
