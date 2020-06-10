@@ -3,8 +3,8 @@
 
 import { assert } from 'chai';
 import { MarkerController } from "Controls/marker";
-import { ListViewModel } from '../../../Controls/list';
-import { RecordSet } from '../../../application/Types/collection';
+import { ListViewModel } from 'Controls/list';
+import { RecordSet } from 'Types/collection';
 
 describe('Controls/marker/Controller', () => {
    let controller, model;
