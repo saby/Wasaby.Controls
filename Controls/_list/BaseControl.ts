@@ -2270,13 +2270,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._createSelectionController();
         }
 
-        if (this._options.useNewModel) {
-            return import('Controls/listRender').then((listRender) => {
-                this._itemActionsTemplate = listRender.itemActionsTemplate;
-                this._swipeTemplate = listRender.swipeTemplate;
-            });
-        }
-
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(
                 this._listViewModel,
@@ -2287,6 +2280,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
                 this._updateItemActions(this._options);
             }
+        }
+
+
+        if (this._options.useNewModel) {
+            return import('Controls/listRender').then((listRender) => {
+                this._itemActionsTemplate = listRender.itemActionsTemplate;
+                this._swipeTemplate = listRender.swipeTemplate;
+            });
         }
 
         // для связи с контроллером ПМО
