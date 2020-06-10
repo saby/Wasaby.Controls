@@ -268,7 +268,6 @@ const _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
-                    let itemsChanged = false;
                     if (self._items) {
                        self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
                     }
@@ -282,7 +281,6 @@ const _private = {
                         modelCollection.assign(list);
                         listModel.setCompatibleReset(false);
                         self._items = listModel.getCollection();
-                        itemsChanged = true;
                     } else {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
@@ -293,7 +291,6 @@ const _private = {
                         if (self._options.task1178907511) {
                             self._markedKeyForRestoredScroll = listModel.getMarkedKey();
                         }
-                        itemsChanged = true;
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
