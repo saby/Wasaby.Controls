@@ -1521,7 +1521,11 @@ define([
 
       it('_private.handleSelectionControllerResult', () => {
          const baseControl = {
-            _notify: function(eventName, args) {}
+            _notify: function(eventName, args) {},
+            _options: {
+               selectedKeys: [],
+               excludedKeys: []
+            }
          };
 
          const notifySpy = sinon.spy(baseControl, '_notify');
