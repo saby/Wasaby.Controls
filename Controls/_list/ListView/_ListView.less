@@ -289,17 +289,32 @@
 }
 
 .controls-ListView__groupExpander_left_theme-@{themeName}::before {
-   width: @grouping_expander_icon-size_list;
-   font-size: @grouping_expander_icon-size_list;
    padding-right: @grouping_expander_icon_offset_list;
    content: '\e000';
 }
 
 .controls-ListView__groupExpander_right_theme-@{themeName}::after {
-   width: @grouping_expander_icon-size_list;
-   font-size: @grouping_expander_icon-size_list;
    padding-left: @grouping_expander_icon_offset_list;
    content: '\e000';
+}
+
+.controls-ListView__groupExpander-iconSize_default_theme-@{themeName} {
+   &::before,
+   &::after {
+      width: @grouping_expander_icon-size_list;
+      font-size: @grouping_expander_icon-size_list;
+   }
+}
+
+.controls-ListView__groupExpander-iconSize_ {
+   @variants: 2xs, xs, s, m, l;
+   .for(@variants, { &@{_item}_theme-@{themeName} {
+      &::before,
+      &::after {
+         width: ~"@{grouping_expander_icon-size-@{_item}_list}";
+         font-size: ~"@{grouping_expander_icon-size-@{_item}_list}";
+      }
+   }});
 }
 
 .ws-is-hover .controls-ListView__groupExpander_theme-@{themeName}:hover {
