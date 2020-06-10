@@ -297,7 +297,7 @@
    content: '\e000';
 }
 
-.controls-ListView__groupExpander-iconSize_s_theme-@{themeName} {
+.controls-ListView__groupExpander-iconSize_default_theme-@{themeName} {
    &::before,
    &::after {
       width: @grouping_expander_icon-size_list;
@@ -306,7 +306,7 @@
 }
 
 .controls-ListView__groupExpander-iconSize_ {
-   @variants: 2xs, xs, m, l;
+   @variants: 2xs, xs, s, m, l;
    .for(@variants, { &@{_item}_theme-@{themeName} {
       &::before,
       &::after {
