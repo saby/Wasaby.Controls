@@ -4859,26 +4859,6 @@ define([
             instance.saveOptions(cfg);
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
          });
-
-         it('should create marker controller', async () => {
-            assert.isNull(instance._markerController);
-            const createMarkerControllerSpy = sinon.spy(lists.BaseControl._private, 'createMarkerController');
-            await instance._beforeUpdate({
-               ...cfg,
-               markerVisibility: 'visible'
-            });
-            assert.isTrue(createMarkerControllerSpy.calledOnce);
-         });
-
-         it('should create selection controller', async () => {
-            assert.isNull(instance._markerController);
-            const createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
-            await instance._beforeUpdate({
-               ...cfg,
-               selectedKeys: [1]
-            });
-            assert.isTrue(createSelectionControllerSpy.calledOnce);
-         });
       });
 
 
