@@ -16,7 +16,7 @@ import {
     TItemActionVisibilityCallback,
     TEditArrowVisibilityCallback,
     IItemAction,
-    TItemActionShowType
+    TItemActionShowType, IItemActionsItem
 } from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -66,6 +66,9 @@ export default class View extends Control<IViewOptions> {
     private _itemActionsMenuId: string = null;
 
     private _markerController: MarkerController = null;
+
+    // Элемент, на котором было вызвано контекстное меню
+    private _targetItem: HTMLElement = null;
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
@@ -213,7 +216,7 @@ export default class View extends Control<IViewOptions> {
         // TODO fire 'markedKeyChanged' event
 
         if (action && !action._isMenu && !action['parent@']) {
-            this._handleItemActionClick(action, clickEvent, item);
+            this._handleItemActionClick(action, clickEvent, item, false);
         } else {
             this._openItemActionsMenu(action, clickEvent, item, false);
         }
@@ -266,19 +269,33 @@ export default class View extends Control<IViewOptions> {
      * @param action
      * @param clickEvent
      * @param item
+     * @param isMenuClick
      * @private
      */
-    private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
+    private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: IItemActionsItem, isMenuClick: boolean): void {
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         let contents = View._getItemContents(item);
-        // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
-        // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
-        const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
+        const itemContainer = this._resolveItemContainer(item, isMenuClick);
         this._notify('actionClick', [action, contents, itemContainer]);
         if (action.handler) {
             action.handler(contents);
         }
         this._closeActionsMenu();
+    }
+
+    /**
+     * Получает контейнер для
+     * @param item
+     * @param isMenuClick
+     */
+    private _resolveItemContainer(item, isMenuClick: boolean): HTMLElement {
+        const container = this._container;
+        const itemIndex = this._collection.getSourceIndexByItem(item);
+        const startIndex = this._collection.getStartIndex();
+        return isMenuClick ? this._targetItem : Array.prototype.filter.call(
+            container.querySelector('.controls-ListView__itemV').parentNode.children,
+            (item: HTMLElement) => item.className.includes('controls-ListView__itemV')
+        )[itemIndex - startIndex];
     }
 
     /**
@@ -297,7 +314,7 @@ export default class View extends Control<IViewOptions> {
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
                 const item = this._itemActionsController.getActiveItem();
-                this._handleItemActionClick(action, clickEvent, item);
+                this._handleItemActionClick(action, clickEvent, item, true);
             }
         }
     }
@@ -417,7 +434,7 @@ export default class View extends Control<IViewOptions> {
      *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
      * @param item
      */
-    private static _getItemContents(item: CollectionItem<Model>): Model {
+    private static _getItemContents(item: IItemActionsItem): Model {
         let contents = item?.getContents();
         if (item['[Controls/_display/BreadcrumbsItem]']) {
             contents = contents[(contents as any).length - 1];
