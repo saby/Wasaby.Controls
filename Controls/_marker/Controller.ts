@@ -22,11 +22,13 @@ export class Controller {
 
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-      this.setMarkedKey(options.markedKey);
 
-      // если visibility изменили на visible и передали null, то ставим marker на первый элемент
-      if (markerVisibilityChanged && this._markerVisibility === Visibility.Visible && this._markedKey === null) {
+      // если visibility изменили на visible и не передали ключ, то ставим marker на первый элемент,
+      // иначе проставляем переданный ключ
+      if (markerVisibilityChanged && this._markerVisibility === Visibility.Visible && !options.markedKey) {
          this._markedKey = this._setMarkerOnFirstItem();
+      } else {
+         this.setMarkedKey(options.markedKey);
       }
 
       return this._markedKey;
