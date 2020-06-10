@@ -152,7 +152,16 @@ define([
          setTimeout(function() {
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
+            let doScrollToTop = false;
+            ctrl._notify = (name, params) => {
+               if (name === 'doScroll' && params && params[0] === 'top') {
+                  doScrollToTop = true;
+               }
+            };
+            ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
+
+            assert.isTrue(doScrollToTop);
 
             // check saving loaded items after new viewModelConstructor
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98

@@ -437,7 +437,7 @@ const _private = {
     setMarkedKey(self, key: string | number): void {
         if (key !== undefined && self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
-            _private.scrollToItem(self, key);
+            _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToNext: function (self, event) {
@@ -1827,7 +1827,7 @@ const _private = {
                    selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerController) {
-                   self._markerController.handleRemoveItems(removedItemsIndex);
+                   self._markedKey = self._markerController.handleRemoveItems(removedItemsIndex);
                }
                break;
        }
@@ -2372,6 +2372,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }));
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
+
+            // Сбрасываем скролл при смене конструктора модели
+            // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
+            if (this._isScrollShown) {
+                this._notify('doScroll', ['top'], {bubbling: true});
+            }
         }
 
         if (this._dndListController) {
