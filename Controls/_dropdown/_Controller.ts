@@ -513,25 +513,27 @@ var _Controller = Control.extend({
    },
 
    update: function (newOptions) {
-      if (newOptions.readOnly && newOptions.readOnly !== this._options.readOnly) {
+      const oldOptions = {...this._options};
+      this._options = newOptions;
+      if (newOptions.readOnly && newOptions.readOnly !== oldOptions.readOnly) {
          _private.closeDropdownList(this);
       }
 
-      if (_private.templateOptionsChanged(newOptions, this._options)) {
+      if (_private.templateOptionsChanged(newOptions, oldOptions)) {
          this._loadMenuTempPromise = null;
          if (this._isOpened) {
             this._open();
          }
       }
-      if ((newOptions.source && (newOptions.source !== this._options.source || !this._sourceController)) ||
-          !isEqual(newOptions.navigation, this._options.navigation) ||
-          !isEqual(newOptions.filter, this._options.filter)) {
+      if ((newOptions.source && (newOptions.source !== oldOptions.source || !this._sourceController)) ||
+          !isEqual(newOptions.navigation, oldOptions.navigation) ||
+          !isEqual(newOptions.filter, oldOptions.filter)) {
          if (this._sourceController && !this._sourceController.isLoading()) {
             this._source = null;
             this._sourceController = null;
          }
 
-         if (newOptions.source !== this._options.source) {
+         if (newOptions.source !== oldOptions.source) {
             _private.resetLoadPromises(this);
          }
          if (newOptions.lazyItemsLoading && !this._isOpened) {
@@ -544,10 +546,9 @@ var _Controller = Control.extend({
                }
             });
          }
-      } else if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
+      } else if (newOptions.selectedKeys !== oldOptions.selectedKeys && this._items) {
          _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
       }
-      this._options = newOptions;
    },
 
    handleKeyDown: function(event) {

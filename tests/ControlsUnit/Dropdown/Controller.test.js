@@ -1051,13 +1051,6 @@ define(
 
             it('_private::onResult itemClick on history item', function() {
                let updated, resultItems, testEvent, closeByNodeClick = true;
-
-               dropdownController._options.notifySelectedItemsChanged = function(d, e) {
-                  resultItems = d;
-                  testEvent = e;
-                  return closeByNodeClick;
-               };
-
                historySource.update = function () {
                   updated = true;
                };
@@ -1066,7 +1059,12 @@ define(
                   selectedKeys: [2],
                   keyProperty: 'id',
                   source: historySource,
-                  filter: {}
+                  filter: {},
+                  notifySelectedItemsChanged: function(d, e) {
+                     resultItems = d;
+                     testEvent = e;
+                     return closeByNodeClick;
+                  }
                });
                dropdownController._source = historySource;
 
