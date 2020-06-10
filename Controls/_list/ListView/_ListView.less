@@ -257,7 +257,7 @@
    min-width: 10%;
    flex-grow: 1;
    flex-shrink: 1;
-   font-size: @grouping_expander_icon-size-default_list;
+   font-size: @grouping_expander_icon-size_list;
 }
 
 .controls-ListView__groupSeparator-left_theme-@{themeName} {
@@ -297,8 +297,16 @@
    content: '\e000';
 }
 
+.controls-ListView__groupExpander-iconSize_s_theme-@{themeName} {
+   &::before,
+   &::after {
+      width: @grouping_expander_icon-size_list;
+      font-size: @grouping_expander_icon-size_list;
+   }
+}
+
 .controls-ListView__groupExpander-iconSize_ {
-   @variants: default, 2xs, xs, s, m, l;
+   @variants: 2xs, xs, m, l;
    .for(@variants, { &@{_item}_theme-@{themeName} {
       &::before,
       &::after {
