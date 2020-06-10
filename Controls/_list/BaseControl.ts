@@ -1710,7 +1710,9 @@ const _private = {
          selectedKeys: newOptions.selectedKeys,
          excludedKeys: newOptions.excludedKeys,
          strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
-      });
+      },
+         self._options.root !== newOptions.root,
+         !isEqual(self._options.filter, newOptions.filter));
       this.handleSelectionControllerResult(self, result);
    },
 
