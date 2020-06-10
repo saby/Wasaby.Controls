@@ -68,6 +68,24 @@ describe('Controls/marker/Controller', () => {
          assert.equal(result, 1);
          assert.equal(model.getMarkedKey(), 1);
       });
+
+      it('marker was reset in model', () => {
+         let result = controller.setMarkedKey(2);
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
+
+         // сбрасываем маркер в модели
+         model.setMarkedKey(undefined, true);
+         assert.isUndefined(model.getMarkedKey());
+
+         result = controller.update({
+            model: model,
+            markerVisibility: 'visible',
+            markedKey: 2
+         });
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
+      });
    });
 
    describe('setMarkedKey', () => {

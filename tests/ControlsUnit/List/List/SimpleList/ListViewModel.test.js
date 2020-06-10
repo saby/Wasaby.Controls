@@ -349,6 +349,23 @@ define([
          assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
       });
 
+      it('setMarkedKey', function() {
+         const cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markerVisibility: 'visible'
+         };
+
+         const model = new lists.ListViewModel(cfg);
+
+         model.setMarkedKey(2, true);
+         assert.equal(model.getMarkedKey(), 2);
+
+         model.setMarkedKey(2, false);
+         assert.equal(model.getMarkedKey(), undefined);
+      });
+
       // TODO SetItemActions
       /*it('setItemActions should not change actions if an item does not exist in display', function() {
          var
