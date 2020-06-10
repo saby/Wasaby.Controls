@@ -1718,9 +1718,7 @@ const _private = {
          selectedKeys: newOptions.selectedKeys,
          excludedKeys: newOptions.excludedKeys,
          strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
-      },
-         self._options.root !== newOptions.root,
-         !isEqual(self._options.filter, newOptions.filter));
+      });
       this.handleSelectionControllerResult(self, result);
    },
 
@@ -2456,11 +2454,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._selectionController) {
             _private.updateSelectionController(this, newOptions);
+            if (self._options.root !== newOptions.root || filterChanged || this._listViewModel.getCount() === 0) {
+                const result = this._selectionController.clearSelection();
+                _private.handleSelectionControllerResult(this, result);
+            }
         } else {
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
             if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
                 this._selectionController = _private.createSelectionController(this, newOptions);
-        }
+            }
         }
     },
 

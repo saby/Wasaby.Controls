@@ -81,61 +81,6 @@ describe('Controls/_multiselection/Controller', () => {
          }, false, false);
          assert.isTrue(setSelectedItemsSpy.called);
       });
-
-      it('root changed', () => {
-         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-         controller.update({
-            model,
-            strategy,
-            selectedKeys: [],
-            excludedKeys: []
-         }, true, false);
-         assert.isTrue(setSelectedItemsSpy.called);
-      });
-
-      it('filter changed', () => {
-         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-         controller.update({
-            model,
-            strategy,
-            selectedKeys: [],
-            excludedKeys: []
-         }, false, true);
-         assert.isTrue(setSelectedItemsSpy.called);
-      });
-
-      it('empty collection', () => {
-         model =  new ListViewModel({
-               items: new RecordSet({
-                  rawData: [],
-                  keyProperty: 'id'
-               }),
-            keyProperty: 'id'
-         });
-
-         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-         const result = controller.update({
-            model,
-            strategy,
-            selectedKeys: [],
-            excludedKeys: []
-         }, false, true);
-         assert.isTrue(setSelectedItemsSpy.called);
-         assert.deepEqual(result, {
-            selectedKeysDiff: {
-               added: [],
-               removed: [],
-               keys: []
-            },
-            excludedKeysDiff: {
-               added: [],
-               removed: [],
-               keys: []
-            },
-            selectedCount: undefined,
-            isAllSelected: false
-         });
-      });
    });
 
    describe('toggleItem', () => {
@@ -179,6 +124,26 @@ describe('Controls/_multiselection/Controller', () => {
       });
    });
 
+   it('clearSelection', () => {
+      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+      const result = controller.clearSelection();
+      assert.isTrue(setSelectedItemsSpy.called);
+      assert.deepEqual(result, {
+         selectedKeysDiff: {
+            added: [],
+            removed: [],
+            keys: []
+         },
+         excludedKeysDiff: {
+            added: [],
+            removed: [],
+            keys: []
+         },
+         selectedCount: undefined,
+         isAllSelected: false
+      });
+   });
+
    it('selectAll', () => {
       const setSelectedItemsSpy = spy(model, 'setSelectedItems');
       controller.selectAll();
@@ -210,8 +175,15 @@ describe('Controls/_multiselection/Controller', () => {
    });
 
    it('handleReset', () => {
+      controller = new SelectionController({
+         model,
+         strategy,
+         selectedKeys: [null],
+         excludedKeys: [null]
+      });
+
       const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-      controller.handleReset([]);
+      controller.handleReset([], null, true);
       assert.isTrue(setSelectedItemsSpy.called);
    });
 });
