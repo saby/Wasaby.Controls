@@ -158,6 +158,7 @@ define([
                   doScrollToTop = true;
                }
             };
+            ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
 
             assert.isTrue(doScrollToTop);
