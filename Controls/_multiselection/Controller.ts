@@ -49,7 +49,7 @@ export class Controller {
     * @param rootChanged
     * @param filterChanged
     */
-   update(options: ISelectionControllerOptions, rootChanged: boolean, filterChanged: boolean): ISelectionControllerResult {
+   update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
@@ -64,15 +64,17 @@ export class Controller {
          this._excludedKeys = options.excludedKeys.slice();
       }
 
-      const needClearSelection = filterChanged || rootChanged || this._model.getCount() === 0;
-      if (needClearSelection) {
-         this._clearSelection();
-      }
-
-      if (selectionChanged || modelChanged || needClearSelection) {
+      if (selectionChanged || modelChanged) {
          this._updateModel(this._selection);
       }
 
+      return this._getResult(oldSelection, this._selection);
+   }
+
+   clearSelection(): ISelectionControllerResult {
+      const oldSelection = clone(this._selection);
+      this._clearSelection();
+      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -143,9 +145,9 @@ export class Controller {
       // и вышли в родительский узел, по стандартам элементы должны стать невыбранными
       if (rootChanged && this._selectedKeys.includes(prevRootId) && this._excludedKeys.includes(prevRootId)) {
          this._clearSelection();
+         this._updateModel(this._selection);
       }
 
-      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
 
