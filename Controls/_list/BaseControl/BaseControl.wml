@@ -102,7 +102,6 @@
         on:updatePlaceholdersSize="_stopBubblingEvent()"
         on:saveScrollPosition="_stopBubblingEvent()"
         on:restoreScrollPosition="_stopBubblingEvent()"
-        on:itemsContainerReady="_itemsContainerReadyHandler()"
         on:controlResize="_viewResizeHandler()"
     >
         <div name="topVirtualScrollTrigger" style="position: relative; top: 0;"></div>
@@ -138,7 +137,7 @@
                     on:dragStart="_notifyHandler('dragStart')"
                     on:editingRowKeyDown="_onEditingRowKeyDown()"
                     on:onRowDeactivated="_onRowDeactivated()"
-
+                    on:itemsContainerReady="_itemsContainerReadyHandler()"
                     >
                 <ws:itemActionsTemplate>
                     <ws:partial

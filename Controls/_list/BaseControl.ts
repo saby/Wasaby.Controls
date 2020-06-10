@@ -1860,7 +1860,7 @@ const _private = {
                     * _canUpdateItemsActions приведет к показу неактуальных операций.
                     */
                     self._updateItemActions(self._options);
-    }
+                }
             });
         }
     },
@@ -3365,13 +3365,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     _viewResizeHandler(): void {
         if (this._scrollController) {
-            this._scrollController.viewResize();
+            this._scrollController.viewResize(this._container);
         }
     },
 
     _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: any): void {
         if (this._scrollController) {
-            this._scrollController.observeScroll();
+            this._scrollController.observeScroll(eventName, params);
         }
     }
 

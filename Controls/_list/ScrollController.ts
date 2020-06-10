@@ -61,7 +61,7 @@ export default class ScrollController {
         bottomLoadTrigger: HTMLElement;
     };
     private _observerRegistered: boolean = false;
-
+    private _container: HTMLElement;
     private _virtualScroll: VirtualScroll;
     private _itemsContainerGetter: Function;
 
@@ -89,7 +89,7 @@ export default class ScrollController {
     }
 
     private _restoreScrollResolve: Function;
-    private _checkTriggerVisibilityTimeout: number;
+    private _checkTriggerVisibilityTimeout: NodeJS.Timeout;
 
     private _afterRenderCallbacks: Function[];
     private _isRendering: boolean = false;
@@ -134,7 +134,7 @@ export default class ScrollController {
         }
     }
 
-    afterMount(container: any): void {
+    afterMount(container: HTMLElement): void {
         this.__mounted = true;
         this._container = container;
         this._viewResize(this._container.offsetHeight, false);
@@ -193,7 +193,8 @@ export default class ScrollController {
         this._itemsContainerGetter = itemsContainerGetter;
     }
 
-    viewResize(): void {
+    viewResize(container: HTMLElement): void {
+        this._container = container;
         this._viewResize(this._container.offsetHeight);
         // TODO Совместимость необходимо удалить после переписывания baseControl
         this._notify('viewResize');
@@ -418,20 +419,19 @@ export default class ScrollController {
         if (needScrollCalculation) {
             let collectionStartIndex: number;
             let collectionStopIndex: number;
-
-        if (collection.getViewIterator) {
-            collectionStartIndex = VirtualScrollController.getStartIndex(
-                collection as unknown as VirtualScrollController.IVirtualScrollCollection
-            );
-            collectionStopIndex = VirtualScrollController.getStopIndex(
-                collection as unknown as VirtualScrollController.IVirtualScrollCollection
-            );
-        } else {
-            // @ts-ignore
-            collectionStartIndex = collection.getStartIndex();
-            // @ts-ignore
-            collectionStopIndex = collection.getStopIndex();
-        }
+            if (collection.getViewIterator) {
+                collectionStartIndex = VirtualScrollController.getStartIndex(
+                    collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+                collectionStopIndex = VirtualScrollController.getStopIndex(
+                    collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+            } else {
+                // @ts-ignore
+                collectionStartIndex = collection.getStartIndex();
+                // @ts-ignore
+                collectionStopIndex = collection.getStopIndex();
+            }
 
             if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
                 if (collection.getViewIterator) {
@@ -688,8 +688,8 @@ export default class ScrollController {
         }
     }
 
-    _notify() {
-        this._options.notify();
+    _notify(eventName: string, args?: any[], options?: { bubbling?: boolean }): any {
+        this._options.notify(eventName, args, options);
     }
 
     /**
