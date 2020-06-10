@@ -26,8 +26,8 @@ describe('Controls/marker/Controller', () => {
    describe('constructor', () => {
       it('not pass markedKey', () => {
          controller = new MarkerController({ model, markerVisibility: 'visible', markedKey: undefined })
-         assert.equal(controller._markedKey, undefined);
-         assert.equal(model.getMarkedKey(), undefined);
+         assert.equal(controller._markedKey, 1);
+         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('pass markedKey', () => {
@@ -75,7 +75,7 @@ describe('Controls/marker/Controller', () => {
          assert.equal(model.getMarkedKey(), 2);
 
          // сбрасываем маркер в модели
-         model.setMarkedKey(undefined, true);
+         model.setMarkedKey(2, false);
          assert.isUndefined(model.getMarkedKey());
 
          result = controller.update({
@@ -105,8 +105,8 @@ describe('Controls/marker/Controller', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
          const result = controller.setMarkedKey(null);
-         assert.equal(result, 1);
-         assert.equal(model.getMarkedKey(), 1);
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
       });
 
       it('undefined', () => {

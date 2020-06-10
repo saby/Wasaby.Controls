@@ -362,6 +362,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             this.getItemById(key)
         ];
 
+        const item = this.getItemBySourceKey(key);
+        if (item) {
+            item.setMarked(status);
+        }
+
         if (status === false) {
             this._markedKey = undefined;
         } else {

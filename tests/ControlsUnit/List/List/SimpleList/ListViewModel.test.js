@@ -346,7 +346,7 @@ define([
          marItem = iv.getMarkedItem();
          assert.equal(iv._markedKey, 3, 'Incorrect _markedKey value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
-         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
+         assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
       });
 
       it('setMarkedKey', function() {
@@ -361,9 +361,11 @@ define([
 
          model.setMarkedKey(2, true);
          assert.equal(model.getMarkedKey(), 2);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
 
          model.setMarkedKey(2, false);
          assert.equal(model.getMarkedKey(), undefined);
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
       });
 
       // TODO SetItemActions
