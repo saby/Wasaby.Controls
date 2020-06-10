@@ -9,6 +9,7 @@ import {isEqual} from 'Types/object';
 import {List, RecordSet} from 'Types/collection';
 import {descriptor} from 'Types/entity';
 import {Logger} from 'UI/Utils';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 var _private = {
       loadItems: function(self, options, selectedKeys, sourceIsChanged) {
@@ -32,9 +33,13 @@ var _private = {
                resultDef.callback(self._items = result);
                return result;
             })
-            .addErrback(function(result) {
+            .addErrback((error) => {
+               dataSourceError.process({
+                  error,
+                  opener: self
+               });
                resultDef.callback(null);
-               return result;
+               return error;
             });
 
          return resultDef;
