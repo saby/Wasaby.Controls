@@ -268,6 +268,7 @@ const _private = {
                         self._groupingLoader.resetLoadedGroups(listModel);
                     }
 
+                    let itemsChanged = false;
                     if (self._items) {
                        self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
                     }
@@ -281,6 +282,7 @@ const _private = {
                         modelCollection.assign(list);
                         listModel.setCompatibleReset(false);
                         self._items = listModel.getCollection();
+                        itemsChanged = true;
                     } else {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
@@ -291,11 +293,12 @@ const _private = {
                         if (self._options.task1178907511) {
                             self._markedKeyForRestoredScroll = listModel.getMarkedKey();
                         }
+                        itemsChanged = true;
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
                     if (self._markerController) {
-                        _private.updateMarkerController(self, self._options);
+                        _private.updateMarkerController(self, self._options, itemsChanged);
                     }
 
                     if (self._sourceController) {
@@ -1816,12 +1819,12 @@ const _private = {
         });
    },
 
-    updateMarkerController(self: any, options: any): void {
+    updateMarkerController(self: any, options: any, itemsChanged: boolean): void {
         self._markedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
             markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
-        });
+        }, itemsChanged);
     },
 
     createDndListController(self: any, options: any): DndFlatController|DndTreeController {
@@ -2393,7 +2396,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._markerController) {
-            _private.updateMarkerController(this, newOptions);
+            _private.updateMarkerController(this, newOptions, false);
         } else {
             if (newOptions.markerVisibility !== 'hidden') {
                 this._markerController = _private.createMarkerController(self, newOptions);
