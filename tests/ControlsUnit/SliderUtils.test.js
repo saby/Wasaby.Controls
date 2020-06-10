@@ -83,6 +83,59 @@ define([
          assert.deepEqual(actual, expected, 'Scale data with label formatter are not equal');
       });
 
+
+      it('convertIntervals', function() {
+         it('should be return converted intervals', function() {
+            let intervals = [{
+               color: '00ff00',
+               start: 10,
+               end: 20
+            }, {
+               color: '00ff00',
+               start: 40,
+               end: 50
+            }];
+
+            let expected = [{
+               color: '00ff00',
+               left: 10,
+               width: 10
+            }, {
+               color: '00ff00',
+               left: 40,
+               width: 10
+            }];
+
+            const actual = utils.default.convertIntervals(intervals, 0, 100);
+            assert.deepEqual(actual, expected, 'Converted intervals are not equal');
+         });
+
+         it('should be return converted intervals and sort', function() {
+            let intervals = [{
+               color: '00ff00',
+               start: 40,
+               end: 50
+            }, {
+               color: '00ff00',
+               start: 10,
+               end: 20
+            }];
+
+            let expected = [{
+               color: '00ff00',
+               left: 10,
+               width: 10
+            }, {
+               color: '00ff00',
+               left: 40,
+               width: 10
+            }];
+
+            const actual = utils.default.convertIntervals(intervals, 0, 100);
+            assert.deepEqual(actual, expected, 'Converted intervals are not equal');
+         });
+      });
+
       it('getNativeEventPageX', function() {
          let getNativeEventPageX = utils.default.getNativeEventPageX;
          let mouseEvent = {
