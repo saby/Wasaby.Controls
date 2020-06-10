@@ -901,7 +901,8 @@ var
                     hasActionCell: this._shouldAddActionsCell()
                 }, this._options.theme);
                 cellClasses += ' controls-Grid__header-cell_min-width';
-                if (!this._isMultiHeader && columnIndex > hasMultiSelect ? 1 : 0) {
+
+                if (!this._isMultiHeader && !cell.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
                     const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, columnIndex, this._options.columnSeparatorSize);
                     if (columnSeparatorSize !== null) {
                         cellClasses += ` controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
@@ -965,7 +966,7 @@ var
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ` controls-Grid__cell_header-content_border-bottom_theme-${this._options.theme}` : '';
 
                 // У первой колонки не рисуем вертикальные разделители. startColumn - конфигурация GridLayout, начинается с 1.
-                if (startColumn - (hasMultiSelect ? 2 : 1)) {
+                if (!cell.isActionCell && (startColumn - (hasMultiSelect ? 2 : 1))) {
                     const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, startColumn - 1, this._options.columnSeparatorSize);
                     if (columnSeparatorSize !== null) {
                         cellClasses += ` controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
@@ -1089,7 +1090,7 @@ var
                 });
             }
 
-            if (columnIndex > hasMultiSelect ? 1 : 0) {
+            if (!resultsColumn.column.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
                 const columnSeparatorSize = _private.getSeparatorForColumn(
                     this._options.columns,
                     columnIndex - (hasMultiSelect ? 1 : 0),
