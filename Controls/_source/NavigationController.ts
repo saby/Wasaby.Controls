@@ -5,9 +5,9 @@ import {Logger} from 'UI/Utils';
 import * as cClone from 'Core/core-clone';
 
 import {IQueryParamsController} from './interface/IQueryParamsController';
-import PageNavigationStore from './NavigationController/PageNavigationStore';
+import {default as PageNavigationStore, IPageNavigationState} from './NavigationController/PageNavigationStore';
 import PageParamsCalculator from './NavigationController/PageParamsCalculator';
-import PositionNavigationStore from './NavigationController/PositionNavigationStore';
+import {default as PositionNavigationStore, IPositionNavigationState} from './NavigationController/PositionNavigationStore';
 import PositionParamsCalculator from './NavigationController/PositionParamsCalculator';
 
 import {Direction, IAdditionalQueryParams, IAdditionQueryParamsMeta} from 'Controls/_interface/IAdditionalQueryParams';
@@ -136,7 +136,7 @@ export class NavigationController {
 
     private _navigationType: TNavigationSource;
     private _navigationConfig: INavigationSourceConfig;
-    private readonly _navigationStores: List<TNavigationStore> = null;
+    private _navigationStores: List<TNavigationStore> = null;
 
     constructor(cfg: INavigationControllerOptions) {
         this._navigationType = cfg.navigationType;
@@ -190,7 +190,7 @@ export class NavigationController {
         list: RecordSet,
         id: TKey = null,
         navigationConfig?: INavigationSourceConfig,
-        direction?: Direction): void {
+        direction?: Direction): IPageNavigationState | IPositionNavigationState {
 
         // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
         const store = this._getStore(id);
@@ -265,11 +265,7 @@ export class NavigationController {
      * @remark
      * @param config INavigationSourceConfig
      */
-    setConfig(config: INavigationSourceConfig): void {
-        if (this._queryParamsController) {
-            this._queryParamsController.setConfig(config);
-        }
-    }
+    update(cfg: INavigationControllerOptions): void {};
 
     /**
      * разрушает IQueryParamsController
@@ -278,9 +274,11 @@ export class NavigationController {
      * destroy current IQueryParamsController
      */
     destroy(): void {
-        if (this._queryParamsController) {
-            this._queryParamsController.destroy();
-        }
-        this._options = null;
+        this._navigationStores.each((navigationStore) => {
+            navigationStore.destroy();
+        });
+        this._navigationStores = null;
+        this._navigationType = null;
+        this._navigationConfig = null;
     }
 }

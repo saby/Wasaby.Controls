@@ -2,17 +2,22 @@ export interface IPageNavigationStoreOptions {
     pageSize: number;
     page?: number;
     hasMore?: boolean;
+}
+export interface IPageNavigationState {
+    pageSize: number;
+    page?: number;
+    hasMore?: boolean;
     nextPage: number;
     prevPage: number;
 }
 class PageNavigationStore {
-    private _nextPage: number;
-    private _prevPage: number;
-    private _more: boolean | number = null;
-
     private _page: number;
     private _pageSize: number;
     private _hasMore: boolean;
+
+    private _nextPage: number;
+    private _prevPage: number;
+    private _more: boolean | number = null;
 
     constructor(cfg: IPageNavigationStoreOptions) {
         this._page = cfg.page || 0;
@@ -35,7 +40,7 @@ class PageNavigationStore {
         this._nextPage = this._page + 1;
     }
 
-    getParams(): IPageNavigationStoreOptions {
+    getParams(): IPageNavigationState {
         return {
             page: this._page,
             pageSize: this._pageSize,
@@ -55,6 +60,20 @@ class PageNavigationStore {
 
     setCurrentPage(pageNumber: number): void {
         this._initPages(pageNumber);
+    }
+
+    setMetaMore(more: boolean | number): void {
+        this._more = more;
+    }
+
+    destroy(): void {
+        this._nextPage = null;
+        this._prevPage = null;
+        this._more = null;
+
+        this._page = null;
+        this._pageSize = null;
+        this._hasMore = null;
     }
 }
 

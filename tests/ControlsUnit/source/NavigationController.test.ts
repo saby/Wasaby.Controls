@@ -64,115 +64,162 @@ const TEST_PAGE_SIZE = 10;
 
 describe('Controls/_source/NavigationController', () => {
     describe('Page navigation', () => {
-        it('getQueryParams root, without config', () => {
-            const nc = new NavigationController({
-                navigationType: 'page',
-                navigationConfig: {
-                    page: 0,
-                    pageSize: TEST_PAGE_SIZE,
-                    hasMore: true
-                }
+        describe('Without config', () => {
+            it('getQueryParams root', () => {
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: 0,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: true
+                    }
+                });
+
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting});
+                assert.equal(TEST_PAGE_SIZE, params.limit, 'Wrong query params');
+                assert.equal(0, params.offset, 'Wrong query params');
             });
 
-            const params = nc.getQueryParams({filter: defFilter, sorting: defSorting});
-            assert.equal(TEST_PAGE_SIZE, params.limit, 'Wrong query params');
-            assert.equal(0, params.offset, 'Wrong query params');
+            it('getQueryParams root + forward', () => {
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: 0,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: true
+                    }
+                });
+
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'forward');
+                assert.equal(TEST_PAGE_SIZE, params.limit, 'Wrong query params');
+                assert.equal(TEST_PAGE_SIZE, params.offset, 'Wrong query params');
+            });
+
+            it('getQueryParams root + backward', () => {
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: 2,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: true
+                    }
+                });
+
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'backward');
+                assert.equal(TEST_PAGE_SIZE, params.limit, 'Wrong query params');
+                assert.equal(TEST_PAGE_SIZE, params.offset, 'Wrong query params');
+            });
+
+            it('updateQueryProperties root', () => {
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: 0,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: true
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                const params = nc.updateQueryProperties(rs);
+                assert.equal(1, params.nextPage, 'Wrong query properties');
+                assert.equal(-1, params.prevPage, 'Wrong query properties');
+            });
+
+            it('updateQueryProperties root + forward, without config', () => {
+                const START_PAGE = 0;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: true
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                const params = nc.updateQueryProperties(rs, null, undefined, 'forward');
+                assert.equal(START_PAGE + 2, params.nextPage, 'Wrong query properties');
+                assert.equal(START_PAGE - 1, params.prevPage, 'Wrong query properties');
+            });
+
+            it('updateQueryProperties root + backward, without config', () => {
+                const START_PAGE = 2;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: true
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                const params = nc.updateQueryProperties(rs, null, undefined, 'backward');
+                assert.equal(START_PAGE + 1, params.nextPage, 'Wrong query properties');
+                assert.equal(START_PAGE - 2, params.prevPage, 'Wrong query properties');
+            });
         });
-
-        it('getQueryParams root + forward, without config', () => {
-            const nc = new NavigationController({
-                navigationType: 'page',
-                navigationConfig: {
-                    page: 0,
-                    pageSize: TEST_PAGE_SIZE,
-                    hasMore: true
-                }
-            });
-
-            const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'forward');
-            assert.equal(TEST_PAGE_SIZE, params.limit, 'Wrong query params');
-            assert.equal(TEST_PAGE_SIZE, params.offset, 'Wrong query params');
-        });
-
-        it('getQueryParams root + backward, without config', () => {
-            const nc = new NavigationController({
-                navigationType: 'page',
-                navigationConfig: {
-                    page: 2,
-                    pageSize: TEST_PAGE_SIZE,
-                    hasMore: true
-                }
-            });
-
-            const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'backward');
-            assert.equal(TEST_PAGE_SIZE, params.limit, 'Wrong query params');
-            assert.equal(TEST_PAGE_SIZE, params.offset, 'Wrong query params');
-        });
-
-
-        it('updateQueryProperties root, without config', () => {
-            const nc = new NavigationController({
-                navigationType: 'page',
-                navigationConfig: {
-                    page: 0,
-                    pageSize: TEST_PAGE_SIZE,
-                    hasMore: true
-                }
-            });
-
-            const rs = new RecordSet({
-                rawData: data,
-                keyProperty: 'id'
-            });
-
-            const params = nc.updateQueryProperties(rs);
-            assert.equal(1, params.nextPage, 'Wrong query properties');
-            assert.equal(-1, params.prevPage, 'Wrong query properties');
-        });
-
-        it('updateQueryProperties root + forward, without config', () => {
-            const START_PAGE = 0;
-            const nc = new NavigationController({
-                navigationType: 'page',
-                navigationConfig: {
-                    page: START_PAGE,
-                    pageSize: TEST_PAGE_SIZE,
-                    hasMore: true
-                }
-            });
-
-            const rs = new RecordSet({
-                rawData: data,
-                keyProperty: 'id'
-            });
-
-            const params = nc.updateQueryProperties(rs, null, undefined, 'forward');
-            assert.equal(START_PAGE + 2, params.nextPage, 'Wrong query properties');
-            assert.equal(START_PAGE - 1, params.prevPage, 'Wrong query properties');
-        });
-
-        it('updateQueryProperties root + backward, without config', () => {
-            const START_PAGE = 2;
-            const nc = new NavigationController({
-                navigationType: 'page',
-                navigationConfig: {
-                    page: START_PAGE,
-                    pageSize: TEST_PAGE_SIZE,
-                    hasMore: true
-                }
-            });
-
-            const rs = new RecordSet({
-                rawData: data,
-                keyProperty: 'id'
-            });
-
-            const params = nc.updateQueryProperties(rs, null, undefined, 'backward');
-            assert.equal(START_PAGE + 1, params.nextPage, 'Wrong query properties');
-            assert.equal(START_PAGE - 2, params.prevPage, 'Wrong query properties');
-        });
-
 
     });
+    describe('Position navigation', () => {
+        describe('Without config', () => {
+            it('getQueryParams root bothways', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: 1,
+                        field: 'id',
+                        direction: 'bothways',
+                        limit: 3
+                    }
+                });
 
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting});
+                assert.equal(1, params.filter['id~'], 'Wrong query params');
+            });
+
+            it('getQueryParams root forward', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: 1,
+                        field: 'id',
+                        direction: 'forward',
+                        limit: 3
+                    }
+                });
+
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting});
+                assert.equal(1, params.filter['id>='], 'Wrong query params');
+            });
+
+            it('getQueryParams root backward', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: 1,
+                        field: 'id',
+                        direction: 'backward',
+                        limit: 3
+                    }
+                });
+
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting});
+                assert.equal(1, params.filter['id<='], 'Wrong query params');
+            });
+        });
+    }
 });

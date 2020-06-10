@@ -1,14 +1,14 @@
 import {IAdditionalQueryParams, Direction} from 'Controls/_interface/IAdditionalQueryParams';
 import {QueryNavigationType} from 'Types/source';
-import {PageNavigationStore, IPageNavigationStoreOptions} from './NavigationController/PageNavigationStore';
-import {IBasePageSourceConfig} from 'Controls/interface';
+import {PageNavigationStore, IPageNavigationState} from './NavigationController/PageNavigationStore';
+import {IBasePageSourceConfig, INavigationPageSourceConfig} from 'Controls/interface';
 import {TNavigationDirection} from 'Controls/_interface/INavigation';
 import {Recordset} from 'Types/collection';
 
 class PageParamsCalculator {
     static getQueryParams(
         store: PageNavigationStore,
-        config: IBasePageSourceConfig,
+        config: INavigationPageSourceConfig,
         direction?: TNavigationDirection
     ): IAdditionalQueryParams {
         const addParams: IAdditionalQueryParams = {};
@@ -31,6 +31,8 @@ class PageParamsCalculator {
             addParams.meta.hasMore = false;
         }
 
+        // TODO callback
+
         return addParams;
     }
 
@@ -39,11 +41,12 @@ class PageParamsCalculator {
         list: Recordset,
         config: IBasePageSourceConfig,
         direction?: TNavigationDirection
-    ): IPageNavigationStoreOptions  {
+    ): IPageNavigationState  {
         const moreValue = list.getMetaData().more;
         const storeParams = store.getParams();
 
         PageParamsCalculator._validateNavigation(moreValue, storeParams.hasMore);
+        store.setMetaMore(moreValue);
 
         switch (direction) {
             case 'forward': store.shiftNextPage(); break;
