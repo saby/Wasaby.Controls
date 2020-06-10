@@ -348,6 +348,11 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
         const opener = this._children.renderer;
+        /**
+         * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
+         * у которого открываем меню. Потом передадим его для события actionClick.
+         */
+        this._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
         const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
         if (menuConfig) {
             clickEvent.nativeEvent.preventDefault();
