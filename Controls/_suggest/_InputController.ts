@@ -302,9 +302,6 @@ var _private = {
 
    getSelectorOptions(self, filter): IStackPopupOptions {
       return {
-         opener: self,
-         template: 'Controls/suggestPopup:Dialog',
-         closeOnOutsideClick: true,
          templateOptions: {
             filter: filter,
             searchValue: self._searchValue,
@@ -330,9 +327,6 @@ var _private = {
                   onResult: self._select.bind(self)
                }
             }
-         },
-         eventHandlers: {
-            onResult: self._select.bind(self)
          }
       };
    }
