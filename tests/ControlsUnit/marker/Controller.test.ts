@@ -47,9 +47,8 @@ describe('Controls/marker/Controller', () => {
 
       it('pass null if markedKey was set', () => {
          let result = controller.setMarkedKey(1);
-         assert.equal(controller._markedKey, 1);
          assert.equal(model.getMarkedKey(), 1);
-         assert.equal(result, 2);
+         assert.equal(result, 1);
 
          result =  controller.update({
             model: model,
@@ -177,8 +176,8 @@ describe('Controls/marker/Controller', () => {
          }));
 
          const result = controller.handleRemoveItems(0);
-         assert.equal(result, null);
-         assert.equal(model.getMarkedKey(), null);
+         assert.equal(result, undefined);
+         assert.equal(model.getMarkedKey(), undefined);
       });
    });
 
@@ -225,8 +224,8 @@ describe('Controls/marker/Controller', () => {
       it ('offset 31 and start index 2', () => {
          model.getStartIndex = () => { return 2; }
          const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 31);
-         assert.equal(result, undefined);
-         assert.equal(model.getMarkedKey(), undefined);
+         assert.equal(result, 3);
+         assert.equal(model.getMarkedKey(), 3);
       });
    });
 });

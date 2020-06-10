@@ -107,7 +107,7 @@ export class Controller {
     * Ставит маркер на следующий элемент, при его отустствии на предыдущий, иначе сбрасывает маркер
     * @param removedItemsIndex
     */
-   handleRemoveItems(removedItemsIndex: number): void {
+   handleRemoveItems(removedItemsIndex: number): TKey {
       const nextItem = this._model.getNextByIndex(removedItemsIndex);
       const prevItem = this._model.getPrevByIndex(removedItemsIndex);
 
@@ -116,8 +116,10 @@ export class Controller {
       } else if (prevItem) {
          this.setMarkedKey(prevItem.getContents().getKey());
       } else {
-         this.setMarkedKey(null);
+         this.setMarkedKey(undefined);
       }
+
+      return this._markedKey;
    }
 
    /**
@@ -134,6 +136,8 @@ export class Controller {
       if (item) {
          const itemKey = item.getContents().getKey();
          this.setMarkedKey(itemKey);
+      } else {
+         this.setMarkedKey(undefined);
       }
 
       return this._markedKey;
