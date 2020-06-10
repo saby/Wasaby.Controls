@@ -283,7 +283,7 @@ var
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
-                if (!isFullGridSupport) {
+                if (!isFullGridSupport && !current.isEditing) {
                     classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
@@ -1472,7 +1472,7 @@ var
                     const index = current.stickyProperties.indexOf(stickyProperty);
                     const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
                     if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
-                        index === 1 && !hasMainCell || 
+                        index === 1 && !hasMainCell ||
                         index === 0 && hasMainCell)) {
                         result += ' controls-Grid__row-cell__ladder-content_displayNoneForLadder';
                     }
@@ -1482,7 +1482,7 @@ var
                 }
                 return result;
             };
-            
+
             current.getAdditionalLadderClasses = () => {
                 let result = '';
                 const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
@@ -1818,6 +1818,22 @@ var
         // New Model compatibility
         setEventRaising(enabled: boolean, analyze: boolean): void {
             return this._model.setEventRaising(enabled, analyze);
+        },
+
+        /**
+         * Возвращает состояние editing для модели.
+         * New Model compatibility
+         */
+        isEditing(): boolean {
+            return this._model.isEditing();
+        },
+
+        /**
+         * Устанавливает состояние editing для модели.
+         * New Model compatibility
+         */
+        setEditing(editing): void {
+            this._model.setEditing(editing);
         },
 
         at(index: number): Model {

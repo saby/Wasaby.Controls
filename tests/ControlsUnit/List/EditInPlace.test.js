@@ -224,6 +224,7 @@ define([
                item: listViewModel.at(0).getContents()
             });
             assert.isTrue(listViewModel.at(0).getContents().isEqual(eip._editingItem));
+            listViewModel.at(0).setEditing(false);
             assert.equal(listViewModel.at(0).getContents(), eip._originalItem);
          });
 

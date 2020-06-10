@@ -284,6 +284,13 @@ const _private = {
                     } else {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
+
+                        // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
+                        // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
+                        // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+                        if (self._options.task1178907511) {
+                            self._markedKeyForRestoredScroll = listModel.getMarkedKey();
+                        }
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
@@ -481,10 +488,9 @@ const _private = {
             toggledItemId = model.at(0).getContents().getId();
         }
 
-        if (toggledItemId) {
-            if (self._selectionController) {
-                self._selectionController.toggleItem(toggledItemId);
-            }
+        if (toggledItemId && self._selectionController) {
+            const result = self._selectionController.toggleItem(toggledItemId);
+            _private.handleSelectionControllerResult(self, result);
             _private.moveMarkerToNext(self, event);
         }
     },
@@ -1893,6 +1899,11 @@ const _private = {
 var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
     _updateShadowModeAfterMount: null,
 
+    // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
+    // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
+    // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+    _markedKeyForRestoredScroll: null,
+
     _updateInProgress: false,
     _groupingLoader: null,
 
@@ -2270,7 +2281,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._editInPlace.registerFormOperation(
                 this._listViewModel,
                 this._children.formController,
-                () => this.isDestroyed()
+                () => this._destroyed
             );
 
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
@@ -2571,6 +2582,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         // todo 2 Фантастически, но свежеиспеченный afterRender НЕ ПОДХОДИТ! Падают тесты. ХФ на носу, разбираться
         // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
         if (this._shouldRestoreScrollPosition && !this.__error) {
+
+            // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
+            // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
+            // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+            if (this._options.task1178907511 && this._markedKeyForRestoredScroll !== null && this._isScrollShown) {
+                _private.scrollToItem(this, this._markedKeyForRestoredScroll);
+                this._markedKeyForRestoredScroll = null;
+            }
+
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._children.scrollController.checkTriggerVisibilityWithTimeout();
@@ -3003,9 +3023,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
     _dragEnter: function(event, dragObject) {
+        // если мы утащим в другой список, то в нем нужно создать контроллер
+        if (!this._dndListController) {
+            this._dndListController = _private.createDndListController(this, this._options);
+        }
+
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (this._dndListController && dragObject && this._dndListController.isDragging()
-            && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
+        if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 

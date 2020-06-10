@@ -1506,8 +1506,10 @@ define([
 
          baseControl._loadingIndicatorState = null;
          sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
+         const handleSelectionControllerResult = sinon.spy(lists.BaseControl._private, 'handleSelectionControllerResult');
          lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
+         assert.isTrue(handleSelectionControllerResult.withArgs(baseControl, undefined).calledOnce);
 
          baseControl.getViewModel()._markedKey = 5;
          lists.BaseControl._private.spaceHandler(baseControl, event);
@@ -1515,6 +1517,48 @@ define([
 
 
          sandbox.restore();
+      });
+
+      it('_private.handleSelectionControllerResult', () => {
+         const baseControl = {
+            _notify: function(eventName, args) {}
+         };
+
+         const notifySpy = sinon.spy(baseControl, '_notify');
+
+         const result = {
+            selectedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            excludedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            selectedCount: 0,
+            isAllSelected: false
+         };
+
+         lists.BaseControl._private.handleSelectionControllerResult(baseControl, result);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
+
+         result.selectedKeysDiff.added = [5];
+         result.selectedKeysDiff.keys = [5];
+         lists.BaseControl._private.handleSelectionControllerResult(baseControl, result);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [result.selectedKeysDiff.keys, result.selectedKeysDiff.added, result.selectedKeysDiff.removed]).called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
+
+         result.excludedKeysDiff.added = [2];
+         result.excludedKeysDiff.keys = [2];
+         lists.BaseControl._private.handleSelectionControllerResult(baseControl, result);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [result.selectedKeysDiff.keys, result.selectedKeysDiff.added, result.selectedKeysDiff.removed]).called);
+         assert.isTrue(notifySpy.withArgs('excludedKeysChanged', [result.excludedKeysDiff.keys, result.excludedKeysDiff.added, result.excludedKeysDiff.removed]).called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
       it('loadToDirection up', async function() {
@@ -3605,19 +3649,10 @@ define([
             notifiedEntity = dragEntity && dragEntity[0];
          };
 
-         ctrl._dragEnter({}, {
-            '[Controls/dragnDrop:ItemsEntity]': true
-         });
-         assert.isNull(notifiedEvent, 'Not set because dndListController is null');
-
-         ctrl._dndListController = {
-            isDragging() {
-               return true;
-            }
-         };
-
+         assert.isNull(ctrl._dndListController);
          ctrl._dragEnter({}, undefined);
          assert.isNull(notifiedEvent);
+         assert.isNotNull(ctrl._dndListController);
 
          const badDragObject = { entity: {} };
          ctrl._dragEnter({}, badDragObject);
