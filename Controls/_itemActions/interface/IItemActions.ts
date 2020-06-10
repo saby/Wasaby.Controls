@@ -172,6 +172,7 @@ export interface IItemActionsItem {
     setSwiped(swiped: boolean): void;
     isSwiped(): boolean;
     isRightSwiped(): boolean;
+    isEditing(): boolean;
 }
 
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
@@ -193,6 +194,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
      */
     setActiveItem(item: IItemActionsItem): void;
     getActiveItem(): IItemActionsItem;
+    isEditing(): boolean;
 }
 
 export interface IMenuTemplateOptions extends IContextMenuConfig {

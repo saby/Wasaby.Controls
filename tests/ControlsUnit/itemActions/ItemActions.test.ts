@@ -402,12 +402,27 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(actionsOf1.showed[1].tooltip, 'This is awesome Profile you\'ve never seen', 'tooltip should be not the same as title here');
         });
 
-        // T1.16. Должны адекватно набираться ItemActions для breadcrumbs (когда getContents() возвращает массив записей)
+        // T1.16 Если редактируется или создаётся запись, actions будут добавлены в showed только для редактируемой записи
+        it('should not add any item actions when records are editing', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            item3.setEditing(true, item3.getContents());
+            collection.setEditing(true);
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions,
+                theme: 'default'
+            }));
+            const actionsOf2 = collection.getItemBySourceKey(2).getActions();
+            assert.equal(item3.getActions().showed.length, 4, 'item 4 is editing and should contain 4 itemActions');
+            assert.equal(actionsOf2.showed.length, 0, 'item 4 is editing and item 2 should not contain any itemActions');
+        });
+
+        // T1.17. Должны адекватно набираться ItemActions для breadcrumbs (когда getContents() возвращает массив записей)
         // TODO возможно, это уйдёт из контроллера, т.к. по идее уровень абстракции в контроллере ниже и он не должен знать о breadcrumbs
         //  надо разобраться как в коллекцию добавить breadcrumbs
         // it('should set item actions when some items are breadcrumbs', () => {});
 
-        // T1.17. Должны адекватно набираться ItemActions если в списке элементов коллекции присутствуют группы
+        // T1.18. Должны адекватно набираться ItemActions если в списке элементов коллекции присутствуют группы
         // TODO возможно, это уйдёт из контроллера, т.к. по идее уровень абстракции в контроллере ниже и он не должен знать о группах
         //  надо разобраться как в коллекцию добавить group
         // it('should set item actions when some items are groups', () => {});
