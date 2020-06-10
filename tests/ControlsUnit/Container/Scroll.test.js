@@ -11,8 +11,11 @@ define(
 
       describe('Controls.Container.Scroll', function() {
          var scroll, result;
-
+         let event;
          beforeEach(function() {
+            event = {
+               stopImmediatePropagation: sinon.fake()
+            }
             scroll = new scrollMod.Container({});
 
             var templateFn = scroll._template;
@@ -864,18 +867,35 @@ define(
             });
 
             describe('_updateShadowMode', function() {
+               const mode = {
+                  top: 'visible',
+                  bottom: 'visible',
+               };
                it('Should update shadow mode if the container is visible.', function() {
-                  const mode = 'newMode';
                   sinon.stub(scroll, '_isHidden').returns(false);
-                  scroll._updateShadowMode({}, mode);
-                  assert.strictEqual(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.stub(scroll, '_forceUpdate');
+                  scroll._updateShadowMode(event, mode);
+                  assert.include(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.assert.called(event.stopImmediatePropagation);
+                  sinon.assert.called(scroll._forceUpdate);
                   sinon.restore();
                });
                it('Should\'t update shadow mode if the container is hidden.', function() {
-                  const mode = 'newMode';
                   sinon.stub(scroll, '_isHidden').returns(true);
-                  scroll._updateShadowMode({}, mode);
-                  assert.notEqual(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.stub(scroll, '_forceUpdate');
+                  scroll._updateShadowMode(event, mode);
+                  assert.notInclude(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.assert.called(event.stopImmediatePropagation);
+                  sinon.assert.notCalled(scroll._forceUpdate);
+                  sinon.restore();
+               });
+               it('Should\'t force update if value does not changed.', function() {
+                  scroll._shadowVisibilityByInnerComponents = mode
+                  sinon.stub(scroll, '_isHidden').returns(true);
+                  sinon.stub(scroll, '_forceUpdate');
+                  scroll._updateShadowMode(event, mode);
+                  sinon.assert.called(event.stopImmediatePropagation);
+                  sinon.assert.notCalled(scroll._forceUpdate);
                   sinon.restore();
                });
             });

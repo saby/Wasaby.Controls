@@ -436,7 +436,7 @@ const _private = {
     setMarkedKey(self, key: string | number): void {
         if (key !== undefined && self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
-            _private.scrollToItem(self, key);
+            _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToNext: function (self, event) {
@@ -1826,7 +1826,7 @@ const _private = {
                    selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerController) {
-                   self._markerController.handleRemoveItems(removedItemsIndex);
+                   self._markedKey = self._markerController.handleRemoveItems(removedItemsIndex);
                }
                break;
          }
