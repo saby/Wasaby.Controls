@@ -206,9 +206,10 @@ export interface IMenuTemplateOptions extends IContextMenuConfig {
     closeButtonVisibility: boolean;
     root: number | string;
     showHeader: boolean;
+    iconSize: TItemActionsSize;
     headConfig?: {
         caption: string;
         icon: string;
-        iconSize: string;
+        iconSize: TItemActionsSize;
     };
 }
