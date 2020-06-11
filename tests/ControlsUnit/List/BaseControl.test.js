@@ -988,11 +988,6 @@ define([
             up: false,
             down: true
          };
-         ctrl._notify = (eventName, eventsArgs) => {
-            if (eventName === 'updateShadowMode') {
-               shadowVisibility = eventsArgs[0];
-            }
-         };
          ctrl._isScrollShown = true;
          ctrl._shadowVisibility = {};
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
@@ -1006,15 +1001,14 @@ define([
          ctrl._portionedSearchInProgress = true;
 
          // Up trigger became visible, no changes to indicator
-         ctrl.triggerVisibilityChangedHandler(null, 'up', true);
+         ctrl.triggerVisibilityChangedHandler('up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
          assert.isFalse(ctrl._showContinueSearchButton);
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
-         ctrl.triggerVisibilityChangedHandler(null, 'down', false);
+         ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
          assert.isTrue(ctrl._showContinueSearchButton);
-         assert.equal(shadowVisibility.bottom, 'auto');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
@@ -5189,6 +5183,11 @@ define([
             ctrl._container = {
                clientHeight: 100,
                getBoundingClientRect: () => ({y: 0})
+            };
+            ctrl._children = {
+               scrollObserver: {
+                  startRegister: () => undefined
+               }
             };
             ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
