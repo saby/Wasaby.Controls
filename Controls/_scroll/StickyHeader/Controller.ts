@@ -14,6 +14,11 @@ interface IShadowVisible {
     [id: number]: boolean;
 }
 
+interface IHeightEntry {
+    key: HTMLElement;
+    value: number;
+}
+
 class Component extends Control {
     protected _template: Function = template;
 
@@ -29,7 +34,7 @@ class Component extends Control {
     private _stickyControllerMounted: boolean = false;
     private _updateTopBottomInitialized: boolean = false;
     private _stickyHeaderObserver: ResizeObserverUtil;
-    private _elementsHeight: object[] = [];
+    private _elementsHeight: IHeightEntry[] = [];
     private _firstResize: boolean = true;
 
     _beforeMount(options) {
@@ -152,7 +157,7 @@ class Component extends Control {
         const stickyHeaders = this._getStickyHeaderElements(container);
         stickyHeaders.forEach((elem: HTMLElement) => {
             this._stickyHeaderObserver.observe(elem);
-            this._elementsHeight.push({key: elem, value: elem.getBoundingClientRect().height});
+            // this._elementsHeight.push({key: elem, value: elem.getBoundingClientRect().height});
         });
     }
 
@@ -166,17 +171,23 @@ class Component extends Control {
     private _resizeObserverCallback(entries: any): void {
         let heightChanged = false;
         for (const entry of entries) {
-            heightChanged = this._elementsHeight.some((elemHeight) => {
-                if (elemHeight.key === entry.target && elemHeight.value !== entry.contentRect.height) {
-                    elemHeight.value = entry.contentRect.height;
-                    return true;
-                } else {
-                    return false;
-                }
+            const heightEntry: IHeightEntry = this._elementsHeight.find((item: IHeightEntry) => {
+                return item.key === entry.target;
             });
+
+            if (heightEntry) {
+                if (heightEntry.value !== entry.contentRect.height) {
+                    heightEntry.value = entry.contentRect.height;
+                    heightChanged = true;
+                }
+            } else {
+                // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
+                // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
+                // этого элемента мы еще не сохранили.
+                this._elementsHeight.push({key: entry.target, value: entry.contentRect.height});
+            }
         }
-        if (heightChanged || this._firstResize) {
-            this._firstResize = false;
+        if (heightChanged) {
             this._resizeHandler();
         }
     }
