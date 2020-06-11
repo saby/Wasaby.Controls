@@ -125,7 +125,7 @@ export default class ScrollController {
     }, SCROLLMOVE_DELAY, true);
 
     constructor(options: any) {
-        this._options = options;
+        this._options = {...ScrollController.getDefaultOptions(), ...options};
         this._initModelObserving(options);
         this._initVirtualScroll(options);
         this._callbacks = options.callbacks;
