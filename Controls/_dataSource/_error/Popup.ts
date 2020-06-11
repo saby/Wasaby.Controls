@@ -114,7 +114,8 @@ export default class Popup implements IPopupHelper {
      */
     private static readonly POPUP_MODULES: string[] = [
         'Controls/popup',
-        'Controls/popupConfirmation'
+        'Controls/popupConfirmation',
+        'Controls/popupTemplate:DialogController'
     ];
 
     /**
