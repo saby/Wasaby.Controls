@@ -5706,7 +5706,8 @@ define([
                      setMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     update: function() {}
                   };
 
                   baseControl._children = {
@@ -5736,7 +5737,8 @@ define([
                      setMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     update: function() {}
                   };
 
                baseControl._mouseDownItemKey = 1;
