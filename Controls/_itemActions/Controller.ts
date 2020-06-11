@@ -306,7 +306,7 @@ export class Controller {
         this._collection.each((item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
                 const contents = Controller._getItemContents(item);
-				const actionsContainer = this._fixShownActionsDisplayOptions(this._getActionsContainer(item));
+				const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
                 const itemChanged = Controller._setItemActions(item, actionsContainer);
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
@@ -485,11 +485,11 @@ export class Controller {
                 });
             }
         } else {
-            showed = clone(actions);
+            showed = actions;
         }
         return {
             all: actions,
-            showed
+            showed: showed
         };
     }
 
@@ -529,15 +529,20 @@ export class Controller {
      * @param actions
      * @private
      */
-    private _fixShownActionsDisplayOptions(actions: IItemActionsContainer): IItemActionsContainer {
-        if (actions.showed) {
-            actions.showed = actions.showed.map((action) => {
-                action.icon = Controller._fixActionIconClass(action.icon, this._theme);
+    private _fixActionsDisplayOptions(actions: IItemActionsContainer): IItemActionsContainer {
+        if (actions.all && actions.all.length) {
+            actions.all = actions.all.map((action) => {
                 action.style = Utils.getStyle(action.style, 'itemActions/Controller');
                 action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
+                action.tooltip = Controller._getTooltip(action);
+                return action;
+            });
+        }
+        if (actions.showed && actions.showed.length) {
+            actions.showed = clone(actions.showed).map((action) => {
+                action.icon = Controller._fixActionIconClass(action.icon, this._theme);
                 action.showIcon = Controller._needShowIcon(action);
                 action.showTitle = Controller._needShowTitle(action);
-                action.tooltip = Controller._getTooltip(action);
                 return action;
             });
         }
@@ -631,9 +636,9 @@ export class Controller {
     private static _fixActionIconClass(icon: string, theme: string): string {
         if (!icon || icon.includes(this._resolveItemActionClass(theme))) {
             return icon;
-    }
-        return `${icon} ${this._resolveItemActionClass(theme)}`
         }
+        return `${icon} ${this._resolveItemActionClass(theme)}`
+    }
 
     private static _resolveItemActionClass(theme: string): string {
         return `controls-itemActionsV__action_icon_theme-${theme} icon-size_theme-${theme}`;
