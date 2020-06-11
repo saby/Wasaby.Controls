@@ -2,6 +2,8 @@ import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/List/Container');
 import {showType} from 'Controls/Utils/Toolbar';
+import {Record} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  *
@@ -175,44 +177,76 @@ import {showType} from 'Controls/Utils/Toolbar';
  * </pre>
  */
 
-let ACTION_ID = 'selector.action';
+type Key = string|number;
+type SelectionChangedEventResult = [Key[], Key[], Key[]];
+
+let SELECT_ACTION_ID = 'selector.action';
 let ACTION_TITLE = rk('Выбрать');
 let ACTION = {
-   id: ACTION_ID,
+   id: SELECT_ACTION_ID,
    title: ACTION_TITLE,
    showType: showType.TOOLBAR
 };
 
 let _private = {
-   getItemClickResult(itemKey, selectedKeys, multiSelect) {
-      let added = [];
-      let removed = [];
-      let itemIndex = selectedKeys.indexOf(itemKey);
-      selectedKeys = selectedKeys.slice();
+   getItemClickResult(itemKey: Key, keys: Key[], multiSelect: boolean): SelectionChangedEventResult {
+      const added = [];
+      const removed = [];
+      const itemIndex = keys.indexOf(itemKey);
+      keys = keys.slice();
 
       if (itemIndex === -1) {
-         if (!multiSelect && selectedKeys.length) {
-            removed.push(selectedKeys[0]);
-            selectedKeys.splice(0, 1);
+         if (!multiSelect && keys.length) {
+            removed.push(keys[0]);
+            keys.splice(0, 1);
          }
 
-         selectedKeys.push(itemKey);
+         keys.push(itemKey);
          added.push(itemKey);
       } else if (multiSelect) {
-         selectedKeys.splice(itemIndex, 1);
+         keys.splice(itemIndex, 1);
          removed.push(itemKey);
       }
 
-      return [selectedKeys, added, removed];
+      return [keys, added, removed];
    },
 
-   selectItem(self, itemClickResult) {
-      self._notify('listSelectedKeysChanged', itemClickResult, {bubbling: true});
+   isSelectedAll(self): boolean {
+      return self._options.root !== undefined ?
+          self._options.selectedKeys.includes(self._options.root) :
+          self._options.selectedKeys.includes(null);
+   },
+
+   selectItem(self, item: Record): void {
+      const itemKey = item.get(self._options.keyProperty);
+      const eventResult = [[itemKey], [itemKey], []] as SelectionChangedEventResult;
+      _private.notifySelectedKeysChanged(self, eventResult);
       self._notify('selectComplete', [self._options.multiSelect, true], {bubbling: true});
    },
 
-   selectionChanged(self, itemClickResult) {
-      self._notify('listSelectedKeysChanged', itemClickResult, {bubbling: true});
+   selectionChanged(self, item: Record): void {
+      const itemKey = item.get(self._options.keyProperty);
+      const isSelectedAll = _private.isSelectedAll(self);
+      let eventName;
+      let keys;
+
+      if (isSelectedAll) {
+         eventName = 'notifyExcludedKeysChanged';
+         keys = self._options.excludedKeys;
+      } else {
+         eventName = 'notifySelectedKeysChanged';
+         keys = self._options.selectedKeys;
+      }
+
+      _private[eventName](self, _private.getItemClickResult(itemKey, keys, self._options.multiSelect));
+   },
+
+   notifySelectedKeysChanged(self, result: SelectionChangedEventResult): void {
+      self._notify('listSelectedKeysChanged', result, {bubbling: true});
+   },
+
+   notifyExcludedKeysChanged(self, result: SelectionChangedEventResult): void {
+      self._notify('listExcludedKeysChanged', result, {bubbling: true});
    },
 
    getItemActions(options) {
@@ -230,7 +264,7 @@ let _private = {
          let showByOptions;
          let showByItemType;
 
-         if (action.id === ACTION_ID) {
+         if (action.id === SELECT_ACTION_ID) {
             showByOptions = !options.multiSelect || !options.selectedKeys.length;
             showByItemType = options.selectionType === 'node' ? true : item.get(options.nodeProperty);
             return showByOptions && showByItemType;
@@ -240,13 +274,14 @@ let _private = {
       };
    },
 
-   itemClick(self, itemKey, multiSelect, selectedKeys) {
-      let itemClickResult = _private.getItemClickResult(itemKey, selectedKeys, multiSelect);
+   itemClick(self, item: Record): void {
+      const isMultiSelect = self._options.multiSelect;
+      const selectedKeys = self._options.selectedKeys;
 
-      if (!multiSelect || !selectedKeys.length) {
-         _private.selectItem(self, itemClickResult);
+      if (!isMultiSelect || !selectedKeys.length) {
+         _private.selectItem(self, item);
       } else {
-         _private.selectionChanged(self, itemClickResult);
+         _private.selectionChanged(self, item);
       }
    },
 
@@ -308,16 +343,15 @@ let Container = Control.extend({
       this._selectedKeys = null;
    },
 
-   _itemClick(event, item) {
+   _itemClick(event: SyntheticEvent, item: Record): void {
       if (!item.get(this._options.nodeProperty)) {
-         _private.itemClick(this, item.get(this._options.keyProperty), this._options.multiSelect, this._options.selectedKeys);
+         _private.itemClick(this, item);
       }
    },
 
-   _itemActionsClick(event, action, item) {
-      if (action.id === ACTION_ID) {
-         let itemClickResult = _private.getItemClickResult(item.get(this._options.keyProperty), this._options.selectedKeys, this._options.multiSelect);
-         _private.selectItem(this, itemClickResult);
+   _itemActionsClick(event: SyntheticEvent, action, item: Record) {
+      if (action.id === SELECT_ACTION_ID) {
+         _private.selectItem(this, item.get(this._options.keyProperty));
       }
    }
 
