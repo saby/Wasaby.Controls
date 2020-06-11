@@ -1,3 +1,5 @@
+type TMore = boolean | number;
+
 export interface IPageNavigationStoreOptions {
     pageSize: number;
     page?: number;
@@ -17,7 +19,7 @@ class PageNavigationStore {
 
     private _nextPage: number;
     private _prevPage: number;
-    private _more: boolean | number = null;
+    private _more: TMore = null;
 
     constructor(cfg: IPageNavigationStoreOptions) {
         this._page = cfg.page || 0;
@@ -62,7 +64,7 @@ class PageNavigationStore {
         this._initPages(pageNumber);
     }
 
-    setMetaMore(more: boolean | number): void {
+    setMetaMore(more: TMore): void {
         this._more = more;
     }
 

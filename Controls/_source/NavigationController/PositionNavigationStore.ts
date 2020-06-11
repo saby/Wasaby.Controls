@@ -3,11 +3,9 @@ import {CursorDirection} from 'Controls/Constants';
 interface IPositionHasMore {
     backward: boolean;
     forward: boolean;
-    before?: boolean;
-    after?: boolean;
 }
 
-type TPositionHasMore = boolean | IPositionHasMore;
+type TPositionHasMore = IPositionHasMore;
 
 // TODO Общие типы
 type TPosition = any;
@@ -41,7 +39,7 @@ class PositionNavigationStore {
 
     protected _backwardPosition: TPositionValue = [null];
     protected _forwardPosition: TPositionValue = [null];
-    private _more: boolean | TPositionHasMore;
+    private _more: TPositionHasMore;
 
     constructor(cfg: IPositionNavigationStoreOptions) {
         if (cfg.field !== undefined) {
@@ -71,9 +69,7 @@ class PositionNavigationStore {
     private static _getDefaultMoreMeta(): IPositionHasMore {
         return {
             backward: false,
-            forward: false,
-            before: false,
-            after: false
+            forward: false
         };
     }
 
@@ -102,20 +98,20 @@ class PositionNavigationStore {
         };
     }
 
-    shiftNextPage(): void {
-        this._nextPage++;
+    setForwardPosition(value: TPosition): void {
+        this._forwardPosition = value;
     }
 
-    shiftPrevPage(): void {
-        this._prevPage--;
+    setBackwardPosition(value: TPosition): void {
+        this._backwardPosition = value;
     }
 
-    setCurrentPage(pageNumber: number): void {
-        this._initPages(pageNumber);
-    }
-
-    setMetaMore(more: boolean | number): void {
+    setMetaMore(more: IPositionHasMore): void {
         this._more = more;
+    }
+
+    updateMetaMoreToDirection(direction: 'forward' | 'backward', value: boolean): void {
+        this._more[direction] = value;
     }
 
     destroy(): void {

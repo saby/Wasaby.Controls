@@ -176,7 +176,7 @@ describe('Controls/_source/NavigationController', () => {
     });
     describe('Position navigation', () => {
         describe('Without config', () => {
-            it('getQueryParams root bothways', () => {
+            it('getQueryParams root direction=bothways', () => {
                 const nc = new NavigationController({
                     navigationType: 'position',
                     navigationConfig: {
@@ -191,7 +191,7 @@ describe('Controls/_source/NavigationController', () => {
                 assert.equal(1, params.filter['id~'], 'Wrong query params');
             });
 
-            it('getQueryParams root forward', () => {
+            it('getQueryParams root direction=forward', () => {
                 const nc = new NavigationController({
                     navigationType: 'position',
                     navigationConfig: {
@@ -206,7 +206,7 @@ describe('Controls/_source/NavigationController', () => {
                 assert.equal(1, params.filter['id>='], 'Wrong query params');
             });
 
-            it('getQueryParams root backward', () => {
+            it('getQueryParams root direction=backward', () => {
                 const nc = new NavigationController({
                     navigationType: 'position',
                     navigationConfig: {
@@ -220,6 +220,40 @@ describe('Controls/_source/NavigationController', () => {
                 const params = nc.getQueryParams({filter: defFilter, sorting: defSorting});
                 assert.equal(1, params.filter['id<='], 'Wrong query params');
             });
+
+            it('getQueryParams root direction=bothways load forward', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: 1,
+                        field: 'id',
+                        direction: 'bothways',
+                        limit: 3
+                    }
+                });
+
+                // if it is first call without updateQueryProperties before it, position should be null
+                // because backwardPosition isn't initialized
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'forward');
+                assert.equal(null, params.filter['id>='], 'Wrong query params');
+            });
+
+            it('getQueryParams root direction=bothways load backward', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: 1,
+                        field: 'id',
+                        direction: 'bothways',
+                        limit: 3
+                    }
+                });
+
+                // if it is first call without updateQueryProperties before it, position should be null
+                // because backwardPosition isn't initialized
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'backward');
+                assert.equal(null, params.filter['id<='], 'Wrong query params');
+            });
         });
-    }
+    });
 });

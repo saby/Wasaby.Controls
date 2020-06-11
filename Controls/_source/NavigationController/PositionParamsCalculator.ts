@@ -5,6 +5,7 @@ import {IBasePositionSourceConfig, INavigationPositionSourceConfig} from 'Contro
 import {TNavigationDirection} from 'Controls/_interface/INavigation';
 import {Recordset} from 'Types/collection';
 import {CursorDirection} from 'Controls/Constants';
+import {Logger} from 'UI/Utils';
 
 // TODO Общие типы
 type TPosition = any;
@@ -64,14 +65,77 @@ class PositionParamsCalculator {
     static updateQueryProperties(
         store: PositionNavigationStore,
         list: Recordset,
-        config: IBasePageSourceConfig,
+        config: IBasePositionSourceConfig,
         direction?: TNavigationDirection
     ): IPositionNavigationState  {
         const moreValue = list.getMetaData().more;
         const storeParams = store.getParams();
 
-        PositionParamsCalculator._validateNavigation(moreValue, storeParams.hasMore);
-        store.setMetaMore(moreValue);
+        const queryDirection = PositionParamsCalculator._resolveDirection(direction, storeParams.direction);
+
+        if (typeof moreValue === 'boolean') {
+            if (queryDirection !== CursorDirection.bothways) {
+                store.updateMoreToDirection(direction, moreValue);
+            } else {
+                Logger.error('NavigationController: Wrong type of \"more\" value. Must be Object');
+            }
+        } else {
+            if (moreValue instanceof Object) {
+                if (queryDirection === CursorDirection.bothways) {
+                    store.setMoreData(moreValue);
+                } else {
+                    Logger.error('NavigationController: Wrong type of \"more\" value. Must be boolean');
+                }
+            }
+        }
+
+        const metaNextPosition = list.getMetaData().nextPosition;
+
+        if (metaNextPosition) {
+            if (metaNextPosition instanceof Array) {
+                if (queryDirection !== CursorDirection.bothways) {
+                    if (queryDirection === CursorDirection.forward) {
+                        store.setForwardPosition(metaNextPosition);
+                    } else if (queryDirection === CursorDirection.backward) {
+                        store.setBackwardPosition(metaNextPosition);
+                    }
+                } else {
+                    Logger.error('NavigationController: Wrong type of \"nextPosition\" value. Must be object');
+                }
+            } else {
+                if (queryDirection === CursorDirection.bothways) {
+                    if (metaNextPosition.before && metaNextPosition.before instanceof Array
+                        && metaNextPosition.after && metaNextPosition.after instanceof Array) {
+                        this._beforePosition = metaNextPosition.before;
+                        this._afterPosition = metaNextPosition.after;
+                        this._positionByMeta = true;
+                    } else if (metaNextPosition.backward && metaNextPosition.backward instanceof Array
+                        && metaNextPosition.forward && metaNextPosition.forward instanceof Array) {
+                        this._beforePosition = metaNextPosition.backward;
+                        this._afterPosition = metaNextPosition.forward;
+                        this._positionByMeta = true;
+                    } else {
+                        Logger.error('QueryParamsController/Position: ' +
+                            'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties.' +
+                            'Each properties must be Arrays');
+                    }
+                } else {
+                    Logger.error('QueryParamsController/Position: Wrong type of \"nextPosition\" value. Must be Array');
+                }
+            }
+
+        } else {
+            if ((list as RecordSet).getCount()) {
+                if (loadDirection !== 'down') {
+                    edgeElem = (list as RecordSet).at(0);
+                    this._beforePosition = this._resolvePosition(edgeElem, this._options.field);
+                }
+                if (loadDirection !== 'up') {
+                    edgeElem = (list as RecordSet).at((list as RecordSet).getCount() - 1);
+                    this._afterPosition = this._resolvePosition(edgeElem, this._options.field);
+                }
+            }
+        }
 
         switch (direction) {
             case 'forward': store.shiftNextPage(); break;
@@ -115,19 +179,6 @@ class PositionParamsCalculator {
         return (optField instanceof Array) ? optField : [optField];
     }
 
-    private static _validateNavigation(hasMoreValue: boolean | number, hasMoreOption: boolean): void {
-        if (hasMoreOption === false) {
-            // meta.more can be undefined is is not error
-            if (hasMoreValue && (typeof hasMoreValue !== 'number')) {
-                throw new Error('"more" Parameter has incorrect type. Must be numeric');
-            }
-        } else {
-            // meta.more can be undefined is is not error
-            if (hasMoreValue && (typeof hasMoreValue !== 'boolean')) {
-                throw new Error('"more" Parameter has incorrect type. Must be boolean');
-            }
-        }
-    }
 }
 
 export default PositionParamsCalculator;
