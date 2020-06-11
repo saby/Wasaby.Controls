@@ -304,7 +304,7 @@ const _private = {
 
                     // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
                     if (!self._selectionController && cfg.selectedKeys && cfg.selectedKeys.length > 0) {
-                        self._selectionController = _private.createSelectionController(self, cfg);
+                        _private.createSelectionControllerByOptions(self, cfg);
                     }
 
                     if (self._sourceController) {
@@ -1726,11 +1726,10 @@ const _private = {
      * @param options
      * @private
      */
-    _createSelectionControllerByOptions(self: any, options: any): void {
-        if (!self._selectionController && options.selectedKeys && options.selectedKeys.length !== 0) {
-            self._selectionController = _private.createSelectionController(self, options);
-
-        }
+    createSelectionControllerByOptions(self: any, options: any): void {
+        self._selectionController = _private.createSelectionController(self, options);
+        const result = self._selectionController.getResultAfterConstructor();
+        _private.handleSelectionControllerResult(self, result);
     },
 
     updateSelectionController(self: any, newOptions: any): void {
@@ -2099,7 +2098,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 }
 
                 if (!self._selectionController && newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
-                    self._selectionController = _private.createSelectionController(self, newOptions);
+                    _private.createSelectionControllerByOptions(self, newOptions);
                 }
             }
 

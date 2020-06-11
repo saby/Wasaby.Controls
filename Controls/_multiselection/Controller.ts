@@ -72,11 +72,16 @@ export class Controller {
    }
 
    /**
-    * Возвращает результат работы последнего
+    * Возвращает результат работы после выполнения конструктора
+    * @remark Вызывать только после конструктора, иначе будут неправильные данные
     */
-   getLastResult(): ISelectionControllerResult {
-      const oldSelection =
-      return this._getResult()
+   getResultAfterConstructor(): ISelectionControllerResult {
+      // TODO придумать решение лучше этого, для получения результатов после создания контроллера
+      const oldSelection = {
+         selected: [],
+         excluded: []
+      };
+      return this._getResult(oldSelection, this._selection);
    }
 
    clearSelection(): ISelectionControllerResult {
