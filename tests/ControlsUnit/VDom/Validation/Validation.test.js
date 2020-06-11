@@ -142,7 +142,7 @@ define([
             FC.destroy();
             done();
          });
-
+         FC._afterUpdate();
       });
 
       it('setValidationResult', () => {
@@ -179,6 +179,7 @@ define([
          }).catch((error) => {
             done(error);
          });
+         FC._afterUpdate();
          FC.destroy();
       });
    });
