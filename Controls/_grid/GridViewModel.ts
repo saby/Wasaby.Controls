@@ -1560,7 +1560,7 @@ var
                     currentColumn.ladder = self._ladder.ladder[current.index];
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
-                if (current.item.get) {
+                if (current.item.get && current.searchValue) {
                     currentColumn.column.needSearchHighlight = !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue);
                     currentColumn.searchValue = current.searchValue;
                 }

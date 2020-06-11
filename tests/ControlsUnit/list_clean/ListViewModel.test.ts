@@ -1,41 +1,21 @@
 import { assert } from 'chai';
 import { ListViewModel } from 'Controls/list';
-import { view } from 'Controls/Constants';
 import { RecordSet } from 'Types/collection';
-
-interface ITestDataItem {
-    key: number;
-    caption: string;
-    group?: string;
-}
+import { generateFlatData } from '../_utils/lists';
 
 interface ITestResultResetCase {
     start: number;
     current: number;
 }
 
-const TEST_GROUP_SIZE = 3;
-
 describe('Controls/list_clean/ListViewModel', () => {
-    function generateData(count: number, splitIntoGroups: boolean): ITestDataItem[] {
-        const result: ITestDataItem[] = [];
-        for (let idx = 1; idx <= count; idx++) {
-            const item: ITestDataItem = { key: idx, caption: 'item_' + idx };
-            if (splitIntoGroups) {
-                const groupIdx = idx % TEST_GROUP_SIZE;
-                item.group = groupIdx ? 'group_' + groupIdx : view.hiddenGroup;
-            }
-            result.push(item);
-        }
-        return result;
-    }
     describe('reset', () => {
         const itemsCount = 6;
         let items: RecordSet;
 
         beforeEach(() => {
             items = new RecordSet({
-                rawData: generateData(itemsCount, true),
+                rawData: generateFlatData(itemsCount, true),
                 keyProperty: 'key'
             });
         });
