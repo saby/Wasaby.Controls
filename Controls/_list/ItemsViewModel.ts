@@ -628,12 +628,9 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     // New Model compatibility
-    getSourceIndexByItem(item: CollectionItem<Model> | { dispItem: CollectionItem<Model> }): number {
-        let searchItem = item;
-        if (!(searchItem instanceof CollectionItem)) {
-            searchItem = searchItem.dispItem;
-        }
-        return this._display ? this._display.getSourceIndexByItem(searchItem) : undefined;
+    getSourceIndexByItem(item: { index: number }): number {
+        let index = item.index;
+        return this._display ? this._display.getSourceIndexByIndex(index) : undefined;
     },
 
     // New Model compatibility

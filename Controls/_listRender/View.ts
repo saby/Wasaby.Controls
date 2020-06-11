@@ -289,7 +289,9 @@ export default class View extends Control<IViewOptions> {
      * @param isMenuClick
      */
     private _resolveItemContainer(item, isMenuClick: boolean): HTMLElement {
-        const container = this._container;
+        // TODO: self._container может быть не HTMLElement, а jQuery-элементом,
+        //  убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        const container = this._container.get ? this._container.get(0) : this._container;
         const itemIndex = this._collection.getSourceIndexByItem(item);
         const startIndex = this._collection.getStartIndex();
         return isMenuClick ? this._targetItem : Array.prototype.filter.call(
