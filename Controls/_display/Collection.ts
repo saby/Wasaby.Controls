@@ -702,6 +702,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     protected _swipeAnimation: ANIMATION_STATE;
 
+    protected _$isEditing: boolean;
+
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
     constructor(options: IOptions<S, T>) {
@@ -2164,8 +2166,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const item = this.getItemBySourceKey(key);
         if (item) {
             item.setMarked(status);
+            this.nextVersion();
         }
-        this.nextVersion();
     }
 
     getValidItemForMarker(index: number): S {
@@ -2338,6 +2340,23 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     getActiveItem(): T {
         return this._$activeItem;
+    }
+
+    /**
+     * Возвращает состояние editing для модели.
+     * Можно было бы проверять isEditing() у CollectionItem и таким образом
+     * рисовать ItemActions только там, где это надо. Но при поиске методом find новый item не учитывается в enumerator и,
+     * соответственно, невозможно проверить, что в коллекцю что-то добавляется.
+     */
+    isEditing(): boolean {
+        return this._$isEditing;
+    }
+
+    /**
+     * Устанавливает состояние editing для модели.
+     */
+    setEditing(editing): void {
+        this._$isEditing = editing;
     }
 
     getSwipeConfig(): ISwipeConfig {

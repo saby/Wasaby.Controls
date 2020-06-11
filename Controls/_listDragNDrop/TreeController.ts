@@ -94,7 +94,7 @@ export default class TreeController extends FlatController {
 
    startCountDownForExpandNode(itemData: ITreeItemData, expandNode: Function): void {
       if (!this._itemOnWhichStartCountDown && itemData.dispItem.isNode() && !itemData.isExpanded
-            && this._draggingItemData.key !== itemData.key) {
+            && this._itemOnWhichStartCountDown !== itemData) {
          this._clearTimeoutForExpandOnDrag();
          this._itemOnWhichStartCountDown = itemData;
          this._setTimeoutForExpandOnDrag(itemData, expandNode);

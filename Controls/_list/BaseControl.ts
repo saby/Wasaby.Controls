@@ -293,6 +293,13 @@ const _private = {
                     } else {
                         listModel.setItems(list);
                         self._items = listModel.getItems();
+
+                        // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
+                        // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
+                        // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+                        if (self._options.task1178907511) {
+                            self._markedKeyForRestoredScroll = listModel.getMarkedKey();
+                        }
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
@@ -437,8 +444,8 @@ const _private = {
     setMarkedKey(self, key: string | number): void {
         if (key !== undefined && self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
-            _private.scrollToItem(self, key);
-            }
+            _private.scrollToItem(self, self._markedKey);
+        }
     },
     moveMarkerToNext(self, event) {
         if (self._markerController) {
@@ -489,10 +496,9 @@ const _private = {
             toggledItemId = model.at(0).getContents().getId();
         }
 
-        if (toggledItemId) {
-            if (self._selectionController) {
-                self._selectionController.toggleItem(toggledItemId);
-            }
+        if (toggledItemId && self._selectionController) {
+            const result = self._selectionController.toggleItem(toggledItemId);
+            _private.handleSelectionControllerResult(self, result);
             _private.moveMarkerToNext(self, event);
         }
     },
@@ -1701,16 +1707,20 @@ const _private = {
         });
     },
 
-   createSelectionController(self: any, options: any): SelectionController {
-      const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
+    createSelectionController(self: any, options: any): SelectionController {
+        if (!self._listViewModel || !self._items) {
+            return null;
+        }
 
-      return new SelectionController({
-         model: self._listViewModel,
-         selectedKeys: options.selectedKeys,
-         excludedKeys: options.excludedKeys,
-         strategy
-      });
-   },
+        const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
+
+        return new SelectionController({
+            model: self._listViewModel,
+            selectedKeys: options.selectedKeys,
+            excludedKeys: options.excludedKeys,
+            strategy
+        });
+    },
 
    updateSelectionController(self: any, newOptions: any): void {
       const result = self._selectionController.update({
@@ -1802,7 +1812,7 @@ const _private = {
                    selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerController) {
-                   self._markerController.handleRemoveItems(removedItemsIndex);
+                   self._markedKey = self._markerController.handleRemoveItems(removedItemsIndex);
                }
                break;
          }
@@ -1926,6 +1936,11 @@ const _private = {
 const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
     _updateShadowModeAfterMount: null,
 
+    // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
+    // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
+    // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+    _markedKeyForRestoredScroll: null,
+
     _updateInProgress: false,
     _groupingLoader: null,
 
@@ -2018,7 +2033,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _swipeTemplate: swipeTemplate,
 
     _markerController: null,
-    _markedKey: null,
+    _markedKey: undefined,
 
     _dndListController: null,
 
@@ -2307,6 +2322,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.afterMount(container, this._children);
         }
 
+        if (this._editInPlace) {
+            this._editInPlace.registerFormOperation(
+                this._listViewModel,
+                this._children.formController,
+                () => this._destroyed
+            );
+
+            if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
+                this._updateItemActions(this._options);
+            }
+        }
+
         if (this._options.useNewModel) {
             return import('Controls/listRender').then((listRender) => {
                 this._itemActionsTemplate = listRender.itemActionsTemplate;
@@ -2314,16 +2341,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             });
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(
-                this._listViewModel,
-                this._children.formController,
-                () => this.isDestroyed()
-            );
-
-            if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
-                this._updateItemActions(this._options);
-            }
+        if (this._options.useNewModel) {
+            return import('Controls/listRender').then((listRender) => {
+                this._itemActionsTemplate = listRender.itemActionsTemplate;
+                this._swipeTemplate = listRender.swipeTemplate;
+            });
         }
 
         // для связи с контроллером ПМО
@@ -2434,7 +2456,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         } else {
             if (newOptions.markerVisibility !== 'hidden') {
                 this._markerController = _private.createMarkerController(self, newOptions);
+            }
         }
+
+        if (this._selectionController) {
+            _private.updateSelectionController(this, newOptions);
+            if (self._options.root !== newOptions.root || filterChanged || this._listViewModel.getCount() === 0) {
+                const result = this._selectionController.clearSelection();
+                _private.handleSelectionControllerResult(this, result);
+            }
+        } else {
+            // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
+            if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
+                this._selectionController = _private.createSelectionController(this, newOptions);
+            }
         }
 
         if (this._editInPlace) {
@@ -2484,15 +2519,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._loadedItems) {
             this._shouldRestoreScrollPosition = true;
-        }
-
-        if (this._selectionController) {
-            _private.updateSelectionController(this, newOptions);
-        } else {
-            // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
-            if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
-                this._selectionController = _private.createSelectionController(this, newOptions);
-        }
         }
     },
 
@@ -2631,6 +2657,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // todo 2 Фантастически, но свежеиспеченный afterRender НЕ ПОДХОДИТ! Падают тесты. ХФ на носу, разбираться
         // некогда, завел подошибку: https://online.sbis.ru/opendoc.html?guid=d83711dd-a110-4e10-b279-ade7e7e79d38
         if (this._shouldRestoreScrollPosition && !this.__error) {
+
+            // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
+            // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
+            // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+            if (this._options.task1178907511 && this._markedKeyForRestoredScroll !== null && this._isScrollShown) {
+                _private.scrollToItem(this, this._markedKeyForRestoredScroll);
+                this._markedKeyForRestoredScroll = null;
+            }
+
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             this._scrollController.checkTriggerVisibilityWithTimeout();
@@ -3081,9 +3116,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
     _dragEnter(event, dragObject) {
+        // если мы утащим в другой список, то в нем нужно создать контроллер
+        if (!this._dndListController) {
+            this._dndListController = _private.createDndListController(this, this._options);
+        }
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (this._dndListController && dragObject && this._dndListController.isDragging()
-            && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
+        if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
         ) {
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
