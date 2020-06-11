@@ -41,7 +41,8 @@ export class Controller {
     * @return {string|number} новый ключ маркера
     */
    setMarkedKey(key: TKey): TKey {
-      if (key === null || !this._model) {
+      // TODO наверно можно будет убрать, так как другим реквестом изменил место создания контроллера
+      if (!this._model) {
          return this._markedKey;
       }
 
@@ -68,8 +69,7 @@ export class Controller {
       } else {
          switch (this._markerVisibility) {
             case Visibility.OnActivated:
-               this._model.setMarkedKey(null, true);
-               this._markedKey = null;
+               this._markedKey = undefined;
                break;
             case Visibility.Visible:
                this._markedKey = this._setMarkerOnFirstItem();

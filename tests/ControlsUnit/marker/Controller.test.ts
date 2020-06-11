@@ -105,8 +105,8 @@ describe('Controls/marker/Controller', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
          const result = controller.setMarkedKey(null);
-         assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
+         assert.equal(result, 1);
+         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('undefined', () => {
