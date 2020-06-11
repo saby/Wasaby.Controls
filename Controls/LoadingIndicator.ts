@@ -427,7 +427,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             this._clearOverlayTimerId();
             this._isMessageVisible = true;
             this._isOverlayVisible = true;
-            // this._toggleEvents(false);
+            this._toggleEvents(false);
             this._updateProperties(config);
         } else {
             this._isMessageVisible = false;
