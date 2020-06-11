@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_validate/Container');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
@@ -111,7 +111,7 @@ const _private = {
 };
 
 type ValidResult = boolean|null|Promise<boolean>|string[];
-class ValidateContainer extends Control {
+class ValidateContainer extends Control<IControlOptions> {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
     _contentActive: boolean = false;

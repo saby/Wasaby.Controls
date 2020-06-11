@@ -10,8 +10,18 @@ import {selectionToRecord} from 'Controls/operations';
 import {adapter as adapterLib} from 'Types/entity';
 import {IData, IDecorator} from 'Types/source';
 import {List, RecordSet} from 'Types/collection';
-import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/interface';
+import {ISelectionObject,
+        TSelectionRecord,
+        TSelectionType,
+        IHierarchyOptions,
+        IFilterOptions} from 'Controls/interface';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
+interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
+   selection: TSelectionRecord;
+   root?: string|number|null;
+   searchParam?: string;
+}
 /**
  * Контейнер принимает опцию selectedItems от Controls/lookupPopup:Controller и устанавливает опцию selectedKeys для дочернего списка.
  * Загружает список записей по списку первичных ключей из опции selectedKeys при завершении выбора
@@ -205,7 +215,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             return adapter;
          },
 
-         prepareFilter(filter: object, selection: TSelectionRecord, searchParam: string|undefined, parentProperty: string): object {
+         prepareFilter({filter, selection, searchParam, parentProperty, root}: IFilterConfig): object {
             filter = Utils.object.clone(filter);
 
              // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
@@ -219,7 +229,7 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
              // Если просто отмечают записи чекбоксами (не через панель массовых операций),
              // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
              // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
-            if (searchParam && selection.get('marked')[0] !== null) {
+            if (searchParam && !selection.get('marked').includes(root !== undefined ? root : null)) {
                delete filter[searchParam];
             }
             if (parentProperty) {
@@ -367,6 +377,10 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             this._initialSelection = _private.getInitialSelectedItems(this, options, context);
          },
 
+         _afterMount(): void {
+            RegisterUtil(this, 'selectComplete', this._selectComplete.bind(this));
+         },
+
          _beforeUpdate(newOptions, context): void {
             const currentSelectedItems = this._options.selectedItems || this.context.get('selectorControllerContext').selectedItems;
             const newSelectedItems = newOptions.selectedItems || context.selectorControllerContext.selectedItems;
@@ -374,6 +388,10 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             if (currentSelectedItems !== newSelectedItems) {
                this._selectedKeys = _private.getSelectedKeys(newOptions, context);
             }
+         },
+
+         _beforeUnmount(): void {
+            UnregisterUtil(this, 'selectComplete');
          },
 
          _selectComplete(): void {
@@ -400,7 +418,13 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             }
             const adapter = _private.getSourceAdapter(dataOptions.source);
             const selection = _private.getSelection(selectionObject, adapter, options.selectionType, isRecursive);
-            const filter = _private.prepareFilter(dataOptions.filter, selection, options.searchParam, options.parentProperty);
+            const filter = _private.prepareFilter({
+               filter: dataOptions.filter,
+               selection,
+               searchParam: options.searchParam,
+               parentProperty: options.parentProperty,
+               root: options.root
+            });
 
             // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 
             // необходимо уйти от опции selectionLoadMode и вынести загрузку
