@@ -1996,7 +1996,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _swipeTemplate: swipeTemplate,
 
     _markerController: null,
-    _markedKey: null,
+    _markedKey: undefined,
 
     _dndListController: null,
 
