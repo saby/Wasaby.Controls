@@ -4,6 +4,7 @@ import template = require('wml!Controls/_lookupPopup/List/Container');
 import {showType} from 'Controls/Utils/Toolbar';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import { IItemAction } from 'Controls/itemActions';
 
 /**
  *
@@ -349,9 +350,9 @@ let Container = Control.extend({
       }
    },
 
-   _itemActionsClick(event: SyntheticEvent, action, item: Record) {
+   _itemActionsClick(event: SyntheticEvent, action: IItemAction, item: Record) {
       if (action.id === SELECT_ACTION_ID) {
-         _private.selectItem(this, item.get(this._options.keyProperty));
+         _private.selectItem(this, item);
       }
    }
 
