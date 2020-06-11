@@ -115,6 +115,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _minHeight: number = 0;
     private _cachedStyles: CSSStyleDeclaration = null;
     private _cssClassName: string = null;
+    private _canScroll: boolean = false;
 
     protected _notifyHandler: Function = tmplNotify;
 
@@ -171,13 +172,16 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             position: this._options.position,
         });
 
-        this._initObserver();
+        // Переделать на новые события
+        // https://online.sbis.ru/opendoc.html?guid=ca70827b-ee39-4d20-bf8c-32b10d286682
+        RegisterUtil(this, 'listScroll', this._onScrollStateChanged.bind(this));
 
         this.updateBottomShadowStyle();
     }
 
     protected _beforeUnmount(): void {
         UnregisterUtil(this, 'updateFixed');
+        UnregisterUtil(this, 'listScroll');
         if (this._model) {
             //Let the listeners know that the element is no longer fixed before the unmount.
             this._fixationStateChangeHandler('', this._model.fixedPosition);
@@ -243,6 +247,16 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._options.shadowVisibility;
     }
 
+    protected _onScrollStateChanged(eventType): void {
+        if (eventType === 'canScroll') {
+            this._canScroll = true;
+            this._initObserver();
+        } else if (eventType === 'cantScroll') {
+            this._canScroll = false;
+            this._destroyObserver();
+        }
+    }
+
     protected _resizeHandler(): void {
         if (this._needUpdateObserver) {
             this._initObserver();
@@ -262,17 +276,21 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // в самом верху скролируемой области, то верхний тригер останется невидимым, т.е. сбытия не будет.
         // Что бы самостоятельно не рассчитывать положение тригеров, мы просто пересоздадим обсервер когда заголовок
         // станет видимым.
-        if (isHidden(this._container)) {
+        if (isHidden(this._container) || !this._canScroll) {
             this._needUpdateObserver = true;
             return;
         }
 
-        if (this._observer) {
-            this._observer.disconnect();
-        }
-
+        this._destroyObserver();
         this._createObserver();
         this._needUpdateObserver = false;
+    }
+
+    private _destroyObserver(): void {
+        if (this._observer) {
+            this._observer.disconnect();
+            this._observer = null;
+        }
     }
 
     private _createObserver(): void {
