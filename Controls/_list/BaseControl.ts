@@ -441,12 +441,18 @@ const _private = {
     },
     moveMarkerToNext: function (self, event) {
         if (self._markerController) {
+            // чтобы предотвратить нативный подскролл
+            // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
+            event.preventDefault();
             self._markedKey = self._markerController.moveMarkerToNext();
             _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToPrevious: function (self, event) {
         if (self._markerController) {
+            // чтобы предотвратить нативный подскролл
+            // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
+            event.preventDefault();
             self._markedKey = self._markerController.moveMarkerToPrev();
             _private.scrollToItem(self, self._markedKey);
         }
