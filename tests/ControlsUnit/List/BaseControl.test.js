@@ -4746,13 +4746,13 @@ define([
             };
             instance = new lists.BaseControl(cfg);
             instance.saveOptions(cfg);
+            instance._viewModelConstructor = cfg.viewModelConstructor;
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
          });
 
          // Необходимо обновлять опции записи при изиенении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
          it('should update ItemActions when visibilityCallback has changed', () => {
-            const sandbox = sinon.createSandbox();
-            sandbox.replace(instance._listViewModel, 'isActionsAssigned', () => true);
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4765,13 +4765,11 @@ define([
                return null;
             };
             assert.equal(visibilityResult, 'second');
-            sandbox.restore();
          });
 
          // Необходимо обновлять опции записи при изиенении самих ItemActions
          it('should update ItemActions when ItemActions have changed', () => {
-            const sandbox = sinon.createSandbox();
-            sandbox.replace(instance._listViewModel, 'isActionsAssigned', () => true);
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4785,7 +4783,6 @@ define([
             const actionsOf0 = instance._listViewModel.at(0).getActions();
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
             assert.equal(actionsOf0.all[0].title, '456', 'new actions for item at 0 pos. were not assigned');
-            sandbox.restore();
          });
 
          // Необходимо обновлять опции записи при изиенении модели (Демка Controls-demo/Explorer/ExplorerLayout)
@@ -4799,8 +4796,7 @@ define([
                   textOverflow: 'ellipsis'
                }
             ];
-            const sandbox = sinon.createSandbox();
-            sandbox.replace(instance._listViewModel, 'isActionsAssigned', () => true);
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4809,7 +4805,6 @@ define([
             });
             const actionsOf0 = instance._listViewModel.at(0).getActions();
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-            sandbox.restore();
          });
 
          // Необходимо обновлять опции записи если в конфиге editingConfig передан item
@@ -4830,8 +4825,7 @@ define([
 
          // при неидентичности source необходимо перезапрашивать данные этого source и затем инициализировать ItemActions
          it('should update ItemActions when data was reloaded', async () => {
-            const sandbox = sinon.createSandbox();
-            sandbox.replace(instance._listViewModel, 'isActionsAssigned', () => true);
+            instance._listViewModel.setActionsAssigned(true);
             await instance._beforeUpdate({
                ...cfg,
                itemActions: [
@@ -4844,13 +4838,11 @@ define([
             const actionsOf0 = instance._listViewModel.at(0).getActions();
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
             assert.equal(actionsOf0.all[0].title, '456', 'new actions for item at 0 pos. were not assigned');
-            sandbox.restore();
          });
 
          // при смене значения свойства readOnly необходимо делать переинициализвацию ItemActions
          it('should update ItemActions when readOnly option has been changed', () => {
-            const sandbox = sinon.createSandbox();
-            sandbox.replace(instance._listViewModel, 'isActionsAssigned', () => true);
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4858,7 +4850,6 @@ define([
             });
             const actionsOf0 = instance._listViewModel.at(0).getActions();
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-            sandbox.restore();
          });
       });
 

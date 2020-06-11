@@ -2441,14 +2441,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
-            ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
             newOptions.readOnly !== this._options.readOnly
         ) {
             this._updateInitializedItemActions(newOptions);
         }
 
         // Ициализация опций записи при загрузке нужна для случая, когда предустановлен editingConfig.item
-        if (newOptions.editingConfig && newOptions.editingConfig.item) {
+        if (
+            ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
+            newOptions.editingConfig && newOptions.editingConfig.item) {
             this._initItemActions(null, newOptions);
         }
 
