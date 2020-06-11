@@ -317,7 +317,7 @@ describe('Controls/_itemActions/Controller', () => {
 
         // T1.9. После установки набора операций, операции с иконками содержат в поле icon CSS класс “controls-itemActionsV__action_icon icon-size” (оч сомнительный тест)
         // TODO Возможно, установка этого класса переедет в шаблон
-        it('should set to all item actions icons "controls-itemActionsV__action_icon_theme-default icon-size_theme-default" CSS class', () => {
+        it('should set "controls-itemActionsV__action_icon_theme-default icon-size_theme-default" CSS class for shown item actions icons', () => {
             const actionsOf5 = collection.getItemBySourceKey(5).getActions();
             assert.exists(actionsOf5, 'actions were not set to item 5');
             assert.notEqual(actionsOf5.showed[0].icon.indexOf('controls-itemActionsV__action_icon_theme'), -1, 'Css class \'controls-itemActionsV__action_icon_theme-\' should be added to item');
@@ -625,7 +625,7 @@ describe('Controls/_itemActions/Controller', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.exists(config.templateOptions, 'Template options were not set');
-            assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t been set in template options');
+            assert.exists(config.templateOptions.source, 'Menu actions source haven\'t been set in template options');
             // @ts-ignore
             const calculatedChildren = JSON.stringify(config.templateOptions.source.data);
             const children = JSON.stringify(itemActions.filter((action) => action.parent === itemActions[3].id));
@@ -682,7 +682,7 @@ describe('Controls/_itemActions/Controller', () => {
         });
 
         // T3.6. Если в контрол был передан contextMenuConfig, его нужно объединять с templateOptions для Sticky.openPopup(menuConfig)
-        it ('should merge contextMenuConfig with templateOptions for popup config', () => {
+        it('should merge contextMenuConfig with templateOptions for popup config', () => {
             itemActionsController.update(initializeControllerOptions({
                 collection,
                 itemActions,
@@ -696,6 +696,16 @@ describe('Controls/_itemActions/Controller', () => {
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.equal(config.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
             assert.equal(config.templateOptions.headConfig.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
+        });
+
+        // T3.7. Для меню не нужно считать controls-itemActionsV__action_icon_theme-default
+        it('should not set "controls-itemActionsV__action_icon_theme-default" CSS class for menu item actions icons', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            const calculatedChildren = config.templateOptions.source;
+            assert.exists(calculatedChildren, 'Menu actions source haven\'t been set in template options');
+            assert.equal(calculatedChildren.data[0].icon.indexOf('controls-itemActionsV__action_icon_theme'), -1, 'Css class \'controls-itemActionsV__action_icon_theme-\' should not be added to menu item');
         });
     });
 

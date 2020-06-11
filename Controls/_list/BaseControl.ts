@@ -1726,16 +1726,20 @@ const _private = {
         });
     },
 
-   createSelectionController(self: any, options: any): SelectionController {
-      const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
+    createSelectionController(self: any, options: any): SelectionController {
+        if (!self._listViewModel || !self._items) {
+            return null;
+        }
 
-      return new SelectionController({
-         model: self._listViewModel,
-         selectedKeys: options.selectedKeys,
-         excludedKeys: options.excludedKeys,
-         strategy
-      });
-   },
+        const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
+
+        return new SelectionController({
+            model: self._listViewModel,
+            selectedKeys: options.selectedKeys,
+            excludedKeys: options.excludedKeys,
+            strategy
+        });
+    },
 
    updateSelectionController(self: any, newOptions: any): void {
       const result = self._selectionController.update({
@@ -2026,7 +2030,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _swipeTemplate: swipeTemplate,
 
     _markerController: null,
-    _markedKey: null,
+    _markedKey: undefined,
 
     _dndListController: null,
 
@@ -2304,13 +2308,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._createSelectionController();
         }
 
-        if (this._options.useNewModel) {
-            return import('Controls/listRender').then((listRender) => {
-                this._itemActionsTemplate = listRender.itemActionsTemplate;
-                this._swipeTemplate = listRender.swipeTemplate;
-            });
-        }
-
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(
                 this._listViewModel,
@@ -2321,6 +2318,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
                 this._updateItemActions(this._options);
             }
+        }
+
+
+        if (this._options.useNewModel) {
+            return import('Controls/listRender').then((listRender) => {
+                this._itemActionsTemplate = listRender.itemActionsTemplate;
+                this._swipeTemplate = listRender.swipeTemplate;
+            });
         }
 
         // для связи с контроллером ПМО
@@ -2437,7 +2442,20 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         } else {
             if (newOptions.markerVisibility !== 'hidden') {
                 this._markerController = _private.createMarkerController(self, newOptions);
+            }
         }
+
+        if (this._selectionController) {
+            _private.updateSelectionController(this, newOptions);
+            if (self._options.root !== newOptions.root || filterChanged || this._listViewModel.getCount() === 0) {
+                const result = this._selectionController.clearSelection();
+                _private.handleSelectionControllerResult(this, result);
+            }
+        } else {
+            // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
+            if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
+                this._selectionController = _private.createSelectionController(this, newOptions);
+            }
         }
 
         if (this._editInPlace) {
@@ -2483,15 +2501,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._loadedItems) {
             this._shouldRestoreScrollPosition = true;
-        }
-
-        if (this._selectionController) {
-            _private.updateSelectionController(this, newOptions);
-        } else {
-            // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
-            if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
-                this._selectionController = _private.createSelectionController(this, newOptions);
-        }
         }
     },
 

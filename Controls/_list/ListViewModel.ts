@@ -352,10 +352,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setMarkedKey: function(key, status) {
-        // status - для совместимости с новой моделью
-        // если он false, то markedKey менять не нужно,
-        // мы его поменяем на следующем вызове со status=true
-        if (this._markedKey === key || status === false) {
+        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно его передать false
+        if (this._markedKey === key && status !== false) {
             return;
         }
 
@@ -363,8 +361,18 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             this.getItemById(this._markedKey),
             this.getItemById(key)
         ];
-        this._markedKey = key;
-        this._savedMarkedKey = undefined;
+
+        const item = this.getItemBySourceKey(key);
+        if (item) {
+            item.setMarked(status);
+        }
+
+        if (status === false) {
+            this._markedKey = undefined;
+        } else {
+            this._markedKey = key;
+        }
+
         this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
         this._notify('onMarkedKeyChanged', this._markedKey);
     },
@@ -544,7 +552,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setItems: function(items) {
-        var currentItems = this.getItems();
         ListViewModel.superclass.setItems.apply(this, arguments);
         this._nextModelVersion();
     },

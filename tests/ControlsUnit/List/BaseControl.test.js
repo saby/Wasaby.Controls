@@ -2800,7 +2800,8 @@ define([
             lnBaseControl = new lists.BaseControl(lnCfg);
          lnBaseControl._selectionController = {
             toggleItem: function() {},
-            handleReset: function() {}
+            handleReset: function() {},
+            update: function() {}
          };
 
          lnBaseControl.saveOptions(lnCfg);
@@ -3869,6 +3870,7 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._listViewModel.setItems(rs);
+            instance._items = rs;
             instance._children = {scrollController: { scrollToItem: () => null }};
             instance._updateItemActions(cfg);
          }
@@ -4669,6 +4671,63 @@ define([
          assert.isTrue(portionSearchReseted);
       });
 
+      it('_beforeUpdate with new root', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source
+         };
+         let instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         let clearSelectionCalled = false;
+         instance._selectionController = {
+            update() {},
+            clearSelection() { clearSelectionCalled = true; },
+            handleReset() {}
+         };
+
+         let cfgClone = { ...cfg, root: 'newvalue' };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(clearSelectionCalled);
+      });
+
+      it('_beforeUpdate with empty model', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id'
+         };
+         let instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         let clearSelectionCalled = false;
+         instance._selectionController = {
+            update() {},
+            clearSelection() { clearSelectionCalled = true; },
+            handleReset() {}
+         };
+
+         let cfgClone = { ...cfg};
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(clearSelectionCalled);
+      });
+
       it('_beforeUpdate with new searchValue', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -4903,6 +4962,7 @@ define([
       describe('beforeUpdate', () => {
          let cfg;
          let instance;
+         let createSelectionControllerSpy;
 
          beforeEach(() => {
             cfg = {
@@ -4933,17 +4993,31 @@ define([
                ...cfg,
                markerVisibility: 'visible'
             });
+            assert.isNotNull(instance._markerController);
             assert.isTrue(createMarkerControllerSpy.calledOnce);
          });
 
          it('should create selection controller', async () => {
             assert.isNull(instance._markerController);
-            const createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
+            createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
+            instance._items = instance._listViewModel.getItems();
             await instance._beforeUpdate({
                ...cfg,
                selectedKeys: [1]
             });
+            assert.isNotNull(instance._selectionController);
             assert.isTrue(createSelectionControllerSpy.calledOnce);
+         });
+
+         it('not should create selection controller', async () => {
+            assert.isNull(instance._markerController);
+            await instance._beforeUpdate({
+               ...cfg,
+               selectedKeys: [1],
+               viewModelConstructor: null
+            });
+            assert.isNull(instance._selectionController);
+            assert.equal(createSelectionControllerSpy.callCount, 2);
          });
       });
 

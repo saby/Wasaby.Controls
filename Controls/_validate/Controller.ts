@@ -1,13 +1,10 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Controller');
-// @ts-ignore
-import ValidateContainer = require('wml!Controls/_validate/Container');
-import {Logger} from 'UI/Utils';
-import {IValidateConfig} from 'Controls/_validate/Container';
+import ValidateContainer from 'Controls/_validate/Container';
+import ControllerClass from 'Controls/_validate/ControllerClass';
 
 interface IValidateResult {
     [key: number]: boolean;
-
     hasErrors?: boolean;
 }
 
@@ -24,88 +21,35 @@ interface IValidateResult {
 
 class Form extends Control<IControlOptions> {
     _template: TemplateFunction = template;
-    _validates: ValidateContainer[] = [];
+    private _validateController: ControllerClass = new ControllerClass();
 
     onValidateCreated(e: Event, control: ValidateContainer): void {
-        this._validates.push(control);
+        this._validateController.addValidator(control);
     }
 
     onValidateDestroyed(e: Event, control: ValidateContainer): void {
-        this._validates = this._validates.filter((validate) => {
-            return validate !== control;
-        });
+        this._validateController.removeValidator(control);
     }
 
     submit(): Promise<IValidateResult | Error> {
-        const validatePromises = [];
-
-        // The infobox should be displayed on the first not valid field.
-        this._validates.reverse();
-        let config: IValidateConfig = {
-            hideInfoBox: true,
-        };
-        this._validates.forEach((validate: ValidateContainer) => {
-            if (!(validate._options && validate._options.readOnly)) {
-                //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=2ebc5fff-6c4f-44ed-8764-baf39e4d4958
-                validatePromises.push(validate.validate(config));
-            }
-        });
-
-        const resultPromise = Promise.all(validatePromises);
-
-        this._notify('registerPending', [resultPromise, {showLoadingIndicator: true}], {bubbling: true});
-        return resultPromise.then((results: IValidateResult) => {
-            let key: string;
-            let needValid: boolean;
-            let resultCounter: number = 0;
-
-            // Walking through object with errors and focusing first not valid field.
-            for (key in this._validates) {
-                if (this._validates.hasOwnProperty(key) && !this._validates[key]._options.readOnly) {
-                    if (results[resultCounter]) {
-                        needValid = this._validates[key];
-                    }
-                    resultCounter++;
-                }
-            }
-            if (needValid) {
-                results.hasErrors = true;
-                this.activateValidator(needValid);
-            }
-            this._validates.reverse();
-            return results;
-        }).catch((e: Error) => {
-            Logger.error('Form: Submit error', this, e);
-            return e;
-        });
-    }
-
-    activateValidator(control: ValidateContainer): void {
-        control.activate({enableScrollToElement: true});
+        return this._validateController.submit();
     }
 
     setValidationResult(): void {
-        this._validates.forEach((validate: ValidateContainer) => {
-            validate.setValidationResult(null);
-        });
+        return this._validateController.setValidationResult();
     }
 
     getValidationResult(): IValidateResult {
-        const results: IValidateResult = {};
-        let i: number = 0;
-        this._validates.forEach((validate: ValidateContainer) => {
-            results[i++] = validate.isValid();
-        });
-        return results;
+        return this._validateController.getValidationResult();
     }
 
     isValid(): boolean {
-        for (const item in this._validates) {
-            if (!this._validates[item].isValid()) {
-                return false;
-            }
-        }
-        return true;
+        return this._validateController.isValid();
+    }
+
+    protected _beforeUnmount(): void {
+        this._validateController.destroy();
+        this._validateController = null;
     }
 }
 

@@ -1561,7 +1561,8 @@ var
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
                 if (current.item.get) {
-                    currentColumn.column.needSearchHighlight = !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue);
+                    currentColumn.column.needSearchHighlight = current.searchValue ?
+                        !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
                 }
                 if (stickyColumn) {
