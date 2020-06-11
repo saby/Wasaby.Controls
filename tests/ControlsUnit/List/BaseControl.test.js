@@ -5510,21 +5510,11 @@ define([
       });
 
       describe('event handlers', function() {
-
          let
             baseControlOptions,
             baseControl;
 
          async function mountBaseControl(control, options) {
-            sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => {
-               return {
-                  setMarkedKey() { },
-                  moveMarkerToNext() {},
-                  moveMarkerToPrev() {},
-                  handleRemoveItems() {},
-                  update() {}
-               };
-            });
             control.saveOptions(options);
             await control._beforeMount(options);
             control._container = {clientHeight: 0};
