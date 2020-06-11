@@ -288,7 +288,7 @@ class StickyController extends BaseController {
         // Если внутри лежит скроллконтейнер, то восстанавливаем позицию скролла после изменения размеров
         const scroll = container.querySelector('.controls-Scroll__content');
         const scrollTop = scroll?.scrollTop;
-        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '100vh';
+        container.style.maxHeight = item.popupOptions.maxHeight ? item.popupOptions.maxHeight + 'px' : '100vh';
         container.style.width = 'auto';
         container.style.height = 'auto';
 
