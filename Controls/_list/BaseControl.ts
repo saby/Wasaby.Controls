@@ -1720,7 +1720,20 @@ const _private = {
       });
    },
 
-   updateSelectionController(self: any, newOptions: any): void {
+    /**
+     * Создать контроллер, когда передали selectedKeys
+     * @param self
+     * @param options
+     * @private
+     */
+    _createSelectionControllerByOptions(self: any, options: any): void {
+        if (!self._selectionController && options.selectedKeys && options.selectedKeys.length !== 0) {
+            self._selectionController = _private.createSelectionController(self, options);
+
+        }
+    },
+
+    updateSelectionController(self: any, newOptions: any): void {
       const result = self._selectionController.update({
          model: self._listViewModel,
          selectedKeys: newOptions.selectedKeys,

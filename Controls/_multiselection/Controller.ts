@@ -71,6 +71,14 @@ export class Controller {
       return this._getResult(oldSelection, this._selection);
    }
 
+   /**
+    * Возвращает результат работы последнего
+    */
+   getLastResult(): ISelectionControllerResult {
+      const oldSelection =
+      return this._getResult()
+   }
+
    clearSelection(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._clearSelection();
