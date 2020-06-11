@@ -15,6 +15,7 @@ import {ISelectionObject,
         TSelectionType,
         IHierarchyOptions,
         IFilterOptions} from 'Controls/interface';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    selection: TSelectionRecord;
@@ -376,6 +377,10 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             this._initialSelection = _private.getInitialSelectedItems(this, options, context);
          },
 
+         _afterMount(): void {
+            RegisterUtil(this, 'selectComplete', this._selectComplete.bind(this));
+         },
+
          _beforeUpdate(newOptions, context): void {
             const currentSelectedItems = this._options.selectedItems || this.context.get('selectorControllerContext').selectedItems;
             const newSelectedItems = newOptions.selectedItems || context.selectorControllerContext.selectedItems;
@@ -383,6 +388,10 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             if (currentSelectedItems !== newSelectedItems) {
                this._selectedKeys = _private.getSelectedKeys(newOptions, context);
             }
+         },
+
+         _beforeUnmount(): void {
+            UnregisterUtil(this, 'selectComplete');
          },
 
          _selectComplete(): void {
