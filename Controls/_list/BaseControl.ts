@@ -2454,6 +2454,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._selectionController) {
             _private.updateSelectionController(this, newOptions);
+            if (self._options.root !== newOptions.root || filterChanged || this._listViewModel.getCount() === 0) {
+                const result = this._selectionController.clearSelection();
+                _private.handleSelectionControllerResult(this, result);
+            }
         }
     },
 
