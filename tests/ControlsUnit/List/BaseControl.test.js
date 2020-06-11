@@ -4808,7 +4808,6 @@ define([
 
          // Необходимо обновлять опции записи если в конфиге editingConfig передан item
          it('should update ItemActions when item was passed within options.editingConfig', () => {
-            instance._listViewModel.isActionsAssigned = () => true;
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
