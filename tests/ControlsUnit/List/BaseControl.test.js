@@ -2791,7 +2791,8 @@ define([
             lnBaseControl = new lists.BaseControl(lnCfg);
          lnBaseControl._selectionController = {
             toggleItem: function() {},
-            handleReset: function() {}
+            handleReset: function() {},
+            update: function() {}
          };
 
          lnBaseControl.saveOptions(lnCfg);
@@ -3860,6 +3861,7 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._listViewModel.setItems(rs);
+            instance._items = rs;
             instance._children = {scrollController: { scrollToItem: () => null }};
             instance._updateItemActions(cfg);
          }
@@ -4872,6 +4874,7 @@ define([
       describe('beforeUpdate', () => {
          let cfg;
          let instance;
+         let createSelectionControllerSpy;
 
          beforeEach(() => {
             cfg = {
@@ -4902,17 +4905,31 @@ define([
                ...cfg,
                markerVisibility: 'visible'
             });
+            assert.isNotNull(instance._markerController);
             assert.isTrue(createMarkerControllerSpy.calledOnce);
          });
 
          it('should create selection controller', async () => {
             assert.isNull(instance._markerController);
-            const createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
+            createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
+            instance._items = instance._listViewModel.getItems();
             await instance._beforeUpdate({
                ...cfg,
                selectedKeys: [1]
             });
+            assert.isNotNull(instance._selectionController);
             assert.isTrue(createSelectionControllerSpy.calledOnce);
+         });
+
+         it('not should create selection controller', async () => {
+            assert.isNull(instance._markerController);
+            await instance._beforeUpdate({
+               ...cfg,
+               selectedKeys: [1],
+               viewModelConstructor: null
+            });
+            assert.isNull(instance._selectionController);
+            assert.equal(createSelectionControllerSpy.callCount, 2);
          });
       });
 
