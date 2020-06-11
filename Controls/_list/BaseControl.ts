@@ -1334,20 +1334,28 @@ const _private = {
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
-        isContextMenu: boolean): void {
-        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
-        if (menuConfig) {
-            clickEvent.nativeEvent.preventDefault();
-            clickEvent.stopImmediatePropagation();
-            menuConfig.eventHandlers = {
-                onResult: self._onItemActionsMenuResult,
-                onClose: self._onItemActionsMenuClose
-            };
-            self._itemActionsController.setActiveItem(item);
-            Sticky.openPopup(menuConfig).then((popupId) => {
-                self._itemActionsMenuId = popupId;
-            });
+        isContextMenu: boolean): Promise<void> {
+        // Если уже открыто какое-то меню, то ничего не делаем, т.к.
+        // если откроем несколько подряд меню даже на одном и том же Item,
+        // при закрытии любого из них сбросится активный Item и тогда при клике на предыдущем
+        // не закрывшемся меню в консоль полетит ошибка
+        if (self._itemActionsMenuId) {
+            return Promise.resolve();
         }
+        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        if (!menuConfig) {
+            return Promise.resolve();
+        }
+        clickEvent.nativeEvent.preventDefault();
+        clickEvent.stopImmediatePropagation();
+        menuConfig.eventHandlers = {
+            onResult: self._onItemActionsMenuResult,
+            onClose: self._onItemActionsMenuClose
+        };
+        self._itemActionsController.setActiveItem(item);
+        return Sticky.openPopup(menuConfig).then((popupId) => {
+            self._itemActionsMenuId = popupId;
+        });
     },
 
     /**

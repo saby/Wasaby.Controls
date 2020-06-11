@@ -4037,6 +4037,18 @@ define([
             assert(instance._listViewModel.getActiveItem(), item);
          });
 
+         // Нельзя открывать itemActionsMenu дважды подряд (надо сначала дождаться закрытия предыдущего меню)
+         it('should not open itemActionsMenu twice at the same time', () => {
+            const self = {
+               _itemActionsMenuId: 'somePopupId'
+            };
+
+            // Нам нужно только передать self с установленной опцией _itemActionsMenuId, чтобы метод вернул пустой промис
+            return lists.BaseControl._private.openItemActionsMenu(self, null, null, null, false)
+               .then(() => {
+                  assert.equal(self._itemActionsMenuId, 'somePopupId');
+               });
+         });
       });
 
       it('resolveIndicatorStateAfterReload', function() {
