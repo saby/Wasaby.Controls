@@ -23,8 +23,9 @@ interface IValidateResult {
  */
 
 class Form extends Control<IControlOptions> {
-    private _submitResolve: (res: IValidateResult) => void | null = null;
-    private _submitReject: (res: Error) => void | null = null;
+    private _submitResolve: (res: IValidateResult) => void = null;
+    private _submitReject: (res: Error) => void = null;
+    private _submitPromise: Promise<IValidateResult | Error>;
 
     protected _template: TemplateFunction = template;
     protected _validates: ValidateContainer[] = [];
@@ -76,17 +77,18 @@ class Form extends Control<IControlOptions> {
     protected _afterUpdate(oldOptions?: IControlOptions, oldContext?: any): void {
         super._afterUpdate(oldOptions, oldContext);
 
-        if (this._submitResolve) {
+        if (this._submitPromise) {
+            const submitResolve = this._submitResolve;
+            const submitReject = this._submitReject;
+            this._submitResolve = null;
+            this._submitReject = null;
+            this._submitPromise = null;
             this._submit()
                 .then((result: IValidateResult) => {
-                    this._submitResolve(result);
+                    submitResolve(result);
                 })
                 .catch((error: Error) => {
-                    this._submitReject(error);
-                })
-                .finally(() => {
-                    this._submitResolve = null;
-                    this._submitReject = null;
+                    submitReject(error);
                 });
         }
     }
@@ -112,10 +114,15 @@ class Form extends Control<IControlOptions> {
          * т.к. последовательно произойдет измененние значения поля ввода -> завершение редактирования -> вызов submit -> обновление значения в поле ввода.
          */
         this._forceUpdate();
-        return new Promise((resolve, reject) => {
-            this._submitResolve = resolve;
-            this._submitReject = reject;
-        });
+
+        if (!this._submitPromise) {
+            this._submitPromise = new Promise((resolve, reject) => {
+                this._submitResolve = resolve;
+                this._submitReject = reject;
+            });
+        }
+
+        return this._submitPromise;
     }
 
     activateValidator(control: ValidateContainer): void {
