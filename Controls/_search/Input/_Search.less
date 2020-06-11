@@ -71,7 +71,11 @@
    background: @readonly_contrast_background-color_searchInput;
 }
 
-.controls-Search__field_theme_@{themeName}_margin {
+.controls-Search__field_theme_@{themeName}_margin-xs {
+   margin: 0 @reset-button_offset-left_searchInput 0 (@padding-left_searchInput - @border-thickness_inputText);
+}
+
+.controls-Search__field_theme_@{themeName}_margin-null {
    margin: 0 @reset-button_offset-left_searchInput 0 (@padding-left_searchInput - @border-thickness_inputText);
 }
 
@@ -88,8 +92,7 @@
    cursor: default;
 }
 
-.controls-Search__searchButton_inlineheight-s_theme-@{themeName},
-.controls-Search__searchButton_inlineheight-default_theme-@{themeName}{
+.controls-Search__searchButton_inlineheight-s_theme-@{themeName} {
    .icon-size(@trigger_s_icon-size_searchInput);
 }
 
@@ -97,7 +100,8 @@
    .icon-size(@trigger_xs_icon-size_searchInput);
 }
 
-.controls-Search__searchButton_inlineheight-m_theme-@{themeName} {
+.controls-Search__searchButton_inlineheight-m_theme-@{themeName},
+.controls-Search__searchButton_inlineheight-default_theme-@{themeName} {
    .icon-size(@trigger_m_icon-size_searchInput);
 }
 

@@ -12,8 +12,6 @@ import {
 } from './interface';
 import clone = require('Core/core-clone');
 
-const ALL_SELECTION_VALUE = null;
-
 /**
  * @class Controls/_multiselector/SelectionController
  * @author Авраменко А.С.
@@ -45,9 +43,14 @@ export class Controller {
       this._updateModel(this._selection);
    }
 
+   /**
+    * Обновить состояние контроллера
+    * @param options
+    * @param rootChanged
+    * @param filterChanged
+    */
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
-      const itemsChanged = modelChanged ? true : options.model.getCollection() !== this._model.getCollection();
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
 
@@ -59,10 +62,19 @@ export class Controller {
       if (selectionChanged) {
          this._selectedKeys = options.selectedKeys.slice();
          this._excludedKeys = options.excludedKeys.slice();
-         this._updateModel(this._selection);
-      } else if (itemsChanged || modelChanged) {
+      }
+
+      if (selectionChanged || modelChanged) {
          this._updateModel(this._selection);
       }
+
+      return this._getResult(oldSelection, this._selection);
+   }
+
+   clearSelection(): ISelectionControllerResult {
+      const oldSelection = clone(this._selection);
+      this._clearSelection();
+      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -107,12 +119,13 @@ export class Controller {
       return result;   }
 
    handleAddItems(addedItems: Record[]): ISelectionControllerResult {
+      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
       this._updateModel(this._selection);
       return {
          selectedKeysDiff: { keys: [], added: [], removed: [] },
          excludedKeysDiff: { keys: [], added: [], removed: [] },
          selectedCount: this._getCount(this._selection),
-         isAllSelected: this._isAllSelected(this._selection)
+         isAllSelected: this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount())
       };
    }
 
@@ -120,6 +133,7 @@ export class Controller {
       const oldSelection = clone(this._selection);
       this._remove(this._getItemsKeys(removedItems));
 
+      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
       this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
@@ -131,9 +145,9 @@ export class Controller {
       // и вышли в родительский узел, по стандартам элементы должны стать невыбранными
       if (rootChanged && this._selectedKeys.includes(prevRootId) && this._excludedKeys.includes(prevRootId)) {
          this._clearSelection();
+         this._updateModel(this._selection);
       }
 
-      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -190,8 +204,8 @@ export class Controller {
       return {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
-         selectedCount: this._getCount(newSelection),
-         isAllSelected: this._isAllSelected(newSelection)
+         selectedCount: selectionCount,
+         isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getHasMoreData(), this._model.getCount())
       };
    }
 
@@ -200,9 +214,5 @@ export class Controller {
       this._model.setSelectedItems(selectionForModel.get(true), true);
       this._model.setSelectedItems(selectionForModel.get(false), false);
       this._model.setSelectedItems(selectionForModel.get(null), null);
-   }
-
-   private _isAllSelected(selection: ISelection): boolean {
-      return selection.selected.includes(ALL_SELECTION_VALUE) && selection.excluded.includes(ALL_SELECTION_VALUE);
    }
 }

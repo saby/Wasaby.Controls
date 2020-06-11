@@ -15,6 +15,19 @@
                  on:dragScrolling="_positionChangedHandler()"/>
       </ws:if>
 
+    <!-- При table-layout скроллбар нужно выводить вне таблицы. Т.к. таблица имеет transform:translateX, абсолютно -->
+    <!-- спозиционированные элементы позиционируются относительно ее. Скроллбар должен занимать ширину видимой области таблицы. -->
+    <ws:if data="{{_isDisplayColumnScroll() && !_isFullGridSupport()}}">
+        <Controls._scroll.Scroll.Scrollbar
+                name="columnScrollbar"
+                position="{{_scrollPosition}}"
+                direction="horizontal"
+                shouldSetMarginTop="{{ false }}"
+                contentSize="{{_contentSizeForHScroll}}"
+                attr:class="controls-ColumnScroll_theme-{{_options.theme}} controls-ColumnScroll_without_offset js-controls-Grid_columnScroll_thumb-wrapper"
+                on:positionChanged="_positionHandler()"/>
+    </ws:if>
+
       <ws:partial
               template="{{_options.content}}"
               scope="{{_options}}"

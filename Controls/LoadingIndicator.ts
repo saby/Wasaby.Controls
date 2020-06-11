@@ -94,6 +94,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     protected mods: Array<string> | string;
     protected delay: number;
     protected delayTimeout: number;
+    private _toggleEventTimerId: number;
 
     protected _beforeMount(cfg: ILoadingIndicatorOptions): void {
         this.mods = [];
@@ -319,6 +320,8 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         clearTimeout(this.delayTimeout);
         this._updateZIndex(config);
         if (visible) {
+            // TODO: https://online.sbis.ru/opendoc.html?guid=8a294eac-6874-4dae-9621-ae095bd1c9d3
+            // this._toggleEvents(true);
             this._toggleOverlayAsync(true, config);
             if (force) {
                 this._toggleIndicatorVisible(true, config);
@@ -337,6 +340,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             // if we dont't have indicator in stack, then hide overlay
             if (this._stack.getCount() === 0) {
                 this._toggleIndicatorVisible(false);
+                // this._toggleEvents(false);
                 this._toggleOverlayAsync(false, {});
             }
         }
@@ -356,6 +360,48 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         }, delay);
     }
 
+    private _toggleEvents(toggle: boolean): void {
+        // TODO https://online.sbis.ru/opendoc.html?guid=157084a2-d702-40b9-b54e-1a42853c301e
+        // TODO в 4000 можно попробовать убрать таймаут, сейчас вернул его, чтобы не менять поведение перед выпуском
+        const delay = 100;
+
+        // Если оверлей отключен - блокировать ничего не надо
+        if (this._options.overlay === 'none') {
+            return;
+        }
+        this._clearToggleEventTimerId();
+        if (toggle) {
+            this._toggleEventTimerId = setTimeout(() => {
+                this._toggleEventTimerId = null;
+                this._toggleEventSubscribe(toggle);
+            }, delay);
+        } else {
+            this._toggleEventSubscribe(toggle);
+        }
+    }
+
+    _clearToggleEventTimerId(): void {
+        if (this._toggleEventTimerId) {
+            clearTimeout(this._toggleEventTimerId);
+            this._toggleEventTimerId = null;
+        }
+    }
+
+    private _toggleEventSubscribe(toggle: boolean): void {
+        const action = toggle ? 'addEventListener' : 'removeEventListener';
+        const events = ['mousedown', 'mouseup', 'click', 'keydown', 'keyup'];
+        for (const event of events) {
+            if (window) {
+                window[action](event, LoadingIndicator._eventsHandler, true);
+                // В оффлайне стрельнул баг: если отписываться с флагом true(несмотря на такую же подписку)
+                // отписка от события не произойдет. вызываю дополнительно отписку без флага.
+                if (!toggle) {
+                    window[action](event, LoadingIndicator._eventsHandler);
+                }
+            }
+        }
+    }
+
     private _toggleOverlay(toggle: boolean, config: ILoadingIndicatorOptions): void {
         this._isOverlayVisible = toggle && config.overlay !== 'none';
         this._redrawOverlay();
@@ -371,9 +417,11 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             this._clearOverlayTimerId();
             this._isMessageVisible = true;
             this._isOverlayVisible = true;
+            // this._toggleEvents(false);
             this._updateProperties(config);
         } else {
             this._isMessageVisible = false;
+            this._isOverlayVisible = false;
         }
         this._redrawOverlay();
     }
@@ -472,6 +520,13 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     private _getThemedClassName(simpleClassName: string): string {
         return simpleClassName + ' ' + simpleClassName + '_theme-' + this.theme;
     }
+
+    static _eventsHandler(event: Event): void {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+    }
+
     static _theme: string[] = ['Controls/_LoadingIndicator/LoadingIndicator'];
 }
 

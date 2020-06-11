@@ -5,6 +5,7 @@
             on:popupUpdated="_eventHandler('popupUpdated')"
             on:popupResizeInner="_eventHandler('popupResizeInner')"
             on:popupResizeOuter="_eventHandler('popupResizeOuter')"
+            on:workspaceResize="_eventHandler('workspaceResize')"
             on:popupAfterUpdated="_eventHandler('popupAfterUpdated')"
             on:popupDeactivated="_eventHandler('popupDeactivated')"
             on:popupActivated="_eventHandler('popupActivated')"

@@ -220,7 +220,7 @@ export default {
              *    <ws:partial template="{{itemTemplate.defaultTemplate}}">
              *       <ws:monthCaptionTemplate>
              *          <ws:if data="{{month.getMonth() % 2 === 0}}">
-             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption_theme-{{_options.theme}}"
              *                  style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
              *                {{ formatDate(month, "MMMM") }} !
              *             </div>
@@ -240,7 +240,7 @@ export default {
              *    <ws:partial template="{{itemTemplate.defaultTemplate}}">
              *       <ws:monthCaptionTemplate>
              *          <ws:if data="{{month.getMonth() % 2 === 0}}">
-             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption_theme-{{_options.theme}}"
              *                  style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
              *                {{ formatDate(month, "MMMM") }} !
              *             </div>

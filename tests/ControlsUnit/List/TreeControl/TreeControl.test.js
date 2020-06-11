@@ -344,125 +344,6 @@ define([
             assert.isTrue(event.stopped);
          });
       });
-      describe('expanding nodes on dragging', function() {
-         let treeControl = correctCreateTreeControl({
-               columns: [],
-               source: new sourceLib.Memory({
-                  data: [],
-                  keyProperty: 'id'
-               })
-            }),
-            itemData = {isExpanded: false},
-            toggleExpandedCalled = false;
-
-         treeControl._expandNodeOnDrag = function(itemData) {
-            if (!itemData.isExpanded) {
-               toggleExpandedCalled = true;
-            }
-         }
-
-         it('clearTimeoutForExpandOnDrag on dragEnd', function(done) {
-            treeControl._setTimeoutForExpandOnDrag(itemData);
-            assert.isFalse(toggleExpandedCalled);
-            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
-            treeControl._dragEnd();
-            assert.equal(treeControl._timeoutForExpandOnDrag, null);
-            setTimeout(function() {
-               assert.isFalse(toggleExpandedCalled);
-               done();
-            }, 1000);
-         });
-
-         it('clearTimeoutForExpandOnDrag on itemMouseLeave', function(done) {
-            itemData = {isExpanded: false};
-            toggleExpandedCalled = false;
-
-            treeControl._setTimeoutForExpandOnDrag(itemData);
-            assert.isFalse(toggleExpandedCalled);
-            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
-            treeControl._draggingItemMouseLeave();
-            assert.equal(treeControl._timeoutForExpandOnDrag, null);
-            setTimeout(function() {
-               assert.isFalse(toggleExpandedCalled);
-               done();
-            }, 1000);
-         });
-
-         it('ExpandOnDrag on collapsed', function(done) {
-            itemData = {isExpanded: false};
-            toggleExpandedCalled = false;
-            treeControl._setTimeoutForExpandOnDrag(itemData);
-            assert.isFalse(toggleExpandedCalled);
-            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
-            setTimeout(function() {
-               assert.isTrue(toggleExpandedCalled);
-               done();
-            }, 1000);
-         });
-         it('ExpandOnDrag on expanded', function(done) {
-            toggleExpandedCalled = false;
-            itemData.isExpanded = true;
-            treeControl._setTimeoutForExpandOnDrag(itemData);
-            assert.isFalse(toggleExpandedCalled);
-            assert.notEqual(treeControl._timeoutForExpandOnDrag, null);
-            setTimeout(function() {
-               assert.isFalse(toggleExpandedCalled);
-               done();
-            }, 1000);
-         });
-      });
-      it('nodeMouseMove does not call setDragTargetPosition if dragItemData is null', function() {
-         let tree = correctCreateTreeControl({
-            columns: [],
-            source: new sourceLib.Memory({
-               data: [],
-               idProperty: 'id'
-            })
-         });
-         let nodeItem = {
-            nodeProperty: 'node',
-            item: {
-               get: function () {
-                  return true;
-               }
-            },
-            isExpanded: true,
-            dispItem: {
-               isNode: function () {
-                  return true;
-               }
-            }
-         };
-         let target = {
-            getBoundingClientRect: function () {
-               return {
-                  top: 10,
-                  height: 10
-               };
-            }
-         }
-         let event = {
-            target: {
-               closest: function() {
-                  return target;
-               }
-            },
-            nativeEvent: {
-               pageY: 15,
-            }
-         }
-         let model = tree._children.baseControl.getViewModel();
-
-         model.getDragItemData = function () {
-            return null;
-         };
-         let setDragTargetPositionCalled = false;
-         model.setDragTargetPosition = function() {
-            setDragTargetPositionCalled = true;
-         };
-         tree._nodeMouseMove(nodeItem, event);
-         assert.isFalse(setDragTargetPositionCalled);
-      });
 
       it('TreeControl.toggleExpanded with sorting', function() {
          let treeControl = correctCreateTreeControl({
@@ -990,47 +871,47 @@ define([
          assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
       });
 
-      it('List navigation by keys', function(done) {
-         // mock function working with DOM
-         listMod.BaseControl._private.scrollToItem = function() {};
+      describe('List nafigation', function() {
+         var stubScrollToItem;
 
-         var
-            stopImmediateCalled = false,
-
-            lnSource = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: [
-                  { id: 1, type: true, parent: null },
-                  { id: 2, type: true, parent: 1 }
-               ]
-            }),
-            lnCfg = {
-               viewName: 'Controls/List/TreeGridView',
-               source: lnSource,
-               keyProperty: 'id',
-               parentProperty: 'parent',
-               nodeProperty: 'type',
-               markedKey: 1,
-               columns: [],
-               viewModelConstructor: treeGrid.ViewModel
-            },
-            lnTreeControl = correctCreateTreeControl(lnCfg),
-            treeGridViewModel = lnTreeControl._children.baseControl.getViewModel();
-
-         setTimeout(function () {
-            assert.deepEqual([], treeGridViewModel._model._expandedItems);
-
-            lnTreeControl._onTreeViewKeyDown({
-               stopImmediatePropagation: function() {
-                  stopImmediateCalled = true;
-               },
-               target: {closest() { return false; }},
-               nativeEvent: {
-                  keyCode: Env.constants.key.right
-               }
+         before(function() {
+            stubScrollToItem = sinon.stub(listMod.BaseControl._private, 'scrollToItem');
+            stubScrollToItem.callsFake(function() {
+               // mock function working with DOM
             });
+         });
+
+         after(function() {
+            stubScrollToItem.restore();
+            stubScrollToItem = undefined;
+         });
+
+         it('by keys', function(done) {
+            var
+               stopImmediateCalled = false,
+
+               lnSource = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: [
+                     { id: 1, type: true, parent: null },
+                     { id: 2, type: true, parent: 1 }
+                  ]
+               }),
+               lnCfg = {
+                  viewName: 'Controls/List/TreeGridView',
+                  source: lnSource,
+                  keyProperty: 'id',
+                  parentProperty: 'parent',
+                  nodeProperty: 'type',
+                  markedKey: 1,
+                  columns: [],
+                  viewModelConstructor: treeGrid.ViewModel
+               },
+               lnTreeControl = correctCreateTreeControl(lnCfg),
+               treeGridViewModel = lnTreeControl._children.baseControl.getViewModel();
+
             setTimeout(function () {
-               assert.deepEqual([1], treeGridViewModel._model._expandedItems);
+               assert.deepEqual([], treeGridViewModel._model._expandedItems);
 
                lnTreeControl._onTreeViewKeyDown({
                   stopImmediatePropagation: function() {
@@ -1038,15 +919,28 @@ define([
                   },
                   target: {closest() { return false; }},
                   nativeEvent: {
-                     keyCode: Env.constants.key.left
+                     keyCode: Env.constants.key.right
                   }
                });
-               assert.deepEqual([], treeGridViewModel._model._expandedItems);
+               setTimeout(function () {
+                  assert.deepEqual([1], treeGridViewModel._model._expandedItems);
 
-               assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-               done();
+                  lnTreeControl._onTreeViewKeyDown({
+                     stopImmediatePropagation: function() {
+                        stopImmediateCalled = true;
+                     },
+                     target: {closest() { return false; }},
+                     nativeEvent: {
+                        keyCode: Env.constants.key.left
+                     }
+                  });
+                  assert.deepEqual([], treeGridViewModel._model._expandedItems);
+
+                  assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
+                  done();
+               }, 1);
             }, 1);
-         }, 1);
+         });
       });
       it('TreeControl._beforeUpdate name of property', function() {
          var

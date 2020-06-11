@@ -8,12 +8,11 @@
         <div class="controls-text-label_theme-{{_options.theme}}">readOnly=true</div>
         <Controls.toggle:Switch bind:value="_value2"
                                 caption="state"
-                                readonly="{{true}}"/>
+                                readOnly="{{true}}"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">custom caption</div>
         <Controls.toggle:Switch bind:value="_value3"
-                                caption="{{_caption}}"
-                                readonly="{{true}}"/>
+                                caption="{{_caption}}"/>
     </div>
 </div>

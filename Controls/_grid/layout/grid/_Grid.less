@@ -248,6 +248,9 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-default_theme-@{themeName} {
       background-color: @item_hover_background-color_list;
    }
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} {
+      background-color: @item_hover_background-color_list;
+   }
    .controls-BaseControl_showActions .controls-Grid:not(.controls-itemActionsV_invisible) .controls-Grid__row:hover {
       > .controls-Grid__row-cell,
       > .controls-itemActionsV__container,
@@ -275,7 +278,10 @@
    .controls-Grid__editArrow-wrapper_theme-@{themeName} {
       visibility: visible;
    }
-
+   .controls-Grid__editArrow_theme-@{themeName}:hover {
+      fill: @edit-arrow_hover_icon-color_grid;
+   }
+   
 }
 
 .controls-Grid__row-cell-background-editing_theme-@{themeName} {
@@ -287,14 +293,47 @@
    }
 }
 
-.controls-Grid__row-cell__content_hiddenForLadder {
-   visibility: hidden;
+.controls-Grid__row-additional_ladderWrapper {
+   position: absolute;
+   top: 0;
+   bottom: 0;
 }
 
+.controls-Grid__row-cell__ladder-content_displayNoneForLadder {
+   display: none;
+}
+.controls-Grid__row-cell__ladder-content_hiddenForLadder,
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} .controls-Grid__row-cell__ladder-content {
+   visibility: hidden;
+}
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} {
+   z-index: 1;
+}
+.controls-Grid__row-cell__ladder-spacing_theme-@{themeName} {
+   top: @item_line-height_l_grid !important;
+   height: 0;
+}
+.controls-Grid__cell-content-wrapper_ladder {
+   align-items: baseline;
+   position: absolute;
+   display: flex;
+   &:before {
+      content: '\200b';
+      font-size: @item_font-size_l_grid;
+   }
+}
+.controls-Grid__row-cell__ladder-content_additional-with-main {
+   position: absolute;
+}
+
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} .controls-Grid__row-cell__ladder-content
 .controls-Grid__row-ladder-cell {
    pointer-events: none;
    position: relative;
-   z-index: 2;
+   z-index: 1;
+}
+.controls-Grid__row-ladder-cell {
+   position: relative;
 }
 
 .controls-Grid__row-ladder-cell__content_default_theme-@{themeName} {
@@ -452,7 +491,7 @@
 .controls-Grid__cell_spacingBackButton_with_multiSelection_theme-@{themeName} {
    margin-left: -@click-area_width_checkbox;
 }
-
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName},
 .controls-GridView__item_active_theme-@{themeName} {
    background-color: @item_hover_background-color_list;
 }
@@ -523,9 +562,14 @@
    transform: translateZ(0);
 }
 
+// TODO После https://online.sbis.ru/opendoc.html?guid=83aacafa-5b11-4615-9424-46d724b3793e
+//  вернуть как было в задаче https://online.sbis.ru/opendoc.html?guid=ecf7bb3e-a806-4477-9efa-dfc176195197
+.controls-background-masterClassic_theme-@{themeName}.controls-Grid__row-cell_selected-masterClassic_theme-@{themeName},
+.controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
+   background-color: @masterClassic_item_selected_background-color_list;
+}
 .controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
    z-index: 1;
-   background-color: @masterClassic_item_selected_background-color_list;
 
    &:before {
       content: '';
@@ -568,8 +612,13 @@
    display: inline-flex;
    align-items: baseline;
    width: @master-marker_thickness_list;
-   top: 0;
+   top: initial;
    left: 0;
+   height: 100%;
+}
+
+.ws-is-ie11 .controls-GridView__itemV_marker-master_theme-@{themeName} {
+   top: 0;
    bottom: 0;
    height: auto;
 }
@@ -597,6 +646,7 @@
       background-color: @master_item_hover_background-color_list;
    }
 }
+.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName},
 .controls-background-listItem_theme-@{themeName} {
    background-color: @background-color;
 }
@@ -689,6 +739,7 @@
 .controls-Grid__editArrow_theme-@{themeName} {
    position: relative;
    z-index: 1;
+   fill: @edit-arrow_icon-color_grid;
    .icon(@edit-arrow_icon-size_grid)
 }
 

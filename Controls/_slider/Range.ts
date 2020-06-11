@@ -19,7 +19,7 @@ const maxPercentValue = 100;
  * 
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FSlider%2FRange%2FStandartSliderRangeDemo">демо-пример</a>
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fRange%2fIndex">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_slider.less">переменные тем оформления</a>
  *
  * @public
@@ -27,19 +27,19 @@ const maxPercentValue = 100;
  * @class Controls/_slider/Range
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
- * @demo Controls-demo/Slider/Range/SliderRangeDemo
+ * @demo Controls-demo/Slider/Range/Base/Index
  */
 
 /*
  * Slider with two movable points for choosing range.
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FSlider%2FRange%2FStandartSliderRangeDemo">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fRange%2fIndex">Demo-example</a>.
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Range
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
- * @demo Controls-demo/Slider/Range/SliderRangeDemo
+ * @demo Controls-demo/Slider/Range/Base/Index
  */
 
 /**

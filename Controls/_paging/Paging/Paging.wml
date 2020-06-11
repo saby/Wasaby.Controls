@@ -4,17 +4,17 @@
          <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
                         controls-Paging__btn_first controls-Paging__btn_first_theme-{{_options.theme}}
                         controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
-                        controls-Paging__arrow__state-{{_stateBegin}}
-                        controls-Paging__arrow__state-{{_stateBegin}}_theme-{{_options.theme}}"
-                        attr:title="{[В начало]}" on:click="_arrowClick('Begin')">
+                        controls-Paging__arrow__state-{{_stateBackward}}
+                        controls-Paging__arrow__state-{{_stateBackward}}_theme-{{_options.theme}}"
+                        attr:title="{[В начало]}" on:click="_arrowClick('Begin', 'Backward')">
             <i class="icon-First controls-Paging__icon_theme-{{_options.theme}}"></i>
          </span>
       </ws:if>
       <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
                      controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
-                     controls-Paging__arrow__state-{{_statePrev}}
-                     controls-Paging__arrow__state-{{_statePrev}}_theme-{{_options.theme}}"
-                     attr:title="{[Назад]}" on:click="_arrowClick('Prev')">
+                     controls-Paging__arrow__state-{{_stateBackward}}
+                     controls-Paging__arrow__state-{{_stateBackward}}_theme-{{_options.theme}}"
+                     attr:title="{[Назад]}" on:click="_arrowClick('Prev', 'Backward')">
          <i class="icon-Back2 controls-Paging__icon_theme-{{_options.theme}}"></i>
       </span>
       <ws:if data="{{_options.showDigits}}">
@@ -27,17 +27,17 @@
       <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
                      controls-Paging__btn_last controls-Paging__btn_last_theme-{{_options.theme}}
                      controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
-                     controls-Paging__arrow__state-{{_stateNext}}
-                     controls-Paging__arrow__state-{{_stateNext}}_theme-{{_options.theme}}"
-                     attr:title="{[Вперёд]}" on:click="_arrowClick('Next')">
+                     controls-Paging__arrow__state-{{_stateForward}}
+                     controls-Paging__arrow__state-{{_stateForward}}_theme-{{_options.theme}}"
+                     attr:title="{[Вперёд]}" on:click="_arrowClick('Next', 'Forward')">
          <i class="icon-Forward controls-Paging__icon_theme-{{_options.theme}}"></i>
       </span>
       <ws:if data="{{_options.showEndButton}}">
          <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
                         controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
-                        controls-Paging__arrow__state-{{_stateEnd}}
-                        controls-Paging__arrow__state-{{_stateEnd}}_theme-{{_options.theme}}"
-                        attr:title="{[В конец]}" on:click="_arrowClick('End')">
+                        controls-Paging__arrow__state-{{_stateForward}}
+                        controls-Paging__arrow__state-{{_stateForward}}_theme-{{_options.theme}}"
+                        attr:title="{[В конец]}" on:click="_arrowClick('End', 'Forward')">
             <i class="icon-Last controls-Paging__icon_theme-{{_options.theme}}"></i>
          </span>
       </ws:if>

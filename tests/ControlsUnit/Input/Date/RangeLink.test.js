@@ -16,6 +16,7 @@ define([
       mask: 'DD.MM.YYYY',
       value: new Date(2018, 0, 1),
       replacer: ' ',
+      theme: 'default'
    };
 
    describe('Controls/_dateRange/RangeSelector', function() {
@@ -68,7 +69,7 @@ define([
             sinon.assert.called(component._children.opener.open);
             sinon.assert.called(component._children.linkView.getPopupTarget);
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
-               className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft',
+               className: 'controls-DatePopup__selector-marginTop_theme-default controls-DatePopup__selector-marginLeft_theme-default',
                target: TARGET,
                templateOptions: {
                   startValue: opts.startValue,
@@ -97,7 +98,7 @@ define([
             };
             component.openPopup();
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
-               className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft',
+               className: 'controls-DatePopup__selector-marginTop_theme-default controls-DatePopup__selector-marginLeft_theme-default',
                templateOptions: {
                   quantum: extOptions.ranges,
                   minRange: extOptions.minRange,
@@ -142,7 +143,7 @@ define([
                   };
                   component.openPopup();
                   sinon.assert.calledWith(component._children.opener.open, sinon.match({
-                     className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft'
+                     className: 'controls-DatePopup__selector-marginTop_theme-default controls-DatePopup__selector-marginLeft_theme-default'
                   }));
                });
             });
@@ -172,7 +173,7 @@ define([
                   };
                   component.openPopup();
                   sinon.assert.calledWith(component._children.opener.open, sinon.match({
-                     className: 'controls-DatePopup__selector-marginTop controls-DatePopup__selector-marginLeft-withoutModeBtn'
+                     className: 'controls-DatePopup__selector-marginTop_theme-default controls-DatePopup__selector-marginLeft-withoutModeBtn_theme-default'
                   }));
                });
             });

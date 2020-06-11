@@ -8,6 +8,7 @@ import {descriptor} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {Stack as StackOpener, IStackPopupOptions} from 'Controls/popup';
 import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
@@ -158,12 +159,14 @@ var _private = {
    },
 
    shouldShowSuggest: function(self, searchResult) {
-      var hasItems = searchResult && searchResult.data.getCount();
+      const hasItems = searchResult && searchResult.data.getCount();
+      const isSuggestHasTabs = self._tabsSelectedKey !== null;
 
       /* do not suggest if:
        * 1) loaded list is empty and empty template option is doesn't set
        * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
-      return hasItems || (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
+      return hasItems ||
+             (!self._options.historyId || self._searchValue || isSuggestHasTabs) && self._options.emptyTemplate;
    },
    processResultData: function(self, resultData) {
       self._searchResult = resultData;
@@ -288,13 +291,50 @@ var _private = {
       if (self._notify('showSelector', [popupOptions]) !== false) {
          //loading showAll templates
          requirejs(['Controls/suggestPopup'], function () {
-            self._children.stackOpener.open(popupOptions);
+            StackOpener.openPopup(popupOptions);
          });
       }
    },
    isInvalidValidationStatus(options): boolean {
       return options.validationStatus === 'invalid' ||
              options.validationStatus === 'invalidAccent';
+   },
+
+   getSelectorOptions(self, filter): IStackPopupOptions {
+      return {
+         opener: self,
+         template: 'Controls/suggestPopup:Dialog',
+         closeOnOutsideClick: true,
+         templateOptions: {
+            filter: filter,
+            searchValue: self._searchValue,
+            template: 'Controls/suggestPopup:_ListWrapper',
+            templateOptions: {
+               templateName: self._options.suggestTemplate.templateName,
+               templateOptions: self._options.suggestTemplate.templateOptions,
+               searchEndCallback: self._searchEnd,
+               searchStartCallback: self._searchStart,
+               searchErrback: self._searchErrback,
+               emptyTemplate: self._emptyTemplate,
+               source: self._options.source,
+               minSearchLength: self._options.autoDropDown ? 0 : self._options.minSearchLength,
+               navigation: self._options.navigation,
+               sorting: self._options.sorting,
+               searchParam: self._options.searchParam,
+               tabsSelectedKey: self._tabsSelectedKey,
+               layerName: self._options.layerName,
+               searchDelay: self._searchDelay,
+               tabsSelectedKeyChangedCallback: self._tabsSelectedKeyChanged,
+               searchValue: self._searchValue,
+               eventHandlers: {
+                  onResult: self._select.bind(self)
+               }
+            }
+         },
+         eventHandlers: {
+            onResult: self._select.bind(self)
+         }
+      };
    }
 };
 
@@ -332,7 +372,6 @@ var SuggestLayout = Control.extend({
    _searchValue: '',
    _inputValue: '',
    _isFooterShown: false,
-   _tabsSource: null,
    _filter: null,
    _tabsSelectedKey: null,
    _historyKeys: null,
@@ -367,7 +406,6 @@ var SuggestLayout = Control.extend({
    },
    _beforeUnmount: function() {
       this._searchResult = null;
-      this._tabsSource = null;
       this._searchStart = null;
       this._searchEnd = null;
       this._searchErrback = null;
@@ -545,20 +583,12 @@ var SuggestLayout = Control.extend({
       var filter = clone(this._filter) || {};
 
       filter[this._options.searchParam] = '';
-      _private.openSelector(this, {
-         templateOptions: {
-            filter: filter
-         }
-      });
+      _private.openSelector(this, _private.getSelectorOptions(this, filter));
       _private.close(this);
    },
 
    _moreClick: function() {
-      _private.openSelector(this, {
-         templateOptions: {
-            filter: this._filter
-         }
-      });
+      _private.openSelector(this, _private.getSelectorOptions(this, this._filter));
       _private.close(this);
    },
 

@@ -43,6 +43,8 @@ var _private = {
       if (self._options.dataLoadErrback) {
          self._options.dataLoadErrback(error);
       }
+      self._loadItemsPromise = null;
+      self._createMenuSource(error);
    },
 
    prepareFilterForQuery(self, options): object {
@@ -191,19 +193,19 @@ var _private = {
       }
    },
 
-   onResult: function (action, data) {
+   onResult: function (action, data, nativeEvent) {
       switch (action) {
          case 'pinClick':
             _private.pinClick(this, data);
             break;
          case 'applyClick':
-            this._notify('selectedItemsChanged', [data]);
+            this._notify('selectedItemsChanged', [data, nativeEvent]);
             _private.updateHistory(this, data);
             _private.closeDropdownList(this);
             break;
          case 'itemClick':
             data = _private.prepareItem(data, this._options.keyProperty, this._source);
-            var res = this._notify('selectedItemsChanged', [[data]]);
+            var res = this._notify('selectedItemsChanged', [[data], nativeEvent]);
 
             // dropDown must close by default, but user can cancel closing, if returns false from event
             if (res !== false) {
@@ -213,7 +215,7 @@ var _private = {
             break;
          case 'selectorResult':
             _private.onSelectorResult(this, data);
-            this._notify('selectedItemsChanged', [data]);
+            this._notify('selectedItemsChanged', [data, nativeEvent]);
             break;
          case 'selectorDialogOpened':
             this._initSelectorItems = data;
@@ -238,6 +240,7 @@ var _private = {
       };
       self._onClose = function(event, args) {
          self._isOpened = false;
+         self._menuSource = null;
          self._notify('dropDownClose');
          if (typeof (options.close) === 'function') {
             options.close(args);
@@ -300,6 +303,23 @@ var _private = {
    },
 
    getPopupOptions(self, popupOptions?): object {
+      let baseConfig = {...self._options};
+      const ignoreOptions = [
+         'iWantBeWS3',
+         '_$createdFromCode',
+         '_logicParent',
+         'theme',
+         'vdomCORE',
+         'name',
+         'esc'
+      ];
+
+      for (let i = 0; i < ignoreOptions.length; i++) {
+         const option = ignoreOptions[i];
+         if (self._options[option] !== undefined) {
+            delete baseConfig[option];
+         }
+      }
       let templateOptions = {
          closeButtonVisibility: false,
          emptyText: self._getEmptyText(),
@@ -316,13 +336,11 @@ var _private = {
              undefined,
          hasMoreButton: self._sourceController.hasMoreData('down'),
          selectorOpener: self._children.selectorOpener,
-         selectorDialogResult: self._onSelectorTemplateResult.bind(self),
-         iWantBeWS3: false // FIXME https://online.sbis.ru/opendoc.html?guid=9bd2e071-8306-4808-93a7-0e59829a317a
+         selectorDialogResult: self._onSelectorTemplateResult.bind(self)
       };
-      let options = {...self._options};
       const config = {
          id: self._popupId,
-         templateOptions: Object.assign(options, templateOptions),
+         templateOptions: Object.assign(baseConfig, templateOptions),
          className: self._options.popupClassName,
          template: 'Controls/menu:Popup',
          actionOnScroll: 'close',
@@ -543,30 +561,47 @@ var _Controller = Control.extend({
       return this._loadItemsPromise;
    },
 
-   loadDependencies(): void {
-      return Promise.all([_private.loadMenuTemplates(this, this._options), this._loadItems()]).then( () => {
-         return _private.loadItemsTemplates(this, this._options);
-       });
+   loadDependencies(): Promise<unknown> {
+      const deps = [_private.loadMenuTemplates(this, this._options)];
+
+      if (!this._items) {
+         deps.push(this._loadItems().then(() => _private.loadItemsTemplates(this, this._options)));
+      } else {
+         deps.push(_private.loadItemsTemplates(this, this._options));
+      }
+
+      return Promise.all(deps);
    },
 
    _open(popupOptions?: object): void {
       if (this._options.readOnly) {
          return;
       }
-      return this.loadDependencies().then( () => {
-         const count = this._items.getCount();
-         if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
-            let config = _private.getPopupOptions(this, popupOptions);
-            this._isOpened = true;
-            StickyOpener.openPopup(config, this).then((popupId) => {
-               this._popupId = popupId;
-            });
-         } else if (count === 1) {
-            this._notify('selectedItemsChanged', [
-               [this._items.at(0)]
-            ]);
-         }
-      });
+      const openPopup = () => {
+         StickyOpener.openPopup(_private.getPopupOptions(this, popupOptions)).then((popupId) => {
+            this._popupId = popupId;
+         });
+      };
+
+      return this.loadDependencies().then(
+          () => {
+             const count = this._items.getCount();
+             if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
+                this._createMenuSource(this._items);
+                this._isOpened = true;
+                openPopup();
+             } else if (count === 1) {
+                this._notify('selectedItemsChanged', [
+                   [this._items.at(0)]
+                ]);
+             }
+          },
+          () => {
+             if (this._menuSource) {
+                openPopup();
+             }
+          }
+       );
    },
 
    _onSelectorTemplateResult: function(event, selectedItems) {
@@ -615,18 +650,22 @@ var _Controller = Control.extend({
       return dropdownUtils.prepareEmpty(this._options.emptyText);
    },
 
-   _setItems: function(items) {
+   _setItems(items: RecordSet|null): void {
       if (items) {
-         this._menuSource = new PrefetchProxy({
-            target: this._source,
-            data: {
-               query: items.clone()
-            }
-         });
+         this._createMenuSource(items);
       } else {
          this._loadItemsPromise = null;
       }
       this._items = items;
+   },
+
+   _createMenuSource(items: RecordSet|Error): void {
+      this._menuSource = new PrefetchProxy({
+         target: this._source,
+         data: {
+            query: items
+         }
+      });
    },
 
    _hasHistory(): boolean {

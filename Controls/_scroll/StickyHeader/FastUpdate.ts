@@ -22,16 +22,18 @@ class FastUpdate {
 
     _isInvalid: boolean = false;
 
+    _promise: Promise<void>;
+
     resetSticky(elements: Element[]): void {
         this._stickyContainersForReset = this._stickyContainersForReset.concat(elements);
     }
 
-    measure(fn: Function): void {
+    measure(fn: Function): Promise<void> {
         this._measures.push(fn);
         return this._invalidateMutations();
     }
 
-    mutate(fn: Function): void {
+    mutate(fn: Function): Promise<void> {
         this._mutates.push(fn);
         return this._invalidateMutations();
     }
@@ -39,8 +41,9 @@ class FastUpdate {
     protected _invalidateMutations() {
         if (!this._isInvalid) {
             this._isInvalid = true;
-            Promise.resolve().then(this._applyMutations.bind(this));
+            this._promise = Promise.resolve().then(this._applyMutations.bind(this));
         }
+        return this._promise;
     }
 
     protected _applyMutations() {

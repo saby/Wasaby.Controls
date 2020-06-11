@@ -147,22 +147,26 @@ const
              // Не скроллируем зафиксированные колонки
              `.${self._transformSelector} .controls-Grid__cell_fixed { transform: translateX(${position}px); }` +
 
-             // Не скроллируем скроллбар
-             `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }`;
+               // не скроллируем подвал таблицы
+               `.${self._transformSelector} .controls-GridView__footer { transform: translateX(${position}px); }`;
 
-          // Не скроллируем операции над записью
-          if (isFullGridSupport()) {
-              newHTML += `.${self._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
-          } else {
-              const maxTranslate = self._contentSize - self._contentContainerSize;
-              newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(${position - maxTranslate}px); }`;
-          }
+           // Не скроллируем операции над записью
+           if (isFullGridSupport()) {
+               // Cкроллируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
+               // table-layout скроллбар лежит вне таблицы
+               newHTML +=
+                   `.${self._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
+                   `.${self._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
+           } else {
+               const maxTranslate = self._contentSize - self._contentContainerSize;
+               newHTML += ` .${self._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(${position - maxTranslate}px); }`;
+           }
 
-          if (self._children.contentStyle.innerHTML !== newHTML) {
-              self._children.contentStyle.innerHTML = newHTML;
-          }
+           if (self._children.contentStyle.innerHTML !== newHTML) {
+               self._children.contentStyle.innerHTML = newHTML;
+           }
 
-      },
+       },
        /**
         * Скрывает/показывает горизонтальный скролл и шапку таблицы (display: none),
         * чтобы, из-за особенностей sticky элементов, которые лежат внутри grid-layout,
@@ -396,6 +400,9 @@ const
        },
        _onViewTouchEnd(e): void {
            this._children.dragScroll?.onViewTouchEnd(e);
+       },
+       _isFullGridSupport() {
+           return isFullGridSupport();
        }
    });
 ColumnScroll._theme = ['Controls/grid', 'Controls/Classes'];

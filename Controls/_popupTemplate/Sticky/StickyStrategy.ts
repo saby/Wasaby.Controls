@@ -6,7 +6,7 @@ import {detection} from 'Env/Env';
 let TouchKeyboardHelper = {};
 
 if (detection.isMobileIOS && detection.IOSVersion === 12) {
-   import('Controls/Utils/TouchKeyboardHelper').then((module) => TouchKeyboardHelper = module);
+   import('Controls/Utils/TouchKeyboardHelper').then((module) => TouchKeyboardHelper = module.default);
 }
 
 interface IPosition {
@@ -211,7 +211,7 @@ interface IPosition {
             }
          }
          _private.fixPosition(resultPosition, targetCoords);
-         _private.calculateRestrictionContainerCoords(popupCfg, position);
+         _private.calculateRestrictionContainerCoords(popupCfg, resultPosition);
          return resultPosition;
       },
 
@@ -249,18 +249,18 @@ interface IPosition {
 
       calculateRestrictionContainerCoords(popupCfg, position): void {
          const coords = popupCfg.restrictiveContainerCoords;
-         const height = position.height || popupCfg.sizes?.height;
+         const height = position.height > 0 ? position.height : popupCfg.sizes?.height;
          const width = position.width || popupCfg.sizes?.width;
          const body = _private.getBody();
          if (coords) {
-            let dif = (position.bottom + height) - (body.clientHeight - coords.top);
+            let dif = (position.bottom + height) - (body.height - coords.top);
             if (dif > 0) {
                position.bottom -= dif;
             } else if (position.top + height > coords.bottom) {
                position.top = coords.bottom - height;
             }
 
-            dif = (position.right + width) - (body.clientWidth - coords.left);
+            dif = (position.right + width) - (body.height - coords.left);
             if (dif > 0) {
                position.right -= dif;
             } else if (position.left + width > coords.right) {
@@ -377,8 +377,8 @@ interface IPosition {
          return {
             offsetLeft: 0,
             offsetTop: 0,
-            pageLeft: window && window.scrollX,
-            pageTop: window && window.scrollY,
+            pageLeft: window && window.pageXOffset,
+            pageTop: window && window.pageYOffset,
             width: document && document.body.clientWidth,
             height: document && document.body.clientHeight
          };

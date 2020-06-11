@@ -1,0 +1,7 @@
+<div class="controlsDemo controlsDemo__inline-flex">
+   <ws:partial template="wml!Controls-demo/JumpingLabel/Standard/Base"
+               source="{{_source}}" contrastBackground="{{false}}"/>
+   <ws:partial attr:style="background-color: #eaeaea;"
+               template="wml!Controls-demo/JumpingLabel/Standard/Base"
+               source="{{_source}}" contrastBackground="{{true}}"/>
+</div>

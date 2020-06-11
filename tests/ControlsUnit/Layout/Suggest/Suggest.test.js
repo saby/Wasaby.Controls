@@ -1,4 +1,4 @@
-define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/history', 'Core/Deferred'], function(suggestMod, collection, entity, Env, history, Deferred) {
+define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/history', 'Core/Deferred', 'Controls/popup'], function(suggestMod, collection, entity, Env, history, Deferred, popupLib) {
 'use strict';
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
@@ -15,11 +15,13 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       };
 
       var getComponentObject = function() {
-         var self = {};
-         self._options = {};
-         self._options.suggestTemplate = {};
-         self._options.footerTemplate = {};
-         return self;
+         const controller = new suggestMod._InputController();
+         const options = {
+            suggestTemplate: {},
+            footerTemplate: {}
+         };
+         controller.saveOptions(options);
+         return controller;
       };
 
       var getContainer = function(size) {
@@ -209,6 +211,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
          assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
 
+         self._tabsSelectedKey = 'testTab';
+         self._searchValue = '';
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!suggestMod._InputController._private.shouldShowSuggest(self, result));
+
          //case 6. emptyTemplate is null/undefined, search - is empty string, historyId is set
          self._options.emptyTemplate = null;
          assert.isFalse(!!suggestMod._InputController._private.shouldShowSuggest(self, emptyResult));
@@ -349,12 +356,17 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          var footerTpl;
 
          requirejs(['Controls/suggestPopup'], function(result) {
+            let compat = Env.constants.compat;
+            Env.constants.compat = true;
+
             footerTpl = result.FooterTemplate;
 
             assert.equal(footerTpl(), '<div class="controls-Suggest__footer"></div>');
             assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore'}), '<div class="controls-Suggest__footer">testShowMore</div>');
             assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore', showSelectorButtonTemplate: 'testShowSelector'}), '<div class="controls-Suggest__footer">testShowMoretestShowSelector</div>');
             done();
+
+            Env.constants.compat = compat;
          });
       });
 
@@ -366,12 +378,13 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
          suggest._notify = (event, options) => { openCfg = options; return eventResult; };
          suggest._showContent = true;
-         suggest._children = {
-            stackOpener: {
-               open: () => {
-                  stackOpened = true;
-               }
-            }
+         popupLib.Stack.openPopup = () => {
+            stackOpened = true;
+         };
+
+         suggest._options.suggestTemplate = {
+            templateName: 'test',
+            templateOptions: {}
          };
 
          suggest._showAllClick();
@@ -386,19 +399,17 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             isNotifyShowSelector = false,
             suggest = new suggestMod._InputController();
 
-         suggest._children = {
-            stackOpener: {
-               open: () => {}
-            }
+         popupLib.Stack.openPopup = () => {};
+
+         suggest._options.suggestTemplate = {
+            templateName: 'test',
+            templateOptions: {}
          };
+
          suggest._notify = function(eventName, data) {
             if (eventName === 'showSelector') {
                isNotifyShowSelector = true;
-               assert.deepEqual(data[0], {
-                  templateOptions: {
-                     filter: suggest._filter
-                  }
-               });
+               assert.deepEqual(data[0].templateOptions.filter, suggest._filter);
             }
          };
 

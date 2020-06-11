@@ -11,6 +11,10 @@ import {isHistorySource} from 'Controls/_filter/HistoryUtils';
 /**
  * Панель "быстрых фильтров" для {@link Controls/filter:View}.
  * Шаблон окна, в котором для каждого фильтра с viewMode = 'frequent' отображает список элементов в отдельном блоке.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления</a>
  *
  * @class Controls/_filterPopup/SimplePanel
  * @extends Core/Control
@@ -70,7 +74,7 @@ var _private = {
         });
         return pDef.done().getResult().addCallback(() => {
             const displayItems = items.filter((item) => {
-                return item.items?.getCount() > 1;
+                return item.items?.getCount() > 1 || item.hasMoreButton;
             });
             return displayItems.length ? displayItems : [items[0]];
         });

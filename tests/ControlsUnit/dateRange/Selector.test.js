@@ -47,6 +47,31 @@ define([
             sinon.assert.callCount(component._notify, 3);
             sandbox.restore();
          });
+         it('should not generate date change events if dates differ only in time', function() {
+            const opt = {
+               rangeModel: new dateRange.DateRangeModel(),
+               mask: 'DD.MM.YYYY',
+               startValue: new Date(2018, 0, 1, 10, 10, 10),
+               endValue: new Date(2018, 0, 1, 10, 12, 15),
+               replacer: ' ',
+            };
+
+            const
+                sandbox = sinon.sandbox.create(),
+                component = calendarTestUtils.createComponent(dateRange.RangeSelector, opt),
+                startValue = new Date(2018, 0, 1),
+                endValue = new Date(2018, 0, 1);
+
+            sandbox.stub(component, '_notify');
+
+            component._rangeChangedHandler(null, startValue, endValue);
+
+            sinon.assert.neverCalledWith(component._notify, 'startValueChanged');
+            sinon.assert.neverCalledWith(component._notify, 'endValueChanged');
+            sinon.assert.neverCalledWith(component._notify, 'rangeChanged');
+            sinon.assert.callCount(component._notify, 0);
+            sandbox.restore();
+         });
       });
    });
 });

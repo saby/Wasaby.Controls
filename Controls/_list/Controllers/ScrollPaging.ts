@@ -1,106 +1,87 @@
 /**
  * Created by kraynovdo on 13.11.2017.
  */
-import cExtend = require('Core/core-simpleExtend');
 /**
  *
  * @author Авраменко А.С.
  * @private
  */
 
-var _private = {
-    getStateByHasMoreData: function (hasMoreData) {
-        return hasMoreData ? 'normal' : 'disabled';
-    }
-};
+type IScrollpagingState = 'top' | 'bottom' | 'middle';
 
-var Paging = cExtend.extend({
-    _curState: null,
+interface IScrollParams {
+    clientHeight: number;
+    scrollTop: number;
+    scrollHeight: number;
+}
+interface IPagingCfg { 
+    backwardEnabled: boolean, 
+    forwardEnabled: boolean
+}
+interface IScrollPagingOptions {
+    scrollParams: IScrollParams,
+    pagingCfgTrigger(IPagingCfg):void;
+}
 
-    constructor: function (cfg) {
+export default class ScrollPagingController {
+    protected _curState: IScrollpagingState = null;
+    protected _options: IScrollPagingOptions = null;
+
+    constructor(cfg: IScrollPagingOptions) {
         this._options = cfg;
-        Paging.superclass.constructor.apply(this, arguments);
-        this._initializePaging(cfg.scrollParams);
-    },
+        this.updateStateByScrollParams(cfg.scrollParams);
+    };
 
-    _initializePaging(scrollParams) {
-        if (scrollParams.scrollTop === 0) {
-            this._curState = 'top';
-        } else if (scrollParams.clientHeight + scrollParams.scrollTop >= scrollParams.scrollHeight) {
-            this._curState = 'bottom';
-        } else {
-            this._curState = 'middle';
+    protected updateStateByScrollParams(scrollParams): void {
+        const canScrollForward = scrollParams.clientHeight + scrollParams.scrollTop < scrollParams.scrollHeight;
+        const canScrollBackward = scrollParams.scrollTop > 0;
+        if (canScrollForward && canScrollBackward) {
+            this.handleScrollMiddle();
+        } else if (canScrollForward && !canScrollBackward) {
+            this.handleScrollTop();
+        } else if (!canScrollForward && canScrollBackward) {
+            this.handleScrollBottom();
         }
-
-        // refactored by https://online.sbis.ru/opendoc.html?guid=edc7e56a-fe3c-4763-995e-5e29fcac3c6f
-        this._options.pagingCfgTrigger({
-            stateBegin: this._curState !== 'top' ? 'normal' : 'disabled',
-            statePrev: this._curState !== 'top' ? 'normal' : 'disabled',
-            stateNext: this._curState !== 'bottom' ? 'normal' : 'disabled',
-            stateEnd: this._curState !== 'bottom' ? 'normal' : 'disabled'
-        });
-    },
-
-    handleScroll: function () {
+    };
+    protected handleScrollMiddle() {
         if (!(this._curState === 'middle')) {
             this._options.pagingCfgTrigger({
-                stateBegin: 'normal',
-                statePrev: 'normal',
-                stateNext: 'normal',
-                stateEnd: 'normal'
+                backwardEnabled: true,
+                forwardEnabled: true
             });
             this._curState = 'middle';
         }
-    },
+    };
 
-    handleScrollTop: function (hasMoreData) {
-        var statePrev = _private.getStateByHasMoreData(hasMoreData);
+    protected handleScrollTop() {
         if (!(this._curState === 'top')) {
             this._options.pagingCfgTrigger({
-                stateBegin: statePrev,
-                statePrev: statePrev,
-                stateNext: 'normal',
-                stateEnd: 'normal'
+                backwardEnabled: false,
+                forwardEnabled: true
             });
-            if (!hasMoreData) {
-                this._curState = 'top';
-            }
+             this._curState = 'top';
         }
-    },
+    };
 
-    handleScrollBottom: function (hasMoreData) {
-        var stateNext = _private.getStateByHasMoreData(hasMoreData);
+    protected handleScrollBottom() {
         if (!(this._curState === 'bottom')) {
             this._options.pagingCfgTrigger({
-                stateBegin: 'normal',
-                statePrev: 'normal',
-                stateNext: stateNext,
-                stateEnd: stateNext
+                backwardEnabled: true,
+                forwardEnabled: false
             });
-            if (!hasMoreData) {
-                this._curState = 'bottom';
-            }
+            this._curState = 'bottom';
         }
+    };
+    
+    public updateScrollParams(scrollParams): void {
+        this._options.scrollParams = scrollParams;
+        this.updateStateByScrollParams(scrollParams);
+    };
 
-    },
+    protected destroy(): void {
+        this._options = null;
+    };
 
-    handleScrollEdge: function (direction, hasMoreData) {
-        switch (direction) {
-            case 'up':
-                this.handleScrollTop(hasMoreData.up);
-                break;
-            case 'down':
-                this.handleScrollBottom(hasMoreData.down);
-                break;
-        }
-    },
+}
 
-    destroy: function () {
-        this._options = {};
-    }
 
-});
-
-Paging._private = _private;
-
-export = Paging;

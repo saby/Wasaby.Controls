@@ -46,12 +46,14 @@ define(
          };
 
          let defaultOptions = {
-            listModel: getListModel()
+            listModel: getListModel(),
+            keyProperty: 'key'
          };
 
          let getRender = function(config) {
-            let menuControl = new menu.Render();
-            menuControl.saveOptions(config || defaultOptions);
+            const renderConfig = config || defaultOptions;
+            const menuControl = new menu.Render(renderConfig);
+            menuControl.saveOptions(renderConfig);
             return menuControl;
          };
 
@@ -383,6 +385,26 @@ define(
             renderOptions.headingIcon = 'icon-Add';
             iconPadding = menuRender.getIconPadding(renderOptions);
             assert.equal(iconPadding, '');
+         });
+
+         describe('_beforeUnmount', () => {
+
+            it('empty item must be removed from collection', () => {
+               const listModel = getListModel();
+               const menuRenderConfig = {
+                  listModel: listModel,
+                  emptyText: 'emptyText',
+                  itemPadding: {},
+                  selectedKeys: [],
+                  emptyKey: 'testKey',
+                  keyProperty: 'key'
+               };
+               const menuRender = getRender(menuRenderConfig);
+               menuRender._beforeMount(menuRenderConfig);
+               menuRender._beforeUnmount();
+               assert.equal(listModel.getCollection().getCount(), 4, 'empty item is not removed from collection on _beforeUnmount');
+            });
+
          });
 
       });

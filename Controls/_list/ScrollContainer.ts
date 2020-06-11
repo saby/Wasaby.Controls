@@ -47,6 +47,13 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
     _triggerPositionCoefficient: number;
 }
 
+/**
+ * Контейнер управляющий операциями скролла в списке.
+ * @class Controls/_list/ScrollContainer
+ * @control
+ * @private
+ * @author Авраменко А.С.
+ */
 export default class ScrollContainer extends Control<IOptions> {
     protected _template: TemplateFunction = template;
     protected _children: {
@@ -64,6 +71,10 @@ export default class ScrollContainer extends Control<IOptions> {
     private _viewportHeight: number = 0;
     private _triggerOffset: number = 0;
     private _lastScrollTop: number = 0;
+
+    private _updateShadowModeAfterMount: Function|null = null;
+
+    private _updateShadowModeAfterMount: Function|null = null;
 
     private _triggerVisibility: ITriggerState = {up: false, down: false};
 
@@ -129,6 +140,10 @@ export default class ScrollContainer extends Control<IOptions> {
             this._registerObserver();
         }
         this._afterRenderHandler();
+        if (this._updateShadowModeAfterMount) {
+            this._updateShadowModeAfterMount();
+            this._updateShadowModeAfterMount = null;
+        }
     }
 
     protected _beforeUpdate(options: IOptions): void {
@@ -441,6 +456,15 @@ export default class ScrollContainer extends Control<IOptions> {
                 up: start > 0,
                 down: stop < collection.getCount()
             }]);
+        } else {
+            // Обновление режима отображения тени в должно вызываться, иначе изначальное отображение будет неверным.
+            // https://online.sbis.ru/opendoc.html?guid=a3d69022-e68d-41d2-95c6-b9a8877190e9
+            this._updateShadowModeAfterMount = () => {
+                this._notify('updateShadowMode', [{
+                    up: start > 0,
+                    down: stop < collection.getCount()
+                }]);
+            };
         }
     }
 
@@ -631,7 +655,9 @@ export default class ScrollContainer extends Control<IOptions> {
             }
 
             if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
-                this._itemsRemovedHandler(removedItemsIndex, removedItems);
+                // When move items call removeHandler with "forceShift" param.
+                // https://online.sbis.ru/opendoc.html?guid=4e6981f5-27e1-44e5-832e-2a080a89d6a7
+                this._itemsRemovedHandler(removedItemsIndex, removedItems, action === IObservable.ACTION_MOVE);
             }
 
             if (action === IObservable.ACTION_RESET) {
@@ -677,10 +703,11 @@ export default class ScrollContainer extends Control<IOptions> {
      * Обрабатывает удаление элементов из коллекции
      * @param removeIndex
      * @param items
+     * @param forcedShift
      * @private
      */
-    private _itemsRemovedHandler(removeIndex: number, items: object[]): void {
-        const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length);
+    private _itemsRemovedHandler(removeIndex: number, items: object[], forcedShift: boolean): void {
+        const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length, forcedShift);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
             this._options.needScrollCalculation);
@@ -701,15 +728,6 @@ export default class ScrollContainer extends Control<IOptions> {
         if (this.__mounted) {
             this._notify('updatePlaceholdersSize', [placeholders], {bubbling: true});
         }
-    }
-
-    /**
-     * Обновление режима тени, в зависимости от размеров виртуальных распорок
-     * @remark Так как при виртуальном скроллировании отображается только некоторый "видимый" набор записей
-     * то scrollContainer будет неверно рассчитывать наличие тени, поэтому управляем режимом тени вручную
-     */
-    private _updateShadowMode(): void {
-        this._notify('updateShadowMode', [this._placeholders]);
     }
 
     private _updateTriggerOffset(scrollHeight: number, viewportHeight: number): void {

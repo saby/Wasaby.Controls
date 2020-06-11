@@ -96,8 +96,7 @@ const _private = {
         const popupCfg = self._getPopupConfig(cfg, sizes);
 
         cfg.position = StickyStrategy.getPosition(popupCfg, self._getTargetCoords(cfg, sizes));
-
-        cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);
+        _private.updateStickyPosition(cfg, popupCfg);
 
         cfg.positionConfig = popupCfg;
         _private.updateClasses(cfg, popupCfg);
@@ -140,21 +139,25 @@ const _private = {
         return cfg.popupOptions.target || (document && document.body);
     },
 
-    prepareStickyPosition(cfg) {
-        return {
-            targetPoint: cfg.targetPoint,
-            direction: cfg.direction,
-            offset: cfg.offset,
+    updateStickyPosition(item, position): void {
+        const newStickyPosition = {
+            targetPoint: position.targetPoint,
+            direction: position.direction,
+            offset: position.offset,
             horizontalAlign: { // TODO: to remove
-                side: cfg.direction.horizontal,
-                offset: cfg.offset.horizontal
+                side: position.direction.horizontal,
+                offset: position.offset.horizontal
             },
             verticalAlign: { // TODO: to remove
-                side: cfg.direction.vertical,
-                offset: cfg.offset.vertical
+                side: position.direction.vertical,
+                offset: position.offset.vertical
             },
-            corner: cfg.corner // TODO: to remove
+            corner: position.corner // TODO: to remove
         };
+        // быстрая проверка на равенство простых объектов
+        if (JSON.stringify(item.popupOptions.stickyPosition) !== JSON.stringify(newStickyPosition)) {
+            item.popupOptions.stickyPosition = newStickyPosition;
+        }
     },
 
     getWindowWidth() {
@@ -239,11 +242,12 @@ class StickyController extends BaseController {
         } else {
             this._printTargetRemovedWarn();
         }
+        return true;
     }
 
     elementUpdated(item, container) {
         _private.setStickyContent(item);
-        item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
+        _private.updateStickyPosition(item, item.positionConfig);
         if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
 
@@ -320,7 +324,7 @@ class StickyController extends BaseController {
         _private.setStickyContent(item);
         item.popupOptions = _private.prepareOriginPoint(item.popupOptions);
         const popupCfg = this._getPopupConfig(item);
-        item.popupOptions.stickyPosition = _private.prepareStickyPosition(popupCfg);
+        _private.updateStickyPosition(item, popupCfg);
         item.position = {
             top: -10000,
             left: -10000,
@@ -381,7 +385,8 @@ class StickyController extends BaseController {
             } else if (item.popupOptions.restrictiveContainer instanceof HTMLElement) {
                 restrictiveContainer = item.popupOptions.restrictiveContainer;
             } else if (typeof item.popupOptions.restrictiveContainer === 'string') {
-                restrictiveContainer = document.querySelector(item.popupOptions.restrictiveContainer);
+                // ищем ближайшего
+                restrictiveContainer = item.popupOptions.target.closest(item.popupOptions.restrictiveContainer);
             }
 
             if (restrictiveContainer) {

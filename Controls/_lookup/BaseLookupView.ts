@@ -27,8 +27,8 @@ var _private = {
     },
 
     resetInputValue: function(self) {
-        if (self._inputValue !== '') {
-            self._inputValue = '';
+        if (self._getInputValue(self._options) !== '') {
+            self._setInputValue(self._options, '');
             _private.notifyValue(self, '');
         }
     },
@@ -63,13 +63,23 @@ var BaseLookupView = Control.extend({
     _needSetFocusInInput: false,
 
     _beforeMount: function (options) {
-        this._inputValue = options.value;
+        this._setInputValue(options, options.value);
         this._listOfDependentOptions = [];
 
-        if (!options.multiSelect) {
+        /*
+        * На _beforeMount нам ещё не известны размеры поля,
+        * поэтому записи выводим только для ситуаций, который решаются на css'e.
+        * C помощью css'a можно вывести все записи в readOnly режиме,
+        * или 1-у запись в одиночном и множественном выборе.
+        * Для вывода нескольких записей нужна ширина поля.
+        * */
+        const itemsCount = options.items.getCount();
+        if (!options.multiSelect || itemsCount === 1) {
             this._maxVisibleItems = 1;
         } else if (options.multiLine) {
             this._maxVisibleItems = options.maxVisibleItems;
+        } else if (options.multiSelect && itemsCount > 1) {
+            this._maxVisibleItems = 0;
         } else {
             this._maxVisibleItems = options.items.getCount();
         }
@@ -94,7 +104,7 @@ var BaseLookupView = Control.extend({
         const itemsChanged = currentOptions.items !== newOptions.items;
 
         if (valueChanged) {
-            this._inputValue = newOptions.value;
+            this._setInputValue(newOptions, newOptions.value);
         } else if (itemsChanged && !newOptions.comment) {
             _private.resetInputValue(this);
         }
@@ -132,7 +142,7 @@ var BaseLookupView = Control.extend({
     },
 
     _changeValueHandler: function (event, value) {
-        this._inputValue = value;
+        this._setInputValue(this._options, value);
         _private.notifyValue(this, value);
     },
 
@@ -173,14 +183,15 @@ var BaseLookupView = Control.extend({
 
     },
 
-    _resize: function () {
-        var
-            oldFieldWrapperWidth = this._getFieldWrapperWidth(),
-            newFieldWrapperWidth = this._getFieldWrapperWidth(true);
+    _resize(): void {
+        if (this._isNeedCalculatingSizes(this._options)) {
+            const oldFieldWrapperWidth = this._getFieldWrapperWidth();
+            const newFieldWrapperWidth = this._getFieldWrapperWidth(true);
 
-        // if hidden, then there is no reason to recalc the sizes
-        if (newFieldWrapperWidth > 0 && this._isNeedCalculatingSizes(this._options) && newFieldWrapperWidth !== oldFieldWrapperWidth) {
-            this._calculatingSizes(this._options);
+            // if hidden, then there is no reason to recalc the sizes
+            if (newFieldWrapperWidth > 0 && newFieldWrapperWidth !== oldFieldWrapperWidth) {
+                this._calculatingSizes(this._options);
+            }
         }
     },
 
@@ -252,7 +263,7 @@ var BaseLookupView = Control.extend({
         if (keyCodeEvent === KEY_CODE_F2) {
             this._notify('showSelector');
         } else if (keyCodeEvent === constants.key.backspace &&
-            !this._inputValue && !this._isEmpty(this._options)) {
+            !this._getInputValue(this._options) && !this._isEmpty(this._options)) {
 
             //If press backspace, the input field is empty and there are selected entries -  remove last item
             this._notify('removeItem', [items.at(items.getCount() - 1)]);
@@ -275,14 +286,31 @@ var BaseLookupView = Control.extend({
 
    _isShowCollection: function() {
        return !this._isEmpty(this._options) && (this._maxVisibleItems || this._options.readOnly);
-   }
+   },
+
+    _getInputValue(options): string {
+        let result;
+
+        if (options.hasOwnProperty('value')) {
+            result = options.value;
+        } else {
+            result = this._inputValue;
+        }
+
+        return result;
+    },
+
+    _setInputValue(options, value: string): void {
+        if (!options.hasOwnProperty('value')) {
+            this._inputValue = value;
+        }
+    }
 });
 
 BaseLookupView._theme = ['Controls/lookup'];
 
 BaseLookupView.getDefaultOptions = function () {
     return {
-        value: '',
         displayProperty: 'title',
         multiSelect: false,
         maxVisibleItems: 7,

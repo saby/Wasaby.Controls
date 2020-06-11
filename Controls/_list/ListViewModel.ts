@@ -13,6 +13,7 @@ import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfi
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction} from 'Controls/itemActions';
+import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
 const ITEMACTIONS_POSITION_CLASSES = {
     bottomRight: 'controls-itemActionsV_position_bottomRight',
@@ -132,6 +133,9 @@ var _private = {
         itemsModelCurrent.isSwiped = (): boolean => (
             itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : false
         );
+        itemsModelCurrent.isRightSwiped = (): boolean => (
+            itemsModelCurrent.dispItem.isRightSwiped !== undefined ? itemsModelCurrent.dispItem.isRightSwiped() : false
+        );
         itemsModelCurrent.getContents = () => (
             itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
         );
@@ -153,6 +157,12 @@ var _private = {
                 itemsModelCurrent.dispItem.setSelected(selected, silent);
             }
         };
+        itemsModelCurrent.setEditing = (editing: boolean): void => {
+            itemsModelCurrent.isEditing = editing;
+            if (itemsModelCurrent.dispItem.setEditing !== undefined) {
+                itemsModelCurrent.dispItem.setEditing(editing, itemsModelCurrent.item, true);
+            }
+        }
     }
 };
 
@@ -205,13 +215,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         // TODO USE itemsModelCurrent.isSelected()
         itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
-        itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
         itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
         itemsModelCurrent.searchValue = this._options.searchValue;
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
-        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && (itemsModelCurrent.style === 'master' || itemsModelCurrent.style === 'masterClassic');
+        itemsModelCurrent.isSticky = itemsModelCurrent._isSelected && this._isSupportStickyMarkedItem();
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
@@ -251,11 +260,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (this._dragEntity) {
             dragItems = this._dragEntity.getItems();
-            if (dragItems[0] === itemsModelCurrent.key) {
+            if (this._draggingItemData && this._draggingItemData.key === itemsModelCurrent.key) {
                 itemsModelCurrent.isDragging = true;
             }
             if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
-                itemsModelCurrent.isVisible = dragItems[0] === itemsModelCurrent.key ? !this._dragTargetPosition : false;
+                itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
             }
             if (this._draggingItemData && this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                 itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
@@ -263,6 +272,37 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
         }
         return itemsModelCurrent;
+    },
+
+    _isSupportStickyMarkedItem(): boolean {
+        return this._options.stickyMarkedItem !== false &&
+            (this._options.style === 'master' || this._options.style === 'masterClassic');
+    },
+
+    _isSupportStickyItem(): boolean {
+        return this._options.stickyHeader && (this._options.groupingKeyCallback || this._options.groupProperty) ||
+            this._isSupportStickyMarkedItem();
+    },
+
+    _isStickedItem(itemData: { isSticky?: boolean, isGroup?: boolean }): boolean {
+        return itemData.isSticky || itemData.isGroup;
+    },
+
+    _getCurIndexForReset(startIndex: number): number {
+        if (this._isSupportStickyItem() && startIndex > 0) {
+            // Если поддерживается sticky элементов, то индекс не просто нужно сбросить на 0, а взять индекс ближайшего
+            // к startIndex застиканного элемента, если таковой имеется. Если же его нет, то оставляем 0.
+            // https://online.sbis.ru/opendoc.html?guid=28edae33-62ba-46ae-882c-2bc282b4ee75
+            let idx = startIndex;
+            while (idx >= 0) {
+                const itemData = this.getItemDataByItem(this._display.at(idx));
+                if (this._isStickedItem(itemData)) {
+                    return idx;
+                }
+                idx--;
+            }
+        }
+        return startIndex;
     },
 
     isShouldBeDrawnItem: function(item) {
@@ -425,13 +465,26 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true, 'activeItemChanged');
     },
 
+    setDraggedItems(draggedItem: IFlatItemData, dragEntity): void {
+        this.setDragItemData(draggedItem);
+        this.setDragEntity(dragEntity);
+    },
+    setDragPosition(position: IDragPosition): void {
+        this.setDragTargetPosition(position);
+    },
+    resetDraggedItems(): void {
+        this._dragEntity = null;
+        this._draggingItemData = null;
+        this._dragTargetPosition = null;
+        this._nextModelVersion(true);
+    },
+
     setDragEntity: function(entity) {
         if (this._dragEntity !== entity) {
             this._dragEntity = entity;
             this._nextModelVersion(true);
         }
     },
-
     getDragEntity: function() {
         return this._dragEntity;
     },
@@ -439,50 +492,14 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setDragItemData: function(itemData) {
         this._draggingItemData = itemData;
     },
-
     getDragItemData: function() {
         return this._draggingItemData;
-    },
-
-    calculateDragTargetPosition: function(targetData) {
-        var
-            position,
-            prevIndex = -1;
-
-        //If you hover on a record that is being dragged, then the position should not change.
-        if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
-            return null;
-        }
-
-        if (this._dragTargetPosition) {
-            prevIndex = this._dragTargetPosition.index;
-        } else if (this._draggingItemData) {
-            prevIndex = this._draggingItemData.index;
-        }
-
-        if (prevIndex === -1) {
-            position = 'before';
-        } else if (targetData.index > prevIndex) {
-            position = 'after';
-        } else if (targetData.index < prevIndex) {
-            position = 'before';
-        } else if (targetData.index === prevIndex) {
-            position = this._dragTargetPosition.position === 'after' ? 'before' : 'after';
-        }
-
-        return {
-            index: targetData.index,
-            item: targetData.item,
-            data: targetData,
-            position: position
-        };
     },
 
     setDragTargetPosition: function(position) {
         this._dragTargetPosition = position;
         this._nextModelVersion(true);
     },
-
     getDragTargetPosition: function() {
         return this._dragTargetPosition;
     },
@@ -492,17 +509,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
            this._swipeItem = itemData;
            this._nextModelVersion(true);
         }
-    },
-
-    /**
-     * задаёт Для Item controls-ListView__item_rightSwipeAnimation
-     * для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f
-     * надо понять, надо это или нет.
-     * Если надо, то реализовать в новой модели
-     */
-    setRightSwipedItem: function(itemData) {
-        this._rightSwipedItem = itemData;
-        this._nextModelVersion();
     },
 
     setHoveredItem: function(item){
@@ -595,6 +601,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;
         this._editingItemData = itemData;
+        data.setEditing(itemData !== null);
         this._onCollectionChange(
            new EventObject('oncollectionchange', this._display),
            IObservable.ACTION_CHANGE,
@@ -714,13 +721,31 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
+    /**
+     * Возвращает состояние editing для модели.
+     * New Model compatibility
+     */
+    isEditing(): boolean {
+        return this._display ? this._display.isEditing() : false;
+    },
+
+    /**
+     * Устанавливает состояние editing для модели.
+     * New Model compatibility
+     */
+    setEditing(editing): void {
+        if (this._display) {
+            this._display.setEditing(editing);
+        }
+    },
+
     updateSelection: function(selectedKeys) {
         this._selectedKeys = selectedKeys || [];
         this._nextModelVersion(true);
     },
 
     setSelectedItems(items: Model[], selected: boolean|null): void {
-        // говнокод для совместимости с новой моделью
+        // Код для совместимости с новой моделью
         // вместо false ставим undefined,
         // чтобы не сломалось показывание только при наведении
         items.forEach((item) => {

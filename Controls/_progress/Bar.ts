@@ -20,7 +20,7 @@ export interface IBarOptions extends IControlOptions {
  *
  * @public
  *
- * @demo Controls-demo/Indicator/ProgressBar/ProgressBar
+ * @demo Controls-demo/progress/Bar/Index
  *
  */
 
@@ -32,7 +32,7 @@ export interface IBarOptions extends IControlOptions {
  *
  * @public
  *
- * @demo Controls-demo/Indicator/ProgressBar/ProgressBar
+ * @demo Controls-demo/progress/Bar/Index
  *
  */
 

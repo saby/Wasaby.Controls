@@ -19,28 +19,15 @@
 
 .controls-StackTemplate-shadow {
    position: absolute;
-   height:100%;
+   height: 100%;
    overflow: hidden;
 }
 
 .controls-StackTemplate-shadow_theme_@{themeName} {
-   //TODO: will be fixed https://online.sbis.ru/opendoc.html?guid=36dbe124-a479-4d61-a624-967e5705d72d
-   width: @box-shadow-container_width;
-   left: -@box-shadow-container_width;
-}
-
-.controls-StackTemplate-shadow__content {
-   position: absolute;
-   right: 0;
-   top: 0;
-   bottom: 0;
-   z-index: -1; // shadow can't overlap a content
-}
-
-.controls-StackTemplate-shadow__content_theme_@{themeName} {
-  width: @border-thickness_stack;
-  background: @border-color_stack;
-  box-shadow: @box-shadow_stack;
+   width: @shadow-blur_stack;
+   left: -(@shadow-blur_stack + @border-thickness_stack);
+   background: linear-gradient(to right, transparent, @shadow-color_stack);
+   border-right: @border-thickness_stack solid @border-color_stack;
 }
 
 .controls-StackTemplate__top-area_theme_@{themeName} {

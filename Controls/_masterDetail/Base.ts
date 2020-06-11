@@ -226,19 +226,29 @@ class Base extends Control<IMasterDetail> {
             options.masterMinWidth !== undefined) {
             let currentWidth = this._getOffsetValue(this._currentWidth || options.masterWidth);
             this._currentWidth = currentWidth + 'px';
-            this._maxOffset = this._getOffsetValue(options.masterMaxWidth) - currentWidth;
-            // Protect against window resize
-            if (this._maxOffset < 0) {
-                currentWidth += this._maxOffset;
-                this._maxOffset = 0;
+
+            // Если нет контейнера(до маунта) и значение задано в процентах, то мы не можем высчитать в px maxOffset
+            // Пересчитаем после маунта в px, чтобы работало движение
+            if (this. _getContainerWidth() || !this._isPercentValue(options.masterMaxWidth)) {
+                this._maxOffset = this._getOffsetValue(options.masterMaxWidth) - currentWidth;
+                // Protect against window resize
+                if (this._maxOffset < 0) {
+                    currentWidth += this._maxOffset;
+                    this._maxOffset = 0;
+                }
             }
-            this._minOffset = currentWidth - this._getOffsetValue(options.masterMinWidth);
-            // Protect against window resize
-            if (this._minOffset < 0) {
-                currentWidth -= this._minOffset;
-                this._minOffset = 0;
+
+            // Если нет контейнера(до маунта) и значение задано в процентах, то мы не можем высчитать в px minOffset
+            // Пересчитаем после маунта в px, чтобы работало движение
+            if (this. _getContainerWidth() || !this._isPercentValue(options.masterMinWidth)) {
+                this._minOffset = currentWidth - this._getOffsetValue(options.masterMinWidth);
+                // Protect against window resize
+                if (this._minOffset < 0) {
+                    currentWidth -= this._minOffset;
+                    this._minOffset = 0;
+                }
+                this._currentWidth = currentWidth + 'px';
             }
-            this._currentWidth = currentWidth + 'px';
         }
     }
 

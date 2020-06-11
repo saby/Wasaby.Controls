@@ -20,6 +20,8 @@ import * as scrollToElement from 'Controls/Utils/scrollToElement';
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
 import {LocalStorageNative} from 'Browser/Storage';
+import Observer from './IntersectionObserver/Observer';
+import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 
 /**
  * Контейнер с тонким скроллом.
@@ -395,14 +397,14 @@ let
          const {scrollTop, clientHeight, scrollHeight} = self._children.content;
 
          if (scrollTop <= 0) {
-            self._pagingState.stateUp = 'disabled';
-            self._pagingState.stateDown = 'normal';
+            self._pagingState.stateUp = false;
+            self._pagingState.stateDown = true;
          } else if (scrollTop + clientHeight >= scrollHeight) {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'disabled';
+            self._pagingState.stateUp = true;
+            self._pagingState.stateDown = false;
          } else {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'normal';
+            self._pagingState.stateUp = true;
+            self._pagingState.stateDown = true;
          }
       },
 
@@ -493,8 +495,6 @@ let
 
       _isMounted: false,
 
-       _enableScrollbar: true,
-
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
       },
@@ -503,10 +503,6 @@ let
          var
             self = this,
             def;
-
-         if (!constants.isServerSide) {
-             this._enableScrollbar = getEnableScrollbar();
-         }
 
          if ('shadowVisible' in options) {
             Logger.warn('Controls/scroll:Container: Опция shadowVisible устарела, используйте topShadowVisibility и bottomShadowVisibility.', self);
@@ -538,8 +534,8 @@ let
             // paging buttons are invisible. Control calculates height and shows buttons after mounting.
             this._pagingState = {
                visible: false,
-               stateUp: 'disabled',
-               stateDown: 'normal'
+               stateUp: false,
+               stateDown: true
             };
          } else {
             this._pagingState = {};
@@ -739,6 +735,11 @@ let
 
          Bus.globalChannel().unsubscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
          this._lockScrollPositionUntilKeyboardShown = null;
+
+         if(this._observer) {
+             this._observer.destroy();
+             this._observer = null;
+         }
       },
 
       _shadowVisible(position: POSITION) {
@@ -773,13 +774,24 @@ let
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {
+          event.stopImmediatePropagation();
          // _shadowVisibilityByInnerComponents не используется в шаблоне,
          // поэтому св-во не является реактивным и для обновления надо позвать _forceUpdate
          // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
          // Не запускаем перерисовку, если контрол скрыт
-         if (!this._isHidden()) {
-            this._shadowVisibilityByInnerComponents = shadowVisibleObject;
-            this._forceUpdate();
+         if (this._isHidden()) {
+             return;
+         }
+         const oldValue = this._shadowVisibilityByInnerComponents;
+         this._shadowVisibilityByInnerComponents = {
+             ...oldValue,
+             ...shadowVisibleObject
+         };
+         for (let key of Object.keys(shadowVisibleObject)) {
+             if (shadowVisibleObject[key] && shadowVisibleObject[key] !== oldValue[key]) {
+                 this._forceUpdate();
+                 return;
+             }
          }
       },
 
@@ -878,13 +890,6 @@ let
          }
       },
 
-       _wheelHandler(event: SyntheticEvent): void {
-          if (enableScrollbar) {
-              // В рамках оптимизации для устройств на которых есть колесико мыши отключаем показ скролбара.
-              setEnableScrollbar(false);
-          }
-       },
-
       _keydownHandler: function(ev) {
          // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
          if (!ev.nativeEvent.isTrusted) {
@@ -948,14 +953,14 @@ let
       _scrollMoveHandler: function(e, scrollData) {
          if (this._pagingState.visible) {
             if (scrollData.position === 'up') {
-               this._pagingState.stateUp = 'disabled';
-               this._pagingState.stateDown = 'normal';
+               this._pagingState.stateUp = false;
+               this._pagingState.stateDown = true;
             } else if (scrollData.position === 'down') {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'disabled';
+               this._pagingState.stateUp = true;
+               this._pagingState.stateDown = false;
             } else {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'normal';
+               this._pagingState.stateUp = true;
+               this._pagingState.stateDown = true;
             }
             this._forceUpdate();
          }
@@ -963,10 +968,6 @@ let
 
       _mouseenterHandler: function(event) {
          this._scrollbarTaken(true);
-         if (this._enableScrollbar !== getEnableScrollbar()) {
-             this._enableScrollbar = getEnableScrollbar();
-             this._forceUpdate();
-         }
       },
 
       _mouseleaveHandler: function(event) {
@@ -995,8 +996,7 @@ let
       },
 
       _scrollbarVisibility: function() {
-         return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._displayState.canScroll && this._showScrollbarOnHover
-         && this._enableScrollbar);
+         return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._displayState.canScroll && this._showScrollbarOnHover);
       },
 
        _horizontalScrollbarVisibility() {
@@ -1266,7 +1266,34 @@ let
          // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
          // Не запускаем перерисовку, если контрол скрыт
          return !!this._container.closest('.ws-hidden');
-      }
+      },
+
+       // Intersection observer
+
+       _initObserver(): void {
+           if (!this._observer) {
+               this._observer = new Observer(this._intersectHandler.bind(this));
+           }
+       },
+
+       _intersectionObserverRegisterHandler(event: SyntheticEvent, intersectionObserverObject: IIntersectionObserverObject): void {
+           this._initObserver();
+           this._observer.register(this._container, intersectionObserverObject);
+           if (!intersectionObserverObject.observerName) {
+               event.stopImmediatePropagation();
+           }
+       },
+
+       _intersectionObserverUnregisterHandler(event: SyntheticEvent, instId: string, observerName: string): void {
+           this._observer.unregister(instId, observerName);
+           if (!observerName) {
+               event.stopImmediatePropagation();
+           }
+       },
+
+       _intersectHandler(items): void {
+           this._notify('intersect', [items]);
+       }
    });
 
 Scroll.getDefaultOptions = function() {
@@ -1296,19 +1323,22 @@ Scroll.contextTypes = function() {
 
 Scroll._private = _private;
 
-function setEnableScrollbar(value: boolean): void {
-    enableScrollbar = value;
-    LocalStorageNative.setItem('enableScrollbar', JSON.stringify(value));
-}
-
-function getEnableScrollbar(): void {
-    if (enableScrollbar === null) {
-        enableScrollbar = JSON.parse(LocalStorageNative.getItem('enableScrollbar'));
-        enableScrollbar = enableScrollbar === null ? true : enableScrollbar;
-    }
-    return enableScrollbar;
-}
-
-let enableScrollbar = null;
+// Добавлялись по задаче https://online.sbis.ru/opendoc.html?guid=1c831383-36a7-474b-9832-35e08a424034
+// Функционал был эксперементальным. Закоментировали, т.к не исключаем, что это может понадбиться в будущем.
+// https://online.sbis.ru/opendoc.html?guid=251ce7fe-0b79-4c02-83db-1b82be76c693
+// function setEnableScrollbar(value: boolean): void {
+//     enableScrollbar = value;
+//     LocalStorageNative.setItem('enableScrollbar', JSON.stringify(value));
+// }
+//
+// function getEnableScrollbar(scrollbarVisibleHard: boolean = false): void {
+//     if (enableScrollbar === null) {
+//         enableScrollbar = JSON.parse(LocalStorageNative.getItem('enableScrollbar'));
+//         enableScrollbar = enableScrollbar === null ? true : enableScrollbar;
+//     }
+//     return scrollbarVisibleHard ? scrollbarVisibleHard : enableScrollbar;
+// }
+//
+// let enableScrollbar = null;
 
 export = Scroll;

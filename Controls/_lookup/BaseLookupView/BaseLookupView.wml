@@ -21,7 +21,7 @@
       suggestPopupOptions="{{_options.suggestPopupOptions}}"
       autoDropDown="{{_determineAutoDropDown()}}"
       layerName="Controls/suggestPopup:__PopupLayer"
-      value="{{_inputValue}}"
+      value="{{_getInputValue(_options)}}"
       validationStatus="{{_options.validationStatus}}"
       attr:class="controls-Lookup__suggest">
    <Controls._lookup.BaseLookupView.InputRender
@@ -44,7 +44,7 @@
          fontStyle="{{_options.fontStyle}}"
          textAlign="{{_options.textAlign}}"
          maxLength="{{_options.maxLength}}"
-         value="{{_inputValue}}"
+         value="{{_getInputValue(_options)}}"
          tagStyle="{{_options.tagStyle}}"
          placeholder="{{_getPlaceholder(_options)}}"
          on:valueChanged="_changeValueHandler()"

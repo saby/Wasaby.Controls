@@ -56,7 +56,7 @@
  * @class Controls/Utils/Toolbar
  * @public
  */
-import {factory, Abstract as ChainAbstract} from 'Types/chain';
+import {Abstract as ChainAbstract, factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 
@@ -85,4 +85,13 @@ export function getMenuItems<T extends Record>(items: RecordSet<T> | T[]): Chain
    return factory(items).filter((item) => {
       return item.get('showType') !== this.showType.TOOLBAR;
    });
+}
+export function needShowMenu(items: RecordSet): boolean {
+    let isNeedShowToolbar = false;
+    items.forEach( item => {
+       if (item.get('showType') !== this.showType.TOOLBAR) {
+          isNeedShowToolbar = true;
+       }
+    });
+    return isNeedShowToolbar;
 }

@@ -753,24 +753,15 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
 
          constructor(): void {
             this._dataLoadCallback = this._dataLoadCallback.bind(this);
+            this._dataLoadErrback = this._dataLoadErrback.bind(this);
             Container.superclass.constructor.apply(this, arguments);
          },
 
         resetPrefetch(): void {
             const filter = clone(this._filter);
-            const historyId = this._options.historyId;
-
-            return _private.getHistoryItems(this, historyId).then(() => {
-                const history = _private.getHistoryByItems(this, historyId, this._filterButtonItems);
-
-                if (history) {
-                    _private.deleteFromHistory(history.item, historyId);
-                }
-
-                this._isFilterChanged = true;
-                _private.setFilter(this, Prefetch.clearPrefetchSession(filter));
-                _private.notifyFilterChanged(this);
-            });
+            this._isFilterChanged = true;
+            _private.setFilter(this, Prefetch.clearPrefetchSession(filter));
+            _private.notifyFilterChanged(this);
         },
 
         _observeStore(): void {
@@ -899,7 +890,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
 
          _dataLoadCallback(items: RecordSet): void {
             if (this._options.historyId && this._isFilterChanged) {
-
+               _private.deleteCurrentFilterFromHistory(this);
                _private.addToHistory(
                    this,
                    this._filterButtonItems,
@@ -919,7 +910,24 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             if (this._options.dataLoadCallback) {
                this._options.dataLoadCallback(items);
             }
-         }
+         },
+
+        _dataLoadErrback(error: Error): void {
+            if (this._options.historyId && this._isFilterChanged) {
+                const currentAppliedHistoryItems =
+                    _private.getHistoryByItems(this, this._options.historyId, this._filterButtonItems);
+
+                if (currentAppliedHistoryItems) {
+                    Object.assign(
+                        this._filter,
+                        Prefetch.applyPrefetchFromHistory(this._filter, currentAppliedHistoryItems.data)
+                    );
+                }
+            }
+            if (this._options.dataLoadErrback) {
+                this._options.dataLoadErrback(error);
+            }
+        }
 
       });
 

@@ -425,7 +425,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
     describe('.getDisplayIndex()', () => {
         it('should return index in projection', () => {
             const next = strategy.count;
-            const expected = [next, next, next, 1, 2, next, next, 5, next, next, next, 9, 10];
+            const expected = [next, next, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             items.forEach((item, index) => {
                 assert.equal(strategy.getDisplayIndex(index), expected[index], 'at ' + index);
             });

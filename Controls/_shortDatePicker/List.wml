@@ -8,15 +8,19 @@
                 on:mouseenter="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"
                 on:mouseleave="_onYearMouseLeave()"
                 on:click="_onYearClick(yearHeaderTemplate.date.getFullYear())"
-                class="controls-PeriodLiteDialog__fullYear-listElement {{_options.chooseYears?  'controls-PeriodLiteDialog__fullYear-listElement-hovered'}}
-                      controls-PeriodLiteDialog__vLayoutItem-caption controls-PeriodLiteDialog__text-align-center
-                      ">
+                class="controls-PeriodLiteDialog__fullYear-listElement
+                       controls-PeriodLiteDialog__fullYear-listElement_theme-{{_options.theme}}
+                       {{_options.chooseYears?  'controls-PeriodLiteDialog__fullYear-listElement-hovered' +
+                       'controls-PeriodLiteDialog__fullYear-listElement-hovered_theme-' + _options.theme}}
+                       controls-PeriodLiteDialog__vLayoutItem-caption controls-PeriodLiteDialog__text-align-center
+                       controls-PeriodLiteDialog__vLayoutItem-caption_theme-{{_options.theme}}">
             {{ yearHeaderTemplate.date.getFullYear() }}
         </div>
     </ws:yearHeaderTemplate>
     <ws:yearTemplate>
         <Controls._shortDatePicker.bodyItem
-                attr:class="controls-PeriodLiteDialog_calendarBody"
+                attr:class="controls-PeriodLiteDialog_calendarBody
+                            controls-PeriodLiteDialog_calendarBody_theme-{{_options.theme}}"
                 attr:data-date="{{_dateToDataString(yearTemplate.date)}}"
                 scope="{{_options}}"
                 monthTemplate="{{monthTemplate}}"

@@ -11,8 +11,11 @@ define(
 
       describe('Controls.Container.Scroll', function() {
          var scroll, result;
-
+         let event;
          beforeEach(function() {
+            event = {
+               stopImmediatePropagation: sinon.fake()
+            }
             scroll = new scrollMod.Container({});
 
             var templateFn = scroll._template;
@@ -271,8 +274,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'disabled',
-                  stateDown: 'normal'
+                  stateUp: false,
+                  stateDown: true
                });
             });
             it('Content at the middle', function() {
@@ -285,8 +288,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'normal',
-                  stateDown: 'normal'
+                  stateUp: true,
+                  stateDown: true
                });
             });
             it('Content at the bottom', function() {
@@ -299,8 +302,8 @@ define(
 
                scroll._resizeHandler();
                assert.deepEqual(scroll._pagingState, {
-                  stateUp: 'normal',
-                  stateDown: 'disabled'
+                  stateUp: true,
+                  stateDown: false
                });
             });
          });
@@ -530,22 +533,22 @@ define(
                scroll._scrollMoveHandler({}, {
                   position: 'up'
                });
-               assert.equal('disabled', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(false, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateDown, 'Wrong paging state');
             });
             it('down', function() {
                scroll._scrollMoveHandler({}, {
                   position: 'down'
                });
-               assert.equal('normal', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('disabled', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(false, scroll._pagingState.stateDown, 'Wrong paging state');
             });
             it('middle', function() {
                scroll._scrollMoveHandler({}, {
                   position: 'middle'
                });
-               assert.equal('normal', scroll._pagingState.stateUp, 'Wrong paging state');
-               assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateUp, 'Wrong paging state');
+               assert.equal(true, scroll._pagingState.stateDown, 'Wrong paging state');
             });
 
          });
@@ -864,18 +867,35 @@ define(
             });
 
             describe('_updateShadowMode', function() {
+               const mode = {
+                  top: 'visible',
+                  bottom: 'visible',
+               };
                it('Should update shadow mode if the container is visible.', function() {
-                  const mode = 'newMode';
                   sinon.stub(scroll, '_isHidden').returns(false);
-                  scroll._updateShadowMode({}, mode);
-                  assert.strictEqual(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.stub(scroll, '_forceUpdate');
+                  scroll._updateShadowMode(event, mode);
+                  assert.include(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.assert.called(event.stopImmediatePropagation);
+                  sinon.assert.called(scroll._forceUpdate);
                   sinon.restore();
                });
                it('Should\'t update shadow mode if the container is hidden.', function() {
-                  const mode = 'newMode';
                   sinon.stub(scroll, '_isHidden').returns(true);
-                  scroll._updateShadowMode({}, mode);
-                  assert.notEqual(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.stub(scroll, '_forceUpdate');
+                  scroll._updateShadowMode(event, mode);
+                  assert.notInclude(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.assert.called(event.stopImmediatePropagation);
+                  sinon.assert.notCalled(scroll._forceUpdate);
+                  sinon.restore();
+               });
+               it('Should\'t force update if value does not changed.', function() {
+                  scroll._shadowVisibilityByInnerComponents = mode
+                  sinon.stub(scroll, '_isHidden').returns(true);
+                  sinon.stub(scroll, '_forceUpdate');
+                  scroll._updateShadowMode(event, mode);
+                  sinon.assert.called(event.stopImmediatePropagation);
+                  sinon.assert.notCalled(scroll._forceUpdate);
                   sinon.restore();
                });
             });

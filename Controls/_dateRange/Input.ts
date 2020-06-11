@@ -74,7 +74,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         this._rangeModel.update(options);
         proxyModelEvents(
             this, this._rangeModel,
-            ['startValueChanged', 'endValueChanged', 'rangeChanged', 'valueChanged']
+            ['startValueChanged', 'endValueChanged', 'rangeChanged']
         );
         this._rangeModel.subscribe('rangeChanged', this._updateValidators.bind(this));
         this._updateValidators(options);
@@ -101,7 +101,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
             ...getOptions.getCommonOptions(this),
             target: this._container,
             template: 'Controls/datePopup',
-            className: 'controls-PeriodDialog__picker',
+            className: 'controls-PeriodDialog__picker_theme-' + this._options.theme,
             templateOptions: {
                 ...getOptions.getDateRangeTemplateOptions(this),
                 selectionType: this._options.selectionType,

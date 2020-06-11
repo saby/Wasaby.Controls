@@ -4,8 +4,10 @@
    <div class="controls-Slider__wrapper{{_options.borderVisible ? ' controls-Slider__withBorder_theme-'+_options.theme}}"
         on:mousedown="_mouseDownAndTouchStartHandler()"
         on:touchstart="_mouseDownAndTouchStartHandler()"
-        on:mousemove="_onMouseMove()"
-        on:mouseleave="_onMouseLeave()"
+        on:mousemove="_mouseMoveAndTouchMoveHandler()"
+        on:touchmove="_mouseMoveAndTouchMoveHandler()"
+        on:mouseleave="_mouseLeaveAndTouchEndHandler()"
+        on:touchend="_mouseLeaveAndTouchEndHandler()"
         on:mouseup="_onMouseUp()">
       <div class="controls-Slider__mainSlider{{_options.size=='m' ? '_big' : '_small'}}_theme-{{_options.theme}}" name="area">
          <ws:for data="key, point in _pointData">

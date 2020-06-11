@@ -60,23 +60,30 @@ define(
          let menu = new dropdown.Button(config);
 
          it('check item click', () => {
-            menu._notify = (e) => {
+            let testEvent;
+            menu._notify = (e, d) => {
                assert.isTrue(e === 'menuItemActivate' || e === 'onMenuItemActivate');
+               testEvent = d[1];
                if (e === 'onMenuItemActivate') {
                   return false;
                }
             };
+            let nativeEvent = {
+               keyCode: 28
+            };
             let eventResult = menu._onItemClickHandler('itemClick', [{
                id: '1',
                title: 'Запись 1'
-            }]);
+            }], nativeEvent);
 
             assert.isFalse(eventResult);
+            assert.deepEqual(testEvent, nativeEvent);
          });
 
          it('_beforeMount', () => {
             menu._beforeMount(config);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-medium_popup');
+            assert.isTrue(menu._hasItems);
          });
 
          it('_beforeUpdate', function() {

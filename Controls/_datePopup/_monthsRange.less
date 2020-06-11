@@ -4,9 +4,12 @@
 }
 
 .controls-PeriodDialog-MonthsRange__header {
+   text-align: center;
+}
+
+.controls-PeriodDialog-MonthsRange__header_theme-@{themeName} {
    height: @yearlist_heading_height_datePicker;
    line-height: @yearlist_heading_height_datePicker;
-   text-align: center;
    color: @yearlist_heading_text-color_datePicker;
    font-size: @yearlist_heading_font-size_datePicker;
    font-weight: @yearlist_heading_font-weight_datePicker;
@@ -19,6 +22,10 @@
 }
 
 .controls-PeriodDialog-MonthsRange__halfYears {
+   flex-grow: 1;
+}
+
+.controls-PeriodDialog-MonthsRange__halfYears_theme-@{themeName} {
    background-color: @yearlist_block-separator_color_datePicker;
    border-top: (@yearlist_item_border-thickness_datePicker +  @yearlist_item_border-thickness_datePicker) solid @yearlist_block-separator_color_datePicker;
    flex-grow: 1;
@@ -37,14 +44,19 @@
 
 .controls-PeriodDialog-MonthsRange__halfYearsPanel-button,
 .controls-PeriodDialog-MonthsRange__quarterButton {
-   width: @yearnav_arrow_width_datePicker - (@yearlist_block-separator_thickness_datePicker - @yearlist_item_border-thickness_datePicker);
    flex-grow: 1;
    display: flex;
    align-items: center;
    justify-content: center;
+}
+
+.controls-PeriodDialog-MonthsRange__halfYearsPanel-button_theme-@{themeName},
+.controls-PeriodDialog-MonthsRange__quarterButton_theme-@{themeName} {
+   width: @yearnav_arrow_width_datePicker - (@yearlist_block-separator_thickness_datePicker - @yearlist_item_border-thickness_datePicker);
    border-bottom: @yearlist_item_border-thickness_datePicker solid @yearlist_block-separator_color_datePicker;
 }
-.controls-PeriodDialog-MonthsRange__quarterButton {
+
+.controls-PeriodDialog-MonthsRange__quarterButton_theme-@{themeName} {
    height: @yearlist_month_height_datePicker - @yearlist_item_border-thickness_datePicker * 2;
    width: @yearlist_quarters_width_datePicker;
    color: @yearlist_quarters_text-color_datePicker;
@@ -66,7 +78,7 @@
    }
 }
 
-.controls-PeriodDialog-MonthsRange__halfYearsPanel-button {
+.controls-PeriodDialog-MonthsRange__halfYearsPanel-button_theme-@{themeName} {
    background-color: @yearlist_halfyears_backround-color_datePicker;
    width: @yearlist_halfyears_width_datePicker;
    color: @yearlist_halfyears_text-color_datePicker;
@@ -74,47 +86,47 @@
    border-left: (@yearlist_block-separator_thickness_datePicker - @yearlist_item_border-thickness_datePicker) solid @yearlist_block-separator_color_datePicker;
 }
 
-.controls-PeriodDialog-MonthsRange__halfYear-hovered,
+.controls-PeriodDialog-MonthsRange__halfYear-hovered_theme-@{themeName},
 .controls-PeriodDialog-MonthsRange__quarter-hovered {
    background-color: @yearlist_item_hover_background-color_datePicker;
 }
 
 .controls-PeriodDialog-MonthsRange__item,
-.controls-PeriodDialog-MonthsRange__item-selected{
+.controls-PeriodDialog-MonthsRange__item-selected {
    .box-sizing(border-box);
    .flex-shrink(0);
    z-index: 2;
-   padding: @yearlist_month_padding_datePicker;
    display: flex;
    flex-direction: column;
    justify-content: space-between;
 }
 
-.controls-PeriodDialog-MonthsRange__item {
+.controls-PeriodDialog-MonthsRange__item_theme-@{themeName},
+.controls-PeriodDialog-MonthsRange__item-selected_theme-@{themeName} {
+   padding: @yearlist_month_padding_datePicker;
+   width: @yearlist_month_width_datePicker - 2 * @yearlist_item_border-thickness_datePicker;
+   margin-bottom: @yearlist_item_border-thickness_datePicker;
+   margin-right: @yearlist_item_border-thickness_datePicker;
+   height: @yearlist_month_height_datePicker - 2 * @yearlist_item_border-thickness_datePicker;
+}
+
+.controls-PeriodDialog-MonthsRange__item_theme-@{themeName} {
    background-color: @background-color_datePicker;
-   margin-right: @yearlist_item_border-thickness_datePicker;
-   margin-bottom: @yearlist_item_border-thickness_datePicker;
-   width: @yearlist_month_width_datePicker - 2 * @yearlist_item_border-thickness_datePicker;
-   height: @yearlist_month_height_datePicker - 2 * @yearlist_item_border-thickness_datePicker;
 }
 
-.controls-PeriodDialog-MonthsRange__item-selected {
-   width: @yearlist_month_width_datePicker - 2 * @yearlist_item_border-thickness_datePicker;
-   margin-right: @yearlist_item_border-thickness_datePicker;
-   height: @yearlist_month_height_datePicker - 2 * @yearlist_item_border-thickness_datePicker;
-   margin-bottom: @yearlist_item_border-thickness_datePicker;
-}
-
-.controls-PeriodDialog-MonthsRange__hovered {
+.controls-PeriodDialog-MonthsRange__hovered { //TODO
    outline: @yearlist_item_hover_border-color_datePicker solid @yearlist_item_border-thickness_datePicker;
    background-color: @yearlist_item_hover_background-color_datePicker;
 }
 
 .controls-PeriodDialog-MonthsRange__month_title {
    text-align: center;
+   font-weight: normal;
+}
+
+.controls-PeriodDialog-MonthsRange__month_title_theme-@{themeName} {
    color: @yearlist_month_heading_text-color_datePicker;
    font-size: @yearlist_month_heading_font-size_datePicker;
-   font-weight: normal;
    height: @yearlist_monthview_heading_height_datePicker;
 }
 
@@ -125,15 +137,12 @@
       background-color: transparent;
    }
 }
+
 .controls-PeriodDialog-MonthsRange__halfYear-hovered {
    &:before {
       content: '';
       position: absolute;
-      top: -@yearlist_item_border-thickness_datePicker;
       bottom: 0;
-      left: @yearnav_arrow_width_datePicker - @yearlist_item_border-thickness_datePicker;
-      right: -@yearlist_item_border-thickness_datePicker;
-      border: solid @yearlist_item_border-thickness_datePicker @yearlist_item_hover_border-color_datePicker;
       z-index: 3;
    }
    .controls-PeriodDialog-MonthsRange__halfYearsPanel-button {
@@ -145,15 +154,22 @@
       position: relative;
    }
 }
+
+.controls-PeriodDialog-MonthsRange__halfYear-hovered_theme-@{themeName} {
+   &:before {
+      top: -@yearlist_item_border-thickness_datePicker;
+      left: @yearnav_arrow_width_datePicker - @yearlist_item_border-thickness_datePicker;
+      right: -@yearlist_item_border-thickness_datePicker;
+      border: solid @yearlist_item_border-thickness_datePicker @yearlist_item_hover_border-color_datePicker;
+   }
+}
+
 .controls-PeriodDialog-MonthsRange__quarter-hovered {
    &:before {
       content: '';
       position: absolute;
-      top: -@yearlist_item_border-thickness_datePicker;
       bottom: 0;
       right: 0;
-      left: -@yearlist_item_border-thickness_datePicker;
-      border: solid @yearlist_item_border-thickness_datePicker @yearlist_item_hover_border-color_datePicker;
       z-index: 3;
    }
    .controls-PeriodDialog-MonthsRange__quarterButton {
@@ -166,7 +182,16 @@
    }
 }
 
+.controls-PeriodDialog-MonthsRange__quarter-hovered_theme-@{themeName} {
+   &:before {
+      top: -@yearlist_item_border-thickness_datePicker;
+      left: -@yearlist_item_border-thickness_datePicker;
+      border: solid @yearlist_item_border-thickness_datePicker @yearlist_item_hover_border-color_datePicker;
+   }
+}
+
 // нестандартная тема для MonthView
+// TODO: https://online.sbis.ru/opendoc.html?guid=a85cb94c-1e97-40d3-90f2-a3e21968b3d0
 .controls-PeriodDialog-MonthsRange__month {
    cursor: pointer;
    border: 1px dotted transparent;
@@ -179,9 +204,52 @@
    }
 
    .controls-MonthViewVDOM__table {
-     height: @yearlist_monthview_height_datePicker;
      justify-content: flex-end;
-     padding-bottom: @yearlist_monthview_bottom-offset_datePicker;
+   }
+
+   .controls-MonthViewVDOM__tableRow {
+      flex-grow: 0;
+      justify-content: center;
+   }
+
+   .controls-MonthViewVDOM__item-today-background {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+   }
+
+   .controls-MonthViewVDOM__item {
+      flex-shrink: 0;
+      flex-grow: 0;
+      margin: 0;
+      &:active {
+         outline: none;
+      }
+   }
+
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected_theme-@{themeName},
+   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected-readOnly_theme-@{themeName} {
+      background-color: transparent;
+   }
+
+   .controls-MonthViewVDOM__item-selectedStart,
+   .controls-MonthViewVDOM__item-selectedEnd,
+   .controls-MonthViewVDOM__item-selectedInner {
+      outline: none;
+      font-weight: normal;
+   }
+
+   .controls-MonthViewVDOM__item-selectedStart:before {
+      left: 0;
+   }
+}
+
+// нестандартная тема для MonthView
+.controls-PeriodDialog-MonthsRange__month {
+   .controls-MonthViewVDOM__table_theme-@{themeName} {
+      height: @yearlist_monthview_height_datePicker;
+      padding-bottom: @yearlist_monthview_bottom-offset_datePicker;
    }
 
    .controls-MonthViewVDOM__item-title {
@@ -189,48 +257,26 @@
       width: @yearlist_monthview_item_width_datePicker;
    }
 
-   .controls-MonthViewVDOM__tableRow {
+   .controls-MonthViewVDOM__tableRow_theme-@{themeName} {
       flex-basis: @yearlist_monthview_item_height_datePicker;
-      flex-grow: 0;
-      justify-content: center;
    }
 
    .controls-MonthViewVDOM__item-today-background_theme-@{themeName} {
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
       border-radius: @yearlist_monthview_today_border-radius_datePicker;
    }
 
    .controls-MonthViewVDOM__item {
       flex-basis: @yearlist_monthview_item_height_datePicker;
-      flex-shrink: 0;
-      flex-grow: 0;
       font-size: @yearlist_monthview_item_font-size_datePicker;
-      margin: 0;
    }
 
    .controls-MonthViewVDOM__item-selectedStartEnd_theme-@{themeName} {
       outline: @yearlist_monthview_selection-border_single_color_datePicker solid @yearlist_monthview_selection-border_thickness_datePicker;
    }
 
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected_theme-@{themeName},
-   .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected-readOnly_theme-@{themeName} {
-      background-color: transparent;
-   }
-   .controls-MonthViewVDOM__item-selectedStart_theme-@{themeName},
-   .controls-MonthViewVDOM__item-selectedEnd_theme-@{themeName},
-   .controls-MonthViewVDOM__item-selectedInner_theme-@{themeName} {
-      outline: none;
-      font-weight: normal;
-   }
    .controls-MonthViewVDOM__item-selectedStart_theme-@{themeName}:before,
    .controls-MonthViewVDOM__item-selectedEnd_theme-@{themeName}:after {
       width: @yearlist_monthview_selection-border_thickness_datePicker;
-   }
-   .controls-MonthViewVDOM__item-selectedStart_theme-@{themeName}:before {
-      left: 0;
    }
 }
 
@@ -249,32 +295,20 @@
 
 .ws-is-hover {
    .controls-PeriodDialog-MonthsRange__month {
-      .controls-MonthViewVDOM__item {
-         &:hover {
-            outline: none;
-         }
+      .controls-MonthViewVDOM__item:hover {
+         outline: none;
       }
+
       .controls-MonthViewVDOM__backgroundColor-currentMonthDay-unselected_theme-@{themeName}:hover {
          background: transparent;
       }
    }
-   .controls-PeriodDialog-MonthsRange__month_clickable {
-      &:hover {
-         border-color: @yearlist_item_hover_border-color_datePicker;
-      }
+
+   .controls-PeriodDialog-MonthsRange__month_clickable_theme-@{themeName}:hover {
+      border-color: @yearlist_item_hover_border-color_datePicker;
    }
 }
 
-.controls-PeriodDialog-MonthsRange__month {
-   .controls-MonthViewVDOM__item {
-      &:active {
-         outline: none;
-      }
-   }
-}
-
-.controls-PeriodDialog-MonthsRange__month_clickable {
-   &:active {
-      border-color:  @yearlist_item_hover_border-color_datePicker;
-   }
+.controls-PeriodDialog-MonthsRange__month_clickable_theme-@{themeName}:active {
+   border-color: @yearlist_item_hover_border-color_datePicker;
 }

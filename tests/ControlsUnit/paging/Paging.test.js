@@ -10,15 +10,13 @@ define([
          var pg = new pagingLib.Paging();
 
          pg._initArrowDefaultStates({});
-         assert.equal('disabled', pg._stateBegin, 'Wrong default state');
-         assert.equal('disabled', pg._stateEnd, 'Wrong default state');
-         assert.equal('disabled', pg._stateNext, 'Wrong default state');
-         assert.equal('disabled', pg._statePrev, 'Wrong default state');
+         assert.equal('disabled', pg._stateBackward, 'Wrong default state');
+         assert.equal('disabled', pg._stateForward, 'Wrong default state');
 
 
-         pg._initArrowDefaultStates({ stateEnd: 'normal', stateNext: 'normal' });
-         assert.equal('normal', pg._stateEnd, 'Wrong default state');
-         assert.equal('normal', pg._stateNext, 'Wrong default state');
+         pg._initArrowDefaultStates({ backwardEnabled: true, forwardEnabled: true });
+         assert.equal('normal', pg._stateBackward, 'Wrong default state');
+         assert.equal('normal', pg._stateForward, 'Wrong default state');
       });
 
       it('initArrowStateBySelectedPage', function() {
@@ -30,30 +28,24 @@ define([
          var pg = new pagingLib.Paging(cfg);
 
          pg._initArrowStateBySelectedPage(cfg);
-         assert.equal('disabled', pg._stateBegin, 'Wrong arrow state in begin position');
-         assert.equal('normal', pg._stateEnd, 'Wrong arrow state in begin position');
-         assert.equal('normal', pg._stateNext, 'Wrong arrow state in begin position');
-         assert.equal('disabled', pg._statePrev, 'Wrong arrow state in begin position');
+         assert.equal('disabled', pg._stateBackward, 'Wrong arrow state in begin position');
+         assert.equal('normal', pg._stateForward, 'Wrong arrow state in begin position');
 
          cfg = {
             pagesCount: 5,
             selectedPage: 3
          };
          pg._initArrowStateBySelectedPage(cfg);
-         assert.equal('normal', pg._stateBegin, 'Wrong arrow state in middle position');
-         assert.equal('normal', pg._stateEnd, 'Wrong arrow state in middle position');
-         assert.equal('normal', pg._stateNext, 'Wrong arrow state in middle position');
-         assert.equal('normal', pg._statePrev, 'Wrong arrow state in middle position');
+         assert.equal('normal', pg._stateBackward, 'Wrong arrow state in middle position');
+         assert.equal('normal', pg._stateForward, 'Wrong arrow state in middle position');
 
          cfg = {
             pagesCount: 5,
             selectedPage: 5
          };
          pg._initArrowStateBySelectedPage(cfg);
-         assert.equal('normal', pg._stateBegin, 'Wrong arrow state in end position');
-         assert.equal('disabled', pg._stateEnd, 'Wrong arrow state in end position');
-         assert.equal('disabled', pg._stateNext, 'Wrong arrow state in end position');
-         assert.equal('normal', pg._statePrev, 'Wrong arrow state in end position');
+         assert.equal('normal', pg._stateBackward, 'Wrong arrow state in end position');
+         assert.equal('disabled', pg._stateForward, 'Wrong arrow state in end position');
       });
 
       it('changePage', function() {
@@ -88,33 +80,25 @@ define([
          pg.saveOptions(cfg1);
          pg._beforeMount(cfg1);
 
-         assert.equal('normal', pg._stateBegin, 'Wrong arrow state in _beforeMount');
-         assert.equal('normal', pg._stateEnd, 'Wrong arrow state in _beforeMount');
-         assert.equal('normal', pg._stateNext, 'Wrong arrow state in _beforeMount');
-         assert.equal('normal', pg._statePrev, 'Wrong arrow state in _beforeMount');
+         assert.equal('normal', pg._stateBackward, 'Wrong arrow state in _beforeMount');
+         assert.equal('normal', pg._stateForward, 'Wrong arrow state in _beforeMount');
 
          cfg1.selectedPage = 5;
          pg._beforeUpdate(cfg1);
-         assert.equal('normal', pg._stateBegin, 'Wrong arrow state in _beforeUpdate');
-         assert.equal('disabled', pg._stateEnd, 'Wrong arrow state in _beforeUpdate');
-         assert.equal('disabled', pg._stateNext, 'Wrong arrow state in _beforeUpdate');
-         assert.equal('normal', pg._statePrev, 'Wrong arrow state in _beforeUpdate');
+         assert.equal('normal', pg._stateBackward, 'Wrong arrow state in _beforeUpdate');
+         assert.equal('disabled', pg._stateForward, 'Wrong arrow state in _beforeUpdate');
 
          pg = new pagingLib.Paging(cfg1);
          pg.saveOptions(cfg1);
          pg._beforeMount(cfg2);
-         assert.equal('disabled', pg._stateBegin, 'Wrong default state');
-         assert.equal('disabled', pg._stateEnd, 'Wrong default state');
-         assert.equal('disabled', pg._stateNext, 'Wrong default state');
-         assert.equal('disabled', pg._statePrev, 'Wrong default state');
+         assert.equal('disabled', pg._stateBackward, 'Wrong default state');
+         assert.equal('disabled', pg._stateForward, 'Wrong default state');
 
          pg = new pagingLib.Paging(cfg1);
          pg.saveOptions(cfg1);
          pg._beforeUpdate(cfg2);
-         assert.equal('disabled', pg._stateBegin, 'Wrong default state');
-         assert.equal('disabled', pg._stateEnd, 'Wrong default state');
-         assert.equal('disabled', pg._stateNext, 'Wrong default state');
-         assert.equal('disabled', pg._statePrev, 'Wrong default state');
+         assert.equal('disabled', pg._stateBackward, 'Wrong default state');
+         assert.equal('disabled', pg._stateForward, 'Wrong default state');
       });
 
       it('click', function() {
@@ -140,13 +124,13 @@ define([
 
          // проверяем клики на стрелки
          result = null;
-         pg._arrowClick({}, 'Begin');
+         pg._arrowClick({}, 'Begin', 'Backward');
          assert.equal(1, result, 'Wrong page after change page');
-         pg._arrowClick({}, 'End');
+         pg._arrowClick({}, 'End', 'Forward');
          assert.equal(5, result, 'Wrong page after change page');
-         pg._arrowClick({}, 'Prev');
+         pg._arrowClick({}, 'Prev', 'Backward');
          assert.equal(2, result, 'Wrong page after change page');
-         pg._arrowClick({}, 'Next');
+         pg._arrowClick({}, 'Next', 'Forward');
          assert.equal(4, result, 'Wrong page after change page');
 
          // проверяем клики на задизабленные стрелки
@@ -159,7 +143,7 @@ define([
          pg.saveOptions(cfg1);
 
          result = 0;
-         pg._arrowClick({}, 'Begin');
+         pg._arrowClick({}, 'Begin', 'Backward');
          assert.equal(0, result, 'Arrow was clicked in disabled state');
       });
    });

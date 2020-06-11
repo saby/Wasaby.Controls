@@ -50,13 +50,11 @@ define([
 
                model.subscribe(`${field}Changed`, callback);
                model.subscribe('rangeChanged', rangeChangedCallback);
-               model.subscribe('valueChanged', valueChangedCallback);
                model[field] = value;
 
                assert.strictEqual(model[field], value);
                assert(callback.calledOnce, `${field}Changed callback called ${callback.callCount} times`);
                assert(rangeChangedCallback.calledOnce, `rangeChangedCallback callback called ${callback.callCount} times`);
-               assert(valueChangedCallback.calledOnce, `valueChangedCallback callback called ${callback.callCount} times`);
             });
 
             it(`should not update ${field} if value did not changed`, function() {
@@ -164,82 +162,6 @@ define([
                sandbox.restore();
                done();
             }, 10);
-         });
-      });
-
-      describe('.slideStartDate', function () {
-         it('should return correct start value', function () {
-            const model = new dateRange.RelationController(),
-               options = {
-                  bindType: "normal",
-                  dateConstructor: typesEntity.DateTime,
-               };
-
-            model._beforeMount(options);
-
-            [{
-               expectedResult: new Date(2018, 2, 1),
-               lastDate: new Date(2018, 1, 1),
-               date: new Date(2018, 3, 1),
-               delta: -1,
-               bindType: 'month'
-            }, {
-               expectedResult: new Date(2018, 5, 16),
-               lastDate: new Date(2018, 4, 1),
-               date: new Date(2019, 5, 16),
-               delta: -5,
-               bindType: 'days'
-            }, {
-               expectedResult: new Date(2019, 5, 11),
-               lastDate: new Date(2019, 4, 1),
-               date: new Date(2019, 5, 16),
-               delta: -5,
-               bindType: 'days'
-            }
-            ].forEach(function(test) {
-               let result = model._model._slideStartDate(test.lastDate, test.date, test.delta, test.bindType);
-               assert.equal(result.getFullYear(), test.expectedResult.getFullYear());
-               assert.equal(result.getMonth(), test.expectedResult.getMonth());
-               assert.equal(result.getDate(), test.expectedResult.getDate());
-            });
-         });
-      });
-
-      describe('.slideEndDate', function () {
-         it('should return correct end value', function () {
-            const model = new dateRange.RelationController(),
-               options = {
-                  bindType: "normal",
-                  dateConstructor: typesEntity.DateTime,
-               };
-
-            model._beforeMount(options);
-
-            [{
-               expectedResult: new Date(2018, 3, 0),
-               lastDate: new Date(2018, 1, 1),
-               date: new Date(2018, 3, 1),
-               delta: -1,
-               bindType: 'month'
-            }, {
-               expectedResult: new Date(2018, 5, 20),
-               lastDate: new Date(2018, 4, 1),
-               date: new Date(2019, 5, 16),
-               periodLength: 5,
-               bindType: 'days'
-            }, {
-               expectedResult: new Date(2019, 5, 15),
-               lastDate: new Date(2019, 4, 1),
-               date: new Date(2019, 5, 16),
-               delta: -1,
-               bindType: 'days'
-            }
-            ].forEach(function(test) {
-               let result = model._model._slideEndDate(test.lastDate, test.date, test.delta, test.bindType, test.periodLength);
-               assert.equal(result.getFullYear(), test.expectedResult.getFullYear());
-               assert.equal(result.getMonth(), test.expectedResult.getMonth());
-               assert.equal(result.getDate(), test.expectedResult.getDate());
-            });
          });
       });
    });

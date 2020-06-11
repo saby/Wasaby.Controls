@@ -3,7 +3,7 @@
          threshold="{{[0, 0.01, 0.99, 1]}}"
          observerName="datePopup"
          on:intersect="_currentDayIntersectHandler()">
-      <div class="controls-PeriodDialog">
+      <div class="controls-PeriodDialog controls-PeriodDialog_theme-{{_options.theme}}">
       <ws:partial
          template="{{_headerTmpl}}"
          _options="{{_options}}"
@@ -22,7 +22,8 @@
          _endValueValidators="{{_endValueValidators}}"
       />
 
-         <div if="{{ _state === _STATES.year }}" class="controls-PeriodDialog__months controls-PeriodDialog__body">
+         <div if="{{ _state === _STATES.year }}" class="controls-PeriodDialog__months
+               controls-PeriodDialog__body controls-PeriodDialog__body_theme-{{_options.theme}}">
             <Controls.dateRange:DateRangeSelectionController
                   bind:startValue="_yearRangeModel.startValue"
                   bind:endValue="_yearRangeModel.endValue"
@@ -83,7 +84,8 @@
             on:selectionEnded="_dateRangeSelectionEnded()">
 
             <Controls._datePopup.DateRange
-               attr:class="controls-DateRangeBigChoose__months-month-wrapper controls-PeriodDialog__body"
+               attr:class="controls-DateRangeBigChoose__months-month-wrapper
+                           controls-PeriodDialog__body controls-PeriodDialog__body_theme-{{_options.theme}}"
                on:fixedPeriodClick="_dateRangeFixedPeriodClick()"
                bind:position="_displayedDate"
                selectionType="{{_options.selectionType}}"

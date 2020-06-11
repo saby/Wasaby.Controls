@@ -1,29 +1,29 @@
 <div class="controls-PeriodDialog-DateRange">
-   <div class="controls-PeriodDialog-DateRange__header">
-      <div class="controls-PeriodDialog-DateRange__year">{{_options.position.getFullYear()}}</div>
-      <div class="controls-PeriodDialog-DateRange-header-weekdays">
+   <div class="controls-PeriodDialog-DateRange__header controls-PeriodDialog-DateRange__header_theme-{{_options.theme}}">
+      <div class="controls-PeriodDialog-DateRange__year controls-PeriodDialog-DateRange__year_theme-{{_options.theme}}">{{_options.position.getFullYear()}}</div>
+      <div class="controls-PeriodDialog-DateRange-header-weekdays controls-PeriodDialog-DateRange-header-weekdays_theme-{{_options.theme}}">
          <div for="weekday in _weekdaysCaptions"
-              class="{{ _prepareCssClass(
-                           'controls-PeriodDialog-DateRange-header-weekdays', null,
+              class="{{ _prepareCssClass('controls-PeriodDialog-DateRange-header-weekdays', null,
                            [[weekday.weekend, 'weekend', 'workday']])
-                     }}">
+                     }}_theme-{{_options.theme}}">
             {{ weekday.caption }}
          </div>
       </div>
    </div>
    <div class="controls-PeriodDialog-DateRange__body">
       <ws:if data="{{!_isStickySupport}}">
-         <div class="controls-PeriodDialog-DateRangeItem__months"
+         <div class="controls-PeriodDialog-DateRangeItem__months controls-PeriodDialog-DateRangeItem__months_theme-{{_options.theme}}"
                on:wheel="_wheelHandler()"
                on:swipe="_swipeHandler()">
             <ws:for data="month in 12">
-               <div class="controls-PeriodDialog-DateRangeItem__months-btn"
+               <div class="controls-PeriodDialog-DateRangeItem__months-btn controls-PeriodDialog-DateRangeItem__months-btn_theme-{{_options.theme}}"
                     on:click="_scrollToMonth(_options.position.getFullYear(), month)"
                     >
                   {{ _formatMonth(month) }}
                </div>
             </ws:for>
-            <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
+            <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn
+                        controls-PeriodDialog-DateRangeItem__months-nextyearBtn_theme-{{_options.theme}}"
                  on:click="_scrollToMonth(_options.position.getFullYear() + 1, 0)"
                   >
                {{ _options.position.getFullYear() + 1 }}
@@ -43,7 +43,8 @@
          on:positionChanged="_onPositionChanged()"
       >
          <ws:yearHeaderTemplate>
-            <div class="{{_getSeparatorCssClass()}}"></div>
+            <div class="controls-PeriodDialog-DateRangeItem__separator {{_getSeparatorCssClass()}}_theme-{{_options.theme}}
+                        controls-PeriodDialog-DateRangeItem__separator_theme-{{_options.theme}}"></div>
          </ws:yearHeaderTemplate>
          <ws:yearTemplate>
             <ws:partial template="Controls/calendar:MonthListYearTemplate">

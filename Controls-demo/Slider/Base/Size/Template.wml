@@ -1,0 +1,20 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">size s</div>
+        <Controls.slider:Base
+                maxValue="{{100}}"
+                minValue="{{0}}"
+                bind:value="_value"
+                size="s"
+        />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">size m</div>
+        <Controls.slider:Base
+                maxValue="{{100}}"
+                minValue="{{0}}"
+                bind:value="_value"
+                size="m"
+        />
+    </div>
+</div>

@@ -198,8 +198,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
                 this._options.selectionBaseValue, this._options.selectionHoveredValue) &&
             this._selectionViewType === SELECTION_VEIW_TYPES.months) {
             css.push('controls-PeriodDialog-MonthsRange__item-selected');
+            css.push('controls-PeriodDialog-MonthsRange__item-selected_theme-' + this._options.theme);
         } else {
             css.push('controls-PeriodDialog-MonthsRange__item');
+            css.push('controls-PeriodDialog-MonthsRange__item_theme-' + this._options.theme);
         }
 
         if (this._selectionViewType === SELECTION_VEIW_TYPES.months) {

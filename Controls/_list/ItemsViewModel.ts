@@ -148,9 +148,13 @@ var ItemsViewModel = BaseViewModel.extend({
         return Boolean(this._options?.virtualScrollConfig) && this._options.supportVirtualScroll;
     },
 
-    reset: function() {
+    _getCurIndexForReset(startIndex: number): number {
+        return startIndex;
+    },
+
+    reset(): void {
         this._startIndex = this._isSupportVirtualScroll() && !!this._startIndex ? this._startIndex : 0;
-        this._curIndex = 0;
+        this._curIndex = this._getCurIndexForReset(this._startIndex);
     },
 
     isEnd: function() {
@@ -434,22 +438,22 @@ var ItemsViewModel = BaseViewModel.extend({
         // method may be implemented
     },
 
-    _updateSubscriptionOnMetaChange(oldItems: RecordSet | null, newItems: RecordSet | null, isRecordSetEqual?: boolean): void {
-        const execCommand = (items, command: 'subscribe' | 'unsubscribe') => {
-            if (items && cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
-                if (!isRecordSetEqual) {
-                    items[command]('onPropertyChange', this._onMetaDataChanged);
-                }
-
-                const meta = items.getMetaData();
-                if (meta && meta.results && cInstance.instanceOfModule(meta.results, 'Types/entity:Model')) {
-                    meta.results[command]('onPropertyChange', this._onMetaDataChanged);
-                }
+    _execUpdateSubscriptionOnMetaChange(items: RecordSet, command: 'subscribe' | 'unsubscribe', isRecordSetEqual?: boolean): void {
+        if (items && cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
+            if (!isRecordSetEqual) {
+                items[command]('onPropertyChange', this._onMetaDataChanged);
             }
-        };
 
-        execCommand(oldItems, 'unsubscribe');
-        execCommand(newItems, 'subscribe');
+            const meta = items.getMetaData();
+            if (meta && meta.results && cInstance.instanceOfModule(meta.results, 'Types/entity:Model')) {
+                meta.results[command]('onPropertyChange', this._onMetaDataChanged);
+            }
+        }
+    },
+
+    _updateSubscriptionOnMetaChange(oldItems: RecordSet | null, newItems: RecordSet | null, isRecordSetEqual?: boolean): void {
+        this._execUpdateSubscriptionOnMetaChange(oldItems, 'unsubscribe', isRecordSetEqual);
+        this._execUpdateSubscriptionOnMetaChange(newItems, 'subscribe', isRecordSetEqual);
     },
 
     _onMetaDataChanged(): void {
@@ -618,19 +622,6 @@ var ItemsViewModel = BaseViewModel.extend({
     each(callback: collection.EnumeratorCallback<Record>, context?: object): void {
         if (this._display) {
             this._display.each(callback, context);
-        } else {
-            this.reset();
-            while (this.isEnd()) {
-                const index = this.getCurrentIndex();
-                if (this.isShouldBeDrawnItem()) {
-                    callback.call(
-                        context,
-                        this.getCurrent(),
-                        index
-                    );
-                }
-                this.goToNext();
-            }
         }
     },
 
@@ -643,15 +634,6 @@ var ItemsViewModel = BaseViewModel.extend({
     find(predicate: (item: Model) => boolean): Model {
         if (this._display) {
             return this._display.find(predicate);
-        } else {
-            this.reset();
-            while (this.isEnd()) {
-                const current = this.getCurrent();
-                if (predicate(current)) {
-                    return current;
-                }
-                this.goToNext();
-            }
         }
     },
 
@@ -679,7 +661,10 @@ var ItemsViewModel = BaseViewModel.extend({
             this._display.destroy();
             this._display = null;
         }
-        this._items = null;
+        if (this._items) {
+            this._execUpdateSubscriptionOnMetaChange(this._items, 'unsubscribe');
+            this._items = null;
+        }
         this._itemDataCache = null;
         this._curIndex = null;
         this._onCollectionChangeFnc = null;

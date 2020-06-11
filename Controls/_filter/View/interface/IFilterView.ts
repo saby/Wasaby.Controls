@@ -19,17 +19,17 @@
  * @property {Types/source:Base} source Объект, который реализует интерфейс {@link Types/source:ICrud} для доступа к данным.
  * Если свойство items указано, то свойство source будет игнорироваться.
  * @property {Boolean} multiSelect Определяет, установлен ли множественный выбор.
- * @property {Controls/interface/ISelectorDialog} selectorTemplate Шаблон панели выбора элементов.
+ * @property {Controls/_interface/ISelectorDialog} selectorTemplate Шаблон панели выбора элементов.
  * @property {Function|String} itemTemplate Шаблон рендеринга элементов.
- * Подробнее читайте {@link Controls/interface/IDropdown#itemTemplate здесь}.
+ * Подробнее о настройке itemTemplate читайте {@link Controls/menu:IMenuControl#itemTemplate здесь}.
  * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
  * @property {String} itemTemplateProperty Имя свойства, содержащего шаблон для рендеринга элементов.
- * Подробнее читайте {@link Controls/interface/IDropdown#itemTemplateProperty здесь}.
+ * Подробнее о настройке itemTemplateProperty читайте {@link Controls/menu:IMenuControl#itemTemplateProperty здесь}.
  * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
  * @property {Object} filter Конфигурация фильтра-объект с именами полей и их значениями.
- * Подробнее читайте {@link Controls/interface/IFilter#filter здесь}.
+ * Подробнее читайте {@link Controls/_interface/IFilter#filter здесь}.
  * @property {Object} navigation Конфигурация навигации по списку. Настройка навигации источника данных (страницы, смещение, положение) и представления навигации (страницы, бесконечная прокрутка и т. д.).
- * Подробнее читайте {@link Controls/interface/INavigation#navigation здесь}.
+ * Подробнее читайте {@link Controls/_interface/INavigation#navigation здесь}.
  * @property {String} editorMode Режим отображения редактора. Принимаемые значения см. в документации редактора.
  */
 
@@ -454,6 +454,7 @@
  * @name Controls/_filter/View/interface/IFilterView#itemTemplate
  * @cfg {String|Function} Устанавливает шаблон отображения фильтров на панели.
  * @default Controls/filter:ViewItemTemplate
+ * @demo Controls-demo/FilterView/ItemTemplates/Index
  * @example
  * <pre>
  * <Controls.filter:View

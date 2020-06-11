@@ -34,6 +34,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
                templateOptions: {
                   draggable: true
                },
+               propStorageId: 'draggableDialog',
                maxHeight: 700,
                width: 600,
                minWidth: 500
@@ -84,6 +85,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
          openStackCustomHeader: function() {
             this._children.stack.open({
                opener: this._children.button6,
+               closeOnOutsideClick: true,
                template: 'Controls-demo/Popup/Opener/resources/StackTemplateHeader',
             });
          },

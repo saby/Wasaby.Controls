@@ -12,7 +12,7 @@ define([
    const options = {
       mask: 'DD.MM.YYYY',
       value: new Date(2018, 0, 1),
-      replacer: ' ',
+      replacer: ' '
    };
 
    describe('Controls/_input/Date/Picker', function() {
@@ -34,7 +34,8 @@ define([
          it('should open dialog with passed dialog options', function() {
             const
                extOptions = {
-                  readOnly: true
+                  readOnly: true,
+                  theme: 'default'
                },
                component = calendarTestUtils.createComponent(input.Date, extOptions),
                TARGET = 'target';
@@ -49,7 +50,7 @@ define([
             component.openPopup();
             sinon.assert.called(component._children.opener.open);
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
-               className: 'controls-PeriodDialog__picker',
+               className: 'controls-PeriodDialog__picker_theme-default',
                templateOptions: {
                   readOnly: extOptions.readOnly
                }

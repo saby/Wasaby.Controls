@@ -1,3 +1,4 @@
-<div class="controls-PeriodLiteDialog__vLayoutItem-caption">
+<div class="controls-PeriodLiteDialog__vLayoutItem-caption
+            controls-PeriodLiteDialog__vLayoutItem-caption_theme-{{theme}}">
    {{ formatDate(month, "MMMM") }}
 </div>

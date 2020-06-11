@@ -4,6 +4,8 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
    describe('Controls/_lookup/showSelector', function() {
       let lastPopupOptions;
       let isShowSelector = false;
+      let stubOpenPopup;
+
       const getBaseController = function() {
          const baseController = new BaseController();
 
@@ -15,16 +17,24 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
                width: 100
             }
          };
-         popup.Stack = {
-            openPopup: function(popupOptions) {
-               isShowSelector = true;
-               lastPopupOptions = popupOptions;
-               return Promise.resolve();
-            }
-         };
 
          return baseController;
       };
+
+      before(function() {
+         stubOpenPopup = sinon.stub(popup.Stack, 'openPopup');
+         stubOpenPopup.callsFake(function(popupOptions) {
+            isShowSelector = true;
+            lastPopupOptions = popupOptions;
+            return Promise.resolve();
+         });
+      });
+
+      after(function() {
+         stubOpenPopup.restore();
+
+         stubOpenPopup = undefined;
+      });
 
       it('showSelector without params', function() {
          const baseController = getBaseController();
@@ -94,6 +104,27 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
 
          assert.isTrue(stub.notCalled);
          sandbox.restore();
+      });
+
+      it('opening showSelector', function() {
+         const baseController = getBaseController();
+         isShowSelector = false;
+         baseController._openingSelector = null;
+         showSelector.default(baseController, {});
+         assert.isTrue(isShowSelector);
+         assert.isNotNull(baseController._openingSelector);
+
+         isShowSelector = false;
+         showSelector.default(baseController, {});
+         assert.isFalse(isShowSelector);
+      });
+
+      it('showSelector without selectorTemplate', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = null;
+         baseController._openingSelector = null;
+
+         assert.isNull(showSelector.default(baseController, {}));
       });
    });
 });

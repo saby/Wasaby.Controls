@@ -35,7 +35,7 @@ var _private = {
       return true;
    },
 
-   getFullYearBy2DigitsYear: function(valueYear) {
+   getFullYearBy2DigitsYear: function(self, valueYear) {
       var
           curYear = (new Date()).getFullYear(),
           shortCurYear = curYear % 100,
@@ -43,7 +43,15 @@ var _private = {
 
       // Если год задаётся двумя числами, то считаем что это текущий век
       // если год меньше или равен текущему году + 10, иначе это прошлый век.
-      return valueYear <= shortCurYear + 10 ? curCentury + valueYear : (curCentury - 100) + valueYear;
+      // Если в DateRange в первом поле задана дата и год больше, чем сформированный
+      // год по правилу выше, то значит век возьмем текущий. Например, в первом поле
+      // указан год 20, а во втором 35, то без этой правки во втором поле будет создан
+      // 1935 год.
+      const fullYear = valueYear <= shortCurYear + 10 ? curCentury + valueYear : (curCentury - 100) + valueYear;
+      if (self._yearSeparatesCenturies && fullYear < self._yearSeparatesCenturies.getFullYear()) {
+         return valueYear + 2000;
+      }
+      return fullYear;
    },
 
    parseString: function(self, str) {
@@ -75,7 +83,7 @@ var _private = {
             valueObject.valid = true;
             valueObject.value = parseInt(strItems[i], 10);
             if (maskItems[i] === 'YY') {
-               valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
+               valueObject.value = _private.getFullYearBy2DigitsYear(self, valueObject.value);
             } else if (maskItems[i] === 'MM') {
                valueObject.value -= 1;
             }
@@ -106,7 +114,7 @@ var _private = {
             valueObject.valid = true;
             valueObject.value = parseInt(valueObject.str, 10);
             if (i=== 'year' && valueObject.value < 100) {
-               valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
+               valueObject.value = _private.getFullYearBy2DigitsYear(self, valueObject.value);
             } else if (i === 'month') {
                valueObject.value -= 1;
             }
@@ -183,7 +191,7 @@ var _private = {
          itemValue = parseInt(valueModel.year.str.replace(self._replacerRegExp, ' '), 10);
          isZeroAtBeginning = valueModel.year.str.split(itemValue)[0].indexOf('0') === -1;
          if (!isNaN(itemValue) && itemValue < 100 && isZeroAtBeginning) {
-            setValue(valueModel.year, _private.getFullYearBy2DigitsYear(itemValue));
+            setValue(valueModel.year, _private.getFullYearBy2DigitsYear(self, itemValue));
          } else {
             return;
          }
@@ -313,6 +321,7 @@ var ModuleClass = cExtend.extend({
    _replacerRegExp: null,
    _replacerBetweenCharsRegExp: null,
    _dateConstructor: null,
+   _yearSeparatesCenturies: null,
 
    constructor: function(options) {
       this.update(options || {});
@@ -323,6 +332,7 @@ var ModuleClass = cExtend.extend({
     * @param options
     */
    update: function(options) {
+      this._yearSeparatesCenturies = options.yearSeparatesCenturies;
       this._mask = options.mask;
       this._dateConstructor = options.dateConstructor || Date;
       if (this._replacer !== options.replacer) {

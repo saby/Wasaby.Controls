@@ -15,7 +15,6 @@ import callNext = require('Core/helpers/Function/callNext');
 import cInstance = require('Core/core-instance');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
-import 'css!theme?Controls/compatiblePopup';
 
 function removeOperation(operation, array) {
    var idx = arrayFindIndex(array, function(op) {
@@ -401,7 +400,13 @@ var CompoundArea = CompoundContainer.extend([
       }
    },
 
-   isOpened: function() {
+   isOpened(): boolean {
+      if (!this._options.autoShow) {
+         const popupContainer = this._container.closest('.controls-Popup');
+         if (popupContainer) {
+            return !popupContainer.classList.contains('ws-hidden');
+         }
+      }
       return true;
    },
 
@@ -1082,7 +1087,7 @@ var CompoundArea = CompoundContainer.extend([
             popupConfig.modal = visible;
 
             // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
-            Controller.reindex();
+            Controller.getManager()._popupItems._nextVersion();
             Controller.update(id, popupConfig.popupOptions);
          }
 
@@ -1491,4 +1496,5 @@ var CompoundArea = CompoundContainer.extend([
       return res;
    }
 });
+CompoundArea._theme = ['Controls/compatiblePopup'];
 export default CompoundArea;

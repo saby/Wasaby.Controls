@@ -98,6 +98,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _isMobilePlatform: boolean = detection.isMobilePlatform;
     protected _isMobileAndroid: boolean = detection.isMobileAndroid;
     protected _isSafari13: boolean = StickyHeader._isSafari13();
+    protected _isIOSChrome: boolean = StickyHeader._isIOSChrome();
     protected _isMobileIOS: boolean = detection.isMobileIOS;
 
     private _isFixed: boolean = false;
@@ -114,6 +115,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _minHeight: number = 0;
     private _cachedStyles: CSSStyleDeclaration = null;
     private _cssClassName: string = null;
+    private _canScroll: boolean = false;
 
     protected _notifyHandler: Function = tmplNotify;
 
@@ -138,7 +140,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _afterUpdate(): void {
-        this._updateBottomShadowStyle();
+        this.updateBottomShadowStyle();
     }
 
     protected _beforePaintOnMount(): void {
@@ -170,13 +172,16 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             position: this._options.position,
         });
 
-        this._initObserver();
+        // Переделать на новые события
+        // https://online.sbis.ru/opendoc.html?guid=ca70827b-ee39-4d20-bf8c-32b10d286682
+        RegisterUtil(this, 'listScroll', this._onScrollStateChanged.bind(this));
 
-        this._updateBottomShadowStyle();
+        this.updateBottomShadowStyle();
     }
 
     protected _beforeUnmount(): void {
         UnregisterUtil(this, 'updateFixed');
+        UnregisterUtil(this, 'listScroll');
         if (this._model) {
             //Let the listeners know that the element is no longer fixed before the unmount.
             this._fixationStateChangeHandler('', this._model.fixedPosition);
@@ -204,7 +209,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     get height(): number {
         const container: HTMLElement = this._container;
-        if (container.offsetParent !== null) {
+        if (!isHidden(container)) {
             this._height = container.offsetHeight;
         }
         return this._height;
@@ -218,7 +223,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
-            this._container.style.top = `${value}px`;
+            fastUpdate.mutate(() => {
+                this._container.style.top = `${value}px`;
+            });
             this._forceUpdate();
         }
     }
@@ -240,12 +247,22 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._options.shadowVisibility;
     }
 
+    protected _onScrollStateChanged(eventType): void {
+        if (eventType === 'canScroll') {
+            this._canScroll = true;
+            this._initObserver();
+        } else if (eventType === 'cantScroll') {
+            this._canScroll = false;
+            this._destroyObserver();
+        }
+    }
+
     protected _resizeHandler(): void {
         if (this._needUpdateObserver) {
             this._initObserver();
         }
-        if (this._isSafari13) {
-            this._updateBottomShadowStyle();
+        if (this._isSafari13 || this._isIOSChrome) {
+            this.updateBottomShadowStyle();
         }
     }
 
@@ -259,17 +276,21 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // в самом верху скролируемой области, то верхний тригер останется невидимым, т.е. сбытия не будет.
         // Что бы самостоятельно не рассчитывать положение тригеров, мы просто пересоздадим обсервер когда заголовок
         // станет видимым.
-        if (this._container.offsetParent === null) {
+        if (isHidden(this._container) || !this._canScroll) {
             this._needUpdateObserver = true;
             return;
         }
 
-        if (this._observer) {
-            this._observer.disconnect();
-        }
-
+        this._destroyObserver();
         this._createObserver();
         this._needUpdateObserver = false;
+    }
+
+    private _destroyObserver(): void {
+        if (this._observer) {
+            this._observer.disconnect();
+            this._observer = null;
+        }
     }
 
     private _createObserver(): void {
@@ -329,7 +350,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _fixationStateChangeHandler(newPosition: POSITION, prevPosition: POSITION): void {
         // If the header is hidden we cannot calculate its current height.
         // Use the height that it had before it was hidden.
-        if (this._container.offsetParent !== null) {
+        if (!isHidden(this._container)) {
             this._height = this._container.offsetHeight;
         }
         this._isFixed = !!newPosition;
@@ -452,15 +473,15 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
         const container: HTMLElement = this._getNormalizedContainer();
-        if (this._isSafari13 && position === POSITION.bottom) {
+        if ((this._isSafari13 || this._isIOSChrome) && position === POSITION.bottom) {
             return 'top: ' + (coord + (container ? container.offsetHeight : 0)) + 'px;';
         }
 
         return position + ': -' + coord + 'px;';
     }
 
-    protected _updateBottomShadowStyle(): void {
-        if (this._isSafari13) {
+    updateBottomShadowStyle(): void {
+        if (this._isSafari13 || this._isIOSChrome) {
             const container: HTMLElement = this._getNormalizedContainer();
             // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
             // There's no container at first building of template.
@@ -484,7 +505,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 // Модель еще не существует, значит заголвок только что создан и контроллер сказал
                 // заголовку что он зафиксирован. Обновим тень вручную что бы не было скачков.
                 fastUpdate.mutate(() => {
-                    if (this._children.shadowBottom) {
+                    if (this._children.shadowBottom &&
+                            this._context.stickyHeader.shadowPosition.indexOf(POSITION.top) !== -1) {
                         this._children.shadowBottom.classList.remove('ws-invisible');
                     }
                 });
@@ -533,6 +555,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     static _isSafari13(): boolean {
         return detection.safariVersion >= 13;
+    }
+
+    static _isIOSChrome(): boolean {
+        return detection.isMobileIOS && detection.chrome;
     }
 
     static contextTypes(): IStickyHeaderContext {

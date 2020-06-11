@@ -778,5 +778,19 @@ define(
             assert.equal(tCoords.right, 0);
          });
 
+         it('stack need redraw after created', () => {
+            const item = {
+               position: { stackWidth: 720 },
+               popupOptions: { className: '' }
+            };
+            popupTemplate.StackController._stack.clear();
+            popupTemplate.StackController._stack.add(item);
+            let result = popupTemplate.StackController.elementCreated(item);
+            assert.equal(result, false);
+
+            popupTemplate.StackController._stack.add(item);
+            result = popupTemplate.StackController.elementCreated(item);
+            assert.equal(result, true);
+         })
       });
    });

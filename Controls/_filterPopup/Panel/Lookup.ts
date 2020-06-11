@@ -6,16 +6,20 @@ import 'Controls/lookup';
 
 /**
  * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
- * Здесь вы можете увидеть <a href="/materials/Controls-demo/app/Controls-demo%2FLookup%2FIndex">демо пример</a>.
+ * 
+ * @remark
  * Если вы используете внутри подсказки поля ввода ссылку на открытие справочника - вам понадобиться {@link Controls/lookup:Link}.
  * Если вы хотите сделать динамичную подсказку поля ввода, которая будет меняться в зависимости от выбранной коллекции, используйте {@link Controls/lookup:PlaceholderChooser}.
  * Если хотите расположить поле связи с кнопкой-ссылкой в одну строку, необходимо на корневой элемет навесить класс 'ws-flexbox'.
  *
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FLookup%2FIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления</a>
+ * 
  * @class Controls/_filterPopup/Panel/Lookup
  * @extends Core/Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
- * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
@@ -31,6 +35,7 @@ import 'Controls/lookup';
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/interface/IInputField
  * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/_interface/ISelectorDialog
  * @control
  * @public
  * @author Герасимов А.М.

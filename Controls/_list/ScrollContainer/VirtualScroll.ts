@@ -8,6 +8,12 @@ import {
 } from './interfaces';
 import * as getDimensions from 'Controls/Utils/getDimensions';
 
+/**
+ * Контроллер, управляющий виртуальным скроллом.
+ * @class Controls/_list/ScrollContainer/VirtualScroll
+ * @private
+ * @author Авраменко А.С.
+ */
 export default class VirtualScroll {
     private _containerHeightsData: IContainerHeights = {scroll: 0, trigger: 0, viewport: 0};
     private _options: IVirtualScrollOptions;
@@ -153,14 +159,15 @@ export default class VirtualScroll {
      * Производит смещение диапазона за счет удаления элементов
      * @param removeIndex индекс начиная с которого происходит удаление элементов
      * @param count количество удаляемых элементов
+     * @param forcedShift Принудительный сдвиг. В таком случае игнорируется состояние rangeChanged.
      */
-    removeItems(removeIndex: number, count: number): IRangeShiftResult {
+    removeItems(removeIndex: number, count: number, forcedShift?: boolean): IRangeShiftResult {
         const direction = removeIndex < this._range.start ? 'up' : 'down';
         this._itemsCount -= count;
         this._removeItemHeights(removeIndex, count);
 
         return this._setRange(
-            this.rangeChanged ? this._range : this._shiftRangeBySegment(direction, count)
+            this.rangeChanged && !forcedShift ? this._range : this._shiftRangeBySegment(direction, count)
         );
     }
 

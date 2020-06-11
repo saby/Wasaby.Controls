@@ -5,39 +5,35 @@
  */
 import Control = require('Core/Control');
 import template = require('wml!Controls/_event/Register');
-import Registrar = require('Controls/_event/Registrar');
 import entity = require('Types/entity');
 import {IRegistrarConfig} from './Registrar';
+import RegisterClass from './RegisterClass';
 
-let EventRegistrator = Control.extend({
+const EventRegistrator = Control.extend({
    _template: template,
-   _registrar: null,
-   _beforeMount(newOptions) {
+   _register: null,
+   _beforeMount(newOptions): void {
       if (typeof window !== 'undefined') {
          this._forceUpdate = function() {
             // Do nothing
             // This method will be called because of handling event.
          };
-         this._registrar = new Registrar({ register: newOptions.register });
+         this._register = new RegisterClass({ register: newOptions.register });
       }
    },
-   _registerIt(event, registerType, component, callback, config:IRegistrarConfig = {}) {
-      if (registerType === this._options.register) {
-         this._registrar.register(event, component, callback, config);
-      }
+   _registerIt(event, registerType, component, callback, config: IRegistrarConfig = {}): void {
+      this._register.register(event, registerType, component, callback, config);
    },
-   _unRegisterIt(event, registerType, component, config: IRegistrarConfig = {}) {
-      if (registerType === this._options.register) {
-         this._registrar.unregister(event, component, config);
-      }
+   _unRegisterIt(event, registerType, component, config: IRegistrarConfig = {}): void {
+      this._register.unregister(event, registerType, component, config);
    },
-   start() {
-      this._registrar.start.apply(this._registrar, arguments);
+   start(): void {
+      this._register.start.apply(this._register, arguments);
    },
-   _beforeUnmount() {
-      if (this._registrar) {
-         this._registrar.destroy();
-         this._registrar = null;
+   _beforeUnmount(): void {
+      if (this._register) {
+         this._register.destroy();
+         this._register = null;
       }
    }
 });
