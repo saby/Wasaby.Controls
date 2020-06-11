@@ -2080,8 +2080,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
-            if (newOptions.markerVisibility !== 'hidden') {
-                self._markerController = _private.createMarkerController(self, newOptions);
+            if (receivedData) {
+                if (newOptions.markerVisibility !== 'hidden') {
+                    self._markerController = _private.createMarkerController(self, newOptions);
+                }
+
+                if (!self._selectionController && newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
+                    self._selectionController = _private.createSelectionController(self, newOptions);
+                }
             }
 
             if (newOptions.source) {

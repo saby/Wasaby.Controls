@@ -4803,6 +4803,31 @@ define([
          });
       });
 
+      it('create controllers in beforeMount', async () => {
+         const
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: new sourceLib.Memory({}),
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'visible',
+               selectedKeys: [5],
+               excludedKeys: []
+            },
+            ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg, {},
+            {
+               data: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
+            });
+
+         assert.isNotNull(ctrl._markerController);
+         assert.isNotNull(ctrl._selectionController);
+      });
+
       it('_beforeMount with PrefetchProxy in source', function() {
          let prefetchSource = new sourceLib.PrefetchProxy({
             target: source,
