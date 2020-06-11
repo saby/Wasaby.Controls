@@ -67,6 +67,6 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
     _historyApply(event: Event, history): void {
         this._notify('filterHistoryApply', [history], {bubbling: true});
     }
-});
+}, {});
 
 export default Container;

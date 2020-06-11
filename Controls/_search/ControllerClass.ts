@@ -156,6 +156,7 @@ export default class SearchControllerClass {
         this._path = null;
         if (this._storeCallbackId) {
             Store.unsubscribe(this._storeCallbackId);
+            Store.dispatch('searchValue', undefined);
         }
     }
 
