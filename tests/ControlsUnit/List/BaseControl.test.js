@@ -4748,11 +4748,13 @@ define([
             };
             instance = new lists.BaseControl(cfg);
             instance.saveOptions(cfg);
+            instance._viewModelConstructor = cfg.viewModelConstructor;
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
          });
 
          // Необходимо обновлять опции записи при изиенении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
          it('should update ItemActions when visibilityCallback has changed', () => {
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4769,6 +4771,7 @@ define([
 
          // Необходимо обновлять опции записи при изиенении самих ItemActions
          it('should update ItemActions when ItemActions have changed', () => {
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4795,6 +4798,7 @@ define([
                   textOverflow: 'ellipsis'
                }
             ];
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4823,6 +4827,7 @@ define([
 
          // при неидентичности source необходимо перезапрашивать данные этого source и затем инициализировать ItemActions
          it('should update ItemActions when data was reloaded', async () => {
+            instance._listViewModel.setActionsAssigned(true);
             await instance._beforeUpdate({
                ...cfg,
                itemActions: [
@@ -4839,6 +4844,7 @@ define([
 
          // при смене значения свойства readOnly необходимо делать переинициализвацию ItemActions
          it('should update ItemActions when readOnly option has been changed', () => {
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
