@@ -1,6 +1,15 @@
 define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
 
 
+   function getModel(id) {
+      return new entity.Model({
+         keyProperty: 'id',
+         rawData: {
+            id: id
+         }
+      });
+   }
+
    describe('Controls/_lookupPopup/Container', function() {
 
       it('getItemClickResult', function() {
@@ -135,16 +144,23 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
       });
 
       it('itemClick', function() {
-         var self = {
-            _options: {}
+          const self = {
+            _options: {
+               keyProperty: 'id'
+            }
          };
-         var selectCompleted = false;
-         var clickSelection = false;
-         var isByItemClick = false;
+         let selectCompleted = false;
+         let clickSelection = false;
+         let isByItemClick = false;
+         let excludedKeysChanged = false;
+         let selectedItem;
 
          self._notify = function(eventName, args) {
             if (eventName === 'listSelectedKeysChanged') {
                clickSelection = true;
+            }
+            if (eventName === 'listExcludedKeysChanged') {
+               excludedKeysChanged = true;
             }
             if (eventName === 'selectComplete') {
                selectCompleted = true;
@@ -152,22 +168,35 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
             }
          };
 
-         lookupPopup.ListContainer._private.itemClick(self, 'test', false, []);
+         selectedItem = getModel('test');
+         self._options.selectedKeys = [];
+         self._options.multiSelect = false;
+         lookupPopup.ListContainer._private.itemClick(self, selectedItem);
          assert.isTrue(selectCompleted);
          assert.isTrue(clickSelection);
          assert.isTrue(isByItemClick);
 
          selectCompleted = false;
          clickSelection = false;
-         lookupPopup.ListContainer._private.itemClick(self, 'test', true, []);
+         self._options.selectedKeys = [];
+         self._options.multiSelect = true;
+         lookupPopup.ListContainer._private.itemClick(self, selectedItem);
          assert.isTrue(selectCompleted);
          assert.isTrue(clickSelection);
 
          selectCompleted = false;
          clickSelection = false;
-         lookupPopup.ListContainer._private.itemClick(self, 'test', true, [1]);
+         self._options.selectedKeys = [1];
+         self._options.multiSelect = true;
+         lookupPopup.ListContainer._private.itemClick(self, selectedItem);
          assert.isTrue(clickSelection);
          assert.isFalse(selectCompleted);
+
+         self._options.selectedKeys = [null];
+         self._options.excludedKeys = [];
+         self._options.multiSelect = true;
+         lookupPopup.ListContainer._private.itemClick(self, selectedItem);
+         assert.isTrue(excludedKeysChanged);
       });
 
       it('_itemClick handler', function() {
