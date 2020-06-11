@@ -34,6 +34,34 @@ define(
             popupContainer.setPopupItems(items);
             assert.equal(popupContainer._popupItems.getCount(), 0);
          });
+
+         it('getItems', () => {
+            const Container = new popupMod.Container();
+            const list = new collection.List();
+            const getItem = (popupId, TYPE) => {
+               return {
+                  id: popupId,
+                  controller: {
+                     TYPE
+                  }
+               };
+            };
+            list.add(getItem(0, 'InfoBox'));
+            list.add(getItem(1, 'Stack'));
+            list.add(getItem(2, 'Dialog'));
+            list.add(getItem(3, 'Sticky'));
+            list.add(getItem(4, 'Stack'));
+            list.add(getItem(5, 'Dialog'));
+
+            const containerItems = Container._getItems(list);
+            const order = [5, 4, 2, 1, 0, 3];
+            const containerOrder = [];
+            containerItems.each((element) => {
+               containerOrder.push(element.id);
+            });
+            assert.deepEqual(order, containerOrder);
+            Container.destroy();
+         });
       });
    }
 );

@@ -70,7 +70,14 @@ class Container extends Control<IControlOptions> {
     protected _getItems(popupItems: List<IPopupItem>): List<IPopupItem> {
         const reversePopupList: List<IPopupItem> = new List();
         popupItems.each((item: IPopupItem) => {
-            reversePopupList.add(item, 0);
+            let at;
+            // Для поддержки старых автотестов, нужно, чтобы открываемые стековые и диалоговые окна в DOM располагались
+            // выше чем уже открытые. Со всеми окнами так делать нельзя, доп окна (стики) открываемые на 1 уровне, имеют
+            // одинаковый z-index и последнее открытое окно должно быть выше, это осуществялется за счет позиции в DOM.
+            if (item.controller.TYPE === 'Stack' || item.controller.TYPE === 'Dialog') {
+                at = 0;
+            }
+            reversePopupList.add(item, at);
         });
         return reversePopupList;
     }
