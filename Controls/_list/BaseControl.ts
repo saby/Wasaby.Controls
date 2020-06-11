@@ -187,7 +187,7 @@ const _private = {
     isNewModelItemsChange: (action, newItems) => {
         return action && (action !== 'ch' || newItems && !newItems.properties);
     },
-    checkDeprecated: function(cfg) {
+    checkDeprecated(cfg) {
         if (cfg.historyIdCollapsedGroups) {
             Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
@@ -240,7 +240,7 @@ const _private = {
             }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
-            self._sourceController.load(filter, sorting, null,sourceConfig).addCallback(function(list) {
+            self._sourceController.load(filter, sorting, null, sourceConfig).addCallback(function(list) {
                 _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
                 if (list.getCount()) {
@@ -249,10 +249,10 @@ const _private = {
                     self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
                 }
                 if (self._pagingNavigation) {
-                    var hasMoreDataDown = list.getMetaData().more;
-                        _private.updatePagingData(self, hasMoreDataDown);
+                    const hasMoreDataDown = list.getMetaData().more;
+                    _private.updatePagingData(self, hasMoreDataDown);
                 }
-                var
+                const
                     listModel = self._listViewModel;
 
                 if (cfg.afterReloadCallback) {
@@ -365,12 +365,12 @@ const _private = {
                 && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)) {
             const key = itemData.getContents().getKey();
 
-            //Support moving with mass selection.
-            //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+            // Support moving with mass selection.
+            // Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             let selection = {
                 selected: self._options.selectedKeys || [],
                 excluded: self._options.excludedKeys || []
-            };1
+            }; 1;
             selection = DndFlatController.getSelectionForDragNDrop(self._listViewModel, selection, key);
             const recordSet = self._listViewModel.getCollection();
 
@@ -388,8 +388,7 @@ const _private = {
         }
     },
 
-
-    resolveIndicatorStateAfterReload: function(self, list, navigation):void {
+    resolveIndicatorStateAfterReload(self, list, navigation): void {
         if (!self._isMounted) {
             return;
         }
@@ -431,7 +430,7 @@ const _private = {
             _private.hasMoreData(self, sourceController, 'down');
     },
 
-    scrollToItem: function(self, key, toBottom, force) {
+    scrollToItem(self, key, toBottom, force) {
         return self._scrollController?.scrollToItem(key, toBottom, force);
     },
 
@@ -441,13 +440,13 @@ const _private = {
             _private.scrollToItem(self, key);
             }
     },
-    moveMarkerToNext: function (self, event) {
+    moveMarkerToNext(self, event) {
         if (self._markerController) {
             self._markedKey = self._markerController.moveMarkerToNext();
             _private.scrollToItem(self, self._markedKey);
         }
     },
-    moveMarkerToPrevious: function (self, event) {
+    moveMarkerToPrevious(self, event) {
         if (self._markerController) {
             self._markedKey = self._markerController.moveMarkerToPrev();
             _private.scrollToItem(self, self._markedKey);
@@ -458,20 +457,20 @@ const _private = {
             self._setMarkerAfterScroll = true;
         }
     },
-    keyDownHome: function(self, event) {
+    keyDownHome(self, event) {
         _private.setMarkerAfterScroll(self, event);
     },
-    keyDownEnd:  function(self, event) {
+    keyDownEnd(self, event) {
         _private.setMarkerAfterScroll(self, event);
     },
-    keyDownPageUp:  function(self, event) {
+    keyDownPageUp(self, event) {
         _private.setMarkerAfterScroll(self, event);
     },
-    keyDownPageDown:  function(self, event) {
+    keyDownPageDown(self, event) {
         _private.setMarkerAfterScroll(self, event);
     },
 
-    enterHandler: function(self, event) {
+    enterHandler(self, event) {
         let markedItem;
         if (self._options.useNewModel) {
             markedItem = self.getViewModel().find((item) => item.isMarked());
@@ -482,7 +481,7 @@ const _private = {
             self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
         }
     },
-    spaceHandler: function(self, event) {
+    spaceHandler(self, event) {
         const model = self.getViewModel();
         let toggledItemId = model.getMarkedKey();
 
@@ -497,8 +496,8 @@ const _private = {
             _private.moveMarkerToNext(self, event);
         }
     },
-    prepareFooter: function(self, navigation, sourceController) {
-        var
+    prepareFooter(self, navigation, sourceController) {
+        let
             loadedDataCount, allDataCount;
 
         if (_private.isDemandNavigation(navigation) && _private.hasMoreData(self, sourceController, 'down')) {
@@ -518,7 +517,7 @@ const _private = {
         }
     },
 
-    loadToDirection: function(self, direction, userCallback, userErrback, receivedFilter) {
+    loadToDirection(self, direction, userCallback, userErrback, receivedFilter) {
         const navigation = self._options.navigation;
         const listViewModel = self._listViewModel;
         const isPortionedLoad = _private.isPortionedLoad(self);
@@ -613,11 +612,11 @@ const _private = {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
             return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
-                //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
-                //до реализации функционала и проблемы из новости делаем решение по месту:
-                //посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
-                //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
-                //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
+                // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
+                // до реализации функционала и проблемы из новости делаем решение по месту:
+                // посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
+                // надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
+                // Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
                 const countCurrentItems = self._listViewModel.getCount();
 
                 if (self._isMounted) {
@@ -685,7 +684,7 @@ const _private = {
         Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
     },
 
-    checkLoadToDirectionCapability: function(self, filter, navigation) {
+    checkLoadToDirectionCapability(self, filter, navigation) {
         if (self._destroyed) {
             return;
         }
@@ -799,7 +798,7 @@ const _private = {
         return result;
     },
 
-    loadToDirectionIfNeed: function(self, direction, filter) {
+    loadToDirectionIfNeed(self, direction, filter) {
         const sourceController = self._sourceController;
         const hasMoreData = _private.hasMoreData(self, sourceController, direction);
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
@@ -825,13 +824,13 @@ const _private = {
     },
 
     // Метод, вызываемый при прокрутке скролла до триггера
-    onScrollLoadEdge: function (self, direction, filter) {
+    onScrollLoadEdge(self, direction, filter) {
         if (self._options.navigation && self._options.navigation.view === 'infinity') {
             _private.loadToDirectionIfNeed(self, direction, filter);
         }
     },
 
-    scrollToEdge: function(self, direction) {
+    scrollToEdge(self, direction) {
         _private.setMarkerAfterScroll(self);
         if (_private.hasMoreData(self, self._sourceController, direction)) {
             self._sourceController.setEdgeState(direction);
@@ -854,7 +853,7 @@ const _private = {
             _private.jumpToEnd(self);
         }
     },
-    scrollPage: function(self, direction) {
+    scrollPage(self, direction) {
         if (!self._scrollPageLocked) {
             /**
              * скроллу не нужно блокироваться, если есть ошибка, потому что
@@ -880,11 +879,10 @@ const _private = {
         }
     },
 
-    needShowPagingByScrollSize: function(self, viewSize: number, viewPortSize: number): boolean {
+    needShowPagingByScrollSize(self, viewSize: number, viewPortSize: number): boolean {
         let result = self._pagingVisible;
 
         const proportion = (viewSize / viewPortSize);
-
 
         // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
         if (!result) {
@@ -910,7 +908,7 @@ const _private = {
                 scrollTop: self._scrollTop,
                 clientHeight: self._viewPortSize,
                 scrollHeight: self._viewSize
-            }
+            };
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
             // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
@@ -926,7 +924,7 @@ const _private = {
             }
 
             if (!visbilityTriggerDown && self._viewSize && self._viewPortSize) {
-                visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');;
+                visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');
             }
 
             if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
@@ -945,7 +943,7 @@ const _private = {
         return result;
     },
 
-    onScrollShow: function(self, params) {
+    onScrollShow(self, params) {
         _private.doAfterUpdate(self, () => {
         // ToDo option "loadOffset" is crutch for contacts.
         // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
@@ -953,7 +951,7 @@ const _private = {
 
         self._viewPortRect = params.viewPortRect;
 
-            if (_private.needScrollPaging(self._options.navigation)) {
+        if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
                     scrollTop: self._scrollTop,
                     scrollHeight: params.scrollHeight,
@@ -968,7 +966,7 @@ const _private = {
         });
     },
 
-    onScrollHide: function(self) {
+    onScrollHide(self) {
         _private.doAfterUpdate(self, () => {
         if (self._pagingVisible) {
             self._pagingVisible = false;
@@ -978,7 +976,7 @@ const _private = {
         self._isScrollShown = false;
         });
     },
-    getScrollPagingControllerWithCallback: function(self, scrollParams, callback) {
+    getScrollPagingControllerWithCallback(self, scrollParams, callback) {
         if (self._scrollPagingCtr) {
             callback(self._scrollPagingCtr);
         } else {
@@ -987,7 +985,7 @@ const _private = {
             });
         }
     },
-    createScrollPagingController: function(self, scrollParams) {
+    createScrollPagingController(self, scrollParams) {
         const scrollPagingConfig = {
             scrollParams,
             pagingCfgTrigger: (cfg) => {
@@ -1064,18 +1062,18 @@ const _private = {
     /**
      * Обработать прокрутку списка виртуальным скроллом
      */
-    handleListScroll: function(self, params) {
+    handleListScroll(self, params) {
 
     },
 
-    setMarkerAfterScrolling: function(self, scrollTop) {
+    setMarkerAfterScrolling(self, scrollTop) {
         // TODO вручную обрабатывать pagedown и делать stop propagation
         if (self._markerController) {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
             self._markedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
-        self._setMarkerAfterScroll = false;
+            self._setMarkerAfterScroll = false;
         }
     },
 
@@ -1084,9 +1082,9 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    getTopOffsetForItemsContainer: function(self, itemsContainer) {
+    getTopOffsetForItemsContainer(self, itemsContainer) {
         let offsetTop = uDimension(itemsContainer.children[0], true).top;
-        let container = self._container[0] || self._container;
+        const container = self._container[0] || self._container;
         offsetTop += container.offsetTop - uDimension(container).top;
         return offsetTop;
     },
@@ -1128,7 +1126,7 @@ const _private = {
                 self._showContinueSearchButton = false;
             },
             searchContinueCallback: () => {
-                let direction = _private.hasMoreData(self, self._sourceController, 'up') ? 'up' : 'down';
+                const direction = _private.hasMoreData(self, self._sourceController, 'up') ? 'up' : 'down';
 
                 self._portionedSearchInProgress = true;
                 self._showContinueSearchButton = false;
@@ -1202,11 +1200,11 @@ const _private = {
         }], {bubbling: true});
     },
 
-    needScrollCalculation: function (navigationOpt) {
+    needScrollCalculation(navigationOpt) {
         return navigationOpt && navigationOpt.view === 'infinity';
     },
 
-    needScrollPaging: function(navigationOpt) {
+    needScrollPaging(navigationOpt) {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
             navigationOpt.viewConfig &&
@@ -1214,11 +1212,11 @@ const _private = {
         );
     },
 
-    getItemsCount: function(self) {
+    getItemsCount(self) {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
-    onListChange: function(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+    onListChange(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
@@ -1228,7 +1226,7 @@ const _private = {
             }
         }
         if (changesType === 'collectionChanged' || newModelChanged) {
-            //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+            // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {
                 const stateChanged = self._sourceController.setState(self._listViewModel);
 
@@ -1277,7 +1275,7 @@ const _private = {
         }
     },
 
-    initListViewModelHandler: function(self, model, useNewModel: boolean) {
+    initListViewModelHandler(self, model, useNewModel: boolean) {
         if (useNewModel) {
             model.subscribe('onCollectionChange', (...args: any[]) => {
                 _private.onListChange.apply(
@@ -1313,7 +1311,7 @@ const _private = {
         item: CollectionItem<Model>): void {
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        let contents = _private.getPlainItemContents(item);
+        const contents = _private.getPlainItemContents(item);
 
         // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
         const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
@@ -1391,7 +1389,7 @@ const _private = {
         self._onItemsChanged = self._onItemsChanged.bind(self);
     },
 
-    groupsExpandChangeHandler: function(self, changes) {
+    groupsExpandChangeHandler(self, changes) {
         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
         _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -1400,8 +1398,8 @@ const _private = {
         }
     },
 
-    prepareCollapsedGroups: function(config) {
-        var
+    prepareCollapsedGroups(config) {
+        const
             result = new Deferred();
         if (config.historyIdCollapsedGroups || config.groupHistoryId) {
             groupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
@@ -1413,10 +1411,10 @@ const _private = {
         return result;
     },
 
-    getSortingOnChange: function(currentSorting, propName) {
-        var sorting = cClone(currentSorting || []);
-        var sortElem;
-        var newSortElem = {};
+    getSortingOnChange(currentSorting, propName) {
+        let sorting = cClone(currentSorting || []);
+        let sortElem;
+        const newSortElem = {};
 
         if (sorting.length === 1 && sorting[0][propName]) {
             const elem = sorting[0];
@@ -1512,11 +1510,11 @@ const _private = {
         return newKnownPagesCount;
     },
 
-    getPagingLabelData: function(totalItemsCount, pageSize, currentPage) {
+    getPagingLabelData(totalItemsCount, pageSize, currentPage) {
         let pagingLabelData;
         if (typeof totalItemsCount === 'number') {
             pagingLabelData = {
-                totalItemsCount: totalItemsCount,
+                totalItemsCount,
                 pageSize: pageSize.toString(),
                 firstItemNumber: (currentPage - 1) * pageSize + 1,
                 lastItemNumber: Math.min(currentPage * pageSize, totalItemsCount)
@@ -1527,22 +1525,22 @@ const _private = {
         return pagingLabelData;
     },
 
-    getSourceController: function({source, navigation, keyProperty}:{source: ICrud, navigation: object, keyProperty: string}, queryParamsCallback): SourceController {
+    getSourceController({source, navigation, keyProperty}: {source: ICrud, navigation: object, keyProperty: string}, queryParamsCallback): SourceController {
         return new SourceController({
-            source: source,
-            navigation: navigation,
-            keyProperty: keyProperty,
-            queryParamsCallback: queryParamsCallback
-        })
+            source,
+            navigation,
+            keyProperty,
+            queryParamsCallback
+        });
     },
 
-    checkRequiredOptions: function(options) {
+    checkRequiredOptions(options) {
         if (options.keyProperty === undefined) {
             Logger.warn('BaseControl: Option "keyProperty" is required.');
         }
     },
 
-    needBottomPadding: function(options, items, listViewModel) {
+    needBottomPadding(options, items, listViewModel) {
         const isEditing =
             options.useNewModel
             ? EditInPlaceController.isEditing(listViewModel)
@@ -1562,7 +1560,7 @@ const _private = {
         }
     },
 
-    isPagingNavigation: function(navigation) {
+    isPagingNavigation(navigation) {
         return navigation && navigation.view === 'pages';
     },
 
@@ -1575,21 +1573,21 @@ const _private = {
     },
 
     updatePagingDataByItemsChanged(self, newItems, removedItems) {
-        let countDifferece = (newItems?.length) || (- (removedItems?.length)) || 0;
-        let itemsCount = self._pagingLabelData.totalItemsCount + countDifferece;
+        const countDifferece = (newItems?.length) || (- (removedItems?.length)) || 0;
+        const itemsCount = self._pagingLabelData.totalItemsCount + countDifferece;
         _private.updatePagingData(self, itemsCount);
     },
 
-    resetPagingNavigation: function(self, navigation) {
+    resetPagingNavigation(self, navigation) {
         self._knownPagesCount = INITIAL_PAGES_COUNT;
         self._currentPageSize = navigation && navigation.sourceConfig && navigation.sourceConfig.pageSize || 1;
 
-        //TODO: KINGO
+        // TODO: KINGO
         // нумерация страниц пейджинга начинается с 1, а не с 0 , поэтому текущая страница пейджига это страница навигации + 1
         self._currentPage = navigation && navigation.sourceConfig && navigation.sourceConfig.page + 1 || INITIAL_PAGES_COUNT;
     },
 
-    initializeNavigation: function(self, cfg) {
+    initializeNavigation(self, cfg) {
         self._needScrollCalculation = _private.needScrollCalculation(cfg.navigation);
         self._pagingNavigation = _private.isPagingNavigation(cfg.navigation);
         if (!self._needScrollCalculation) {
@@ -1613,7 +1611,7 @@ const _private = {
             _private.resetPagingNavigation(self, cfg.navigation);
         }
     },
-    updateNavigation: function(self) {
+    updateNavigation(self) {
         self._pagingNavigationVisible = self._pagingNavigation;
     },
     closeEditingIfPageChanged(self, oldNavigation, newNavigation) {
@@ -1655,7 +1653,7 @@ const _private = {
             top = viewRect.top;
             bottom = viewRect.bottom;
         }
-        let newHeight = bottom - top - _private.getListTopOffset(self);
+        const newHeight = bottom - top - _private.getListTopOffset(self);
 
         if (self._loadingIndicatorContainerHeight !== newHeight) {
             self._loadingIndicatorContainerHeight = newHeight;
@@ -1798,7 +1796,7 @@ const _private = {
       // при подписке на модель событие remove летит еще и при скрытии элементов
 
        let selectionControllerResult;
-         switch (action) {
+       switch (action) {
             case IObservable.ACTION_REMOVE:
                if (self._selectionController) {
                    selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
@@ -1837,7 +1835,7 @@ const _private = {
 
     createEditInPlace(self: typeof BaseControl, options: any): void {
         if (options.editingConfig) {
-            self._editInPlace = new EditInPlace(<IEditingOptions> {
+            self._editInPlace = new EditInPlace({
                 editingConfig: options.editingConfig,
                 listViewModel: self._listViewModel,
                 multiSelectVisibility: options.multiSelectVisibility,
@@ -1861,7 +1859,7 @@ const _private = {
                     */
                     self._updateItemActions(self._options);
                 }
-            });
+            } as IEditingOptions);
         }
     },
 
@@ -1880,9 +1878,23 @@ const _private = {
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
             virtualScrollConfig: options.virtualScrollConfig || {},
-            needScrollCalculation: options.needScrollCalculation,
+            needScrollCalculation: self._needScrollCalculation,
+            scrollObserver: self._children.scrollObserver,
             collection: self._listViewModel,
             activeElement: options.activeElement,
+            callbacks: {
+                triggerOffsetChanged: self.triggerOffsetChangedHandler.bind(self),
+                changeIndicatorState: self.changeIndicatorStateHandler.bind(self),
+                triggerVisibilityChanged: self.triggerVisibilityChangedHandler.bind(self),
+                updateShadowMode: self.updateShadowModeHandler.bind(self),
+                scrollResize: self.scrollResizeHandler.bind(self),
+                viewportResize: self.viewportResizeHandler.bind(self),
+                cantScroll: self.cantScrollHandler.bind(self),
+                canScroll: self.canScrollHandler.bind(self),
+                loadMore: self.loadMore.bind(self),
+                scrollMove: self.scrollMoveHandler.bind(self),
+                scrollPositionChanged: self.scrollMoveSyncHandler.bind(self)
+            },
             notify: (name, args, params) => {
                 return self._notify(name, args, params);
             }
@@ -1911,7 +1923,7 @@ const _private = {
  * @category List
  */
 
-var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
     _updateShadowModeAfterMount: null,
 
     _updateInProgress: false,
@@ -1960,7 +1972,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _popupOptions: null,
     _targetItem: null,
 
-    //Variables for paging navigation
+    // Variables for paging navigation
     _knownPagesCount: INITIAL_PAGES_COUNT,
     _currentPage: INITIAL_PAGES_COUNT,
     _pagingNavigation: false,
@@ -2024,8 +2036,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @return {Promise}
      * @protected
      */
-    _beforeMount: function (newOptions, context, receivedState: IReceivedState = {}) {
-        var self = this;
+    _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
+        const self = this;
 
         this._inertialScrolling = new InertialScrolling();
 
@@ -2047,7 +2059,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.createEditInPlace(self, newOptions);
         }
 
-        return _private.prepareCollapsedGroups(newOptions).addCallback(function (collapsedGroups) {
+        return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             let viewModelConfig = cClone(newOptions);
             if (collapsedGroups) {
                 viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
@@ -2098,7 +2110,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
                     }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
                     if (self._pagingNavigation) {
-                        var hasMoreData = self._items.getMetaData().more;
+                        const hasMoreData = self._items.getMetaData().more;
                         _private.updatePagingData(self, hasMoreData);
                     }
 
@@ -2169,7 +2181,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     },
 
-    scrollMoveSyncHandler(_: SyntheticEvent<Event>, params: unknown): void {
+    scrollMoveSyncHandler(params: unknown): void {
         _private.handleListScrollSync(this, params);
 
         if (detection.isMobileIOS) {
@@ -2177,26 +2189,26 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    scrollMoveHandler(_: SyntheticEvent<Event>, params: unknown): void {
+    scrollMoveHandler(params: unknown): void {
         _private.handleListScroll(this, params);
     },
 
-    canScrollHandler(_: SyntheticEvent<Event>, params: unknown): void {
+    canScrollHandler(params: unknown): void {
         _private.onScrollShow(this, params);
     },
 
-    cantScrollHandler(): void {
+    cantScrollHandler(params: unknown): void {
         _private.onScrollHide(this);
     },
 
-    viewportResizeHandler(_: SyntheticEvent<Event>, viewportHeight: number, viewportRect: number): void {
+    viewportResizeHandler(viewportHeight: number, viewportRect: number): void {
         const container = this._container[0] || this._container;
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
         this._viewPortSize = viewportHeight;
         this._viewPortRect = viewportRect;
     },
 
-    scrollResizeHandler(_: SyntheticEvent<Event>, params: object): void {
+    scrollResizeHandler(params: object): void {
         if (_private.needScrollPaging(this._options.navigation)) {
             // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
             // поэтому нужен таймаут
@@ -2206,7 +2218,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    updateShadowModeHandler(_: SyntheticEvent<Event>, shadowVisibility: { down: boolean, up: boolean }): void {
+    updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
         _private.updateShadowMode(this, shadowVisibility);
@@ -2217,32 +2229,33 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    loadMore(_: SyntheticEvent<Event>, direction: IDirection): void {
+    loadMore(direction: IDirection): void {
         if (this._options?.navigation?.view === 'infinity') {
             _private.loadToDirectionIfNeed(this, direction, this._options.filter);
         }
     },
 
-    triggerVisibilityChangedHandler(_: SyntheticEvent<Event>, direction: IDirection, state: boolean): void {
+    triggerVisibilityChangedHandler(direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
             _private.hideIndicator(this);
 
             if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
                 _private.getPortionedSearch(this).stopSearch();
-        }
+            }
         }
         if (_private.needScrollPaging(this._options.navigation)) {
             this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewPortSize);
         }
     },
 
-    triggerOffsetChangedHandler(_: SyntheticEvent<Event>, top: number, bottom: number): void {
+    triggerOffsetChangedHandler(top: number, bottom: number): void {
         this._loadOffsetTop = top;
         this._loadOffsetBottom = bottom;
+
     },
 
-    changeIndicatorStateHandler(_: SyntheticEvent<Event>, state: boolean, indicatorName: 'top' | 'bottom'): void {
+    changeIndicatorStateHandler(state: boolean, indicatorName: 'top' | 'bottom'): void {
         if (state) {
             this._children[`${indicatorName}LoadingIndicator`].style.display = '';
         } else {
@@ -2251,6 +2264,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _viewResize(): void {
+        if (this._scrollController) {
+            this._scrollController.viewResize(this._container);
+        }
+
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
         if (_private.needScrollPaging(this._options.navigation)) {
@@ -2269,11 +2286,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return this._listViewModel;
     },
 
-    getSourceController: function () {
+    getSourceController() {
         return this._sourceController;
     },
 
-    _afterMount: function () {
+    _afterMount() {
         this._isMounted = true;
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
@@ -2284,6 +2301,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._options.selectedKeys && this._options.selectedKeys.length !== 0) {
             this._createSelectionController();
+        }
+
+        if (this._scrollController) {
+            this._scrollController.afterMount(container, this._children);
         }
 
         if (this._options.useNewModel) {
@@ -2305,10 +2326,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             }
         }
 
-        if (this._scrollController) {
-            this._scrollController.afterMount(container);
-        }
-
         // для связи с контроллером ПМО
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
         this._notifyOnDrawItems();
@@ -2318,14 +2335,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _beforeUpdate: function (newOptions) {
+    _beforeUpdate(newOptions) {
         this._updateInProgress = true;
-        var filterChanged = !isEqual(newOptions.filter, this._options.filter);
-        var navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
-        var resetPaging = this._pagingNavigation && filterChanged;
-        var recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
-        var sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
-        var self = this;
+        const filterChanged = !isEqual(newOptions.filter, this._options.filter);
+        const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
+        const resetPaging = this._pagingNavigation && filterChanged;
+        const recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
+        const sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
+        const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
         if (!isEqual(newOptions.navigation, this._options.navigation)) {
@@ -2479,7 +2496,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    reloadItem: function (key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
+    reloadItem(key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
         const items = this._listViewModel.getItems();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
         const sourceController = _private.getSourceController(this._options, this._notifyNavigationParamsChanged);
@@ -2536,7 +2553,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         return reloadItemDeferred.addErrback((error) => {
             return _private.crudErrback(this, {
-                error: error,
+                error,
                 mode: dataSourceError.Mode.dialog
             });
         });
@@ -2546,12 +2563,12 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return _private.scrollToItem(this, key, toBottom, force);
     },
 
-    _beforeUnmount: function () {
+    _beforeUnmount() {
         if (this._checkLoadToDirectionTimeout) {
             clearTimeout(this._checkLoadToDirectionTimeout);
         }
         if (this._options.itemsDragNDrop) {
-            let container = this._container[0] || this._container;
+            const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
         }
         if (this._sourceController) {
@@ -2648,7 +2665,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._updateInProgress = false;
         this._notifyOnDrawItems();
 
-        //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
+        // FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
             if (this._options.loading && this._loadingState === null) {
                 _private.showIndicator(this);
@@ -2682,7 +2699,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    __onPagingArrowClick: function (e, arrow) {
+    __onPagingArrowClick(e, arrow) {
         switch (arrow) {
             case 'Next':
                 _private.scrollPage(this, 'Down');
@@ -2699,7 +2716,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    __needShowEmptyTemplate: function (emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
+    __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
         const noData = !listViewModel.getCount();
         const noEdit =
@@ -2712,7 +2729,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
 
-    _onCheckBoxClick: function (e, key, status, readOnly) {
+    _onCheckBoxClick(e, key, status, readOnly) {
         if (!readOnly) {
             if (!this._selectionController) {
                 this._createSelectionController();
@@ -2732,7 +2749,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.hideIndicator(this);
     },
 
-    reload: function (keepScroll: boolean, sourceConfig: IBaseSourceConfig) {
+    reload(keepScroll: boolean, sourceConfig: IBaseSourceConfig) {
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
@@ -2743,7 +2760,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.setMarkedKey(this, key);
     },
 
-    _onGroupClick: function (e, groupId, baseEvent) {
+    _onGroupClick(e, groupId, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
             if (this._options.groupProperty) {
@@ -2763,7 +2780,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
     },
 
-    _onItemClick: function (e, item, originalEvent) {
+    _onItemClick(e, item, originalEvent) {
         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
             /*
              When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
@@ -2781,19 +2798,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
     },
 
-    beginEdit: function (options) {
+    beginEdit(options) {
         return this._options.readOnly ? Deferred.fail() : this._editInPlace.beginEdit(options);
     },
 
-    beginAdd: function (options) {
+    beginAdd(options) {
         return this._options.readOnly ? Deferred.fail() : this._editInPlace.beginAdd(options);
     },
 
-    cancelEdit: function () {
+    cancelEdit() {
         return this._options.readOnly ? Deferred.fail() : this._editInPlace.cancelEdit();
     },
 
-    commitEdit: function () {
+    commitEdit() {
         return this._options.readOnly ? Deferred.fail() : this._editInPlace.commitEdit();
     },
 
@@ -2890,7 +2907,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         clickEvent.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        let contents = _private.getPlainItemContents(item);
+        const contents = _private.getPlainItemContents(item);
         const key = contents ? contents.getKey() : item.key;
         this.setMarkedKey(key);
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
@@ -2907,7 +2924,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        let contents = _private.getPlainItemContents(item);
+        const contents = _private.getPlainItemContents(item);
         const key = contents ? contents.getKey() : item.key;
         this.setMarkedKey(key);
 
@@ -2991,7 +3008,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         _private.startDragNDrop(this, this._savedItemMouseDownEventArgs.domEvent, this._savedItemMouseDownEventArgs.itemData);
     },
 
-    _onLoadMoreClick: function () {
+    _onLoadMoreClick() {
         _private.loadToDirectionIfNeed(this, 'down');
     },
 
@@ -3010,7 +3027,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         });
     },
 
-    _nativeDragStart: function (event) {
+    _nativeDragStart(event) {
         // preventDefault нужно делать именно на нативный dragStart:
         // 1. getItemsBySelection может отрабатывать асинхронно (например при массовом выборе всех записей), тогда
         //    preventDefault в startDragNDrop сработает слишком поздно, браузер уже включит нативное перетаскивание
@@ -3018,7 +3035,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         event.preventDefault();
     },
 
-    _dragStart: function (event, dragObject, draggedKey) {
+    _dragStart(event, dragObject, draggedKey) {
         if (!this._dndListController) {
             this._dndListController = _private.createDndListController(this, this._options);
         }
@@ -3028,13 +3045,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // Cобытие mouseEnter на записи может сработать до dragStart.
             // И тогда перемещение при наведении не будет обработано.
             // В таком случае обрабатываем наведение на запись сейчас.
-            //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
-            if (this._unprocessedDragEnteredItem) {
+            // TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
+        if (this._unprocessedDragEnteredItem) {
             this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
         }
     },
 
-    _dragEnd: function (event, dragObject) {
+    _dragEnd(event, dragObject) {
         if (this._dndListController) {
             const targetPosition = this._dndListController.getDragPosition();
             if (targetPosition) {
@@ -3051,19 +3068,19 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._onViewKeyDown(event);
     },
 
-    _onViewKeyDown: function (event) {
+    _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
         if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (!this._options._keyDownHandler || !this._options._keyDownHandler(event))) {
-            let key = event.nativeEvent.keyCode;
-            let dontStop = key === 33
+            const key = event.nativeEvent.keyCode;
+            const dontStop = key === 33
                 || key === 34
                 || key === 35
                 || key === 36;
             keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
-    _dragEnter: function (event, dragObject) {
+    _dragEnter(event, dragObject) {
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController && dragObject && this._dndListController.isDragging()
             && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
@@ -3089,7 +3106,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     },
 
     _documentDragEnd(): void {
-        //Reset the state of the dragndrop after the movement on the source happens.
+        // Reset the state of the dragndrop after the movement on the source happens.
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController) {
         if (this._dragEndResult instanceof Promise) {
@@ -3145,18 +3162,18 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
         }
     },
-    _sortingChanged: function (event, propName) {
-        var newSorting = _private.getSortingOnChange(this._options.sorting, propName);
+    _sortingChanged(event, propName) {
+        const newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
         this._notify('sortingChanged', [newSorting]);
     },
 
-    __pagingChangePage: function (event, page) {
+    __pagingChangePage(event, page) {
         this._currentPage = page;
         this._applyPagingNavigationState({page: this._currentPage});
     },
 
-    _changePageSize: function (e, key) {
+    _changePageSize(e, key) {
         this._currentPageSize = PAGE_SIZE_ARRAY[key - 1].pageSize;
         this._currentPage = 1;
         this._applyPagingNavigationState({pageSize: this._currentPageSize});
@@ -3178,8 +3195,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._notify('tagHover', [dispItem, columnIndex, event]);
     },
 
-    _applyPagingNavigationState: function (params) {
-        var newNavigation = cClone(this._options.navigation);
+    _applyPagingNavigationState(params) {
+        const newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
             newNavigation.sourceConfig.pageSize = params.pageSize;
         }
@@ -3192,7 +3209,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         this._shouldRestoreScrollPosition = true;
     },
 
-    recreateSourceController: function (newSource, newNavigation, newKeyProperty) {
+    recreateSourceController(newSource, newNavigation, newKeyProperty) {
 
         if (this._sourceController) {
             this._sourceController.destroy();
@@ -3360,12 +3377,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         if (this._scrollController) {
             this._scrollController.itemsContainerReady(itemsContainerGetter);
-        }
-    },
-
-    _viewResizeHandler(): void {
-        if (this._scrollController) {
-            this._scrollController.viewResize(this._container);
         }
     },
 

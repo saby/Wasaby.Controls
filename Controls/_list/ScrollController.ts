@@ -46,6 +46,14 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
     _notify: (eventName: string, args?: unknown[], options?: { bubbling?: boolean }) => unknown;
 }
 
+interface IScrollTriggers {
+    topVirtualScrollTrigger?: HTMLElement;
+    bottomVirtualScrollTrigger?: HTMLElement;
+    topLoadTrigger?: HTMLElement;
+    bottomLoadTrigger?: HTMLElement;
+    scrollObserver?: HTMLElement;
+}
+
 /**
  * Контейнер управляющий операциями скролла в списке.
  * @class Controls/_list/ScrollController/ScrollController
@@ -54,12 +62,19 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
  * @author Авраменко А.С.
  */
 export default class ScrollController {
-    protected triggers: {
-        topVirtualScrollTrigger: HTMLElement;
-        bottomVirtualScrollTrigger: HTMLElement;
-        topLoadTrigger: HTMLElement;
-        bottomLoadTrigger: HTMLElement;
-    };
+
+    // В браузерах кроме хрома иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
+    // вследствие чего получаем ошибку в вычислениях нового range и вообше делаем по сути
+    // лишние пересчеты, например: https://online.sbis.ru/opendoc.html?guid=ea354034-fd77-4461-a368-1a8019fcb0d4
+    // TODO: этот код должен быть убран после
+    // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
+    private get _calculatedTriggerVisibility(): ITriggerState {
+        return {
+            up: this._triggerOffset >= this._lastScrollTop - this._container.offsetTop,
+            down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
+        };
+    }
+    protected _triggers: IScrollTriggers;
     private _observerRegistered: boolean = false;
     private _container: HTMLElement;
     private _virtualScroll: VirtualScroll;
@@ -73,20 +88,7 @@ export default class ScrollController {
     private _updateShadowModeAfterMount: Function|null = null;
 
     private _updateShadowModeAfterMount: Function|null = null;
-
     private _triggerVisibility: ITriggerState = {up: false, down: false};
-
-    // В браузерах кроме хрома иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
-    // вследствие чего получаем ошибку в вычислениях нового range и вообше делаем по сути
-    // лишние пересчеты, например: https://online.sbis.ru/opendoc.html?guid=ea354034-fd77-4461-a368-1a8019fcb0d4
-    // TODO: этот код должен быть убран после
-    // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
-    private get _calculatedTriggerVisibility(): ITriggerState {
-        return {
-            up: this._triggerOffset >= this._lastScrollTop - this._container.offsetTop,
-            down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
-        };
-    }
 
     private _restoreScrollResolve: Function;
     private _checkTriggerVisibilityTimeout: NodeJS.Timeout;
@@ -95,7 +97,7 @@ export default class ScrollController {
     private _isRendering: boolean = false;
 
     private _indicatorState: IDirection;
-    private _indicatorTimeout: number;
+    private _indicatorTimeout: NodeJS.Timeout;
 
     private _addItemsDirection: IDirection;
     private _addItemsIndex: number;
@@ -112,11 +114,7 @@ export default class ScrollController {
 
     protected _options: any;
 
-    constructor(options: any) {
-        this._options = options;
-        this._initModelObserving(options);
-        this._initVirtualScroll(options);
-    }
+    private _callbacks: any;
 
     private _throttledPositionChanged: Function = throttle((params) => {
         const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
@@ -126,17 +124,25 @@ export default class ScrollController {
         this._doAfterRender(params.applyScrollTopCallback);
     }, SCROLLMOVE_DELAY, true);
 
+    constructor(options: any) {
+        this._options = options;
+        this._initModelObserving(options);
+        this._initVirtualScroll(options);
+        this._callbacks = options.callbacks;
+    }
+
     protected _registerObserver(): void {
         if (!this._observerRegistered) {
             // @ts-ignore
-            this._scrollObserver.startRegister(this._triggers);
+            this._triggers.scrollObserver.startRegister(this._triggers);
             this._observerRegistered = true;
         }
     }
 
-    afterMount(container: HTMLElement): void {
+    afterMount(container: HTMLElement, triggers: IScrollTriggers): void {
         this.__mounted = true;
         this._container = container;
+        this._triggers = triggers;
         this._viewResize(this._container.offsetHeight, false);
         if (this._options.needScrollCalculation) {
             this._registerObserver();
@@ -152,11 +158,12 @@ export default class ScrollController {
         if (options.collection && this._options.collection !== options.collection) {
             this._initModelObserving(options);
             this._initVirtualScroll(options);
+            this._options.collection = options.collection;
         }
 
         if (this._indicatorState) {
             this._indicatorTimeout = setTimeout(() => {
-                this._notify('changeIndicatorState', [true, this._indicatorState]);
+                this._callbacks.changeIndicatorState(true, this._indicatorState);
             }, LOADING_INDICATOR_SHOW_TIMEOUT);
         }
 
@@ -219,7 +226,7 @@ export default class ScrollController {
                 break;
             case 'viewportResize':
                 this._viewportResize(params.clientHeight);
-                this._notify('viewportResize', [params.clientHeight, params.rect]);
+                this._callbacks.viewportResize(params.clientHeight, params.rect);
                 break;
             case 'virtualScrollMove':
                 this._scrollBarPositionChanged(params);
@@ -228,7 +235,7 @@ export default class ScrollController {
             case 'scrollResize':
             case 'scrollMove':
             case 'cantScroll':
-                this._notify(eventName, [params as IScrollParams]);
+                this._callbacks[eventName](params as IScrollParams);
                 break;
         }
     }
@@ -443,18 +450,18 @@ export default class ScrollController {
             }
         }
         if (this.__mounted) {
-            this._notify('updateShadowMode', [{
+            this._callbacks.updateShadowMode({
                 up: start > 0,
                 down: stop < collection.getCount()
-            }]);
+            });
         } else {
             // Обновление режима отображения тени в должно вызываться, иначе изначальное отображение будет неверным.
             // https://online.sbis.ru/opendoc.html?guid=a3d69022-e68d-41d2-95c6-b9a8877190e9
             this._updateShadowModeAfterMount = () => {
-                this._notify('updateShadowMode', [{
+                this._callbacks.updateShadowMode({
                     up: start > 0,
                     down: stop < collection.getCount()
-                }]);
+                });
             };
         }
     }
@@ -475,7 +482,7 @@ export default class ScrollController {
 
         this._triggerVisibility[triggerName] = triggerVisible;
         // TODO Совместимость необходимо удалить после переписывания baseControl
-        this._notify('triggerVisibilityChanged', [triggerName, triggerVisible]);
+        this._callbacks.triggerVisibilityChanged(triggerName, triggerVisible);
     }
 
     /**
@@ -488,7 +495,7 @@ export default class ScrollController {
             this._inertialScrolling.scrollStarted();
         }
 
-        this._notify('scrollPositionChanged', [this._lastScrollTop]);
+        this._callbacks.scrollPositionChanged(this._lastScrollTop);
 
         if (this._fakeScroll) {
             this._fakeScroll = false;
@@ -545,7 +552,7 @@ export default class ScrollController {
      */
     private _recalcToDirection(direction: IDirection): void {
         if (!this._virtualScroll.rangeChanged && this._virtualScroll.isRangeOnEdge(direction)) {
-            this._notifyLoadMore(direction);
+            this._callbacks.loadMore(direction);
         } else {
             this._inertialScrolling.callAfterScrollStopped(() => {
                 if (!this._virtualScroll.rangeChanged) {
@@ -567,7 +574,7 @@ export default class ScrollController {
         }
 
         if (this._indicatorState) {
-            this._notify('changeIndicatorState', [false, this._indicatorState]);
+            this._callbacks.changeIndicatorState(false, this._indicatorState);
             this._indicatorState = null;
             clearTimeout(this._indicatorTimeout);
         }
@@ -705,15 +712,6 @@ export default class ScrollController {
             this._options.needScrollCalculation);
     }
 
-    /**
-     * Нотифицирует о том, что нужно грузить новые данные
-     * @param direction
-     * @private
-     */
-    private _notifyLoadMore(direction: IDirection): void {
-        this._notify('loadMore', [direction]);
-    }
-
     private _notifyPlaceholdersChanged(placeholders: IPlaceholders): void {
         this._placeholders = placeholders;
 
@@ -728,7 +726,7 @@ export default class ScrollController {
             this._options._triggerPositionCoefficient;
         this._triggers?.topVirtualScrollTrigger?.style.top = `${this._triggerOffset}px`;
         this._triggers?.bottomVirtualScrollTrigger?.style.bottom = `${this._triggerOffset}px`;
-        this._notify('triggerOffsetChanged', [this._triggerOffset, this._triggerOffset]);
+        this._callbacks.triggerOffsetChanged(this._triggerOffset, this._triggerOffset);
     }
 
     private static _setCollectionIterator(collection: Collection<Record>, mode: 'remove' | 'hide'): void {
