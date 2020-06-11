@@ -2435,7 +2435,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         // Ициализация опций записи при загрузке нужна для случая, когда предустановлен editingConfig.item
         if (newOptions.editingConfig && newOptions.editingConfig.item) {
-            this._updateItemActions(newOptions);
+            this._initItemActions(newOptions);
         }
 
         if (this._itemsChanged) {
@@ -2782,9 +2782,9 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Выполняется из шаблона при mouseenter
      * @private
      */
-    _initItemActions(): void {
+    _initItemActions(options: any): void {
         if (!this._itemActionsInitialized) {
-            this._updateItemActions(this._options);
+            this._updateItemActions(options);
             this._itemActionsInitialized = true;
         }
     },
