@@ -47,10 +47,40 @@ define([
                closest: () => true
             };
             sinon.stub(component, '_createObserver');
+            component._canScroll = true;
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            component._onScrollStateChanged('canScroll');
             assert.isUndefined(component._observer);
             component._container.closest = () => false;
             component._resizeHandler();
+            sinon.assert.called(component._createObserver);
+            sinon.restore();
+         });
+
+         it('should create observer if scroll is appears', function () {
+            const component = createComponent(StickyHeader, options);
+            component._container = {
+               closest: () => false
+            };
+            sinon.stub(component, '_createObserver');
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            assert.isUndefined(component._observer);
+            component._onScrollStateChanged('canScroll');
+            sinon.assert.called(component._createObserver);
+            sinon.restore();
+         });
+
+         it('should not create a observer if there is no scroll, and must create scroll is appears', function () {
+            const component = createComponent(StickyHeader, options);
+            component._container = {
+               closest: () => false
+            };
+            sinon.stub(component, '_createObserver');
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            assert.isUndefined(component._observer);
+            component._onScrollStateChanged('cantScroll');
+            sinon.assert.notCalled(component._createObserver);
+            component._onScrollStateChanged('canScroll');
             sinon.assert.called(component._createObserver);
             sinon.restore();
          });
