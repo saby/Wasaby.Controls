@@ -96,29 +96,28 @@ export default interface ISelectorDialog {
  *
  * @example
  * В следующем примере создается Controls/lookup:Input и демонстрируется сценарий использования.
- * WML:
- * <pre>
- *    <Controls.lookup:Input
- *       source="{{_source}}"
- *       keyProperty="id"
- *       searchParam="title"
- *       on:selectorCallback="_selectorCallback()">
- *    </Controls.lookup:Input>
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.lookup:Input
+ *     source="{{_source}}"
+ *     keyProperty="id"
+ *     searchParam="title"
+ *     on:selectorCallback="_selectorCallback()" />
  * </pre>
- * JS:
- * <pre>
- *    _selectorCallback: function(initialItems, newItems) {
- *       let resultRS = newItems.clone();
- *       let countItems = resultRS.getCount();
+ * <pre class="brush: js">
+ * // JavaScript
+ * _selectorCallback: function(eventObject, initialItems, newItems) {
+ *    let resultRS = newItems.clone();
+ *    let countItems = resultRS.getCount();
  *
- *       if (countItems > 1) {
- *          resultRS.clear();
- *          resultRS.add(newItems.at(0));
- *       }
- *
- *       // Вернем новую коллекцию
- *       return resultRS;
+ *    if (countItems > 1) {
+ *       resultRS.clear();
+ *       resultRS.add(newItems.at(0));
  *    }
+ *
+ *    // Вернем новую коллекцию
+ *    return resultRS;
+ * }
  * </pre>
  */
 
