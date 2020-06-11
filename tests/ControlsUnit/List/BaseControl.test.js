@@ -4799,7 +4799,7 @@ define([
 
          // Необходимо обновлять опции записи если в конфиге editingConfig передан item
          it('should update ItemActions when item was passed within options.editingConfig', () => {
-            instance._itemActionsInitialized = true;
+            instance._itemActionsInitialized = false;
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
