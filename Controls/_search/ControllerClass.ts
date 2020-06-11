@@ -47,7 +47,7 @@ interface ISearchCallbackResult {
     hasMore: boolean;
 }
 
-export default class SearchController {
+export default class SearchControllerClass {
     private _options: ISearchControllerOptions = null;
     private _viewMode: string = '';
     private _previousViewMode: string = '';
@@ -66,6 +66,7 @@ export default class SearchController {
         this._options = options;
         this._dataOptions = context.dataOptions;
         this._previousViewMode = this._viewMode = options.viewMode;
+        this._updateViewMode(options.viewMode);
         let searchValue = options.searchValue;
         if (options.useStore) {
             this._observeStore();
@@ -181,7 +182,7 @@ export default class SearchController {
             this._notifiedMarkedKey = root;
             if (this._options.expandedItemsChangedCallback) {
                 this._options.expandedItemsChangedCallback(
-                    SearchController._prepareExpandedItems(
+                    SearchControllerClass._prepareExpandedItems(
                         this._options.root,
                         root,
                         items,
@@ -429,7 +430,7 @@ export default class SearchController {
     private _updateRootAfterSearch(): void {
         if (this._options.startingWith === 'root') {
             this._setRoot(
-                SearchController._getRoot(this._path, this._root, this._options.parentProperty)
+                SearchControllerClass._getRoot(this._path, this._root, this._options.parentProperty)
             );
         }
     }
@@ -535,6 +536,9 @@ export default class SearchController {
             },
             deepReloadChangedCallback: (deepReload) => {
                 self._deepReload = deepReload;
+            },
+            misspellValueChangedCallback: (value) => {
+                self._misspellValue = value;
             },
             filterChangedCallback: (filter) => {
                 self._notify('filterChanged', [filter]);
