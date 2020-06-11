@@ -5516,6 +5516,15 @@ define([
             baseControl;
 
          async function mountBaseControl(control, options) {
+            sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => {
+               return {
+                  setMarkedKey() { },
+                  moveMarkerToNext() {},
+                  moveMarkerToPrev() {},
+                  handleRemoveItems() {},
+                  update() {}
+               };
+            });
             control.saveOptions(options);
             await control._beforeMount(options);
             control._container = {clientHeight: 0};
@@ -5531,15 +5540,6 @@ define([
                   markedKey: null
                };
                const _baseControl = new lists.BaseControl(baseControlOptions);
-               sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => {
-                  return {
-                     setMarkedKey() { },
-                     moveMarkerToNext() {},
-                     moveMarkerToPrev() {},
-                     handleRemoveItems() {},
-                     update() {}
-                  };
-               });
                await mountBaseControl(_baseControl, baseControlOptions);
                baseControl = _baseControl;
             });
