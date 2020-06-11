@@ -2449,7 +2449,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         // Ициализация опций записи при загрузке нужна для случая, когда предустановлен editingConfig.item
         if (newOptions.editingConfig && newOptions.editingConfig.item) {
-            this._initItemActions(newOptions);
+            this._initItemActions(null, newOptions);
         }
 
         if (this._itemsChanged) {
@@ -2797,7 +2797,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Инициализирует опции при mouseenter в шаблоне контрола
      * @private
      */
-    _initItemActions(options: any): void {
+    _initItemActions(e: SyntheticEvent, options: any): void {
         if (this._options.itemActionsVisibility !== 'visible') {
             if (!this._listViewModel.isActionsAssigned()) {
             this._updateItemActions(options);
