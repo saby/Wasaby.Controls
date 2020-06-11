@@ -10,6 +10,7 @@ import {Logger} from 'UI/Utils';
 import { DefaultOpenerFinder } from 'UI/Focus';
 import rk = require('i18n!Controls');
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
+import { error as dataSourceError } from 'Controls/dataSource';
 
 /**
  * Base Popup opener
@@ -85,7 +86,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         const popupId: string = this._getCurrentPopupId();
         if (popupId) {
             (BaseOpener.closeDialog(popupId) as Promise<void>).then(() => {
-                this._popupId = null;
+                // Пока закрывали текущее окно, уже могли открыть новое с новым popupId.
+                // Если popupId новый, то не нужно чистить старое значение
+                if (!ManagerController.find(this._popupId)) {
+                    this._popupId = null;
+                }
             });
         }
     }
@@ -334,8 +339,10 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 try {
                     requirejs.onError(error);
                 } finally {
-                    Logger.error('Controls/popup' + ': ' + error.message, undefined, error);
-                    reject(error);
+                    dataSourceError.process({ error }).then(() => {
+                        Logger.error('Controls/popup' + ': ' + error.message, undefined, error);
+                        reject(error);
+                    });
                 }
             });
         });

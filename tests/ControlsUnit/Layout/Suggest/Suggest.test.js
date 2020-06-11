@@ -1,4 +1,4 @@
-define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/history', 'Core/Deferred', 'Controls/popup'], function(suggestMod, collection, entity, Env, history, Deferred, popupLib) {
+define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/history', 'Core/Deferred', 'Controls/popup', 'Core/library'], function(suggestMod, collection, entity, Env, history, Deferred, popupLib, coreLib) {
 'use strict';
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
@@ -352,20 +352,17 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isFalse(suggest._loading);
       });
 
-      it('Suggest::check footer template', function(done) {
+      it('Suggest::check footer template', function() {
          var footerTpl;
+         let compat = Env.constants.compat;
+         Env.constants.compat = true;
 
-         requirejs(['Controls/suggestPopup'], function(result) {
-            let compat = Env.constants.compat;
-            Env.constants.compat = true;
-
+         return coreLib.load('Controls/suggestPopup').then((result) => {
             footerTpl = result.FooterTemplate;
-
             assert.equal(footerTpl(), '<div class="controls-Suggest__footer"></div>');
             assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore'}), '<div class="controls-Suggest__footer">testShowMore</div>');
             assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore', showSelectorButtonTemplate: 'testShowSelector'}), '<div class="controls-Suggest__footer">testShowMoretestShowSelector</div>');
-            done();
-
+         }).finally(() => {
             Env.constants.compat = compat;
          });
       });

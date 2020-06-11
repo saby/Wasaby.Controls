@@ -26,13 +26,13 @@ define([
          const lookup = new Lookup();
          let options;
 
-         options = {multiLine: true, maxVisibleItems: 10, readOnly: true, multiSelect: true};
+         options = {multiLine: true, maxVisibleItems: 10, readOnly: true, multiSelect: true, items: getItems(5)};
          lookup._beforeMount(options);
          assert.equal(lookup._maxVisibleItems, 10);
 
          options = {items: getItems(5), readOnly: true, multiSelect: true};
          lookup._beforeMount(options);
-         assert.equal(lookup._maxVisibleItems, 5);
+         assert.equal(lookup._maxVisibleItems, 0);
 
          options = {items: getItems(5), readOnly: true};
          lookup._beforeMount(options);
@@ -143,9 +143,10 @@ define([
       });
 
       it('_changeValueHandler', function() {
-         var
-            newValue = [],
-            lookup = new Lookup();
+         const lookup = new Lookup();
+         let newValue = [];
+
+         lookup.saveOptions(Lookup.getDefaultOptions());
 
          lookup._notify = function(event, value) {
             if (event === 'valueChanged') {
@@ -154,6 +155,7 @@ define([
          };
          lookup._changeValueHandler(null, 1);
          assert.deepEqual(newValue, [1]);
+         assert.equal(lookup._inputValue, 1);
       });
 
       it('_choose', function() {
@@ -178,7 +180,7 @@ define([
             assert.isFalse(itemAdded);
          };
 
-         lookup._beforeMount({ multiLine: true });
+         lookup._beforeMount({ multiLine: true , items: getItems(1)});
 
          lookup._options.multiSelect = false;
          lookup._choose();
@@ -299,7 +301,8 @@ define([
          };
 
          lookup._beforeMount({
-            value: ''
+            value: '',
+            items: getItems(0)
          });
          lookup._options.items = getItems(0);
          lookup._keyDown(null, eventBackspace);
@@ -314,7 +317,8 @@ define([
          isNotifyRemoveItems = false;
 
          lookup._beforeMount({
-            value: 'not empty valeue'
+            value: 'not empty valeue',
+            items: getItems(1)
          });
          lookup._options.value = 'not empty valeue';
          lookup._keyDown(null, eventBackspace);

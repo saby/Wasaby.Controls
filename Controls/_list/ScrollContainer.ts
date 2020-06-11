@@ -107,7 +107,7 @@ export default class ScrollContainer extends Control<IOptions> {
     // подскроллов создаваемых самим контролом (scrollToItem, восстановление позиции скролла после перерисовок)
     private _fakeScroll: boolean;
 
-    private __mounted: boolean = false;
+    private _isMounted: boolean = false;
 
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
@@ -134,7 +134,7 @@ export default class ScrollContainer extends Control<IOptions> {
     }
 
     protected _afterMount(): void {
-        this.__mounted = true;
+        this._isMounted = true;
         this._viewResize(this._container.offsetHeight, false);
         if (this._options.needScrollCalculation) {
             this._registerObserver();
@@ -313,10 +313,15 @@ export default class ScrollContainer extends Control<IOptions> {
                                 const rangeShiftResult = this._virtualScroll
                                     .resetRange(index, this._options.collection.getCount());
                                 this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-                                this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
-                                    this._options.needScrollCalculation);
+                                this._setCollectionIndices(
+                                    this._options.collection,
+                                    rangeShiftResult.range,
+                                    false,
+                                    this._options.needScrollCalculation
+                                );
 
-                                // Скролл нужно восстанавливать после отрисовки, для этого используем _restoreScrollResolve
+                                // Скролл нужно восстанавливать после отрисовки, для этого используем
+                                // _restoreScrollResolve
                                 this._restoreScrollResolve = scrollCallback;
                             });
                         }
@@ -428,19 +433,19 @@ export default class ScrollContainer extends Control<IOptions> {
             let collectionStartIndex: number;
             let collectionStopIndex: number;
 
-        if (collection.getViewIterator) {
-            collectionStartIndex = VirtualScrollController.getStartIndex(
-                collection as unknown as VirtualScrollController.IVirtualScrollCollection
-            );
-            collectionStopIndex = VirtualScrollController.getStopIndex(
-                collection as unknown as VirtualScrollController.IVirtualScrollCollection
-            );
-        } else {
-            // @ts-ignore
-            collectionStartIndex = collection.getStartIndex();
-            // @ts-ignore
-            collectionStopIndex = collection.getStopIndex();
-        }
+            if (collection.getViewIterator) {
+                collectionStartIndex = VirtualScrollController.getStartIndex(
+                    collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+                collectionStopIndex = VirtualScrollController.getStopIndex(
+                    collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+            } else {
+                // @ts-ignore
+                collectionStartIndex = collection.getStartIndex();
+                // @ts-ignore
+                collectionStopIndex = collection.getStopIndex();
+            }
 
             if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
                 if (collection.getViewIterator) {
@@ -451,7 +456,7 @@ export default class ScrollContainer extends Control<IOptions> {
                 }
             }
         }
-        if (this.__mounted) {
+        if (this._isMounted) {
             this._notify('updateShadowMode', [{
                 up: start > 0,
                 down: stop < collection.getCount()
@@ -655,7 +660,9 @@ export default class ScrollContainer extends Control<IOptions> {
             }
 
             if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
-                this._itemsRemovedHandler(removedItemsIndex, removedItems);
+                // When move items call removeHandler with "forceShift" param.
+                // https://online.sbis.ru/opendoc.html?guid=4e6981f5-27e1-44e5-832e-2a080a89d6a7
+                this._itemsRemovedHandler(removedItemsIndex, removedItems, action === IObservable.ACTION_MOVE);
             }
 
             if (action === IObservable.ACTION_RESET) {
@@ -668,8 +675,12 @@ export default class ScrollContainer extends Control<IOptions> {
             // Такое происходит например при добавлении в узел дерева
             // После решения ошибки этот код будет не нужен и индексы проставляться будут только здесь
             // @ts-ignore
-            this._setCollectionIndices(this._options.collection, this._virtualScroll._range, false,
-                this._options.needScrollCalculation);
+            this._setCollectionIndices(
+                this._options.collection,
+                this._virtualScroll._range,
+                false,
+                this._options.needScrollCalculation
+            );
         }
     }
 
@@ -701,10 +712,11 @@ export default class ScrollContainer extends Control<IOptions> {
      * Обрабатывает удаление элементов из коллекции
      * @param removeIndex
      * @param items
+     * @param forcedShift
      * @private
      */
-    private _itemsRemovedHandler(removeIndex: number, items: object[]): void {
-        const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length);
+    private _itemsRemovedHandler(removeIndex: number, items: object[], forcedShift: boolean): void {
+        const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length, forcedShift);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
             this._options.needScrollCalculation);
@@ -722,7 +734,7 @@ export default class ScrollContainer extends Control<IOptions> {
     private _notifyPlaceholdersChanged(placeholders: IPlaceholders): void {
         this._placeholders = placeholders;
 
-        if (this.__mounted) {
+        if (this._isMounted) {
             this._notify('updatePlaceholdersSize', [placeholders], {bubbling: true});
         }
     }

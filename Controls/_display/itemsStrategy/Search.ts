@@ -101,7 +101,9 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
     getDisplayIndex(index: number): number {
         const sourceIndex = this.source.getDisplayIndex(index);
         const sourceItem = this.source.items[sourceIndex];
-        const mappedItem = this._treeItemToDecorator.get(sourceItem) || sourceItem;
+        const mappedItem = this._treeItemToDecorator.get(sourceItem)
+           || this._treeItemToBreadcrumbs.get(sourceItem)
+           || sourceItem;
         const items = this._getItems();
         const itemIndex = items.indexOf(mappedItem as T);
 

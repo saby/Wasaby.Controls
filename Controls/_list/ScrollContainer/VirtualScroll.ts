@@ -8,6 +8,8 @@ import {
 } from './interfaces';
 import * as getDimensions from 'Controls/Utils/getDimensions';
 
+const RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT = 4;
+
 /**
  * Контроллер, управляющий виртуальным скроллом.
  * @class Controls/_list/ScrollContainer/VirtualScroll
@@ -42,7 +44,7 @@ export default class VirtualScroll {
         let segmentSize: number = options.segmentSize;
 
         if (!segmentSize) {
-            segmentSize = pageSize ? Math.ceil(pageSize / 4) : 0;
+            segmentSize = pageSize ? Math.ceil(pageSize / RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT) : 0;
         }
 
         this._options = {...this._options, ...{segmentSize, pageSize}};
@@ -159,14 +161,15 @@ export default class VirtualScroll {
      * Производит смещение диапазона за счет удаления элементов
      * @param removeIndex индекс начиная с которого происходит удаление элементов
      * @param count количество удаляемых элементов
+     * @param forcedShift Принудительный сдвиг. В таком случае игнорируется состояние rangeChanged.
      */
-    removeItems(removeIndex: number, count: number): IRangeShiftResult {
+    removeItems(removeIndex: number, count: number, forcedShift?: boolean): IRangeShiftResult {
         const direction = removeIndex < this._range.start ? 'up' : 'down';
         this._itemsCount -= count;
         this._removeItemHeights(removeIndex, count);
 
         return this._setRange(
-            this.rangeChanged ? this._range : this._shiftRangeBySegment(direction, count)
+            this.rangeChanged && !forcedShift ? this._range : this._shiftRangeBySegment(direction, count)
         );
     }
 
@@ -401,7 +404,9 @@ export default class VirtualScroll {
         }
 
         for (let i = 0, len = Math.min(container.children.length, this._range.stop - this._range.start); i < len; i++) {
-            const itemHeight = Math.round(getDimensions(container.children[startChildrenIndex + i] as HTMLElement).height);
+            const itemHeight = Math.round(
+                getDimensions(container.children[startChildrenIndex + i] as HTMLElement).height
+            );
 
             this._itemsHeightData.itemsHeights[this._range.start + i] = itemHeight;
             this._itemsHeightData.itemsOffsets[this._range.start + i] = sum;

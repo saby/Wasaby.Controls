@@ -180,14 +180,6 @@ class Manager extends Control<IManagerOptions> {
              item.popupState === item.controller.POPUP_STATE_DESTROYED);
     }
 
-    /**
-     * Reindex a set of popups, for example, after changing the configuration of one of them
-     * @function Controls/_popup/Manager#reindex
-     */
-    reindex(): void {
-        this._popupItems._reindex();
-    }
-
     private _updateContext(context: IManagerTouchContext): void {
         this._contextIsTouch = context && context.isTouch && context.isTouch.isTouch;
     }
@@ -238,7 +230,7 @@ class Manager extends Control<IManagerOptions> {
     private _addElement(item: IPopupItem): void {
         this._popupItems.add(item);
         if (item.modal) {
-            ManagerController.getContainer().setOverlay(this._popupItems.getCount() - 1);
+            ManagerController.getContainer().setOverlay(item.id);
         }
     }
 
@@ -294,7 +286,9 @@ class Manager extends Control<IManagerOptions> {
 
     private _updateOverlay(): void {
         const indices = this._popupItems.getIndicesByValue('modal', true);
-        ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
+        const lastModalIndex = indices.length ? indices[indices.length - 1] : null;
+        const lastModalItem = this._popupItems.at(lastModalIndex);
+        ManagerController.getContainer().setOverlay(lastModalItem?.id);
     }
 
     protected _pageScrolled(id: string): boolean {

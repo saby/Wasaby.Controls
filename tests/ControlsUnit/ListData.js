@@ -20,7 +20,7 @@ define('ControlsUnit/ListData', function() {
          }, {
             'id': 3,
             'Раздел': 2,
-            'Раздел@': null,
+            'Раздел@': false,
             'Раздел$': false
          }, {
             'id': 4,

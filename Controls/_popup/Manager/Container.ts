@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {List} from 'Types/collection';
 import {IPopupItem} from 'Controls/_popup/interface/IPopup';
+import {dispatcherHandler} from 'UI/HotKeys';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import template = require('wml!Controls/_popup/Manager/Container');
 
@@ -21,7 +22,7 @@ class Container extends Control<IControlOptions> {
      */
 
     protected _template: TemplateFunction = template;
-    protected _overlayId: number = null;
+    protected _overlayId: string;
     protected _zIndexStep: number = POPUP_ZINDEX_STEP;
     protected _popupItems: List<IPopupItem>;
 
@@ -35,10 +36,10 @@ class Container extends Control<IControlOptions> {
     /**
      * Set the index of popup, under which the overlay will be drawn
      * @function Controls/_popup/Manager/Container#setPopupItems
-     * @param {Integer} index индекс попапа
+     * @param {String} id индекс попапа
      */
-    setOverlay(index: number): void {
-        this._overlayId = index;
+    setOverlay(id: string): void {
+        this._overlayId = id;
     }
 
     /**
@@ -63,6 +64,19 @@ class Container extends Control<IControlOptions> {
 
     getPending(): Control {
         return this._children.pending as Control;
+    }
+
+    // todo: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
+    protected _getItems(popupItems: List<IPopupItem>): List<IPopupItem> {
+        const reversePopupList: List<IPopupItem> = new List();
+        popupItems.each((item: IPopupItem) => {
+            reversePopupList.add(item, 0);
+        });
+        return reversePopupList;
+    }
+
+    protected _keyDownHandler(event: Event): void {
+        return dispatcherHandler(event);
     }
 
     protected _popupDeactivated(event: Event, popupId: string, data: boolean): void {

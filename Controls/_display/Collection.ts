@@ -1,3 +1,4 @@
+import { TemplateFunction } from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
@@ -32,6 +33,7 @@ import * as VirtualScrollController from './controllers/VirtualScroll';
 import { IDragPosition } from 'Controls/listDragNDrop';
 import DragStrategy from './itemsStrategy/Drag';
 import { ItemsEntity } from 'Controls/dragnDrop';
+import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -39,18 +41,8 @@ const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editingContents', 'animated', 'canShowActions', 'expanded'];
 
-export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
-}
-
-export type SourceCollection<T> = T[] | ISourceCollection<T>;
-
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
-}
-
-export enum ANIMATION_STATE {
-    CLOSE = 'close',
-    OPEN = 'open'
 }
 
 type FilterFunction<S> = (
@@ -125,16 +117,6 @@ export interface IItemActionsTemplateConfig {
     actionAlignment?: string;
     actionCaptionPosition?: 'right'|'bottom'|'none';
     itemActionsClass?: string;
-}
-
-export interface IContextMenuConfig {
-    items?: RecordSet;
-    groupTemplate?: TemplateFunction|string;
-    groupProperty?: string;
-    itemTemplate?: TemplateFunction|string;
-    footerTemplate?: TemplateFunction|string;
-    headerTemplate?: TemplateFunction|string;
-    iconSize?: string;
 }
 
 export interface ISwipeConfig {
@@ -405,7 +387,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     SerializableMixin,
     VersionableMixin,
     EventRaisingMixin
-) implements IEnumerable<T>, IList<T> {
+) implements ICollection<S, T>, IEnumerable<T>, IList<T> {
     /**
      * Возвращать локализованные значения
      */
@@ -604,8 +586,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$hasMoreData: boolean;
 
-    protected _$contextMenuConfig: IContextMenuConfig;
-
     protected _$compatibleReset: boolean;
 
     protected _$itemActionsProperty: string;
@@ -721,6 +701,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * Анимация свайпа: открытие или закрытие меню опций
      */
     protected _swipeAnimation: ANIMATION_STATE;
+
+    protected _$isEditing: boolean;
 
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
@@ -2184,8 +2166,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const item = this.getItemBySourceKey(key);
         if (item) {
             item.setMarked(status);
+            this.nextVersion();
         }
-        this.nextVersion();
     }
 
     getValidItemForMarker(index: number): S {
@@ -2275,11 +2257,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$compatibleReset = compatible;
     }
 
-    // yet not used anywhere
-    getContextMenuConfig(): IContextMenuConfig {
-        return this._$contextMenuConfig;
-    }
-
     setViewIterator(viewIterator: IViewIterator): void {
         this._viewIterator = viewIterator;
     }
@@ -2363,6 +2340,23 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     getActiveItem(): T {
         return this._$activeItem;
+    }
+
+    /**
+     * Возвращает состояние editing для модели.
+     * Можно было бы проверять isEditing() у CollectionItem и таким образом
+     * рисовать ItemActions только там, где это надо. Но при поиске методом find новый item не учитывается в enumerator и,
+     * соответственно, невозможно проверить, что в коллекцю что-то добавляется.
+     */
+    isEditing(): boolean {
+        return this._$isEditing;
+    }
+
+    /**
+     * Устанавливает состояние editing для модели.
+     */
+    setEditing(editing): void {
+        this._$isEditing = editing;
     }
 
     getSwipeConfig(): ISwipeConfig {

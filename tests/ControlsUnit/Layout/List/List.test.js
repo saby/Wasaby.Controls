@@ -162,11 +162,11 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
       });
 
       it('_beforeMount', function() {
-         var listLayout = new deprecatedList.Container(getListOptionsWithPrefetch());
+         var listLayout = new deprecatedList.Container(listOptions);
          listLayout._searchMode = true;
-         listLayout._beforeMount(getListOptionsWithPrefetch());
+         listLayout._beforeMount(listOptions);
 
-         assert.equal(listLayout._source.getModel(), getListOptionsWithPrefetch().source._$target.getModel());
+         assert.equal(listLayout._source.getModel(), listOptions.source.getModel());
       });
 
       it('.searchCallback', function() {
