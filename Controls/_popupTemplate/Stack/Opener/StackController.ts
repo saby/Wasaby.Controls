@@ -36,10 +36,9 @@ class StackController extends BaseController {
                     StackController.calcStackParentCoords();
                 });
             }
-            window.addEventListener('resize', () => {
-                StackController.stackParentCoords = null;
-                StackController.calcStackParentCoords();
-            }, true);
+            //TODO: https://online.sbis.ru/opendoc.html?guid=38b056ea-33a7-4f3c-84e5-ab52de810925
+            window.addEventListener('resize', this._updateStackParentCoords, true);
+            window.addEventListener('scroll', this._updateStackParentCoords, true);
         }
     }
 
@@ -481,6 +480,11 @@ class StackController extends BaseController {
     private _removeLastStackClass(item: IPopupItem): void {
         const className = (item.popupOptions.className || '').replace(/controls-Stack__last-item/ig, '');
         item.popupOptions.className = className.trim();
+    }
+
+    private _updateStackParentCoords(): void {
+        StackController.stackParentCoords = null;
+        StackController.calcStackParentCoords();
     }
 
     // TODO COMPATIBLE
