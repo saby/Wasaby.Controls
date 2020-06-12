@@ -144,9 +144,7 @@ export default class ScrollController {
         this._container = container;
         this._triggers = triggers;
         this._viewResize(this._container.offsetHeight, false);
-        if (this._options.needScrollCalculation) {
-            this._registerObserver();
-        }
+        this.registerObserver();
         this._afterRenderHandler();
         if (this._updateShadowModeAfterMount) {
             this._updateShadowModeAfterMount();
@@ -154,7 +152,7 @@ export default class ScrollController {
         }
     }
 
-    beforeUpdate(options: IOptions): void {
+    update(options: IOptions): void {
         if (options.collection && this._options.collection !== options.collection) {
             this._initModelObserving(options);
             if (options.virtualScrollConfig) {
@@ -172,13 +170,13 @@ export default class ScrollController {
         this._isRendering = true;
     }
 
-    afterUpdate(): void {
+    registerObserver(): void {
         if (this._options.needScrollCalculation) {
             this._registerObserver();
         }
     }
 
-    beforeRender(): void {
+    saveScrollPosition(): void {
         if (this._virtualScroll.isNeedToRestorePosition) {
             this._notify('saveScrollPosition', [], {bubbling: true});
         }
@@ -189,7 +187,7 @@ export default class ScrollController {
         this._afterRenderHandler();
     }
 
-    beforeUnmount(): void {
+    reset(): void {
         clearTimeout(this._checkTriggerVisibilityTimeout);
         // TODO убрать проверку в https://online.sbis.ru/opendoc.html?guid=fb8a3901-bddf-4552-ae9a-ed0299d3e46f
         if (!this._options.collection.destroyed) {

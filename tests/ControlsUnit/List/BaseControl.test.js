@@ -2330,7 +2330,7 @@ define([
                   }
                   return Promise.resolve();
                },
-               beforeUnmount: () => undefined
+               reset: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -2405,8 +2405,8 @@ define([
                   }
                   return Promise.resolve();
                },
-               afterUpdate: () => undefined,
-               beforeUnmount: () => undefined
+               registerObserver: () => undefined,
+               reset: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -5670,7 +5670,7 @@ define([
                   scrollToItem(key) {
                      assert.equal(key, 1);
                   },
-                  beforeUnmount: () => undefined
+                  reset: () => undefined
                }
 
                   const originalEvent = {target: {}};
@@ -5732,7 +5732,7 @@ define([
                         }
                         return Promise.resolve();
                      },
-                     beforeUnmount: () => undefined
+                     reset: () => undefined
                   };
 
                   // No editing

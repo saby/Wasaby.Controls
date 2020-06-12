@@ -2477,7 +2477,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
-            this._scrollController.beforeUpdate({collection: newOptions.listViewModel || this.getViewModel(), ...newOptions});
+            this._scrollController.update({collection: newOptions.listViewModel || this.getViewModel(), ...newOptions});
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -2621,7 +2621,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
-            this._scrollController.beforeUnmount();
+            this._scrollController.reset();
         }
 
         // для связи с контроллером ПМО
@@ -2646,7 +2646,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
-            this._scrollController.beforeRender();
+            this._scrollController.saveScrollPosition();
         }
     },
 
@@ -2732,7 +2732,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
-            this._scrollController.afterUpdate();
+            this._scrollController.registerObserver();
         }
     },
 
