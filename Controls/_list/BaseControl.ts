@@ -1890,6 +1890,7 @@ const _private = {
             scrollObserver: self._children.scrollObserver,
             collection: self._listViewModel,
             activeElement: options.activeElement,
+            useNewModel: options.useNewModel,
             callbacks: {
                 triggerOffsetChanged: self.triggerOffsetChangedHandler.bind(self),
                 changeIndicatorState: self.changeIndicatorStateHandler.bind(self),
