@@ -59,7 +59,6 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    _template: template,
    _tmplNotify: tmplNotify,
    _dataOptions: null,
-   _itemOpenHandler: null,
    _previousViewMode: null,
    _viewMode: null,
    _searchValue: null,
