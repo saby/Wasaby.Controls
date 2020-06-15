@@ -145,7 +145,7 @@ describe('Controls/_multiselection/Controller', () => {
    });
 
    it('isAllSelected', () => {
-      const isAllSelectedSpy = spy(model, 'isAllSelected');
+      const isAllSelectedSpy = spy(strategy, 'isAllSelected');
       controller.isAllSelected();
       assert.isTrue(isAllSelectedSpy.called);
    });
