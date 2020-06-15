@@ -57,12 +57,11 @@ const _private = {
             if (eventResult && eventResult.finally) {
                 self._showIndicator();
                 result = eventResult.then((defResult) => {
-                    self._hideIndicator();
                     if (defResult === constEditing.CANCEL) {
                         return {cancelled: true};
                     }
                     return defResult;
-                }).finally(() => {
+                }).catch(() => ({cancelled: true})).finally(() => {
                     self._hideIndicator();
                 });
             } else if (
