@@ -33,9 +33,10 @@ class Component extends Control {
     private _delayedHeaders: TRegisterEventData[] = [];
     private _stickyControllerMounted: boolean = false;
     private _updateTopBottomInitialized: boolean = false;
-    private _stickyHeaderObserver: ResizeObserverUtil;
+    private _stickyHeaderResizeObserver: ResizeObserverUtil;
     private _elementsHeight: IHeightEntry[] = [];
     private _firstResize: boolean = true;
+    private _canScroll: boolean = false;
 
     _beforeMount(options) {
         this._headersStack = {
@@ -48,17 +49,17 @@ class Component extends Control {
         };
         this._headers = {};
         this._resizeHandlerDebounced = debounce(this._resizeHandler.bind(this), 50);
-        this._stickyHeaderObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
+        this._stickyHeaderResizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
     }
 
     _afterMount(options) {
         this._stickyControllerMounted = true;
-        this._stickyHeaderObserver.initialize();
+        this._stickyHeaderResizeObserver.initialize();
         this._registerDelayed();
     }
 
     _beforeUnmount(): void {
-        this._stickyHeaderObserver.terminate();
+        this._stickyHeaderResizeObserver.terminate();
     }
 
     /**
@@ -117,6 +118,16 @@ class Component extends Control {
         return height + replaceableHeight;
     }
 
+    setCanScroll(canScroll: boolean): void {
+        if (canScroll === this._canScroll) {
+            return;
+        }
+        this._canScroll = canScroll;
+        if (this._canScroll) {
+            this._registerDelayed();
+        }
+    }
+
     _stickyRegisterHandler(event, data: TRegisterEventData, register: boolean): void {
         const promise = this._register(data, register, true);
         this._clearOffsetCache();
@@ -140,7 +151,7 @@ class Component extends Control {
             // Невидимые заголовки нельзя обсчитать, потому что нельзя узнать их размеры и положение.
             this._delayedHeaders.push(data);
 
-            if (!isHidden(data.container) && this._stickyControllerMounted) {
+            if (!isHidden(data.container) && this._stickyControllerMounted && this._canScroll) {
                 return Promise.resolve().then(this._registerDelayed.bind(this));
             }
             this._observeStickyHeader(data.container);
@@ -156,15 +167,14 @@ class Component extends Control {
     private _observeStickyHeader(container: HTMLElement): void {
         const stickyHeaders = this._getStickyHeaderElements(container);
         stickyHeaders.forEach((elem: HTMLElement) => {
-            this._stickyHeaderObserver.observe(elem);
-            // this._elementsHeight.push({key: elem, value: elem.getBoundingClientRect().height});
+            this._stickyHeaderResizeObserver.observe(elem);
         });
     }
 
     private _unobserveStickyHeader(container: HTMLElement): void {
         const stickyHeaders = this._getStickyHeaderElements(container);
         stickyHeaders.forEach((elem: HTMLElement) => {
-            this._stickyHeaderObserver.unobserve(elem);
+            this._stickyHeaderResizeObserver.unobserve(elem);
         });
     }
 
@@ -229,6 +239,10 @@ class Component extends Control {
         this._updateTopBottom();
     }
 
+    _controlResizeHandler(): void {
+        this._stickyHeaderResizeObserver.controlResizeHandler()
+    }
+
     _resizeHandler() {
         const isSimpleHeaders = this._headersStack.top.length <= 1 && this._headersStack.bottom.length <= 1;
         // Игнорируем все собятия ресайза до _afterMount.
@@ -258,10 +272,10 @@ class Component extends Control {
         }
     }
 
-    private _registerDelayed(): void {
+    private _registerDelayed(): Promise<void> {
         const delayedHeadersCount = this._delayedHeaders.length;
 
-        if (!delayedHeadersCount) {
+        if (!delayedHeadersCount || !this._canScroll) {
             return;
         }
 
