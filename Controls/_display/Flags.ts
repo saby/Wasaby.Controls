@@ -1,6 +1,5 @@
-import Collection, {
-    ISourceCollection as IGeneralSourceCollection
-} from './Collection';
+import Collection from './Collection';
+import {ISourceCollection as IGeneralSourceCollection} from './interface/ICollection';
 import FlagsItem from './FlagsItem';
 import {IFlags, IFlagsValue} from 'Types/collection';
 import {register} from 'Types/di';

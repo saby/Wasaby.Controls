@@ -46,10 +46,11 @@ export class Controller {
    /**
     * Обновить состояние контроллера
     * @param options
+    * @param rootChanged
+    * @param filterChanged
     */
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
-      const itemsChanged = modelChanged ? true : options.model.getCollection() !== this._model.getCollection();
       const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
 
@@ -61,10 +62,19 @@ export class Controller {
       if (selectionChanged) {
          this._selectedKeys = options.selectedKeys.slice();
          this._excludedKeys = options.excludedKeys.slice();
-         this._updateModel(this._selection);
-      } else if (itemsChanged || modelChanged) {
+      }
+
+      if (selectionChanged || modelChanged) {
          this._updateModel(this._selection);
       }
+
+      return this._getResult(oldSelection, this._selection);
+   }
+
+   clearSelection(): ISelectionControllerResult {
+      const oldSelection = clone(this._selection);
+      this._clearSelection();
+      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -115,7 +125,7 @@ export class Controller {
          selectedKeysDiff: { keys: [], added: [], removed: [] },
          excludedKeysDiff: { keys: [], added: [], removed: [] },
          selectedCount: this._getCount(this._selection),
-         isAllSelected: this._strategy.isAllSelected(this._selection, this._model.getHasMoreData())
+         isAllSelected: this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount())
       };
    }
 
@@ -135,9 +145,9 @@ export class Controller {
       // и вышли в родительский узел, по стандартам элементы должны стать невыбранными
       if (rootChanged && this._selectedKeys.includes(prevRootId) && this._excludedKeys.includes(prevRootId)) {
          this._clearSelection();
+         this._updateModel(this._selection);
       }
 
-      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -194,8 +204,8 @@ export class Controller {
       return {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
-         selectedCount: this._getCount(newSelection),
-         isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getHasMoreData())
+         selectedCount: selectionCount,
+         isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getHasMoreData(), this._model.getCount())
       };
    }
 

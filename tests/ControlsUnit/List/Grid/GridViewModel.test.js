@@ -967,7 +967,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
-                  'getChildren','getStartIndex', 'getActiveItem', 'setRightSwipedItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
+                  'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
 
             gridViewModel._model = {
@@ -1023,7 +1023,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                9: { date: { } }
             },
             resultStickyLadder = {
-               0: { 
+               0: {
                   photo: {
                      ladderLength: 3,
                      headingStyle: 'grid-row: span 3'
@@ -1468,6 +1468,25 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             headerRow.resetHeaderColumns();
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
 
+         });
+
+         it('should not add column separator classes on action cell', function () {
+            const gridHeaderClone = gridHeader.map(function(obj) {
+               return Object.assign({}, obj);
+            });
+            gridHeaderClone[gridHeaderClone.length - 1].isActionCell = true;
+            gridViewModel._prepareHeaderColumns(gridHeaderClone, true);
+            const headerRow = gridViewModel.getCurrentHeaderRow();
+            headerRow.curHeaderColumnIndex = 3;
+            const headerColumn = headerRow.getCurrentHeaderColumn();
+            assert.equal(
+                headerColumn.cellClasses,
+                'controls-Grid__header-cell ' +
+                'controls-Grid__header-cell_theme-default ' +
+                'controls-Grid__header-cell_min-height_theme-default ' +
+                'controls-background-default_theme-default ' +
+                'controls-Grid__header-cell_min-width'
+            );
          });
 
          it('getCurrentHeaderColumn checkbox cell with breadcrumbs', function() {

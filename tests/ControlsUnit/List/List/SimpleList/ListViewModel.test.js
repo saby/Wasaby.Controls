@@ -130,7 +130,7 @@ define([
          // assert.include(version, 'ITEM_ACTION_2');
 
          assert.include(version, 'WITHOUT_EDITING');
-         model._setEditingItemData({ key: 21, item: {} });
+         model._setEditingItemData({ key: 21, item: {}, setEditing: () => {} });
          version = model._calcItemVersion(item, key);
          assert.include(version, 'WITH_EDITING');
       });
@@ -239,7 +239,8 @@ define([
             item: {
                qwe: 123,
                asd: 456
-            }
+            },
+            setEditing: () => {}
          };
 
          assert.deepEqual(cfg.items.at(0), lists.ListViewModel._private.getItemByMarkedKey(iv, 1).getContents());
@@ -345,7 +346,26 @@ define([
          marItem = iv.getMarkedItem();
          assert.equal(iv._markedKey, 3, 'Incorrect _markedKey value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
-         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
+         assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
+      });
+
+      it('setMarkedKey', function() {
+         const cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markerVisibility: 'visible'
+         };
+
+         const model = new lists.ListViewModel(cfg);
+
+         model.setMarkedKey(2, true);
+         assert.equal(model.getMarkedKey(), 2);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+
+         model.setMarkedKey(2, false);
+         assert.equal(model.getMarkedKey(), undefined);
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
       });
 
       // TODO SetItemActions
@@ -496,29 +516,6 @@ define([
          var lv = new lists.ListViewModel(cfg);
          lv.setMarkedKey(1);
          assert.equal(lv.getMarkedKey(), 1);
-      });
-
-      it('setRightSwipedItem', function() {
-         var
-            cfg = {
-               items: data,
-               keyProperty: 'id',
-               displayProperty: 'title',
-               selectedKeys: [1],
-               markedKey: null
-            },
-            itemData = {
-               test: 'test'
-            },
-            nextVersionCalled = false;
-
-         var lv = new lists.ListViewModel(cfg);
-         lv._nextVersion = function() {
-            nextVersionCalled = true;
-         };
-         lv.setRightSwipedItem(itemData);
-         assert.equal(lv._rightSwipedItem, itemData);
-         assert.isTrue(nextVersionCalled, 'setRightSwipedItem should change the version of the model');
       });
 
       it('setActiveItem should not change version of the model if the item is already active', function() {

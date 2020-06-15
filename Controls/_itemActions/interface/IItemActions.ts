@@ -5,6 +5,12 @@ import {IBaseCollection, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STA
 import {ISource} from 'Controls/interface';
 import {IContextMenuConfig} from "./IContextMenuConfig";
 
+/**
+ * @typedef {String} TItemActionShowType
+ * @variant 0 показывать опцию только в меню
+ * @variant 1 показывать опцию в меню и тулбаре
+ * @variant 2 показывать опцию только в тулбаре
+ */
 export enum TItemActionShowType {
     // show only in Menu
     MENU,
@@ -12,6 +18,20 @@ export enum TItemActionShowType {
     MENU_TOOLBAR,
     // show only in Toolbar
     TOOLBAR
+}
+
+/**
+ * @typedef {String} TActionDisplayMode
+ * @variant title показывать только заголовок
+ * @variant icon показывать только иконку
+ * @variant both показывать иконку и заголовок
+ * @variant auto если есть иконка, то показывать иконку, иначе заголовок
+ */
+export enum TActionDisplayMode {
+    TITLE = 'title',
+    ICON = 'icon',
+    BOTH = 'both',
+    AUTO = 'auto'
 }
 
 /**
@@ -31,16 +51,6 @@ export type TIconStyle = 'secondary'|'warning'|'danger'|'success';
  * @variant none Не будет отображаться.
  */
 export type TActionCaptionPosition = 'right'|'bottom'|'none';
-
-/**
- * @typedef {String} TActionDisplayMode
- * @variant title показывать только заголовок
- * @variant icon показывать только иконку
- * @variant both показывать иконку и заголовок
- * @variant auto если есть иконка, то показывать иконку, иначе заголовок
- * TODO duplicated from IList
- */
-export type TActionDisplayMode = 'title'|'icon'|'both'|'auto';
 
 /**
  * @typedef {String} TItemActionsPosition
@@ -110,13 +120,36 @@ export interface IItemAction {
      * Flag of parent
      */
     'parent@'?: boolean|null;
+
+    /**
+     * настройка отображения иконки и заголовка
+     */
     displayMode?: TActionDisplayMode;
+
+    /**
+     * Значение, которое показано в тултипе при наведении на опцию
+     */
     tooltip?: string;
 
     /**
      * Parent action id
      */
     parent?: string | number;
+}
+
+/**
+ * Расширенный интерфейс IItemAction с полями для использования в шаблоне
+ */
+interface IShownItemAction extends IItemAction {
+    /**
+     * Показывать текст операции
+     */
+    showTitle?: boolean;
+
+    /**
+     * Показывать иконку операции
+     */
+    showIcon?: boolean;
 }
 
 export type TActionClickCallback = (clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, contents: Model) => void;
@@ -127,7 +160,7 @@ export type TEditArrowVisibilityCallback = (item: unknown) => boolean;
 
 export interface IItemActionsContainer {
     all: IItemAction[];
-    showed: IItemAction[];
+    showed: IShownItemAction[];
 }
 
 export interface IItemActionsItem {
@@ -138,6 +171,8 @@ export interface IItemActionsItem {
     isActive(): boolean;
     setSwiped(swiped: boolean): void;
     isSwiped(): boolean;
+    isRightSwiped(): boolean;
+    isEditing(): boolean;
 }
 
 export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
@@ -159,6 +194,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
      */
     setActiveItem(item: IItemActionsItem): void;
     getActiveItem(): IItemActionsItem;
+    isEditing(): boolean;
 }
 
 export interface IMenuTemplateOptions extends IContextMenuConfig {
@@ -170,10 +206,11 @@ export interface IMenuTemplateOptions extends IContextMenuConfig {
     closeButtonVisibility: boolean;
     root: number | string;
     showHeader: boolean;
+    iconSize: TItemActionsSize;
     headConfig?: {
         caption: string;
         icon: string;
-        iconSize: string;
+        iconSize: TItemActionsSize;
     };
 }
 

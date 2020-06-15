@@ -2,8 +2,9 @@ define([
    'Controls/lookup',
    'Types/entity',
    'Types/collection',
-   'Types/source'
-], function(lookup, entity, collection, sourceLib) {
+   'Types/source',
+   'Controls/dataSource'
+], function(lookup, entity, collection, sourceLib, {error}) {
 
    function getBaseSelectedCollection() {
       return {
@@ -75,6 +76,25 @@ define([
             assert.equal(result.at(1).getId(), 2);
             assert.equal(result.getCount(), 2);
             done()
+         });
+      });
+
+      it('loadItems returns error', function() {
+         const source = new sourceLib.Memory({});
+         const selectedKeys = [1, 2, 3];
+         source.query = () => Promise.reject(new Error());
+
+         return new Promise((resolve) => {
+            const stub = sinon.stub(error, 'process');
+            lookup._CollectionController._private.loadItems({}, {
+               source: source,
+               keyProperty: 'id',
+               selectedKeys: selectedKeys
+            }).then(() => {
+               assert.isTrue(stub.calledOnce);
+               stub.restore();
+               resolve();
+            });
          });
       });
 

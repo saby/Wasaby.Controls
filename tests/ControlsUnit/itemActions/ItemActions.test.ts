@@ -6,7 +6,12 @@ import {ANIMATION_STATE, Collection, CollectionItem} from 'Controls/display';
 import {IOptions as ICollectionOptions} from 'Controls/_display/Collection';
 
 import {Controller as ItemActionsController, IItemActionsControllerOptions} from 'Controls/_itemActions/Controller';
-import {IItemAction, IItemActionsItem, TItemActionShowType} from 'Controls/_itemActions/interface/IItemActions';
+import {
+    IItemAction,
+    IItemActionsItem,
+    TActionDisplayMode,
+    TItemActionShowType
+} from 'Controls/_itemActions/interface/IItemActions';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
 const itemActions: IItemAction[] = [
@@ -26,6 +31,7 @@ const itemActions: IItemAction[] = [
         id: 3,
         icon: 'icon-Profile',
         title: 'Profile',
+        tooltip: 'This is awesome Profile you\'ve never seen',
         showType: TItemActionShowType.TOOLBAR
     },
     {
@@ -99,6 +105,38 @@ const horizontalOnlyItemActions: IItemAction[] = [
     }
 ];
 
+// Варианты отображением иконки и текста
+const displayModeItemActions: IItemAction[] = [
+    {
+        id: 1,
+        icon: 'icon-PhoneNull',
+        title: 'phone',
+        showType: TItemActionShowType.TOOLBAR,
+        displayMode: TActionDisplayMode.ICON
+    },
+    {
+        id: 2,
+        icon: 'icon-EmptyMessage',
+        title: 'message',
+        showType: TItemActionShowType.TOOLBAR,
+        displayMode: TActionDisplayMode.TITLE
+    },
+    {
+        id: 3,
+        icon: 'icon-Profile',
+        title: 'Profile',
+        showType: TItemActionShowType.TOOLBAR,
+        displayMode: TActionDisplayMode.BOTH
+    },
+    {
+        id: 4,
+        icon: 'icon-Time',
+        title: 'Time management',
+        showType: TItemActionShowType.TOOLBAR,
+        displayMode: TActionDisplayMode.AUTO
+    }
+];
+
 const data = [
     {id: 1, name: 'Philip J. Fry', gender: 'M', itemActions: []},
     {
@@ -162,7 +200,8 @@ describe('Controls/_itemActions/Controller', () => {
             editingToolbarVisible: options ? options.editingToolbarVisible : false,
             editArrowAction: options ? options.editArrowAction : false,
             editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
-            contextMenuConfig: options ? options.contextMenuConfig: null
+            contextMenuConfig: options ? options.contextMenuConfig: null,
+            iconSize: options ? options.iconSize: 'm',
         };
     }
 
@@ -278,7 +317,7 @@ describe('Controls/_itemActions/Controller', () => {
 
         // T1.9. После установки набора операций, операции с иконками содержат в поле icon CSS класс “controls-itemActionsV__action_icon icon-size” (оч сомнительный тест)
         // TODO Возможно, установка этого класса переедет в шаблон
-        it('should set to all item actions icons "controls-itemActionsV__action_icon_theme-default icon-size_theme-default" CSS class', () => {
+        it('should set "controls-itemActionsV__action_icon_theme-default icon-size_theme-default" CSS class for shown item actions icons', () => {
             const actionsOf5 = collection.getItemBySourceKey(5).getActions();
             assert.exists(actionsOf5, 'actions were not set to item 5');
             assert.notEqual(actionsOf5.showed[0].icon.indexOf('controls-itemActionsV__action_icon_theme'), -1, 'Css class \'controls-itemActionsV__action_icon_theme-\' should be added to item');
@@ -317,14 +356,74 @@ describe('Controls/_itemActions/Controller', () => {
                 theme: 'default',
             }));
             assert.exists(newCollection.getItemBySourceKey(6).getActions());
-        })
+        });
 
-        // T1.14. Должны адекватно набираться ItemActions для breadcrumbs (когда getContents() возвращает массив записей)
+        // T1.14 Необходимо корректно расчитывать showTitle, showIcon на основе displayMode
+        describe('displayMode calculations', () => {
+            beforeEach(() => {
+                itemActionsController.update(initializeControllerOptions({
+                    collection: collection,
+                    itemActions: displayModeItemActions,
+                    theme: 'default',
+                }));
+            });
+            // T1.14.1. Должны учитываться расчёты отображения icon при displayMode=icon
+            it('should consider showIcon calculations when displayMode=icon', () => {
+                const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+                assert.isTrue(actionsOf1.showed[0].showIcon, 'we expected to see icon here');
+                assert.isNotTrue(actionsOf1.showed[0].showTitle, 'we didn\'t expect to see title here');
+            });
+
+            // T1.14.2. Должны учитываться расчёты отображения title при displayMode=title
+            it('should consider showTitle calculations when displayMode=title', () => {
+                const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+                assert.isTrue(actionsOf1.showed[1].showTitle, 'we expected to see title here');
+                assert.isNotTrue(actionsOf1.showed[1].showIcon, 'we didn\'t expect to see icon here');
+            });
+
+            // T1.14.3. Должны учитываться расчёты отображения title и icon при displayMode=both
+            it('should consider showTitle calculations when displayMode=both', () => {
+                const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+                assert.isTrue(actionsOf1.showed[2].showTitle, 'we expected to see title here');
+                assert.isTrue(actionsOf1.showed[2].showIcon, 'we expected to see icon here');
+            });
+
+            // T1.14.4. Должны учитываться расчёты отображения title и icon при displayMode=auto
+            it('should consider showTitle calculations when displayMode=auto', () => {
+                const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+                assert.isTrue(actionsOf1.showed[3].showIcon, 'we expected to see icon here');
+                assert.isNotTrue(actionsOf1.showed[3].showTitle, 'we didn\'t expect to see title here');
+            });
+        });
+
+        // T1.15. Если не указано свойство опции tooltip, надо подставлять title
+        it('should change tooltip to title when no tooltip is set', () => {
+            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+            assert.equal(actionsOf1.showed[0].tooltip, 'message', 'tooltip should be the same as title here');
+            assert.equal(actionsOf1.showed[1].tooltip, 'This is awesome Profile you\'ve never seen', 'tooltip should be not the same as title here');
+        });
+
+        // T1.16 Если редактируется или создаётся запись, actions будут добавлены в showed только для редактируемой записи
+        it('should not add any item actions when records are editing', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            item3.setEditing(true, item3.getContents());
+            collection.setEditing(true);
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions,
+                theme: 'default'
+            }));
+            const actionsOf2 = collection.getItemBySourceKey(2).getActions();
+            assert.equal(item3.getActions().showed.length, 4, 'item 4 is editing and should contain 4 itemActions');
+            assert.equal(actionsOf2.showed.length, 0, 'item 4 is editing and item 2 should not contain any itemActions');
+        });
+
+        // T1.17. Должны адекватно набираться ItemActions для breadcrumbs (когда getContents() возвращает массив записей)
         // TODO возможно, это уйдёт из контроллера, т.к. по идее уровень абстракции в контроллере ниже и он не должен знать о breadcrumbs
         //  надо разобраться как в коллекцию добавить breadcrumbs
         // it('should set item actions when some items are breadcrumbs', () => {});
 
-        // T1.15. Должны адекватно набираться ItemActions если в списке элементов коллекции присутствуют группы
+        // T1.18. Должны адекватно набираться ItemActions если в списке элементов коллекции присутствуют группы
         // TODO возможно, это уйдёт из контроллера, т.к. по идее уровень абстракции в контроллере ниже и он не должен знать о группах
         //  надо разобраться как в коллекцию добавить group
         // it('should set item actions when some items are groups', () => {});
@@ -461,9 +560,14 @@ describe('Controls/_itemActions/Controller', () => {
             assert.exists(config, 'Swipe activation should make configuration');
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
+
+        // T2.11 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
+        it('should right-swipe item on activateRightSwipe() method', () => {
+            itemActionsController.activateRightSwipe(1);
+            const item1 = collection.getItemBySourceKey(1);
+            assert.isTrue(item1.isRightSwiped());
+        });
     });
-
-
 
     describe('prepareActionsMenuConfig()', () => {
         let clickEvent: SyntheticEvent<MouseEvent>;
@@ -507,7 +611,7 @@ describe('Controls/_itemActions/Controller', () => {
         // T3.2. Если в метод parentAction - это кнопка открытия меню, то config.templateOptions.showHeader будет false
         it('should set config.templateOptions.showHeader \'false\' when parentAction is _isMenu', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const actionsOf3 = collection.getItemBySourceKey(3).getActions();
+            const actionsOf3 = item3.getActions();
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
             assert.exists(config.templateOptions, 'Template options were not set when no isMenu parent passed');
             assert.isFalse(config.templateOptions.showHeader, 'showHeader should be false when isMenu parent passed');
@@ -521,7 +625,7 @@ describe('Controls/_itemActions/Controller', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.exists(config.templateOptions, 'Template options were not set');
-            assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t been set in template options');
+            assert.exists(config.templateOptions.source, 'Menu actions source haven\'t been set in template options');
             // @ts-ignore
             const calculatedChildren = JSON.stringify(config.templateOptions.source.data);
             const children = JSON.stringify(itemActions.filter((action) => action.parent === itemActions[3].id));
@@ -568,8 +672,17 @@ describe('Controls/_itemActions/Controller', () => {
             assert.deepEqual(config.target.getBoundingClientRect(), target.getBoundingClientRect());
         });
 
-        // T3.5. Если в контрол был передан contextMenuConfig, его нужно объединять с templateOptions для Sticky.openPopup(menuConfig)
-        it ('should merge contextMenuConfig with templateOptions for popup config', () => {
+        // T3.5. Если был установлен iconSize он должен примениться к templateOptions
+        it('should apply iconSize to templateOptions', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            assert.exists(config.templateOptions, 'Template options were not set');
+            assert.equal(config.templateOptions.iconSize, 'm', 'iconSize from templateOptions has not been applied');
+        });
+
+        // T3.6. Если в контрол был передан contextMenuConfig, его нужно объединять с templateOptions для Sticky.openPopup(menuConfig)
+        it('should merge contextMenuConfig with templateOptions for popup config', () => {
             itemActionsController.update(initializeControllerOptions({
                 collection,
                 itemActions,
@@ -583,7 +696,17 @@ describe('Controls/_itemActions/Controller', () => {
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.equal(config.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
             assert.equal(config.templateOptions.headConfig.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
-        })
+        });
+
+        // T3.7. Для меню не нужно считать controls-itemActionsV__action_icon_theme-default
+        it('should not set "controls-itemActionsV__action_icon_theme-default" CSS class for menu item actions icons', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            const calculatedChildren = config.templateOptions.source;
+            assert.exists(calculatedChildren, 'Menu actions source haven\'t been set in template options');
+            assert.equal(calculatedChildren.data[0].icon.indexOf('controls-itemActionsV__action_icon_theme'), -1, 'Css class \'controls-itemActionsV__action_icon_theme-\' should not be added to menu item');
+        });
     });
 
     // см. этот же тест в Collection.test.ts
@@ -616,4 +739,6 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.OPEN, 'Incorrect animation state !== open');
         })
     });
+
+
 });

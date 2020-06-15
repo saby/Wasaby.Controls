@@ -133,6 +133,9 @@ var _private = {
         itemsModelCurrent.isSwiped = (): boolean => (
             itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : false
         );
+        itemsModelCurrent.isRightSwiped = (): boolean => (
+            itemsModelCurrent.dispItem.isRightSwiped !== undefined ? itemsModelCurrent.dispItem.isRightSwiped() : false
+        );
         itemsModelCurrent.getContents = () => (
             itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null
         );
@@ -154,6 +157,12 @@ var _private = {
                 itemsModelCurrent.dispItem.setSelected(selected, silent);
             }
         };
+        itemsModelCurrent.setEditing = (editing: boolean): void => {
+            itemsModelCurrent.isEditing = editing;
+            if (itemsModelCurrent.dispItem.setEditing !== undefined) {
+                itemsModelCurrent.dispItem.setEditing(editing, itemsModelCurrent.item, true);
+            }
+        }
     }
 };
 
@@ -206,7 +215,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         // TODO USE itemsModelCurrent.isSelected()
         itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
-        itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
         itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
         itemsModelCurrent.searchValue = this._options.searchValue;
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
@@ -252,7 +260,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (this._dragEntity) {
             dragItems = this._dragEntity.getItems();
-            if (this._draggingItemData.key === itemsModelCurrent.key) {
+            if (this._draggingItemData && this._draggingItemData.key === itemsModelCurrent.key) {
                 itemsModelCurrent.isDragging = true;
             }
             if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
@@ -344,10 +352,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setMarkedKey: function(key, status) {
-        // status - для совместимости с новой моделью
-        // если он false, то markedKey менять не нужно,
-        // мы его поменяем на следующем вызове со status=true
-        if (this._markedKey === key || status === false) {
+        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно его передать false
+        if (this._markedKey === key && status !== false) {
             return;
         }
 
@@ -355,8 +361,18 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             this.getItemById(this._markedKey),
             this.getItemById(key)
         ];
-        this._markedKey = key;
-        this._savedMarkedKey = undefined;
+
+        const item = this.getItemBySourceKey(key);
+        if (item) {
+            item.setMarked(status);
+        }
+
+        if (status === false) {
+            this._markedKey = undefined;
+        } else {
+            this._markedKey = key;
+        }
+
         this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
         this._notify('onMarkedKeyChanged', this._markedKey);
     },
@@ -503,17 +519,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
-    /**
-     * задаёт Для Item controls-ListView__item_rightSwipeAnimation
-     * для решения https://online.sbis.ru/doc/e3866e50-5a3e-4403-a64e-0841db9cda9f
-     * надо понять, надо это или нет.
-     * Если надо, то реализовать в новой модели
-     */
-    setRightSwipedItem: function(itemData) {
-        this._rightSwipedItem = itemData;
-        this._nextModelVersion();
-    },
-
     setHoveredItem: function(item){
         const changedItems = [];
         if (this._hoveredItem && typeof this._hoveredItem.getId === 'function') {
@@ -547,7 +552,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setItems: function(items) {
-        var currentItems = this.getItems();
         ListViewModel.superclass.setItems.apply(this, arguments);
         this._nextModelVersion();
     },
@@ -604,6 +608,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;
         this._editingItemData = itemData;
+        data.setEditing(itemData !== null);
         this._onCollectionChange(
            new EventObject('oncollectionchange', this._display),
            IObservable.ACTION_CHANGE,
@@ -720,6 +725,24 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setEventRaising(enabled: boolean, analyze: boolean): void {
         if (this._display) {
             this._display.setEventRaising(enabled, analyze);
+        }
+    },
+
+    /**
+     * Возвращает состояние editing для модели.
+     * New Model compatibility
+     */
+    isEditing(): boolean {
+        return this._display ? this._display.isEditing() : false;
+    },
+
+    /**
+     * Устанавливает состояние editing для модели.
+     * New Model compatibility
+     */
+    setEditing(editing): void {
+        if (this._display) {
+            this._display.setEditing(editing);
         }
     },
 

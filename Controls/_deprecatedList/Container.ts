@@ -290,7 +290,7 @@ var List = Control.extend({
        Ошибка выписна, в плане у Зуева https://online.sbis.ru/opendoc.html?guid=fb08b40e-f2ac-4dd2-9a84-dfbfc404da02 */
       //return this._searchDeferred;
 
-      if (this._searchMode) {
+      if (this._searchMode && _private.getSearchController(this, options).isLoading()) {
          _private.cachedSourceFix(this);
          var originSource = _private.getOriginSource(options.source);
          this._source = new Memory({

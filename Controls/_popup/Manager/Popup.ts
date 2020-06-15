@@ -59,6 +59,7 @@ class Popup extends Control<IPopupControlOptions> {
     // It is necessary for checking relationship between popups.
     protected _moduleName: string = 'Controls/_popup/Manager/Popup';
     private _resizeRegister: RegisterClass;
+    private _isDragStarted: boolean;
 
     private _closeByESC(event: SyntheticEvent<KeyboardEvent>): void {
         if (event.nativeEvent.keyCode === constants.key.esc) {
@@ -149,7 +150,9 @@ class Popup extends Control<IPopupControlOptions> {
      * @function Controls/_popup/Manager/Popup#_close
      */
     protected _close(): void {
-        this._notify('popupClose', [this._options.id], {bubbling: true});
+        if (!this._isDragStarted) {
+            this._notify('popupClose', [this._options.id], {bubbling: true});
+        }
     }
 
     protected _maximized(event: SyntheticEvent<Event>, state: boolean): void {
@@ -157,10 +160,12 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _popupDragStart(event: SyntheticEvent<Event>, offset: number): void {
+        this._isDragStarted = true;
         this._notify('popupDragStart', [this._options.id, offset], {bubbling: true});
     }
 
     protected _popupDragEnd(): void {
+        this._isDragStarted = false;
         this._notify('popupDragEnd', [this._options.id], {bubbling: true});
     }
 

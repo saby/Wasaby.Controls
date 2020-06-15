@@ -163,7 +163,7 @@ export default class FlatController {
       keys.sort((a, b) => {
          const indexA = model.getIndexByKey(a),
             indexB = model.getIndexByKey(b);
-         return indexA > indexB ? 1 : -1
+         return indexA > indexB ? 1 : -1;
       });
    }
 }

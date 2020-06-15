@@ -162,6 +162,28 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
                 instance.removeItems(4, 1));
         });
     });
+    describe('.removeItems | forcedShift', () => {
+        let instance: controller;
+
+        beforeEach(() => {
+            instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 300});
+            instance.resetRange(0, 4);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([60, 60, 60, 60]));
+        });
+        it('forcedShift === false', () => {
+            assert.deepEqual(instance.insertItems(0, 1, { up: true, down: false }),
+                { range: { start: 0, stop: 5 }, placeholders: { top: 0, bottom: 0 }});
+            assert.deepEqual(instance.removeItems(5, 1),
+                { range: { start: 0, stop: 5 }, placeholders: { top: 0, bottom: 0 }});
+        });
+        it('forcedShift === true', () => {
+            assert.deepEqual(instance.insertItems(0, 1, { up: true, down: false }),
+                { range: { start: 0, stop: 5 }, placeholders: { top: 0, bottom: 0 }});
+            assert.deepEqual(instance.removeItems(5, 1, true),
+                { range: { start: 0, stop: 4 }, placeholders: { top: 0, bottom: 60 }});
+        });
+    });
     describe('.shiftRange', () => {
         const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 600});
 

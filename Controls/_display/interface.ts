@@ -17,7 +17,3 @@ export interface IStrategyCollection<T> {
     getStrategyInstance(strategy: Function): IItemsStrategy<unknown, T>;
     removeStrategy(strategy: Function): void;
 }
-
-export interface ICollectionCommand<T> {
-    execute(collection: IBaseCollection<T>): void;
-}

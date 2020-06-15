@@ -126,6 +126,7 @@
                     editingItemData="{{_editingItemData}}"
                     startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
                     isAdd="{{_editingItemData ? _editingItemData.isAdd : undefined}}"
+                    on:animationend="_onItemSwipeAnimationEnd()"
                     on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
                     on:itemClick="_onItemClick()"
                     on:groupClick="_onGroupClick()"
@@ -194,7 +195,7 @@
     viewConfig="{{ __error }}"
     on:keyDown="_onViewKeyDown()"
 >
-    <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:mouseenter="_initItemActions()" on:touchstart="_initItemActions()">
+    <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:mouseenter="_initItemActions(_options)" on:touchstart="_initItemActions(_options)">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
 
         <ws:if data="{{_listViewModel}}">
