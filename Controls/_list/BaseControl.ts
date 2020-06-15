@@ -1850,6 +1850,8 @@ const _private = {
                 source: self.getSourceController(),
                 useNewModel: options.useNewModel,
                 theme: self._options.theme,
+                readOnly: self._options.readOnly,
+                keyProperty: self._options.keyProperty,
                 notify: (name, args, params) => {
                     return self._notify(name, args, params);
                 },
