@@ -71,6 +71,19 @@ interface IGetColspanStylesForParams {
     maxEndRow?: number;
 }
 
+interface IHeaderModel {
+    isStickyHeader: Function;
+    getCurrentHeaderColumn: Function;
+    getMultiSelectVisibility: Function;
+    isMultiHeader: Function;
+    resetHeaderRows: Function;
+    isEndHeaderRow: Function;
+    goToNextHeaderRow: Function;
+    getCurrentHeaderRow: Function;
+    getVersion: Function;
+    nextVersion: Function;
+}
+
 var
     _private = {
         calcItemColumnVersion: function(self, itemVersion, columnIndex, index) {
@@ -584,6 +597,8 @@ var
         _isMultiHeader: null,
         _resolvers: null,
 
+        _headerModel: null,
+
         constructor: function(cfg) {
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
@@ -713,6 +728,31 @@ var
                 this._shouldAddActionsCell(),
                 this.shouldAddStickyLadderCell()
             );
+            if (columns && columns.length) {
+                this._headerModel = {
+                    isStickyHeader: this.isStickyHeader,
+                    getCurrentHeaderColumn: this.getCurrentHeaderColumn,
+                    getMultiSelectVisibility: this.getMultiSelectVisibility,
+                    isMultiHeader: () => this._isMultiHeader,
+                    resetHeaderRows: this.resetHeaderRows,
+                    isEndHeaderRow: this.isEndHeaderRow,
+                    goToNextHeaderRow: this.goToNextHeaderRow,
+                    getCurrentHeaderRow: this.getCurrentHeaderRow,
+                    getVersion: () => this.headerVersion,
+                    nextVersion: () => ++this.headerVersion
+                };
+            }
+        },
+
+        _nextHeaderVersion(): void {
+            const headerModel = this.getHeaderModel();
+            if (headerModel) {
+                headerModel.nextVersion();
+            }
+        },
+
+        getHeaderModel(): IHeaderModel {
+            return this._headerModel;
         },
 
         setHeader: function(columns) {
