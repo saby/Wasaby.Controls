@@ -15,6 +15,8 @@ import {ISelectionObject,
         TSelectionType,
         IHierarchyOptions,
         IFilterOptions} from 'Controls/interface';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
 
 interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    selection: TSelectionRecord;
@@ -215,6 +217,8 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
          },
 
          prepareFilter({filter, selection, searchParam, parentProperty, root}: IFilterConfig): object {
+            const selectedKeys = selection.get('marked');
+            const currentRoot = root !== undefined ? root : null;
             filter = Utils.object.clone(filter);
 
              // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
@@ -228,7 +232,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
              // Если просто отмечают записи чекбоксами (не через панель массовых операций),
              // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
              // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
-            if (searchParam && !selection.get('marked').includes(root !== undefined ? root : null)) {
+            if (searchParam && ArrayUtil.invertTypeIndexOf(selectedKeys, currentRoot) === -1) {
                delete filter[searchParam];
             }
             if (parentProperty) {
@@ -376,6 +380,10 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             this._initialSelection = _private.getInitialSelectedItems(this, options, context);
          },
 
+         _afterMount(): void {
+            RegisterUtil(this, 'selectComplete', this._selectComplete.bind(this));
+         },
+
          _beforeUpdate(newOptions, context): void {
             const currentSelectedItems = this._options.selectedItems || this.context.get('selectorControllerContext').selectedItems;
             const newSelectedItems = newOptions.selectedItems || context.selectorControllerContext.selectedItems;
@@ -383,6 +391,10 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             if (currentSelectedItems !== newSelectedItems) {
                this._selectedKeys = _private.getSelectedKeys(newOptions, context);
             }
+         },
+
+         _beforeUnmount(): void {
+            UnregisterUtil(this, 'selectComplete');
          },
 
          _selectComplete(): void {

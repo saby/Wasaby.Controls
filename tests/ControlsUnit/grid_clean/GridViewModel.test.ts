@@ -29,12 +29,12 @@ describe('Controls/grid_clean/GridViewModel', () => {
             const currentRow = gridViewModel.getCurrent();
             let currentColumn = currentRow.getCurrentColumn();
             assert.strictEqual(currentColumn.searchValue, undefined);
-            assert.strictEqual(currentColumn.column.needSearchHighlight, undefined);
+            assert.strictEqual(currentColumn.column.needSearchHighlight, false);
 
             currentRow.goToNextColumn();
             currentColumn = currentRow.getCurrentColumn();
             assert.strictEqual(currentColumn.searchValue, undefined);
-            assert.strictEqual(currentColumn.column.needSearchHighlight, undefined);
+            assert.strictEqual(currentColumn.column.needSearchHighlight, false);
         });
 
         it('With searchValue.', () => {
