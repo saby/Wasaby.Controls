@@ -2406,6 +2406,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (this._selectionController) {
             _private.updateSelectionController(this, newOptions);
+        } else {
+            this._selectionController = _private.createSelectionController(this, newOptions);
         }
     },
 
