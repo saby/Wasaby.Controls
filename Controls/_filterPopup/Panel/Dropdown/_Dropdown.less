@@ -21,13 +21,19 @@
 .ws-is-hover {
    .controls-Dropdown__item_style-filter:hover {
       color: @item_hover_text-color_filterPanel;
-      text-decoration: underline;
+
+      .controls-Dropdown__text-wrapper {
+         text-decoration: underline;
+      }
    }
 }
 
 .controls-Dropdown__item_style-filter:active {
    color: @item_active_text-color_filterPanel;
-   text-decoration: underline;
+
+   .controls-Dropdown__text-wrapper {
+      text-decoration: underline;
+   }
 }
 
 .controls-FilterDropdown__reset {
