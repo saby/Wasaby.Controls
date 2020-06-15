@@ -4931,7 +4931,7 @@ define([
 
          // при смене значения свойства itemActionsPosition необходимо делать переинициализвацию ItemActions
          it('should update ItemActions when itemActionsPosition option has been changed', () => {
-            instance._itemActionsInitialized = true;
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
