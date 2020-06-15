@@ -156,6 +156,7 @@ export default class SearchControllerClass {
         this._path = null;
         if (this._storeCallbackId) {
             Store.unsubscribe(this._storeCallbackId);
+            Store.dispatch('searchValue', undefined);
         }
     }
 
@@ -239,7 +240,7 @@ export default class SearchControllerClass {
 
     private _observeStore(): void {
         this._storeCallbackId = Store.onPropertyChanged('searchValue', (searchValue) => {
-            this._search(null, searchValue, true);
+            this.search(searchValue, true);
         });
     }
 

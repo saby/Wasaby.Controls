@@ -262,6 +262,25 @@ define(
             });
          });
 
+         it('update equal source', function(done) {
+            var
+                items,
+                config = {source: source, keyProperty: 'id'},
+                data = getDataWithConfig(config);
+
+            data._beforeMount(config).addCallback(function() {
+               items = data._items;
+
+               data._beforeUpdate({source: new sourceLib.Memory({
+                     keyProperty: 'id',
+                     data: sourceDataEdited
+                  }), idProperty: 'id'}).addCallback(function() {
+                  assert.isTrue(data._items === items);
+                  done();
+               });
+            });
+         });
+
          it('itemsChanged', (done) => {
             const config = {
                source: source,
