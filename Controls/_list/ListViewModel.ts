@@ -352,7 +352,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setMarkedKey: function(key, status) {
-        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно его передать false
+        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
         if (this._markedKey === key && status !== false) {
             return;
         }
@@ -369,6 +369,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (status === false) {
             this._markedKey = undefined;
+            // на следующем вызове со статус = true проставится новый ключ и мы его занотифаем
+            return;
         } else {
             this._markedKey = key;
         }
