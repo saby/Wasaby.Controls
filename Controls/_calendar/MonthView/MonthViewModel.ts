@@ -87,6 +87,13 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       obj.enabled = state.enabled;
       obj.clickable = obj.mode === 'extended' || obj.isCurrentMonth;
 
+      if (state.hoveredStartValue <= obj.date && state.hoveredStartValue !== null &&
+          state.hoveredEndValue >= obj.date) {
+         obj.hovered = true;
+      } else {
+         obj.hovered = false;
+      }
+
       if (state.dayFormatter) {
          coreMerge(obj, state.dayFormatter(date) || {});
       }
@@ -164,8 +171,10 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
             css.push('controls-MonthViewVDOM__cursor-item');
          }
          if (!scope.selected) {
-            if (scope.selectionEnabled && !backgroundStyle) {
+            if (scope.selectionEnabled && !backgroundStyle && this._state.selectionType !== 'quantum' ) {
                css.push('controls-MonthViewVDOM__border-currentMonthDay-unselected_theme-' + theme);
+            } else if (scope.hovered) {
+               css.push('controls-MonthViewVDOM__border-multiple-hover_theme-' + theme);
             }
          }
          css.push('controls-MonthViewVDOM__selectableItem');
