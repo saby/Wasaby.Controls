@@ -47,8 +47,8 @@ export class Controller {
       }
 
       if (key === undefined && this._markedKey !== undefined) {
-         this._markedKey = undefined;
          this._model.setMarkedKey(this._markedKey, false);
+         this._markedKey = undefined;
          return undefined;
       }
 
