@@ -2923,16 +2923,17 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
     /**
      * Обработчик показа контекстного меню
      * @param e
-     * @param item
+     * @param itemData
      * @param clickEvent
      * @private
      */
-    _onItemContextMenu(e: SyntheticEvent<Event>, item: CollectionItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
+    _onItemContextMenu(e: SyntheticEvent<Event>, itemData: CollectionItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
         clickEvent.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        let contents = _private.getPlainItemContents(item);
-        const key = contents ? contents.getKey() : item.key;
+        let contents = _private.getPlainItemContents(itemData);
+        const key = contents ? contents.getKey() : itemData.key;
+        const item = this._listViewModel.getItemBySourceKey(key);
         this.setMarkedKey(key);
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
     },
@@ -2941,15 +2942,16 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Обработчик клика по операции
      * @param event
      * @param action
-     * @param item
+     * @param itemData
      * @private
      */
-    _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, item: CollectionItem<Model>): void {
+    _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
         event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        let contents = _private.getPlainItemContents(item);
-        const key = contents ? contents.getKey() : item.key;
+        let contents = _private.getPlainItemContents(itemData);
+        const key = contents ? contents.getKey() : itemData.key;
+        const item = this._listViewModel.getItemBySourceKey(key);
         this.setMarkedKey(key);
 
         if (action && !action._isMenu && !action['parent@']) {
