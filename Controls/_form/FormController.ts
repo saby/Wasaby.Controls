@@ -427,8 +427,8 @@ class FormController extends Control<IFormController, IReceivedState> {
         self._pendingPromise = new Deferred();
         self._notify('registerPending', [self._pendingPromise, {
             showLoadingIndicator: false,
-            validate(isInside: boolean): boolean {
-                return self._needShowConfirmation(isInside);
+            validate(): boolean {
+                return self._needShowConfirmation();
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
                 self._startFormOperations('cancel').then(() => {
@@ -438,11 +438,11 @@ class FormController extends Control<IFormController, IReceivedState> {
         }], {bubbling: true});
     }
 
-    private _needShowConfirmation(isInside: boolean = false): boolean {
+    private _needShowConfirmation(): boolean {
         if (this._options.needShowConfirmationCallback) {
             return this._options.needShowConfirmationCallback();
         } else {
-            return this._record && this._record.isChanged() && !isInside;
+            return this._record && this._record.isChanged();
         }
     }
 
