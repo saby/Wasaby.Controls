@@ -4679,10 +4679,16 @@ define([
          instance._selectionController = {
             update() {},
             clearSelection() { clearSelectionCalled = true; },
-            handleReset() {}
+            handleReset() {},
+            isAllSelected() { return false; }
          };
 
          let cfgClone = { ...cfg, root: 'newvalue' };
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(clearSelectionCalled);
+
+         instance._selectionController.isAllSelected = function() { return true; };
+         cfgClone = { ...cfg, root: 'newvalue1' };
          instance._beforeUpdate(cfgClone);
          assert.isTrue(clearSelectionCalled);
       });

@@ -78,6 +78,10 @@ export class Controller {
       return this._getResult(oldSelection, this._selection);
    }
 
+   isAllSelected(): boolean {
+      return this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount());
+   }
+
    toggleItem(key: TKey): ISelectionControllerResult {
       const status = this._getItemStatus(key);
       let newSelection;
