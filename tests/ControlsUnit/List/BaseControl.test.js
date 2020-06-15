@@ -4115,6 +4115,9 @@ define([
          // Нельзя открывать itemActionsMenu дважды подряд (надо сначала дождаться закрытия предыдущего меню)
          it('should not open itemActionsMenu twice at the same time', () => {
             const self = {
+               _itemActionsController: {
+                  prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => {}
+               },
                _itemActionsMenuId: 'somePopupId'
             };
 
