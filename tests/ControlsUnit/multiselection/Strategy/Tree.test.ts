@@ -288,6 +288,77 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(toArray(res.get(null)), [ ]);
          assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => [2, 3, 4].includes(it.id)) );
       });
+
+      it('selected unloaded item', () => {
+          const treeStrategyWithRootItems = new TreeSelectionStrategy({
+              nodesSourceControllers,
+              selectDescendants: true,
+              selectAncestors: true,
+              hierarchyRelation: hierarchy,
+              rootId: null,
+              items: new RecordSet({
+                  keyProperty: ListData.KEY_PROPERTY,
+                  rawData: ListData.getRootItems()
+              })
+          });
+          const entryPath = [
+              {parent: 6, id: 10},
+              {parent: 6, id: 11},
+          ];
+          const selection = {
+             selected: [10],
+             excluded: []
+          };
+          treeStrategyWithRootItems._items.setMetaData({
+              ENTRY_PATH: entryPath
+          });
+          const result = treeStrategyWithRootItems.getSelectionForModel(selection);
+          const unselectedKeys = toArray(result.get(false)).map((resultItem) => {
+             return resultItem.id;
+          });
+          const hasSelectedItems = !!result.get(true).length;
+          const nullStateKeys = toArray(result.get(null)).map((resultItem) => {
+              return resultItem.id;
+          });
+          assert.deepEqual(unselectedKeys, [1, 7]);
+          assert.isFalse(hasSelectedItems);
+          assert.deepEqual(nullStateKeys, [6]);
+      });
+   });
+
+   describe('_getChildrenByEntryPath', () => {
+      it('returns all children ids by node and entry path', () => {
+          const entryPath = [
+              {
+                  parent: null,
+                  id: 1
+              },
+              {
+                  parent: null,
+                  id: 2
+              },
+              {
+                  parent: 1,
+                  id: 3
+              },
+              {
+                  parent: 2,
+                  id: 4
+              },
+              {
+                  id: 5,
+                  parent: 2
+              },
+              {
+                  id: 6,
+                  parent: 5
+              }
+          ];
+          const childrenFromRoot = strategy._getChildrenByEntryPath(null, entryPath);
+          assert.deepEqual(childrenFromRoot, [1, 2, 3, 4, 5, 6]);
+          const childrenFromNode = strategy._getChildrenByEntryPath(2, entryPath);
+          assert.deepEqual(childrenFromNode, [4, 5, 6]);
+      });
    });
 
    describe('getCount', () => {
