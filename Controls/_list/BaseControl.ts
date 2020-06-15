@@ -2469,7 +2469,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._editInPlace) {
-            this._editInPlace.updateEditingData(newOptions);
+            this._editInPlace.updateEditingData({listViewModel: this._listViewModel, ...newOptions});
             this._editingItemData = this._editInPlace.getEditingItemData();
         }
 
