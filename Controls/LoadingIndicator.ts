@@ -316,13 +316,12 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         return overlay;
     }
 
-    private _toggleIndicator(visible?: boolean, config?: ILoadingIndicatorOptions, force?: boolean): void {
+    private _toggleIndicator(visible?: boolean, config: ILoadingIndicatorOptions = {}, force?: boolean): void {
+        const isGlobal = config.isGlobal || this.isGlobal;
         clearTimeout(this.delayTimeout);
         this._updateZIndex(config);
         if (visible) {
-            // TODO: https://online.sbis.ru/opendoc.html?guid=8a294eac-6874-4dae-9621-ae095bd1c9d3
-            // this._toggleEvents(true);
-            this._toggleOverlayAsync(true, config);
+            this._blockContent(true, config, isGlobal);
             if (force) {
                 this._toggleIndicatorVisible(true, config);
             } else {
@@ -340,14 +339,25 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             // if we dont't have indicator in stack, then hide overlay
             if (this._stack.getCount() === 0) {
                 this._toggleIndicatorVisible(false);
-                // this._toggleEvents(false);
-                this._toggleOverlayAsync(false, {});
+                this._blockContent(false, config, isGlobal);
             }
         }
         this._forceUpdate();
     }
 
-    private _toggleOverlayAsync(toggle: boolean, config: ILoadingIndicatorOptions): void {
+    private _blockContent(toggle, config, isGlobal): void {
+        if (isGlobal) {
+            // Защита на случай, если сделали быстро 2 вызова с разными параметрами isGlobal
+            this._toggleOverlayAsync(false);
+            this._toggleEvents(toggle);
+        } else {
+            // Защита на случай, если сделали быстро 2 вызова с разными параметрами isGlobal
+            this._toggleEvents(false);
+            this._toggleOverlayAsync(toggle, config);
+        }
+    }
+
+    private _toggleOverlayAsync(toggle: boolean, config: ILoadingIndicatorOptions = {}): void {
         // контролы, которые при ховере показывают окно, теряют свой ховер при показе оверлея,
         // что влечет за собой вызов обработчиков на mouseout + визуально дергается ховер таргета.
         // Делаю небольшую задержку, если окно не имеет в себе асинхронного кода, то оно успеет показаться раньше
@@ -417,7 +427,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             this._clearOverlayTimerId();
             this._isMessageVisible = true;
             this._isOverlayVisible = true;
-            // this._toggleEvents(false);
+            this._toggleEvents(false);
             this._updateProperties(config);
         } else {
             this._isMessageVisible = false;
