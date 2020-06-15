@@ -1311,7 +1311,10 @@ const _private = {
         //  убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
         const container = self._container.get ? self._container.get(0) : self._container;
 
-        const itemIndex = self._listViewModel.getSourceIndexByItem(item);
+        // Т.к., например, breadcrumbs отсутствует в source, но иногда нам нужно получать его target
+        // логичнее использовать именно getIndex(), а не getSourceIndexByItem()
+        // кроме того, в старой модели в itemData.index записывается именно результат getIndex()
+        let itemIndex = self._listViewModel.getIndex(item);
         const startIndex = self._listViewModel.getStartIndex();
         return isMenuClick ? self._targetItem : Array.prototype.filter.call(
             container.querySelector('.controls-ListView__itemV').parentNode.children,

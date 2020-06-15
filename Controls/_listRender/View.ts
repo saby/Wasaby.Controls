@@ -292,7 +292,11 @@ export default class View extends Control<IViewOptions> {
         // TODO: self._container может быть не HTMLElement, а jQuery-элементом,
         //  убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
         const container = this._container.get ? this._container.get(0) : this._container;
-        const itemIndex = this._collection.getSourceIndexByItem(item);
+
+        // Т.к., например, breadcrumbs отсутствует в source, но иногда нам нужно получать его target
+        // логичнее использовать именно getIndex(), а не getSourceIndexByItem()
+        // кроме того, в старой модели в itemData.index записывается именно результат getIndex()
+        const itemIndex = this._collection.getIndex(item);
         const startIndex = this._collection.getStartIndex();
         return isMenuClick ? this._targetItem : Array.prototype.filter.call(
             container.querySelector('.controls-ListView__itemV').parentNode.children,

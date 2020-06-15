@@ -628,6 +628,11 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     // New Model compatibility
+    getIndex(item: CollectionItem<Model>): number | string {
+        return this._display ? this._display.getIndex(item) : undefined;
+    },
+
+    // New Model compatibility
     getSourceIndexByItem(item: CollectionItem<Model>): number {
         return this._display ? this._display.getSourceIndexByItem(item) : undefined;
     },
