@@ -164,6 +164,15 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             root: 'testRoot'
          });
          assert.isTrue(preparedFilter.searchParam === 'test');
+
+         selection = operations.selectionToRecord({ selected: [1], excluded: [null] }, source.getAdapter());
+         preparedFilter = lookupPopup.Container._private.prepareFilter({
+            filter,
+            selection,
+            searchParam: 'searchParam',
+            root: 1
+         });
+         assert.isTrue(preparedFilter.searchParam === 'test');
       });
 
       it('prepareResult', function() {

@@ -68,12 +68,30 @@ define([
             scrollHeight: 100,
             clientHeight: 100
          };
+         component._canScroll = true;
          sinon.stub(StickyHeaderUtils, 'isHidden').returns(false);
          // sinon.stub(scroll._stickyHeaderController, '_isVisible').returns(true);
       });
 
       afterEach(function() {
          sinon.restore();
+      });
+
+
+      describe('setCanScroll', function() {
+         it('should update value from true to false and should not register waiting headers', function() {
+            sinon.stub(component, '_registerDelayed');
+            component.setCanScroll(false);
+            assert.isFalse(component._canScroll);
+            sinon.assert.notCalled(component._registerDelayed);
+         });
+         it('should update value from false to true and register waiting headers', function() {
+            sinon.stub(component, '_registerDelayed');
+            component._canScroll = false;
+            component.setCanScroll(true);
+            assert.isTrue(component._canScroll);
+            sinon.assert.called(component._registerDelayed);
+         });
       });
 
       describe('_stickyRegisterHandler', function() {
