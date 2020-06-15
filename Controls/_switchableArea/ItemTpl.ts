@@ -6,6 +6,7 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 class SwitchableAreaItem extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
    protected _keyHooksStorage: string[] = null;
+   private _needStartResizeRegister: boolean;
 
    protected _beforeMount(): void {
       this._keyHooksStorage = [];
@@ -17,8 +18,16 @@ class SwitchableAreaItem extends Control<IControlOptions> {
       RegisterUtil(this, 'controlResize', this._resizeHandler.bind(this));
    }
 
+   protected _beforeUpdate(newOptions): void {
+      // Если поменялся ключ и выбрали текущий итем
+      if (this._options.selectedKey !== newOptions.selectedKey && newOptions.selectedKey === this._options.key) {
+         this._needStartResizeRegister = true;
+      }
+   }
+
    protected _afterRender(): void {
-      if (this._options.selectedKey === this._options.key) {
+      if (this._needStartResizeRegister) {
+         this._needStartResizeRegister = false;
          this._startResizeRegister();
       }
    }
