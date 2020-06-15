@@ -172,7 +172,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _draggingItemData: null,
     _dragTargetPosition: null,
     _selectedKeys: null,
-    _markedKey: null,
+    _markedKey: undefined,
     _hoveredItem: null,
     _reloadedKeys: null,
     _singleItemReloadCount: 0,
@@ -352,7 +352,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setMarkedKey: function(key, status) {
-        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно его передать false
+        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
         if (this._markedKey === key && status !== false) {
             return;
         }
@@ -368,7 +368,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         if (status === false) {
-            this._markedKey = undefined;
+            if (key === undefined) {
+                this._markedKey = undefined;
+                return;
+            } else {
+                this._markedKey = undefined;
+            }
         } else {
             this._markedKey = key;
         }
