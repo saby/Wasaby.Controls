@@ -219,7 +219,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
       },
 
       _finishPendingHandler: function(event, forceFinishValue, root) {
-         return this.finishPendingOperations(forceFinishValue,  root);
+         return this.finishPendingOperations(forceFinishValue, root);
       },
 
       /**
