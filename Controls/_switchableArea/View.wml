@@ -5,8 +5,8 @@
                         currentItemKey="{{ item.id || item.key}}"
                         attr:class="{{ _selectedKey !== item.id && _selectedKey!== item.key ? 'ws-hidden' }}"
                         key="{{ item.id || item.key }}"
+                        autofocus="{{ item.autofocus }}"
                         itemTemplate="{{ item.itemTemplate }}"
-                        autofocus="{{_options.autofocus}}"
                         selectedKey="{{ _options.selectedKey }}"
                         templateOptions="{{item.templateOptions}}"/>
         </ws:if>

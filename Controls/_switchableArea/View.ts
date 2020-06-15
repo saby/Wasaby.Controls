@@ -9,7 +9,6 @@ export interface ISwitchableOptions extends IControlOptions{
     itemTemplate: TemplateFunction;
     selectedKey?: string| number;
     items?: ISwitchableAreaItem;
-    autofocus?: boolean;
 }
 
 interface ISwitchableAreaItem {
@@ -33,6 +32,7 @@ interface ISwitchableAreaItem {
  * @property {String|Number} key Ключ элемента
  * @property {Function} itemTemplate Шаблон элемента
  * @property {templateOptions} templateOptions Опции шаблона элемента
+ * @property {boolean} autofocus Определяет, установится ли фокус на контентную область. По умолчанию - true
  */
 
 /**
@@ -43,12 +43,6 @@ interface ISwitchableAreaItem {
 /**
  * @name Controls/_switchableArea/View#selectedKey
  * @cfg {String} Ключ выбранного элемента.
- */
-
-/**
- * @name Controls/_switchableArea/View#autofocus
- * @cfg {Boolean} Определяет, установится ли фокус на контентную область.
- * @default true
  */
 
 /**
@@ -109,8 +103,7 @@ class View extends Control<ISwitchableOptions> {
 
     static getDefaultOptions(): ISwitchableOptions {
         return {
-            itemTemplate: defaultItemTemplate,
-            autofocus: true
+            itemTemplate: defaultItemTemplate
         };
     }
 }

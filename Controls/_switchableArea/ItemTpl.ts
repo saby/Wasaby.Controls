@@ -85,6 +85,11 @@ class SwitchableAreaItem extends Control<IControlOptions> {
    protected _resizeHandler(): void {
       this._startResizeRegister();
    }
+    static getDefaultOptions() {
+        return {
+            autofocus: true
+        };
+    }
 }
 
 export default SwitchableAreaItem;
