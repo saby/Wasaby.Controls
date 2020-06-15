@@ -56,11 +56,15 @@ const _private = {
         } else {
             if (eventResult && eventResult.finally) {
                 self._showIndicator();
-                eventResult.finally((defResult) => {
+                result = eventResult.then((defResult) => {
                     self._hideIndicator();
+                    if (defResult === constEditing.CANCEL) {
+                        return {cancelled: true};
+                    }
                     return defResult;
+                }).finally(() => {
+                    self._hideIndicator();
                 });
-                result = eventResult;
             } else if (
                 (eventResult && eventResult.item instanceof entity.Record) ||
                 (options && options.item instanceof entity.Record)
@@ -68,9 +72,8 @@ const _private = {
                 result = Promise.resolve(eventResult || options);
             } else if (isAdd) {
                 self._showIndicator();
-                result = _private.createModel(self, eventResult || options).finally((createModelResult) => {
+                result = _private.createModel(self, eventResult || options).finally(() => {
                     self._hideIndicator();
-                    return createModelResult;
                 });
             }
         }
@@ -108,12 +111,12 @@ const _private = {
                     self._endEditDeferred = null;
                     return Promise.resolve({cancelled: true});
                 }
-
-                return Promise.resolve(resultOfDeferred).finally((res) => {
+                const both = (res) => {
                     self._endEditDeferred = null;
                     _private.afterEndEdit(self, commit);
                     return res;
-                });
+                };
+                return Promise.resolve(resultOfDeferred).then(both).catch(both);
             });
         } else {
             if (eventResult === constEditing.CANCEL) {
@@ -595,9 +598,10 @@ export default class EditInPlace {
 
     cancelEdit(): Promise<any> {
         const self = this;
-        return this._isCommitInProcess ? this._commitPromise.finally(() => {
+        const both = () => {
             return _private.endItemEdit(self, false);
-        }) : _private.endItemEdit(this, false);
+        };
+        return this._isCommitInProcess ? this._commitPromise.then(both).catch(both) : _private.endItemEdit(this, false);
     }
 
     editNextRow(): Promise<any> {
