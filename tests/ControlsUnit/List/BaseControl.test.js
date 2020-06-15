@@ -4121,7 +4121,7 @@ define([
             // Нам нужно только передать self с установленной опцией _itemActionsMenuId, чтобы метод вернул пустой промис
             return lists.BaseControl._private.openItemActionsMenu(self, null, null, null, false)
                .then(() => {
-                  assert.equal(self._itemActionsMenuId, 'somePopupId');
+                  assert.equal(self._itemActionsMenuId, null);
                });
          });
       });

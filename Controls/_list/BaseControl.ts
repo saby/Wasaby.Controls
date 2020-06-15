@@ -1241,8 +1241,7 @@ const _private = {
             }
             if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
-                    _private.closePopup(self);
-                    self._onItemActionsMenuClose();
+                    self.closeActionsMenu(self);
                 }
             }
 
@@ -1339,13 +1338,7 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        // Если уже открыто какое-то меню, то ничего не делаем, т.к.
-        // если откроем несколько подряд меню даже на одном и том же Item,
-        // при закрытии любого из них сбросится активный Item и тогда при клике на предыдущем
-        // не закрывшемся меню в консоль полетит ошибка
-        if (self._itemActionsMenuId) {
-            return Promise.resolve();
-        }
+        _private.closePopup(self);
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
@@ -1390,7 +1383,9 @@ const _private = {
      * @param self
      */
     closePopup(self): void {
-        Sticky.closePopup(self._itemActionsMenuId);
+        if (self._itemActionsMenuId) {
+            Sticky.closePopup(self._itemActionsMenuId);
+        }
         self._itemActionsMenuId = null;
     },
 
@@ -2440,8 +2435,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             if (this._itemActionsMenuId) {
-                _private.closePopup(self);
-                this._onItemActionsMenuClose();
+                this.closeActionsMenu(self)
             }
 
             // return result here is for unit tests
@@ -2937,8 +2931,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * @private
      */
     _onItemActionsMenuClose(clickEvent: SyntheticEvent<MouseEvent>): void {
-        this._itemActionsController.setActiveItem(null);
-        this._itemActionsController.deactivateSwipe();
+        // this._itemActionsController.setActiveItem(null);
+        // this._itemActionsController.deactivateSwipe();
         this._itemActionsMenuId = null;
     },
 
