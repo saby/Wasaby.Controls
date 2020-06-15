@@ -32,6 +32,7 @@ interface ISwitchableAreaItem {
  * @property {String|Number} key Ключ элемента
  * @property {Function} itemTemplate Шаблон элемента
  * @property {templateOptions} templateOptions Опции шаблона элемента
+ * @property {boolean} autofocus Определяет, установится ли фокус на контентную область. По умолчанию - true
  */
 
 /**

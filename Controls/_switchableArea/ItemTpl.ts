@@ -13,7 +13,9 @@ class SwitchableAreaItem extends Control<IControlOptions> {
 
    protected _afterMount(): void {
       // if we select current item, then activate it, for focusing child controls
-      this.activate();
+      if (this._options.autofocus) {
+         this.activate();
+      }
       RegisterUtil(this, 'controlResize', this._resizeHandler.bind(this));
    }
 
@@ -26,7 +28,7 @@ class SwitchableAreaItem extends Control<IControlOptions> {
    protected _afterUpdate(oldOptions): void {
       // if we select current item, then activate it, for focusing child controls
       if (this._options.selectedKey !== oldOptions.selectedKey) {
-         if (this._options.selectedKey === this._options.key) {
+         if (this._options.selectedKey === this._options.key && this._options.autofocus) {
             this.activate();
             this._executeKeyHooks('register');
          } else {
@@ -83,6 +85,11 @@ class SwitchableAreaItem extends Control<IControlOptions> {
    protected _resizeHandler(): void {
       this._startResizeRegister();
    }
+    static getDefaultOptions() {
+        return {
+            autofocus: true
+        };
+    }
 }
 
 export default SwitchableAreaItem;
