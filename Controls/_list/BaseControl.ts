@@ -2462,11 +2462,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
          * 3. Изменился коллбек видимости опции
          * 4. Модель была пересоздана
          * 5. обновилась опция readOnly (относится к TreeControl)
+         * 6. обновилась опция itemActionsPosition
          */
         if (
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
-            newOptions.readOnly !== this._options.readOnly
+            newOptions.readOnly !== this._options.readOnly ||
+            newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
             this._updateInitializedItemActions(newOptions);
         }

@@ -53,7 +53,7 @@ export interface IViewOptions extends IControlOptions {
     markerVisibility: TVisibility;
     markedKey: number|string;
     showEditArrow: boolean;
-    editArrowVisibilityCallback: TEditArrowVisibilityCallback
+    editArrowVisibilityCallback: TEditArrowVisibilityCallback;
 }
 
 export default class View extends Control<IViewOptions> {
@@ -119,7 +119,9 @@ export default class View extends Control<IViewOptions> {
             options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
             (options.itemActions || options.itemActionsProperty) && collectionRecreated ||
             options.itemActionsProperty ||
-            (options.editingConfig && options.editingConfig.item)
+            (options.editingConfig && options.editingConfig.item) ||
+            options.readOnly !== this._options.readOnly ||
+            options.itemActionsPosition !== this._options.itemActionsPosition
         ) {
             this._updateItemActions();
         }
