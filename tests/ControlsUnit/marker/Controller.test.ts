@@ -76,7 +76,7 @@ describe('Controls/marker/Controller', () => {
 
          // сбрасываем маркер в модели
          model.setMarkedKey(2, false);
-         assert.isNull(model.getMarkedKey());
+         assert.isUndefined(model.getMarkedKey());
 
          result = controller.update({
             model: model,
