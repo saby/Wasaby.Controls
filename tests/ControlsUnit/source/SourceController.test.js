@@ -49,6 +49,29 @@ define([
          });
       });
 
+      it('load with config', function (done) {
+         const controller = new scroll.Controller({
+            source: source,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 1,
+                  hasMore: false
+               }
+            }
+         });
+         const sandbox = sinon.createSandbox();
+         const stub = sandbox.stub(controller._queryParamsController, 'updateQueryProperties');
+         const config = {};
+
+         controller.load({}, null, 'down', config).addCallback(function(rs) {
+            assert.isTrue(stub.calledWith(rs, 'down', config));
+            sandbox.restore();
+            done();
+         });
+      });
+
+
       it('load + navigation', function (done) {
          var controller = new scroll.Controller({
             source: source,

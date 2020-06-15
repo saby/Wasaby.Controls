@@ -37,6 +37,14 @@
   border-right: @trigger_offset_lookupInput solid transparent;
 }
 
+// У всех ссылок внутри placeholder'a поля связи не должно быть line-height,
+// иначе они ломают выравнивание placeholder'a
+// При этом, если ссылка находится вне поля связи, у неё должен быть line-height,
+// чтобы работало выравнивание относительно других элементов.
+.controls-Lookup__fieldWrapper .controls-Lookup__link {
+  line-height: initial;
+}
+
 .controls-Lookup__fieldWrapper-size-default_theme-@{themeName} {
    height: @inline_height_default_input;
    line-height: @inline_height_default_input;
