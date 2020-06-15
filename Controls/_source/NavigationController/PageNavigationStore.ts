@@ -1,3 +1,5 @@
+import {TNavigationDirection} from 'Controls/_interface/INavigation';
+
 type TMore = boolean | number;
 
 export interface IPageNavigationStoreOptions {
@@ -33,7 +35,7 @@ class PageNavigationStore {
             throw new Error('Option pageSize is undefined in PagePagination');
         }
 
-        this._hasMore = cfg.hasMore || true;
+        this._hasMore = !!cfg.hasMore;
     }
 
     private _initPages(pageNumber: number): void {
@@ -66,6 +68,34 @@ class PageNavigationStore {
 
     setMetaMore(more: TMore): void {
         this._more = more;
+    }
+
+    hasMoreData(direction: TNavigationDirection): boolean {
+        let result: boolean;
+
+        if (direction === 'forward') {
+
+            // moreResult === undefined, when navigation for passed rootKey is not defined
+            if (this._more === undefined) {
+                result = false;
+            } else {
+                if (this._hasMore === false) {
+                    // в таком случае в more приходит общее число записей в списке
+                    // значит умножим номер след. страницы на число записей на одной странице и сравним с общим
+                    result = typeof this._more === 'boolean'
+                                ? this._more
+                                : this._nextPage * this._pageSize < this._more;
+                } else {
+                    result = !!this._more;
+                }
+            }
+        } else if (direction === 'backward') {
+            result = this._prevPage >= 0;
+        } else {
+            throw new Error('Parameter direction is not defined in hasMoreData call');
+        }
+
+        return result;
     }
 
     destroy(): void {

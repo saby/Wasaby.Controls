@@ -27,6 +27,7 @@ class PositionParamsCalculator {
         addParams.meta = {navigationType: QueryNavigationType.Position};
 
         const storeParams = store.getParams();
+        addParams.limit = storeParams.limit;
 
         const queryField = this._resolveField(storeParams.field);
 
@@ -71,18 +72,19 @@ class PositionParamsCalculator {
         const moreValue = list.getMetaData().more;
         const storeParams = store.getParams();
 
+        const queryField = PositionParamsCalculator._resolveField(storeParams.field);
         const queryDirection = PositionParamsCalculator._resolveDirection(direction, storeParams.direction);
 
         if (typeof moreValue === 'boolean') {
             if (queryDirection !== CursorDirection.bothways) {
-                store.updateMoreToDirection(direction, moreValue);
+                store.updateMetaMoreToDirection(queryDirection, moreValue);
             } else {
                 Logger.error('NavigationController: Wrong type of \"more\" value. Must be Object');
             }
         } else {
             if (moreValue instanceof Object) {
                 if (queryDirection === CursorDirection.bothways) {
-                    store.setMoreData(moreValue);
+                    store.setMetaMore(moreValue);
                 } else {
                     Logger.error('NavigationController: Wrong type of \"more\" value. Must be boolean');
                 }
@@ -106,14 +108,12 @@ class PositionParamsCalculator {
                 if (queryDirection === CursorDirection.bothways) {
                     if (metaNextPosition.before && metaNextPosition.before instanceof Array
                         && metaNextPosition.after && metaNextPosition.after instanceof Array) {
-                        this._beforePosition = metaNextPosition.before;
-                        this._afterPosition = metaNextPosition.after;
-                        this._positionByMeta = true;
+                        store.setBackwardPosition(metaNextPosition.before);
+                        store.setForwardPosition(metaNextPosition.after);
                     } else if (metaNextPosition.backward && metaNextPosition.backward instanceof Array
                         && metaNextPosition.forward && metaNextPosition.forward instanceof Array) {
-                        this._beforePosition = metaNextPosition.backward;
-                        this._afterPosition = metaNextPosition.forward;
-                        this._positionByMeta = true;
+                        store.setBackwardPosition(metaNextPosition.backward);
+                        store.setForwardPosition(metaNextPosition.forward);
                     } else {
                         Logger.error('QueryParamsController/Position: ' +
                             'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties.' +
@@ -125,35 +125,15 @@ class PositionParamsCalculator {
             }
 
         } else {
-            if ((list as RecordSet).getCount()) {
-                if (loadDirection !== 'down') {
-                    edgeElem = (list as RecordSet).at(0);
-                    this._beforePosition = this._resolvePosition(edgeElem, this._options.field);
+            let edgeElem;
+            if ((list as Recordset).getCount()) {
+                if (queryDirection !== 'forward') {
+                    edgeElem = (list as Recordset).at(0);
+                    store.setBackwardPosition(PositionParamsCalculator._resolvePosition(edgeElem, queryField));
                 }
-                if (loadDirection !== 'up') {
-                    edgeElem = (list as RecordSet).at((list as RecordSet).getCount() - 1);
-                    this._afterPosition = this._resolvePosition(edgeElem, this._options.field);
-                }
-            }
-        }
-
-        switch (direction) {
-            case 'forward': store.shiftNextPage(); break;
-            case 'backward': store.shiftPrevPage(); break;
-            default: {
-                // Если направление не указано,
-                // значит это расчет параметров после начальной загрузки списка или после перезагрузки
-                if (config) {
-                    // TODO обработать эту ситуацию
-                    const pageSizeRemainder = config.pageSize % storeParams.pageSize;
-                    const pageSizeCoef = (config.pageSize - pageSizeRemainder) / storeParams.pageSize;
-
-                    if (pageSizeRemainder) {
-                        throw new Error('pageSize, переданный для единичной перезагрузки списка, должен нацело делиться на pageSize из опции navigation.sourceConfig.');
-                    }
-
-                    // если мы загрузили 0 страницу размера 30 , то мы сейчас на 2 странице размера 10
-                    store.setCurrentPage((config.page + 1) * pageSizeCoef - 1);
+                if (queryDirection !== 'backward') {
+                    edgeElem = (list as Recordset).at((list as Recordset).getCount() - 1);
+                    store.setForwardPosition(PositionParamsCalculator._resolvePosition(edgeElem, queryField));
                 }
             }
         }
@@ -177,6 +157,14 @@ class PositionParamsCalculator {
 
     private static _resolveField(optField: TField): TFieldValue {
         return (optField instanceof Array) ? optField : [optField];
+    }
+
+    private static _resolvePosition(item: Record, field: TFieldValue): TPositionValue {
+        const navPosition: TPositionValue = [];
+        for (let i = 0; i < field.length; i++) {
+            navPosition.push(item.get(field[i]));
+        }
+        return navPosition;
     }
 
 }

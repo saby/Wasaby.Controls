@@ -190,7 +190,7 @@ export class NavigationController {
         list: RecordSet,
         id: TKey = null,
         navigationConfig?: INavigationSourceConfig,
-        direction?: Direction): IPageNavigationState | IPositionNavigationState {
+        direction?: TNavigationDirection): IPageNavigationState | IPositionNavigationState {
 
         // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
         const store = this._getStore(id);
@@ -203,12 +203,19 @@ export class NavigationController {
 
     }
 
+    hasMoreData(direction?: TNavigationDirection, id: TKey = null) {
+        // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
+        const store = this._getStore(id);
+        return store.hasMoreData(direction);
+    }
+
     private _getStore(id: TKey): TNavigationStore {
         let resStore: TNavigationStore;
         if (this._navigationStores[id]) {
             resStore = this._navigationStores[id];
         } else {
             resStore = NavigationStoreFactory.resolve(this._navigationType, this._navigationConfig);
+            this._navigationStores[id] = resStore;
         }
         return resStore;
     }

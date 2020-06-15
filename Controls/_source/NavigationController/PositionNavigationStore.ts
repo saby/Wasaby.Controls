@@ -1,8 +1,16 @@
 import {CursorDirection} from 'Controls/Constants';
+import {TNavigationDirection} from "../../_interface/INavigation";
 
 interface IPositionHasMore {
     backward: boolean;
     forward: boolean;
+}
+
+interface IPositionHasMoreCompatible {
+    backward?: boolean;
+    forward?: boolean;
+    before?: boolean;
+    after?: boolean;
 }
 
 type TPositionHasMore = IPositionHasMore;
@@ -50,18 +58,15 @@ class PositionNavigationStore {
         if (cfg.position !== undefined) {
             this._position = cfg.position.length ? cfg.position : [cfg.position];
         } else {
-            throw new Error('Option position is undefined in PositionNavigation');
+            // Default value of position
+            cfg.position = [null];
         }
         if (cfg.direction !== undefined) {
             this._direction = PositionNavigationStore._convertDirection(cfg.direction);
         } else {
             throw new Error('Option direction is undefined in PositionNavigation');
         }
-        if (cfg.limit !== undefined) {
-            this._limit = cfg.limit;
-        } else {
-            throw new Error('Option limit is undefined in PositionNavigation');
-        }
+        this._limit = cfg.limit;
 
         this._more = PositionNavigationStore._getDefaultMoreMeta();
     }
@@ -106,22 +111,47 @@ class PositionNavigationStore {
         this._backwardPosition = value;
     }
 
-    setMetaMore(more: IPositionHasMore): void {
-        this._more = more;
+    setMetaMore(more: IPositionHasMoreCompatible): void {
+        if (more.before) {
+            this._more.backward = more.before;
+        }
+        if (more.backward) {
+            this._more.backward = more.backward;
+        }
+        if (more.after) {
+            this._more.forward = more.after;
+        }
+        if (more.forward) {
+            this._more.forward = more.forward;
+        }
     }
 
     updateMetaMoreToDirection(direction: 'forward' | 'backward', value: boolean): void {
         this._more[direction] = value;
     }
 
-    destroy(): void {
-        this._nextPage = null;
-        this._prevPage = null;
-        this._more = null;
+    hasMoreData(direction: TNavigationDirection): boolean {
+        let result: boolean;
 
-        this._page = null;
-        this._pageSize = null;
-        this._hasMore = null;
+        // moreResult === undefined, when navigation for passed rootKey is not defined
+        if (this._more === undefined) {
+            result = false;
+        } else {
+            return this._more[direction];
+        }
+
+        return result;
+    }
+
+    destroy(): void {
+        this._field = null;
+        this._position = null;
+        this._direction = null;
+        this._limit = null;
+
+        this._backwardPosition = null;
+        this._forwardPosition = null;
+        this._more = null;
     }
 }
 
