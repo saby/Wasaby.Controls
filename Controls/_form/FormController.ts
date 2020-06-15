@@ -24,6 +24,7 @@ interface IFormController extends IControlOptions {
     record?: Model;
     errorController?: dataSourceError.Controller;
     source?: Memory;
+    needShowConfirmationCallback?: Function;
 
     //удалить при переходе на новые опции
     dataSource?: Memory;
@@ -244,7 +245,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
         if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
             // Если текущий рекорд изменен, то покажем вопрос
-            if (this._options.record && this._options.record.isChanged()) {
+            if (this._needShowConfirmation()) {
                 this._showConfirmPopup('yesno').then((answer) => {
                     if (answer === true) {
                         this.update().then((res) => {
@@ -427,7 +428,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         self._notify('registerPending', [self._pendingPromise, {
             showLoadingIndicator: false,
             validate(isInside: boolean): boolean {
-                return self._record && self._record.isChanged() && !isInside;
+                return self._needShowConfirmation(isInside);
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
                 self._startFormOperations('cancel').then(() => {
@@ -435,6 +436,14 @@ class FormController extends Control<IFormController, IReceivedState> {
                 });
             }
         }], {bubbling: true});
+    }
+
+    private _needShowConfirmation(isInside: boolean = false): boolean {
+        if (this._options.needShowConfirmationCallback) {
+            return this._options.needShowConfirmationCallback();
+        } else {
+            return this._record && this._record.isChanged() && !isInside;
+        }
     }
 
     private _registerFormOperationHandler(event: Event, operation: IFormOperation): void {
