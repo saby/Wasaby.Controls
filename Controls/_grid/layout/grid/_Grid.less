@@ -281,7 +281,7 @@
    .controls-Grid__editArrow_theme-@{themeName}:hover {
       fill: @edit-arrow_hover_icon-color_grid;
    }
-   
+
 }
 
 .controls-Grid__row-cell-background-editing_theme-@{themeName} {
@@ -740,7 +740,11 @@
    position: relative;
    z-index: 1;
    fill: @edit-arrow_icon-color_grid;
-   .icon(@edit-arrow_icon-size_grid)
+   width: @edit-arrow_icon-size_grid;
+   min-width: @edit-arrow_icon-size_grid;
+   min-height: @edit-arrow_icon-size_grid;
+   display: inline-block;
+   line-height: 1;
 }
 
 .controls-Grid__editArrow_style-default_background_theme-@{themeName} {
