@@ -4744,6 +4744,7 @@ define([
 
          // Необходимо обновлять опции записи при изиенении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
          it('should update ItemActions when visibilityCallback has changed', () => {
+            instance._itemActionsInitialized = true;
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4760,6 +4761,7 @@ define([
 
          // Необходимо обновлять опции записи при изиенении самих ItemActions
          it('should update ItemActions when ItemActions have changed', () => {
+            instance._itemActionsInitialized = true;
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4786,6 +4788,7 @@ define([
                   textOverflow: 'ellipsis'
                }
             ];
+            instance._itemActionsInitialized = true;
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4798,6 +4801,7 @@ define([
 
          // Необходимо обновлять опции записи если в конфиге editingConfig передан item
          it('should update ItemActions when item was passed within options.editingConfig', () => {
+            instance._itemActionsInitialized = false;
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -4814,6 +4818,7 @@ define([
 
          // при неидентичности source необходимо перезапрашивать данные этого source и затем инициализировать ItemActions
          it('should update ItemActions when data was reloaded', async () => {
+            instance._itemActionsInitialized = true;
             await instance._beforeUpdate({
                ...cfg,
                itemActions: [
@@ -4830,6 +4835,7 @@ define([
 
          // при смене значения свойства readOnly необходимо делать переинициализвацию ItemActions
          it('should update ItemActions when readOnly option has been changed', () => {
+            instance._itemActionsInitialized = true;
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,

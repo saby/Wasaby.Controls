@@ -368,7 +368,7 @@ const _private = {
             let selection = {
                 selected: self._options.selectedKeys || [],
                 excluded: self._options.excludedKeys || []
-            };1
+            };
             selection = DndFlatController.getSelectionForDragNDrop(self._listViewModel, selection, key);
             const recordSet = self._listViewModel.getCollection();
 
@@ -441,12 +441,18 @@ const _private = {
     },
     moveMarkerToNext: function (self, event) {
         if (self._markerController) {
+            // чтобы предотвратить нативный подскролл
+            // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
+            event.preventDefault();
             self._markedKey = self._markerController.moveMarkerToNext();
             _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToPrevious: function (self, event) {
         if (self._markerController) {
+            // чтобы предотвратить нативный подскролл
+            // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
+            event.preventDefault();
             self._markedKey = self._markerController.moveMarkerToPrev();
             _private.scrollToItem(self, self._markedKey);
         }
@@ -1264,9 +1270,7 @@ const _private = {
             newModelChanged
         ) {
             self._itemsChanged = true;
-            if (self._itemActionsInitialized) {
-                self._updateItemActions(self._options);
-            }
+            self._updateInitializedItemActions(self._options);
         }
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
@@ -1861,7 +1865,7 @@ const _private = {
                     * _canUpdateItemsActions приведет к показу неактуальных операций.
                     */
                     self._updateItemActions(self._options);
-    }
+                }
             });
         }
     },
@@ -2433,14 +2437,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             // return result here is for unit tests
             return _private.reload(self, newOptions).addCallback(() => {
                 this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
-                this._updateItemActions(newOptions);
+                this._updateInitializedItemActions(newOptions);
             });
         }
 
         /*
-         * Переинициализация опций записи нужна при:
+         * Переинициализация ранее проинициализированных опций записи нужна при:
          * 1. Изменились опции записи
-         * 2. Редактирование записи при загрузке (Может быть изменится после версии 20.5000, т.к. там появились опции, отображаемые всегда)
          * 3. Изменился коллбек видимости опции
          * 4. Модель была пересоздана
          * 5. обновилась опция readOnly (относится к TreeControl)
@@ -2449,10 +2452,14 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
             ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
-            (newOptions.editingConfig && newOptions.editingConfig.item) ||
             newOptions.readOnly !== this._options.readOnly
         ) {
-            this._updateItemActions(newOptions);
+            this._updateInitializedItemActions(newOptions);
+        }
+
+        // Ициализация опций записи при загрузке нужна для случая, когда предустановлен editingConfig.item
+        if (newOptions.editingConfig && newOptions.editingConfig.item) {
+            this._initItemActions(null, newOptions);
         }
 
         if (this._itemsChanged) {
@@ -2786,10 +2793,21 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Выполняется из шаблона при mouseenter
      * @private
      */
-    _initItemActions(): void {
+    _initItemActions(e: SyntheticEvent, options: any): void {
         if (!this._itemActionsInitialized) {
-            this._updateItemActions(this._options);
+            this._updateItemActions(options);
             this._itemActionsInitialized = true;
+        }
+    },
+
+    /**
+     * Обновляет ItemActions только в случае, если они были ранее проинициализированы
+     * @param options
+     * @private
+     */
+    _updateInitializedItemActions(options: any) {
+        if (this._itemActionsInitialized) {
+            this._updateItemActions(options);
         }
     },
 

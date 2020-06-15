@@ -8,6 +8,7 @@ import Deferred = require('Core/Deferred');
 import converterFilterItems = require('Controls/_filter/converterFilterItems');
 import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
+import {error as dataSourceError} from 'Controls/dataSource';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {detection} from 'Env/Env';
 import {object} from 'Types/util';
@@ -747,7 +748,7 @@ var Filter = Control.extend({
                 }
                 popupOptions.templateOptions = this._options.panelTemplateOptions || {};
                 this._open(items, popupOptions);
-            });
+            }, (error) => dataSourceError.process({ error }));
         }
     },
 
