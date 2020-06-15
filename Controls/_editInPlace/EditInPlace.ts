@@ -662,8 +662,8 @@ export default class EditInPlace {
     }
 
     updateEditingData(options: IEditingOptions): void {
-        this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
         this._updateOptions(options);
+        this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
         if (this._editingItemData) {
             this._setEditingItemData(this._editingItemData.item);
         }
