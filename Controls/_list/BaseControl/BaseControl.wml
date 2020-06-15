@@ -141,7 +141,7 @@
                     on:itemSwipe="_onItemSwipe()"
                     on:dragStart="_notifyHandler('dragStart')"
                     on:editingRowKeyDown="_onEditingRowKeyDown()"
-                    on:onRowDeactivated="_onRowDeactivated()"
+                    on:rowDeactivated="_onRowDeactivated()"
                     >
                 <ws:itemActionsTemplate>
                     <ws:partial
