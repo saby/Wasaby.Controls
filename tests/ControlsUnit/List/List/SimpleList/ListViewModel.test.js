@@ -375,7 +375,7 @@ define([
          assert.equal(model.getMarkedKey(), undefined);
          assert.isFalse(model.getItemBySourceKey(2).isMarked());
          assert.isFalse(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
-         assert.isFalse(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
+         assert.isTrue(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
       });
 
       // TODO SetItemActions
