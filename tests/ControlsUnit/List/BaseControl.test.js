@@ -4121,7 +4121,7 @@ define([
                id: 1,
                showType: 0
             };
-            instance._listViewModel.getSourceIndexByItem = () => 0;
+            instance._listViewModel.getIndex = (item) => 0;
             instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
             assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
             assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
