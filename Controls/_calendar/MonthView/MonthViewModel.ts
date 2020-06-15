@@ -120,6 +120,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
       let textColorClass = 'controls-MonthViewVDOM__textColor',
          backgroundColorClass = 'controls-MonthViewVDOM__backgroundColor',
+         backgroundColorClassRangeHovered,
          css = [];
 
       if (scope.isCurrentMonth) {
@@ -150,8 +151,10 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       if (scope.readOnly) {
           backgroundColorClass += '-readOnly';
       }
+      backgroundColorClassRangeHovered = backgroundColorClass + '-hovered';
       textColorClass += '_theme-' + theme;
       backgroundColorClass += '_theme-' + theme;
+      backgroundColorClassRangeHovered += '_theme-' + theme;
 
       if (fontColorStyle) {
          textColorClass += '_style-' + fontColorStyle;
@@ -159,9 +162,13 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
       if (backgroundStyle) {
          backgroundColorClass += '_style-' + backgroundStyle;
+         backgroundColorClassRangeHovered += '_style-' + backgroundStyle;
       }
       if (scope.isCurrentMonth || scope.mode === 'extended') {
          css.push(textColorClass, backgroundColorClass);
+         if (scope.hovered) {
+            css.push(backgroundColorClassRangeHovered);
+         }
       }
 
       // Оставляем старые классы т.к. они используются в большом выборе периода до его редизайна
@@ -174,7 +181,9 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
             if (scope.selectionEnabled && !backgroundStyle && this._state.selectionType !== 'quantum' ) {
                css.push('controls-MonthViewVDOM__border-currentMonthDay-unselected_theme-' + theme);
             } else if (scope.hovered) {
-               css.push('controls-MonthViewVDOM__border-multiple-hover_theme-' + theme);
+               let borderStyle = 'controls-MonthViewVDOM__border-hover_theme-' + theme;
+               borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
+               css.push(borderStyle);
             }
          }
          css.push('controls-MonthViewVDOM__selectableItem');
