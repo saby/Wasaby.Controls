@@ -60,9 +60,10 @@ var _private = {
       },
       prepareItemSelected: function(item, options) {
          const classes = [];
+         const style = _private.prepareStyle(options.style);
          if (item.get(options.keyProperty) === options.selectedKey) {
-            classes.push('controls-Tabs_style_' + options.style + '__item_state_selected ' +
-            'controls-Tabs_style_' + options.style + '__item_state_selected_theme_' + options.theme);
+            classes.push('controls-Tabs_style_' + style + '__item_state_selected ' +
+            'controls-Tabs_style_' + style + '__item_state_selected_theme_' + options.theme);
             classes.push('controls-Tabs__item_state_selected controls-Tabs__item_state_selected_theme_' + options.theme);
          } else {
             classes.push('controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_' + options.theme);
