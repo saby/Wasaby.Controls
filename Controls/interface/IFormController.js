@@ -63,7 +63,7 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @name Controls/interface/IFormController#needShowConfirmationCallback
+    * @name Controls/interface/IFormController#confirmationShowingCallback
     * @cfg {Function} Функция, которая определяет должно ли показаться окно с подтверждением сохранения/не сохранения измененных данных при закрытии диалога редактирования записи. Необходимо для случаев, когда есть измененные данные, не связанные с рекордом.
     * @returns {Boolean} true - окно покажется. false - нет
     */

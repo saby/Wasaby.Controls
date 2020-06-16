@@ -443,7 +443,7 @@ define([
          FC._record = {
             isChanged: () => false
          };
-         FC._options.needShowConfirmationCallback = () => {
+         FC._options.confirmationShowingCallback = () => {
             return true;
          };
          assert.isTrue(result);

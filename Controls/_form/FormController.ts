@@ -24,7 +24,7 @@ interface IFormController extends IControlOptions {
     record?: Model;
     errorController?: dataSourceError.Controller;
     source?: Memory;
-    needShowConfirmationCallback?: Function;
+    confirmationShowingCallback?: Function;
 
     //удалить при переходе на новые опции
     dataSource?: Memory;
@@ -439,8 +439,8 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _needShowConfirmation(): boolean {
-        if (this._options.needShowConfirmationCallback) {
-            return this._options.needShowConfirmationCallback();
+        if (this._options.confirmationShowingCallback) {
+            return this._options.confirmationShowingCallback();
         } else {
             return this._record && this._record.isChanged();
         }
