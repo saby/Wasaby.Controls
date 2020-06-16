@@ -131,6 +131,10 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
          || !hasMoreData && itemsCount === this.getCount(selection, hasMoreData);
    }
 
+   isAllSelectedByPmo(selection: ISelection): boolean {
+      return this._isAllSelected(selection);
+   }
+
    /**
     * Проверяет присутствует ли в selected значение "Выбрано все"
     * @param selection

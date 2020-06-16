@@ -229,8 +229,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number): boolean {
       return !hasMoreData && itemsCount === this.getCount(selection, hasMoreData)
-         || selection.selected.includes(this._rootId) && selection.excluded.includes(this._rootId)
-            && selection.excluded.length === 1;
+         || this._isAllSelectedInRoot(selection) && selection.excluded.length === 1;
+   }
+
+   isAllSelectedByPmo(selection: ISelection): boolean {
+      return this._isAllSelectedInRoot(selection);
    }
 
    private _unselectParentNodes(selection: ISelection, parentId: TKey): void {

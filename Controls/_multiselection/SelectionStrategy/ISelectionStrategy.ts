@@ -84,4 +84,10 @@ export default interface ISelectionStrategy {
     * @param itemsCount количество элементов в модели
     */
    isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number): boolean;
+
+   /**
+    * Проверяет, что были выбраны все элементы, используя ПМО, Выбрать все
+    * @param selection текущее состояние выбранных ключей
+    */
+   isAllSelectedByPmo(selection: ISelection): boolean;
 }

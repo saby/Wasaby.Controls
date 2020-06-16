@@ -428,4 +428,15 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.isFalse(strategy.isAllSelected(selection, true, 7));
       });
    });
+
+   it('isAllSelectedByPmo', () => {
+      let selection = { selected: [], excluded: [] };
+      assert.isFalse(strategy.isAllSelectedByPmo(selection));
+
+      selection = { selected: [null], excluded: [null] };
+      assert.isTrue(strategy.isAllSelectedByPmo(selection));
+
+      selection = { selected: [null, 2], excluded: [null, 3] };
+      assert.isTrue(strategy.isAllSelectedByPmo(selection));
+   });
 });

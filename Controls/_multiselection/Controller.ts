@@ -78,8 +78,11 @@ export class Controller {
       return this._getResult(oldSelection, this._selection);
    }
 
-   isAllSelected(): boolean {
-      return this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount());
+   /**
+    * Проверяет, что было выбрано все, используя ПМО
+    */
+   isAllSelectedByPmo(): boolean {
+      return this._strategy.isAllSelectedByPmo(this._selection);
    }
 
    toggleItem(key: TKey): ISelectionControllerResult {

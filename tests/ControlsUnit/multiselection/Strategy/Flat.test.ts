@@ -203,4 +203,15 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
       selection = { selected: [1, 2, 3], excluded: [] };
       assert.isTrue(strategy.isAllSelected(selection, false, 3));
    });
+
+   it('isAllSelectedByPmo', () => {
+      let selection = { selected: [], excluded: [] };
+      assert.isFalse(strategy.isAllSelectedByPmo(selection));
+
+      selection = { selected: [null], excluded: [] };
+      assert.isTrue(strategy.isAllSelectedByPmo(selection));
+
+      selection = { selected: [null, 2], excluded: [3] };
+      assert.isTrue(strategy.isAllSelectedByPmo(selection));
+   });
 });
