@@ -43,7 +43,17 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     hasMoreData(direction: 'up' | 'down', root?: Key): boolean | undefined {
-        return this.getController(root).hasMoreData(direction, root);
+        const controller = this._getControllerByRoot(root);
+        let hasMoreDataResult;
+
+        if (controller) {
+            hasMoreDataResult = controller.queryParamsController.hasMoreData(direction, root);
+        } else if (this._controllers.getCount()) {
+            hasMoreDataResult = this._controllers.at(0).queryParamsController.hasMoreData(direction, root);
+        } else {
+            hasMoreDataResult = false;
+        }
+        return hasMoreDataResult;
     }
 
     prepareQueryParams(direction: 'up' | 'down', callback?, config?, multiNavigation?: boolean): IAdditionalQueryParams {
@@ -106,7 +116,7 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     getController(root?: Key): IQueryParamsController {
-        let controllerItem = this._controllers.at(this._controllers.getIndexByValue('id', root));
+        let controllerItem = this._getControllerByRoot(root);
 
         if (!controllerItem && !root) {
             controllerItem = this._controllers.at(0);
@@ -121,6 +131,10 @@ export default class QueryParamsController implements IQueryParamsController {
         }
 
         return controllerItem.queryParamsController;
+    }
+
+    private _getControllerByRoot(root?: Key): IControllerItem {
+        return this._controllers.at(this._controllers.getIndexByValue('id', root));
     }
 
 }
