@@ -16,7 +16,9 @@ import {
     TItemActionVisibilityCallback,
     TEditArrowVisibilityCallback,
     IItemAction,
-    TItemActionShowType, IItemActionsItem
+    TItemActionShowType,
+    TItemActionsPosition,
+    IItemActionsItem
 } from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
