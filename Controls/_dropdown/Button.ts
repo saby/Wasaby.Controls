@@ -1,8 +1,11 @@
-import Control = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ActualApi from 'Controls/_buttons/ActualApi';
+import _Controller = require('Controls/_dropdown/_Controller');
+import {SyntheticEvent} from "Vdom/Vdom";
+import Dropdown = require('Controls/_dropdown/Dropdown');
 
 /**
  * Контрол «Кнопка с меню».
@@ -67,45 +70,77 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @demo Controls-demo/Buttons/Menu/MenuPG
  */
 
-var Button = Control.extend({
-   _template: template,
-   _tmplNotify: tmplNotify,
-   _hasItems: true,
+class Button extends Dropdown {
+   protected _template: TemplateFunction = template;
+   protected _tmplNotify: Function = tmplNotify;
+   protected _hasItems: boolean = true;
 
-   constructor: function () {
-      Button.superclass.constructor.apply(this, arguments);
+   constructor() {
+      super(arguments);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
-   },
+   }
 
-   _beforeMount: function (options) {
+   _beforeMount(options, recievedState) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       this._updateState(options);
-   },
+      this._controller = new _Controller(this._getControllerOptions(options));
 
-   _beforeUpdate: function (options) {
+      return super._beforeMount(options, recievedState);
+   }
+
+   _afterMount() {
+      this._controller.registerScrollEvent(this);
+   }
+
+   _beforeUpdate(options) {
+      this._controller.update(this._getControllerOptions(options));
       if (this._options.size !== options.size || this._options.icon !== options.icon ||
          this._options.viewMode !== options.viewMode) {
          this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       }
       this._updateState(options);
-   },
+   }
 
-   _updateState: function (options) {
+   _updateState(options) {
       const currentButtonClass = ActualApi.styleToViewMode(options.style);
 
       this._fontSizeButton = ActualApi.fontSize(options);
       this._viewModeButton = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode).viewMode;
-   },
+   }
 
-   _dataLoadCallback: function (items) {
+   _dataLoadCallback(items) {
       this._hasItems = items.getCount() > 0;
 
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(items);
       }
-   },
+   }
 
-   _onItemClickHandler: function (event, result, nativeEvent) {
+   _notifyButtonEvent(eventName, data, additionData) {
+      return this._notify(eventName, [data, additionData]);
+      if (!data) {
+         this._tmplNotify(eventName);
+      }
+   }
+
+   _getControllerOptions(options) {
+      return { ...options, ...{
+             headerTemplate: options.headTemplate || options.headerTemplate,
+             headingCaption: options.caption,
+             headingIconSize: options.iconSize,
+             headingIcon: options.icon,
+             itemTemplate: options.itemTemplate,
+             dataLoadCallback: this._dataLoadCallback.bind(this),
+             popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
+             hasIconPin: this._hasIconPin,
+             allowPin: true,
+             notifyEvent: this._notifyButtonEvent.bind(this),
+             notifySelectedItemsChanged: this._onItemClickHandler.bind(this)
+         }
+      };
+   }
+
+   _onItemClickHandler(result, nativeEvent) {
       //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
       const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0], nativeEvent]);
       const menuItemActivateResult = this._notify('menuItemActivate', [result[0], nativeEvent]);
@@ -119,27 +154,41 @@ var Button = Control.extend({
       }
 
       return handlerResult;
-   },
-
-   _onPinClickHandler: function (event, item) {
-      this._options.source.update(item.clone(), {
-         $_pinned: !item.get('pinned')
-      });
-   },
-
-   _deactivated: function() {
-      this.closeMenu();
-   },
-
-   openMenu(popupOptions?: object): void {
-      this._children.controller.openMenu(popupOptions);
-   },
-
-   closeMenu(): void {
-      this._children.controller.closeMenu();
    }
 
-});
+   openMenu(popupOptions?: object): void {
+      this._controller.openMenu(popupOptions);
+   }
+
+   closeMenu(): void {
+      this._controller.closeMenu();
+   }
+
+   _handleClick(event: SyntheticEvent): void {
+      // stop bubbling event, so the list does not handle click event.
+      event.stopPropagation();
+   }
+
+   _handleMouseDown(event: SyntheticEvent): void {
+      this._controller.handleMouseDownOnMenuPopupTarget(this._container.children[0]);
+   }
+
+   _handleMouseEnter(event: SyntheticEvent): void {
+      this._controller.handleMouseEnterOnMenuPopupTarget();
+   },
+
+   _handleMouseLeave(event: SyntheticEvent): void {
+      this._controller.handleMouseLeaveMenuPopupTarget();
+   }
+
+   _handleKeyDown(event: SyntheticEvent): void {
+      this._controller.handleKeyDown(event);
+   }
+
+   _beforeUnmount(): void {
+      this._controller.destroy();
+   }
+}
 
 Button.getDefaultOptions = function () {
    return {
