@@ -175,7 +175,7 @@ class Button extends Dropdown {
 
    _handleMouseEnter(event: SyntheticEvent): void {
       this._controller.handleMouseEnterOnMenuPopupTarget();
-   },
+   }
 
    _handleMouseLeave(event: SyntheticEvent): void {
       this._controller.handleMouseLeaveMenuPopupTarget();
