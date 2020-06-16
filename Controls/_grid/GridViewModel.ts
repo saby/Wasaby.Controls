@@ -598,6 +598,7 @@ var
         _resolvers: null,
 
         _headerModel: null,
+        _headerVersion: 0,
 
         constructor: function(cfg) {
             this._options = cfg;
@@ -613,6 +614,9 @@ var
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
                 if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
                     this._ladder = _private.prepareLadder(this);
+                }
+                if (changesType !== 'markedKeyChanged' && action !== 'ch') {
+                    this._nextHeaderVersion();
                 }
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
@@ -730,17 +734,19 @@ var
             );
             if (columns && columns.length) {
                 this._headerModel = {
-                    isStickyHeader: this.isStickyHeader,
-                    getCurrentHeaderColumn: this.getCurrentHeaderColumn,
-                    getMultiSelectVisibility: this.getMultiSelectVisibility,
+                    isStickyHeader: this.isStickyHeader.bind(this),
+                    getCurrentHeaderColumn: this.getCurrentHeaderColumn.bind(this),
+                    getMultiSelectVisibility: this.getMultiSelectVisibility.bind(this),
                     isMultiHeader: () => this._isMultiHeader,
-                    resetHeaderRows: this.resetHeaderRows,
-                    isEndHeaderRow: this.isEndHeaderRow,
-                    goToNextHeaderRow: this.goToNextHeaderRow,
-                    getCurrentHeaderRow: this.getCurrentHeaderRow,
-                    getVersion: () => this.headerVersion,
-                    nextVersion: () => ++this.headerVersion
+                    resetHeaderRows: this.resetHeaderRows.bind(this),
+                    isEndHeaderRow: this.isEndHeaderRow.bind(this),
+                    goToNextHeaderRow: this.goToNextHeaderRow.bind(this),
+                    getCurrentHeaderRow: this.getCurrentHeaderRow.bind(this),
+                    getVersion: () => this._headerVersion,
+                    nextVersion: () => ++this._headerVersion
                 };
+            } else {
+                this._headerModel = null;
             }
         },
 
