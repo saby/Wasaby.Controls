@@ -88,4 +88,18 @@ describe('Controls/search:ControllerClass', () => {
         assert.isFalse(!!searchController._isSearchValueEmpty('', 'test'));
         assert.isFalse(!!searchController._isSearchValueEmpty('test', ''));
     });
+
+    describe('constructor', () => {
+
+        it('searchValueChangedCallback is not called on constructor', () => {
+            let searchValueChangedCallbackCalled = false;
+            const options = getDefaultOptions();
+            options.searchValueChangedCallback = () => {
+                searchValueChangedCallbackCalled = true;
+            }
+            options.searchValue = 'test';
+            new ControllerClass(options, {});
+            assert.isFalse(searchValueChangedCallbackCalled);
+        });
+    });
 })
