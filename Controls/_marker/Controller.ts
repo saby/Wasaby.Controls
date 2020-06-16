@@ -56,13 +56,13 @@ export class Controller {
       if (this._markedKey === key && item) {
          // если список перестроится, то в модели сбросится маркер, а в контроллере сохранится
          if (!item.isMarked()) {
-            this._model.setMarkedKey(this._markedKey, false);
+            this._model.setMarkedKey(this._markedKey, false, true);
             this._model.setMarkedKey(key, true);
          }
          return this._markedKey;
       }
 
-      this._model.setMarkedKey(this._markedKey, false);
+      this._model.setMarkedKey(this._markedKey, false, true);
       if (item) {
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
@@ -70,6 +70,7 @@ export class Controller {
          switch (this._markerVisibility) {
             case Visibility.OnActivated:
                this._markedKey = null;
+               this._model.nextVersion();
                break;
             case Visibility.Visible:
                this._markedKey = this._setMarkerOnFirstItem();

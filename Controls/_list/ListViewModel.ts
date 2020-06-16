@@ -351,7 +351,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
-    setMarkedKey: function(key, status) {
+    setMarkedKey: function(key, status, silent) {
         // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
         if (this._markedKey === key && status !== false) {
             return;
@@ -369,15 +369,14 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (status === false) {
             this._markedKey = null;
-            if (key === null) {
-                return;
-            }
         } else {
             this._markedKey = key;
         }
 
-        this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
-        this._notify('onMarkedKeyChanged', this._markedKey);
+        if (!silent) {
+            this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
+            this._notify('onMarkedKeyChanged', this._markedKey);
+        }
     },
 
     setMarkerVisibility: function(markerVisibility) {
