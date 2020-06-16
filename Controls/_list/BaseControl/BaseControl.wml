@@ -95,24 +95,9 @@
     </Controls.dragnDrop:Container>
 </ws:template>
 <ws:template name="viewTpl">
-    <Controls._list.ScrollContainer
-            name="scrollController"
-            on:scrollPositionChanged="scrollMoveSyncHandler()"
-            on:scrollMove="scrollMoveHandler()"
-            on:loadMore="loadMore()"
-            on:viewResize="_viewResize()"
-            on:viewportResize="viewportResizeHandler()"
-            on:canScroll="canScrollHandler()"
-            on:cantScroll="cantScrollHandler()"
-            on:scrollResize="scrollResizeHandler()"
-            on:updateShadowMode="updateShadowModeHandler()"
-            on:triggerVisibilityChanged="triggerVisibilityChangedHandler()"
-            on:triggerOffsetChanged="triggerOffsetChangedHandler()"
-            on:activeElementChanged="_notifyHandler('activeElementChanged')"
-            on:changeIndicatorState="changeIndicatorStateHandler()"
-            collection="{{_listViewModel}}"
-            needScrollCalculation="{{_needScrollCalculation}}"
-            scope="{{_options}}">
+    <div class="controls-ScrollController">
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;"></div>
+        <div name="topLoadTrigger"></div>
         <Controls.validate:Controller name="formController">
             <ws:partial
                     name="{{name}}"
@@ -142,7 +127,15 @@
                     on:dragStart="_notifyHandler('dragStart')"
                     on:editingRowKeyDown="_onEditingRowKeyDown()"
                     on:rowDeactivated="_onRowDeactivated()"
-                    >
+                    on:itemsContainerReady="_itemsContainerReadyHandler()"
+                    on:controlResize="_viewResize()"
+                    on:doScroll="_stopBubblingEvent()"
+                    on:scrollToElement="_stopBubblingEvent()"
+                    on:updateShadowMode="_stopBubblingEvent()"
+                    on:updatePlaceholdersSize="_stopBubblingEvent()"
+                    on:saveScrollPosition="_stopBubblingEvent()"
+                    on:restoreScrollPosition="_stopBubblingEvent()"
+                >
                 <ws:itemActionsTemplate>
                     <ws:partial
                             template="{{_itemActionsTemplate}}"
@@ -174,7 +167,12 @@
                 </ws:emptyTemplate>
             </ws:partial>
         </Controls.validate:Controller>
-    </Controls._list.ScrollContainer>
+        <div name="bottomVirtualScrollTrigger" style="position: relative; bottom: 0;"></div>
+        <div name="bottomLoadTrigger"></div>
+        <ws:if data="{{_needScrollCalculation}}">
+            <Controls._list.BaseControl.Scroll.Emitter on:emitListScroll="_observeScrollHandler()" name="scrollObserver"/>
+        </ws:if>
+    </div>
 </ws:template>
 <ws:template name="fullView">
     <ws:if data="{{_options.itemsDragNDrop}}">
