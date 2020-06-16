@@ -1895,7 +1895,8 @@ const _private = {
                     * _canUpdateItemsActions приведет к показу неактуальных операций.
                     */
                     self._updateItemActions(self._options);
-                }
+                },
+                isDestroyed: () => self._destroyed
             });
         }
     },
@@ -2315,11 +2316,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(
-                this._listViewModel,
-                this._children.formController,
-                () => this._destroyed
-            );
+            this._editInPlace.registerFormOperation(this._children.formController);
+            this._editInPlace.updateViewModel(this._listViewModel);
         }
 
 
@@ -2456,7 +2454,10 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         }
 
         if (this._editInPlace) {
-            this._editInPlace.updateEditingData({listViewModel: this._listViewModel, ...newOptions});
+            this._editInPlace.updateEditingData(
+                {listViewModel: this._listViewModel, ...newOptions},
+                this._children.formController
+            );
             this._editingItemData = this._editInPlace.getEditingItemData();
         }
 
