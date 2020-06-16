@@ -239,24 +239,24 @@ import {Model} from 'Types/entity';
          },
 
          onResult: function(event, action, data) {
-            if (data && action !== 'menuOpened') {
-               const items = action === 'itemClick' ? [data] : data;
-               if (action === 'selectorResult') {
-                  this.lastOpenIndex = this._indexOpenedFilter;
-                  _private.onSelectorResult(this._configs[this._indexOpenedFilter], items);
-               } else if (action === 'selectorDialogOpened') {
-                  this._afterSelectorOpenCallback(items);
-                  this._children.DropdownOpener.close();
-                  return;
-               } else {
-                  _private.updateHistory(this._configs[this.lastOpenIndex], items);
-               }
-               _private.selectItems.call(this, items);
-               _private.notifyChanges(this, this._items);
-               this._children.DropdownOpener.close();
-            } else if (action === 'footerClick') {
-                this._children.DropdownOpener.close();
-            }
+             if (action === 'footerClick') {
+                 this._children.DropdownOpener.close();
+             } else if (data && action !== 'menuOpened') {
+                 const items = action === 'itemClick' ? [data] : data;
+                 if (action === 'selectorResult') {
+                     this.lastOpenIndex = this._indexOpenedFilter;
+                     _private.onSelectorResult(this._configs[this._indexOpenedFilter], items);
+                 } else if (action === 'selectorDialogOpened') {
+                     this._afterSelectorOpenCallback(items);
+                     this._children.DropdownOpener.close();
+                     return;
+                 } else {
+                     _private.updateHistory(this._configs[this.lastOpenIndex], items);
+                 }
+                 _private.selectItems.call(this, items);
+                 _private.notifyChanges(this, this._items);
+                 this._children.DropdownOpener.close();
+             }
          },
 
          setTextValue: function(item, textValue) {
