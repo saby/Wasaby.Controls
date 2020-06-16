@@ -22,6 +22,7 @@ import collection = require('Types/collection');
 import { Model } from 'Types/entity';
 import { IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
+import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {createClassListCollection} from "../Utils/CssClassList";
 import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
@@ -232,8 +233,8 @@ var
            return _private.isFixedCell(params) && params.columnScroll ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
         },
 
-        getColumnScrollCellClasses: function(params, theme) {
-           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ' controls-Grid__cell_transform';
+        getColumnScrollCellClasses(params, theme): string {
+           return _private.isFixedCell(params) ? ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ` ${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`;
         },
 
         getClassesLadderHeading(itemData, theme): String {
@@ -1458,8 +1459,7 @@ var
                 return current;
             }
 
-            current.itemActionsDrawPosition =
-                this._options.columnScroll ? 'after' : 'before';
+            current.itemActionsDrawPosition = this._options.columnScroll ? 'after' : 'before';
             current.itemActionsColumnScrollDraw = this._options.columnScroll;
 
             current.columnIndex = 0;
@@ -1569,13 +1569,11 @@ var
                     currentColumn.hiddenForLadder = currentColumn.columnIndex === (current.multiSelectVisibility !== 'hidden' ? stickyColumn.index + 1 : stickyColumn.index);
                 }
 
-                if (current.columnScroll && !GridLayoutUtil.isFullGridSupport()) {
-                    currentColumn.tableCellStyles = _private.getTableCellStyles(currentColumn);
-                }
-
                 if (current.columnScroll) {
-                    currentColumn.itemActionsGridCellStyles =
-                        ' position: sticky; overflow: visible; display: inline-block; right: 0;';
+                    currentColumn.itemActionsGridCellStyles = ' position: sticky; overflow: visible; display: inline-block; right: 0;';
+                    if (!GridLayoutUtil.isFullGridSupport()) {
+                        currentColumn.tableCellStyles = _private.getTableCellStyles(currentColumn);
+                    }
                 }
 
                 return currentColumn;
