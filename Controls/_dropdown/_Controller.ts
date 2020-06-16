@@ -164,6 +164,8 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
 
       if (!this._items) {
          deps.push(this._getloadItemsPromise().then(() => this._loadItemsTemplates(this._options)));
+      } else {
+         deps.push(this._loadItemsTemplates(this._options));
       }
 
       return Promise.all(deps);

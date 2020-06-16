@@ -82,8 +82,8 @@ class ComboBox extends Dropdown{
    protected _notifyHandler: Function = tmplNotify;
 
    _beforeMount(options, recievedState) {
-      this._onClose = this._popupVisibilityChanged(false);
-      this._onOpen = this._popupVisibilityChanged(true);
+      this._onClose = this._popupVisibilityChanged.bind(this, false);
+      this._onOpen = this._popupVisibilityChanged.bind(this, true);
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
