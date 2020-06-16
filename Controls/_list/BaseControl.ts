@@ -2073,15 +2073,15 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._loadTriggerVisibility = {};
 
-        if (newOptions.editingConfig) {
-            _private.createEditInPlace(self, newOptions);
-        }
-
         if (newOptions.useNewModel) {
             import('Controls/listRender').then((listRender) => {
                 this._itemActionsTemplate = listRender.itemActionsTemplate;
                 this._swipeTemplate = listRender.swipeTemplate;
             });
+        }
+
+        if (newOptions.editingConfig) {
+            _private.createEditInPlace(self, newOptions);
         }
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
