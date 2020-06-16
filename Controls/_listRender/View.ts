@@ -127,7 +127,7 @@ export default class View extends Control<IViewOptions> {
             options.readOnly !== this._options.readOnly ||
             options.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            this._updateItemActions();
+            this._updateItemActions(options);
         }
     }
 
@@ -139,16 +139,16 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * По событию youch мы должны показать операции
+     * По событию touch мы должны показать операции
      * @param e
      * @private
      */
     protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
-        this._updateItemActions();
+        this._updateItemActions(this._options);
     }
 
     /**
-     * По событию youch мы должны показать операции
+     * При наведении на запись в списке мы должны показать операции
      * @param e
      * @private
      */
@@ -206,7 +206,7 @@ export default class View extends Control<IViewOptions> {
      * @param e
      * @private
      */
-    _onCloseSwipe(e: SyntheticEvent<null>): void {
+    protected _onCloseSwipe(e: SyntheticEvent<null>): void {
         this._itemActionsController.deactivateSwipe();
     }
 
@@ -440,7 +440,7 @@ export default class View extends Control<IViewOptions> {
         }
         const editingConfig = this._collection.getEditingConfig();
         let editArrowAction: IItemAction;
-        if (this._options.showEditArrow) {
+        if (options.showEditArrow) {
             editArrowAction = {
                 id: 'view',
                 icon: 'icon-Forward',
@@ -465,7 +465,7 @@ export default class View extends Control<IViewOptions> {
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
-            editArrowVisibilityCallback: this._options.editArrowVisibilityCallback
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback
         });
     }
 
