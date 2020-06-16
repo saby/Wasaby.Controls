@@ -3509,6 +3509,46 @@ define([
             ctrl._beforeUpdate(cfg);
             assert.isTrue(ctrl._editInPlace._options.readOnly);
          });
+
+         it('should update form controlled if it was updated', async () => {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               editingConfig: {
+                  item: new entity.Model({rawData: { id: 1 }})
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+            };
+            var ctrl = new lists.BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            await ctrl._beforeMount(cfg);
+            cfg.readOnly = true;
+            const formController = {};
+            ctrl._children.formController = formController;
+            ctrl._beforeUpdate(cfg);
+            assert.equal(ctrl._editInPlace._formController, formController);
+         });
       });
 
       it('can\'t start drag on readonly list', function() {
@@ -5571,7 +5611,7 @@ define([
                expectedSourceConfig.pageSize = 100;
                expectedSourceConfig.hasMore = false;
                baseControl._changePageSize({}, 5);
-               assert.equal(baseControl._currentPage, 1);
+               assert.equal(baseControl._currentPage, 1);f
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);
             });
