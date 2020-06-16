@@ -195,13 +195,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     protected _onCloseSwipe(e: SyntheticEvent<null>): void {
-        const item = this._itemActionsController.getSwipeItem();
-        if (item) {
-            if (!this._options.itemActions) {
-                this._notify('itemSwipe', [item, e]);
-            }
-            this._itemActionsController.deactivateSwipe();
-        }
+        this._itemActionsController.deactivateSwipe();
     }
 
     /**
