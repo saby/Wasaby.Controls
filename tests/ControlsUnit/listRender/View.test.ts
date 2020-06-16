@@ -180,7 +180,7 @@ describe('Controls/_listRender/View', () => {
                     closest: () => 'elem'
                 }
             };
-            view._updateItemActions();
+            view._updateItemActions(defaultCfg);
         });
 
         // Не показываем контекстное меню браузера, если мы должны показать кастомное меню
