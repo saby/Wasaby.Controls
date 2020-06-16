@@ -180,7 +180,7 @@ describe('Controls/_listRender/View', () => {
                     closest: () => 'elem'
                 }
             };
-            view._updateItemActions();
+            view._updateItemActions(defaultCfg);
         });
 
         // Не показываем контекстное меню браузера, если мы должны показать кастомное меню
@@ -191,6 +191,15 @@ describe('Controls/_listRender/View', () => {
         });
 
         // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
-        it('should correctly work with breadcrumbs');
+        it('should correctly work with breadcrumbs', () => {
+            const breadcrumbItem = Object.assign(item, {
+                '[Controls/_display/BreadcrumbsItem]': true,
+                getContents: () => ['fake', 'fake', 'fake', {
+                    getKey: () => 2
+                }]
+            });
+            view._onItemContextMenu(null, breadcrumbItem, fakeEvent);
+            assert(view._collection.getActiveItem(), item);
+        });
     });
 });
