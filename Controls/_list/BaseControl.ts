@@ -1911,6 +1911,10 @@ const _private = {
                 self.getSourceController()
             );
             self._editingItemData = self._editInPlace.getEditingItemData();
+
+            if (options.itemActions && self._editInPlace.shouldShowToolbar()) {
+                self._updateItemActions(options);
+            }
         }
     }
 
@@ -2321,9 +2325,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._children.formController);
             this._editInPlace.updateViewModel(this._listViewModel);
-            if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
-                this._updateItemActions(this._options);
-            }
         }
 
 
