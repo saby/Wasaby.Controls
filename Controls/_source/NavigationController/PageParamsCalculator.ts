@@ -1,12 +1,13 @@
 import {IAdditionalQueryParams, Direction} from 'Controls/_interface/IAdditionalQueryParams';
 import {QueryNavigationType} from 'Types/source';
-import {PageNavigationStore, IPageNavigationState} from './NavigationController/PageNavigationStore';
+import {default as PageNavigationStore, IPageNavigationState} from './PageNavigationStore';
 import {IBasePageSourceConfig, INavigationPageSourceConfig} from 'Controls/interface';
 import {TNavigationDirection} from 'Controls/_interface/INavigation';
-import {Recordset} from 'Types/collection';
+import {RecordSet} from 'Types/collection';
+import IParamsCalculator from './interface/IParamsCalculator';
 
-class PageParamsCalculator {
-    static getQueryParams(
+class PageParamsCalculator implements IParamsCalculator {
+    getQueryParams(
         store: PageNavigationStore,
         config: INavigationPageSourceConfig,
         direction?: TNavigationDirection
@@ -14,7 +15,7 @@ class PageParamsCalculator {
         const addParams: IAdditionalQueryParams = {};
         addParams.meta = {navigationType: QueryNavigationType.Page};
 
-        const storeParams = store.getParams();
+        const storeParams = store.getState();
 
         let page;
         switch (direction) {
@@ -36,14 +37,14 @@ class PageParamsCalculator {
         return addParams;
     }
 
-    static updateQueryProperties(
+    updateQueryProperties(
         store: PageNavigationStore,
-        list: Recordset,
+        list: RecordSet,
         config: IBasePageSourceConfig,
         direction?: TNavigationDirection
     ): IPageNavigationState  {
         const moreValue = list.getMetaData().more;
-        const storeParams = store.getParams();
+        const storeParams = store.getState();
 
         PageParamsCalculator._validateNavigation(moreValue, storeParams.hasMore);
         store.setMetaMore(moreValue);
@@ -68,7 +69,41 @@ class PageParamsCalculator {
                 }
             }
         }
-        return store.getParams();
+        return store.getState();
+    }
+
+    hasMoreData(store: PageNavigationStore, direction: TNavigationDirection): boolean {
+        let result: boolean;
+        const storeParams = store.getState();
+        const more = store.getMetaMore();
+
+        if (direction === 'forward') {
+
+            // moreResult === undefined, when navigation for passed rootKey is not defined
+            if (more === undefined) {
+                result = false;
+            } else {
+                if (storeParams.hasMore === false) {
+                    // в таком случае в more приходит общее число записей в списке
+                    // значит умножим номер след. страницы на число записей на одной странице и сравним с общим
+                    result = typeof more === 'boolean'
+                        ? more
+                        : storeParams.nextPage * storeParams.pageSize < more;
+                } else {
+                    result = !!more;
+                }
+            }
+        } else if (direction === 'backward') {
+            result = storeParams.prevPage >= 0;
+        } else {
+            throw new Error('Parameter direction is not defined in hasMoreData call');
+        }
+
+        return result;
+    }
+
+    destroy(): void {
+        return;
     }
 
     private static _validateNavigation(hasMoreValue: boolean | number, hasMoreOption: boolean): void {

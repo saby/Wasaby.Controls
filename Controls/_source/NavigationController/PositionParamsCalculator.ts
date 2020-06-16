@@ -1,11 +1,12 @@
 import {IAdditionalQueryParams, Direction} from 'Controls/_interface/IAdditionalQueryParams';
 import {QueryNavigationType} from 'Types/source';
-import {PositionNavigationStore, IPositionNavigationState} from './NavigationController/PositionNavigationStore';
+import {default as PositionNavigationStore, IPositionNavigationState} from './PositionNavigationStore';
 import {IBasePositionSourceConfig, INavigationPositionSourceConfig} from 'Controls/interface';
 import {TNavigationDirection} from 'Controls/_interface/INavigation';
-import {Recordset} from 'Types/collection';
+import {RecordSet} from 'Types/collection';
 import {CursorDirection} from 'Controls/Constants';
 import {Logger} from 'UI/Utils';
+import IParamsCalculator from './interface/IParamsCalculator';
 
 // TODO Общие типы
 type TPosition = any;
@@ -17,8 +18,8 @@ type TPositionValue = any[];
 type TField = string | string[];
 type TFieldValue = string[];
 
-class PositionParamsCalculator {
-    static getQueryParams(
+class PositionParamsCalculator implements IParamsCalculator {
+    getQueryParams(
         store: PositionNavigationStore,
         config: INavigationPositionSourceConfig,
         direction?: TNavigationDirection
@@ -26,10 +27,10 @@ class PositionParamsCalculator {
         const addParams: IAdditionalQueryParams = {};
         addParams.meta = {navigationType: QueryNavigationType.Position};
 
-        const storeParams = store.getParams();
+        const storeParams = store.getState();
         addParams.limit = storeParams.limit;
 
-        const queryField = this._resolveField(storeParams.field);
+        const queryField = PositionParamsCalculator._resolveField(storeParams.field);
 
         let queryPosition;
         switch (direction) {
@@ -63,14 +64,14 @@ class PositionParamsCalculator {
         return addParams;
     }
 
-    static updateQueryProperties(
+    updateQueryProperties(
         store: PositionNavigationStore,
-        list: Recordset,
+        list: RecordSet,
         config: IBasePositionSourceConfig,
         direction?: TNavigationDirection
     ): IPositionNavigationState  {
         const moreValue = list.getMetaData().more;
-        const storeParams = store.getParams();
+        const storeParams = store.getState();
 
         const queryField = PositionParamsCalculator._resolveField(storeParams.field);
         const queryDirection = PositionParamsCalculator._resolveDirection(direction, storeParams.direction);
@@ -126,18 +127,36 @@ class PositionParamsCalculator {
 
         } else {
             let edgeElem;
-            if ((list as Recordset).getCount()) {
+            if ((list as RecordSet).getCount()) {
                 if (queryDirection !== 'forward') {
-                    edgeElem = (list as Recordset).at(0);
+                    edgeElem = (list as RecordSet).at(0);
                     store.setBackwardPosition(PositionParamsCalculator._resolvePosition(edgeElem, queryField));
                 }
                 if (queryDirection !== 'backward') {
-                    edgeElem = (list as Recordset).at((list as Recordset).getCount() - 1);
+                    edgeElem = (list as RecordSet).at((list as RecordSet).getCount() - 1);
                     store.setForwardPosition(PositionParamsCalculator._resolvePosition(edgeElem, queryField));
                 }
             }
         }
-        return store.getParams();
+        return store.getState();
+    }
+
+    hasMoreData(store: PositionNavigationStore, direction: TNavigationDirection): boolean {
+        let result: boolean;
+        const more = store.getMetaMore();
+
+        // moreResult === undefined, when navigation for passed rootKey is not defined
+        if (more === undefined) {
+            result = false;
+        } else {
+            return more[direction];
+        }
+
+        return result;
+    }
+
+    destroy(): void {
+        return;
     }
 
     private static _resolveDirection(

@@ -1,5 +1,6 @@
 import {CursorDirection} from 'Controls/Constants';
-import {TNavigationDirection} from "../../_interface/INavigation";
+import {TNavigationDirection} from 'Controls/_interface/INavigation';
+import INavigationStore from './interface/INavigationStore';
 
 interface IPositionHasMore {
     backward: boolean;
@@ -39,7 +40,7 @@ export interface IPositionNavigationState {
     backwardPosition: TPosition;
     forwardPosition: TPosition;
 }
-class PositionNavigationStore {
+class PositionNavigationStore implements INavigationStore {
     private _field: TFieldValue;
     private _position: TPositionValue;
     private _direction: CursorDirection;
@@ -92,7 +93,7 @@ class PositionNavigationStore {
         return map[position] ? map[position] : position;
     }
 
-    getParams(): IPositionNavigationState {
+    getState(): IPositionNavigationState {
         return {
             field: this._field,
             position: this._position,
@@ -126,21 +127,12 @@ class PositionNavigationStore {
         }
     }
 
-    updateMetaMoreToDirection(direction: 'forward' | 'backward', value: boolean): void {
-        this._more[direction] = value;
+    getMetaMore(): IPositionHasMore {
+        return this._more;
     }
 
-    hasMoreData(direction: TNavigationDirection): boolean {
-        let result: boolean;
-
-        // moreResult === undefined, when navigation for passed rootKey is not defined
-        if (this._more === undefined) {
-            result = false;
-        } else {
-            return this._more[direction];
-        }
-
-        return result;
+    updateMetaMoreToDirection(direction: 'forward' | 'backward', value: boolean): void {
+        this._more[direction] = value;
     }
 
     destroy(): void {
