@@ -32,14 +32,14 @@
    .controls-GridView__itemV_marker-master_rowSpacingTop-default_theme-@{themeName},
    .controls-Grid__row-checkboxCell_rowSpacingTop_default_theme-@{themeName},
    &.controls-Grid__row-checkboxCell_rowSpacingTop_default_theme-@{themeName} {
-      padding-top: @item_padding-top_default_grid;
+      padding-top: @item_padding-top_default_grid - @item-separator_s_thickness_list;
    }
 
    .controls-Grid__row-cell_rowSpacingTop_s_theme-@{themeName},
    .controls-GridView__itemV_marker-master_rowSpacingTop-s_theme-@{themeName},
    .controls-Grid__row-checkboxCell_rowSpacingTop_s_theme-@{themeName},
    &.controls-Grid__row-checkboxCell_rowSpacingTop_s_theme-@{themeName} {
-      padding-top: @item_padding-top_s_grid;
+      padding-top: @item_padding-top_s_grid - @item-separator_s_thickness_list;
    }
 
    .controls-Grid__row-cell_rowSpacingTop_l_theme-@{themeName},
