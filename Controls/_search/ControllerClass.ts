@@ -76,7 +76,7 @@ export default class SearchControllerClass {
         if (searchValue) {
             this._setInputSearchValue(searchValue);
             if (!this._isSearchValueShort(searchValue, options.minSearchLength)) {
-                this._setSearchValue(searchValue);
+                this._searchValue = searchValue;
 
                 if (this._needUpdateViewMode('search')) {
                     this._updateViewMode('search');
