@@ -11,6 +11,7 @@
                                items="{{items}}"
                                parentProperty="parent"
                                keyProperty="id"
+                               isDouble="{{true}}"
                                on:arrowActivated="_onArrowActivated()"
                                on:itemClick="_onItemClick()" />
     <h2>Path with content back button</h2>

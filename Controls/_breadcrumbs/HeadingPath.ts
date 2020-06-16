@@ -31,13 +31,13 @@ var _private = {
 
 /**
  * Хлебные крошки с кнопкой "Назад".
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FBreadCrumbs%2FScenarios">демо-пример</a>
  * * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/bread-crumbs/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_breadcrumbs.less">переменные тем оформления</a>
- * 
+ *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
@@ -175,7 +175,8 @@ BreadCrumbsPath.getDefaultOptions = function () {
         displayProperty: 'title',
         root: null,
         backButtonStyle: 'secondary',
-        showActionButton: true
+        showActionButton: true,
+        isDouble: false
     };
 };
 
