@@ -748,7 +748,11 @@ var Filter = Control.extend({
                 }
                 popupOptions.templateOptions = this._options.panelTemplateOptions || {};
                 this._open(items, popupOptions);
-            }, (error) => dataSourceError.process({ error }));
+            }, (error) => {
+                // Если во время загрузки данных произошла ошибка, то попытаемся догрузить при следующем открытии
+                this._configs = {};
+                dataSourceError.process({ error })
+            });
         }
     },
 
