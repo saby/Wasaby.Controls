@@ -326,41 +326,6 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       });
    });
 
-   describe('_getChildrenByEntryPath', () => {
-      it('returns all children ids by node and entry path', () => {
-          const entryPath = [
-              {
-                  parent: null,
-                  id: 1
-              },
-              {
-                  parent: null,
-                  id: 2
-              },
-              {
-                  parent: 1,
-                  id: 3
-              },
-              {
-                  parent: 2,
-                  id: 4
-              },
-              {
-                  id: 5,
-                  parent: 2
-              },
-              {
-                  id: 6,
-                  parent: 5
-              }
-          ];
-          const childrenFromRoot = strategy._getChildrenByEntryPath(null, entryPath);
-          assert.deepEqual(childrenFromRoot, [1, 2, 3, 4, 5, 6]);
-          const childrenFromNode = strategy._getChildrenByEntryPath(2, entryPath);
-          assert.deepEqual(childrenFromNode, [4, 5, 6]);
-      });
-   });
-
    describe('getCount', () => {
       it('not selected', () => {
          const selection = { selected: [], excluded: [] };
