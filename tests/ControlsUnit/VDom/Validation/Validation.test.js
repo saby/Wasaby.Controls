@@ -142,7 +142,6 @@ define([
             Controller.destroy();
             done();
          });
-
       });
 
       it('setValidationResult', () => {

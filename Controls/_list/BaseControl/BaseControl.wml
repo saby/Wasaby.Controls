@@ -127,7 +127,7 @@
                     on:itemSwipe="_onItemSwipe()"
                     on:dragStart="_notifyHandler('dragStart')"
                     on:editingRowKeyDown="_onEditingRowKeyDown()"
-                    on:onRowDeactivated="_onRowDeactivated()"
+                    on:rowDeactivated="_onRowDeactivated()"
                     on:itemsContainerReady="_itemsContainerReadyHandler()"
                     on:controlResize="_viewResize()"
                     on:doScroll="_stopBubblingEvent()"

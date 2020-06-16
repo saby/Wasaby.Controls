@@ -3425,6 +3425,81 @@ define([
             lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {sourceConfig: {page: 1}}, {sourceConfig: {page: 2}});
             assert.isTrue(isCanceled);
          });
+
+         it ('should create editinplace with readonly property', async () => {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               editingConfig: {
+                  item: new entity.Model({rawData: { id: 1 }})
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+               readOnly: true
+            };
+            var ctrl = new lists.BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            await ctrl._beforeMount(cfg);
+            assert.isTrue(ctrl._editInPlace._options.readOnly);
+         });
+
+         it('should update readonly property for editinplace', async () => {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               editingConfig: {
+                  item: new entity.Model({rawData: { id: 1 }})
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: lists.ListViewModel,
+               navigation: {
+                  source: 'page',
+                  sourceConfig: {
+                     pageSize: 6,
+                     page: 0,
+                     hasMore: false
+                  },
+                  view: 'infinity',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  }
+               },
+            };
+            var ctrl = new lists.BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            await ctrl._beforeMount(cfg);
+            cfg.readOnly = true;
+            ctrl._beforeUpdate(cfg);
+            assert.isTrue(ctrl._editInPlace._options.readOnly);
+         });
       });
 
       it('can\'t start drag on readonly list', function() {
@@ -3918,44 +3993,11 @@ define([
 
       describe('ItemActions menu', () => {
          let instance;
-         let fakeEvent;
          let item;
+         let lastOutgoingEvent;
 
-         beforeEach(async() => {
-            const cfg = {
-               items: new collection.RecordSet({
-                  rawData: [
-                     {
-                        id: 1,
-                        title: 'item 1'
-                     },
-                     {
-                        id: 2,
-                        title: 'item 2'
-                     }
-                  ],
-                  keyProperty: 'id'
-               }),
-               itemActions: [
-                  {
-                     id: 2,
-                     showType: 0
-                  }
-               ],
-               viewName: 'Controls/List/ListView',
-               viewConfig: {
-                  idProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: [],
-                  idProperty: 'id'
-               },
-               markedKey: null,
-               viewModelConstructor: lists.ListViewModel,
-               source: source
-            };
-            instance = new lists.BaseControl(cfg);
-            fakeEvent = {
+         let initFakeEvent = () => {
+            return {
                immediatePropagating: true,
                propagating: true,
                nativeEvent: {
@@ -3979,9 +4021,53 @@ define([
                      width: 100,
                      height: 100
                   }),
-                  closest: () => 'elem'
+                  closest: (selector) => ({
+                     className: selector.substr(1)
+                  })
                }
             };
+         };
+
+         beforeEach(async() => {
+            const cfg = {
+               items: new collection.RecordSet({
+                  rawData: [
+                     {
+                        id: 1,
+                        title: 'item 1'
+                     },
+                     {
+                        id: 2,
+                        title: 'item 2'
+                     }
+                  ],
+                  keyProperty: 'id'
+               }),
+               itemActions: [
+                  {
+                     id: 1,
+                     showType: 0,
+                     'parent@': true
+                  },
+                  {
+                     id: 2,
+                     showType: 2,
+                     parent: 1
+                  }
+               ],
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  idProperty: 'id'
+               },
+               markedKey: null,
+               viewModelConstructor: lists.ListViewModel,
+               source: source
+            };
+            instance = new lists.BaseControl(cfg);
             item =  item = {
                _$active: false,
                getContents: () => ({
@@ -4001,13 +4087,26 @@ define([
             instance._scrollController = {
                scrollToItem: () => {}
             };
+            instance._container = {
+               querySelector: (selector) => ({
+                  parentNode: {
+                     children: [{
+                        className: 'controls-ListView__itemV'
+                     }]
+                  }
+               })
+            };
             await instance._beforeMount(cfg);
             instance._updateItemActions(cfg);
+            popup.Sticky.openPopup = (config) => Promise.resolve(1);
+            instance._notify = (eventName, args) => {
+               lastOutgoingEvent = { eventName, args };
+            };
          });
 
          // Не показываем контекстное меню браузера, если мы должны показать кастомное меню
          it('should prevent default context menu', () => {
-            popup.Sticky.openPopup = (config) => Promise.resolve(1);
+            const fakeEvent = initFakeEvent();
             instance._onItemContextMenu(null, item, fakeEvent);
             assert.isTrue(fakeEvent.nativeEvent.prevented);
             assert.isFalse(fakeEvent.propagating);
@@ -4015,6 +4114,7 @@ define([
 
          // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
          it('should correctly work with breadcrumbs', () => {
+            const fakeEvent = initFakeEvent();
             const breadcrumbItem = {
                '[Controls/_display/BreadcrumbsItem]': true,
                _$active: false,
@@ -4035,6 +4135,61 @@ define([
             assert(instance._listViewModel.getActiveItem(), item);
          });
 
+         // Клик по ItemAction в меню отдавать контейнер в событии
+         it('should send target container in event on click in menu', () => {
+            const fakeEvent = initFakeEvent();
+            const fakeEvent2 = initFakeEvent();
+            const action = {
+               id: 1,
+               showType: 0,
+               'parent@': true
+            };
+            const actionModel = {
+               getRawData: () => ({
+                  id: 2,
+                  showType: 0,
+                  parent: 1
+               })
+            };
+            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+
+            // popup.Sticky.openPopup called in openItemActionsMenu is an async function
+            // we cannot determine that it has ended
+            instance._listViewModel.setActiveItem(instance._listViewModel.at(0));
+            instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
+            assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
+            assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
+         });
+
+
+         // Клик по ItemAction в контекстном меню отдавать контейнер в событии
+         it('should send target container in event on click in context menu', () => {
+            const fakeEvent = initFakeEvent();
+            const fakeEvent2 = initFakeEvent();
+            const actionModel = {
+               getRawData: () => ({
+                  id: 2,
+                  showType: 0
+               })
+            };
+            instance._onItemContextMenu(null, item, fakeEvent);
+            instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
+            assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
+            assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
+         });
+
+         // Клик по ItemAction в тулбаре должен приводить к расчёту контейнера
+         it('should calculate container to send it in event on toolbar action click', () => {
+            const fakeEvent = initFakeEvent();
+            const action = {
+               id: 1,
+               showType: 0
+            };
+            instance._listViewModel.getIndex = (item) => 0;
+            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
+            assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
+         });
       });
 
       it('resolveIndicatorStateAfterReload', function() {
@@ -4604,10 +4759,16 @@ define([
          instance._selectionController = {
             update() {},
             clearSelection() { clearSelectionCalled = true; },
-            handleReset() {}
+            handleReset() {},
+            isAllSelected() { return false; }
          };
 
          let cfgClone = { ...cfg, root: 'newvalue' };
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(clearSelectionCalled);
+
+         instance._selectionController.isAllSelected = function() { return true; };
+         cfgClone = { ...cfg, root: 'newvalue1' };
          instance._beforeUpdate(cfgClone);
          assert.isTrue(clearSelectionCalled);
       });
@@ -4840,6 +5001,18 @@ define([
                ...cfg,
                source: instance._options.source,
                readOnly: true,
+            });
+            const actionsOf0 = instance._listViewModel.at(0).getActions();
+            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+         });
+
+         // при смене значения свойства itemActionsPosition необходимо делать переинициализвацию ItemActions
+         it('should update ItemActions when itemActionsPosition option has been changed', () => {
+            instance._itemActionsInitialized = true;
+            instance._beforeUpdate({
+               ...cfg,
+               source: instance._options.source,
+               itemActionsPosition: 'outside',
             });
             const actionsOf0 = instance._listViewModel.at(0).getActions();
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');

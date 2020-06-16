@@ -34,7 +34,7 @@ import uDimension = require('Controls/Utils/getDimensions');
 import {
     CollectionItem,
     EditInPlaceController,
-    VirtualScrollController,
+
     GroupItem,
     ANIMATION_STATE,
     Collection
@@ -1308,23 +1308,45 @@ const _private = {
     },
 
     /**
+     * Получает контейнер для
+     * @param self
+     * @param item
+     * @param isMenuClick
+     */
+    resolveItemContainer(self, item, isMenuClick: boolean): HTMLElement {
+        // TODO: self._container может быть не HTMLElement, а jQuery-элементом,
+        //  убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        const container = self._container.get ? self._container.get(0) : self._container;
+
+        // Т.к., например, breadcrumbs отсутствует в source, но иногда нам нужно получать его target
+        // логичнее использовать именно getIndex(), а не getSourceIndexByItem()
+        // кроме того, в старой модели в itemData.index записывается именно результат getIndex()
+        let itemIndex = self._listViewModel.getIndex(item);
+        const startIndex = self._listViewModel.getStartIndex();
+        return isMenuClick ? self._targetItem : Array.prototype.filter.call(
+            container.querySelector('.controls-ListView__itemV').parentNode.children,
+            (item: HTMLElement) => item.className.includes('controls-ListView__itemV')
+        )[itemIndex - startIndex];
+    },
+
+    /**
      * Обрабатывает клик по записи и отправляет событие actionClick наверх
      * @param self
      * @param action
      * @param clickEvent
      * @param item
+     * @param isMenuClick
      */
     handleItemActionClick(
         self: any,
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
-        item: CollectionItem<Model>): void {
+        item: CollectionItem<Model>,
+        isMenuClick: boolean): void {
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(item);
-
-        // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
-        const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
+        const itemContainer = _private.resolveItemContainer(self, item, isMenuClick);
         self._notify('actionClick', [action, contents, itemContainer]);
         if (action.handler) {
             action.handler(contents);
@@ -1346,6 +1368,12 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): void {
+        /**
+         * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
+         * у которого открываем меню. Потом передадим его для события actionClick.
+         */
+        self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
+
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (menuConfig) {
             clickEvent.nativeEvent.preventDefault();
@@ -1857,6 +1885,8 @@ const _private = {
                 source: self.getSourceController(),
                 useNewModel: options.useNewModel,
                 theme: self._options.theme,
+                readOnly: self._options.readOnly,
+                keyProperty: self._options.keyProperty,
                 notify: (name, args, params) => {
                     return self._notify(name, args, params);
                 },
@@ -1990,6 +2020,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _viewPortSize: null,
     _scrollTop: 0,
     _popupOptions: null,
+
+    // target элемента, на котором было вызвано контекстное меню
     _targetItem: null,
 
     // Variables for paging navigation
@@ -2038,7 +2070,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _swipeTemplate: swipeTemplate,
 
     _markerController: null,
-    _markedKey: undefined,
+    _markedKey: null,
 
     _dndListController: null,
 
@@ -2460,7 +2492,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._selectionController) {
             _private.updateSelectionController(this, newOptions);
-            if (self._options.root !== newOptions.root || filterChanged || this._listViewModel.getCount() === 0) {
+            if ((self._options.root !== newOptions.root || filterChanged) && this._selectionController.isAllSelected()
+                    || this._listViewModel.getCount() === 0) {
                 const result = this._selectionController.clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
@@ -2472,7 +2505,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._editInPlace) {
-            this._editInPlace.updateEditingData(newOptions);
+            this._editInPlace.updateEditingData({listViewModel: this._listViewModel, ...newOptions});
             this._editingItemData = this._editInPlace.getEditingItemData();
         }
 
@@ -2500,12 +2533,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
          * 3. Изменился коллбек видимости опции
          * 4. Модель была пересоздана
          * 5. обновилась опция readOnly (относится к TreeControl)
+         * 6. обновилась опция itemActionsPosition
          */
         if (
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
             ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
-            newOptions.readOnly !== this._options.readOnly
+            newOptions.readOnly !== this._options.readOnly ||
+            newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
             this._updateInitializedItemActions(newOptions);
         }
@@ -2947,16 +2982,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     /**
      * Обработчик показа контекстного меню
      * @param e
-     * @param item
+     * @param itemData
      * @param clickEvent
      * @private
      */
-    _onItemContextMenu(e: SyntheticEvent<Event>, item: CollectionItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
+    _onItemContextMenu(e: SyntheticEvent<Event>, itemData: CollectionItem<Model>, clickEvent: SyntheticEvent<MouseEvent>): void {
         clickEvent.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        const contents = _private.getPlainItemContents(item);
-        const key = contents ? contents.getKey() : item.key;
+        const contents = _private.getPlainItemContents(itemData);
+        const key = contents ? contents.getKey() : itemData.key;
+        const item = this._listViewModel.getItemBySourceKey(key);
         this.setMarkedKey(key);
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
     },
@@ -2965,19 +3001,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * Обработчик клика по операции
      * @param event
      * @param action
-     * @param item
+     * @param itemData
      * @private
      */
-    _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, item: CollectionItem<Model>): void {
+    _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
         event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        const contents = _private.getPlainItemContents(item);
-        const key = contents ? contents.getKey() : item.key;
+        const contents = _private.getPlainItemContents(itemData);
+        const key = contents ? contents.getKey() : itemData.key;
+        const item = this._listViewModel.getItemBySourceKey(key);
         this.setMarkedKey(key);
 
         if (action && !action._isMenu && !action['parent@']) {
-            _private.handleItemActionClick(this, action, event, item);
+            _private.handleItemActionClick(this, action, event, item, false);
         } else {
             _private.openItemActionsMenu(this, action, event, item, false);
         }
@@ -2996,7 +3033,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
                 const item = this._itemActionsController.getActiveItem();
-                _private.handleItemActionClick(this, action, clickEvent, item);
+                _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
         }
     },
