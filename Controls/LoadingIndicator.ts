@@ -316,7 +316,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     private _toggleIndicator(visible?: boolean, config: ILoadingIndicatorOptions = {}, force?: boolean): void {
-        const isGlobal = config.isGlobal || this.isGlobal;
+        const isGlobal = config.hasOwnProperty('isGlobal') ? config.isGlobal : this.isGlobal;
         clearTimeout(this.delayTimeout);
         this._updateZIndex(config);
         if (visible) {
