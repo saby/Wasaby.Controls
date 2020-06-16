@@ -353,19 +353,26 @@ define(
             });
          });
 
-         it('_openPanel with error', () => {
+         it('_openPanel with error', (done) => {
             let view = getView(defaultConfig);
-            let sandBox = sinon.createSandbox();
-            sandBox.stub(filter.View._private, 'loadUnloadedFrequentItems').rejects(42);
-            sandBox.stub(filter.View._private, 'sourcesIsLoaded').returns(true);
-            let stub = sandBox.stub(dataSource.error, 'process');
+            view._beforeMount(defaultConfig).then(() => {
+                let sandBox = sinon.createSandbox();
+                sandBox.stub(filter.View._private, 'loadUnloadedFrequentItems').rejects(42);
+                sandBox.stub(filter.View._private, 'sourcesIsLoaded').returns(true);
+                let stub = sandBox.stub(dataSource.error, 'process');
 
-            view._configs = {};
-            view._options.panelTemplateName = 'panelTemplateName.wml';
+                view._configs = {};
+                view._options.panelTemplateName = 'panelTemplateName.wml';
 
-            return view._openPanel().then(() => {
-               assert.deepEqual(stub.getCall(0).args[0], { error: 42 });
-               sandBox.restore();
+                view._openPanel().then(() => {
+                    assert.deepEqual(stub.getCall(0).args[0], { error: 42 });
+                    sandBox.restore();
+                    view._open = () => {};
+                    view._openPanel().then(() => {
+                       assert.isTrue(Object.keys(view._configs).length > 0);
+                       done();
+                    });
+                });
             });
          });
 
