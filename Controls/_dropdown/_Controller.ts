@@ -2,6 +2,7 @@
 import Control = require('Core/Control');
 // @ts-ignore
 import {Sticky as StickyOpener, Stack as StackOpener} from 'Controls/popup';
+import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
 import chain = require('Types/chain');
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
@@ -17,376 +18,12 @@ import * as Merge from 'Core/core-merge';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
-
-var _private = {
-   createSourceController: function(self, options) {
-      if (!self._sourceController) {
-         self._sourceController = new SourceController({
-            source: self._source,
-            navigation: options.navigation
-         });
-      }
-      return self._sourceController;
-   },
-
-   hasHistory(options): boolean {
-      return options.historyId || historyUtils.isHistorySource(options.source);
-   },
-
-   isLocalSource(source): boolean {
-      return cInstance.instanceOfModule(source, 'Types/source:Local');
-   },
-
-   loadError(self, error: Error): void {
-      if (self._options.dataLoadErrback) {
-         self._options.dataLoadErrback(error);
-      }
-      self._loadItemsPromise = null;
-      self._createMenuSource(error);
-   },
-
-   prepareFilterForQuery(self, options): object {
-      let filter = options.filter;
-
-      if (_private.hasHistory(options)) {
-         if (_private.isLocalSource(options.source) || !options.historyNew) {
-            filter = historyUtils.getSourceFilter(options.filter, self._source);
-         } else {
-            filter.historyIds = [options.historyId];
-         }
-      }
-
-      return filter;
-   },
-
-   pinClick(self, item): void {
-      const preparedItem = _private.prepareItem(item, self._options.keyProperty, self._source);
-      self._options.source.update(item.clone(), {
-         $_pinned: !item.get('pinned')
-      });
-      self._setItems(null);
-      self._open();
-   },
-
-   getSourceController(self, options): Promise<SourceController> {
-      let sourcePromise;
-
-      if (_private.hasHistory(options) && _private.isLocalSource(options.source) && !options.historyNew) {
-         sourcePromise = historyUtils.getSource(options.source, options.historyId);
-      } else {
-         sourcePromise = Promise.resolve(options.source);
-      }
-      return sourcePromise.then((source) => {
-         self._source = source;
-         return _private.createSourceController(self, options);
-      });
-   },
-
-   loadItems: function (self, options) {
-      return _private.getSourceController(self, options).then(
-          (sourceController) => {
-             self._filter = _private.prepareFilterForQuery(self, options);
-
-             return sourceController.load(self._filter).addCallback((items) => {
-                if (options.dataLoadCallback) {
-                   options.dataLoadCallback(items);
-                }
-                self._setItems(items);
-                _private.updateSelectedItems(self,
-                    options.emptyText,
-                    options.selectedKeys,
-                    options.keyProperty,
-                    options.selectedItemsChangedCallback);
-                return items;
-             }).addErrback((error) => {
-                _private.loadError(self, error);
-                return error;
-             });
-          });
-   },
-
-   resetLoadPromises(self) {
-      self._loadMenuTempPromise = null;
-      self._loadItemsPromise = null;
-      self._loadItemsTempPromise = null;
-   },
-
-   getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
-      let item;
-
-      if (items) {
-         item = items.at(items.getIndexByValue(keyProperty, key));
-      }
-
-      return item;
-   },
-
-   updateSelectedItems: function (self, emptyText, selectedKeys, keyProperty, selectedItemsChangedCallback) {
-      const selectedItems = [];
-
-      const addToSelected = (key: string) => {
-         const selectedItem = _private.getItemByKey(self._items, key, keyProperty);
-
-         if (selectedItem) {
-            selectedItems.push(selectedItem);
-         }
-      };
-
-      if (!selectedKeys || !selectedKeys.length || selectedKeys[0] === null) {
-         if (emptyText) {
-            selectedItems.push(null);
-         } else {
-            addToSelected(null);
-         }
-      } else {
-         chain.factory(selectedKeys).each( (key) => {
-            // fill the array of selected items from the array of selected keys
-            addToSelected(key);
-         });
-      }
-      if (selectedItemsChangedCallback) {
-         selectedItemsChangedCallback(selectedItems);
-      }
-   },
-
-   getNewItems(items: RecordSet, selectedItems: RecordSet, keyProperty: string): Model[] {
-      const newItems = [];
-
-      chain.factory(selectedItems).each((item) => {
-         if (!_private.getItemByKey(items, item.get(keyProperty), keyProperty)) {
-            newItems.push(item);
-         }
-      });
-      return newItems;
-   },
-
-   onSelectorResult: function (self, selectedItems) {
-      var newItems = _private.getNewItems(self._items, selectedItems, self._options.keyProperty);
-
-      // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
-      if (historyUtils.isHistorySource(self._source)) {
-         if (newItems.length) {
-            self._sourceController = null;
-         }
-         _private.updateHistory(self, chain.factory(selectedItems).toArray());
-      } else {
-         self._items.prepend(newItems);
-         self._setItems(self._items);
-      }
-   },
-
-   prepareItem: function(item, keyProperty, source) {
-      if (historyUtils.isHistorySource(source)) {
-         return source.resetHistoryFields(item, keyProperty);
-      } else {
-         return item;
-      }
-   },
-
-   updateHistory: function (self, items) {
-      if (historyUtils.isHistorySource(self._source)) {
-         self._source.update(items, historyUtils.getMetaHistory());
-
-         if (self._sourceController && self._source.getItems) {
-            self._setItems(self._source.getItems());
-         }
-      }
-   },
-
-   onResult: function (action, data, nativeEvent) {
-      switch (action) {
-         case 'pinClick':
-            _private.pinClick(this, data);
-            break;
-         case 'applyClick':
-            this._options.notifySelectedItemsChanged(data, nativeEvent);
-            _private.updateHistory(this, data);
-            _private.closeDropdownList(this);
-            break;
-         case 'itemClick':
-            data = _private.prepareItem(data, this._options.keyProperty, this._source);
-
-            var res = this._options.notifySelectedItemsChanged([data], nativeEvent);
-
-            // dropDown must close by default, but user can cancel closing, if returns false from event
-            if (res !== false) {
-               _private.updateHistory(this, data);
-               _private.closeDropdownList(this);
-            }
-            break;
-         case 'selectorResult':
-            _private.onSelectorResult(this, data);
-            this._options.notifySelectedItemsChanged(data, nativeEvent);
-            break;
-         case 'selectorDialogOpened':
-            this._initSelectorItems = data;
-            _private.closeDropdownList(this);
-            break;
-         case 'footerClick':
-            this._options.notifyEvent('footerClick', data);
-            if (!this.parentControl._$active) {
-               _private.closeDropdownList(this);
-            }
-      }
-   },
-
-   closeDropdownList: function (self) {
-      StickyOpener.closePopup(self._popupId);
-      self._isOpened = false;
-   },
-
-   setHandlers: function (self, options) {
-      self._onOpen = function (event, args) {
-         self._options.notifyEvent('dropDownOpen');
-         if (typeof (options.open) === 'function') {
-            options.open(args);
-         }
-      };
-      self._onClose = function(event, args) {
-         self._isOpened = false;
-         self._menuSource = null;
-         self._options.notifyEvent('dropDownClose');
-         if (typeof (options.close) === 'function') {
-            options.close(args);
-         }
-      };
-   },
-
-   templateOptionsChanged: function(newOptions, options) {
-      const isTemplateChanged = (tplOption) => {
-         return typeof newOptions[tplOption] === 'string' && newOptions[tplOption] !== options[tplOption];
-      };
-
-      if (isTemplateChanged('headTemplate') ||
-          isTemplateChanged('itemTemplate') ||
-          isTemplateChanged('footerTemplate')) {
-         return true;
-      }
-   },
-
-   loadItemsTemplates: function(self, options) {
-      if (!self._loadItemsTempPromise) {
-         const templatesToLoad = _private.getItemsTemplates(self, options);
-         self._loadItemsTempPromise = mStubs.require(templatesToLoad);
-      }
-      return self._loadItemsTempPromise;
-   },
-
-   loadMenuTemplates(self, options: object) {
-      if (!self._loadMenuTempPromise) {
-         let templatesToLoad = ['Controls/menu'];
-         let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
-         templates.forEach((template) => {
-            if (typeof options[template] === 'string') {
-               templatesToLoad.push(options[template]);
-            }
-         });
-         self._loadMenuTempPromise = mStubs.require(templatesToLoad).then((loadedDeps) => {
-            return loadedDeps[0].Control.loadCSS(options.theme);
-         });
-      }
-      return self._loadMenuTempPromise;
-   },
-
-   getItemsTemplates: function(self, options) {
-      let
-          templates = {},
-          itemTemplateProperty = options.itemTemplateProperty;
-
-      if (itemTemplateProperty) {
-         self._items.each(function(item) {
-            let itemTemplate = item.get(itemTemplateProperty);
-
-            if (typeof itemTemplate === 'string') {
-               templates[itemTemplate] = true;
-            }
-         });
-      }
-
-      return Object.keys(templates);
-   },
-
-   getPopupOptions(self, popupOptions?): object {
-      let baseConfig = {...self._options};
-      const ignoreOptions = [
-         'iWantBeWS3',
-         '_$createdFromCode',
-         '_logicParent',
-         'theme',
-         'vdomCORE',
-         'name',
-         'esc'
-      ];
-
-      for (let i = 0; i < ignoreOptions.length; i++) {
-         const option = ignoreOptions[i];
-         if (self._options[option] !== undefined) {
-            delete baseConfig[option];
-         }
-      }
-      let templateOptions = {
-         closeButtonVisibility: false,
-         emptyText: self._getEmptyText(),
-         allowPin: self._options.allowPin && self._hasHistory(),
-         headerTemplate: self._options.headTemplate || self._options.headerTemplate,
-         footerContentTemplate: self._options.footerContentTemplate || self._options.footerTemplate,
-         items: self._items,
-         source: self._menuSource,
-         filter: self._filter,
-         // FIXME self._container[0] delete after
-         // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-         width: self._options.width !== undefined ?
-             (self.target[0] || self.target).offsetWidth :
-             undefined,
-         hasMoreButton: self._sourceController.hasMoreData('down'),
-         selectorOpener: StackOpener,
-         selectorDialogResult: self._onSelectorTemplateResult.bind(self)
-      };
-      const config = {
-         id: self._popupId,
-         templateOptions: Object.assign(baseConfig, templateOptions),
-         className: self._options.popupClassName,
-         template: 'Controls/menu:Popup',
-         actionOnScroll: 'close',
-         target: self.target,
-         targetPoint: self._options.targetPoint,
-         opener: self.parentControl,
-         fittingMode: {
-            vertical: 'adaptive',
-            horizontal: 'overflow'
-         },
-         eventHandlers: {
-            onOpen: self._onOpen,
-            onClose: () => {
-               self._popupId = null;
-               self._onClose();
-            },
-            onResult: self._onResult
-         },
-         autofocus: false,
-         closeOnOutsideClick: true
-      };
-      const popupConfig = popupOptions || self._options.menuPopupOptions;
-      return Merge(config, popupConfig || {});
-   }
-};
-
 /**
  * Контроллер для выпадающих списков.
  *
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IMultiSelectable
- * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_interface/IIcon
- * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/interface/IGroupedList
+ * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
  * @control
  * @private
@@ -397,17 +34,7 @@ var _private = {
  *
  * @class Controls/_dropdown/_Controller
  * @extends Core/Control
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IMultiSelectable
- * @mixes Controls/interface/IDropdown
- * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_interface/IIcon
- * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/interface/IGroupedList
+ * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
  * @control
  * @private
@@ -419,57 +46,21 @@ var _private = {
  * @param {Types/collection:RecordSet} items Выбранные элементы.
  */
 
-/*
- * @event Controls/_dropdown/_Controller#selectedItemsChanged Occurs when the selected items change.
- */
+class _Controller extends Control<IDropdownControllerOptions> implements IDropdownController {
+   protected _items: RecordSet = null;
+   protected _loadItemsTempPromise: Promise<any> = null;
+   protected _options: IDropdownControllerOptions = null;
 
-/**
- * @name Controls/_dropdown/_Controller#typeShadow
- * @cfg {String} Задает тип тени вокруг всплывающего окна.
- * @variant default Тень по умолчанию.
- * @variant suggestionsContainer Тень справа, слева, снизу.
- */
-
-/*
- * @name Controls/_dropdown/_Controller#typeShadow
- * @cfg {String} Specifies the type of shadow around the popup.
- * @variant default Default shadow.
- * @variant suggestionsContainer Shadow on the right, left, bottom.
- */
-
-/**
- * @name Controls/_dropdown/_Controller#marker
- * @cfg {Boolean} Определяет, будет ли маркер отображаться рядом с выбранным элементом.
- */
-
-/*
- * @name Controls/_dropdown/_Controller#marker
- * @cfg {Boolean} Determines whether the marker is displayed around the selected item.
- */
-
-/**
- * @name Controls/_dropdown/_Controller#showClose
- * @cfg {Boolean} Определяет, отображается ли крестик закрытия.
- */
-
-/*
- * @name Controls/_dropdown/_Controller#showClose
- * @cfg {Boolean} Determines whether the cross is displayed.
- */
-
-var _Controller = Control.extend({
-   _items: null,
-   _loadItemsTempPromise: null,
-
-   constructor(options) {
+   constructor(options: IDropdownControllerOptions) {
+      super(options);
       this._options = options;
-      this._onResult = _private.onResult.bind(this);
-      _private.setHandlers(this, options);
-   },
+      this._onResult = this._onResult.bind(this);
+      this._setHandlers(options);
+   }
 
-   loadItemsOnMount(): Promise<object> {
+   loadItems(): Promise<object> {
       return new Promise((resolve) => {
-         _private.loadItems(this, this._options).addCallback((items) => {
+         this._loadItems(this._options).addCallback((items) => {
             const beforeMountResult = {};
 
             if (historyUtils.isHistorySource(this._source)) {
@@ -482,10 +73,10 @@ var _Controller = Control.extend({
             resolve(beforeMountResult);
          });
       });
-   },
+   }
 
-   setItemsOnMount(recievedState) {
-      return _private.getSourceController(this, this._options).addCallback((sourceController) => {
+   setItems(recievedState) {
+      return this._getSourceController(this._options).addCallback((sourceController) => {
          this._setItems(recievedState.items);
          sourceController.calculateState(this._items);
 
@@ -494,32 +85,28 @@ var _Controller = Control.extend({
             this._setItems(this._source.prepareItems(this._items));
          }
 
-         _private.updateSelectedItems(this, this._options.emptyText, this._options.selectedKeys, this._options.keyProperty, this._options.selectedItemsChangedCallback);
+         this._updateSelectedItems(this._options.emptyText, this._options.selectedKeys, this._options.keyProperty, this._options.selectedItemsChangedCallback);
          if (this._options.dataLoadCallback) {
             this._options.dataLoadCallback(this._items);
          }
 
          return sourceController;
       });
-   },
+   }
 
-   registerScrollEvent(parentControl): void {
-      this.parentControl = parentControl;
-      RegisterUtil(parentControl, 'scroll', this.handleScroll.bind(this));
-   },
+   registerScrollEvent(opener): void {
+      this.opener = opener;
+      RegisterUtil(opener, 'scroll', this.handleScroll.bind(this));
+   }
 
-   setMenuPopupTarget(target): void {
-      this.target = target;
-   },
-
-   update: function (newOptions) {
+   update(newOptions: IDropdownControllerOptions) {
       const oldOptions = {...this._options};
       this._options = newOptions;
       if (newOptions.readOnly && newOptions.readOnly !== oldOptions.readOnly) {
-         _private.closeDropdownList(this);
+         this._closeDropdownList();
       }
 
-      if (_private.templateOptionsChanged(newOptions, oldOptions)) {
+      if (this._templateOptionsChanged(newOptions, oldOptions)) {
          this._loadMenuTempPromise = null;
          if (this._isOpened) {
             this._open();
@@ -534,59 +121,60 @@ var _Controller = Control.extend({
          }
 
          if (newOptions.source !== oldOptions.source) {
-            _private.resetLoadPromises(this);
+            this._resetLoadPromises();
          }
          if (newOptions.lazyItemsLoading && !this._isOpened) {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
-            return _private.loadItems(this, newOptions).addCallback((items) => {
+            return this._loadItems(newOptions).addCallback((items) => {
                if (items && this._isOpened) {
                   this._open();
                }
             });
          }
       } else if (newOptions.selectedKeys !== oldOptions.selectedKeys && this._items) {
-         _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
+         this._updateSelectedItems(newOptions.emptyText, newOptions.selectedKeys,
+                                   newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
       }
-   },
+   }
 
-   handleKeyDown: function(event) {
+   handleKeyDown(event) {
       if (event.nativeEvent.keyCode === Env.constants.key.esc && this._popupId) {
-         _private.closeDropdownList(this);
+         this._closeDropdownList();
          event.stopPropagation();
       }
-   },
+   }
 
-   _loadItems() {
+   _getloadItemsPromise() {
       if (this._items) {
          // Обновляем данные в источнике, нужно для работы истории
          this._setItems(this._items);
          this._loadItemsPromise = Promise.resolve();
       } else if (!this._loadItemsPromise || this._loadItemsPromise.resolved && !this._items) {
          if (this._options.source && !this._items) {
-            this._loadItemsPromise = _private.loadItems(this, this._options);
+            this._loadItemsPromise = this._loadItems(this._options);
          }
       }
       return this._loadItemsPromise;
-   },
+   }
 
    loadDependencies(): Promise<unknown> {
-      const deps = [_private.loadMenuTemplates(this, this._options)];
+      const deps = [this._loadMenuTemplates(this._options)];
 
       if (!this._items) {
-         deps.push(this._loadItems().then(() => _private.loadItemsTemplates(this, this._options)));
+         deps.push(this._getloadItemsPromise().then(() => this._loadItemsTemplates(this._options)));
       }
 
       return Promise.all(deps);
-   },
+   }
 
-   _open(popupOptions?: object): void {
+   _open(popupOptions?: object): Promise<any> {
       if (this._options.readOnly) {
          return;
       }
       const openPopup = () => {
-         StickyOpener.openPopup(_private.getPopupOptions(this, popupOptions)).then((popupId) => {
+         StickyOpener.openPopup(this._getPopupOptions(popupOptions)).then((popupId) => {
             this._popupId = popupId;
          });
       };
@@ -608,48 +196,51 @@ var _Controller = Control.extend({
              }
           }
        );
-   },
+   }
 
-   _onSelectorTemplateResult: function(event, selectedItems) {
+   _onSelectorTemplateResult(event, selectedItems): void {
       let result = this._options.notifyEvent('selectorCallback', this._initSelectorItems, selectedItems) || selectedItems;
       this._onResult('selectorResult', result);
-   },
+   }
 
-   handleScroll: function() {
+   handleScroll(): void {
       if (this._popupId) {
-         _private.closeDropdownList(this);
+         this._closeDropdownList();
       }
-   },
+   }
 
-   handleMouseDownOnMenuPopupTarget(): void {
+   handleMouseDownOnMenuPopupTarget(target): void {
+      if (!this.target) {
+         this.target = target;
+      }
       if (this._popupId) {
-         _private.closeDropdownList(this);
+         this._closeDropdownList();
       } else {
          this._open();
       }
-   },
+   }
 
-   handleMouseEnterOnMenuPopupTarget: function() {
+   handleMouseEnterOnMenuPopupTarget(): void {
       this._loadDependenciesTimer = setTimeout(this.loadDependencies.bind(this), PRELOAD_DEPENDENCIES_HOVER_DELAY);
-   },
+   }
 
-   handleMouseLeaveMenuPopupTarget: function() {
+   handleMouseLeaveMenuPopupTarget(): void {
       clearTimeout(this._loadDependenciesTimer);
-   },
+   }
 
-   destroy: function() {
+   destroy() {
       if (this._sourceController) {
          this._sourceController.cancelLoading();
          this._sourceController = null;
       }
       this._setItems(null);
-      _private.closeDropdownList(this);
-      UnregisterUtil(this.parentControl, 'scroll');
-   },
+      this._closeDropdownList();
+      UnregisterUtil(this.opener, 'scroll');
+   }
 
-   _getEmptyText: function () {
+   _getEmptyText() {
       return dropdownUtils.prepareEmpty(this._options.emptyText);
-   },
+   }
 
    _setItems(items: RecordSet|null): void {
       if (items) {
@@ -658,7 +249,7 @@ var _Controller = Control.extend({
          this._loadItemsPromise = null;
       }
       this._items = items;
-   },
+   }
 
    _createMenuSource(items: RecordSet|Error): void {
       this._menuSource = new PrefetchProxy({
@@ -667,24 +258,370 @@ var _Controller = Control.extend({
             query: items
          }
       });
-   },
-
-   _hasHistory(): boolean {
-      return _private.hasHistory(this._options);
-   },
-
+   }
    _deactivated(): void {
       this.closeMenu();
-   },
+   }
 
    openMenu(popupOptions?: object): void {
       return this._open(popupOptions);
-   },
+   }
 
    closeMenu(): void {
-      _private.closeDropdownList(this);
+      this._closeDropdownList();
    }
-});
+
+   private _createSourceController(options) {
+      if (!this._sourceController) {
+         this._sourceController = new SourceController({
+            source: this._source,
+            navigation: options.navigation
+         });
+      }
+      return this._sourceController;
+   }
+
+   private _hasHistory(options): boolean {
+      return options.historyId || historyUtils.isHistorySource(options.source);
+   }
+
+   private _isLocalSource(source): boolean {
+      return cInstance.instanceOfModule(source, 'Types/source:Local');
+   }
+
+   private _loadError(error: Error): void {
+      if (this._options.dataLoadErrback) {
+         this._options.dataLoadErrback(error);
+      }
+      this._loadItemsPromise = null;
+      this._createMenuSource(error);
+   }
+
+   private _prepareFilterForQuery(options): object {
+      let filter = options.filter;
+
+      if (this._hasHistory(options)) {
+         if (this._isLocalSource(options.source) || !options.historyNew) {
+            filter = historyUtils.getSourceFilter(options.filter, this._source);
+         } else {
+            filter.historyIds = [options.historyId];
+         }
+      }
+
+      return filter;
+   }
+
+   private _pinClick(item): void {
+      const preparedItem = this._prepareItem(item, this._options.keyProperty, this._source);
+      this._options.source.update(item.clone(), {
+         $_pinned: !item.get('pinned')
+      });
+      this._setItems(null);
+      this._open();
+   }
+
+   private _getSourceController(options): Promise<SourceController> {
+      let sourcePromise;
+
+      if (this._hasHistory(options) && this._isLocalSource(options.source) && !options.historyNew) {
+         sourcePromise = historyUtils.getSource(options.source, options.historyId);
+      } else {
+         sourcePromise = Promise.resolve(options.source);
+      }
+      return sourcePromise.then((source) => {
+         this._source = source;
+         return this._createSourceController(options);
+      });
+   }
+
+   private _loadItems(options) {
+      return this._getSourceController(options).then(
+          (sourceController) => {
+             this._filter = this._prepareFilterForQuery(options);
+
+             return sourceController.load(this._filter).addCallback((items) => {
+                if (options.dataLoadCallback) {
+                   options.dataLoadCallback(items);
+                }
+                this._setItems(items);
+                this._updateSelectedItems(
+                    options.emptyText,
+                    options.selectedKeys,
+                    options.keyProperty,
+                    options.selectedItemsChangedCallback);
+                return items;
+             }).addErrback((error) => {
+                this._loadError(error);
+                return error;
+             });
+          });
+   }
+
+   private _resetLoadPromises() {
+      this._loadMenuTempPromise = null;
+      this._loadItemsPromise = null;
+      this._loadItemsTempPromise = null;
+   }
+
+   private _getItemByKey(items: RecordSet, key: string, keyProperty: string): void|Model {
+      let item;
+
+      if (items) {
+         item = items.at(items.getIndexByValue(keyProperty, key));
+      }
+
+      return item;
+   }
+
+   private _updateSelectedItems(emptyText, selectedKeys, keyProperty, selectedItemsChangedCallback) {
+      const selectedItems = [];
+
+      const addToSelected = (key: string) => {
+         const selectedItem = this._getItemByKey(this._items, key, keyProperty);
+
+         if (selectedItem) {
+            selectedItems.push(selectedItem);
+         }
+      };
+
+      if (!selectedKeys || !selectedKeys.length || selectedKeys[0] === null) {
+         if (emptyText) {
+            selectedItems.push(null);
+         } else {
+            addToSelected(null);
+         }
+      } else {
+         chain.factory(selectedKeys).each( (key) => {
+            // fill the array of selected items from the array of selected keys
+            addToSelected(key);
+         });
+      }
+      if (selectedItemsChangedCallback) {
+         selectedItemsChangedCallback(selectedItems);
+      }
+   }
+
+   private _getNewItems(items: RecordSet, selectedItems: RecordSet, keyProperty: string): Model[] {
+      const newItems = [];
+
+      chain.factory(selectedItems).each((item) => {
+         if (!this._getItemByKey(items, item.get(keyProperty), keyProperty)) {
+            newItems.push(item);
+         }
+      });
+      return newItems;
+   }
+
+   private _onSelectorResult(selectedItems) {
+      var newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
+
+      // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
+      if (historyUtils.isHistorySource(this._source)) {
+         if (newItems.length) {
+            this._sourceController = null;
+         }
+         this._updateHistory(chain.factory(selectedItems).toArray());
+      } else {
+         this._items.prepend(newItems);
+         this._setItems(this._items);
+      }
+   }
+
+   private _prepareItem(item, keyProperty, source) {
+      if (historyUtils.isHistorySource(source)) {
+         return source.resetHistoryFields(item, keyProperty);
+      } else {
+         return item;
+      }
+   }
+
+   private _updateHistory(items) {
+      if (historyUtils.isHistorySource(this._source)) {
+         this._source.update(items, historyUtils.getMetaHistory());
+
+         if (this._sourceController && this._source.getItems) {
+            this._setItems(this._source.getItems());
+         }
+      }
+   }
+
+   private _onResult(action, data, nativeEvent) {
+      switch (action) {
+         case 'pinClick':
+            this._pinClick(data);
+            break;
+         case 'applyClick':
+            this._options.notifySelectedItemsChanged(data, nativeEvent);
+            this._updateHistory(data);
+            this._closeDropdownList();
+            break;
+         case 'itemClick':
+            data = this._prepareItem(data, this._options.keyProperty, this._source);
+
+            var res = this._options.notifySelectedItemsChanged([data], nativeEvent);
+
+            // dropDown must close by default, but user can cancel closing, if returns false from event
+            if (res !== false) {
+               this._updateHistory(data);
+               this._closeDropdownList();
+            }
+            break;
+         case 'selectorResult':
+            this._onSelectorResult(data);
+            this._options.notifySelectedItemsChanged(data, nativeEvent);
+            break;
+         case 'selectorDialogOpened':
+            this._initSelectorItems = data;
+            this._closeDropdownList();
+            break;
+         case 'footerClick':
+            this._options.notifyEvent('footerClick', data);
+            if (!this.opener._$active) {
+               this._closeDropdownList();
+            }
+      }
+   }
+
+   private _closeDropdownList() {
+      StickyOpener.closePopup(this._popupId);
+      this._isOpened = false;
+   }
+
+   private _setHandlers(options) {
+      this._onOpen = function (event, args) {
+         this._options.notifyEvent('dropDownOpen');
+         if (typeof (options.open) === 'function') {
+            options.open(args);
+         }
+      };
+      this._onClose = function(event, args) {
+         this._isOpened = false;
+         this._menuSource = null;
+         this._options.notifyEvent('dropDownClose');
+         if (typeof (options.close) === 'function') {
+            options.close(args);
+         }
+      };
+   }
+
+   private _templateOptionsChanged(newOptions, options) {
+      const isTemplateChanged = (tplOption) => {
+         return typeof newOptions[tplOption] === 'string' && newOptions[tplOption] !== options[tplOption];
+      };
+
+      if (isTemplateChanged('headTemplate') ||
+          isTemplateChanged('itemTemplate') ||
+          isTemplateChanged('footerTemplate')) {
+         return true;
+      }
+   }
+
+   private _loadItemsTemplates(options) {
+      if (!this._loadItemsTempPromise) {
+         const templatesToLoad = this._getItemsTemplates(options);
+         this._loadItemsTempPromise = mStubs.require(templatesToLoad);
+      }
+      return this._loadItemsTempPromise;
+   }
+
+   private _loadMenuTemplates(options: object) {
+      if (!this._loadMenuTempPromise) {
+         let templatesToLoad = ['Controls/menu'];
+         let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
+         templates.forEach((template) => {
+            if (typeof options[template] === 'string') {
+               templatesToLoad.push(options[template]);
+            }
+         });
+         this._loadMenuTempPromise = mStubs.require(templatesToLoad).then((loadedDeps) => {
+            return loadedDeps[0].Control.loadCSS(options.theme);
+         });
+      }
+      return this._loadMenuTempPromise;
+   }
+
+   private _getItemsTemplates(options) {
+      let
+          templates = {},
+          itemTemplateProperty = options.itemTemplateProperty;
+
+      if (itemTemplateProperty) {
+         this._items.each(function(item) {
+            let itemTemplate = item.get(itemTemplateProperty);
+
+            if (typeof itemTemplate === 'string') {
+               templates[itemTemplate] = true;
+            }
+         });
+      }
+
+      return Object.keys(templates);
+   }
+
+   private _getPopupOptions(popupOptions?): object {
+      let baseConfig = {...this._options};
+      const ignoreOptions = [
+         'iWantBeWS3',
+         '_$createdFromCode',
+         '_logicParent',
+         'theme',
+         'vdomCORE',
+         'name',
+         'esc'
+      ];
+
+      for (let i = 0; i < ignoreOptions.length; i++) {
+         const option = ignoreOptions[i];
+         if (this._options[option] !== undefined) {
+            delete baseConfig[option];
+         }
+      }
+      let templateOptions = {
+         closeButtonVisibility: false,
+         emptyText: this._getEmptyText(),
+         allowPin: this._options.allowPin && this._hasHistory(this._options),
+         headerTemplate: this._options.headTemplate || this._options.headerTemplate,
+         footerContentTemplate: this._options.footerContentTemplate || this._options.footerTemplate,
+         items: this._items,
+         source: this._menuSource,
+         filter: this._filter,
+         // FIXME this._container[0] delete after
+         // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+         width: this._options.width !== undefined ?
+             (this.target[0] || this.target).offsetWidth :
+             undefined,
+         hasMoreButton: this._sourceController.hasMoreData('down'),
+         selectorOpener: StackOpener,
+         selectorDialogResult: this._onSelectorTemplateResult.bind(this)
+      };
+      const config = {
+         id: this._popupId,
+         templateOptions: Object.assign(baseConfig, templateOptions),
+         className: this._options.popupClassName,
+         template: 'Controls/menu:Popup',
+         actionOnScroll: 'close',
+         target: this.target,
+         targetPoint: this._options.targetPoint,
+         opener: this.opener,
+         fittingMode: {
+            vertical: 'adaptive',
+            horizontal: 'overflow'
+         },
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: () => {
+               this._popupId = null;
+               this._onClose();
+            },
+            onResult: this._onResult.bind(this)
+         },
+         autofocus: false,
+         closeOnOutsideClick: true
+      };
+      const popupConfig = popupOptions || this._options.menuPopupOptions;
+      return Merge(config, popupConfig || {});
+   }
+}
 
 _Controller.getDefaultOptions = function getDefaultOptions() {
    return {
@@ -699,6 +636,4 @@ _Controller.getOptionTypes = function getOptionTypes() {
       selectedKeys: descriptor(Array)
    };
 };
-
-_Controller._private = _private;
 export = _Controller;

@@ -90,10 +90,10 @@ define(
          it('popupVisibilityChanged', function() {
             let combobox = getCombobox(config);
 
-            dropdown.Combobox._private.popupVisibilityChanged.call(combobox, true);
+            combobox._popupVisibilityChanged(true);
             assert.isTrue(combobox._isOpen);
 
-            dropdown.Combobox._private.popupVisibilityChanged.call(combobox, false);
+            combobox._popupVisibilityChanged(false);
             assert.isFalse(combobox._isOpen);
          });
 

@@ -1,5 +1,5 @@
 import rk = require('i18n!Controls');
-import Control = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Input/Input');
 import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
 import Utils = require('Types/util');
@@ -7,50 +7,10 @@ import chain = require('Types/chain');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import {isEqual} from 'Types/object';
 import _Controller = require('Controls/_dropdown/_Controller');
-import {beforeMountMethod, afterMountMethod} from 'Controls/_dropdown/Utils/CommonHookMethods';
+import Dropdown = require('Controls/_dropdown/Dropdown');
 import {SyntheticEvent} from "Vdom/Vdom";
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
-
-var _private = {
-   getSelectedKeys: function (items, keyProperty) {
-      var keys = [];
-      chain.factory(items).each(function (item) {
-         keys.push(getPropValue(item, keyProperty));
-      });
-      return keys;
-   },
-
-   getTooltip: function (items, displayProperty) {
-      var tooltips = [];
-      chain.factory(items).each(function (item) {
-         tooltips.push(getPropValue(item, displayProperty));
-      });
-      return tooltips.join(', ');
-   },
-
-   isEmptyItem: function(self, item) {
-      return self._options.emptyText && (getPropValue(item, self._options.keyProperty) === null || !item);
-   },
-
-   getText: function(self, items) {
-      let text = '';
-      if (_private.isEmptyItem(self, items[0])) {
-         text = dropdownUtils.prepareEmpty(self._options.emptyText);
-      } else {
-         text = getPropValue(items[0], self._options.displayProperty);
-      }
-      return text;
-   },
-
-   getMoreText: function(items) {
-      let moreText = '';
-      if (items.length > 1) {
-         moreText = ', ' + rk('еще') + ' ' + (items.length - 1);
-      }
-      return moreText;
-   }
-};
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
@@ -272,33 +232,33 @@ var _private = {
  * </pre>
  */
 
-var Input = Control.extend({
-   _template: template,
-   _defaultContentTemplate: defaultContentTemplate,
-   _text: '',
-   _hasMoreText: '',
-   _selectedItems: '',
+class Input extends Dropdown {
+   protected _template: TemplateFunction = template;
+   protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
+   protected _text: string = '';
+   protected _hasMoreText: string = '';
+   protected _selectedItems = '';
 
-   _beforeMount: function (options, recievedState) {
+   _beforeMount(options, recievedState): Promise<object>|void {
       this._prepareDisplayState = this._prepareDisplayState.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new _Controller(this._getControllerOptions(options));
 
-      return beforeMountMethod(this, options, recievedState);
-   },
+      return super._beforeMount(options, recievedState);
+   }
 
-   _afterMount: function (options) {
+   _afterMount(options) {
       /* Updating the text in the header.
       Since the text is set after loading source, the caption stored old value */
       if (options.showHeader && options.caption !== this._text) {
          this._forceUpdate();
       }
-      afterMountMethod(this);
-   },
+      this._controller.registerScrollEvent(this);
+   }
 
-   _beforeUpdate: function (options) {
+   _beforeUpdate(options) {
       this._controller.update(this._getControllerOptions(options));
-   },
+   }
 
    _getControllerOptions(options) {
       return { ...options, ...{
@@ -313,18 +273,18 @@ var Input = Control.extend({
             notifyEvent: this._notifyInputEvent.bind(this),
             notifySelectedItemsChanged: this._selectedItemsChangedHandler.bind(this)
          }
-      }
-   },
+      };
+   }
 
-   _selectedItemsChangedHandler: function (items) {
-      this._notify('textValueChanged', [_private.getText(this, items) + _private.getMoreText(items)]);
-      const newSelectedKeys = _private.getSelectedKeys(items, this._options.keyProperty);
+   _selectedItemsChangedHandler(items) {
+      this._notify('textValueChanged', [this._getText(items) + this._getMoreText(items)]);
+      const newSelectedKeys = this._getSelectedKeys(items, this._options.keyProperty);
       if (!isEqual(this._options.selectedKeys, newSelectedKeys) || this._options.task1178744737) {
          return this._notify('selectedKeysChanged', [newSelectedKeys]);
       }
-   },
+   }
 
-   _dataLoadCallback: function (items) {
+   _dataLoadCallback(items) {
       this._countItems = items.getCount();
       if (this._options.emptyText) {
          this._countItems += 1;
@@ -333,58 +293,96 @@ var Input = Control.extend({
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(items);
       }
-   },
+   }
 
-   _prepareDisplayState: function (items) {
+   _prepareDisplayState(items) {
       if (items.length) {
          this._selectedItems = items;
          this._needInfobox = this._options.readOnly && this._selectedItems.length > 1;
          this._item = items[0];
-         this._isEmptyItem = _private.isEmptyItem(this, this._item);
+         this._isEmptyItem = this.isEmptyItem(this._item);
          this._icon = this._isEmptyItem ? null : getPropValue(this._item, 'icon');
-         this._text = _private.getText(this, items);
-         this._hasMoreText = _private.getMoreText(items);
-         this._tooltip = _private.getTooltip(items, this._options.displayProperty);
+         this._text = this._getText(items);
+         this._hasMoreText = this._getMoreText(items);
+         this._tooltip = this._getTooltip(items, this._options.displayProperty);
       }
-   },
+   }
 
    openMenu(popupOptions?: object): void {
       this._controller.openMenu(popupOptions);
-   },
+   }
 
    closeMenu(): void {
       this._controller.closeMenu();
-   },
+   }
 
    _handleClick(event: SyntheticEvent): void {
       // stop bubbling event, so the list does not handle click event.
       event.stopPropagation();
-   },
+   }
 
    _handleMouseDown(event: SyntheticEvent): void {
-      this._controller.handleMouseDownOnMenuPopupTarget();
-   },
+      this._controller.handleMouseDownOnMenuPopupTarget(this._container);
+   }
 
    _handleMouseEnter(event: SyntheticEvent): void {
       this._controller.handleMouseEnterOnMenuPopupTarget();
-   },
+   }
 
    _handleMouseLeave(event: SyntheticEvent): void {
       this._controller.handleMouseLeaveMenuPopupTarget();
-   },
+   }
 
    _handleKeyDown(event: SyntheticEvent): void {
       this._controller.handleKeyDown(event);
-   },
+   }
 
    _beforeUnmount(): void {
       this._controller.destroy();
-   },
+   }
 
    _notifyInputEvent(eventName, data, additionData) {
       return this._notify(eventName, [data, additionData]);
    }
-});
+
+   private _getSelectedKeys(items, keyProperty) {
+      let keys = [];
+      chain.factory(items).each(function (item) {
+         keys.push(getPropValue(item, keyProperty));
+      });
+      return keys;
+   }
+
+   private _getTooltip(items, displayProperty) {
+      var tooltips = [];
+      chain.factory(items).each(function (item) {
+         tooltips.push(getPropValue(item, displayProperty));
+      });
+      return tooltips.join(', ');
+   }
+
+   private isEmptyItem(item) {
+      return this._options.emptyText && (getPropValue(item, this._options.keyProperty) === null || !item);
+   }
+
+   private _getText(items) {
+      let text = '';
+      if (this.isEmptyItem(items[0])) {
+         text = dropdownUtils.prepareEmpty(this._options.emptyText);
+      } else {
+         text = getPropValue(items[0], this._options.displayProperty);
+      }
+      return text;
+   }
+
+   private _getMoreText(items) {
+      let moreText = '';
+      if (items.length > 1) {
+         moreText = ', ' + rk('еще') + ' ' + (items.length - 1);
+      }
+      return moreText;
+   }
+}
 
 Input._theme = ['Controls/dropdown', 'Controls/Classes'];
 
