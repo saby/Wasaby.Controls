@@ -5602,7 +5602,7 @@ define([
                expectedSourceConfig.pageSize = 100;
                expectedSourceConfig.hasMore = false;
                baseControl._changePageSize({}, 5);
-               assert.equal(baseControl._currentPage, 1);f
+               assert.equal(baseControl._currentPage, 1);
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);
             });
