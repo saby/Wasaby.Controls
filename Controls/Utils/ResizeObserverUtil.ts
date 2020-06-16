@@ -50,4 +50,10 @@ export default class ResizeObserverUtil {
             this._resizeObserver.unobserve(container);
         }
     }
+
+    controlResizeHandler(): void {
+        if (!this._resizeObserverSupported) {
+            this._controlResizeCallback();
+        }
+    }
 }

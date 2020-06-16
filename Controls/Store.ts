@@ -123,7 +123,7 @@ class Store implements IStore {
         const [ctxName, propertyName, index]: string[] = id.split(ID_SEPARATOR);
         this.state[ctxName][propertyName].callbacks = this.state[ctxName][propertyName].callbacks.reduce(
             (acc, callbackObj) => {
-                if (callbackObj.id !== index) {
+                if (callbackObj.id !== id) {
                     acc.push(callbackObj);
                 }
                 return acc;

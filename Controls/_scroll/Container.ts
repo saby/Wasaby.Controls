@@ -636,6 +636,9 @@ let
          calculatedOptionValue = _private.calcCanScroll(SCROLL_TYPE.VERTICAL, this);
          if (calculatedOptionValue) {
             this._displayState.canScroll = calculatedOptionValue;
+            // Сделано не через опции потому что stickyController скоро станет не компонентом
+            // а полностью js контроллером. И что бы избежать лишних синхронизаций.
+            this._children.stickyController.setCanScroll(calculatedOptionValue);
             needUpdate = true;
          }
 
@@ -721,6 +724,7 @@ let
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
+            this._children.stickyController.setCanScroll(displayState.canScroll);
             this._updateStickyHeaderContext();
 
             this._forceUpdate();
@@ -847,6 +851,7 @@ let
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
+            this._children.stickyController.setCanScroll(displayState.canScroll);
          }
 
          _private.calcPagingStateBtn(this);

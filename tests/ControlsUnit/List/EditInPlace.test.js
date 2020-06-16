@@ -143,6 +143,7 @@ define([
             forceUpdate: () => undefined,
             source: source,
             updateItemActions: () => undefined,
+            multiSelectVisibility: false,
             notify: () => undefined,
             forceUpdate: () => undefined
          });
@@ -2145,5 +2146,20 @@ define([
          });
       });
 
+      describe('.processBeforeBeginEditResult()', () => {
+         it('should return result cancelled', async () => {
+            const eventResult = Promise.resolve('Cancel');
+            const result = await EditInPlace._private.processBeforeBeginEditResult(eip, {}, eventResult, false);
+            assert.deepEqual({cancelled: true}, result);
+         });
+
+         it('should return result cancelled when event result throw catch', async () => {
+            const eventResult = Promise.reject(new Error('!!!!'));
+            const result = await EditInPlace._private.processBeforeBeginEditResult(eip, {}, eventResult, false);
+            assert.deepEqual({cancelled: true}, result);
+         });
+      });
+
    });
+
 });
