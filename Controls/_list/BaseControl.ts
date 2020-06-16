@@ -2077,6 +2077,13 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             _private.createEditInPlace(self, newOptions);
         }
 
+        if (newOptions.useNewModel) {
+            import('Controls/listRender').then((listRender) => {
+                this._itemActionsTemplate = listRender.itemActionsTemplate;
+                this._swipeTemplate = listRender.swipeTemplate;
+            });
+        }
+
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             let viewModelConfig = cClone(newOptions);
             if (collapsedGroups) {
@@ -2320,14 +2327,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
                 this._updateItemActions(this._options);
             }
-        }
-
-
-        if (this._options.useNewModel) {
-            return import('Controls/listRender').then((listRender) => {
-                this._itemActionsTemplate = listRender.itemActionsTemplate;
-                this._swipeTemplate = listRender.swipeTemplate;
-            });
         }
 
         // для связи с контроллером ПМО
