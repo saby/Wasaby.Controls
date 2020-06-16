@@ -4,7 +4,7 @@ import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
-import {CrudWrapper} from 'Controls/dataSource';
+import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {List, RecordSet} from 'Types/collection';
 import {descriptor} from 'Types/entity';
@@ -18,13 +18,13 @@ var _private = {
 
          filter[options.keyProperty] = selectedKeys;
 
-         if (sourceIsChanged || !self.crudWrapper) {
-            self.crudWrapper = new CrudWrapper({
+         if (sourceIsChanged || !self.sourceController) {
+            self.sourceController = new SourceController({
                source: options.source
             });
          }
-         self.crudWrapper.query({filter})
-            .then((result) => {
+         self.sourceController.load(filter)
+            .addCallback(function(result) {
                if (options.dataLoadCallback) {
                   options.dataLoadCallback(result);
                }
@@ -215,7 +215,7 @@ var _private = {
             sourceIsChanged = newOptions.source !== this._options.source;
 
          if (sourceIsChanged) {
-            this.crudWrapper = null;
+            this.sourceController = null;
          }
 
          if (keysChanged || sourceIsChanged) {
