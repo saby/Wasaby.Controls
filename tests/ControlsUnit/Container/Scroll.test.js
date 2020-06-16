@@ -260,6 +260,11 @@ define(
                scroll._container = {
                   closest: () => {}
                };
+               scroll._children = {
+                  stickyController: {
+                     setCanScroll: () => undefined
+                  }
+               };
             });
             it('Content at the top', function() {
                scroll._pagingState = {};
@@ -309,11 +314,18 @@ define(
          });
 
          describe('_resizeHandler', function() {
-            it('should update _displayState if it changed(vertical scroll).', function() {
-               let oldDisplayState = scroll._displayState;
+            beforeEach(function() {
                scroll._container = {
                   closest: () => {}
                };
+               scroll._children = {
+                  stickyController: {
+                     setCanScroll: sinon.stub()
+                  }
+               };
+            });
+            it('should update _displayState if it changed(vertical scroll).', function() {
+               let oldDisplayState = scroll._displayState;
                scroll._pagingState = {};
                scroll._children.content = {
                   scrollTop: 100,
@@ -323,6 +335,8 @@ define(
 
                scroll._resizeHandler();
                assert.notStrictEqual(scroll._displayState, oldDisplayState);
+               sinon.assert.calledWith(scroll._children.stickyController.setCanScroll, false);
+
                oldDisplayState = scroll._displayState;
                scroll._resizeHandler();
                assert.strictEqual(scroll._displayState, oldDisplayState);
@@ -330,9 +344,6 @@ define(
 
             it('should update _displayState if it changed(horizontal scroll).', function() {
                let oldDisplayState = scroll._displayState;
-               scroll._container = {
-                  closest: () => {}
-               };
                scroll._pagingState = {};
                scroll._children.content = {
                   scrollLeft: 100,

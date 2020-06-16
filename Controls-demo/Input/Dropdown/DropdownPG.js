@@ -71,14 +71,14 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
                },
                contentTemplate: {
                   items: [
-                     { id: '1', title: 'Default template', template: '' },
+                     { id: '1', title: 'Default template', template: undefined },
                      { id: '2', title: 'Custom template', template: 'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownWithIconLeft' }
                   ],
                   value: 'Default template'
                },
                itemTemplate: {
                   items: [
-                     { id: '1', title: 'Default template', template: '' },
+                     { id: '1', title: 'Default template', template: undefined },
                      { id: '2', title: 'Custom template', template: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownCustom2' }
                   ],
                   value: 'Default template'

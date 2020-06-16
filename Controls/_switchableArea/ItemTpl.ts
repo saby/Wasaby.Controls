@@ -6,6 +6,7 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 class SwitchableAreaItem extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
    protected _keyHooksStorage: string[] = null;
+   private _needStartResizeRegister: boolean;
 
    protected _beforeMount(): void {
       this._keyHooksStorage = [];
@@ -13,12 +14,22 @@ class SwitchableAreaItem extends Control<IControlOptions> {
 
    protected _afterMount(): void {
       // if we select current item, then activate it, for focusing child controls
-      this.activate();
+      if (this._options.autofocus) {
+         this.activate();
+      }
       RegisterUtil(this, 'controlResize', this._resizeHandler.bind(this));
    }
 
+   protected _beforeUpdate(newOptions): void {
+      // Если поменялся ключ и выбрали текущий итем
+      if (this._options.selectedKey !== newOptions.selectedKey && newOptions.selectedKey === this._options.key) {
+         this._needStartResizeRegister = true;
+      }
+   }
+
    protected _afterRender(): void {
-      if (this._options.selectedKey === this._options.key) {
+      if (this._needStartResizeRegister) {
+         this._needStartResizeRegister = false;
          this._startResizeRegister();
       }
    }
@@ -26,7 +37,7 @@ class SwitchableAreaItem extends Control<IControlOptions> {
    protected _afterUpdate(oldOptions): void {
       // if we select current item, then activate it, for focusing child controls
       if (this._options.selectedKey !== oldOptions.selectedKey) {
-         if (this._options.selectedKey === this._options.key) {
+         if (this._options.selectedKey === this._options.key && this._options.autofocus) {
             this.activate();
             this._executeKeyHooks('register');
          } else {
@@ -83,6 +94,11 @@ class SwitchableAreaItem extends Control<IControlOptions> {
    protected _resizeHandler(): void {
       this._startResizeRegister();
    }
+    static getDefaultOptions() {
+        return {
+            autofocus: true
+        };
+    }
 }
 
 export default SwitchableAreaItem;
