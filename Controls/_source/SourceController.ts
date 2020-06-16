@@ -194,7 +194,12 @@ var SourceController = cExtend.extend({
 
    calculateState: function(list, root: string|number) {
       if (this._queryParamsController) {
-         this._queryParamsController.updateQueryProperties(list, null, root);
+         this._queryParamsController.updateQueryProperties(
+             list,
+             null,
+             null,
+             root
+         );
       }
    },
 
