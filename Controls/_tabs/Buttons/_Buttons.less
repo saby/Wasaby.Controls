@@ -13,7 +13,6 @@
    .tabs-baseline();
 }
 .controls-Tabs_theme_@{themeName} {
-   display: inline-flex;
    height: @item_height_tabs;
    position: relative;
    &:after {
@@ -25,6 +24,12 @@
       height: @border-thickness_tabs;
       background: @border-color_tabs;
    }
+}
+
+.controls-Tabs-wrapper {
+   display: inline-flex;
+   width: 100%;
+   height: 100%;
 }
 .controls-Tabs__space_theme_@{themeName} {
    display: inline-flex;
