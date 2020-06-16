@@ -2114,6 +2114,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadTriggerVisibility = {};
 
+        if (newOptions.useNewModel) {
+            import('Controls/listRender').then((listRender) => {
+                this._itemActionsTemplate = listRender.itemActionsTemplate;
+                this._swipeTemplate = listRender.swipeTemplate;
+            });
+        }
+
         if (newOptions.editingConfig) {
             _private.createEditInPlace(self, newOptions);
         }
@@ -2372,14 +2379,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
                 this._updateItemActions(this._options);
             }
-        }
-
-
-        if (this._options.useNewModel) {
-            return import('Controls/listRender').then((listRender) => {
-                this._itemActionsTemplate = listRender.itemActionsTemplate;
-                this._swipeTemplate = listRender.swipeTemplate;
-            });
         }
 
         // для связи с контроллером ПМО

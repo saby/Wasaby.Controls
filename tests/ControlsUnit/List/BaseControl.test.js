@@ -15,8 +15,9 @@ define([
    'Types/entity',
    'Controls/popup',
    'Controls/listDragNDrop',
+   'Controls/listRender',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop) {
+], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, listRender) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -6088,6 +6089,40 @@ define([
                baseControl._onItemClick(e, {}, originalEvent);
                assert.isTrue(isStopped);
             });
+         });
+      });
+
+      // Инициализация шаблонов под isNewModel должна происходить до того, как  
+      it('should init templates for useNewModel before any item actions initialization', async () => {
+         const cfg = {
+            editingConfig: {
+               toolbarVisibility: true
+            },
+            useNewModel: true,
+            itemActions: [
+               {
+                  id: 1,
+                  showType: 0,
+                  'parent@': true
+               },
+               {
+                  id: 2,
+                  showType: 2,
+                  parent: 1
+               }
+            ]
+         };
+         const sandbox = sinon.createSandbox();
+         const baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         baseControl._container = {clientHeight: 0};
+         sandbox.replace(baseControl, '_updateItemActions', (options) => {
+            assert.equal(baseControl._itemActionsTemplate, listRender.itemActionsTemplate);
+         });
+         setTimeout(async () => {
+            await baseControl._afterMount();
+            sandbox.restore();
          });
       });
    });
