@@ -1241,7 +1241,7 @@ const _private = {
             }
             if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
-                    self.closeActionsMenu(self);
+                    _private.closeActionsMenu(self);
                 }
             }
 
@@ -1321,7 +1321,7 @@ const _private = {
         if (action.handler) {
             action.handler(contents);
         }
-        _private.closeActionsMenu(self);
+        _private.closePopup(self);
     },
 
     /**
@@ -1349,9 +1349,11 @@ const _private = {
             onResult: self._onItemActionsMenuResult,
             onClose: self._onItemActionsMenuClose
         };
-        self._itemActionsController.setActiveItem(item);
         return Sticky.openPopup(menuConfig).then((popupId) => {
             self._itemActionsMenuId = popupId;
+            // Нельзя устанавливать activeItem раньше, иначе при автокликах
+            // робот будет открывать меню раньше, чем оно закрылось
+            self._itemActionsController.setActiveItem(item);
         });
     },
 
@@ -1360,9 +1362,11 @@ const _private = {
      * @private
      */
     closeActionsMenu(self: any): void {
-        self._itemActionsController.setActiveItem(null);
-        self._itemActionsController.deactivateSwipe();
-        _private.closePopup(self);
+        if (self._itemActionsMenuId) {
+            _private.closePopup(self);
+            self._itemActionsController.setActiveItem(null);
+            self._itemActionsController.deactivateSwipe();
+        }
     },
 
     /**
@@ -2434,9 +2438,7 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
-            if (this._itemActionsMenuId) {
-                this.closeActionsMenu(self)
-            }
+            _private.closeActionsMenu(this);
 
             // return result here is for unit tests
             return _private.reload(self, newOptions).addCallback(() => {
@@ -2930,10 +2932,8 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
      * Обработчик закрытия выпадающего/контекстного меню
      * @private
      */
-    _onItemActionsMenuClose(clickEvent: SyntheticEvent<MouseEvent>): void {
-        // this._itemActionsController.setActiveItem(null);
-        // this._itemActionsController.deactivateSwipe();
-        this._itemActionsMenuId = null;
+    _onItemActionsMenuClose(): void {
+        _private.closeActionsMenu(this);
     },
 
     _onItemsChanged(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {

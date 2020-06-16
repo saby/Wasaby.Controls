@@ -4091,7 +4091,7 @@ define([
          });
 
          // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
-         it('should correctly work with breadcrumbs', () => {
+         it('should correctly work with breadcrumbs', async () => {
             const breadcrumbItem = {
                '[Controls/_display/BreadcrumbsItem]': true,
                _$active: false,
@@ -4108,8 +4108,8 @@ define([
                   }]
                })
             };
-            instance._onItemContextMenu(null, breadcrumbItem, fakeEvent);
-            assert(instance._listViewModel.getActiveItem(), item);
+            await instance._onItemContextMenu(null, breadcrumbItem, fakeEvent);
+            assert.equal(instance._listViewModel.getActiveItem(), breadcrumbItem);
          });
 
          // Нельзя открывать itemActionsMenu дважды подряд (надо сначала дождаться закрытия предыдущего меню)
@@ -4126,6 +4126,26 @@ define([
                .then(() => {
                   assert.equal(self._itemActionsMenuId, null);
                });
+         });
+
+         // Нужно устанавливать active item только после того, как пришёл id нового меню
+         it('should set active item only after promise then result', (done) => {
+            let activeItem = null;
+            const self = {
+               _itemActionsController: {
+                  prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => ({}),
+                  setActiveItem: (_item) => {
+                     activeItem = _item;
+                  }
+               },
+               _itemActionsMenuId: null
+            };
+            lists.BaseControl._private.openItemActionsMenu(self, null, fakeEvent, item, false)
+               .then(() => {
+                  assert.equal(activeItem, item);
+               })
+               .then(done);
+            assert.equal(activeItem, null);
          });
       });
 
