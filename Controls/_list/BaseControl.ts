@@ -1343,7 +1343,7 @@ const _private = {
         if (action.handler) {
             action.handler(contents);
         }
-        _private.closePopup(self);
+        _private.closeActionsMenu(self);
     },
 
     /**

@@ -378,9 +378,9 @@ export default class View extends Control<IViewOptions> {
         const onResult = this._itemActionsMenuResultHandler.bind(this);
         const onClose = this._itemActionsMenuCloseHandler.bind(this);
         menuConfig.eventHandlers = {onResult, onClose};
-        this._itemActionsController.setActiveItem(item);
         return Sticky.openPopup(menuConfig).then((popupId) => {
             this._itemActionsMenuId = popupId;
+            this._itemActionsController.setActiveItem(item);
         });
     }
 
