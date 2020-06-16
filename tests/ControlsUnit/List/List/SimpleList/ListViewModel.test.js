@@ -362,11 +362,11 @@ define([
          const notifySpy = sinon.spy(model, '_notify'),
                nextModelVersionSpy = sinon.spy(model, '_nextModelVersion');
 
-         model.setMarkedKey(2, true);
+         model.setMarkedKey(2, true, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
-         assert.isTrue(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
+         assert.isFalse(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
+         assert.isFalse(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
 
          notifySpy.resetHistory();
          nextModelVersionSpy.resetHistory();
@@ -382,8 +382,17 @@ define([
 
          model.setMarkedKey(null, false);
          assert.isNull(model.getMarkedKey());
-         assert.isFalse(notifySpy.withArgs('onMarkedKeyChanged', null).called);
-         assert.isFalse(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
+         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', null).called);
+         assert.isTrue(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
+
+         notifySpy.resetHistory();
+         nextModelVersionSpy.resetHistory();
+
+         model.setMarkedKey(2, true);
+         assert.equal(model.getMarkedKey(), 2);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
+         assert.isTrue(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
       });
 
       // TODO SetItemActions
