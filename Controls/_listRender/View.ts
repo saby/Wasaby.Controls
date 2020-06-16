@@ -119,7 +119,7 @@ export default class View extends Control<IViewOptions> {
             options.readOnly !== this._options.readOnly ||
             options.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            this._updateItemActions();
+            this._updateItemActions(options);
         }
     }
 
@@ -136,7 +136,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     protected _onRenderMouseEnter(e: SyntheticEvent<MouseEvent>): void {
-        this._updateItemActions();
+        this._updateItemActions(this._options);
     }
 
     /**
@@ -145,7 +145,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
-        this._updateItemActions();
+        this._updateItemActions(this._options);
     }
 
     /**
@@ -194,8 +194,14 @@ export default class View extends Control<IViewOptions> {
      * @param e
      * @private
      */
-    _onCloseSwipe(e: SyntheticEvent<null>): void {
-        this._itemActionsController.deactivateSwipe();
+    protected _onCloseSwipe(e: SyntheticEvent<null>): void {
+        const item = this._itemActionsController.getSwipeItem();
+        if (item) {
+            if (!this._options.itemActions) {
+                this._notify('itemSwipe', [item, e]);
+            }
+            this._itemActionsController.deactivateSwipe();
+        }
     }
 
     /**
@@ -405,13 +411,13 @@ export default class View extends Control<IViewOptions> {
      * Инициализирует контрорллере и обновляет в нём данные
      * @private
      */
-    protected _updateItemActions(): void {
+    protected _updateItemActions(options: IViewOptions): void {
         if (!this._itemActionsController) {
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._collection.getEditingConfig();
         let editArrowAction: IItemAction;
-        if (this._options.showEditArrow) {
+        if (options.showEditArrow) {
             editArrowAction = {
                 id: 'view',
                 icon: 'icon-Forward',
@@ -424,19 +430,19 @@ export default class View extends Control<IViewOptions> {
         }
         this._itemActionsController.update({
             collection: this._collection,
-            itemActions: this._options.itemActions,
-            itemActionsProperty: this._options.itemActionsProperty,
-            visibilityCallback: this._options.itemActionVisibilityCallback,
-            itemActionsPosition: this._options.itemActionsPosition,
-            style: this._options.style,
-            theme: this._options.theme,
-            actionAlignment: this._options.actionAlignment,
-            actionCaptionPosition: this._options.actionCaptionPosition,
-            itemActionsClass: this._options.itemActionsClass,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style: options.style,
+            theme: options.theme,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
-            editArrowVisibilityCallback: this._options.editArrowVisibilityCallback
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback
         });
     }
 
