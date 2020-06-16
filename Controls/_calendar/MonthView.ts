@@ -71,8 +71,6 @@ var MonthView = BaseControl.extend({
    _monthViewModel: null,
    _caption: null,
 
-   _singleDayHover: true,
-
    _themeCssClass: '',
 
    _beforeMount: function(options) {
