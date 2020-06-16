@@ -3048,11 +3048,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
 
         this._dndListController.startDrag(draggedKey, dragObject.entity);
 
-            // Cобытие mouseEnter на записи может сработать до dragStart.
-            // И тогда перемещение при наведении не будет обработано.
-            // В таком случае обрабатываем наведение на запись сейчас.
-            //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
-            if (this._unprocessedDragEnteredItem) {
+        // Cобытие mouseEnter на записи может сработать до dragStart.
+        // И тогда перемещение при наведении не будет обработано.
+        // В таком случае обрабатываем наведение на запись сейчас.
+        //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
+        if (this._unprocessedDragEnteredItem) {
             this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
         }
     },
