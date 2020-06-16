@@ -46,10 +46,14 @@ export class Controller {
          return this._markedKey;
       }
 
-      if (key === undefined && this._markedKey !== undefined) {
+      if (key === undefined && this._markerVisibility !== Visibility.Visible) {
+         if (this._markedKey === undefined) {
+            return undefined;
+         }
+
          this._model.setMarkedKey(this._markedKey, false);
-         this._markedKey = null;
-         return null;
+         this._markedKey = undefined;
+         return undefined;
       }
 
       const item = this._model.getItemBySourceKey(key);
