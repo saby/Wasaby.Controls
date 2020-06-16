@@ -23,7 +23,7 @@ var _private = {
                source: options.source
             });
          }
-         self.crudWrapper.load({filter})
+         self.crudWrapper.query({filter})
             .then((result) => {
                if (options.dataLoadCallback) {
                   options.dataLoadCallback(result);
