@@ -384,7 +384,7 @@ const _private = {
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
             // количество записей будет отдавать selectionController https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
             getItemsBySelection(selection, self._options.source, recordSet, self._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
-                const dragStartResult = self._notify('dragStart', [items]);
+                const dragStartResult = self._notify('dragStart', [items, key]);
                 if (dragStartResult) {
                     if (self._options.dragControlId) {
                         dragStartResult.dragControlId = self._options.dragControlId;
@@ -3128,10 +3128,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._dndListController.startDrag(draggedKey, dragObject.entity);
 
-            // Cобытие mouseEnter на записи может сработать до dragStart.
-            // И тогда перемещение при наведении не будет обработано.
-            // В таком случае обрабатываем наведение на запись сейчас.
-            // TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
+        // Cобытие mouseEnter на записи может сработать до dragStart.
+        // И тогда перемещение при наведении не будет обработано.
+        // В таком случае обрабатываем наведение на запись сейчас.
+        //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
         if (this._unprocessedDragEnteredItem) {
             this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
         }
