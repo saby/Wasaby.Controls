@@ -712,7 +712,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
@@ -785,7 +786,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
@@ -850,7 +852,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -978,16 +981,12 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
             down: true
-         };
-         ctrl._notify = (eventName, eventsArgs) => {
-            if (eventName === 'updateShadowMode') {
-               shadowVisibility = eventsArgs[0];
-            }
          };
          ctrl._isScrollShown = true;
          ctrl._shadowVisibility = {};
@@ -1002,15 +1001,14 @@ define([
          ctrl._portionedSearchInProgress = true;
 
          // Up trigger became visible, no changes to indicator
-         ctrl.triggerVisibilityChangedHandler(null, 'up', true);
+         ctrl.triggerVisibilityChangedHandler('up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
          assert.isFalse(ctrl._showContinueSearchButton);
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
-         ctrl.triggerVisibilityChangedHandler(null, 'down', false);
+         ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
          assert.isTrue(ctrl._showContinueSearchButton);
-         assert.equal(shadowVisibility.bottom, 'auto');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
@@ -1055,7 +1053,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
@@ -1590,7 +1589,8 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
+         baseControl._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) , offsetHeight:0};
+         baseControl._scrollController.__getItemsContainer = () => ({children: []});
          baseControl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
@@ -1625,7 +1625,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          ctrl._sourceController.load = sinon.stub()
@@ -2015,9 +2016,9 @@ define([
             };
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
-            ctrl._beforeMount(cfg);
+            await ctrl._beforeMount(cfg);
 
-            ctrl._children = triggers;
+            ctrl._scrollController._triggers = triggers;
             ctrl._viewSize = 1000;
             ctrl._viewPortSize = 400;
             // эмулируем появление скролла
@@ -2320,17 +2321,16 @@ define([
             ctrl._notify = function(event, dir) {
                result = dir;
             };
-            ctrl._children = {
-               scrollController: {
-                  scrollToItem(key) {
-                     if (key === data[0].id) {
-                        result = 'top';
-                     } else if (key === data[data.length - 1].id) {
-                        result = 'bottom';
-                     }
-                     return Promise.resolve();
+            ctrl._scrollController = {
+               scrollToItem(key) {
+                  if (key === data[0].id) {
+                     result = 'top';
+                  } else if (key === data[data.length - 1].id) {
+                     result = 'bottom';
                   }
-               }
+                  return Promise.resolve();
+               },
+               reset: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -2396,17 +2396,17 @@ define([
             ctrl._notify = function(eventName, type) {
                result = type;
             };
-            ctrl._children = {
-               scrollController: {
-                  scrollToItem(key) {
-                     if (key === data[0].id) {
-                        result = ['top'];
-                     } else if (key === data[data.length - 1].id) {
-                        result = ['bottom'];
-                     }
-                     return Promise.resolve();
+            ctrl._scrollController ={
+               scrollToItem(key) {
+                  if (key === data[0].id) {
+                     result = ['top'];
+                  } else if (key === data[data.length - 1].id) {
+                     result = ['bottom'];
                   }
-               }
+                  return Promise.resolve();
+               },
+               registerObserver: () => undefined,
+               reset: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -4129,10 +4129,8 @@ define([
                })
             };
             instance.saveOptions(cfg);
-            instance._children = {
-               scrollController: {
-                  scrollToItem: () => {}
-               }
+            instance._scrollController = {
+               scrollToItem: () => {}
             };
             instance._container = {
                querySelector: (selector) => ({
@@ -4576,6 +4574,7 @@ define([
              instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
+         instance._scrollController.afterMount = () => undefined;
          instance._container = {};
          let fakeNotify = sandbox.spy(instance, '_notify')
              .withArgs('drawItems');
@@ -4757,7 +4756,8 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
-         instance._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
+         instance._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }), offsetHeight:0 };
+         instance._scrollController.__getItemsContainer = () => ({children: []});
          instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
@@ -5353,6 +5353,7 @@ define([
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             ctrl._container = {clientHeight: 100};
+            ctrl._scrollController.__getItemsContainer = () => ({children: []});
             ctrl._afterMount(cfg);
 
             assert.isNull(ctrl._loadedItems);
@@ -5443,6 +5444,11 @@ define([
             ctrl._container = {
                clientHeight: 100,
                getBoundingClientRect: () => ({y: 0})
+            };
+            ctrl._children = {
+               scrollObserver: {
+                  startRegister: () => undefined
+               }
             };
             ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
@@ -5769,7 +5775,8 @@ define([
          async function mountBaseControl(control, options) {
             control.saveOptions(options);
             await control._beforeMount(options);
-            control._container = {clientHeight: 0};
+            control._container = {clientHeight: 0, offsetHeight:0};
+            control._scrollController.__getItemsContainer = () => ({children: []});
             await control._afterMount(options);
          }
 
@@ -5914,10 +5921,11 @@ define([
                baseControlOptions.markerVisibility = 'onactivated';
                await mountBaseControl(baseControl, baseControlOptions);
 
-               baseControl._children.scrollController = {
+               baseControl._scrollController = {
                   scrollToItem(key) {
                      assert.equal(key, 1);
-                  }
+                  },
+                  reset: () => undefined
                }
 
                   const originalEvent = {target: {}};
@@ -5970,17 +5978,16 @@ define([
                      }
                   };
 
-                  baseControl._children = {
-                     scrollController: {
-                        scrollToItem(key) {
-                           if (key === data[0].id) {
-                              result = 'top';
-                           } else if (key === data[data.length - 1].id) {
-                              result = 'bottom';
-                           }
-                           return Promise.resolve();
+                  baseControl._scrollController = {
+                     scrollToItem(key) {
+                        if (key === data[0].id) {
+                           result = 'top';
+                        } else if (key === data[data.length - 1].id) {
+                           result = 'bottom';
                         }
-                     }
+                        return Promise.resolve();
+                     },
+                     reset: () => undefined
                   };
 
                   // No editing
