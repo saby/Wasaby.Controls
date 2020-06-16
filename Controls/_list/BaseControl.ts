@@ -1361,16 +1361,15 @@ const _private = {
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
         _private.closePopup(self);
+        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        if (!menuConfig) {
+            return Promise.resolve();
+        }
         /**
          * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
-
-        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
-        if (!menuConfig) {
-            return Promise.resolve();
-        }
         clickEvent.nativeEvent.preventDefault();
         clickEvent.stopImmediatePropagation();
         menuConfig.eventHandlers = {

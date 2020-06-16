@@ -4046,12 +4046,17 @@ define([
                itemActions: [
                   {
                      id: 1,
-                     showType: 0,
+                     showType: 2,
                      'parent@': true
                   },
                   {
                      id: 2,
-                     showType: 2,
+                     showType: 0,
+                     parent: 1
+                  },
+                  {
+                     id: 3,
+                     showType: 0,
                      parent: 1
                   }
                ],
@@ -4117,12 +4122,11 @@ define([
          // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
          it('should correctly work with breadcrumbs', async () => {
             const fakeEvent = initFakeEvent();
+            const itemAt1 = instance._listViewModel.at(1);
             const breadcrumbItem = {
                '[Controls/_display/BreadcrumbsItem]': true,
                _$active: false,
-               getContents: () => ['fake', 'fake', 'fake', {
-                  getKey: () => 2
-               }],
+               getContents: () => ['fake', 'fake', 'fake', itemAt1.getContents() ],
                setActive: function() {
                   this._$active = true;
                },
@@ -4134,11 +4138,11 @@ define([
                })
             };
             await instance._onItemContextMenu(null, breadcrumbItem, fakeEvent);
-            assert.equal(instance._listViewModel.getActiveItem(), breadcrumbItem);
+            assert.equal(instance._listViewModel.getActiveItem(), itemAt1);
          });
 
          // Клик по ItemAction в меню отдавать контейнер в событии
-         it('should send target container in event on click in menu', () => {
+         it('should send target container in event on click in menu', async () => {
             const fakeEvent = initFakeEvent();
             const fakeEvent2 = initFakeEvent();
             const action = {
@@ -4153,7 +4157,8 @@ define([
                   parent: 1
                })
             };
-            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            instance._listViewModel.itemActions
+            await instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
 
             // popup.Sticky.openPopup called in openItemActionsMenu is an async function
             // we cannot determine that it has ended
@@ -4181,7 +4186,7 @@ define([
 
 
          // Клик по ItemAction в контекстном меню отдавать контейнер в событии
-         it('should send target container in event on click in context menu', () => {
+         it('should send target container in event on click in context menu', async () => {
             const fakeEvent = initFakeEvent();
             const fakeEvent2 = initFakeEvent();
             const actionModel = {
@@ -4190,7 +4195,7 @@ define([
                   showType: 0
                })
             };
-            instance._onItemContextMenu(null, item, fakeEvent);
+            await instance._onItemContextMenu(null, item, fakeEvent);
             instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
             assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
             assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
@@ -4211,6 +4216,7 @@ define([
 
          // Нужно устанавливать active item только после того, как пришёл id нового меню
          it('should set active item only after promise then result', (done) => {
+            const fakeEvent = initFakeEvent();
             let activeItem = null;
             const self = {
                _itemActionsController: {
