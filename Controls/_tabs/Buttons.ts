@@ -47,21 +47,34 @@ var _private = {
       prepareItemOrder: function(order) {
          return '-ms-flex-order:' + order + '; order:' + order;
       },
-      prepareItemClass: function(item, order, options, lastRightOrder, self) {
-         var
-            classes = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme],
-            modifyToNewStyle = '';
-         if (options.style === 'default') {
-            modifyToNewStyle = 'primary';
-            Logger.warn('Tabs/Buttons: Используются устаревшие стили. Используйте style = primary вместо style = default', self);
-         } else if (options.style === 'additional') {
-            modifyToNewStyle = 'secondary';
-            Logger.warn('Tabs/Buttons: Используются устаревшие стили. Используйте style = secondary вместо style = additional', self);
+      prepareStyle: function(style) {
+         if (style === 'default') {
+            return 'primary';
+            Logger.warn('Tabs/Buttons: Используются устаревшие стили. Используйте style = primary вместо style = default', this);
+         } else if (style === 'additional') {
+            return 'secondary';
+            Logger.warn('Tabs/Buttons: Используются устаревшие стили. Используйте style = secondary вместо style = additional', this);
          } else {
-            modifyToNewStyle = options.style;
+            return style;
          }
+      },
+      prepareItemSelected: function(item, options) {
+         const classes = [];
+         if (item.get(options.keyProperty) === options.selectedKey) {
+            classes.push('controls-Tabs_style_' + options.style + '__item_state_selected ' +
+            'controls-Tabs_style_' + options.style + '__item_state_selected_theme_' + options.theme);
+            classes.push('controls-Tabs__item_state_selected controls-Tabs__item_state_selected_theme_' + options.theme);
+         } else {
+            classes.push('controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_' + options.theme);
+         }
+         return classes.join(' ');
+      },
+
+      prepareItemClass: function(item, order, options, lastRightOrder) {
+         var classes = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme];
+
          classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right') +
-             ' controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right')+ '_theme_' + options.theme);
+             ' controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right') + '_theme_' + options.theme);
          if (order === 1 || order === lastRightOrder) {
             classes.push('controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_' + options.theme);
          }
@@ -71,13 +84,6 @@ var _private = {
             classes.push('controls-Tabs__item_extreme_last controls-Tabs__item_extreme_last_theme_' + options.theme);
          } else {
             classes.push('controls-Tabs__item_default controls-Tabs__item_default_theme_' + options.theme);
-         }
-         if (item.get(options.keyProperty) === options.selectedKey) {
-            classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected ' +
-                'controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected_theme_' + options.theme);
-            classes.push('controls-Tabs__item_state_selected controls-Tabs__item_state_selected_theme_' + options.theme);
-         } else {
-            classes.push('controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_' + options.theme);
          }
          if (item.get('type')) {
             classes.push('controls-Tabs__item_type_' + item.get('type') +
@@ -97,7 +103,7 @@ var _private = {
 
    /**
     * Контрол предоставляет пользователю возможность выбрать между двумя или более вкладками.
-    * 
+    *
     * @remark
     * Полезные ссылки:
     * * <a href="/materials/Controls-demo/app/Controls-demo%2FTabs%2FButtons">демо-пример</a>
@@ -510,7 +516,10 @@ var _private = {
          this._notify('selectedKeyChanged', [key]);
       },
       _prepareItemClass: function(item, index) {
-         return _private.prepareItemClass(item, this._itemsOrder[index], this._options, this._lastRightOrder, this);
+         return _private.prepareItemClass(item, this._itemsOrder[index], this._options, this._lastRightOrder);
+      },
+      _prepareItemSelectedClass(item) {
+         return _private.prepareItemSelected(item, this._options);
       },
       _prepareItemOrder: function(index) {
          return _private.prepareItemOrder(this._itemsOrder[index]);
