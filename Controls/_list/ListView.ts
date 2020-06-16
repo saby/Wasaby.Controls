@@ -212,8 +212,7 @@ var ListView = BaseControl.extend(
         },
 
         _onGroupClick: function(e, dispItem) {
-            var
-                item = dispItem.getContents();
+            var item = dispItem.getContents();
             this._notify('groupClick', [item, e], {bubbling: true});
         },
 
