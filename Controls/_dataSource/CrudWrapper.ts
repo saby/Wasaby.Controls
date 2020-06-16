@@ -190,10 +190,11 @@ export class CrudWrapper {
             query = query.meta(queryParams.meta);
         }
         return this._source.query(query).then((dataSet: DataSet) => {
-            if (keyProperty && keyProperty !== dataSet.getKeyProperty()) {
+            // TODO разобраться с типами. Похоже что PrefetchProxy отдает не DataSet
+            if (keyProperty && dataSet.getKeyProperty && keyProperty !== dataSet.getKeyProperty()) {
                 dataSet.setKeyProperty(keyProperty);
             }
-            return dataSet.getAll();
+            return dataSet.getAll ? dataSet.getAll() : dataSet as RecordSet;
         }).catch(this._boundPromiseCatchCallback);
     }
 
@@ -221,10 +222,9 @@ export class CrudWrapper {
      * @param error
      * @private
      */
-    private _promiseCatchCallback(error: Error): Promise<null> {
-        return this._processError(error, ErrorMode.include).then((errorConf: ErrorViewConfig) => {
-            return Promise.reject(errorConf);
-        });
+    private _promiseCatchCallback(error: Error): Promise<error> {
+        // TODO добавить обработку ошибок
+        return Promise.resolve(error);
     }
 
     /**
