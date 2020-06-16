@@ -4,9 +4,8 @@
 define([
    'Controls/source',
    'Types/source',
-   'Core/core-instance',
-   'Types/collection'
-], function(scroll, sourceLib, cInstance, collection){
+   'Core/core-instance'
+], function(scroll, sourceLib, cInstance){
    describe('Controls.Controllers.SourceController', function () {
       var data, source;
       beforeEach(function() {
@@ -83,6 +82,7 @@ define([
                   hasMore: false
                }
             }
+
          });
          controller.load().addCallback(function(rs){
             assert.isTrue(cInstance.instanceOfModule(rs, 'Types/collection:RecordSet'), 'load doesn\'t returns recordset instance');
@@ -152,34 +152,6 @@ define([
             done();
          });
 
-      });
-
-      it('calculateState', function () {
-         const controller = new scroll.Controller({
-            source: source,
-            navigation: {
-               source: 'page',
-               sourceConfig: {
-                  pageSize: 1,
-                  hasMore: true
-               }
-            }
-         });
-         const loadedRecordSet = new collection.RecordSet({
-            keyProperty: 'id',
-            rawData: data
-         });
-         loadedRecordSet.setMetaData({
-            more: true
-         });
-         controller.calculateState(loadedRecordSet, 'testRoot');
-         assert.isTrue(controller.hasMoreData('down', 'testRoot'));
-
-         loadedRecordSet.setMetaData({
-            more: false
-         });
-         controller.calculateState(loadedRecordSet, 'testRoot');
-         assert.isFalse(controller.hasMoreData('down', 'testRoot'));
       });
    })
 });
