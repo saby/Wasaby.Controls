@@ -43,16 +43,15 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     hasMoreData(direction: 'up' | 'down', root?: Key): boolean | undefined {
-        const controller = this._getControllerByRoot(root);
+        const controllerForRoot = this._getControllerByRoot(root);
         let hasMoreDataResult;
 
-        if (controller) {
-            hasMoreDataResult = controller.queryParamsController.hasMoreData(direction, root);
-        } else if (this._controllers.getCount()) {
-            hasMoreDataResult = this._controllers.at(0).queryParamsController.hasMoreData(direction, root);
+        if (controllerForRoot) {
+            hasMoreDataResult = controllerForRoot.queryParamsController.hasMoreData(direction, root);
         } else {
-            hasMoreDataResult = false;
+            hasMoreDataResult = this.getController().hasMoreData(direction, root);
         }
+
         return hasMoreDataResult;
     }
 
