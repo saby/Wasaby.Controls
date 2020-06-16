@@ -457,7 +457,7 @@ define(
 
          it('loadDependencies, loadItemsTemplates', async() => {
             const controller = getDropdownController(config);
-            let stub = sandbox.stub(dropdown._Controller._private, 'loadItemsTemplates');
+            let stub = sandbox.stub(controller, '_loadItemsTemplates');
 
             // items not loaded, loadItemsTemplates was called
             await controller.loadDependencies();
