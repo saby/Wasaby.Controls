@@ -1241,8 +1241,8 @@ var
         setSupportVirtualScroll: function(value) {
             this._model.setSupportVirtualScroll(value);
         },
-        setMarkedKey: function(key, byOptions) {
-            this._model.setMarkedKey(key, byOptions);
+        setMarkedKey: function(key, status, silent) {
+            this._model.setMarkedKey(key, status, silent);
         },
 
         setMarkerVisibility: function(markerVisibility) {
