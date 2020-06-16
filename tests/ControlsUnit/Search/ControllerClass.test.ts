@@ -104,4 +104,18 @@ describe('Controls/search:ControllerClass', () => {
         searchController._searchErrback({}, {testField: 'testValue'});
         assert.deepEqual(filter, {testField: 'testValue'});
     });
+
+    describe('constructor', () => {
+
+        it('searchValueChangedCallback is not called on constructor', () => {
+            let searchValueChangedCallbackCalled = false;
+            const options = getDefaultOptions();
+            options.searchValueChangedCallback = () => {
+                searchValueChangedCallbackCalled = true;
+            }
+            options.searchValue = 'test';
+            new ControllerClass(options, {});
+            assert.isFalse(searchValueChangedCallbackCalled);
+        });
+    });
 });
