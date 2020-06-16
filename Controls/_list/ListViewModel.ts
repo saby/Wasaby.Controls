@@ -172,7 +172,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _draggingItemData: null,
     _dragTargetPosition: null,
     _selectedKeys: null,
-    _markedKey: null,
+    _markedKey: undefined,
     _hoveredItem: null,
     _reloadedKeys: null,
     _singleItemReloadCount: 0,
@@ -352,7 +352,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setMarkedKey: function(key, status) {
-        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно его передать false
+        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
         if (this._markedKey === key && status !== false) {
             return;
         }
@@ -368,7 +368,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         if (status === false) {
-            this._markedKey = undefined;
+            if (key === undefined) {
+                this._markedKey = undefined;
+                return;
+            } else {
+                this._markedKey = undefined;
+            }
         } else {
             this._markedKey = key;
         }
@@ -456,8 +461,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
      *  мы не можем снять эти состояния при клике внутри ItemActions
      * @param itemData
      */
-    setActiveItem(item: CollectionItem<Model>): void {
-        if (item === this._activeItem) {
+    setActiveItem(itemData: CollectionItem<Model>): void {
+        if (itemData === this._activeItem) {
             return;
         }
         const oldActiveItem = this.getActiveItem();
@@ -466,11 +471,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         // TODO костыль. В TileView вместо item передаётся объект, поэтому проверяем на function
         //  надо передавать настроенный item
-        if (item && typeof item.setActive === 'function') {
-            item.setActive(true);
+        if (itemData && typeof itemData.setActive === 'function') {
+            itemData.setActive(true);
         }
-        this._activeItem = item;
-        this._nextModelVersion(true, 'activeItemChanged');
+        this._activeItem = itemData;
+        this._nextModelVersion(false, 'activeItemChanged');
     },
 
     setDraggedItems(draggedItem: IFlatItemData, dragEntity): void {
