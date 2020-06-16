@@ -3654,6 +3654,56 @@ define([
          });
       });
 
+      it('startDragNDrop', () => {
+         const self = {
+               _options: {
+                  readOnly: false,
+                  itemsDragNDrop: true,
+                  source,
+                  filter: {},
+                  selectedKeys: [],
+                  excludedKeys: [],
+               },
+               _listViewModel: new lists.ListViewModel({
+                  items: new collection.RecordSet({
+                     rawData: data,
+                     keyProperty: 'id'
+                  }),
+                  keyProperty: 'key'
+               })
+            },
+            domEvent = {
+               nativeEvent: {},
+               target: {
+                  closest: function() {
+                     return false;
+                  }
+               }
+            },
+            itemData = {
+               getContents() {
+                  return {
+                     getKey() {
+                        return 2;
+                     }
+                  };
+               }
+            };
+
+         // self._listViewModel.setItems(data);
+
+         let notifyCalled = false;
+         self._notify = function(eventName, args) {
+            notifyCalled = true;
+            assert.equal(eventName, 'dragStart');
+            assert.deepEqual(args[0], [2]);
+            assert.equal(args[1], 2);
+         };
+
+         lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
+         assert.isTrue(notifyCalled);
+      });
+
       it('_processItemMouseEnterWithDragNDrop', () => {
          const ctrl = new lists.BaseControl({});
          const dragEntity = { entity: 'entity' },

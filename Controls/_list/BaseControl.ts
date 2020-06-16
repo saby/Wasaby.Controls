@@ -375,7 +375,7 @@ const _private = {
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
             // количество записей будет отдавать selectionController https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
             getItemsBySelection(selection, self._options.source, recordSet, self._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
-                const dragStartResult = self._notify('dragStart', [items]);
+                const dragStartResult = self._notify('dragStart', [items, key]);
                 if (dragStartResult) {
                     if (self._options.dragControlId) {
                         dragStartResult.dragControlId = self._options.dragControlId;
