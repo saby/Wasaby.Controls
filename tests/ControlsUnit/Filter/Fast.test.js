@@ -420,7 +420,7 @@ define(
             let fastFilter = getFastFilter(configWithItems);
             fastFilter._children = { DropdownOpener: { close: ()=> {closed = true;} } };
             fastFilter._beforeMount(configWithItems);
-            fastFilter._onResult(null, 'footerClick');
+            fastFilter._onResult({}, 'footerClick');
             assert.isTrue(closed);
          });
 

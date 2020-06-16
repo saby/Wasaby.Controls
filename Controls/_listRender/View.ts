@@ -16,7 +16,7 @@ import {
     TItemActionVisibilityCallback,
     TEditArrowVisibilityCallback,
     IItemAction,
-    TItemActionShowType
+    TItemActionShowType, IItemActionsItem
 } from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -51,7 +51,7 @@ export interface IViewOptions extends IControlOptions {
     markerVisibility: TVisibility;
     markedKey: number|string;
     showEditArrow: boolean;
-    editArrowVisibilityCallback: TEditArrowVisibilityCallback
+    editArrowVisibilityCallback: TEditArrowVisibilityCallback;
 }
 
 export default class View extends Control<IViewOptions> {
@@ -66,6 +66,9 @@ export default class View extends Control<IViewOptions> {
     private _itemActionsMenuId: string = null;
 
     private _markerController: MarkerController = null;
+
+    // Элемент, на котором было вызвано контекстное меню
+    private _targetItem: HTMLElement = null;
 
     protected async _beforeMount(options: IViewOptions): Promise<void> {
         this._collection = this._createCollection(options.collection, options.items, options);
@@ -112,9 +115,11 @@ export default class View extends Control<IViewOptions> {
             options.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
             (options.itemActions || options.itemActionsProperty) && collectionRecreated ||
             options.itemActionsProperty ||
-            (options.editingConfig && options.editingConfig.item)
+            (options.editingConfig && options.editingConfig.item) ||
+            options.readOnly !== this._options.readOnly ||
+            options.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            this._updateItemActions();
+            this._updateItemActions(options);
         }
     }
 
@@ -131,7 +136,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     protected _onRenderMouseEnter(e: SyntheticEvent<MouseEvent>): void {
-        this._updateItemActions();
+        this._updateItemActions(this._options);
     }
 
     /**
@@ -140,7 +145,7 @@ export default class View extends Control<IViewOptions> {
      * @private
      */
     protected _onRenderTouchStart(e: SyntheticEvent<TouchEvent>): void {
-        this._updateItemActions();
+        this._updateItemActions(this._options);
     }
 
     /**
@@ -189,7 +194,7 @@ export default class View extends Control<IViewOptions> {
      * @param e
      * @private
      */
-    _onCloseSwipe(e: SyntheticEvent<null>): void {
+    protected _onCloseSwipe(e: SyntheticEvent<null>): void {
         this._itemActionsController.deactivateSwipe();
     }
 
@@ -213,7 +218,7 @@ export default class View extends Control<IViewOptions> {
         // TODO fire 'markedKeyChanged' event
 
         if (action && !action._isMenu && !action['parent@']) {
-            this._handleItemActionClick(action, clickEvent, item);
+            this._handleItemActionClick(action, clickEvent, item, false);
         } else {
             this._openItemActionsMenu(action, clickEvent, item, false);
         }
@@ -266,19 +271,39 @@ export default class View extends Control<IViewOptions> {
      * @param action
      * @param clickEvent
      * @param item
+     * @param isMenuClick
      * @private
      */
-    private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
+    private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: IItemActionsItem, isMenuClick: boolean): void {
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         let contents = View._getItemContents(item);
-        // TODO Проверить. В старом коде был поиск controls-ListView__itemV по текущему индексу записи
-        // TODO Корректно ли тут обращаться по CSS классу для поиска контейнера?
-        const itemContainer = (clickEvent.target as HTMLElement).closest('.controls-ListView__itemV');
+        const itemContainer = this._resolveItemContainer(item, isMenuClick);
         this._notify('actionClick', [action, contents, itemContainer]);
         if (action.handler) {
             action.handler(contents);
         }
         this._closeActionsMenu();
+    }
+
+    /**
+     * Получает контейнер для
+     * @param item
+     * @param isMenuClick
+     */
+    private _resolveItemContainer(item, isMenuClick: boolean): HTMLElement {
+        // TODO: self._container может быть не HTMLElement, а jQuery-элементом,
+        //  убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+        const container = this._container.get ? this._container.get(0) : this._container;
+
+        // Т.к., например, breadcrumbs отсутствует в source, но иногда нам нужно получать его target
+        // логичнее использовать именно getIndex(), а не getSourceIndexByItem()
+        // кроме того, в старой модели в itemData.index записывается именно результат getIndex()
+        const itemIndex = this._collection.getIndex(item);
+        const startIndex = this._collection.getStartIndex();
+        return isMenuClick ? this._targetItem : Array.prototype.filter.call(
+            container.querySelector('.controls-ListView__itemV').parentNode.children,
+            (item: HTMLElement) => item.className.includes('controls-ListView__itemV')
+        )[itemIndex - startIndex];
     }
 
     /**
@@ -297,7 +322,7 @@ export default class View extends Control<IViewOptions> {
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
                 const item = this._itemActionsController.getActiveItem();
-                this._handleItemActionClick(action, clickEvent, item);
+                this._handleItemActionClick(action, clickEvent, item, true);
             }
         }
     }
@@ -329,20 +354,34 @@ export default class View extends Control<IViewOptions> {
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
-        isContextMenu: boolean): void {
-        const opener = this._children.renderer;
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
-        if (menuConfig) {
-            clickEvent.nativeEvent.preventDefault();
-            clickEvent.stopImmediatePropagation();
-            const onResult = this._itemActionsMenuResultHandler.bind(this);
-            const onClose = this._itemActionsMenuCloseHandler.bind(this);
-            menuConfig.eventHandlers = {onResult, onClose};
-            this._itemActionsController.setActiveItem(item);
-            Sticky.openPopup(menuConfig).then((popupId) => {
-                this._itemActionsMenuId = popupId;
-            });
+        isContextMenu: boolean): Promise<void> {
+        // Если уже открыто какое-то меню, то ничего не делаем, т.к.
+        // если откроем несколько подряд меню даже на одном и том же Item,
+        // при закрытии любого из них сбросится активный Item и тогда при клике на предыдущем
+        // не закрывшемся меню в консоль полетит ошибка
+        if (this._itemActionsMenuId) {
+            return Promise.resolve();
         }
+        const opener = this._children.renderer;
+        /**
+         * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
+         * у которого открываем меню. Потом передадим его для события actionClick.
+         */
+        this._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
+        if (!menuConfig) {
+            return Promise.resolve();
+        }
+
+        clickEvent.nativeEvent.preventDefault();
+        clickEvent.stopImmediatePropagation();
+        const onResult = this._itemActionsMenuResultHandler.bind(this);
+        const onClose = this._itemActionsMenuCloseHandler.bind(this);
+        menuConfig.eventHandlers = {onResult, onClose};
+        return Sticky.openPopup(menuConfig).then((popupId) => {
+            this._itemActionsMenuId = popupId;
+            this._itemActionsController.setActiveItem(item);
+        });
     }
 
     /**
@@ -375,13 +414,13 @@ export default class View extends Control<IViewOptions> {
      * Инициализирует контрорллере и обновляет в нём данные
      * @private
      */
-    protected _updateItemActions(): void {
+    protected _updateItemActions(options: IViewOptions): void {
         if (!this._itemActionsController) {
             this._itemActionsController = new ItemActionsController();
         }
         const editingConfig = this._collection.getEditingConfig();
         let editArrowAction: IItemAction;
-        if (this._options.showEditArrow) {
+        if (options.showEditArrow) {
             editArrowAction = {
                 id: 'view',
                 icon: 'icon-Forward',
@@ -394,19 +433,19 @@ export default class View extends Control<IViewOptions> {
         }
         this._itemActionsController.update({
             collection: this._collection,
-            itemActions: this._options.itemActions,
-            itemActionsProperty: this._options.itemActionsProperty,
-            visibilityCallback: this._options.itemActionVisibilityCallback,
-            itemActionsPosition: this._options.itemActionsPosition,
-            style: this._options.style,
-            theme: this._options.theme,
-            actionAlignment: this._options.actionAlignment,
-            actionCaptionPosition: this._options.actionCaptionPosition,
-            itemActionsClass: this._options.itemActionsClass,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style: options.style,
+            theme: options.theme,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
-            editArrowVisibilityCallback: this._options.editArrowVisibilityCallback
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback
         });
     }
 
@@ -417,7 +456,7 @@ export default class View extends Control<IViewOptions> {
      *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
      * @param item
      */
-    private static _getItemContents(item: CollectionItem<Model>): Model {
+    private static _getItemContents(item: IItemActionsItem): Model {
         let contents = item?.getContents();
         if (item['[Controls/_display/BreadcrumbsItem]']) {
             contents = contents[(contents as any).length - 1];

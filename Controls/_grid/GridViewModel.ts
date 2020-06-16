@@ -20,7 +20,13 @@ import {
 import cClone = require('Core/core-clone');
 import collection = require('Types/collection');
 import { Model } from 'Types/entity';
-import { IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
+import {
+    IEditingConfig,
+    IItemActionsTemplateConfig,
+    ISwipeConfig,
+    ANIMATION_STATE,
+    CollectionItem
+} from 'Controls/display';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {createClassListCollection} from "../Utils/CssClassList";
@@ -1235,8 +1241,8 @@ var
         setSupportVirtualScroll: function(value) {
             this._model.setSupportVirtualScroll(value);
         },
-        setMarkedKey: function(key, byOptions) {
-            this._model.setMarkedKey(key, byOptions);
+        setMarkedKey: function(key, status, silent) {
+            this._model.setMarkedKey(key, status, silent);
         },
 
         setMarkerVisibility: function(markerVisibility) {
@@ -1560,8 +1566,9 @@ var
                     currentColumn.ladder = self._ladder.ladder[current.index];
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
-                if (current.item.get && current.searchValue) {
-                    currentColumn.column.needSearchHighlight = !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue);
+                if (current.item.get) {
+                    currentColumn.column.needSearchHighlight = current.searchValue ?
+                        !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
                 }
                 if (stickyColumn) {
@@ -1807,7 +1814,12 @@ var
         },
 
         // New Model compatibility
-        getSourceIndexByItem(item: Model): number {
+        getIndex(item: CollectionItem<Model>): number | string {
+            return this._model ? this._model.getIndex(item) : undefined;
+        },
+
+        // New Model compatibility
+        getSourceIndexByItem(item: CollectionItem<Model>): number {
             return this._model ? this._model.getSourceIndexByItem(item) : undefined;
         },
 

@@ -9,9 +9,10 @@ define(
       'Types/chain',
       'Controls/_dropdown/dropdownHistoryUtils',
       'Application/Env',
+      'Controls/dataSource',
       'Core/nativeExtensions'
    ],
-   function(filter, Clone, sourceLib, collection, history, Deferred, chain, historyUtils, Env) {
+   function(filter, Clone, sourceLib, collection, history, Deferred, chain, historyUtils, Env, dataSource) {
       describe('Filter:View', function() {
 
          let defaultItems = [
@@ -349,6 +350,29 @@ define(
                      });
                   });
                });
+            });
+         });
+
+         it('_openPanel with error', (done) => {
+            let view = getView(defaultConfig);
+            view._beforeMount(defaultConfig).then(() => {
+                let sandBox = sinon.createSandbox();
+                sandBox.stub(filter.View._private, 'loadUnloadedFrequentItems').rejects(42);
+                sandBox.stub(filter.View._private, 'sourcesIsLoaded').returns(true);
+                let stub = sandBox.stub(dataSource.error, 'process');
+
+                view._configs = {};
+                view._options.panelTemplateName = 'panelTemplateName.wml';
+
+                view._openPanel().then(() => {
+                    assert.deepEqual(stub.getCall(0).args[0], { error: 42 });
+                    sandBox.restore();
+                    view._open = () => {};
+                    view._openPanel().then(() => {
+                       assert.isTrue(Object.keys(view._configs).length > 0);
+                       done();
+                    });
+                });
             });
          });
 

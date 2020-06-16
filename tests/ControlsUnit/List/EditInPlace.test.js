@@ -143,6 +143,7 @@ define([
             forceUpdate: () => undefined,
             source: source,
             updateItemActions: () => undefined,
+            multiSelectVisibility: false,
             notify: () => undefined,
             forceUpdate: () => undefined
          });
@@ -2146,5 +2147,43 @@ define([
          });
       });
 
+      describe('.processBeforeBeginEditResult()', () => {
+         it('should return result cancelled', async () => {
+            const eventResult = Promise.resolve('Cancel');
+            const result = await EditInPlace._private.processBeforeBeginEditResult(eip, {}, eventResult, false);
+            assert.deepEqual({cancelled: true}, result);
+         });
+
+         it('should return result cancelled when event result throw catch', async () => {
+            const eventResult = Promise.reject(new Error('!!!!'));
+            const result = await EditInPlace._private.processBeforeBeginEditResult(eip, {}, eventResult, false);
+            assert.deepEqual({cancelled: true}, result);
+         });
+      });
+
+      describe('.registerFormOperation()', () => {
+         const formController = {};
+         it('should set form controller', async () => {
+            eip.registerFormOperation(formController);
+
+            assert.equal(eip._formController, formController);
+         });
+
+         it('should notify registerFormOperation', async () => {
+            const spyNotify = sinon.spy(eip, '_notify');
+            eip.registerFormOperation(formController);
+
+            assert.equal(spyNotify.firstCall.args[0], 'registerFormOperation');
+         });
+
+         it('should do nothing if formController was undefined', async () => {
+            eip._formController = formController;
+            eip.registerFormOperation();
+
+            assert.equal(eip._formController, formController);
+         });
+      });
+
    });
+
 });

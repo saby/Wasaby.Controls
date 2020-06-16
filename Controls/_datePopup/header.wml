@@ -1,5 +1,6 @@
 <div class="controls-PeriodDialog__header controls-PeriodDialog__header_theme-{{theme}}">
    <!--<div class="controls-PeriodDialog__stateButton-wrapper">-->
+      <Controls._datePopup.fakeThemeLoader theme="{{theme}}"/>
       <Controls.toggle:Button
          if="{{_monthStateEnabled}}"
          attr:class="controls-PeriodDialog__stateButton controls-PeriodDialog__stateButton_theme-{{theme}}"
@@ -56,6 +57,7 @@
                mask="{{_mask}}"
                autocompleteMode="start"
                value="{{_rangeModel.endValue}}"
+               _yearSeparatesCenturies="{{_rangeModel.startValue}}"
                dateConstructor="{{_options.dateConstructor}}"
                valueValidators="{{_endValueValidators}}"
                validateByFocusOut="{{false}}"

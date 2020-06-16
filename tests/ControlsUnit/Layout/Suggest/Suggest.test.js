@@ -974,5 +974,24 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestMod._InputController._private.closePopup(suggestComponent);
          assert.isTrue(isClosePopup);
       });
+
+      it('Suggest::_private.openPopup', function() {
+         let
+            isOpenPopup = false,
+            suggestComponent = new suggestMod._InputController({
+               suggestTemplate: {}
+            });
+         suggestComponent._options.suggestTemplate = {};
+
+         let templateOptions = suggestMod._InputController._private.getTemplateOptions(suggestComponent, suggestComponent);
+
+         suggestComponent._notify = (items, data) => {
+            assert.deepEqual(data[0], templateOptions);
+            return true;
+         };
+
+         suggestMod._InputController._private.openSelector(suggestComponent, templateOptions);
+         assert.isFalse(isOpenPopup);
+      });
    });
 });

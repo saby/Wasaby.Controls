@@ -46,9 +46,13 @@ export class Controller {
          return this._markedKey;
       }
 
-      if (key === undefined && this._markedKey !== undefined) {
-         this._markedKey = undefined;
+      if (key === undefined && this._markerVisibility !== Visibility.Visible) {
+         if (this._markedKey === undefined) {
+            return undefined;
+         }
+
          this._model.setMarkedKey(this._markedKey, false);
+         this._markedKey = undefined;
          return undefined;
       }
 
@@ -56,20 +60,21 @@ export class Controller {
       if (this._markedKey === key && item) {
          // если список перестроится, то в модели сбросится маркер, а в контроллере сохранится
          if (!item.isMarked()) {
-            this._model.setMarkedKey(this._markedKey, false);
+            this._model.setMarkedKey(this._markedKey, false, true);
             this._model.setMarkedKey(key, true);
          }
          return this._markedKey;
       }
 
-      this._model.setMarkedKey(this._markedKey, false);
+      this._model.setMarkedKey(this._markedKey, false, true);
       if (item) {
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
       } else {
          switch (this._markerVisibility) {
             case Visibility.OnActivated:
-               this._markedKey = undefined;
+               this._markedKey = null;
+               this._model.nextVersion();
                break;
             case Visibility.Visible:
                this._markedKey = this._setMarkerOnFirstItem();

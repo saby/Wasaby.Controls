@@ -351,8 +351,14 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
-    setMarkedKey: function(key, status) {
-        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно его передать false
+    /**
+     * Проставить маркер
+     * @param key ключ элемента, в котором задается состояние marked
+     * @param status значение marked
+     * @param silent уведомлять ли о событии. Если false, то не будет перерисована модель и не стрельнет событие onMarkedKeyChanged
+     */
+    setMarkedKey(key: number|string, status: boolean, silent: boolean = false): void {
+        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
         if (this._markedKey === key && status !== false) {
             return;
         }
@@ -368,13 +374,15 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         if (status === false) {
-            this._markedKey = undefined;
+            this._markedKey = null;
         } else {
             this._markedKey = key;
         }
 
-        this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
-        this._notify('onMarkedKeyChanged', this._markedKey);
+        if (!silent) {
+            this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
+            this._notify('onMarkedKeyChanged', this._markedKey);
+        }
     },
 
     setMarkerVisibility: function(markerVisibility) {
@@ -456,8 +464,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
      *  мы не можем снять эти состояния при клике внутри ItemActions
      * @param itemData
      */
-    setActiveItem(item: CollectionItem<Model>): void {
-        if (item === this._activeItem) {
+    setActiveItem(itemData: CollectionItem<Model>): void {
+        if (itemData === this._activeItem) {
             return;
         }
         const oldActiveItem = this.getActiveItem();
@@ -466,11 +474,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         // TODO костыль. В TileView вместо item передаётся объект, поэтому проверяем на function
         //  надо передавать настроенный item
-        if (item && typeof item.setActive === 'function') {
-            item.setActive(true);
+        if (itemData && typeof itemData.setActive === 'function') {
+            itemData.setActive(true);
         }
-        this._activeItem = item;
-        this._nextModelVersion(true, 'activeItemChanged');
+        this._activeItem = itemData;
+        this._nextModelVersion(false, 'activeItemChanged');
     },
 
     setDraggedItems(draggedItem: IFlatItemData, dragEntity): void {

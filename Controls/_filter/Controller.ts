@@ -206,7 +206,8 @@ const _private = {
                              historyData = historySource.getDataObject(item);
 
                              if (historyData) {
-                                 minimizedItemFromOption = _private.minimizeFilterItems(items);
+                                 const itemsToSave = items.filter((item) => !item.doNotSaveToHistory);
+                                 minimizedItemFromOption = _private.minimizeFilterItems(itemsToSave);
                                  minimizedItemFromHistory = _private.minimizeFilterItems(historyData.items || historyData);
                                  if (isEqual(minimizedItemFromOption, minimizedItemFromHistory)) {
                                      result = {
@@ -764,15 +765,17 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             _private.notifyFilterChanged(this);
         },
 
-        _observeStore(): void {
+        _observeStore(options): void {
             const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
                 _private.setFilterItems(this, filterSource, [], []);
                 _private.itemsReady(this, this._filter);
+                // запись в историю
+                this._itemsChanged(null, filterSource);
             });
             const filterSourceCallbackId = Store.onPropertyChanged('filter', (filter) => {
                 _private.applyItemsToFilter(
                     this,
-                    Prefetch.prepareFilter(filter, this._options.prefetchParams),
+                    Prefetch.prepareFilter(filter, options.prefetchParams),
                     this._filterButtonItems,
                     this._fastFilterItems
                 );
@@ -788,7 +791,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             }
 
             if (options.useStore) {
-                this._observeStore();
+                this._observeStore(options);
             }
 
             if (receivedState) {
@@ -806,10 +809,22 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                 }
             } else if (options.useStore) {
                 const state = Store.getState();
-                _private.resolveItems(this, state.historyId, state.filterSource, [], options.historyItems).then((history) => {
-                    _private.itemsReady(this, state.filter, history);
-                    return history;
-                });
+                // fixme: уберется по https://online.sbis.ru/opendoc.html?guid=8dd6dd08-820f-4298-b743-aff4ff4663e6
+                const loadedSources = state && state.loadedSources && state.loadedSources[0];
+                if (loadedSources) {
+                    return _private.resolveItems(this, loadedSources.historyId, loadedSources.filterButtonSource, loadedSources.fastFilterSource, loadedSources.historyItems).then((history) => {
+                        _private.itemsReady(this, loadedSources.filter, history);
+                        if (loadedSources.historyItems && loadedSources.historyItems.length && loadedSources.historyId && loadedSources.prefetchParams) {
+                            _private.processHistoryOnItemsChanged(this, loadedSources.historyItems, loadedSources);
+                        }
+                        return history;
+                    });
+                } else {
+                    _private.resolveItems(this, state.historyId, state.filterSource, [], options.historyItems).then((history) => {
+                        _private.itemsReady(this, state.filter, history);
+                        return history;
+                    });
+                }
             } else {
                 return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback((history) => {
                     _private.itemsReady(this, filter, history);

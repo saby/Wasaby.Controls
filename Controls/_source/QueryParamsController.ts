@@ -4,7 +4,7 @@ import {IPositionQueryParamsControllerOptions} from 'Controls/_source/QueryParam
 import {RecordSet, List} from 'Types/collection';
 import {Collection} from 'Controls/display';
 import {Record} from 'Types/entity';
-import {INavigationSourceConfig} from 'Controls/interface';
+import {INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
 import {Direction, IAdditionalQueryParams} from 'Controls/_source/interface/IAdditionalQueryParams';
 
 type Key = string|number|null;
@@ -43,7 +43,16 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     hasMoreData(direction: 'up' | 'down', root?: Key): boolean | undefined {
-        return this.getController(root).hasMoreData(direction, root);
+        const controllerForRoot = this._getControllerByRoot(root);
+        let hasMoreDataResult;
+
+        if (controllerForRoot) {
+            hasMoreDataResult = controllerForRoot.queryParamsController.hasMoreData(direction, root);
+        } else {
+            hasMoreDataResult = this.getController().hasMoreData(direction, root);
+        }
+
+        return hasMoreDataResult;
     }
 
     prepareQueryParams(direction: 'up' | 'down', callback?, config?, multiNavigation?: boolean): IAdditionalQueryParams {
@@ -76,7 +85,12 @@ export default class QueryParamsController implements IQueryParamsController {
         return this.getController(root).setState(model);
     }
 
-    updateQueryProperties(list?: RecordSet, direction?: Direction, root?: Key): void {
+    updateQueryProperties(
+        list?: RecordSet,
+        direction?: Direction,
+        config?: IBaseSourceConfig,
+        root?: Key
+    ): void {
         const more = list.getMetaData().more;
         let recordSetWithNavigation;
 
@@ -86,10 +100,10 @@ export default class QueryParamsController implements IQueryParamsController {
                 recordSetWithNavigation.setMetaData({
                     more: nav.get('nav_result')
                 });
-                this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction);
+                this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction, config);
             });
         } else {
-            this.getController(root).updateQueryProperties(list, direction);
+            this.getController(root).updateQueryProperties(list, direction, config);
         }
     }
 
@@ -101,7 +115,7 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     getController(root?: Key): IQueryParamsController {
-        let controllerItem = this._controllers.at(this._controllers.getIndexByValue('id', root));
+        let controllerItem = this._getControllerByRoot(root);
 
         if (!controllerItem && !root) {
             controllerItem = this._controllers.at(0);
@@ -116,6 +130,10 @@ export default class QueryParamsController implements IQueryParamsController {
         }
 
         return controllerItem.queryParamsController;
+    }
+
+    private _getControllerByRoot(root?: Key): IControllerItem {
+        return this._controllers.at(this._controllers.getIndexByValue('id', root));
     }
 
 }
