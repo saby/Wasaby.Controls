@@ -440,4 +440,36 @@ describe('Controls/_listRender/Render', () => {
         assert.isTrue(render._canHaveMultiselect({ multiselectVisibility: 'onhover' }));
         assert.isTrue(render._canHaveMultiselect({ multiselectVisibility: 'visible' }));
     });
+
+    describe('Calling animation end handlers', () => {
+        let render: Render;
+        let lastCalledEvent: string;
+        beforeEach(() => {
+            lastCalledEvent = null;
+            render = new Render(defaultCfg);
+            render._notify = (eventName) => {
+                lastCalledEvent = eventName;
+            };
+        });
+
+        it('should not fire closeSwipe event on any event', () => {
+            render._onActionsSwipeAnimationEnd({
+                stopPropagation(): void {},
+                nativeEvent: {
+                    animationName: 'test'
+                }
+            });
+            assert.notExists(lastCalledEvent);
+        });
+
+        it('should fire closeSwipe event on \'itemActionsSwipeClose\' event', () => {
+            render._onActionsSwipeAnimationEnd({
+                stopPropagation(): void {},
+                nativeEvent: {
+                    animationName: 'itemActionsSwipeClose'
+                }
+            });
+            assert.equal(lastCalledEvent, 'closeSwipe');
+        });
+    });
 });
