@@ -1249,8 +1249,7 @@ const _private = {
             }
             if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
                 if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
-                    _private.closePopup(self);
-                    self._onItemActionsMenuClose();
+                    _private.closeActionsMenu(self);
                 }
             }
 
@@ -1368,26 +1367,29 @@ const _private = {
         action: IItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
-        isContextMenu: boolean): void {
+        isContextMenu: boolean): Promise<void> {
+        _private.closePopup(self);
+        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        if (!menuConfig) {
+            return Promise.resolve();
+        }
         /**
          * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
-
-        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
-        if (menuConfig) {
-            clickEvent.nativeEvent.preventDefault();
-            clickEvent.stopImmediatePropagation();
-            menuConfig.eventHandlers = {
-                onResult: self._onItemActionsMenuResult,
-                onClose: self._onItemActionsMenuClose
-            };
+        clickEvent.nativeEvent.preventDefault();
+        clickEvent.stopImmediatePropagation();
+        menuConfig.eventHandlers = {
+            onResult: self._onItemActionsMenuResult,
+            onClose: self._onItemActionsMenuClose
+        };
+        return Sticky.openPopup(menuConfig).then((popupId) => {
+            self._itemActionsMenuId = popupId;
+            // Нельзя устанавливать activeItem раньше, иначе при автокликах
+            // робот будет открывать меню раньше, чем оно закрылось
             self._itemActionsController.setActiveItem(item);
-            Sticky.openPopup(menuConfig).then((popupId) => {
-                self._itemActionsMenuId = popupId;
-            });
-        }
+        });
     },
 
     /**
@@ -1395,9 +1397,11 @@ const _private = {
      * @private
      */
     closeActionsMenu(self: any): void {
-        self._itemActionsController.setActiveItem(null);
-        self._itemActionsController.deactivateSwipe();
-        _private.closePopup(self);
+        if (self._itemActionsMenuId) {
+            _private.closePopup(self);
+            self._itemActionsController.setActiveItem(null);
+            self._itemActionsController.deactivateSwipe();
+        }
     },
 
     /**
@@ -1418,7 +1422,9 @@ const _private = {
      * @param self
      */
     closePopup(self): void {
-        Sticky.closePopup(self._itemActionsMenuId);
+        if (self._itemActionsMenuId) {
+            Sticky.closePopup(self._itemActionsMenuId);
+        }
         self._itemActionsMenuId = null;
     },
 
@@ -2529,10 +2535,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
-            if (this._itemActionsMenuId) {
-                _private.closePopup(self);
-                this._onItemActionsMenuClose();
-            }
+            _private.closeActionsMenu(this);
 
             // return result here is for unit tests
             return _private.reload(self, newOptions).addCallback(() => {
@@ -3071,10 +3074,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * Обработчик закрытия выпадающего/контекстного меню
      * @private
      */
-    _onItemActionsMenuClose(clickEvent: SyntheticEvent<MouseEvent>): void {
-        this._itemActionsController.setActiveItem(null);
-        this._itemActionsController.deactivateSwipe();
-        this._itemActionsMenuId = null;
+    _onItemActionsMenuClose(): void {
+        _private.closeActionsMenu(this);
     },
 
     _onItemsChanged(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
