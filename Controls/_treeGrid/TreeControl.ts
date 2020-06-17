@@ -178,16 +178,9 @@ var _private = {
     },
     prepareHasMoreStorage(sourceControllers: Record<string, SourceController>): Record<string, boolean> {
         const hasMore = {};
-        let hasMoreForNode;
 
         sourceControllers.forEach((controller, nodeKey) => {
-            hasMoreForNode = controller.hasMoreData('down');
-
-            if (hasMoreForNode === undefined) {
-                hasMoreForNode = controller.hasMoreData('down');
-            }
-
-            hasMore[nodeKey] = hasMoreForNode;
+            hasMore[nodeKey] = controller.hasMoreData('down', nodeKey);
         });
 
         return hasMore;
@@ -215,7 +208,7 @@ var _private = {
 
         filter[self._options.parentProperty] = nodeKey;
         self._children.baseControl.showIndicator();
-        nodeSourceControllers.get(nodeKey).load(filter, self._options.sorting, 'down').addCallbacks((list) => {
+        nodeSourceControllers.get(nodeKey).load(filter, self._options.sorting, 'down', null, nodeKey).addCallbacks((list) => {
             listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
             baseSourceController.calculateState(list, nodeKey);
             if (self._options.uniqueKeys) {
