@@ -4664,6 +4664,72 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
+      it('onListChange call selectionController methods', () => {
+         let clearSelectionCalled = false,
+             handleResetCalled = false,
+             handleAddItemsCalled = false;
+
+         const self = {
+            _options: {
+               root: 5
+            },
+            _prevRootId: 5,
+            _selectionController: {
+               isAllSelected: () => true,
+               clearSelection: () => { clearSelectionCalled = true },
+               handleReset: (items, prevRoot, rootChanged) => {
+                  handleResetCalled = true;
+                  assert.equal(items, 'items');
+                  assert.equal(prevRoot, 5);
+                  assert.isFalse(rootChanged);
+               },
+               handleAddItems: (items) => {
+                  handleAddItemsCalled = true;
+                  assert.equal(items, 'items');
+               }
+            },
+            _listViewModel: {
+               getCount: () => 5
+            },
+            handleSelectionControllerResult: () => {},
+            _updateInitializedItemActions: () => {}
+         };
+
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         self._listViewModel.getCount = () => 0;
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         assert.isTrue(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         clearSelectionCalled = false;
+         self._selectionController.isAllSelected = () => false;
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         clearSelectionCalled = false;
+         lists.BaseControl._private.onListChange(self, null, '');
+         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'rs', 'items');
+         assert.isFalse(clearSelectionCalled);
+         assert.isTrue(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'a', 'items');
+         assert.isFalse(clearSelectionCalled);
+         assert.isTrue(handleResetCalled);
+         assert.isTrue(handleAddItemsCalled);
+      });
+
       it('should fire "drawItems" with new collection if source item has changed', async function() {
          var
             cfg = {
@@ -4903,35 +4969,6 @@ define([
 
          instance._selectionController.isAllSelected = function() { return true; };
          cfgClone = { ...cfg, root: 'newvalue1' };
-         instance._beforeUpdate(cfgClone);
-         assert.isTrue(clearSelectionCalled);
-      });
-
-      it('_beforeUpdate with empty model', async function() {
-         let cfg = {
-            viewName: 'Controls/List/ListView',
-            sorting: [],
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            keyProperty: 'id'
-         };
-         let instance = new lists.BaseControl(cfg);
-
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-
-         let clearSelectionCalled = false;
-         instance._selectionController = {
-            update() {},
-            clearSelection() { clearSelectionCalled = true; },
-            handleReset() {},
-            isAllSelected() { return true; }
-         };
-
-         let cfgClone = { ...cfg};
          instance._beforeUpdate(cfgClone);
          assert.isTrue(clearSelectionCalled);
       });
