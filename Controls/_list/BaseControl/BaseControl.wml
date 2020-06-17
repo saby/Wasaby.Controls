@@ -100,7 +100,6 @@
         <div name="topLoadTrigger"></div>
         <Controls.validate:Controller name="formController">
             <ws:partial
-                    attr:class="{{_itemActionsMenuId !== null ? 'controls-itemActionsV_invisible'}}"
                     name="{{name}}"
                     template="{{ _options.content }}"
                     scope="{{_options}}"
@@ -139,7 +138,7 @@
                 >
                 <ws:itemActionsTemplate>
                     <ws:partial
-                            template="{{ _itemActionsTemplate }}"
+                            template="{{_itemActionsTemplate}}"
                             scope="{{ _listViewModel.getActionsTemplateConfig() }}" />
                 </ws:itemActionsTemplate>
                 <ws:swipeTemplate>
@@ -204,7 +203,8 @@
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
 
-            <ws:partial template="fullView" name="listView" attr:class="{{(_showActions || _options.useNewModel) ? 'controls-BaseControl_showActions'}}"/>
+            <ws:partial template="fullView" name="listView"
+                        attr:class="{{_isVisibleItemActions(_showActions, _itemActionsMenuId) ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
