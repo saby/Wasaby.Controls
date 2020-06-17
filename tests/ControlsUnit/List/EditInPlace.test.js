@@ -2092,12 +2092,12 @@ define([
                assert.equal(editingItem, eip._editingItemData.item);
                assert.equal(eip._options.multiSelectVisibility, 'visible');
             };
-
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
             eip.updateEditingData({multiSelectVisibility: 'visible', listViewModel: listViewModel});
             assert.isTrue(isItemDataRegenerated);
          });
 
-         it('should called ', async () => {
+         it('should suscribe onCollectionChange once', async () => {
             let
                isItemDataRegenerated = false;
 
