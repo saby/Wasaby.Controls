@@ -190,6 +190,7 @@ describe('Controls/_listRender/View', () => {
                 }
             };
             const cfg = {
+                ...defaultCfg,
                 itemActions: [
                     {
                         id: 2,
