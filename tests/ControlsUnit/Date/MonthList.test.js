@@ -19,7 +19,7 @@ define([
 ) {
    'use strict';
    let config = {
-      startPosition: new Date(2018, 0, 1)
+      position: new Date(2018, 0, 1)
    };
 
    ItemTypes = ItemTypes.default;
@@ -29,9 +29,20 @@ define([
          it('default options', function() {
             let ml = calendarTestUtils.createComponent(calendar.MonthList, config);
             assert.strictEqual(ml._itemTemplate, YearTemplate);
-            assert.strictEqual(ml._positionToScroll, config.startPosition);
-            assert.strictEqual(ml._displayedPosition, config.startPosition);
+            assert.strictEqual(ml._positionToScroll, config.position);
+            assert.strictEqual(ml._displayedPosition, config.position);
             assert.strictEqual(ml._startPositionId, '2018-01-01');
+            assert.strictEqual(+ml._lastNotifiedPositionChangedDate, +config.position);
+         });
+
+         it('viewMode = "year", position = 2020.03.01', function() {
+            const
+                position = new Date(2020, 2, 1),
+                ml = calendarTestUtils.createComponent(calendar.MonthList, {viewMode: 'year', position: position});
+            assert.strictEqual(ml._positionToScroll, position);
+            assert.strictEqual(ml._displayedPosition, position);
+            assert.strictEqual(ml._startPositionId, '2020-01-01');
+            assert.strictEqual(+ml._lastNotifiedPositionChangedDate, +(new Date(2020, 0, 1)));
          });
 
          it('should render by month if viewMode is equals "month"', function() {
@@ -278,6 +289,7 @@ define([
             ml._scrollToPosition(position);
             assert.isEmpty(ml._displayedDates);
             assert.strictEqual(ml._startPositionId, '2018-01-01');
+            assert.strictEqual(+ml._lastNotifiedPositionChangedDate, +position);
             sinon.assert.called(ml._children.months.reload);
             sandbox.restore();
          });
@@ -315,6 +327,7 @@ define([
             assert.isEmpty(ml._displayedDates);
             assert.strictEqual(ml._startPositionId, '2018-01-01');
             assert.strictEqual(ml._positionToScroll, position);
+            assert.strictEqual(+ml._lastNotifiedPositionChangedDate, +(new Date(2018, 0, 1)));
             sinon.assert.notCalled(ml._children.months.reload);
             sandbox.restore();
          });

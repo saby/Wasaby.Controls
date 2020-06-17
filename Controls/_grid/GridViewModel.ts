@@ -20,7 +20,13 @@ import {
 import cClone = require('Core/core-clone');
 import collection = require('Types/collection');
 import { Model } from 'Types/entity';
-import { IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
+import {
+    IEditingConfig,
+    IItemActionsTemplateConfig,
+    ISwipeConfig,
+    ANIMATION_STATE,
+    CollectionItem
+} from 'Controls/display';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
@@ -70,6 +76,19 @@ interface IGetColspanStylesForParams {
     columnIndex: number;
     columnsLength: number;
     maxEndRow?: number;
+}
+
+interface IHeaderModel {
+    isStickyHeader: Function;
+    getCurrentHeaderColumn: Function;
+    getMultiSelectVisibility: Function;
+    isMultiHeader: Function;
+    resetHeaderRows: Function;
+    isEndHeaderRow: Function;
+    goToNextHeaderRow: Function;
+    getCurrentHeaderRow: Function;
+    getVersion: Function;
+    nextVersion: Function;
 }
 
 var
@@ -585,6 +604,9 @@ var
         _isMultiHeader: null,
         _resolvers: null,
 
+        _headerModel: null,
+        _headerVersion: 0,
+
         constructor: function(cfg) {
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
@@ -599,6 +621,9 @@ var
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
                 if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
                     this._ladder = _private.prepareLadder(this);
+                }
+                if (changesType !== 'markedKeyChanged' && action !== 'ch') {
+                    this._nextHeaderVersion();
                 }
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
@@ -714,6 +739,33 @@ var
                 this._shouldAddActionsCell(),
                 this.shouldAddStickyLadderCell()
             );
+            if (columns && columns.length) {
+                this._headerModel = {
+                    isStickyHeader: this.isStickyHeader.bind(this),
+                    getCurrentHeaderColumn: this.getCurrentHeaderColumn.bind(this),
+                    getMultiSelectVisibility: this.getMultiSelectVisibility.bind(this),
+                    isMultiHeader: () => this._isMultiHeader,
+                    resetHeaderRows: this.resetHeaderRows.bind(this),
+                    isEndHeaderRow: this.isEndHeaderRow.bind(this),
+                    goToNextHeaderRow: this.goToNextHeaderRow.bind(this),
+                    getCurrentHeaderRow: this.getCurrentHeaderRow.bind(this),
+                    getVersion: () => this._headerVersion,
+                    nextVersion: () => ++this._headerVersion
+                };
+            } else {
+                this._headerModel = null;
+            }
+        },
+
+        _nextHeaderVersion(): void {
+            const headerModel = this.getHeaderModel();
+            if (headerModel) {
+                headerModel.nextVersion();
+            }
+        },
+
+        getHeaderModel(): IHeaderModel {
+            return this._headerModel;
         },
 
         setHeader: function(columns) {
@@ -1236,8 +1288,8 @@ var
         setSupportVirtualScroll: function(value) {
             this._model.setSupportVirtualScroll(value);
         },
-        setMarkedKey: function(key, byOptions) {
-            this._model.setMarkedKey(key, byOptions);
+        setMarkedKey: function(key, status, silent) {
+            this._model.setMarkedKey(key, status, silent);
         },
 
         setMarkerVisibility: function(markerVisibility) {
@@ -1806,7 +1858,12 @@ var
         },
 
         // New Model compatibility
-        getSourceIndexByItem(item: Model): number {
+        getIndex(item: CollectionItem<Model>): number | string {
+            return this._model ? this._model.getIndex(item) : undefined;
+        },
+
+        // New Model compatibility
+        getSourceIndexByItem(item: CollectionItem<Model>): number {
             return this._model ? this._model.getSourceIndexByItem(item) : undefined;
         },
 

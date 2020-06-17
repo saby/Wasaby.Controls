@@ -4,7 +4,7 @@
 
     <!-- Заголовок таблицы -->
     <ws:if data="{{ _listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList() }}">
-        <ws:partial template="{{ _baseHeaderTemplate }}" attr:name="header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
+        <ws:partial template="{{ _baseHeaderTemplate }}" attr:name="header" headerModel="{{_listModel.getHeaderModel()}}" defaultHeaderContent="{{_headerContentTemplate}}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
     </ws:if>
 
     <!-- Результаты сверху -->

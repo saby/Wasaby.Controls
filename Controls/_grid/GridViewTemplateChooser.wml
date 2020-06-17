@@ -66,7 +66,7 @@
                     _horizontalScrollPosition="{{ _horizontalScrollPosition }}"
                     _contentSizeForHScroll="{{ _contentSizeForHScroll }}"
                     _horizontalScrollWidth="{{ _horizontalScrollWidth }}"
-                    __isColumnScrollVisible="{{ __isColumnScrollVisible() }}"
+                    __isColumnScrollVisible="{{ _isColumnScrollVisible() }}"
 
                     attr:class="{{ _viewGrabbingClasses }}"
                     on:mousedown="_startDragScrolling('mouse')"

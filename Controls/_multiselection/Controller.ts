@@ -78,6 +78,10 @@ export class Controller {
       return this._getResult(oldSelection, this._selection);
    }
 
+   isAllSelected(): boolean {
+      return this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount());
+   }
+
    toggleItem(key: TKey): ISelectionControllerResult {
       const status = this._getItemStatus(key);
       let newSelection;
@@ -108,7 +112,8 @@ export class Controller {
       this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
-      return result;   }
+      return result;
+   }
 
    unselectAll(): ISelectionControllerResult {
       const newSelection = this._strategy.unselectAll(this._selection);

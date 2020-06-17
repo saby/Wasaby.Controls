@@ -56,11 +56,14 @@ const _private = {
         } else {
             if (eventResult && eventResult.finally) {
                 self._showIndicator();
-                eventResult.finally((defResult) => {
-                    self._hideIndicator();
+                result = eventResult.then((defResult) => {
+                    if (defResult === constEditing.CANCEL) {
+                        return {cancelled: true};
+                    }
                     return defResult;
+                }).catch(() => ({cancelled: true})).finally(() => {
+                    self._hideIndicator();
                 });
-                result = eventResult;
             } else if (
                 (eventResult && eventResult.item instanceof entity.Record) ||
                 (options && options.item instanceof entity.Record)
@@ -68,9 +71,8 @@ const _private = {
                 result = Promise.resolve(eventResult || options);
             } else if (isAdd) {
                 self._showIndicator();
-                result = _private.createModel(self, eventResult || options).finally((createModelResult) => {
+                result = _private.createModel(self, eventResult || options).finally(() => {
                     self._hideIndicator();
-                    return createModelResult;
                 });
             }
         }
@@ -108,12 +110,12 @@ const _private = {
                     self._endEditDeferred = null;
                     return Promise.resolve({cancelled: true});
                 }
-
-                return Promise.resolve(resultOfDeferred).finally((res) => {
+                const both = (res) => {
                     self._endEditDeferred = null;
                     _private.afterEndEdit(self, commit);
                     return res;
-                });
+                };
+                return Promise.resolve(resultOfDeferred).then(both).catch(both);
             });
         } else {
             if (eventResult === constEditing.CANCEL) {
@@ -436,6 +438,7 @@ export interface IEditingOptions {
     forceUpdate?: Function;
     listView?: any;
     updateItemActions: Function;
+    isDestroyed: Function;
     theme: String;
 }
 
@@ -510,14 +513,19 @@ export default class EditInPlace {
         this._sequentialEditing = _private.getSequentialEditing(editingConfig);
     }
 
-    registerFormOperation(listViewModel: any, formContontroller: any, isDestroyed: Function): void {
-        this._formController = formContontroller;
+    registerFormOperation(formController: any): void {
+        if (formController && this._formController !== formController) {
+            this._formController = formController;
+            this._notify('registerFormOperation', [{
+                save: this._formOperationHandler.bind(this, true),
+                cancel: this._formOperationHandler.bind(this, false),
+                isDestroyed: () => this._options.isDestroyed()
+            }], {bubbling: true});
+        }
+    }
+
+    updateViewModel(listViewModel: any): void {
         this._options.listViewModel = listViewModel;
-        this._notify('registerFormOperation', [{
-            save: this._formOperationHandler.bind(this, true),
-            cancel: this._formOperationHandler.bind(this, false),
-            isDestroyed: () => isDestroyed()
-        }], {bubbling: true});
     }
 
     _formOperationHandler(shouldSave: boolean): Promise<any> {
@@ -535,7 +543,7 @@ export default class EditInPlace {
                 return _private.beginEdit(self, options);
             }).then((newOptions) => {
                 return _private.beginEditCallback(self, newOptions);
-            });;
+            });
         }
 
         if (!this._editingItem || !this._editingItem.isEqual(options.item)) {
@@ -595,9 +603,10 @@ export default class EditInPlace {
 
     cancelEdit(): Promise<any> {
         const self = this;
-        return this._isCommitInProcess ? this._commitPromise.finally(() => {
+        const both = () => {
             return _private.endItemEdit(self, false);
-        }) : _private.endItemEdit(this, false);
+        };
+        return this._isCommitInProcess ? this._commitPromise.then(both).catch(both) : _private.endItemEdit(this, false);
     }
 
     editNextRow(): Promise<any> {
@@ -661,12 +670,9 @@ export default class EditInPlace {
         return result;
     }
 
-    updateEditingData(options: IEditingOptions): void {
+    updateEditingData(options: IEditingOptions, formController: any): void {
+        this._updateOptions(options);
         this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
-        this._options.source = options.source;
-        this._options.editingConfig = options.editingConfig;
-        this._options.useNewModel = options.useNewModel;
-        this._options.multiSelectVisibility = options.multiSelectVisibility;
         if (this._editingItemData) {
             this._setEditingItemData(this._editingItemData.item);
         }
@@ -675,6 +681,8 @@ export default class EditInPlace {
             // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
             this._pendingInputRenderState = PendingInputRenderState.Rendering;
         }
+
+        this.registerFormOperation(formController);
     }
 
     prepareHtmlInput(): void {
@@ -909,6 +917,14 @@ export default class EditInPlace {
 
     getEditingItemData(): any {
         return this._editingItemData;
+    }
+
+    _updateOptions(options: IEditingOptions): void {
+        Object.keys(this._options).forEach((name) => {
+            if (options.hasOwnProperty(name)) {
+                this._options[name] = options[name];
+            }
+        });
     }
 
     static _theme: string[];

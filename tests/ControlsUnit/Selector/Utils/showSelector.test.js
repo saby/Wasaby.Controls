@@ -75,6 +75,21 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
          assert.equal(lastPopupOptions.opener, baseController);
       });
 
+      it('showSelector with handlers on templateOptions', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = {
+            templateOptions: {
+               handlers: {
+                  onTestAction: () => {}
+               }
+            }
+         };
+         showSelector.default(baseController, {});
+
+         assert.isFunction(lastPopupOptions.templateOptions.handlers.onSelectComplete);
+         assert.isFunction(lastPopupOptions.templateOptions.handlers.onTestAction);
+      });
+
       it('showSelector with multiSelect', function() {
          const baseController = getBaseController();
          let selectCompleted = false;

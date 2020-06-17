@@ -65,7 +65,6 @@
                                 closeOnOutsideClick="{{true}}"
                                 on:showIndicator="_changeIndicatorOverlay()"
                                 on:result="_subMenuResult()"
-                                on:close="_closeSubMenu()"
                                 template="Controls/menu:Popup"
                                 className="controls-DropdownList__subMenu controls-Menu__subMenu controls-Menu__subMenu_margin_theme-{{_options.theme}}"/>
       </ws:if>
