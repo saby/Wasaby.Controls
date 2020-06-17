@@ -109,7 +109,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
 
-        const normalizedPosition = this._normalizeStartPosition(position, options.viewMode);
+        const normalizedPosition = this._normalizeDate(position, options.viewMode);
 
         this._enrichItemsDebounced = debounce(this._enrichItems, 150);
 
@@ -119,7 +119,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._startPositionId = monthListUtils.dateToId(normalizedPosition);
         this._positionToScroll = position;
         this._displayedPosition = position;
-        this._lastNotifiedPositionChangedDate = position;
+        this._lastNotifiedPositionChangedDate = normalizedPosition;
 
         if (this._extData) {
             if (receivedState) {
@@ -248,8 +248,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return;
         }
 
+        const normalizedPosition: Date = this._normalizeDate(position)
+
         this._positionToScroll = position;
-        this._lastNotifiedPositionChangedDate = dateUtils.getStartOfMonth(position);
+        this._lastNotifiedPositionChangedDate = normalizedPosition;
 
         if (this._container && this._canScroll(position)) {
             // Update scroll position without waiting view modification
@@ -257,7 +259,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         } else {
             this._displayedDates = [];
             const oldPositionId = this._startPositionId;
-            this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
+            this._startPositionId = monthListUtils.dateToId(normalizedPosition);
             // After changing the navigation options, we must call the "reload" to redraw the control,
             // because the last time we could start rendering from the same position.
             // Position option is the initial position from which control is initially drawn.
@@ -267,7 +269,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    private _normalizeStartPosition(date: Date, viewMode?: VIEW_MODE): Date {
+    private _normalizeDate(date: Date, viewMode?: VIEW_MODE): Date {
         return (viewMode || this._options.viewMode) === VIEW_MODE.year ?
             dateUtils.getStartOfYear(date) : dateUtils.getStartOfMonth(date);
     }
