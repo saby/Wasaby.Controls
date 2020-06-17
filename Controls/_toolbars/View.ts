@@ -180,6 +180,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IIconSize]': boolean = true;
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
     readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
+    private _popupId: string;
 
     constructor(...args) {
         super(args);
@@ -191,6 +192,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
         return {...this._menuOptions, ...{
+                id: this._popupId,
                 opener: this,
                 className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
                 templateOptions: {
