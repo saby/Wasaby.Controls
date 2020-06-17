@@ -116,6 +116,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _cachedStyles: CSSStyleDeclaration = null;
     private _cssClassName: string = null;
     private _canScroll: boolean = false;
+    private _lastFixedPosition: string = '';
 
     protected _notifyHandler: Function = tmplNotify;
 
@@ -176,6 +177,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // https://online.sbis.ru/opendoc.html?guid=ca70827b-ee39-4d20-bf8c-32b10d286682
         RegisterUtil(this, 'listScroll', this._onScrollStateChanged.bind(this));
 
+        this._initObserver();
         this.updateBottomShadowStyle();
     }
 
@@ -247,13 +249,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._options.shadowVisibility;
     }
 
-    protected _onScrollStateChanged(eventType): void {
+    protected _onScrollStateChanged(eventType: string): void {
         if (eventType === 'canScroll') {
             this._canScroll = true;
-            this._initObserver();
+            if (this._model.fixedPosition !== this._lastFixedPosition) {
+                this._forceUpdate();
+            }
         } else if (eventType === 'cantScroll') {
             this._canScroll = false;
-            this._destroyObserver();
         }
     }
 
@@ -276,7 +279,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // в самом верху скролируемой области, то верхний тригер останется невидимым, т.е. сбытия не будет.
         // Что бы самостоятельно не рассчитывать положение тригеров, мы просто пересоздадим обсервер когда заголовок
         // станет видимым.
-        if (isHidden(this._container) || !this._canScroll) {
+        if (isHidden(this._container)) {
             this._needUpdateObserver = true;
             return;
         }
@@ -339,7 +342,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
-            this._forceUpdate();
+            if (this._canScroll) {
+                this._lastFixedPosition = this._model.fixedPosition;
+                this._forceUpdate();
+            }
         }
     }
 
