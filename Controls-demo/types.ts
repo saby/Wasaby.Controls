@@ -7,3 +7,18 @@ export interface IHeader extends IHeaderCell {
 
 export type TItemsReadyCallback = (items: RecordSet) => void;
 export type TRoot = string | number | null;
+
+export type TExpandOrColapsItems = number[] | null[];
+
+export interface INavigation {
+    source: string,
+    view: string,
+    sourceConfig: {
+        pageSize: number,
+        page: number,
+        hasMore: boolean
+    },
+    viewConfig: {
+        pagingMode: string
+    }
+}
