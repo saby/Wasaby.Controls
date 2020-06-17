@@ -5,7 +5,6 @@
             on:selectedKeysChanged="_selectedKeysChangedHandler()"
             keyProperty="id"
             displayProperty="title"
-            itemPadding="{{_itemPadding}}"
             source="{{_source}}"
             fontSize="{{_options.fontSize}}"
             dropdownClassName="{{_options.dropdownClassName}}"

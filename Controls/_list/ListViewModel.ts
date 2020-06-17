@@ -351,7 +351,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
-    setMarkedKey: function(key, status) {
+    /**
+     * Проставить маркер
+     * @param key ключ элемента, в котором задается состояние marked
+     * @param status значение marked
+     * @param silent уведомлять ли о событии. Если false, то не будет перерисована модель и не стрельнет событие onMarkedKeyChanged
+     */
+    setMarkedKey(key: number|string, status: boolean, silent: boolean = false): void {
         // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
         if (this._markedKey === key && status !== false) {
             return;
@@ -369,15 +375,14 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (status === false) {
             this._markedKey = null;
-            if (key === null) {
-                return;
-            }
         } else {
             this._markedKey = key;
         }
 
-        this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
-        this._notify('onMarkedKeyChanged', this._markedKey);
+        if (!silent) {
+            this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
+            this._notify('onMarkedKeyChanged', this._markedKey);
+        }
     },
 
     setMarkerVisibility: function(markerVisibility) {

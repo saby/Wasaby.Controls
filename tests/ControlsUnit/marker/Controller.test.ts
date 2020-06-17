@@ -2,6 +2,7 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
+import { spy } from 'sinon';
 import { MarkerController } from "Controls/marker";
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
@@ -110,11 +111,17 @@ describe('Controls/marker/Controller', () => {
       });
 
       it('undefined', () => {
-         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
+         controller = new MarkerController({model: model, markerVisibility: 'onactivated', markedKey: 2});
 
-         const result = controller.setMarkedKey(undefined);
+         let result = controller.setMarkedKey(undefined);
          assert.equal(result, undefined);
          assert.equal(model.getMarkedKey(), undefined);
+
+         const setMarkedKeySpy = spy(model, 'setMarkedKey');
+         result = controller.setMarkedKey(undefined);
+         assert.equal(result, undefined);
+         assert.equal(model.getMarkedKey(), undefined);
+         assert.isFalse(setMarkedKeySpy.called);
       });
 
       it('change key', () => {

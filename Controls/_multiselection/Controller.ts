@@ -112,7 +112,8 @@ export class Controller {
       this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
-      return result;   }
+      return result;
+   }
 
    unselectAll(): ISelectionControllerResult {
       const newSelection = this._strategy.unselectAll(this._selection);

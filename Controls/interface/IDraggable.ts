@@ -129,7 +129,8 @@
 /**
  * @event Controls/interface/IDraggable#dragStart Происходит при начале перемещения элемента.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Array.<String>} items Идентификаторы перемещаемых элементов.
+ * @param {Array<String>} items Идентификаторы перемещаемых элементов.
+ * @param {string|number} draggedKey Идентификатор элемента, за который начали drag-n-drop.
  * @remark Чтобы начать перемещение drag'n'drop из события, необходимо вернуть объект перемещения. Событие срабатывает у контейнера, в котором началось перемещение.
  * Отличается от события {@link /docs/js/Controls/tile/IDraggable/events/dragEnter/ dragEnter}, которое срабатывает у контейнера, в который была перемещена запись.
  * @example

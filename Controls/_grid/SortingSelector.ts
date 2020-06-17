@@ -14,9 +14,6 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     private _currentParamName: string = null;
     private _currentOrder: Order = null;
     protected _source: Memory;
-    protected _itemPadding = {
-        right: 'null'
-    }
 
     protected _beforeMount(options: ISortingSelectorOptions): void {
         this.updateConfig(options.sortingParams, options.value);

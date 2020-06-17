@@ -6,7 +6,7 @@ export enum Visibility { Visible = 'visible', Hidden = 'hidden', OnActivated = '
 export type TKey = string|number;
 
 export interface IMarkerModel extends IBaseCollection<CollectionItem<Model>> {
-   setMarkedKey(key: TKey, status: boolean): void;
+   setMarkedKey(key: TKey, status: boolean, silent?: boolean): void;
    getFirstItem(): Model;
    getCount(): number;
    getValidItemForMarker(index: number): CollectionItem<Model>;
@@ -18,6 +18,9 @@ export interface IMarkerModel extends IBaseCollection<CollectionItem<Model>> {
 
    getNextByIndex(index: number): CollectionItem<Model>;
    getPrevByIndex(index: number): CollectionItem<Model>;
+
+   nextVersion();
+   getItemBySourceKey(key: TKey): CollectionItem<Model>;
 }
 
 export interface IOptions {

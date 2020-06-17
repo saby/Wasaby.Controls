@@ -189,6 +189,7 @@ define([
             isChanged: () => true
          };
          FC._options.record = record;
+         FC._record = record;
          FC._beforeUpdate({
             record: record,
             key: 'key'
@@ -430,6 +431,22 @@ define([
             FC.destroy();
             done();
          })
+      });
+      it('_needShowConfirmation', () => {
+         let FC = new form.Controller();
+         FC._record = {
+            isChanged: () => true
+         };
+         let result = FC._needShowConfirmation();
+         assert.isTrue(result);
+
+         FC._record = {
+            isChanged: () => false
+         };
+         FC._options.confirmationShowingCallback = () => {
+            return true;
+         };
+         assert.isTrue(result);
       });
 
       it('requestCustomUpdate isNewRecord', (done) => {
