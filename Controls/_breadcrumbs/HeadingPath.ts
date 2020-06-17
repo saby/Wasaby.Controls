@@ -83,6 +83,13 @@ var _private = {
  */
 
 /**
+ * @name Controls/_breadcrumbs/HeadingPath#isDouble
+ * @cfg {Boolean} Отображение крошек в две строки
+ * @default false
+ * @demo Controls-demo/BreadCrumbs/isDouble/Index
+ */
+
+/**
  * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Происходит при клике на кнопку "Просмотр записи".
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
