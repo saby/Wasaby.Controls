@@ -1,13 +1,14 @@
 import { assert } from 'chai';
 
-import View from 'Controls/_listRender/View';
+import View, {IViewOptions} from 'Controls/_listRender/View';
 import { RecordSet } from 'Types/collection';
 
 import 'Controls/display';
+import {Sticky} from 'Controls/popup';
 
 describe('Controls/_listRender/View', () => {
     let items: RecordSet;
-    let defaultCfg;
+    let defaultCfg: IViewOptions;
 
     beforeEach(() => {
         items = new RecordSet({
@@ -21,7 +22,11 @@ describe('Controls/_listRender/View', () => {
         defaultCfg = {
             items,
             collection: 'Controls/display:Collection',
-            render: 'Controls/listRender:Render'
+            render: 'Controls/listRender:Render',
+            contextMenuConfig: {
+                iconSize: 's',
+                groupProperty: 'title'
+            }
         };
     });
 
@@ -123,7 +128,7 @@ describe('Controls/_listRender/View', () => {
         assert.isTrue(oldCollectionDestroyed);
     });
 
-    describe('ItemActions', () => {
+    describe('Setting of item actions', () => {
         let view: View;
         let item: any;
         let fakeEvent: any;
@@ -158,7 +163,8 @@ describe('Controls/_listRender/View', () => {
                 },
                 getActiveItem(): any {
                     return this._$activeItem;
-                }
+                },
+                at: () => item
             };
             fakeEvent = {
                 propagating: true,
@@ -202,6 +208,31 @@ describe('Controls/_listRender/View', () => {
         });
 
         // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
-        it('should correctly work with breadcrumbs');
+        it('should correctly work with breadcrumbs', async () => {
+            const itemAt1 = view._collection.at(1);
+            const breadcrumbItem = Object.assign(item, {
+                '[Controls/_display/BreadcrumbsItem]': true,
+                getContents: () => ['fake', 'fake', 'fake', itemAt1.getContents()]
+            });
+            await view._onItemContextMenu(null, breadcrumbItem, fakeEvent);
+            setTimeout(() => {
+                assert.equal(view._collection.getActiveItem(), itemAt1);
+            })
+        });
+
+        // Должен устанавливать contextMenuConfig при инициализации itemActionsController
+        it('should set contextMenuConfig to itemActionsController', async () => {
+            let popupConfig;
+            Sticky.openPopup = (config) => {
+                popupConfig = config;
+                return Promise.resolve(config);
+            };
+            await view._onItemContextMenu(null, item, fakeEvent);
+            setTimeout(() => {
+                assert.exists(popupConfig, 'popupConfig has not been set');
+                assert.equal(popupConfig.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
+                assert.equal(popupConfig.templateOptions.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
+            }
+        });
     });
 });
