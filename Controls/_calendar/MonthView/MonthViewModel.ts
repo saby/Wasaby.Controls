@@ -185,8 +185,10 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
             css.push('controls-MonthViewVDOM__cursor-item');
          }
          if (!scope.selected) {
-            if (scope.selectionEnabled && !backgroundStyle && this._singleDayHover) {
-               css.push('controls-MonthViewVDOM__border-currentMonthDay-unselected_theme-' + theme);
+            if (scope.selectionEnabled && this._singleDayHover) {
+               let borderStyle = 'controls-MonthViewVDOM__border-currentMonthDay-unselected_theme-' + theme;
+               borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
+               css.push(borderStyle);
             } else if (scope.hovered) {
                let borderStyle = 'controls-MonthViewVDOM__border-hover_theme-' + theme;
                borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
