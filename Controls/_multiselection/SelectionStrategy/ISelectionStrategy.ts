@@ -82,7 +82,7 @@ export default interface ISelectionStrategy {
     * @param selection текущее состояние выбранных ключей
     * @param hasMoreData имеются ли в модели еще не загруженные элементы
     * @param itemsCount количество элементов в модели
-    * @param byEveryItem true - был выбран каждый элемент, иначе проверяется что выбраны все одним нажатием, например ПМО
+    * @param byEveryItem true - проверять выбранность каждого элемента по отдельности. Иначе проверка происходит по наличию единого признака выбранности всех элементов.
     */
    isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number, byEveryItem?: boolean): boolean;
 }
