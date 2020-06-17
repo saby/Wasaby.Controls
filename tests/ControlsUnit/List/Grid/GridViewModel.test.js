@@ -166,8 +166,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          const dummyDispitem = {
             getContents: () => [],
             isEditing: () => false,
-            setEditing: (v) => {},
-            isSelected: () => false
+            setEditing: (v) => {}
          };
 
          it('calcItemColumnVersion', function() {
@@ -719,8 +718,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getMultiSelectClassList onhover selected', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';
-            gridViewModel.setSelectedItems([gridViewModel.getItemById(123, 'id').getContents()], true);
+            gridViewModel._model._selectedKeys = {'123': true};
             let data = gridViewModel.getItemDataByItem(gridViewModel.getItemById('123', 'id'));
+
             assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox_theme-default');
          });
 
@@ -728,7 +728,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';
             let data = gridViewModel.getItemDataByItem(dummyDispitem);
+
             assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-GridView__checkbox_theme-default');
+            gridViewModel._options.multiSelectVisibility = 'visible';
          });
 
          it('getItemColumnCellClasses', function() {
@@ -947,7 +949,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       });
       describe('methods for processing with items', function() {
          var
-            gridViewModel = new gridMod.GridViewModel({...cfg, multiSelectVisibility: 'visible'});
+            gridViewModel = new gridMod.GridViewModel(cfg);
          it('getColumns', function() {
             assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()".');
          });
@@ -963,7 +965,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
-                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'setSelectedItems', 'getCurrentIndex',
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];

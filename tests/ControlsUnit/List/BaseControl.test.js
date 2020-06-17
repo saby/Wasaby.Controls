@@ -1489,9 +1489,7 @@ define([
                    }, {
                       key: 3
                    }]
-                }),
-                selectedKeys: [],
-                excludedKeys: []
+                })
              },
              baseControl = new lists.BaseControl(cfg);
 
@@ -1502,20 +1500,34 @@ define([
 
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-
+         baseControl._createSelectionController = () => {
+            baseControl._selectionController = {
+               toggleItem: (key) => {
+                  if (baseControl._listViewModel.getSelectionStatus(key)) {
+                     baseControl._listViewModel._selectedKeys.pop(key);
+                  } else {
+                     baseControl._listViewModel._selectedKeys.push(key);
+                  }
+               },
+               handleReset: function() {}
+            };
+         }
+         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
          baseControl._loadingIndicatorState = 'all';
          lists.BaseControl._private.enterHandler(baseControl);
+         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
 
          baseControl._loadingIndicatorState = null;
          sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
          const handleSelectionControllerResult = sinon.spy(lists.BaseControl._private, 'handleSelectionControllerResult');
          lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.isTrue(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+         assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
          assert.isTrue(handleSelectionControllerResult.withArgs(baseControl, undefined).calledOnce);
 
          baseControl.getViewModel()._markedKey = 5;
          lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+         assert.deepEqual([1, 1], baseControl._listViewModel._selectedKeys);
+
 
          sandbox.restore();
       });
@@ -6093,7 +6105,7 @@ define([
          });
       });
 
-      // Инициализация шаблонов под isNewModel должна происходить до того, как
+      // Инициализация шаблонов под isNewModel должна происходить до того, как  
       it('should init templates for useNewModel before any item actions initialization', async () => {
          const cfg = {
             editingConfig: {
