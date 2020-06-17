@@ -1266,6 +1266,11 @@ const _private = {
                      result = self._selectionController.handleAddItems(newItems);
                      break;
                }
+
+               if (self._listViewModel.getCount() === 0 && self._selectionController.isAllSelected()) {
+                   result = self._selectionController.clearSelection();
+               }
+
                self.handleSelectionControllerResult(result);
             }
         }
@@ -2497,8 +2502,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._selectionController) {
             _private.updateSelectionController(this, newOptions);
-            if ((self._options.root !== newOptions.root || filterChanged) && this._selectionController.isAllSelected()
-                    || this._listViewModel.getCount() === 0) {
+            if ((self._options.root !== newOptions.root || filterChanged) && this._selectionController.isAllSelected()) {
                 const result = this._selectionController.clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
