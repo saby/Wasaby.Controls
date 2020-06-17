@@ -5086,23 +5086,6 @@ define([
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
          });
 
-         // Необходимо обновлять опции записи если в конфиге editingConfig передан item
-         it('should update ItemActions when item was passed within options.editingConfig', () => {
-            instance._itemActionsInitialized = false;
-            instance._beforeUpdate({
-               ...cfg,
-               source: instance._options.source,
-               editingConfig: {
-                  item: { id: 1 }
-               }
-            });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-            const actionsTemplateConfig = instance._listViewModel.getActionsTemplateConfig();
-            assert.exists(actionsTemplateConfig, 'actionsTemplateConfig for model was not assigned');
-            assert.equal(actionsTemplateConfig.size, 's', 'incorrect size for item actions on editingConfig');
-         });
-
          // при неидентичности source необходимо перезапрашивать данные этого source и затем инициализировать ItemActions
          it('should update ItemActions when data was reloaded', async () => {
             instance._itemActionsInitialized = true;
