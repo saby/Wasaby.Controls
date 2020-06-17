@@ -211,13 +211,23 @@ describe('Controls/_listRender/View', () => {
         // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
         it('should correctly work with breadcrumbs', async () => {
             const itemAt1 = view._collection.at(1);
-            const breadcrumbItem = Object.assign(item, {
+            const breadcrumbItem = {
                 '[Controls/_display/BreadcrumbsItem]': true,
-                getContents: () => ['fake', 'fake', 'fake', itemAt1.getContents()]
-            });
+                _$active: false,
+                getContents: () => ['fake', 'fake', 'fake', itemAt1.getContents() ],
+                setActive: function() {
+                    this._$active = true;
+                },
+                getActions: () => ({
+                    all: [{
+                        id: 2,
+                        showType: 0
+                    }]
+                })
+            };
             await view._onItemContextMenu(null, breadcrumbItem, fakeEvent);
             setTimeout(() => {
-                assert.equal(view._collection.getActiveItem(), itemAt1);
+                assert.equal(view._collection.getActiveItem().getContents().getKey(), itemAt1.getContents().getKey());
             })
         });
 
