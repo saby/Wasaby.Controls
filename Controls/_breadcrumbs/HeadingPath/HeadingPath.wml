@@ -11,7 +11,7 @@
                                                isDouble="{{_options.isDouble}}"
                                                afterBackButtonTemplate="{{_options.afterBackButtonTemplate}}"
                                                theme="{{_options.theme}}"
-                                               isSingle="{{!_visibleItems}}"
+                                               itemsExist="{{!_visibleItems}}"
                                                attr:class="{{!_visibleItems || _options.isDouble ? 'controls-BreadCrumbsPath__backButton__wrapper__only'}} "
                                                on:backButtonClick="_onBackButtonClick()"
                                                on:arrowClick="_notifyHandler('arrowClick')"/>
