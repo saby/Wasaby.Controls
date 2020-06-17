@@ -358,14 +358,17 @@ let
          return ScrollHeightFixUtil.calcHeightFix(self._children.content);
       },
 
+      calcShadowEnable(options, position: POSITION, canScroll: boolean): boolean {
+          return options[`${position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
+                 (_private.isShadowEnable(options, position) && canScroll)
+      },
+
       calcDisplayState(self) {
          const
              canScroll = _private.calcCanScroll(SCROLL_TYPE.VERTICAL, self),
              canHorizontalScroll = _private.calcCanScroll(SCROLL_TYPE.HORIZONTAL, self),
-             topShadowEnable = self._options.topShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.TOP) && canScroll),
-             bottomShadowEnable = self._options.bottomShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.BOTTOM) && canScroll),
+             topShadowEnable = _private.calcShadowEnable(self._options, POSITION.TOP, canScroll),
+             bottomShadowEnable = _private.calcShadowEnable(self._options, POSITION.BOTTOM, canScroll),
              shadowPosition = topShadowEnable || bottomShadowEnable ? _private.getShadowPosition(self) : '',
              leftShadowEnable = canHorizontalScroll,
              rightShadowEnable = canHorizontalScroll,
@@ -654,6 +657,18 @@ let
          calculatedOptionValue = _private.getHorizontalShadowPosition(this);
          if (calculatedOptionValue) {
             this._displayState.horizontalShadowPosition = calculatedOptionValue;
+            needUpdate = true;
+         }
+
+         calculatedOptionValue = _private.calcShadowEnable(this._options, POSITION.TOP, this._displayState.canScroll);
+         if (calculatedOptionValue) {
+            this._displayState.shadowEnable.top = calculatedOptionValue;
+            needUpdate = true;
+         }
+
+         calculatedOptionValue = _private.calcShadowEnable(this._options, POSITION.BOTTOM, this._displayState.canScroll);
+         if (calculatedOptionValue !== this._displayState.shadowEnable.bottom) {
+            this._displayState.shadowEnable.bottom = calculatedOptionValue;
             needUpdate = true;
          }
 
