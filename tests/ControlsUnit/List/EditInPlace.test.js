@@ -2096,6 +2096,27 @@ define([
             eip.updateEditingData({multiSelectVisibility: 'visible', listViewModel: listViewModel});
             assert.isTrue(isItemDataRegenerated);
          });
+
+         it('should called ', async () => {
+            let
+               isItemDataRegenerated = false;
+
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+
+            await eip.beginAdd();
+
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
+
+            let spy = sinon.spy(listViewModel, 'subscribe');
+
+            eip.updateEditingData({listViewModel: listViewModel});
+            eip.updateEditingData({listViewModel: listViewModel});
+
+            assert.isTrue(spy.calledOnceWith('onCollectionChange', eip._updateIndex));
+         });
       });
 
       it('property change of an editing item should reset validation', function() {
