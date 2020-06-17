@@ -1,3 +1,4 @@
+import merge = require('Core/core-merge');
 import {Stack as StackOpener, IStackPopupOptions} from 'Controls/popup';
 
 function getPopupOptions(self): IStackPopupOptions {
@@ -53,18 +54,18 @@ export default function(self, popupOptions, multiSelect) {
         const stackPopupOptions = getPopupOptions(self);
 
         if (selectorTemplate && selectorTemplate.popupOptions) {
-            Object.assign(stackPopupOptions, selectorTemplate.popupOptions);
+            merge(stackPopupOptions, selectorTemplate.popupOptions);
         }
 
         if (popupOptions && popupOptions.template || selectorTemplate) {
             stackPopupOptions.templateOptions = getTemplateOptions(self, multiSelect);
 
             if (selectorTemplate && selectorTemplate.templateOptions) {
-                Object.assign(stackPopupOptions.templateOptions, selectorTemplate.templateOptions);
+                merge(stackPopupOptions.templateOptions, selectorTemplate.templateOptions);
             }
 
             if (popupOptions) {
-                Object.assign(stackPopupOptions, popupOptions);
+                merge(stackPopupOptions, popupOptions);
             }
 
             self._openingSelector = StackOpener.openPopup(stackPopupOptions).then((id) => {
