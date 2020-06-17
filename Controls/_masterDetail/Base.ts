@@ -125,7 +125,7 @@ class Base extends Control<IMasterDetail> {
                     resolve(this._currentWidth);
                 });
             });
-        } else {
+        } else if (this._canResizing) {
             this.initCurrentWidth(options.masterWidth);
         }
     }
@@ -254,7 +254,7 @@ class Base extends Control<IMasterDetail> {
 
     private _isCanResizing(options: IMasterDetail): boolean {
         const canResizing = options.masterWidth && options.masterMaxWidth && options.masterMinWidth &&
-            options.masterMaxWidth !== options.masterMinWidth;
+            options.masterMaxWidth !== options.masterMinWidth && options.propStorageId;
         return !!canResizing;
     }
 
@@ -303,6 +303,9 @@ class Base extends Control<IMasterDetail> {
 
     static getDefaultOptions(): Partial<IMasterDetail> {
         return {
+            masterWidth: '27%',
+            masterMinWidth: 30,
+            masterMaxWidth: '50%',
             contrastBackground: true
         };
     }
