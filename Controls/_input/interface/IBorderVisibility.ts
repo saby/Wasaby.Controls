@@ -6,19 +6,18 @@ import {descriptor} from 'Types/entity';
  * @variant partial
  * @variant hidden
  */
-
 export type TBorderVisibility = 'visible' | 'partial' | 'hidden';
 
 /**
  * Интерфейс для контролов, которые поддерживают разное количество видимых границ.
  *
- * @interface Controls/interface/IBorderVisibility
+ * @interface Controls/_input/interface/IBorderVisibility
  * @public
  * @author Красильников А.С.
  */
 export interface IBorderVisibilityOptions {
     /**
-     * @name Controls/interface/IBorderVisibility#borderVisibility
+     * @name Controls/_input/interface/IBorderVisibility#borderVisibility
      * @cfg {TBorderVisibility} Видимость границ контрола.
      * @demo Controls-demo/Input/BorderVisibility/Index
      */
