@@ -170,7 +170,7 @@ class Button extends Dropdown {
             onResult: this._onResult.bind(this)
          }
       };
-      this._controller.setMenuPopupTarget(this._container.children[0];
+      this._controller.setMenuPopupTarget(this._container.children[0]);
       this._controller.openMenu(config).then((result) => {
          if (typeof result === 'string') {
             this._popupId = result;
