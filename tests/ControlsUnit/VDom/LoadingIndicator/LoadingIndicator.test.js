@@ -164,6 +164,22 @@ define([
          assert.equal(Loading._stack.getCount(), 0);
       });
 
+      it ('LoadingIndicator with empty config', () => {
+         let LoadingInd = new LoadingIndicator.default();
+         LoadingInd._beforeMount({});
+
+         const cfg = LoadingInd._prepareConfig({message: 'Loading'});
+         LoadingInd._updateProperties(cfg);
+         LoadingInd._beforeUpdate({});
+         assert.equal(LoadingInd.message, 'Loading');
+
+         const cfgEmpty = LoadingInd._prepareConfig({});
+         LoadingInd._updateProperties(cfgEmpty);
+         LoadingInd._beforeUpdate({});
+         assert.equal(LoadingInd.message, '');
+         LoadingInd.destroy();
+      });
+
       it('LoadingIndicator - toggleIndicator', (done) => {
          let LoadingInd = new LoadingIndicator.default();
          let isMessageVisible = true;
