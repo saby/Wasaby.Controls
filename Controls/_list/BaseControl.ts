@@ -384,7 +384,7 @@ const _private = {
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
             // количество записей будет отдавать selectionController https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
             getItemsBySelection(selection, self._options.source, recordSet, self._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
-                const dragStartResult = self._notify('dragStart', [items]);
+                const dragStartResult = self._notify('dragStart', [items, key]);
                 if (dragStartResult) {
                     if (self._options.dragControlId) {
                         dragStartResult.dragControlId = self._options.dragControlId;
@@ -502,7 +502,10 @@ const _private = {
             toggledItemId = model.at(0).getContents().getId();
         }
 
-        if (toggledItemId && self._selectionController) {
+        if (toggledItemId && self._options.multiSelectVisibility !== 'hidden') {
+            if (!self._selectionController) {
+                self._createSelectionController();
+            }
             const result = self._selectionController.toggleItem(toggledItemId);
             _private.handleSelectionControllerResult(self, result);
             _private.moveMarkerToNext(self, event);
@@ -2114,6 +2117,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadTriggerVisibility = {};
 
+        if (newOptions.useNewModel) {
+            import('Controls/listRender').then((listRender) => {
+                this._itemActionsTemplate = listRender.itemActionsTemplate;
+                this._swipeTemplate = listRender.swipeTemplate;
+            });
+        }
+
         if (newOptions.editingConfig) {
             _private.createEditInPlace(self, newOptions);
         }
@@ -2372,14 +2382,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
                 this._updateItemActions(this._options);
             }
-        }
-
-
-        if (this._options.useNewModel) {
-            return import('Controls/listRender').then((listRender) => {
-                this._itemActionsTemplate = listRender.itemActionsTemplate;
-                this._swipeTemplate = listRender.swipeTemplate;
-            });
         }
 
         // для связи с контроллером ПМО
@@ -3128,10 +3130,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._dndListController.startDrag(draggedKey, dragObject.entity);
 
-            // Cобытие mouseEnter на записи может сработать до dragStart.
-            // И тогда перемещение при наведении не будет обработано.
-            // В таком случае обрабатываем наведение на запись сейчас.
-            // TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
+        // Cобытие mouseEnter на записи может сработать до dragStart.
+        // И тогда перемещение при наведении не будет обработано.
+        // В таком случае обрабатываем наведение на запись сейчас.
+        //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
         if (this._unprocessedDragEnteredItem) {
             this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
         }

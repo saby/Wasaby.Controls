@@ -15,8 +15,9 @@ define([
    'Types/entity',
    'Controls/popup',
    'Controls/listDragNDrop',
+   'Controls/listRender',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop) {
+], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, listRender) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -1468,6 +1469,8 @@ define([
                 markerVisibility: 'visible',
                 keyProperty: 'key',
                 multiSelectVisibility: 'visible',
+                selectedKeys: [],
+                excludedKeys: [],
                 source: new sourceLib.Memory({
                    keyProperty: 'key',
                    data: [{
@@ -1488,16 +1491,18 @@ define([
 
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._selectionController = {
-            toggleItem: (key) => {
-               if (baseControl._listViewModel.getSelectionStatus(key)) {
-                  baseControl._listViewModel._selectedKeys.pop(key);
-               } else {
-                  baseControl._listViewModel._selectedKeys.push(key);
-               }
-            },
-            handleReset: function() {}
-         };
+         baseControl._createSelectionController = () => {
+            baseControl._selectionController = {
+               toggleItem: (key) => {
+                  if (baseControl._listViewModel.getSelectionStatus(key)) {
+                     baseControl._listViewModel._selectedKeys.pop(key);
+                  } else {
+                     baseControl._listViewModel._selectedKeys.push(key);
+                  }
+               },
+               handleReset: function() {}
+            };
+         }
          assert.deepEqual([], baseControl._listViewModel._selectedKeys);
          baseControl._loadingIndicatorState = 'all';
          lists.BaseControl._private.enterHandler(baseControl);
@@ -3692,6 +3697,56 @@ define([
             ctrl._itemMouseDown({}, itemData, domEvent);
             assert.isTrue(dragNDropStarted);
          });
+      });
+
+      it('startDragNDrop', () => {
+         const self = {
+               _options: {
+                  readOnly: false,
+                  itemsDragNDrop: true,
+                  source,
+                  filter: {},
+                  selectedKeys: [],
+                  excludedKeys: [],
+               },
+               _listViewModel: new lists.ListViewModel({
+                  items: new collection.RecordSet({
+                     rawData: data,
+                     keyProperty: 'id'
+                  }),
+                  keyProperty: 'key'
+               })
+            },
+            domEvent = {
+               nativeEvent: {},
+               target: {
+                  closest: function() {
+                     return false;
+                  }
+               }
+            },
+            itemData = {
+               getContents() {
+                  return {
+                     getKey() {
+                        return 2;
+                     }
+                  };
+               }
+            };
+
+         // self._listViewModel.setItems(data);
+
+         let notifyCalled = false;
+         self._notify = function(eventName, args) {
+            notifyCalled = true;
+            assert.equal(eventName, 'dragStart');
+            assert.deepEqual(args[0], [2]);
+            assert.equal(args[1], 2);
+         };
+
+         lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
+         assert.isTrue(notifyCalled);
       });
 
       it('_processItemMouseEnterWithDragNDrop', () => {
@@ -6039,6 +6094,40 @@ define([
                baseControl._onItemClick(e, {}, originalEvent);
                assert.isTrue(isStopped);
             });
+         });
+      });
+
+      // Инициализация шаблонов под isNewModel должна происходить до того, как  
+      it('should init templates for useNewModel before any item actions initialization', async () => {
+         const cfg = {
+            editingConfig: {
+               toolbarVisibility: true
+            },
+            useNewModel: true,
+            itemActions: [
+               {
+                  id: 1,
+                  showType: 0,
+                  'parent@': true
+               },
+               {
+                  id: 2,
+                  showType: 2,
+                  parent: 1
+               }
+            ]
+         };
+         const sandbox = sinon.createSandbox();
+         const baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         baseControl._container = {clientHeight: 0};
+         sandbox.replace(baseControl, '_updateItemActions', (options) => {
+            assert.equal(baseControl._itemActionsTemplate, listRender.itemActionsTemplate);
+         });
+         setTimeout(async () => {
+            await baseControl._afterMount();
+            sandbox.restore();
          });
       });
    });

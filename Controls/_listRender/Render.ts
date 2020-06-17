@@ -121,7 +121,10 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onActionsSwipeAnimationEnd(e: SyntheticEvent<null>): void {
-        this._notify('closeSwipe', [e]);
+        if (e.nativeEvent.animationName === 'itemActionsSwipeClose') {
+            e.stopPropagation();
+            this._notify('closeSwipe', [e]);
+        }
     }
 
     protected _onItemActionsClick(e: SyntheticEvent<MouseEvent>, action: unknown, item: CollectionItem<unknown>): void {
