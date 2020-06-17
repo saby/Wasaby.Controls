@@ -99,8 +99,11 @@
 .controls-Path__backButtonArrow_readonly_theme-@{themeName} {
    color: @back_editButton_readonly_icon-color_breadcrumbsHeadingPath;
 }
-.controls-BreadCrumbsPath__backButton__wrapper__only__withArrow_theme-@{themeName} {
-   padding-right: @back_offset_breadcrumbsHeadingPath;
+.controls-BreadCrumbsPath__backButton__container__only__withArrow_theme-@{themeName} {
+   padding-right: @back_editButton_icon-size_breadcrumbsHeadingPath;
+}
+.controls-BreadCrumbsPath__backButtonArrow-container__only {
+   right: 0;
 }
 .controls-BreadCrumbsPath__counter_theme-@{themeName} {
    margin-left: @back_counter_offset_breadcrumbsHeadingPath;
@@ -177,4 +180,12 @@
 
 .controls-fontsize-headingPathBack_theme-@{themeName} {
    font-size: @font-size_headingPathBack_headingBack;
+}
+
+.controls-BreadCrumbsPath__backButton__container {
+   position: relative;
+   display: inline-flex;
+   max-width: 100%;
+   align-items: baseline;
+   box-sizing: border-box;
 }
