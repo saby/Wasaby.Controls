@@ -550,6 +550,10 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
     */
    getDataObject: function(data) {
       return _private.deserialize(this, data.get('ObjectData'));
+   },
+
+   historyReady(): boolean {
+      return !!this._history;
    }
 });
 

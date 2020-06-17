@@ -442,7 +442,7 @@ const _private = {
     },
 
     setMarkedKey(self, key: string | number): void {
-        if (key !== undefined && self._markerController) {
+        if (self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
             _private.scrollToItem(self, self._markedKey);
         }
@@ -2502,7 +2502,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._selectionController) {
             _private.updateSelectionController(this, newOptions);
-            if ((self._options.root !== newOptions.root || filterChanged) && this._selectionController.isAllSelected()) {
+            if ((self._options.root !== newOptions.root || filterChanged) && this._selectionController.isAllSelected(false)) {
                 const result = this._selectionController.clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
