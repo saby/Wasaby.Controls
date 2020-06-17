@@ -4904,7 +4904,7 @@ define([
          instance._beforeUpdate(cfgClone);
          assert.isFalse(clearSelectionCalled);
 
-         instance._selectionController.isAllSelectedByPmo = function() { return true; };
+         instance._selectionController.isAllSelected = function() { return true; };
          cfgClone = { ...cfg, root: 'newvalue1' };
          instance._beforeUpdate(cfgClone);
          assert.isTrue(clearSelectionCalled);
