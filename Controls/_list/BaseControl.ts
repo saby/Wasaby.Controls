@@ -2577,6 +2577,11 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
         if (this._checkLoadToDirectionTimeout) {
             clearTimeout(this._checkLoadToDirectionTimeout);
         }
+
+        if (this._needPagingTimeout) {
+            clearTimeout(this._needPagingTimeout);
+            this._needPagingTimeout = null;
+        }
         if (this._options.itemsDragNDrop) {
             let container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
