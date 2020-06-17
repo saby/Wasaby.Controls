@@ -54,7 +54,8 @@ define(['Controls/masterDetail'], function (masterDetail) {
          let options = {
             masterMinWidth: 100,
             masterWidth: 200,
-            masterMaxWidth: 299
+            masterMaxWidth: 299,
+            propStorageId: 10
          };
 
          Control._canResizing = Control._isCanResizing(options);
@@ -111,7 +112,8 @@ define(['Controls/masterDetail'], function (masterDetail) {
          let options = {
             masterMinWidth: 250,
             masterWidth: 200,
-            masterMaxWidth: 299
+            masterMaxWidth: 299,
+            propStorageId: 10
          };
          assert.equal(Control._isCanResizing(options), true);
 
