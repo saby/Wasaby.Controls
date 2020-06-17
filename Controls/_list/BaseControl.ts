@@ -2564,6 +2564,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateInitializedItemActions(newOptions);
         }
 
+        if (
+            ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated)) {
+            this._initItemActions(null, newOptions);
+        }
+
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
         }
