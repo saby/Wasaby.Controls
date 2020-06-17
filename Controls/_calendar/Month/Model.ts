@@ -13,7 +13,6 @@ var ModuleClass = MonthViewModel.extend({
         var nState = ModuleClass.superclass._normalizeState.apply(this, arguments);
         nState.selectionProcessing = state.selectionProcessing;
         nState.selectionType = state.selectionType;
-        nState.quantum = state.quantum;
         nState.hoveredEndValue = state.hoveredEndValue;
         nState.hoveredStartValue = state.hoveredStartValue;
         nState.startValue = DateUtil.normalizeDate(state.startValue);
