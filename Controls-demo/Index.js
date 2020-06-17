@@ -26,8 +26,8 @@ define('Controls-demo/Index', [
                   var controlId = ids[0];
                   if (!storage[controlId]) {
                      storage[controlId] = 1000;
-                     if (controlId === 'master111') {
-                        storage[controlId] = 300;
+                     if (controlId.indexOf('master') > -1) {
+                        storage[controlId] = undefined;
                      }
                   }
                   return (new Deferred()).callback(storage);
