@@ -1927,6 +1927,10 @@ const _private = {
                 self.getSourceController()
             );
             self._editingItemData = self._editInPlace.getEditingItemData();
+
+            if (options.itemActions && self._editInPlace.shouldShowToolbar()) {
+                self._updateItemActions(options);
+            }
         }
     },
 
@@ -2387,9 +2391,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._children.formController);
             this._editInPlace.updateViewModel(this._listViewModel);
-            if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
-                this._updateItemActions(this._options);
-            }
         }
 
         // для связи с контроллером ПМО
@@ -2563,10 +2564,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateInitializedItemActions(newOptions);
         }
 
-        // Ициализация опций записи при загрузке нужна для случая, когда предустановлен editingConfig.item
         if (
-            ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
-            newOptions.editingConfig && newOptions.editingConfig.item) {
+            ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated)) {
             this._initItemActions(null, newOptions);
         }
 
