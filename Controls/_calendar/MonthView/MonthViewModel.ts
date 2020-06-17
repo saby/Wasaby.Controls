@@ -23,7 +23,9 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       // Нет необходимости каждый раз обовлять стили месяца при наведении,
       // если хавер работает только по одной ячейке дня, а не по нескольким.
       if (cfg.selectionType === 'quantum' && cfg.quantum) {
-         if (!'days' in cfg.quantum || cfg.quantum.days.indexOf(1) === -1) {
+         if ('days' in cfg.quantum && cfg.quantum.days.indexOf(1) !== -1) {
+            this._singleDayHover = true;
+         } else {
             this._singleDayHover = false;
          }
       }
