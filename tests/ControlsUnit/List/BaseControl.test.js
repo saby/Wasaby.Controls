@@ -4897,7 +4897,7 @@ define([
             update() {},
             clearSelection() { clearSelectionCalled = true; },
             handleReset() {},
-            isAllSelectedByPmo() { return false; }
+            isAllSelected() { return false; }
          };
 
          let cfgClone = { ...cfg, root: 'newvalue' };
@@ -4931,7 +4931,7 @@ define([
             update() {},
             clearSelection() { clearSelectionCalled = true; },
             handleReset() {},
-            isAllSelectedByPmo() { return true; }
+            isAllSelected() { return true; }
          };
 
          let cfgClone = { ...cfg};
@@ -6097,7 +6097,7 @@ define([
          });
       });
 
-      // Инициализация шаблонов под isNewModel должна происходить до того, как  
+      // Инициализация шаблонов под isNewModel должна происходить до того, как
       it('should init templates for useNewModel before any item actions initialization', async () => {
          const cfg = {
             editingConfig: {
