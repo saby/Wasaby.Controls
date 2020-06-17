@@ -19,7 +19,7 @@
         </ws:if>
         <ws:if data="{{ _options.showActionButton }}">
             <div class="controls-BreadCrumbsPath__backButtonArrow-container controls-BreadCrumbsPath__backButtonArrow-container_theme-{{_options.theme}}
-                  {{_options.itemsExist || _options.isDouble ? 'controls-BreadCrumbsPath__backButtonArrow-container__only'}}
+                  {{_options.showArrowOutsideOfBackButton || _options.itemsExist || _options.isDouble  ? 'controls-BreadCrumbsPath__backButtonArrow-container__only'}}
                   controls-background-{{_options.backgroundStyle || 'default'}}_theme-{{_options.theme}}
                   {{_options.readOnly ? ' controls-Path__backButtonArrow_readonly_theme-' + _options.theme}}"
                  title="{[Подробнее]}"
