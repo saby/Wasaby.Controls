@@ -1478,6 +1478,8 @@ define([
                 markerVisibility: 'visible',
                 keyProperty: 'key',
                 multiSelectVisibility: 'visible',
+                selectedKeys: [],
+                excludedKeys: [],
                 source: new sourceLib.Memory({
                    keyProperty: 'key',
                    data: [{
@@ -1498,16 +1500,18 @@ define([
 
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._selectionController = {
-            toggleItem: (key) => {
-               if (baseControl._listViewModel.getSelectionStatus(key)) {
-                  baseControl._listViewModel._selectedKeys.pop(key);
-               } else {
-                  baseControl._listViewModel._selectedKeys.push(key);
-               }
-            },
-            handleReset: function() {}
-         };
+         baseControl._createSelectionController = () => {
+            baseControl._selectionController = {
+               toggleItem: (key) => {
+                  if (baseControl._listViewModel.getSelectionStatus(key)) {
+                     baseControl._listViewModel._selectedKeys.pop(key);
+                  } else {
+                     baseControl._listViewModel._selectedKeys.push(key);
+                  }
+               },
+               handleReset: function() {}
+            };
+         }
          assert.deepEqual([], baseControl._listViewModel._selectedKeys);
          baseControl._loadingIndicatorState = 'all';
          lists.BaseControl._private.enterHandler(baseControl);
