@@ -23,18 +23,20 @@ export interface ViewConfig<TOptions = object> extends ParkingViewConfig<TOption
     status?: HTTPStatus;
 }
 
+export type ProcessedError = Error & { processed?: boolean; };
+
 /**
  * Параметры для функции-обработчика ошибки
  * @interface Controls/_dataSource/_error/HandlerConfig
  * @public
  * @author Северьянов А.А.
  */
-export interface HandlerConfig<T extends Error = Error> {
+export interface HandlerConfig<TError extends ProcessedError = ProcessedError> {
     /**
      * @name Controls/_dataSource/_error/HandlerConfig#error
      * @cfg {T | Error} Обрабатываемая ошибка
      */
-    error: T | Error;
+    error: TError;
     /**
      * @name Controls/_dataSource/_error/HandlerConfig#mode
      * @cfg {Controls/_dataSource/_error/Mode} Способ отображения ошибки (на всё окно / диалог / внутри компонента)
