@@ -2785,7 +2785,8 @@ define([
          lnBaseControl._selectionController = {
             toggleItem: function() {},
             handleReset: function() {},
-            update: function() {}
+            update: function() {},
+            restoreSelection: () => {}
          };
 
          lnBaseControl.saveOptions(lnCfg);
