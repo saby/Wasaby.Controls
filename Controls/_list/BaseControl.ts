@@ -2725,7 +2725,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-            this._scrollController.checkTriggerVisibilityWithTimeout();
+            if (this._scrollController) {
+                this._scrollController.checkTriggerVisibilityWithTimeout();
+            }
         }
 
         // До отрисовки элементов мы не можем понять потребуется ли еще загрузка (зависит от видимости тригеров).
