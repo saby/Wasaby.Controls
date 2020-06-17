@@ -2505,13 +2505,6 @@ var BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype
             this._updateInitializedItemActions(newOptions);
         }
 
-        // Ициализация опций записи при загрузке нужна для случая, когда предустановлен editingConfig.item
-        if (
-            ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated) ||
-            newOptions.editingConfig && newOptions.editingConfig.item) {
-            this._initItemActions(null, newOptions);
-        }
-
         if (this._itemsChanged) {
             this._shouldNotifyOnDrawItems = true;
         }
