@@ -212,7 +212,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         // TODO USE itemsModelCurrent.isSelected()
         itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
-        itemsModelCurrent.multiSelectStatus = itemsModelCurrent?.dispItem?.isSelected();
+        itemsModelCurrent.multiSelectStatus = itemsModelCurrent.isSelected();
         itemsModelCurrent.searchValue = this._options.searchValue;
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
