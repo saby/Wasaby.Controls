@@ -18,7 +18,8 @@ import {
     IItemAction,
     TItemActionShowType,
     TItemActionsPosition,
-    IItemActionsItem
+    IItemActionsItem,
+    IContextMenuConfig
 } from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -51,10 +52,14 @@ export interface IViewOptions extends IControlOptions {
 
     editingConfig?: any;
 
-    markerVisibility: TVisibility;
-    markedKey: number|string;
-    showEditArrow: boolean;
-    editArrowVisibilityCallback: TEditArrowVisibilityCallback;
+    markerVisibility?: TVisibility;
+    markedKey?: number|string;
+    showEditArrow?: boolean;
+    editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
+    /**
+     * Конфигурация для контекстного меню опции записи.
+     */
+    contextMenuConfig?: IContextMenuConfig
 }
 
 export default class View extends Control<IViewOptions> {
@@ -375,24 +380,16 @@ export default class View extends Control<IViewOptions> {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        // Если уже открыто какое-то меню, то ничего не делаем, т.к.
-        // если откроем несколько подряд меню даже на одном и том же Item,
-        // при закрытии любого из них сбросится активный Item и тогда при клике на предыдущем
-        // не закрывшемся меню в консоль полетит ошибка
-        if (this._itemActionsMenuId) {
+        const opener = this._children.renderer;
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
+        if (!menuConfig) {
             return Promise.resolve();
         }
-        const opener = this._children.renderer;
         /**
          * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         this._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
-        if (!menuConfig) {
-            return Promise.resolve();
-        }
-
         clickEvent.nativeEvent.preventDefault();
         clickEvent.stopImmediatePropagation();
         const onResult = this._itemActionsMenuResultHandler.bind(this);
@@ -465,7 +462,8 @@ export default class View extends Control<IViewOptions> {
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
-            editArrowVisibilityCallback: options.editArrowVisibilityCallback
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback,
+            contextMenuConfig: options.contextMenuConfig
         });
     }
 
