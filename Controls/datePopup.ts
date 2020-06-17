@@ -24,6 +24,7 @@ import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "
  * @class Controls/datePopup
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/interface/IDateMask
  * @mixes Controls/_datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
@@ -40,6 +41,7 @@ import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "
  * @class Controls/datePopup
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/interface/IDateMask
  * @mixes Controls/datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
