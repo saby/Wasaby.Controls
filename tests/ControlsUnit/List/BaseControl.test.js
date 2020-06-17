@@ -15,8 +15,9 @@ define([
    'Types/entity',
    'Controls/popup',
    'Controls/listDragNDrop',
+   'Controls/listRender',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop) {
+], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, listRender) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -712,7 +713,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
@@ -785,7 +787,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
@@ -850,7 +853,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -978,16 +982,12 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
             down: true
-         };
-         ctrl._notify = (eventName, eventsArgs) => {
-            if (eventName === 'updateShadowMode') {
-               shadowVisibility = eventsArgs[0];
-            }
          };
          ctrl._isScrollShown = true;
          ctrl._shadowVisibility = {};
@@ -1002,15 +1002,14 @@ define([
          ctrl._portionedSearchInProgress = true;
 
          // Up trigger became visible, no changes to indicator
-         ctrl.triggerVisibilityChangedHandler(null, 'up', true);
+         ctrl.triggerVisibilityChangedHandler('up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
          assert.isFalse(ctrl._showContinueSearchButton);
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
-         ctrl.triggerVisibilityChangedHandler(null, 'down', false);
+         ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
          assert.isTrue(ctrl._showContinueSearchButton);
-         assert.equal(shadowVisibility.bottom, 'auto');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
@@ -1055,7 +1054,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
@@ -1469,6 +1469,8 @@ define([
                 markerVisibility: 'visible',
                 keyProperty: 'key',
                 multiSelectVisibility: 'visible',
+                selectedKeys: [],
+                excludedKeys: [],
                 source: new sourceLib.Memory({
                    keyProperty: 'key',
                    data: [{
@@ -1478,7 +1480,9 @@ define([
                    }, {
                       key: 3
                    }]
-                })
+                }),
+                selectedKeys: [],
+                excludedKeys: []
              },
              baseControl = new lists.BaseControl(cfg);
 
@@ -1489,32 +1493,20 @@ define([
 
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._selectionController = {
-            toggleItem: (key) => {
-               if (baseControl._listViewModel.getSelectionStatus(key)) {
-                  baseControl._listViewModel._selectedKeys.pop(key);
-               } else {
-                  baseControl._listViewModel._selectedKeys.push(key);
-               }
-            },
-            handleReset: function() {}
-         };
-         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
+
          baseControl._loadingIndicatorState = 'all';
          lists.BaseControl._private.enterHandler(baseControl);
-         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
 
          baseControl._loadingIndicatorState = null;
          sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
          const handleSelectionControllerResult = sinon.spy(lists.BaseControl._private, 'handleSelectionControllerResult');
          lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
+         assert.isTrue(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
          assert.isTrue(handleSelectionControllerResult.withArgs(baseControl, undefined).calledOnce);
 
          baseControl.getViewModel()._markedKey = 5;
          lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.deepEqual([1, 1], baseControl._listViewModel._selectedKeys);
-
+         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
 
          sandbox.restore();
       });
@@ -1590,7 +1582,8 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
+         baseControl._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) , offsetHeight:0};
+         baseControl._scrollController.__getItemsContainer = () => ({children: []});
          baseControl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
@@ -1625,7 +1618,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          ctrl._sourceController.load = sinon.stub()
@@ -2015,9 +2009,9 @@ define([
             };
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
-            ctrl._beforeMount(cfg);
+            await ctrl._beforeMount(cfg);
 
-            ctrl._children = triggers;
+            ctrl._scrollController._triggers = triggers;
             ctrl._viewSize = 1000;
             ctrl._viewPortSize = 400;
             // эмулируем появление скролла
@@ -2320,17 +2314,16 @@ define([
             ctrl._notify = function(event, dir) {
                result = dir;
             };
-            ctrl._children = {
-               scrollController: {
-                  scrollToItem(key) {
-                     if (key === data[0].id) {
-                        result = 'top';
-                     } else if (key === data[data.length - 1].id) {
-                        result = 'bottom';
-                     }
-                     return Promise.resolve();
+            ctrl._scrollController = {
+               scrollToItem(key) {
+                  if (key === data[0].id) {
+                     result = 'top';
+                  } else if (key === data[data.length - 1].id) {
+                     result = 'bottom';
                   }
-               }
+                  return Promise.resolve();
+               },
+               reset: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -2396,17 +2389,17 @@ define([
             ctrl._notify = function(eventName, type) {
                result = type;
             };
-            ctrl._children = {
-               scrollController: {
-                  scrollToItem(key) {
-                     if (key === data[0].id) {
-                        result = ['top'];
-                     } else if (key === data[data.length - 1].id) {
-                        result = ['bottom'];
-                     }
-                     return Promise.resolve();
+            ctrl._scrollController ={
+               scrollToItem(key) {
+                  if (key === data[0].id) {
+                     result = ['top'];
+                  } else if (key === data[data.length - 1].id) {
+                     result = ['bottom'];
                   }
-               }
+                  return Promise.resolve();
+               },
+               registerObserver: () => undefined,
+               reset: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -3694,6 +3687,56 @@ define([
          });
       });
 
+      it('startDragNDrop', () => {
+         const self = {
+               _options: {
+                  readOnly: false,
+                  itemsDragNDrop: true,
+                  source,
+                  filter: {},
+                  selectedKeys: [],
+                  excludedKeys: [],
+               },
+               _listViewModel: new lists.ListViewModel({
+                  items: new collection.RecordSet({
+                     rawData: data,
+                     keyProperty: 'id'
+                  }),
+                  keyProperty: 'key'
+               })
+            },
+            domEvent = {
+               nativeEvent: {},
+               target: {
+                  closest: function() {
+                     return false;
+                  }
+               }
+            },
+            itemData = {
+               getContents() {
+                  return {
+                     getKey() {
+                        return 2;
+                     }
+                  };
+               }
+            };
+
+         // self._listViewModel.setItems(data);
+
+         let notifyCalled = false;
+         self._notify = function(eventName, args) {
+            notifyCalled = true;
+            assert.equal(eventName, 'dragStart');
+            assert.deepEqual(args[0], [2]);
+            assert.equal(args[1], 2);
+         };
+
+         lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
+         assert.isTrue(notifyCalled);
+      });
+
       it('_processItemMouseEnterWithDragNDrop', () => {
          const ctrl = new lists.BaseControl({});
          const dragEntity = { entity: 'entity' },
@@ -4129,10 +4172,8 @@ define([
                })
             };
             instance.saveOptions(cfg);
-            instance._children = {
-               scrollController: {
-                  scrollToItem: () => {}
-               }
+            instance._scrollController = {
+               scrollToItem: () => {}
             };
             instance._container = {
                querySelector: (selector) => ({
@@ -4576,6 +4617,7 @@ define([
              instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
+         instance._scrollController.afterMount = () => undefined;
          instance._container = {};
          let fakeNotify = sandbox.spy(instance, '_notify')
              .withArgs('drawItems');
@@ -4757,7 +4799,8 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
-         instance._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
+         instance._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }), offsetHeight:0 };
+         instance._scrollController.__getItemsContainer = () => ({children: []});
          instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
@@ -4875,7 +4918,8 @@ define([
          instance._selectionController = {
             update() {},
             clearSelection() { clearSelectionCalled = true; },
-            handleReset() {}
+            handleReset() {},
+            isAllSelected() { return true; }
          };
 
          let cfgClone = { ...cfg};
@@ -5353,6 +5397,7 @@ define([
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             ctrl._container = {clientHeight: 100};
+            ctrl._scrollController.__getItemsContainer = () => ({children: []});
             ctrl._afterMount(cfg);
 
             assert.isNull(ctrl._loadedItems);
@@ -5443,6 +5488,11 @@ define([
             ctrl._container = {
                clientHeight: 100,
                getBoundingClientRect: () => ({y: 0})
+            };
+            ctrl._children = {
+               scrollObserver: {
+                  startRegister: () => undefined
+               }
             };
             ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
@@ -5769,7 +5819,8 @@ define([
          async function mountBaseControl(control, options) {
             control.saveOptions(options);
             await control._beforeMount(options);
-            control._container = {clientHeight: 0};
+            control._container = {clientHeight: 0, offsetHeight:0};
+            control._scrollController.__getItemsContainer = () => ({children: []});
             await control._afterMount(options);
          }
 
@@ -5914,10 +5965,11 @@ define([
                baseControlOptions.markerVisibility = 'onactivated';
                await mountBaseControl(baseControl, baseControlOptions);
 
-               baseControl._children.scrollController = {
+               baseControl._scrollController = {
                   scrollToItem(key) {
                      assert.equal(key, 1);
-                  }
+                  },
+                  reset: () => undefined
                }
 
                   const originalEvent = {target: {}};
@@ -5970,17 +6022,16 @@ define([
                      }
                   };
 
-                  baseControl._children = {
-                     scrollController: {
-                        scrollToItem(key) {
-                           if (key === data[0].id) {
-                              result = 'top';
-                           } else if (key === data[data.length - 1].id) {
-                              result = 'bottom';
-                           }
-                           return Promise.resolve();
+                  baseControl._scrollController = {
+                     scrollToItem(key) {
+                        if (key === data[0].id) {
+                           result = 'top';
+                        } else if (key === data[data.length - 1].id) {
+                           result = 'bottom';
                         }
-                     }
+                        return Promise.resolve();
+                     },
+                     reset: () => undefined
                   };
 
                   // No editing
@@ -6031,6 +6082,40 @@ define([
                baseControl._onItemClick(e, {}, originalEvent);
                assert.isTrue(isStopped);
             });
+         });
+      });
+
+      // Инициализация шаблонов под isNewModel должна происходить до того, как
+      it('should init templates for useNewModel before any item actions initialization', async () => {
+         const cfg = {
+            editingConfig: {
+               toolbarVisibility: true
+            },
+            useNewModel: true,
+            itemActions: [
+               {
+                  id: 1,
+                  showType: 0,
+                  'parent@': true
+               },
+               {
+                  id: 2,
+                  showType: 2,
+                  parent: 1
+               }
+            ]
+         };
+         const sandbox = sinon.createSandbox();
+         const baseControl = new lists.BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+         baseControl._container = {clientHeight: 0};
+         sandbox.replace(baseControl, '_updateItemActions', (options) => {
+            assert.equal(baseControl._itemActionsTemplate, listRender.itemActionsTemplate);
+         });
+         setTimeout(async () => {
+            await baseControl._afterMount();
+            sandbox.restore();
          });
       });
    });

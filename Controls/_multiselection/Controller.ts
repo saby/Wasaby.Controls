@@ -78,8 +78,12 @@ export class Controller {
       return this._getResult(oldSelection, this._selection);
    }
 
-   isAllSelected(): boolean {
-      return this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount());
+   /**
+    * Проверяет, что было выбраны все записи.
+    * @param byEveryItem true - проверять выбранность каждого элемента по отдельности. Иначе проверка происходит по наличию единого признака выбранности всех элементов.
+    */
+   isAllSelected(byEveryItem: boolean): boolean {
+      return this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount(), byEveryItem);
    }
 
    toggleItem(key: TKey): ISelectionControllerResult {
@@ -112,7 +116,8 @@ export class Controller {
       this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
-      return result;   }
+      return result;
+   }
 
    unselectAll(): ISelectionControllerResult {
       const newSelection = this._strategy.unselectAll(this._selection);

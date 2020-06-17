@@ -1,5 +1,4 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import * as template from 'wml!Controls/_list/ScrollContainer/ScrollContainer';
+import {IControlOptions} from 'UI/Base';
 import {Collection} from 'Controls/display';
 import VirtualScroll from './ScrollContainer/VirtualScroll';
 import {Record} from 'Types/entity';
@@ -11,7 +10,6 @@ import {
     IDirection,
     ITriggerState
 } from './ScrollContainer/interfaces';
-import {SyntheticEvent} from 'Vdom/Vdom';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {throttle} from 'Types/function';
@@ -33,7 +31,7 @@ interface ICompatibilityOptions {
     useNewModel: boolean;
 }
 
-interface IOptions extends IControlOptions, ICompatibilityOptions {
+export interface IOptions extends IControlOptions, ICompatibilityOptions {
     virtualScrollConfig: {
         pageSize?: number;
         segmentSize?: number;
@@ -45,38 +43,25 @@ interface IOptions extends IControlOptions, ICompatibilityOptions {
     collection: Collection<Record>;
     activeElement: string | number;
     _triggerPositionCoefficient: number;
+    _notify: (eventName: string, args?: unknown[], options?: { bubbling?: boolean }) => unknown;
+}
+
+interface IScrollTriggers {
+    topVirtualScrollTrigger?: HTMLElement;
+    bottomVirtualScrollTrigger?: HTMLElement;
+    topLoadTrigger?: HTMLElement;
+    bottomLoadTrigger?: HTMLElement;
+    scrollObserver?: HTMLElement;
 }
 
 /**
  * Контейнер управляющий операциями скролла в списке.
- * @class Controls/_list/ScrollContainer
+ * @class Controls/_list/ScrollController/ScrollController
  * @control
  * @private
  * @author Авраменко А.С.
  */
-export default class ScrollContainer extends Control<IOptions> {
-    protected _template: TemplateFunction = template;
-    protected _children: {
-        topVirtualScrollTrigger: HTMLElement;
-        bottomVirtualScrollTrigger: HTMLElement;
-        topLoadTrigger: HTMLElement;
-        bottomLoadTrigger: HTMLElement;
-    };
-    private _observerRegistered: boolean = false;
-
-    private _virtualScroll: VirtualScroll;
-    private _itemsContainerGetter: Function;
-
-    private _viewHeight: number = 0;
-    private _viewportHeight: number = 0;
-    private _triggerOffset: number = 0;
-    private _lastScrollTop: number = 0;
-
-    private _updateShadowModeAfterMount: Function|null = null;
-
-    private _updateShadowModeAfterMount: Function|null = null;
-
-    private _triggerVisibility: ITriggerState = {up: false, down: false};
+export default class ScrollController {
 
     // В браузерах кроме хрома иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
     // вследствие чего получаем ошибку в вычислениях нового range и вообше делаем по сути
@@ -89,15 +74,30 @@ export default class ScrollContainer extends Control<IOptions> {
             down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
         };
     }
+    protected _triggers: IScrollTriggers;
+    private _observerRegistered: boolean = false;
+    private _container: HTMLElement;
+    private _virtualScroll: VirtualScroll;
+    private _itemsContainerGetter: Function;
+
+    private _viewHeight: number = 0;
+    private _viewportHeight: number = 0;
+    private _triggerOffset: number = 0;
+    private _lastScrollTop: number = 0;
+
+    private _updateShadowModeAfterMount: Function|null = null;
+
+    private _updateShadowModeAfterMount: Function|null = null;
+    private _triggerVisibility: ITriggerState = {up: false, down: false};
 
     private _restoreScrollResolve: Function;
-    private _checkTriggerVisibilityTimeout: number;
+    private _checkTriggerVisibilityTimeout: NodeJS.Timeout;
 
     private _afterRenderCallbacks: Function[];
     private _isRendering: boolean = false;
 
     private _indicatorState: IDirection;
-    private _indicatorTimeout: number;
+    private _indicatorTimeout: NodeJS.Timeout;
 
     private _addItemsDirection: IDirection;
     private _addItemsIndex: number;
@@ -112,6 +112,10 @@ export default class ScrollContainer extends Control<IOptions> {
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
+    protected _options: any;
+
+    private _callbacks: any;
+
     private _throttledPositionChanged: Function = throttle((params) => {
         const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
         this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
@@ -120,25 +124,27 @@ export default class ScrollContainer extends Control<IOptions> {
         this._doAfterRender(params.applyScrollTopCallback);
     }, SCROLLMOVE_DELAY, true);
 
-    protected _beforeMount(options: IOptions): void {
+    constructor(options: any) {
+        this._options = {...ScrollController.getDefaultOptions(), ...options};
         this._initModelObserving(options);
         this._initVirtualScroll(options);
+        this._callbacks = options.callbacks;
     }
 
     protected _registerObserver(): void {
         if (!this._observerRegistered) {
             // @ts-ignore
-            this._children.scrollObserver.startRegister(this._children);
+            this._triggers.scrollObserver.startRegister(this._triggers);
             this._observerRegistered = true;
         }
     }
 
-    protected _afterMount(): void {
+    afterMount(container: HTMLElement, triggers: IScrollTriggers): void {
         this.__mounted = true;
+        this._container = container;
+        this._triggers = triggers;
         this._viewResize(this._container.offsetHeight, false);
-        if (this._options.needScrollCalculation) {
-            this._registerObserver();
-        }
+        this.registerObserver();
         this._afterRenderHandler();
         if (this._updateShadowModeAfterMount) {
             this._updateShadowModeAfterMount();
@@ -146,39 +152,42 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    protected _beforeUpdate(options: IOptions): void {
-        if (this._options.collection !== options.collection) {
+    update(options: IOptions): void {
+        if (options.collection && this._options.collection !== options.collection) {
             this._initModelObserving(options);
-            this._initVirtualScroll(options);
+            if (options.virtualScrollConfig) {
+                this._initVirtualScroll(options);
+            }
+            this._options.collection = options.collection;
         }
 
         if (this._indicatorState) {
             this._indicatorTimeout = setTimeout(() => {
-                this._notify('changeIndicatorState', [true, this._indicatorState]);
+                this._callbacks.changeIndicatorState(true, this._indicatorState);
             }, LOADING_INDICATOR_SHOW_TIMEOUT);
         }
 
         this._isRendering = true;
     }
 
-    protected _afterUpdate(oldOptions: IOptions): void {
+    registerObserver(): void {
         if (this._options.needScrollCalculation) {
             this._registerObserver();
         }
     }
 
-    protected _beforeRender(): void {
+    saveScrollPosition(): void {
         if (this._virtualScroll.isNeedToRestorePosition) {
             this._notify('saveScrollPosition', [], {bubbling: true});
         }
     }
 
-    protected _afterRender(): void {
+    afterRender(): void {
         this._isRendering = false;
         this._afterRenderHandler();
     }
 
-    protected _beforeUnmount(): void {
+    reset(): void {
         clearTimeout(this._checkTriggerVisibilityTimeout);
         // TODO убрать проверку в https://online.sbis.ru/opendoc.html?guid=fb8a3901-bddf-4552-ae9a-ed0299d3e46f
         if (!this._options.collection.destroyed) {
@@ -187,28 +196,18 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
-    protected _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
+    itemsContainerReady(itemsContainerGetter: Function): void {
         this._itemsContainerGetter = itemsContainerGetter;
     }
 
-    protected _stopBubblingEvent(event: SyntheticEvent<Event>): void {
-        // В некоторых кейсах (например ScrollViewer) внутри списков могут находиться
-        // другие списки, которые также будут нотифицировать события управления скроллом и тенью
-        // Необходимо их останавливать, чтобы скроллом управлял только самый верхний список
-        event.stopPropagation();
-    }
-
-    protected _viewResizeHandler(): void {
+    viewResize(container: HTMLElement): void {
+        this._container = container;
         this._viewResize(this._container.offsetHeight);
         // TODO Совместимость необходимо удалить после переписывания baseControl
         this._notify('viewResize');
     }
 
-    protected _observeScrollHandler(
-        _: SyntheticEvent<Event>,
-        eventName: string,
-        params: IScrollParams
-    ): void {
+    observeScroll(eventName: string, params: IScrollParams): void {
         switch (eventName) {
             case 'virtualPageBottomStart':
                 this._triggerVisibilityChanged('down', true, params);
@@ -227,7 +226,7 @@ export default class ScrollContainer extends Control<IOptions> {
                 break;
             case 'viewportResize':
                 this._viewportResize(params.clientHeight);
-                this._notify('viewportResize', [params.clientHeight, params.rect]);
+                this._callbacks.viewportResize(params.clientHeight, params.rect);
                 break;
             case 'virtualScrollMove':
                 this._scrollBarPositionChanged(params);
@@ -236,7 +235,7 @@ export default class ScrollContainer extends Control<IOptions> {
             case 'scrollResize':
             case 'scrollMove':
             case 'cantScroll':
-                this._notify(eventName, [params as IScrollParams]);
+                this._callbacks[eventName](params as IScrollParams);
                 break;
         }
     }
@@ -361,7 +360,7 @@ export default class ScrollContainer extends Control<IOptions> {
         this._subscribeToCollectionChange(options.collection, options.useNewModel);
 
         if (options.useNewModel) {
-            ScrollContainer._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
+            ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
         }
     }
 
@@ -427,20 +426,19 @@ export default class ScrollContainer extends Control<IOptions> {
         if (needScrollCalculation) {
             let collectionStartIndex: number;
             let collectionStopIndex: number;
-
-        if (collection.getViewIterator) {
-            collectionStartIndex = VirtualScrollController.getStartIndex(
-                collection as unknown as VirtualScrollController.IVirtualScrollCollection
-            );
-            collectionStopIndex = VirtualScrollController.getStopIndex(
-                collection as unknown as VirtualScrollController.IVirtualScrollCollection
-            );
-        } else {
-            // @ts-ignore
-            collectionStartIndex = collection.getStartIndex();
-            // @ts-ignore
-            collectionStopIndex = collection.getStopIndex();
-        }
+            if (collection.getViewIterator) {
+                collectionStartIndex = VirtualScrollController.getStartIndex(
+                    collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+                collectionStopIndex = VirtualScrollController.getStopIndex(
+                    collection as unknown as VirtualScrollController.IVirtualScrollCollection
+                );
+            } else {
+                // @ts-ignore
+                collectionStartIndex = collection.getStartIndex();
+                // @ts-ignore
+                collectionStopIndex = collection.getStopIndex();
+            }
 
             if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
                 if (collection.getViewIterator) {
@@ -452,18 +450,18 @@ export default class ScrollContainer extends Control<IOptions> {
             }
         }
         if (this.__mounted) {
-            this._notify('updateShadowMode', [{
+            this._callbacks.updateShadowMode({
                 up: start > 0,
                 down: stop < collection.getCount()
-            }]);
+            });
         } else {
             // Обновление режима отображения тени в должно вызываться, иначе изначальное отображение будет неверным.
             // https://online.sbis.ru/opendoc.html?guid=a3d69022-e68d-41d2-95c6-b9a8877190e9
             this._updateShadowModeAfterMount = () => {
-                this._notify('updateShadowMode', [{
+                this._callbacks.updateShadowMode({
                     up: start > 0,
                     down: stop < collection.getCount()
-                }]);
+                });
             };
         }
     }
@@ -484,7 +482,7 @@ export default class ScrollContainer extends Control<IOptions> {
 
         this._triggerVisibility[triggerName] = triggerVisible;
         // TODO Совместимость необходимо удалить после переписывания baseControl
-        this._notify('triggerVisibilityChanged', [triggerName, triggerVisible]);
+        this._callbacks.triggerVisibilityChanged(triggerName, triggerVisible);
     }
 
     /**
@@ -497,7 +495,7 @@ export default class ScrollContainer extends Control<IOptions> {
             this._inertialScrolling.scrollStarted();
         }
 
-        this._notify('scrollPositionChanged', [this._lastScrollTop]);
+        this._callbacks.scrollPositionChanged(this._lastScrollTop);
 
         if (this._fakeScroll) {
             this._fakeScroll = false;
@@ -554,7 +552,7 @@ export default class ScrollContainer extends Control<IOptions> {
      */
     private _recalcToDirection(direction: IDirection): void {
         if (!this._virtualScroll.rangeChanged && this._virtualScroll.isRangeOnEdge(direction)) {
-            this._notifyLoadMore(direction);
+            this._callbacks.loadMore(direction);
         } else {
             this._inertialScrolling.callAfterScrollStopped(() => {
                 if (!this._virtualScroll.rangeChanged) {
@@ -576,7 +574,7 @@ export default class ScrollContainer extends Control<IOptions> {
         }
 
         if (this._indicatorState) {
-            this._notify('changeIndicatorState', [false, this._indicatorState]);
+            this._callbacks.changeIndicatorState(false, this._indicatorState);
             this._indicatorState = null;
             clearTimeout(this._indicatorTimeout);
         }
@@ -699,6 +697,10 @@ export default class ScrollContainer extends Control<IOptions> {
         }
     }
 
+    _notify(eventName: string, args?: any[], options?: { bubbling?: boolean }): any {
+        this._options.notify(eventName, args, options);
+    }
+
     /**
      * Обрабатывает удаление элементов из коллекции
      * @param removeIndex
@@ -713,15 +715,6 @@ export default class ScrollContainer extends Control<IOptions> {
             this._options.needScrollCalculation);
     }
 
-    /**
-     * Нотифицирует о том, что нужно грузить новые данные
-     * @param direction
-     * @private
-     */
-    private _notifyLoadMore(direction: IDirection): void {
-        this._notify('loadMore', [direction]);
-    }
-
     private _notifyPlaceholdersChanged(placeholders: IPlaceholders): void {
         this._placeholders = placeholders;
 
@@ -734,9 +727,9 @@ export default class ScrollContainer extends Control<IOptions> {
         this._triggerOffset =
             (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
             this._options._triggerPositionCoefficient;
-        this._children.topVirtualScrollTrigger.style.top = `${this._triggerOffset}px`;
-        this._children.bottomVirtualScrollTrigger.style.bottom = `${this._triggerOffset}px`;
-        this._notify('triggerOffsetChanged', [this._triggerOffset, this._triggerOffset]);
+        this._triggers?.topVirtualScrollTrigger?.style.top = `${this._triggerOffset}px`;
+        this._triggers?.bottomVirtualScrollTrigger?.style.bottom = `${this._triggerOffset}px`;
+        this._callbacks.triggerOffsetChanged(this._triggerOffset, this._triggerOffset);
     }
 
     private static _setCollectionIterator(collection: Collection<Record>, mode: 'remove' | 'hide'): void {

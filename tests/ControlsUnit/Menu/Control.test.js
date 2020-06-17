@@ -362,6 +362,31 @@ define(
             assert.isFalse(result);
          });
 
+         it('setSubMenuPosition', function() {
+            let menuControl = getMenu();
+            menuControl._openSubMenuEvent = {
+               clientX: 25
+            };
+
+            menuControl._subMenu = {
+               getBoundingClientRect: () => ({
+                  left: 10,
+                  top: 10,
+                  height: 200,
+                  width: 100
+               })
+            };
+
+            menuControl.setSubMenuPosition();
+            assert.deepEqual(menuControl._subMenuPosition, {
+
+               // т.к. left < clientX, прибавляем ширину к left
+               left: 110,
+               top: 10,
+               height: 200
+            });
+         });
+
          describe('_separatorMouseEnter', function() {
             let isClosed, isMouseInArea = true, menuControl = getMenu();
             beforeEach(() => {
