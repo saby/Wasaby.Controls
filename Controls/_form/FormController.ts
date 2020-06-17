@@ -12,7 +12,6 @@ import {Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IFormOperation} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
-import Func = Mocha.Func;
 
 interface IFormController extends IControlOptions {
     createMetaData?: unknown;
