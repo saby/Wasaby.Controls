@@ -12,6 +12,7 @@ import {Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IFormOperation} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
+import Func = Mocha.Func;
 
 interface IFormController extends IControlOptions {
     createMetaData?: unknown;
@@ -244,8 +245,9 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
         if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
             // Если текущий рекорд изменен, то покажем вопрос
-            if (this._options.record && this._options.record.isChanged()) {
-                this._showConfirmPopup('yesno').then((answer) => {
+            const confirmChangeRecordPromise = this._confirmRecordChange();
+            if (confirmChangeRecordPromise) {
+                confirmChangeRecordPromise.then((answer) => {
                     if (answer === true) {
                         this.update().then((res) => {
                             this.read(newOptions.key, newOptions.readMetaData);
@@ -270,8 +272,9 @@ class FormController extends Control<IFormController, IReceivedState> {
         // Нельзя чтобы контрол ддосил БЛ.
         if (newOptions.key === undefined && !newOptions.record && this._createMetaDataOnUpdate !== createMetaData) {
             // Если текущий рекорд изменен, то покажем вопрос
-            if (this._options.record && this._options.record.isChanged()) {
-                this._showConfirmPopup('yesno').then((answer) => {
+            const confirmChangeRecordPromise = this._confirmRecordChange();
+            if (confirmChangeRecordPromise) {
+                confirmChangeRecordPromise.then((answer) => {
                     if (answer === true) {
                         this.update().then((res) => {
                             return res;
@@ -286,6 +289,11 @@ class FormController extends Control<IFormController, IReceivedState> {
             if (newOptions.hasOwnProperty('isNewRecord')) {
                 this._isNewRecord = newOptions.isNewRecord;
             }
+        }
+    }
+    private _confirmRecordChange(): Promise<string | boolean> | void {
+        if (this._options.record && this._options.record.isChanged()) {
+            return this._showConfirmPopup('yesno');
         }
     }
 
