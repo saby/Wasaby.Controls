@@ -226,6 +226,7 @@ export class Controller {
 
    private _updateModel(selection: ISelection, silent: boolean = false): void {
       const selectionForModel = this._strategy.getSelectionForModel(selection);
+      // TODO думаю лучше будет занотифаить об изменении один раз после всех вызовов (сейчас нотифай в каждом)
       this._model.setSelectedItems(selectionForModel.get(true), true, silent);
       this._model.setSelectedItems(selectionForModel.get(false), false, silent);
       this._model.setSelectedItems(selectionForModel.get(null), null, silent);

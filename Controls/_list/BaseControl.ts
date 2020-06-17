@@ -218,7 +218,11 @@ const _private = {
         }
     },
 
-    reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
+    /*
+        Если reload вызван публичным методом, то состояние модели не нужно восстанавливать, так как оно будет отдельно
+        восстановлено. Для этого добавлен параметр updateModel
+     */
+    reload(self, cfg, sourceConfig?: IBaseSourceConfig, updateModel: boolean = true): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
         const navigation = cClone(cfg.navigation);
@@ -303,6 +307,10 @@ const _private = {
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
+                    if (self._markerController && updateModel) {
+                        _private.updateMarkerController(self, self._options);
+                    }
+
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                     }
@@ -365,7 +373,7 @@ const _private = {
     },
 
     reloadAndUpdateModel(self: any, cfg: any, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
-        return _private.reload(self, cfg, sourceConfig).addCallback(() => {
+        return _private.reload(self, cfg, sourceConfig, false).addCallback(() => {
             if (self._markerController) {
                 self._markerController.restoreMarker();
             }
