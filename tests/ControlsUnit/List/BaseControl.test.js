@@ -4655,6 +4655,72 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
+      it('onListChange call selectionController methods', () => {
+         let clearSelectionCalled = false,
+             handleResetCalled = false,
+             handleAddItemsCalled = false;
+
+         const self = {
+            _options: {
+               root: 5
+            },
+            _prevRootId: 5,
+            _selectionController: {
+               isAllSelected: () => true,
+               clearSelection: () => { clearSelectionCalled = true },
+               handleReset: (items, prevRoot, rootChanged) => {
+                  handleResetCalled = true;
+                  assert.equal(items, 'items');
+                  assert.equal(prevRoot, 5);
+                  assert.isFalse(rootChanged);
+               },
+               handleAddItems: (items) => {
+                  handleAddItemsCalled = true;
+                  assert.equal(items, 'items');
+               }
+            },
+            _listViewModel: {
+               getCount: () => 5
+            },
+            handleSelectionControllerResult: () => {},
+            _updateInitializedItemActions: () => {}
+         };
+
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         self._listViewModel.getCount = () => 0;
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         assert.isTrue(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         clearSelectionCalled = false;
+         self._selectionController.isAllSelected = () => false;
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         clearSelectionCalled = false;
+         lists.BaseControl._private.onListChange(self, null, '');
+         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'rs', 'items');
+         assert.isFalse(clearSelectionCalled);
+         assert.isTrue(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'a', 'items');
+         assert.isFalse(clearSelectionCalled);
+         assert.isTrue(handleResetCalled);
+         assert.isTrue(handleAddItemsCalled);
+      });
+
       it('should fire "drawItems" with new collection if source item has changed', async function() {
          var
             cfg = {
@@ -4898,35 +4964,6 @@ define([
          assert.isTrue(clearSelectionCalled);
       });
 
-      it('_beforeUpdate with empty model', async function() {
-         let cfg = {
-            viewName: 'Controls/List/ListView',
-            sorting: [],
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            keyProperty: 'id'
-         };
-         let instance = new lists.BaseControl(cfg);
-
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-
-         let clearSelectionCalled = false;
-         instance._selectionController = {
-            update() {},
-            clearSelection() { clearSelectionCalled = true; },
-            handleReset() {},
-            isAllSelected() { return true; }
-         };
-
-         let cfgClone = { ...cfg};
-         instance._beforeUpdate(cfgClone);
-         assert.isTrue(clearSelectionCalled);
-      });
-
       it('_beforeUpdate with new searchValue', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -5084,23 +5121,6 @@ define([
             });
             const actionsOf0 = instance._listViewModel.at(0).getActions();
             assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-         });
-
-         // Необходимо обновлять опции записи если в конфиге editingConfig передан item
-         it('should update ItemActions when item was passed within options.editingConfig', () => {
-            instance._itemActionsInitialized = false;
-            instance._beforeUpdate({
-               ...cfg,
-               source: instance._options.source,
-               editingConfig: {
-                  item: { id: 1 }
-               }
-            });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-            const actionsTemplateConfig = instance._listViewModel.getActionsTemplateConfig();
-            assert.exists(actionsTemplateConfig, 'actionsTemplateConfig for model was not assigned');
-            assert.equal(actionsTemplateConfig.size, 's', 'incorrect size for item actions on editingConfig');
          });
 
          // при неидентичности source необходимо перезапрашивать данные этого source и затем инициализировать ItemActions

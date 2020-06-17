@@ -1266,6 +1266,11 @@ const _private = {
                      result = self._selectionController.handleAddItems(newItems);
                      break;
                }
+
+               if (self._listViewModel.getCount() === 0 && self._selectionController.isAllSelected()) {
+                   result = self._selectionController.clearSelection();
+               }
+
                self.handleSelectionControllerResult(result);
             }
         }
@@ -1926,6 +1931,10 @@ const _private = {
                 self.getSourceController()
             );
             self._editingItemData = self._editInPlace.getEditingItemData();
+
+            if (options.itemActions && self._editInPlace.shouldShowToolbar()) {
+                self._updateItemActions(options);
+            }
         }
     },
 
@@ -2379,9 +2388,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._children.formController);
             this._editInPlace.updateViewModel(this._listViewModel);
-            if (this._options.itemActions && this._editInPlace.shouldShowToolbar()) {
-                this._updateItemActions(this._options);
-            }
         }
 
         // для связи с контроллером ПМО
@@ -2497,8 +2503,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._selectionController) {
             _private.updateSelectionController(this, newOptions);
-            if ((self._options.root !== newOptions.root || filterChanged || this._listViewModel.getCount() === 0)
-                && this._selectionController.isAllSelected(false)) {
+            if ((self._options.root !== newOptions.root || filterChanged) && this._selectionController.isAllSelected(false)) {
                 const result = this._selectionController.clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
@@ -2548,11 +2553,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
             this._updateInitializedItemActions(newOptions);
-        }
-
-        // Ициализация опций записи при загрузке нужна для случая, когда предустановлен editingConfig.item
-        if (newOptions.editingConfig && newOptions.editingConfig.item) {
-            this._initItemActions(null, newOptions);
         }
 
         if (this._itemsChanged) {

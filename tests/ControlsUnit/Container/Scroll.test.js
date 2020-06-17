@@ -16,7 +16,8 @@ define(
             event = {
                stopImmediatePropagation: sinon.fake()
             }
-            scroll = new scrollMod.Container({});
+            scroll = new scrollMod.Container(scrollMod.Container.getDefaultOptions());
+            scroll._options = scrollMod.Container.getDefaultOptions();
 
             var templateFn = scroll._template;
 
@@ -49,6 +50,7 @@ define(
                start: sinon.fake()
             };
             scroll._children.content = {
+               offsetHeight: 40,
                scrollHeight: 50,
                scrollTop: 10
             };
@@ -65,8 +67,32 @@ define(
                top: 'auto',
                bottom: 'auto'
             };
+            scroll._stickyHeaderContext = {
+               updateConsumers: function() { }
+            };
 
             scroll._isMounted = true;
+         });
+
+         describe('_afterMount', function() {
+            it('should be enable shadows if the contents fit in the container', function () {
+               scroll._beforeMount(scrollMod.Container.getDefaultOptions(), {});
+               sinon.stub(scroll, '_adjustContentMarginsForBlockRender');
+               scroll._children.stickyController = {
+                  setCanScroll: sinon.fake()
+               };
+               scroll._afterMount();
+               assert.isTrue(scroll._displayState.shadowEnable.top);
+               assert.isTrue(scroll._displayState.shadowEnable.bottom);
+            });
+            it('should be disable shadows if the content does not fit in the container', function () {
+               scroll._beforeMount(scrollMod.Container.getDefaultOptions(), {});
+               scroll._children.content.offsetHeight = 100;
+               sinon.stub(scroll, '_adjustContentMarginsForBlockRender');
+               scroll._afterMount();
+               assert.isFalse(scroll._displayState.shadowEnable.top);
+               assert.isFalse(scroll._displayState.shadowEnable.bottom);
+            });
          });
 
          describe('_afterUpdate', function() {
