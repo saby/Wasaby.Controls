@@ -79,8 +79,8 @@ export class Controller {
    }
 
    /**
-    * Проверяет, что было выбрано все, используя ПМО
-    * @param byEveryItem true - был выбран каждый элемент, иначе проверяется что выбраны все одним нажатием, например ПМО
+    * Проверяет, что было выбраны все записи.
+    * @param byEveryItem true - проверять выбранность каждого элемента по отдельности. Иначе проверка происходит по наличию единого признака выбранности всех элементов.
     */
    isAllSelected(byEveryItem: boolean): boolean {
       return this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount(), byEveryItem);
