@@ -395,11 +395,14 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       it('all selected', () => {
          const selection = { selected: [null], excluded: [null] };
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, false));
+
       });
 
       it ('all selected and one excluded', () => {
          const selection = { selected: [null], excluded: [null, 2] };
          assert.isFalse(strategy.isAllSelected(selection, false, 7));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, false));
       });
 
       it ('selected current root', () => {
@@ -416,27 +419,19 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             })
          });
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
+         assert.isTrue(strategy.isAllSelected(selection, true, 7, false));
       });
 
       it ('selected by one all elements', () => {
          const selection = { selected: [1, 2, 3, 4, 5, 6, 7], excluded: [] };
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
+         assert.isFalse(strategy.isAllSelected(selection, true, 7, false));
       });
 
       it ('selected by one all elements and has more data', () => {
          const selection = { selected: [1, 2, 3, 4, 5, 6, 7], excluded: [] };
          assert.isFalse(strategy.isAllSelected(selection, true, 7));
+         assert.isFalse(strategy.isAllSelected(selection, true, 7, false));
       });
-   });
-
-   it('isAllSelectedByPmo', () => {
-      let selection = { selected: [], excluded: [] };
-      assert.isFalse(strategy.isAllSelectedByPmo(selection));
-
-      selection = { selected: [null], excluded: [null] };
-      assert.isTrue(strategy.isAllSelectedByPmo(selection));
-
-      selection = { selected: [null, 2], excluded: [null, 3] };
-      assert.isTrue(strategy.isAllSelectedByPmo(selection));
    });
 });

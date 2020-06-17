@@ -33,8 +33,7 @@ describe('Controls/_multiselection/Controller', () => {
       },
       isAllSelected(): boolean {
          return false;
-      },
-      isAllSelectedByPmo(): void {}
+      }
    };
 
    let controller, model;
@@ -145,9 +144,9 @@ describe('Controls/_multiselection/Controller', () => {
       });
    });
 
-   it('isAllSelectedByPmo', () => {
-      const isAllSelectedSpy = spy(strategy, 'isAllSelectedByPmo');
-      controller.isAllSelectedByPmo();
+   it('isAllSelected', () => {
+      const isAllSelectedSpy = spy(strategy, 'isAllSelected');
+      controller.isAllSelected();
       assert.isTrue(isAllSelectedSpy.called);
    });
 

@@ -227,13 +227,17 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number): boolean {
-      return !hasMoreData && itemsCount === this.getCount(selection, hasMoreData)
-         || this._isAllSelectedInRoot(selection) && selection.excluded.length === 1;
-   }
+   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number, byEveryItem: boolean = true): boolean {
+      let isAllSelected;
 
-   isAllSelectedByPmo(selection: ISelection): boolean {
-      return this._isAllSelectedInRoot(selection);
+      if (byEveryItem) {
+         isAllSelected = !hasMoreData && itemsCount === this.getCount(selection, hasMoreData)
+            || this._isAllSelectedInRoot(selection) && selection.excluded.length === 1;
+      } else {
+         isAllSelected = this._isAllSelectedInRoot(selection);
+      }
+
+      return isAllSelected;
    }
 
    private _unselectParentNodes(selection: ISelection, parentId: TKey): void {

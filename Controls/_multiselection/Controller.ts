@@ -80,9 +80,10 @@ export class Controller {
 
    /**
     * Проверяет, что было выбрано все, используя ПМО
+    * @param byEveryItem true - был выбран каждый элемент, иначе проверяется что выбраны все одним нажатием, например ПМО
     */
-   isAllSelectedByPmo(): boolean {
-      return this._strategy.isAllSelectedByPmo(this._selection);
+   isAllSelected(byEveryItem: boolean): boolean {
+      return this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount(), byEveryItem);
    }
 
    toggleItem(key: TKey): ISelectionControllerResult {
