@@ -14,6 +14,7 @@ import monthListUtils from './MonthList/Utils';
 import ITEM_TYPES from './MonthList/ItemTypes';
 import {IDisplayedRanges, IDisplayedRangesOptions} from 'Controls/interface';
 import {IDateConstructor, IDateConstructorOptions} from 'Controls/interface';
+import {IDayTemplate, IDayTemplateOptions} from 'Controls/interface';
 import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
 import dateUtils = require('Controls/Utils/Date');
 import getDimensions = require("Controls/Utils/getDimensions");
@@ -29,6 +30,7 @@ interface IModuleComponentOptions extends
     IMonthListOptions,
     IMonthListVirtualPageSizeOptions,
     IDisplayedRangesOptions,
+    IDayTemplateOptions,
     IDateConstructorOptions {
 }
 
@@ -45,7 +47,7 @@ const enum VIEW_MODE {
 
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_calendar.less">переменные тем оформления</a>
@@ -53,18 +55,21 @@ const enum VIEW_MODE {
  * @class Controls/_calendar/MonthList
  * @extends Core/Control
  * @mixes Controls/_calendar/interfaces/IMonthListSource
+ * @mixes Controls/_interface/IDayTemplate
+ * @mixes Controls/_calendar/interfaces/IMonth
  * @control
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Date/MonthList
  */
 class  ModuleComponent extends Control<IModuleComponentOptions> implements
-        IMonthListSource, IMonthList, IMonthListVirtualPageSize, IDateConstructor, IDisplayedRanges {
+        IMonthListSource, IMonthList, IMonthListVirtualPageSize, IDateConstructor, IDisplayedRanges, IDayTemplate {
     readonly '[Controls/_calendar/interface/IMonthListSource]': boolean = true;
     readonly '[Controls/_calendar/interface/IMonthList]': boolean = true;
     readonly '[Controls/_calendar/interface/IMonthListVirtualPageSize]': boolean = true;
     readonly '[Controls/_interface/IDateConstructor]': boolean = true;
     readonly '[Controls/_interface/IDisplayedRanges]': boolean = true;
+    readonly '[Controls/_interface/IDayTemplate]': boolean = true;
 
     protected _template: TemplateFunction = template;
 
