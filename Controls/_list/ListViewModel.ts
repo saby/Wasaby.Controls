@@ -78,7 +78,7 @@ var _private = {
     getMultiSelectClassList: function (current): string {
         let
             checkboxOnHover = current.multiSelectVisibility === 'onhover',
-            isSelected = !!current.multiSelectStatus;
+            isSelected = current.multiSelectStatus !== undefined;
 
         return CssClassList.add('js-controls-ListView__checkbox')
                            .add('js-controls-ListView__notEditable')
@@ -171,6 +171,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _dragEntity: null,
     _draggingItemData: null,
     _dragTargetPosition: null,
+    _selectedKeys: null,
     _markedKey: null,
     _hoveredItem: null,
     _reloadedKeys: null,
@@ -180,6 +181,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     constructor(cfg): void {
         const self = this;
         ListViewModel.superclass.constructor.apply(this, arguments);
+
+        this._selectedKeys = cfg.selectedKeys || [];
 
         // TODO надо ли?
         _private.updateIndexes(self, 0, self.getCount());
@@ -212,7 +215,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         // TODO USE itemsModelCurrent.isSelected()
         itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
-        itemsModelCurrent.multiSelectStatus = itemsModelCurrent?.dispItem?.isSelected();
+        itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
         itemsModelCurrent.searchValue = this._options.searchValue;
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
@@ -332,9 +335,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._activeItem && this._activeItem.item === item) {
             version = 'ACTIVE_' + version;
         }
-        const isSelected = this.getItemBySourceKey(key)?.isSelected();
-        if (isSelected === true || isSelected === null) {
-            version = 'SELECTED_' + isSelected + '_' + version;
+        if (this._selectedKeys && this._selectedKeys.hasOwnProperty(key)) {
+            version = 'SELECTED_' + this._selectedKeys[key] + '_' + version;
         }
         if (this._reloadedKeys[key]) {
             version = `RELOADED_${this._reloadedKeys[key]}_` + version;
@@ -445,7 +447,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return _private.getItemByMarkedKey(this, this._markedKey);
     },
     getSelectionStatus: function(key) {
-        return !!this.getItemBySourceKey(key)?.isSelected();
+        return this._selectedKeys[key] !== undefined;
     },
 
     getSwipeItem: function() {
@@ -752,7 +754,23 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
+    updateSelection: function(selectedKeys) {
+        this._selectedKeys = selectedKeys || [];
+        this._nextModelVersion(true);
+    },
+
     setSelectedItems(items: Model[], selected: boolean|null): void {
+        // Код для совместимости с новой моделью
+        // вместо false ставим undefined,
+        // чтобы не сломалось показывание только при наведении
+        items.forEach((item) => {
+            if (selected === false) {
+                this._selectedKeys[item.getId()] = undefined;
+            } else {
+                this._selectedKeys[item.getId()] = selected;
+            }
+        });
+
         this._display.setSelectedItems(items, selected);
     },
 
