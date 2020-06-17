@@ -137,7 +137,7 @@ define([
              cleanParams: { filter: {}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } },
              direction: null,
              paramsController: controller._queryParamsController
-         )};
+         });
          assert.notEqual(originalFilter, resParams.filter, 'Modified filter should be a new object instance');
       });
 
