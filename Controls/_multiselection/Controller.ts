@@ -46,8 +46,6 @@ export class Controller {
    /**
     * Обновить состояние контроллера
     * @param options
-    * @param rootChanged
-    * @param filterChanged
     */
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
@@ -76,6 +74,14 @@ export class Controller {
       this._clearSelection();
       this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
+   }
+
+   /**
+    * Проставляет выбранные элементы в модели
+    * @remark Не уведомляет о изменениях в модели
+    */
+   restoreSelection(): void {
+      this._updateModel(this._selection, true);
    }
 
    /**
@@ -218,10 +224,10 @@ export class Controller {
       };
    }
 
-   private _updateModel(selection: ISelection): void {
+   private _updateModel(selection: ISelection, silent: boolean = false): void {
       const selectionForModel = this._strategy.getSelectionForModel(selection);
-      this._model.setSelectedItems(selectionForModel.get(true), true);
-      this._model.setSelectedItems(selectionForModel.get(false), false);
-      this._model.setSelectedItems(selectionForModel.get(null), null);
+      this._model.setSelectedItems(selectionForModel.get(true), true, silent);
+      this._model.setSelectedItems(selectionForModel.get(false), false, silent);
+      this._model.setSelectedItems(selectionForModel.get(null), null, silent);
    }
 }

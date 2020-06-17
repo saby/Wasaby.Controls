@@ -10,16 +10,18 @@ import { RecordSet } from 'Types/collection';
 describe('Controls/marker/Controller', () => {
    let controller, model;
 
+   const items = new RecordSet({
+      rawData: [
+         {id: 1},
+         {id: 2},
+         {id: 3}
+      ],
+      keyProperty: 'id'
+   });
+
    beforeEach(() => {
       model = new ListViewModel({
-         items: new RecordSet({
-            rawData: [
-               {id: 1},
-               {id: 2},
-               {id: 3}
-            ],
-            keyProperty: 'id'
-         })
+         items
       });
       controller = new MarkerController({ model, markerVisibility: 'visible', markedKey: undefined })
    });
@@ -147,6 +149,18 @@ describe('Controls/marker/Controller', () => {
          assert.equal(result, undefined);
          assert.equal(model.getMarkedKey(), undefined);
       });
+   });
+
+   it('restoreSelection', () => {
+      controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
+      model.setItems(items);
+
+      const notifyLaterSpy = spy(model, '_notifyLater');
+
+      controller.restoreMarker();
+
+      assert.isFalse(notifyLaterSpy.called);
+      assert.isTrue(model.getItemBySourceKey(1).isMarked());
    });
 
    it('move marker next', () => {

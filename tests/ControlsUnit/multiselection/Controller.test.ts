@@ -2,7 +2,7 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { SelectionController } from 'Controls/multiselection';
+import { FlatSelectionStrategy, SelectionController } from 'Controls/multiselection';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { spy } from 'sinon';
@@ -18,23 +18,7 @@ describe('Controls/_multiselection/Controller', () => {
       keyProperty: 'id'
    });
 
-   const strategy = {
-      unselect(): object { return { selected: [], excluded: [] }; },
-      select(): object { return { selected: [], excluded: [] }; },
-      update(): object { return { selected: [], excluded: [] }; },
-      selectAll(): object { return { selected: [], excluded: [] }; },
-      toggleAll(): object { return { selected: [], excluded: [] }; },
-      unselectAll(): object { return { selected: [], excluded: [] }; },
-      getCount(): void {},
-      getSelectionForModel(): object {
-         return {
-            get(): object { return []; }
-         };
-      },
-      isAllSelected(): boolean {
-         return false;
-      }
-   };
+   const strategy = new FlatSelectionStrategy({items});
 
    let controller, model;
 
@@ -81,6 +65,23 @@ describe('Controls/_multiselection/Controller', () => {
          }, false, false);
          assert.isTrue(setSelectedItemsSpy.called);
       });
+   });
+
+   it('restoreSelection', () => {
+      controller = new SelectionController({
+         model,
+         strategy,
+         selectedKeys: [1],
+         excludedKeys: []
+      });
+      model.setItems(items);
+
+      const notifyLaterSpy = spy(model, '_notifyLater');
+
+      controller.restoreSelection();
+
+      assert.isFalse(notifyLaterSpy.called);
+      assert.isTrue(model.getItemBySourceKey(1).isSelected());
    });
 
    describe('toggleItem', () => {

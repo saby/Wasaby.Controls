@@ -303,10 +303,6 @@ const _private = {
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                    if (self._markerController) {
-                        _private.updateMarkerController(self, self._options);
-                    }
-
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                     }
@@ -367,6 +363,18 @@ const _private = {
         }
         return resDeferred;
     },
+
+    reloadAndUpdateModel(self: any, cfg: any, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
+        return _private.reload(self, cfg, sourceConfig).addCallback(() => {
+            if (self._markerController) {
+                self._markerController.restoreMarker();
+            }
+            if (self._selectionController) {
+                self._selectionController.restoreSelection();
+            }
+        });
+    },
+
     startDragNDrop(self, domEvent, itemData): void {
         if (!self._options.readOnly && self._options.itemsDragNDrop
                 && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)) {
@@ -2830,7 +2838,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
-        return _private.reload(this, this._options, sourceConfig).addCallback(getData);
+        return _private.reloadAndUpdateModel(this, this._options, sourceConfig).addCallback(getData);
     },
 
     setMarkedKey(key: number | string): void {
