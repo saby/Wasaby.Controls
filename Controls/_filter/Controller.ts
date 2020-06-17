@@ -179,7 +179,7 @@ const _private = {
                  historyUtils.getHistorySource({historyId}).update(historyData, meta);
              }
 
-             if (!historyUtils.getHistorySource({historyId})._history) {
+             if (!historyUtils.getHistorySource({historyId}).historyReady()) {
                // Getting history before updating if it hasn’t already done
                _private.getHistoryItems(self, historyId).addCallback(function() {
                   update();
@@ -905,8 +905,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
 
          _dataLoadCallback(items: RecordSet): void {
             if (this._options.historyId && this._isFilterChanged) {
-               _private.deleteCurrentFilterFromHistory(this);
-               _private.addToHistory(
+                if (historyUtils.getHistorySource({ historyId: this._options.historyId }).historyReady()) {
+                    _private.deleteCurrentFilterFromHistory(this);
+                }
+                _private.addToHistory(
                    this,
                    this._filterButtonItems,
                    this._fastFilterItems,
