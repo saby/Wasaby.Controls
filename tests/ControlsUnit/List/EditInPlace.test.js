@@ -2091,9 +2091,30 @@ define([
                assert.equal(editingItem, eip._editingItemData.item);
                assert.equal(eip._options.multiSelectVisibility, 'visible');
             };
-
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
             eip.updateEditingData({multiSelectVisibility: 'visible', listViewModel: listViewModel});
             assert.isTrue(isItemDataRegenerated);
+         });
+
+         it('should suscribe onCollectionChange once', async () => {
+            let
+               isItemDataRegenerated = false;
+
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+
+            await eip.beginAdd();
+
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
+
+            let spy = sinon.spy(listViewModel, 'subscribe');
+
+            eip.updateEditingData({listViewModel: listViewModel});
+            eip.updateEditingData({listViewModel: listViewModel});
+
+            assert.isTrue(spy.calledOnceWith('onCollectionChange', eip._updateIndex));
          });
       });
 
