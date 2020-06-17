@@ -49,7 +49,7 @@ describe('Controls/_multiselection/Controller', () => {
             model,
             selectedKeys: [],
             excludedKeys: [],
-            strategyOptions: {}
+            strategyOptions: { items: model.getItems() }
          }, false, false);
 
          assert.isTrue(setSelectedItemsSpy.called);
@@ -61,7 +61,7 @@ describe('Controls/_multiselection/Controller', () => {
             model,
             selectedKeys: [1],
             excludedKeys: [],
-            strategyOptions: {}
+            strategyOptions: { items: model.getItems() }
          }, false, false);
          assert.isTrue(setSelectedItemsSpy.called);
       });
@@ -140,7 +140,7 @@ describe('Controls/_multiselection/Controller', () => {
             removed: [],
             keys: []
          },
-         selectedCount: undefined,
+         selectedCount: 0,
          isAllSelected: false
       });
    });

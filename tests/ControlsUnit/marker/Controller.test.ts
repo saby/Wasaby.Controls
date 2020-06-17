@@ -179,53 +179,6 @@ describe('Controls/marker/Controller', () => {
       assert.equal(model.getMarkedKey(), 1);
    });
 
-   describe('handlerRemoveItems', () => {
-      it('exists next item', () => {
-         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
-
-         model.setItems(new RecordSet({
-               rawData: [
-                  {id: 1},
-                  {id: 3}
-               ],
-               keyProperty: 'id'
-            }));
-
-         const result = controller.handleRemoveItems(1);
-         assert.equal(result, 3);
-         assert.equal(model.getMarkedKey(), 3);
-      });
-
-      it('exists prev item, but not next', () => {
-         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
-
-         model.setItems(new RecordSet({
-            rawData: [
-               {id: 1},
-               {id: 2}
-            ],
-            keyProperty: 'id'
-         }));
-
-         const result = controller.handleRemoveItems(2);
-         assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
-      });
-
-      it('not exists next and prev', () => {
-         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
-
-         model.setItems(new RecordSet({
-            rawData: [],
-            keyProperty: 'id'
-         }));
-
-         const result = controller.handleRemoveItems(0);
-         assert.equal(result, undefined);
-         assert.equal(model.getMarkedKey(), undefined);
-      });
-   });
-
    describe('setMarkerOnFirstVisibleItem', () => {
       const getBCR = function() {
          return { height: 30 };
@@ -271,6 +224,53 @@ describe('Controls/marker/Controller', () => {
          const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 31);
          assert.equal(result, 3);
          assert.equal(model.getMarkedKey(), 3);
+      });
+   });
+
+   describe('handlerRemoveItems', () => {
+      it('exists next item', () => {
+         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
+
+         model.setItems(new RecordSet({
+               rawData: [
+                  {id: 1},
+                  {id: 3}
+               ],
+               keyProperty: 'id'
+            }));
+
+         const result = controller.handleRemoveItems(1);
+         assert.equal(result, 3);
+         assert.equal(model.getMarkedKey(), 3);
+      });
+
+      it('exists prev item, but not next', () => {
+         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
+
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 1},
+               {id: 2}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const result = controller.handleRemoveItems(2);
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
+      });
+
+      it('not exists next and prev', () => {
+         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
+
+         model.setItems(new RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         }));
+
+         const result = controller.handleRemoveItems(0);
+         assert.equal(result, undefined);
+         assert.equal(model.getMarkedKey(), undefined);
       });
    });
 });
