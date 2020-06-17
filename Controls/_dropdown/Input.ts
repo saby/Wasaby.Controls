@@ -6,9 +6,10 @@ import Utils = require('Types/util');
 import chain = require('Types/chain');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import {isEqual} from 'Types/object';
-import _Controller = require('Controls/_dropdown/_Controller');
+import Controller = require('Controls/_dropdown/_Controller');
 import Dropdown = require('Controls/_dropdown/Dropdown');
 import {SyntheticEvent} from "Vdom/Vdom";
+import {Stack as StackOpener} from 'Controls/popup';
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
@@ -242,9 +243,9 @@ class Input extends Dropdown {
    _beforeMount(options, recievedState): Promise<object>|void {
       this._prepareDisplayState = this._prepareDisplayState.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
-      this._controller = new _Controller(this._getControllerOptions(options));
+      this._controller = new Controller(this._getControllerOptions(options));
 
-      return super._beforeMount(options, recievedState);
+      return this._controller.loadItems(recievedState);
    }
 
    _afterMount(options) {
@@ -253,25 +254,25 @@ class Input extends Dropdown {
       if (options.showHeader && options.caption !== this._text) {
          this._forceUpdate();
       }
-      this._controller.registerScrollEvent(this);
+      this._controller.registerScrollEvent();
    }
 
    _beforeUpdate(options) {
       this._controller.update(this._getControllerOptions(options));
    }
 
-   _getControllerOptions(options) {
+   _getControllerOptions(options): object {
       return { ...options, ...{
             dataLoadCallback: this._dataLoadCallback,
             selectedKeys: options.selectedKeys || [],
             popupClassName: options.popupClassName || (options.showHeader || options.headerTemplate ?
-                'controls-DropdownList__margin-head' : options.multiSelect ?
-                    'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') + ' theme_' + options.theme,
+                           'controls-DropdownList__margin-head' : options.multiSelect ?
+                           'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') +
+                           ' theme_' + options.theme,
             caption: options.caption || this._text ,
             allowPin: false,
             selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
-            notifyEvent: this._notifyInputEvent.bind(this),
-            notifySelectedItemsChanged: this._selectedItemsChangedHandler.bind(this)
+            openerControl: this
          }
       };
    }
@@ -284,7 +285,7 @@ class Input extends Dropdown {
       }
    }
 
-   _dataLoadCallback(items) {
+   _dataLoadCallback(items): void {
       this._countItems = items.getCount();
       if (this._options.emptyText) {
          this._countItems += 1;
@@ -295,7 +296,7 @@ class Input extends Dropdown {
       }
    }
 
-   _prepareDisplayState(items) {
+   _prepareDisplayState(items): void {
       if (items.length) {
          this._selectedItems = items;
          this._needInfobox = this._options.readOnly && this._selectedItems.length > 1;
@@ -308,41 +309,77 @@ class Input extends Dropdown {
       }
    }
 
-   openMenu(popupOptions?: object): void {
-      this._controller.openMenu(popupOptions);
-   }
-
-   closeMenu(): void {
-      this._controller.closeMenu();
-   }
-
-   _handleClick(event: SyntheticEvent): void {
-      // stop bubbling event, so the list does not handle click event.
-      event.stopPropagation();
-   }
-
    _handleMouseDown(event: SyntheticEvent): void {
-      this._controller.handleMouseDownOnMenuPopupTarget(this._container);
+      const config = {
+         templateOptions: {
+            selectorDialogResult: this._selectorTemplateResult.bind(this),
+            selectorOpener: StackOpener
+         },
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: () => {
+               this._popupId = null;
+               this._onClose();
+            },
+            onResult: this._onResult.bind(this)
+         }
+      };
+      this._controller.setMenuPopupTarget(this._container);
+      this._controller.openMenu(config).then((result) => {
+         if (typeof result === 'string') {
+            this._popupId = result;
+         } else if (result) {
+            this._selectedItemsChangedHandler(result);
+         }
+      });
    }
 
-   _handleMouseEnter(event: SyntheticEvent): void {
-      this._controller.handleMouseEnterOnMenuPopupTarget();
+   protected _onResult(action, data) {
+      switch (action) {
+         case 'applyClick':
+            this._applyClick(data);
+            break;
+         case 'itemClick':
+            this._itemClick(data);
+            break;
+         case 'selectorResult':
+            this._selectorResult(data);
+            break;
+         case 'selectorDialogOpened':
+            this._selectorDialogOpened(data);
+            break;
+         case 'footerClick':
+            this._footerClick(data);
+      }
    }
 
-   _handleMouseLeave(event: SyntheticEvent): void {
-      this._controller.handleMouseLeaveMenuPopupTarget();
+   protected _itemClick(data): void {
+      const item = this._controller.getPreparedItem(data, this._options.keyProperty, this._source);
+      const res = this._selectedItemsChangedHandler([item]);
+
+      // dropDown must close by default, but user can cancel closing, if returns false from event
+      if (res !== false) {
+         this._controller.applyClick(item);
+      }
    }
 
-   _handleKeyDown(event: SyntheticEvent): void {
-      this._controller.handleKeyDown(event);
+   protected _applyClick(data): void {
+      this._selectedItemsChangedHandler(data);
+      this._controller.applyClick(data);
+   }
+
+   protected _selectorResult(data): void {
+      this._controller.onSelectorResult(data);
+      this._selectedItemsChangedHandler(data);
+   }
+
+   protected _selectorTemplateResult(event, selectedItems): void {
+      let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
+      this._selectorResult(result);
    }
 
    _beforeUnmount(): void {
       this._controller.destroy();
-   }
-
-   _notifyInputEvent(eventName, data, additionData) {
-      return this._notify(eventName, [data, additionData]);
    }
 
    private _getSelectedKeys(items, keyProperty) {

@@ -5,7 +5,7 @@ import Utils = require('Types/util');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import Dropdown = require('Controls/_dropdown/Dropdown');
-import _Controller = require('Controls/_dropdown/_Controller');
+import Controller = require('Controls/_dropdown/_Controller');
 import {SyntheticEvent} from "Vdom/Vdom";
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -78,18 +78,15 @@ var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
 class ComboBox extends Dropdown{
    protected _template: TemplateFunction = template;
-   protected _isOpen: boolean =  false;
    protected _notifyHandler: Function = tmplNotify;
 
    _beforeMount(options, recievedState) {
-      this._onClose = this._popupVisibilityChanged.bind(this, false);
-      this._onOpen = this._popupVisibilityChanged.bind(this,true);
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
-      this._controller = new _Controller(this._getControllerOptions(options));
+      this._controller = new Controller(this._getControllerOptions(options));
 
-      return super._beforeMount(options, recievedState);
+      return this._controller.loadItems(recievedState);
    }
 
    _afterMount() {
@@ -98,7 +95,7 @@ class ComboBox extends Dropdown{
       };
       this._width = this._getContainerNode(this._container).offsetWidth;
       this._forceUpdate();
-      this._controller.registerScrollEvent(this);
+      this._controller.registerScrollEvent();
    }
 
    _beforeUpdate(options) {
@@ -121,24 +118,22 @@ class ComboBox extends Dropdown{
             allowPin: false,
             selectedItemsChangedCallback: this._setText,
             theme: options.theme,
-            notifyEvent: this._notifyComboboxEvent.bind(this),
-            notifySelectedItemsChanged: this._selectedItemsChangedHandler.bind(this),
             itemPadding: {
                right: 'menu-xs',
                left: 'menu-xs'
             },
             width: this._width,
-            targetPoint: this._targetPoint
+            targetPoint: this._targetPoint,
+            openerControl: this
          }
       };
    }
 
-   _selectedItemsChangedHandler(selectedItems, event) {
+   _selectedItemsChangedHandler(selectedItems) {
       var key = getPropValue(selectedItems[0], this._options.keyProperty);
       this._setText(selectedItems);
       this._notify('valueChanged', [this._value]);
       this._notify('selectedKeyChanged', [key]);
-      this._isOpen = false;
    }
 
    _setText(selectedItems) {
@@ -160,38 +155,41 @@ class ComboBox extends Dropdown{
       this._controller.closeMenu();
    }
 
-   _notifyComboboxEvent(eventName, data, additionData) {
-      return this._notify(eventName, [data, additionData]);
-   }
-
-   _handleClick(event: SyntheticEvent): void {
-      // stop bubbling event, so the list does not handle click event.
-      event.stopPropagation();
-   }
-
    _handleMouseDown(event: SyntheticEvent): void {
-      this._controller.handleMouseDownOnMenuPopupTarget(this._container);
+      if (this._popupId) {
+         this._controller.closeMenu();
+      } else {
+         const config = {
+            eventHandlers: {
+               onOpen: this._onOpen.bind(this),
+               onClose: () => {
+                  this._popupId = null;
+                  this._onClose();
+               },
+               onResult: this._onResult.bind(this)
+            }
+         };
+         this._controller.setMenuPopupTarget(this._container);
+         this._controller.openMenu(config).then((result) => {
+            if (typeof result === 'string') {
+               this._popupId = result;
+            } else if (result) {
+               this._selectedItemsChangedHandler(result);
+            }
+         });
+      }
    }
 
-   _handleMouseEnter(event: SyntheticEvent): void {
-      this._controller.handleMouseEnterOnMenuPopupTarget();
-   }
-
-   _handleMouseLeave(event: SyntheticEvent): void {
-      this._controller.handleMouseLeaveMenuPopupTarget();
-   }
-
-   _handleKeyDown(event: SyntheticEvent): void {
-      this._controller.handleKeyDown(event);
+   protected _onResult(action, data) {
+      if (action === 'itemClick') {
+         const item = this._controller.getPreparedItem(data, this._options.keyProperty, this._source);
+         this._selectedItemsChangedHandler([item]);
+         this._controller.applyClick(item);
+      }
    }
 
    _beforeUnmount(): void {
       this._controller.destroy();
-   }
-
-   private _popupVisibilityChanged(state) {
-      this._isOpen = state;
-      this._forceUpdate();
    }
 
    //FIXME delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3

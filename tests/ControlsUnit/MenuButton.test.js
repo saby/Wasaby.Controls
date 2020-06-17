@@ -6,9 +6,10 @@ define(
       'Controls/history',
       'Core/Deferred',
       'Types/entity',
-      'Types/collection'
+      'Types/collection',
+      'Controls/popup'
    ],
-   (dropdown, sourceLib, Clone, history, Deferred, entity, collection) => {
+   (dropdown, sourceLib, Clone, history, Deferred, entity, collection, popup) => {
       describe('MenuButton', () => {
          let items = [
             {
@@ -208,6 +209,301 @@ define(
 
             menu._handleClick(event);
             assert.isTrue(eventStopped);
+         });
+
+         it('_handleKeyDown', () => {
+            // Тестируем нажатие не esc список закрыт
+            let menuClosed = false;
+            menu._controller.closeMenu = () => {
+               menuClosed = true;
+            };
+            const event = {
+               nativeEvent: {
+                  keyCode: 27
+               },
+               stopPropagation: () => {}
+            };
+            menu._handleKeyDown(event);
+            assert.isFalse(menuClosed);
+
+            // Тестируем нажатие esc, когда выпадающий список открыт
+            menu._popupId = 'testId';
+
+            menu._handleKeyDown(event);
+            assert.isTrue(menuClosed);
+         });
+
+         it('events on open/close', async () => {
+            let menuOpenNotified, menuCloseNotified;
+            menu._notify = function(e) {
+               if (e === 'dropDownOpen') {
+                  menuOpenNotified = true;
+               } else if (e === 'dropDownClose') {
+                  menuCloseNotified = true;
+               }
+            };
+            menu._onOpen();
+            menu._onClose();
+
+            assert.isTrue(menuOpenNotified);
+            assert.isTrue(menuCloseNotified);
+         });
+
+         it('_selectorTemplateResult', () => {
+            let opened;
+            menu._beforeMount(config);
+            popup.Sticky.closePopup = () => { opened = false; };
+            let curItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  },
+                     {
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
+               });
+            menu._controller._items = curItems;
+            menu._controller._source = config.source;
+            let newItems = [ {
+               id: '9',
+               title: 'Запись 9'
+            },
+               {
+                  id: '10',
+                  title: 'Запись 10'
+               },
+               {
+                  id: '1',
+                  title: 'Запись 1'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  title: 'Запись 3'
+               }
+            ];
+
+            menu._selectorTemplateResult('selectorResult', selectedItems);
+            assert.deepEqual(newItems, menu._controller._items.getRawData());
+         });
+
+         it('_selectorTemplateResult selectorCallback', () => {
+            menu._notify = (event, data) => {
+               if (event === 'selectorCallback') {
+                  data[1].at(0).set({id: '11', title: 'Запись 11'});
+               }
+            };
+            let opened;
+            popup.Sticky.closePopup = () => { opened = false; };
+
+            let curItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  },
+                     {
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
+               });
+            menu._controller._items = curItems;
+            menu._controller._source = config.source;
+            let newItems = [
+               { id: '11', title: 'Запись 11' },
+               { id: '9', title: 'Запись 9' },
+               { id: '10', title: 'Запись 10' },
+               { id: '1', title: 'Запись 1' },
+               { id: '2', title: 'Запись 2' },
+               { id: '3', title: 'Запись 3' }
+            ];
+
+            menu._selectorTemplateResult('selectorResult', selectedItems);
+            assert.deepEqual(newItems, menu._controller._items.getRawData());
+         });
+
+         it('_selectorResult', function() {
+            let curItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  },
+                     {
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
+               });
+            menu._controller._items = curItems;
+            let newItems = [ {
+               id: '9',
+               title: 'Запись 9'
+            },
+               {
+                  id: '10',
+                  title: 'Запись 10'
+               },
+               {
+                  id: '1',
+                  title: 'Запись 1'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  title: 'Запись 3'
+               }
+            ];
+            menu._source = config.source;
+            menu._selectorResult(selectedItems);
+            assert.deepEqual(newItems, menu._controller._items.getRawData());
+            assert.isOk(menu._controller._menuSource);
+         });
+
+         it('lazy load', () => {
+            config.lazyItemsLoading = true;
+            menu._beforeMount(config);
+            assert.equal(menu._controller._items, undefined);
+         });
+
+         it('check pin click', () => {
+            let closed = false, opened;
+            let resultItem;
+            config.lazyItemsLoading = true;
+
+            menu._beforeMount(config);
+            menu._controller._items = itemsRecords.clone();
+            popup.Sticky.closePopup = () => {closed = true; };
+            popup.Sticky.openPopup = () => {opened = true; };
+
+            // return the original Id value
+            let item = new entity.Model({
+               rawData: {
+                  id: '6', title: 'title 6'
+               },
+               keyProperty: 'id'
+            });
+            item.set('originalId', item.getId());
+            item.set('id', item.getId() + '_history');
+            closed = false;
+            assert.equal(item.getId(), '6_history');
+            let historySource = new history.Source({
+               historyId: 'TEST_HISTORY_ID_DDL_CONTROLLER'
+            });
+            menu._source = historySource;
+            menu._source.update = () => {};
+            menu._onResult('pinClick', item);
+            assert.isFalse(closed);
+         });
+
+         it('notify footerClick', () => {
+            menu._notify = function(e) {
+               if (e === 'footerClick') {
+                  isFooterClicked = true;
+               }
+            };
+            let isClosed = false, isFooterClicked = false;
+            popup.Sticky.closePopup = () => {isClosed = true; };
+            menu._$active = true;
+            menu._onResult('footerClick');
+            assert.isFalse(isClosed);
+            assert.isTrue(isFooterClicked);
+         });
+
+         it('check item click', () => {
+            let closed = false;
+            let opened = false;
+            let closeByNodeClick = false;
+            let resultItems;
+            menu._onItemClickHandler = function(eventResult) {
+               resultItems = eventResult[0];
+               return closeByNodeClick;
+            };
+            menu._beforeMount(config);
+            menu._controller._items = itemsRecords.clone();
+            popup.Sticky.closePopup = () => {closed = true; };
+            popup.Sticky.openPopup = () => {opened = true; };
+
+            // returned false from handler and no hierarchy
+            menu._onResult('itemClick', menu._controller._items.at(4));
+            assert.isFalse(closed);
+
+            // returned undefined from handler and there is hierarchy
+            closed = false;
+            closeByNodeClick = false;
+            menu._onResult('itemClick', menu._controller._items.at(5));
+            assert.isFalse(closed);
+
+            // returned undefined from handler and no hierarchy
+            closed = false;
+            menu._popupId = 'test';
+            closeByNodeClick = undefined;
+            menu._onResult('itemClick', menu._controller._items.at(4));
+            assert.isTrue(closed);
+
+            // returned true from handler and there is hierarchy
+            closed = false;
+            closeByNodeClick = undefined;
+            menu._onResult('itemClick', menu._controller._items.at(5));
+            assert.isTrue(closed);
          });
 
          it('_beforeUpdate', function() {

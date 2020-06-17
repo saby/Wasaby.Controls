@@ -3,9 +3,10 @@ import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ActualApi from 'Controls/_buttons/ActualApi';
-import _Controller = require('Controls/_dropdown/_Controller');
+import Controller = require('Controls/_dropdown/_Controller');
 import {SyntheticEvent} from "Vdom/Vdom";
 import Dropdown = require('Controls/_dropdown/Dropdown');
+import {Stack as StackOpener} from 'Controls/popup';
 
 /**
  * Контрол «Кнопка с меню».
@@ -83,13 +84,15 @@ class Button extends Dropdown {
    _beforeMount(options, recievedState) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       this._updateState(options);
-      this._controller = new _Controller(this._getControllerOptions(options));
+      this._controller = new Controller(this._getControllerOptions(options));
 
-      return super._beforeMount(options, recievedState);
+      if (!options.lazyItemsLoading) {
+         return this._controller.loadItems(recievedState);
+      }
    }
 
    _afterMount() {
-      this._controller.registerScrollEvent(this);
+      this._controller.registerScrollEvent();
    }
 
    _beforeUpdate(options) {
@@ -116,26 +119,14 @@ class Button extends Dropdown {
       }
    }
 
-   _notifyButtonEvent(eventName, data, additionData) {
-      return this._notify(eventName, [data, additionData]);
-      if (!data) {
-         this._tmplNotify(eventName);
-      }
-   }
-
    _getControllerOptions(options) {
       return { ...options, ...{
              headerTemplate: options.headTemplate || options.headerTemplate,
-             headingCaption: options.caption,
-             headingIconSize: options.iconSize,
-             headingIcon: options.icon,
-             itemTemplate: options.itemTemplate,
              dataLoadCallback: this._dataLoadCallback.bind(this),
              popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
              hasIconPin: this._hasIconPin,
              allowPin: true,
-             notifyEvent: this._notifyButtonEvent.bind(this),
-             notifySelectedItemsChanged: this._onItemClickHandler.bind(this)
+             openerControl: this
          }
       };
    }
@@ -164,25 +155,76 @@ class Button extends Dropdown {
       this._controller.closeMenu();
    }
 
-   _handleClick(event: SyntheticEvent): void {
-      // stop bubbling event, so the list does not handle click event.
-      event.stopPropagation();
-   }
-
    _handleMouseDown(event: SyntheticEvent): void {
-      this._controller.handleMouseDownOnMenuPopupTarget(this._container.children[0]);
+      const config = {
+         templateOptions: {
+            selectorDialogResult: this._selectorTemplateResult.bind(this),
+            selectorOpener: StackOpener
+         },
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: () => {
+               this._popupId = null;
+               this._onClose();
+            },
+            onResult: this._onResult.bind(this)
+         }
+      };
+      this._controller.setMenuPopupTarget(this._container.children[0];
+      this._controller.openMenu(config).then((result) => {
+         if (typeof result === 'string') {
+            this._popupId = result;
+         } else if (result) {
+            this._onItemClickHandler(result);
+         }
+      });
    }
 
-   _handleMouseEnter(event: SyntheticEvent): void {
-      this._controller.handleMouseEnterOnMenuPopupTarget();
+   protected _onResult(action, data, nativeEvent) {
+      switch (action) {
+         case 'pinClick':
+            this._controller._pinClick(data);
+            break;
+         case 'applyClick':
+            this._applyClick(data, nativeEvent);
+            break;
+         case 'itemClick':
+            this._itemClick(data, nativeEvent);
+            break;
+         case 'selectorResult':
+            this._selectorResult(data, nativeEvent);
+            break;
+         case 'selectorDialogOpened':
+            this._selectorDialogOpened(data);
+            break;
+         case 'footerClick':
+            this._footerClick(data);
+      }
    }
 
-   _handleMouseLeave(event: SyntheticEvent): void {
-      this._controller.handleMouseLeaveMenuPopupTarget();
+   protected _itemClick(data, nativeEvent): void {
+      const item = this._controller.getPreparedItem(data, this._options.keyProperty, this._source);
+      const res = this._onItemClickHandler([item], nativeEvent);
+
+      // dropDown must close by default, but user can cancel closing, if returns false from event
+      if (res !== false) {
+         this._controller.applyClick(item);
+      }
    }
 
-   _handleKeyDown(event: SyntheticEvent): void {
-      this._controller.handleKeyDown(event);
+   protected _applyClick(data, nativeEvent): void {
+      this._onItemClickHandler(data, nativeEvent);
+      this._controller.applyClick(data);
+   }
+
+   protected _selectorResult(data, nativeEvent): void {
+      this._controller.onSelectorResult(data);
+      this._onItemClickHandler(data, nativeEvent);
+   }
+
+   protected _selectorTemplateResult(event, selectedItems): void {
+      let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
+      this._selectorResult(result);
    }
 
    _beforeUnmount(): void {

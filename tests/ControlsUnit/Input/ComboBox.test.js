@@ -83,18 +83,6 @@ define(
                   assert.equal(data[0], '2');
                }
             };
-            combobox._selectedItemsChangedHandler([itemsRecords.at(1)], 'itemClick');
-            assert.isFalse(combobox._isOpen);
-         });
-
-         it('popupVisibilityChanged', function() {
-            let combobox = getCombobox(config);
-
-            combobox._popupVisibilityChanged(true);
-            assert.isTrue(combobox._isOpen);
-
-            combobox._popupVisibilityChanged(false);
-            assert.isFalse(combobox._isOpen);
          });
 
          it('_beforeMount', function() {

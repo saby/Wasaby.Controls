@@ -6,7 +6,6 @@ import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdow
 import chain = require('Types/chain');
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
-import Env = require('Env/Env');
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import * as mStubs from 'Core/moduleStubs';
@@ -16,8 +15,8 @@ import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+import isEmpty = require('Core/helpers/Object/isEmpty');
 
-const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 /**
  * Контроллер для выпадающих списков.
  *
@@ -46,60 +45,41 @@ const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
  * @param {Types/collection:RecordSet} items Выбранные элементы.
  */
 
-class _Controller extends Control<IDropdownControllerOptions> implements IDropdownController {
+class _Controller implements IDropdownController {
    protected _items: RecordSet = null;
    protected _loadItemsTempPromise: Promise<any> = null;
    protected _options: IDropdownControllerOptions = null;
 
    constructor(options: IDropdownControllerOptions) {
-      super(options);
       this._options = options;
-      this._onResult = this._onResult.bind(this);
-      this._setHandlers(options);
    }
 
-   loadItems(): Promise<object> {
-      return new Promise((resolve) => {
-         this._loadItems(this._options).addCallback((items) => {
-            const beforeMountResult = {};
+   loadItems(recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|RecordSet {
+      if (!recievedState || isEmpty(recievedState)) {
+         return new Promise((resolve) => {
+            this._loadItems(this._options).addCallback((items) => {
+               const beforeMountResult = {};
 
-            if (historyUtils.isHistorySource(this._source)) {
-               beforeMountResult.history = this._source.getHistory();
-               beforeMountResult.items = this._source.getItems(false);
-            } else {
-               beforeMountResult.items = items;
-            }
+               if (historyUtils.isHistorySource(this._source)) {
+                  beforeMountResult.history = this._source.getHistory();
+                  beforeMountResult.items = this._source.getItems(false);
+               } else {
+                  beforeMountResult.items = items;
+               }
 
-            resolve(beforeMountResult);
+               resolve(beforeMountResult);
+            });
          });
-      });
+      } else {
+         this.setItems(recievedState);
+      }
    }
 
-   setItems(recievedState) {
-      return this._getSourceController(this._options).addCallback((sourceController) => {
-         this._setItems(recievedState.items);
-         sourceController.calculateState(this._items);
-
-         if (recievedState.history) {
-            this._source.setHistory(recievedState.history);
-            this._setItems(this._source.prepareItems(this._items));
-         }
-
-         this._updateSelectedItems(this._options.emptyText, this._options.selectedKeys, this._options.keyProperty, this._options.selectedItemsChangedCallback);
-         if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback(this._items);
-         }
-
-         return sourceController;
-      });
+   registerScrollEvent(): void {
+      RegisterUtil(this._options.openerControl, 'scroll', this._handleScroll.bind(this));
    }
 
-   registerScrollEvent(opener): void {
-      this.opener = opener;
-      RegisterUtil(opener, 'scroll', this.handleScroll.bind(this));
-   }
-
-   update(newOptions: IDropdownControllerOptions) {
+   update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void {
       const oldOptions = {...this._options};
       this._options = newOptions;
       if (newOptions.readOnly && newOptions.readOnly !== oldOptions.readOnly) {
@@ -139,14 +119,115 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
       }
    }
 
-   handleKeyDown(event) {
-      if (event.nativeEvent.keyCode === Env.constants.key.esc && this._popupId) {
-         this._closeDropdownList();
-         event.stopPropagation();
+   loadDependencies(): Promise<any> {
+      const deps = [this._loadMenuTemplates(this._options)];
+
+      if (!this._items) {
+         deps.push(this._getloadItemsPromise().then(() => this._loadItemsTemplates(this._options)));
+      } else {
+         deps.push(this._loadItemsTemplates(this, this._options));
+      }
+
+      return Promise.all(deps);
+   }
+
+   setMenuPopupTarget(target): void {
+      if (!this.target) {
+         this.target = target;
       }
    }
 
-   _getloadItemsPromise() {
+   openMenu(popupOptions?: object): void {
+      return this._open(popupOptions);
+   }
+
+   closeMenu(): void {
+      this._closeDropdownList();
+   }
+
+   destroy(): void {
+      if (this._sourceController) {
+         this._sourceController.cancelLoading();
+         this._sourceController = null;
+      }
+      this._setItems(null);
+      this._closeDropdownList();
+      UnregisterUtil(this._options.openerControl, 'scroll');
+   }
+
+   applyClick(data): void {
+      this._updateHistory(data);
+      this._closeDropdownList();
+   }
+
+   getPreparedItem(data, keyProperty, source) {
+      return this._prepareItem(data, keyProperty, source);
+   }
+
+   onSelectorResult(selectedItems): void {
+      var newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
+
+      // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
+      if (historyUtils.isHistorySource(this._source)) {
+         if (newItems.length) {
+            this._sourceController = null;
+         }
+         this._updateHistory(chain.factory(selectedItems).toArray());
+      } else {
+         this._items.prepend(newItems);
+         this._setItems(this._items);
+      }
+   }
+
+   private _open(loadedDe ,popupOptions?: object): Promise<any> {
+      if (this._options.readOnly) {
+         return;
+      }
+      const openPopup = () => {
+         return StickyOpener.openPopup(this._getPopupOptions(popupOptions)).then((popupId) => {
+            return this._popupId = popupId;
+         });
+      };
+
+      return this.loadDependencies().then(
+          () => {
+             const count = this._items.getCount();
+             if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
+                this._createMenuSource(this._items);
+                this._isOpened = true;
+                return openPopup();
+             } else if (count === 1) {
+                return Promise.resolve(this._items.at(0));
+             }
+          },
+          () => {
+             if (this._menuSource) {
+                return openPopup();
+             }
+          }
+       );
+   }
+
+   private setItems(recievedState): Promise<any> {
+      return this._getSourceController(this._options).addCallback((sourceController) => {
+         this._setItems(recievedState.items);
+         sourceController.calculateState(this._items);
+
+         if (recievedState.history) {
+            this._source.setHistory(recievedState.history);
+            this._setItems(this._source.prepareItems(this._items));
+         }
+
+         this._updateSelectedItems(this._options.emptyText, this._options.selectedKeys, this._options.keyProperty, this._options.selectedItemsChangedCallback);
+         if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback(this._items);
+         }
+
+         return sourceController;
+      });
+   }
+
+   private _getloadItemsPromise(): Promise<any> {
       if (this._items) {
          // Обновляем данные в источнике, нужно для работы истории
          this._setItems(this._items);
@@ -159,92 +240,17 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
       return this._loadItemsPromise;
    }
 
-   loadDependencies(): Promise<unknown> {
-      const deps = [this._loadMenuTemplates(this._options)];
-
-      if (!this._items) {
-         deps.push(this._getloadItemsPromise().then(() => this._loadItemsTemplates(this._options)));
-      } else {
-         deps.push(this._loadItemsTemplates(this, this._options));
-      }
-
-      return Promise.all(deps);
-   }
-
-   _open(popupOptions?: object): Promise<any> {
-      if (this._options.readOnly) {
-         return;
-      }
-      const openPopup = () => {
-         StickyOpener.openPopup(this._getPopupOptions(popupOptions)).then((popupId) => {
-            this._popupId = popupId;
-         });
-      };
-
-      return this.loadDependencies().then(
-          () => {
-             const count = this._items.getCount();
-             if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
-                this._createMenuSource(this._items);
-                this._isOpened = true;
-                openPopup();
-             } else if (count === 1) {
-                this._options.notifySelectedItemsChanged(this._items.at(0));
-             }
-          },
-          () => {
-             if (this._menuSource) {
-                openPopup();
-             }
-          }
-       );
-   }
-
-   _onSelectorTemplateResult(event, selectedItems): void {
-      let result = this._options.notifyEvent('selectorCallback', this._initSelectorItems, selectedItems) || selectedItems;
-      this._onResult('selectorResult', result);
-   }
-
-   handleScroll(): void {
+   private _handleScroll(): void {
       if (this._popupId) {
          this._closeDropdownList();
       }
    }
 
-   handleMouseDownOnMenuPopupTarget(target): void {
-      if (!this.target) {
-         this.target = target;
-      }
-      if (this._popupId) {
-         this._closeDropdownList();
-      } else {
-         this._open();
-      }
-   }
-
-   handleMouseEnterOnMenuPopupTarget(): void {
-      this._loadDependenciesTimer = setTimeout(this.loadDependencies.bind(this), PRELOAD_DEPENDENCIES_HOVER_DELAY);
-   }
-
-   handleMouseLeaveMenuPopupTarget(): void {
-      clearTimeout(this._loadDependenciesTimer);
-   }
-
-   destroy() {
-      if (this._sourceController) {
-         this._sourceController.cancelLoading();
-         this._sourceController = null;
-      }
-      this._setItems(null);
-      this._closeDropdownList();
-      UnregisterUtil(this.opener, 'scroll');
-   }
-
-   _getEmptyText() {
+   private _getEmptyText(): string {
       return dropdownUtils.prepareEmpty(this._options.emptyText);
    }
 
-   _setItems(items: RecordSet|null): void {
+   private _setItems(items: RecordSet|null): void {
       if (items) {
          this._createMenuSource(items);
       } else {
@@ -253,24 +259,13 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
       this._items = items;
    }
 
-   _createMenuSource(items: RecordSet|Error): void {
+   private _createMenuSource(items: RecordSet|Error): void {
       this._menuSource = new PrefetchProxy({
          target: this._source,
          data: {
             query: items
          }
       });
-   }
-   _deactivated(): void {
-      this.closeMenu();
-   }
-
-   openMenu(popupOptions?: object): void {
-      return this._open(popupOptions);
-   }
-
-   closeMenu(): void {
-      this._closeDropdownList();
    }
 
    private _createSourceController(options) {
@@ -359,7 +354,7 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
           });
    }
 
-   private _resetLoadPromises() {
+   private _resetLoadPromises(): void {
       this._loadMenuTempPromise = null;
       this._loadItemsPromise = null;
       this._loadItemsTempPromise = null;
@@ -414,21 +409,6 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
       return newItems;
    }
 
-   private _onSelectorResult(selectedItems) {
-      var newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
-
-      // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
-      if (historyUtils.isHistorySource(this._source)) {
-         if (newItems.length) {
-            this._sourceController = null;
-         }
-         this._updateHistory(chain.factory(selectedItems).toArray());
-      } else {
-         this._items.prepend(newItems);
-         this._setItems(this._items);
-      }
-   }
-
    private _prepareItem(item, keyProperty, source) {
       if (historyUtils.isHistorySource(source)) {
          return source.resetHistoryFields(item, keyProperty);
@@ -437,7 +417,7 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
       }
    }
 
-   private _updateHistory(items) {
+   private _updateHistory(items): void {
       if (historyUtils.isHistorySource(this._source)) {
          this._source.update(items, historyUtils.getMetaHistory());
 
@@ -447,66 +427,12 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
       }
    }
 
-   private _onResult(action, data, nativeEvent) {
-      switch (action) {
-         case 'pinClick':
-            this._pinClick(data);
-            break;
-         case 'applyClick':
-            this._options.notifySelectedItemsChanged(data, nativeEvent);
-            this._updateHistory(data);
-            this._closeDropdownList();
-            break;
-         case 'itemClick':
-            data = this._prepareItem(data, this._options.keyProperty, this._source);
-
-            var res = this._options.notifySelectedItemsChanged([data], nativeEvent);
-
-            // dropDown must close by default, but user can cancel closing, if returns false from event
-            if (res !== false) {
-               this._updateHistory(data);
-               this._closeDropdownList();
-            }
-            break;
-         case 'selectorResult':
-            this._onSelectorResult(data);
-            this._options.notifySelectedItemsChanged(data, nativeEvent);
-            break;
-         case 'selectorDialogOpened':
-            this._initSelectorItems = data;
-            this._closeDropdownList();
-            break;
-         case 'footerClick':
-            this._options.notifyEvent('footerClick', data);
-            if (!this.opener._$active) {
-               this._closeDropdownList();
-            }
-      }
-   }
-
-   private _closeDropdownList() {
+   private _closeDropdownList(): void {
       StickyOpener.closePopup(this._popupId);
       this._isOpened = false;
    }
 
-   private _setHandlers(options) {
-      this._onOpen = function (event, args) {
-         this._options.notifyEvent('dropDownOpen');
-         if (typeof (options.open) === 'function') {
-            options.open(args);
-         }
-      };
-      this._onClose = function(event, args) {
-         this._isOpened = false;
-         this._menuSource = null;
-         this._options.notifyEvent('dropDownClose');
-         if (typeof (options.close) === 'function') {
-            options.close(args);
-         }
-      };
-   }
-
-   private _templateOptionsChanged(newOptions, options) {
+   private _templateOptionsChanged(newOptions, options): boolean {
       const isTemplateChanged = (tplOption) => {
          return typeof newOptions[tplOption] === 'string' && newOptions[tplOption] !== options[tplOption];
       };
@@ -518,7 +444,7 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
       }
    }
 
-   private _loadItemsTemplates(options) {
+   private _loadItemsTemplates(options): Promise<any> {
       if (!this._loadItemsTempPromise) {
          const templatesToLoad = this._getItemsTemplates(options);
          this._loadItemsTempPromise = mStubs.require(templatesToLoad);
@@ -526,7 +452,7 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
       return this._loadItemsTempPromise;
    }
 
-   private _loadMenuTemplates(options: object) {
+   private _loadMenuTemplates(options: object): Promise<any> {
       if (!this._loadMenuTempPromise) {
          let templatesToLoad = ['Controls/menu'];
          let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
@@ -593,8 +519,7 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
              (this.target[0] || this.target).offsetWidth :
              undefined,
          hasMoreButton: this._sourceController.hasMoreData('down'),
-         selectorOpener: StackOpener,
-         selectorDialogResult: this._onSelectorTemplateResult.bind(this)
+         selectorOpener: StackOpener
       };
       const config = {
          id: this._popupId,
@@ -604,18 +529,10 @@ class _Controller extends Control<IDropdownControllerOptions> implements IDropdo
          actionOnScroll: 'close',
          target: this.target,
          targetPoint: this._options.targetPoint,
-         opener: this.opener,
+         opener: this._options.openerControl,
          fittingMode: {
             vertical: 'adaptive',
             horizontal: 'overflow'
-         },
-         eventHandlers: {
-            onOpen: this._onOpen.bind(this),
-            onClose: () => {
-               this._popupId = null;
-               this._onClose();
-            },
-            onResult: this._onResult.bind(this)
          },
          autofocus: false,
          closeOnOutsideClick: true
