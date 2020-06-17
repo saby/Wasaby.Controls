@@ -221,7 +221,7 @@ describe('Controls/_listRender/View', () => {
                 assert.exists(popupConfig, 'popupConfig has not been set');
                 assert.equal(popupConfig.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
                 assert.equal(popupConfig.templateOptions.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
-            }
+            });
         });
     });
 });
