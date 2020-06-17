@@ -43,7 +43,7 @@ define(
                autoComplete: 'off',
                onlyPositive: false,
                fontColorStyle: 'default',
-               fontSize: 'default',
+               fontSize: 'm',
                selectOnClick: false,
                showEmptyDecimals: false,
                horizontalPadding: 'xs'

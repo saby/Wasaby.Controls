@@ -1096,7 +1096,7 @@ Base.getDefaultOptions = function () {
         placeholder: '',
         textAlign: 'left',
         autoComplete: 'off',
-        fontSize: 'default',
+        fontSize: 'm',
         fontColorStyle: 'default',
         spellCheck: true,
         selectOnClick: false

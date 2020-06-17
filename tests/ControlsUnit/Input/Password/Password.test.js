@@ -36,7 +36,7 @@ define(
                textAlign: 'left',
                autoComplete: 'on',
                fontColorStyle: 'default',
-               fontSize: 'default',
+               fontSize: 'm',
                selectOnClick: false,
                horizontalPadding: 'xs'
             });

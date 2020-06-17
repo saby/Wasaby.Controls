@@ -160,28 +160,30 @@ const ActualApi = {
          }
       });
    },
-   contrastBackground(options): boolean {
+   contrastBackground(options, hasMsg: boolean = false): boolean {
       if (typeof options.contrastBackground !== 'undefined') {
          return options.contrastBackground;
       } else {
          if (typeof options.transparent !== 'undefined') {
-            // TODO: будет удалено в версию после 5100
-            Logger.error('Button: Используется устаревшая опция transparent". ' +
-                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию contrastBackground.');
+            if (hasMsg) {
+               // TODO: будет удалено в версию после 5100
+               Logger.error('Button: Используется устаревшая опция transparent". ' +
+                   'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию contrastBackground.');
+            }
             return !options.transparent;
          } else {
             return false;
          }
       }
    },
-   buttonStyle(calcStyle: string, optionStyle: string, optionButtonStyle: string, optionReadonly: boolean): string {
+   buttonStyle(calcStyle: string, optionStyle: string, optionButtonStyle: string, optionReadonly: boolean, hasMsg: boolean = false): string {
       if (optionReadonly) {
          return 'readonly';
       } else if (optionButtonStyle) {
          return optionButtonStyle;
       } else {
-         if (optionStyle) {
+         if (optionStyle && hasMsg) {
             // TODO: будет удалено в версию после 5100
             Logger.error('Button: Используется устаревшая опция style". ' +
                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
@@ -249,15 +251,17 @@ const ActualApi = {
          }
       }
    },
-   fontSize(options: unknown): string {
+   fontSize(options: unknown, hasMsg: boolean = false): string {
       if (options.fontSize) {
          return options.fontSize;
       } else {
          if (typeof(options.size) !== 'undefined') {
-            // TODO: будет удалено в версию после 5100
-            Logger.error('Button: Используется устаревшая опция size". ' +
-                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
+            if (hasMsg) {
+               // TODO: будет удалено в версию после 5100
+               Logger.error('Button: Используется устаревшая опция size". ' +
+                   'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
+            }
             if (options.viewMode === 'button') {
                // кнопки l размера имеют шрифт xl в теме
                if (options.size === 'l') {
@@ -303,7 +307,7 @@ const ActualApi = {
       };
    },
 
-   actualHeight(optionSize: string, optionHeight: string, viewMode: string, hasMsg: boolean = true): string {
+   actualHeight(optionSize: string, optionHeight: string, viewMode: string, hasMsg: boolean = false): string {
       if (optionHeight) {
          return optionHeight;
       } else {

@@ -8,7 +8,6 @@
                           fontSize="headingPathBack"
                           theme="{{ _options.theme}}"
                           on:click="_onBackButtonClick()"/>
-<mata charset="windows-1251"></mata>
    <ws:if data="{{ _options.afterBackButtonTemplate }}">
       <ws:partial template="{{ _options.afterBackButtonTemplate }}"/>
    </ws:if>
