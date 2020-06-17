@@ -4918,7 +4918,8 @@ define([
          instance._selectionController = {
             update() {},
             clearSelection() { clearSelectionCalled = true; },
-            handleReset() {}
+            handleReset() {},
+            isAllSelected() { return true; }
          };
 
          let cfgClone = { ...cfg};

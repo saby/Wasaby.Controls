@@ -2497,8 +2497,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._selectionController) {
             _private.updateSelectionController(this, newOptions);
-            if ((self._options.root !== newOptions.root || filterChanged) && this._selectionController.isAllSelected()
-                    || this._listViewModel.getCount() === 0) {
+            if ((self._options.root !== newOptions.root || filterChanged || this._listViewModel.getCount() === 0)
+                && this._selectionController.isAllSelected(false)) {
                 const result = this._selectionController.clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
