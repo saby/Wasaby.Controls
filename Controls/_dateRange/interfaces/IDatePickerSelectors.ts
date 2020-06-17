@@ -5,32 +5,6 @@
  */
 
 /**
- * @name Controls/_dateRange/interfaces/IDatePickerSelectors#dayTemplate
- * @cfg {String|Function} Шаблон дня.
- * @remark
- * В шаблон передается объект value, в котором хранятся:
- * <ul>
- *     <li>date - дата дня</li>
- *     <li>day - порядковый номер дня</li>
- *     <li>today - определяет, является ли день сегодняшним </li>
- *     <li>weekend - определяет, является ли день выходным </li>
- *     <li>extData - данные, загруженные через источник данных</li>
- * </ul>
- * @example
- * <pre>
- * <Controls.dateRange:Selector>
- *    <ws:dayTemplate>
- *      <ws:partial template="Controls/calendar:MonthViewDayTemplate">
- *          <ws:contentTemplate>
- *                 {{contentTemplate.value.day}}
- *          </ws:contentTemplate>
- *      </ws:partial>
- *    </ws:dayTemplate>
- * </Controls.dateRange:Selector>
- * </pre>
- */
-
-/**
  * @name Controls/_dateRange/interfaces/IDatePickerSelectors#calendarSource
  * @cfg {Types/source:ICrud} Источник данных, которые используются для отображения дней.
  * @remark
