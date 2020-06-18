@@ -578,7 +578,7 @@ const _private = {
                 (self._options.task1176625749 && countCurrentItems === cnt2)) {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
-            if (self._isMounted) {
+            if (self._isMounted && self._scrollController) {
                 self._scrollController.stopBatchAdding();
             }
 
@@ -634,7 +634,7 @@ const _private = {
                 // Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
                 const countCurrentItems = self._listViewModel.getCount();
 
-                if (self._isMounted) {
+                if (self._isMounted && self._scrollController) {
                     self._scrollController.startBatchAdding(direction);
                 }
 
@@ -2715,7 +2715,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-            this._scrollController.checkTriggerVisibilityWithTimeout();
+            if (this._scrollController) {
+                this._scrollController.checkTriggerVisibilityWithTimeout();
+            }
         }
 
         // До отрисовки элементов мы не можем понять потребуется ли еще загрузка (зависит от видимости тригеров).
