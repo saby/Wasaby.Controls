@@ -352,6 +352,7 @@ define([
                listViewModel: listViewModel,
                source: source
             });
+            assert.isNotTrue(listViewModel.isEditing(), 'Model shouldn\'t be in editing state before beginEdit()');
             await eip.beginEdit({
                item: listViewModel.at(0).getContents()
             });
