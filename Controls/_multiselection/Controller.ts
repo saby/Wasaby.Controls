@@ -84,7 +84,7 @@ export class Controller {
    restoreSelection(): void {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
       this._strategy.setItems(this._model.getCollection());
-      this._updateModel(this._selection);
+      this._updateModel(this._selection, true);
    }
 
    /**

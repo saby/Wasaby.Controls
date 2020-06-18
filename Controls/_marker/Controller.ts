@@ -90,7 +90,10 @@ export class Controller {
     * @remark Не уведомляет о проставлении маркера
     */
    restoreMarker(): void {
-      this._model.setMarkedKey(this._markedKey, true, true);
+      const item = this._model.getItemBySourceKey(this._markedKey);
+      if (item) {
+         item.setMarked(true, true);
+      }
    }
 
    /**

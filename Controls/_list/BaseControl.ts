@@ -218,7 +218,8 @@ const _private = {
         }
     },
 
-    reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
+    // когда вызывают публичный reload не нужно обновлять маркер здесь, для этого параметр updateMarker
+    reload(self, cfg, sourceConfig?: IBaseSourceConfig, updateMarker: boolean = true): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
         const navigation = cClone(cfg.navigation);
@@ -302,6 +303,10 @@ const _private = {
                         }
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
+
+                    if (self._markerController && updateMarker) {
+                        _private.updateMarkerController(self, self._options);
+                    }
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));

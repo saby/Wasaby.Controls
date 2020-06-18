@@ -82,6 +82,7 @@ describe('Controls/_multiselection/Controller', () => {
 
       assert.isFalse(notifyLaterSpy.called);
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
+      assert.equal(controller._strategy._items, items);
    });
 
    describe('toggleItem', () => {
