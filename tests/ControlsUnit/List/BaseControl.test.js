@@ -3536,7 +3536,6 @@ define([
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            cfg.readOnly = true;
             const formController = {};
             ctrl._children.formController = formController;
             ctrl._beforeUpdate(cfg);

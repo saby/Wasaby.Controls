@@ -675,17 +675,19 @@ export default class EditInPlace {
 
     updateEditingData(options: IEditingOptions, formController: any): void {
         this._updateOptions(options);
-        this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
-        if (this._editingItemData && this._options.listViewModel.getEditingItemData() !== this._editingItemData) {
-            this._setEditingItemData(this._editingItemData.item);
-        }
+        if (!this._options.readOnly) {
+            this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
+            if (this._editingItemData && this._options.listViewModel.getEditingItemData() !== this._editingItemData) {
+                this._setEditingItemData(this._editingItemData.item);
+            }
 
-        if (this._pendingInputRenderState === PendingInputRenderState.PendingRender) {
-            // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
-            this._pendingInputRenderState = PendingInputRenderState.Rendering;
-        }
+            if (this._pendingInputRenderState === PendingInputRenderState.PendingRender) {
+                // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
+                this._pendingInputRenderState = PendingInputRenderState.Rendering;
+            }
 
-        this.registerFormOperation(formController);
+            this.registerFormOperation(formController);
+        }
     }
 
     prepareHtmlInput(): void {
