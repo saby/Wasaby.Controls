@@ -63,6 +63,7 @@ export class Controller {
       }
 
       if (selectionChanged || modelChanged) {
+
          this._updateModel(this._selection);
       }
 
@@ -81,7 +82,9 @@ export class Controller {
     * @remark Не уведомляет о изменениях в модели
     */
    restoreSelection(): void {
-      this._updateModel(this._selection, true);
+      // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
+      this._strategy.setItems(this._model.getCollection());
+      this._updateModel(this._selection);
    }
 
    /**
@@ -131,7 +134,8 @@ export class Controller {
       this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
-      return result;   }
+      return result;
+   }
 
    handleAddItems(addedItems: Record[]): ISelectionControllerResult {
       // TODO для улучшения производительности обрабатывать только изменившиеся элементы

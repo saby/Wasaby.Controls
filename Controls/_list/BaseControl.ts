@@ -210,7 +210,7 @@ const _private = {
         if (self._updateInProgress) {
             if (self._callbackAfterUpdate) {
                 self._callbackAfterUpdate.push(callback);
-        } else {
+            } else {
                 self._callbackAfterUpdate = [callback];
             }
         } else {
@@ -218,11 +218,7 @@ const _private = {
         }
     },
 
-    /*
-        Если reload вызван публичным методом, то состояние модели не нужно восстанавливать, так как оно будет отдельно
-        восстановлено. Для этого добавлен параметр updateModel
-     */
-    reload(self, cfg, sourceConfig?: IBaseSourceConfig, updateModel: boolean = true): Promise<any> | Deferred<any> {
+    reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
         const navigation = cClone(cfg.navigation);
@@ -307,10 +303,6 @@ const _private = {
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                    if (self._markerController && updateModel) {
-                        _private.updateMarkerController(self, self._options);
-                    }
-
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                     }
@@ -372,7 +364,7 @@ const _private = {
         return resDeferred;
     },
 
-    reloadAndUpdateModel(self: any, cfg: any, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
+    reloadAndRestoreModelState(self: any, cfg: any, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         return _private.reload(self, cfg, sourceConfig, false).addCallback(() => {
             if (self._markerController) {
                 self._markerController.restoreMarker();
@@ -2790,6 +2782,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 callback();
             });
             this._callbackAfterUpdate = null;
+            if (this._markerController) {
+                this._markerController.restoreMarker();
+            }
+            if (this._selectionController) {
+                this._selectionController.restoreSelection();
+            }
         }
 
         if (this._editInPlace) {
@@ -2855,7 +2853,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
-        return _private.reloadAndUpdateModel(this, this._options, sourceConfig).addCallback(getData);
+        return _private.reloadAndRestoreModelState(this, this._options, sourceConfig).addCallback(getData);
     },
 
     setMarkedKey(key: number | string): void {

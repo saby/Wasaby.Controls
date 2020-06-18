@@ -2,6 +2,8 @@ import { TKeysSelection as TKeys, ISelectionObject as ISelection} from 'Controls
 import { Model } from 'Types/entity';
 import { CollectionItem } from 'Controls/display';
 import { IFlatSelectionStrategyOptions, ITreeSelectionStrategyOptions } from '../interface';
+import { RecordSet } from 'Types/collection';
+
 /**
  * Интерфейс базового класс стратегий выбора
  */
@@ -85,4 +87,10 @@ export default interface ISelectionStrategy {
     * @param byEveryItem true - проверять выбранность каждого элемента по отдельности. Иначе проверка происходит по наличию единого признака выбранности всех элементов.
     */
    isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number, byEveryItem?: boolean): boolean;
+
+   /**
+    * Задать список элементов
+    * @param items
+    */
+   setItems(items: RecordSet): void;
 }
