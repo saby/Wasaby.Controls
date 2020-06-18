@@ -22,13 +22,8 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
       // Нет необходимости каждый раз обовлять стили месяца при наведении,
       // если хавер работает только по одной ячейке дня, а не по нескольким.
-      if (cfg.selectionType === 'quantum' && cfg.quantum) {
-         if ('days' in cfg.quantum && cfg.quantum.days.indexOf(1) !== -1) {
-            this._singleDayHover = true;
-         } else {
-            this._singleDayHover = false;
-         }
-      }
+      const isQuantumSelection = cfg.selectionType === 'quantum' && cfg.quantum;
+      this._singleDayHover = isQuantumSelection ? 'days' in cfg.quantum && cfg.quantum.days.indexOf(1) !== -1 : true;
 
       this._state = this._normalizeState(cfg);
       this._validateWeeksArray();
@@ -189,14 +184,15 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
             css.push('controls-MonthViewVDOM__cursor-item');
          }
          if (!scope.selected) {
+            let borderStyle;
             if (scope.selectionEnabled && this._singleDayHover) {
-               let borderStyle = 'controls-MonthViewVDOM__border-currentMonthDay-unselected_theme-' + theme;
-               borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
-               css.push(borderStyle);
+               borderStyle = 'controls-MonthViewVDOM__border-currentMonthDay-unselected_theme-' + theme;
             } else if (scope.hovered) {
-               let borderStyle = 'controls-MonthViewVDOM__border-hover_theme-' + theme;
-               borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
-               css.push(borderStyle);
+               borderStyle = 'controls-MonthViewVDOM__border-hover_theme-' + theme;
+            }
+            if (borderStyle) {
+              borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
+              css.push(borderStyle);
             }
          }
          css.push('controls-MonthViewVDOM__selectableItem');
