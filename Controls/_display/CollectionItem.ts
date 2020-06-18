@@ -220,7 +220,7 @@ export default class CollectionItem<T> extends mixin<
     /**
      * Возвращает признак, что элемент выбран
      */
-    isSelected(): boolean {
+    isSelected(): boolean|null {
         return this._$selected;
     }
 

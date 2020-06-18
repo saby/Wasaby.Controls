@@ -179,7 +179,7 @@ const _private = {
                  historyUtils.getHistorySource({historyId}).update(historyData, meta);
              }
 
-             if (!historyUtils.getHistorySource({historyId})._history) {
+             if (!historyUtils.getHistorySource({historyId}).historyReady()) {
                // Getting history before updating if it hasn’t already done
                _private.getHistoryItems(self, historyId).addCallback(function() {
                   update();
@@ -518,14 +518,14 @@ function updateFilterHistory(cfg) {
       /**
        * Контрол используют в качестве контроллера, который позволяет фильтровать данные в {@link Controls/list:View}.
        * Контроллер позволяет сохранять историю фильтра и восстанавливать страницу после перезагрузки с последним примененным фильтром.
-       * 
+       *
        * @remark
        * Полезные ссылки:
        * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
        * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
        * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
        * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
-       * 
+       *
        * @class Controls/_filter/Controller
        * @extends Core/Control
        * @mixes Controls/_interface/IFilter
@@ -859,6 +859,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                     );
                 }
 
+                if (filterButtonChanged && newOptions.prefetchParams) {
+                    this._filter = Prefetch.clearPrefetchSession(this._filter);
+                }
+
                 if (newOptions.historyId !== this._options.historyId) {
                     this._crudWrapper = null;
                 }
@@ -905,8 +909,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
 
          _dataLoadCallback(items: RecordSet): void {
             if (this._options.historyId && this._isFilterChanged) {
-               _private.deleteCurrentFilterFromHistory(this);
-               _private.addToHistory(
+                if (historyUtils.getHistorySource({ historyId: this._options.historyId }).historyReady()) {
+                    _private.deleteCurrentFilterFromHistory(this);
+                }
+                _private.addToHistory(
                    this,
                    this._filterButtonItems,
                    this._fastFilterItems,

@@ -186,6 +186,17 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          assert.deepEqual(filterLayout._filterButtonItems, expectedButtonItems);
          assert.deepEqual(filterLayout._fastFilterItems, expectedFastItems);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValueFast', testKey2: ''});
+
+         filterLayout.saveOptions({
+            prefetchParams: {
+               PrefetchSessionId: 'test'
+            },
+            filter: {
+               PrefetchSessionId: 'test'
+            }
+         });
+         filterLayout._beforeUpdate({filterButtonSource: buttonItems});
+         assert.isFalse(filterLayout._filter.hasOwnProperty('PrefetchSessionId'));
       });
 
       it('_beforeUpdate new historyId', function () {

@@ -1931,10 +1931,6 @@ var
             this._nextModelVersion();
         },
 
-        updateSelection: function(selectedKeys) {
-            this._model.updateSelection(selectedKeys);
-        },
-
         setSelectedItems(items: Model[], selected: boolean|null): void {
             this._model.setSelectedItems(items, selected);
         },
