@@ -1406,13 +1406,13 @@ interface IDataForPadding {
 }
 
 const cellPadding = () => ({
-    getCollumns: (): IColumn[] => ([
+    getCollumns: (): any => ([
         {
             displayProperty: 'number',
             width: '100px',
             template: itemCountr,
             cellPadding: {
-                right: 'S',
+                right: 's',
             }
         },
         {
@@ -1420,7 +1420,7 @@ const cellPadding = () => ({
             width: '100px',
             template: itemTpl,
             cellPadding: {
-                left: 'S',
+                left: 's',
                 right: 'null'
             }
         },
