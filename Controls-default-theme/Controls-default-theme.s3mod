@@ -4,7 +4,7 @@
 
   <depends>
     <module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls"/>
-  <depends/>
+  </depends>
 
   <load_after/>
 
