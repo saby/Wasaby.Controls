@@ -1176,6 +1176,7 @@ define([
              isIndicatorHasBeenHidden = false,
              dataLoadCallbackCalled = false,
              loadMoreSorting,
+             loadNodeId,
              mockedTreeControlInstance = {
                 _options: {
                    filter: {
@@ -1192,10 +1193,11 @@ define([
                    [
                       1,
                       {
-                         load: (filter, sorting) => {
+                         load: (filter, sorting, direction, config, node) => {
                             let result = new Deferred();
                             loadMoreSorting = sorting;
                             result.callback();
+                            loadNodeId = node;
                             return result;
                          },
                          hasMoreData: function () {
@@ -1251,6 +1253,7 @@ define([
          assert.isTrue(isIndicatorHasBeenShown);
          assert.isTrue(isIndicatorHasBeenHidden);
          assert.deepEqual(loadMoreSorting, [{'test': 'ASC'}]);
+         assert.equal(loadNodeId, 1);
       });
       describe('EditInPlace', function() {
          it('beginEdit', function() {

@@ -1331,6 +1331,7 @@ var
 
         setSorting: function(sorting) {
             this._model.setSorting(sorting);
+            this._nextHeaderVersion();
         },
 
         setSearchValue: function(value) {

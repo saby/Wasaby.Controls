@@ -129,6 +129,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         return SHADOW_VISIBILITY.hidden;
     }
 
+    getChildrenHeaders(): TRegisterEventData[] {
+        return Object.keys(this._headers).map(id => this._headers[id]);
+    }
+
     private _setOffset(value: number, position: POSITION): void {
         for (let id in this._headers) {
             const positionValue: number = this._headers[id][position] + value;

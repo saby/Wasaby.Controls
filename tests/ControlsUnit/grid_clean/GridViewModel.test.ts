@@ -162,6 +162,12 @@ describe('Controls/grid_clean/GridViewModel', () => {
                 assert.strictEqual(gridViewModel.getHeaderModel().getVersion(), 1);
             });
 
+            it('setSorting(newSorting)', () => {
+                const newSorting = [{ caption: 'asc' }];
+                gridViewModel.setHeader(newSorting);
+                assert.strictEqual(gridViewModel.getHeaderModel().getVersion(), 1);
+            });
+
             it('setMarkedKey(newMarkedKey)', () => {
                 const items = gridViewModel.getItems();
                 const newMarkedKey = items.at(1).getKey();

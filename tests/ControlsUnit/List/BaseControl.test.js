@@ -1508,6 +1508,10 @@ define([
          lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
 
+         baseControl._options.multiSelectVisibility = 'hidden';
+         lists.BaseControl._private.spaceHandler(baseControl, event);
+         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+
          sandbox.restore();
       });
 
@@ -1551,6 +1555,29 @@ define([
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [result.selectedKeysDiff.keys, result.selectedKeysDiff.added, result.selectedKeysDiff.removed]).called);
          assert.isTrue(notifySpy.withArgs('excludedKeysChanged', [result.excludedKeysDiff.keys, result.excludedKeysDiff.added, result.excludedKeysDiff.removed]).called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
+      });
+
+      it('_private.setMarkedKey', () => {
+         const baseControl = {
+            _markerController: {
+               setMarkedKey: (key) => {
+                  assert.equal(key, 2);
+                  return key;
+               }
+            }
+         };
+
+         const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
+         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'setMarkedKey');
+
+         lists.BaseControl._private.setMarkedKey({}, 2);
+         assert.isFalse(setMarkedKeySpy.called);
+         assert.isFalse(scrollToItemSpy.called);
+
+         lists.BaseControl._private.setMarkedKey(baseControl, 2);
+         assert.isFalse(scrollToItemSpy.called);
+         assert.isFalse(setMarkedKeySpy.withArgs(baseControl, 2).called);
+         assert.equal(baseControl._markedKey, 2);
       });
 
       it('loadToDirection up', async function() {
@@ -3528,7 +3555,6 @@ define([
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            cfg.readOnly = true;
             const formController = {};
             ctrl._children.formController = formController;
             ctrl._beforeUpdate(cfg);
