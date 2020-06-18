@@ -35,10 +35,10 @@
 
         <ws:if data="{{ _isDragScrollingEnabled() }}">
             <div class="{{ _dragScrollOverlayClasses }}"
-                 on:mouseup="_onOverlayStopDragScrolling('mouse')"
-                 on:touchend="_onOverlayStopDragScrolling('touch')"
-                 on:mousemove="_onOverlayDragScrolling('mouse')"
-                 on:touchmove="_onOverlayDragScrolling('touch')"
+                 on:mouseup="_onDragScrollOverlayMouseUp()"
+                 on:touchend="_onDragScrollOverlayTouchEnd()"
+                 on:mousemove="_onDragScrollOverlayMouseMove()"
+                 on:touchmove="_onDragScrollOverlayTouchMove()"
                  on:mouseleave="_onDragScrollOverlayMouseLeave()">
             </div>
         </ws:if>

@@ -45,7 +45,7 @@ const WHEEL_DELTA_INCREASE_COEFFICIENT = 100;
 const WHEEL_SCROLLING_SMOOTH_COEFFICIENT = 0.6;
 
 export class ColumnScroll {
-    private _options: IColumnScrollOptions;
+    protected _options: IColumnScrollOptions;
     private _isDestroyed: boolean = false;
 
     private readonly _transformSelector: string;
@@ -69,7 +69,7 @@ export class ColumnScroll {
         this._options.stickyColumnsCount = this._options.stickyColumnsCount || 1;
 
         this._updateSizes = this._updateSizes.bind(this);
-        this._transformSelector = `controls-ColumnScroll__transform-${Guid.create()}`;
+        this._transformSelector = `controls-ColumnScroll__transform-${this._createGuid()}`;
         this._debouncedUpdateSizes = debounce(this._updateSizes, DELAY_UPDATE_SIZES, false);
     }
 
@@ -81,6 +81,9 @@ export class ColumnScroll {
         return this._transformSelector;
     }
 
+    private _createGuid(): string {
+        return Guid.create();
+    }
     /**
      * Возвращает флаг, указывающий должен ли быть виден горизонтальный скролл (ширина контента больше, чем его контейнер)
      */

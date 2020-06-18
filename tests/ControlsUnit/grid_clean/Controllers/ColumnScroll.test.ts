@@ -1,6 +1,9 @@
 import {assert} from 'chai';
 import {ColumnScroll} from 'Controls/_grid/resources/ColumnScroll';
 
+// @ts-ignore
+ColumnScroll.prototype._createGuid = () => '12345';
+
 function mockScrollContainer(params: { offsetWidth: number }): HTMLElement {
     return {
         getClientRects: () => [null, null],
@@ -66,6 +69,11 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
         });
     });
 
+    it('state after ctor', () => {
+        assert.equal(columnScroll.getTransformSelector(), 'controls-ColumnScroll__transform-12345');
+        assert.equal(columnScroll.getScrollPosition(), 0);
+    });
+
     it('should call only once, last callback in debounced updateSizes', (done) => {
         let updateCounter = 0;
         let isFiredLast = false;
@@ -101,3 +109,4 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
         assert.isFalse(isCallbackCalled, 'Callback wasCalled for destroyed controller.');
     });
 });
+

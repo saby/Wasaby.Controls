@@ -15,6 +15,11 @@
    display: none;
 }
 
+// Курссор лапка, когда возможно скроллирование перетаскиванием.
+// Курсор появляется, только если в списке не идет перемещение записей.
+// Пока нет доступа к DragNDrop контроллеру, мы не можем понять, идет ли в списке перемещение записей.
+// Доступное решение на данный момент :not(.селектор_процесса_dnd). Использование отрицания усиливает селектор и не срабатывает класс
+// .controls-Grid__DragScroll__content_grabbing отвечающий за курсор при скроллировании (сжатая в кулак лапка). Добавляем отрицание этого класса сюда.
 .controls-Grid__DragScroll__content:not(.controls-Grid_dragging_process):not(.controls-Grid__DragScroll__content_grabbing) {
    .controls-Grid__row-cell:not(.controls-Grid__cell_fixed) {
       .controls-Grid__row-cell__content {

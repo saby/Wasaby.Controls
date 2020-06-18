@@ -1,7 +1,0 @@
-<div class="controls-Grid__DragScroll__overlay controls-Grid__DragScroll__overlay_{{ _isOverlayShown ? 'activated' : 'deactivated' }}"
-     on:mouseup="_onOverlayMouseUp()"
-     on:touchend="_onOverlayTouchEnd()"
-     on:mousemove="_onOverlayMouseMove()"
-     on:touchmove="_onOverlayTouchMove()"
-     on:mouseleave="_onOverlayMouseLeave()">
-</div>

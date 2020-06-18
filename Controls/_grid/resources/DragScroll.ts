@@ -30,7 +30,6 @@ interface TPoint {
 }
 
 export class DragScroll {
-    private _dragNDropDelay: number;
     private _startDragNDropCallback: IDragScrollParams['startDragNDropCallback'];
     private _scrollLength: number = 0;
     private _scrollPosition: number = 0;
@@ -49,14 +48,9 @@ export class DragScroll {
     private _startItemsDragNDropTimer: number;
 
     constructor(params: IDragScrollParams) {
-        this._dragNDropDelay = this._getDragNDropDelay(params.dragNDropDelay);
         this._startDragNDropCallback = params.startDragNDropCallback;
         this._onOverlayShownCallback = params.onOverlayShown;
         this._onOverlayHideCallback = params.onOverlayHide;
-    }
-
-    setDragNDropDelay(newDragNDropDelay: number): void {
-        this._dragNDropDelay = this._getDragNDropDelay(newDragNDropDelay);
     }
 
     setStartDragNDropCallback(newStartDragNDropCallback: IDragScrollParams['startDragNDropCallback']): void {
@@ -73,10 +67,6 @@ export class DragScroll {
     }): void {
         this._scrollLength = params.scrollLength;
         this._scrollPosition = params.scrollPosition;
-    }
-
-    private _getDragNDropDelay(optionsDragNDropDelay: number): number {
-        return typeof optionsDragNDropDelay === 'number' ? optionsDragNDropDelay : START_ITEMS_DRAG_N_DROP_DELAY;
     }
 
     /**
@@ -240,7 +230,7 @@ export class DragScroll {
             if (this._maxMouseMoveDistance.x < DISTANCE_TO_START_DRAG_N_DROP) {
                 this._initDragNDrop();
             }
-        }, this._dragNDropDelay);
+        }, START_ITEMS_DRAG_N_DROP_DELAY);
     }
 
     /**
@@ -484,7 +474,3 @@ function validateEvent(e: SyntheticEvent<MouseEvent | TouchEvent>): boolean {
         return (e.nativeEvent as MouseEvent).buttons === 1;
     }
 }
-
-
-// var a = new DragScroll({});
-// a.setDragNDropDelay()

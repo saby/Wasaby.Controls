@@ -297,9 +297,6 @@ var
                 this._resultsTemplate = newCfg.resultsTemplate || this._baseResultsTemplate;
             }
             if (this._dragScrollController) {
-                if (this._options.dragNDropDelay !== newCfg.dragNDropDelay) {
-                    this._dragScrollController.setDragNDropDelay(newCfg.dragNDropDelay);
-                }
                 if (this._options.itemsDragNDrop !== newCfg.itemsDragNDrop) {
                     this._dragScrollController.setStartDragNDropCallback(!newCfg.itemsDragNDrop ? null : () => {
                         _private.setGrabbing(self, false);
@@ -371,7 +368,7 @@ var
             }
             let classList = CssClassList
                 .add('controls-GridView__footer')
-                .add(COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT, this._options.columnScroll)
+                .add(COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT, !!this._options.columnScroll)
                 .add(`controls-GridView__footer__paddingLeft_${leftPadding}_theme-${this._options.theme}`);
 
             // Для предотвращения скролла одной записи в таблице с экшнами.
@@ -386,17 +383,13 @@ var
 
         resizeNotifyOnListChanged(): void {
             GridView.superclass.resizeNotifyOnListChanged.apply(this, arguments);
-            // TODO: Проверить https://online.sbis.ru/opendoc.html?guid=a768cb95-9c30-4f75-b1fb-9182228e5550
-            //  #rea_columnnScroll
-            // if (this._children.columnScroll) {
-            //     this._children.columnScroll._resizeHandler();
-            //
-            //     // TODO: KINGO
-            //     // перерисовка тени после обновления размеров в columnScroll происходит уже в следующую отрисовку.
-            //     // из-за этого, между обновлениями, тень от скролла рисуется поверх колонок.
-            //     // Чтобы тень заняла акуальную позицию раньше, нужно вручную установить стиль элементу
-            //     this._children.columnScroll.updateShadowStyle();
-            // }
+
+            // TODO: Проверить https://online.sbis.ru/opendoc.html?guid=a768cb95-9c30-4f75-b1fb-9182228e5550 #rea_columnnScroll
+            this._columnScrollController?.updateSizes((newSizes) => {
+                this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
+                this._horizontalScrollWidth = newSizes.scrollWidth;
+                this._updateColumnScrollData();
+            });
         },
 
         _resolveItemTemplate(options): TemplateFunction {
@@ -512,6 +505,7 @@ var
             return this._isColumnScrollVisible() && this._isDragScrollingEnabled();
         },
 
+        // Не вызывает реактивную перерисовку, т.к. данные пишутся в поля объекта. Перерисовка инициируется обновлением позиции скрола.
         _updateColumnScrollShadowClasses(): void {
             const newStart = this._columnScrollController.getShadowClasses('start');
             const newEnd = this._columnScrollController.getShadowClasses('end');
@@ -524,6 +518,8 @@ var
                 this._columnScrollShadowClasses.end = newEnd;
             }
         },
+
+        // Не вызывает реактивную перерисовку, т.к. данные пишутся в поля объекта. Перерисовка инициируется обновлением позиции скрола.
         _updateColumnScrollShadowStyles(): void {
             const newStart = this._columnScrollController.getShadowStyles('start');
             const newEnd = this._columnScrollController.getShadowStyles('end');
@@ -609,35 +605,32 @@ var
                 _private.setGrabbing(this, false);
             }
         },
-        _onOverlayDragScrolling(e, startBy: 'mouse' | 'touch') {
+        _onDragScrollOverlayMouseMove(e): void {
             if (this._dragScrollController) {
-                let newPosition;
-
-                if (startBy === 'mouse') {
-                    newPosition = this._dragScrollController.onOverlayMouseMove(e);
-                } else {
-                    newPosition = this._dragScrollController.onOverlayTouchMove(e);
-                }
-
+                const newPosition = this._dragScrollController.onOverlayMouseMove(e);
                 if (newPosition !== null) {
                     this._columnScrollController.setScrollPosition(newPosition);
                     this._updateColumnScrollData();
                 }
             }
         },
-        _onOverlayStopDragScrolling(e, startBy: 'mouse' | 'touch') {
+        _onDragScrollOverlayTouchMove(e): void {
             if (this._dragScrollController) {
-                if (startBy === 'mouse') {
-                    this._dragScrollController.onOverlayMouseUp(e);
-                } else {
-                    this._dragScrollController.onOverlayTouchEnd(e);
+                const newPosition = this._dragScrollController.onOverlayTouchMove(e);
+                if (newPosition !== null) {
+                    this._columnScrollController.setScrollPosition(newPosition);
+                    this._updateColumnScrollData();
                 }
             }
         },
+        _onDragScrollOverlayMouseUp(e) {
+            this._dragScrollController?.onOverlayMouseUp(e);
+        },
+        _onDragScrollOverlayTouchEnd(e) {
+            this._dragScrollController?.onOverlayTouchEnd(e);
+        },
         _onDragScrollOverlayMouseLeave(e) {
-            if (this._dragScrollController) {
-                this._dragScrollController.onOverlayMouseLeave(e);
-            }
+            this._dragScrollController?.onOverlayMouseLeave(e);
         }
     });
 
