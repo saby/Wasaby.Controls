@@ -21,7 +21,7 @@ import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
  *
  * Событие hideIndicator используется для удаления запроса отображения индикатора.
  * Параметры события hideIndicator идентичны аргументам метода {@link hide}.
- * 
+ *
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_loadingIndicator.less">переменные тем оформления</a>
  *
@@ -268,6 +268,9 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             config = {
                 message: config
             };
+        }
+        if (!config.hasOwnProperty('message')) {
+            config.message = '';
         }
         if (!config.hasOwnProperty('overlay')) {
             config.overlay = 'default';
