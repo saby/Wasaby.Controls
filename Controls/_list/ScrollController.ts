@@ -54,6 +54,13 @@ interface IScrollTriggers {
     scrollObserver?: HTMLElement;
 }
 
+const SCROLL_TRIGGERS: Array<keyof IScrollTriggers> = [
+    "topVirtualScrollTrigger",
+    "bottomVirtualScrollTrigger",
+    "topLoadTrigger",
+    "bottomLoadTrigger",
+    "scrollObserver"
+];
 /**
  * Контейнер управляющий операциями скролла в списке.
  * @class Controls/_list/ScrollController/ScrollController
@@ -141,8 +148,8 @@ export default class ScrollController {
 
     afterMount(container: HTMLElement, triggers: IScrollTriggers): void {
         this._isMounted = true;
-        this._container = container;
-        this._triggers = triggers;
+        this._setContainer(container);
+        this._setTriggers(triggers);
         this._viewResize(this._container.offsetHeight, false);
         this.registerObserver();
         this._afterRenderHandler();
@@ -201,7 +208,7 @@ export default class ScrollController {
     }
 
     viewResize(container: HTMLElement): void {
-        this._container = container;
+        this._setContainer(container);
         this._viewResize(this._container.offsetHeight);
         // TODO Совместимость необходимо удалить после переписывания baseControl
         this._notify('viewResize');
@@ -755,6 +762,18 @@ export default class ScrollController {
                 );
                 break;
         }
+    }
+
+    private _setTriggers(triggers: IScrollTriggers) {
+        this._triggers = {};
+        SCROLL_TRIGGERS.forEach(name => {
+            this._triggers[name] = triggers[name];
+        });
+    }
+
+    private _setContainer(container: HTMLElement) {
+        let scrollContainer = container.getElementsByClassName('controls-ScrollController');
+        this._container = <HTMLElement>scrollContainer[0];
     }
 
     static getDefaultOptions(): Partial<IOptions> {
