@@ -297,7 +297,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _confirmRecordChange(): Promise<string | boolean> | void {
-        if (this._options.record && this._options.record.isChanged()) {
+        if (this._needShowConfirmation()) {
             return this._showConfirmPopup('yesno');
         }
     }
