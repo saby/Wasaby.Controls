@@ -23,7 +23,10 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       // Нет необходимости каждый раз обовлять стили месяца при наведении,
       // если хавер работает только по одной ячейке дня, а не по нескольким.
       const isQuantumSelection = cfg.selectionType === 'quantum' && cfg.quantum;
-      this._singleDayHover = isQuantumSelection ? 'days' in cfg.quantum && cfg.quantum.days.indexOf(1) !== -1 : true;
+      if (isQuantumSelection) {
+         const isSingleDayQuantum = 'days' in cfg.quantum && cfg.quantum.days.indexOf(1) !== -1;
+         this._singleDayHover = isSingleDayQuantum;
+      }
 
       this._state = this._normalizeState(cfg);
       this._validateWeeksArray();
