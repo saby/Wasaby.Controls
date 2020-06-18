@@ -445,7 +445,6 @@ const _private = {
     setMarkedKey(self, key: string | number): void {
         if (self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
-            _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToNext(self, event) {

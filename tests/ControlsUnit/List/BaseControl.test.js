@@ -1562,6 +1562,29 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
+      it('_private.setMarkedKey', () => {
+         const baseControl = {
+            _markerController: {
+               setMarkedKey: (key) => {
+                  assert.equal(key, 2);
+                  return key;
+               }
+            }
+         };
+
+         const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
+         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'setMarkedKey');
+
+         lists.BaseControl._private.setMarkedKey({}, 2);
+         assert.isFalse(setMarkedKeySpy.called);
+         assert.isFalse(scrollToItemSpy.called);
+
+         lists.BaseControl._private.setMarkedKey(baseControl, 2);
+         assert.isFalse(scrollToItemSpy.called);
+         assert.isFalse(setMarkedKeySpy.withArgs(baseControl, 2).called);
+         assert.equal(baseControl._markedKey, 2);
+      });
+
       it('loadToDirection up', async function() {
          const source = new sourceLib.Memory({
             keyProperty: 'id',
