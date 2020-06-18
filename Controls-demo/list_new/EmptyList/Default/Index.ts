@@ -1,6 +1,6 @@
-import {Control, TemplateFunction} from "UI/Base";
-import * as Template from "wml!Controls-demo/list_new/EmptyList/Default/Default";
-import {Memory} from "Types/source";
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/list_new/EmptyList/Default/Default';
+import {Memory} from 'Types/source';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
