@@ -29,7 +29,7 @@
                                      displayProperty="title"
                                      parentProperty="parent"
                                      nodeProperty="@parent"
-                                     attr:class="ControlsDemo-InputDropdown__item-limitMaxWidth"
+                                     attr:class="ControlsDemo-InputDropdown__item-limitMaxWidth ws-flexbox"
                                      source="{{_hierarchyItems}}"/>
          </div>
       </div>
