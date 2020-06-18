@@ -1582,7 +1582,13 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) , offsetHeight:0}])};
+         baseControl._container = {
+            getElementsByClassName: () => ([
+               {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) , offsetHeight:0}
+            ]),
+            clientHeight: 100,
+            getBoundingClientRect: () => ({ y: 0 })
+         };
          baseControl._scrollController.__getItemsContainer = () => ({children: []});
          baseControl._afterMount(cfg);
 
@@ -1711,7 +1717,7 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl._container =  {getElementsByClassName: () => ([{
                getBoundingClientRect: () => ({})
-            }])};
+            }]), getBoundingClientRect: () => ({})};
          ctrl._scrollTop = 200;
 
          assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
@@ -2669,9 +2675,9 @@ define([
             }
          };
          let scrollContainer = { getBoundingClientRect: () => ({ y: 0 })};
-         baseControl._container = {
+         baseControl._container = Object.assign({}, scrollContainer, {
             getElementsByClassName: () => ([scrollContainer])
-         };
+         });
          baseControl.saveOptions(cfg);
 
          it('before mounting', async function() {
@@ -4864,7 +4870,11 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
-         instance._container = {getElementsByClassName: () => ([{clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }), offsetHeight:0 }])};
+         instance._container = {
+            getElementsByClassName: () => ([{clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }), offsetHeight:0 }]),
+            clientHeight: 100,
+            getBoundingClientRect: () => ({ y: 0 })
+         };
          instance._scrollController.__getItemsContainer = () => ({children: []});
          instance._afterMount(cfg);
 
