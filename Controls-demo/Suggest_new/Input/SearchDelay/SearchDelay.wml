@@ -12,6 +12,7 @@
           <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/Input/SearchDelay/resources/SuggestTemplate">
               <ws:templateOptions demoClass="demo-SuggestInputList"/>
           </ws:suggestTemplate>
+          <ws:suggestPopupOptions className="suggestPopupOptions-className" />
       </Controls.suggest:Input>
   </div>
    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
