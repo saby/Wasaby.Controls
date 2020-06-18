@@ -1508,6 +1508,10 @@ define([
          lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
 
+         baseControl._options.multiSelectVisibility = 'hidden';
+         lists.BaseControl._private.spaceHandler(baseControl, event);
+         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+
          sandbox.restore();
       });
 
