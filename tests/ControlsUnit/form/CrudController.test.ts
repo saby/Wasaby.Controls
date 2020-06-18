@@ -30,8 +30,7 @@ describe('Controls/form:CrudController', () => {
         formController = new Controller();
         formController._isMount = true;
         source = new MemorySource();
-        crud = new CrudController(source,
-            formController._notifyHandler.bind(formController), formController.registerPendingNotifier.bind(formController), formController.indicatorNotifier.bind(formController);
+        crud = new CrudController(source, formController._notifyHandler.bind(formController), formController.registerPendingNotifier.bind(formController), formController.indicatorNotifier.bind(formController));
         stubNotify = sandbox.stub(formController, '_notify');
     });
     afterEach(() => {
