@@ -713,7 +713,7 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
          ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
@@ -787,7 +787,7 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
          ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
@@ -853,7 +853,7 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
          ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
@@ -982,7 +982,7 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
          ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
@@ -1054,7 +1054,7 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
          ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
@@ -1582,7 +1582,7 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) , offsetHeight:0};
+         baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) , offsetHeight:0}])};
          baseControl._scrollController.__getItemsContainer = () => ({children: []});
          baseControl._afterMount(cfg);
 
@@ -1618,7 +1618,7 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100, offsetHeight:0};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
          ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
@@ -2668,17 +2668,18 @@ define([
                doScrollNotified = true;
             }
          };
+         let scrollContainer = { getBoundingClientRect: () => ({ y: 0 })};
          baseControl._container = {
-            getBoundingClientRect: () => ({ y: 0 })
+            getElementsByClassName: () => ([scrollContainer])
          };
-
+         baseControl._sourceController = lists.BaseControl._private.getSourceController(cfg);
          baseControl.saveOptions(cfg);
 
          it('before mounting', async function() {
             await baseControl._beforeMount(cfg);
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
-            baseControl._container.clientHeight = 100;
+            scrollContainer.clientHeight = 100;
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
          });
@@ -4865,7 +4866,7 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
-         instance._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }), offsetHeight:0 };
+         instance._container = {getElementsByClassName: () => ([{clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }), offsetHeight:0 }])};
          instance._scrollController.__getItemsContainer = () => ({children: []});
          instance._afterMount(cfg);
 
