@@ -8,6 +8,8 @@ export interface IHeader extends IHeaderCell {
 export type TItemsReadyCallback = (items: RecordSet) => void;
 export type TRoot = string | number | null;
 
+export type TExpandOrColapsItems = number[] | null[];
+
 export interface INavigation {
     source: string,
     view: string,
@@ -20,4 +22,4 @@ export interface INavigation {
         pagingMode?: string
         maxCountValue?: number
     }
-}
+};

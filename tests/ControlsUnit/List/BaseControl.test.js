@@ -3536,7 +3536,6 @@ define([
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            cfg.readOnly = true;
             const formController = {};
             ctrl._children.formController = formController;
             ctrl._beforeUpdate(cfg);
@@ -5203,6 +5202,14 @@ define([
                   resolve();
                });
          });
+      });
+
+      it('_beforeUnmount', function() {
+         let instance = new lists.BaseControl();
+         instance._needPagingTimeout = setTimeout(() => {}, 100);
+
+         instance._beforeUnmount();
+         assert.isNull(instance._needPagingTimeout);
       });
 
 

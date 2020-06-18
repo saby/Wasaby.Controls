@@ -345,6 +345,19 @@ define([
 
             assert.isTrue(result instanceof Promise);
          });
+
+         // Необходимо устанавливать состояние "модель редактируется" для новой и старой модели
+         it('should set isEditing() for model', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+            assert.isNotTrue(listViewModel.isEditing(), 'Model shouldn\'t be in editing state before beginEdit()');
+            await eip.beginEdit({
+               item: listViewModel.at(0).getContents()
+            });
+            assert.isTrue(listViewModel.isEditing(), 'Model should be in editing state after what had happened to her.');
+         });
       });
 
       describe('beginAdd', function() {
@@ -2115,6 +2128,22 @@ define([
             eip.updateEditingData({listViewModel: listViewModel});
 
             assert.isTrue(spy.calledOnceWith('onCollectionChange', eip._updateIndex));
+         });
+
+         it('should suscribe updateEditingData once', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+
+            await eip.beginAdd();
+
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
+            let spy = sinon.spy(eip, 'registerFormOperation');
+            eip._options.readOnly = true;
+            eip.updateEditingData({listViewModel: listViewModel});
+
+            assert.isTrue(spy.notCalled);
          });
       });
 
