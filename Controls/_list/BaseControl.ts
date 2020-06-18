@@ -494,6 +494,9 @@ const _private = {
         }
     },
     spaceHandler(self, event) {
+        if (self._options.multiSelectVisibility === 'hidden') {
+            return;
+        }
         const model = self.getViewModel();
         let toggledItemId = model.getMarkedKey();
 
@@ -501,7 +504,7 @@ const _private = {
             toggledItemId = model.at(0).getContents().getId();
         }
 
-        if (toggledItemId && self._options.multiSelectVisibility !== 'hidden') {
+        if (toggledItemId) {
             if (!self._selectionController) {
                 self._createSelectionController();
             }
