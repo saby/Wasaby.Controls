@@ -93,12 +93,8 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       obj.enabled = state.enabled;
       obj.clickable = obj.mode === 'extended' || obj.isCurrentMonth;
 
-      if (state.hoveredStartValue <= obj.date && state.hoveredStartValue !== null &&
-          state.hoveredEndValue >= obj.date) {
-         obj.hovered = true;
-      } else {
-         obj.hovered = false;
-      }
+      obj.hovered = state.hoveredStartValue <= obj.date && state.hoveredStartValue !== null &&
+          state.hoveredEndValue >= obj.date;
 
       if (state.dayFormatter) {
          coreMerge(obj, state.dayFormatter(date) || {});
