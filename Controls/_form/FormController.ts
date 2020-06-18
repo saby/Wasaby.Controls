@@ -272,7 +272,9 @@ class FormController extends Control<IFormController, IReceivedState> {
 
             const result = this._confirmRecordChangeHandler(() => {
                     this._createBeforeUpdate(createMetaData, newOptions);
-                });
+                }, () => {
+                this._createBeforeUpdate(createMetaData, newOptions);
+            });
             if (result === undefined) {
                 this._createBeforeUpdate(createMetaData, newOptions);
             }
