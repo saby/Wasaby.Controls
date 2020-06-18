@@ -1,5 +1,5 @@
 import {IControlOptions} from 'UI/Base';
-import {IFilterOptions, IMultiSelectableOptions} from 'Controls/interface';
+import {INavigationOptions, IFilterOptions, IMultiSelectableOptions} from 'Controls/interface';
 import {IMenuPopup} from 'Controls/menu';
 import {IDropdownSourceOptions} from './IDropdownSource';
 import {RecordSet} from "Types/collection";
@@ -20,8 +20,8 @@ export interface IDropdownController {
     onSelectorResult(selectedItems: RecordSet): void;
 }
 
-export interface IDropdownControllerOptions extends IControlOptions, IDropdownSourceOptions,
-                 IFilterOptions, IMultiSelectableOptions, IMenuPopup {
+export interface IDropdownControllerOptions extends IControlOptions, IDropdownSourceOptions, INavigationOptions,
+        IFilterOptions, IMultiSelectableOptions, IMenuPopup {
     notifySelectedItemsChanged: Function;
     keyProperty: string;
     notifyEvent: Function;
