@@ -5,6 +5,7 @@ import { Controller as ParkingController, loadHandlers } from 'Controls/_dataSou
 import {
     Handler,
     HandlerConfig,
+    ProcessedError,
     ViewConfig
 } from './Handler';
 import Mode from './Mode';
@@ -14,6 +15,7 @@ import Popup, { IPopupHelper } from './Popup';
 
 export type Config = {
     handlers?: Handler[];
+    viewConfig?: Partial<ViewConfig>;
 };
 
 /// region helpers
@@ -104,12 +106,12 @@ export function getPopupHelper(): IPopupHelper {
  * </pre>
  */
 export default class ErrorController {
-    private __controller: ParkingController;
+    private __controller: ParkingController<ViewConfig>;
 
-    constructor(config: Config, private _popupHelper: IPopupHelper = getPopupHelper()) {
-        this.__controller = new ParkingController({
+    constructor(options: Config, private _popupHelper: IPopupHelper = getPopupHelper()) {
+        this.__controller = new ParkingController<ViewConfig>({
             configField: ErrorController.CONFIG_FIELD,
-            ...config
+            ...options
         });
     }
 
@@ -121,26 +123,22 @@ export default class ErrorController {
 
     /**
      * Добавить обработчик ошибки.
-     * @method
-     * @name Controls/_dataSource/_error/Controller#addHandler
-     * @public
      * @param {Controls/_dataSource/_error/Handler} handler
-     * @void
+     * @param isPostHandler Выполнять ли обработчик после обработчиков уровня приложения.
+     * @public
      */
-    addHandler(handler: Handler): void {
-        this.__controller.addHandler(handler);
+    addHandler(handler: Handler, isPostHandler?: boolean): void {
+        this.__controller.addHandler(handler, isPostHandler);
     }
 
     /**
      * Убрать обработчик ошибки.
-     * @method
-     * @name Controls/_dataSource/_error/Controller#removeHandler
-     * @public
      * @param {Controls/_dataSource/_error/Handler} handler
-     * @void
+     * @param isPostHandler Выполнять ли обработчик после обработчиков уровня приложения.
+     * @public
      */
-    removeHandler(handler: Handler): void {
-        this.__controller.removeHandler(handler);
+    removeHandler(handler: Handler, isPostHandler?: boolean): void {
+        this.__controller.removeHandler(handler, isPostHandler);
     }
 
     /**
@@ -154,16 +152,20 @@ export default class ErrorController {
      * @param {Error | Controls/_dataSource/_error/HandlerConfig} config Обрабатываемая ошибки или объект, содержащий обрабатываемую ошибку и предпочитаемый режим отображения.
      * @return {void | Controls/_dataSource/_error/ViewConfig} Данные для отображения сообщения об ошибке.
      */
-    process<T extends Error = Error>(config: HandlerConfig<T> | T): Promise<ViewConfig | void> {
-        const _config = prepareConfig<T>(config);
+    process<TError extends ProcessedError = ProcessedError>(
+        config: HandlerConfig<TError> | TError
+    ): Promise<ViewConfig | void> {
+        const _config = prepareConfig<TError>(config);
+
         if (!isNeedHandle(_config.error)) {
             return Promise.resolve();
         }
+
         return this.__controller.process(_config).then((handlerResult: ViewConfig | void) => {
             if (!handlerResult) {
                 return this._getDefault(_config);
             }
-            // @ts-ignore
+
             _config.error.processed = true;
             return {
                 status: handlerResult.status,
