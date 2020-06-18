@@ -345,6 +345,19 @@ define([
 
             assert.isTrue(result instanceof Promise);
          });
+
+         // Необходимо устанавливать состояние "модель редактируется" для новой и старой модели
+         it('should set isEditing() for model', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+            assert.isNotTrue(listViewModel.isEditing(), 'Model shouldn\'t be in editing state before beginEdit()');
+            await eip.beginEdit({
+               item: listViewModel.at(0).getContents()
+            });
+            assert.isTrue(listViewModel.isEditing(), 'Model should be in editing state after what had happened to her.');
+         });
       });
 
       describe('beginAdd', function() {
