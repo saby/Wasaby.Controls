@@ -5,6 +5,7 @@ define('Controls-demo/Tabs/Buttons', [
    'wml!Controls-demo/Tabs/Buttons/resources/itemTemplate',
    'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate',
    'wml!Controls-demo/Tabs/Buttons/resources/photoContent',
+   'wml!Controls-demo/Tabs/Buttons/resources/iconTemplate',
    'Types/source',
 ], function(
    Control,
@@ -13,6 +14,7 @@ define('Controls-demo/Tabs/Buttons', [
    itemTemplate,
    mainTemplate,
    photoContent,
+   iconTemplate,
    source
 ) {
    'use strict';
@@ -191,7 +193,8 @@ define('Controls-demo/Tabs/Buttons', [
                   text: 'Отпуск',
                   icon: 'icon-Vacation',
                   iconStyle: 'success',
-                  itemTemplate: itemTemplate
+                  itemTemplate: itemTemplate,
+                  leftTemplate: iconTemplate
                },
                {
                   id: '2',
@@ -199,7 +202,9 @@ define('Controls-demo/Tabs/Buttons', [
                   text: 'Отгул',
                   icon: 'icon-SelfVacation',
                   iconStyle: 'warning',
-                  itemTemplate: itemTemplate
+                  itemTemplate: itemTemplate,
+                  leftTemplate: iconTemplate,
+                  rightTemplate: iconTemplate
                },
                {
                   id: '3',
@@ -207,7 +212,8 @@ define('Controls-demo/Tabs/Buttons', [
                   text: 'Больничный',
                   icon: 'icon-Sick',
                   iconStyle: 'secondary',
-                  itemTemplate: itemTemplate
+                  itemTemplate: itemTemplate,
+                  rightTemplate: iconTemplate
                }
             ]
          });

@@ -39,6 +39,8 @@
                 bind:selectedKey='SelectedKey5'
                 keyProperty="id"
                 itemTemplateProperty="itemTemplate"
+                leftTemplateProperty="leftTemplate"
+                rightTemplateProperty="rightTemplate"
                 source="{{_source5}}"
         />
     </div>

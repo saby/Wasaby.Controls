@@ -41,49 +41,49 @@ define([
             assert.strictEqual(component._index, component2._index - 1);
          });
 
-         it('should not create a observer if the control was created invisible, and must create after it has become visible', function () {
-            const component = createComponent(StickyHeader, options);
-            component._container = {
-               closest: () => true
-            };
-            sinon.stub(component, '_createObserver');
-            component._canScroll = true;
-            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
-            component._onScrollStateChanged('canScroll');
-            assert.isUndefined(component._observer);
-            component._container.closest = () => false;
-            component._resizeHandler();
-            sinon.assert.called(component._createObserver);
-            sinon.restore();
-         });
+         // it('should not create a observer if the control was created invisible, and must create after it has become visible', function () {
+         //    const component = createComponent(StickyHeader, options);
+         //    component._container = {
+         //       closest: () => true
+         //    };
+         //    sinon.stub(component, '_createObserver');
+         //    component._canScroll = true;
+         //    component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+         //    component._onScrollStateChanged('canScroll');
+         //    assert.isUndefined(component._observer);
+         //    component._container.closest = () => false;
+         //    component._resizeHandler();
+         //    sinon.assert.called(component._createObserver);
+         //    sinon.restore();
+         // });
+         //
+         // it('should create observer if scroll is appears', function () {
+         //    const component = createComponent(StickyHeader, options);
+         //    component._container = {
+         //       closest: () => false
+         //    };
+         //    sinon.stub(component, '_createObserver');
+         //    component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+         //    assert.isUndefined(component._observer);
+         //    component._onScrollStateChanged('canScroll');
+         //    sinon.assert.called(component._createObserver);
+         //    sinon.restore();
+         // });
 
-         it('should create observer if scroll is appears', function () {
-            const component = createComponent(StickyHeader, options);
-            component._container = {
-               closest: () => false
-            };
-            sinon.stub(component, '_createObserver');
-            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
-            assert.isUndefined(component._observer);
-            component._onScrollStateChanged('canScroll');
-            sinon.assert.called(component._createObserver);
-            sinon.restore();
-         });
-
-         it('should not create a observer if there is no scroll, and must create scroll is appears', function () {
-            const component = createComponent(StickyHeader, options);
-            component._container = {
-               closest: () => false
-            };
-            sinon.stub(component, '_createObserver');
-            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
-            assert.isUndefined(component._observer);
-            component._onScrollStateChanged('cantScroll');
-            sinon.assert.notCalled(component._createObserver);
-            component._onScrollStateChanged('canScroll');
-            sinon.assert.called(component._createObserver);
-            sinon.restore();
-         });
+         // it('should not create a observer if there is no scroll, and must create scroll is appears', function () {
+         //    const component = createComponent(StickyHeader, options);
+         //    component._container = {
+         //       closest: () => false
+         //    };
+         //    sinon.stub(component, '_createObserver');
+         //    component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+         //    assert.isUndefined(component._observer);
+         //    component._onScrollStateChanged('cantScroll');
+         //    sinon.assert.notCalled(component._createObserver);
+         //    component._onScrollStateChanged('canScroll');
+         //    sinon.assert.called(component._createObserver);
+         //    sinon.restore();
+         // });
       });
 
       describe('_beforeUnmount', function() {
@@ -106,6 +106,25 @@ define([
             assert.isUndefined(component._observeHandler);
             assert.isUndefined(component._observer);
             sandbox.restore();
+         });
+      });
+
+      describe('_onScrollStateChanged', function() {
+         it('canScroll', function () {
+            const component = createComponent(StickyHeader, {});
+            sinon.stub(component, '_forceUpdate');
+            component._model = {
+               fixedPosition: 'top'
+            };
+            component._onScrollStateChanged('canScroll');
+            assert.isTrue(component._canScroll);
+            sinon.assert.called(component._forceUpdate);
+         });
+
+         it('cantScroll', function () {
+            const component = createComponent(StickyHeader, {});
+            component._onScrollStateChanged('cantScroll');
+            assert.isFalse(component._canScroll);
          });
       });
 
@@ -237,7 +256,12 @@ define([
             const component = createComponent(StickyHeader, {});
             component._model = {fixedPosition: ''};
             component._container = {
-               style: { top: null }
+               style: { top: null },
+               container: {
+                  getBoundingClientRect() {
+                     return {height: 500};
+                  }
+               }
             };
             sinon.stub(component, '_forceUpdate');
 

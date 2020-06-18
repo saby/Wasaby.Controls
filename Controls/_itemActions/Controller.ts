@@ -180,7 +180,7 @@ export class Controller {
      * Получает последний swiped элемент
      */
     getSwipeItem(): IItemActionsItem {
-        return this._collection.find((item) => item.isSwiped());
+        return this._collection.find((item) => item.isSwiped() || item.isRightSwiped());
     }
 
     /**

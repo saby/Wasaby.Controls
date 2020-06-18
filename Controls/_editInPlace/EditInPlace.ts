@@ -676,7 +676,7 @@ export default class EditInPlace {
     updateEditingData(options: IEditingOptions, formController: any): void {
         this._updateOptions(options);
         this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
-        if (this._editingItemData) {
+        if (this._editingItemData && this._options.listViewModel.getEditingItemData() !== this._editingItemData) {
             this._setEditingItemData(this._editingItemData.item);
         }
 
@@ -774,6 +774,7 @@ export default class EditInPlace {
             } else {
                 listViewModel._setEditingItemData(null);
             }
+            listViewModel.unsubscribe('onCollectionChange', this._updateIndex);
             this._editingItemData = null;
             this._editingItem = null;
             return;
