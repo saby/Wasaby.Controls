@@ -147,14 +147,6 @@ class Button extends BaseDropdown {
       return handlerResult;
    }
 
-   openMenu(popupOptions?: object): void {
-      this._controller.openMenu(popupOptions);
-   }
-
-   closeMenu(): void {
-      this._controller.closeMenu();
-   }
-
    _handleMouseDown(event: SyntheticEvent): void {
       const config = {
          templateOptions: {

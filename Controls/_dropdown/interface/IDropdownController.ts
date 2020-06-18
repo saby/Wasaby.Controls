@@ -12,7 +12,7 @@ export interface IDropdownController {
     update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void;
     loadDependencies(): Promise<any>;
     setMenuPopupTarget(target: any): void;
-    openMenu(popupOptions?: object): void;
+    openMenu(popupOptions?: object): Promise<any>;
     closeMenu(): void;
     destroy(): void;
     applyClick(data: RecordSet): void;

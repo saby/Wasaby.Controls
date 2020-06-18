@@ -147,14 +147,6 @@ class ComboBox extends BaseDropdown{
       }
    }
 
-   openMenu(popupOptions?: object): void {
-      this._controller.openMenu(popupOptions);
-   }
-
-   closeMenu(): void {
-      this._controller.closeMenu();
-   }
-
    _handleMouseDown(event: SyntheticEvent): void {
       if (this._popupId) {
          this._controller.closeMenu();
