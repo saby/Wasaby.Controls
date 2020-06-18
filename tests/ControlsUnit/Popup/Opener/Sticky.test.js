@@ -594,6 +594,14 @@ define(
             position = {};
             StickyStrategy._private.setMaxSizes(popupCfg, position);
             assert.equal(position.maxHeight, BODY_HEIGHT);
+
+            position = {top: 20};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxHeight, BODY_HEIGHT - 20);
+
+            position = {bottom: 50};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxHeight, BODY_HEIGHT - 50);
          });
 
          it('Centered targetPoint sticky', () => {
@@ -667,7 +675,7 @@ define(
             assert.strictEqual(container.style.height, '100px');
             assert.isUndefined(container.style.maxHeight);
 
-            item.position.maxHeight = 300;
+            item.popupOptions.maxHeight = 300;
             container.style.maxHeight = '200px';
             StickyController.elementAfterUpdated(item, container);
             assert.strictEqual(newContainer.style.maxHeight, '300px');

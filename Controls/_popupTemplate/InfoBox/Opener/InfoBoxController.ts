@@ -77,10 +77,12 @@ class InfoBoxController extends StickyController.constructor {
         }
         this._openedPopupId = item.id;
 
-        // Remove the width obtained in getDefaultOptions
+        // Remove the width and height obtained in getDefaultOptions
         item.position.maxWidth = undefined;
+        item.position.maxHeight = undefined;
         //Removes set value to get real size of the content
         container.style.maxWidth = '';
+        container.style.maxHeight = '';
 
         return super.elementCreated.apply(this, arguments);
     }
