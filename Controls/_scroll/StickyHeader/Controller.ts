@@ -154,9 +154,9 @@ class Component extends Control {
             if (!isHidden(data.container) && this._stickyControllerMounted && this._canScroll) {
                 return Promise.resolve().then(this._registerDelayed.bind(this));
             }
-            this._observeStickyHeader(data.container);
+            this._observeStickyHeader(data);
         } else {
-            this._unobserveStickyHeader(this._headers[data.id].container);
+            this._unobserveStickyHeader(this._headers[data.id]);
             delete this._headers[data.id];
             this._removeFromHeadersStack(data.id, data.position);
             this._removeFromDelayedStack(data.id);
@@ -164,15 +164,15 @@ class Component extends Control {
         return Promise.resolve();
     }
 
-    private _observeStickyHeader(container: HTMLElement): void {
-        const stickyHeaders = this._getStickyHeaderElements(container);
+    private _observeStickyHeader(header: TRegisterEventData): void {
+        const stickyHeaders = this._getStickyHeaderElements(header);
         stickyHeaders.forEach((elem: HTMLElement) => {
             this._stickyHeaderResizeObserver.observe(elem);
         });
     }
 
-    private _unobserveStickyHeader(container: HTMLElement): void {
-        const stickyHeaders = this._getStickyHeaderElements(container);
+    private _unobserveStickyHeader(header: TRegisterEventData): void {
+        const stickyHeaders = this._getStickyHeaderElements(header);
         stickyHeaders.forEach((elem: HTMLElement) => {
             this._stickyHeaderResizeObserver.unobserve(elem);
         });
@@ -202,11 +202,11 @@ class Component extends Control {
         }
     }
 
-    private _getStickyHeaderElements(container: HTMLElement): NodeListOf<HTMLElement> {
-        if (getComputedStyle(container, null).display === 'contents') {
-            return container.querySelectorAll('.controls-StickyHeader');
+    private _getStickyHeaderElements(header: TRegisterEventData): NodeListOf<HTMLElement> {
+        if (header.inst.getChildrenHeaders) {
+            return header.inst.getChildrenHeaders().map(h => h.container);
         } else {
-            return [container];
+            return [header.container];
         }
     }
 
