@@ -1,8 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import Template = require('wml!Controls-demo/BreadCrumbs/isDouble/IsDouble');
+import Template = require('wml!Controls-demo/BreadCrumbs/DisplayMode/DisplayMode');
 import {Model} from 'Types/entity';
 
-class IsDouble extends Control<IControlOptions> {
+class DisplayMode extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     protected _items: object;
 
@@ -56,4 +56,4 @@ class IsDouble extends Control<IControlOptions> {
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 
-export default IsDouble;
+export default DisplayMode;

@@ -83,10 +83,12 @@ var _private = {
  */
 
 /**
- * @name Controls/_breadcrumbs/HeadingPath#isDouble
+ * @name Controls/_breadcrumbs/HeadingPath#displayMode
+ * @variant default
+ * @variant doubleline
  * @cfg {Boolean} Отображение крошек в две строки
- * @default false
- * @demo Controls-demo/BreadCrumbs/isDouble/Index
+ * @default default
+ * @demo Controls-demo/BreadCrumbs/DisplayMode/Index
  */
 
 /**
@@ -183,7 +185,7 @@ BreadCrumbsPath.getDefaultOptions = function () {
         root: null,
         backButtonStyle: 'secondary',
         showActionButton: true,
-        isDouble: false
+        displayMode: 'default'
     };
 };
 
