@@ -91,5 +91,5 @@ export default class extends Control{
       this._textMultiply3 = 'Выбраны ключи: ' + keys.join(', ');
    }
 
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
+   static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Lookup/Selector/Index'];
 }
