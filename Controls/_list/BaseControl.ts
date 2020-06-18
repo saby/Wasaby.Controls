@@ -241,7 +241,7 @@ const _private = {
             }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
-            self._sourceController.load(filter, sorting, null, sourceConfig).addCallback(function(list) {
+            self._sourceController.load(filter, sorting, null, sourceConfig, cfg.root).addCallback(function(list) {
                 _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
                 if (list.getCount()) {

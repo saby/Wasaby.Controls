@@ -43,19 +43,16 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     hasMoreData(direction: 'up' | 'down', root?: Key): boolean | undefined {
-        const controllerForRoot = this._getControllerByRoot(root);
-        let hasMoreDataResult;
-
-        if (controllerForRoot) {
-            hasMoreDataResult = controllerForRoot.queryParamsController.hasMoreData(direction, root);
-        } else {
-            hasMoreDataResult = this.getController().hasMoreData(direction, root);
-        }
-
-        return hasMoreDataResult;
+        return this.getController(root).hasMoreData(direction, root);
     }
 
-    prepareQueryParams(direction: 'up' | 'down', callback?, config?, multiNavigation?: boolean): IAdditionalQueryParams {
+    prepareQueryParams(
+        direction: 'up' | 'down',
+        callback?: Function,
+        config?: IBaseSourceConfig,
+        multiNavigation?: boolean,
+        root?: Key
+    ): IAdditionalQueryParams {
         let result;
 
         if (multiNavigation) {
@@ -67,7 +64,7 @@ export default class QueryParamsController implements IQueryParamsController {
                 });
             });
         } else {
-            result = this.getController().prepareQueryParams(direction, callback, config);
+            result = this.getController(root).prepareQueryParams(direction, callback, config);
         }
 
         return result;
@@ -115,7 +112,7 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     getController(root?: Key): IQueryParamsController {
-        let controllerItem = this._getControllerByRoot(root);
+        let controllerItem = this._controllers.at(this._controllers.getIndexByValue('id', root));
 
         if (!controllerItem && !root) {
             controllerItem = this._controllers.at(0);
@@ -131,9 +128,4 @@ export default class QueryParamsController implements IQueryParamsController {
 
         return controllerItem.queryParamsController;
     }
-
-    private _getControllerByRoot(root?: Key): IControllerItem {
-        return this._controllers.at(this._controllers.getIndexByValue('id', root));
-    }
-
 }
