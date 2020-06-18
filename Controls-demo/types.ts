@@ -16,9 +16,10 @@ export interface INavigation {
     sourceConfig: {
         pageSize: number,
         page: number,
-        hasMore: boolean
+        hasMore?: boolean
     },
-    viewConfig: {
-        pagingMode: string
+    viewConfig?: {
+        pagingMode?: string
+        maxCountValue?: number
     }
-}
+};
