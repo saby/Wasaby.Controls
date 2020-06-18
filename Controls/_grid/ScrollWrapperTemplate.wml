@@ -22,5 +22,14 @@
     </Controls.scroll:StickyHeader>
 </ws:if>
 <ws:else>
-    <invisible-node />
+        <Controls._scroll.Scroll.Scrollbar
+                name="columnScrollbar"
+                position="{{_options.position}}"
+                direction="horizontal"
+                contentSize="{{_options.contentSize}}"
+                shouldSetMarginTop="{{_shouldSetMarginTop}}"
+                gridSupport="{{_options.gridSupport}}"
+                trackVisible="{{_options.trackVisible}}"
+                attr:class="js-controls-Grid_columnScroll_thumb-wrapper controls-ColumnScroll_theme-{{_options.theme}}"
+                on:positionChanged="_localPositionHandler()"/>
 </ws:else>
