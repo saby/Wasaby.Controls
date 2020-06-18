@@ -73,6 +73,10 @@ define('Controls-demo/Popup/PopupPage',
             });
          },
 
+         openIndicatorPopup: function () {
+            this._children.executingIndicatorStack.open();
+         },
+
          openNotifyStack: function() {
             this._children.notifyStack.open();
          },
