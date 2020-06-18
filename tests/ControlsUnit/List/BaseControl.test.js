@@ -1709,9 +1709,9 @@ define([
       it('indicator', function() {
          var cfg = {};
          var ctrl = new lists.BaseControl(cfg);
-         ctrl._container = {
-            getBoundingClientRect: () => ({})
-         };
+         ctrl._container =  {getElementsByClassName: () => ([{
+               getBoundingClientRect: () => ({})
+            }])};
          ctrl._scrollTop = 200;
 
          assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
@@ -2672,7 +2672,6 @@ define([
          baseControl._container = {
             getElementsByClassName: () => ([scrollContainer])
          };
-         baseControl._sourceController = lists.BaseControl._private.getSourceController(cfg);
          baseControl.saveOptions(cfg);
 
          it('before mounting', async function() {
@@ -2693,13 +2692,12 @@ define([
          it('with scroll', async function() {
             baseControl._isScrollShown = true;
             await lists.BaseControl._private.reload(baseControl, cfg);
-            assert.isTrue(baseControl._resetScrollAfterReload);
             await baseControl._afterUpdate(cfg);
             assert.isFalse(doScrollNotified);
             baseControl._shouldNotifyOnDrawItems = true;
+            baseControl._resetScrollAfterReload = true;
             await baseControl._beforeRender(cfg);
             assert.isTrue(doScrollNotified);
-
          });
       });
 
@@ -5425,7 +5423,7 @@ define([
 
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            ctrl._container = {clientHeight: 100};
+            ctrl._container =  {getElementsByClassName: () => ([{clientHeight: 100}])};
             ctrl._scrollController.__getItemsContainer = () => ({children: []});
             ctrl._afterMount(cfg);
 
@@ -5514,7 +5512,12 @@ define([
                up: false,
                down: true
             };
+
             ctrl._container = {
+               getElementsByClassName: () => ([{
+                  clientHeight: 100,
+                  getBoundingClientRect: () => ({y: 0})
+               }]),
                clientHeight: 100,
                getBoundingClientRect: () => ({y: 0})
             };
@@ -5848,7 +5851,7 @@ define([
          async function mountBaseControl(control, options) {
             control.saveOptions(options);
             await control._beforeMount(options);
-            control._container = {clientHeight: 0, offsetHeight:0};
+            control._container =  {getElementsByClassName: () => ([ {clientHeight: 0, offsetHeight:0}])};
             control._scrollController.__getItemsContainer = () => ({children: []});
             await control._afterMount(options);
          }
@@ -6138,7 +6141,7 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._container = {clientHeight: 0};
+         baseControl._container = {getElementsByClassName: () => ([{clientHeight: 0}])};
          sandbox.replace(baseControl, '_updateItemActions', (options) => {
             assert.equal(baseControl._itemActionsTemplate, listRender.itemActionsTemplate);
          });
