@@ -95,6 +95,7 @@
     height: 0;
   }
 
+  .controls-Grid__row-cell
   .controls-Grid__row-cell_theme-@{themeName} {
     height: @cell_min-height_grid;
   }
@@ -174,6 +175,20 @@
   display: flex;
 }
 
+.ws-is-ie12, .ws-is-firefox {
+  /*
+    По непонятным причинам ячейка таблицы воспринимает height буквально, как высоту, хотя спецификация говорит,
+    что свойство должно работать как min-height. Наиболее вероятная причина - браузер не понимает как сосчитать высоту,
+    потому что в ячейке лежит блок с нефиксированной высотой. У него задан min-height и height: 100%.
+    Блок - controls-Grid__table__relative-cell-wrapper. Нужен он для растягивания каждой ячейки по высоте максимальной.
+    Весь этот механизм - большой хак, если данные правки ломающие - чинить нужно максимально точечно.
+    https://online.sbis.ru/opendoc.html?guid=09258c3e-e4eb-4552-85e2-8320ee02c411
+    https://online.sbis.ru/open_dialog.html?guid=8f63d15a-1192-44dc-b6f5-72beb399dd45
+  */
+  .controls-Grid_partial-support_theme-@{themeName} .controls-Grid__row-cell {
+    height: auto;
+  }
+}
 
 .ws-is-not-full-grid-support,
 .controls-Grid_partial-support_theme-@{themeName} {

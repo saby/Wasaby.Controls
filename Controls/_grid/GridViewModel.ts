@@ -20,7 +20,13 @@ import {
 import cClone = require('Core/core-clone');
 import collection = require('Types/collection');
 import { Model } from 'Types/entity';
-import { IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
+import {
+    IEditingConfig,
+    IItemActionsTemplateConfig,
+    ISwipeConfig,
+    ANIMATION_STATE,
+    CollectionItem
+} from 'Controls/display';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {createClassListCollection} from "../Utils/CssClassList";
@@ -69,6 +75,19 @@ interface IGetColspanStylesForParams {
     columnIndex: number;
     columnsLength: number;
     maxEndRow?: number;
+}
+
+interface IHeaderModel {
+    isStickyHeader: Function;
+    getCurrentHeaderColumn: Function;
+    getMultiSelectVisibility: Function;
+    isMultiHeader: Function;
+    resetHeaderRows: Function;
+    isEndHeaderRow: Function;
+    goToNextHeaderRow: Function;
+    getCurrentHeaderRow: Function;
+    getVersion: Function;
+    nextVersion: Function;
 }
 
 var
@@ -283,7 +302,7 @@ var
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
-                if (!isFullGridSupport) {
+                if (!isFullGridSupport && !current.isEditing) {
                     classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
@@ -584,6 +603,9 @@ var
         _isMultiHeader: null,
         _resolvers: null,
 
+        _headerModel: null,
+        _headerVersion: 0,
+
         constructor: function(cfg) {
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
@@ -598,6 +620,9 @@ var
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
                 if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
                     this._ladder = _private.prepareLadder(this);
+                }
+                if (changesType !== 'markedKeyChanged' && action !== 'ch') {
+                    this._nextHeaderVersion();
                 }
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
@@ -713,6 +738,33 @@ var
                 this._shouldAddActionsCell(),
                 this.shouldAddStickyLadderCell()
             );
+            if (columns && columns.length) {
+                this._headerModel = {
+                    isStickyHeader: this.isStickyHeader.bind(this),
+                    getCurrentHeaderColumn: this.getCurrentHeaderColumn.bind(this),
+                    getMultiSelectVisibility: this.getMultiSelectVisibility.bind(this),
+                    isMultiHeader: () => this._isMultiHeader,
+                    resetHeaderRows: this.resetHeaderRows.bind(this),
+                    isEndHeaderRow: this.isEndHeaderRow.bind(this),
+                    goToNextHeaderRow: this.goToNextHeaderRow.bind(this),
+                    getCurrentHeaderRow: this.getCurrentHeaderRow.bind(this),
+                    getVersion: () => this._headerVersion,
+                    nextVersion: () => ++this._headerVersion
+                };
+            } else {
+                this._headerModel = null;
+            }
+        },
+
+        _nextHeaderVersion(): void {
+            const headerModel = this.getHeaderModel();
+            if (headerModel) {
+                headerModel.nextVersion();
+            }
+        },
+
+        getHeaderModel(): IHeaderModel {
+            return this._headerModel;
         },
 
         setHeader: function(columns) {
@@ -901,7 +953,8 @@ var
                     hasActionCell: this._shouldAddActionsCell()
                 }, this._options.theme);
                 cellClasses += ' controls-Grid__header-cell_min-width';
-                if (!this._isMultiHeader && columnIndex > hasMultiSelect ? 1 : 0) {
+
+                if (!this._isMultiHeader && !cell.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
                     const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, columnIndex, this._options.columnSeparatorSize);
                     if (columnSeparatorSize !== null) {
                         cellClasses += ` controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
@@ -965,7 +1018,7 @@ var
                 cellContentClasses += rowIndex !== this._headerRows.length - 1 && endRow - startRow === 1 ? ` controls-Grid__cell_header-content_border-bottom_theme-${this._options.theme}` : '';
 
                 // У первой колонки не рисуем вертикальные разделители. startColumn - конфигурация GridLayout, начинается с 1.
-                if (startColumn - (hasMultiSelect ? 2 : 1)) {
+                if (!cell.isActionCell && (startColumn - (hasMultiSelect ? 2 : 1))) {
                     const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, startColumn - 1, this._options.columnSeparatorSize);
                     if (columnSeparatorSize !== null) {
                         cellClasses += ` controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
@@ -1089,7 +1142,7 @@ var
                 });
             }
 
-            if (columnIndex > hasMultiSelect ? 1 : 0) {
+            if (!resultsColumn.column.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
                 const columnSeparatorSize = _private.getSeparatorForColumn(
                     this._options.columns,
                     columnIndex - (hasMultiSelect ? 1 : 0),
@@ -1234,8 +1287,8 @@ var
         setSupportVirtualScroll: function(value) {
             this._model.setSupportVirtualScroll(value);
         },
-        setMarkedKey: function(key, byOptions) {
-            this._model.setMarkedKey(key, byOptions);
+        setMarkedKey: function(key, status, silent) {
+            this._model.setMarkedKey(key, status, silent);
         },
 
         setMarkerVisibility: function(markerVisibility) {
@@ -1278,6 +1331,7 @@ var
 
         setSorting: function(sorting) {
             this._model.setSorting(sorting);
+            this._nextHeaderVersion();
         },
 
         setSearchValue: function(value) {
@@ -1472,7 +1526,7 @@ var
                     const index = current.stickyProperties.indexOf(stickyProperty);
                     const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
                     if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
-                        index === 1 && !hasMainCell || 
+                        index === 1 && !hasMainCell ||
                         index === 0 && hasMainCell)) {
                         result += ' controls-Grid__row-cell__ladder-content_displayNoneForLadder';
                     }
@@ -1482,7 +1536,7 @@ var
                 }
                 return result;
             };
-            
+
             current.getAdditionalLadderClasses = () => {
                 let result = '';
                 const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
@@ -1560,7 +1614,8 @@ var
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
                 if (current.item.get) {
-                    currentColumn.column.needSearchHighlight = !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue);
+                    currentColumn.column.needSearchHighlight = current.searchValue ?
+                        !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
                 }
                 if (stickyColumn) {
@@ -1806,7 +1861,12 @@ var
         },
 
         // New Model compatibility
-        getSourceIndexByItem(item: Model): number {
+        getIndex(item: CollectionItem<Model>): number | string {
+            return this._model ? this._model.getIndex(item) : undefined;
+        },
+
+        // New Model compatibility
+        getSourceIndexByItem(item: CollectionItem<Model>): number {
             return this._model ? this._model.getSourceIndexByItem(item) : undefined;
         },
 
@@ -1820,6 +1880,22 @@ var
             return this._model.setEventRaising(enabled, analyze);
         },
 
+        /**
+         * Возвращает состояние editing для модели.
+         * New Model compatibility
+         */
+        isEditing(): boolean {
+            return this._model.isEditing();
+        },
+
+        /**
+         * Устанавливает состояние editing для модели.
+         * New Model compatibility
+         */
+        setEditing(editing): void {
+            this._model.setEditing(editing);
+        },
+
         at(index: number): Model {
             return this._model.at(index);
         },
@@ -1830,10 +1906,6 @@ var
 
         setSwipeItem: function(itemData) {
             this._model.setSwipeItem(itemData);
-        },
-
-        setRightSwipedItem: function(itemData) {
-            this._model.setRightSwipedItem(itemData);
         },
 
         // TODO: Исправить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
@@ -1860,10 +1932,6 @@ var
         setStickyColumnsCount: function(stickyColumnsCount) {
             this._options.stickyColumnsCount = stickyColumnsCount;
             this._nextModelVersion();
-        },
-
-        updateSelection: function(selectedKeys) {
-            this._model.updateSelection(selectedKeys);
         },
 
         setSelectedItems(items: Model[], selected: boolean|null): void {

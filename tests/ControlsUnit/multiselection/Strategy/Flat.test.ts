@@ -189,4 +189,27 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
          assert.equal(count, null);
       });
    });
+
+   it('isAllSelected', () => {
+      let selection = { selected: [null], excluded: [] };
+      assert.isTrue(strategy.isAllSelected(selection, false, 3));
+
+      selection = { selected: [null], excluded: [5] };
+      assert.isFalse(strategy.isAllSelected(selection, false, 3));
+
+      selection = { selected: [1, 2, 3], excluded: [] };
+      assert.isFalse(strategy.isAllSelected(selection, true, 3));
+
+      selection = { selected: [1, 2, 3], excluded: [] };
+      assert.isTrue(strategy.isAllSelected(selection, false, 3));
+
+      selection = { selected: [], excluded: [] };
+      assert.isFalse(strategy.isAllSelected(selection, false, 3, false));
+
+      selection = { selected: [null], excluded: [] };
+      assert.isTrue(strategy.isAllSelected(selection, false, 3, false));
+
+      selection = { selected: [null, 2], excluded: [3] };
+      assert.isTrue(strategy.isAllSelected(selection, false, 3, false));
+   });
 });

@@ -75,6 +75,21 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
          assert.equal(lastPopupOptions.opener, baseController);
       });
 
+      it('showSelector with handlers on templateOptions', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = {
+            templateOptions: {
+               handlers: {
+                  onTestAction: () => {}
+               }
+            }
+         };
+         showSelector.default(baseController, {});
+
+         assert.isFunction(lastPopupOptions.templateOptions.handlers.onSelectComplete);
+         assert.isFunction(lastPopupOptions.templateOptions.handlers.onTestAction);
+      });
+
       it('showSelector with multiSelect', function() {
          const baseController = getBaseController();
          let selectCompleted = false;
@@ -125,6 +140,36 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
          baseController._openingSelector = null;
 
          assert.isNull(showSelector.default(baseController, {}));
+      });
+
+      it('showSelector without selectorTemplate and popupOptions template', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = null;
+         showSelector.default(baseController, {});
+
+         assert.isUndefined(baseController._openingSelector);
+      });
+
+      it('showSelector without selectorTemplate and with popupOptions template', function() {
+         const baseController = getBaseController();
+         baseController._openingSelector = null;
+         baseController._options.selectorTemplate = null;
+         showSelector.default(baseController, {
+            template: 'testTemplate'
+         });
+         assert.isNotNull(baseController._openingSelector);
+         assert.equal(lastPopupOptions.template, 'testTemplate');
+      });
+
+      it('showSelector with selectorTemplate', function() {
+         const baseController = getBaseController();
+         baseController._openingSelector = null;
+         baseController._options.selectorTemplate = {
+            templateName: 'selectorTemplate'
+         };
+         showSelector.default(baseController, {});
+         assert.equal(lastPopupOptions.template, 'selectorTemplate');
+         assert.isNotNull(baseController._openingSelector);
       });
    });
 });

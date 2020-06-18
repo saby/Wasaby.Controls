@@ -180,14 +180,6 @@ class Manager extends Control<IManagerOptions> {
              item.popupState === item.controller.POPUP_STATE_DESTROYED);
     }
 
-    /**
-     * Reindex a set of popups, for example, after changing the configuration of one of them
-     * @function Controls/_popup/Manager#reindex
-     */
-    reindex(): void {
-        this._popupItems._reindex();
-    }
-
     private _updateContext(context: IManagerTouchContext): void {
         this._contextIsTouch = context && context.isTouch && context.isTouch.isTouch;
     }
@@ -237,9 +229,6 @@ class Manager extends Control<IManagerOptions> {
 
     private _addElement(item: IPopupItem): void {
         this._popupItems.add(item);
-        if (item.modal) {
-            ManagerController.getContainer().setOverlay(this._popupItems.getCount() - 1);
-        }
     }
 
     private _closeChilds(item: IPopupItem): Promise<null> {
@@ -274,7 +263,6 @@ class Manager extends Control<IManagerOptions> {
             this._popupItems.remove(item);
             this._removeFromParentConfig(item);
 
-            this._updateOverlay();
             this._redrawItems();
             this._notify('managerPopupDestroyed', [item, this._popupItems], {bubbling: true});
         });
@@ -290,11 +278,6 @@ class Manager extends Control<IManagerOptions> {
                 }
             }
         }
-    }
-
-    private _updateOverlay(): void {
-        const indices = this._popupItems.getIndicesByValue('modal', true);
-        ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
     }
 
     protected _pageScrolled(id: string): boolean {
@@ -654,7 +637,7 @@ class Manager extends Control<IManagerOptions> {
                 if (item.removePending) {
                     return item.removePending;
                 }
-                item.removePending = registrator.finishPendingOperations(undefined, undefined, popupId);
+                item.removePending = registrator.finishPendingOperations(undefined, popupId);
 
                 // TODO: Compatible Пендинги от совместимости старого FormController'a не
                 // попадают в _hasRegisteredPendings,
@@ -714,7 +697,6 @@ class Manager extends Control<IManagerOptions> {
 
     private _updatePopupOptions(id: string, item: IPopupItem, oldOptions: IPopupOptions, result: boolean): void {
         if (result) {
-            this._updateOverlay();
             this._redrawItems();
 
             // wait, until popup will be update options

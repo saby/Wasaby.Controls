@@ -6,10 +6,11 @@
             marker="{{false}}"
             attr:key="{{ itemData.key }}__breadcrumbs">
     <ws:colspanTemplate>
+        <!-- Сюда нельзя прокидывать _options.backgroundStyle, т.к. будет неправильный фон у спозиционированных absolute/fixed эл-в -->
         <Controls.Container.Async templateName="Controls/breadcrumbs:Path">
             <ws:partial template="{{ content.resolvedTemplate }}"
                         items="{{colspanTemplate.itemData.item}}"
-                        backgroundStyle="{{_options.backgroundStyle}}"
+                        backgroundStyle="{{_options.style}}"
                         attr:class="controls-Grid__breadCrumbs"
                         breadCrumbsItemClickCallback="{{ itemData.breadcrumbsItemClickCallback }}"
                         keyProperty="{{itemData.keyProperty}}"

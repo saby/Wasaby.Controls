@@ -27,7 +27,10 @@ define([
             id: scroll.getNextStickyId(),
             position: (cfg && cfg.position) || 'top',
             container: {
-               offsetParent: {}
+               offsetParent: {},
+               getBoundingClientRect() {
+                  return {height: 500};
+               }
             },
             inst: {
                getOffset: function() {
@@ -52,6 +55,11 @@ define([
                height: 10,
                resetSticky: sinon.fake(),
                restoreSticky: sinon.fake()
+            },
+            container: {
+               getBoundingClientRect() {
+                  return {height: 500};
+               }
             }
          };
 
@@ -68,12 +76,30 @@ define([
             scrollHeight: 100,
             clientHeight: 100
          };
+         component._canScroll = true;
          sinon.stub(StickyHeaderUtils, 'isHidden').returns(false);
          // sinon.stub(scroll._stickyHeaderController, '_isVisible').returns(true);
       });
 
       afterEach(function() {
          sinon.restore();
+      });
+
+
+      describe('setCanScroll', function() {
+         it('should update value from true to false and should not register waiting headers', function() {
+            sinon.stub(component, '_registerDelayed');
+            component.setCanScroll(false);
+            assert.isFalse(component._canScroll);
+            sinon.assert.notCalled(component._registerDelayed);
+         });
+         it('should update value from false to true and register waiting headers', function() {
+            sinon.stub(component, '_registerDelayed');
+            component._canScroll = false;
+            component.setCanScroll(true);
+            assert.isTrue(component._canScroll);
+            sinon.assert.called(component._registerDelayed);
+         });
       });
 
       describe('_stickyRegisterHandler', function() {
@@ -88,6 +114,7 @@ define([
             };
             component._afterMount({});
             sinon.stub(component, '_updateTopBottom');
+            
             return component._stickyRegisterHandler(event, data, true).then(function() {
                sinon.assert.calledOnce(event.stopImmediatePropagation);
             });
@@ -252,7 +279,12 @@ define([
             component._afterMount({});
             return Promise.all([0, 20, 10].map(function(offset, index) {
                const header = {
-                  container: {parentElement: 1},
+                  container: {
+                     parentElement: 1,
+                     getBoundingClientRect() {
+                        return {height: 500};
+                     }
+                  },
                   id: index,
                   position: 'top',
                   mode: 'stackable',
@@ -268,6 +300,26 @@ define([
             })).then(function() {
                assert.deepEqual(component._headersStack.top, [0, 2, 1]);
             });
+         });
+      });
+
+      describe('_getStickyHeaderElements', function() {
+         it('should returns [header.container]', function() {
+            const header = getRegisterObject();
+            component._getStickyHeaderElements(header);
+            assert.deepEqual(component._getStickyHeaderElements(header), [header.container]);
+         });
+         it('should returns array of all headers in group', function() {
+            const header = getRegisterObject();
+            header.inst.getChildrenHeaders = function() {
+               return [{
+                     container: 'container1'
+                  }, {
+                     container: 'container2'
+                  }]
+            };
+            component._getStickyHeaderElements(header);
+            assert.deepEqual(component._getStickyHeaderElements(header), ['container1', 'container2']);
          });
       });
 
@@ -481,6 +533,11 @@ define([
                   height: 10,
                   resetSticky: sinon.fake(),
                   restoreSticky: sinon.fake()
+               },
+               container: {
+                  getBoundingClientRect() {
+                     return {height: 500};
+                  }
                }
             };
             component._afterMount({});

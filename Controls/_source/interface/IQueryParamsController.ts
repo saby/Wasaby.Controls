@@ -1,4 +1,4 @@
-import {IAdditionalQueryParams, Direction} from './IAdditionalQueryParams';
+import {IAdditionalQueryParams, Direction} from 'Controls/_interface/IAdditionalQueryParams';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {Collection} from 'Controls/display';
@@ -57,7 +57,12 @@ export interface IQueryParamsController {
      * @param list {Types/collection:RecordSet} object containing meta information for current request
      * @param direction {Direction} nav direction ('up' or 'down')
      */
-    updateQueryProperties(list?: RecordSet  | {[p: string]: unknown}, direction?: Direction, root?: string|number): void;
+    updateQueryProperties(
+        list?: RecordSet  | {[p: string]: unknown},
+        direction?: Direction,
+        config?: IBaseSourceConfig,
+        root?: string|number
+    ): void;
 
     /**
      * Считает количество записей всего по мета информации из текущего состояния контроллера и ключу DataSet

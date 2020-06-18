@@ -22,7 +22,7 @@ class Container extends Control<IControlOptions> {
      */
 
     protected _template: TemplateFunction = template;
-    protected _overlayId: number = null;
+    protected _overlayId: string;
     protected _zIndexStep: number = POPUP_ZINDEX_STEP;
     protected _popupItems: List<IPopupItem>;
 
@@ -31,15 +31,6 @@ class Container extends Control<IControlOptions> {
     }
     protected _afterMount(): void {
         ManagerController.setContainer(this);
-    }
-
-    /**
-     * Set the index of popup, under which the overlay will be drawn
-     * @function Controls/_popup/Manager/Container#setPopupItems
-     * @param {Integer} index индекс попапа
-     */
-    setOverlay(index: number): void {
-        this._overlayId = index;
     }
 
     /**
@@ -64,6 +55,29 @@ class Container extends Control<IControlOptions> {
 
     getPending(): Control {
         return this._children.pending as Control;
+    }
+
+    // todo: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
+    protected _getItems(popupItems: List<IPopupItem>): List<IPopupItem> {
+        const reversePopupList: List<IPopupItem> = new List();
+        let maxModalPopup: IPopupItem;
+        popupItems.each((item: IPopupItem) => {
+            let at;
+            // Для поддержки старых автотестов, нужно, чтобы открываемые стековые и диалоговые окна в DOM располагались
+            // выше чем уже открытые. Со всеми окнами так делать нельзя, доп окна (стики) открываемые на 1 уровне, имеют
+            // одинаковый z-index и последнее открытое окно должно быть выше, это осуществялется за счет позиции в DOM.
+            if (item.controller.TYPE === 'Stack' || item.controller.TYPE === 'Dialog') {
+                at = 0;
+            }
+            if (item.modal) {
+                if (!maxModalPopup || item.currentZIndex > maxModalPopup.currentZIndex) {
+                    maxModalPopup = item;
+                }
+            }
+            reversePopupList.add(item, at);
+        });
+        this._overlayId = maxModalPopup?.id;
+        return reversePopupList;
     }
 
     protected _keyDownHandler(event: Event): void {

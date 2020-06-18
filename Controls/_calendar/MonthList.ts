@@ -14,6 +14,7 @@ import monthListUtils from './MonthList/Utils';
 import ITEM_TYPES from './MonthList/ItemTypes';
 import {IDisplayedRanges, IDisplayedRangesOptions} from 'Controls/interface';
 import {IDateConstructor, IDateConstructorOptions} from 'Controls/interface';
+import {IDayTemplate, IDayTemplateOptions} from 'Controls/interface';
 import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
 import dateUtils = require('Controls/Utils/Date');
 import getDimensions = require("Controls/Utils/getDimensions");
@@ -29,6 +30,7 @@ interface IModuleComponentOptions extends
     IMonthListOptions,
     IMonthListVirtualPageSizeOptions,
     IDisplayedRangesOptions,
+    IDayTemplateOptions,
     IDateConstructorOptions {
 }
 
@@ -45,7 +47,7 @@ const enum VIEW_MODE {
 
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_calendar.less">переменные тем оформления</a>
@@ -53,18 +55,21 @@ const enum VIEW_MODE {
  * @class Controls/_calendar/MonthList
  * @extends Core/Control
  * @mixes Controls/_calendar/interfaces/IMonthListSource
+ * @mixes Controls/_interface/IDayTemplate
+ * @mixes Controls/_calendar/interfaces/IMonth
  * @control
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Date/MonthList
  */
 class  ModuleComponent extends Control<IModuleComponentOptions> implements
-        IMonthListSource, IMonthList, IMonthListVirtualPageSize, IDateConstructor, IDisplayedRanges {
+        IMonthListSource, IMonthList, IMonthListVirtualPageSize, IDateConstructor, IDisplayedRanges, IDayTemplate {
     readonly '[Controls/_calendar/interface/IMonthListSource]': boolean = true;
     readonly '[Controls/_calendar/interface/IMonthList]': boolean = true;
     readonly '[Controls/_calendar/interface/IMonthListVirtualPageSize]': boolean = true;
     readonly '[Controls/_interface/IDateConstructor]': boolean = true;
     readonly '[Controls/_interface/IDisplayedRanges]': boolean = true;
+    readonly '[Controls/_interface/IDayTemplate]': boolean = true;
 
     protected _template: TemplateFunction = template;
 
@@ -104,7 +109,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
 
-        const normalizedPosition = this._normalizeStartPosition(position, options.viewMode);
+        const normalizedPosition = this._normalizeDate(position, options.viewMode);
 
         this._enrichItemsDebounced = debounce(this._enrichItems, 150);
 
@@ -114,7 +119,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._startPositionId = monthListUtils.dateToId(normalizedPosition);
         this._positionToScroll = position;
         this._displayedPosition = position;
-        this._lastNotifiedPositionChangedDate = position;
+        this._lastNotifiedPositionChangedDate = normalizedPosition;
 
         if (this._extData) {
             if (receivedState) {
@@ -243,8 +248,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return;
         }
 
+        const normalizedPosition: Date = this._normalizeDate(position)
+
         this._positionToScroll = position;
-        this._lastNotifiedPositionChangedDate = dateUtils.getStartOfMonth(position);
+        this._lastNotifiedPositionChangedDate = normalizedPosition;
 
         if (this._container && this._canScroll(position)) {
             // Update scroll position without waiting view modification
@@ -252,7 +259,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         } else {
             this._displayedDates = [];
             const oldPositionId = this._startPositionId;
-            this._startPositionId = monthListUtils.dateToId(this._normalizeStartPosition(position));
+            this._startPositionId = monthListUtils.dateToId(normalizedPosition);
             // After changing the navigation options, we must call the "reload" to redraw the control,
             // because the last time we could start rendering from the same position.
             // Position option is the initial position from which control is initially drawn.
@@ -262,7 +269,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    private _normalizeStartPosition(date: Date, viewMode?: VIEW_MODE): Date {
+    private _normalizeDate(date: Date, viewMode?: VIEW_MODE): Date {
         return (viewMode || this._options.viewMode) === VIEW_MODE.year ?
             dateUtils.getStartOfYear(date) : dateUtils.getStartOfMonth(date);
     }

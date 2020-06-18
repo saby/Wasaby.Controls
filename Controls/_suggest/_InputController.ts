@@ -287,24 +287,33 @@ var _private = {
       return self._historyLoad;
    },
 
-   openSelector: function(self, popupOptions) {
-      if (self._notify('showSelector', [popupOptions]) !== false) {
+   openSelector: function(self, templateOptions) {
+      if (!self._notify('showSelector', [templateOptions])) {
          //loading showAll templates
          requirejs(['Controls/suggestPopup'], function () {
-            StackOpener.openPopup(popupOptions);
+            StackOpener.openPopup(_private.getSelectorOptions(self, templateOptions));
          });
       }
    },
+
    isInvalidValidationStatus(options): boolean {
       return options.validationStatus === 'invalid' ||
              options.validationStatus === 'invalidAccent';
    },
 
-   getSelectorOptions(self, filter): IStackPopupOptions {
+   getSelectorOptions(self, templateOptions): IStackPopupOptions {
+      return { ...{
+            opener: self,
+            template: 'Controls/suggestPopup:Dialog',
+            closeOnOutsideClick: true,
+            eventHandlers: {
+               onResult: self._select.bind(self)
+            }
+         }, ...templateOptions};
+   },
+
+   getTemplateOptions(self, filter): IStackPopupOptions {
       return {
-         opener: self,
-         template: 'Controls/suggestPopup:Dialog',
-         closeOnOutsideClick: true,
          templateOptions: {
             filter: filter,
             searchValue: self._searchValue,
@@ -330,9 +339,6 @@ var _private = {
                   onResult: self._select.bind(self)
                }
             }
-         },
-         eventHandlers: {
-            onResult: self._select.bind(self)
          }
       };
    }
@@ -583,12 +589,12 @@ var SuggestLayout = Control.extend({
       var filter = clone(this._filter) || {};
 
       filter[this._options.searchParam] = '';
-      _private.openSelector(this, _private.getSelectorOptions(this, filter));
+      _private.openSelector(this, _private.getTemplateOptions(this, filter));
       _private.close(this);
    },
 
    _moreClick: function() {
-      _private.openSelector(this, _private.getSelectorOptions(this, this._filter));
+      _private.openSelector(this, _private.getTemplateOptions(this, this._filter));
       _private.close(this);
    },
 

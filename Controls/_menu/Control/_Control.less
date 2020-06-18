@@ -256,7 +256,7 @@
 .controls-Menu__applyButton_theme-@{themeName} {
    position: absolute;
    right: @apply-button_offset_menuPopup;
-   top: (@item_height_menu - @icon-size_m) / 2;
+   top: (@item_height_menu - @apply-button_inline-height_menuPopup) / 2;
    z-index: 2;
 }
 
@@ -312,6 +312,7 @@
    flex-shrink: 1;
    height: @grouping_separator_thickness_menu;
    width: 100%;
+   margin: @grouping_padding-vertical_menu @grouping_padding-horizontal_menu;
 }
 
 .controls-Menu__group_content {

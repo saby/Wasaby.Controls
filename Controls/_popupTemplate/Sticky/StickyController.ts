@@ -96,8 +96,7 @@ const _private = {
         const popupCfg = self._getPopupConfig(cfg, sizes);
 
         cfg.position = StickyStrategy.getPosition(popupCfg, self._getTargetCoords(cfg, sizes));
-
-        cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);
+        _private.updateStickyPosition(cfg, popupCfg);
 
         cfg.positionConfig = popupCfg;
         _private.updateClasses(cfg, popupCfg);
@@ -140,21 +139,25 @@ const _private = {
         return cfg.popupOptions.target || (document && document.body);
     },
 
-    prepareStickyPosition(cfg) {
-        return {
-            targetPoint: cfg.targetPoint,
-            direction: cfg.direction,
-            offset: cfg.offset,
+    updateStickyPosition(item, position): void {
+        const newStickyPosition = {
+            targetPoint: position.targetPoint,
+            direction: position.direction,
+            offset: position.offset,
             horizontalAlign: { // TODO: to remove
-                side: cfg.direction.horizontal,
-                offset: cfg.offset.horizontal
+                side: position.direction.horizontal,
+                offset: position.offset.horizontal
             },
             verticalAlign: { // TODO: to remove
-                side: cfg.direction.vertical,
-                offset: cfg.offset.vertical
+                side: position.direction.vertical,
+                offset: position.offset.vertical
             },
-            corner: cfg.corner // TODO: to remove
+            corner: position.corner // TODO: to remove
         };
+        // быстрая проверка на равенство простых объектов
+        if (JSON.stringify(item.popupOptions.stickyPosition) !== JSON.stringify(newStickyPosition)) {
+            item.popupOptions.stickyPosition = newStickyPosition;
+        }
     },
 
     getWindowWidth() {
@@ -244,7 +247,7 @@ class StickyController extends BaseController {
 
     elementUpdated(item, container) {
         _private.setStickyContent(item);
-        item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
+        _private.updateStickyPosition(item, item.positionConfig);
         if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
 
@@ -302,6 +305,12 @@ class StickyController extends BaseController {
         // Если ограничивающих размеров нет (контент влезает в экран), то ставим высоту по контенту.
         container.style.height = item.position.height ? item.position.height + 'px' : 'auto';
 
+        // Синхронно ставлю новую позицию, чтобы не было прыжков при изменении контента
+        const verticalPosition = item.position.top ? 'top' : 'bottom';
+        const revertVerticalPosition = item.position.top ? 'bottom' : 'top';
+        container.style[verticalPosition] = item.position[verticalPosition] + 'px';
+        container.style[revertVerticalPosition] = 'auto';
+
         //TODO: https://online.sbis.ru/opendoc.html?guid=5ddf9f3b-2d0e-49aa-b5ed-12e943c761d8
         scroll?.scrollTop = scrollTop;
         /* end: Return all values to the node. Need for vdom synchronizer */
@@ -321,7 +330,7 @@ class StickyController extends BaseController {
         _private.setStickyContent(item);
         item.popupOptions = _private.prepareOriginPoint(item.popupOptions);
         const popupCfg = this._getPopupConfig(item);
-        item.popupOptions.stickyPosition = _private.prepareStickyPosition(popupCfg);
+        _private.updateStickyPosition(item, popupCfg);
         item.position = {
             top: -10000,
             left: -10000,

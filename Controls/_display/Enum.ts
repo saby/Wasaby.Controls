@@ -1,8 +1,8 @@
 import CollectionItem from './CollectionItem';
 import Collection, {
-    ISourceCollection as IGeneralSourceCollection,
     IOptions as ICollectionOptions
 } from './Collection';
+import {ISourceCollection as IGeneralSourceCollection} from './interface/ICollection';
 import {IEnum} from 'Types/collection';
 import {register} from 'Types/di';
 import {DestroyableMixin, ObservableMixin} from 'Types/entity';

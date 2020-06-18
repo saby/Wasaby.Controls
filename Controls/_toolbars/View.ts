@@ -5,7 +5,6 @@ import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Sticky  as StickyOpener} from 'Controls/popup';
-import {Controller as SourceController} from 'Controls/source';
 import {IShowType, showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
@@ -27,7 +26,7 @@ import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
 import {ButtonTemplate, cssStyleGeneration} from 'Controls/buttons';
-import {CrudWrapper} from "../dataSource";
+import {CrudWrapper} from 'Controls/dataSource';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -180,6 +179,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IIconSize]': boolean = true;
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
     readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
+    private _popupId: string;
 
     constructor(...args) {
         super(args);
@@ -191,6 +191,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
         return {...this._menuOptions, ...{
+                id: this._popupId,
                 opener: this,
                 className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
                 templateOptions: {
@@ -276,6 +277,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             template: 'Controls/menu:Popup',
             closeOnOutsideClick: true,
             actionOnScroll: 'close',
+            fittingMode: {
+                vertical: 'adaptive',
+                horizontal: 'overflow'
+            },
             id: this._popupId
         };
     }

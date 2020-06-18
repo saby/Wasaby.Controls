@@ -1,5 +1,6 @@
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
-import Collection, {ISourceCollection} from '../Collection';
+import Collection from '../Collection';
+import {ISourceCollection} from '../interface/ICollection';
 import CollectionItem from '../CollectionItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState as IDefaultSerializableState} from 'Types/entity';
 import {IEnumerator} from 'Types/collection';

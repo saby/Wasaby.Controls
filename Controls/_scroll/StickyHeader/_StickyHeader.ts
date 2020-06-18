@@ -115,6 +115,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _minHeight: number = 0;
     private _cachedStyles: CSSStyleDeclaration = null;
     private _cssClassName: string = null;
+    private _canScroll: boolean = false;
+    private _lastFixedPosition: string = '';
 
     protected _notifyHandler: Function = tmplNotify;
 
@@ -171,13 +173,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             position: this._options.position,
         });
 
-        this._initObserver();
+        // Переделать на новые события
+        // https://online.sbis.ru/opendoc.html?guid=ca70827b-ee39-4d20-bf8c-32b10d286682
+        RegisterUtil(this, 'listScroll', this._onScrollStateChanged.bind(this));
 
+        this._initObserver();
         this.updateBottomShadowStyle();
     }
 
     protected _beforeUnmount(): void {
         UnregisterUtil(this, 'updateFixed');
+        UnregisterUtil(this, 'listScroll');
         if (this._model) {
             //Let the listeners know that the element is no longer fixed before the unmount.
             this._fixationStateChangeHandler('', this._model.fixedPosition);
@@ -243,6 +249,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._options.shadowVisibility;
     }
 
+    protected _onScrollStateChanged(eventType: string): void {
+        if (eventType === 'canScroll') {
+            this._canScroll = true;
+            if (this._model.fixedPosition !== this._lastFixedPosition) {
+                this._forceUpdate();
+            }
+        } else if (eventType === 'cantScroll') {
+            this._canScroll = false;
+        }
+    }
+
     protected _resizeHandler(): void {
         if (this._needUpdateObserver) {
             this._initObserver();
@@ -267,12 +284,16 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             return;
         }
 
-        if (this._observer) {
-            this._observer.disconnect();
-        }
-
+        this._destroyObserver();
         this._createObserver();
         this._needUpdateObserver = false;
+    }
+
+    private _destroyObserver(): void {
+        if (this._observer) {
+            this._observer.disconnect();
+            this._observer = null;
+        }
     }
 
     private _createObserver(): void {
@@ -321,7 +342,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
-            this._forceUpdate();
+            if (this._canScroll) {
+                this._lastFixedPosition = this._model.fixedPosition;
+                this._forceUpdate();
+            }
         }
     }
 

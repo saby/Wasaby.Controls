@@ -32,7 +32,7 @@ define([
       return validator;
    }
 
-   describe('Validate/Controller', () => {
+   describe('Validate/Container', () => {
       var stubP;
       var calls = [];
       var validCtrl = new validateMod.Container();
@@ -89,84 +89,83 @@ define([
          validCtrl.destroy();
       });
    });
-   describe('Validate/FormController', () => {
+   describe('Validate/ControllerClass', () => {
       it('add/remove validator', () => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
          let validator1 = getValidator();
          let validator2 = getValidator();
 
-         FC.onValidateCreated({}, validator1);
-         FC.onValidateCreated({}, validator2);
+         Controller.addValidator(validator1);
+         Controller.addValidator(validator2);
 
-         assert.equal(FC._validates.length, 2);
+         assert.equal(Controller._validates.length, 2);
 
-         FC.onValidateDestroyed({}, validator1);
-         FC.onValidateDestroyed({}, validator2);
+         Controller.removeValidator(validator1);
+         Controller.removeValidator(validator2);
 
-         assert.equal(FC._validates.length, 0);
+         assert.equal(Controller._validates.length, 0);
 
-         FC.destroy();
+         Controller.destroy();
       });
 
       it('isValid', () => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
          let validator1 = getValidator();
          let validator2 = getValidator();
-         FC.onValidateCreated({}, validator1);
-         FC.onValidateCreated({}, validator2);
+         Controller.addValidator(validator1);
+         Controller.addValidator(validator2);
 
-         let isValid = FC.isValid();
+         let isValid = Controller.isValid();
          assert.equal(validator1._isValidCall, true);
          assert.equal(validator2._isValidCall, true);
          assert.equal(isValid, true);
 
          let validator3 = getValidator();
          validator3.setValidationResult('Error');
-         FC.onValidateCreated({}, validator3);
-         isValid = FC.isValid();
+         Controller.addValidator(validator3);
+         isValid = Controller.isValid();
          assert.equal(validator3._isValidCall, true);
          assert.equal(isValid, false);
 
-         FC.destroy();
+         Controller.destroy();
       });
       it('activateFirstValidField', (done) => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
          let validator1 = getValidator();
          let validator2 = getValidator(null, true);
          let validator3 = getValidator('Error');
          let validator4 = getValidator('Error');
 
-         FC._validates.push(validator1, validator2, validator3, validator4);
-         FC.submit().then(() => {
+         Controller._validates.push(validator1, validator2, validator3, validator4);
+         Controller.submit().then(() => {
             assert.equal(validator3._activateCall, true);
-            FC.destroy();
+            Controller.destroy();
             done();
          });
-
       });
 
       it('setValidationResult', () => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
          let validator1 = getValidator();
          let validator2 = getValidator();
-         FC.onValidateCreated({}, validator1);
-         FC.onValidateCreated({}, validator2);
+         Controller.addValidator(validator1);
+         Controller.addValidator(validator2);
 
-         FC.setValidationResult();
+         Controller.setValidationResult();
          assert.equal(validator1._validationResult, null);
          assert.equal(validator2._validationResult, null);
 
-         FC.destroy();
+         Controller.destroy();
       });
 
       it('submit', (done) => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
          let validator1 = getValidator(true);
          let validator2 = getValidator(false);
-         FC.onValidateCreated({}, validator1);
-         FC.onValidateCreated({}, validator2);
+         Controller.addValidator(validator1);
+         Controller.addValidator(validator2);
 
-         FC.submit().then((result) => {
+         Controller.submit().then((result) => {
             assert.equal(validator1._validateCall, true, 'is validate1 call');
             assert.equal(validator2._validateCall, true, 'is validate2 call');
 
@@ -175,11 +174,11 @@ define([
 
             assert.equal(validator1._activateCall, true, 'is validate1 activate');
             assert.equal(validator2._activateCall, false, 'is validate2 activate');
+            Controller.destroy();
             done();
          }).catch((error) => {
             done(error);
          });
-         FC.destroy();
       });
    });
 });

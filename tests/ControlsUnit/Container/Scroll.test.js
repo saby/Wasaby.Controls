@@ -11,9 +11,13 @@ define(
 
       describe('Controls.Container.Scroll', function() {
          var scroll, result;
-
+         let event;
          beforeEach(function() {
-            scroll = new scrollMod.Container({});
+            event = {
+               stopImmediatePropagation: sinon.fake()
+            }
+            scroll = new scrollMod.Container(scrollMod.Container.getDefaultOptions());
+            scroll._options = scrollMod.Container.getDefaultOptions();
 
             var templateFn = scroll._template;
 
@@ -46,6 +50,7 @@ define(
                start: sinon.fake()
             };
             scroll._children.content = {
+               offsetHeight: 40,
                scrollHeight: 50,
                scrollTop: 10
             };
@@ -62,8 +67,32 @@ define(
                top: 'auto',
                bottom: 'auto'
             };
+            scroll._stickyHeaderContext = {
+               updateConsumers: function() { }
+            };
 
             scroll._isMounted = true;
+         });
+
+         describe('_afterMount', function() {
+            it('should be enable shadows if the contents fit in the container', function () {
+               scroll._beforeMount(scrollMod.Container.getDefaultOptions(), {});
+               sinon.stub(scroll, '_adjustContentMarginsForBlockRender');
+               scroll._children.stickyController = {
+                  setCanScroll: sinon.fake()
+               };
+               scroll._afterMount();
+               assert.isTrue(scroll._displayState.shadowEnable.top);
+               assert.isTrue(scroll._displayState.shadowEnable.bottom);
+            });
+            it('should be disable shadows if the content does not fit in the container', function () {
+               scroll._beforeMount(scrollMod.Container.getDefaultOptions(), {});
+               scroll._children.content.offsetHeight = 100;
+               sinon.stub(scroll, '_adjustContentMarginsForBlockRender');
+               scroll._afterMount();
+               assert.isFalse(scroll._displayState.shadowEnable.top);
+               assert.isFalse(scroll._displayState.shadowEnable.bottom);
+            });
          });
 
          describe('_afterUpdate', function() {
@@ -257,6 +286,11 @@ define(
                scroll._container = {
                   closest: () => {}
                };
+               scroll._children = {
+                  stickyController: {
+                     setCanScroll: () => undefined
+                  }
+               };
             });
             it('Content at the top', function() {
                scroll._pagingState = {};
@@ -306,11 +340,18 @@ define(
          });
 
          describe('_resizeHandler', function() {
-            it('should update _displayState if it changed(vertical scroll).', function() {
-               let oldDisplayState = scroll._displayState;
+            beforeEach(function() {
                scroll._container = {
                   closest: () => {}
                };
+               scroll._children = {
+                  stickyController: {
+                     setCanScroll: sinon.stub()
+                  }
+               };
+            });
+            it('should update _displayState if it changed(vertical scroll).', function() {
+               let oldDisplayState = scroll._displayState;
                scroll._pagingState = {};
                scroll._children.content = {
                   scrollTop: 100,
@@ -320,6 +361,8 @@ define(
 
                scroll._resizeHandler();
                assert.notStrictEqual(scroll._displayState, oldDisplayState);
+               sinon.assert.calledWith(scroll._children.stickyController.setCanScroll, false);
+
                oldDisplayState = scroll._displayState;
                scroll._resizeHandler();
                assert.strictEqual(scroll._displayState, oldDisplayState);
@@ -327,9 +370,6 @@ define(
 
             it('should update _displayState if it changed(horizontal scroll).', function() {
                let oldDisplayState = scroll._displayState;
-               scroll._container = {
-                  closest: () => {}
-               };
                scroll._pagingState = {};
                scroll._children.content = {
                   scrollLeft: 100,
@@ -864,18 +904,35 @@ define(
             });
 
             describe('_updateShadowMode', function() {
+               const mode = {
+                  top: 'visible',
+                  bottom: 'visible',
+               };
                it('Should update shadow mode if the container is visible.', function() {
-                  const mode = 'newMode';
                   sinon.stub(scroll, '_isHidden').returns(false);
-                  scroll._updateShadowMode({}, mode);
-                  assert.strictEqual(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.stub(scroll, '_forceUpdate');
+                  scroll._updateShadowMode(event, mode);
+                  assert.include(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.assert.called(event.stopImmediatePropagation);
+                  sinon.assert.called(scroll._forceUpdate);
                   sinon.restore();
                });
                it('Should\'t update shadow mode if the container is hidden.', function() {
-                  const mode = 'newMode';
                   sinon.stub(scroll, '_isHidden').returns(true);
-                  scroll._updateShadowMode({}, mode);
-                  assert.notEqual(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.stub(scroll, '_forceUpdate');
+                  scroll._updateShadowMode(event, mode);
+                  assert.notInclude(scroll._shadowVisibilityByInnerComponents, mode);
+                  sinon.assert.called(event.stopImmediatePropagation);
+                  sinon.assert.notCalled(scroll._forceUpdate);
+                  sinon.restore();
+               });
+               it('Should\'t force update if value does not changed.', function() {
+                  scroll._shadowVisibilityByInnerComponents = mode
+                  sinon.stub(scroll, '_isHidden').returns(true);
+                  sinon.stub(scroll, '_forceUpdate');
+                  scroll._updateShadowMode(event, mode);
+                  sinon.assert.called(event.stopImmediatePropagation);
+                  sinon.assert.notCalled(scroll._forceUpdate);
                   sinon.restore();
                });
             });

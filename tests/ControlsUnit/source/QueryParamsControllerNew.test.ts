@@ -1,10 +1,11 @@
 import QueryParamsController from  'Controls/_source/QueryParamsController';
 import {IQueryParamsController} from 'Controls/_source/interface/IQueryParamsController';
+import {default as PageQueryParamsController} from 'Controls/_source/QueryParamsController/PageQueryParamsController';
 import {Direction, IAdditionalQueryParams} from 'Controls/source';
 import {IBaseSourceConfig, INavigationSourceConfig} from 'Controls/interface';
 import {Collection} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
-import * as assert from 'assert';
+import {equal, ok} from 'assert';
 
 class FakeController implements IQueryParamsController {
    destroy(): void {}
@@ -41,34 +42,61 @@ recordSetWithMultiNavigation.setMetaData({
       rawData: [
          {
             id: 1,
-            nav_result: {}
+            nav_result: true
          },
          {
             id: 2,
-            nav_result: {}
+            nav_result: false
          }
       ]
    })
 });
 
+const recordSetWithSingleNavigation = new RecordSet();
+recordSetWithSingleNavigation.setMetaData({
+   more: true
+});
+
 describe('Controls/_source/QueryParamsController', () => {
    let controller;
+   let queryParamsWithPageController;
 
    beforeEach(() => {
       controller = new QueryParamsController({
          controllerClass: FakeController
       });
+      queryParamsWithPageController = new QueryParamsController({
+         controllerClass: PageQueryParamsController,
+         controllerOptions: {
+            page: 0,
+            pageSize: 2
+         }
+      });
+   });
 
-      it('prepareQueryParams', () => {
-         controller.updateQueryProperties(recordSetWithMultiNavigation);
-         const queryParams = controller.prepareQueryParams('down', () => {}, {}, true);
-         assert.equal(queryParams.length, 2);
+   it('prepareQueryParams', () => {
+      controller.updateQueryProperties(recordSetWithMultiNavigation);
+      const queryParams = controller.prepareQueryParams('down', () => {}, {}, true);
+      equal(queryParams.length, 2);
+   });
+
+   it('updateQueryProperties', () => {
+      controller.updateQueryProperties(recordSetWithMultiNavigation);
+      ok(!!controller.getController(1));
+      ok(!!controller.getController(2));
+   });
+
+   describe('hasMoreData', () => {
+      it('hasMoreData for multi navigation query result', () => {
+         queryParamsWithPageController.updateQueryProperties(recordSetWithMultiNavigation);
+         ok(queryParamsWithPageController.hasMoreData('down', 1));
+         equal(queryParamsWithPageController.hasMoreData('down', 2), false);
+         equal(queryParamsWithPageController.hasMoreData('down'), true);
       });
 
-      it('updateQueryProperties', () => {
-         controller.updateQueryProperties(recordSetWithMultiNavigation);
-         assert.isTrue(!!controller.getController(1));
-         assert.isTrue(!!controller.getController(2));
+      it('hasMoreData for single navigation query result', () => {
+         queryParamsWithPageController.updateQueryProperties(recordSetWithSingleNavigation, 'down');
+         ok(queryParamsWithPageController.hasMoreData('down'));
       });
    });
 });

@@ -1,3 +1,4 @@
+import { TemplateFunction } from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
@@ -32,6 +33,7 @@ import * as VirtualScrollController from './controllers/VirtualScroll';
 import { IDragPosition } from 'Controls/listDragNDrop';
 import DragStrategy from './itemsStrategy/Drag';
 import { ItemsEntity } from 'Controls/dragnDrop';
+import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -39,18 +41,8 @@ const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editingContents', 'animated', 'canShowActions', 'expanded'];
 
-export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
-}
-
-export type SourceCollection<T> = T[] | ISourceCollection<T>;
-
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
-}
-
-export enum ANIMATION_STATE {
-    CLOSE = 'close',
-    OPEN = 'open'
 }
 
 type FilterFunction<S> = (
@@ -395,7 +387,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     SerializableMixin,
     VersionableMixin,
     EventRaisingMixin
-) implements IEnumerable<T>, IList<T> {
+) implements ICollection<S, T>, IEnumerable<T>, IList<T> {
     /**
      * Возвращать локализованные значения
      */
@@ -709,6 +701,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * Анимация свайпа: открытие или закрытие меню опций
      */
     protected _swipeAnimation: ANIMATION_STATE;
+
+    protected _$isEditing: boolean;
 
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
@@ -2172,8 +2166,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const item = this.getItemBySourceKey(key);
         if (item) {
             item.setMarked(status);
+            this.nextVersion();
         }
-        this.nextVersion();
     }
 
     getValidItemForMarker(index: number): S {
@@ -2346,6 +2340,26 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     getActiveItem(): T {
         return this._$activeItem;
+    }
+
+    /**
+     * Возвращает состояние "Модель в режиме редактирования".
+     * В случае создания нового Item этот Item отсутствует в коллекции и мы не можем
+     * в контроллере ItemActions определить, надо ли скрывать у остальных элементов его опции.
+     * Если true, опции ItemActions не дожны быть отрисованы
+     */
+    isEditing(): boolean {
+        return this._$isEditing;
+    }
+
+    /**
+     * Устанавливает состояние "Модель в режиме редактирования".
+     * В случае создания нового Item этот Item отсутствует в коллекции и мы не можем
+     * в контроллере ItemActions определить, надо ли скрывать у остальных элементов его опции
+     * Если true, опции ItemActions не дожны быть отрисованы
+     */
+    setEditing(editing): void {
+        this._$isEditing = editing;
     }
 
     getSwipeConfig(): ISwipeConfig {

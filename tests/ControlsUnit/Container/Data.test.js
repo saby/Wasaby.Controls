@@ -184,12 +184,20 @@ define(
          });
 
          it('_beforeMount with root and parentProperty', async() => {
-            const data = {test: true};
+            const dataSetMock = {
+               test: true,
+               getKeyProperty() {
+                  return 'id';
+               },
+               setKeyProperty() {
+                  return 1;
+               }
+            };
             let sourceQuery;
             const source = {
                query: function(query) {
                   sourceQuery = query;
-                  return Deferred.success(data);
+                  return Deferred.success(dataSetMock);
                },
                _mixins: [],
                "[Types/_source/ICrud]": true
@@ -259,6 +267,25 @@ define(
                assert.isTrue(data._dataOptionsContext.source === source);
                assert.isTrue(!!data._dataOptionsContext.prefetchSource);
                done();
+            });
+         });
+
+         it('update equal source', function(done) {
+            var
+                items,
+                config = {source: source, keyProperty: 'id'},
+                data = getDataWithConfig(config);
+
+            data._beforeMount(config).addCallback(function() {
+               items = data._items;
+
+               data._beforeUpdate({source: new sourceLib.Memory({
+                     keyProperty: 'id',
+                     data: sourceDataEdited
+                  }), idProperty: 'id'}).addCallback(function() {
+                  assert.isTrue(data._items === items);
+                  done();
+               });
             });
          });
 

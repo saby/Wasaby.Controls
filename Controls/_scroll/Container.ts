@@ -358,14 +358,17 @@ let
          return ScrollHeightFixUtil.calcHeightFix(self._children.content);
       },
 
+      calcShadowEnable(options, position: POSITION, canScroll: boolean): boolean {
+          return options[`${position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
+                 (_private.isShadowEnable(options, position) && canScroll)
+      },
+
       calcDisplayState(self) {
          const
              canScroll = _private.calcCanScroll(SCROLL_TYPE.VERTICAL, self),
              canHorizontalScroll = _private.calcCanScroll(SCROLL_TYPE.HORIZONTAL, self),
-             topShadowEnable = self._options.topShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.TOP) && canScroll),
-             bottomShadowEnable = self._options.bottomShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.BOTTOM) && canScroll),
+             topShadowEnable = _private.calcShadowEnable(self._options, POSITION.TOP, canScroll),
+             bottomShadowEnable = _private.calcShadowEnable(self._options, POSITION.BOTTOM, canScroll),
              shadowPosition = topShadowEnable || bottomShadowEnable ? _private.getShadowPosition(self) : '',
              leftShadowEnable = canHorizontalScroll,
              rightShadowEnable = canHorizontalScroll,
@@ -636,6 +639,9 @@ let
          calculatedOptionValue = _private.calcCanScroll(SCROLL_TYPE.VERTICAL, this);
          if (calculatedOptionValue) {
             this._displayState.canScroll = calculatedOptionValue;
+            // Сделано не через опции потому что stickyController скоро станет не компонентом
+            // а полностью js контроллером. И что бы избежать лишних синхронизаций.
+            this._children.stickyController.setCanScroll(calculatedOptionValue);
             needUpdate = true;
          }
 
@@ -651,6 +657,18 @@ let
          calculatedOptionValue = _private.getHorizontalShadowPosition(this);
          if (calculatedOptionValue) {
             this._displayState.horizontalShadowPosition = calculatedOptionValue;
+            needUpdate = true;
+         }
+
+         calculatedOptionValue = _private.calcShadowEnable(this._options, POSITION.TOP, this._displayState.canScroll);
+         if (calculatedOptionValue) {
+            this._displayState.shadowEnable.top = calculatedOptionValue;
+            needUpdate = true;
+         }
+
+         calculatedOptionValue = _private.calcShadowEnable(this._options, POSITION.BOTTOM, this._displayState.canScroll);
+         if (calculatedOptionValue !== this._displayState.shadowEnable.bottom) {
+            this._displayState.shadowEnable.bottom = calculatedOptionValue;
             needUpdate = true;
          }
 
@@ -721,6 +739,7 @@ let
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
+            this._children.stickyController.setCanScroll(displayState.canScroll);
             this._updateStickyHeaderContext();
 
             this._forceUpdate();
@@ -774,13 +793,24 @@ let
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {
+          event.stopImmediatePropagation();
          // _shadowVisibilityByInnerComponents не используется в шаблоне,
          // поэтому св-во не является реактивным и для обновления надо позвать _forceUpdate
          // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
          // Не запускаем перерисовку, если контрол скрыт
-         if (!this._isHidden()) {
-            this._shadowVisibilityByInnerComponents = shadowVisibleObject;
-            this._forceUpdate();
+         if (this._isHidden()) {
+             return;
+         }
+         const oldValue = this._shadowVisibilityByInnerComponents;
+         this._shadowVisibilityByInnerComponents = {
+             ...oldValue,
+             ...shadowVisibleObject
+         };
+         for (let key of Object.keys(shadowVisibleObject)) {
+             if (shadowVisibleObject[key] && shadowVisibleObject[key] !== oldValue[key]) {
+                 this._forceUpdate();
+                 return;
+             }
          }
       },
 
@@ -836,6 +866,7 @@ let
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
+            this._children.stickyController.setCanScroll(displayState.canScroll);
          }
 
          _private.calcPagingStateBtn(this);

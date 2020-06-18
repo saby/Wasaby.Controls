@@ -130,7 +130,7 @@ define([
          // assert.include(version, 'ITEM_ACTION_2');
 
          assert.include(version, 'WITHOUT_EDITING');
-         model._setEditingItemData({ key: 21, item: {} });
+         model._setEditingItemData({ key: 21, item: {}, setEditing: () => {} });
          version = model._calcItemVersion(item, key);
          assert.include(version, 'WITH_EDITING');
       });
@@ -205,8 +205,7 @@ define([
             keyProperty: 'id',
             displayProperty: 'title',
             markedKey: 1,
-            markerVisibility: 'visible',
-            selectedKeys: {1: true}
+            markerVisibility: 'visible'
          };
 
          var iv = new lists.ListViewModel(cfg);
@@ -216,7 +215,6 @@ define([
          assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(cfg.items.at(0), cur.item, 'Incorrect field set on getCurrent()');
-         assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
       });
 
       it('getItemByMarkedKey', function () {
@@ -239,7 +237,8 @@ define([
             item: {
                qwe: 123,
                asd: 456
-            }
+            },
+            setEditing: () => {}
          };
 
          assert.deepEqual(cfg.items.at(0), lists.ListViewModel._private.getItemByMarkedKey(iv, 1).getContents());
@@ -345,7 +344,53 @@ define([
          marItem = iv.getMarkedItem();
          assert.equal(iv._markedKey, 3, 'Incorrect _markedKey value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
-         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
+         assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
+      });
+
+      it('setMarkedKey', function() {
+         const cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markerVisibility: 'visible'
+         };
+
+         const model = new lists.ListViewModel(cfg);
+
+         const notifySpy = sinon.spy(model, '_notify'),
+               nextModelVersionSpy = sinon.spy(model, '_nextModelVersion');
+
+         model.setMarkedKey(2, true, true);
+         assert.equal(model.getMarkedKey(), 2);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+         assert.isFalse(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
+         assert.isFalse(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
+
+         notifySpy.resetHistory();
+         nextModelVersionSpy.resetHistory();
+
+         model.setMarkedKey(2, false);
+         assert.isNull(model.getMarkedKey());
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', null).called);
+         assert.isTrue(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
+
+         notifySpy.resetHistory();
+         nextModelVersionSpy.resetHistory();
+
+         model.setMarkedKey(null, false);
+         assert.isNull(model.getMarkedKey());
+         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', null).called);
+         assert.isTrue(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
+
+         notifySpy.resetHistory();
+         nextModelVersionSpy.resetHistory();
+
+         model.setMarkedKey(2, true);
+         assert.equal(model.getMarkedKey(), 2);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
+         assert.isTrue(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
       });
 
       // TODO SetItemActions
@@ -409,23 +454,6 @@ define([
          });
          assert.isTrue(editingItem.drawActions, 'should draw actions on editing item if actions array is empty and toolbarVisibility = true');
       });*/
-
-      it('_updateSelection', function() {
-         var cfg = {
-            items: data,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            selectedKeys: [1],
-            markedKey: null
-         };
-
-         var iv = new lists.ListViewModel(cfg);
-         assert.deepEqual(iv._selectedKeys, [1]);
-         var curPrefixItemVersion = iv._prefixItemVersion;
-         iv.updateSelection([2, 3]);
-         assert.deepEqual(iv._selectedKeys, [2, 3]);
-         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
-      });
 
       it('setMultiSelectVisibility', function() {
          var cfg = {
@@ -496,29 +524,6 @@ define([
          var lv = new lists.ListViewModel(cfg);
          lv.setMarkedKey(1);
          assert.equal(lv.getMarkedKey(), 1);
-      });
-
-      it('setRightSwipedItem', function() {
-         var
-            cfg = {
-               items: data,
-               keyProperty: 'id',
-               displayProperty: 'title',
-               selectedKeys: [1],
-               markedKey: null
-            },
-            itemData = {
-               test: 'test'
-            },
-            nextVersionCalled = false;
-
-         var lv = new lists.ListViewModel(cfg);
-         lv._nextVersion = function() {
-            nextVersionCalled = true;
-         };
-         lv.setRightSwipedItem(itemData);
-         assert.equal(lv._rightSwipedItem, itemData);
-         assert.isTrue(nextVersionCalled, 'setRightSwipedItem should change the version of the model');
       });
 
       it('setActiveItem should not change version of the model if the item is already active', function() {
@@ -634,7 +639,7 @@ define([
 
          it('getMultiSelectClassList onhover selected', function() {
             lvm._options.multiSelectVisibility = 'onhover';
-            lvm._selectedKeys = {'2': true};
+            lvm.setSelectedItems([lvm.getItemById(2, 'id').getContents()], true);
             var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable');
          });

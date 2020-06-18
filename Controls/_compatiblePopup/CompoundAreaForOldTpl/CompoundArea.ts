@@ -915,7 +915,11 @@ var CompoundArea = CompoundContainer.extend([
       DialogRecord.prototype.setSaveDiffOnly.apply(this, arguments);
    },
    ok: function() {
-      DialogRecord.prototype.ok.apply(this, arguments);
+      if (this._options.popupComponent === 'recordFloatArea') {
+         DialogRecord.prototype.ok.apply(this, arguments);
+      } else {
+         this.close(true);
+      }
    },
    _setEnabledForChildControls: function() {
       DialogRecord.prototype._setEnabledForChildControls.apply(this, arguments);
@@ -1087,7 +1091,7 @@ var CompoundArea = CompoundContainer.extend([
             popupConfig.modal = visible;
 
             // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
-            Controller.reindex();
+            Controller.getManager()._popupItems._nextVersion();
             Controller.update(id, popupConfig.popupOptions);
          }
 

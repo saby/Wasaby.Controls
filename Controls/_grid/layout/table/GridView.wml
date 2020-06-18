@@ -4,14 +4,13 @@
 
     <!-- Заголовок таблицы -->
     <ws:if data="{{ _listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList() }}">
-        <ws:partial template="{{ _baseHeaderTemplate }}" attr:name="header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
+        <ws:partial template="{{ _baseHeaderTemplate }}" attr:name="header" headerModel="{{_listModel.getHeaderModel()}}" defaultHeaderContent="{{_headerContentTemplate}}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
     </ws:if>
 
     <!-- Результаты сверху -->
     <ws:if data="{{ _listModel.getResultsPosition() === 'top' }}">
         <ws:partial template="{{ _resultsTemplate }}" attr:name="results" listModel="{{_listModel}}" baseResultsTemplate="{{ _baseResultsTemplate }}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
     </ws:if>
-
     <!-- Скроллбар горизонтального скролла -->
     <ws:if data="{{isDisplayColumnScroll}}">
         <Controls._grid.ScrollWrapper

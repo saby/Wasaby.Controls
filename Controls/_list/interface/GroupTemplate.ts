@@ -15,6 +15,7 @@
  *          expanderVisible="{{ false }}"
  *          textAlign="left"
  *          fontSize="xs"
+ *          iconSize="m"
  *          scope="{{groupTemplate}}">
  *          <ws:contentTemplate>
  *             <ws:if data="{{contentTemplate.itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
@@ -28,4 +29,4 @@
  * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/ здесь}.
  * @public
  */
- 
+

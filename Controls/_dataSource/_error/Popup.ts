@@ -13,12 +13,27 @@ interface IViewConfigMessage {
     details?: string;
 }
 
+export type PopupId = string;
+
+export interface IPopupHelper {
+    preloadPopup(): Promise<IPopupModule | void>;
+
+    openConfirmation(options: IConfirmationOptions): Promise<void>;
+
+    openDialog<T extends IViewConfigMessage>(
+        config: ViewConfig<T>,
+        opener: Control,
+        eventHandlers: Record<string, Function>): Promise<PopupId | void>;
+
+    closeDialog(popupId: string): Promise<void>;
+}
+
 /**
  * Загрузка и открытие диалогов.
  * В конструктор можно передать названия модулей, которые надо загружать дополнительно к модулям диалогов.
  * @private
  */
-export default class Popup {
+export default class Popup implements IPopupHelper {
     private preloadPromise: Promise<IPopupModule | void>;
     private readonly modules: string[];
     private readonly themes: string[];
@@ -66,7 +81,7 @@ export default class Popup {
      */
     openDialog<T extends IViewConfigMessage>(config: ViewConfig<T>,
                                              opener: Control = null,
-                                             eventHandlers: Record<string, Function> = {}): Promise<string | void> {
+                                             eventHandlers: Record<string, Function> = {}): Promise<PopupId | void> {
         return this.preloadPopup().then((popup) => {
             if (!popup) {
                 Popup.showDefaultDialog(config.options.message, config.options.details);
@@ -99,7 +114,8 @@ export default class Popup {
      */
     private static readonly POPUP_MODULES: string[] = [
         'Controls/popup',
-        'Controls/popupConfirmation'
+        'Controls/popupConfirmation',
+        'Controls/popupTemplate'
     ];
 
     /**

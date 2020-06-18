@@ -10,6 +10,7 @@ class FontStyles extends Control<IControlOptions> {
     protected _dangerValue = FontStyles._defaultValue;
     protected _unaccentedValue = FontStyles._defaultValue;
     protected _labelValue = FontStyles._defaultValue;
+    protected _infoValue = FontStyles._defaultValue
     protected _defaultValue = FontStyles._defaultValue;
     protected _placeholder = 'Tooltip';
 
