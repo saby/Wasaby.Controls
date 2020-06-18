@@ -155,10 +155,13 @@ describe('Controls/_listRender/View', () => {
                 getEditingConfig: () => null,
                 setActionsTemplateConfig: () => null,
                 getItemBySourceKey: () => item,
-                setActiveItem: function(_item) {
+                setEventRaising: (val1, val2) => null,
+                each: (val) => null,
+                setActionsAssigned: (val) => null,
+                setActiveItem(_item: any): void {
                     this._$activeItem = _item;
                 },
-                getActiveItem: function() {
+                getActiveItem(): any {
                     return this._$activeItem;
                 },
                 at: () => item
@@ -167,11 +170,11 @@ describe('Controls/_listRender/View', () => {
                 propagating: true,
                 nativeEvent: {
                     prevented: false,
-                    preventDefault: function() {
+                    preventDefault(): void {
                         this.prevented = true;
                     }
                 },
-                stopImmediatePropagation: function() {
+                stopImmediatePropagation(): void {
                     this.propagating = false;
                 },
                 target: {
@@ -186,7 +189,16 @@ describe('Controls/_listRender/View', () => {
                     closest: () => 'elem'
                 }
             };
-            view._updateItemActions(defaultCfg);
+            const cfg = {
+                ...defaultCfg,
+                itemActions: [
+                    {
+                        id: 2,
+                        showType: 0
+                    }
+                ]
+            };
+            view._updateItemActions(cfg);
         });
 
         // Не показываем контекстное меню браузера, если мы должны показать кастомное меню
@@ -194,29 +206,6 @@ describe('Controls/_listRender/View', () => {
             view._onItemContextMenu(null, item, fakeEvent);
             assert.isTrue(fakeEvent.nativeEvent.prevented);
             assert.isFalse(fakeEvent.propagating);
-        });
-
-        // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
-        it('should correctly work with breadcrumbs', async () => {
-            const itemAt1 = view._collection.at(1);
-            const breadcrumbItem = {
-                '[Controls/_display/BreadcrumbsItem]': true,
-                _$active: false,
-                getContents: () => ['fake', 'fake', 'fake', itemAt1.getContents() ],
-                setActive: function() {
-                    this._$active = true;
-                },
-                getActions: () => ({
-                    all: [{
-                        id: 2,
-                        showType: 0
-                    }]
-                })
-            };
-            await view._onItemContextMenu(null, breadcrumbItem, fakeEvent);
-            setTimeout(() => {
-                assert.equal(view._collection.getActiveItem().getContents().getKey(), itemAt1.getContents().getKey());
-            })
         });
 
         // Должен устанавливать contextMenuConfig при инициализации itemActionsController
@@ -227,11 +216,9 @@ describe('Controls/_listRender/View', () => {
                 return Promise.resolve(config);
             };
             await view._onItemContextMenu(null, item, fakeEvent);
-            setTimeout(() => {
-                assert.exists(popupConfig, 'popupConfig has not been set');
-                assert.equal(popupConfig.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
-                assert.equal(popupConfig.templateOptions.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
-            });
+            assert.exists(popupConfig, 'popupConfig has not been set');
+            assert.equal(popupConfig.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
+            assert.equal(popupConfig.templateOptions.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
         });
     });
 });

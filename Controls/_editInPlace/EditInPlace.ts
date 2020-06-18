@@ -160,8 +160,11 @@ const _private = {
 
     createModel(self: EditInPlace, options: IEditingConfig): Promise<IEditingConfig> {
         return self.getSource().create().then((item) => {
-            options.item = item;
-            return options;
+            if (item && item instanceof entity.Record) {
+                options.item = item;
+                return options;
+            }
+            throw Error('EditInPlace:createModel() - the item must be Record');
         }).catch((error: Error) => {
             return _private.processError(self, error);
         });
@@ -672,17 +675,19 @@ export default class EditInPlace {
 
     updateEditingData(options: IEditingOptions, formController: any): void {
         this._updateOptions(options);
-        this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
-        if (this._editingItemData && this._options.listViewModel.getEditingItemData() !== this._editingItemData) {
-            this._setEditingItemData(this._editingItemData.item);
-        }
+        if (!this._options.readOnly) {
+            this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
+            if (this._editingItemData && this._options.listViewModel.getEditingItemData() !== this._editingItemData) {
+                this._setEditingItemData(this._editingItemData.item);
+            }
 
-        if (this._pendingInputRenderState === PendingInputRenderState.PendingRender) {
-            // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
-            this._pendingInputRenderState = PendingInputRenderState.Rendering;
-        }
+            if (this._pendingInputRenderState === PendingInputRenderState.PendingRender) {
+                // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
+                this._pendingInputRenderState = PendingInputRenderState.Rendering;
+            }
 
-        this.registerFormOperation(formController);
+            this.registerFormOperation(formController);
+        }
     }
 
     prepareHtmlInput(): void {
@@ -765,8 +770,8 @@ export default class EditInPlace {
         const editingConfig = this._options.editingConfig;
         const useNewModel =  this._options.useNewModel;
         if (!item) {
+            listViewModel.setEditing(false);
             if (useNewModel) {
-                listViewModel.setEditing(false);
                 displayLib.EditInPlaceController.endEdit(listViewModel);
             } else {
                 listViewModel._setEditingItemData(null);
@@ -806,8 +811,8 @@ export default class EditInPlace {
             }
         }
 
+        listViewModel.setEditing(true);
         if (useNewModel) {
-            listViewModel.setEditing(true);
             displayLib.EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
             this._editingItemData = listViewModel.getItemDataByItem(editingItemProjection);

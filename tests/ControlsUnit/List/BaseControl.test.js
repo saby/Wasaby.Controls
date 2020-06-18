@@ -153,7 +153,16 @@ define([
          setTimeout(function() {
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
+            let doScrollToTop = false;
+            ctrl._notify = (name, params) => {
+               if (name === 'doScroll' && params && params[0] === 'top') {
+                  doScrollToTop = true;
+               }
+            };
+            ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
+
+            assert.isTrue(doScrollToTop);
 
             // check saving loaded items after new viewModelConstructor
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
@@ -1508,6 +1517,10 @@ define([
          lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
 
+         baseControl._options.multiSelectVisibility = 'hidden';
+         lists.BaseControl._private.spaceHandler(baseControl, event);
+         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+
          sandbox.restore();
       });
 
@@ -1551,6 +1564,29 @@ define([
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [result.selectedKeysDiff.keys, result.selectedKeysDiff.added, result.selectedKeysDiff.removed]).called);
          assert.isTrue(notifySpy.withArgs('excludedKeysChanged', [result.excludedKeysDiff.keys, result.excludedKeysDiff.added, result.excludedKeysDiff.removed]).called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
+      });
+
+      it('_private.setMarkedKey', () => {
+         const baseControl = {
+            _markerController: {
+               setMarkedKey: (key) => {
+                  assert.equal(key, 2);
+                  return key;
+               }
+            }
+         };
+
+         const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
+         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'setMarkedKey');
+
+         lists.BaseControl._private.setMarkedKey({}, 2);
+         assert.isFalse(setMarkedKeySpy.called);
+         assert.isFalse(scrollToItemSpy.called);
+
+         lists.BaseControl._private.setMarkedKey(baseControl, 2);
+         assert.isFalse(scrollToItemSpy.called);
+         assert.isFalse(setMarkedKeySpy.withArgs(baseControl, 2).called);
+         assert.equal(baseControl._markedKey, 2);
       });
 
       it('loadToDirection up', async function() {
@@ -3532,7 +3568,6 @@ define([
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            cfg.readOnly = true;
             const formController = {};
             ctrl._children.formController = formController;
             ctrl._beforeUpdate(cfg);
@@ -5072,12 +5107,13 @@ define([
             };
             instance = new lists.BaseControl(cfg);
             instance.saveOptions(cfg);
+            instance._viewModelConstructor = cfg.viewModelConstructor;
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
          });
 
          // Необходимо обновлять опции записи при изиенении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
          it('should update ItemActions when visibilityCallback has changed', () => {
-            instance._itemActionsInitialized = true;
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -5094,7 +5130,7 @@ define([
 
          // Необходимо обновлять опции записи при изиенении самих ItemActions
          it('should update ItemActions when ItemActions have changed', () => {
-            instance._itemActionsInitialized = true;
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -5121,7 +5157,7 @@ define([
                   textOverflow: 'ellipsis'
                }
             ];
-            instance._itemActionsInitialized = true;
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -5134,7 +5170,7 @@ define([
 
          // при неидентичности source необходимо перезапрашивать данные этого source и затем инициализировать ItemActions
          it('should update ItemActions when data was reloaded', async () => {
-            instance._itemActionsInitialized = true;
+            instance._listViewModel.setActionsAssigned(true);
             await instance._beforeUpdate({
                ...cfg,
                itemActions: [
@@ -5151,7 +5187,7 @@ define([
 
          // при смене значения свойства readOnly необходимо делать переинициализвацию ItemActions
          it('should update ItemActions when readOnly option has been changed', () => {
-            instance._itemActionsInitialized = true;
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
@@ -5163,7 +5199,7 @@ define([
 
          // при смене значения свойства itemActionsPosition необходимо делать переинициализвацию ItemActions
          it('should update ItemActions when itemActionsPosition option has been changed', () => {
-            instance._itemActionsInitialized = true;
+            instance._listViewModel.setActionsAssigned(true);
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,

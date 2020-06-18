@@ -345,6 +345,19 @@ define([
 
             assert.isTrue(result instanceof Promise);
          });
+
+         // Необходимо устанавливать состояние "модель редактируется" для новой и старой модели
+         it('should set isEditing() for model', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+            assert.isNotTrue(listViewModel.isEditing(), 'Model shouldn\'t be in editing state before beginEdit()');
+            await eip.beginEdit({
+               item: listViewModel.at(0).getContents()
+            });
+            assert.isTrue(listViewModel.isEditing(), 'Model should be in editing state after what had happened to her.');
+         });
       });
 
       describe('beginAdd', function() {
@@ -459,24 +472,23 @@ define([
             });
          });
 
-         it('add item to a folder', function(done) {
+         it('add item to a folder', function() {
             Object.assign(eip._options,{
                listViewModel: treeModel,
                source: source
             });
             treeModel.setExpandedItems([1]);
 
-            source.create().addCallback(function(model) {
+            return source.create().then(function(model) {
                model.set('parent', 1);
                model.set('parent@', false);
-               eip.beginAdd({
+               return eip.beginAdd({
                   item: model
-               }).addCallback(function() {
+               }).then(function() {
                   assert.instanceOf(eip._editingItem, entity.Model);
                   assert.isTrue(eip._isAdd);
-                  assert.equal(2, eip._editingItemData.level);
-                  assert.equal(4, eip._editingItemData.index);
-                  done();
+                  assert.equal(eip._editingItemData.level, 2);
+                  assert.equal(eip._editingItemData.index, 4);
                });
             });
          });
@@ -2116,6 +2128,22 @@ define([
             eip.updateEditingData({listViewModel: listViewModel});
 
             assert.isTrue(spy.calledOnceWith('onCollectionChange', eip._updateIndex));
+         });
+
+         it('should suscribe updateEditingData once', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+
+            await eip.beginAdd();
+
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
+            let spy = sinon.spy(eip, 'registerFormOperation');
+            eip._options.readOnly = true;
+            eip.updateEditingData({listViewModel: listViewModel});
+
+            assert.isTrue(spy.notCalled);
          });
       });
 

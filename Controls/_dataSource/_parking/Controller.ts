@@ -5,9 +5,10 @@ import { load } from 'Core/library';
 import { Logger } from 'UI/Utils';
 import { PromiseCanceledError } from 'Types/entity';
 
-interface IParkingControllerPotions {
+interface IParkingControllerOptions<TViewConfig = ViewConfig> {
     handlers: Handler[];
     configField: string;
+    viewConfig?: Partial<TViewConfig>;
 }
 
 /**
@@ -21,23 +22,14 @@ export const loadHandlers = (handlersField: string): Array<Promise<Handler>> => 
     return getApplicationHandlers(handlersField).map(getHandler);
 };
 
-const getDefaultConfig = (): Partial<IParkingControllerPotions> => {
-    return {
-        handlers: [],
-        configField: 'parkingHandlers'
-    };
-};
-
 /// region helpers
-const log = (message) => {
+const log = (message: string) => {
     Logger.info(
         'Controls/_dataSource/_parking/Controller: ' + message
     );
 };
 
-const getApplicationConfig = () => {
-    return constants.ApplicationConfig || {};
-};
+const getApplicationConfig = () => constants.ApplicationConfig || {};
 
 const getApplicationHandlers = (handlersField: string): Array<Handler | string> => {
     const applicationConfig = getApplicationConfig();
@@ -145,40 +137,68 @@ export function findTemplate<TConfig>(
  *     });
  * </pre>
  */
-export default class ParkingController /** @lends Controls/_dataSource/_parking/Controller.prototype */ {
+export default class ParkingController<TViewConfig extends ViewConfig = ViewConfig> {
     private _handlers: Handler[];
+    private _postHandlers: Handler[] = [];
     private readonly _configField: string;
+    private _viewConfig: Partial<TViewConfig>;
 
-    constructor(config: Partial<IParkingControllerPotions> = {}) {
-        const cfg = { ...getDefaultConfig(), ...config };
-        this._handlers = cfg.handlers;
-        this._configField = cfg.configField;
+    constructor(options: Partial<IParkingControllerOptions<TViewConfig>> = {}) {
+        this._handlers = options.handlers || [];
+        this._configField = options.configField || ParkingController.CONFIG_FIELD;
+        this._viewConfig = options.viewConfig || {};
+    }
+
+    /**
+     * Составить конфиг ошибки из предустановленных данных и результата из обработчика.
+     * @param viewConfig Результат обработчика
+     * @private
+     */
+    private _composeViewConfig(viewConfig: TViewConfig): TViewConfig {
+        const result = {
+            ...this._viewConfig,
+            ...viewConfig
+        };
+
+        if (this._viewConfig.options && viewConfig.options) {
+            result.options = {
+                ...this._viewConfig.options,
+                ...viewConfig.options
+            };
+        }
+
+        return result;
     }
 
     destroy(): void {
         delete this._handlers;
+        delete this._postHandlers;
+        delete this._viewConfig;
     }
 
     /**
      * Добавить обработчик ошибки.
      * @param {Controls/_dataSource/_parking/Handler} handler
+     * @param isPostHandler Выполнять ли обработчик после обработчиков уровня приложения.
      * @public
      */
-    addHandler(handler: Handler): void {
-        if (this._handlers.indexOf(handler) >= 0) {
+    addHandler(handler: Handler, isPostHandler?: boolean): void {
+        const handlers = isPostHandler ? this._postHandlers : this._handlers;
+        if (handlers.indexOf(handler) >= 0) {
             return;
         }
-        this._handlers.push(handler);
+        handlers.push(handler);
     }
 
     /**
      * Удалить обработчик ошибки.
      * @param {Controls/_dataSource/_parking/Handler} handler
+     * @param isPostHandler Выполнять ли обработчик после обработчиков уровня приложения.
      * @public
-     * @void
      */
-    removeHandler(handler: Handler): void {
-        this._handlers = this._handlers.filter((_handler) => handler !== _handler);
+    removeHandler(handler: Handler, isPostHandler?: boolean): void {
+        const handlers = isPostHandler ? '_postHandlers' : '_handlers';
+        this[handlers] = this[handlers].filter((_handler) => handler !== _handler);
     }
 
     /**
@@ -187,14 +207,22 @@ export default class ParkingController /** @lends Controls/_dataSource/_parking/
      * @public
      * @returns {Promise.<void | Controls/_dataSource/_parking/ViewConfig>}
      */
-    process<TConfig>(config: TConfig): Promise<ViewConfig | void> {
-        // find in own handlers
-        return findTemplate(this._handlers, config).then((result: ViewConfig | void) => {
-            if (result) {
-                return result;
-            }
-            // find in Application handlers
-            return findTemplate(getApplicationHandlers(this._configField), config);
-        });
+    process<TConfig>(config: TConfig): Promise<TViewConfig | void> {
+        return [
+            () => this._handlers,
+            () => getApplicationHandlers(this._configField),
+            () => this._postHandlers
+        ].reduce(
+            (result: Promise<TViewConfig | void>, getHandlers: () => Handler[]) =>
+                result.then((viewConfig) => viewConfig
+                    ? this._composeViewConfig(viewConfig)
+                    : findTemplate(getHandlers(), config)
+                ),
+            Promise.resolve());
     }
+
+    /**
+     * Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
+     */
+    static readonly CONFIG_FIELD: string = 'parkingHandlers';
 }

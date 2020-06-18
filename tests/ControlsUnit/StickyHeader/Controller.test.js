@@ -303,6 +303,26 @@ define([
          });
       });
 
+      describe('_getStickyHeaderElements', function() {
+         it('should returns [header.container]', function() {
+            const header = getRegisterObject();
+            component._getStickyHeaderElements(header);
+            assert.deepEqual(component._getStickyHeaderElements(header), [header.container]);
+         });
+         it('should returns array of all headers in group', function() {
+            const header = getRegisterObject();
+            header.inst.getChildrenHeaders = function() {
+               return [{
+                     container: 'container1'
+                  }, {
+                     container: 'container2'
+                  }]
+            };
+            component._getStickyHeaderElements(header);
+            assert.deepEqual(component._getStickyHeaderElements(header), ['container1', 'container2']);
+         });
+      });
+
       describe('StickyHeader', function() {
          var event = {
             stopImmediatePropagation: function() {}

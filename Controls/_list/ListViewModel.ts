@@ -735,7 +735,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     /**
-     * Возвращает состояние editing для модели.
+     * Возвращает состояние "Модель в режиме редактирования".
+     * В случае создания нового Item этот Item отсутствует в коллекции и мы не можем
+     * в контроллере ItemActions определить, надо ли скрывать у остальных элементов его опции.
+     * Если true, опции ItemActions не дожны быть отрисованы
      * New Model compatibility
      */
     isEditing(): boolean {
@@ -743,7 +746,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     /**
-     * Устанавливает состояние editing для модели.
+     * Устанавливает состояние "Модель в режиме редактирования".
+     * В случае создания нового Item этот Item отсутствует в коллекции и мы не можем
+     * в контроллере ItemActions определить, надо ли скрывать у остальных элементов его опции
+     * Если true, опции ItemActions не дожны быть отрисованы
      * New Model compatibility
      */
     setEditing(editing): void {
