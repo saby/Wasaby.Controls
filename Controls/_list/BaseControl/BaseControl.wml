@@ -229,6 +229,7 @@
             <div class="controls-BaseControl__pagingContainer {{_options.task1179362156 ? 'controls-BaseControl-hide-paging'}}">
                 <Controls.paging:Paging
                     attr:class="controls-BaseControl__scrollPaging_theme-{{_options.theme}}"
+                    contrastBackground="{{true}}"
                     scope="{{_pagingCfg}}"
                     showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
                     on:onArrowClick="__onPagingArrowClick()" />
