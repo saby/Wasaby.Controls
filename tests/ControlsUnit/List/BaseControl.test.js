@@ -5195,6 +5195,14 @@ define([
          });
       });
 
+      it('_beforeUnmount', function() {
+         let instance = new lists.BaseControl();
+         instance._needPagingTimeout = setTimeout(() => {}, 100);
+
+         instance._beforeUnmount();
+         assert.isNull(instance._needPagingTimeout);
+      });
+
 
       describe('beforeUpdate', () => {
          let cfg;
