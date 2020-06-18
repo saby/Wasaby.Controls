@@ -284,7 +284,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _confirmRecordChangeHandler(onYesAnswer: Function, onNoAnswer?: Function): Promise<Boolean> | undefined {
-        if (this._options.record && this._options.record.isChanged()) {
+        if (this._needShowConfirmation()) {
             return this._showConfirmPopup('yesno').then((answer) => {
                 if (answer === true) {
                     this.update().then(() => {
