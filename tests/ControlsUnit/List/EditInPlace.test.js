@@ -2117,6 +2117,22 @@ define([
 
             assert.isTrue(spy.calledOnceWith('onCollectionChange', eip._updateIndex));
          });
+
+         it('should suscribe updateEditingData once', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+
+            await eip.beginAdd();
+
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
+            let spy = sinon.spy(eip, 'registerFormOperation');
+            eip._options.readOnly = true;
+            eip.updateEditingData({listViewModel: listViewModel});
+
+            assert.isTrue(spy.notCalled);
+         });
       });
 
       it('property change of an editing item should reset validation', function() {
