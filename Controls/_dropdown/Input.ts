@@ -7,7 +7,7 @@ import chain = require('Types/chain');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import {isEqual} from 'Types/object';
 import Controller = require('Controls/_dropdown/_Controller');
-import Dropdown = require('Controls/_dropdown/Dropdown');
+import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
 import {SyntheticEvent} from "Vdom/Vdom";
 import {Stack as StackOpener} from 'Controls/popup';
 
@@ -233,7 +233,7 @@ var getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * </pre>
  */
 
-class Input extends Dropdown {
+class Input extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
    protected _text: string = '';

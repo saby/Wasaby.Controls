@@ -5,7 +5,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import ActualApi from 'Controls/_buttons/ActualApi';
 import Controller = require('Controls/_dropdown/_Controller');
 import {SyntheticEvent} from "Vdom/Vdom";
-import Dropdown = require('Controls/_dropdown/Dropdown');
+import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
 import {Stack as StackOpener} from 'Controls/popup';
 
 /**
@@ -71,7 +71,7 @@ import {Stack as StackOpener} from 'Controls/popup';
  * @demo Controls-demo/Buttons/Menu/MenuPG
  */
 
-class Button extends Dropdown {
+class Button extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _tmplNotify: Function = tmplNotify;
    protected _hasItems: boolean = true;

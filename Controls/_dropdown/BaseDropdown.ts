@@ -4,7 +4,7 @@ import {SyntheticEvent} from "Vdom/Vdom";
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
-class Dropdown extends Control<IControlOptions> {
+class BaseDropdown extends Control<IControlOptions> {
 
    protected _handleKeyDown(event): void {
       if (event.nativeEvent.keyCode === Env.constants.key.esc && this._popupId) {
@@ -56,4 +56,4 @@ class Dropdown extends Control<IControlOptions> {
    }
 }
 
-export = Dropdown;
+export = BaseDropdown;

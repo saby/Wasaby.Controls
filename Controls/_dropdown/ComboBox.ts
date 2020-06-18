@@ -4,7 +4,7 @@ import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
 import Utils = require('Types/util');
 import dropdownUtils = require('Controls/_dropdown/Util');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import Dropdown = require('Controls/_dropdown/Dropdown');
+import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
 import Controller = require('Controls/_dropdown/_Controller');
 import {SyntheticEvent} from "Vdom/Vdom";
 
@@ -76,7 +76,7 @@ var getPropValue = Utils.object.getPropertyValue.bind(Utils);
  *    }
  */
 
-class ComboBox extends Dropdown{
+class ComboBox extends BaseDropdown{
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
 
