@@ -1990,8 +1990,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
          it('getColumnScrollCellClasses', function() {
             const backgroundStyle = 'controls-background-default_theme-default';
-            const fixedCell = ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
-            const transformCell = ' controls-Grid__cell_transform';
+            const fixedCell = ` controls-Grid_columnScroll__fixed controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
+            const transformCell = ' controls-Grid_columnScroll__scrollable';
             const params = {
                multiSelectVisibility: 'hidden',
                stickyColumnsCount: 1,
