@@ -256,6 +256,9 @@ export class Controller {
             direction: {
                 horizontal: isContextMenu ? 'right' : 'left'
             },
+            fittingMode: {
+                vertical: 'overflow'
+            },
             className: showHeader ? 'controls-MenuButton_link_iconSize-medium_popup' : '' + `controls-ItemActions__popup__list_theme-${this._theme}`,
             nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
             autofocus: false
