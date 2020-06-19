@@ -57,6 +57,7 @@ define(
          it('_beforeUnmount', () => {
             let opener = new popup.BaseOpener();
             let isHideIndicatorCall = false;
+            opener.saveOptions(popup.BaseOpener.getDefaultOptions());
             opener._indicatorId = '123';
             opener._openPopupTimerId = '145';
             opener._options.closePopupBeforeUnmount = true;

@@ -213,6 +213,10 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     private _toggleIndicator(visible: boolean): void {
+        if (!this._options.showIndicator) {
+            return;
+        }
+
         if (visible) {
             // if popup was opened, then don't show indicator, because we don't have async phase
             if (this._getCurrentPopupId()) {
@@ -417,6 +421,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     static getDefaultOptions(): IBaseOpenerOptions {
         return {
+            showIndicator: true,
             closePopupBeforeUnmount: true
         };
     }
