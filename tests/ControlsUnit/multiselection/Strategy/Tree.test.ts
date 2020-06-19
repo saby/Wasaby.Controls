@@ -303,7 +303,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
           });
           const entryPath = [
               {parent: 6, id: 10},
-              {parent: 6, id: 11},
+              {parent: 6, id: 11}
           ];
           const selection = {
              selected: [10],
