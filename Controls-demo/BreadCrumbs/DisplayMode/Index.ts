@@ -5,6 +5,7 @@ import {Model} from 'Types/entity';
 class DisplayMode extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     protected _items: object;
+    protected _item: object;
 
     protected _beforeMount(): void {
         this._items  = [
@@ -40,9 +41,21 @@ class DisplayMode extends Control<IControlOptions> {
             },
             {
                 id: 6,
-                title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
+                title: 'Очень длинное название кнопки назад очень длинное название',
                 secondTitle: 'тест6',
                 parent: 5
+            }
+        ].map((item) => {
+            return new Model({
+                rawData: item,
+                keyProperty: 'id'
+            });
+        });
+        this._item  = [
+            {
+                id: 6,
+                title: 'Очень длинное название кнопки назад очень длинное название кнопки назад очень длинное название кнопки назад',
+                secondTitle: 'тест6'
             }
         ].map((item) => {
             return new Model({
