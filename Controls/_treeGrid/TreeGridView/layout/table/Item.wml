@@ -1,4 +1,4 @@
-<ws:template name="itemActionsTemplateChooser">
+<ws:template name="itemActionsTemplate">
     <ws:if data="{{itemData.isSwiped()}}">
         <ws:partial template="{{swipeTemplate}}"
                     itemData="{{itemData}}"
@@ -73,7 +73,7 @@
 
     <!-- Без скролла колонок операции выводятся в последней ячейке таблицы. -->
    <ws:if data="{{!itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode)}}">
-       <ws:partial template="itemActionsTemplateChooser"/>
+       <ws:partial template="itemActionsTemplate"/>
    </ws:if>
 </ws:template>
 
@@ -138,7 +138,7 @@
             colspan="1"
             style="width: 0; min-width: 0; max-width: 0; padding: 0px; overflow: visible; z-index: 3;">
             <div class="controls-TreeGridView__row-cell_innerWrapper {{ currentColumn.classList.relativeCellWrapper }}">
-                <ws:partial template="itemActionsTemplateChooser"/>
+                <ws:partial template="itemActionsTemplate"/>
             </div>
         </td>
     </ws:if>

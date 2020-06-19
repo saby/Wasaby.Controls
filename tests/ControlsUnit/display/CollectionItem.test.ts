@@ -678,7 +678,7 @@ describe('Controls/_display/CollectionItem', () => {
         // CSS класс для позиционирования опций записи. Если опции вне строки, то возвращает пустую строку
         it('getItemActionPositionClasses() should return empty string when itemActionsPosition === "outside"', () => {
             const result = item.getItemActionPositionClasses('outside', 'controls-itemActionsV_position_bottomRight', {top: 's', bottom: 's'}, 'default');
-            assert.equal(result, ' ');
+            assert.equal(result, ' controls-itemActionsV_padding-bottom_default_theme-default ');
         });
 
         // CSS класс для позиционирования опций записи. Если itemActionsClass не задан, возвращает классы для позиции itemPadding top
