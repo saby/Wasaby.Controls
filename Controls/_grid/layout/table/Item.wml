@@ -1,4 +1,4 @@
-<ws:template name="itemActionsTemplate">
+<ws:template name="itemActionsTemplateChooser">
     <ws:if data="{{itemData.isSwiped()}}">
         <ws:partial template="{{swipeTemplate}}"
                     itemData="{{itemData}}"
@@ -46,7 +46,7 @@
     </ws:else>
     <!-- Без скролла колонок операции выводятся в последней ячейке таблицы. -->
     <ws:if data="{{!itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
-        <ws:partial template="itemActionsTemplate"/>
+        <ws:partial template="itemActionsTemplateChooser"/>
     </ws:if>
 </ws:template>
 
@@ -103,7 +103,7 @@
         <ws:partial template="tableTD" keyPostfix="_actions"
                     attr:class="controls-Grid-table-layout__itemActions__container {{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}"
                     attr:style="width: 0; min-width: 0; max-width: 0; padding: 0px;">
-            <ws:partial template="itemActionsTemplate"/>
+            <ws:partial template="itemActionsTemplateChooser"/>
         </ws:partial>
     </ws:if>
 
