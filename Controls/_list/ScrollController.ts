@@ -162,7 +162,7 @@ export default class ScrollController {
     update(options: IOptions): void {
         if (options.collection && this._options.collection !== options.collection) {
             this._initModelObserving(options);
-            if (options.virtualScrollConfig) {
+            if (!this._virtualScroll || options.virtualScrollConfig) {
                 this._initVirtualScroll(options);
             }
             this._options.collection = options.collection;
@@ -374,53 +374,57 @@ export default class ScrollController {
     }
 
     private _initModelObserving(options: IOptions): void {
-        this._subscribeToCollectionChange(options.collection, options.useNewModel);
+        if (options.collection) {
+            this._subscribeToCollectionChange(options.collection, options.useNewModel);
 
-        if (options.useNewModel) {
-            ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
+            if (options.useNewModel) {
+                ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
+            }
         }
     }
 
     private _initVirtualScroll(options: IOptions): void {
-        this._virtualScroll = new VirtualScroll(
-            options.virtualScrollConfig,
-            {
-                viewport: this._viewportHeight,
-                scroll: this._viewHeight,
-                trigger: this._triggerOffset
-            });
+        if (options.collection) {
+            this._virtualScroll = new VirtualScroll(
+                options.virtualScrollConfig,
+                {
+                    viewport: this._viewportHeight,
+                    scroll: this._viewHeight,
+                    trigger: this._triggerOffset
+                });
 
-        let itemsHeights: Partial<IItemsHeights>;
+            let itemsHeights: Partial<IItemsHeights>;
 
-        const initialIndex = typeof options.activeElement !== 'undefined' ?
-            options.collection.getIndexByKey(options.activeElement) : 0;
+            const initialIndex = typeof options.activeElement !== 'undefined' ?
+                options.collection.getIndexByKey(options.activeElement) : 0;
 
-        if (options?.virtualScrollConfig?.itemHeightProperty) {
-            this._virtualScroll.applyContainerHeightsData({
-                viewport: options.virtualScrollConfig.viewportHeight
-            });
+            if (options?.virtualScrollConfig?.itemHeightProperty) {
+                this._virtualScroll.applyContainerHeightsData({
+                    viewport: options.virtualScrollConfig.viewportHeight
+                });
 
-            itemsHeights = {
-                itemsHeights: []
-            };
+                itemsHeights = {
+                    itemsHeights: []
+                };
 
-            options.collection.each((item, index) => {
-                itemsHeights.itemsHeights[index] = item
-                    .getContents()
-                    .get(options.virtualScrollConfig.itemHeightProperty);
-            });
-        }
+                options.collection.each((item, index) => {
+                    itemsHeights.itemsHeights[index] = item
+                        .getContents()
+                        .get(options.virtualScrollConfig.itemHeightProperty);
+                });
+            }
 
-        const rangeShiftResult = this._virtualScroll
-            .resetRange(initialIndex, options.collection.getCount(), itemsHeights);
-        this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-        this._setCollectionIndices(options.collection, rangeShiftResult.range, true,
-            options.needScrollCalculation);
+            const rangeShiftResult = this._virtualScroll
+                .resetRange(initialIndex, options.collection.getCount(), itemsHeights);
+            this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
+            this._setCollectionIndices(options.collection, rangeShiftResult.range, true,
+                options.needScrollCalculation);
 
-        if (options.activeElement) {
-            this._restoreScrollResolve = () => {
-                this.scrollToItem(options.activeElement, false, true);
-            };
+            if (options.activeElement) {
+                this._restoreScrollResolve = () => {
+                    this.scrollToItem(options.activeElement, false, true);
+                };
+            }
         }
     }
 
