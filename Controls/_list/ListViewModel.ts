@@ -78,7 +78,7 @@ var _private = {
     getMultiSelectClassList: function (current): string {
         let
             checkboxOnHover = current.multiSelectVisibility === 'onhover',
-            isSelected = !!current.multiSelectStatus;
+            isSelected = current.multiSelectStatus !== false && current.multiSelectStatus !== undefined; // так как null - это тоже выбрано
 
         return CssClassList.add('js-controls-ListView__checkbox')
                            .add('js-controls-ListView__notEditable')
@@ -445,7 +445,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return _private.getItemByMarkedKey(this, this._markedKey);
     },
     getSelectionStatus: function(key) {
-        return !!this.getItemBySourceKey(key)?.isSelected();
+        return this.getItemBySourceKey(key)?.isSelected();
     },
 
     getSwipeItem: function() {
