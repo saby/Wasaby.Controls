@@ -88,7 +88,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             (BaseOpener.closeDialog(popupId) as Promise<void>).then(() => {
                 // Пока закрывали текущее окно, уже могли открыть новое с новым popupId.
                 // Если popupId новый, то не нужно чистить старое значение
-                if (!ManagerController.find(this._popupId)) {
+                if (!this.isOpened()) {
                     this._popupId = null;
                 }
             });
@@ -101,7 +101,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
      * @returns {Boolean} Is popup opened
      */
     isOpened(): boolean {
-        return !!ManagerController.find(this._getCurrentPopupId());
+        return !!ManagerController.find(this._popupId);
     }
 
     private _openPopup(cfg: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
@@ -243,7 +243,10 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     protected _getCurrentPopupId(): string {
-        return this._popupId;
+        if (this.isOpened()) {
+            return this._popupId;
+        }
+        return null;
     }
 
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {

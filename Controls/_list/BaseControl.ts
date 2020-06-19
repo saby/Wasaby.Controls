@@ -240,7 +240,7 @@ const _private = {
             }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
-            self._sourceController.load(filter, sorting, null, sourceConfig).addCallback(function(list) {
+            self._sourceController.load(filter, sorting, null, sourceConfig, cfg.root).addCallback(function(list) {
                 _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
                 if (list.getCount()) {
@@ -444,7 +444,6 @@ const _private = {
     setMarkedKey(self, key: string | number): void {
         if (self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
-            _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToNext(self, event) {
@@ -495,6 +494,9 @@ const _private = {
         }
     },
     spaceHandler(self, event) {
+        if (self._options.multiSelectVisibility === 'hidden') {
+            return;
+        }
         const model = self.getViewModel();
         let toggledItemId = model.getMarkedKey();
 
@@ -502,7 +504,7 @@ const _private = {
             toggledItemId = model.at(0).getContents().getId();
         }
 
-        if (toggledItemId && self._options.multiSelectVisibility !== 'hidden') {
+        if (toggledItemId) {
             if (!self._selectionController) {
                 self._createSelectionController();
             }
@@ -2254,6 +2256,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         return getState(result);
                     }
                 });
+            } else  {
+                _private.createScrollController(self, newOptions);
             }
         });
 

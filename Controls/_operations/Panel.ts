@@ -3,7 +3,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
 
 /**
  * Контрол, предназначенный для операций над множеством записей списка.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">демо-пример</a>
@@ -64,6 +64,12 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * <!-- WML -->
  *    <Controls.operations:Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
  * </pre>
+ */
+
+/**
+ * @name Controls/_operations/Panel#popupFooterTemplate
+ * @cfg {String|Function} Шаблон футера дополнительного меню тулбара.
+ * @demo Controls-demo/OperationsPanelNew/PopupFooterTemplate/Index
  */
 
 /**
@@ -132,7 +138,7 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * @variant null Кпопка скрыта.
  * @variant all Кнопка "Показать отмеченные".
  * @variant selected Кнопка "Показать все".
- */ 
+ */
 
 /**
  * @name Controls/_operations/Panel#selectionViewMode
