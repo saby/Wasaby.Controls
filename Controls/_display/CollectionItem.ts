@@ -36,6 +36,11 @@ export interface ICollectionItemCounters {
     [key: string]: number;
 }
 
+const ITEMACTIONS_POSITION_CLASSES = {
+    bottomRight: 'controls-itemActionsV_position_bottomRight',
+    topRight: 'controls-itemActionsV_position_topRight'
+};
+
 /**
  * Элемент коллекции
  * @class Controls/_display/CollectionItem
@@ -292,6 +297,15 @@ export default class CollectionItem<T> extends mixin<
         return this._$editing;
     }
 
+    /**
+     * Т.к. не получается быстро избавиться от IsEditing в старых моделях,
+     * называем метод иначе. Когда избавимся от старой модели, этот метод будет не нужен и
+     * можно будет везде использовать isEditing()
+     */
+    isEditingState(): boolean {
+        return this._$editing;
+    }
+
     setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
         if (this._$editing === editing && this._$editingContents === editingContents) {
             return;
@@ -425,6 +439,33 @@ export default class CollectionItem<T> extends mixin<
 
     getContentClasses(theme: string, style: string = 'default'): string {
         return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}`;
+    }
+
+    /**
+     * Возвращает Класс для позиционирования опций записи.
+     * Если опции вне строки, то возвращает пустую строку
+     * Если itemActionsClass не задан, возвращает классы для позиции itemPadding bottom
+     * Иначе возвращает классы, соответствующие заданным параметрам itemActionsClass и itemPadding
+     * @param itemActionsPosition
+     * @param itemActionsClass
+     * @param itemPadding
+     * @param theme
+     */
+    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
+        if (itemActionsPosition === 'outside') {
+            return ' ';
+        }
+        const classes = itemActionsClass || ITEMACTIONS_POSITION_CLASSES.bottomRight;
+        const result: string[] = [classes];
+        const themedPositionClassCompile = (position) => (
+            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
+        );
+        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+            result.push(themedPositionClassCompile('top'));
+        } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+            result.push(themedPositionClassCompile('bottom'));
+        }
+        return ` ${result.join(' ')} `;
     }
 
     getItemTemplate(userTemplate: TemplateFunction|string): TemplateFunction|string {
