@@ -228,13 +228,7 @@ var
 
             return preparedClasses;
         },
-        isLastItem: function(editingItem, rowCount, itemIndex) {
-            if (editingItem && editingItem.index >= rowCount) {
-                return itemIndex === editingItem.index;
-            } else {
-                return itemIndex === rowCount - 1;
-            }
-        },
+
         isFixedCell: function(params) {
             const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isMultiHeader } = params;
             const
@@ -1457,6 +1451,7 @@ var
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
             current.getSeparatorForColumn = _private.getSeparatorForColumn;
+            current.isLastItem = !this.getHasMoreData() && (this.getCount() - 1 === this.getIndex(dispItem));
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup)
