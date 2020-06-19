@@ -6113,6 +6113,33 @@ define([
          });
       });
 
+      describe('_beforeMount()', () => {
+         let stubCreate;
+         beforeEach(() => {
+            stubCreate = sinon.stub(lists.BaseControl._private, 'createScrollController');
+         });
+         afterEach(() => {
+            stubCreate.restore();
+         });
+         it('should create scrollController without source', async (done) => {
+            const cfg = {
+               viewName: 'Controls/List/ListView',
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
+            };
+            const baseControl = new lists.BaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            stubCreate.callsFake(() => {
+               done();
+            });
+            baseControl._beforeMount(cfg);
+         });
+      });
+
       // Инициализация шаблонов под isNewModel должна происходить до того, как
       it('should init templates for useNewModel before any item actions initialization', async () => {
          const cfg = {
