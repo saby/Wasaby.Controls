@@ -14,12 +14,17 @@ export { default as Grid } from 'Controls/_listRender/Grid';
 export { TileItemTemplateWrapper };
 export { ColumnsItemTemplateWrapper as ColumnsItemTemplate};
 
+import itemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
+import swipeTemplate = require('wml!Controls/_list/Swipe/resources/SwipeTemplate');
+
 export { default as View } from 'Controls/_listRender/View';
 export {
     editingTemplate,
     moneyEditingTemplate,
     numberEditingTemplate,
     itemTemplateWrapper,
+    itemActionsTemplate,
+    swipeTemplate,
     groupTemplate
 };
 
