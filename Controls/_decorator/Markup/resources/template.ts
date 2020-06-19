@@ -34,6 +34,7 @@ import {Logger} from 'UI/Utils';
          'file:(//|\\\\)',
          'smb:(//|\\\\)',
          'mailto:',
+         'tel:',
          '#',
          './',
          '/'

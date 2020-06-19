@@ -1,8 +1,7 @@
 [{
   "include": [
     "Controls/Application",
-    "Controls/Application/*",
-    "css!Controls-default-theme/application"
+    "Controls/Application/*"
   ],
   "exclude": [
     "wml!Controls/Application/CompatibleScripts",
