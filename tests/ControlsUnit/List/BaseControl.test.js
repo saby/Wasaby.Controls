@@ -4717,7 +4717,9 @@ define([
                }
             },
             _listViewModel: {
-               getCount: () => 5
+               _isActionsAssigned: false,
+               getCount: () => 5,
+               isActionsAssigned: function() { return this._isActionsAssigned; }
             },
             handleSelectionControllerResult: () => {},
             _updateInitializedItemActions: () => {}
