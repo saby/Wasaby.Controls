@@ -22,6 +22,7 @@ export interface IBasePopupOptions {
     modal?: boolean;
     eventHandlers?: IEventHandlers;
     isDefaultOpener?: boolean;
+    showIndicator?: boolean;
     zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     actionOnScroll?: string; // TODO Перенести на sticky, Удалить из baseOpener
     zIndex?: number; // TODO Compatible
@@ -105,6 +106,12 @@ export interface IBaseOpener {
  * @name Controls/_popup/interface/IBaseOpener#isOpened
  * @description Popup opened status.
  * @function
+ */
+
+/**
+ * @name Controls/_popup/interface/IBaseOpener#showIndicator
+ * @cfg {Boolean} Определяет, будет ли показываться индикатор при открытии окна
+ * @default true
  */
 
 /**
