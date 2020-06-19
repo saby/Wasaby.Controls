@@ -202,9 +202,11 @@ abstract class BaseController {
     }
 
     private getContentSizes(container: HTMLDivElement): IPopupSizes {
+        // Чтобы размеры элементов не искажались при масштабировании надо использовать getBoundingClientRect вместо offsetHeight и offsetWidth
+        const sizes = container.getBoundingClientRect();
         return {
-            width: container.offsetWidth,
-            height: container.offsetHeight
+            width: sizes.width,
+            height: sizes.height
         };
     }
 }
