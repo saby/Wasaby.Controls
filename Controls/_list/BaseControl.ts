@@ -2201,8 +2201,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.updatePagingData(self, hasMoreData);
                     }
 
-                    if (!self._markerController && newOptions.markerVisibility !== 'hidden') {
+                    if (newOptions.markerVisibility !== 'hidden') {
                         self._markerController = _private.createMarkerController(self, newOptions);
+                    }
+
+                    if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
+                        self._selectionController = _private.createSelectionController(self, newOptions);
                     }
 
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
@@ -2391,10 +2395,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             container.addEventListener('dragstart', this._nativeDragStart);
         }
         this._loadedItems = null;
-
-        if (this._options.selectedKeys && this._options.selectedKeys.length !== 0) {
-            this._createSelectionController();
-        }
 
         if (this._scrollController) {
             this._scrollController.afterMount(container, this._children);

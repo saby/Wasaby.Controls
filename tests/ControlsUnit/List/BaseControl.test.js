@@ -5276,12 +5276,14 @@ define([
          });
       });
 
-      it('_beforeMount create marker controller when passed receivedState', function() {
+      it('_beforeMount create controllers when passed receivedState', function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             markerVisibility: 'visible',
+            selectedKeys: [1],
+            excludedKeys: [],
             source: new sourceLib.Memory({
                keyProperty: 'id',
                data: new collection.RecordSet({
@@ -5300,7 +5302,10 @@ define([
          });
 
          assert.isNotNull(instance._markerController);
-         assert.equal(instance._listViewModel.getMarkedKey(), 1);
+         assert.isNotNull(instance._selectionController);
+         const item = instance._listViewModel.getItemBySourceKey(1);
+         assert.isTrue(item.isMarked());
+         assert.isTrue(item.isSelected());
       });
 
       it('_beforeUnmount', function() {
