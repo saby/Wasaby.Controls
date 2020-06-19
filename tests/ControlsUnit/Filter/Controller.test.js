@@ -1015,10 +1015,12 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          filterItems = [{id: 'testId2', value: 'testValuePinned', resetValue: 'testResetValuePinned', textValue: '', anyField1: 'anyValue2'}]
          assert.isNull(Filter._private.getHistoryByItems(self, 'testId', filterItems), 'item cannot be deleted from pinned');
          assert.isFalse(self._updateMeta.isClient);
+         assert.isTrue(self._updateMeta.$_pinned);
 
          filterItems = [{id: 'testId3', value: 'testValueClient', resetValue: 'testResetValueClient', textValue: '', anyField1: 'anyValue3'}]
          assert.isNull(Filter._private.getHistoryByItems(self, 'testId', filterItems), 'item cannot be deleted from clint');
          assert.isTrue(self._updateMeta.isClient);
+         assert.isTrue(self._updateMeta.$_favorite);
          sandbox.restore();
       });
 

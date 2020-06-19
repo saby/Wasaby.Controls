@@ -226,13 +226,21 @@ const _private = {
 
              // Метод используется для поиска элемента для удаления и последующего сохранения нового элемента с новыми данными
              // Если элемент запинен или добавлен в избранное, его нельзя удалять.
-             if (result && (result.item.get('pinned') || result.item.get('client'))) {
-                 self._updateMeta = {
-                     item: result.item,
-                     $_favorite: true,
-                     isClient: result.data.isClient
-                 };
-                 result = null;
+             if (result) {
+                 const isPinned = result.item.get('pinned');
+                 const isFavorite = result.item.get('client');
+                 if (isFavorite || isPinned) {
+                     self._updateMeta = {
+                         item: result.item,
+                         isClient: result.data.isClient
+                     };
+                     if (isPinned) {
+                         self._updateMeta.$_pinned = true;
+                     } else {
+                         self._updateMeta.$_favorite = true;
+                     }
+                     result = null;
+                 }
              }
              return result;
          },
@@ -518,14 +526,14 @@ function updateFilterHistory(cfg) {
       /**
        * Контрол используют в качестве контроллера, который позволяет фильтровать данные в {@link Controls/list:View}.
        * Контроллер позволяет сохранять историю фильтра и восстанавливать страницу после перезагрузки с последним примененным фильтром.
-       * 
+       *
        * @remark
        * Полезные ссылки:
        * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
        * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
        * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
        * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
-       * 
+       *
        * @class Controls/_filter/Controller
        * @extends Core/Control
        * @mixes Controls/_interface/IFilter
