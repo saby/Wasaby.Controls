@@ -442,8 +442,8 @@ export default class CollectionItem<T> extends mixin<
     }
 
     /**
-     * Для новой модели не вызывается, потому что в интеграционных тестах возникает ошибка
      * Возвращает Класс для позиционирования опций записи.
+     * Если новая модель, то в любом случае не считается класс, добавляющий padding
      * Если опции вне строки, то возвращает класс, добавляющий padding согласно itemActionsClass и itemPadding
      * Если опции вне строки и itemActionsClass не задан, возвращает пробел
      * Если опции внутри строки и itemActionsClass не задан, возвращает класс, добавляющий выравнивание bottomRight, без padding
@@ -456,21 +456,20 @@ export default class CollectionItem<T> extends mixin<
      * @param useNewModel
      */
     getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string, useNewModel?: boolean): string {
-        if (useNewModel) {
-            return ' ';
-        }
         const classes = itemActionsClass || ITEMACTIONS_POSITION_CLASSES.bottomRight;
         const result: string[] = [];
         if (itemActionsPosition !== 'outside') {
             result.push(classes);
         }
-        const themedPositionClassCompile = (position) => (
-            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
-        );
-        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
-            result.push(themedPositionClassCompile('top'));
-        } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
-            result.push(themedPositionClassCompile('bottom'));
+        if (!useNewModel) {
+            const themedPositionClassCompile = (position) => (
+                `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
+            );
+            if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+                result.push(themedPositionClassCompile('top'));
+            } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+                result.push(themedPositionClassCompile('bottom'));
+            }
         }
         return result.length ? ` ${result.join(' ')} ` : ' ';
     }
