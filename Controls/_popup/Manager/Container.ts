@@ -71,7 +71,7 @@ class Container extends Control<IControlOptions> {
     }
 
     private _finishPendingHandler(event: Event, forceFinishValue: boolean, root: string): void {
-        this._pendingController.finishPendingOperations(forceFinishValue, true, root);
+        this._pendingController.finishPendingOperations(forceFinishValue, root);
     }
 
     private _cancelFinishingPendingHandler(event: Event, root: string): void {
