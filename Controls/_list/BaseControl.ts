@@ -2516,8 +2516,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._editInPlace) {
             this._editInPlace.updateEditingData(
-                {listViewModel: this._listViewModel, ...newOptions},
-                this._children.formController
+                {listViewModel: this._listViewModel, ...newOptions}
             );
             this._editingItemData = this._editInPlace.getEditingItemData();
         }
@@ -2773,6 +2772,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._editInPlace) {
+            this._editInPlace.registerFormOperation(this._children.formController);
             this._editInPlace.prepareHtmlInput();
         }
 

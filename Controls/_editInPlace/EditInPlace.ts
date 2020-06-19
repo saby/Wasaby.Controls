@@ -670,7 +670,7 @@ export default class EditInPlace {
         return result;
     }
 
-    updateEditingData(options: IEditingOptions, formController: any): void {
+    updateEditingData(options: IEditingOptions): void {
         this._updateOptions(options);
         this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
         if (this._editingItemData && this._options.listViewModel.getEditingItemData() !== this._editingItemData) {
@@ -681,8 +681,6 @@ export default class EditInPlace {
             // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
             this._pendingInputRenderState = PendingInputRenderState.Rendering;
         }
-
-        this.registerFormOperation(formController);
     }
 
     prepareHtmlInput(): void {
