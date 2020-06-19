@@ -101,7 +101,7 @@
       <div attr:class="controls-Grid__row-ladder-cell {{!!itemData.isActive() ? ' controls-GridView__item_active_theme-' + _options.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + _options.theme}} js-controls-SwipeControl__actionsContainer"
            attr:key="{{itemData.key + stickyProperty + '_sticky_ladder'}}"
            attr:style="{{itemData.stickyLadder[stickyProperty].headingStyle}}">
-         
+
          <ws:if data="{{itemData.stickyProperties[index]}}">
             <ws:if data="{{index === 1}}">
                <div class="controls-Grid__row-additional_ladderWrapper" style="left: -125px;">
@@ -154,7 +154,7 @@
                                    {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
                                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
                                    {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-                                   controls-TreeGrid__row js-controls-SwipeControl__actionsContainer controls-Grid__cell_transform"
+                                   controls-TreeGrid__row js-controls-SwipeControl__actionsContainer controls-Grid_columnScroll__scrollable"
               attr:style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false).replace('controls-Grid__cell_fixed', '')}} {{itemData.getColspanForColumnScroll().scrollableColumns}}"></div>
       </div>
    </ws:if>
