@@ -41,6 +41,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._items = options.items;
    }
 
+   setItems(items: RecordSet): void {
+      this._items = items;
+   }
+
    select(selection: ISelection, keys: TKeys): ISelection {
       const cloneSelection = clone(selection);
 

@@ -86,6 +86,17 @@ export class Controller {
    }
 
    /**
+    * Проставляет заново маркер в модели
+    * @remark Не уведомляет о проставлении маркера
+    */
+   restoreMarker(): void {
+      const item = this._model.getItemBySourceKey(this._markedKey);
+      if (item) {
+         item.setMarked(true, true);
+      }
+   }
+
+   /**
     * Переместить маркер на следующий элемент
     * @return ключ, на который поставлен маркер
     */

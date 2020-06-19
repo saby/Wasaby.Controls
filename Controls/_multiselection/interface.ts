@@ -47,9 +47,10 @@ export interface ISelectionModel extends IBaseCollection<CollectionItem<Model>> 
     * @public
     * @param {Array<CollectionItem<Model>>} items Список элементов
     * @param {boolean} selected Состояние переданных элементов
+    * @param {Boolean} silent Не уведомлять о изменении
     * @void
     */
-   setSelectedItems(items: Array<CollectionItem<Model>>, selected: boolean): void;
+   setSelectedItems(items: Array<CollectionItem<Model>>, selected: boolean, silent: boolean): void;
 }
 
 /**
