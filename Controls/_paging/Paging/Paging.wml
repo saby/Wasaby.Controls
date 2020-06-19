@@ -7,7 +7,7 @@
                         controls-Paging__arrow__state-{{_stateBackward}}
                         controls-Paging__arrow__state-{{_stateBackward}}_theme-{{_options.theme}}"
                         attr:title="{[В начало]}" on:click="_arrowClick('Begin', 'Backward')">
-            <i class="controls-Paging_icon-Begin_theme-{{_options.theme}} controls-Paging__icon_theme-{{_options.theme}}"></i>
+            <i class="controls-Paging_icon-Begin controls-Paging_icon-Begin_theme-{{_options.theme}} controls-Paging__icon_theme-{{_options.theme}}"></i>
          </span>
       </ws:if>
       <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
@@ -17,7 +17,7 @@
                      controls-Paging__arrow__state-{{_stateBackward}}
                      controls-Paging__arrow__state-{{_stateBackward}}_theme-{{_options.theme}}"
                      attr:title="{[Назад]}" on:click="_arrowClick('Prev', 'Backward')">
-         <i class="controls-Paging_icon-Prev_{{_options.showDigits ? 'digits_'}}theme-{{_options.theme}} controls-Paging__icon_theme-{{_options.theme}}"></i>
+         <i class="controls-Paging_icon-Prev controls-Paging_icon-Prev_{{_options.showDigits ? 'digits_'}}theme-{{_options.theme}} controls-Paging__icon_theme-{{_options.theme}}"></i>
       </span>
       <ws:if data="{{_options.showDigits}}">
          <Controls._paging.Paging.DigitButtons
@@ -33,7 +33,7 @@
                      controls-Paging__arrow__state-{{_stateForward}}
                      controls-Paging__arrow__state-{{_stateForward}}_theme-{{_options.theme}}"
                      attr:title="{[Вперёд]}" on:click="_arrowClick('Next', 'Forward')">
-         <i class="controls-Paging_icon-Next_{{_options.showDigits ? 'digits_'}}theme-{{_options.theme}} controls-Paging__icon_theme-{{_options.theme}}"></i>
+         <i class="controls-Paging_icon-Next controls-Paging_icon-Next_{{_options.showDigits ? 'digits_'}}theme-{{_options.theme}} controls-Paging__icon_theme-{{_options.theme}}"></i>
       </span>
       <ws:if data="{{_options.showEndButton}}">
          <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}}
@@ -42,7 +42,7 @@
                         controls-Paging__arrow__state-{{_stateForward}}
                         controls-Paging__arrow__state-{{_stateForward}}_theme-{{_options.theme}}"
                         attr:title="{[В конец]}" on:click="_arrowClick('End', 'Forward')">
-            <i class="controls-Paging_icon-End_{{_options.showDigits ? 'digits_'}}theme-{{_options.theme}} controls-Paging__icon_theme-{{_options.theme}}"></i>
+            <i class="controls-Paging_icon-End controls-Paging_icon-End_{{_options.showDigits ? 'digits_'}}theme-{{_options.theme}} controls-Paging__icon_theme-{{_options.theme}}"></i>
          </span>
       </ws:if>
    </div>
