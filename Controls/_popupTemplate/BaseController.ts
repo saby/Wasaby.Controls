@@ -207,8 +207,8 @@ abstract class BaseController {
         const width = sizes ? sizes.width : undefined;
         const height = sizes ? sizes.height : undefined;
         return {
-            width: sizes.width,
-            height: sizes.height
+            width,
+            height
         };
     }
 }
