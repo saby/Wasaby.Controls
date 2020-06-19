@@ -735,6 +735,7 @@ describe('Controls/_itemActions/Controller', () => {
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.exists(config.fittingMode, 'Direction options were not set');
             assert.equal(config.fittingMode.vertical, 'overflow');
+            assert.equal(config.fittingMode.horizontal, 'adaptive');
         });
     });
 
