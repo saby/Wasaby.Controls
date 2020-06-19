@@ -151,9 +151,9 @@ var _private = {
             itemsModelCurrent.dispItem.getItemActionClasses ?
                 itemsModelCurrent.dispItem.getItemActionClasses(itemActionsPosition, theme) : ''
         );
-        itemsModelCurrent.getItemActionPositionClasses = (itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string): string => (
+        itemsModelCurrent.getItemActionPositionClasses = (itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string, useNewModel?: boolean): string => (
             itemsModelCurrent.dispItem.getItemActionPositionClasses ?
-                itemsModelCurrent.dispItem.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemPadding, theme) : ''
+                itemsModelCurrent.dispItem.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemPadding, theme, useNewModel) : ''
         );
     }
 };
