@@ -2254,6 +2254,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         return getState(result);
                     }
                 });
+            } else  {
+                _private.createScrollController(self, newOptions);
             }
         });
 
