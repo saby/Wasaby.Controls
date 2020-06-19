@@ -373,16 +373,17 @@ var
          * Производит пересчёт групп объединяемых колонок для заголовков (разделителей) записей
          * @param itemData информация о записи
          * @param leftSideItemsCount число колонок в группе (или номер последней колонки)
+         * @param isActionsCellExists выводится ли в строке дополнительная ячейка под операции над записью
          * @private
          */
-        getColumnAlignGroupStyles(itemData: IGridItemData, leftSideItemsCount: number = 0): {
+        getColumnAlignGroupStyles(itemData: IGridItemData, leftSideItemsCount: number = 0, isActionsCellExists: boolean): {
             left: string
             right: string
         } {
             const additionalTerm = (itemData.hasMultiSelect ? 1 : 0);
             const result = {left: '', right: ''};
             const start = 1;
-            const end = itemData.columns.length + 1;
+            const end = itemData.columns.length + 1 + (isActionsCellExists ? 1 : 0);
 
             if (leftSideItemsCount > 0) {
                 const center = leftSideItemsCount + additionalTerm + 1;
@@ -1459,7 +1460,7 @@ var
             current.getSeparatorForColumn = _private.getSeparatorForColumn;
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
-                _private.getColumnAlignGroupStyles(current, columnAlignGroup)
+                _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
 
             const superShouldDrawMarker = current.shouldDrawMarker;

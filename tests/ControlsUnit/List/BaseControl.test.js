@@ -2562,7 +2562,6 @@ define([
       });
 
       it('reload with changing source/navig/filter should call scroll to start', function() {
-
          var
              lnSource = new sourceLib.Memory({
                 keyProperty: 'id',
@@ -2621,6 +2620,49 @@ define([
                }, 10);
             }, 10);
          });
+      });
+
+      it('reload and restore model state', async function() {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [1],
+               excludedKeys: [],
+               markedKey: 1,
+               markerVisibility: 'visible'
+            },
+            baseControl = new lists.BaseControl(lnCfg);
+
+         baseControl.saveOptions(lnCfg);
+         await baseControl._beforeMount(lnCfg);
+         baseControl._createSelectionController();
+
+         let item = baseControl._listViewModel.getItemBySourceKey(1);
+         assert.isTrue(item.isMarked());
+         assert.isTrue(item.isSelected());
+
+         // Меняю наверняка items, чтобы если этого не произойдет в reload, упали тесты
+         baseControl._listViewModel.setItems(new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: data
+         }));
+
+         item = baseControl._listViewModel.getItemBySourceKey(1);
+         assert.isFalse(item.isMarked());
+         assert.isFalse(item.isSelected());
+
+         await baseControl.reload(false, {});
+
+         item = baseControl._listViewModel.getItemBySourceKey(1);
+         assert.isTrue(item.isMarked());
+         assert.isTrue(item.isSelected());
       });
 
       describe('updateItemActions', function() {
@@ -2826,7 +2868,8 @@ define([
          lnBaseControl._selectionController = {
             toggleItem: function() {},
             handleReset: function() {},
-            update: function() {}
+            update: function() {},
+            restoreSelection: () => {}
          };
 
          lnBaseControl.saveOptions(lnCfg);
@@ -3552,18 +3595,6 @@ define([
                   selectedKeys: [1, 3]
                },
                viewModelConstructor: lists.ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     hasMore: false
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               },
             };
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
@@ -3571,6 +3602,7 @@ define([
             const formController = {};
             ctrl._children.formController = formController;
             ctrl._beforeUpdate(cfg);
+            ctrl._afterUpdate(cfg);
             assert.equal(ctrl._editInPlace._formController, formController);
          });
       });
