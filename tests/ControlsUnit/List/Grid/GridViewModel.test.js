@@ -2069,6 +2069,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             );
 
+            // with column scroll and action cell
+            itemData.hasMultiSelect = true;
+            itemData.columns = [{}, {}, {}, {}];
+            assert.deepEqual(
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined, true),
+                {
+                   left: 'grid-column: 1 / 6; -ms-grid-column: 1; -ms-grid-column-span: 5;',
+                   right: ''
+                }
+            );
          });
 
          it('getColspanForColumnScroll', function () {
