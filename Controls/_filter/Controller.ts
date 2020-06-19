@@ -226,13 +226,21 @@ const _private = {
 
              // Метод используется для поиска элемента для удаления и последующего сохранения нового элемента с новыми данными
              // Если элемент запинен или добавлен в избранное, его нельзя удалять.
-             if (result && (result.item.get('pinned') || result.item.get('client'))) {
-                 self._updateMeta = {
-                     item: result.item,
-                     $_favorite: true,
-                     isClient: result.data.isClient
-                 };
-                 result = null;
+             if (result) {
+                 const isPinned = result.item.get('pinned');
+                 const isFavorite = result.item.get('client');
+                 if (isFavorite || isPinned) {
+                     self._updateMeta = {
+                         item: result.item,
+                         isClient: result.data.isClient
+                     };
+                     if (isPinned) {
+                         self._updateMeta.$_pinned = true;
+                     } else {
+                         self._updateMeta.$_favorite = true;
+                     }
+                     result = null;
+                 }
              }
              return result;
          },
