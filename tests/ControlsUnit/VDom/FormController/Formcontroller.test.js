@@ -123,8 +123,12 @@ define([
          let createPromiseResolverReed;
          let createPromiseResolverDelete;
          let createPromise;
+         const record = {
+            isChanged: () => false
+         };
 
-         FC._setRecord = () => {
+         FC._setRecord = (record) => {
+            FC._record = record;
             setRecordCalled = true;
          };
          FC.read = () => {
@@ -151,9 +155,7 @@ define([
 
          setRecordCalled = false;
          FC._beforeUpdate({
-            record: {
-               isChanged: () => false
-            },
+            record: record,
             key: 'key'
          });
 
@@ -192,9 +194,7 @@ define([
                createPromiseResolverUpdate = res;
             });
          };
-         let record = {
-            isChanged: () => true
-         };
+         record.isChanged = () => true;
          FC._options.record = record;
          FC._beforeUpdate({
             record: record,

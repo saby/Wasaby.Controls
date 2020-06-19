@@ -592,15 +592,24 @@ define(
 
          describe('_fixedHandler', function() {
             it('Should update scroll style when header fixed', function() {
+               scroll._displayState.canScroll = true;
                scroll._fixedHandler(null, 10, 10);
                assert.strictEqual(scroll._scrollbarStyles, 'top:10px; bottom:10px;');
                assert.strictEqual(scroll._displayState.contentHeight, 30);
             });
             it('Should update scroll style when header unfixed', function() {
                scroll._headersHeight = { top: 10, bottom: 20 };
+               scroll._displayState.canScroll = true;
                scroll._fixedHandler(null, 0, 0);
                assert.strictEqual(scroll._scrollbarStyles, 'top:0px; bottom:0px;');
                assert.strictEqual(scroll._displayState.contentHeight, 50);
+            });
+            it('Should\'t update scroll style if there is no scroll', function() {
+               scroll._displayState.contentHeight = 40;
+               scroll._displayState.canScroll = false;
+               scroll._fixedHandler(null, 10, 10);
+               assert.strictEqual(scroll._scrollbarStyles, '');
+               assert.strictEqual(scroll._displayState.contentHeight, 40);
             });
          });
 

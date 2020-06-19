@@ -423,6 +423,13 @@ let
          self._displayState.shadowVisible = displayState.shadowVisible;
       },
 
+       _updateScrollbar: function(self): void {
+         if (self._displayState.canScroll) {
+            self._displayState.contentHeight = _private.getContentHeight(self);
+            self._scrollbarStyles =  'top:' + self._headersHeight.top + 'px; bottom:' + self._headersHeight.bottom + 'px;';
+         }
+      },
+
       proxyEvent(self, event, eventName, args) {
          // Forwarding bubbling events makes no sense.
          if (!event.propagating()) {
@@ -735,11 +742,15 @@ let
             return;
          }
 
-         let displayState = _private.calcDisplayState(this);
+         const oldDisplayState = this._displayState;
+         const displayState = _private.calcDisplayState(this);
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
             this._children.stickyController.setCanScroll(displayState.canScroll);
+            if (oldDisplayState.canScroll !== displayState.canScroll) {
+               _private._updateScrollbar(this);
+            }
             this._updateStickyHeaderContext();
 
             this._forceUpdate();
@@ -862,11 +873,15 @@ let
          if (this._isHidden()) {
             return;
          }
+         const oldDisplayState = this._displayState;
          const displayState = _private.calcDisplayState(this);
 
-         if (!isEqual(this._displayState, displayState)) {
+         if (!isEqual(oldDisplayState, displayState)) {
             this._displayState = displayState;
             this._children.stickyController.setCanScroll(displayState.canScroll);
+            if (oldDisplayState.canScroll !== displayState.canScroll) {
+               _private._updateScrollbar(this);
+            }
          }
 
          _private.calcPagingStateBtn(this);
@@ -1268,8 +1283,7 @@ let
       _fixedHandler: function(event, topHeight, bottomHeight) {
          this._headersHeight.top = topHeight;
          this._headersHeight.bottom = bottomHeight;
-         this._displayState.contentHeight = _private.getContentHeight(this);
-         this._scrollbarStyles =  'top:' + topHeight + 'px; bottom:' + bottomHeight + 'px;';
+         _private._updateScrollbar(this);
       },
 
       /* При получении фокуса input'ами на IOS13, может вызывается подскролл у ближайшего контейнера со скролом,
