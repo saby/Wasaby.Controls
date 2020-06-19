@@ -51,7 +51,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       keys.forEach((key) => {
          const item: Record = this._items.getRecordById(key);
 
-         if (!item || this._hierarchyRelation.isNode(item) !== LEAF) {
+         if (!item || this._isNode(item)) {
             this._selectNode(cloneSelection, key);
          } else {
             this._selectLeaf(cloneSelection, key);
@@ -66,7 +66,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       keys.forEach((key) => {
          const item = this._items.getRecordById(key);
-         if (!item || this._hierarchyRelation.isNode(item) !== LEAF) {
+         if (!item || this._isNode(item)) {
             this._unselectNode(cloneSelection, key);
          } else {
             this._unselectLeaf(cloneSelection, key);
@@ -177,7 +177,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
             this._isAllSelected(selection, parentId));
 
-         if (this._selectAncestors && this._hierarchyRelation.isNode(item) !== LEAF) {
+         if (this._selectAncestors && this._isNode(item)) {
             isSelected = this._getStateNode(itemId, isSelected, {
                selected: selectedKeysWithEntryPath,
                excluded: selection.excluded
@@ -200,7 +200,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                const itemId: TKey = selection.selected[index];
                const item: Record = this._items.getRecordById(itemId);
 
-               if (!item || this._hierarchyRelation.isNode(item) !== LEAF) {
+               if (!item || this._isNode(item)) {
                   selectedNodes.push(itemId);
                }
 
@@ -389,7 +389,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          const childId: TKey = child.getId();
          const childInList = listKeys.includes(childId);
 
-         if (this._hierarchyRelation.isNode(child) !== LEAF) {
+         if (this._isNode(child)) {
             const stateChildNode = this._getStateNode(childId, childInList ? !initialState : initialState, selection);
 
             if (stateChildNode === null) {
@@ -436,7 +436,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._getChildren(nodeId, items, hierarchyRelation).forEach((child) => {
          ArraySimpleValuesUtil.addSubArray(children, [child]);
 
-         if (hierarchyRelation.isNode(child)) {
+         if (this._isNode(child)) {
             ArraySimpleValuesUtil.addSubArray(children, this._getAllChildren(child.getId(), items, hierarchyRelation));
          }
       });
@@ -503,7 +503,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                      selectedChildrenCount++;
                   }
 
-                  if (hierarchyRelation.isNode(childItem) && this._isHasChildren(childItem, hierarchyRelation) && deep !== false) {
+                  if (this._isNode(childItem) && this._isHasChildren(childItem, hierarchyRelation) && deep !== false) {
                      childNodeSelectedCount = this._getSelectedChildrenCount(childId, selection, items, hierarchyRelation);
 
                      if (childNodeSelectedCount === null) {
@@ -531,5 +531,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _getChildren(nodeId: TKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): Record[] {
       return hierarchyRelation.getChildren(nodeId, items);
+   }
+
+   /**
+    * Проверяет что элемент узел или скрытый узел
+    * @param item
+    * @private
+    */
+   private _isNode(item: Record): boolean {
+      return this._hierarchyRelation.isNode(item) !== LEAF;
    }
 }
