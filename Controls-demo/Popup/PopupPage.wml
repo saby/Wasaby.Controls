@@ -27,6 +27,9 @@
 
    <Controls.popup:Stack name="executingStack" template="Controls-demo/Popup/TestExecutingStack" closeOnOutsideClick="{{false}}" minWidth="500" maxWidth="700">
    </Controls.popup:Stack>
+   <Controls.popup:Stack name="executingIndicatorStack" template="Controls-demo/Popup/TestExecutingStack" closeOnOutsideClick="{{false}}" minWidth="500" maxWidth="700">
+      <ws:templateOptions delay="{{3000}}"/>
+   </Controls.popup:Stack>
 
    <Controls.popup:Stack name="notifyStack"
                                 on:close="_notifyCloseHandler()"
@@ -91,6 +94,9 @@
    </div>
    <div>
       <Controls.buttons:Button name="stackIgnoreButton" caption="ignoreActivationStack" on:click="openIgnoreActivationStack()" attr:class="ControlsDemo-PopupPage__stackIgnoreButton"/>
+   </div>
+   <div>
+      <Controls.buttons:Button name="stackIndicatorButton" caption="openIndicatorPopup" on:click="openIndicatorPopup()" attr:class="ControlsDemo-PopupPage__openIndicatorPopupButton"/>
    </div>
    <div>
       <Controls.buttons:Button name="stackButton2" caption="open old template" on:click="openOldTemplate()" attr:class="ControlsDemo-PopupPage__stackOldTemplateButton"/>

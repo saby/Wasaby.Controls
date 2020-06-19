@@ -339,7 +339,8 @@ interface IPosition {
          } else {
             // На ios возвращается неверная высота страницы, из-за чего накладывая maxWidth === windowSizes.height
             // окно визуально обрезается. Делаю по body, у него высота правильная
-            position.maxHeight = _private.getViewportHeight();
+            const verticalPadding = position.top || position.bottom || 0;
+            position.maxHeight = _private.getViewportHeight() - verticalPadding;
             // position.maxHeight = windowSizes.height;
          }
 

@@ -245,7 +245,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             }
         }
 
-        if (newOptions.record && this._options.record !== newOptions.record) {
+        if (newOptions.record && this._record !== newOptions.record) {
             this._setRecord(newOptions.record);
         }
         if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
@@ -533,6 +533,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     private _createHandler(record: Model): Model {
         this._updateIsNewRecord(true);
+        this._setRecord(record);
         this._wasCreated = true;
         this._forceUpdate();
         return record;
@@ -556,6 +557,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     private _readHandler(record: Model): Model {
         this._wasRead = true;
+        this._setRecord(record);
         this._updateIsNewRecord(false);
         this._forceUpdate();
         this._hideError();

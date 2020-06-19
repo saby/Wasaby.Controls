@@ -82,6 +82,9 @@ import {IList} from "./interface/IList";
 const defaultSelectedKeys = [];
 const defaultExcludedKeys = [];
 
+// = 28 + 6 + 6 см controls-BaseControl_paging-Padding_theme TODO не должно такого быть, он в разных темах разный
+const PAGING_PADDING = 40;
+
 const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 2, title: '10', pageSize: 10},
     {id: 3, title: '25', pageSize: 25},
@@ -445,7 +448,6 @@ const _private = {
     setMarkedKey(self, key: string | number): void {
         if (self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
-            _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToNext(self, event) {
@@ -496,6 +498,9 @@ const _private = {
         }
     },
     spaceHandler(self, event) {
+        if (self._options.multiSelectVisibility === 'hidden') {
+            return;
+        }
         const model = self.getViewModel();
         let toggledItemId = model.getMarkedKey();
 
@@ -503,7 +508,7 @@ const _private = {
             toggledItemId = model.at(0).getContents().getId();
         }
 
-        if (toggledItemId && self._options.multiSelectVisibility !== 'hidden') {
+        if (toggledItemId) {
             if (!self._selectionController) {
                 self._createSelectionController();
             }
@@ -889,7 +894,7 @@ const _private = {
         } else {
             let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
             if (self._pagingVisible) {
-                bottomScroll -= 32;
+                bottomScroll -= PAGING_PADDING;
             }
             return bottomScroll < triggerOffset * 1.3;
         }
@@ -2262,6 +2267,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         return getState(result);
                     }
                 });
+            } else  {
+                _private.createScrollController(self, newOptions);
             }
         });
 

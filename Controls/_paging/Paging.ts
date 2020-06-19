@@ -21,6 +21,7 @@ export interface IPagingOptions extends IControlOptions {
     selectedPage?: number;
     backwardEnabled: boolean;
     forwardEnabled: boolean;
+    contrastBackground: boolean;
 }
 
 /**

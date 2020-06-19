@@ -1,7 +1,7 @@
-import {Control, TemplateFunction} from "UI/Base";
-import * as Template from "wml!Controls-demo/grid/VirtualScroll/Default/Default";
-import {Memory} from "Types/source";
-import {generateData} from "../../../list_new/DemoHelpers/DataCatalog";
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/grid/VirtualScroll/Default/Default';
+import {Memory} from 'Types/source';
+import {generateData} from '../../../list_new/DemoHelpers/DataCatalog';
 import {getCountriesStats, countries} from '../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 

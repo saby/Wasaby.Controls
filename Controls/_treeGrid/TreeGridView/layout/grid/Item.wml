@@ -101,7 +101,7 @@
       <div attr:class="controls-Grid__row-ladder-cell {{!!itemData.isActive() ? ' controls-GridView__item_active_theme-' + _options.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + _options.theme}} js-controls-SwipeControl__actionsContainer"
            attr:key="{{itemData.key + stickyProperty + '_sticky_ladder'}}"
            attr:style="{{itemData.stickyLadder[stickyProperty].headingStyle}}">
-         
+
          <ws:if data="{{itemData.stickyProperties[index]}}">
             <ws:if data="{{index === 1}}">
                <div class="controls-Grid__row-additional_ladderWrapper" style="left: -125px;">
@@ -154,7 +154,7 @@
                                    {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
                                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
                                    {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-                                   controls-TreeGrid__row js-controls-SwipeControl__actionsContainer controls-Grid__cell_transform"
+                                   controls-TreeGrid__row js-controls-SwipeControl__actionsContainer controls-Grid_columnScroll__scrollable"
               attr:style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false).replace('controls-Grid__cell_fixed', '')}} {{itemData.getColspanForColumnScroll().scrollableColumns}}"></div>
       </div>
    </ws:if>
@@ -196,7 +196,8 @@
          <div></div>
       </ws:else>
    </ws:if>
-   <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{backgroundStyle}}"
+   <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
+   <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{itemData.style + '_sticked'}}"
                                  attr:class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
                                    {{ currentColumn.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}
                                    {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
@@ -216,7 +217,7 @@
    </ws:if>
 </ws:template>
 
-<ws:if data="{{itemData.isSticky}}">
+<ws:if data="{{itemData.isStickedMasterItem}}">
    <Controls.scroll:Group>
       <div class="controls-Grid__row {{itemData.calcCursorClasses(clickable, cursor)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}">
          <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->

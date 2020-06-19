@@ -1,3 +1,5 @@
+/**
+ * Переписать для нового контроллера, некоторые тесты можно брать отсюда
 define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], function(ColumnScroll, Entity, Clone) {
 
    'use strict';
@@ -1032,3 +1034,4 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       });
    });
 });
+*/

@@ -297,6 +297,9 @@ define([
                   ['p',
                      ['iframe', { src: 'data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==' }, 'base64 alert']
                   ],
+                  ['p',
+                     ['a', { href: 'tel:+78142332211', rel: 'nofollow' }, '+7(814)-233-22-11']
+                  ]
                ],
                goodHtml = '<div>' +
                   '<p></p>' +
@@ -306,6 +309,7 @@ define([
                   '<p><a>leading spaces</a></p>' +
                   '<p><a>upper and lower case</a></p>' +
                   '<p><iframe>base64 alert</iframe></p>' +
+                  '<p><a href="tel:+78142332211" rel="nofollow">+7(814)-233-22-11</a></p>' +
                   '</div>',
                checkHtml = decorator.Converter.jsonToHtml(json);
             equalsHtml(checkHtml, goodHtml);

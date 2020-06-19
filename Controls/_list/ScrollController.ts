@@ -54,6 +54,13 @@ interface IScrollTriggers {
     scrollObserver?: HTMLElement;
 }
 
+const SCROLL_TRIGGERS: Array<keyof IScrollTriggers> = [
+    "topVirtualScrollTrigger",
+    "bottomVirtualScrollTrigger",
+    "topLoadTrigger",
+    "bottomLoadTrigger",
+    "scrollObserver"
+];
 /**
  * Контейнер управляющий операциями скролла в списке.
  * @class Controls/_list/ScrollController/ScrollController
@@ -141,8 +148,8 @@ export default class ScrollController {
 
     afterMount(container: HTMLElement, triggers: IScrollTriggers): void {
         this._isMounted = true;
-        this._container = container;
-        this._triggers = triggers;
+        this._setContainer(container);
+        this._setTriggers(triggers);
         this._viewResize(this._container.offsetHeight, false);
         this.registerObserver();
         this._afterRenderHandler();
@@ -155,7 +162,7 @@ export default class ScrollController {
     update(options: IOptions): void {
         if (options.collection && this._options.collection !== options.collection) {
             this._initModelObserving(options);
-            if (options.virtualScrollConfig) {
+            if (!this._virtualScroll || options.virtualScrollConfig) {
                 this._initVirtualScroll(options);
             }
             this._options.collection = options.collection;
@@ -188,7 +195,9 @@ export default class ScrollController {
     }
 
     reset(): void {
-        clearTimeout(this._checkTriggerVisibilityTimeout);
+        if (this._checkTriggerVisibilityTimeout) {
+            clearTimeout(this._checkTriggerVisibilityTimeout);
+        }
         // TODO убрать проверку в https://online.sbis.ru/opendoc.html?guid=fb8a3901-bddf-4552-ae9a-ed0299d3e46f
         if (!this._options.collection.destroyed) {
             this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
@@ -201,7 +210,7 @@ export default class ScrollController {
     }
 
     viewResize(container: HTMLElement): void {
-        this._container = container;
+        this._setContainer(container);
         this._viewResize(this._container.offsetHeight);
         // TODO Совместимость необходимо удалить после переписывания baseControl
         this._notify('viewResize');
@@ -335,9 +344,12 @@ export default class ScrollController {
     }
 
     checkTriggerVisibilityWithTimeout(): void {
+        if (this._checkTriggerVisibilityTimeout) {
+            clearTimeout(this._checkTriggerVisibilityTimeout);
+        }
         this._checkTriggerVisibilityTimeout = setTimeout(() => {
             this._checkTriggerVisibility();
-            clearTimeout(this._checkTriggerVisibilityTimeout);
+            this._checkTriggerVisibilityTimeout = null;
         }, TRIGGER_VISIBILITY_DELAY);
     }
 
@@ -362,53 +374,57 @@ export default class ScrollController {
     }
 
     private _initModelObserving(options: IOptions): void {
-        this._subscribeToCollectionChange(options.collection, options.useNewModel);
+        if (options.collection) {
+            this._subscribeToCollectionChange(options.collection, options.useNewModel);
 
-        if (options.useNewModel) {
-            ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
+            if (options.useNewModel) {
+                ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
+            }
         }
     }
 
     private _initVirtualScroll(options: IOptions): void {
-        this._virtualScroll = new VirtualScroll(
-            options.virtualScrollConfig,
-            {
-                viewport: this._viewportHeight,
-                scroll: this._viewHeight,
-                trigger: this._triggerOffset
-            });
+        if (options.collection) {
+            this._virtualScroll = new VirtualScroll(
+                options.virtualScrollConfig,
+                {
+                    viewport: this._viewportHeight,
+                    scroll: this._viewHeight,
+                    trigger: this._triggerOffset
+                });
 
-        let itemsHeights: Partial<IItemsHeights>;
+            let itemsHeights: Partial<IItemsHeights>;
 
-        const initialIndex = typeof options.activeElement !== 'undefined' ?
-            options.collection.getIndexByKey(options.activeElement) : 0;
+            const initialIndex = typeof options.activeElement !== 'undefined' ?
+                options.collection.getIndexByKey(options.activeElement) : 0;
 
-        if (options?.virtualScrollConfig?.itemHeightProperty) {
-            this._virtualScroll.applyContainerHeightsData({
-                viewport: options.virtualScrollConfig.viewportHeight
-            });
+            if (options?.virtualScrollConfig?.itemHeightProperty) {
+                this._virtualScroll.applyContainerHeightsData({
+                    viewport: options.virtualScrollConfig.viewportHeight
+                });
 
-            itemsHeights = {
-                itemsHeights: []
-            };
+                itemsHeights = {
+                    itemsHeights: []
+                };
 
-            options.collection.each((item, index) => {
-                itemsHeights.itemsHeights[index] = item
-                    .getContents()
-                    .get(options.virtualScrollConfig.itemHeightProperty);
-            });
-        }
+                options.collection.each((item, index) => {
+                    itemsHeights.itemsHeights[index] = item
+                        .getContents()
+                        .get(options.virtualScrollConfig.itemHeightProperty);
+                });
+            }
 
-        const rangeShiftResult = this._virtualScroll
-            .resetRange(initialIndex, options.collection.getCount(), itemsHeights);
-        this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-        this._setCollectionIndices(options.collection, rangeShiftResult.range, true,
-            options.needScrollCalculation);
+            const rangeShiftResult = this._virtualScroll
+                .resetRange(initialIndex, options.collection.getCount(), itemsHeights);
+            this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
+            this._setCollectionIndices(options.collection, rangeShiftResult.range, true,
+                options.needScrollCalculation);
 
-        if (options.activeElement) {
-            this._restoreScrollResolve = () => {
-                this.scrollToItem(options.activeElement, false, true);
-            };
+            if (options.activeElement) {
+                this._restoreScrollResolve = () => {
+                    this.scrollToItem(options.activeElement, false, true);
+                };
+            }
         }
     }
 
@@ -755,6 +771,18 @@ export default class ScrollController {
                 );
                 break;
         }
+    }
+
+    private _setTriggers(triggers: IScrollTriggers) {
+        this._triggers = {};
+        SCROLL_TRIGGERS.forEach(name => {
+            this._triggers[name] = triggers[name];
+        });
+    }
+
+    private _setContainer(container: HTMLElement) {
+        let scrollContainer = container.getElementsByClassName('controls-ScrollController');
+        this._container = <HTMLElement>scrollContainer[0];
     }
 
     static getDefaultOptions(): Partial<IOptions> {
