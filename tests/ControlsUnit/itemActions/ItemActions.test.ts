@@ -729,6 +729,13 @@ describe('Controls/_itemActions/Controller', () => {
             assert.exists(calculatedChildren, 'Menu actions source haven\'t been set in template options');
             assert.equal(calculatedChildren.data[0].icon.indexOf('controls-itemActionsV__action_icon_theme'), -1, 'Css class \'controls-itemActionsV__action_icon_theme-\' should not be added to menu item');
         });
+
+        it('should set config.fittingMode.vertical as \'overflow\'', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.exists(config.fittingMode, 'Direction options were not set');
+            assert.equal(config.fittingMode.vertical, 'overflow');
+        });
     });
 
     // см. этот же тест в Collection.test.ts
