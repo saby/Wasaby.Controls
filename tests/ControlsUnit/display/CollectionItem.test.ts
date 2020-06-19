@@ -667,4 +667,30 @@ describe('Controls/_display/CollectionItem', () => {
             assert.isAbove(item.getVersion(), prevVersion);
         });
     });
+
+    describe('testing of ICollectionItemStyled styling methods', () => {
+        let item: CollectionItem<any>;
+
+        beforeEach(() => {
+            item = new CollectionItem();
+        });
+
+        // CSS класс для позиционирования опций записи. Если опции вне строки, то возвращает пустую строку
+        it('getItemActionPositionClasses() should return empty string when itemActionsPosition === "outside"', () => {
+            const result = item.getItemActionPositionClasses('outside', 'controls-itemActionsV_position_bottomRight', {top: 's', bottom: 's'}, 'default');
+            assert.equal(result, ' ');
+        });
+
+        // CSS класс для позиционирования опций записи. Если itemActionsClass не задан, возвращает классы для позиции itemPadding top
+        it('getItemActionPositionClasses() should return classes for bottom-right positioning when no itemActionClass is set', () => {
+            const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 's'}, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight controls-itemActionsV_padding-bottom_default_theme-default ');
+        });
+
+        // CSS класс для позиционирования опций записи. Возвращает классы, соответствующие заданным параметрам itemActionsClass и itemPadding
+        it('getItemActionPositionClasses() should return classes depending on itemActionClass value and itemPadding', () => {
+            const result = item.getItemActionPositionClasses('inside', 'controls-itemActionsV_position_topRight', {top: 'null', bottom: 's'}, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_topRight controls-itemActionsV_padding-top_null_theme-default ');
+        });
+    })
 });

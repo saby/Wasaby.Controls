@@ -18,9 +18,7 @@
                                 showedActions="{{swipeConfig.twoColumnsActions}}"
                                 swipeConfig="{{swipeConfig}}"
                                 actionAlignment="{{actionAlignment}}"
-                                actionCaptionPosition="{{actionCaptionPosition}}"
-                                needSeparator="{{needSeparator}}"
-                                needTitle="{{needTitle}}"/>
+                                actionCaptionPosition="{{actionCaptionPosition}}"/>
                     </ws:if>
                     <ws:else>
                         <ws:partial
@@ -29,11 +27,8 @@
                                 showedActions="{{itemData.getActions().showed}}"
                                 swipeConfig="{{swipeConfig}}"
                                 actionAlignment="{{actionAlignment}}"
-                                actionCaptionPosition="{{actionCaptionPosition}}"
-                                needSeparator="{{needSeparator}}"
-                                needTitle="{{needTitle}}"/>
+                                actionCaptionPosition="{{actionCaptionPosition}}"/>
                     </ws:else>
-
                 </div>
             </div>
         </div>

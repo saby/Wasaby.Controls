@@ -1966,27 +1966,6 @@ const _private = {
     },
 
     /**
-     * Этот метод необходим для гарантированной предзагрузки шаблонов ItemActions до
-     * первой инициализаци ItemActions
-     * @param self
-     * @param options
-     */
-    resolveItemActionTemplates(self, options): Promise<void> {
-        if (!self._itemActionsTemplate && !self._swipeTemplate) {
-            if (options.useNewModel) {
-                return import('Controls/listRender').then((listRender) => {
-                    self._itemActionsTemplate = listRender.itemActionsTemplate;
-                    self._swipeTemplate = listRender.swipeTemplate;
-                });
-            } else {
-                self._itemActionsTemplate = itemActionsTemplate;
-                self._swipeTemplate = swipeTemplate;
-            }
-        }
-        return Promise.resolve();
-    },
-
-    /**
      * Необходимо передавать опции для случая, когда в результате изменения модели меняются параметры
      * для показа ItemActions и их нужно поменять до отрисовки.
      * @param self
@@ -2017,31 +1996,29 @@ const _private = {
             };
         }
         // Гарантированно инициализируем шаблоны, если это ещё не произошло
-        _private.resolveItemActionTemplates(self, options).then(() => {
-            const itemActionsChangeResult = self._itemActionsController.update({
-                collection: self._listViewModel,
-                itemActions: options.itemActions,
-                itemActionsProperty: options.itemActionsProperty,
-                visibilityCallback: options.itemActionVisibilityCallback,
-                itemActionsPosition: options.itemActionsPosition,
-                style: options.style,
-                theme: options.theme,
-                actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition,
-                itemActionsClass: options.itemActionsClass,
-                iconSize: editingConfig ? 's' : 'm',
-                editingToolbarVisible: editingConfig?.toolbarVisibility,
-                editArrowAction,
-                editArrowVisibilityCallback: options.editArrowVisibilityCallback,
-                contextMenuConfig: options.contextMenuConfig
-            });
-            if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
-                itemActionsChangeResult.forEach((recordKey: number | string) => {
-                    self._listViewModel.resetCachedItemData(recordKey);
-                });
-                self._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
-            }
+        const itemActionsChangeResult = self._itemActionsController.update({
+            collection: self._listViewModel,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style: options.style,
+            theme: options.theme,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
+            iconSize: editingConfig ? 's' : 'm',
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editArrowAction,
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback,
+            contextMenuConfig: options.contextMenuConfig
         });
+        if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
+            itemActionsChangeResult.forEach((recordKey: number | string) => {
+                self._listViewModel.resetCachedItemData(recordKey);
+            });
+            self._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
+        }
     },
 
     /**
@@ -2173,10 +2150,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemActionsMenuId: null,
 
     // Шаблон операций с записью
-    _itemActionsTemplate: null,
+    _itemActionsTemplate: itemActionsTemplate,
 
     // Шаблон операций с записью для swipe
-    _swipeTemplate: null,
+    _swipeTemplate: swipeTemplate,
 
     _markerController: null,
     _markedKey: null,

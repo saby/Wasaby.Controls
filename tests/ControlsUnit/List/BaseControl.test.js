@@ -6162,37 +6162,5 @@ define([
             });
          });
       });
-
-      // Инициализация шаблонов под isNewModel должна гарантированно происходить до того, как произойдёт инициализация ItemActions
-      it('should init templates for useNewModel before any item actions initialization', async () => {
-         const cfg = {
-            editingConfig: {
-               toolbarVisibility: true
-            },
-            useNewModel: true,
-            itemActions: [
-               {
-                  id: 1,
-                  showType: 0,
-                  'parent@': true
-               },
-               {
-                  id: 2,
-                  showType: 2,
-                  parent: 1
-               }
-            ]
-         };
-         const sandbox = sinon.createSandbox();
-         const baseControl = new lists.BaseControl(cfg);
-         baseControl.saveOptions(cfg);
-         await baseControl._beforeMount(cfg);
-         baseControl._container = {getElementsByClassName: () => ([{clientHeight: 0}])};
-         sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
-            assert.equal(baseControl._itemActionsTemplate, listRender.itemActionsTemplate);
-         });
-         await baseControl._afterMount();
-         sandbox.restore();
-      });
    });
 });
