@@ -122,7 +122,7 @@ var BaseLookupView = Control.extend({
         }
 
         if (!this._isInputActive(newOptions)) {
-            this._suggestState = false;
+            this.closeSuggest();
         }
     },
 
@@ -201,12 +201,12 @@ var BaseLookupView = Control.extend({
 
     _deactivated: function(): void {
         this._active = false;
-        this._suggestState = false;
+        this.closeSuggest();
     },
 
     _suggestStateChanged(event: SyntheticEvent, state: boolean): void {
         if (this._infoboxOpened || !this._isInputActive(this._options) || !state) {
-            this._suggestState = false;
+            this.closeSuggest();
         }
     },
 
@@ -228,7 +228,7 @@ var BaseLookupView = Control.extend({
 
     _openInfoBox: function (event, config) {
         config.width = this._getContainer().offsetWidth;
-        this._suggestState = false;
+        this.closeSuggest();
         this._infoboxOpened = true;
         this._notify('openInfoBox', [config]);
     },
@@ -239,7 +239,7 @@ var BaseLookupView = Control.extend({
     },
 
     _onClickShowSelector: function (event) {
-        this._suggestState = false;
+        this.closeSuggest();
         this._notify('showSelector');
     },
 
@@ -251,7 +251,7 @@ var BaseLookupView = Control.extend({
     },
 
     _itemClick: function (event, item) {
-        this._suggestState = false;
+        this.closeSuggest();
         this._notify('itemClick', [item]);
     },
 
@@ -304,6 +304,10 @@ var BaseLookupView = Control.extend({
         if (!options.hasOwnProperty('value')) {
             this._inputValue = value;
         }
+    },
+
+    closeSuggest() {
+        this._suggestState = false;
     }
 });
 
