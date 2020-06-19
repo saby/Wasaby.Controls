@@ -609,7 +609,7 @@ var CompoundArea = CompoundContainer.extend([
          return this.save(arg);
       } if (commandName === 'rebuildTitleBar') {
          return this._rebuildTitleBar(arg);
-      } if (commandName === 'delete') {
+      } if (this._options._mode === 'recordFloatArea' && commandName === 'delete') {
          return this.delRecord(arg);
       } if (commandName === 'print') {
          return this.print(arg);

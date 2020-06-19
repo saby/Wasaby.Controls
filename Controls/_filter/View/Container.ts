@@ -71,12 +71,14 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
 
     _getSourceByHistory(source, historyItems) {
         let result;
-        if (typeof source === 'function') {
-            result = source(historyItems);
-        } else if (historyItems) {
-            result = mergeSource(this._cloneItems(source), historyItems);
-        } else {
-            result = this._cloneItems(source);
+        if (source) {
+            if (typeof source === 'function') {
+                result = source(historyItems);
+            } else if (historyItems) {
+                result = mergeSource(this._cloneItems(source), historyItems);
+            } else {
+                result = this._cloneItems(source);
+            }
         }
         return result;
     },

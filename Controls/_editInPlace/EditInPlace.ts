@@ -672,14 +672,16 @@ export default class EditInPlace {
 
     updateEditingData(options: IEditingOptions): void {
         this._updateOptions(options);
-        this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
-        if (this._editingItemData && this._options.listViewModel.getEditingItemData() !== this._editingItemData) {
-            this._setEditingItemData(this._editingItemData.item);
-        }
+        if (!this._options.readOnly) {
+            this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
+            if (this._editingItemData && this._options.listViewModel.getEditingItemData() !== this._editingItemData) {
+                this._setEditingItemData(this._editingItemData.item);
+            }
 
-        if (this._pendingInputRenderState === PendingInputRenderState.PendingRender) {
-            // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
-            this._pendingInputRenderState = PendingInputRenderState.Rendering;
+            if (this._pendingInputRenderState === PendingInputRenderState.PendingRender) {
+                // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
+                this._pendingInputRenderState = PendingInputRenderState.Rendering;
+            }
         }
     }
 
@@ -763,8 +765,8 @@ export default class EditInPlace {
         const editingConfig = this._options.editingConfig;
         const useNewModel =  this._options.useNewModel;
         if (!item) {
+            listViewModel.setEditing(false);
             if (useNewModel) {
-                listViewModel.setEditing(false);
                 displayLib.EditInPlaceController.endEdit(listViewModel);
             } else {
                 listViewModel._setEditingItemData(null);
@@ -804,8 +806,8 @@ export default class EditInPlace {
             }
         }
 
+        listViewModel.setEditing(true);
         if (useNewModel) {
-            listViewModel.setEditing(true);
             displayLib.EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
             this._editingItemData = listViewModel.getItemDataByItem(editingItemProjection);

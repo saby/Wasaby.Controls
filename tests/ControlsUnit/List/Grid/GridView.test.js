@@ -334,27 +334,24 @@ define(['Controls/grid'], function(gridMod) {
             },
             gridView = new gridMod.GridView(cfg),
             columnScrollResizeHandlerCalled = false,
-            columnScrollUpdateShadowStyleCalled = false,
+            updateShadowStyleCalled = false,
             controlResizeNotified = false;
-         gridView._children = {
-            columnScroll:{
-               _resizeHandler: function() {
-                  columnScrollResizeHandlerCalled = true;
-               },
-               updateShadowStyle() {
-                  columnScrollUpdateShadowStyleCalled = true;
-               }
+         gridView._columnScrollController = {
+            updateSizes(c) {
+               columnScrollResizeHandlerCalled = true;
+               c({
+                  contentSizeForScrollBar: 100,
+                  scrollWidth: 80
+               });
             }
          };
-         gridView._notify = function(e) {
-            if (e === 'controlResize') {
-               controlResizeNotified = true;
-            }
+         gridView._updateColumnScrollData = () => {
+            updateShadowStyleCalled = true;
          };
+
          gridView.resizeNotifyOnListChanged();
-         assert.isTrue(controlResizeNotified);
          assert.isTrue(columnScrollResizeHandlerCalled);
-         assert.isTrue(columnScrollUpdateShadowStyleCalled);
+         assert.isTrue(updateShadowStyleCalled);
       });
 
       it('itemClick sends right args', function() {

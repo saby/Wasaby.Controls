@@ -19,23 +19,27 @@ define('Controls-demo/List/Grid/ColumnScroll', [
          {
             displayProperty: 'name',
             width: 'minmax(600px, 1fr)',
+            compatibleWidth: '600px',
             template: 'wml!Controls-demo/List/Grid/DemoName'
          },
          {
             displayProperty: 'price',
             width: 'auto',
+            compatibleWidth: '51px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
          },
          {
             displayProperty: 'balance',
             width: 'auto',
+            compatibleWidth: '69px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoBalancePrice'
          },
          {
             displayProperty: 'costPrice',
             width: 'auto',
+            compatibleWidth: '78px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice',
             resultTemplate: 'wml!Controls-demo/List/Grid/Results',
