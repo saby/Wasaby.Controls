@@ -1,33 +1,40 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_grid/resources/DragScroll/DragScroll';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './ColumnScroll';
 
-export interface IDragScrollOptions extends IControlOptions {
-    scrollLength: number;
-    scrollPosition: number;
+export interface IDragScrollParams {
     dragNDropDelay?: number;
     startDragNDropCallback?(): void;
+    onOverlayShown?(): void;
+    onOverlayHide?(): void;
 }
 
-type TPoint = {
-    x: number;
-    y: number;
+export const JS_SELECTORS = {
+    CONTENT: 'controls-Grid__DragScroll__content',
+    CONTENT_GRABBING: 'controls-Grid__DragScroll__content_grabbing',
+    NOT_DRAG_SCROLLABLE: 'js-controls-ColumnScroll__notDraggable',
+    OVERLAY: 'controls-Grid__DragScroll__overlay',
+    OVERLAY_ACTIVATED: 'controls-Grid__DragScroll__overlay_activated',
+    OVERLAY_DEACTIVATED: 'controls-Grid__DragScroll__overlay_deactivated'
 };
+
+// TODO: В будущем этот селектор должен импортироваться из DND. Это селектор не DragScroll'a
+const DRAG_N_DROP_NOT_DRAGGABLE = 'controls-DragNDrop__notDraggable';
 
 const SCROLL_SPEED_BY_DRAG = 0.75;
 const DISTANCE_TO_START_DRAG_N_DROP = 3;
 const START_ITEMS_DRAG_N_DROP_DELAY = 250;
 
-// TODO: В будущем этот селектор должен импортироваться из DND. Это селектор не DragScroll'a
-const DRAG_N_DROP_NOT_DRAGGABLE = 'controls-DragNDrop__notDraggable';
+interface TPoint {
+    x: number;
+    y: number;
+}
 
-export const JS_SELECTORS = {
-    NOT_DRAG_SCROLLABLE: 'js-controls-ColumnScroll__notDraggable'
-};
-
-export class DragScroll extends Control<IDragScrollOptions> {
-    protected _template: TemplateFunction = template;
-    private _dragNDropDelay: number;
+export class DragScroll {
+    private _startDragNDropCallback: IDragScrollParams['startDragNDropCallback'];
+    private _scrollLength: number = 0;
+    private _scrollPosition: number = 0;
+    private _onOverlayShownCallback: IDragScrollParams['onOverlayShown'];
+    private _onOverlayHideCallback: IDragScrollParams['onOverlayHide'];
 
     private _isMouseDown: boolean = false;
     private _mouseDownTarget?: HTMLElement;
@@ -40,18 +47,26 @@ export class DragScroll extends Control<IDragScrollOptions> {
 
     private _startItemsDragNDropTimer: number;
 
-    protected _beforeMount(options: IDragScrollOptions): void {
-        this._dragNDropDelay = this._getDragNDropDelay(options);
+    constructor(params: IDragScrollParams) {
+        this._startDragNDropCallback = params.startDragNDropCallback;
+        this._onOverlayShownCallback = params.onOverlayShown;
+        this._onOverlayHideCallback = params.onOverlayHide;
     }
 
-    protected _beforeUpdate(options: IDragScrollOptions): void {
-        if (this._options.dragNDropDelay !== options.dragNDropDelay) {
-            this._dragNDropDelay = this._getDragNDropDelay(options);
-        }
+    setStartDragNDropCallback(newStartDragNDropCallback: IDragScrollParams['startDragNDropCallback']): void {
+        this._startDragNDropCallback = newStartDragNDropCallback;
     }
 
-    protected _beforeUnmount(): void {
-        this._manageDragScrollStop();
+    setScrollPosition(newScrollPosition: number): void {
+        this._scrollPosition = newScrollPosition;
+    }
+
+    updateScrollData(params: {
+        scrollLength: number;
+        scrollPosition: number;
+    }): void {
+        this._scrollLength = params.scrollLength;
+        this._scrollPosition = params.scrollPosition;
     }
 
     /**
@@ -60,7 +75,7 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @private
      */
     private _manageDragScrollStart(startPosition: TPoint, target: HTMLElement): boolean {
-        const hasDragNDrop = !!this._options.startDragNDropCallback;
+        const hasDragNDrop = !!this._startDragNDropCallback;
         const isTargetDraggable = !target.closest(`.${DRAG_N_DROP_NOT_DRAGGABLE}`);
 
         // Если за данный элемент нельзя скролить, то при возможности сразу начинаем DragNDrop.
@@ -73,7 +88,7 @@ export class DragScroll extends Control<IDragScrollOptions> {
 
         this._isMouseDown = true;
         this._startMousePosition = startPosition;
-        this._startScrollPosition = this._options.scrollPosition;
+        this._startScrollPosition = this._scrollPosition;
         this._maxMouseMoveDistance = {x: 0, y: 0};
         this._mouseDownTarget = target;
 
@@ -91,7 +106,7 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @param {TPoint} newMousePosition Координаты текущей позиции указателя.
      * @private
      */
-    private _manageDragScrollMove(newMousePosition: TPoint): void {
+    private _manageDragScrollMove(newMousePosition: TPoint): number | null {
         // Расстояние, на которое был перемещен указатель мыши с момента нажатия клавиши ПКМ.
         const mouseMoveDistance: TPoint = {
             x: newMousePosition.x - this._startMousePosition.x,
@@ -107,14 +122,14 @@ export class DragScroll extends Control<IDragScrollOptions> {
         // Если начали водить мышью вертикально, то начинаем drag'n'drop (если он включен в списке)
         if (this._shouldInitDragNDropByVerticalMovement()) {
             this._initDragNDrop();
-            return;
+            return null;
         }
 
         // Если активно начали водить мышью по горизонтали, то считаем, что будет drag scrolling.
         // Сбрасываем таймер отложенного запуска Drag'n'drop'а записей, при скролле он не должен возникать.
         // Показывыем overlay во весь экран, чтобы можно было водить мышкой где угодно на экране.
         // Если в списке нет Drag'n'drop'а записей, то сразу начинаем скроллирование при движении мышки.
-        const distanceToStartDragNDrop = this._options.startDragNDropCallback ? DISTANCE_TO_START_DRAG_N_DROP : 0;
+        const distanceToStartDragNDrop = this._startDragNDropCallback ? DISTANCE_TO_START_DRAG_N_DROP : 0;
         if (this._maxMouseMoveDistance.x > distanceToStartDragNDrop) {
             if (!this._isOverlayShown) {
                 this._showOverlay();
@@ -124,13 +139,16 @@ export class DragScroll extends Control<IDragScrollOptions> {
         // Новая позиция скролла лежит в диапазоне от 0 до максимально возможной прокрутке в списке.
         const newScrollPosition = Math.min(
             Math.max(this._startScrollPosition - Math.floor(SCROLL_SPEED_BY_DRAG * mouseMoveDistance.x), 0),
-            this._options.scrollLength
+            this._scrollLength
         );
 
         // Не надо стрелять событием, если позиция скролла не поменялась.
         if (this._currentScrollPosition !== newScrollPosition) {
             this._currentScrollPosition = newScrollPosition;
-            this._notify('dragScrolling', [newScrollPosition], { bubbling: false });
+            this._scrollPosition = newScrollPosition;
+            return newScrollPosition;
+        } else {
+            return null;
         }
     }
 
@@ -141,6 +159,9 @@ export class DragScroll extends Control<IDragScrollOptions> {
     private _manageDragScrollStop(): void {
         this._clearDragNDropTimer();
         this._isMouseDown = false;
+        if (this._isOverlayShown && this._onOverlayHideCallback) {
+            this._onOverlayHideCallback();
+        }
         this._isOverlayShown = false;
         this._mouseDownTarget = null;
         this._startMousePosition = null;
@@ -157,20 +178,10 @@ export class DragScroll extends Control<IDragScrollOptions> {
      */
     private _showOverlay(): void {
         this._isOverlayShown = true;
-        this._clearDragNDropTimer();
-    }
-
-    /**
-     * Сбросить таймер отложенного старта Drag'N'Drop'а записей.
-     * Происходит например, если указатель увели достаточно далеко или Drag'N'Drop записей уже начался из-за
-     * перемещения указателя вертикально.
-     * @private
-     */
-    private _clearDragNDropTimer(): void {
-        if (this._startItemsDragNDropTimer) {
-            clearTimeout(this._startItemsDragNDropTimer);
-            this._startItemsDragNDropTimer = null;
+        if (this._onOverlayShownCallback) {
+            this._onOverlayShownCallback();
         }
+        this._clearDragNDropTimer();
     }
 
     /**
@@ -187,12 +198,21 @@ export class DragScroll extends Control<IDragScrollOptions> {
      */
     private _shouldInitDragNDropByVerticalMovement(): boolean {
         // TODO: Убрать селектор .controls-Grid__row, логически о нем знать здесь мы не можем
-        return !!this._options.startDragNDropCallback &&
+        return !!this._startDragNDropCallback &&
             !this._isOverlayShown &&
             typeof this._startItemsDragNDropTimer === 'number' &&
             this._maxMouseMoveDistance.x < DISTANCE_TO_START_DRAG_N_DROP &&
             this._maxMouseMoveDistance.y > DISTANCE_TO_START_DRAG_N_DROP &&
             !!this._mouseDownTarget.closest('.controls-Grid__row');
+    }
+
+    /**
+     * Запускает Drag'N'Drop записей. Скроллирование колонок прекращается.
+     * @private
+     */
+    private _initDragNDrop(): void {
+        this._manageDragScrollStop();
+        this._startDragNDropCallback();
     }
 
     /**
@@ -210,16 +230,7 @@ export class DragScroll extends Control<IDragScrollOptions> {
             if (this._maxMouseMoveDistance.x < DISTANCE_TO_START_DRAG_N_DROP) {
                 this._initDragNDrop();
             }
-        }, this._dragNDropDelay);
-    }
-
-    /**
-     * Запускает Drag'N'Drop записей. Скроллирование колонок прекращается.
-     * @private
-     */
-    private _initDragNDrop(): void {
-        this._manageDragScrollStop();
-        this._options.startDragNDropCallback();
+        }, START_ITEMS_DRAG_N_DROP_DELAY);
     }
 
     /**
@@ -235,22 +246,22 @@ export class DragScroll extends Control<IDragScrollOptions> {
         * TODO: https://online.sbis.ru/opendoc.html?guid=f5101ade-8716-40cb-a0be-3701b212b2fa
         * После закрытия везде, где вешается controls-Grid__cell_fixed начать вешать еще и
         * DragScroll.JS_SELECTORS.NOT_DRAG_SCROLLABLE. Отсюда controls-Grid__cell_fixed удалить.
+        * COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT
         * */
         return !target.closest(`.${JS_SELECTORS.NOT_DRAG_SCROLLABLE}`) && !target.closest('.controls-Grid__cell_fixed');
     }
 
     /**
-     * Возвращает значение задержки в течении которой может начаться Drag'N'Drop записей.
-     * Если за это время указатель не был перемещен достаточно далеко, должен начаться Drag'N'Drop записей.
-     *
-     * @param {IDragScrollOptions} options Опции контрола.
-     * @see START_ITEMS_DRAG_N_DROP_DELAY
-     * @see DISTANCE_TO_START_DRAG_N_DROP
-     * @return {Number} Задержка в течении которой может начаться Drag'N'Drop записей
+     * Сбросить таймер отложенного старта Drag'N'Drop'а записей.
+     * Происходит например, если указатель увели достаточно далеко или Drag'N'Drop записей уже начался из-за
+     * перемещения указателя вертикально.
      * @private
      */
-    private _getDragNDropDelay(options: IDragScrollOptions): number {
-        return typeof options.dragNDropDelay === 'number' ? options.dragNDropDelay : START_ITEMS_DRAG_N_DROP_DELAY;
+    private _clearDragNDropTimer(): void {
+        if (this._startItemsDragNDropTimer) {
+            clearTimeout(this._startItemsDragNDropTimer);
+            this._startItemsDragNDropTimer = null;
+        }
     }
 
     /**
@@ -276,58 +287,39 @@ export class DragScroll extends Control<IDragScrollOptions> {
         }
     }
 
-    //#region View event handlers
+    destroy(): void {
+        this._manageDragScrollStop();
+    }
+
+    //#region View mouse event handlers
 
     /**
      * Обработчик события mousedown над таблицей.
      * @param {SyntheticEvent} e Дескриптор события mousedown.
-     * @protected
      */
-    protected onViewMouseDown(e: SyntheticEvent<MouseEvent>): void {
+    onViewMouseDown(e: SyntheticEvent<MouseEvent>): boolean {
+        let isGrabStarted = false;
         // Только по ПКМ. Если началось скроллирование перетаскиванием, нужно убрать предыдущее выделение и
         // запретить выделение в процессе скроллирования.
-        if (validateEvent(e) && this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement)) {
-            e.preventDefault();
-            this._clearSelection();
+        if (validateEvent(e)) {
+            isGrabStarted = this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement);
+            if (isGrabStarted) {
+                e.preventDefault();
+                this._clearSelection();
+            }
         }
-    }
-
-    /**
-     * Обработчик события touchstart над таблицей.
-     * @param {SyntheticEvent} e Дескриптор события touchstart.
-     * @protected
-     */
-    protected onViewTouchStart(e: SyntheticEvent<TouchEvent>): void {
-        // Обрабатываем только один тач. Если началось скроллирование перетаскиванием, нужно убрать предыдущее
-        // выделение и запретить выделение в процессе скроллирования.
-        if (validateEvent(e) && this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement)) {
-            e.preventDefault();
-            this._clearSelection();
-        } else {
-            this._manageDragScrollStop();
-        }
+        return isGrabStarted;
     }
 
     /**
      * Обработчик события mousemove над таблицей.
      * @param {SyntheticEvent} e Дескриптор события mousemove.
-     * @protected
      */
-    protected onViewMouseMove(e: SyntheticEvent<MouseEvent>): void {
+    onViewMouseMove(e: SyntheticEvent<MouseEvent>): number | null {
         if (this._isMouseDown) {
-            this._manageDragScrollMove(getCursorPosition(e));
+            return this._manageDragScrollMove(getCursorPosition(e));
         }
-    }
-
-    /**
-     * Обработчик события touchmove над таблицей.
-     * @param {SyntheticEvent} e Дескриптор события touchmove.
-     * @protected
-     */
-    protected onViewTouchMove(e: SyntheticEvent<TouchEvent>): void {
-        if (this._isMouseDown) {
-            this._manageDragScrollMove(getCursorPosition(e));
-        }
+        return null;
     }
 
     /**
@@ -339,13 +331,44 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @see START_ITEMS_DRAG_N_DROP_DELAY
      * @see DISTANCE_TO_START_DRAG_N_DROP
      * @param {SyntheticEvent} e Дескриптор события mouseup.
-     * @protected
      */
-    protected onViewMouseUp(e: SyntheticEvent<MouseEvent>): void {
-        // Чтобы лишний раз не срабатывало, но не понятно, может ли чломаться что то. Если да, то ошибка скорее
-        // всего не в этом, а в том почему мы вообще попали в onViewMouseUp(не был показан оверлэй)
+    onViewMouseUp(e: SyntheticEvent<MouseEvent>): void {
         if (this._isMouseDown) {
             this._manageDragScrollStop();
+        }
+    }
+
+    //#endregion
+
+    //#region View touch event handlers
+
+    /**
+     * Обработчик события touchstart над таблицей.
+     * @param {SyntheticEvent} e Дескриптор события touchstart.
+     */
+    onViewTouchStart(e: SyntheticEvent<TouchEvent>): boolean {
+        let isGrabStarted = false;
+        // Обрабатываем только один тач. Если началось скроллирование перетаскиванием, нужно убрать предыдущее
+        // выделение и запретить выделение в процессе скроллирования.
+        if (validateEvent(e)) {
+            isGrabStarted = this._manageDragScrollStart(getCursorPosition(e), e.target as HTMLElement);
+            if (isGrabStarted) {
+                e.preventDefault();
+                this._clearSelection();
+            }
+        } else {
+            this._manageDragScrollStop();
+        }
+        return isGrabStarted;
+    }
+
+    /**
+     * Обработчик события touchmove над таблицей.
+     * @param {SyntheticEvent} e Дескриптор события touchmove.
+     */
+    onViewTouchMove(e: SyntheticEvent<TouchEvent>): void {
+        if (this._isMouseDown) {
+            this._manageDragScrollMove(getCursorPosition(e));
         }
     }
 
@@ -358,9 +381,8 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * @see START_ITEMS_DRAG_N_DROP_DELAY
      * @see DISTANCE_TO_START_DRAG_N_DROP
      * @param {SyntheticEvent} e Дескриптор события touchend.
-     * @protected
      */
-    protected onViewTouchEnd(e: SyntheticEvent<TouchEvent>): void {
+    onViewTouchEnd(e: SyntheticEvent<TouchEvent>): void {
         // Чтобы лишний раз не срабатывало, но не понятно, может ли чломаться что то. Если да, то ошибка скорее
         // всего не в этом, а в том почему мы вообще попали в onViewMouseUp(не был показан оверлэй)
         if (this._isMouseDown) {
@@ -370,49 +392,26 @@ export class DragScroll extends Control<IDragScrollOptions> {
 
     //#endregion
 
-    //#region Overlay event handlers
+    //#region Overlay mouse event handlers
 
     /**
      * Обработчик события mousemove над overlay.
      * Происходит при скроллировании колонок мышью.
      * @param {SyntheticEvent} e Дескриптор события mousemove.
-     * @protected
      */
-    protected _onOverlayMouseMove(e: SyntheticEvent<MouseEvent>): void {
+    onOverlayMouseMove(e: SyntheticEvent<MouseEvent>): number | null {
         if (this._isMouseDown) {
-            this._manageDragScrollMove(getCursorPosition(e));
+            return this._manageDragScrollMove(getCursorPosition(e));
         }
-    }
-
-    /**
-     * Обработчик события touchmove над overlay.
-     * Происходит при скроллировании колонок через touch.
-     * @param {SyntheticEvent} e Дескриптор события touchmove.
-     * @protected
-     */
-    protected _onOverlayTouchMove(e: SyntheticEvent<TouchEvent>): void {
-        if (this._isMouseDown) {
-            this._manageDragScrollMove(getCursorPosition(e));
-        }
+        return null;
     }
 
     /**
      * Обработчик события mouseup над overlay.
      * Происходит при завершении скроллирования колонок мышью.
      * @param {SyntheticEvent} e Дескриптор события mouseup.
-     * @protected
      */
-    protected _onOverlayMouseUp(e: SyntheticEvent<MouseEvent>): void {
-        this._manageDragScrollStop();
-    }
-
-    /**
-     * Обработчик события touchend над overlay.
-     * Происходит при завершении скроллирования колонок через touch, прекращении touch.
-     * @param {SyntheticEvent} e Дескриптор события touchend.
-     * @protected
-     */
-    protected _onOverlayTouchEnd(e: SyntheticEvent<TouchEvent>): void {
+    onOverlayMouseUp(e: SyntheticEvent<MouseEvent>): void {
         this._manageDragScrollStop();
     }
 
@@ -420,13 +419,34 @@ export class DragScroll extends Control<IDragScrollOptions> {
      * Обработчик события mouseleave над overlay.
      * Происходит, если при запущенном скроллировании колок указатель мыши был уведен за пределы окна(т.к. overlay растянут на все окно).
      * @param {SyntheticEvent} e Дескриптор события touchend.
-     * @protected
      */
-    protected _onOverlayMouseLeave(e: SyntheticEvent<TouchEvent>): void {
+    onOverlayMouseLeave(e: SyntheticEvent<TouchEvent>): void {
         this._manageDragScrollStop();
     }
 
-    static _styles: string[] = ['Controls/_grid/resources/DragScroll/DragScroll'];
+    //#endregion
+
+    //#region Overlay touch event handlers
+
+    /**
+     * Обработчик события touchmove над overlay.
+     * Происходит при скроллировании колонок через touch.
+     * @param {SyntheticEvent} e Дескриптор события touchmove.
+     */
+    onOverlayTouchMove(e: SyntheticEvent<TouchEvent>): void {
+        if (this._isMouseDown) {
+            this._manageDragScrollMove(getCursorPosition(e));
+        }
+    }
+
+    /**
+     * Обработчик события touchend над overlay.
+     * Происходит при завершении скроллирования колонок через touch, прекращении touch.
+     * @param {SyntheticEvent} e Дескриптор события touchend.
+     */
+    onOverlayTouchEnd(e: SyntheticEvent<TouchEvent>): void {
+        this._manageDragScrollStop();
+    }
 
     //#endregion
 }
@@ -454,5 +474,3 @@ function validateEvent(e: SyntheticEvent<MouseEvent | TouchEvent>): boolean {
         return (e.nativeEvent as MouseEvent).buttons === 1;
     }
 }
-
-export default DragScroll;
