@@ -543,6 +543,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     private _createHandler(record: Model): Model {
         this._updateIsNewRecord(true);
+        this._setRecord(record);
         this._wasCreated = true;
         this._forceUpdate();
         return record;
