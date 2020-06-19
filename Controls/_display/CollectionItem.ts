@@ -452,11 +452,11 @@ export default class CollectionItem<T> extends mixin<
      * @param theme
      */
     getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
-        if (itemActionsPosition === 'outside') {
-            return ' ';
-        }
         const classes = itemActionsClass || ITEMACTIONS_POSITION_CLASSES.bottomRight;
-        const result: string[] = [classes];
+        const result: string[] = [];
+        if (itemActionsPosition !== 'outside') {
+            result.push(classes);
+        }
         const themedPositionClassCompile = (position) => (
             `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
         );
