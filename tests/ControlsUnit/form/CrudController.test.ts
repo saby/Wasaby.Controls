@@ -45,9 +45,11 @@ describe('Controls/form:CrudController', () => {
             const actual = crud.create();
 
             sinon.assert.calledWith(formController._notify, 'registerPending');
-            actual.finally(() => {
+            actual.then(() => {
                 sinon.assert.calledWith(formController._notify, 'createSuccessed');
                 done();
+            }).catch(() => {
+                done('should not go into the Promise.catch handler');
             });
         });
         it('Fail', (done) => {
@@ -57,7 +59,10 @@ describe('Controls/form:CrudController', () => {
             const actual = crud.create();
 
             sinon.assert.calledWith(formController._notify, 'registerPending');
-            actual.finally(() => {
+
+            actual.then(() => {
+                done('should not go into the Promise.then handler');
+            }).catch(() => {
                 sinon.assert.calledWith(formController._notify, 'createFailed');
                 done();
             });
@@ -72,9 +77,11 @@ describe('Controls/form:CrudController', () => {
             const actual = crud.update(record);
 
             assert.isTrue(stubNotify.calledWith('registerPending'));
-            actual.finally(() => {
+            actual.then(() => {
                 assert.isTrue(stubNotify.calledWith('updateSuccessed'));
                 done();
+            }).catch(() => {
+                done('should not go into the Promise.catch handler');
             });
 
             record.set<'title'>('title', 'test');
@@ -88,7 +95,10 @@ describe('Controls/form:CrudController', () => {
             const actual = crud.update(record);
 
             assert.isTrue(stubNotify.calledWith('registerPending'));
-            actual.finally(() => {
+
+            actual.then(() => {
+                done('should not go into the Promise.then handler');
+            }).catch(() => {
                 assert.isTrue(stubNotify.calledWith('updateFailed'));
                 done();
             });
@@ -109,9 +119,11 @@ describe('Controls/form:CrudController', () => {
             const actual = crud.delete(record);
 
             assert.isTrue(stubNotify.calledWith('registerPending'));
-            actual.finally(() => {
+            actual.then(() => {
                 assert.isTrue(stubNotify.calledWith('deleteSuccessed'));
                 done();
+            }).catch(() => {
+                done('should not go into the Promise.catch handler');
             });
         });
         it('Fail', (done) => {
@@ -121,7 +133,10 @@ describe('Controls/form:CrudController', () => {
             const actual = crud.delete(record);
 
             assert.isTrue(stubNotify.calledWith('registerPending'));
-            actual.finally(() => {
+
+            actual.then(() => {
+                done('should not go into the Promise.then handler');
+            }).catch(() => {
                 assert.isTrue(stubNotify.calledWith('deleteFailed'));
                 done();
             });
