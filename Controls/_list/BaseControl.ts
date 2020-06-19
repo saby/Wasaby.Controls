@@ -461,6 +461,12 @@ const _private = {
     },
     moveMarkerToNext(self, event) {
         if (self._markerController) {
+            // activate list when marker is moving. It let us press enter and open current row
+            // must check mounted to avoid fails on unit tests
+            if (self._mounted) {
+                self.activate();
+            }
+
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
@@ -470,6 +476,12 @@ const _private = {
     },
     moveMarkerToPrevious(self, event) {
         if (self._markerController) {
+            // activate list when marker is moving. It let us press enter and open current row
+            // must check mounted to avoid fails on unit tests
+            if (self._mounted) {
+                self.activate();
+            }
+
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
