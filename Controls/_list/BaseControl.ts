@@ -2201,6 +2201,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.updatePagingData(self, hasMoreData);
                     }
 
+                    if (!self._markerController && newOptions.markerVisibility !== 'hidden') {
+                        self._markerController = _private.createMarkerController(self, newOptions);
+                    }
+
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
                         newOptions.serviceDataLoadCallback(null, self._items);
                     }
