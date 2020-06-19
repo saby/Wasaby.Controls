@@ -2639,13 +2639,6 @@ define([
          baseControl.saveOptions(cfg);
          baseControl._beforeMount(cfg);
          var actionsUpdateCount = 0;
-         baseControl._children = {
-            itemActions: {
-               updateActions: function() {
-                  actionsUpdateCount++;
-               }
-            }
-         };
          baseControl._container = {
             clientHeight: 100,
             getBoundingClientRect: () => ({ y: 0 })
@@ -2664,13 +2657,13 @@ define([
           });
          it('control in error state, should not call update', function() {
             baseControl.__error = true;
-            baseControl._updateItemActions();
+            lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
             assert.equal(actionsUpdateCount, 0);
             baseControl.__error = false;
          });
          it('without listViewModel should not call update', function() {
             baseControl._listViewModel = null;
-            baseControl._updateItemActions();
+            lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
             assert.equal(actionsUpdateCount, 0);
             baseControl._beforeMount(cfg);
          });
@@ -4017,6 +4010,8 @@ define([
          let childEvent;
          let itemData;
          let instance;
+         let sandbox;
+         let isRightSwipeActivated;
 
          function initTest(multiSelectVisibility) {
             const cfg = {
@@ -4047,7 +4042,12 @@ define([
             instance._listViewModel.setItems(rs);
             instance._items = rs;
             instance._children = {scrollController: { scrollToItem: () => null }};
-            instance._updateItemActions(cfg);
+            isRightSwipeActivated = false;
+            instance._itemActionsController = {
+               activateRightSwipe: () => {
+                  isRightSwipeActivated = true;
+               }
+            };
          }
 
          beforeEach(() => {
@@ -4081,22 +4081,19 @@ define([
          it('multiSelectVisibility: visible, should start animation', function() {
             initTest('visible');
             instance._onItemSwipe({}, itemData, childEvent);
-            const item1 = instance._listViewModel.getItemBySourceKey(itemData.getContents().getKey());
-            assert.isTrue(item1.isRightSwiped());
+            assert.isTrue(isRightSwipeActivated);
          });
 
          it('multiSelectVisibility: onhover, should start animation', function() {
             initTest('onhover');
             instance._onItemSwipe({}, itemData, childEvent);
-            const item1 = instance._listViewModel.getItemBySourceKey(itemData.getContents().getKey());
-            assert.isTrue(item1.isRightSwiped());
+            assert.isTrue(isRightSwipeActivated);
          });
 
          it('multiSelectVisibility: hidden, should not start animation', function() {
             initTest('hidden');
             instance._onItemSwipe({}, itemData, childEvent);
-            const item1 = instance._listViewModel.getItemBySourceKey(itemData.getContents().getKey());
-            assert.isFalse(item1.isRightSwiped());
+            assert.isFalse(isRightSwipeActivated);
          });
       });
 
@@ -4211,7 +4208,7 @@ define([
                })
             };
             await instance._beforeMount(cfg);
-            instance._updateItemActions(cfg);
+            lists.BaseControl._private.updateItemActions(instance, cfg);
             popup.Sticky.openPopup = (config) => Promise.resolve(1);
             instance._notify = (eventName, args) => {
                lastOutgoingEvent = { eventName, args };
@@ -5060,7 +5057,8 @@ define([
          let cfg;
          let instance;
          let items;
-         let visibilityResult;
+         let sandbox;
+         let updateItemActionsCalled;
 
          beforeEach(() => {
             items = new collection.RecordSet({
@@ -5081,7 +5079,6 @@ define([
                ],
                viewModelConstructor: lists.ListViewModel,
                itemActionVisibilityCallback: () => {
-                  visibilityResult = 'first';
                   return true;
                },
                keyProperty: 'id',
@@ -5090,29 +5087,37 @@ define([
             instance = new lists.BaseControl(cfg);
             instance.saveOptions(cfg);
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
+            sandbox = sinon.createSandbox();
+            updateItemActionsCalled = false;
          });
 
-         // Необходимо обновлять опции записи при изиенении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
-         it('should update ItemActions when visibilityCallback has changed', () => {
+         afterEach(() => {
+            sandbox.restore();
+         });
+
+         // Необходимо вызывать updateItemActions при изменении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
+         it('should call updateItemActions when visibilityCallback has changed', async () => {
             instance._itemActionsInitialized = true;
-            instance._beforeUpdate({
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
+            await instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                itemActionVisibilityCallback: () => {
-                  visibilityResult = 'second';
-                  return true;
+                  return false;
                }
             });
-            instance._listViewModel.getEditingItemData = function() {
-               return null;
-            };
-            assert.equal(visibilityResult, 'second');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // Необходимо обновлять опции записи при изиенении самих ItemActions
-         it('should update ItemActions when ItemActions have changed', () => {
+         // Необходимо вызывать updateItemActions при изиенении самих ItemActions
+         it('should call updateItemActions when ItemActions have been changed', async () => {
             instance._itemActionsInitialized = true;
-            instance._beforeUpdate({
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
+            await instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                itemActions: [
@@ -5122,13 +5127,11 @@ define([
                   }
                ]
             });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-            assert.equal(actionsOf0.all[0].title, '456', 'new actions for item at 0 pos. were not assigned');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // Необходимо обновлять опции записи при изиенении модели (Демка Controls-demo/Explorer/ExplorerLayout)
-         it('should update ItemActions when Model constructor has changed', () => {
+         // Необходимо вызывать updateItemActions при изиенении модели (Демка Controls-demo/Explorer/ExplorerLayout)
+         it('should call updateItemActions when Model constructor has changed', () => {
             const columns = [
                {
                   displayProperty: 'title',
@@ -5139,19 +5142,24 @@ define([
                }
             ];
             instance._itemActionsInitialized = true;
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                columns,
                viewModelConstructor: grid.GridViewModel
             });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // при неидентичности source необходимо перезапрашивать данные этого source и затем инициализировать ItemActions
-         it('should update ItemActions when data was reloaded', async () => {
+         // при неидентичности source необходимо перезапрашивать данные этого source и затем вызывать updateItemActions
+         it('should call updateItemActions when data was reloaded', async () => {
             instance._itemActionsInitialized = true;
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
             await instance._beforeUpdate({
                ...cfg,
                itemActions: [
@@ -5161,33 +5169,35 @@ define([
                   }
                ]
             });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-            assert.equal(actionsOf0.all[0].title, '456', 'new actions for item at 0 pos. were not assigned');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // при смене значения свойства readOnly необходимо делать переинициализвацию ItemActions
-         it('should update ItemActions when readOnly option has been changed', () => {
+         // при смене значения свойства readOnly необходимо вызывать updateItemAction
+         it('should call updateItemActions when readOnly option has been changed', () => {
             instance._itemActionsInitialized = true;
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                readOnly: true,
             });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // при смене значения свойства itemActionsPosition необходимо делать переинициализвацию ItemActions
-         it('should update ItemActions when itemActionsPosition option has been changed', () => {
+         // при смене значения свойства itemActionsPosition необходимо вызывать updateItemAction
+         it('should call updateItemActions when itemActionsPosition option has been changed', () => {
             instance._itemActionsInitialized = true;
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                itemActionsPosition: 'outside',
-      });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+            });
+            assert.isTrue(updateItemActionsCalled);
          });
       });
 
@@ -6139,7 +6149,7 @@ define([
          });
       });
 
-      // Инициализация шаблонов под isNewModel должна происходить до того, как
+      // Инициализация шаблонов под isNewModel должна гарантированно происходить до того, как произойдёт инициализация ItemActions
       it('should init templates for useNewModel before any item actions initialization', async () => {
          const cfg = {
             editingConfig: {
@@ -6164,13 +6174,11 @@ define([
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          baseControl._container = {clientHeight: 0};
-         sandbox.replace(baseControl, '_updateItemActions', (options) => {
+         sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
             assert.equal(baseControl._itemActionsTemplate, listRender.itemActionsTemplate);
          });
-         setTimeout(async () => {
-            await baseControl._afterMount();
-            sandbox.restore();
-         });
+         await baseControl._afterMount();
+         sandbox.restore();
       });
    });
 });
