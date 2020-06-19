@@ -245,7 +245,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             }
         }
 
-        if (newOptions.record && this._options.record !== newOptions.record) {
+        if (newOptions.record && this._record !== newOptions.record) {
             this._setRecord(newOptions.record);
         }
         if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
@@ -257,9 +257,6 @@ class FormController extends Control<IFormController, IReceivedState> {
                     this.read(newOptions.key, newOptions.readMetaData);
                 });
             });
-            if (result === undefined) {
-                this.read(newOptions.key, newOptions.readMetaData);
-            }
             return;
         }
         // Если нет ключа и записи - то вызовем метод создать. Состояние isNewRecord обновим после того, как запись вычитается
@@ -269,15 +266,21 @@ class FormController extends Control<IFormController, IReceivedState> {
         // создание записи. Метод падает с ошибкой. У контрола стреляет _beforeUpdate, вызов метода создать повторяется бесконечно.
         // Нельзя чтобы контрол ддосил БЛ.
         if (newOptions.key === undefined && !newOptions.record && this._createMetaDataOnUpdate !== createMetaData) {
+            const _createBeforeUpdate = (createMetaData, newOptions: IFormController) => {
+                this._createMetaDataOnUpdate = createMetaData;
+                this.create(newOptions.initValues || newOptions.createMetaData).then(() => {
+                    if (newOptions.hasOwnProperty('isNewRecord')) {
+                        this._isNewRecord = newOptions.isNewRecord;
+                    }
+                    this._createMetaDataOnUpdate = null;
+                });
+            };
 
             const result = this._confirmRecordChangeHandler(() => {
-                    this._createBeforeUpdate(createMetaData, newOptions);
+                    _createBeforeUpdate(createMetaData, newOptions);
                 }, () => {
-                this._createBeforeUpdate(createMetaData, newOptions);
+                _createBeforeUpdate(createMetaData, newOptions);
             });
-            if (result === undefined) {
-                this._createBeforeUpdate(createMetaData, newOptions);
-            }
         } else {
             if (newOptions.hasOwnProperty('isNewRecord')) {
                 this._isNewRecord = newOptions.isNewRecord;
@@ -301,18 +304,8 @@ class FormController extends Control<IFormController, IReceivedState> {
                 }
             });
         } else {
-            return undefined;
+            return onYesAnswer();
         }
-    }
-
-    private _createBeforeUpdate(createMetaData, newOptions: IFormController) {
-        this._createMetaDataOnUpdate = createMetaData;
-        this.create(newOptions.initValues || newOptions.createMetaData).then(() => {
-            if (newOptions.hasOwnProperty('isNewRecord')) {
-                this._isNewRecord = newOptions.isNewRecord;
-            }
-            this._createMetaDataOnUpdate = null;
-        });
     }
 
     protected _afterUpdate(): void {
@@ -559,6 +552,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     private _createHandler(record: Model): Model {
         this._updateIsNewRecord(true);
+        this._setRecord(record);
         this._wasCreated = true;
         this._forceUpdate();
         return record;
@@ -582,6 +576,7 @@ class FormController extends Control<IFormController, IReceivedState> {
 
     private _readHandler(record: Model): Model {
         this._wasRead = true;
+        this._setRecord(record);
         this._updateIsNewRecord(false);
         this._forceUpdate();
         this._hideError();

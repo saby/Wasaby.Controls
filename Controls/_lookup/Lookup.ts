@@ -179,6 +179,7 @@ var Lookup = Control.extend({
    _template: template,
 
    showSelector: function (popupOptions) {
+      this._children.view.closeSuggest();
       return this._children.controller.showSelector(popupOptions);
    }
 });

@@ -123,8 +123,12 @@ define([
          let createPromiseResolverReed;
          let createPromiseResolverDelete;
          let createPromise;
+         const record = {
+            isChanged: () => false
+         };
 
-         FC._setRecord = () => {
+         FC._setRecord = (record) => {
+            FC._record = record;
             setRecordCalled = true;
          };
          FC.read = () => {
@@ -151,9 +155,7 @@ define([
 
          setRecordCalled = false;
          FC._beforeUpdate({
-            record: {
-               isChanged: () => false
-            },
+            record: record,
             key: 'key'
          });
 
@@ -192,9 +194,7 @@ define([
                createPromiseResolverUpdate = res;
             });
          };
-         let record = {
-            isChanged: () => true
-         };
+         record.isChanged = () => true;
          FC._options.record = record;
          FC._record = record;
          FC._beforeUpdate({
@@ -211,6 +211,7 @@ define([
          assert.equal(updateCalled, true);
          assert.equal(createCalled, false);
          assert.equal(FC._isNewRecord, true);
+
 
          FC._showConfirmPopup = () => {
             confirmPopupCalled = true;
@@ -244,6 +245,41 @@ define([
          assert.equal(updateCalled, false);
          assert.equal(createCalled, false);
 
+         readCalled = false;
+         createCalled = false;
+         setRecordCalled = false;
+         updateCalled = false;
+         confirmPopupCalled = false;
+         FC._showConfirmPopup = () => {
+            confirmPopupCalled = true;
+            return new Promise((res) => {
+               createPromiseResolverShow = res;
+            });
+         };
+         FC.update = () => {
+            updateCalled = true;
+            return new Promise((res) => {
+               createPromiseResolverUpdate = res;
+            });
+         };
+         let oldRecord = {
+            isChanged: () => true
+         };
+         FC._options.record = oldRecord;
+         FC._beforeUpdate({
+            record: null
+         });
+         await createPromiseResolverShow(true);
+         await createPromiseResolverUpdate();
+         await createPromiseResolverReed();
+
+         assert.equal(setRecordCalled, false);
+         assert.equal(confirmPopupCalled, true);
+         assert.equal(readCalled, false);
+         assert.equal(updateCalled, true);
+         assert.equal(createCalled, true);
+         assert.equal(FC._isNewRecord, true);
+
          FC.destroy();
       });
 
@@ -266,6 +302,69 @@ define([
             done();
             FC.destroy();
          });
+      });
+
+      it('FormController _confirmRecordChangeHandler', async() => {
+         let FC = new form.Controller();
+         let confirmPopupCalled = false;
+         FC._record = {
+            isChanged: () => true
+         };
+         FC._options.record = FC._record;
+         FC._showConfirmPopup = () => {
+            confirmPopupCalled = true;
+            return new Promise((resolve) => {
+               resolve(true);
+            });
+         };
+         FC._isNewRecord = true;
+         FC._notify = () => true;
+         FC.update().then(() => {
+         });
+         let result = await FC._confirmRecordChangeHandler(() => {
+            return 'Read'} , () => {
+            return 'Delete';
+         });
+         assert.isTrue(result);
+         assert.isTrue(confirmPopupCalled);
+         assert.isFalse( FC._isNewRecord);
+
+         FC._isNewRecord = true;
+         FC._record = {
+            isChanged: () => true
+         };
+         FC._record = {
+            isChanged: () => true
+         };
+         confirmPopupCalled = false;
+         FC._showConfirmPopup = () => {
+            confirmPopupCalled = true;
+            return new Promise((resolve) => {
+               resolve(false);
+            });
+         };
+         FC._isNewRecord = true;
+         result = await FC._confirmRecordChangeHandler(() => {
+            return 'Read'} , () => {
+            return 'Delete';
+         });
+         assert.isFalse(result);
+         assert.isTrue(confirmPopupCalled);
+         assert.isTrue( FC._isNewRecord);
+
+         FC._record = {
+            isChanged: () => false
+         };
+         confirmPopupCalled = false;
+         FC._options.record = FC._record;
+         FC._isNewRecord = true;
+         result = await FC._confirmRecordChangeHandler(() => {
+            return 'Read'} , () => {
+            return 'Delete';
+         });
+         assert.equal(result, 'Read');
+         assert.isFalse(confirmPopupCalled);
+         assert.isTrue( FC._isNewRecord);
       });
 
       it('FormController user operations', () => {

@@ -194,11 +194,15 @@ class MenuRender extends Control<IMenuRenderOptions> {
     private getRightSpacing(options: IMenuRenderOptions): string {
         let rightSpacing = 'm';
         if (!options.itemPadding.right) {
-            factory(options.listModel).each((item) => {
-                if (item.getContents().get && item.getContents().get(options.nodeProperty)) {
-                    rightSpacing = 'menu-expander';
-                }
-            });
+            if (options.multiSelect) {
+                rightSpacing = 'menu-multiSelect';
+            } else {
+                factory(options.listModel).each((item) => {
+                    if (item.getContents().get && item.getContents().get(options.nodeProperty)) {
+                        rightSpacing = 'menu-expander';
+                    }
+                });
+            }
         } else {
             rightSpacing = options.itemPadding.right;
         }
