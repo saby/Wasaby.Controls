@@ -650,6 +650,33 @@ define([
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
          });
 
+
+         it('getMultiSelectClassList', () => {
+            const current = {
+               multiSelectVisibility: 'visible',
+               multiSelectStatus: false
+            };
+
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.multiSelectVisibility = 'onhover';
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
+
+            current.multiSelectStatus = true;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.multiSelectStatus = null;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.multiSelectStatus = undefined;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
+         });
+
          it('setDragTargetPosition', function() {
             assert.equal(lvm.getDragTargetPosition(), null);
             lvm.setDragTargetPosition(target);
