@@ -675,20 +675,20 @@ describe('Controls/_display/CollectionItem', () => {
             item = new CollectionItem();
         });
 
-        // CSS класс для позиционирования опций записи. Если опции вне строки, то возвращает пустую строку
-        it('getItemActionPositionClasses() should return empty string when itemActionsPosition === "outside"', () => {
-            const result = item.getItemActionPositionClasses('outside', 'controls-itemActionsV_position_bottomRight', {top: 's', bottom: 's'}, 'default');
-            assert.equal(result, ' controls-itemActionsV_padding-bottom_default_theme-default ');
+        // CSS класс для позиционирования опций записи. Для новой модели всегда возвращает пробел
+        it('getItemActionPositionClasses() should return space when itemActionsPosition === "outside" and itemActionsClass is not set', () => {
+            const result = item.getItemActionPositionClasses('inside', null, {top: 's', bottom: 's'}, 'default', true);
+            assert.equal(result, ' ');
         });
 
-        // CSS класс для позиционирования опций записи. Если itemActionsClass не задан, возвращает классы для позиции itemPadding top
+        // CSS класс для позиционирования опций записи. Если опции внутри строки и itemActionsClass не задан, возвращает класс, добавляющий выравнивание bottomRight, без padding
         it('getItemActionPositionClasses() should return classes for bottom-right positioning when no itemActionClass is set', () => {
             const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 's'}, 'default');
             assert.equal(result, ' controls-itemActionsV_position_bottomRight controls-itemActionsV_padding-bottom_default_theme-default ');
         });
 
-        // CSS класс для позиционирования опций записи. Возвращает классы, соответствующие заданным параметрам itemActionsClass и itemPadding
-        it('getItemActionPositionClasses() should return classes depending on itemActionClass value and itemPadding', () => {
+        // CSS класс для позиционирования опций записи. Всегда происходит попытка рассчитать класс, добавляющий Padding, независимо от itemActionsPosition
+        it('getItemActionPositionClasses() should try to add padding', () => {
             const result = item.getItemActionPositionClasses('inside', 'controls-itemActionsV_position_topRight', {top: 'null', bottom: 's'}, 'default');
             assert.equal(result, ' controls-itemActionsV_position_topRight controls-itemActionsV_padding-top_null_theme-default ');
         });
