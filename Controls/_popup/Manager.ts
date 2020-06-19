@@ -721,7 +721,8 @@ class Manager extends Control<IManagerOptions> {
                 }
             }
             // Закрываю окна первого уровня, дочерние закроются вместе с ними
-            if (!item.parentId) {
+            // нотификационные окна не закрываем ( ДО, звонки )
+            if (!item.parentId && item.controller.TYPE !== 'notification') {
                 this.remove(item.id);
             }
         });
