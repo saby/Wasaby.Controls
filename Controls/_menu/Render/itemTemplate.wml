@@ -28,8 +28,6 @@
                   <ws:partial
                           template="{{content.resolvedTemplate}}"
                           itemData="{{itemData}}"
-                          attr:class="{{_options.multiSelect && _options.checkBoxAlign !== 'right' ?
-                                     'controls-Menu__content-multiselect_theme-' + _options.theme}}"
                   />
                </Controls.Container.Async>
             </ws:if>
@@ -37,8 +35,6 @@
                <ws:partial
                        template="{{contentTemplate}}"
                        itemData="{{itemData}}"
-                       attr:class="{{_options.multiSelect && _options.checkBoxAlign !== 'right' ?
-                                  'controls-Menu__content-multiselect_theme-' + _options.theme}}"
                />
             </ws:else>
          </ws:if>

@@ -137,6 +137,10 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     private _setItemPadding(options: IMenuPopupOptions): void {
         if (options.itemPadding) {
             this._itemPadding = options.itemPadding;
+        } else if (options.multiSelect) {
+            this._itemPadding = {
+                right: 'menu-multiselect'
+            };
         } else if (this._closeButtonVisibility) {
             this._itemPadding = {
                 right: 'menu-close'
