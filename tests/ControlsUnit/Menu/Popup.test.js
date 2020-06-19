@@ -39,11 +39,8 @@ define(
             it('_setItemPadding', function() {
                 let menuPopup = new menu.Popup();
                 menuPopup._closeButtonVisibility = true;
-                menuPopup._setItemPadding({ itemPadding: {right: 'test-padding'}, multiSelect: true, allowPin: true });
+                menuPopup._setItemPadding({ itemPadding: {right: 'test-padding'}, allowPin: true });
                 assert.equal(menuPopup._itemPadding.right, 'test-padding');
-
-                menuPopup._setItemPadding({ multiSelect: true, allowPin: true });
-                assert.equal(menuPopup._itemPadding.right, 'menu-multiselect');
 
                 menuPopup._setItemPadding({ allowPin: true });
                 assert.equal(menuPopup._itemPadding.right, 'menu-close');

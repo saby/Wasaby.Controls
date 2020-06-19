@@ -113,6 +113,11 @@ define(
             renderOptions.itemPadding.right = 'xs';
             rightSpacing = menuRender.getRightSpacing(renderOptions);
             assert.equal(rightSpacing, 'xs');
+
+            renderOptions.itemPadding.right = null;
+            renderOptions.multiSelect = true;
+            rightSpacing = menuRender.getRightSpacing(renderOptions);
+            assert.equal(rightSpacing, 'menu-multiSelect');
          });
 
          describe('addEmptyItem', function() {
