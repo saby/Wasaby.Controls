@@ -104,10 +104,6 @@
    flex-shrink: 1;
 }
 
-.controls-Menu__content-multiselect_theme-@{themeName} {
-   padding-right: @apply-button_inline-height_menuPopup + (@apply-button_offset_menuPopup * 2);
-}
-
 .controls-Menu__defaultItem_theme-@{themeName},
 .controls-Menu__emptyItem_theme-@{themeName} {
    font-size: @item_font-size_menu;
@@ -200,6 +196,10 @@
 
 .controls-Menu__iconPin_theme-@{themeName}.controls-Menu__iconPin_swiped {
    .inline-flexbox();
+}
+
+.controls-ListView__item-rightPadding_menu-multiselect_theme-@{themeName} {
+   padding-right: @apply-button_inline-height_menuPopup + (@apply-button_offset_menuPopup * 2);
 }
 
 .controls-ListView__item-rightPadding_menu-expander_theme-@{themeName} {
