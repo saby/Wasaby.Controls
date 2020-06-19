@@ -4,12 +4,14 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {
-    TBorderVisibility, IBorderVisibility, IBorderVisibilityOptions,
-    getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes,
     IHeight, IHeightOptions, IFontColorStyle,
     IFontColorStyleOptions, IFontSize, IFontSizeOptions,
     IBorderStyle, IBorderStyleOptions, IValidationStatus, IValidationStatusOptions
 } from 'Controls/interface';
+import IBorderVisibility, {
+    TBorderVisibility, IBorderVisibilityOptions,
+    getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes
+} from './interface/IBorderVisibility';
 
 import * as template from 'wml!Controls/_input/Render/Render';
 
