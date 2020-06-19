@@ -91,7 +91,7 @@ class PendingClass {
         }
     }
 
-    finishPendingOperations(forceFinishValue: boolean, isInside?: boolean, root: string = null): Deferred {
+    finishPendingOperations(forceFinishValue: boolean, root: string = null): Deferred {
         const resultDeferred = new Deferred();
         const parallelDef = new ParallelDeferred();
         const pendingResults = [];
@@ -101,7 +101,7 @@ class PendingClass {
             const pending = pendingRoot[key];
             let isValid = true;
             if (pending.validate) {
-                isValid = pending.validate(isInside);
+                isValid = pending.validate();
             } else if (pending.validateCompatible) { //todo compatible
                 isValid = pending.validateCompatible();
             }
