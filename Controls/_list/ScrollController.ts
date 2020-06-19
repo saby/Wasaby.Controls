@@ -195,7 +195,9 @@ export default class ScrollController {
     }
 
     reset(): void {
-        clearTimeout(this._checkTriggerVisibilityTimeout);
+        if (this._checkTriggerVisibilityTimeout) {
+            clearTimeout(this._checkTriggerVisibilityTimeout);
+        }
         // TODO убрать проверку в https://online.sbis.ru/opendoc.html?guid=fb8a3901-bddf-4552-ae9a-ed0299d3e46f
         if (!this._options.collection.destroyed) {
             this._options.collection.unsubscribe('onListChange', this._collectionChangedHandler);
@@ -342,9 +344,12 @@ export default class ScrollController {
     }
 
     checkTriggerVisibilityWithTimeout(): void {
+        if (this._checkTriggerVisibilityTimeout) {
+            clearTimeout(this._checkTriggerVisibilityTimeout);
+        }
         this._checkTriggerVisibilityTimeout = setTimeout(() => {
             this._checkTriggerVisibility();
-            clearTimeout(this._checkTriggerVisibilityTimeout);
+            this._checkTriggerVisibilityTimeout = null;
         }, TRIGGER_VISIBILITY_DELAY);
     }
 
