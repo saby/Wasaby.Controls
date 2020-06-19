@@ -1981,7 +1981,7 @@ const _private = {
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (self.__error || !self._listViewModel) {
             return;
-    }
+        }
         if (!self._itemActionsController) {
             self._itemActionsController = new ItemActionsController();
         }
@@ -2006,7 +2006,7 @@ const _private = {
             itemActionsProperty: options.itemActionsProperty,
             visibilityCallback: options.itemActionVisibilityCallback,
             itemActionsPosition: options.itemActionsPosition,
-            style: options.style,
+            style: options.itemActionsVisibility === 'visible' ? 'transparent' : options.style,
             theme: options.theme,
             actionAlignment: options.actionAlignment,
             actionCaptionPosition: options.actionCaptionPosition,
@@ -2032,7 +2032,20 @@ const _private = {
      * @private
      */
     updateInitializedItemActions(self, options: any) {
-        if (self._itemActionsInitialized) {
+        if (self._listViewModel.isActionsAssigned()) {
+            _private.updateItemActions(self, options);
+        }
+    },
+
+    /**
+     * инициализирует опции записи при загрузке контрола
+     * @param self
+     * @param options
+     * @private
+     */
+    initVisibleItemActions(self, options: IList): void {
+        if (options.itemActionsVisibility === 'visible') {
+            self._showActions = true;
             _private.updateItemActions(self, options);
         }
     }
@@ -2271,7 +2284,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
 
-                    self._initVisibleItemActions(newOptions);
+                    _private.initVisibleItemActions(self, newOptions);
                     return;
                 }
                 if (receivedError) {
@@ -2310,7 +2323,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.createEditingData(self, newOptions);
                     _private.createScrollController(self, newOptions);
 
-                    self._initVisibleItemActions(newOptions);
+                    _private.initVisibleItemActions(self, newOptions);
 
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
@@ -3006,7 +3019,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _initItemActions(e: SyntheticEvent, options: any): void {
         if (this._options.itemActionsVisibility !== 'visible') {
             if (!this._listViewModel.isActionsAssigned()) {
-            _private.updateItemActions(this, options);
+                _private.updateItemActions(this, options);
             }
         }
     },
