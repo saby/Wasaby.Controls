@@ -210,7 +210,7 @@ const _private = {
         if (self._updateInProgress) {
             if (self._callbackAfterUpdate) {
                 self._callbackAfterUpdate.push(callback);
-        } else {
+            } else {
                 self._callbackAfterUpdate = [callback];
             }
         } else {
@@ -218,7 +218,8 @@ const _private = {
         }
     },
 
-    reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
+    // когда вызывают публичный reload не нужно обновлять маркер здесь, для этого параметр updateMarker
+    reload(self, cfg, sourceConfig?: IBaseSourceConfig, updateMarker: boolean = true): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
         const navigation = cClone(cfg.navigation);
@@ -303,7 +304,7 @@ const _private = {
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                    if (self._markerController) {
+                    if (self._markerController && updateMarker) {
                         _private.updateMarkerController(self, self._options);
                     }
 
@@ -367,6 +368,18 @@ const _private = {
         }
         return resDeferred;
     },
+
+    reloadAndRestoreModelState(self: any, cfg: any, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
+        return _private.reload(self, cfg, sourceConfig, false).addCallback(() => {
+            if (self._markerController) {
+                self._markerController.restoreMarker();
+            }
+            if (self._selectionController) {
+                self._selectionController.restoreSelection();
+            }
+        });
+    },
+
     startDragNDrop(self, domEvent, itemData): void {
         if (!self._options.readOnly && self._options.itemsDragNDrop
                 && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)) {
@@ -2776,6 +2789,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 callback();
             });
             this._callbackAfterUpdate = null;
+            if (this._markerController) {
+                this._markerController.restoreMarker();
+            }
+            if (this._selectionController) {
+                this._selectionController.restoreSelection();
+            }
         }
 
         if (this._editInPlace) {
@@ -2841,7 +2860,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
-        return _private.reload(this, this._options, sourceConfig).addCallback(getData);
+        return _private.reloadAndRestoreModelState(this, this._options, sourceConfig).addCallback(getData);
     },
 
     setMarkedKey(key: number | string): void {

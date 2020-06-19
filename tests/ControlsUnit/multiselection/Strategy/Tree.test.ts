@@ -434,4 +434,13 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.isFalse(strategy.isAllSelected(selection, true, 7, false));
       });
    });
+
+   it('setItems', () => {
+      const newItems = new RecordSet({
+         keyProperty: ListData.KEY_PROPERTY,
+         rawData: ListData.getItems()
+      });
+      strategy.setItems(newItems);
+      assert.equal(strategy._items, newItems);
+   });
 });
