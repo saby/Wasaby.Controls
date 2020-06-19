@@ -426,6 +426,46 @@ define(['Controls/grid'], function(gridMod) {
             assert.isTrue(editArrowClickNotified);
          });
       });
+
+      it('should call dragscroll only if column scroll enabled', function () {
+         const cfg = {
+            multiSelectVisibility: 'visible',
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+         const calledMethods = [];
+         gridView._dragScrollController = {};
+
+         [
+            'onViewMouseDown',
+            'onViewTouchStart',
+            'onViewMouseMove',
+            'onViewTouchMove',
+            'onViewMouseUp',
+            'onViewTouchEnd',
+            'onOverlayMouseMove',
+            'onOverlayTouchMove',
+            'onOverlayMouseUp',
+            'onOverlayTouchEnd',
+            'onOverlayMouseLeave'
+         ].forEach((methodName) => {
+            gridView._dragScrollController[methodName] = () => {
+               calledMethods.push(methodName);
+            };
+         });
+
+         gridView._startDragScrolling({}, 'mouse');
+         gridView._startDragScrolling({}, 'touch');
+         gridView._moveDragScroll({}, 'mouse');
+         gridView._moveDragScroll({}, 'touch');
+         gridView._stopDragScrolling({}, 'mouse');
+         gridView._stopDragScrolling({}, 'touch');
+
+         assert.deepEqual(calledMethods, []);
+      });
    });
 
 });

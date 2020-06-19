@@ -570,7 +570,7 @@ var
             this._updateColumnScrollData();
         },
         _startDragScrolling(e, startBy: 'mouse' | 'touch'): void {
-            if (this._dragScrollController) {
+            if (this._isColumnScrollVisible() && this._dragScrollController) {
                 let isGrabbing: boolean;
                 if (startBy === 'mouse') {
                     isGrabbing = this._dragScrollController.onViewMouseDown(e);
@@ -581,7 +581,7 @@ var
             }
         },
         _moveDragScroll(e, startBy: 'mouse' | 'touch') {
-            if (this._dragScrollController) {
+            if (this._isColumnScrollVisible() && this._dragScrollController) {
                 let newPosition: number;
                 if (startBy === 'mouse') {
                     newPosition = this._dragScrollController.onViewMouseMove(e);
@@ -596,7 +596,7 @@ var
             }
         },
         _stopDragScrolling(e, startBy: 'mouse' | 'touch') {
-            if (this._dragScrollController) {
+            if (this._isColumnScrollVisible() && this._dragScrollController) {
                 if (startBy === 'mouse') {
                     this._dragScrollController.onViewMouseUp(e);
                 } else {
@@ -606,7 +606,7 @@ var
             }
         },
         _onDragScrollOverlayMouseMove(e): void {
-            if (this._dragScrollController) {
+            if (this._isColumnScrollVisible() && this._dragScrollController) {
                 const newPosition = this._dragScrollController.onOverlayMouseMove(e);
                 if (newPosition !== null) {
                     this._columnScrollController.setScrollPosition(newPosition);
@@ -615,7 +615,7 @@ var
             }
         },
         _onDragScrollOverlayTouchMove(e): void {
-            if (this._dragScrollController) {
+            if (this._isColumnScrollVisible() && this._dragScrollController) {
                 const newPosition = this._dragScrollController.onOverlayTouchMove(e);
                 if (newPosition !== null) {
                     this._columnScrollController.setScrollPosition(newPosition);
