@@ -66,15 +66,15 @@ export class Controller {
          return this._markedKey;
       }
 
-      this._model.setMarkedKey(this._markedKey, false, true);
       if (item) {
+         this._model.setMarkedKey(this._markedKey, false, true);
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
       } else {
          switch (this._markerVisibility) {
             case Visibility.OnActivated:
+               this._model.setMarkedKey(this._markedKey, false, true);
                this._markedKey = null;
-               this._model.nextVersion();
                break;
             case Visibility.Visible:
                this._markedKey = this._setMarkerOnFirstItem();
@@ -159,16 +159,24 @@ export class Controller {
    private _setMarkerOnFirstItem(): TKey {
       // если модель пустая, то не на что ставить маркер
       if (!this._model.getCount()) {
+         // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
+         this._model.setMarkedKey(this._markedKey, false, true);
          return undefined;
       }
 
       const firstItem = this._model.getFirstItem();
       if (!firstItem) {
+         // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
+         this._model.setMarkedKey(this._markedKey, false, true);
          return undefined;
       }
 
-      this._model.setMarkedKey(firstItem.getKey(), true);
-      return firstItem.getKey();
+      const firstItemKey = firstItem.getKey();
+      if (this._markedKey !== firstItemKey) {
+         this._model.setMarkedKey(this._markedKey, false, true);
+         this._model.setMarkedKey(firstItemKey, true);
+      }
+      return firstItemKey;
    }
 
    private _getFirstVisibleItemIndex(items: HTMLElement[], verticalOffset: number): number {
