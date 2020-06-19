@@ -141,7 +141,7 @@
       </ws:else>
    </ws:if>
 </ws:template>
-<ws:if data="{{itemData.isSticky}}">
+<ws:if data="{{itemData.isStickedMasterItem}}">
    <Controls.scroll:Group>
       <div attr:class="controls-Grid__row {{itemData.calcCursorClasses(clickable, cursor)}} {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}">
          <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->

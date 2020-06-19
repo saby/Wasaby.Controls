@@ -51,7 +51,7 @@
         </ws:else>
     </ws:if>
 </ws:template>
-<ws:if data="{{itemData.isSticky}}">
+<ws:if data="{{itemData.isStickedMasterItem}}">
    <ws:partial template="itemOutputTpl">
       <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{backgroundStyle}}">
          <ws:partial template="itemContentTpl"/>
