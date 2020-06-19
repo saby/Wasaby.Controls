@@ -3595,18 +3595,6 @@ define([
                   selectedKeys: [1, 3]
                },
                viewModelConstructor: lists.ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     hasMore: false
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               },
             };
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
@@ -3614,6 +3602,7 @@ define([
             const formController = {};
             ctrl._children.formController = formController;
             ctrl._beforeUpdate(cfg);
+            ctrl._afterUpdate(cfg);
             assert.equal(ctrl._editInPlace._formController, formController);
          });
       });
