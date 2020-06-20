@@ -475,8 +475,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return childrenIds;
    }
 
-   private _isHasChildren(item: Record, hierarchyRelation: relation.Hierarchy): boolean {
-      return hierarchyRelation ? hierarchyRelation.hasDeclaredChildren(item) !== false : false;
+   private _isHasChildren(item: Record, items: RecordSet, hierarchyRelation: relation.Hierarchy): boolean {
+      return hierarchyRelation.hasDeclaredChildren(item) !== false
+         || this._getChildren(item.getKey(), items, hierarchyRelation).length > 0;
    }
 
    private _getSelectedChildrenCount(
@@ -503,7 +504,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                      selectedChildrenCount++;
                   }
 
-                  if (this._isNode(childItem) && this._isHasChildren(childItem, hierarchyRelation) && deep !== false) {
+                  if (this._isNode(childItem) && this._isHasChildren(childItem, items, hierarchyRelation) && deep !== false) {
                      childNodeSelectedCount = this._getSelectedChildrenCount(childId, selection, items, hierarchyRelation);
 
                      if (childNodeSelectedCount === null) {
@@ -515,7 +516,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                }
             }
          });
-      } else if (!nodeItem || this._isHasChildren(nodeItem, hierarchyRelation)) {
+      } else if (!nodeItem || this._isHasChildren(nodeItem, items, hierarchyRelation)) {
          selectedChildrenCount = null;
       }
 
