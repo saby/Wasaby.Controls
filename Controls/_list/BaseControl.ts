@@ -34,10 +34,8 @@ import uDimension = require('Controls/Utils/getDimensions');
 import {
     CollectionItem,
     EditInPlaceController,
-
     GroupItem,
-    ANIMATION_STATE,
-    Collection
+    ANIMATION_STATE
 } from 'Controls/display';
 import {Controller as ItemActionsController, IItemAction, TItemActionShowType} from 'Controls/itemActions';
 
@@ -1303,7 +1301,7 @@ const _private = {
             newModelChanged
         ) {
             self._itemsChanged = true;
-            self._updateInitializedItemActions(self._options);
+            _private.updateInitializedItemActions(self, self._options);
             }
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
@@ -1934,7 +1932,7 @@ const _private = {
                     * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
                     * _canUpdateItemsActions приведет к показу неактуальных операций.
                     */
-                    self._updateItemActions(self._options);
+                    _private.updateItemActions(self, self._options);
                 },
                 isDestroyed: () => self._destroyed
             } as IEditingOptions);
@@ -1952,7 +1950,7 @@ const _private = {
             self._editingItemData = self._editInPlace.getEditingItemData();
 
             if (options.itemActions && self._editInPlace.shouldShowToolbar()) {
-                self._updateItemActions(options);
+                _private.updateItemActions(self, options);
             }
         }
     },
@@ -1982,8 +1980,88 @@ const _private = {
                 return self._notify(name, args, params);
             }
         });
-    }
+    },
 
+    /**
+     * Необходимо передавать опции для случая, когда в результате изменения модели меняются параметры
+     * для показа ItemActions и их нужно поменять до отрисовки.
+     * @param self
+     * @param options
+     * @private
+     */
+    updateItemActions(self, options: any): void {
+        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
+        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
+        if (self.__error || !self._listViewModel) {
+            return;
+        }
+        if (!self._itemActionsController) {
+            self._itemActionsController = new ItemActionsController();
+        }
+        const editingConfig = self._listViewModel.getEditingConfig();
+        const isActionsAssigned = self._listViewModel.isActionsAssigned();
+        let editArrowAction: IItemAction;
+        if (options.showEditArrow) {
+            editArrowAction = {
+                id: 'view',
+                icon: 'icon-Forward',
+                title: rk('Просмотреть'),
+                showType: TItemActionShowType.TOOLBAR,
+                handler: (item) => {
+                    self._notify('editArrowClick', [item]);
+                }
+            };
+        }
+        // Гарантированно инициализируем шаблоны, если это ещё не произошло
+        const itemActionsChangeResult = self._itemActionsController.update({
+            collection: self._listViewModel,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style: options.itemActionsVisibility === 'visible' ? 'transparent' : options.style,
+            theme: options.theme,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
+            iconSize: editingConfig ? 's' : 'm',
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editArrowAction,
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback,
+            contextMenuConfig: options.contextMenuConfig
+        });
+        if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
+            itemActionsChangeResult.forEach((recordKey: number | string) => {
+                self._listViewModel.resetCachedItemData(recordKey);
+            });
+            self._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
+        }
+    },
+
+    /**
+     * Обновляет ItemActions только в случае, если они были ранее проинициализированы
+     * @param self
+     * @param options
+     * @private
+     */
+    updateInitializedItemActions(self, options: any) {
+        if (self._listViewModel.isActionsAssigned()) {
+            _private.updateItemActions(self, options);
+        }
+    },
+
+    /**
+     * инициализирует опции записи при загрузке контрола
+     * @param self
+     * @param options
+     * @private
+     */
+    initVisibleItemActions(self, options: IList): void {
+        if (options.itemActionsVisibility === 'visible') {
+            self._showActions = true;
+            _private.updateItemActions(self, options);
+        }
+    }
 };
 
 /**
@@ -2147,13 +2225,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadTriggerVisibility = {};
 
-        if (newOptions.useNewModel) {
-            import('Controls/listRender').then((listRender) => {
-                this._itemActionsTemplate = listRender.itemActionsTemplate;
-                this._swipeTemplate = listRender.swipeTemplate;
-            });
-        }
-
         if (newOptions.editingConfig) {
             _private.createEditInPlace(self, newOptions);
         }
@@ -2226,7 +2297,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
 
-                    self._initVisibleItemActions(newOptions);
+                    _private.initVisibleItemActions(self, newOptions);
                     return;
                 }
                 if (receivedError) {
@@ -2265,7 +2336,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.createEditingData(self, newOptions);
                     _private.createScrollController(self, newOptions);
 
-                    self._initVisibleItemActions(newOptions);
+                    _private.initVisibleItemActions(self, newOptions);
 
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
@@ -2566,7 +2637,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // return result here is for unit tests
             return _private.reload(self, newOptions).addCallback(() => {
                 this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
-                this._updateInitializedItemActions(newOptions);
+                _private.updateInitializedItemActions(this, newOptions);
             });
         }
 
@@ -2584,7 +2655,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            this._updateInitializedItemActions(newOptions);
+            _private.updateInitializedItemActions(this, newOptions);
         }
 
         if (
@@ -2967,85 +3038,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _initItemActions(e: SyntheticEvent, options: any): void {
         if (this._options.itemActionsVisibility !== 'visible') {
             if (!this._listViewModel.isActionsAssigned()) {
-            this._updateItemActions(options);
+                _private.updateItemActions(this, options);
             }
-        }
-    },
-
-    /**
-     * инициализирует опции записи при загрузке контрола
-     * @param options
-     * @private
-     */
-    _initVisibleItemActions(options: IList): void {
-        if (options.itemActionsVisibility === 'visible') {
-            this._showActions = true;
-            this._updateItemActions(options);
-        }
-    },
-
-    /**
-     * Обновляет ItemActions только в случае, если они были ранее проинициализированы
-     * @param options
-     * @private
-     */
-    _updateInitializedItemActions(options: any) {
-        if (this._listViewModel.isActionsAssigned()) {
-            this._updateItemActions(options);
-        }
-    },
-
-    /**
-     * Необходимо передавать опции для случая, когда в результате изменения модели меняются параметры
-     * для показа ItemActions и их нужно поменять до отрисовки.
-     * @param options
-     * @private
-     */
-    _updateItemActions(options: IList): void {
-        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
-        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
-        if (this.__error || !this._listViewModel) {
-            return;
-        }
-        if (!this._itemActionsController) {
-            this._itemActionsController = new ItemActionsController();
-        }
-        const editingConfig = this._listViewModel.getEditingConfig();
-        const isActionsAssigned = this._listViewModel.isActionsAssigned();
-        let editArrowAction: IItemAction;
-        if (options.showEditArrow) {
-            editArrowAction = {
-                id: 'view',
-                icon: 'icon-Forward',
-                title: rk('Просмотреть'),
-                showType: TItemActionShowType.TOOLBAR,
-                handler: (item) => {
-                    this._notify('editArrowClick', [item]);
-                }
-            };
-        }
-        const itemActionsChangeResult = this._itemActionsController.update({
-            collection: this._listViewModel,
-            itemActions: options.itemActions,
-            itemActionsProperty: options.itemActionsProperty,
-            visibilityCallback: options.itemActionVisibilityCallback,
-            itemActionsPosition: options.itemActionsPosition,
-            style: options.itemActionsVisibility === 'visible' ? 'transparent' : options.style,
-            theme: options.theme,
-            actionAlignment: options.actionAlignment,
-            actionCaptionPosition: options.actionCaptionPosition,
-            itemActionsClass: options.itemActionsClass,
-            iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisible: editingConfig?.toolbarVisibility,
-            editArrowAction,
-            editArrowVisibilityCallback: options.editArrowVisibilityCallback,
-            contextMenuConfig: options.contextMenuConfig
-        });
-        if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
-            itemActionsChangeResult.forEach((recordKey: number | string) => {
-                this._listViewModel.resetCachedItemData(recordKey);
-            });
-            this._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
         }
     },
 

@@ -1591,7 +1591,9 @@ var
                         },
                         _preferVersionAPI: true,
                         gridCellStyles: '',
-                        tableCellStyles: ''
+                        tableCellStyles: '',
+                        getItemActionPositionClasses: current.getItemActionPositionClasses,
+                        getItemActionClasses: current.getItemActionClasses
                     };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme);
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
