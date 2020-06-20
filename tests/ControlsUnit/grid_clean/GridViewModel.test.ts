@@ -190,4 +190,47 @@ describe('Controls/grid_clean/GridViewModel', () => {
             });
         });
     });
+
+    describe('getItemDataByItem', () => {
+
+        describe('lastItem', () => {
+            let items;
+            let gridViewModel;
+
+            beforeEach(() => {
+                const itemsCount = 2;
+                items = new RecordSet({
+                    rawData: generateFlatData(itemsCount, false),
+                    keyProperty: 'key'
+                });
+                gridViewModel = new GridViewModel({
+                    items,
+                    keyProperty: 'key',
+                    columns: generateFlatSimpleColumns(),
+                    multiSelectVisibility: 'hidden',
+                    header: generateFlatSimpleHeader()
+                });
+            });
+
+            afterEach(() => {
+                items = undefined;
+            });
+
+            it('hasMoreData: true', () => {
+                gridViewModel.setHasMoreData(true);
+                assert.isFalse(gridViewModel.getCurrent().isLastItem);
+
+                gridViewModel.goToNext();
+                assert.isFalse(gridViewModel.getCurrent().isLastItem);
+            });
+
+            it('hasMoreData: false', () => {
+                gridViewModel.setHasMoreData(false);
+                assert.isFalse(gridViewModel.getCurrent().isLastItem);
+
+                gridViewModel.goToNext();
+                assert.isTrue(gridViewModel.getCurrent().isLastItem);
+            });
+        });
+    });
 });
