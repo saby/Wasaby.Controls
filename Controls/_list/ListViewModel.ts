@@ -15,11 +15,6 @@ import {Logger} from 'UI/Utils';
 import {IItemAction} from 'Controls/itemActions';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
-const ITEMACTIONS_POSITION_CLASSES = {
-    bottomRight: 'controls-itemActionsV_position_bottomRight',
-    topRight: 'controls-itemActionsV_position_topRight'
-};
-
 /**
  *
  * @author Авраменко А.С.
@@ -92,20 +87,6 @@ var _private = {
         return {right, left};
     },
 
-    getItemActionsContainerPaddingClass(classes: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
-        const _classes = classes || ITEMACTIONS_POSITION_CLASSES.bottomRight;
-        const paddingClass: string[] = [];
-        const themedPositionClassCompile = (position) => (
-            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
-        );
-        if (_classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
-            paddingClass.push(themedPositionClassCompile('top'));
-        } else if (_classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
-            paddingClass.push(themedPositionClassCompile('bottom'));
-        }
-        return ` ${paddingClass.join(' ')} `;
-    },
-
     // New Model compatibility
     addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
         itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}, silent: boolean = true): void => {
@@ -162,7 +143,18 @@ var _private = {
             if (itemsModelCurrent.dispItem.setEditing !== undefined) {
                 itemsModelCurrent.dispItem.setEditing(editing, itemsModelCurrent.item, true);
             }
-        }
+        };
+        itemsModelCurrent.isEditingState = () => (
+            itemsModelCurrent.isEditing
+        );
+        itemsModelCurrent.getItemActionClasses = (itemActionsPosition: string, theme?: string): string => (
+            itemsModelCurrent.dispItem.getItemActionClasses ?
+                itemsModelCurrent.dispItem.getItemActionClasses(itemActionsPosition, theme) : ''
+        );
+        itemsModelCurrent.getItemActionPositionClasses = (itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string, useNewModel?: boolean): string => (
+            itemsModelCurrent.dispItem.getItemActionPositionClasses ?
+                itemsModelCurrent.dispItem.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemPadding, theme, useNewModel) : ''
+        );
     }
 };
 
@@ -246,8 +238,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
-
-        itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
 
         // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
