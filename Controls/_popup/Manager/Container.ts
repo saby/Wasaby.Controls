@@ -70,8 +70,8 @@ class Container extends Control<IControlOptions> {
         this._pendingController.registerPending(deferred, config);
     }
 
-    private _finishPendingHandler(event: Event, forceFinishValue: boolean, root: string): void {
-        this._pendingController.finishPendingOperations(forceFinishValue, true, root);
+    private _finishPendingHandler(event: Event,  root: string): void {
+        this._pendingController.finishPendingOperations(forceFinishValue, root);
     }
 
     private _cancelFinishingPendingHandler(event: Event, root: string): void {
