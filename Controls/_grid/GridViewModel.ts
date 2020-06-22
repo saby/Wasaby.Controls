@@ -1518,9 +1518,9 @@ var
             };
             current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
                 let result = '';
-                if (current.stickyProperties) {
+                if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const index = current.stickyProperties.indexOf(stickyProperty);
-                    const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                    const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
                     if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
                         index === 1 && !hasMainCell ||
                         index === 0 && hasMainCell)) {
@@ -1535,9 +1535,11 @@ var
 
             current.getAdditionalLadderClasses = () => {
                 let result = '';
-                const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
-                if (!hasMainCell) {
-                    result += ' controls-Grid__row-cell__ladder-spacing_theme-' + self._options.theme;
+                if (current.stickyProperties && self._ladder.stickyLadder[current.index]) { 
+                    const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                    if (!hasMainCell) {
+                        result += ' controls-Grid__row-cell__ladder-spacing_theme-' + self._options.theme;
+                    }
                 }
                 return result;
             };
