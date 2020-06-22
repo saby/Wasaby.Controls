@@ -143,7 +143,7 @@ var _private = {
                   if (self._children.indicator) {
                      self._children.indicator.hide();
                   }
-                 resolve();
+                  resolve();
               });
           });
       }
