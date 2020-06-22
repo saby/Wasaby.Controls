@@ -17,7 +17,7 @@
          </div>
       </div>
    </ws:if>
-   <div class="controls-PeriodDialog-DateRangeItem__monthList">
+   <div class="controls-PeriodDialog-DateRangeItem__monthList controls-PeriodDialog-DateRangeItem__monthList_theme-{{_options.theme}}">
       <div
          for="month in 12"
          class="controls-PeriodDialog-DateRangeItem__monthList_monthWrapper_theme-{{_options.theme}}"
