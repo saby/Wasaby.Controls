@@ -38,6 +38,12 @@ import {error as dataSourceError} from 'Controls/dataSource';
  * @author Герасимов А.М.
  */
 
+interface IMenuPosition {
+    left: number;
+    top: number;
+    height: number;
+}
+
 const SUB_DROPDOWN_DELAY = 400;
 
 class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
@@ -69,7 +75,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     private _hoveredItem: CollectionItem<Model>;
     private _hoveredTarget: EventTarget;
     private _enterEvent: MouseEvent;
-    private _subMenuPosition: DOMRect;
+    private _subMenuPosition: IMenuPosition;
     private _openSubMenuEvent: MouseEvent;
     private _errorController: dataSourceError.Controller;
     private _errorConfig: dataSourceError.ViewConfig|void;
@@ -343,9 +349,15 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private setSubMenuPosition(): void {
-        this._subMenuPosition = this._subMenu.getBoundingClientRect();
-        if (this._subMenuPosition.x < this._openSubMenuEvent.clientX) {
-            this._subMenuPosition.x += this._subMenuPosition.width;
+        const clientRect = this._subMenu.getBoundingClientRect();
+        this._subMenuPosition = {
+            left: clientRect.left,
+            top: clientRect.top,
+            height: clientRect.height
+        };
+
+        if (this._subMenuPosition.left < this._openSubMenuEvent.clientX) {
+            this._subMenuPosition.left += clientRect.width;
         }
     }
 
@@ -390,7 +402,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     }
 
     private startOpeningTimeout(): void {
-        clearTimeout(this._openingTimer);
+        this._clearOpeningTimout();
         this._openingTimer = setTimeout(() => {
             this.handleItemTimeoutCallback();
         }, SUB_DROPDOWN_DELAY);
@@ -398,15 +410,15 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
 
     private isMouseInOpenedItemArea(curMouseEvent: MouseEvent): boolean {
         const firstSegment = this.calculatePointRelativePosition(this._openSubMenuEvent.clientX,
-            this._subMenuPosition.x, this._openSubMenuEvent.clientY,
-            this._subMenuPosition.y, curMouseEvent.clientX, curMouseEvent.clientY);
+            this._subMenuPosition.left, this._openSubMenuEvent.clientY,
+            this._subMenuPosition.top, curMouseEvent.clientX, curMouseEvent.clientY);
 
-        const secondSegment = this.calculatePointRelativePosition(this._subMenuPosition.x,
-            this._subMenuPosition.x, this._subMenuPosition.y, this._subMenuPosition.y +
+        const secondSegment = this.calculatePointRelativePosition(this._subMenuPosition.left,
+            this._subMenuPosition.left, this._subMenuPosition.top, this._subMenuPosition.top +
             this._subMenuPosition.height, curMouseEvent.clientX, curMouseEvent.clientY);
 
-        const thirdSegment = this.calculatePointRelativePosition(this._subMenuPosition.x,
-            this._openSubMenuEvent.clientX,this._subMenuPosition.y +
+        const thirdSegment = this.calculatePointRelativePosition(this._subMenuPosition.left,
+            this._openSubMenuEvent.clientX,this._subMenuPosition.top +
             this._subMenuPosition.height, this._openSubMenuEvent.clientY, curMouseEvent.clientX, curMouseEvent.clientY);
 
         return this._getSign(firstSegment) === this._getSign(secondSegment) &&

@@ -5,7 +5,7 @@ import {RecordSet, List} from 'Types/collection';
 import {Collection} from 'Controls/display';
 import {Record} from 'Types/entity';
 import {INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
-import {Direction, IAdditionalQueryParams} from 'Controls/_source/interface/IAdditionalQueryParams';
+import {Direction, IAdditionalQueryParams} from 'Controls/_interface/IAdditionalQueryParams';
 
 type Key = string|number|null;
 type NavigationRecord = Record<{
@@ -46,7 +46,13 @@ export default class QueryParamsController implements IQueryParamsController {
         return this.getController(root).hasMoreData(direction, root);
     }
 
-    prepareQueryParams(direction: 'up' | 'down', callback?, config?, multiNavigation?: boolean): IAdditionalQueryParams {
+    prepareQueryParams(
+        direction: 'up' | 'down',
+        callback?: Function,
+        config?: IBaseSourceConfig,
+        multiNavigation?: boolean,
+        root?: Key
+    ): IAdditionalQueryParams {
         let result;
 
         if (multiNavigation) {
@@ -58,7 +64,7 @@ export default class QueryParamsController implements IQueryParamsController {
                 });
             });
         } else {
-            result = this.getController().prepareQueryParams(direction, callback, config);
+            result = this.getController(root).prepareQueryParams(direction, callback, config);
         }
 
         return result;
@@ -122,5 +128,4 @@ export default class QueryParamsController implements IQueryParamsController {
 
         return controllerItem.queryParamsController;
     }
-
 }

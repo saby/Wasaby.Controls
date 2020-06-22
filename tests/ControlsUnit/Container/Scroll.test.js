@@ -16,7 +16,8 @@ define(
             event = {
                stopImmediatePropagation: sinon.fake()
             }
-            scroll = new scrollMod.Container({});
+            scroll = new scrollMod.Container(scrollMod.Container.getDefaultOptions());
+            scroll._options = scrollMod.Container.getDefaultOptions();
 
             var templateFn = scroll._template;
 
@@ -49,6 +50,7 @@ define(
                start: sinon.fake()
             };
             scroll._children.content = {
+               offsetHeight: 40,
                scrollHeight: 50,
                scrollTop: 10
             };
@@ -65,8 +67,32 @@ define(
                top: 'auto',
                bottom: 'auto'
             };
+            scroll._stickyHeaderContext = {
+               updateConsumers: function() { }
+            };
 
             scroll._isMounted = true;
+         });
+
+         describe('_afterMount', function() {
+            it('should be enable shadows if the contents fit in the container', function () {
+               scroll._beforeMount(scrollMod.Container.getDefaultOptions(), {});
+               sinon.stub(scroll, '_adjustContentMarginsForBlockRender');
+               scroll._children.stickyController = {
+                  setCanScroll: sinon.fake()
+               };
+               scroll._afterMount();
+               assert.isTrue(scroll._displayState.shadowEnable.top);
+               assert.isTrue(scroll._displayState.shadowEnable.bottom);
+            });
+            it('should be disable shadows if the content does not fit in the container', function () {
+               scroll._beforeMount(scrollMod.Container.getDefaultOptions(), {});
+               scroll._children.content.offsetHeight = 100;
+               sinon.stub(scroll, '_adjustContentMarginsForBlockRender');
+               scroll._afterMount();
+               assert.isFalse(scroll._displayState.shadowEnable.top);
+               assert.isFalse(scroll._displayState.shadowEnable.bottom);
+            });
          });
 
          describe('_afterUpdate', function() {
@@ -566,15 +592,24 @@ define(
 
          describe('_fixedHandler', function() {
             it('Should update scroll style when header fixed', function() {
+               scroll._displayState.canScroll = true;
                scroll._fixedHandler(null, 10, 10);
                assert.strictEqual(scroll._scrollbarStyles, 'top:10px; bottom:10px;');
                assert.strictEqual(scroll._displayState.contentHeight, 30);
             });
             it('Should update scroll style when header unfixed', function() {
                scroll._headersHeight = { top: 10, bottom: 20 };
+               scroll._displayState.canScroll = true;
                scroll._fixedHandler(null, 0, 0);
                assert.strictEqual(scroll._scrollbarStyles, 'top:0px; bottom:0px;');
                assert.strictEqual(scroll._displayState.contentHeight, 50);
+            });
+            it('Should\'t update scroll style if there is no scroll', function() {
+               scroll._displayState.contentHeight = 40;
+               scroll._displayState.canScroll = false;
+               scroll._fixedHandler(null, 10, 10);
+               assert.strictEqual(scroll._scrollbarStyles, '');
+               assert.strictEqual(scroll._displayState.contentHeight, 40);
             });
          });
 

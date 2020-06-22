@@ -334,27 +334,24 @@ define(['Controls/grid'], function(gridMod) {
             },
             gridView = new gridMod.GridView(cfg),
             columnScrollResizeHandlerCalled = false,
-            columnScrollUpdateShadowStyleCalled = false,
+            updateShadowStyleCalled = false,
             controlResizeNotified = false;
-         gridView._children = {
-            columnScroll:{
-               _resizeHandler: function() {
-                  columnScrollResizeHandlerCalled = true;
-               },
-               updateShadowStyle() {
-                  columnScrollUpdateShadowStyleCalled = true;
-               }
+         gridView._columnScrollController = {
+            updateSizes(c) {
+               columnScrollResizeHandlerCalled = true;
+               c({
+                  contentSizeForScrollBar: 100,
+                  scrollWidth: 80
+               });
             }
          };
-         gridView._notify = function(e) {
-            if (e === 'controlResize') {
-               controlResizeNotified = true;
-            }
+         gridView._updateColumnScrollData = () => {
+            updateShadowStyleCalled = true;
          };
+
          gridView.resizeNotifyOnListChanged();
-         assert.isTrue(controlResizeNotified);
          assert.isTrue(columnScrollResizeHandlerCalled);
-         assert.isTrue(columnScrollUpdateShadowStyleCalled);
+         assert.isTrue(updateShadowStyleCalled);
       });
 
       it('itemClick sends right args', function() {
@@ -428,6 +425,46 @@ define(['Controls/grid'], function(gridMod) {
             assert.isTrue(clickEvent.stopped);
             assert.isTrue(editArrowClickNotified);
          });
+      });
+
+      it('should call dragscroll only if column scroll enabled', function () {
+         const cfg = {
+            multiSelectVisibility: 'visible',
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+         const calledMethods = [];
+         gridView._dragScrollController = {};
+
+         [
+            'onViewMouseDown',
+            'onViewTouchStart',
+            'onViewMouseMove',
+            'onViewTouchMove',
+            'onViewMouseUp',
+            'onViewTouchEnd',
+            'onOverlayMouseMove',
+            'onOverlayTouchMove',
+            'onOverlayMouseUp',
+            'onOverlayTouchEnd',
+            'onOverlayMouseLeave'
+         ].forEach((methodName) => {
+            gridView._dragScrollController[methodName] = () => {
+               calledMethods.push(methodName);
+            };
+         });
+
+         gridView._startDragScrolling({}, 'mouse');
+         gridView._startDragScrolling({}, 'touch');
+         gridView._moveDragScroll({}, 'mouse');
+         gridView._moveDragScroll({}, 'touch');
+         gridView._stopDragScrolling({}, 'mouse');
+         gridView._stopDragScrolling({}, 'touch');
+
+         assert.deepEqual(calledMethods, []);
       });
    });
 

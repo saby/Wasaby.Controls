@@ -131,32 +131,56 @@ define([
                'controls-Tabs__item_align_left controls-Tabs__item_align_left_theme_default' +
                ' controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_default ' +
                'controls-Tabs__item_extreme_first controls-Tabs__item_extreme_first_theme_default ' +
-               'controls-Tabs_style_secondary__item_state_selected ' +
-               'controls-Tabs_style_secondary__item_state_selected_theme_default' +
-               ' controls-Tabs__item_state_selected controls-Tabs__item_state_selected_theme_default ' +
                'controls-Tabs__item_notShrink',
             expected2 = 'controls-Tabs__item controls-Tabs__item_theme_default' +
                ' controls-Tabs__item_align_right controls-Tabs__item_align_right_theme_default' +
-               ' controls-Tabs__item_default controls-Tabs__item_default_theme_default ' +
-               'controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_default' +
+               ' controls-Tabs__item_default controls-Tabs__item_default_theme_default' +
                ' controls-Tabs__item_type_photo controls-Tabs__item_type_photo_theme_default ' +
                'controls-Tabs__item_notShrink',
             expected3 = 'controls-Tabs__item controls-Tabs__item_theme_default ' +
                'controls-Tabs__item_align_right controls-Tabs__item_align_right_theme_default' +
                ' controls-Tabs__item_default controls-Tabs__item_default_theme_default' +
-               ' controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_default ' +
-               'controls-Tabs__item_canShrink',
+               ' controls-Tabs__item_canShrink',
             expected4 = 'controls-Tabs__item controls-Tabs__item_theme_default ' +
                'controls-Tabs__item_align_right controls-Tabs__item_align_right_theme_default' +
                ' controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_default' +
                ' controls-Tabs__item_extreme_last controls-Tabs__item_extreme_last_theme_default' +
-               ' controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_default' +
                ' controls-Tabs__item_notShrink';
          assert.equal(expected, tabsMod.Buttons._private.prepareItemClass(item, 1, options, 144), 'wrong order cross-brwoser styles');
          assert.equal(expected2, tabsMod.Buttons._private.prepareItemClass(item2, 2, options, 144), 'wrong order cross-brwoser styles');
          assert.equal(expected3, tabsMod.Buttons._private.prepareItemClass(item3, 2, options, 144));
          assert.equal(expected4, tabsMod.Buttons._private.prepareItemClass(item4, 144, options, 144));
       });
+      it('prepareItemSelected', function() {
+         var
+            item = new entity.Record({
+               rawData: {
+                  align: 'left',
+                  karambola: '15',
+                  _order: '144'
+               }
+            }),
+            item2 = new entity.Record({
+               rawData: {
+                  karambola: '10',
+                  _order: '2',
+                  type: 'photo'
+               }
+            }),
+            options = {
+               style: 'additional',
+               selectedKey: '15',
+               keyProperty: 'karambola',
+               theme: 'default'
+            },
+            expected = 'controls-Tabs_style_secondary__item_state_selected ' +
+            'controls-Tabs_style_secondary__item_state_selected_theme_default' +
+            ' controls-Tabs__item_state_selected controls-Tabs__item_state_selected_theme_default',
+            expected2 = 'controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_default';
+         assert.equal(expected, tabsMod.Buttons._private.prepareItemSelected(item, options), 'wrong order cross-brwoser styles');
+         assert.equal(expected2, tabsMod.Buttons._private.prepareItemSelected(item2, options), 'wrong order cross-brwoser styles');
+      });
+
       it('_beforeMount with received state', function() {
          var tabs = new tabsMod.Buttons(),
             receivedState = {

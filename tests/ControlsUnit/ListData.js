@@ -15,8 +15,8 @@ define('ControlsUnit/ListData', function() {
          }, {
             'id': 2,
             'Раздел': 1,
-            'Раздел@': true,
-            'Раздел$': true
+            'Раздел@': false,
+            'Раздел$': false
          }, {
             'id': 3,
             'Раздел': 2,

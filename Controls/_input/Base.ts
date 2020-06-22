@@ -735,7 +735,8 @@ var Base = Control.extend({
             Env.constants.key.end,
             Env.constants.key.home,
             Env.constants.key.left,
-            Env.constants.key.right
+            Env.constants.key.right,
+            Env.constants.key.space
         ];
 
         /**

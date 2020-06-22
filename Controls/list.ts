@@ -74,6 +74,7 @@ import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeAction');
 import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
+import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
 
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
@@ -99,6 +100,7 @@ import ItemsViewModel = require('Controls/_list/ItemsViewModel');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
+import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {IList} from './_list/interface/IList';
 
 export {
@@ -126,6 +128,7 @@ export {
     ListViewModel,
     ListControl,
     ListView,
+    ItemActionsTemplate,
     SwipeTemplate,
     GroupContentResultsTemplate,
     ItemOutputWrapper,
@@ -142,5 +145,6 @@ export {
     HotKeysContainer,
     InertialScrolling,
     IVirtualScrollConfig,
-    IList
+    IList,
+    VirtualScroll
 };

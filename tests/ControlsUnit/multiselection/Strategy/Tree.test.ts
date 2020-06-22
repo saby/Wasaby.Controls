@@ -288,6 +288,42 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(toArray(res.get(null)), [ ]);
          assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => [2, 3, 4].includes(it.id)) );
       });
+
+      it('selected unloaded item', () => {
+          const treeStrategyWithRootItems = new TreeSelectionStrategy({
+              nodesSourceControllers,
+              selectDescendants: true,
+              selectAncestors: true,
+              hierarchyRelation: hierarchy,
+              rootId: null,
+              items: new RecordSet({
+                  keyProperty: ListData.KEY_PROPERTY,
+                  rawData: ListData.getRootItems()
+              })
+          });
+          const entryPath = [
+              {parent: 6, id: 10},
+              {parent: 6, id: 11}
+          ];
+          const selection = {
+             selected: [10],
+             excluded: []
+          };
+          treeStrategyWithRootItems._items.setMetaData({
+              ENTRY_PATH: entryPath
+          });
+          const result = treeStrategyWithRootItems.getSelectionForModel(selection);
+          const unselectedKeys = toArray(result.get(false)).map((resultItem) => {
+             return resultItem.id;
+          });
+          const hasSelectedItems = !!result.get(true).length;
+          const nullStateKeys = toArray(result.get(null)).map((resultItem) => {
+              return resultItem.id;
+          });
+          assert.deepEqual(unselectedKeys, [1, 7]);
+          assert.isFalse(hasSelectedItems);
+          assert.deepEqual(nullStateKeys, [6]);
+      });
    });
 
    describe('getCount', () => {
@@ -359,11 +395,14 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       it('all selected', () => {
          const selection = { selected: [null], excluded: [null] };
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, false));
+
       });
 
       it ('all selected and one excluded', () => {
          const selection = { selected: [null], excluded: [null, 2] };
          assert.isFalse(strategy.isAllSelected(selection, false, 7));
+         assert.isTrue(strategy.isAllSelected(selection, false, 7, false));
       });
 
       it ('selected current root', () => {
@@ -380,16 +419,28 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             })
          });
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
+         assert.isTrue(strategy.isAllSelected(selection, true, 7, false));
       });
 
       it ('selected by one all elements', () => {
          const selection = { selected: [1, 2, 3, 4, 5, 6, 7], excluded: [] };
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
+         assert.isFalse(strategy.isAllSelected(selection, true, 7, false));
       });
 
       it ('selected by one all elements and has more data', () => {
          const selection = { selected: [1, 2, 3, 4, 5, 6, 7], excluded: [] };
          assert.isFalse(strategy.isAllSelected(selection, true, 7));
+         assert.isFalse(strategy.isAllSelected(selection, true, 7, false));
       });
+   });
+
+   it('setItems', () => {
+      const newItems = new RecordSet({
+         keyProperty: ListData.KEY_PROPERTY,
+         rawData: ListData.getItems()
+      });
+      strategy.setItems(newItems);
+      assert.equal(strategy._items, newItems);
    });
 });

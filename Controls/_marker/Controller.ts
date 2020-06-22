@@ -46,23 +46,27 @@ export class Controller {
          return this._markedKey;
       }
 
-      if (key === undefined && this._markedKey !== undefined) {
+      if (key === undefined && this._markerVisibility !== Visibility.Visible) {
+         if (this._markedKey === undefined) {
+            return undefined;
+         }
+
          this._model.setMarkedKey(this._markedKey, false);
-         this._markedKey = null;
-         return null;
+         this._markedKey = undefined;
+         return undefined;
       }
 
       const item = this._model.getItemBySourceKey(key);
       if (this._markedKey === key && item) {
          // если список перестроится, то в модели сбросится маркер, а в контроллере сохранится
          if (!item.isMarked()) {
-            this._model.setMarkedKey(this._markedKey, false);
+            this._model.setMarkedKey(this._markedKey, false, true);
             this._model.setMarkedKey(key, true);
          }
          return this._markedKey;
       }
 
-      this._model.setMarkedKey(this._markedKey, false);
+      this._model.setMarkedKey(this._markedKey, false, true);
       if (item) {
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
@@ -70,6 +74,7 @@ export class Controller {
          switch (this._markerVisibility) {
             case Visibility.OnActivated:
                this._markedKey = null;
+               this._model.nextVersion();
                break;
             case Visibility.Visible:
                this._markedKey = this._setMarkerOnFirstItem();
@@ -78,6 +83,17 @@ export class Controller {
       }
 
       return this._markedKey;
+   }
+
+   /**
+    * Проставляет заново маркер в модели
+    * @remark Не уведомляет о проставлении маркера
+    */
+   restoreMarker(): void {
+      const item = this._model.getItemBySourceKey(this._markedKey);
+      if (item) {
+         item.setMarked(true, true);
+      }
    }
 
    /**

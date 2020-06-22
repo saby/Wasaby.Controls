@@ -41,13 +41,17 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._items = options.items;
    }
 
+   setItems(items: RecordSet): void {
+      this._items = items;
+   }
+
    select(selection: ISelection, keys: TKeys): ISelection {
       const cloneSelection = clone(selection);
 
       keys.forEach((key) => {
          const item: Record = this._items.getRecordById(key);
 
-         if (!item || this._hierarchyRelation.isNode(item) !== LEAF) {
+         if (!item || this._isNode(item)) {
             this._selectNode(cloneSelection, key);
          } else {
             this._selectLeaf(cloneSelection, key);
@@ -62,7 +66,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       keys.forEach((key) => {
          const item = this._items.getRecordById(key);
-         if (!item || this._hierarchyRelation.isNode(item) !== LEAF) {
+         if (!item || this._isNode(item)) {
             this._unselectNode(cloneSelection, key);
          } else {
             this._unselectLeaf(cloneSelection, key);
@@ -130,6 +134,34 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
+   _getChildrenByEntryPath(nodeId: TKey, path = []): TKey[] {
+      let result = [];
+      let children;
+      const childrenMap = new Map();
+      path.forEach((pathItem) => {
+         if (!childrenMap.has(pathItem.parent)) {
+            childrenMap.set(pathItem.parent, [pathItem.id]);
+         } else {
+            childrenMap.get(pathItem.parent).push(pathItem.id);
+         }
+      });
+      children = childrenMap.get(nodeId) || [];
+      childrenMap.delete(nodeId);
+      while (children.length) {
+         let tempChildren = [];
+         result = result.concat(children);
+         children.forEach((key: TKey): void => {
+            if (childrenMap.has(key)) {
+               tempChildren = tempChildren.concat(childrenMap.get(key));
+               childrenMap.delete(key);
+            }
+         });
+         children = tempChildren;
+      }
+
+      return result;
+   }
+
    getSelectionForModel(selection: ISelection): Map<boolean|null, Record[]> {
       const selectedItems = new Map();
       // IE не поддерживает инициализацию конструктором
@@ -145,15 +177,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
             this._isAllSelected(selection, parentId));
 
-         if (this._selectAncestors && this._hierarchyRelation.isNode(item) !== LEAF) {
+         if (this._selectAncestors && this._isNode(item)) {
             isSelected = this._getStateNode(itemId, isSelected, {
                selected: selectedKeysWithEntryPath,
                excluded: selection.excluded
             });
-
-            if (!isSelected && (selectedKeysWithEntryPath.includes(itemId))) {
-               isSelected = null;
-            }
          }
 
          selectedItems.get(isSelected).push(item);
@@ -172,7 +200,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                const itemId: TKey = selection.selected[index];
                const item: Record = this._items.getRecordById(itemId);
 
-               if (!item || this._hierarchyRelation.isNode(item) !== LEAF) {
+               if (!item || this._isNode(item)) {
                   selectedNodes.push(itemId);
                }
 
@@ -203,10 +231,17 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number): boolean {
-      return !hasMoreData && itemsCount === this.getCount(selection, hasMoreData)
-         || selection.selected.includes(this._rootId) && selection.excluded.includes(this._rootId)
-            && selection.excluded.length === 1;
+   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number, byEveryItem: boolean = true): boolean {
+      let isAllSelected;
+
+      if (byEveryItem) {
+         isAllSelected = !hasMoreData && itemsCount === this.getCount(selection, hasMoreData)
+            || this._isAllSelectedInRoot(selection) && selection.excluded.length === 1;
+      } else {
+         isAllSelected = this._isAllSelectedInRoot(selection);
+      }
+
+      return isAllSelected;
    }
 
    private _unselectParentNodes(selection: ISelection, parentId: TKey): void {
@@ -354,7 +389,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          const childId: TKey = child.getId();
          const childInList = listKeys.includes(childId);
 
-         if (this._hierarchyRelation.isNode(child) !== LEAF) {
+         if (this._isNode(child)) {
             const stateChildNode = this._getStateNode(childId, childInList ? !initialState : initialState, selection);
 
             if (stateChildNode === null) {
@@ -372,6 +407,13 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          if (countChildrenInList === children.length && !hasMoreData) {
             stateNode = !stateNode;
          } else {
+            stateNode = null;
+         }
+      } else if (!children.length) {
+         const entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH];
+         const childrenFromPath = this._getChildrenByEntryPath(itemId, entryPath);
+         const hasChildrenInKeys = listKeys.some((key) => childrenFromPath.includes(key));
+         if (hasChildrenInKeys) {
             stateNode = null;
          }
       }
@@ -394,7 +436,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._getChildren(nodeId, items, hierarchyRelation).forEach((child) => {
          ArraySimpleValuesUtil.addSubArray(children, [child]);
 
-         if (hierarchyRelation.isNode(child)) {
+         if (this._isNode(child)) {
             ArraySimpleValuesUtil.addSubArray(children, this._getAllChildren(child.getId(), items, hierarchyRelation));
          }
       });
@@ -433,8 +475,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return childrenIds;
    }
 
-   private _isHasChildren(item: Record, hierarchyRelation: relation.Hierarchy): boolean {
-      return hierarchyRelation ? hierarchyRelation.hasDeclaredChildren(item) !== false : false;
+   private _isHasChildren(item: Record, items: RecordSet, hierarchyRelation: relation.Hierarchy): boolean {
+      return hierarchyRelation.hasDeclaredChildren(item) !== false
+         || this._getChildren(item.getKey(), items, hierarchyRelation).length > 0;
    }
 
    private _getSelectedChildrenCount(
@@ -461,7 +504,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                      selectedChildrenCount++;
                   }
 
-                  if (hierarchyRelation.isNode(childItem) && this._isHasChildren(childItem, hierarchyRelation) && deep !== false) {
+                  if (this._isNode(childItem) && this._isHasChildren(childItem, items, hierarchyRelation) && deep !== false) {
                      childNodeSelectedCount = this._getSelectedChildrenCount(childId, selection, items, hierarchyRelation);
 
                      if (childNodeSelectedCount === null) {
@@ -473,7 +516,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                }
             }
          });
-      } else if (!nodeItem || this._isHasChildren(nodeItem, hierarchyRelation)) {
+      } else if (!nodeItem || this._isHasChildren(nodeItem, items, hierarchyRelation)) {
          selectedChildrenCount = null;
       }
 
@@ -488,6 +531,15 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    private _getChildren(nodeId: TKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): Record[] {
-      return hierarchyRelation.getChildren(nodeId, items);;
+      return hierarchyRelation.getChildren(nodeId, items);
+   }
+
+   /**
+    * Проверяет что элемент узел или скрытый узел
+    * @param item
+    * @private
+    */
+   private _isNode(item: Record): boolean {
+      return this._hierarchyRelation.isNode(item) !== LEAF;
    }
 }

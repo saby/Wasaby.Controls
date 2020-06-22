@@ -15,8 +15,9 @@ define([
    'Types/entity',
    'Controls/popup',
    'Controls/listDragNDrop',
+   'Controls/listRender',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop) {
+], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, listRender) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -721,7 +722,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
@@ -794,7 +796,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
@@ -859,7 +862,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -987,16 +991,12 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
             down: true
-         };
-         ctrl._notify = (eventName, eventsArgs) => {
-            if (eventName === 'updateShadowMode') {
-               shadowVisibility = eventsArgs[0];
-            }
          };
          ctrl._isScrollShown = true;
          ctrl._shadowVisibility = {};
@@ -1011,15 +1011,14 @@ define([
          ctrl._portionedSearchInProgress = true;
 
          // Up trigger became visible, no changes to indicator
-         ctrl.triggerVisibilityChangedHandler(null, 'up', true);
+         ctrl.triggerVisibilityChangedHandler('up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
          assert.isFalse(ctrl._showContinueSearchButton);
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
-         ctrl.triggerVisibilityChangedHandler(null, 'down', false);
+         ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
          assert.isTrue(ctrl._showContinueSearchButton);
-         assert.equal(shadowVisibility.bottom, 'auto');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
@@ -1064,7 +1063,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
@@ -1478,6 +1478,8 @@ define([
                 markerVisibility: 'visible',
                 keyProperty: 'key',
                 multiSelectVisibility: 'visible',
+                selectedKeys: [],
+                excludedKeys: [],
                 source: new sourceLib.Memory({
                    keyProperty: 'key',
                    data: [{
@@ -1487,7 +1489,9 @@ define([
                    }, {
                       key: 3
                    }]
-                })
+                }),
+                selectedKeys: [],
+                excludedKeys: []
              },
              baseControl = new lists.BaseControl(cfg);
 
@@ -1498,32 +1502,24 @@ define([
 
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._selectionController = {
-            toggleItem: (key) => {
-               if (baseControl._listViewModel.getSelectionStatus(key)) {
-                  baseControl._listViewModel._selectedKeys.pop(key);
-               } else {
-                  baseControl._listViewModel._selectedKeys.push(key);
-               }
-            },
-            handleReset: function() {}
-         };
-         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
+
          baseControl._loadingIndicatorState = 'all';
          lists.BaseControl._private.enterHandler(baseControl);
-         assert.deepEqual([], baseControl._listViewModel._selectedKeys);
 
          baseControl._loadingIndicatorState = null;
          sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
          const handleSelectionControllerResult = sinon.spy(lists.BaseControl._private, 'handleSelectionControllerResult');
          lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.deepEqual([1], baseControl._listViewModel._selectedKeys);
+         assert.isTrue(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
          assert.isTrue(handleSelectionControllerResult.withArgs(baseControl, undefined).calledOnce);
 
          baseControl.getViewModel()._markedKey = 5;
          lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.deepEqual([1, 1], baseControl._listViewModel._selectedKeys);
+         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
 
+         baseControl._options.multiSelectVisibility = 'hidden';
+         lists.BaseControl._private.spaceHandler(baseControl, event);
+         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
 
          sandbox.restore();
       });
@@ -1570,6 +1566,29 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
+      it('_private.setMarkedKey', () => {
+         const baseControl = {
+            _markerController: {
+               setMarkedKey: (key) => {
+                  assert.equal(key, 2);
+                  return key;
+               }
+            }
+         };
+
+         const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
+         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'setMarkedKey');
+
+         lists.BaseControl._private.setMarkedKey({}, 2);
+         assert.isFalse(setMarkedKeySpy.called);
+         assert.isFalse(scrollToItemSpy.called);
+
+         lists.BaseControl._private.setMarkedKey(baseControl, 2);
+         assert.isFalse(scrollToItemSpy.called);
+         assert.isFalse(setMarkedKeySpy.withArgs(baseControl, 2).called);
+         assert.equal(baseControl._markedKey, 2);
+      });
+
       it('loadToDirection up', async function() {
          const source = new sourceLib.Memory({
             keyProperty: 'id',
@@ -1599,7 +1618,14 @@ define([
          const baseControl = new lists.BaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
-         baseControl._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
+         baseControl._container = {
+            getElementsByClassName: () => ([
+               {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) , offsetHeight:0}
+            ]),
+            clientHeight: 100,
+            getBoundingClientRect: () => ({ y: 0 })
+         };
+         baseControl._scrollController.__getItemsContainer = () => ({children: []});
          baseControl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
@@ -1634,7 +1660,8 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {clientHeight: 100};
+         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          ctrl._sourceController.load = sinon.stub()
@@ -1724,9 +1751,9 @@ define([
       it('indicator', function() {
          var cfg = {};
          var ctrl = new lists.BaseControl(cfg);
-         ctrl._container = {
-            getBoundingClientRect: () => ({})
-         };
+         ctrl._container =  {getElementsByClassName: () => ([{
+               getBoundingClientRect: () => ({})
+            }]), getBoundingClientRect: () => ({})};
          ctrl._scrollTop = 200;
 
          assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0, 'Wrong top offset');
@@ -2024,9 +2051,9 @@ define([
             };
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
-            ctrl._beforeMount(cfg);
+            await ctrl._beforeMount(cfg);
 
-            ctrl._children = triggers;
+            ctrl._scrollController._triggers = triggers;
             ctrl._viewSize = 1000;
             ctrl._viewPortSize = 400;
             // эмулируем появление скролла
@@ -2329,17 +2356,16 @@ define([
             ctrl._notify = function(event, dir) {
                result = dir;
             };
-            ctrl._children = {
-               scrollController: {
-                  scrollToItem(key) {
-                     if (key === data[0].id) {
-                        result = 'top';
-                     } else if (key === data[data.length - 1].id) {
-                        result = 'bottom';
-                     }
-                     return Promise.resolve();
+            ctrl._scrollController = {
+               scrollToItem(key) {
+                  if (key === data[0].id) {
+                     result = 'top';
+                  } else if (key === data[data.length - 1].id) {
+                     result = 'bottom';
                   }
-               }
+                  return Promise.resolve();
+               },
+               reset: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -2405,17 +2431,17 @@ define([
             ctrl._notify = function(eventName, type) {
                result = type;
             };
-            ctrl._children = {
-               scrollController: {
-                  scrollToItem(key) {
-                     if (key === data[0].id) {
-                        result = ['top'];
-                     } else if (key === data[data.length - 1].id) {
-                        result = ['bottom'];
-                     }
-                     return Promise.resolve();
+            ctrl._scrollController ={
+               scrollToItem(key) {
+                  if (key === data[0].id) {
+                     result = ['top'];
+                  } else if (key === data[data.length - 1].id) {
+                     result = ['bottom'];
                   }
-               }
+                  return Promise.resolve();
+               },
+               registerObserver: () => undefined,
+               reset: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -2536,7 +2562,6 @@ define([
       });
 
       it('reload with changing source/navig/filter should call scroll to start', function() {
-
          var
              lnSource = new sourceLib.Memory({
                 keyProperty: 'id',
@@ -2597,6 +2622,49 @@ define([
          });
       });
 
+      it('reload and restore model state', async function() {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [1],
+               excludedKeys: [],
+               markedKey: 1,
+               markerVisibility: 'visible'
+            },
+            baseControl = new lists.BaseControl(lnCfg);
+
+         baseControl.saveOptions(lnCfg);
+         await baseControl._beforeMount(lnCfg);
+         baseControl._createSelectionController();
+
+         let item = baseControl._listViewModel.getItemBySourceKey(1);
+         assert.isTrue(item.isMarked());
+         assert.isTrue(item.isSelected());
+
+         // Меняю наверняка items, чтобы если этого не произойдет в reload, упали тесты
+         baseControl._listViewModel.setItems(new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: data
+         }));
+
+         item = baseControl._listViewModel.getItemBySourceKey(1);
+         assert.isFalse(item.isMarked());
+         assert.isFalse(item.isSelected());
+
+         await baseControl.reload(false, {});
+
+         item = baseControl._listViewModel.getItemBySourceKey(1);
+         assert.isTrue(item.isMarked());
+         assert.isTrue(item.isSelected());
+      });
+
       describe('updateItemActions', function() {
          var source = new sourceLib.Memory({
                keyProperty: 'id',
@@ -2628,13 +2696,6 @@ define([
          baseControl.saveOptions(cfg);
          baseControl._beforeMount(cfg);
          var actionsUpdateCount = 0;
-         baseControl._children = {
-            itemActions: {
-               updateActions: function() {
-                  actionsUpdateCount++;
-               }
-            }
-         };
          baseControl._container = {
             clientHeight: 100,
             getBoundingClientRect: () => ({ y: 0 })
@@ -2653,13 +2714,13 @@ define([
           });
          it('control in error state, should not call update', function() {
             baseControl.__error = true;
-            baseControl._updateItemActions();
+            lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
             assert.equal(actionsUpdateCount, 0);
             baseControl.__error = false;
          });
          it('without listViewModel should not call update', function() {
             baseControl._listViewModel = null;
-            baseControl._updateItemActions();
+            lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
             assert.equal(actionsUpdateCount, 0);
             baseControl._beforeMount(cfg);
          });
@@ -2684,17 +2745,17 @@ define([
                doScrollNotified = true;
             }
          };
-         baseControl._container = {
-            getBoundingClientRect: () => ({ y: 0 })
-         };
-
+         let scrollContainer = { getBoundingClientRect: () => ({ y: 0 })};
+         baseControl._container = Object.assign({}, scrollContainer, {
+            getElementsByClassName: () => ([scrollContainer])
+         });
          baseControl.saveOptions(cfg);
 
          it('before mounting', async function() {
             await baseControl._beforeMount(cfg);
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
-            baseControl._container.clientHeight = 100;
+            scrollContainer.clientHeight = 100;
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
          });
@@ -2708,13 +2769,12 @@ define([
          it('with scroll', async function() {
             baseControl._isScrollShown = true;
             await lists.BaseControl._private.reload(baseControl, cfg);
-            assert.isTrue(baseControl._resetScrollAfterReload);
             await baseControl._afterUpdate(cfg);
             assert.isFalse(doScrollNotified);
             baseControl._shouldNotifyOnDrawItems = true;
+            baseControl._resetScrollAfterReload = true;
             await baseControl._beforeRender(cfg);
             assert.isTrue(doScrollNotified);
-
          });
       });
 
@@ -2801,7 +2861,8 @@ define([
          lnBaseControl._selectionController = {
             toggleItem: function() {},
             handleReset: function() {},
-            update: function() {}
+            update: function() {},
+            restoreSelection: () => {}
          };
 
          lnBaseControl.saveOptions(lnCfg);
@@ -3509,6 +3570,34 @@ define([
             ctrl._beforeUpdate(cfg);
             assert.isTrue(ctrl._editInPlace._options.readOnly);
          });
+
+         it('should update form controlled if it was updated', async () => {
+            var cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               editingConfig: {
+                  item: new entity.Model({rawData: { id: 1 }})
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: lists.ListViewModel,
+            };
+            var ctrl = new lists.BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            await ctrl._beforeMount(cfg);
+            const formController = {};
+            ctrl._children.formController = formController;
+            ctrl._beforeUpdate(cfg);
+            ctrl._afterUpdate(cfg);
+            assert.equal(ctrl._editInPlace._formController, formController);
+         });
       });
 
       it('can\'t start drag on readonly list', function() {
@@ -3661,6 +3750,56 @@ define([
             ctrl._itemMouseDown({}, itemData, domEvent);
             assert.isTrue(dragNDropStarted);
          });
+      });
+
+      it('startDragNDrop', () => {
+         const self = {
+               _options: {
+                  readOnly: false,
+                  itemsDragNDrop: true,
+                  source,
+                  filter: {},
+                  selectedKeys: [],
+                  excludedKeys: [],
+               },
+               _listViewModel: new lists.ListViewModel({
+                  items: new collection.RecordSet({
+                     rawData: data,
+                     keyProperty: 'id'
+                  }),
+                  keyProperty: 'key'
+               })
+            },
+            domEvent = {
+               nativeEvent: {},
+               target: {
+                  closest: function() {
+                     return false;
+                  }
+               }
+            },
+            itemData = {
+               getContents() {
+                  return {
+                     getKey() {
+                        return 2;
+                     }
+                  };
+               }
+            };
+
+         // self._listViewModel.setItems(data);
+
+         let notifyCalled = false;
+         self._notify = function(eventName, args) {
+            notifyCalled = true;
+            assert.equal(eventName, 'dragStart');
+            assert.deepEqual(args[0], [2]);
+            assert.equal(args[1], 2);
+         };
+
+         lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
+         assert.isTrue(notifyCalled);
       });
 
       it('_processItemMouseEnterWithDragNDrop', () => {
@@ -3917,6 +4056,8 @@ define([
          let childEvent;
          let itemData;
          let instance;
+         let sandbox;
+         let isRightSwipeActivated;
 
          function initTest(multiSelectVisibility) {
             const cfg = {
@@ -3947,7 +4088,12 @@ define([
             instance._listViewModel.setItems(rs);
             instance._items = rs;
             instance._children = {scrollController: { scrollToItem: () => null }};
-            instance._updateItemActions(cfg);
+            isRightSwipeActivated = false;
+            instance._itemActionsController = {
+               activateRightSwipe: () => {
+                  isRightSwipeActivated = true;
+         }
+            };
          }
 
          beforeEach(() => {
@@ -3981,22 +4127,19 @@ define([
          it('multiSelectVisibility: visible, should start animation', function() {
             initTest('visible');
             instance._onItemSwipe({}, itemData, childEvent);
-            const item1 = instance._listViewModel.getItemBySourceKey(itemData.getContents().getKey());
-            assert.isTrue(item1.isRightSwiped());
+            assert.isTrue(isRightSwipeActivated);
          });
 
          it('multiSelectVisibility: onhover, should start animation', function() {
             initTest('onhover');
             instance._onItemSwipe({}, itemData, childEvent);
-            const item1 = instance._listViewModel.getItemBySourceKey(itemData.getContents().getKey());
-            assert.isTrue(item1.isRightSwiped());
+            assert.isTrue(isRightSwipeActivated);
          });
 
          it('multiSelectVisibility: hidden, should not start animation', function() {
             initTest('hidden');
             instance._onItemSwipe({}, itemData, childEvent);
-            const item1 = instance._listViewModel.getItemBySourceKey(itemData.getContents().getKey());
-            assert.isFalse(item1.isRightSwiped());
+            assert.isFalse(isRightSwipeActivated);
          });
       });
 
@@ -4055,12 +4198,17 @@ define([
                itemActions: [
                   {
                      id: 1,
-                     showType: 0,
+                     showType: 2,
                      'parent@': true
                   },
                   {
                      id: 2,
-                     showType: 2,
+                     showType: 0,
+                     parent: 1
+                  },
+                  {
+                     id: 3,
+                     showType: 0,
                      parent: 1
                   }
                ],
@@ -4093,10 +4241,8 @@ define([
                })
             };
             instance.saveOptions(cfg);
-            instance._children = {
-               scrollController: {
-                  scrollToItem: () => {}
-               }
+            instance._scrollController = {
+               scrollToItem: () => {}
             };
             instance._container = {
                querySelector: (selector) => ({
@@ -4108,7 +4254,7 @@ define([
                })
             };
             await instance._beforeMount(cfg);
-            instance._updateItemActions(cfg);
+            lists.BaseControl._private.updateItemActions(instance, cfg);
             popup.Sticky.openPopup = (config) => Promise.resolve(1);
             instance._notify = (eventName, args) => {
                lastOutgoingEvent = { eventName, args };
@@ -4124,14 +4270,13 @@ define([
          });
 
          // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
-         it('should correctly work with breadcrumbs', () => {
+         it('should correctly work with breadcrumbs', async () => {
             const fakeEvent = initFakeEvent();
+            const itemAt1 = instance._listViewModel.at(1);
             const breadcrumbItem = {
                '[Controls/_display/BreadcrumbsItem]': true,
                _$active: false,
-               getContents: () => ['fake', 'fake', 'fake', {
-                  getKey: () => 2
-               }],
+               getContents: () => ['fake', 'fake', 'fake', itemAt1.getContents() ],
                setActive: function() {
                   this._$active = true;
                },
@@ -4142,12 +4287,12 @@ define([
                   }]
                })
             };
-            instance._onItemContextMenu(null, breadcrumbItem, fakeEvent);
-            assert(instance._listViewModel.getActiveItem(), item);
+            await instance._onItemContextMenu(null, breadcrumbItem, fakeEvent);
+            assert.equal(instance._listViewModel.getActiveItem(), itemAt1);
          });
 
          // Клик по ItemAction в меню отдавать контейнер в событии
-         it('should send target container in event on click in menu', () => {
+         it('should send target container in event on click in menu', async () => {
             const fakeEvent = initFakeEvent();
             const fakeEvent2 = initFakeEvent();
             const action = {
@@ -4162,7 +4307,8 @@ define([
                   parent: 1
                })
             };
-            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            instance._listViewModel.itemActions
+            await instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
 
             // popup.Sticky.openPopup called in openItemActionsMenu is an async function
             // we cannot determine that it has ended
@@ -4172,9 +4318,25 @@ define([
             assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
          });
 
+         // Нельзя открывать itemActionsMenu дважды подряд (надо сначала дождаться закрытия предыдущего меню)
+         it('should not open itemActionsMenu twice at the same time', () => {
+            const self = {
+               _itemActionsController: {
+                  prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => {}
+               },
+               _itemActionsMenuId: 'somePopupId'
+            };
+
+            // Нам нужно только передать self с установленной опцией _itemActionsMenuId, чтобы метод вернул пустой промис
+            return lists.BaseControl._private.openItemActionsMenu(self, null, null, null, false)
+               .then(() => {
+                  assert.equal(self._itemActionsMenuId, null);
+               });
+         });
+
 
          // Клик по ItemAction в контекстном меню отдавать контейнер в событии
-         it('should send target container in event on click in context menu', () => {
+         it('should send target container in event on click in context menu', async () => {
             const fakeEvent = initFakeEvent();
             const fakeEvent2 = initFakeEvent();
             const actionModel = {
@@ -4183,7 +4345,7 @@ define([
                   showType: 0
                })
             };
-            instance._onItemContextMenu(null, item, fakeEvent);
+            await instance._onItemContextMenu(null, item, fakeEvent);
             instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
             assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
             assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
@@ -4200,6 +4362,27 @@ define([
             instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
             assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
             assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
+         });
+
+         // Нужно устанавливать active item только после того, как пришёл id нового меню
+         it('should set active item only after promise then result', (done) => {
+            const fakeEvent = initFakeEvent();
+            let activeItem = null;
+            const self = {
+               _itemActionsController: {
+                  prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => ({}),
+                  setActiveItem: (_item) => {
+                     activeItem = _item;
+                  }
+               },
+               _itemActionsMenuId: null
+            };
+            lists.BaseControl._private.openItemActionsMenu(self, null, fakeEvent, item, false)
+               .then(() => {
+                  assert.equal(activeItem, item);
+               })
+               .then(done);
+            assert.equal(activeItem, null);
          });
       });
 
@@ -4503,6 +4686,7 @@ define([
              instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
+         instance._scrollController.afterMount = () => undefined;
          instance._container = {};
          let fakeNotify = sandbox.spy(instance, '_notify')
              .withArgs('drawItems');
@@ -4538,6 +4722,74 @@ define([
          assert.isFalse(fakeNotify.called);
          instance._afterUpdate(cfg);
          assert.isTrue(fakeNotify.calledOnce);
+      });
+
+      it('onListChange call selectionController methods', () => {
+         let clearSelectionCalled = false,
+             handleResetCalled = false,
+             handleAddItemsCalled = false;
+
+         const self = {
+            _options: {
+               root: 5
+            },
+            _prevRootId: 5,
+            _selectionController: {
+               isAllSelected: () => true,
+               clearSelection: () => { clearSelectionCalled = true },
+               handleReset: (items, prevRoot, rootChanged) => {
+                  handleResetCalled = true;
+                  assert.equal(items, 'items');
+                  assert.equal(prevRoot, 5);
+                  assert.isFalse(rootChanged);
+               },
+               handleAddItems: (items) => {
+                  handleAddItemsCalled = true;
+                  assert.equal(items, 'items');
+               }
+            },
+            _listViewModel: {
+               _isActionsAssigned: false,
+               getCount: () => 5,
+               isActionsAssigned: function() { return this._isActionsAssigned; }
+            },
+            handleSelectionControllerResult: () => {},
+            _updateInitializedItemActions: () => {}
+         };
+
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         self._listViewModel.getCount = () => 0;
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         assert.isTrue(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         clearSelectionCalled = false;
+         self._selectionController.isAllSelected = () => false;
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         clearSelectionCalled = false;
+         lists.BaseControl._private.onListChange(self, null, '');
+         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'rs', 'items');
+         assert.isFalse(clearSelectionCalled);
+         assert.isTrue(handleResetCalled);
+         assert.isFalse(handleAddItemsCalled);
+
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'a', 'items');
+         assert.isFalse(clearSelectionCalled);
+         assert.isTrue(handleResetCalled);
+         assert.isTrue(handleAddItemsCalled);
       });
 
       it('should fire "drawItems" with new collection if source item has changed', async function() {
@@ -4684,7 +4936,12 @@ define([
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
-         instance._container = {clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }) };
+         instance._container = {
+            getElementsByClassName: () => ([{clientHeight: 100, getBoundingClientRect: () => ({ y: 0 }), offsetHeight:0 }]),
+            clientHeight: 100,
+            getBoundingClientRect: () => ({ y: 0 })
+         };
+         instance._scrollController.__getItemsContainer = () => ({children: []});
          instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
@@ -4782,34 +5039,6 @@ define([
          assert.isTrue(clearSelectionCalled);
       });
 
-      it('_beforeUpdate with empty model', async function() {
-         let cfg = {
-            viewName: 'Controls/List/ListView',
-            sorting: [],
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            keyProperty: 'id'
-         };
-         let instance = new lists.BaseControl(cfg);
-
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-
-         let clearSelectionCalled = false;
-         instance._selectionController = {
-            update() {},
-            clearSelection() { clearSelectionCalled = true; },
-            handleReset() {}
-         };
-
-         let cfgClone = { ...cfg};
-         instance._beforeUpdate(cfgClone);
-         assert.isTrue(clearSelectionCalled);
-      });
-
       it('_beforeUpdate with new searchValue', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -4880,7 +5109,8 @@ define([
          let cfg;
          let instance;
          let items;
-         let visibilityResult;
+         let sandbox;
+         let updateItemActionsCalled;
 
          beforeEach(() => {
             items = new collection.RecordSet({
@@ -4901,7 +5131,6 @@ define([
                ],
                viewModelConstructor: lists.ListViewModel,
                itemActionVisibilityCallback: () => {
-                  visibilityResult = 'first';
                   return true;
                },
                keyProperty: 'id',
@@ -4911,29 +5140,37 @@ define([
             instance.saveOptions(cfg);
             instance._viewModelConstructor = cfg.viewModelConstructor;
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
+            sandbox = sinon.createSandbox();
+            updateItemActionsCalled = false;
          });
 
-         // Необходимо обновлять опции записи при изиенении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
-         it('should update ItemActions when visibilityCallback has changed', () => {
+         afterEach(() => {
+            sandbox.restore();
+         });
+
+         // Необходимо вызывать updateItemActions при изменении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
+         it('should call updateItemActions when visibilityCallback has changed', async () => {
             instance._listViewModel.setActionsAssigned(true);
-            instance._beforeUpdate({
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
+            await instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                itemActionVisibilityCallback: () => {
-                  visibilityResult = 'second';
-                  return true;
+                  return false;
                }
             });
-            instance._listViewModel.getEditingItemData = function() {
-               return null;
-            };
-            assert.equal(visibilityResult, 'second');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // Необходимо обновлять опции записи при изиенении самих ItemActions
-         it('should update ItemActions when ItemActions have changed', () => {
+         // Необходимо вызывать updateItemActions при изиенении самих ItemActions
+         it('should call updateItemActions when ItemActions have been changed', async () => {
             instance._listViewModel.setActionsAssigned(true);
-            instance._beforeUpdate({
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
+            await instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                itemActions: [
@@ -4943,13 +5180,11 @@ define([
                   }
                ]
             });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-            assert.equal(actionsOf0.all[0].title, '456', 'new actions for item at 0 pos. were not assigned');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // Необходимо обновлять опции записи при изиенении модели (Демка Controls-demo/Explorer/ExplorerLayout)
-         it('should update ItemActions when Model constructor has changed', () => {
+         // Необходимо вызывать updateItemActions при изиенении модели (Демка Controls-demo/Explorer/ExplorerLayout)
+         it('should call updateItemActions when Model constructor has changed', () => {
             const columns = [
                {
                   displayProperty: 'title',
@@ -4960,35 +5195,24 @@ define([
                }
             ];
             instance._listViewModel.setActionsAssigned(true);
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                columns,
                viewModelConstructor: grid.GridViewModel
             });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // Необходимо обновлять опции записи если в конфиге editingConfig передан item
-         it('should update ItemActions when item was passed within options.editingConfig', () => {
-            instance._beforeUpdate({
-               ...cfg,
-               source: instance._options.source,
-               editingConfig: {
-                  item: { id: 1 }
-               }
-            });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-            const actionsTemplateConfig = instance._listViewModel.getActionsTemplateConfig();
-            assert.exists(actionsTemplateConfig, 'actionsTemplateConfig for model was not assigned');
-            assert.equal(actionsTemplateConfig.size, 's', 'incorrect size for item actions on editingConfig');
-         });
-
-         // при неидентичности source необходимо перезапрашивать данные этого source и затем инициализировать ItemActions
-         it('should update ItemActions when data was reloaded', async () => {
+         // при неидентичности source необходимо перезапрашивать данные этого source и затем вызывать updateItemActions
+         it('should call updateItemActions when data was reloaded', async () => {
             instance._listViewModel.setActionsAssigned(true);
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
             await instance._beforeUpdate({
                ...cfg,
                itemActions: [
@@ -4998,33 +5222,35 @@ define([
                   }
                ]
             });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
-            assert.equal(actionsOf0.all[0].title, '456', 'new actions for item at 0 pos. were not assigned');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // при смене значения свойства readOnly необходимо делать переинициализвацию ItemActions
-         it('should update ItemActions when readOnly option has been changed', () => {
+         // при смене значения свойства readOnly необходимо вызывать updateItemAction
+         it('should call updateItemActions when readOnly option has been changed', () => {
             instance._listViewModel.setActionsAssigned(true);
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                readOnly: true,
             });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+            assert.isTrue(updateItemActionsCalled);
          });
 
-         // при смене значения свойства itemActionsPosition необходимо делать переинициализвацию ItemActions
-         it('should update ItemActions when itemActionsPosition option has been changed', () => {
+         // при смене значения свойства itemActionsPosition необходимо вызывать updateItemAction
+         it('should call updateItemActions when itemActionsPosition option has been changed', () => {
             instance._listViewModel.setActionsAssigned(true);
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
             instance._beforeUpdate({
                ...cfg,
                source: instance._options.source,
                itemActionsPosition: 'outside',
-            });
-            const actionsOf0 = instance._listViewModel.at(0).getActions();
-            assert.exists(actionsOf0, 'actions for item at 0 pos. were not assigned');
+      });
+            assert.isTrue(updateItemActionsCalled);
          });
       });
 
@@ -5056,6 +5282,14 @@ define([
                   resolve();
                });
          });
+      });
+
+      it('_beforeUnmount', function() {
+         let instance = new lists.BaseControl();
+         instance._needPagingTimeout = setTimeout(() => {}, 100);
+
+         instance._beforeUnmount();
+         assert.isNull(instance._needPagingTimeout);
       });
 
 
@@ -5279,7 +5513,8 @@ define([
 
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            ctrl._container = {clientHeight: 100};
+            ctrl._container =  {getElementsByClassName: () => ([{clientHeight: 100}])};
+            ctrl._scrollController.__getItemsContainer = () => ({children: []});
             ctrl._afterMount(cfg);
 
             assert.isNull(ctrl._loadedItems);
@@ -5367,9 +5602,19 @@ define([
                up: false,
                down: true
             };
+
             ctrl._container = {
+               getElementsByClassName: () => ([{
+                  clientHeight: 100,
+                  getBoundingClientRect: () => ({y: 0})
+               }]),
                clientHeight: 100,
                getBoundingClientRect: () => ({y: 0})
+            };
+            ctrl._children = {
+               scrollObserver: {
+                  startRegister: () => undefined
+               }
             };
             ctrl._loadingIndicatorContainerOffsetTop = 222;
             ctrl.saveOptions(cfg);
@@ -5696,7 +5941,8 @@ define([
          async function mountBaseControl(control, options) {
             control.saveOptions(options);
             await control._beforeMount(options);
-            control._container = {clientHeight: 0};
+            control._container =  {getElementsByClassName: () => ([ {clientHeight: 0, offsetHeight:0}])};
+            control._scrollController.__getItemsContainer = () => ({children: []});
             await control._afterMount(options);
          }
 
@@ -5841,10 +6087,11 @@ define([
                baseControlOptions.markerVisibility = 'onactivated';
                await mountBaseControl(baseControl, baseControlOptions);
 
-               baseControl._children.scrollController = {
+               baseControl._scrollController = {
                   scrollToItem(key) {
                      assert.equal(key, 1);
-                  }
+                  },
+                  reset: () => undefined
                }
 
                   const originalEvent = {target: {}};
@@ -5897,17 +6144,16 @@ define([
                      }
                   };
 
-                  baseControl._children = {
-                     scrollController: {
-                        scrollToItem(key) {
-                           if (key === data[0].id) {
-                              result = 'top';
-                           } else if (key === data[data.length - 1].id) {
-                              result = 'bottom';
-                           }
-                           return Promise.resolve();
+                  baseControl._scrollController = {
+                     scrollToItem(key) {
+                        if (key === data[0].id) {
+                           result = 'top';
+                        } else if (key === data[data.length - 1].id) {
+                           result = 'bottom';
                         }
-                     }
+                        return Promise.resolve();
+                     },
+                     reset: () => undefined
                   };
 
                   // No editing
@@ -5960,5 +6206,33 @@ define([
             });
          });
       });
+
+      describe('_beforeMount()', () => {
+         let stubCreate;
+         beforeEach(() => {
+            stubCreate = sinon.stub(lists.BaseControl._private, 'createScrollController');
+         });
+         afterEach(() => {
+            stubCreate.restore();
+         });
+         it('should create scrollController without source', async (done) => {
+            const cfg = {
+               viewName: 'Controls/List/ListView',
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
+            };
+            const baseControl = new lists.BaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            stubCreate.callsFake(() => {
+               done();
+            });
+            baseControl._beforeMount(cfg);
+         });
+      });
+
    });
 });

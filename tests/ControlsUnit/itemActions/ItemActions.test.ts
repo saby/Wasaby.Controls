@@ -567,6 +567,28 @@ describe('Controls/_itemActions/Controller', () => {
             const item1 = collection.getItemBySourceKey(1);
             assert.isTrue(item1.isRightSwiped());
         });
+
+        // T2.12 При вызове getSwipeItem() контроллер должен возвращать true вне зависимости от типа анимации и направления свайпа.
+        it('method getSwipeItem() should return true despite of current animation type and direction', () => {
+            const item: CollectionItem<Record> = collection.getItemBySourceKey(1);
+            let swipedItem: CollectionItem<Record>;
+
+            itemActionsController.activateRightSwipe(1);
+            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
+            assert.equal(swipedItem, item, 'rightSwiped() item has not been found by getSwipeItem() method');
+            itemActionsController.deactivateSwipe();
+
+            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
+            assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
+
+            itemActionsController.activateSwipe(1, 50);
+            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
+            assert.equal(swipedItem, item, 'swiped() item has not been found by getSwipeItem() method');
+            itemActionsController.deactivateSwipe();
+
+            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
+            assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
+        });
     });
 
     describe('prepareActionsMenuConfig()', () => {
@@ -706,6 +728,14 @@ describe('Controls/_itemActions/Controller', () => {
             const calculatedChildren = config.templateOptions.source;
             assert.exists(calculatedChildren, 'Menu actions source haven\'t been set in template options');
             assert.equal(calculatedChildren.data[0].icon.indexOf('controls-itemActionsV__action_icon_theme'), -1, 'Css class \'controls-itemActionsV__action_icon_theme-\' should not be added to menu item');
+        });
+
+        it('should set config.fittingMode.vertical as \'overflow\'', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.exists(config.fittingMode, 'Direction options were not set');
+            assert.equal(config.fittingMode.vertical, 'overflow');
+            assert.equal(config.fittingMode.horizontal, 'adaptive');
         });
     });
 

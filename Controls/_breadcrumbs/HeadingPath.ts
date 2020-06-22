@@ -77,6 +77,15 @@ var _private = {
  */
 
 /**
+ * @name Controls/_breadcrumbs/HeadingPath#displayMode
+ * @cfg {Boolean} Отображение крошек в несколько строк
+ * @variant default
+ * @variant multiline
+ * @default default
+ * @demo Controls-demo/BreadCrumbs/DisplayMode/Index
+ */
+
+/**
  * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Происходит при клике на кнопку "Просмотр записи".
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
@@ -170,7 +179,8 @@ BreadCrumbsPath.getDefaultOptions = function () {
         root: null,
         backButtonIconStyle: 'primary',
         backButtonFontColorStyle: 'secondary',
-        showActionButton: true
+        showActionButton: true,
+        displayMode: 'default'
     };
 };
 

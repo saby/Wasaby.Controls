@@ -57,19 +57,33 @@ define([
             };
             assert.isTrue(Util.isFullGridSupport());
          });
-         it('safari desktop is full grid support', () => {
+         it('safari desktop latter 12 version is full grid support', () => {
             Env.detection = {
                isNotFullGridSupport: true,
                isWinXP: false,
                isIE: false,
                isModernIE: false,
                safari: true,
+               safariVersion: 13,
                isMacOSDesktop: true,
                isNoGridSupport: true
             };
             assert.isTrue(Util.isFullGridSupport());
          });
-         it('safari ver <12 is partial grid support', () => {
+         it('safari desktop earlier then 13 version is not full grid support', () => {
+            Env.detection = {
+               isNotFullGridSupport: true,
+               isWinXP: false,
+               isIE: false,
+               isModernIE: false,
+               safari: true,
+               safariVersion: 12,
+               isMacOSDesktop: true,
+               isNoGridSupport: true
+            };
+            assert.isFalse(Util.isFullGridSupport());
+         });
+         it('safari ver on mobile IOS < 12 ver is partial grid support', () => {
             Env.detection = {
                isNotFullGridSupport: true,
                isWinXP: false,

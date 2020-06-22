@@ -358,14 +358,17 @@ let
          return ScrollHeightFixUtil.calcHeightFix(self._children.content);
       },
 
+      calcShadowEnable(options, position: POSITION, canScroll: boolean): boolean {
+          return options[`${position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
+                 (_private.isShadowEnable(options, position) && canScroll)
+      },
+
       calcDisplayState(self) {
          const
              canScroll = _private.calcCanScroll(SCROLL_TYPE.VERTICAL, self),
              canHorizontalScroll = _private.calcCanScroll(SCROLL_TYPE.HORIZONTAL, self),
-             topShadowEnable = self._options.topShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.TOP) && canScroll),
-             bottomShadowEnable = self._options.bottomShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.BOTTOM) && canScroll),
+             topShadowEnable = _private.calcShadowEnable(self._options, POSITION.TOP, canScroll),
+             bottomShadowEnable = _private.calcShadowEnable(self._options, POSITION.BOTTOM, canScroll),
              shadowPosition = topShadowEnable || bottomShadowEnable ? _private.getShadowPosition(self) : '',
              leftShadowEnable = canHorizontalScroll,
              rightShadowEnable = canHorizontalScroll,
@@ -418,6 +421,13 @@ let
          self._displayState.horizontalShadowPosition = displayState.horizontalShadowPosition;
          self._displayState.shadowEnable = displayState.shadowEnable;
          self._displayState.shadowVisible = displayState.shadowVisible;
+      },
+
+       _updateScrollbar: function(self): void {
+         if (self._displayState.canScroll) {
+            self._displayState.contentHeight = _private.getContentHeight(self);
+            self._scrollbarStyles =  'top:' + self._headersHeight.top + 'px; bottom:' + self._headersHeight.bottom + 'px;';
+         }
       },
 
       proxyEvent(self, event, eventName, args) {
@@ -657,6 +667,18 @@ let
             needUpdate = true;
          }
 
+         calculatedOptionValue = _private.calcShadowEnable(this._options, POSITION.TOP, this._displayState.canScroll);
+         if (calculatedOptionValue) {
+            this._displayState.shadowEnable.top = calculatedOptionValue;
+            needUpdate = true;
+         }
+
+         calculatedOptionValue = _private.calcShadowEnable(this._options, POSITION.BOTTOM, this._displayState.canScroll);
+         if (calculatedOptionValue !== this._displayState.shadowEnable.bottom) {
+            this._displayState.shadowEnable.bottom = calculatedOptionValue;
+            needUpdate = true;
+         }
+
          calculatedOptionValue = _private.isShadowVisible(this, POSITION.TOP, this._displayState.shadowPosition);
          if (calculatedOptionValue) {
             this._displayState.shadowVisible.top = calculatedOptionValue;
@@ -720,11 +742,15 @@ let
             return;
          }
 
-         let displayState = _private.calcDisplayState(this);
+         const oldDisplayState = this._displayState;
+         const displayState = _private.calcDisplayState(this);
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
             this._children.stickyController.setCanScroll(displayState.canScroll);
+            if (oldDisplayState.canScroll !== displayState.canScroll) {
+               _private._updateScrollbar(this);
+            }
             this._updateStickyHeaderContext();
 
             this._forceUpdate();
@@ -847,11 +873,15 @@ let
          if (this._isHidden()) {
             return;
          }
+         const oldDisplayState = this._displayState;
          const displayState = _private.calcDisplayState(this);
 
-         if (!isEqual(this._displayState, displayState)) {
+         if (!isEqual(oldDisplayState, displayState)) {
             this._displayState = displayState;
             this._children.stickyController.setCanScroll(displayState.canScroll);
+            if (oldDisplayState.canScroll !== displayState.canScroll) {
+               _private._updateScrollbar(this);
+            }
          }
 
          _private.calcPagingStateBtn(this);
@@ -1253,8 +1283,7 @@ let
       _fixedHandler: function(event, topHeight, bottomHeight) {
          this._headersHeight.top = topHeight;
          this._headersHeight.bottom = bottomHeight;
-         this._displayState.contentHeight = _private.getContentHeight(this);
-         this._scrollbarStyles =  'top:' + topHeight + 'px; bottom:' + bottomHeight + 'px;';
+         _private._updateScrollbar(this);
       },
 
       /* При получении фокуса input'ами на IOS13, может вызывается подскролл у ближайшего контейнера со скролом,

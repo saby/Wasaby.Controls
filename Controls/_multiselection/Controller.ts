@@ -46,8 +46,6 @@ export class Controller {
    /**
     * Обновить состояние контроллера
     * @param options
-    * @param rootChanged
-    * @param filterChanged
     */
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
       const modelChanged = options.model !== this._model;
@@ -65,6 +63,7 @@ export class Controller {
       }
 
       if (selectionChanged || modelChanged) {
+
          this._updateModel(this._selection);
       }
 
@@ -78,8 +77,22 @@ export class Controller {
       return this._getResult(oldSelection, this._selection);
    }
 
-   isAllSelected(): boolean {
-      return this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount());
+   /**
+    * Проставляет выбранные элементы в модели
+    * @remark Не уведомляет о изменениях в модели
+    */
+   restoreSelection(): void {
+      // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
+      this._strategy.setItems(this._model.getCollection());
+      this._updateModel(this._selection, true);
+   }
+
+   /**
+    * Проверяет, что было выбраны все записи.
+    * @param byEveryItem true - проверять выбранность каждого элемента по отдельности. Иначе проверка происходит по наличию единого признака выбранности всех элементов.
+    */
+   isAllSelected(byEveryItem: boolean): boolean {
+      return this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount(), byEveryItem);
    }
 
    toggleItem(key: TKey): ISelectionControllerResult {
@@ -112,7 +125,8 @@ export class Controller {
       this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
-      return result;   }
+      return result;
+   }
 
    unselectAll(): ISelectionControllerResult {
       const newSelection = this._strategy.unselectAll(this._selection);
@@ -120,7 +134,8 @@ export class Controller {
       this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
-      return result;   }
+      return result;
+   }
 
    handleAddItems(addedItems: Record[]): ISelectionControllerResult {
       // TODO для улучшения производительности обрабатывать только изменившиеся элементы
@@ -213,10 +228,11 @@ export class Controller {
       };
    }
 
-   private _updateModel(selection: ISelection): void {
+   private _updateModel(selection: ISelection, silent: boolean = false): void {
       const selectionForModel = this._strategy.getSelectionForModel(selection);
-      this._model.setSelectedItems(selectionForModel.get(true), true);
-      this._model.setSelectedItems(selectionForModel.get(false), false);
-      this._model.setSelectedItems(selectionForModel.get(null), null);
+      // TODO думаю лучше будет занотифаить об изменении один раз после всех вызовов (сейчас нотифай в каждом)
+      this._model.setSelectedItems(selectionForModel.get(true), true, silent);
+      this._model.setSelectedItems(selectionForModel.get(false), false, silent);
+      this._model.setSelectedItems(selectionForModel.get(null), null, silent);
    }
 }

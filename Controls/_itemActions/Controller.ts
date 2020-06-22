@@ -180,7 +180,7 @@ export class Controller {
      * Получает последний swiped элемент
      */
     getSwipeItem(): IItemActionsItem {
-        return this._collection.find((item) => item.isSwiped());
+        return this._collection.find((item) => item.isSwiped() || item.isRightSwiped());
     }
 
     /**
@@ -255,6 +255,10 @@ export class Controller {
             },
             direction: {
                 horizontal: isContextMenu ? 'right' : 'left'
+            },
+            fittingMode: {
+                vertical: 'overflow',
+                horizontal: 'adaptive'
             },
             className: showHeader ? 'controls-MenuButton_link_iconSize-medium_popup' : '' + `controls-ItemActions__popup__list_theme-${this._theme}`,
             nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
@@ -368,9 +372,11 @@ export class Controller {
      */
     private _getFakeMenuTarget(realTarget: HTMLElement): {
         getBoundingClientRect(): ClientRect;
+        children: any;
     } {
         const rect = realTarget.getBoundingClientRect();
         return {
+            children: [],
             getBoundingClientRect(): ClientRect {
                 return rect;
             }

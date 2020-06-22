@@ -16,6 +16,14 @@ export function generateFlatSimpleColumns() {
     }];
 }
 
+export function generateFlatSimpleHeader() {
+    return [{
+        caption: 'key'
+    }, {
+        caption: 'caption'
+    }];
+}
+
 export function generateFlatData(count: number, splitIntoGroups: boolean): ITestDataItem[] {
     const result: ITestDataItem[] = [];
     for (let idx = 1; idx <= count; idx++) {

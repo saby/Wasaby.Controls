@@ -4,8 +4,9 @@
 define([
    'Controls/source',
    'Types/source',
-   'Core/core-instance'
-], function(scroll, sourceLib, cInstance){
+   'Core/core-instance',
+   'Types/collection'
+], function(scroll, sourceLib, cInstance, collection){
    describe('Controls.Controllers.SourceController', function () {
       var data, source;
       beforeEach(function() {
@@ -82,7 +83,6 @@ define([
                   hasMore: false
                }
             }
-
          });
          controller.load().addCallback(function(rs){
             assert.isTrue(cInstance.instanceOfModule(rs, 'Types/collection:RecordSet'), 'load doesn\'t returns recordset instance');
@@ -106,7 +106,11 @@ define([
                }
             }
          });
-         var resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
+         var resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({
+            cleanParams: {filter: {}},
+            direction: null,
+            paramsController: controller._queryParamsController
+         });
          assert.deepEqual({filter:{}, limit: 10, offset: 0, meta: { hasMore: false, navigationType: sourceLib.SbisService.NAVIGATION_TYPE.PAGE } }, resParams, 'Wrong query params in page navigation');
 
          controller = new scroll.Controller({
@@ -121,11 +125,19 @@ define([
                }
             }
          });
-         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({ filter: {}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, null, controller._queryParamsController);
+         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({
+            cleanParams:{ filter: {}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } },
+            direction: null,
+            paramsController: controller._queryParamsController
+         });
          assert.deepEqual({limit: 10, offset: undefined, filter: {'id>=': 2}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, resParams, 'Wrong query params in position navigation');
 
          var originalFilter = {};
-         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({ filter: {}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, null, controller._queryParamsController);
+         resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({
+             cleanParams: { filter: {}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } },
+             direction: null,
+             paramsController: controller._queryParamsController
+         });
          assert.notEqual(originalFilter, resParams.filter, 'Modified filter should be a new object instance');
       });
 
@@ -152,6 +164,34 @@ define([
             done();
          });
 
+      });
+
+      it('calculateState', function () {
+         const controller = new scroll.Controller({
+            source: source,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 1,
+                  hasMore: true
+               }
+            }
+         });
+         const loadedRecordSet = new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: data
+         });
+         loadedRecordSet.setMetaData({
+            more: true
+         });
+         controller.calculateState(loadedRecordSet, 'testRoot');
+         assert.isTrue(controller.hasMoreData('down', 'testRoot'));
+
+         loadedRecordSet.setMetaData({
+            more: false
+         });
+         controller.calculateState(loadedRecordSet, 'testRoot');
+         assert.isFalse(controller.hasMoreData('down', 'testRoot'));
       });
    })
 });

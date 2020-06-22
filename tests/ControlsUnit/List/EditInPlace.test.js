@@ -345,6 +345,19 @@ define([
 
             assert.isTrue(result instanceof Promise);
          });
+
+         // Необходимо устанавливать состояние "модель редактируется" для новой и старой модели
+         it('should set isEditing() for model', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+            assert.isNotTrue(listViewModel.isEditing(), 'Model shouldn\'t be in editing state before beginEdit()');
+            await eip.beginEdit({
+               item: listViewModel.at(0).getContents()
+            });
+            assert.isTrue(listViewModel.isEditing(), 'Model should be in editing state after what had happened to her.');
+         });
       });
 
       describe('beginAdd', function() {
@@ -2091,9 +2104,46 @@ define([
                assert.equal(editingItem, eip._editingItemData.item);
                assert.equal(eip._options.multiSelectVisibility, 'visible');
             };
-
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
             eip.updateEditingData({multiSelectVisibility: 'visible', listViewModel: listViewModel});
             assert.isTrue(isItemDataRegenerated);
+         });
+
+         it('should suscribe onCollectionChange once', async () => {
+            let
+               isItemDataRegenerated = false;
+
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+
+            await eip.beginAdd();
+
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
+
+            let spy = sinon.spy(listViewModel, 'subscribe');
+
+            eip.updateEditingData({listViewModel: listViewModel});
+            eip.updateEditingData({listViewModel: listViewModel});
+
+            assert.isTrue(spy.calledOnceWith('onCollectionChange', eip._updateIndex));
+         });
+
+         it('should suscribe updateEditingData once', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+
+            await eip.beginAdd();
+
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
+            let spy = sinon.spy(eip, 'registerFormOperation');
+            eip._options.readOnly = true;
+            eip.updateEditingData({listViewModel: listViewModel});
+
+            assert.isTrue(spy.notCalled);
          });
       });
 
@@ -2157,6 +2207,29 @@ define([
             const eventResult = Promise.reject(new Error('!!!!'));
             const result = await EditInPlace._private.processBeforeBeginEditResult(eip, {}, eventResult, false);
             assert.deepEqual({cancelled: true}, result);
+         });
+      });
+
+      describe('.registerFormOperation()', () => {
+         const formController = {};
+         it('should set form controller', async () => {
+            eip.registerFormOperation(formController);
+
+            assert.equal(eip._formController, formController);
+         });
+
+         it('should notify registerFormOperation', async () => {
+            const spyNotify = sinon.spy(eip, '_notify');
+            eip.registerFormOperation(formController);
+
+            assert.equal(spyNotify.firstCall.args[0], 'registerFormOperation');
+         });
+
+         it('should do nothing if formController was undefined', async () => {
+            eip._formController = formController;
+            eip.registerFormOperation();
+
+            assert.equal(eip._formController, formController);
          });
       });
 

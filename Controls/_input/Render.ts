@@ -4,12 +4,14 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {
-    TBorderVisibility, IBorderVisibility, IBorderVisibilityOptions,
-    getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes,
     IHeight, IHeightOptions, IFontColorStyle,
     IFontColorStyleOptions, IFontSize, IFontSizeOptions,
     IBorderStyle, IBorderStyleOptions, IValidationStatus, IValidationStatusOptions
 } from 'Controls/interface';
+import IBorderVisibility, {
+    TBorderVisibility, IBorderVisibilityOptions,
+    getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes
+} from './interface/IBorderVisibility';
 
 import * as template from 'wml!Controls/_input/Render/Render';
 
@@ -111,7 +113,10 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     readonly '[Controls/interface/IBorderVisibility]': boolean = true;
 
     private updateState(options: IRenderOptions): void {
-        this._border = Render._detectToBorder(options.borderVisibility, options.multiline);
+        const border = Render._detectToBorder(options.borderVisibility, options.multiline);
+        if (JSON.stringify(border) !== JSON.stringify(this._border)) {
+            this._border = border;
+        }
         this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);
         this._inlineHeight = ActualAPI.inlineHeight(options.size, options.inlineHeight);
         this._fontColorStyle = ActualAPI.fontColorStyle(options.fontStyle, options.fontColorStyle);

@@ -1,6 +1,7 @@
 import {detection} from 'Env/Env';
 
 const FULL_GRID_IOS_VERSION = 12;
+const FULL_GRID_MAC_SAFARI_VERSION = 13;
 const OLD_IE_LAST_VERSION = 11;
 const DEFAULT_GRID_COLUMN_WIDTH = '1fr';
 const DEFAULT_TABLE_COLUMN_WIDTH = 'auto';
@@ -33,7 +34,7 @@ function _isFullGridSafari(): boolean {
         detection.safari &&
         (
             detection.IOSVersion >= FULL_GRID_IOS_VERSION ||
-            detection.isMacOSDesktop
+            (detection.isMacOSDesktop && (detection.safariVersion >= FULL_GRID_MAC_SAFARI_VERSION))
         )
     );
 }

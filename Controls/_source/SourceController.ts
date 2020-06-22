@@ -8,6 +8,15 @@ import PositionQueryParamsController from 'Controls/_source/QueryParamsControlle
 import QueryParamsController from 'Controls/_source/QueryParamsController';
 import {Logger} from 'UI/Utils';
 
+interface IModifyParamsWithNavigation {
+   root?: string|number|null;
+   config?: object;
+   callback?: Function;
+   cleanParams: object;
+   direction?: 'up'|'down';
+   paramsController: QueryParamsController;
+}
+
 var _private = {
    prepareSource: function(sourceOpt) {
       if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
@@ -85,11 +94,18 @@ var _private = {
       return cntInstance;
    },
 
-   modifyQueryParamsWithNavigation: function(cleanParams, direction, paramsController, callback, config?) {
-      var resultParams, navigParams, navFilter;
+   modifyQueryParamsWithNavigation({
+       cleanParams,
+       direction,
+       paramsController,
+       callback,
+       config,
+       root
+   }: IModifyParamsWithNavigation) {
+      let resultParams, navigParams, navFilter;
 
       resultParams = cleanParams;
-      navigParams = paramsController.prepareQueryParams(direction, callback, config);
+      navigParams = paramsController.prepareQueryParams(direction, callback, config, false, root);
 
       resultParams.limit = navigParams.limit;
       resultParams.offset = navigParams.offset;
@@ -129,7 +145,7 @@ var SourceController = cExtend.extend({
       }
    },
 
-   load: function(filter, sorting?, direction?, config?) {
+   load: function(filter, sorting?, direction?, config?, root?) {
       var def, queryParams, self;
 
       queryParams = {
@@ -141,7 +157,14 @@ var SourceController = cExtend.extend({
       this.cancelLoading();
 
       if (this._queryParamsController) {
-         queryParams = _private.modifyQueryParamsWithNavigation(queryParams, direction, this._queryParamsController, this._options.queryParamsCallback, config);
+         queryParams = _private.modifyQueryParamsWithNavigation({
+             cleanParams: queryParams,
+             direction,
+             paramsController: this._queryParamsController,
+             callback: this._options.queryParamsCallback,
+             config,
+             root
+         });
       }
 
       self = this;
@@ -153,7 +176,7 @@ var SourceController = cExtend.extend({
          queryParams.meta)
          .addCallback(function(list) {
             if (self._queryParamsController) {
-               self._queryParamsController.updateQueryProperties(list, direction, config);
+               self._queryParamsController.updateQueryProperties(list, direction, config, root);
             }
             return list;
          }).addErrback(function(error) {
@@ -194,7 +217,12 @@ var SourceController = cExtend.extend({
 
    calculateState: function(list, root: string|number) {
       if (this._queryParamsController) {
-         this._queryParamsController.updateQueryProperties(list, null, root);
+         this._queryParamsController.updateQueryProperties(
+             list,
+             null,
+             null,
+             root
+         );
       }
    },
 

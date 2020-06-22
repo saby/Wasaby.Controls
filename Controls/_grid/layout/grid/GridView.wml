@@ -1,8 +1,8 @@
 <div attr:class="{{ _gridViewClasses }}" attr:style="{{ _gridViewStyles }}">
 
     <!-- Заголовок таблицы -->
-    <ws:if data="{{ _listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList() }}">
-        <ws:partial template="wml!Controls/_grid/layout/grid/Header" attr:name="header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
+    <ws:if data="{{ _listModel.getHeaderModel() && _listModel.isDrawHeaderWithEmptyList() }}">
+        <ws:partial template="wml!Controls/_grid/layout/grid/Header" attr:name="header" headerModel="{{_listModel.getHeaderModel()}}" defaultHeaderContent="{{_headerContentTemplate}}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
     </ws:if>
 
     <!-- Результаты сверху -->
@@ -11,17 +11,16 @@
     </ws:if>
 
     <!-- Скроллбар горизонтального скролла -->
-    <!-- TODO: Попробовать вынести через scope={{_options}}, но нужно переименовать _options в options, раз {{...}} нельзя-->
-    <ws:if data="{{isDisplayColumnScroll}}">
+    <ws:if data="{{ _isColumnScrollVisible }}">
         <Controls._grid.ScrollWrapper
                 name="horizontalScrollWrapper"
-                position="{{ position }}"
-                contentSize="{{ contentSize }}"
+                position="{{ _horizontalScrollPosition }}"
+                contentSize="{{ _contentSizeForHScroll }}"
                 gridSupport="full"
-                scrollWidth="{{ scrollWidth }}"
+                scrollWidth="{{ _horizontalScrollWidth }}"
                 listModel="{{ _listModel }}"
-                trackVisible="{{ trackVisible }}"
-                positionChangeHandler="{{ positionChangeHandler }}"
+                trackVisible="{{ _trackVisible }}"
+                positionChangeHandler="{{ _horizontalPositionChangedHandler }}"
                 backgroundStyle="{{_options.backgroundStyle || _options.style}}">
         </Controls._grid.ScrollWrapper>
     </ws:if>

@@ -411,6 +411,7 @@ define(
                      _children: {
                         menuTarget: 'menuTarget'
                      },
+                     _popupId: '123',
                      _menuSource: recordForMenu
                   },
                   templateOptions = {
@@ -429,7 +430,10 @@ define(
                      itemActionVisibilityCallback: undefined,
                      closeButtonVisibility: true
                   };
-               assert.deepEqual((new toolbars.View())._getMenuConfig.call(testSelf).templateOptions, templateOptions);
+               const toolbar = new toolbars.View();
+               const config = toolbar._getMenuConfig.call(testSelf);
+               assert.deepEqual(config.templateOptions, templateOptions);
+               assert.deepEqual(config.id, '123');
             });
             it('toolbar closed by his parent', () => {
                let isMenuClosed = false;
