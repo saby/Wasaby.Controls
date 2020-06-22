@@ -203,12 +203,10 @@ abstract class BaseController {
 
     private getContentSizes(container: HTMLDivElement): IPopupSizes {
         // Чтобы размер контейнера не искажался при масштабировании использую getBoundingClientRect
-        const sizes = container.getBoundingClientRect ? container.getBoundingClientRect() : undefined;
-        const width = sizes ? Math.round(sizes.width) : undefined;
-        const height = sizes ? Math.round(sizes.height) : undefined;
+        const sizes = container.getBoundingClientRect();
         return {
-            width,
-            height
+            width: Math.round(sizes.width),
+            height: Math.round(sizes.height)
         };
     }
 }
