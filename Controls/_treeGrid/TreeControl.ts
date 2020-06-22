@@ -135,10 +135,10 @@ var _private = {
             self._children.baseControl.showIndicator();
             filter[options.parentProperty] = nodeKey;
             _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
-                .load(filter, options.sorting, 'down', null, nodeKey)
+                .load(filter, options.sorting, null, null, nodeKey)
                 .addCallbacks((list) => {
                     listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
-                    baseSourceController.calculateState(list, 'down', nodeKey);
+                    baseSourceController.calculateState(list, null, nodeKey);
                     if (options.uniqueKeys) {
                         listViewModel.mergeItems(list);
                     } else {

@@ -142,7 +142,6 @@ define([
                }
             });
          var isSourceControllerUsed = false;
-         var loadDirection;
          var originalCreateSourceController = treeGrid.TreeControl._private.createSourceController;
          treeGrid.TreeControl._private.createSourceController = function() {
             return {
@@ -229,7 +228,6 @@ define([
             });
             assert.isTrue(isSourceControllerUsed);
             assert.isTrue(nodeLoadCallbackCalled);
-            assert.equal(loadDirection, 'down');
             treeGrid.TreeControl._private.createSourceController = originalCreateSourceController;
             resolve();
          });
