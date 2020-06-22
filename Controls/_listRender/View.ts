@@ -386,9 +386,13 @@ export default class View extends Control<IViewOptions> {
     private _closeActionsMenu(): void {
         this._itemActionsController.setActiveItem(null);
         this._itemActionsController.deactivateSwipe();
-
+        this._closePopup();
     }
 
+    /**
+     * Закрывает popup и снимает регистрацию его подписки на событие скролла
+     * @private
+     */
     private _closePopup() {
         if (this._itemActionsMenuId) {
             Sticky.closePopup(this._itemActionsMenuId);
@@ -427,8 +431,8 @@ export default class View extends Control<IViewOptions> {
         if (detection.isMobileIOS && (scrollEvent.target === document.body || scrollEvent.target === document)) {
             return;
         }
-        _private.closePopup(this);
-    },
+        this._closePopup();
+    }
 
     /**
      * Инициализирует контрорллере и обновляет в нём данные
