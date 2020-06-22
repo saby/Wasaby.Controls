@@ -323,15 +323,18 @@ var
                 // if (oldOptions.root !== this._options.root) {
                 //     this._columnScrollController.resetSizes();
                 // }
+
+                // Если изменилось несколько опций, из за которых требуется пересчитать размеры коризонтального скролла,
+                // то перечет должен случиться только один раз.
                 const shouldUpdateSizes = this._columnsHaveBeenChanged ||
+                    this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount ||
                     this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility;
 
                 if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
-
-                    // Если изменилось количество зафиксированных ячеек и, при этом, нужно пересчитать размеры
-                    // горизонтального скролла из-за смены колонок или режима отображения чекбоксов, то
-                    // пересчет должен быть один.
                     this._columnScrollController.setStickyColumnsCount(this._options.stickyColumnsCount, shouldUpdateSizes);
+                }
+                if (this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility) {
+                    this._columnScrollController.setMultiSelectVisibility(this._options.multiSelectVisibility, shouldUpdateSizes);
                 }
 
                 if (shouldUpdateSizes) {
