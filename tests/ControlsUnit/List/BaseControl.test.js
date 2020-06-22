@@ -1228,7 +1228,8 @@ define([
                moveMarkerToNext() { moveMarkerToNextCalled = true; },
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
-               update() {}
+               update() {},
+               restoreMarker() {}
             };
          };
          baseControl.saveOptions(cfg);
@@ -1297,7 +1298,8 @@ define([
                moveMarkerToNext() { moveMarkerToNextCalled = true; },
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
-               update() {}
+               update() {},
+               restoreMarker() {}
             };
          };
 
@@ -1328,6 +1330,64 @@ define([
 
          lists.BaseControl._private.scrollToItem = originalScrollToItem;
          lists.BaseControl._private.createMarkerController = originalCreateMarkerController;
+      });
+
+      describe('moveMarker', () => {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            markerVisibility: 'visible',
+            selectedKeys: [1],
+            excludedKeys: [],
+            markedKey: 2,
+            source: new sourceLib.Memory({
+               keyProperty: 'id',
+               data: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
+            })
+         };
+         let instance,
+            preventDefaultCalled = false,
+            activateCalled = false;
+         const event = {
+            preventDefault() { preventDefaultCalled = true; }
+         };
+
+         beforeEach(() => {
+            instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg, null, {
+               data: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
+            });
+
+            instance.activate = () => { activateCalled = true };
+
+            instance._scrollController = null;
+            instance._mounted = true;
+
+            preventDefaultCalled = false;
+            activateCalled = false;
+         });
+
+         it ('moveMarkerToNext', () => {
+            lists.BaseControl._private.moveMarkerToNext(instance, event);
+            assert.isTrue(activateCalled);
+            assert.isTrue(preventDefaultCalled);
+            assert.equal(instance._listViewModel.getMarkedKey(), 3);
+         });
+
+         it ('moveMarkerToPrev', () => {
+            lists.BaseControl._private.moveMarkerToPrevious(instance, event);
+            assert.isTrue(activateCalled);
+            assert.isTrue(preventDefaultCalled);
+            assert.equal(instance._listViewModel.getMarkedKey(), 1);
+         });
       });
 
       it('moveMarkerToNext && moveMarkerToPrevious while loading', async function() {
@@ -2956,7 +3016,8 @@ define([
             toggleItem: function(key) {
                   assert.equal(key, 1);
             },
-            handleReset: function() {}
+            handleReset: function() {},
+            restoreSelection() {}
          };
          ctrl._onCheckBoxClick({}, 1, 1);
       });
@@ -5272,6 +5333,38 @@ define([
          });
       });
 
+      it('_beforeMount create controllers when passed receivedState', function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            markerVisibility: 'visible',
+            selectedKeys: [1],
+            excludedKeys: [],
+            source: new sourceLib.Memory({
+               keyProperty: 'id',
+               data: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
+            })
+         };
+         let instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         instance._beforeMount(cfg, null, {
+            data: new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: data
+            })
+         });
+
+         assert.isNotNull(instance._markerController);
+         assert.isNotNull(instance._selectionController);
+         const item = instance._listViewModel.getItemBySourceKey(1);
+         assert.isTrue(item.isMarked());
+         assert.isTrue(item.isSelected());
+      });
+
       it('_beforeUnmount', function() {
          let instance = new lists.BaseControl();
          instance._needPagingTimeout = setTimeout(() => {}, 100);
@@ -5949,7 +6042,8 @@ define([
                      moveMarkerToNext() {},
                      moveMarkerToPrev() {},
                      handleRemoveItems() {},
-                     update() {}
+                     update() {},
+                     restoreMarker() {}
                   };
                });
                await mountBaseControl(_baseControl, baseControlOptions);
@@ -6129,7 +6223,8 @@ define([
                      setMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     restoreMarker() {}
                   };
 
                   baseControl._scrollController = {
