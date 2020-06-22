@@ -4308,7 +4308,7 @@ define([
             };
             await instance._beforeMount(cfg);
             lists.BaseControl._private.updateItemActions(instance, cfg);
-            popup.Sticky.openPopup = (config) => Promise.resolve(1);
+            popup.Sticky.openPopup = (config) => Promise.resolve('ekaf');
             instance._notify = (eventName, args) => {
                outgoingEventsMap[eventName] = args;
             };
@@ -4388,35 +4388,22 @@ define([
             assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
          });
 
-         // Нельзя открывать itemActionsMenu дважды подряд (надо сначала дождаться закрытия предыдущего меню)
-         it('should not open itemActionsMenu twice at the same time', () => {
+         // должен открывать меню, соответствующее новому id Popup
+         it('should open itemActionsMenu according to its id', () => {
+            const fakeEvent = initFakeEvent();
             const self = {
                _itemActionsController: {
-                  prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => {}
+                  prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => ({}),
+                  setActiveItem: (_item) => { }
                },
-               _notify: () => {},
-               _itemActionsMenuId: 'somePopupId'
+               _itemActionsMenuId: 'fake',
+               _scrollHandler: () => {},
+               _notify: () => {}
             };
-
-            // Нам нужно только передать self с установленной опцией _itemActionsMenuId, чтобы метод вернул пустой промис
-            return lists.BaseControl._private.openItemActionsMenu(self, null, null, null, false)
+            return lists.BaseControl._private.openItemActionsMenu(self, null, fakeEvent, item, false)
                .then(() => {
-                  assert.equal(self._itemActionsMenuId, null);
+                  assert.equal(self._itemActionsMenuId, 'ekaf');
                });
-         });
-
-         // Клик по ItemAction в тулбаре должен приводить к расчёту контейнера
-         it('should calculate container to send it in event on toolbar action click', () => {
-            const fakeEvent = initFakeEvent();
-            const action = {
-               id: 1,
-               showType: 0
-            };
-            instance._listViewModel.getIndex = (item) => 0;
-            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
-            assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
-            assert.exists(outgoingEventsMap.actionClick[2], 'Third argument has not been set');
-            assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
          });
 
          // Нужно устанавливать active item только после того, как пришёл id нового меню
@@ -4434,15 +4421,38 @@ define([
                _scrollHandler: () => {},
                _notify: () => {}
             };
-            assert.equal(activeItem, null);
             lists.BaseControl._private.openItemActionsMenu(self, null, fakeEvent, item, false)
-               .then(() => {
-                  assert.equal(activeItem, item);
-                  done();
-               })
-               .catch((error) => {
-                  done();
-               });
+                .then(() => {
+                   assert.equal(activeItem, item);
+                   done();
+                })
+                .catch((error) => {
+                   done();
+                });
+            assert.equal(activeItem, null);
+         });
+
+         // Необходимо закрывать popup с указанным id
+         it('should close popup with specified id', () => {
+            instance._itemActionsMenuId = 'fake';
+            instance._onItemActionsMenuClose({id: 'ekaf'});
+            assert.equal(instance._itemActionsMenuId, 'fake');
+            instance._onItemActionsMenuClose(null);
+            assert.equal(instance._itemActionsMenuId, null);
+         });
+
+         // Клик по ItemAction в тулбаре должен приводить к расчёту контейнера
+         it('should calculate container to send it in event on toolbar action click', () => {
+            const fakeEvent = initFakeEvent();
+            const action = {
+               id: 1,
+               showType: 0
+            };
+            instance._listViewModel.getIndex = (item) => 0;
+            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
+            assert.exists(outgoingEventsMap.actionClick[2], 'Third argument has not been set');
+            assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
          });
 
          // Необходимо при показе меню ItemActions регистрировать обработчик события скролла

@@ -1418,7 +1418,6 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        _private.closePopup(self);
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
@@ -1432,9 +1431,14 @@ const _private = {
         clickEvent.stopImmediatePropagation();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
-            onClose: self._onItemActionsMenuClose
+            onClose: function () {
+                self._onItemActionsMenuClose(this);
+            }
         };
         return Sticky.openPopup(menuConfig).then((popupId) => {
+            // Закрываем popup с текущим id на случай, если вдруг он оказался открыт
+            _private.closePopup(self, self._itemActionsMenuId);
+            // Устанавливаем новый Id
             self._itemActionsMenuId = popupId;
             // Нельзя устанавливать activeItem раньше, иначе при автокликах
             // робот будет открывать меню раньше, чем оно закрылось
@@ -1445,11 +1449,13 @@ const _private = {
 
     /**
      * Метод, который закрывает меню
+     * @param self
+     * @param currentPopup
      * @private
      */
-    closeActionsMenu(self: any): void {
+    closeActionsMenu(self: any, currentPopup?: any): void {
         if (self._itemActionsMenuId) {
-            _private.closePopup(self);
+            _private.closePopup(self, currentPopup ? currentPopup.id : null);
             self._itemActionsController.deactivateSwipe();
         }
     },
@@ -1470,13 +1476,23 @@ const _private = {
     /**
      * Закрывает popup меню
      * @param self
+     * @param itemActionsMenuId id popup, который надо закрыть. Если не указано - берём текущий self._itemActionsMenuId
+     * иногла можно не дождавшимь показа меню случайно вызвать второе менню поверх превого.
+     * Это случается от того, что поуказ меню асинхронный и возвращает Promise, который мы не можем отменить.
+     * При этом закрытие меню внутри самого Promise повлечёт за собой асинхронный вызов "_onItemActionsMenuClose()",
+     * что приведёт к закрытию всех текущих popup на странице.
+     * Зато мы можем получить объект Popup, который мы пытаемся закрыть, и, соответственно, его id. Таким образом, мы можем
+     * указать, какой именно popup мы закрываем.
      */
-    closePopup(self): void {
-        if (self._itemActionsMenuId) {
-            Sticky.closePopup(self._itemActionsMenuId);
-            UnregisterUtil(self, 'scroll');
+    closePopup(self, itemActionsMenuId?: string): void {
+        const id = itemActionsMenuId || self._itemActionsMenuId;
+        if (id) {
+            Sticky.closePopup(id);
         }
-        self._itemActionsMenuId = null;
+        if (!itemActionsMenuId || (self._itemActionsMenuId && self._itemActionsMenuId === itemActionsMenuId)) {
+            UnregisterUtil(self, 'scroll');
+            self._itemActionsMenuId = null;
+        }
     },
 
     bindHandlers(self): void {
@@ -3104,8 +3120,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * Обработчик закрытия выпадающего/контекстного меню
      * @private
      */
-    _onItemActionsMenuClose(): void {
-        _private.closeActionsMenu(this);
+    _onItemActionsMenuClose(currentPopup): void {
+        _private.closeActionsMenu(this, currentPopup);
     },
 
     _onItemsChanged(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
