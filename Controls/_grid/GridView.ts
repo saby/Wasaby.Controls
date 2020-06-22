@@ -142,7 +142,7 @@ var
             self._columnScrollShadowClasses = { start: '', end: '' };
             self._columnScrollShadowStyles = { start: '', end: '' };
 
-            if (self._isDragScrollingEnabled()) {
+            if (self._isDragScrollingEnabled(options)) {
                 _private.initDragScroll(self, options);
             }
         },
@@ -412,7 +412,7 @@ var
             return this._children.results ? getDimensions(this._children.results).height : 0;
         },
 
-        _getGridViewClasses(): string {
+        _getGridViewClasses(options): string {
             const classes = new CssClassList();
             classes
                 .add('controls-Grid')
@@ -430,7 +430,7 @@ var
             }
             if (this._columnScrollController) {
                 classes.add(COLUMN_SCROLL_JS_SELECTORS.CONTENT);
-                classes.add(DRAG_SCROLL_JS_SELECTORS.CONTENT, this._isDragScrollingEnabled());
+                classes.add(DRAG_SCROLL_JS_SELECTORS.CONTENT, this._isDragScrollingEnabled(options));
             }
             return classes.compile();
         },
@@ -496,13 +496,9 @@ var
             }
         },
 
-        _isDragScrollingEnabled(): boolean {
-            const hasOption = typeof this._options.dragScrolling === 'boolean';
-            return hasOption ? this._options.dragScrolling : !this._options.itemsDragNDrop;
-        },
-
-        _isDragScrollingVisible(): boolean {
-            return this._isColumnScrollVisible() && this._isDragScrollingEnabled();
+        _isDragScrollingEnabled(options): boolean {
+            const hasOption = typeof options.dragScrolling === 'boolean';
+            return hasOption ? options.dragScrolling : !options.itemsDragNDrop;
         },
 
         // Не вызывает реактивную перерисовку, т.к. данные пишутся в поля объекта. Перерисовка инициируется обновлением позиции скрола.
