@@ -536,9 +536,10 @@ describe('Controls/_itemActions/Controller', () => {
             assert.notExists(config, 'Collection\'s swipe config has not been reset');
         });
 
-        // T2.10 Необходимо отправлять только одно событие на изменение модели, когда вызывается activateSwipe
-        // Множетсвенные события порождают рекурсисвное обновление опций в onListChange в BaseControl
-        it('should send only one collectionchange event when activateSwipe() was called', () => {
+        // T2.10 Не надо отправлять отправлять событие collectionchange из collection, когда вызывается activateSwipe()
+        // Отправкой этого события должна заниматься старая модель, иначе мы приходим к множественному
+        // обновлению опций записи в onListChange в BaseControl при setActive(), setSwiped() и т.д.
+        it('should not send collectionchange event when activateSwipe() was called', () => {
             let eventCounter = 0;
             collection.notifyItemChange = function(item: CollectionItem<Record>, properties?: object): void {
                 if (!this.isEventRaising()) {
@@ -547,11 +548,12 @@ describe('Controls/_itemActions/Controller', () => {
                 eventCounter++;
             }
             itemActionsController.activateSwipe(1, 50);
-            assert.equal(eventCounter, 1);
+            assert.equal(eventCounter, 0);
         });
 
-        // T2.11 Необходимо отправлять только одно событие на изменение модели, когда вызывается deactivateSwipe
-        // Множетсвенные события порождают рекурсисвное обновление опций в onListChange в BaseControl
+        // T2.11 Не надо отправлять отправлять событие collectionchange из collection, когда вызывается deactivateSwipe()
+        // Отправкой этого события должна заниматься старая модель, иначе мы приходим к множественному
+        // обновлению опций записи в onListChange в BaseControl при setActive(), setSwiped() и т.д.
         it('should send only one collectionchange event when deactivateSwipe() was called', () => {
             let eventCounter = 0;
             collection.notifyItemChange = function(item: CollectionItem<Record>, properties?: object): void {
@@ -561,7 +563,7 @@ describe('Controls/_itemActions/Controller', () => {
                 eventCounter++;
             }
             itemActionsController.deactivateSwipe();
-            assert.equal(eventCounter, 1);
+            assert.equal(eventCounter, 0);
         });
 
         // T2.12. При свайпе добавляется editArrow в набор операций, вызывается editArrowVisibilityCallback.
