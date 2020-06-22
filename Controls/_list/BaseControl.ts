@@ -2406,6 +2406,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.afterMount(container, this._children);
         }
 
+        // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         if (this._selectionController) {
             const result = this._selectionController.getResultAfterConstructor();
             _private.handleSelectionControllerResult(this, result);
