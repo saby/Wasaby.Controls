@@ -93,7 +93,7 @@ export default class QueryParamsController implements IQueryParamsController {
 
         if (more instanceof RecordSet) {
             more.each((nav: NavigationRecord) => {
-                recordSetWithNavigation = new RecordSet();
+                recordSetWithNavigation = list.clone(true);
                 recordSetWithNavigation.setMetaData({
                     more: nav.get('nav_result')
                 });
