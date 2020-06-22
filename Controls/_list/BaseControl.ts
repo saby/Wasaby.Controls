@@ -1293,7 +1293,7 @@ const _private = {
         // virtual scrolling is disabled.
         // But we should not update any ItemActions when marker has changed
         if (
-            (changesType === 'collectionChanged' && (!newItems || newItems.properties !== 'marked')) ||
+            (changesType === 'collectionChanged' && _private.shouldUpdateItemActions(newItems)) ||
             changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
             newModelChanged
         ) {
@@ -1304,6 +1304,18 @@ const _private = {
         if (self._isMounted) {
             self._forceUpdate();
         }
+    },
+
+    /**
+     * Возвращает boolean, надо ли обновлять проинициализированные ранее ItemActions, основываясь на newItems.properties.
+     * Возвращается true, если newItems или newItems.properties не заданы
+     * Новая модель в событии collectionChanged для newItems задаёт properties,
+     * где указано, что именно обновляется.
+     * @param newItems
+     */
+    shouldUpdateItemActions(newItems): boolean {
+        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged';
+        return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) !== -1;
     },
 
     initListViewModelHandler(self, model, useNewModel: boolean) {

@@ -162,13 +162,11 @@ export class Controller {
     activateSwipe(itemKey: TItemKey, actionsContainerHeight: number): void {
         const item = this._collection.getItemBySourceKey(itemKey);
         this.setSwipeAnimation(ANIMATION_STATE.OPEN);
-        this._collection.setEventRaising(false, true);
         this._setSwipeItem(itemKey);
         this._collection.setActiveItem(item);
         if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
         }
-        this._collection.setEventRaising(true, true);
         this._collection.nextVersion();
     }
 
@@ -176,12 +174,10 @@ export class Controller {
      * Деактивирует Swipe для меню операций с записью
      */
     deactivateSwipe(): void {
-        this._collection.setEventRaising(false, true);
         this._setSwipeItem(null);
         this._collection.setActiveItem(null);
         this._collection.setSwipeConfig(null);
         this._collection.setSwipeAnimation(null);
-        this._collection.setEventRaising(true, true);
         this._collection.nextVersion();
     }
 
@@ -277,7 +273,7 @@ export class Controller {
 
     /**
      * Устанавливает активный Item в коллекции
-     * @param item
+     * @param item Текущий элемент коллекции
      */
     setActiveItem(item: IItemActionsItem) {
         this._collection.setActiveItem(item);
@@ -362,16 +358,17 @@ export class Controller {
     /**
      * Устанавливает текущий swiped элемент
      * @param key Ключ элемента коллекции, на котором был выполнен swipe
+     * @param silent Если true, коллекция не отправит onCollectionChange
      */
-    private _setSwipeItem(key: TItemKey): void {
+    private _setSwipeItem(key: TItemKey, silent?: boolean): void {
         const oldSwipeItem = this.getSwipeItem();
         const newSwipeItem = this._collection.getItemBySourceKey(key);
 
         if (oldSwipeItem) {
-            oldSwipeItem.setSwiped(false);
+            oldSwipeItem.setSwiped(false, silent);
         }
         if (newSwipeItem) {
-            newSwipeItem.setSwiped(true);
+            newSwipeItem.setSwiped(true, silent);
         }
     }
 

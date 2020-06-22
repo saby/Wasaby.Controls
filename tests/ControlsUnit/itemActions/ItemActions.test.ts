@@ -536,37 +536,7 @@ describe('Controls/_itemActions/Controller', () => {
             assert.notExists(config, 'Collection\'s swipe config has not been reset');
         });
 
-        // T2.10 Не надо отправлять отправлять событие collectionchange из collection, когда вызывается activateSwipe()
-        // Отправкой этого события должна заниматься старая модель, иначе мы приходим к множественному
-        // обновлению опций записи в onListChange в BaseControl при setActive(), setSwiped() и т.д.
-        it('should not send collectionchange event when activateSwipe() was called', () => {
-            let eventCounter = 0;
-            collection.notifyItemChange = function(item: CollectionItem<Record>, properties?: object): void {
-                if (!this.isEventRaising()) {
-                    return;
-                }
-                eventCounter++;
-            }
-            itemActionsController.activateSwipe(1, 50);
-            assert.equal(eventCounter, 0);
-        });
-
-        // T2.11 Не надо отправлять отправлять событие collectionchange из collection, когда вызывается deactivateSwipe()
-        // Отправкой этого события должна заниматься старая модель, иначе мы приходим к множественному
-        // обновлению опций записи в onListChange в BaseControl при setActive(), setSwiped() и т.д.
-        it('should send only one collectionchange event when deactivateSwipe() was called', () => {
-            let eventCounter = 0;
-            collection.notifyItemChange = function(item: CollectionItem<Record>, properties?: object): void {
-                if (!this.isEventRaising()) {
-                    return;
-                }
-                eventCounter++;
-            }
-            itemActionsController.deactivateSwipe();
-            assert.equal(eventCounter, 0);
-        });
-
-        // T2.12. При свайпе добавляется editArrow в набор операций, вызывается editArrowVisibilityCallback.
+        // T2.10. При свайпе добавляется editArrow в набор операций, вызывается editArrowVisibilityCallback.
         it('should call add editArrow for every item action when necessary', () => {
             const editArrowAction: IItemAction = {
                 id: 'view',
@@ -591,14 +561,14 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
 
-        // T2.13 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
+        // T2.11 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
         it('should right-swipe item on activateRightSwipe() method', () => {
             itemActionsController.activateRightSwipe(1);
             const item1 = collection.getItemBySourceKey(1);
             assert.isTrue(item1.isRightSwiped());
         });
 
-        // T2.14 При вызове getSwipeItem() контроллер должен возвращать true вне зависимости от типа анимации и направления свайпа.
+        // T2.12 При вызове getSwipeItem() контроллер должен возвращать true вне зависимости от типа анимации и направления свайпа.
         it('method getSwipeItem() should return true despite of current animation type and direction', () => {
             const item: CollectionItem<Record> = collection.getItemBySourceKey(1);
             let swipedItem: CollectionItem<Record>;
