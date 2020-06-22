@@ -44,6 +44,18 @@ export class Controller {
    }
 
    /**
+    * Возвращает результат работы после конструктора
+    */
+   getResultAfterConstructor(): ISelectionControllerResult {
+      const oldSelection = {
+         selected: [],
+         excluded: []
+      };
+
+      return this._getResult(oldSelection, this._selection);
+   }
+
+   /**
     * Обновить состояние контроллера
     * @param options
     */
