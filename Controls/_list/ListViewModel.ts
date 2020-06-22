@@ -556,12 +556,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         _private.updateIndexes(this, 0, this.getCount());
     },
     isValidItemForMarkedKey: function (item) {
-        return !this._isGroup(item) && item.getId;
+        return item && !this._isGroup(item) && item.getId;
     },
     getPreviousItem: function (itemIndex) {
         var prevIndex = itemIndex - 1, prevItem;
         while (prevIndex >= 0) {
-            prevItem = this._display.at(prevIndex).getContents();
+            prevItem = this._display.at(prevIndex)?.getContents();
             if (this.isValidItemForMarkedKey(prevItem)) {
                 return prevItem.getId();
             }
