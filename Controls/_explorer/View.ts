@@ -397,10 +397,7 @@ var
 
    /**
     * @name Controls/_explorer/View#displayMode
-    * @cfg {Boolean} Отображение крошек в несколько строк
-    * @variant default
-    * @variant multiline
-    * @default default
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
     */
 
     var Explorer = Control.extend({
