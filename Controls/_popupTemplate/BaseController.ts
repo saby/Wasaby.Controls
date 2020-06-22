@@ -201,10 +201,12 @@ abstract class BaseController {
         return true;
     }
 
-    private getContentSizes(container: HTMLDivElement): IPopupSizes {
+    private getContentSizes(container?: HTMLDivElement = null): IPopupSizes {
+        // Чтобы размер контейнера не искажался при масштабировании использую getBoundingClientRect
+        const sizes = container?.getBoundingClientRect();
         return {
-            width: container.offsetWidth,
-            height: container.offsetHeight
+            width: Math.round(sizes?.width),
+            height: Math.round(sizes?.height)
         };
     }
 }
