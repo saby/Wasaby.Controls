@@ -87,7 +87,7 @@
       <div attr:class="{{itemData.getMarkerClasses()}}"></div>
    </ws:if>
    <ws:partial template="columnContent"
-               attr:class="{{currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder_theme-' + _options.theme}}
+               attr:class="{{currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
                            {{itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}"/>
 </ws:template>
 <ws:template name="colTpl">
