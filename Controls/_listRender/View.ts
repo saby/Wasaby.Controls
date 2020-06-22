@@ -362,7 +362,6 @@ export default class View extends Control<IViewOptions> {
         // Actions dropdown can start closing after the view itself was unmounted already, in which case
         // the model would be destroyed and there would be no need to process the action itself
         if (this._collection && !this._collection.destroyed) {
-            this._itemActionsController.setActiveItem(null);
             this._itemActionsController.deactivateSwipe();
             this._itemActionsMenuId = null;
         }

@@ -98,17 +98,17 @@ var _private = {
         itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
             itemsModelCurrent.dispItem.getActions ? itemsModelCurrent.dispItem.getActions() : itemsModelCurrent.itemActions
         );
-        itemsModelCurrent.setActive = (state: boolean): void => {
+        itemsModelCurrent.setActive = (state: boolean, silent?: boolean): void => {
             if (itemsModelCurrent.dispItem.setActive !== undefined) {
-                itemsModelCurrent.dispItem.setActive(state);
+                itemsModelCurrent.dispItem.setActive(state, silent);
             }
         };
         itemsModelCurrent.isActive = (): boolean => (
             itemsModelCurrent.dispItem.isActive() !== undefined ? itemsModelCurrent.dispItem.isActive() : false
         );
-        itemsModelCurrent.setSwiped = (state: boolean): void => {
+        itemsModelCurrent.setSwiped = (state: boolean, silent?: boolean): void => {
             if (itemsModelCurrent.dispItem.setSwiped !== undefined) {
-                itemsModelCurrent.dispItem.setSwiped(state);
+                itemsModelCurrent.dispItem.setSwiped(state, silent);
             }
         };
         itemsModelCurrent.isSwiped = (): boolean => (
@@ -458,12 +458,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         const oldActiveItem = this.getActiveItem();
         if (oldActiveItem) {
-            oldActiveItem.setActive(false);
+            oldActiveItem.setActive(false, true);
         }
         // TODO костыль. В TileView вместо item передаётся объект, поэтому проверяем на function
         //  надо передавать настроенный item
         if (itemData && typeof itemData.setActive === 'function') {
-            itemData.setActive(true);
+            itemData.setActive(true, true);
         }
         this._activeItem = itemData;
         this._nextModelVersion(false, 'activeItemChanged');

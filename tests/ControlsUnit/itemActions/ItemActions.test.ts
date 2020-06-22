@@ -499,8 +499,8 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isUndefined(config.twoColumns);
         });
 
-        // T2.4.1 Если actionAlignment был принудительно изменён, необходимо обновлять конфиг ItemActions
-        it('should Update itemTemplateConfig when actionAlignment has been forced to change from vertical to horizontal', () => {
+        // T2.4.1 Необходимо обновлять конфиг ItemActions после расчёта конфигурации swipe
+        it('should Update actionsTemplateConfig after calculating itemSwipe configuration', () => {
             itemActionsController.update(initializeControllerOptions({
                 collection,
                 itemActions: horizontalOnlyItemActions,
