@@ -9,6 +9,11 @@ import template = require('wml!Controls/_popup/Manager/Container');
 // It should be enough to place all the additional popups (menu, infobox, suggest) on the main popups (stack, window)
 const POPUP_ZINDEX_STEP: number = 10;
 
+interface IRemovedItem {
+    removedItem: IPopupItem;
+    removeCallback: Function;
+}
+
 class Container extends Control<IControlOptions> {
 
     /**
@@ -25,12 +30,22 @@ class Container extends Control<IControlOptions> {
     protected _overlayId: string;
     protected _zIndexStep: number = POPUP_ZINDEX_STEP;
     protected _popupItems: List<IPopupItem>;
+    protected _removeItems: IRemovedItem[] = [];
 
     protected _beforeMount(): void {
         this._popupItems = new List();
     }
     protected _afterMount(): void {
         ManagerController.setContainer(this);
+    }
+
+    protected _afterRender(): void {
+        if (this._removeItems.length) {
+            this._removeItems.map((data: IRemovedItem) => {
+                data.removeCallback(data.removedItem);
+            });
+            this._removeItems = [];
+        }
     }
 
     /**
@@ -40,6 +55,21 @@ class Container extends Control<IControlOptions> {
      */
     setPopupItems(popupItems: List<IPopupItem>): void {
         this._popupItems = popupItems;
+    }
+
+    removePopupItem(popupItems: List<IPopupItem>, removedItem: IPopupItem, removeCallback: Function): void {
+        // Ядро не предоставляет данных о том, когда контрол удалится из верстки.
+        // Для того, чтобы пронотифаить событие onClose, когда окно реально удалилось, приходится запоминать
+        // удаляемое окно и в цикле после обновления нотифаить для него события.
+        // Нужно нотифаить после удаления из-за особенностей работы стековых окон:нижнее окно скрывается через ws-hidden
+        // Если верхнее окно закроется, а на событие onClose кто-нибудь (лукап) попытается восстановить фокус
+        // то у него ничего не получится, т.к. цикл синхронизации еще не прошел, верхнее окно не удалилось,
+        // с нижнего не снялся ws-hidden, из-за чего не отработала фокусировка.
+        this._removeItems.push({
+            removedItem,
+            removeCallback
+        });
+        this.setPopupItems(popupItems);
     }
 
     getPopupById(id: string): Control {
