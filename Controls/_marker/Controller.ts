@@ -91,7 +91,7 @@ export class Controller {
     */
    restoreMarker(): void {
       const item = this._model.getItemBySourceKey(this._markedKey);
-      if (item && !item.isMarked()) {
+      if (item) {
          item.setMarked(true, true);
       }
    }
