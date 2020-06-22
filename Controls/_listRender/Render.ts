@@ -7,7 +7,6 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection, EditInPlaceController, GroupItem } from 'Controls/display';
 import { constants } from 'Env/Env';
 import { Opener as DropdownOpener } from 'Controls/dropdown';
-import {Model} from 'types/entity';
 
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
@@ -19,7 +18,6 @@ export interface IRenderOptions extends IControlOptions {
 
 export interface IRenderChildren {
     itemsContainer?: HTMLDivElement;
-    menuOpener?: DropdownOpener;
 }
 
 export interface ISwipeEvent extends Event {

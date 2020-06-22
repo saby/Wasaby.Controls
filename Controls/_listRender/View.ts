@@ -26,10 +26,10 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import { load as libraryLoad } from 'Core/library';
 import { SyntheticEvent } from 'Vdom/Vdom';
 
-import { constants } from 'Env/Env';
-
-import { ISwipeEvent } from './Render';
+import {constants, detection} from 'Env/Env';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import { MarkerController, TVisibility, Visibility } from 'Controls/marker';
+import { ISwipeEvent } from './Render';
 
 import template = require('wml!Controls/_listRender/View/View');
 
@@ -379,8 +379,7 @@ export default class View extends Control<IViewOptions> {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        const opener = this._children.renderer;
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, opener, isContextMenu);
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, this, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
@@ -397,6 +396,7 @@ export default class View extends Control<IViewOptions> {
         return Sticky.openPopup(menuConfig).then((popupId) => {
             this._itemActionsMenuId = popupId;
             this._itemActionsController.setActiveItem(item);
+            RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
         });
     }
 
@@ -407,7 +407,18 @@ export default class View extends Control<IViewOptions> {
     private _closeActionsMenu(): void {
         this._itemActionsController.setActiveItem(null);
         this._itemActionsController.deactivateSwipe();
+        this._closePopup();
+    }
+
+    /**
+     * Закрывает popup и снимает регистрацию его подписки на событие скролла
+     * @private
+     */
+    private _closePopup() {
+        if (this._itemActionsMenuId) {
         Sticky.closePopup(this._itemActionsMenuId);
+            UnregisterUtil(this, 'scroll');
+        }
         this._itemActionsMenuId = null;
     }
 
@@ -424,6 +435,24 @@ export default class View extends Control<IViewOptions> {
         collectionOptions: IViewOptions
     ): Collection<Model> {
         return diCreate(module, { ...collectionOptions, collection: items });
+    }
+
+    /**
+     * Обработчик скролла, вызываемый при помощи регистратора событий по событию в ScrollContainer
+     * @param event
+     * @param scrollEvent
+     * @param initiator
+     * @private
+     */
+    private _scrollHandler(event: Event, scrollEvent: Event, initiator: string): void {
+        // Код ниже взят из Controls\_popup\Opener\Sticky.ts
+        // Из-за флага listenAll на listener'e, подписка доходит до application'a всегда.
+        // На ios при показе клавиатуры стреляет событие скролла, что приводит к вызову текущего обработчика
+        // и закрытию окна. Для ios отключаю реакцию на скролл, событие скролла стрельнуло на body.
+        if (detection.isMobileIOS && (scrollEvent.target === document.body || scrollEvent.target === document)) {
+            return;
+        }
+        this._closePopup();
     }
 
     /**

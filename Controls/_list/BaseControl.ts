@@ -38,6 +38,7 @@ import {
     ANIMATION_STATE
 } from 'Controls/display';
 import {Controller as ItemActionsController, IItemAction, TItemActionShowType} from 'Controls/itemActions';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import ListViewModel from 'Controls/_list/ListViewModel';
@@ -1442,6 +1443,7 @@ const _private = {
             // Нельзя устанавливать activeItem раньше, иначе при автокликах
             // робот будет открывать меню раньше, чем оно закрылось
             self._itemActionsController.setActiveItem(item);
+            RegisterUtil(self, 'scroll', self._scrollHandler.bind(self));
         });
     },
 
@@ -1476,6 +1478,7 @@ const _private = {
     closePopup(self): void {
         if (self._itemActionsMenuId) {
             Sticky.closePopup(self._itemActionsMenuId);
+            UnregisterUtil(self, 'scroll');
         }
         self._itemActionsMenuId = null;
     },
@@ -3440,6 +3443,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
         return styles;
+    },
+
+    /**
+     * Обработчик скролла, вызываемый при помощи регистратора событий по событию в ScrollContainer
+     * @param event
+     * @param scrollEvent
+     * @param initiator
+     * @private
+     */
+    _scrollHandler(event: Event, scrollEvent: Event, initiator: string): void {
+        // Код ниже взят из Controls\_popup\Opener\Sticky.ts
+        // Из-за флага listenAll на listener'e, подписка доходит до application'a всегда.
+        // На ios при показе клавиатуры стреляет событие скролла, что приводит к вызову текущего обработчика
+        // и закрытию окна. Для ios отключаю реакцию на скролл, событие скролла стрельнуло на body.
+        if (detection.isMobileIOS && (scrollEvent.target === document.body || scrollEvent.target === document)) {
+            return;
+        }
+        _private.closePopup(this);
     },
 
     /**
