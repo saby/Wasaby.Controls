@@ -151,10 +151,10 @@ class Component extends Control {
             // Невидимые заголовки нельзя обсчитать, потому что нельзя узнать их размеры и положение.
             this._delayedHeaders.push(data);
 
+            this._observeStickyHeader(data);
             if (!isHidden(data.container) && this._stickyControllerMounted && this._canScroll) {
                 return Promise.resolve().then(this._registerDelayed.bind(this));
             }
-            this._observeStickyHeader(data);
         } else {
             this._unobserveStickyHeader(this._headers[data.id]);
             delete this._headers[data.id];
@@ -165,9 +165,12 @@ class Component extends Control {
     }
 
     private _observeStickyHeader(header: TRegisterEventData): void {
-        const stickyHeaders = this._getStickyHeaderElements(header);
-        stickyHeaders.forEach((elem: HTMLElement) => {
-            this._stickyHeaderResizeObserver.observe(elem);
+        // Подпишемся на изменение размеров всех заголовков 1 раз после того как они все зарегистрируются.
+        setTimeout(() => {
+            const stickyHeaders = this._getStickyHeaderElements(header);
+            stickyHeaders.forEach((elem: HTMLElement) => {
+                this._stickyHeaderResizeObserver.observe(elem);
+            });
         });
     }
 
