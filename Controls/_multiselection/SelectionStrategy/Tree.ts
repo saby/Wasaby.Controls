@@ -215,7 +215,13 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
          for (let index = 0; index < selectedNodes.length; index++) {
             const nodeKey: TKey = selectedNodes[index];
-            const countItemsSelectedInNode: number|null = this._getSelectedChildrenCount(nodeKey, selection, this._items, this._hierarchyRelation, this._selectDescendants);
+            const nodeSourceController = this._nodesSourceControllers?.get(nodeKey);
+            let countItemsSelectedInNode;
+            if (nodeSourceController?.hasMoreData('down')) {
+                countItemsSelectedInNode = null;
+            } else {
+                countItemsSelectedInNode = this._getSelectedChildrenCount(nodeKey, selection, this._items, this._hierarchyRelation, this._selectDescendants);
+            }
 
             if (countItemsSelectedInNode === null) {
                countItemsSelected = null;
