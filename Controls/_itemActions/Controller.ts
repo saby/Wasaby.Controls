@@ -116,6 +116,9 @@ export class Controller {
     private _contextMenuConfig: IContextMenuConfig;
     private _iconSize: TItemActionsSize;
 
+    // вариант расположения опций в свайпе на момент инициализации
+    private _actionsAlignment: 'horizontal'|'vertical';
+
     private _theme: string;
 
     /**
@@ -132,6 +135,7 @@ export class Controller {
         this._editArrowAction = options.editArrowAction;
         this._contextMenuConfig = options.contextMenuConfig;
         this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
+        this._actionsAlignment = options.actionAlignment || DEFAULT_ACTION_ALIGNMENT;
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
@@ -156,14 +160,14 @@ export class Controller {
      * @param actionsContainerHeight высота контейнера для отображения операций с записью
      */
     activateSwipe(itemKey: TItemKey, actionsContainerHeight: number): void {
-        this._setSwipeItem(itemKey);
-        this.setSwipeAnimation(ANIMATION_STATE.OPEN);
         const item = this._collection.getItemBySourceKey(itemKey);
+        this.setSwipeAnimation(ANIMATION_STATE.OPEN);
+        this._setSwipeItem(itemKey);
         this._collection.setActiveItem(item);
-
         if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
         }
+        this._collection.nextVersion();
     }
 
     /**
@@ -174,6 +178,7 @@ export class Controller {
         this._collection.setActiveItem(null);
         this._collection.setSwipeConfig(null);
         this._collection.setSwipeAnimation(null);
+        this._collection.nextVersion();
     }
 
     /**
@@ -188,8 +193,8 @@ export class Controller {
      * @param itemKey
      */
     activateRightSwipe(itemKey: TItemKey) {
-        this._setSwipeItem(itemKey);
         this.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
+        this._setSwipeItem(itemKey);
     }
 
     /**
@@ -268,7 +273,7 @@ export class Controller {
 
     /**
      * Устанавливает активный Item в коллекции
-     * @param item
+     * @param item Текущий элемент коллекции
      */
     setActiveItem(item: IItemActionsItem) {
         this._collection.setActiveItem(item);
@@ -353,16 +358,17 @@ export class Controller {
     /**
      * Устанавливает текущий swiped элемент
      * @param key Ключ элемента коллекции, на котором был выполнен swipe
+     * @param silent Если true, коллекция не отправит onCollectionChange
      */
-    private _setSwipeItem(key: TItemKey): void {
+    private _setSwipeItem(key: TItemKey, silent?: boolean): void {
         const oldSwipeItem = this.getSwipeItem();
         const newSwipeItem = this._collection.getItemBySourceKey(key);
 
         if (oldSwipeItem) {
-            oldSwipeItem.setSwiped(false);
+            oldSwipeItem.setSwiped(false, silent);
         }
         if (newSwipeItem) {
-            newSwipeItem.setSwiped(true);
+            newSwipeItem.setSwiped(true, silent);
         }
     }
 
@@ -393,7 +399,7 @@ export class Controller {
             itemActionsClass: options.itemActionsClass,
             size: this._iconSize,
             itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
-            actionAlignment: options.actionAlignment || DEFAULT_ACTION_ALIGNMENT,
+            actionAlignment: this._actionsAlignment,
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
         });
     }
@@ -421,6 +427,7 @@ export class Controller {
 
         let actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
+        actionsTemplateConfig.actionAlignment = this._actionsAlignment;
 
         if (this._editArrowAction && this._editArrowVisibilityCallback(item)) {
             if (!actions.find((action) => action.id === 'view')) {
@@ -446,9 +453,8 @@ export class Controller {
                 actionsContainerHeight,
                 actionsTemplateConfig.actionCaptionPosition
             );
-            this._collection.setActionsTemplateConfig(actionsTemplateConfig);
         }
-
+        this._collection.setActionsTemplateConfig(actionsTemplateConfig);
         Controller._setItemActions(item, swipeConfig.itemActions);
 
         if (swipeConfig.twoColumns) {

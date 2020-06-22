@@ -1307,8 +1307,9 @@ const _private = {
         // for example if Controls.explorer:View is switched from list to tile mode. The controller
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
+        // But we should not update any ItemActions when marker has changed
         if (
-            changesType === 'collectionChanged' ||
+            (changesType === 'collectionChanged' && _private.shouldUpdateItemActions(newItems)) ||
             changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
             newModelChanged
         ) {
@@ -1319,6 +1320,18 @@ const _private = {
         if (self._isMounted) {
             self._forceUpdate();
         }
+    },
+
+    /**
+     * Возвращает boolean, надо ли обновлять проинициализированные ранее ItemActions, основываясь на newItems.properties.
+     * Возвращается true, если newItems или newItems.properties не заданы
+     * Новая модель в событии collectionChanged для newItems задаёт properties,
+     * где указано, что именно обновляется.
+     * @param newItems
+     */
+    shouldUpdateItemActions(newItems): boolean {
+        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged';
+        return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     },
 
     initListViewModelHandler(self, model, useNewModel: boolean) {
@@ -1435,7 +1448,6 @@ const _private = {
     closeActionsMenu(self: any): void {
         if (self._itemActionsMenuId) {
             _private.closePopup(self);
-            self._itemActionsController.setActiveItem(null);
             self._itemActionsController.deactivateSwipe();
         }
     },
@@ -3405,15 +3417,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 : itemContainer.querySelector('.' + ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR);
 
         if (swipeEvent.nativeEvent.direction === 'left') {
-            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
             _private.setMarkedKey(this, key);
+            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             if (item.isSwiped()) {
                 this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
                 this._listViewModel.nextVersion();
             } else {
-                // After the right swipe the item should get selected. (Кусок старого кода)
+                // After the right swipe the item should get selected.
                 if (!this._selectionController) {
                     this._createSelectionController();
                 }
@@ -3458,7 +3470,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
             this._itemActionsController.deactivateSwipe();
-            this._listViewModel.nextVersion();
         }
     },
 

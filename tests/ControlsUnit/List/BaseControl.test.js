@@ -4970,6 +4970,35 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
+      // Смена маркера не должна ровоцировать обновление itemActions
+      it('should not call updateItemActions when marker has changed', () => {
+         let handleinitItemActionsCalled = false;
+
+         const self = {
+            _options: {
+               root: 5
+            },
+            _prevRootId: 5,
+            _selectionController: {
+               isAllSelected: () => true,
+               clearSelection: () => {},
+               handleReset: (items, prevRoot, rootChanged) => {},
+               handleAddItems: (items) => {}
+            },
+            _listViewModel: {
+               getCount: () => 5
+            },
+            handleSelectionControllerResult: () => {},
+            _updateInitializedItemActions: () => {
+               handleinitItemActionsCalled = true;
+            }
+         };
+         const items = [{}];
+         items.properties = 'marked';
+         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+         assert.isFalse(handleinitItemActionsCalled);
+      });
+
       it('_afterUpdate while loading do not update loadingState', async function() {
          var cfg = {
             viewName: 'Controls/List/ListView',
