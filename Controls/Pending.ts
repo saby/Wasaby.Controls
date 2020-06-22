@@ -187,7 +187,7 @@ import PendingClass from 'Controls/_popup/Manager/PendingClass';
        */
 
       finishPendingOperations: function(forceFinishValue, isInside?: boolean, root = null) {
-         return this._pendingController.finishPendingOperations(forceFinishValue, true, root);
+         return this._pendingController.finishPendingOperations(forceFinishValue, isInside, root);
       },
       _cancelFinishingPendingHandler: function(event, root) {
          return this._pendingController.cancelFinishingPending(root);
