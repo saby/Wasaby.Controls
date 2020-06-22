@@ -1330,6 +1330,64 @@ define([
          lists.BaseControl._private.createMarkerController = originalCreateMarkerController;
       });
 
+      describe('moveMarker', () => {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            markerVisibility: 'visible',
+            selectedKeys: [1],
+            excludedKeys: [],
+            markedKey: 2,
+            source: new sourceLib.Memory({
+               keyProperty: 'id',
+               data: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
+            })
+         };
+         let instance,
+            preventDefaultCalled = false,
+            activateCalled = false;
+         const event = {
+            preventDefault() { preventDefaultCalled = true; }
+         };
+
+         beforeEach(() => {
+            instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg, null, {
+               data: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
+            });
+
+            instance.activate = () => { activateCalled = true };
+
+            instance._scrollController = null;
+            instance._mounted = true;
+
+            preventDefaultCalled = false;
+            activateCalled = false;
+         });
+
+         it ('moveMarkerToNext', () => {
+            lists.BaseControl._private.moveMarkerToNext(instance, event);
+            assert.isTrue(activateCalled);
+            assert.isTrue(preventDefaultCalled);
+            assert.equal(instance._listViewModel.getMarkedKey(), 3);
+         });
+
+         it ('moveMarkerToPrev', () => {
+            lists.BaseControl._private.moveMarkerToPrevious(instance, event);
+            assert.isTrue(activateCalled);
+            assert.isTrue(preventDefaultCalled);
+            assert.equal(instance._listViewModel.getMarkedKey(), 1);
+         });
+      });
+
       it('moveMarkerToNext && moveMarkerToPrevious while loading', async function() {
          var
             cfg = {
