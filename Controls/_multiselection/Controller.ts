@@ -22,6 +22,7 @@ export class Controller {
    private _selectedKeys: TKeys = [];
    private _excludedKeys: TKeys = [];
    private _strategy: ISelectionStrategy;
+   private _limit: number|undefined;
 
    private get _selection(): ISelection {
       return {
@@ -41,6 +42,10 @@ export class Controller {
       this._strategy = options.strategy;
 
       this._updateModel(this._selection);
+   }
+
+   setLimit(limit: number|undefined): void {
+      this._limit = limit;
    }
 
    /**
@@ -102,6 +107,10 @@ export class Controller {
       if (status === true || status === null) {
          newSelection = this._strategy.unselect(this._selection, [key]);
       } else {
+         if (this._limit && this._selectedKeys.length === 1 && !this._excludedKeys.includes(this._selectedKeys[0])) {
+            this._increaseLimit(this._selectedKeys);
+         }
+
          newSelection = this._strategy.select(this._selection, [key]);
       }
 
@@ -186,6 +195,35 @@ export class Controller {
 
    private _getCount(selection?: ISelection): number | null {
       return this._strategy.getCount(selection || this._selection, this._model.getHasMoreData());
+   }
+
+   /**
+    * Увеличивает лимит на количество выбранных записей, все предыдущие невыбранные записи при этом попадают в исключение
+    * @param {Array} selectedKeys
+    * @private
+    */
+   private _increaseLimit(selectedKey: TKey): void {
+      let
+         selectedItemsCount: number = 0,
+         limit = this._limit ? this._limit - this._excludedKeys.length : 0,
+         selectionForModel: Map<TKey, boolean> = this._selectionStrategy.getSelectionForModel(this.getSelection(), this._listModel, this._limit);
+
+      this._model.getCollection().forEach((item) => {
+         let key: TKey = item.getKey();
+
+         if (selectedItemsCount < limit && selectionForModel.get(key) !== false) {
+            selectedItemsCount++;
+         } else if (selectedItemsCount >= limit && selectedKey) {
+            selectedItemsCount++;
+            this._limit++;
+
+            if (selectedKey === key) {
+               selectedKeys.splice(selectedKeys.indexOf(key), 1);
+            } else {
+               this._excludedKeys.push(key);
+            }
+         }
+      });
    }
 
    private _getItemsKeys(items: Array<CollectionItem<Record>>): TKeys {
