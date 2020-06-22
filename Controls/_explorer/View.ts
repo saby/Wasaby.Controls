@@ -401,7 +401,6 @@ var
     * @variant default
     * @variant multiline
     * @default default
-    * @demo Controls-demo/BreadCrumbs/DisplayMode/Index
     */
 
     var Explorer = Control.extend({
