@@ -4137,7 +4137,7 @@ define([
       describe('ItemActions menu', () => {
          let instance;
          let item;
-         let lastOutgoingEvent;
+         let outgoingEventsMap;
 
          let initFakeEvent = () => {
             return {
@@ -4172,6 +4172,7 @@ define([
          };
 
          beforeEach(async() => {
+            outgoingEventsMap = {};
             const cfg = {
                items: new collection.RecordSet({
                   rawData: [
@@ -4248,7 +4249,7 @@ define([
             lists.BaseControl._private.updateItemActions(instance, cfg);
             popup.Sticky.openPopup = (config) => Promise.resolve(1);
             instance._notify = (eventName, args) => {
-               lastOutgoingEvent = { eventName, args };
+               outgoingEventsMap[eventName] = args;
             };
          });
 
@@ -4298,33 +4299,16 @@ define([
                   parent: 1
                })
             };
-            instance._listViewModel.itemActions
             await instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
 
             // popup.Sticky.openPopup called in openItemActionsMenu is an async function
             // we cannot determine that it has ended
             instance._listViewModel.setActiveItem(instance._listViewModel.at(0));
             instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
-            assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
-            assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
+            assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
+            assert.exists(outgoingEventsMap.actionClick[2], 'Third argument has not been set');
+            assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
          });
-
-         // Нельзя открывать itemActionsMenu дважды подряд (надо сначала дождаться закрытия предыдущего меню)
-         it('should not open itemActionsMenu twice at the same time', () => {
-            const self = {
-               _itemActionsController: {
-                  prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => {}
-               },
-               _itemActionsMenuId: 'somePopupId'
-            };
-
-            // Нам нужно только передать self с установленной опцией _itemActionsMenuId, чтобы метод вернул пустой промис
-            return lists.BaseControl._private.openItemActionsMenu(self, null, null, null, false)
-               .then(() => {
-                  assert.equal(self._itemActionsMenuId, null);
-               });
-         });
-
 
          // Клик по ItemAction в контекстном меню отдавать контейнер в событии
          it('should send target container in event on click in context menu', async () => {
@@ -4338,8 +4322,26 @@ define([
             };
             await instance._onItemContextMenu(null, item, fakeEvent);
             instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
-            assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
-            assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
+            assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
+            assert.exists(outgoingEventsMap.actionClick[2], 'Third argument has not been set');
+            assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
+         });
+
+         // Нельзя открывать itemActionsMenu дважды подряд (надо сначала дождаться закрытия предыдущего меню)
+         it('should not open itemActionsMenu twice at the same time', () => {
+            const self = {
+               _itemActionsController: {
+                  prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => {}
+               },
+               _notify: () => {},
+               _itemActionsMenuId: 'somePopupId'
+            };
+
+            // Нам нужно только передать self с установленной опцией _itemActionsMenuId, чтобы метод вернул пустой промис
+            return lists.BaseControl._private.openItemActionsMenu(self, null, null, null, false)
+               .then(() => {
+                  assert.equal(self._itemActionsMenuId, null);
+               });
          });
 
          // Клик по ItemAction в тулбаре должен приводить к расчёту контейнера
@@ -4351,8 +4353,9 @@ define([
             };
             instance._listViewModel.getIndex = (item) => 0;
             instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
-            assert.exists(lastOutgoingEvent.args[2], 'Third argument has not been set');
-            assert.equal(lastOutgoingEvent.args[2].className, 'controls-ListView__itemV');
+            assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
+            assert.exists(outgoingEventsMap.actionClick[2], 'Third argument has not been set');
+            assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
          });
 
          // Нужно устанавливать active item только после того, как пришёл id нового меню
@@ -4366,14 +4369,64 @@ define([
                      activeItem = _item;
                   }
                },
-               _itemActionsMenuId: null
+               _itemActionsMenuId: null,
+               _scrollHandler: () => {},
+               _notify: () => {}
             };
+            assert.equal(activeItem, null);
             lists.BaseControl._private.openItemActionsMenu(self, null, fakeEvent, item, false)
                .then(() => {
                   assert.equal(activeItem, item);
+                  done();
                })
-               .then(done);
-            assert.equal(activeItem, null);
+               .catch((error) => {
+                  done();
+               });
+         });
+
+         // Необходимо при показе меню ItemActions регистрировать обработчик события скролла
+         it('should register scroll handler on display ItemActions menu', (done) => {
+            const fakeEvent = initFakeEvent();
+            let isScrollHandlerCalled = false;
+            let lastFiredEvent = null;
+            const self = {
+               _itemActionsController: {
+                  prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => ({}),
+                  setActiveItem: (_item) => {}
+               },
+               _itemActionsMenuId: null,
+               _scrollHandler: () => {
+                  isScrollHandlerCalled = true;
+               },
+               _notify: (eventName, args) => {
+                  lastFiredEvent = {eventName, args};
+               }
+            };
+            lists.BaseControl._private.openItemActionsMenu(self, null, fakeEvent, item, false)
+               .then(() => {
+                  assert.exists(lastFiredEvent, 'ListenerUtils did not fire any event');
+                  assert.equal(lastFiredEvent.eventName, 'register', 'Last fired event is wrong');
+                  lastFiredEvent.args[2]();
+                  assert.isTrue(isScrollHandlerCalled, '_scrollHandler() should be called');
+                  done();
+               })
+               .catch((error) => {
+                  done();
+               });
+         });
+
+         // Необходимо при закрытии меню ItemActions снимать регистрацию обработчика события скролла
+         it('should unregister scroll handler on close ItemActions menu', () => {
+            let lastFiredEvent = null;
+            const self = {
+               _itemActionsMenuId: 'fake',
+               _notify: (eventName, args) => {
+                  lastFiredEvent = {eventName, args};
+               }
+            };
+            lists.BaseControl._private.closePopup(self);
+            assert.exists(lastFiredEvent, 'ListenerUtils did not fire any event');
+            assert.equal(lastFiredEvent.eventName, 'unregister', 'Last fired event is wrong');
          });
       });
 
