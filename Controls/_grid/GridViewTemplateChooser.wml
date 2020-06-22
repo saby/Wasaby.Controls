@@ -19,6 +19,7 @@
                 _horizontalScrollPosition="{{ _horizontalScrollPosition }}"
                 _horizontalPositionChangedHandler="{{ _horizontalPositionChangedHandler }}"
                 _horizontalScrollWidth="{{ _horizontalScrollWidth }}"
+                _containerSize="{{ _containerSize }}"
 
                 _options="{{_options}}"/>
 </ws:template>
@@ -64,6 +65,7 @@
                     __trackVisible="{{ true }}"
                     _horizontalPositionChangedHandler="{{ _horizontalPositionChangedHandler }}"
                     _horizontalScrollPosition="{{ _horizontalScrollPosition }}"
+                    _containerSize="{{ _containerSize }}"
                     _contentSizeForHScroll="{{ _contentSizeForHScroll }}"
                     _horizontalScrollWidth="{{ _horizontalScrollWidth }}"
                     __isColumnScrollVisible="{{ _isColumnScrollVisible() }}"
