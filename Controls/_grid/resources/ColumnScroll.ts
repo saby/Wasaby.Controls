@@ -140,8 +140,19 @@ export class ColumnScroll {
         this._setStickyColumnsCount(newStickyColumnsCount, silence, GridLayoutUtil.isFullGridSupport());
     }
 
+    setMultiSelectVisibility(newMultiSelectVisibility: 'visible' | 'hidden' | 'onhover', silence: boolean = false): void {
+        this._setMultiSelectVisibility(newMultiSelectVisibility, silence, GridLayoutUtil.isFullGridSupport());
+    }
+
     private _setStickyColumnsCount(newStickyColumnsCount: number, silence: boolean = false, isFullGridSupport: boolean): void {
         this._options.stickyColumnsCount = newStickyColumnsCount;
+        if (!silence) {
+            this._updateFixedColumnWidth(isFullGridSupport);
+        }
+    }
+
+    private _setMultiSelectVisibility(newMultiSelectVisibility: 'visible' | 'hidden' | 'onhover', silence: boolean = false, isFullGridSupport: boolean): void {
+        this._options.hasMultiSelect = newMultiSelectVisibility !== 'hidden';
         if (!silence) {
             this._updateFixedColumnWidth(isFullGridSupport);
         }

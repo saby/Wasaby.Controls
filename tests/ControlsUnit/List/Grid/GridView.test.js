@@ -466,6 +466,28 @@ define(['Controls/grid'], function(gridMod) {
 
          assert.deepEqual(calledMethods, []);
       });
+
+      it('should update column scroll sizes if options has been changed (only once per lifecycle)', function () {
+         const cfg = {
+            multiSelectVisibility: 'hidden',
+            stickyColumnsCount: 1,
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+         gridView.saveOptions(cfg);
+         const calledMethods = [];
+         gridView._columnScrollController = {
+            setStickyColumnsCount: () => {calledMethods.push('setStickyColumnsCount')},
+            setMultiSelectVisibility: () => {calledMethods.push('setMultiSelectVisibility')},
+            updateSizes: () => {calledMethods.push('updateSizes')}
+         };
+
+         gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2});
+         assert.deepEqual(calledMethods, ['setStickyColumnsCount', 'setMultiSelectVisibility', 'updateSizes']);
+      });
    });
 
 });
