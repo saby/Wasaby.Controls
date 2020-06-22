@@ -303,10 +303,7 @@ const _private = {
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                    if (!self._markerController && cfg.markerVisibility !== 'hidden') {
-                        self._markerController = _private.createMarkerController(self, cfg);
-                    }
-                    _private.restoreModelState(self);
+                    _private.restoreModelState(self, cfg);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -369,12 +366,21 @@ const _private = {
         return resDeferred;
     },
 
-    restoreModelState(self: any): void {
+    restoreModelState(self: any, options: any): void {
         if (self._markerController) {
             self._markerController.restoreMarker();
+        } else {
+            if (options.markerVisibility !== 'hidden') {
+                self._markerController = _private.createMarkerController(self, options);
+            }
         }
+
         if (self._selectionController) {
             self._selectionController.restoreSelection();
+        } else {
+            if (options.selectedKeys && options.selectedKeys.length > 0) {
+                self._selectionController = _private.createSelectionController(self, options);
+            }
         }
     },
 
