@@ -1315,7 +1315,7 @@ const _private = {
      */
     shouldUpdateItemActions(newItems): boolean {
         const propertyVariants = 'selected|marked|swiped|hovered|active|dragged';
-        return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) !== -1;
+        return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     },
 
     initListViewModelHandler(self, model, useNewModel: boolean) {
