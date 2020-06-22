@@ -1725,9 +1725,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          // Иногда таблица инициализируется без колонок. Тогда метод getCurrentResultsColumn не должен вызывать ошибок.
          it('should calculate params for resultColumn when grid initialized without columns', () => {
-            // gridViewModel = new gridMod.GridViewModel({ ...cfg, multiSelectVisibility: 'hidden', columns: [] });
-            // const currentResultColumn = gridViewModel.getCurrentResultsColumn();
-            // assert.deepEqual(currentResultColumn.column, undefined);
+            const newGridViewModel = new gridMod.GridViewModel({ ...cfg, multiSelectVisibility: 'hidden', columns: [] });
+            const currentResultColumn = newGridViewModel.getCurrentResultsColumn();
+            assert.deepEqual(currentResultColumn.column, undefined);
          });
 
          it('first header cell with breadcrumbs should renders from first column', function () {
