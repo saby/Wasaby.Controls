@@ -65,21 +65,15 @@ var _private = {
  */
 
 /**
- * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
- * @cfg {String} Стиль отображения кнопки "Назад".
- * @variant primary
- * @variant secondary
- * @default secondary
- * @see Controls/_heading/Back#style
+ * @name Controls/_breadcrumbs/HeadingPath#backButtonIconStyle
+ * @cfg {String} Стиль отображения иконки кнопки "Назад".
+ * @see Controls/_heading/Back#iconStyle
  */
 
-/*
- * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
- * @cfg {String} Back heading display style.
- * @variant primary
- * @variant secondary
- * @default secondary
- * @see Controls/_heading/Back#style
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#backButtonFontColorStyle
+ * @cfg {String} Стиль цвета кнопки "Назад".
+ * @see Controls/_heading/Back#fontColorStyle
  */
 
 /**
@@ -183,7 +177,8 @@ BreadCrumbsPath.getDefaultOptions = function () {
     return {
         displayProperty: 'title',
         root: null,
-        backButtonStyle: 'secondary',
+        backButtonIconStyle: 'primary',
+        backButtonFontColorStyle: 'secondary',
         showActionButton: true,
         displayMode: 'default'
     };

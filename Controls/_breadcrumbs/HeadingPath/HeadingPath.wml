@@ -7,6 +7,8 @@
                                                     counterCaption="{{ _getCounterCaption(_options.items) }}"
                                                     showArrowOutsideOfBackButton="{{!_breadCrumbsItems && !_options.rootVisible}}"
                                                     backButtonStyle="{{ _options.backButtonStyle }}"
+                                                    backButtonIconStyle="{{ _options.backButtonIconStyle }}"
+                                                    backButtonFontColorStyle="{{ _options.backButtonFontColorStyle }}"
                                                     showActionButton="{{_options.showActionButton}}"
                                                     displayMode="{{_options.displayMode}}"
                                                     afterBackButtonTemplate="{{_options.afterBackButtonTemplate}}"
@@ -38,5 +40,5 @@
                 </ws:if>
             </div>
         </ws:if>
-    </div>
+   </div>
 </div>

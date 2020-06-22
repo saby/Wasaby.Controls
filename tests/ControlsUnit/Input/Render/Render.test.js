@@ -75,9 +75,10 @@ define(
             beforeEach(function() {
                ctrl._options = {
                   content: Content,
-                  size: 'm',
+                  inlineHeight: 'm',
                   state: '',
-                  fontStyle: 'default',
+                  fontSize: 'm',
+                  fontColorStyle: 'default',
                   textAlign: 'left',
                   style: 'info',
                   theme: 'default'

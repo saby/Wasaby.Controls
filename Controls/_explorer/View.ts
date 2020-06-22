@@ -662,7 +662,8 @@ var
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         backButtonStyle: 'secondary',
+         backButtonIconStyle: 'primary',
+         backButtonFontColorStyle: 'secondary',
          stickyHeader: true,
          searchStartingWith: 'root',
          showActionButton: false
