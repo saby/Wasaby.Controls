@@ -194,4 +194,14 @@ describe('Controls/_multiselection/Controller', () => {
       controller.handleReset([], null, true);
       assert.isTrue(setSelectedItemsSpy.called);
    });
+
+   it('with limit', () => {
+      controller.setLimit(2);
+
+      let result = controller.selectAll();
+      assert.equal(result.selectedCount, 2);
+
+      result = controller.toggleItem(3);
+      assert.equal(result.selectedCount, 3);
+   });
 });
