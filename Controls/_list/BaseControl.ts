@@ -220,8 +220,7 @@ const _private = {
         }
     },
 
-    // когда вызывают публичный reload не нужно обновлять маркер здесь, для этого параметр updateMarker
-    reload(self, cfg, sourceConfig?: IBaseSourceConfig, updateMarker: boolean = true): Promise<any> | Deferred<any> {
+    reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
         const navigation = cClone(cfg.navigation);
@@ -306,9 +305,7 @@ const _private = {
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                    if (self._markerController && updateMarker) {
-                        _private.updateMarkerController(self, self._options);
-                    }
+                    _private.restoreModelState(self, cfg);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -371,15 +368,22 @@ const _private = {
         return resDeferred;
     },
 
-    reloadAndRestoreModelState(self: any, cfg: any, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
-        return _private.reload(self, cfg, sourceConfig, false).addCallback(() => {
-            if (self._markerController) {
-                self._markerController.restoreMarker();
+    restoreModelState(self: any, options: any): void {
+        if (self._markerController) {
+            self._markerController.restoreMarker();
+        } else {
+            if (options.markerVisibility !== 'hidden') {
+                self._markerController = _private.createMarkerController(self, options);
             }
-            if (self._selectionController) {
-                self._selectionController.restoreSelection();
+        }
+
+        if (self._selectionController) {
+            self._selectionController.restoreSelection();
+        } else {
+            if (options.selectedKeys && options.selectedKeys.length > 0) {
+                self._selectionController = _private.createSelectionController(self, options);
             }
-        });
+        }
     },
 
     startDragNDrop(self, domEvent, itemData): void {
@@ -2275,10 +2279,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
-            if (newOptions.markerVisibility !== 'hidden') {
-                self._markerController = _private.createMarkerController(self, newOptions);
-            }
-
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
@@ -2294,6 +2294,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (self._pagingNavigation) {
                         const hasMoreData = self._items.getMetaData().more;
                         _private.updatePagingData(self, hasMoreData);
+                    }
+
+                    if (newOptions.markerVisibility !== 'hidden') {
+                        self._markerController = _private.createMarkerController(self, newOptions);
+                    }
+
+                    if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
+                        self._selectionController = _private.createSelectionController(self, newOptions);
                     }
 
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
@@ -2488,12 +2496,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._loadedItems = null;
 
-        if (this._options.selectedKeys && this._options.selectedKeys.length !== 0) {
-            this._createSelectionController();
-        }
-
         if (this._scrollController) {
             this._scrollController.afterMount(container, this._children);
+        }
+
+        // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
+        // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
+        if (this._selectionController) {
+            const result = this._selectionController.getResultAfterConstructor();
+            _private.handleSelectionControllerResult(this, result);
         }
 
         if (this._editInPlace) {
@@ -2892,12 +2903,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 callback();
             });
             this._callbackAfterUpdate = null;
-            if (this._markerController) {
-                this._markerController.restoreMarker();
-            }
-            if (this._selectionController) {
-                this._selectionController.restoreSelection();
-            }
         }
 
         if (this._editInPlace) {
@@ -2964,7 +2969,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
-        return _private.reloadAndRestoreModelState(this, this._options, sourceConfig).addCallback(getData);
+        return _private.reload(this, this._options, sourceConfig).addCallback(getData);
     },
 
     setMarkedKey(key: number | string): void {

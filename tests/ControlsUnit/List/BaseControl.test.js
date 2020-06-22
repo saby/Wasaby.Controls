@@ -1237,7 +1237,8 @@ define([
                moveMarkerToNext() { moveMarkerToNextCalled = true; },
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
-               update() {}
+               update() {},
+               restoreMarker() {}
             };
          };
          baseControl.saveOptions(cfg);
@@ -1306,7 +1307,8 @@ define([
                moveMarkerToNext() { moveMarkerToNextCalled = true; },
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
-               update() {}
+               update() {},
+               restoreMarker() {}
             };
          };
 
@@ -3023,7 +3025,8 @@ define([
             toggleItem: function(key) {
                   assert.equal(key, 1);
             },
-            handleReset: function() {}
+            handleReset: function() {},
+            restoreSelection() {}
          };
          ctrl._onCheckBoxClick({}, 1, 1);
       });
@@ -5342,6 +5345,38 @@ define([
          });
       });
 
+      it('_beforeMount create controllers when passed receivedState', function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            markerVisibility: 'visible',
+            selectedKeys: [1],
+            excludedKeys: [],
+            source: new sourceLib.Memory({
+               keyProperty: 'id',
+               data: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
+            })
+         };
+         let instance = new lists.BaseControl(cfg);
+         instance.saveOptions(cfg);
+         instance._beforeMount(cfg, null, {
+            data: new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: data
+            })
+         });
+
+         assert.isNotNull(instance._markerController);
+         assert.isNotNull(instance._selectionController);
+         const item = instance._listViewModel.getItemBySourceKey(1);
+         assert.isTrue(item.isMarked());
+         assert.isTrue(item.isSelected());
+      });
+
       it('_beforeUnmount', function() {
          let instance = new lists.BaseControl();
          instance._needPagingTimeout = setTimeout(() => {}, 100);
@@ -6019,7 +6054,8 @@ define([
                      moveMarkerToNext() {},
                      moveMarkerToPrev() {},
                      handleRemoveItems() {},
-                     update() {}
+                     update() {},
+                     restoreMarker() {}
                   };
                });
                await mountBaseControl(_baseControl, baseControlOptions);
@@ -6199,7 +6235,8 @@ define([
                      setMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     restoreMarker() {}
                   };
 
                   baseControl._scrollController = {
