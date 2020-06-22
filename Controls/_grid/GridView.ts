@@ -194,6 +194,7 @@ var
         _horizontalScrollPosition: 0,
         _contentSizeForHScroll: 0,
         _horizontalScrollWidth: 0,
+        _containerSize: 0,
 
         _beforeMount(cfg) {
             _private.checkDeprecated(cfg, this);
@@ -227,6 +228,7 @@ var
                     }
                     this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                     this._horizontalScrollWidth = newSizes.scrollWidth;
+                    this._containerSize = newSizes.containerSize;
                     if (this._dragScrollController) {
                         this._dragScrollController.updateScrollData({
                             scrollLength: newSizes.contentSize - newSizes.containerSize,
@@ -342,6 +344,7 @@ var
                     this._columnScrollController.updateSizes((newSizes) => {
                         this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                         this._horizontalScrollWidth = newSizes.scrollWidth;
+                        this._containerSize = newSizes.containerSize;
                         this._updateColumnScrollData();
                     }, true);
                 }
@@ -391,6 +394,7 @@ var
             this._columnScrollController?.updateSizes((newSizes) => {
                 this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                 this._horizontalScrollWidth = newSizes.scrollWidth;
+                this._containerSize = newSizes.containerSize;
                 this._updateColumnScrollData();
             });
         },
@@ -558,6 +562,7 @@ var
             this._columnScrollController.updateSizes((newSizes) => {
                 this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                 this._horizontalScrollWidth = newSizes.scrollWidth;
+                this._containerSize = newSizes.containerSize;
                 this._updateColumnScrollData();
             });
         },
