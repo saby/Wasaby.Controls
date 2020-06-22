@@ -1723,6 +1723,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             delete gridViewModel._options.columns[1].columnSeparatorSize;
          });
 
+         // Иногда таблица инициализируется без колонок. Тогда метод getCurrentResultsColumn не должен вызывать ошибок.
+         it('should calculate params for resultColumn when grid initialized without columns', () => {
+            // gridViewModel = new gridMod.GridViewModel({ ...cfg, multiSelectVisibility: 'hidden', columns: [] });
+            // const currentResultColumn = gridViewModel.getCurrentResultsColumn();
+            // assert.deepEqual(currentResultColumn.column, undefined);
+         });
+
          it('first header cell with breadcrumbs should renders from first column', function () {
               const originBreadcrumbsCell = gridViewModel._headerRows[0][1];
               gridViewModel._headerRows[0][1] = {
