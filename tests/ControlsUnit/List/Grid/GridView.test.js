@@ -427,6 +427,27 @@ define(['Controls/grid'], function(gridMod) {
          });
       });
 
+      it('createDragScroll if allowed (no dnd)', () => {
+         const cfg = {
+            multiSelectVisibility: 'visible',
+            columnScroll: true,
+            itemsDragNDrop: true,
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+         gridView.saveOptions(cfg);
+         gridView._listModel = {
+            setBaseItemTemplateResolver: () => {},
+            setColumnTemplate: () => {}
+         };
+         gridView._beforeMount(cfg);
+         assert.isDefined(gridView._columnScrollController);
+         assert.isUndefined(gridView._dragScrollController);
+      });
+
       it('should call dragscroll only if column scroll enabled', function () {
          const cfg = {
             multiSelectVisibility: 'visible',
