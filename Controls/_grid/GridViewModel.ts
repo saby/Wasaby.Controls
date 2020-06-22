@@ -1138,7 +1138,7 @@ var
                 });
             }
 
-            if (!resultsColumn.column.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
+            if (!resultsColumn.column?.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
                 const columnSeparatorSize = _private.getSeparatorForColumn(
                     this._options.columns,
                     columnIndex - (hasMultiSelect ? 1 : 0),
@@ -1189,7 +1189,7 @@ var
                         const format = results.getFormat();
                         const fieldIndex = format.getIndexByValue('name', resultsColumn.column.displayProperty);
                         resultsColumn.resultsFormat = fieldIndex !== -1 ? format.at(fieldIndex).getType() : undefined;
-            }
+                    }
                 }
 
                 resultsColumn.showDefaultResultTemplate = !!resultsColumn.resultsFormat;
