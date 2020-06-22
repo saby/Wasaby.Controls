@@ -2,7 +2,7 @@
     <ws:partial template="{{_gridTemplate}}"
                 _listModel="{{_listModel}}"
                 _isFullGridSupport="{{ _listModel.isFullGridSupport() }}"
-                _gridViewClasses="{{_getGridViewClasses()}}"
+                _gridViewClasses="{{_getGridViewClasses(_options)}}"
                 _gridViewStyles="{{_getGridViewStyles()}}"
                 _baseHeaderTemplate="{{_baseHeaderTemplate}}"
                 _resultsTemplate="{{_resultsTemplate}}"
@@ -33,7 +33,7 @@
             <div name="columnScrollShadowEnd" class="{{ _columnScrollShadowClasses.end }}"></div>
         </ws:if>
 
-        <ws:if data="{{ _isDragScrollingEnabled() }}">
+        <ws:if data="{{ _isDragScrollingEnabled(_options) }}">
             <div class="{{ _dragScrollOverlayClasses }}"
                  on:mouseup="_onDragScrollOverlayMouseUp()"
                  on:touchend="_onDragScrollOverlayTouchEnd()"

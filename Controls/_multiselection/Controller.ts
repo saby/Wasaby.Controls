@@ -44,6 +44,13 @@ export class Controller {
    }
 
    /**
+    * Возвращает результат работы после конструктора
+    */
+   getResultAfterConstructor(): ISelectionControllerResult {
+      return this._getResult(this._selection, this._selection);
+   }
+
+   /**
     * Обновить состояние контроллера
     * @param options
     */

@@ -297,12 +297,12 @@ var
     *
     * @remark
     * Сортировка применяется к запросу к источнику данных. Полученные от источника записи дополнительно не сортируются.
-    * 
+    *
     * Полезные ссылки:
     * * <a href="/doc/platform/developmentapl/interface-development/controls/list/explorer/">руководство разработчика</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less">переменные тем оформления explorer</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
-    * 
+    *
     * Демо-примеры:
     * <ul>
     *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
@@ -395,7 +395,12 @@ var
     * </pre>
     */
 
-   var Explorer = Control.extend({
+   /**
+    * @name Controls/_explorer/View#displayMode
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
+    */
+
+    var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
       _root: null,
