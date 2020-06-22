@@ -236,13 +236,6 @@
                     on:onArrowClick="__onPagingArrowClick()" />
             </div>
         </ws:if>
-        <Controls.popup:Sticky
-            name="menuOpener"
-            template="Controls/menu:Popup"
-            closeOnOutsideClick="{{true}}"
-            actionOnScroll="close">
-            <ws:fittingMode vertical="overflow"/>
-        </Controls.popup:Sticky>
         <Controls.event:Listener
            event="dataError"
            on:dataError="_onDataError()"/>
