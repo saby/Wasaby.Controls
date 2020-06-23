@@ -228,12 +228,13 @@ export class Controller {
             keyProperty: 'id'
         });
         const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || DEFAULT_ACTION_SIZE;
-        const showHeader = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
+        const showHeader = !!parentAction && !parentAction._isMenu;
         const headConfig = showHeader ? {
             caption: parentAction.title,
             icon: parentAction.icon,
             iconSize
         } : null;
+        const root = parentAction && parentAction.id;
         const templateOptions: IMenuTemplateOptions = {
             source,
             keyProperty: 'id',
@@ -241,11 +242,11 @@ export class Controller {
             nodeProperty: 'parent@',
             dropdownClassName: 'controls-itemActionsV__popup',
             ...this._contextMenuConfig,
-            root: parentAction && parentAction.id,
+            root,
             showHeader,
             headConfig,
             iconSize,
-            showClose: !parentAction || parentAction._isMenu
+            closeButtonVisibility: !showHeader && !root
         };
         return {
             opener,
