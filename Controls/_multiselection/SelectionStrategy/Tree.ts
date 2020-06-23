@@ -387,6 +387,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       const sourceController = this._nodesSourceControllers.get(itemId);
       const hasMoreData: boolean|void = sourceController ? sourceController.hasMoreData('down') : true;
       const children: Record[] = this._getChildren(itemId, this._items, this._hierarchyRelation);
+      const entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH];
       const listKeys = initialState ? selection.excluded : selection.selected;
       let countChildrenInList: boolean|number|null = 0;
 
@@ -415,8 +416,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          } else {
             stateNode = null;
          }
-      } else if (!children.length) {
-         const entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH];
+      } else if (entryPath) {
          const childrenFromPath = this._getChildrenByEntryPath(itemId, entryPath);
          const hasChildrenInKeys = listKeys.some((key) => childrenFromPath.includes(key));
          if (hasChildrenInKeys) {

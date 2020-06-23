@@ -298,7 +298,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
               rootId: null,
               items: new RecordSet({
                   keyProperty: ListData.KEY_PROPERTY,
-                  rawData: ListData.getRootItems()
+                  rawData: ListData.getItems()
               })
           });
           const entryPath = [
@@ -320,7 +320,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
           const nullStateKeys = toArray(result.get(null)).map((resultItem) => {
               return resultItem.id;
           });
-          assert.deepEqual(unselectedKeys, [1, 7]);
+          assert.deepEqual(unselectedKeys, [1, 2, 3, 4, 5, 7]);
           assert.isFalse(hasSelectedItems);
           assert.deepEqual(nullStateKeys, [6]);
       });
