@@ -44,13 +44,13 @@ const itemActions: IItemAction[] = [
     {
         id: 5,
         title: 'Documentation',
-        showType: TItemActionShowType.MENU,
+        showType: TItemActionShowType.TOOLBAR,
         parent: 4
     },
     {
         id: 6,
         title: 'Development',
-        showType: TItemActionShowType.MENU,
+        showType: TItemActionShowType.MENU_TOOLBAR,
         parent: 4
     },
     {
@@ -630,7 +630,7 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isFalse(config.templateOptions.showHeader, 'showHeader should be false when no parent passed');
         });
 
-        // T3.2. Если в метод parentAction - это кнопка открытия меню, то config.templateOptions.showHeader будет false
+        // T3.2. Если parentAction - это кнопка открытия меню, то config.templateOptions.showHeader будет false
         it('should set config.templateOptions.showHeader \'false\' when parentAction is _isMenu', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
@@ -639,36 +639,319 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isFalse(config.templateOptions.showHeader, 'showHeader should be false when isMenu parent passed');
         });
 
+        describe('Checking _getMenuActions() results', () => {
+
+        });
+
         // T3.6. Result.templateOptions.source содержит меню из ItemActions, соответствующих текущему parentAction
-        // it('returns an empty array if actions are not set');
-        // it('returns actions with showType of MENU and MENU_TOOLBAR');
-        // it('returns child actions');
         it('should set result.templateOptions.source responsible to current parentActions', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.exists(config.templateOptions, 'Template options were not set');
-            assert.exists(config.templateOptions.source, 'Menu actions source haven\'t been set in template options');
+            assert.exists(config.templateOptions.source, 'Menu actions source haven\'t set in template options');
             // @ts-ignore
-            const calculatedChildren = JSON.stringify(config.templateOptions.source.data);
-            const children = JSON.stringify(itemActions.filter((action) => action.parent === itemActions[3].id));
+            const calculatedChildren = JSON.stringify(config.templateOptions.source.data.map((item) => item.id));
+            const children = JSON.stringify(itemActions.filter((action) => action.parent === itemActions[3].id).map((item) => item.id));
             assert.exists(config.templateOptions, 'Template options were not set');
             assert.equal(calculatedChildren, children);
         });
 
-        // T3.7. Result.templateOptions.source содержит меню из всех ItemActions не-первого уровня, если в качестве parentAction была указана кнопка “Показать меню”
-        it('should set result.templateOptions.source as set of all non-first-level ItemActions when parentAction is _isMenu', () => {
+        // T3.7. Если parentAction - кнопка открытия доп. меню, то result.templateOptions.source содержит меню ItemActions с showType != TItemActionShowType.TOOLBAR
+        it('should collect only non-TOOLBAR item actions when parentAction._isMenu="true"', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
             assert.exists(config.templateOptions, 'Template options were not set');
-            assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t been set in template options');
+            assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
             // @ts-ignore
             const calculatedChildren = config.templateOptions.source.data.map((item) => item.id).join('');
             const children = itemActions
-                .filter((action) => (
-                    action.parent !== undefined || action.showType === TItemActionShowType.MENU || action.showType === TItemActionShowType.MENU_TOOLBAR)
-                ).map((item) => item.id).join('');
-            assert.equal(calculatedChildren, children);
+                .filter((action) => action.showType !== TItemActionShowType.TOOLBAR).map((item) => item.id).join('');
+            assert.exists(calculatedChildren, 'child item actions were not calculated');
+            assert.equal(calculatedChildren, children, 'child item actions are not equal to expected');
+        });
+
+        // T3.7.1 Если parentAction - не задан, то result.templateOptions.source содержит меню ItemActions с showType != TItemActionShowType.TOOLBAR
+        it('should collect only non-TOOLBAR item actions when parentAction is not set', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
+            assert.exists(config.templateOptions, 'Template options were not set');
+            assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
+            // @ts-ignore
+            const calculatedChildren = config.templateOptions.source.data.map((item) => item.id).join('');
+            const children = itemActions
+                .filter((action) => action.showType !== TItemActionShowType.TOOLBAR).map((item) => item.id).join('');
+            assert.exists(calculatedChildren, 'child item actions were not calculated');
+            assert.equal(calculatedChildren, children, 'child item actions are not equal to expected');
+        });
+
+        // T3.7.2. Мега тест на _getMenuActions
+        describe('_getMenuActions cases', () => {
+            // T3.7.2.1. parentAction не задан
+            // T3.7.2.1.1. Среди экшнов присутствуют дети какого-то парента
+            // T3.7.2.1.3. Среди экшнов отстутсвуют любые айтемы, у которых showtype===TOOLBAR
+            it('should collect any non-toolbar options when no parentAction passed', () => {
+                const localItemActions: IItemAction[] = [
+                    {
+                        id: 1,
+                        icon: 'icon-PhoneNull',
+                        title: 'phone',
+                        showType: TItemActionShowType.MENU
+                    },
+                    {
+                        id: 6,
+                        title: 'Development',
+                        showType: TItemActionShowType.MENU_TOOLBAR,
+                        parent: 4
+                    },
+                ];
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: localItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+                const item3 = collection.getItemBySourceKey(3);
+                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
+                assert.exists(config.templateOptions, 'Template options were not set');
+                assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
+                const expectedCount = config.templateOptions.source.data.filter((action) => action.showType !== TItemActionShowType.TOOLBAR).length;
+                assert.equal(expectedCount, 2);
+            });
+
+            // T3.7.2.1.2. Среди экшнов присутствуют айтемы, у которых showtype===TOOLBAR
+            it('should collect only non-toolbar options when no parentAction passed', () => {
+                const localItemActions: IItemAction[] = [
+                    {
+                        id: 1,
+                        icon: 'icon-PhoneNull',
+                        title: 'phone',
+                        showType: TItemActionShowType.MENU
+                    },
+                    {
+                        id: 5,
+                        title: 'Documentation',
+                        showType: TItemActionShowType.TOOLBAR,
+                        parent: 4
+                    },
+                    {
+                        id: 6,
+                        title: 'Development',
+                        showType: TItemActionShowType.MENU_TOOLBAR,
+                        parent: 4
+                    },
+                ];
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: localItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+                const item3 = collection.getItemBySourceKey(3);
+                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
+                assert.exists(config.templateOptions, 'Template options were not set');
+                assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
+                const expectedActions = config.templateOptions.source.data.filter((action) => action.showType !== TItemActionShowType.TOOLBAR);
+                assert.isNotEmpty(expectedActions);
+                const unexpectedActions = config.templateOptions.source.data.filter((action) => action.showType === TItemActionShowType.TOOLBAR);
+                assert.isEmpty(unexpectedActions);
+            });
+
+            // T3.7.2.2. parentAction задан
+            // T3.7.2.2.1. Среди экшнов присутствуют дети указанного парента
+            // T3.7.2.2.2. Среди экшнов присутствуют айтемы, у которых showtype===TOOLBAR
+            // T3.7.2.2.3. Среди экшнов присутствуют айтемы, у которых showtype===MENU
+            // T3.7.2.2.3. Среди экшнов присутствуют айтемы, у которых showtype===MENU_TOOLBAR
+            it ('should collect item actions for passed parent', () => {
+                const localItemActions: IItemAction[] = [
+                    {
+                        id: 1,
+                        icon: 'icon-PhoneNull',
+                        title: 'phone',
+                        showType: TItemActionShowType.MENU
+                    },
+                    {
+                        id: 2,
+                        icon: 'icon-EmptyMessage',
+                        title: 'message',
+                        showType: TItemActionShowType.MENU_TOOLBAR
+                    },
+                    {
+                        id: 5,
+                        title: 'Documentation',
+                        showType: TItemActionShowType.TOOLBAR,
+                        parent: 4
+                    },
+                    {
+                        id: 6,
+                        title: 'Development',
+                        showType: TItemActionShowType.MENU_TOOLBAR,
+                        parent: 4
+                    },
+                    {
+                        id: 7,
+                        title: 'Exploitation',
+                        showType: TItemActionShowType.MENU,
+                        parent: 4,
+                        '@parent': true
+                    }
+                ];
+                const parentAction = {
+                    id: 4,
+                    icon: 'icon-Time',
+                    title: 'Time management',
+                    showType: TItemActionShowType.TOOLBAR,
+                    '@parent': true
+                };
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: localItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+                const item3 = collection.getItemBySourceKey(3);
+                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, parentAction, null, false);
+                assert.exists(config.templateOptions, 'Template options were not set');
+                assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
+                const expectedCount = config.templateOptions.source.data.filter((action) => action.parent === 4).length;
+                assert.equal(expectedCount, 3);
+            });
+
+            // T3.7.2.2.1. Среди экшнов присутствуют дети какого-то другого парента, но отсутствуют дети указанного парента
+            it ('should collect item actions only for passed parent', () => {
+                const localItemActions: IItemAction[] = [
+                    {
+                        id: 1,
+                        icon: 'icon-PhoneNull',
+                        title: 'phone',
+                        showType: TItemActionShowType.MENU
+                    },
+                    {
+                        id: 2,
+                        icon: 'icon-EmptyMessage',
+                        title: 'message',
+                        showType: TItemActionShowType.MENU_TOOLBAR
+                    },
+                    {
+                        id: 5,
+                        title: 'Documentation',
+                        showType: TItemActionShowType.TOOLBAR,
+                        parent: 3
+                    },
+                    {
+                        id: 6,
+                        title: 'Development',
+                        showType: TItemActionShowType.MENU_TOOLBAR,
+                        parent: 3
+                    },
+                    {
+                        id: 7,
+                        title: 'Exploitation',
+                        showType: TItemActionShowType.MENU,
+                        parent: 3,
+                        '@parent': true
+                    }
+                ];
+                const parentAction = {
+                    id: 4,
+                    icon: 'icon-Time',
+                    title: 'Time management',
+                    showType: TItemActionShowType.TOOLBAR,
+                    '@parent': true
+                };
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: localItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+                const item3 = collection.getItemBySourceKey(3);
+                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, parentAction, null, false);
+                assert.notExists(config);
+            });
+
+            // T3.7.2.2. parentAction задан и его _isMenu===true
+            // T3.7.2.1.3. Среди экшнов отстутсвуют любые айтемы, у которых showtype===TOOLBAR
+            it('should collect any non-toolbar options when parentAction._isMenu===true', () => {
+                const localItemActions: IItemAction[] = [
+                    {
+                        id: 1,
+                        icon: 'icon-PhoneNull',
+                        title: 'phone',
+                        showType: TItemActionShowType.MENU
+                    },
+                    {
+                        id: 6,
+                        title: 'Development',
+                        showType: TItemActionShowType.MENU_TOOLBAR,
+                        parent: 4
+                    },
+                ];
+                const parentAction = {
+                    id: null,
+                    icon: `icon-ExpandDown`,
+                    style: 'secondary',
+                    iconStyle: 'secondary',
+                    _isMenu: true
+                };
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: localItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+                const item3 = collection.getItemBySourceKey(3);
+                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, parentAction, null, false);
+                assert.exists(config.templateOptions, 'Template options were not set');
+                assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
+                const expectedCount = config.templateOptions.source.data.filter((action) => action.showType !== TItemActionShowType.TOOLBAR).length;
+                assert.equal(expectedCount, 2);
+            });
+
+            // T3.7.2.1.2. Среди экшнов присутствуют айтемы, у которых showtype===TOOLBAR
+            it('should collect only non-toolbar options when parentAction._isMenu===true', () => {
+                const localItemActions: IItemAction[] = [
+                    {
+                        id: 1,
+                        icon: 'icon-PhoneNull',
+                        title: 'phone',
+                        showType: TItemActionShowType.MENU
+                    },
+                    {
+                        id: 5,
+                        title: 'Documentation',
+                        showType: TItemActionShowType.TOOLBAR,
+                        parent: 4
+                    },
+                    {
+                        id: 6,
+                        title: 'Development',
+                        showType: TItemActionShowType.MENU_TOOLBAR,
+                        parent: 4
+                    },
+                ];
+                const parentAction = {
+                    id: null,
+                    icon: `icon-ExpandDown`,
+                    style: 'secondary',
+                    iconStyle: 'secondary',
+                    _isMenu: true
+                };
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: localItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+                const item3 = collection.getItemBySourceKey(3);
+                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, parentAction, null, false);
+                assert.exists(config.templateOptions, 'Template options were not set');
+                assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
+                const expectedActions = config.templateOptions.source.data.filter((action) => action.showType !== TItemActionShowType.TOOLBAR);
+                assert.isNotEmpty(expectedActions);
+                const unexpectedActions = config.templateOptions.source.data.filter((action) => action.showType === TItemActionShowType.TOOLBAR);
+                assert.isEmpty(unexpectedActions);
+            });
         });
 
         // T3.3. Если в метод передан contextMenu=true, то в config.direction.horizontal будет right, иначе left
@@ -679,7 +962,7 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(config.direction.horizontal, 'right');
         });
 
-        // T3.3. Если в метод передан contextMenu=true, то в config.direction.horizontal будет right, иначе left
+        // T3.3.1 Если в метод передан contextMenu=true, то в config.direction.horizontal будет right, иначе left
         it('should set result.direction.horizontal as \'left\' when contextMenu=false', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
