@@ -205,6 +205,9 @@ class MenuRender extends Control<IMenuRenderOptions> {
             }
         } else {
             rightSpacing = options.itemPadding.right;
+            if (options.multiSelect) {
+                rightSpacing += '-multiSelect';
+            }
         }
         return rightSpacing;
     }
@@ -251,8 +254,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     static getDefaultOptions(): object {
         return {
-            itemTemplate,
-            itemPadding: {}
+            itemTemplate
         };
     }
 }
