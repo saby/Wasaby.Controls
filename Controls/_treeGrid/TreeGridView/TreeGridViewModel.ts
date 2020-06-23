@@ -214,20 +214,19 @@ var
                 }
 
                 footer.getColumnClasses = (index, tmplOptions = {}) => {
-                    let classes =
-                        `controls-TreeGrid__nodeFooterContent ` +
-                        `controls-TreeGrid__nodeFooterContent_theme-${theme}`;
+                    let rowSeparatorSize: 's' | 'l' | null;
 
-                    // TODO: Исправить по ошибке https://online.sbis.ru/opendoc.html?guid=e4de50e3-8071-49bf-8cd1-69944e8704e5
-                    if (self._options.rowSeparatorVisibility) {
-                        const separatorSize = self._options.rowSeparatorSize;
-                        const isWideSeparator = separatorSize && separatorSize.toLowerCase() === 'l';
-                        classes += ` controls-TreeGrid__nodeFooterContent_withRowSeparator${isWideSeparator ? '-l' : ''}_theme-${theme}`;
-                        classes += ` controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${isWideSeparator ? 'l' : 's'}_theme-${theme}`;
-                        classes += ` controls-TreeGrid__nodeFooterContent_padding-top-${isWideSeparator ? 'l' : 's'}_theme-${theme}`;
+                    if (self._options.rowSeparatorSize) {
+                        rowSeparatorSize = self._options.rowSeparatorSize.toLowerCase();
                     } else {
-                        classes += ` controls-TreeGrid__nodeFooterContent_withoutRowSeparator_theme-${theme} controls-TreeGrid__nodeFooterContent_padding-top-s_theme-${theme} controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s_theme-${theme}`;
+                        rowSeparatorSize = self._options.rowSeparatorVisibility ? 's' : null;
                     }
+
+                    let classes =
+                        'controls-TreeGrid__nodeFooterContent ' +
+                        `controls-TreeGrid__nodeFooterContent_theme-${theme} ` +
+                        `controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${rowSeparatorSize}_theme-${theme}`;
+
 
                     if (tmplOptions.colspan === false) {
                         if (index > 0) {
