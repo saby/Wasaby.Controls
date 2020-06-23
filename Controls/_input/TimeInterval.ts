@@ -2,6 +2,8 @@ import Base = require('Controls/_input/Base');
 
 import {descriptor, TimeInterval} from 'Types/entity';
 import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval/ViewModel';
+import {constants} from "Env/Env";
+import {SyntheticEvent} from "../../application/Vdom/Vdom";
 
 type IOptions = IModelOptions;
 
@@ -64,6 +66,20 @@ class TimeInterval extends Base {
         }
 
         super._changeHandler();
+    }
+
+    protected _keyDownHandler(event: SyntheticEvent): void {
+        TimeInterval.superclass._keyDownHandler.apply(this, arguments);
+
+        TimeInterval.arrowKeyHandler(this, event, true);
+    }
+
+    private _isPressArrow(event: SyntheticEvent): boolean {
+        return event.keyCode === constants.key.down || event.keyCode === constants.key.up;
+    }
+
+    private _arrowKeyHandler(event: SyntheticEvent): void {
+        TimeInterval.superclass.notifyValueChanged();
     }
 
     protected _focusInHandler(...args) {
