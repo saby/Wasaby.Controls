@@ -12,6 +12,7 @@ import {IControlOptions} from 'UI/Base';
  */
 
 export interface IBasePopupOptions {
+    id?: string;
     className?: string;
     template?: Control<IControlOptions, unknown> | TemplateFunction | string;
     closeOnOutsideClick?: boolean;

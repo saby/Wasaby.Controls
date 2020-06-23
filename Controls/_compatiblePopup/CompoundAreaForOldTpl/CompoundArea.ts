@@ -1095,6 +1095,16 @@ var CompoundArea = CompoundContainer.extend([
             Controller.update(id, popupConfig.popupOptions);
          }
 
+         const changeVisible = () => {
+            self._isVisible = visible;
+
+            if (visible !== prevVisible) {
+               // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
+               // стреляя событием onAfterVisibilityChange
+               self._notifyCompound('onAfterVisibilityChange', visible);
+            }
+         };
+
          if (visible && !prevVisible) {
             // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
             // окна на экране. Чтобы не было видно "прыжка" со старой позиции (вычисленной при старых размерах)
@@ -1106,6 +1116,7 @@ var CompoundArea = CompoundContainer.extend([
             popupConfig.isHiddenForRecalc = true;
 
             var popupAfterUpdated = function popupAfterUpdated(item, container) {
+               changeVisible();
                if (item.isHiddenForRecalc) {
                   // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
                   item.isHiddenForRecalc = false;
@@ -1140,14 +1151,8 @@ var CompoundArea = CompoundContainer.extend([
 
             // если не попадаем в elementAfterUpdated потому что он случился раньше, то попадаем хотя бы по таймауту
             setTimeout(popupAfterUpdated.bind(self, popupConfig, popupContainer), 2000);
-         }
-
-         this._isVisible = visible;
-
-         if (visible !== prevVisible) {
-            // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
-            // стреляя событием onAfterVisibilityChange
-            this._notifyCompound('onAfterVisibilityChange', visible);
+         } else {
+            changeVisible();
          }
       }
    },
