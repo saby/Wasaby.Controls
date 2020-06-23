@@ -882,6 +882,7 @@ var
             const cell = this._headerRows[rowIndex][columnIndex];
             const theme = this._options.theme;
             const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
+            const multiSelectOffset = +hasMultiSelect;
             const headerColumn = {
                 column: cell,
                 index: columnIndex,
@@ -950,8 +951,9 @@ var
                 }, this._options.theme);
                 cellClasses += ' controls-Grid__header-cell_min-width';
 
-                if (!this._isMultiHeader && !cell.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
-                    const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, columnIndex, this._options.columnSeparatorSize);
+                if (!this._isMultiHeader && !cell.isActionCell && (columnIndex > multiSelectOffset)) {
+                    // В this._columns нет колонки под чекбокс, а в this._headerRows[N] есть, поэтому индекс может быть больше.
+                    const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, columnIndex - multiSelectOffset, this._options.columnSeparatorSize);
                     if (columnSeparatorSize !== null) {
                         cellClasses += ` controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
                     }
@@ -1535,7 +1537,7 @@ var
 
             current.getAdditionalLadderClasses = () => {
                 let result = '';
-                if (current.stickyProperties && self._ladder.stickyLadder[current.index]) { 
+                if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
                     if (!hasMainCell) {
                         result += ' controls-Grid__row-cell__ladder-spacing_theme-' + self._options.theme;
