@@ -6,6 +6,7 @@ import { spy } from 'sinon';
 import { MarkerController } from "Controls/marker";
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
+import { SearchGridViewModel } from 'Controls/treeGrid';
 
 describe('Controls/marker/Controller', () => {
    let controller, model;
@@ -274,7 +275,67 @@ describe('Controls/marker/Controller', () => {
       });
    });
 
-   it('with breadcrumbs', () => {
+   it('should work with breadcrumbs', () => {
+      model = new SearchGridViewModel({
+         items: new RecordSet({
+            rawData: [{
+               id: 1,
+               parent: null,
+               nodeType: true,
+               title: 'test_node'
+            }, {
+               id: 2,
+               parent: 1,
+               nodeType: null,
+               title: 'test_leaf'
+            },
+            {
+               id: 3,
+               parent: null,
+               nodeType: true,
+               title: 'test_node'
+            }, {
+               id: 4,
+               parent: 3,
+               nodeType: null,
+               title: 'test_leaf'
+            }],
+            keyProperty: 'id'
+         }),
+         keyProperty: 'id',
+         parentProperty: 'parent',
+         nodeProperty: 'nodeType',
+         columns: [{}]
+      });
 
+      controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
+      assert.equal(model.getMarkedKey(), 2);
+
+      controller.moveMarkerToNext();
+      assert.equal(model.getMarkedKey(), 4);
+
+      controller.moveMarkerToPrev();
+      assert.equal(model.getMarkedKey(), 2);
+
+
+      controller.setMarkedKey(4);
+      assert.equal(model.getMarkedKey(), 4);
+
+      model.setItems(new RecordSet({
+         rawData: [{
+            id: 1,
+            parent: null,
+            nodeType: true,
+            title: 'test_node'
+         }, {
+            id: 2,
+            parent: 1,
+            nodeType: null,
+            title: 'test_leaf'
+         }],
+         keyProperty: 'id'
+      }));
+      controller.handleRemoveItems(2);
+      assert.equal(model.getMarkedKey(), 2);
    });
 });
