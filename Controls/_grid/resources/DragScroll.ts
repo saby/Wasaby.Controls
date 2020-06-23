@@ -366,10 +366,11 @@ export class DragScroll {
      * Обработчик события touchmove над таблицей.
      * @param {SyntheticEvent} e Дескриптор события touchmove.
      */
-    onViewTouchMove(e: SyntheticEvent<TouchEvent>): void {
+    onViewTouchMove(e: SyntheticEvent<TouchEvent>): number | null {
         if (this._isMouseDown) {
-            this._manageDragScrollMove(getCursorPosition(e));
+            return this._manageDragScrollMove(getCursorPosition(e));
         }
+        return null;
     }
 
     /**
@@ -433,10 +434,11 @@ export class DragScroll {
      * Происходит при скроллировании колонок через touch.
      * @param {SyntheticEvent} e Дескриптор события touchmove.
      */
-    onOverlayTouchMove(e: SyntheticEvent<TouchEvent>): void {
+    onOverlayTouchMove(e: SyntheticEvent<TouchEvent>): number | null {
         if (this._isMouseDown) {
-            this._manageDragScrollMove(getCursorPosition(e));
+            return this._manageDragScrollMove(getCursorPosition(e));
         }
+        return null;
     }
 
     /**
