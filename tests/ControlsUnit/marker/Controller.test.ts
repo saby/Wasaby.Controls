@@ -8,18 +8,17 @@ import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 
 describe('Controls/marker/Controller', () => {
-   let controller, model;
-
-   const items = new RecordSet({
-      rawData: [
-         {id: 1},
-         {id: 2},
-         {id: 3}
-      ],
-      keyProperty: 'id'
-   });
+   let controller, model, items;
 
    beforeEach(() => {
+      items = new RecordSet({
+         rawData: [
+            {id: 1},
+            {id: 2},
+            {id: 3}
+         ],
+         keyProperty: 'id'
+      });
       model = new ListViewModel({
          items
       });
@@ -272,5 +271,25 @@ describe('Controls/marker/Controller', () => {
          assert.equal(result, undefined);
          assert.equal(model.getMarkedKey(), undefined);
       });
+   });
+
+   it('onactivated and filter after set marker', () => {
+      controller = new MarkerController({model: model, markerVisibility: 'onactivated', markedKey: undefined});
+
+      let result = controller.setMarkedKey(3);
+      assert.equal(result, 3);
+      assert.equal(model.getMarkedKey(), 3);
+
+      model.setItems(new RecordSet({
+         rawData: [
+            {id: 1},
+            {id: 2}
+         ],
+         keyProperty: 'id'
+      }));
+
+      result = controller.update({model: model, markerVisibility: 'onactivated', markedKey: 3});
+      assert.equal(result, 1);
+      assert.equal(model.getMarkedKey(), 1);
    });
 });
