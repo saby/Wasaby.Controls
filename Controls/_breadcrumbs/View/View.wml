@@ -10,16 +10,4 @@
                         itemTemplate="{{_options.itemTemplate}}" />
         </div>
     </ws:if>
-
-    <Controls.popup:Sticky
-            on:result="_onResult()"
-            on:close="_onClose()"
-            on:open="_onOpen()"
-            name="menuOpener"
-            template="Controls/menu:Popup"
-            closeOnOutsideClick="{{true}}"
-            actionOnScroll="close">
-        <ws:templateOptions className="controls-BreadCrumbsController__menu_theme-{{_options.theme}}"/>
-    </Controls.popup:Sticky>
-
 </div>

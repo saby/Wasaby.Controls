@@ -426,6 +426,89 @@ define(['Controls/grid'], function(gridMod) {
             assert.isTrue(editArrowClickNotified);
          });
       });
+
+      it('createDragScroll if allowed (no dnd)', () => {
+         const cfg = {
+            multiSelectVisibility: 'visible',
+            columnScroll: true,
+            itemsDragNDrop: true,
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+         gridView.saveOptions(cfg);
+         gridView._listModel = {
+            setBaseItemTemplateResolver: () => {},
+            setColumnTemplate: () => {}
+         };
+         gridView._beforeMount(cfg);
+         assert.isDefined(gridView._columnScrollController);
+         assert.isUndefined(gridView._dragScrollController);
+      });
+
+      it('should call dragscroll only if column scroll enabled', function () {
+         const cfg = {
+            multiSelectVisibility: 'visible',
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+         const calledMethods = [];
+         gridView._dragScrollController = {};
+
+         [
+            'onViewMouseDown',
+            'onViewTouchStart',
+            'onViewMouseMove',
+            'onViewTouchMove',
+            'onViewMouseUp',
+            'onViewTouchEnd',
+            'onOverlayMouseMove',
+            'onOverlayTouchMove',
+            'onOverlayMouseUp',
+            'onOverlayTouchEnd',
+            'onOverlayMouseLeave'
+         ].forEach((methodName) => {
+            gridView._dragScrollController[methodName] = () => {
+               calledMethods.push(methodName);
+            };
+         });
+
+         gridView._startDragScrolling({}, 'mouse');
+         gridView._startDragScrolling({}, 'touch');
+         gridView._moveDragScroll({}, 'mouse');
+         gridView._moveDragScroll({}, 'touch');
+         gridView._stopDragScrolling({}, 'mouse');
+         gridView._stopDragScrolling({}, 'touch');
+
+         assert.deepEqual(calledMethods, []);
+      });
+
+      it('should update column scroll sizes if options has been changed (only once per lifecycle)', function () {
+         const cfg = {
+            multiSelectVisibility: 'hidden',
+            stickyColumnsCount: 1,
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+         gridView.saveOptions(cfg);
+         const calledMethods = [];
+         gridView._columnScrollController = {
+            setStickyColumnsCount: () => {calledMethods.push('setStickyColumnsCount')},
+            setMultiSelectVisibility: () => {calledMethods.push('setMultiSelectVisibility')},
+            updateSizes: () => {calledMethods.push('updateSizes')}
+         };
+
+         gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2});
+         assert.deepEqual(calledMethods, ['setStickyColumnsCount', 'setMultiSelectVisibility', 'updateSizes']);
+      });
    });
 
 });

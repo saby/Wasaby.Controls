@@ -259,11 +259,12 @@ class Manager extends Control<IManagerOptions> {
 
         this._notify('managerPopupBeforeDestroyed', [item, this._popupItems, container], {bubbling: true});
         return removeDeferred.addCallback(() => {
-            this._fireEventHandler(item, 'onClose');
             this._popupItems.remove(item);
             this._removeFromParentConfig(item);
 
-            this._redrawItems();
+            this._removeContainerItem(item, (removedItem: IPopupItem) => {
+                this._fireEventHandler(removedItem, 'onClose');
+            });
             this._notify('managerPopupDestroyed', [item, this._popupItems], {bubbling: true});
         });
     }
@@ -547,6 +548,11 @@ class Manager extends Control<IManagerOptions> {
         return container;
     }
 
+    private _removeContainerItem(removedItem: IPopupItem, removedCallback: Function): void {
+        ManagerController.getContainer().removePopupItem(this._popupItems, removedItem, removedCallback);
+        this._redrawItems();
+    }
+
     private _redrawItems(): void {
         this._updateZIndex();
         this._popupItems._nextVersion();
@@ -721,7 +727,8 @@ class Manager extends Control<IManagerOptions> {
                 }
             }
             // Закрываю окна первого уровня, дочерние закроются вместе с ними
-            if (!item.parentId) {
+            // нотификационные окна не закрываем ( ДО, звонки )
+            if (!item.parentId && item.controller.TYPE !== 'Notification') {
                 this.remove(item.id);
             }
         });

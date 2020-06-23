@@ -142,12 +142,12 @@ define([
                }
             });
          var isSourceControllerUsed = false;
-
          var originalCreateSourceController = treeGrid.TreeControl._private.createSourceController;
          treeGrid.TreeControl._private.createSourceController = function() {
             return {
-               load: function() {
+               load: function(filter, sorting, direction) {
                   isSourceControllerUsed = true;
+                  loadDirection = direction;
                   return Deferred.success([]);
                },
                hasMoreData: function () {
@@ -1177,6 +1177,7 @@ define([
              dataLoadCallbackCalled = false,
              loadMoreSorting,
              loadNodeId,
+             loadMoreDirection,
              mockedTreeControlInstance = {
                 _options: {
                    filter: {
@@ -1198,6 +1199,7 @@ define([
                             loadMoreSorting = sorting;
                             result.callback();
                             loadNodeId = node;
+                            loadMoreDirection = direction;
                             return result;
                          },
                          hasMoreData: function () {
@@ -1254,6 +1256,7 @@ define([
          assert.isTrue(isIndicatorHasBeenHidden);
          assert.deepEqual(loadMoreSorting, [{'test': 'ASC'}]);
          assert.equal(loadNodeId, 1);
+         assert.equal(loadMoreDirection, 'down');
       });
       describe('EditInPlace', function() {
          it('beginEdit', function() {

@@ -29,30 +29,33 @@ export default class CrudController {
     }
 
     create(createMetaData: unknown): Promise<Model> {
-        const promise = this._dataSource.create(createMetaData).then((record: Model) => {
-            this._crudOperationFinished('createSuccessed', [record]);
-            return record;
-        }, (e: Error) => {
-            this._crudOperationFinished('createFailed', [e]);
-            return e;
-        });
+        const promise = this._dataSource.create(createMetaData);
         this._notifyRegisterPending([promise, {showLoadingIndicator: this._showLoadingIndicator}]);
-        return promise;
+        return new Promise((res, rej) => {
+            promise.then((record: Model) => {
+                this._crudOperationFinished('createSuccessed', [record]);
+                res(record);
+            }, (e: Error) => {
+                this._crudOperationFinished('createFailed', [e]);
+                rej(e);
+            });
+        });
     }
 
     read(key: string, readMetaData: unknown): Promise<Model> {
         const id = this._indicatorId;
         const message = rk('Пожалуйста, подождите…');
         this._indicatorId = this._notifyIndicator('showIndicator', [{id, message}]);
-
-        return readWithAdditionalFields(this._dataSource, key, readMetaData).then((record: Model) => {
-            this._crudOperationFinished('readSuccessed', [record]);
-            this._notifyIndicator('hideIndicator', [this._indicatorId]);
-            return record;
-        }, (e: Error) => {
-            this._crudOperationFinished('readFailed', [e]);
-            this._notifyIndicator('hideIndicator', [this._indicatorId]);
-            return e;
+        return new Promise((res, rej) => {
+            readWithAdditionalFields(this._dataSource, key, readMetaData).then((record: Model) => {
+                this._crudOperationFinished('readSuccessed', [record]);
+                this._notifyIndicator('hideIndicator', [this._indicatorId]);
+                res(record);
+            }, (e: Error) => {
+                this._crudOperationFinished('readFailed', [e]);
+                this._notifyIndicator('hideIndicator', [this._indicatorId]);
+                rej(e);
+            });
         });
     }
 
@@ -62,12 +65,14 @@ export default class CrudController {
             const resultUpdate = this._dataSource.update(record, updateMetaData);
             this._notifyRegisterPending([resultUpdate, {showLoadingIndicator: this._showLoadingIndicator}
             ]);
-            return resultUpdate.then((key) => {
-                this._crudOperationFinished('updateSuccessed', [record, key, config]);
-                return key;
-            }, (e: Error) => {
-                this._crudOperationFinished('updateFailed', [e, record]);
-                return e;
+            return new Promise((res, rej) => {
+                resultUpdate.then((key) => {
+                    this._crudOperationFinished('updateSuccessed', [record, key, config]);
+                    res(key);
+                }).catch((e: Error) => {
+                    this._crudOperationFinished('updateFailed', [e, record]);
+                    rej(e);
+                });
             });
         }
 
@@ -78,11 +83,14 @@ export default class CrudController {
         const promise = this._dataSource.destroy(record.getId(), destroyMeta);
         this._notifyRegisterPending([promise, { showLoadingIndicator: this._showLoadingIndicator }]);
 
-        return promise.then(() => {
-            this._crudOperationFinished('deleteSuccessed', [record]);
-        }, (e: Error) => {
-            this._crudOperationFinished('deleteFailed', [e]);
-            return e;
+        return new Promise((res, rej) => {
+            promise.then(() => {
+                this._crudOperationFinished('deleteSuccessed', [record]);
+                res();
+            }, (e: Error) => {
+                this._crudOperationFinished('deleteFailed', [e]);
+                rej(e);
+            });
         });
     }
 

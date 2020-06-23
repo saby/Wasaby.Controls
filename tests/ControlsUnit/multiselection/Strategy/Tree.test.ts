@@ -303,7 +303,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
           });
           const entryPath = [
               {parent: 6, id: 10},
-              {parent: 6, id: 11},
+              {parent: 6, id: 11}
           ];
           const selection = {
              selected: [10],
@@ -366,6 +366,28 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.equal(count, null);
          assert.equal(countWithDescAndAnc, null);
       });
+
+      it('selected node with more data', () => {
+         const selection = {selected: [6], excluded: []};
+         const treeStrategyWithNodesMoreData = new TreeSelectionStrategy({
+             selectAncestors: true,
+             selectDescendants: true,
+             hierarchyRelation: hierarchy,
+             nodesSourceControllers: {
+                 get(): object {
+                     return {
+                         hasMoreData(): boolean { return true; }
+                     };
+                 }
+             },
+             rootId: null,
+             items: new RecordSet({
+                 keyProperty: ListData.KEY_PROPERTY,
+                 rawData: ListData.getItems()
+             })
+         });
+         assert.isNull(treeStrategyWithNodesMoreData.getCount(selection, false));
+      })
    });
 
    describe('cases of go inside node and out it', () => {
@@ -433,5 +455,14 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.isFalse(strategy.isAllSelected(selection, true, 7));
          assert.isFalse(strategy.isAllSelected(selection, true, 7, false));
       });
+   });
+
+   it('setItems', () => {
+      const newItems = new RecordSet({
+         keyProperty: ListData.KEY_PROPERTY,
+         rawData: ListData.getItems()
+      });
+      strategy.setItems(newItems);
+      assert.equal(strategy._items, newItems);
    });
 });

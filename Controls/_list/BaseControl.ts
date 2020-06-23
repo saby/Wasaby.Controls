@@ -34,12 +34,11 @@ import uDimension = require('Controls/Utils/getDimensions');
 import {
     CollectionItem,
     EditInPlaceController,
-
     GroupItem,
-    ANIMATION_STATE,
-    Collection
+    ANIMATION_STATE
 } from 'Controls/display';
 import {Controller as ItemActionsController, IItemAction, TItemActionShowType} from 'Controls/itemActions';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import ListViewModel from 'Controls/_list/ListViewModel';
@@ -210,7 +209,7 @@ const _private = {
         if (self._updateInProgress) {
             if (self._callbackAfterUpdate) {
                 self._callbackAfterUpdate.push(callback);
-        } else {
+            } else {
                 self._callbackAfterUpdate = [callback];
             }
         } else {
@@ -303,9 +302,7 @@ const _private = {
                     }
                     self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                    if (self._markerController) {
-                        _private.updateMarkerController(self, self._options);
-                    }
+                    _private.restoreModelState(self, cfg);
 
                     if (self._sourceController) {
                         _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -367,6 +364,25 @@ const _private = {
         }
         return resDeferred;
     },
+
+    restoreModelState(self: any, options: any): void {
+        if (self._markerController) {
+            self._markerController.restoreMarker();
+        } else {
+            if (options.markerVisibility !== 'hidden') {
+                self._markerController = _private.createMarkerController(self, options);
+            }
+        }
+
+        if (self._selectionController) {
+            self._selectionController.restoreSelection();
+        } else {
+            if (options.selectedKeys && options.selectedKeys.length > 0) {
+                self._selectionController = _private.createSelectionController(self, options);
+            }
+        }
+    },
+
     startDragNDrop(self, domEvent, itemData): void {
         if (!self._options.readOnly && self._options.itemsDragNDrop
                 && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)) {
@@ -448,6 +464,12 @@ const _private = {
     },
     moveMarkerToNext(self, event) {
         if (self._markerController) {
+            // activate list when marker is moving. It let us press enter and open current row
+            // must check mounted to avoid fails on unit tests
+            if (self._mounted) {
+                self.activate();
+            }
+
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
@@ -457,6 +479,12 @@ const _private = {
     },
     moveMarkerToPrevious(self, event) {
         if (self._markerController) {
+            // activate list when marker is moving. It let us press enter and open current row
+            // must check mounted to avoid fails on unit tests
+            if (self._mounted) {
+                self.activate();
+            }
+
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
@@ -1280,18 +1308,31 @@ const _private = {
         // for example if Controls.explorer:View is switched from list to tile mode. The controller
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
         // virtual scrolling is disabled.
+        // But we should not update any ItemActions when marker has changed
         if (
-            changesType === 'collectionChanged' ||
+            (changesType === 'collectionChanged' && _private.shouldUpdateItemActions(newItems)) ||
             changesType === 'indexesChanged' && Boolean(self._options.virtualScrollConfig) ||
             newModelChanged
         ) {
             self._itemsChanged = true;
-            self._updateInitializedItemActions(self._options);
+            _private.updateInitializedItemActions(self, self._options);
         }
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
             self._forceUpdate();
         }
+    },
+
+    /**
+     * Возвращает boolean, надо ли обновлять проинициализированные ранее ItemActions, основываясь на newItems.properties.
+     * Возвращается true, если newItems или newItems.properties не заданы
+     * Новая модель в событии collectionChanged для newItems задаёт properties,
+     * где указано, что именно обновляется.
+     * @param newItems
+     */
+    shouldUpdateItemActions(newItems): boolean {
+        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged';
+        return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     },
 
     initListViewModelHandler(self, model, useNewModel: boolean) {
@@ -1377,7 +1418,6 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        _private.closePopup(self);
         const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
@@ -1391,24 +1431,31 @@ const _private = {
         clickEvent.stopImmediatePropagation();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
-            onClose: self._onItemActionsMenuClose
+            onClose: function () {
+                self._onItemActionsMenuClose(this);
+            }
         };
         return Sticky.openPopup(menuConfig).then((popupId) => {
+            // Закрываем popup с текущим id на случай, если вдруг он оказался открыт
+            _private.closePopup(self, self._itemActionsMenuId);
+            // Устанавливаем новый Id
             self._itemActionsMenuId = popupId;
             // Нельзя устанавливать activeItem раньше, иначе при автокликах
             // робот будет открывать меню раньше, чем оно закрылось
             self._itemActionsController.setActiveItem(item);
+            RegisterUtil(self, 'scroll', self._scrollHandler.bind(self));
         });
     },
 
     /**
      * Метод, который закрывает меню
+     * @param self
+     * @param currentPopup
      * @private
      */
-    closeActionsMenu(self: any): void {
+    closeActionsMenu(self: any, currentPopup?: any): void {
         if (self._itemActionsMenuId) {
-            _private.closePopup(self);
-            self._itemActionsController.setActiveItem(null);
+            _private.closePopup(self, currentPopup ? currentPopup.id : null);
             self._itemActionsController.deactivateSwipe();
         }
     },
@@ -1429,12 +1476,23 @@ const _private = {
     /**
      * Закрывает popup меню
      * @param self
+     * @param itemActionsMenuId id popup, который надо закрыть. Если не указано - берём текущий self._itemActionsMenuId
+     * иногла можно не дождавшимь показа меню случайно вызвать второе менню поверх превого.
+     * Это случается от того, что поуказ меню асинхронный и возвращает Promise, который мы не можем отменить.
+     * При этом закрытие меню внутри самого Promise повлечёт за собой асинхронный вызов "_onItemActionsMenuClose()",
+     * что приведёт к закрытию всех текущих popup на странице.
+     * Зато мы можем получить объект Popup, который мы пытаемся закрыть, и, соответственно, его id. Таким образом, мы можем
+     * указать, какой именно popup мы закрываем.
      */
-    closePopup(self): void {
-        if (self._itemActionsMenuId) {
-            Sticky.closePopup(self._itemActionsMenuId);
+    closePopup(self, itemActionsMenuId?: string): void {
+        const id = itemActionsMenuId || self._itemActionsMenuId;
+        if (id) {
+            Sticky.closePopup(id);
         }
-        self._itemActionsMenuId = null;
+        if (!itemActionsMenuId || (self._itemActionsMenuId && self._itemActionsMenuId === itemActionsMenuId)) {
+            UnregisterUtil(self, 'scroll');
+            self._itemActionsMenuId = null;
+        }
     },
 
     bindHandlers(self): void {
@@ -1809,11 +1867,13 @@ const _private = {
       }
    },
 
-   onSelectedTypeChanged(typeName: string): void {
+   onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
       let result;
       if (!this._selectionController) {
-       this._createSelectionController();
+        this._createSelectionController();
       }
+
+      this._selectionController.setLimit(limit);
 
       switch (typeName) {
        case 'selectAll':
@@ -1917,7 +1977,7 @@ const _private = {
                     * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
                     * _canUpdateItemsActions приведет к показу неактуальных операций.
                     */
-                    self._updateItemActions(self._options);
+                    _private.updateItemActions(self, self._options);
                 },
                 isDestroyed: () => self._destroyed
             } as IEditingOptions);
@@ -1935,7 +1995,7 @@ const _private = {
             self._editingItemData = self._editInPlace.getEditingItemData();
 
             if (options.itemActions && self._editInPlace.shouldShowToolbar()) {
-                self._updateItemActions(options);
+                _private.updateItemActions(self, options);
             }
         }
     },
@@ -1965,8 +2025,75 @@ const _private = {
                 return self._notify(name, args, params);
             }
         });
-    }
+    },
 
+    /**
+     * Необходимо передавать опции для случая, когда в результате изменения модели меняются параметры
+     * для показа ItemActions и их нужно поменять до отрисовки.
+     * @param self
+     * @param options
+     * @private
+     */
+    updateItemActions(self, options: any): void {
+        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
+        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
+        if (self.__error || !self._listViewModel) {
+            return;
+        }
+        if (!self._itemActionsController) {
+            self._itemActionsController = new ItemActionsController();
+        }
+        const editingConfig = self._listViewModel.getEditingConfig();
+        const isActionsAssigned = self._listViewModel.isActionsAssigned();
+        let editArrowAction: IItemAction;
+        if (options.showEditArrow) {
+            editArrowAction = {
+                id: 'view',
+                icon: 'icon-Forward',
+                title: rk('Просмотреть'),
+                showType: TItemActionShowType.TOOLBAR,
+                handler: (item) => {
+                    self._notify('editArrowClick', [item]);
+                }
+            };
+        }
+        // Гарантированно инициализируем шаблоны, если это ещё не произошло
+        const itemActionsChangeResult = self._itemActionsController.update({
+            collection: self._listViewModel,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style: options.style,
+            theme: options.theme,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
+            iconSize: editingConfig ? 's' : 'm',
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editArrowAction,
+            editArrowVisibilityCallback: options.editArrowVisibilityCallback,
+            contextMenuConfig: options.contextMenuConfig
+        });
+        if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
+            itemActionsChangeResult.forEach((recordKey: number | string) => {
+                self._listViewModel.resetCachedItemData(recordKey);
+            });
+            self._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
+        }
+    },
+
+    /**
+     * Обновляет ItemActions только в случае, если они были ранее проинициализированы
+     * @param self
+     * @param options
+     * @private
+     */
+    updateInitializedItemActions(self, options: any) {
+        if (self._itemActionsInitialized) {
+            _private.updateItemActions(self, options);
+        }
+    }
 };
 
 /**
@@ -2128,13 +2255,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadTriggerVisibility = {};
 
-        if (newOptions.useNewModel) {
-            import('Controls/listRender').then((listRender) => {
-                this._itemActionsTemplate = listRender.itemActionsTemplate;
-                this._swipeTemplate = listRender.swipeTemplate;
-            });
-        }
-
         if (newOptions.editingConfig) {
             _private.createEditInPlace(self, newOptions);
         }
@@ -2173,10 +2293,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
-            if (newOptions.markerVisibility !== 'hidden') {
-                self._markerController = _private.createMarkerController(self, newOptions);
-            }
-
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
@@ -2192,6 +2308,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (self._pagingNavigation) {
                         const hasMoreData = self._items.getMetaData().more;
                         _private.updatePagingData(self, hasMoreData);
+                    }
+
+                    if (newOptions.markerVisibility !== 'hidden') {
+                        self._markerController = _private.createMarkerController(self, newOptions);
+                    }
+
+                    if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
+                        self._selectionController = _private.createSelectionController(self, newOptions);
                     }
 
                     if (newOptions.serviceDataLoadCallback instanceof Function) {
@@ -2256,6 +2380,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         return getState(result);
                     }
                 });
+            } else  {
+                _private.createScrollController(self, newOptions);
             }
         });
 
@@ -2379,12 +2505,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._loadedItems = null;
 
-        if (this._options.selectedKeys && this._options.selectedKeys.length !== 0) {
-            this._createSelectionController();
-        }
-
         if (this._scrollController) {
             this._scrollController.afterMount(container, this._children);
+        }
+
+        // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
+        // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
+        if (this._selectionController) {
+            const result = this._selectionController.getResultAfterConstructor();
+            _private.handleSelectionControllerResult(this, result);
         }
 
         if (this._editInPlace) {
@@ -2418,7 +2547,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.initializeNavigation(this, newOptions);
             if (this._listViewModel && this._listViewModel.setSupportVirtualScroll) {
                 this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
-        }
+            }
         }
         _private.updateNavigation(this);
 
@@ -2518,8 +2647,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._editInPlace) {
             this._editInPlace.updateEditingData(
-                {listViewModel: this._listViewModel, ...newOptions},
-                this._children.formController
+                {listViewModel: this._listViewModel, ...newOptions}
             );
             this._editingItemData = this._editInPlace.getEditingItemData();
         }
@@ -2535,7 +2663,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // return result here is for unit tests
             return _private.reload(self, newOptions).addCallback(() => {
                 this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
-                this._updateInitializedItemActions(newOptions);
+                _private.updateInitializedItemActions(this, newOptions);
             });
         }
 
@@ -2554,7 +2682,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            this._updateInitializedItemActions(newOptions);
+            _private.updateInitializedItemActions(this, newOptions);
         }
 
         if (this._itemsChanged) {
@@ -2777,6 +2905,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._editInPlace) {
+            this._editInPlace.registerFormOperation(this._children.formController);
             this._editInPlace.prepareHtmlInput();
         }
 
@@ -2923,73 +3052,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _initItemActions(e: SyntheticEvent, options: any): void {
         if (!this._itemActionsInitialized) {
-            this._updateItemActions(options);
+            _private.updateItemActions(this, options);
             this._itemActionsInitialized = true;
-        }
-    },
-
-    /**
-     * Обновляет ItemActions только в случае, если они были ранее проинициализированы
-     * @param options
-     * @private
-     */
-    _updateInitializedItemActions(options: any) {
-        if (this._itemActionsInitialized) {
-            this._updateItemActions(options);
-        }
-    },
-
-    /**
-     * Необходимо передавать опции для случая, когда в результате изменения модели меняются параметры
-     * для показа ItemActions и их нужно поменять до отрисовки.
-     * @param options
-     * @private
-     */
-    _updateItemActions(options: any): void {
-        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
-        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
-        if (this.__error || !this._listViewModel) {
-            return;
-        }
-        if (!this._itemActionsController) {
-            this._itemActionsController = new ItemActionsController();
-        }
-        const editingConfig = this._listViewModel.getEditingConfig();
-        const isActionsAssigned = this._listViewModel.isActionsAssigned();
-        let editArrowAction: IItemAction;
-        if (options.showEditArrow) {
-            editArrowAction = {
-                id: 'view',
-                icon: 'icon-Forward',
-                title: rk('Просмотреть'),
-                showType: TItemActionShowType.TOOLBAR,
-                handler: (item) => {
-                    this._notify('editArrowClick', [item]);
-                }
-            };
-        }
-        const itemActionsChangeResult = this._itemActionsController.update({
-            collection: this._listViewModel,
-            itemActions: options.itemActions,
-            itemActionsProperty: options.itemActionsProperty,
-            visibilityCallback: options.itemActionVisibilityCallback,
-            itemActionsPosition: options.itemActionsPosition,
-            style: options.style,
-            theme: options.theme,
-            actionAlignment: options.actionAlignment,
-            actionCaptionPosition: options.actionCaptionPosition,
-            itemActionsClass: options.itemActionsClass,
-            iconSize: editingConfig ? 's' : 'm',
-            editingToolbarVisible: editingConfig?.toolbarVisibility,
-            editArrowAction,
-            editArrowVisibilityCallback: options.editArrowVisibilityCallback,
-            contextMenuConfig: options.contextMenuConfig
-        });
-        if (itemActionsChangeResult.length > 0 && this._listViewModel.resetCachedItemData) {
-            itemActionsChangeResult.forEach((recordKey: number | string) => {
-                this._listViewModel.resetCachedItemData(recordKey);
-            });
-            this._listViewModel.nextModelVersion(!isActionsAssigned, 'itemActionsUpdated');
         }
     },
 
@@ -3056,8 +3120,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * Обработчик закрытия выпадающего/контекстного меню
      * @private
      */
-    _onItemActionsMenuClose(): void {
-        _private.closeActionsMenu(this);
+    _onItemActionsMenuClose(currentPopup): void {
+        _private.closeActionsMenu(this, currentPopup);
     },
 
     _onItemsChanged(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
@@ -3355,6 +3419,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     /**
+     * Обработчик скролла, вызываемый при помощи регистратора событий по событию в ScrollContainer
+     * @param event
+     * @param scrollEvent
+     * @param initiator
+     * @private
+     */
+    _scrollHandler(event: Event, scrollEvent: Event, initiator: string): void {
+        // Код ниже взят из Controls\_popup\Opener\Sticky.ts
+        // Из-за флага listenAll на listener'e, подписка доходит до application'a всегда.
+        // На ios при показе клавиатуры стреляет событие скролла, что приводит к вызову текущего обработчика
+        // и закрытию окна. Для ios отключаю реакцию на скролл, событие скролла стрельнуло на body.
+        if (detection.isMobileIOS && (scrollEvent.target === document.body || scrollEvent.target === document)) {
+            return;
+        }
+        _private.closePopup(this);
+    },
+
+    /**
      * Обработчик свайпа по записи. Показывает операции по свайпу
      * @param e
      * @param item
@@ -3374,15 +3456,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 : itemContainer.querySelector('.' + ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR);
 
         if (swipeEvent.nativeEvent.direction === 'left') {
-            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
             _private.setMarkedKey(this, key);
+            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             if (item.isSwiped()) {
                 this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
                 this._listViewModel.nextVersion();
             } else {
-                // After the right swipe the item should get selected. (Кусок старого кода)
+                // After the right swipe the item should get selected.
                 if (!this._selectionController) {
                     this._createSelectionController();
                 }
@@ -3427,7 +3509,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
             this._itemActionsController.deactivateSwipe();
-            this._listViewModel.nextVersion();
         }
     },
 

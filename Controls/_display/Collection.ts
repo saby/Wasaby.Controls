@@ -2044,6 +2044,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @remark Метод зависит от фильтра проекции.
      * @param {Array} items Массив элементов коллекции
      * @param {Boolean} selected Элемент выбран.
+     * @param {Boolean} [silent=false] Не уведомлять о изменении
      * @example
      * <pre>
      *      var list = new List({...}),
@@ -2053,7 +2054,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *     display.setSelectedItems([list.at(0), list.at(1)], true) //установит признак двум элементам;
      * </pre>
      */
-    setSelectedItems(items: any[], selected: boolean|null): void {
+    setSelectedItems(items: any[], selected: boolean|null, silent: boolean = false): void {
         const sourceItems = [];
         for (let i = 0, count = items.length; i < count; i++) {
             const item = this.getItemBySourceItem(items[i]);
@@ -2061,7 +2062,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 sourceItems.push(item);
             }
         }
-        this._setSelectedItems(sourceItems, selected);
+        this._setSelectedItems(sourceItems, selected, silent);
     }
 
     /**
@@ -2605,8 +2606,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * Устанавливает признак, переданным, элементам проекции.
      * @param selecItems массив элементов проекции
      * @param selected Элемент выбран.
+     * @param {Boolean} silent Не уведомлять о изменении
      */
-    protected _setSelectedItems(selecItems: T[], selected: boolean|null): void {
+    protected _setSelectedItems(selecItems: T[], selected: boolean|null, silent: boolean = false): void {
         const items = [];
         for (let i = selecItems.length - 1; i >= 0; i--) {
             if (selecItems[i].isSelected() !== selected) {
@@ -2614,7 +2616,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 items.push(selecItems[i]);
             }
         }
-        if (items.length > 0) {
+        if (items.length > 0 && !silent) {
             const index = this.getIndex(items[0]);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(

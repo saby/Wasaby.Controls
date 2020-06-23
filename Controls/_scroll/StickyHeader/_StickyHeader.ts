@@ -228,7 +228,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             fastUpdate.mutate(() => {
                 this._container.style.top = `${value}px`;
             });
-            this._forceUpdate();
+            this._forceUpdateIfCanScroll();
         }
     }
 
@@ -241,7 +241,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._stickyHeadersHeight.bottom = value;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
             this._container.style.bottom = `${value}px`;
-            this._forceUpdate();
+            this._forceUpdateIfCanScroll();
         }
     }
 
@@ -524,7 +524,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 }
             }
             this._isFixed = isFixed;
-            this._forceUpdate();
+            this._forceUpdateIfCanScroll();
         }
     }
 
@@ -555,6 +555,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             return;
         }
         return this._container.get ? this._container.get(0) : this._container;
+    }
+
+    private _forceUpdateIfCanScroll(): void {
+        if (this._canScroll) {
+            this._forceUpdate();
+        }
     }
 
     static _theme: string[] = ['Controls/scroll', 'Controls/Classes'];

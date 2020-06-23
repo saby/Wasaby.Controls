@@ -228,13 +228,7 @@ var
 
             return preparedClasses;
         },
-        isLastItem: function(editingItem, rowCount, itemIndex) {
-            if (editingItem && editingItem.index >= rowCount) {
-                return itemIndex === editingItem.index;
-            } else {
-                return itemIndex === rowCount - 1;
-            }
-        },
+
         isFixedCell: function(params) {
             const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isMultiHeader } = params;
             const
@@ -373,16 +367,17 @@ var
          * Производит пересчёт групп объединяемых колонок для заголовков (разделителей) записей
          * @param itemData информация о записи
          * @param leftSideItemsCount число колонок в группе (или номер последней колонки)
+         * @param isActionsCellExists выводится ли в строке дополнительная ячейка под операции над записью
          * @private
          */
-        getColumnAlignGroupStyles(itemData: IGridItemData, leftSideItemsCount: number = 0): {
+        getColumnAlignGroupStyles(itemData: IGridItemData, leftSideItemsCount: number = 0, isActionsCellExists: boolean): {
             left: string
             right: string
         } {
             const additionalTerm = (itemData.hasMultiSelect ? 1 : 0);
             const result = {left: '', right: ''};
             const start = 1;
-            const end = itemData.columns.length + 1;
+            const end = itemData.columns.length + 1 + (isActionsCellExists ? 1 : 0);
 
             if (leftSideItemsCount > 0) {
                 const center = leftSideItemsCount + additionalTerm + 1;
@@ -1143,7 +1138,7 @@ var
                 });
             }
 
-            if (!resultsColumn.column.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
+            if (!resultsColumn.column?.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
                 const columnSeparatorSize = _private.getSeparatorForColumn(
                     this._options.columns,
                     columnIndex - (hasMultiSelect ? 1 : 0),
@@ -1194,7 +1189,7 @@ var
                         const format = results.getFormat();
                         const fieldIndex = format.getIndexByValue('name', resultsColumn.column.displayProperty);
                         resultsColumn.resultsFormat = fieldIndex !== -1 ? format.at(fieldIndex).getType() : undefined;
-            }
+                    }
                 }
 
                 resultsColumn.showDefaultResultTemplate = !!resultsColumn.resultsFormat;
@@ -1457,9 +1452,10 @@ var
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
             current.getSeparatorForColumn = _private.getSeparatorForColumn;
+            current.isLastItem = !this.getHasMoreData() && (this.getCount() - 1 === this.getIndex(dispItem));
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
-                _private.getColumnAlignGroupStyles(current, columnAlignGroup)
+                _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
 
             const superShouldDrawMarker = current.shouldDrawMarker;
@@ -1522,9 +1518,9 @@ var
             };
             current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
                 let result = '';
-                if (current.stickyProperties) {
+                if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const index = current.stickyProperties.indexOf(stickyProperty);
-                    const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                    const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
                     if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
                         index === 1 && !hasMainCell ||
                         index === 0 && hasMainCell)) {
@@ -1539,9 +1535,11 @@ var
 
             current.getAdditionalLadderClasses = () => {
                 let result = '';
-                const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
-                if (!hasMainCell) {
-                    result += ' controls-Grid__row-cell__ladder-spacing_theme-' + self._options.theme;
+                if (current.stickyProperties && self._ladder.stickyLadder[current.index]) { 
+                    const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                    if (!hasMainCell) {
+                        result += ' controls-Grid__row-cell__ladder-spacing_theme-' + self._options.theme;
+                    }
                 }
                 return result;
             };
@@ -1595,7 +1593,9 @@ var
                         },
                         _preferVersionAPI: true,
                         gridCellStyles: '',
-                        tableCellStyles: ''
+                        tableCellStyles: '',
+                        getItemActionPositionClasses: current.getItemActionPositionClasses,
+                        getItemActionClasses: current.getItemActionClasses
                     };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme);
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {

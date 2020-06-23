@@ -141,7 +141,8 @@
                 <ws:itemActionsTemplate>
                     <ws:partial
                             template="{{ _itemActionsTemplate }}"
-                            scope="{{ _listViewModel.getActionsTemplateConfig() }}" />
+                            scope="{{ _listViewModel.getActionsTemplateConfig() }}"
+                            useNewModel="{{ _options.useNewModel }}"/>
                 </ws:itemActionsTemplate>
                 <ws:swipeTemplate>
                     <ws:partial
@@ -235,13 +236,6 @@
                     on:onArrowClick="__onPagingArrowClick()" />
             </div>
         </ws:if>
-        <Controls.popup:Sticky
-            name="menuOpener"
-            template="Controls/menu:Popup"
-            closeOnOutsideClick="{{true}}"
-            actionOnScroll="close">
-            <ws:fittingMode vertical="overflow"/>
-        </Controls.popup:Sticky>
         <Controls.event:Listener
            event="dataError"
            on:dataError="_onDataError()"/>

@@ -15,11 +15,6 @@ import {Logger} from 'UI/Utils';
 import {IItemAction} from 'Controls/itemActions';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
-const ITEMACTIONS_POSITION_CLASSES = {
-    bottomRight: 'controls-itemActionsV_position_bottomRight',
-    topRight: 'controls-itemActionsV_position_topRight'
-};
-
 /**
  *
  * @author Авраменко А.С.
@@ -78,7 +73,7 @@ var _private = {
     getMultiSelectClassList: function (current): string {
         let
             checkboxOnHover = current.multiSelectVisibility === 'onhover',
-            isSelected = !!current.multiSelectStatus;
+            isSelected = current.multiSelectStatus !== false && current.multiSelectStatus !== undefined; // так как null - это тоже выбрано
 
         return CssClassList.add('js-controls-ListView__checkbox')
                            .add('js-controls-ListView__notEditable')
@@ -92,20 +87,6 @@ var _private = {
         return {right, left};
     },
 
-    getItemActionsContainerPaddingClass(classes: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
-        const _classes = classes || ITEMACTIONS_POSITION_CLASSES.bottomRight;
-        const paddingClass: string[] = [];
-        const themedPositionClassCompile = (position) => (
-            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
-        );
-        if (_classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
-            paddingClass.push(themedPositionClassCompile('top'));
-        } else if (_classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
-            paddingClass.push(themedPositionClassCompile('bottom'));
-        }
-        return ` ${paddingClass.join(' ')} `;
-    },
-
     // New Model compatibility
     addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
         itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}, silent: boolean = true): void => {
@@ -117,17 +98,17 @@ var _private = {
         itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
             itemsModelCurrent.dispItem.getActions ? itemsModelCurrent.dispItem.getActions() : itemsModelCurrent.itemActions
         );
-        itemsModelCurrent.setActive = (state: boolean): void => {
+        itemsModelCurrent.setActive = (state: boolean, silent?: boolean): void => {
             if (itemsModelCurrent.dispItem.setActive !== undefined) {
-                itemsModelCurrent.dispItem.setActive(state);
+                itemsModelCurrent.dispItem.setActive(state, silent);
             }
         };
         itemsModelCurrent.isActive = (): boolean => (
             itemsModelCurrent.dispItem.isActive() !== undefined ? itemsModelCurrent.dispItem.isActive() : false
         );
-        itemsModelCurrent.setSwiped = (state: boolean): void => {
+        itemsModelCurrent.setSwiped = (state: boolean, silent?: boolean): void => {
             if (itemsModelCurrent.dispItem.setSwiped !== undefined) {
-                itemsModelCurrent.dispItem.setSwiped(state);
+                itemsModelCurrent.dispItem.setSwiped(state, silent);
             }
         };
         itemsModelCurrent.isSwiped = (): boolean => (
@@ -162,7 +143,18 @@ var _private = {
             if (itemsModelCurrent.dispItem.setEditing !== undefined) {
                 itemsModelCurrent.dispItem.setEditing(editing, itemsModelCurrent.item, true);
             }
-        }
+        };
+        itemsModelCurrent.isEditingState = () => (
+            itemsModelCurrent.isEditing
+        );
+        itemsModelCurrent.getItemActionClasses = (itemActionsPosition: string, theme?: string): string => (
+            itemsModelCurrent.dispItem.getItemActionClasses ?
+                itemsModelCurrent.dispItem.getItemActionClasses(itemActionsPosition, theme) : ''
+        );
+        itemsModelCurrent.getItemActionPositionClasses = (itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string, useNewModel?: boolean): string => (
+            itemsModelCurrent.dispItem.getItemActionPositionClasses ?
+                itemsModelCurrent.dispItem.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemPadding, theme, useNewModel) : ''
+        );
     }
 };
 
@@ -246,8 +238,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
-
-        itemsModelCurrent.getContainerPaddingClass = _private.getItemActionsContainerPaddingClass;
 
         // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
@@ -445,7 +435,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return _private.getItemByMarkedKey(this, this._markedKey);
     },
     getSelectionStatus: function(key) {
-        return !!this.getItemBySourceKey(key)?.isSelected();
+        return this.getItemBySourceKey(key)?.isSelected();
     },
 
     getSwipeItem: function() {
@@ -468,12 +458,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
         const oldActiveItem = this.getActiveItem();
         if (oldActiveItem) {
-            oldActiveItem.setActive(false);
+            oldActiveItem.setActive(false, true);
         }
         // TODO костыль. В TileView вместо item передаётся объект, поэтому проверяем на function
         //  надо передавать настроенный item
         if (itemData && typeof itemData.setActive === 'function') {
-            itemData.setActive(true);
+            itemData.setActive(true, true);
         }
         this._activeItem = itemData;
         this._nextModelVersion(false, 'activeItemChanged');
@@ -566,12 +556,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         _private.updateIndexes(this, 0, this.getCount());
     },
     isValidItemForMarkedKey: function (item) {
-        return !this._isGroup(item) && item.getId;
+        return item && !this._isGroup(item) && item.getId;
     },
     getPreviousItem: function (itemIndex) {
         var prevIndex = itemIndex - 1, prevItem;
         while (prevIndex >= 0) {
-            prevItem = this._display.at(prevIndex).getContents();
+            prevItem = this._display.at(prevIndex)?.getContents();
             if (this.isValidItemForMarkedKey(prevItem)) {
                 return prevItem.getId();
             }

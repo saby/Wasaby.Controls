@@ -215,11 +215,11 @@ var SourceController = cExtend.extend({
       }
    },
 
-   calculateState: function(list, root: string|number) {
+   calculateState: function(list, direction?: 'up' | 'down', root?: string|number) {
       if (this._queryParamsController) {
          this._queryParamsController.updateQueryProperties(
              list,
-             null,
+             direction,
              null,
              root
          );

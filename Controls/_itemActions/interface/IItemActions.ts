@@ -167,9 +167,9 @@ export interface IItemActionsItem {
     getActions(): IItemActionsContainer;
     getContents(): Model;
     setActions(actions: IItemActionsContainer, silent?: boolean): void;
-    setActive(active: boolean): void;
+    setActive(active: boolean, silent?: boolean): void;
     isActive(): boolean;
-    setSwiped(swiped: boolean): void;
+    setSwiped(swiped: boolean, silent?: boolean): void;
     isSwiped(): boolean;
     isRightSwiped(): boolean;
     isEditing(): boolean;

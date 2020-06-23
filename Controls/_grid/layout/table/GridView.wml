@@ -46,7 +46,7 @@
                     emptyTemplate="{{ _options.emptyTemplate }}"
                     listModel="{{ _listModel }}"
                     isFullGridSupport="{{ _isFullGridSupport }}"
-                    containerSize="{{ containerSize }}"
+                    containerSize="{{ _containerSize }}"
                     hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
                     hasColumnScroll="{{ _options.columnScroll }}"/>
     </ws:if>

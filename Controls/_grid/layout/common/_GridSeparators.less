@@ -38,7 +38,7 @@
 }
 
 // Последняя граница списка, самая нижняя
-.controls-Grid__row:last-child {
+.controls-Grid__row_last {
    .controls-Grid__rowSeparator_size-s_theme-@{themeName} {
       border-bottom: @item-separator_s_thickness_list solid @item_edge_separator_s_color_list;
       min-height: @cell_min-height_grid + @item-separator_s_thickness_list;
@@ -51,7 +51,7 @@
 }
 
 // В таблицах IE(table-layout) функцию min-height выполняет height
-.controls-Grid_table-layout .controls-Grid__row:last-child {
+.controls-Grid_table-layout .controls-Grid__row_last {
    .controls-Grid__rowSeparator_size-s_theme-@{themeName} {
       height: @cell_min-height_grid + @item-separator_s_thickness_list;
    }

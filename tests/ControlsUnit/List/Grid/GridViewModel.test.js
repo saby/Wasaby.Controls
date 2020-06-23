@@ -1264,6 +1264,87 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.isOk(current.stickyLadder, 'should assign ladder');
          });
+         describe('getAdditionalLadderClasses', () => {
+            const ladderViewModel = new gridMod.GridViewModel({
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', prop1: 1, prop2: 1 },
+                     { id: 1, title: 'i1', prop1: 1, prop2: 2 },
+                  ]
+               }),
+               keyProperty: 'id',
+               columns: [{
+                  width: '1fr',
+                  stickyProperty: ['prop1', 'prop2'],
+                  displayProperty: 'title'
+               }, {
+                  width: '1fr',
+                  template: 'wml!MyTestDir/Photo'
+               }],
+               ladderProperties: ['prop1', 'prop2'],
+               virtualScrolling: true,
+               theme: 'default'
+            });
+
+            ladderViewModel._model._startIndex = 0;
+            ladderViewModel._model._stopIndex = 2;
+            ladderViewModel._ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
+            it('with main cell', () => {
+               ladderViewModel._model._curIndex = 0;
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getAdditionalLadderClasses(),'','wrong classes');
+            });
+            it('with main cell', () => {
+               ladderViewModel._model._curIndex = 1;
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getAdditionalLadderClasses(),' controls-Grid__row-cell__ladder-spacing_theme-default','wrong classes');
+            });
+         });
+         describe('getLadderContentClasses', () => {
+            const ladderViewModel = new gridMod.GridViewModel({
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', prop1: 1, prop2: 1 },
+                     { id: 1, title: 'i1', prop1: 1, prop2: 2 },
+                  ]
+               }),
+               keyProperty: 'id',
+               columns: [{
+                  width: '1fr',
+                  stickyProperty: ['prop1', 'prop2'],
+                  displayProperty: 'title'
+               }, {
+                  width: '1fr',
+                  template: 'wml!MyTestDir/Photo'
+               }],
+               ladderProperties: ['prop1', 'prop2'],
+               virtualScrolling: true,
+               theme: 'default'
+            });
+
+            ladderViewModel._model._startIndex = 0;
+            ladderViewModel._model._stopIndex = 2;
+            ladderViewModel._ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
+            it('with main cell', () => {
+               ladderViewModel._model._curIndex = 0;
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getLadderContentClasses('prop1', 'prop1'),'','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop1', 'prop2'),' controls-Grid__row-cell__ladder-content_displayNoneForLadder','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop2', 'prop1'),'','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop2', 'prop2'),' controls-Grid__row-cell__ladder-content_additional-with-main','wrong classes');
+
+            });
+            it('without main cell', () => {
+               ladderViewModel._model._curIndex = 1;
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getLadderContentClasses('prop1', 'prop1'),'','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop1', 'prop2'),'','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop2', 'prop1'),' controls-Grid__row-cell__ladder-content_displayNoneForLadder','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop2', 'prop2'),'','wrong classes');
+            });
+         });
          it('prepareLadder should reset cache of updated items', function () {
             const date1 = new Date(2017, 0, 1);
             const date2 = new Date(2017, 0, 3);
@@ -1723,6 +1804,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             delete gridViewModel._options.columns[1].columnSeparatorSize;
          });
 
+         // Иногда таблица инициализируется без колонок. Тогда метод getCurrentResultsColumn не должен вызывать ошибок.
+         it('should calculate params for resultColumn when grid initialized without columns', () => {
+            const newGridViewModel = new gridMod.GridViewModel({ ...cfg, multiSelectVisibility: 'hidden', columns: [] });
+            const currentResultColumn = newGridViewModel.getCurrentResultsColumn();
+            assert.deepEqual(currentResultColumn.column, undefined);
+         });
+
          it('first header cell with breadcrumbs should renders from first column', function () {
               const originBreadcrumbsCell = gridViewModel._headerRows[0][1];
               gridViewModel._headerRows[0][1] = {
@@ -2069,6 +2157,16 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             );
 
+            // with column scroll and action cell
+            itemData.hasMultiSelect = true;
+            itemData.columns = [{}, {}, {}, {}];
+            assert.deepEqual(
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined, true),
+                {
+                   left: 'grid-column: 1 / 6; -ms-grid-column: 1; -ms-grid-column-span: 5;',
+                   right: ''
+                }
+            );
          });
 
          it('getColspanForColumnScroll', function () {

@@ -42,11 +42,11 @@ export default class OperationsController {
         this._getRegister().unregister(event, component, config);
     }
 
-    selectionTypeChanged(type: string): void {
+    selectionTypeChanged(type: string, limit: number): void {
         if (type === 'all' || type === 'selected') {
             this._selectionViewModeChangedCallback(type);
         } else {
-            this._getRegister().start(type);
+            this._getRegister().start(type, limit);
         }
     }
 

@@ -184,13 +184,13 @@ define([
          loadedRecordSet.setMetaData({
             more: true
          });
-         controller.calculateState(loadedRecordSet, 'testRoot');
+         controller.calculateState(loadedRecordSet, 'down', 'testRoot');
          assert.isTrue(controller.hasMoreData('down', 'testRoot'));
 
          loadedRecordSet.setMetaData({
             more: false
          });
-         controller.calculateState(loadedRecordSet, 'testRoot');
+         controller.calculateState(loadedRecordSet, 'down', 'testRoot');
          assert.isFalse(controller.hasMoreData('down', 'testRoot'));
       });
    })

@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import { spy } from 'sinon';
 
 import {
     Abstract as Display,
@@ -2651,6 +2652,18 @@ describe('Controls/_display/Collection', () => {
                     assert.isTrue(item.isSelected());
                 }
             });
+        });
+
+        it('set selected silent', () => {
+            const notifyLaterSpy = spy(display, '_notifyLater');
+
+            display.setSelectedItems(
+               [list.at(0), list.at(1)],
+               true,
+               true
+            );
+
+            assert.isFalse(notifyLaterSpy.called);
         });
     });
 

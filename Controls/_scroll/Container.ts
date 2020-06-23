@@ -529,7 +529,7 @@ let
          this.calcStyleOverflow(options.scrollMode);
          this._displayState = {};
          this._stickyHeaderContext = new StickyHeaderContext({
-            shadowPosition: options.topShadowVisibility !== SHADOW_VISIBILITY.HIDDEN ? 'bottom' : '',
+            shadowPosition: '',
          });
          this._headersHeight = {
             top: 0,
