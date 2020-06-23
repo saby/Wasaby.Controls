@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper">
    <div class="controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">Controls.input:Text. Привести текст к нижнему регистру.</div>
-      <Controls.input:Text bind:value="_value2">
+      <Controls.input:Text bind:value="_value2" attr:class="controlsDemo-FieldTemplate__inputLower">
          <ws:leftFieldTemplate>
             <div class="controls-icon icon-MarkExpandBold controlsDemo__icon_active controlsDemo-FieldTemplate__icon
                         controls-icon_style-primary_theme-{{_options.theme}} controls-icon_size-default_theme-{{_options.theme}}"
