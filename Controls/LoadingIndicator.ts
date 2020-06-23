@@ -326,6 +326,9 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             this._blockContent(true, config, isGlobal);
             if (force) {
                 this._toggleIndicatorVisible(true, config);
+                if (!isGlobal) {
+                    this._forceUpdate();
+                }
             } else {
                 // if we have indicator in stack, then don't hide overlay
                 this._toggleIndicatorVisible(this._stack.getCount() > 1 && this._isOverlayVisible, config);
@@ -342,9 +345,9 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             if (this._stack.getCount() === 0) {
                 this._toggleIndicatorVisible(false);
                 this._blockContent(false, config, isGlobal);
+                this._forceUpdate();
             }
         }
-        this._forceUpdate();
     }
 
     private _blockContent(toggle, config, isGlobal): void {
