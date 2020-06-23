@@ -36,7 +36,17 @@
    </div>
    <div class="controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">Controls.suggest:Input. Привести текст к нижнему или верхнему регистру.</div>
-      <Controls.suggest:Input bind:value="_value4">
+      <Controls.suggest:Input placeholder="FIO"
+                              searchParam="title"
+                              displayProperty="title"
+                              source="{{_source}}"
+                              autoDropDown="{{true}}"
+                              minSearchLength="{{0}}"
+                              bind:value="_value4">
+         <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate"/>
+         <ws:navigation source="page" view="page">
+            <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
+         </ws:navigation>
          <ws:leftFieldTemplate>
             <div class="controls-icon icon-MarkExpandBold controlsDemo__icon_active controlsDemo-FieldTemplate__icon
                         controls-icon_style-primary_theme-{{_options.theme}} controls-icon_size-default_theme-{{_options.theme}}"
