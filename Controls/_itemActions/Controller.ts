@@ -227,7 +227,7 @@ export class Controller {
             data: menuActions,
             keyProperty: 'id'
         });
-        const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || this._iconSize;
+        const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || DEFAULT_ACTION_SIZE;
         const showHeader = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
         const headConfig = showHeader ? {
             caption: parentAction.title,
@@ -334,22 +334,21 @@ export class Controller {
     }
 
     /**
-     * Получает список операций с записью для указанного элемента коллекции,
-     * отфильтрованных по признаку "Должны отображаться в подменю".
-     * Если указан parentAction, то операции дополнительно фильтруются по признаку
-     * "дочерние по отношению к указанной операции".
-     * Если у parentAction отсутствует id (напр, кнопка "Показать меню" ("Шеврон")),
-     * будут показаны все элементы не-первого уровня, вне зависимости от того, какой у них родитель.
+     * Получает для указанного элемента коллекции набор опций записи для контекстного меню, отфильтрованный по parentAction
+     * Если parentAction - кнопка вызова дополнительного меню или parentAction не указан, то элементы фильтруются по showType.
+     * Если parentAction содержит id, то элементы фильтруются по parent===id.
+     * @see http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BD%D0%BE%D0%B5_%D0%BC%D0%B5%D0%BD%D1%8E__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html
      * @param item
      * @param parentAction
+     * @private
      */
     private _getMenuActions(item: IItemActionsItem, parentAction: IItemAction): IItemAction[] {
         const actions = item.getActions();
         const allActions = actions && actions.all;
         if (allActions) {
             return allActions.filter((action) => (
-                action.showType !== TItemActionShowType.TOOLBAR &&
-                (parentAction && !!parentAction.id ? action.parent === parentAction.id : true)
+                ((!parentAction || parentAction._isMenu) && action.showType !== TItemActionShowType.TOOLBAR) ||
+                (!!parentAction && action.parent === parentAction.id)
             ));
         }
         return [];

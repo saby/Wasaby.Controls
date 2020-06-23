@@ -437,7 +437,7 @@ var
             }
             if (this._columnScrollController) {
                 classes.add(COLUMN_SCROLL_JS_SELECTORS.CONTENT);
-                classes.add(DRAG_SCROLL_JS_SELECTORS.CONTENT, this._isDragScrollingEnabled(options));
+                classes.add(DRAG_SCROLL_JS_SELECTORS.CONTENT, this._isDragScrollingVisible(options));
             }
             return classes.compile();
         },
@@ -506,6 +506,10 @@ var
         _isDragScrollingEnabled(options): boolean {
             const hasOption = typeof options.dragScrolling === 'boolean';
             return hasOption ? options.dragScrolling : !options.itemsDragNDrop;
+        },
+
+        _isDragScrollingVisible(options): boolean {
+            return this._isColumnScrollVisible() && this._isDragScrollingEnabled(options);
         },
 
         // Не вызывает реактивную перерисовку, т.к. данные пишутся в поля объекта. Перерисовка инициируется обновлением позиции скрола.
