@@ -2355,8 +2355,8 @@ define([
       });
       it('calcViewSize', () => {
          let calcViewSize = lists.BaseControl._private.calcViewSize;
-         assert.equal(calcViewSize(132, true), 100);
-         assert.equal(calcViewSize(132, false), 132);
+         assert.equal(calcViewSize(140, true), 100);
+         assert.equal(calcViewSize(140, false), 140);
       });
       it('needShowPagingByScrollSize', function() {
          var cfg = {
