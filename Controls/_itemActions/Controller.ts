@@ -240,12 +240,12 @@ export class Controller {
             parentProperty: 'parent',
             nodeProperty: 'parent@',
             dropdownClassName: 'controls-itemActionsV__popup',
-            closeButtonVisibility: true,
             ...this._contextMenuConfig,
             root: parentAction && parentAction.id,
             showHeader,
             headConfig,
-            iconSize
+            iconSize,
+            showClose: !parentAction || parentAction._isMenu
         };
         return {
             opener,
