@@ -720,6 +720,22 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(config.templateOptions.headConfig.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
         });
 
+        // T3.6.1. Если в контрол был передан contextMenuConfig без IconSize, нужно применять размер иконки по умолчанию
+        it('should use default IconSize when contextMenuConfig does not contain iconSize property', () => {
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions,
+                theme: 'default',
+                iconSize: 's',
+                contextMenuConfig: {
+                    groupProperty: 'title'
+                }
+            }));
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.equal(config.templateOptions.iconSize, 'm', 'default iconSize has not been applied');
+        });
+
         // T3.7. Для меню не нужно считать controls-itemActionsV__action_icon_theme-default
         it('should not set "controls-itemActionsV__action_icon_theme-default" CSS class for menu item actions icons', () => {
             const item3 = collection.getItemBySourceKey(3);

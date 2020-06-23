@@ -227,7 +227,7 @@ export class Controller {
             data: menuActions,
             keyProperty: 'id'
         });
-        const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || this._iconSize;
+        const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || DEFAULT_ACTION_SIZE;
         const showHeader = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
         const headConfig = showHeader ? {
             caption: parentAction.title,
