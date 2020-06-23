@@ -1,8 +1,14 @@
-import Control = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ActualApi from 'Controls/_buttons/ActualApi';
+import Controller = require('Controls/_dropdown/_Controller');
+import {SyntheticEvent} from "Vdom/Vdom";
+import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
+import {Stack as StackOpener} from 'Controls/popup';
+import {getDropdownControllerOptions} from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import isEmpty = require('Core/helpers/Object/isEmpty');
 
 /**
  * Контрол «Кнопка с меню».
@@ -67,30 +73,40 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @demo Controls-demo/Buttons/Menu/MenuPG
  */
 
-var Button = Control.extend({
-   _template: template,
-   _tmplNotify: tmplNotify,
-   _hasItems: true,
+class Button extends BaseDropdown {
+   protected _template: TemplateFunction = template;
+   protected _tmplNotify: Function = tmplNotify;
+   protected _hasItems: boolean = true;
 
-   constructor: function () {
-      Button.superclass.constructor.apply(this, arguments);
-      this._dataLoadCallback = this._dataLoadCallback.bind(this);
-   },
-
-   _beforeMount: function (options) {
+   _beforeMount(options, recievedState) {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       this._updateState(options);
-   },
+      this._dataLoadCallback = this._dataLoadCallback.bind(this);
+      this._controller = new Controller(this._getControllerOptions(options));
 
-   _beforeUpdate: function (options) {
+      if (!options.lazyItemsLoading) {
+         if (!recievedState || isEmpty(recievedState)) {
+            return this._controller.loadItems();
+         } else {
+            this._controller.setItems(recievedState);
+         }
+      }
+   }
+
+   _afterMount() {
+      this._controller.registerScrollEvent();
+   }
+
+   _beforeUpdate(options) {
+      this._controller.update(this._getControllerOptions(options));
       if (this._options.size !== options.size || this._options.icon !== options.icon ||
          this._options.viewMode !== options.viewMode) {
          this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       }
       this._updateState(options);
-   },
+   }
 
-   _updateState: function (options) {
+   _updateState(options) {
       const currentButtonClass = ActualApi.styleToViewMode(options.style);
       const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
 
@@ -103,17 +119,33 @@ var Button = Control.extend({
       this._inlineHeightButton = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewModeButton);
       this._fontColorStyleButton = ActualApi.fontColorStyle(this._buttonStyle, this._viewModeButton, options.fontColorStyle);
       this._fontSizeButton = ActualApi.fontSize(options);
-   },
+   }
 
-   _dataLoadCallback: function (items) {
+   _dataLoadCallback(items) {
       this._hasItems = items.getCount() > 0;
 
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(items);
       }
-   },
+   }
 
-   _onItemClickHandler: function (event, result, nativeEvent) {
+   _getControllerOptions(options) {
+      const controllerOptions = getDropdownControllerOptions(options);
+      return { ...controllerOptions, ...{
+            headerTemplate: options.headTemplate || options.headerTemplate,
+            headingCaption: options.caption,
+            headingIcon: options.icon,
+            headingIconSize: options.iconSize,
+            dataLoadCallback: this._dataLoadCallback.bind(this),
+            popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
+            hasIconPin: this._hasIconPin,
+            allowPin: true,
+            openerControl: this
+         }
+      };
+   }
+
+   _onItemClickHandler(result, nativeEvent) {
       //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
       const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0], nativeEvent]);
       const menuItemActivateResult = this._notify('menuItemActivate', [result[0], nativeEvent]);
@@ -127,27 +159,78 @@ var Button = Control.extend({
       }
 
       return handlerResult;
-   },
-
-   _onPinClickHandler: function (event, item) {
-      this._options.source.update(item.clone(), {
-         $_pinned: !item.get('pinned')
-      });
-   },
-
-   _deactivated: function() {
-      this.closeMenu();
-   },
-
-   openMenu(popupOptions?: object): void {
-      this._children.controller.openMenu(popupOptions);
-   },
-
-   closeMenu(): void {
-      this._children.controller.closeMenu();
    }
 
-});
+   _handleMouseDown(event: SyntheticEvent): void {
+      const config = {
+         templateOptions: {
+            selectorDialogResult: this._selectorTemplateResult.bind(this),
+            selectorOpener: StackOpener
+         },
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: () => {
+               this._popupId = null;
+               this._onClose();
+            },
+            onResult: (action, data, nativeEvent) => {
+               this._onResult(action, data, nativeEvent);
+            }
+         }
+      };
+      this._controller.setMenuPopupTarget(this._container);
+      this._controller.openMenu(config).then((result) => {
+         if (typeof result === 'string') {
+            this._popupId = result;
+         } else if (result) {
+            this._onItemClickHandler(result);
+         }
+      });
+   }
+
+   protected _onResult(action, data, nativeEvent) {
+      switch (action) {
+         case 'pinClick':
+            this._controller.pinClick(data);
+            break;
+         case 'itemClick':
+            this._itemClick(data, nativeEvent);
+            break;
+         case 'selectorResult':
+            this._selectorResult(data, nativeEvent);
+            break;
+         case 'selectorDialogOpened':
+            this._selectorDialogOpened(data);
+            break;
+         case 'footerClick':
+            this._footerClick(data);
+      }
+   }
+
+   protected _itemClick(data, nativeEvent): void {
+      const item = this._controller.getPreparedItem(data, this._options.keyProperty, this._source);
+      const res = this._onItemClickHandler([item], nativeEvent);
+
+      // dropDown must close by default, but user can cancel closing, if returns false from event
+      if (res !== false) {
+         this._controller.handleSelectedItems(item);
+      }
+   }
+
+   protected _selectorResult(data, nativeEvent): void {
+      this._controller.onSelectorResult(data);
+      this._onItemClickHandler(data, nativeEvent);
+   }
+
+   protected _selectorTemplateResult(event, selectedItems): void {
+      let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
+      this._selectorResult(result);
+   }
+
+   _beforeUnmount(): void {
+      this._controller.destroy();
+   }
+}
 
 Button.getDefaultOptions = function () {
    return {
