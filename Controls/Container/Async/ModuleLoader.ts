@@ -56,7 +56,7 @@ class ModuleLoader {
             IoC.resolve('ILogger').error(errorMessage, error);
             return new parking.Controller({
                 configField: errorController.Controller.CONFIG_FIELD,
-                handlers: [errorHandler]})
+                handlers: errorHandler !== undefined ? [errorHandler] : []})
                 .process({error}).then((viewConfig) => {
                     const message = viewConfig?.options?.message;
                     throw new Error(message || rk('У СБИС возникла проблема'));
