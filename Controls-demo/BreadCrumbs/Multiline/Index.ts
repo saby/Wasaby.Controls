@@ -11,49 +11,73 @@ class Multiline extends Control<IControlOptions> {
         this._items  = [
             {
                 id: 1,
-                title: 'Настолько длинное название папки 1',
+                title: 'Продвижение СБИС',
                 secondTitle: 'тест1',
                 parent: null
             },
             {
                 id: 2,
-                title: 'Notebookиииииииииии 2',
+                title: 'Филиальная сеть',
                 secondTitle: 'тест2',
                 parent: 1
             },
             {
                 id: 3,
-                title: 'Smartphoооооооnes 3',
+                title: '3-й дивизион',
                 secondTitle: 'тест3',
                 parent: 2
             },
             {
                 id: 4,
-                title: 'Recoоооооооооооооооооооrd1',
+                title: '6504 Южно-Сахалинск',
                 secondTitle: 'тест4',
                 parent: 3
             },
             {
                 id: 5,
-                title: 'Recokkkkkkkkkkkkkkkkkkkk2',
+                title: 'Работники',
                 secondTitle: 'тест5',
                 parent: 4
             },
             {
                 id: 6,
-                title: 'Очень длинное название',
+                title: 'Менеджеры',
                 secondTitle: 'тест6',
                 parent: 5
             },
             {
                 id: 7,
-                title: 'Recokkkkkkkkkkkkkkkkkkkk2',
+                title: 'Разработка',
                 secondTitle: 'тест5',
                 parent: 4
             },
             {
                 id: 8,
-                title: 'Очень длинное название Последняя',
+                title: 'Тестирование',
+                secondTitle: 'тест6',
+                parent: 5
+            },
+            {
+                id: 9,
+                title: 'Работники',
+                secondTitle: 'тест5',
+                parent: 4
+            },
+            {
+                id: 10,
+                title: 'Менеджеры',
+                secondTitle: 'тест6',
+                parent: 5
+            },
+            {
+                id: 11,
+                title: 'Разработка',
+                secondTitle: 'тест5',
+                parent: 4
+            },
+            {
+                id: 12,
+                title: 'Тестирование',
                 secondTitle: 'тест6',
                 parent: 5
             }
@@ -65,9 +89,9 @@ class Multiline extends Control<IControlOptions> {
         });
         this._item  = [
             {
-                id: 6,
-                title: 'Очень длинное название кнопки назад очень длинное название кнопки назад очень длинное название кнопки назад',
-                secondTitle: 'тест6'
+                id: 1,
+                title: 'Продвижение СБИС',
+                secondTitle: 'тест1'
             }
         ].map((item) => {
             return new Model({
