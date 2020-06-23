@@ -88,7 +88,6 @@ class Highlight extends Control<IHighlightOptions> {
     protected _className: string = null;
     protected _parsedText: Element[];
     protected _template: TemplateFunction = template;
-    protected _theme: string[] = ['Controls/decorator'];
 
     private _parseText(value: string, highlight: string, highlightMode: HighlightMode): Element[] {
         /**
