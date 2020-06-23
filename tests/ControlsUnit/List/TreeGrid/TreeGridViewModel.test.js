@@ -140,6 +140,10 @@ define(['Controls/treeGrid',
             }
          }
 
+         function checkCellBackgroundClass(classes, backgroundColorStyle) {
+            assert.isTrue(classes.indexOf('controls-Grid__row-cell_background_' + backgroundColorStyle + '_theme-default') !== -1);
+         }
+
          var current,
              initialColumns = [{
                 width: '1fr',
@@ -162,6 +166,7 @@ define(['Controls/treeGrid',
              });
          current = model.getCurrent();
          checkCellClasses(current.getCurrentColumn().classList.base, itemTypes.node);
+         checkCellBackgroundClass(current.getCurrentColumn('lightRed').classList.base, 'lightRed');
 
          assert.equal(current.getCurrentColumn().prepareExpanderClasses, current.prepareExpanderClasses);
          model.goToNext();

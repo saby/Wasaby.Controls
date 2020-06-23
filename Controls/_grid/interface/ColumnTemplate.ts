@@ -158,6 +158,18 @@ export type TCursor = 'default' | 'pointer' | 'right';
      * @default pointer
      */
     cursor?: TCursor;
+
+    /**
+     * @typedef {String} backgroundColorStyle
+     * @variant lightRed
+     * @variant lightGreen
+     * @variant lightBlue
+     */
+    /**
+     * @name Controls/grid:ColumnTemplate#backgroundColorStyle
+     * @cfg {backgroundColorStyle} Стиль фона ячейки.
+     */
+    backgroundColorStyle?: string;
 }
 
     /**

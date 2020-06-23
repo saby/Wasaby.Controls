@@ -149,14 +149,14 @@
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
        {{itemData.resetColumnIndex();}}
        <ws:if data="{{itemData.hasMultiSelect}}">
-           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}"/>
            {{itemData.goToNextColumn();}}
        </ws:if>
-       <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+       <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
        <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}"/>
        </ws:for>
    </ws:else>
 </tr>

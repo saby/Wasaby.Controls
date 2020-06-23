@@ -162,6 +162,21 @@
    position: relative;
 }
 
+.controls-Grid__row-cell_background_lightRed_theme-@{themeName},
+.controls-Grid__row-cell__content_background_lightRed_theme-@{themeName} {
+   background-color: @invalid_focus_background-color;
+}
+
+.controls-Grid__row-cell_background_lightYellow_theme-@{themeName},
+.controls-Grid__row-cell__content_background_lightYellow_theme-@{themeName} {
+   background-color: #FFF7E2;
+}
+
+.controls-Grid__row-cell_background_lightGreen_theme-@{themeName},
+.controls-Grid__row-cell__content_background_lightGreen_theme-@{themeName} {
+   background-color: #F0FFE8;
+}
+
 .controls-Grid__row-cell_theme-@{themeName} {
    min-height: @cell_min-height_grid;
 }
@@ -250,6 +265,9 @@
       background-color: @item_hover_background-color_list;
    }
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} {
+      background-color: @item_hover_background-color_list;
+   }
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content {
       background-color: @item_hover_background-color_list;
    }
 

@@ -1,0 +1,12 @@
+<div class="controlsDemo__wrapper">
+    <Controls.grid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            columns="{{_columns}}">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/grid:ItemTemplate"
+                        itemData="{{itemData}}"
+                        backgroundColorStyle="{{itemTemplate.itemData.item.get('population') > 1000000000 ? 'lightRed'}}"/>
+        </ws:itemTemplate>
+    </Controls.grid:View>
+</div>

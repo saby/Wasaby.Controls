@@ -155,9 +155,9 @@ var
 
             current.isLastColumn = isLastColumn;
 
-            current.getCurrentColumn = function () {
+            current.getCurrentColumn = function (backgroundColorStyle: string) {
                 let
-                    currentColumn = superGetCurrentColumn();
+                    currentColumn = superGetCurrentColumn(backgroundColorStyle);
                 currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
 
                 currentColumn.prepareExpanderClasses = current.prepareExpanderClasses;
