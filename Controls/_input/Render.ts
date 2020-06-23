@@ -103,7 +103,6 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     protected _fontColorStyle: string;
     protected _validationStatus: string;
     protected _template: TemplateFunction = template;
-    protected _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
     readonly '[Controls/_interface/IHeight]': boolean = true;
     readonly '[Controls/_interface/IFontSize]': boolean = true;
@@ -170,6 +169,8 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
 
         this.updateState(this._options);
     }
+
+    static _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
     private static notSupportFocusWithin(): boolean {
         return detection.isIE || (detection.isWinXP && detection.yandex);
