@@ -1,7 +1,7 @@
 <ws:template name="localItemActionsTemplate">
     <div attr:class="controls-itemActionsV
         {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') + '_theme-' + theme }}
-        {{itemData.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemPadding, theme, useNewModel)}}
+        {{itemData.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemData.itemPadding, theme, useNewModel)}}
         {{itemData.getItemActionClasses(itemActionsPosition, theme)}}
         {{itemData.isEditingState() ? 'controls-itemActionsV_editing_theme-' + theme}}
         {{itemData.isEditingState() && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}

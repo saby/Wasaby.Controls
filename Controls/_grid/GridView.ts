@@ -194,6 +194,7 @@ var
         _horizontalScrollPosition: 0,
         _contentSizeForHScroll: 0,
         _horizontalScrollWidth: 0,
+        _containerSize: 0,
 
         _beforeMount(cfg) {
             _private.checkDeprecated(cfg, this);
@@ -227,6 +228,7 @@ var
                     }
                     this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                     this._horizontalScrollWidth = newSizes.scrollWidth;
+                    this._containerSize = newSizes.containerSize;
                     if (this._dragScrollController) {
                         this._dragScrollController.updateScrollData({
                             scrollLength: newSizes.contentSize - newSizes.containerSize,
@@ -323,15 +325,18 @@ var
                 // if (oldOptions.root !== this._options.root) {
                 //     this._columnScrollController.resetSizes();
                 // }
+
+                // Если изменилось несколько опций, из за которых требуется пересчитать размеры коризонтального скролла,
+                // то перечет должен случиться только один раз.
                 const shouldUpdateSizes = this._columnsHaveBeenChanged ||
+                    this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount ||
                     this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility;
 
                 if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
-
-                    // Если изменилось количество зафиксированных ячеек и, при этом, нужно пересчитать размеры
-                    // горизонтального скролла из-за смены колонок или режима отображения чекбоксов, то
-                    // пересчет должен быть один.
                     this._columnScrollController.setStickyColumnsCount(this._options.stickyColumnsCount, shouldUpdateSizes);
+                }
+                if (this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility) {
+                    this._columnScrollController.setMultiSelectVisibility(this._options.multiSelectVisibility, shouldUpdateSizes);
                 }
 
                 if (shouldUpdateSizes) {
@@ -339,6 +344,7 @@ var
                     this._columnScrollController.updateSizes((newSizes) => {
                         this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                         this._horizontalScrollWidth = newSizes.scrollWidth;
+                        this._containerSize = newSizes.containerSize;
                         this._updateColumnScrollData();
                     }, true);
                 }
@@ -388,6 +394,7 @@ var
             this._columnScrollController?.updateSizes((newSizes) => {
                 this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                 this._horizontalScrollWidth = newSizes.scrollWidth;
+                this._containerSize = newSizes.containerSize;
                 this._updateColumnScrollData();
             });
         },
@@ -555,6 +562,7 @@ var
             this._columnScrollController.updateSizes((newSizes) => {
                 this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                 this._horizontalScrollWidth = newSizes.scrollWidth;
+                this._containerSize = newSizes.containerSize;
                 this._updateColumnScrollData();
             });
         },

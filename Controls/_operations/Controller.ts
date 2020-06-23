@@ -5,10 +5,10 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { TKeySelection as TKey } from 'Controls/interface';
 import {default as OperationsController} from 'Controls/_operations/ControllerClass';
 
-/** 
- * Контрол используется для организации множественного выбора. 
+/**
+ * Контрол используется для организации множественного выбора.
  * Он обеспечивает связь между Controls/operationsPanel:Containter и {@link Controls/list:Containter}.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/operations/">руководство разработчика</a>
@@ -67,8 +67,8 @@ export default class MultiSelector extends Control {
       this._getOperationsController().unregisterHandler(event, component, config);
    }
 
-   protected _selectedTypeChangedHandler(event: SyntheticEvent<null>, typeName: string): void {
-      this._getOperationsController().selectionTypeChanged(typeName);
+   protected _selectedTypeChangedHandler(event: SyntheticEvent<null>, typeName: string, limit: number): void {
+      this._getOperationsController().selectionTypeChanged(typeName, limit);
    }
 
    protected _selectedKeysCountChanged(e, count: number|null, isAllSelected: boolean): void {

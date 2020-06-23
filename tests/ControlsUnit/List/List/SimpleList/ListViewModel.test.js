@@ -569,6 +569,25 @@ define([
          assert.isAbove(lv.getVersion(), originalVersion);
       });
 
+      it('getPreviousItem', () => {
+         const model = new lists.ListViewModel({
+            items: new collection.RecordSet({
+               rawData: data,
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         let prevItemKey = model.getPreviousItem(1);
+         assert.equal(prevItemKey, 1);
+
+         prevItemKey = model.getPreviousItem(0);
+         assert.equal(prevItemKey, undefined);
+
+         prevItemKey = model.getPreviousItem(5);
+         assert.equal(prevItemKey, 3);
+      });
+
       describe('DragNDrop methods', function() {
          var dragItemData, dragEntity, target, lvm, current;
 

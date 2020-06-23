@@ -1867,11 +1867,13 @@ const _private = {
       }
    },
 
-   onSelectedTypeChanged(typeName: string): void {
+   onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
       let result;
       if (!this._selectionController) {
-       this._createSelectionController();
+        this._createSelectionController();
       }
+
+      this._selectionController.setLimit(limit);
 
       switch (typeName) {
        case 'selectAll':
