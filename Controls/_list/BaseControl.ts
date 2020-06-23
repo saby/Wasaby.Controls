@@ -1833,13 +1833,17 @@ const _private = {
     },
 
    updateSelectionController(self: any, newOptions: any): void {
-      const result = self._selectionController.update({
-         model: self._listViewModel,
-         selectedKeys: newOptions.selectedKeys,
-         excludedKeys: newOptions.excludedKeys,
-         strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
-      });
-      this.handleSelectionControllerResult(self, result);
+        const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
+           || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
+        const result = self._selectionController.update({
+           model: self._listViewModel,
+           selectedKeys: newOptions.selectedKeys,
+           excludedKeys: newOptions.excludedKeys,
+           strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
+        });
+
+        // Если опции не изменились, то значит прикладник отменил выбор и не нужно ему нотифаить об изменении
+        _private.handleSelectionControllerResult(self, result, !selectionChanged);
    },
 
    createSelectionStrategy(options: any, items: RecordSet): ISelectionStrategy {
@@ -1894,19 +1898,21 @@ const _private = {
       this.handleSelectionControllerResult(result);
    },
 
-   handleSelectionControllerResult(self: any, result: ISelectionControllerResult): void {
+   handleSelectionControllerResult(self: any, result: ISelectionControllerResult, silent: boolean = false): void {
       if (!result) {
          return;
       }
 
-      const selectedDiff = result.selectedKeysDiff;
-      if (selectedDiff.added.length || selectedDiff.removed.length) {
-         self._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
-      }
+      if (!silent) {
+          const selectedDiff = result.selectedKeysDiff;
+          if (selectedDiff.added.length || selectedDiff.removed.length) {
+              self._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
+          }
 
-      const excludedDiff = result.excludedKeysDiff;
-      if (excludedDiff.added.length || excludedDiff.removed.length) {
-         self._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
+          const excludedDiff = result.excludedKeysDiff;
+          if (excludedDiff.added.length || excludedDiff.removed.length) {
+              self._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
+          }
       }
 
       // для связи с контроллером ПМО
