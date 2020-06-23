@@ -96,7 +96,7 @@ define([
          return ml.loadAsync('ControlsUnit/Async/Fail/TestModule').then(function () {
             assert.fail('Should not resolved promise successfull');
          }, function (err) {
-            assert.equal(err.message, 'У СБИС возникла проблема', 'Error message is wrong');
+            assert.equal(err.message, 'Couldn\'t load module ControlsUnit/Async/Fail/TestModule', 'Error message is wrong');
             assert.equal(logErrors.length, 1);
          });
       });
