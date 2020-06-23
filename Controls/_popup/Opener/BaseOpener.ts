@@ -101,7 +101,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
      * @returns {Boolean} Is popup opened
      */
     isOpened(): boolean {
-        return !!ManagerController.find(this._popupId);
+        return BaseOpener.isOpened(this._popupId);
     }
 
     private _openPopup(cfg: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
@@ -322,6 +322,10 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
     static closeDialog(popupId: string): Promise<void> | void {
         return ManagerController.remove(popupId);
+    }
+
+    static isOpened(popupId: string): boolean {
+        return !!ManagerController.find(popupId);
     }
 
     /**
