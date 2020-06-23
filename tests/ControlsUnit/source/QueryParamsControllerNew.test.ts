@@ -49,7 +49,8 @@ recordSetWithMultiNavigation.setMetaData({
             nav_result: false
          }
       ]
-   })
+   }),
+   path: new RecordSet()
 });
 
 const recordSetWithSingleNavigation = new RecordSet();
@@ -80,10 +81,16 @@ describe('Controls/_source/QueryParamsController', () => {
       equal(queryParams.length, 2);
    });
 
-   it('updateQueryProperties', () => {
-      controller.updateQueryProperties(recordSetWithMultiNavigation);
-      ok(!!controller.getController(1));
-      ok(!!controller.getController(2));
+   describe('updateQueryProperties', () => {
+      it('controller created for every root in multiNavigation', () => {
+         controller.updateQueryProperties(recordSetWithMultiNavigation);
+         ok(!!controller.getController(1));
+         ok(!!controller.getController(2));
+      });
+      it('path in metaData after updateQueryProperties', () => {
+         queryParamsWithPageController.updateQueryProperties(recordSetWithMultiNavigation);
+         ok(recordSetWithMultiNavigation.getMetaData().path);
+      });
    });
 
    describe('hasMoreData', () => {
