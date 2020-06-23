@@ -1,7 +1,7 @@
 import libHelper = require('Core/library');
 import { IoC } from 'Env/Env';
 import rk = require('i18n!Controls');
-import { parking, error as errorController } from 'Controls/dataSource';
+import { parking } from 'Controls/dataSource';
 
 type Module = unknown;
 let cache: Record<string, Promise<Module>> = {};
@@ -55,7 +55,7 @@ class ModuleLoader {
             const errorMessage = "Couldn't load module " + parsedInfo.name;
             IoC.resolve('ILogger').error(errorMessage, error);
             return new parking.Controller({
-                configField: errorController.Controller.CONFIG_FIELD})
+                configField: 'errorHandlers'})
                 .process({error}).then((viewConfig) => {
                     const message = viewConfig?.options?.message;
                     throw new Error(message || rk('У СБИС возникла проблема'));
