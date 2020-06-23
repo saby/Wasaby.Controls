@@ -172,12 +172,16 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                          item: CollectionItem<Model>,
                          swipeEvent: SyntheticEvent<TouchEvent>,
                          swipeContainerHeight: number): void {
+        const isSwipeLeft = swipeEvent.nativeEvent.direction === 'left';
+        const itemKey = item.getContents().getKey();
         if (this._options.itemActions) {
-            if (swipeEvent.nativeEvent.direction === 'left') {
-                this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
+            if (isSwipeLeft) {
+                this._itemActionsController.activateSwipe(itemKey, swipeContainerHeight);
             } else {
                 this._itemActionsController.deactivateSwipe();
             }
+        } else {
+            this._updateSwipeItem(item, isSwipeLeft);
         }
     }
 
@@ -517,6 +521,17 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                 this._notify('controlResize', [], {bubbling: true});
             });
         }
+    }
+
+    private _updateSwipeItem(newSwipedItem: CollectionItem<Model>, isSwipeLeft: boolean): void {
+        const oldSwipedItem = this._listModel.find(
+            (item) => item.isSwiped() || item.isRightSwiped());
+        if (isSwipeLeft && oldSwipedItem) {
+            oldSwipedItem.setSwiped(false);
+        }
+
+        newSwipedItem.setSwiped(isSwipeLeft);
+        this._listModel.nextVersion();
     }
 
     private createViewModel(items: RecordSet, options: IMenuControlOptions): void {
