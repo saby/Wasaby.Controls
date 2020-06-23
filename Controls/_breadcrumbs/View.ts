@@ -126,7 +126,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
         this._notify('hoveredItemChanged', [item]);
     }
 
-    protected _onResult(event: SyntheticEvent<Event>, actionName, data): void {
+    protected _onResult(actionName: string, data): void {
         if (actionName === 'itemClick' && !this._options.readOnly) {
             this._notify('itemClick', [data]);
             this._menuOpener.closePopup();
