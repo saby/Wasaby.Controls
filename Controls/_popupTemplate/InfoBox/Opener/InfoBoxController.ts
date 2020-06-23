@@ -81,8 +81,11 @@ class InfoBoxController extends StickyController.constructor {
         item.position.maxWidth = undefined;
         item.position.maxHeight = undefined;
         //Removes set value to get real size of the content
+        const maxWidth = container.style.maxWidth;
         container.style.maxWidth = '';
         container.style.maxHeight = '';
+        this.prepareConfig(item);
+        container.style.maxWidth = maxWidth;
 
         return super.elementCreated.apply(this, arguments);
     }
