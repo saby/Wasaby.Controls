@@ -74,7 +74,7 @@ type Element = IHighlight | IPlain;
  * Изменение внешнего вида текста используется с целью акцентирования на нём внимания.
  * @remark
  * Для нахождения подсвечиваемого текста выполняется поиск сопоставления между {@link value текстом} и {@link highlightedValue искомым текстом}.
- * 
+ *
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_decorator.less">переменные тем оформления</a>
  * * <a href="http://axure.tensor.ru/standarts/v7/%D1%80%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82%D0%B0%D1%82%D1%8B_%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_02_.html">алгоритм поиска</a>
@@ -93,7 +93,6 @@ class Highlight extends Control<IHighlightOptions> {
     protected _className: string = null;
     protected _parsedText: Element[];
     protected _template: TemplateFunction = template;
-    protected _theme: string[] = ['Controls/decorator'];
 
     private _parseText(value: string, highlight: string, highlightMode: HighlightMode): Element[] {
         /**
