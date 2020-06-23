@@ -1617,6 +1617,44 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
+
+
+      it('_private.updateSelectionController', async function() {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [1],
+               excludedKeys: []
+            },
+            baseControl = new lists.BaseControl(lnCfg);
+
+
+         baseControl.saveOptions(lnCfg);
+         await baseControl._beforeMount(lnCfg);
+         baseControl._createSelectionController();
+
+         const notifySpy = sinon.spy(baseControl, '_notify');
+
+         await baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged').called);
+
+         notifySpy.resetHistory();
+
+         await baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged').called);
+      });
+
       it('_private.setMarkedKey', () => {
          const baseControl = {
             _markerController: {
