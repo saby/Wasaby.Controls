@@ -545,7 +545,7 @@ var
             this._updateColumnScrollData();
         },
         _columnScrollWheelHandler(e): void {
-            if (this._columnScrollController) {
+            if (this._isColumnScrollVisible()) {
                 this._columnScrollController.scrollByWheel(e);
                 this._horizontalScrollPosition = this._columnScrollController.getScrollPosition();
                 this._updateColumnScrollData();
@@ -563,7 +563,7 @@ var
             }
         },
         _resizeHandler(e): void {
-            this._columnScrollController.updateSizes((newSizes) => {
+            this._columnScrollController?.updateSizes((newSizes) => {
                 this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                 this._horizontalScrollWidth = newSizes.scrollWidth;
                 this._containerSize = newSizes.containerSize;
@@ -571,7 +571,7 @@ var
             });
         },
         _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
-            if (!this._columnScrollController || e.target.tagName !== 'INPUT' || !this._options.listModel.getEditingItemData() || !this._isColumnScrollVisible()) {
+            if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.getEditingItemData()) {
                 return;
             }
             this._columnScrollController.scrollToElementIfHidden(e.target as HTMLElement);
