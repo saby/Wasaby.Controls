@@ -60,6 +60,32 @@ export = {
        * @default day
        */
 
+      /**
+       * @name Controls/_dateRange/interfaces/IDateRangeSelectable#rangeSelectedCallback
+       * @cfg {Function} Функция обратного вызова для определения отображаемого диапазона дат и выбора дат из выпадающей панели.
+       * @remark
+       * Функция вызывается во время начала ввода периода, конца ввода периода, во время передвижения курсора по календарю,
+       * во время переходов к следующему/предыдущему диапазону (кликам по стрелкам).
+       * Функция принимает 3 аргумента:
+       * startValue — Начальное значение диапазона.
+       * endValue — Конечное значение диапазона.
+       * Если используются кванты, то в функцию будут передан рассчитанный по квантам диапазон.
+       * Возвращаемым значением функции должен быть массив с двумя элементами, начальным и конечным значением диапазона [startValue, endValue].
+       * @example
+       * <pre class="brush: html">
+       * <Controls.dateRange:RangeSelector rangeSelectedCallback="{{_rangeSelectedCallback}}" />
+       * </pre>
+       * <pre class="brush: js">
+       * // TypeScript
+       * ...
+       * private _rangeSelectedCallback(startValue: Date, endValue: Date): Date[] {
+       *    return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate() + 2),
+       *        new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 4)];
+       * }
+       * ...
+       * </pre>
+       */
+
       /*
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#minRange
        * @cfg {String} Specifies the range selection mode
