@@ -7,8 +7,10 @@ import {IContextMenuConfig} from "./IContextMenuConfig";
 
 /**
  * @typedef {String} TItemActionShowType
- * @variant 0 показывать опцию только в меню
- * @variant 1 показывать опцию в меню и тулбаре
+ * @remark
+ * Эта опция не должна влиять на иерархию построения меню для тулбара.
+ * @variant 0 показывать опцию только в дополнительном меню
+ * @variant 1 показывать опцию в дополнительном меню и тулбаре
  * @variant 2 показывать опцию только в тулбаре
  */
 export enum TItemActionShowType {
