@@ -132,7 +132,7 @@ define([
                done();
             }
          };
-         bc._onResult(null, 'itemClick', args);
+         bc._onResult('itemClick', args);
       });
    });
 });
