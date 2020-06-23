@@ -623,7 +623,9 @@ var _Controller = Control.extend({
    },
 
    _mouseEnterHandler: function() {
-      this._loadDependenciesTimer = setTimeout(this.loadDependencies.bind(this), PRELOAD_DEPENDENCIES_HOVER_DELAY);
+      if (!this._options.readOnly) {
+         this._loadDependenciesTimer = setTimeout(this.loadDependencies.bind(this), PRELOAD_DEPENDENCIES_HOVER_DELAY);
+      }
    },
 
    _mouseLeaveHandler: function() {

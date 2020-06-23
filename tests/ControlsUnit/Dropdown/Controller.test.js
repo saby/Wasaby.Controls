@@ -912,6 +912,20 @@ define(
             assert.deepEqual(newItems, dropdownController._items.getRawData());
          });
 
+         it('_mouseEnterHandler', () => {
+            let dropdownController = getDropdownController(configLazyLoad);
+            dropdownController._beforeMount(configLazyLoad);
+            dropdownController.loadDependencies = () => {};
+
+            dropdownController._mouseEnterHandler();
+            assert.isOk(dropdownController._loadDependenciesTimer);
+
+            dropdownController._loadDependenciesTimer = null;
+            dropdownController._options.readOnly = true;
+            dropdownController._mouseEnterHandler();
+            assert.isNull(dropdownController._loadDependenciesTimer);
+         });
+
          it('_mouseDownHandler', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             dropdownController._beforeMount(configLazyLoad);
