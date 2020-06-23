@@ -6,6 +6,8 @@ export class Controller {
    private _markerVisibility: TVisibility;
    private _markedKey: TKey;
 
+   private _wasSetMarker: boolean = false;
+
    constructor(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
@@ -41,16 +43,12 @@ export class Controller {
     * @return {string|number} новый ключ маркера
     */
    setMarkedKey(key: TKey): TKey {
-      // TODO наверно можно будет убрать, так как другим реквестом изменил место создания контроллера
-      if (!this._model) {
-         return this._markedKey;
-      }
-
       if (key === undefined && this._markerVisibility !== Visibility.Visible) {
          if (this._markedKey === undefined) {
             return undefined;
          }
 
+         this._wasSetMarker = false;
          this._model.setMarkedKey(this._markedKey, false);
          this._markedKey = undefined;
          return undefined;
@@ -67,14 +65,20 @@ export class Controller {
       }
 
       if (item) {
+         this._wasSetMarker = true;
          this._model.setMarkedKey(this._markedKey, false, true);
          this._model.setMarkedKey(key, true);
          this._markedKey = key;
       } else {
          switch (this._markerVisibility) {
             case Visibility.OnActivated:
-               this._model.setMarkedKey(this._markedKey, false, true);
-               this._markedKey = null;
+               // если маркер уже был проставлен и элемента с этим ключом нет, то ставим маркер на первый элемент
+               if (this._wasSetMarker) {
+                  this._markedKey = this._setMarkerOnFirstItem();
+               } else {
+                  this._model.setMarkedKey(this._markedKey, false, true);
+                  this._markedKey = null;
+               }
                break;
             case Visibility.Visible:
                this._markedKey = this._setMarkerOnFirstItem();
@@ -172,18 +176,19 @@ export class Controller {
       if (!this._model.getCount()) {
          // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
          this._model.setMarkedKey(this._markedKey, false, true);
-         return undefined;
+         return null;
       }
 
       const firstItem = this._model.getFirstItem();
       if (!firstItem) {
          // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
          this._model.setMarkedKey(this._markedKey, false, true);
-         return undefined;
+         return null;
       }
 
       const firstItemKey = firstItem.getKey();
       if (this._markedKey !== firstItemKey) {
+         this._wasSetMarker = true;
          this._model.setMarkedKey(this._markedKey, false, true);
          this._model.setMarkedKey(firstItemKey, true);
       }
