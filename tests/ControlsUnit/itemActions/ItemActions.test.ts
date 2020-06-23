@@ -44,13 +44,13 @@ const itemActions: IItemAction[] = [
     {
         id: 5,
         title: 'Documentation',
-        showType: TItemActionShowType.MENU,
+        showType: TItemActionShowType.TOOLBAR,
         parent: 4
     },
     {
         id: 6,
         title: 'Development',
-        showType: TItemActionShowType.MENU,
+        showType: TItemActionShowType.MENU_TOOLBAR,
         parent: 4
     },
     {
@@ -630,7 +630,7 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isFalse(config.templateOptions.showHeader, 'showHeader should be false when no parent passed');
         });
 
-        // T3.2. Если в метод parentAction - это кнопка открытия меню, то config.templateOptions.showHeader будет false
+        // T3.2. Если parentAction - это кнопка открытия меню, то config.templateOptions.showHeader будет false
         it('should set config.templateOptions.showHeader \'false\' when parentAction is _isMenu', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
@@ -640,34 +640,42 @@ describe('Controls/_itemActions/Controller', () => {
         });
 
         // T3.6. Result.templateOptions.source содержит меню из ItemActions, соответствующих текущему parentAction
-        // it('returns an empty array if actions are not set');
-        // it('returns actions with showType of MENU and MENU_TOOLBAR');
-        // it('returns child actions');
         it('should set result.templateOptions.source responsible to current parentActions', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.exists(config.templateOptions, 'Template options were not set');
-            assert.exists(config.templateOptions.source, 'Menu actions source haven\'t been set in template options');
+            assert.exists(config.templateOptions.source, 'Menu actions source haven\'t set in template options');
             // @ts-ignore
-            const calculatedChildren = JSON.stringify(config.templateOptions.source.data);
-            const children = JSON.stringify(itemActions.filter((action) => action.parent === itemActions[3].id));
+            const calculatedChildren = JSON.stringify(config.templateOptions.source.data.map((item) => item.id));
+            const children = JSON.stringify(itemActions.filter((action) => action.parent === itemActions[3].id).map((item) => item.id));
             assert.exists(config.templateOptions, 'Template options were not set');
             assert.equal(calculatedChildren, children);
         });
 
-        // T3.7. Result.templateOptions.source содержит меню из всех ItemActions не-первого уровня, если в качестве parentAction была указана кнопка “Показать меню”
-        it('should set result.templateOptions.source as set of all non-first-level ItemActions when parentAction is _isMenu', () => {
+        // T3.7. Если parentAction - кнопка открытия доп. меню, то result.templateOptions.source содержит меню ItemActions с showType != TItemActionShowType.TOOLBAR
+        it('should collect only non-TOOLBAR item actions when parentAction._isMenu="true"', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
             assert.exists(config.templateOptions, 'Template options were not set');
-            assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t been set in template options');
+            assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
             // @ts-ignore
             const calculatedChildren = config.templateOptions.source.data.map((item) => item.id).join('');
             const children = itemActions
-                .filter((action) => (
-                    action.parent !== undefined || action.showType === TItemActionShowType.MENU || action.showType === TItemActionShowType.MENU_TOOLBAR)
-                ).map((item) => item.id).join('');
+                .filter((action) => action.showType !== TItemActionShowType.TOOLBAR).map((item) => item.id).join('');
+            assert.equal(calculatedChildren, children);
+        });
+
+        // T3.7.1 Если parentAction - не задан, то result.templateOptions.source содержит меню ItemActions с showType != TItemActionShowType.TOOLBAR
+        it('should collect only non-TOOLBAR item actions when parentAction is not set', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
+            assert.exists(config.templateOptions, 'Template options were not set');
+            assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
+            // @ts-ignore
+            const calculatedChildren = config.templateOptions.source.data.map((item) => item.id).join('');
+            const children = itemActions
+                .filter((action) => action.showType !== TItemActionShowType.TOOLBAR).map((item) => item.id).join('');
             assert.equal(calculatedChildren, children);
         });
 
