@@ -273,4 +273,8 @@ describe('Controls/marker/Controller', () => {
          assert.equal(model.getMarkedKey(), undefined);
       });
    });
+
+   it('with breadcrumbs', () => {
+
+   });
 });
