@@ -15,7 +15,7 @@
                     getTooltip="{{getTooltip}}"
                     size="{{size}}"
                     showedActions="{{itemData.getActions().showed}}"/>
-            <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">
+            <ws:if data="{{itemData.isEditingState() && toolbarVisibility}}">
                 <Controls.Container.Async templateName="Controls/editableArea:Buttons">
                     <ws:partial template="{{content.resolvedTemplate}}"
                                 attr:class="controls-itemActionsV__wrapper-isEditing_theme-{{theme}}"

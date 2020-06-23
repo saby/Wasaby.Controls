@@ -30,7 +30,7 @@
               orientation="{{_options.orientation}}"
               emptyTemplate="{{_options.emptyHistoryTemplate}}"
               on:historyChanged="_historyItemsChanged()"
-              attr:class="controls-HistoryList__{{_options.orientation}}"
+              attr:class="controls-HistoryList__{{_options.orientation}}_theme-{{_options.theme}}"
               on:applyHistoryFilter="_applyHistoryFilter()"/>
    </ws:if>
 </ws:template>
