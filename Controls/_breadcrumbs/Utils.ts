@@ -22,6 +22,24 @@ export default {
     },
     shouldRedraw: function (currentItems, newItems) {
         return currentItems !== newItems;
+    },
+    getItemData: function (index, items, multiline?: boolean = false, withOverflow?: boolean = false) {
+        var
+            currentItem = items[index],
+            count = items.length;
+        return {
+            getPropValue: ItemsUtil.getPropertyValue,
+            item: currentItem,
+            hasArrow: count > 1 && index !== 0 || multiline,
+            withOverflow
+        };
+    },
+    drawBreadCrumbsItems: function (items, multiline? = false) {
+        let visibleItems = [];
+        visibleItems = items.map(function (item, index, items) {
+            return _private.getItemData(index, items, multiline);
+        });
+        return visibleItems;
     }
 
 };

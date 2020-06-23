@@ -1,0 +1,24 @@
+<div class="controls-BreadCrumbsMultiline">
+    <div class="controls-BreadCrumbsMultiline__wrapper">
+        <ws:if data="{{_visibleItemsFirst}}">
+            <Controls._breadcrumbs.View
+                    visibleItems="{{_visibleItemsFirst}}"
+                    withoutDots="{{true}}"
+                    displayMode="multiline"
+                    keyProperty="{{_options.keyProperty}}"
+                    displayProperty="{{_options.displayProperty}}"
+                    highlighter="{{_options.highlighter}}"/>
+        </ws:if>
+        <ws:if data="{{_visibleItemsSecond}}">
+            <Controls._breadcrumbs.View
+                    visibleItems="{{_visibleItemsSecond}}"
+                    keyProperty="{{_options.keyProperty}}"
+                    displayMode="multiline"
+                    items="{{_options.items}}"
+                    displayProperty="{{_options.displayProperty}}"
+                    highlighter="{{_options.highlighter}}"/>
+        </ws:if>
+    </div>
+    <Controls.event:Listener event="controlResize"
+                             on:controlResize="_onResize()"/>
+</div>
