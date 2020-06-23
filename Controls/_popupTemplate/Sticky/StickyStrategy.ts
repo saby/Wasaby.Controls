@@ -327,7 +327,11 @@ interface IPosition {
          if (popupCfg.config.maxWidth) {
             position.maxWidth = Math.min(popupCfg.config.maxWidth, windowSizes.width);
          } else {
-            position.maxWidth = windowSizes.width;
+            let horizontalPadding = 0;
+            if (popupCfg.fittingMode.horizontal === 'adaptive') {
+               horizontalPadding = position.left || position.right || 0;
+            }
+            position.maxWidth = windowSizes.width - horizontalPadding;
          }
 
          if (popupCfg.config.minWidth) {
@@ -339,7 +343,10 @@ interface IPosition {
          } else {
             // На ios возвращается неверная высота страницы, из-за чего накладывая maxWidth === windowSizes.height
             // окно визуально обрезается. Делаю по body, у него высота правильная
-            const verticalPadding = position.top || position.bottom || 0;
+            let verticalPadding = 0;
+            if (popupCfg.fittingMode.vertical === 'adaptive') {
+               verticalPadding = position.top || position.bottom || 0;
+            }
             position.maxHeight = _private.getViewportHeight() - verticalPadding;
             // position.maxHeight = windowSizes.height;
          }
