@@ -2353,6 +2353,11 @@ define([
          });
 
       });
+      it('calcViewSize', () => {
+         let calcViewSize = lists.BaseControl._private.calcViewSize;
+         assert.equal(calcViewSize(132, true), 100);
+         assert.equal(calcViewSize(132, false), 132);
+      });
       it('needShowPagingByScrollSize', function() {
          var cfg = {
             navigation: {
