@@ -24,6 +24,25 @@ function isClassesEqual(actual: string, expected: string, message?: string): voi
     assert.isTrue(failingClasses.length === 0, `${message}. Missing classes: ${failingClasses.join(', ')}.`);
 }
 
+function hasNoClasses(actualClasses: string, missingClasses: string, message: string = ''): void {
+    assert.isString(actualClasses, 'Argument "actualClasses" must be a string!');
+    assert.isString(missingClasses, 'Argument "missingClasses" must be a string!');
+
+    const classesToArray = (classes: string) => classes.trim().split(' ').filter((className) => className.trim() !== '');
+
+    const actualClassesArr: string[] = classesToArray(actualClasses);
+    const missingClassesArr: string[] = classesToArray(missingClasses);
+    const existingClasses = [];
+
+    missingClassesArr.forEach((className) => {
+        if (actualClassesArr.indexOf(className) !== -1) {
+            existingClasses.push(className);
+        }
+    });
+
+    assert.isTrue(existingClasses.length === 0, `Existing classes: ${existingClasses.join(', ')}. ${message}`);
+}
 export {
-    isClassesEqual
+    isClassesEqual,
+    hasNoClasses
 }

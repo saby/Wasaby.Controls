@@ -2298,6 +2298,42 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
                cAssert.isClassesEqual(model.getCurrentHeaderColumn(0, 1).cellClasses, 'controls-Grid__header-cell_align_items_top');
             });
+            it('separator column in header with multiselect', function () {
+               model._headerRows = [
+                  [ /* Первая строка шапки */
+                     {
+                        /* Checkbox */
+                     },
+                     {
+                        /* data */
+                     },
+                     {
+                        /* data */
+                     }
+                  ]
+               ];
+               model._maxEndRow = 2;
+               model._columns = [
+                  {
+                     columnSeparatorSize: {
+                        left: 's',
+                        right: 's'
+                     }
+                  },
+                  {
+                  }
+               ];
+
+               cAssert.hasNoClasses(
+                   model.getCurrentHeaderColumn(0, 1).cellClasses,
+                   'controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-s_theme-default'
+               );
+
+               cAssert.isClassesEqual(
+                   model.getCurrentHeaderColumn(0, 2).cellClasses,
+                   'controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-s_theme-default'
+               );
+            });
          });
 
          it('_prepareCrossBrowserColumn', function () {
