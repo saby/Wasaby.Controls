@@ -692,13 +692,13 @@ define(
             // возвращаем их обратно
             assert.strictEqual(container.style.width, '100px');
             assert.strictEqual(container.style.height, '100px');
-            assert.isUndefined(container.style.maxHeight);
+            assert.strictEqual(container.style.maxHeight, '');
 
             item.popupOptions.maxHeight = 300;
             container.style.maxHeight = '200px';
             StickyController.elementAfterUpdated(item, container);
             assert.strictEqual(newContainer.style.maxHeight, '300px');
-            assert.strictEqual(container.style.maxHeight, '200px');
+            assert.strictEqual(container.style.maxHeight, '');
             StickyController.prepareConfig = prepareConfig;
             StickyController._isTargetVisible = isTargetVisible;
          });
