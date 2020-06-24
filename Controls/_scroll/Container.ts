@@ -781,16 +781,6 @@ let
             return false;
          }
 
-         // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
-         // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
-         // and immediately after the second event it is not necessary.
-         // These conditions appear during scrollTop < 0. Just do not display the shadow when scrollTop < 0.
-         // Turn off this check on the first build when there is no dom tree yet.
-         if (Env.detection.isMobileIOS && position === POSITION.TOP && this._children.content &&
-               _private.getScrollTop(this, this._children.content) < 0) {
-            return false;
-         }
-
          return this._displayState.shadowVisible[position];
       },
 

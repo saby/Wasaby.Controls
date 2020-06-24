@@ -183,21 +183,6 @@ define(
                   assert.isTrue(scroll._shadowVisible('left'));
                });
 
-               it('should not display top shadow if scrollTop < 0.', function () {
-                  scroll._displayState.shadowVisible.top = true;
-                  scroll._children.content.scrollTop = -10;
-                  scroll._children.stickyController = {
-                     hasFixed: function () {
-                        return false;
-                     },
-                     hasShadowVisible: function() {
-                        return false;
-                     }
-                  };
-
-                  assert.isFalse(scroll._shadowVisible('top'));
-               });
-
                it('should not display top shadow if scrollLeft < 0.', function () {
                   scroll._displayState.shadowVisible.left = true;
                   scroll._children.content.scrollLeft = -10;

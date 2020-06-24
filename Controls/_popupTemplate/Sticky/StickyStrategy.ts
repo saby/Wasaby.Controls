@@ -9,6 +9,15 @@ if (detection.isMobileIOS && detection.IOSVersion === 12) {
    import('Controls/Utils/TouchKeyboardHelper').then((module) => TouchKeyboardHelper = module.default);
 }
 
+interface IVisualViewport {
+   height: number;
+   offsetLeft: number;
+   offsetTop: number;
+   pageLeft: number;
+   pageTop: number;
+   width: number;
+}
+
 interface IPosition {
     left?: Number;
     right?: Number;
@@ -347,8 +356,7 @@ interface IPosition {
             if (popupCfg.fittingMode.vertical === 'adaptive') {
                verticalPadding = position.top || position.bottom || 0;
             }
-            position.maxHeight = _private.getViewportHeight() - verticalPadding;
-            // position.maxHeight = windowSizes.height;
+            position.maxHeight = _private.getViewportHeight() - verticalPadding + _private.getVisualViewport().pageTop;
          }
 
          if (popupCfg.config.minHeight) {
@@ -378,7 +386,7 @@ interface IPosition {
           return document.body.clientHeight;
       },
 
-      getVisualViewport(): object {
+      getVisualViewport(): IVisualViewport {
          if (window?.visualViewport) {
             return window.visualViewport;
          }
