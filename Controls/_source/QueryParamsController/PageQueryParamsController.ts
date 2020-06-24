@@ -156,7 +156,7 @@ class PageQueryParamsController implements IQueryParamsController {
 
             // Если направление не указано,
             // значит это расчет параметров после начальной загрузки списка или после перезагрузки
-            if (config) {
+            if (config && config.page !== undefined && config.pageSize !== undefined) {
                 const pageSizeRemainder = config.pageSize % this._options.pageSize;
                 const pageSizeCoef = (config.pageSize - pageSizeRemainder) / this._options.pageSize;
 
