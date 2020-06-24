@@ -341,11 +341,14 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
                 }, this._getDelay(config));
             }
         } else {
+            const needForceUpdate: boolean = this._isOverlayVisible || this._isMessageVisible;
             // if we dont't have indicator in stack, then hide overlay
             if (this._stack.getCount() === 0) {
                 this._toggleIndicatorVisible(false);
                 this._blockContent(false, config, isGlobal);
-                this._forceUpdate();
+                if (needForceUpdate) {
+                    this._forceUpdate();
+                }
             }
         }
     }
