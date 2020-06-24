@@ -1671,22 +1671,21 @@ define([
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
 
-         const updateSpy = sinon.spy(baseControl._markerController, 'update');
+         const notifySpy = sinon.spy(baseControl._listViewModel, '_notify');
 
          lists.BaseControl._private.updateMarkerController(baseControl, cfg);
-         assert.isFalse(updateSpy.called);
+         assert.isFalse(notifySpy.called);
 
-         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 1 });
-         assert.isTrue(updateSpy.called);
+         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
+         assert.isTrue(notifySpy.called);
 
-         updateSpy.resetHistory();
+         notifySpy.resetHistory();
+         baseControl._listViewModel.setItems(new collection.RecordSet({
+            rawData: data,
+            keyProperty: 'id'
+         }));
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isTrue(updateSpy.called);
-
-         updateSpy.resetHistory();
-         baseControl._modelRecreated = true;
-         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isTrue(updateSpy.called);
+         assert.isTrue(notifySpy.called);
       });
 
       it('_private.setMarkedKey', () => {
