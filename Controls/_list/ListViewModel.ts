@@ -666,7 +666,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     // New Model compatibility
     getEditingConfig(): IEditingConfig {
-        return this._options.editingConfig;
+        return this._options?.editingConfig;
     },
 
     // New Model compatibility
