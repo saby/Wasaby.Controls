@@ -1617,8 +1617,6 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
-
-
       it('_private.updateSelectionController', async function() {
          const
             lnSource = new sourceLib.Memory({
@@ -1653,6 +1651,42 @@ define([
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged').called);
+      });
+
+      it('_private.updateMarkerController', async function() {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'visible'
+            },
+            baseControl = new lists.BaseControl(cfg);
+
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+
+         const updateSpy = sinon.spy(baseControl._markerController, 'update');
+
+         lists.BaseControl._private.updateMarkerController(baseControl, cfg);
+         assert.isFalse(updateSpy.called);
+
+         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 1 });
+         assert.isTrue(updateSpy.called);
+
+         updateSpy.resetHistory();
+         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
+         assert.isTrue(updateSpy.called);
+
+         updateSpy.resetHistory();
+         baseControl._modelRecreated = true;
+         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
+         assert.isTrue(updateSpy.called);
       });
 
       it('_private.setMarkedKey', () => {

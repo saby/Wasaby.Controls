@@ -1945,7 +1945,10 @@ const _private = {
    },
 
     updateMarkerController(self: any, options: any): void {
-        if (!self._modelRecreated && self._options.hasOwnProperty('markedKey') && self._options.markedKey === options.markedKey) {
+        if (!self._modelRecreated
+            && self._options.markedKey === options.markedKey
+            && self._options.markerVisibility === options.markerVisibility
+        ) {
             return;
         }
 
