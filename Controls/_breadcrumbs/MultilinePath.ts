@@ -5,24 +5,23 @@ import {ItemsUtil} from 'Controls/list';
 import BreadCrumbsUtil from './Utils';
 // @ts-ignore
 import * as template from 'wml!Controls/_breadcrumbs/MultilinePath/MultilinePath';
+import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
+import {Record, Model} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
-export interface IMultilinePathOptions {
-
-}
-
-class MultilinePath extends Control<IControlOptions> {
+class MultilinePath extends Control<IBreadCrumbsOptions> {
 
     protected _template: TemplateFunction = template;
-    protected _visibleItemsFirst = [];
-    protected _visibleItemsSecond = [];
+    protected _visibleItemsFirst: Record[] = [];
+    protected _visibleItemsSecond: Record[] = [];
     protected _width: number = 0;
     protected ARROW_WIDTH: number = 0;
     protected BREAD_CRUMB_MIN_WIDTH: number = 36;
     protected DOTS_WIDTH: number = 0;
     protected _indexEdge: number = 0;
-    protected _items;
+    protected _items: Record[];
 
-    protected _afterMount(options, contexts?: object, receivedState?: void): void {
+    protected _afterMount(options: IBreadCrumbsOptions, contexts?: object, receivedState?: void): void {
         if (this._options.items && this._options.items.length > 0) {
             this._items = this._options.items;
             this._width = this._container.clientWidth;
@@ -34,12 +33,13 @@ class MultilinePath extends Control<IControlOptions> {
         }
     }
 
-    protected _beforeUpdate(newOptions): void {
+    protected _beforeUpdate(newOptions: IBreadCrumbsOptions): void {
         // Если тема изменилась - изменились размеры
         if (this._options.theme !== newOptions.theme) {
             this._initializeConstants(newOptions.theme);
         }
-        if (this._options.items !== newOptions.items || this._width !== this._container.clientWidth || this._options.theme !== newOptions.theme) {
+        if (this._options.items !== newOptions.items || this._width !== this._container.clientWidth
+            || this._options.theme !== newOptions.theme) {
             this._items = newOptions.items;
             this._visibleItemsFirst = [];
             this._visibleItemsSecond = [];
@@ -56,7 +56,7 @@ class MultilinePath extends Control<IControlOptions> {
     private _calculateBreadCrumbsToDraw(items, containerWidth: number): void {
         const itemsWidth = this._getItemsWidth(items, this._options.displayProperty);
         const currentContainerWidth = itemsWidth.reduce((accumulator, currentValue) => accumulator + currentValue);
-        let shrinkedItemIndex;
+        let shrinkItemIndex;
         let firstContainerItems = [];
 
         if (items.length <= 2) {
@@ -99,7 +99,7 @@ class MultilinePath extends Control<IControlOptions> {
                             if (secondContainerWidth <= containerWidth) {
                                 break;
                             } else if (this._canShrink(itemsWidth[index], secondContainerWidth, containerWidth)) {
-                                shrinkedItemIndex = index;
+                                shrinkItemIndex = index;
                                 secondContainerWidth -= itemsWidth[index] - this.BREAD_CRUMB_MIN_WIDTH;
                                 break;
                             } else {
@@ -109,12 +109,12 @@ class MultilinePath extends Control<IControlOptions> {
 
                         // Если осталось всего 2 крошки, но места все равно не хватает, то пытаемся обрезать первый элемент.
                         if (index === this._indexEdge && secondContainerWidth > containerWidth && itemsWidth[this._indexEdge] > this.BREAD_CRUMB_MIN_WIDTH) {
-                            shrinkedItemIndex = this._indexEdge;
+                            shrinkItemIndex = this._indexEdge;
                             secondContainerWidth -= itemsWidth[this._indexEdge] - this.BREAD_CRUMB_MIN_WIDTH;
                         }
 
                         for (let j = this._indexEdge; j <= index; j++) {
-                            secondContainerItems.push(BreadCrumbsUtil.getItemData(j, items, true, j === shrinkedItemIndex));
+                            secondContainerItems.push(BreadCrumbsUtil.getItemData(j, items, true, j === shrinkItemIndex));
                         }
                         // this._visibleItemsSecond = secondContainerItems;
 
@@ -133,7 +133,7 @@ class MultilinePath extends Control<IControlOptions> {
                         this._visibleItemsSecond = secondContainerItems;
                     }
                 } else {
-                    // если все остальные крошки поместились - огонь - пушим по второй контейнер
+                    // если все остальные крошки поместились - пушим по второй контейнер
                     const secondContainerItems = [];
                     for (let i = this._indexEdge; i < items.length; i++) {
                         secondContainerItems.push(items[i]);
@@ -148,7 +148,7 @@ class MultilinePath extends Control<IControlOptions> {
         this._indexEdge = 0;
     }
 
-    private _getItemsWidth(items, displayProperty): number[] {
+    private _getItemsWidth(items: Record[], displayProperty: string): number[] {
         const itemsWidth = [];
         items.forEach((item, index) => {
             const itemTitleWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title  controls-BreadCrumbsView__title_theme-' + this._options.theme + ' controls-BreadCrumbsView__crumb_theme-' + this._options.theme + '">' + ItemsUtil.getPropertyValue(item, displayProperty) + '</div>');
@@ -171,14 +171,15 @@ class MultilinePath extends Control<IControlOptions> {
         }
     }
 
-    static getDefaultOptions() {
-        return {
-            displayProperty: 'title',
-            root: null
-        };
+    private _itemClickHandler(e: SyntheticEvent<MouseEvent> , item: Model): void {
+        e.stopPropagation();
+        this._notify('itemClick', [item]);
     }
 
-    static getOptionTypes() {
+    static getDefaultOptions() {
+        return {
+            displayProperty: 'title'
+        };
     }
 
     static _styles: string[] = ['Controls/Utils/FontLoadUtil'];

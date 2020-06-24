@@ -3,11 +3,10 @@
         <ws:if data="{{_visibleItemsFirst}}">
             <Controls._breadcrumbs.View
                     visibleItems="{{_visibleItemsFirst}}"
-                    withoutDots="{{true}}"
                     displayMode="multiline"
                     keyProperty="{{_options.keyProperty}}"
                     displayProperty="{{_options.displayProperty}}"
-                    highlighter="{{_options.highlighter}}"/>
+                    on:itemClick="_itemClickHandler()"/>
         </ws:if>
         <ws:if data="{{_visibleItemsSecond}}">
             <Controls._breadcrumbs.View
@@ -16,7 +15,7 @@
                     displayMode="multiline"
                     items="{{_options.items}}"
                     displayProperty="{{_options.displayProperty}}"
-                    highlighter="{{_options.highlighter}}"/>
+                    on:itemClick="_itemClickHandler()"/>
         </ws:if>
     </div>
     <Controls.event:Listener event="controlResize"
