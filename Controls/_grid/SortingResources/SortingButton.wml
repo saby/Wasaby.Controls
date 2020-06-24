@@ -6,15 +6,11 @@
     </ws:if>
 </ws:template>
 
-<div class="controls-SortingButton">
-    <div class="controls-SortingButton__content" title="{{_options.caption}}">
-        
-        <div class="controls-SortingButton__caption controls-SortingButton__caption_theme-{{_options.theme}} 
-        controls-Grid__header-cell__content-{{_options.textOverflow}}" 
-        on:click="_clickHandler()">
-        <ws:partial if="{{_options.align !== 'left'}}" template="arrow"></ws:partial>
-        {{_options.caption}}
-    </div>
-    <ws:partial if="{{_options.align === 'left'}}" template="arrow"></ws:partial>
-    </div>
+<div class="controls-SortingButton controls-SortingButton_align-{{_options.align || 'left'}}" title="{{_options.caption}}">
+    <ws:partial template="arrow"/>
+    <div class="controls-SortingButton__caption
+                controls-SortingButton__caption_theme-{{_options.theme}}
+                controls-SortingButton__caption_align-{{_options.align || 'left'}}
+                {{_options.textOverflow ? 'controls-SortingButton__caption_textOverflow-ellipsis' }}"
+         on:click="_clickHandler()">{{_options.caption}}</div>
 </div>
