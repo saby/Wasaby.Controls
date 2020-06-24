@@ -123,15 +123,15 @@ export function cssStyleGeneration(options: IButtonControlOptions, hasMsg: boole
  * @name Controls/_buttons/Button#viewMode
  * @cfg {Enum} Режим отображения кнопки.
  * @variant button В виде обычной кнопки по-умолчанию.
- * @variant link В виде гиперссылки.
+ * @variant linkButton В виде гиперссылки.
  * @variant toolButton В виде кнопки для панели инструментов.
  * @variant functionalButton В виде кнопки выполняющей определенную функцию. Например добавление или сохранение.
  * @default button
  * @demo Controls-demo/Buttons/ViewModes/Index
  * @example
- * Кнопка в режиме отображения 'link'.
+ * Кнопка в режиме отображения 'linkButton'.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="linkButton" size="xl"/>
  * </pre>
  * Кнопка в режиме отображения 'toolButton'.
  * <pre>

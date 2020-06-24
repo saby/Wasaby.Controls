@@ -331,6 +331,13 @@ var CompoundArea = CompoundContainer.extend([
       var container = self.getContainer()[0];
       container.wsControl = self;
 
+      // Заполнять нужно раньше чем позовется doAutofocus ниже.
+      // doAutofocus спровоцирует уход фокуса, старый менеджер будет проверять связи и звать метод getOpener,
+      // который в совместимости возвращает данные с состояния. если они не заполнены, будут проблемы с проверкой связи.
+      self.__openerFromCfg = self._options.__openerFromCfg;
+      self._parent = self._options.parent;
+      self._logicParent = self._options.parent;
+
       // Переведем фокус сразу на окно, после построения шаблона уже сфокусируем внутренности
       // Если этого не сделать, то во время построения окна, при уничтожении контролов в других областях запустится восстановление фокуса,
       // которое восстановит его в последнюю активную область.
@@ -358,9 +365,7 @@ var CompoundArea = CompoundContainer.extend([
       if (self.__parentFromCfg && self._registerToParent) {
          self._registerToParent(self.__parentFromCfg);
       }
-      self.__openerFromCfg = self._options.__openerFromCfg;
-      self._parent = self._options.parent;
-      self._logicParent = self._options.parent;
+
 
       // Чтобы после применения makeInstanceCompatible BaseCompatible не стирал self._logicParent,
       // нужно в оставить его в опциях в поле _logicParent, logicParent или parent.

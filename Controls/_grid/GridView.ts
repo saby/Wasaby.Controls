@@ -79,26 +79,8 @@ var
             self._baseResultsTemplate = isFullGridSupport ? GridResults : TableResults;
         },
 
-        getCellByEventTarget(event: MouseEvent): HTMLElement {
-            return event.target.closest('.controls-Grid__row-cell');
-        },
-
-        getCellIndexByEventTarget(self,  event): number {
-            if (!event) {
-                return null;
-            }
-            const gridRow = event.target.closest('.controls-Grid__row');
-            if (!gridRow) {
-                return null;
-            }
-            const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
-            const currentCell = _private.getCellByEventTarget(event);
-            const multiSelectOffset = self._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
-            return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
-        },
-
         setHoveredCell(self, item, nativeEvent): void {
-            const hoveredCellIndex = _private.getCellIndexByEventTarget(self, nativeEvent);
+            const hoveredCellIndex = self._getCellIndexByEventTarget(nativeEvent);
             if (item !== self._hoveredCellItem || hoveredCellIndex !== self._hoveredCellIndex) {
                 self._hoveredCellItem = item;
                 self._hoveredCellIndex = hoveredCellIndex;
@@ -106,7 +88,7 @@ var
                 let hoveredCellContainer = null;
                 if (nativeEvent) {
                     container = nativeEvent.target.closest('.controls-ListView__itemV');
-                    hoveredCellContainer = _private.getCellByEventTarget(nativeEvent);
+                    hoveredCellContainer = self._getCellByEventTarget(nativeEvent);
                 }
                 self._notify('hoveredCellChanged', [item, container, hoveredCellIndex, hoveredCellContainer]);
             }
@@ -209,8 +191,8 @@ var
             // Подробнее: GridControl создает модель и отдает ее в GridView через BaseControl. BaseControl занимается обработкой ошибок, в том
             // числе и разрывом соединения с сетью. При разрыве соединения BaseControl уничтожает GridView и показывает ошибку.
             // Если во время, пока GridView разрушена изменять ее опции, то это не приведет ни к каким реакциям.
-            this._listModel.setColumns(cfg.columns);
-            this._listModel.setHeader(cfg.header);
+            this._listModel.setColumns(cfg.columns, true);
+            this._listModel.setHeader(cfg.header, true);
 
             if (cfg.columnScroll) {
                 _private.initColumnScroll(this, cfg);
@@ -475,7 +457,7 @@ var
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
                 const item = dispItem.getContents();
-                this._notify('itemClick', [item, e, _private.getCellIndexByEventTarget(this, e)], {bubbling: true});
+                this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)], {bubbling: true});
             }
         },
 
@@ -568,6 +550,22 @@ var
                     scrollPosition: this._horizontalScrollPosition
                 });
             }
+        },
+        _getCellByEventTarget(event: MouseEvent): HTMLElement {
+            return event.target.closest('.controls-Grid__row-cell');
+        },
+        _getCellIndexByEventTarget(event): number {
+            if (!event) {
+                return null;
+            }
+            const gridRow = event.target.closest('.controls-Grid__row');
+            if (!gridRow) {
+                return null;
+            }
+            const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
+            const currentCell = this._getCellByEventTarget(event);
+            const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+            return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
         },
         _resizeHandler(e): void {
             this._columnScrollController?.updateSizes((newSizes) => {
