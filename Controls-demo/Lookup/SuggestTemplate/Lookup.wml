@@ -8,8 +8,11 @@
            keyProperty="id"
            searchParam="title"
            navigation="{{_navigation}}"
-           displayProperty="title">
+           displayProperty="title"
+           selectorTemplate="{{_selectorTemplate}}"
+           on:selectorClose="_changeEventInfo()">
          <ws:suggestTemplate templateName="wml!Controls-demo/Lookup/resources/SuggestTemplate"/>
       </Controls.lookup:Input>
+      <div class="controls-text-label_theme-{{_options.theme}}">{{_eventInfo}}</div>
    </div>
 </div>
