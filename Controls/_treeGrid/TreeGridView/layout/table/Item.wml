@@ -29,7 +29,7 @@
 </ws:template>
 
 <ws:template name="separatedCell">
-    <ws:partial template="{{currentColumn.template}}"
+    <ws:partial template="{{ renderSeparatedColumnContent !== false ? currentColumn.template : 'Controls/grid:ColumnTemplate' }}"
                 editArrowTemplate="{{editArrowTemplate}}"
                 attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}

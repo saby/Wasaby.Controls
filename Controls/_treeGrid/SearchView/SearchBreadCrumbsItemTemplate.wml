@@ -1,7 +1,8 @@
 <ws:partial template="{{itemData.resolveItemTemplate(itemData)}}"
             scope="{{_options}}"
-            colspan="{{itemData.getColspan(colspan)}}"
-            colspanLength="{{ 1 }}"
+            colspan="{{itemData.getColspan(colspan, isColumnScrollVisible)}}"
+            colspanLength="{{ itemData.getColspanLength(colspan, isColumnScrollVisible) }}"
+            renderSeparatedColumnContent="{{ colspan === false }}"
             expanderIcon="none"
             marker="{{false}}"
             attr:key="{{ itemData.key }}__breadcrumbs">

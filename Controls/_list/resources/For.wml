@@ -13,6 +13,7 @@
       itemTemplate="{{itemTemplate}}"
       itemActionsPosition="{{itemActionsPosition}}"
       backgroundStyle="{{backgroundStyle}}"
+      isColumnScrollVisible="{{isColumnScrollVisible}}"
       tagTemplate="{{tagTemplate}}"/>
 </ws:template>
 
@@ -26,6 +27,7 @@
            multiSelectTpl="{{multiSelectTpl}}"
            itemData="{{editingItemData}}"
            actionsType="{{itemActionsPosition}}"
+           isColumnScrollVisible="{{isColumnScrollVisible}}"
            tagTemplate="{{tagTemplate}}"/>
 </ws:template>
 
