@@ -115,7 +115,9 @@ class BreadCrumbsView extends Control<IControlOptions> {
     static getDefaultOptions() {
         return {
             itemTemplate,
-            backgroundStyle: 'default'
+            backgroundStyle: 'default',
+            fontSize: 'xs',
+            fontColorStyle: 'label'
         };
     }
     static _theme: string[] = ['Controls/crumbs'];
