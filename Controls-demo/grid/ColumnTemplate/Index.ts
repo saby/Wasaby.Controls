@@ -19,13 +19,13 @@ export default class extends Control {
         populationColumn.template = withBackgroundColorStyle;
         populationColumn.getColor = function(populationDensity) {
             if (populationDensity > 100) {
-                return 'lightRed';
+                return 'danger';
             }
             if (populationDensity < 10) {
-                return 'lightGreen';
+                return 'warning';
             }
 
-            return 'lightYellow';
+            return 'success';
         }
 
         this._viewSource = new Memory({

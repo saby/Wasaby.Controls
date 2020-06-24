@@ -6,7 +6,7 @@
         <ws:itemTemplate>
             <ws:partial template="Controls/grid:ItemTemplate"
                         itemData="{{itemData}}"
-                        backgroundColorStyle="{{itemTemplate.itemData.item.get('population') > 1000000000 ? 'lightRed'}}"/>
+                        backgroundColorStyle="{{itemTemplate.itemData.item.get('population') > 1000000000 ? 'danger'}}"/>
         </ws:itemTemplate>
     </Controls.grid:View>
 </div>

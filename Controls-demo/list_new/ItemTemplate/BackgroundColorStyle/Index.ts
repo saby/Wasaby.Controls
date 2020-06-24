@@ -17,10 +17,10 @@ export default class extends Control {
 
     protected getBackgroundColorStyle(itemIndex: number): string {
         if (itemIndex % 2 === 0) {
-            return 'lightRed';
+            return 'danger';
         }
 
-        return 'lightGreen';
+        return 'success';
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

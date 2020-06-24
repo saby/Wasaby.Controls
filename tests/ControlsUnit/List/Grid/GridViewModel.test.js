@@ -794,14 +794,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             current = gridViewModel.getCurrent();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme, 'lightRed').getAll(),
-               expectedResult + ' controls-Grid__row-cell_background_lightRed_theme-default');
-
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme, 'lightGreen').getAll(),
-               expectedResult + ' controls-Grid__row-cell_background_lightGreen_theme-default');
-
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme, 'lightYellow').getAll(),
-               expectedResult + ' controls-Grid__row-cell_background_lightYellow_theme-default');
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme, 'danger').getAll(),
+               expectedResult + ' controls-Grid__row-cell_background_danger_theme-default');
          });
       });
       describe('getCurrent', function() {

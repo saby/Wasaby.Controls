@@ -161,9 +161,13 @@ export type TCursor = 'default' | 'pointer' | 'right';
 
     /**
      * @typedef {String} backgroundColorStyle
-     * @variant lightRed
-     * @variant lightGreen
-     * @variant lightBlue
+     * @variant danger
+     * @variant success
+     * @variant warning
+     * @variant primary
+     * @variant secondary
+     * @variant unaccented
+     * @variant readonly
      */
     /**
      * @name Controls/grid:ColumnTemplate#backgroundColorStyle

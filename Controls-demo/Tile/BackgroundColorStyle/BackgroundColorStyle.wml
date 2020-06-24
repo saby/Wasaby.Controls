@@ -7,7 +7,7 @@
         source="{{_viewSource}}">
   <ws:itemTemplate>
     <ws:partial template="Controls/tile:ItemTemplate"
-                backgroundColorStyle="lightGreen">
+                backgroundColorStyle="success">
     </ws:partial>
   </ws:itemTemplate>
 </Controls.tile:View>

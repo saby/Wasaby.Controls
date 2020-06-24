@@ -8,7 +8,7 @@
         <ws:itemTemplate>
             <ws:partial template="Controls/treeGrid:ItemTemplate"
                         itemData="{{itemData}}"
-                        backgroundColorStyle="{{itemTemplate.itemData.item.get('rating') < 8 ? 'lightRed'}}"/>
+                        backgroundColorStyle="{{itemTemplate.itemData.item.get('rating') < 8 ? 'warning'}}"/>
         </ws:itemTemplate>
     </Controls.treeGrid:View>
 </div>

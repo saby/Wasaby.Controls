@@ -166,7 +166,7 @@ define(['Controls/treeGrid',
              });
          current = model.getCurrent();
          checkCellClasses(current.getCurrentColumn().classList.base, itemTypes.node);
-         checkCellBackgroundClass(current.getCurrentColumn('lightRed').classList.base, 'lightRed');
+         checkCellBackgroundClass(current.getCurrentColumn('danger').classList.base, 'danger');
 
          assert.equal(current.getCurrentColumn().prepareExpanderClasses, current.prepareExpanderClasses);
          model.goToNext();
