@@ -71,16 +71,12 @@ const recordSetWithSingleNavigation = new RecordSet({
    rawData: items
 });
 recordSetWithSingleNavigation.setMetaData(metaNavigation);
-const collection = new Collection({
-   collection: recordSetWithSingleNavigation,
-   keyProperty: 'id'
-});
-collection.getItems().setMetaData(metaMultiNavigation);
-const collectionWithMultiNavigation = new Collection({
-   collection: recordSetWithMultiNavigation,
-   keyProperty: 'id'
-});
-collection.getItems().setMetaData(metaNavigation);
+const modelMock = {
+   getItems: () => recordSetWithSingleNavigation
+};
+const modelMockWithMultiNavigation = {
+   getItems: () => recordSetWithMultiNavigation
+};
 
 describe('Controls/_source/QueryParamsController', () => {
    let controller;
@@ -122,12 +118,12 @@ describe('Controls/_source/QueryParamsController', () => {
       describe('setState', () => {
 
          it('setState with multiNavigation', () => {
-            queryParamsWithPageController.setState(collectionWithMultiNavigation);
+            queryParamsWithPageController.setState(modelMock);
             strictEqual(queryParamsWithPageController.getAllDataCount(), true);
          });
 
          it('setState with singleNavigation', () => {
-            queryParamsWithPageController.setState(collection);
+            queryParamsWithPageController.setState(modelMockWithMultiNavigation);
             strictEqual(queryParamsWithPageController.getAllDataCount(), true);
          });
 
