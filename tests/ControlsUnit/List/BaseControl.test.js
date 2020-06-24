@@ -707,6 +707,7 @@ define([
                   hasMore: false
                }
             },
+            root: 'testRoot',
             searchValue: 'test'
          };
 
@@ -730,6 +731,7 @@ define([
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
          assert.isTrue(ctrl._listViewModel.getHasMoreData());
+         assert.isTrue(ctrl._sourceController.hasMoreData('down', 'testRoot'));
 
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
