@@ -2101,9 +2101,19 @@ const _private = {
      * @param options
      * @private
      */
-    updateInitializedItemActions(self, options: any) {
+    updateInitializedItemActions(self, options: any): void {
         if (self._listViewModel.isActionsAssigned()) {
             _private.updateItemActions(self, options);
+        }
+    },
+
+    /**
+     * Деактивирует свайп, если контроллер ItemActions проинициализирован
+     * @param self
+     */
+    closeSwipe(self): void {
+        if (self._listViewModel.isActionsAssigned()) {
+            self._itemActionsController.deactivateSwipe();
         }
     },
 
@@ -2704,6 +2714,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.updateInitializedItemActions(this, newOptions);
             });
         }
+        if (newOptions.itemActions !== this._options.itemActions) {
+            _private.closeSwipe(this);
+        }
 
         /*
          * Переинициализация ранее проинициализированных опций записи нужна при:
@@ -2719,7 +2732,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            _private.updateInitializedItemActions(this, newOptions);
+            _private.updateInitializedItemActions(this, newOptions, newOptions.itemActions !== this._options.itemActions);
         }
 
         if (
@@ -3038,9 +3051,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onItemClick(e, item, originalEvent) {
-        if (this._itemActionsController) {
-            this._itemActionsController.deactivateSwipe();
-        }
+        _private.closeSwipe(this);
         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
             /*
              When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
