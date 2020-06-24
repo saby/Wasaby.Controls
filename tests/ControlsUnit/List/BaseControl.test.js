@@ -3113,6 +3113,7 @@ define([
             ctrl._itemActionsController.deactivateSwipe = () => {
                isDeactivateSwipeCalled = true;
             };
+            ctrl._listViewModel.setActionsAssigned(true);
             ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
             assert.isTrue(isDeactivateSwipeCalled);
          });
@@ -5347,6 +5348,7 @@ define([
             };
             instance = new lists.BaseControl(cfg);
             instance.saveOptions(cfg);
+            instance._viewModelConstructor = cfg.viewModelConstructor;
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
             instance._itemActionsController = {
                deactivateSwipe: () => {
@@ -5400,6 +5402,7 @@ define([
          // Надо сбрасывать свайп, если изменились ItemActions. Иначе после их изменения свайп будет оставаться поверх записи
          it('should deactivate swipe if it is activated and itemActions have changed', async () => {
             instance._itemActionsInitialized = true;
+            instance._listViewModel.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {});
             await instance._beforeUpdate({
                ...cfg,
