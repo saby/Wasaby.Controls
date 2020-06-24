@@ -101,6 +101,7 @@ const
         keyDownPageDown: constants.key.pageDown
     };
 
+const PAGING_HEIGHT = 32;
 const LOAD_TRIGGER_OFFSET = 100;
 const INDICATOR_DELAY = 2000;
 const INITIAL_PAGES_COUNT = 1;
@@ -918,16 +919,18 @@ const _private = {
         } else {
             let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
             if (self._pagingVisible) {
-                bottomScroll -= 32;
+                bottomScroll -= PAGING_HEIGHT;
             }
             return bottomScroll < triggerOffset * 1.3;
         }
     },
-
+    calcViewSize(viewSize: number, pagingVisible: boolean): number {
+        return viewSize - (pagingVisible ? PAGING_HEIGHT : 0);
+    },
     needShowPagingByScrollSize(self, viewSize: number, viewPortSize: number): boolean {
         let result = self._pagingVisible;
 
-        const proportion = (viewSize / viewPortSize);
+        const proportion = (_private.calcViewSize(viewSize, result) / viewPortSize);
 
         // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
         if (!result) {

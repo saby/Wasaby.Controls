@@ -300,12 +300,12 @@ class StickyController extends BaseController {
 
         /* start: Return all values to the node. Need for vdom synchronizer */
         container.style.width = width;
-        container.style.maxHeight = maxHeight;
         container.style.maxWidth = maxWidth;
         // После того, как дочерние контролы меняют размеры, они кидают событие controlResize, окно отлавливает событие,
         // измеряет верстку и выставляет себе новую позицию и размеры. Т.к. это проходит минимум в 2 цикла синхронизации,
         // то визуально видны прыжки. Уменьшаю на 1 цикл синхронизации простановку размеров
         // Если ограничивающих размеров нет (контент влезает в экран), то ставим высоту по контенту.
+        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '';
         container.style.height = item.position.height ? item.position.height + 'px' : 'auto';
 
         // Синхронно ставлю новую позицию, чтобы не было прыжков при изменении контента
