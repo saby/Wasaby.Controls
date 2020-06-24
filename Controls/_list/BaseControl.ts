@@ -2096,10 +2096,14 @@ const _private = {
      * Обновляет ItemActions только в случае, если они были ранее проинициализированы
      * @param self
      * @param options
+     * @param deactivateSwipe флаг, определяющий, надо ли деактивировать свайп при обновлении опций записи
      * @private
      */
-    updateInitializedItemActions(self, options: any) {
+    updateInitializedItemActions(self, options: any, deactivateSwipe?: boolean): void {
         if (self._itemActionsInitialized) {
+            if (deactivateSwipe) {
+                self._itemActionsController.deactivateSwipe();
+            }
             _private.updateItemActions(self, options);
         }
     }
@@ -2691,7 +2695,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            _private.updateInitializedItemActions(this, newOptions);
+            _private.updateInitializedItemActions(this, newOptions, true);
         }
 
         if (this._itemsChanged) {
