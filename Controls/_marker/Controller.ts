@@ -94,11 +94,14 @@ export class Controller {
    /**
     * Проставляет заново маркер в модели
     * @remark Не уведомляет о проставлении маркера
+    * Если markerVisibility='visible' и элемента с marked key не существует, то маркер поставим на первый элемент
     */
    restoreMarker(): void {
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item) {
          item.setMarked(true, true);
+      } else if (this._markerVisibility === Visibility.Visible) {
+         this._markedKey = this._setMarkerOnFirstItem(true);
       }
    }
 
@@ -185,7 +188,7 @@ export class Controller {
       return contents.getKey();
    }
 
-   private _setMarkerOnFirstItem(): TKey {
+   private _setMarkerOnFirstItem(silent: boolean = false): TKey {
       // если модель пустая, то не на что ставить маркер
       if (!this._model.getCount()) {
          // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
@@ -204,7 +207,7 @@ export class Controller {
       if (this._markedKey !== firstItemKey) {
          this._wasSetMarker = true;
          this._model.setMarkedKey(this._markedKey, false, true);
-         this._model.setMarkedKey(firstItemKey, true);
+         this._model.setMarkedKey(firstItemKey, true, silent);
       }
       return firstItemKey;
    }
