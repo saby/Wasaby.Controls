@@ -117,10 +117,12 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         // https://online.sbis.ru/opendoc.html?guid=2bd41176-8896-4a0a-a04d-a93b8a4c3a2d
         this._redrawOverlay();
     }
+
     protected _beforeUpdate(cfg: ILoadingIndicatorOptions): void {
         this._updateProperties(cfg);
         this._redrawOverlay();
     }
+
     _updateProperties(cfg: ILoadingIndicatorOptions): void {
         if (cfg.isGlobal !== undefined) {
             this.isGlobal = cfg.isGlobal;
@@ -382,6 +384,13 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         for (const event of events) {
             if (window) {
                 window[action](event, LoadingIndicator._eventsHandler, true);
+                /**
+                 * В оффлайне стрельнул баг: если отписываться с флагом true(несмотря на такую же подписку)
+                 * отписка от события не произойдет. Вызываю дополнительно отписку без флага.
+                 */
+                if (!toggle) {
+                    window[action](event, LoadingIndicator._eventsHandler);
+                }
             }
         }
     }
@@ -390,7 +399,8 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         this._isOverlayVisible = toggle && config.overlay !== 'none';
         this._redrawOverlay();
     }
-    private  _clearOverlayTimerId(): void  {
+
+    private _clearOverlayTimerId(): void {
         if (this._toggleOverlayTimerId) {
             clearTimeout(this._toggleOverlayTimerId);
         }
