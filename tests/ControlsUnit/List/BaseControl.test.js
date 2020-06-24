@@ -3060,34 +3060,57 @@ define([
          ctrl._onCheckBoxClick({}, 1, 1);
       });
 
-      it('_onItemClick', async function() {
-         var cfg = {
-            keyProperty: 'id',
-            viewName: 'Controls/List/ListView',
-            source: source,
-            viewModelConstructor: lists.ListViewModel
-         };
-         var originalEvent = {
-            target: {
-               closest: function(selector) {
-                  return selector === '.js-controls-ListView__checkbox';
-               },
-               getAttribute: function(attrName) {
-                  return attrName === 'contenteditable' ? 'true' : '';
+      describe('calling _onItemClick method', function() {
+         let cfg;
+         let originalEvent;
+         let ctrl;
+         beforeEach(async () => {
+            cfg = {
+               keyProperty: 'id',
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewModelConstructor: lists.ListViewModel
+            };
+            originalEvent = {
+               target: {
+                  closest: function(selector) {
+                     return selector === '.js-controls-ListView__checkbox';
+                  },
+                  getAttribute: function(attrName) {
+                     return attrName === 'contenteditable' ? 'true' : '';
+                  }
                }
-            }
-         };
-         var stopPropagationCalled = false;
-         var event = {
-            stopPropagation: function() {
-               stopPropagationCalled = true;
-            }
-         };
-         var ctrl = new lists.BaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-         ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
-         assert.isTrue(stopPropagationCalled);
+            };
+            ctrl = new lists.BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            await ctrl._beforeMount(cfg);
+            ctrl._itemActionsController = {
+               deactivateSwipe: () => {}
+            };
+         });
+
+         it('should stop event propagation', () => {
+            let stopPropagationCalled = false;
+            let event = {
+               stopPropagation: function() {
+                  stopPropagationCalled = true;
+               }
+            };
+            ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
+            assert.isTrue(stopPropagationCalled);
+         });
+
+         it('should call deactivateSwipe method', () => {
+            let isDeactivateSwipeCalled = false;
+            let event = {
+               stopPropagation: function() {}
+            };
+            ctrl._itemActionsController.deactivateSwipe = () => {
+               isDeactivateSwipeCalled = true;
+            };
+            ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
+            assert.isTrue(isDeactivateSwipeCalled);
+         });
       });
 
       it('_needBottomPadding after reload in beforeMount', async function() {
@@ -6396,7 +6419,7 @@ define([
 
 
          describe('_onItemClick', () => {
-            it('click on checkbox should not notifies itemClick, but other clicks should', function() {
+            it('click on checkbox should not notify itemClick, but other clicks should', function() {
                let isStopped = false;
                let isCheckbox = false;
 
