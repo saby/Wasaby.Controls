@@ -3122,6 +3122,7 @@ define([
             ctrl._itemActionsController.deactivateSwipe = () => {
                isDeactivateSwipeCalled = true;
             };
+            ctrl._listViewModel.setActionsAssigned(true);
             ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
             assert.isTrue(isDeactivateSwipeCalled);
          });
