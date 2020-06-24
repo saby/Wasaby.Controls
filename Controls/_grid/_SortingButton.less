@@ -1,22 +1,40 @@
-.controls-SortingButton__content_align-left {
+.controls-SortingButton {
+   .baseline-fix();
+   align-items: baseline;
+   max-width: 100%;
+}
+
+.controls-SortingButton_align-left {
+   display: inline-flex;
    flex-direction: row-reverse;
 }
 
-.controls-SortingButton__content_align-default {
-   flex-direction: row;
+.controls-SortingButton_align-right {
+   display: inline-block;
 }
 
-.controls-SortingButton__content {
-   .baseline-fix();
-
-   display: flex;
-   align-items: baseline;
+.controls-SortingButton__caption {
+   cursor: pointer;
+}
+.controls-SortingButton__caption:active,
+.ws-is-hover .controls-SortingButton__caption:hover {
+   text-decoration: underline;
 }
 
-.controls-SortingButton,
-.controls-SortingButton__content {
-   max-width: 100%;
+.controls-SortingButton__caption_theme-@{themeName} {
+   line-height: @icon-width_gridSortingButton;
+   font-size: @font-size_gridSortingButton;
+   color: @text-color_gridSortingButton;
 }
+
+.controls-SortingButton__caption_align-right {
+   display: inline;
+}
+
+.controls-SortingButton__caption_textOverflow-ellipsis {
+   .text-overflow();
+}
+
 .controls-SortingButton__icon_theme-@{themeName} {
    align-self: baseline;
    display: inline-block;
@@ -25,33 +43,8 @@
    height: @icon-width_gridSortingButton;
 }
 
-.controls-SortingButton__caption {
-   cursor: pointer;
-   line-height: @icon-width_gridSortingButton;
-}
-
 .controls-SortingButton_arrow_theme-@{themeName} {
    fill: @icon-color_gridSortingButton;
    width: @icon-width_gridSortingButton;
    height: @icon-height_gridSortingButton;
-}
-
-.controls-SortingButton__caption_theme-@{themeName} {
-   font-size: @font-size_gridSortingButton;
-   color: @text-color_gridSortingButton;
-}
-
-.controls-SortingButton__caption.controls-Grid__header-cell__content-ellipsis {
-   cursor: pointer;
-   display: inline;
-}
-
-.controls-SortingButton__caption:active {
-   text-decoration: underline;
-}
-
-.ws-is-hover {
-   .controls-SortingButton__caption:hover {
-      text-decoration: underline;
-   }
 }
