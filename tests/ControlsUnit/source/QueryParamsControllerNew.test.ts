@@ -5,7 +5,7 @@ import {Direction, IAdditionalQueryParams} from 'Controls/source';
 import {IBaseSourceConfig, INavigationSourceConfig} from 'Controls/interface';
 import {Collection} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
-import {equal, ok} from 'assert';
+import {equal, ok, strictEqual} from 'assert';
 
 class FakeController implements IQueryParamsController {
    destroy(): void {}
@@ -36,8 +36,17 @@ class FakeController implements IQueryParamsController {
        void {}
 }
 
-const recordSetWithMultiNavigation = new RecordSet();
-recordSetWithMultiNavigation.setMetaData({
+const items = [{
+   id: 1,
+   name: 'Иванов'
+}, {
+   id: 2,
+   name: 'Петров'
+}];
+const metaNavigation = {
+   more: true
+};
+const metaMultiNavigation = {
    more: new RecordSet({
       rawData: [
          {
@@ -50,12 +59,27 @@ recordSetWithMultiNavigation.setMetaData({
          }
       ]
    })
-});
+};
 
-const recordSetWithSingleNavigation = new RecordSet();
-recordSetWithSingleNavigation.setMetaData({
-   more: true
+const recordSetWithMultiNavigation = new RecordSet({
+   rawData: items
 });
+recordSetWithMultiNavigation.setMetaData(metaMultiNavigation);
+
+const recordSetWithSingleNavigation = new RecordSet({
+   rawData: items
+});
+recordSetWithSingleNavigation.setMetaData(metaNavigation);
+const collection = new Collection({
+   collection: recordSetWithSingleNavigation,
+   keyProperty: 'id'
+});
+collection.getItems().setMetaData(metaMultiNavigation);
+const collectionWithMultiNavigation = new Collection({
+   collection: recordSetWithMultiNavigation,
+   keyProperty: 'id'
+});
+collection.getItems().setMetaData(metaNavigation);
 
 describe('Controls/_source/QueryParamsController', () => {
    let controller;
@@ -86,17 +110,34 @@ describe('Controls/_source/QueryParamsController', () => {
       ok(!!controller.getController(2));
    });
 
-   describe('hasMoreData', () => {
-      it('hasMoreData for multi navigation query result', () => {
-         queryParamsWithPageController.updateQueryProperties(recordSetWithMultiNavigation);
-         ok(queryParamsWithPageController.hasMoreData('down', 1));
-         equal(queryParamsWithPageController.hasMoreData('down', 2), false);
-         equal(queryParamsWithPageController.hasMoreData('down'), true);
+   describe('pageQueryParamsController', () => {
+
+      describe('setState', () => {
+
+         it('setState with multiNavigation', () => {
+            queryParamsWithPageController.setState(collectionWithMultiNavigation);
+            strictEqual(queryParamsWithPageController.getAllDataCount(), true);
+         });
+
+         it('setState with singleNavigation', () => {
+            queryParamsWithPageController.setState(collection);
+            strictEqual(queryParamsWithPageController.getAllDataCount(), true);
+         });
+
       });
 
-      it('hasMoreData for single navigation query result', () => {
-         queryParamsWithPageController.updateQueryProperties(recordSetWithSingleNavigation, 'down');
-         ok(queryParamsWithPageController.hasMoreData('down'));
+      describe('hasMoreData', () => {
+         it('hasMoreData for multi navigation query result', () => {
+            queryParamsWithPageController.updateQueryProperties(recordSetWithMultiNavigation);
+            ok(queryParamsWithPageController.hasMoreData('down', 1));
+            equal(queryParamsWithPageController.hasMoreData('down', 2), false);
+            equal(queryParamsWithPageController.hasMoreData('down'), true);
+         });
+
+         it('hasMoreData for single navigation query result', () => {
+            queryParamsWithPageController.updateQueryProperties(recordSetWithSingleNavigation, 'down');
+            ok(queryParamsWithPageController.hasMoreData('down'));
+         });
       });
    });
 });
