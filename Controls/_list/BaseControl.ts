@@ -2511,7 +2511,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._loadedItems = null;
 
-        if (container && this._scrollController) {
+        if (this._scrollController) {
             this._scrollController.afterMount(container, this._children);
         }
 
