@@ -1,34 +1,21 @@
 import {IControlOptions} from 'UI/Base';
-import {INavigationOptions, IFilterOptions, IMultiSelectableOptions} from 'Controls/interface';
+import {INavigationOptions, IFilterOptions, IMultiSelectableOptions, ITooltip, ISearch} from 'Controls/interface';
+import { IStickyPopupOptions } from 'Controls/_popup/interface/ISticky';
 import {IMenuPopup} from 'Controls/menu';
 import {IDropdownSourceOptions} from './IDropdownSource';
 export type TKey = string|number|null;
 
 export interface IBaseDropdownOptions extends IControlOptions, IDropdownSourceOptions, INavigationOptions,
-    IFilterOptions, IMultiSelectableOptions, IMenuPopup {
-    notifySelectedItemsChanged: Function;
-    keyProperty: string;
-    notifyEvent: Function;
-    lazyItemsLoading?: boolean;
-    emptyText?: string;
-    selectedItemsChangedCallback?: Function;
-    dataLoadErrback?: Function;
+    IFilterOptions, IMultiSelectableOptions, IMenuPopup, IStickyPopupOptions, ITooltip, ISearch {
+    dropdownClassName?: string;
     historyId?: string;
-    historyNew?: string;
-    allowPin?: boolean;
-    width?: number;
     popupClassName?: string;
-    marker?: boolean;
-    typeShadow?: string;
+    dataLoadCallback?: Function;
+    keyProperty: string;
+    emptyText?: string;
+    displayProperty: string;
 }
 
-/**
- * Интерфейс контрола, отображающего список меню
- * @interface Controls/_dropdown/interface/IBaseDropdown
- * @public
- * @author Золотова Э.Е.
- */
-
-export default interface IMenuBase {
+export default interface IBaseDropdown {
     readonly '[Controls/_dropdown/interface/IBaseDropdown]': boolean;
 }

@@ -190,7 +190,7 @@ class _Controller implements IDropdownController {
 
    private _open(popupOptions?: object): Promise<any> {
       if (this._options.readOnly) {
-         return;
+         return Promise.resolve();
       }
       if (popupOptions) {
          this._popupOptions =  popupOptions;

@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import tmplNotify = require('Controls/Utils/tmplNotify');
@@ -9,6 +9,24 @@ import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
 import {Stack as StackOpener} from 'Controls/popup';
 import {getDropdownControllerOptions} from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import isEmpty = require('Core/helpers/Object/isEmpty');
+import {IGroupedOptions} from 'Controls/dropdown';
+import {IIconOptions, IHeightOptions, IIconSizeOptions, IIconStyleOptions} from 'Controls/interface';
+import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
+import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
+import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
+import {RecordSet} from "Types/collection";
+
+interface IButtonOptions extends IBaseDropdownOptions, IGroupedOptions, IIconOptions, IHeightOptions,
+         IIconSizeOptions, IIconStyleOptions, IMenuControlOptions, IMenuPopupOptions {
+   additionalProperty?: string;
+   lazyItemsLoading?: boolean;
+   buttonStyle?: string;
+   contrastBackground?: boolean;
+   caption?: string;
+   fontColorStyle?: string;
+   fontSize?: string;
+   showHeader?: boolean;
+}
 
 /**
  * Контрол «Кнопка с меню».
@@ -78,7 +96,7 @@ class Button extends BaseDropdown {
    protected _tmplNotify: Function = tmplNotify;
    protected _hasItems: boolean = true;
 
-   _beforeMount(options, recievedState) {
+   _beforeMount(options: IButtonOptions, recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
       this._offsetClassName = MenuUtils.cssStyleGeneration(options);
       this._updateState(options);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
@@ -93,11 +111,11 @@ class Button extends BaseDropdown {
       }
    }
 
-   _afterMount() {
+   _afterMount(): void {
       this._controller.registerScrollEvent();
    }
 
-   _beforeUpdate(options) {
+   _beforeUpdate(options: IButtonOptions): void {
       this._controller.update(this._getControllerOptions(options));
       if (this._options.size !== options.size || this._options.icon !== options.icon ||
          this._options.viewMode !== options.viewMode) {
@@ -106,7 +124,7 @@ class Button extends BaseDropdown {
       this._updateState(options);
    }
 
-   _updateState(options) {
+   _updateState(options: IButtonOptions): void {
       const currentButtonClass = ActualApi.styleToViewMode(options.style);
       const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
 
@@ -121,7 +139,7 @@ class Button extends BaseDropdown {
       this._fontSizeButton = ActualApi.fontSize(options);
    }
 
-   _dataLoadCallback(items) {
+   _dataLoadCallback(items): void {
       this._hasItems = items.getCount() > 0;
 
       if (this._options.dataLoadCallback) {
@@ -129,7 +147,7 @@ class Button extends BaseDropdown {
       }
    }
 
-   _getControllerOptions(options) {
+   _getControllerOptions(options: IButtonOptions): object {
       const controllerOptions = getDropdownControllerOptions(options);
       return { ...controllerOptions, ...{
             headerTemplate: options.headTemplate || options.headerTemplate,
@@ -188,7 +206,7 @@ class Button extends BaseDropdown {
       });
    }
 
-   protected _onResult(action, data, nativeEvent) {
+   protected _onResult(action, data, nativeEvent): void {
       switch (action) {
          case 'pinClick':
             this._controller.pinClick(data);

@@ -1,6 +1,5 @@
 import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
-import Control = require('Core/Control');
 import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
 import Utils = require('Types/util');
 import dropdownUtils = require('Controls/_dropdown/Util');
@@ -9,8 +8,16 @@ import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
 import Controller = require('Controls/_dropdown/_Controller');
 import {SyntheticEvent} from "Vdom/Vdom";
 import isEmpty = require('Core/helpers/Object/isEmpty');
+import {ISingleSelectableOptions} from 'Controls/interface';
+import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
+import {RecordSet} from 'Types/collection';
 
-var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
+   placeholder?: string;
+   value?: string;
+}
+
+let getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Полный список параметров отображается при нажатии на контрол.
@@ -78,11 +85,11 @@ var getPropValue = Utils.object.getPropertyValue.bind(Utils);
  *    }
  */
 
-class ComboBox extends BaseDropdown{
+class ComboBox extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
 
-   _beforeMount(options, recievedState) {
+   _beforeMount(options: IComboboxOptions, recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
@@ -98,11 +105,11 @@ class ComboBox extends BaseDropdown{
       }
    }
 
-   _afterMount() {
+   _afterMount(): void {
       this._controller.registerScrollEvent();
    }
 
-   _beforeUpdate(options) {
+   _beforeUpdate(options: IComboboxOptions): void {
       const containerNode = this._getContainerNode(this._container);
 
       if (this._width !== containerNode.offsetWidth) {
@@ -111,7 +118,7 @@ class ComboBox extends BaseDropdown{
       this._controller.update(this._getControllerOptions(options));
    }
 
-   _getControllerOptions(options) {
+   _getControllerOptions(options: IComboboxOptions): object {
       return { ...options, ...{
             selectedKeys: [options.selectedKey],
             marker: false,
@@ -132,15 +139,14 @@ class ComboBox extends BaseDropdown{
       };
    }
 
-   _selectedItemsChangedHandler(selectedItems) {
-      var key = getPropValue(selectedItems[0], this._options.keyProperty);
+   _selectedItemsChangedHandler(selectedItems): void {
+      const key = getPropValue(selectedItems[0], this._options.keyProperty);
       this._setText(selectedItems);
       this._notify('valueChanged', [this._value]);
       this._notify('selectedKeyChanged', [key]);
-      this._isOpen = false;
    }
 
-   _setText(selectedItems) {
+   _setText(selectedItems): void {
       this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null || selectedItems[0] === null;
       if (this._isEmptyItem) {
          this._value = '';
@@ -182,7 +188,7 @@ class ComboBox extends BaseDropdown{
       }
    }
 
-   protected _onResult(action, data) {
+   protected _onResult(action: string, data): void {
       if (action === 'itemClick') {
          const item = this._controller.getPreparedItem(data, this._options.keyProperty, this._source);
          this._selectedItemsChangedHandler([item]);
@@ -195,7 +201,7 @@ class ComboBox extends BaseDropdown{
    }
 
    //FIXME delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-   private _getContainerNode(container:[HTMLElement]|HTMLElement):HTMLElement {
+   private _getContainerNode(container:[HTMLElement]|HTMLElement): HTMLElement {
       return container[0] || container;
    }
 }

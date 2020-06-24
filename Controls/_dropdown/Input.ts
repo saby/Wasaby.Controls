@@ -1,5 +1,5 @@
 import rk = require('i18n!Controls');
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Input/Input');
 import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
 import Utils = require('Types/util');
@@ -11,8 +11,23 @@ import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
 import {SyntheticEvent} from "Vdom/Vdom";
 import {Stack as StackOpener} from 'Controls/popup';
 import isEmpty = require('Core/helpers/Object/isEmpty');
+import {IMenuPopup} from "../menu";
+import {IGroupedOptions} from "./interface/IGrouped";
+import {IIconSizeOptions} from 'Controls/interface';
+import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
+import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
+import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
+import {RecordSet} from "Types/collection";
 
-var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+interface IInputOptions extends IBaseDropdownOptions, IGroupedOptions, IIconSizeOptions,
+    IMenuPopupOptions, IMenuControlOptions {
+   fontColorStyle?: string;
+   fontSize?: string;
+   showHeader?: boolean;
+   caption?: string;
+}
+
+let getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
@@ -241,7 +256,7 @@ class Input extends BaseDropdown {
    protected _hasMoreText: string = '';
    protected _selectedItems = '';
 
-   _beforeMount(options, recievedState): Promise<object>|void {
+   _beforeMount(options: IInputOptions, recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
       this._prepareDisplayState = this._prepareDisplayState.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
@@ -253,15 +268,15 @@ class Input extends BaseDropdown {
       }
    }
 
-   _afterMount(options) {
+   _afterMount(): void {
       this._controller.registerScrollEvent();
    }
 
-   _beforeUpdate(options) {
+   _beforeUpdate(options: IInputOptions): void {
       this._controller.update(this._getControllerOptions(options));
    }
 
-   _getControllerOptions(options): object {
+   _getControllerOptions(options: IInputOptions): object {
       return { ...options, ...{
             dataLoadCallback: this._dataLoadCallback,
             selectedKeys: options.selectedKeys || [],

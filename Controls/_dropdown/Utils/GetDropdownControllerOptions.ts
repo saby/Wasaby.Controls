@@ -4,6 +4,7 @@ function getDropdownControllerOptions(options: IDropdownControllerOptions): IDro
     let baseConfig = {...options};
     const ignoreOptions = [
         'buttonStyle',
+        'caption',
         'contrastBackground',
         'fontColorStyle',
         'fontSize',
