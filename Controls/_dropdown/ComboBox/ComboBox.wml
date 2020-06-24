@@ -22,7 +22,7 @@
         on:mouseleave="_handleMouseLeave()"
         on:keydown="_handleKeyDown()"
         placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
-        attr:class="controls-ComboBox-InputRender {{_popupId ? 'controls-Popup__isolatedFocusingContext'}} controls-ComboBox {{_popupId ? 'controls-ComboBox__opened'}}">
+        attr:class="{{_popupId ? 'controls-Popup__isolatedFocusingContext'}} controls-ComboBox {{_popupId ? 'controls-ComboBox__opened'}}">
    <ws:rightFieldWrapper>
       <span if="{{!_options.readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
          <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_popupId ? 'CollapseLight' : 'ExpandLight'}}"></span>

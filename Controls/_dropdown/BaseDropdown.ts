@@ -49,6 +49,10 @@ class BaseDropdown extends Control<IControlOptions> {
         this._initSelectorItems = data;
         this._controller.closeMenu();
     }
+
+    protected closeMenu(): void {
+        this._controller.closeMenu();
+    }
 }
 
 export = BaseDropdown;

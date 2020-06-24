@@ -1,31 +1,32 @@
-<ws:if data="{{!_options.lazyItemsLoading && !_hasItems && _viewModeButton === 'link'}}">
-    <div class="controls-text-default_theme-{{_options.theme}}
-                 controls-fontsize-{{_fontSizeButton}}_theme-{{_options.theme}}">{{_options.caption}}</div>
-</ws:if>
-<ws:else>
-    <Controls.buttons:Button
-            name="content"
-            attr:class="controls-MenuButton__BaseButton theme_{{_options.theme}}
-                        controls-MenuButton_theme_{{_options.theme}}
-                        controls-MenuButton__Wrapper_theme-{{_options.theme}}"
-            icon="{{_options.icon}}"
-            iconSize="{{_options.iconSize}}"
-            iconStyle="{{_options.iconStyle}}"
-            caption="{{_options.caption}}"
-            fontColorStyle="{{_fontColorStyleButton}}"
-            fontSize="{{_fontSizeButton}}"
-            inlineHeight="{{_inlineHeightButton}}"
-            buttonStyle="{{_buttonStyleButton}}"
-            contrastBackground="{{_contrastBackgroundButton}}"
-            viewMode="{{_viewModeButton}}"
-            tooltip="{{_options.tooltip}}"
-            style="{{_options.style}}"
-            transparent="{{_options.transparent}}"
-            size="{{_options.size}}"
-            on:click="_handleClick()"
-            on:mousedown="_handleMouseDown()"
-            on:mouseenter="_handleMouseEnter()"
-            on:mouseleave="_handleMouseLeave()"
-            on:keydown="_handleKeyDown()"
-    />
-</ws:else>
+<div class="controls-MenuButton_theme_{{_options.theme}}">
+    <ws:if data="{{!_options.lazyItemsLoading && !_hasItems && _viewModeButton === 'link'}}">
+        <div class="controls-text-default_theme-{{_options.theme}}
+                     controls-fontsize-{{_fontSizeButton}}_theme-{{_options.theme}}">{{_options.caption}}</div>
+    </ws:if>
+    <ws:else>
+        <Controls.buttons:Button
+                name="content"
+                attr:class="controls-MenuButton__BaseButton_theme-{{_options.theme}}
+                            controls-MenuButton__Wrapper_theme-{{_options.theme}}"
+                icon="{{_options.icon}}"
+                iconSize="{{_options.iconSize}}"
+                iconStyle="{{_options.iconStyle}}"
+                caption="{{_options.caption}}"
+                fontColorStyle="{{_fontColorStyleButton}}"
+                fontSize="{{_fontSizeButton}}"
+                inlineHeight="{{_inlineHeightButton}}"
+                buttonStyle="{{_buttonStyleButton}}"
+                contrastBackground="{{_contrastBackgroundButton}}"
+                viewMode="{{_viewModeButton}}"
+                tooltip="{{_options.tooltip}}"
+                style="{{_options.style}}"
+                transparent="{{_options.transparent}}"
+                size="{{_options.size}}"
+                on:click="_handleClick()"
+                on:mousedown="_handleMouseDown()"
+                on:mouseenter="_handleMouseEnter()"
+                on:mouseleave="_handleMouseLeave()"
+                on:keydown="_handleKeyDown()"
+        />
+    </ws:else>
+</div>

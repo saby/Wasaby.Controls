@@ -18,6 +18,7 @@ import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {RecordSet} from "Types/collection";
+import {getDropdownControllerOptions} from "./Utils/GetDropdownControllerOptions";
 
 interface IInputOptions extends IBaseDropdownOptions, IGroupedOptions, IIconSizeOptions,
     IMenuPopupOptions, IMenuControlOptions {
@@ -277,7 +278,8 @@ class Input extends BaseDropdown {
    }
 
    _getControllerOptions(options: IInputOptions): object {
-      return { ...options, ...{
+      const controllerOptions = getDropdownControllerOptions(options);
+      return { ...controllerOptions, ...{
             dataLoadCallback: this._dataLoadCallback,
             selectedKeys: options.selectedKeys || [],
             popupClassName: options.popupClassName || (options.showHeader || options.headerTemplate ?

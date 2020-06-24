@@ -11,6 +11,7 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 import {ISingleSelectableOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {RecordSet} from 'Types/collection';
+import {getDropdownControllerOptions} from "./Utils/GetDropdownControllerOptions";
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
@@ -119,10 +120,12 @@ class ComboBox extends BaseDropdown {
    }
 
    _getControllerOptions(options: IComboboxOptions): object {
-      return { ...options, ...{
+      const controllerOptions = getDropdownControllerOptions(options);
+      return { ...controllerOptions, ...{
             selectedKeys: [options.selectedKey],
             marker: false,
-            popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup') + ' controls-ComboBox-popup_theme-' + options.theme,
+            popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
+                           + ' controls-ComboBox-popup_theme-' + options.theme,
             typeShadow: 'suggestionsContainer',
             close: this._onClose,
             open: this._onOpen,
