@@ -763,9 +763,11 @@ var
             return this._headerModel;
         },
 
-        setHeader: function(columns) {
+        setHeader: function(columns, silent: boolean = false) {
             this._setHeader(columns);
-            this._nextModelVersion();
+            if (!silent) {
+                this._nextModelVersion();
+            }
         },
         isMultiHeader: function(columns?: any) {
             let result = false;
@@ -1216,17 +1218,21 @@ var
         // -------------------------- items --------------------------
         // -----------------------------------------------------------
 
-        _setColumns(columns: IGridColumn[]): void {
+        _setColumns(columns: IGridColumn[], silent: boolean = false): void {
             this._columns = this._prepareColumns(columns);
             this._ladder = _private.prepareLadder(this);
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
-            this._columnsVersion++;
+            if (!silent) {
+                this._columnsVersion++;
+            }
         },
 
-        setColumns(columns: IGridColumn[]): void {
-            this._setColumns(columns);
-            this._nextModelVersion();
+        setColumns(columns: IGridColumn[], silent: boolean = false): void {
+            this._setColumns(columns, silent);
+            if (!silent) {
+                this._nextModelVersion();
+            }
         },
 
         setLeftSpacing: function(leftSpacing) {
