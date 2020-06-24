@@ -5,6 +5,7 @@ import {Model} from 'Types/entity';
 class Multiline extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     protected _items: object;
+    protected _items2: object;
     protected _item: object;
 
     protected _beforeMount(): void {
@@ -80,6 +81,25 @@ class Multiline extends Control<IControlOptions> {
                 title: 'Тестирование',
                 secondTitle: 'тест6',
                 parent: 5
+            }
+        ].map((item) => {
+            return new Model({
+                rawData: item,
+                keyProperty: 'id'
+            });
+        });
+        this._items2  = [
+            {
+                id: 1,
+                title: 'Очень длинное название первой папки Очень длинное название первой папки Очень длинное название первой папки',
+                secondTitle: 'тест1',
+                parent: null
+            },
+            {
+                id: 2,
+                title: 'Длинное название второй папки Длинное название второй папки Длинное название второй папки Длинное название второй папки',
+                secondTitle: 'тест2',
+                parent: 1
             }
         ].map((item) => {
             return new Model({

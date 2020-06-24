@@ -36,8 +36,8 @@ export default {
     },
     drawBreadCrumbsItems: function (items, multiline? = false) {
         let visibleItems = [];
-        visibleItems = items.map(function (item, index, items) {
-            return _private.getItemData(index, items, multiline);
+        visibleItems = items.map((item, index, items) => {
+            return this.getItemData(index, items, multiline);
         });
         return visibleItems;
     }
