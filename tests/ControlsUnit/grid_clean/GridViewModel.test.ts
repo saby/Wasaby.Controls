@@ -221,7 +221,7 @@ describe('Controls/grid_clean/GridViewModel', () => {
                 assert.isFalse(gridViewModel.getCurrent().isLastItem);
 
                 gridViewModel.goToNext();
-                assert.isFalse(gridViewModel.getCurrent().isLastItem);
+                assert.isTrue(gridViewModel.getCurrent().isLastItem);
             });
 
             it('hasMoreData: false', () => {
@@ -230,6 +230,17 @@ describe('Controls/grid_clean/GridViewModel', () => {
 
                 gridViewModel.goToNext();
                 assert.isTrue(gridViewModel.getCurrent().isLastItem);
+            });
+
+            it('hasMoreData: true with infinity navigation ', () => {
+                gridViewModel._options.navigation = {
+                    view: 'infinity'
+                };
+                gridViewModel.setHasMoreData(true);
+                assert.isFalse(gridViewModel.getCurrent().isLastItem);
+
+                gridViewModel.goToNext();
+                assert.isFalse(gridViewModel.getCurrent().isLastItem);
             });
         });
     });
