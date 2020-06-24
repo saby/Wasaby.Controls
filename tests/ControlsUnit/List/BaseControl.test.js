@@ -6487,5 +6487,39 @@ define([
          });
       });
 
+      describe('_private.createEditingData()', () => {
+         let stubUpdateItemActions;
+         let baseControl;
+
+         beforeEach(async () => {
+            stubUpdateItemActions = sinon.stub(lists.BaseControl._private, 'updateItemActions');
+            let  cfg = {
+               viewName: 'Controls/List/ListView',
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               }),
+               editingConfig: {
+                  item: new entity.Model({rawData: { id: 1 }})
+               },
+            };
+            baseControl = new lists.BaseControl(cfg);
+            await baseControl._beforeMount(cfg);
+         });
+         afterEach(() => {
+            stubUpdateItemActions.restore();
+         });
+         it('should update item actions if edit in place sholdShowToolbar:true ', (done) => {
+            let stub = stubUpdateItemActions.callsFake(() => {
+               done();
+            });
+            baseControl._editInPlace._options.editingConfig.toolbarVisibility = true;
+            lists.BaseControl._private.createEditingData(baseControl, {});
+            stub.restore();
+         });
+      });
+
    });
 });

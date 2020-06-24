@@ -2006,7 +2006,7 @@ const _private = {
             );
             self._editingItemData = self._editInPlace.getEditingItemData();
 
-            if (options.itemActions && self._editInPlace.shouldShowToolbar()) {
+            if (options.itemActions || self._editInPlace.shouldShowToolbar()) {
                 _private.updateItemActions(self, options);
             }
         }
