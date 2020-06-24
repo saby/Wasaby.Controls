@@ -201,6 +201,18 @@ define(
             });
          });
 
+         it('_mouseEnterHandler', () => {
+            menu._beforeMount(config);
+
+            menu._handleMouseEnter();
+            assert.isOk(menu._loadDependenciesTimer);
+
+            menu._loadDependenciesTimer = null;
+            menu._options.readOnly = true;
+            menu._handleMouseEnter();
+            assert.isNull(menu._loadDependenciesTimer);
+         });
+
          it('_handleClick', () => {
             let eventStopped = false;
             const event = {

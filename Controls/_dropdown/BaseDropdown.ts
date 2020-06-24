@@ -19,8 +19,10 @@ class BaseDropdown extends Control<IControlOptions> {
     }
 
     protected _handleMouseEnter(event: SyntheticEvent): void {
-        this._loadDependenciesTimer = setTimeout(this._controller.loadDependencies.bind(this._controller),
-            PRELOAD_DEPENDENCIES_HOVER_DELAY);
+        if (!this._options.readOnly) {
+            this._loadDependenciesTimer = setTimeout(this._controller.loadDependencies.bind(this._controller),
+                PRELOAD_DEPENDENCIES_HOVER_DELAY);
+        }
     }
 
     protected _handleMouseLeave(event: SyntheticEvent): void {
