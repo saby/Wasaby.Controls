@@ -149,13 +149,15 @@ export default class ScrollController {
     afterMount(container: HTMLElement, triggers: IScrollTriggers): void {
         this.__mounted = true;
         this._setContainer(container);
-        this._setTriggers(triggers);
-        this._viewResize(this._container.offsetHeight, false);
-        this.registerObserver();
-        this._afterRenderHandler();
-        if (this._updateShadowModeAfterMount) {
-            this._updateShadowModeAfterMount();
-            this._updateShadowModeAfterMount = null;
+        if (this._container) {
+            this._setTriggers(triggers);
+            this._viewResize(this._container.offsetHeight, false);
+            this.registerObserver();
+            this._afterRenderHandler();
+            if (this._updateShadowModeAfterMount) {
+                this._updateShadowModeAfterMount();
+                this._updateShadowModeAfterMount = null;
+            }
         }
     }
 
