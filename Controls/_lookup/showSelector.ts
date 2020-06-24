@@ -19,9 +19,10 @@ function getPopupOptions(self): IStackPopupOptions {
             onClose: () => {
                 self._openingSelector = null;
                 self._closeHandler();
+                self._notify('selectorClose');
             }
         }
-    }
+    };
 }
 
 function getTemplateOptions(self, multiSelect) {
@@ -36,10 +37,8 @@ function getTemplateOptions(self, multiSelect) {
                 }
             }
         }
-    }
+    };
 }
-
-
 
 /**
  * Open selector
