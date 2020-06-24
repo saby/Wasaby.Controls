@@ -314,7 +314,7 @@ export class Controller {
         const changedItemsIds: Array<number | string> = [];
         this._collection.setEventRaising(false, true);
         this._collection.each((item) => {
-            if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
+            if (!item['[Controls/_display/GroupItem]']) {
                 const contents = Controller._getItemContents(item);
 				const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
                 const itemChanged = Controller._setItemActions(item, actionsContainer);

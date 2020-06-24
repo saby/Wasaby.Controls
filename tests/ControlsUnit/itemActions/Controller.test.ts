@@ -228,6 +228,18 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(actionsOf5.showed[0].title, 'message', 'first action of item 5 should be \'message\'');
         });
 
+        // T1.1.1.  Ннабор операций задаётся, в том числе для активного Item.
+        // то, что активный элемент был добавлен в исключения - по -видимому, рудимент,
+        // Возможно, предполагалось, что активному item опции задаются отдельно, поэтому если в рамках
+        // https://online.sbis.ru/opendoc.html?guid=716cc8d4-cea2-4335-b9b1-a8674bdaf5f9 будет реализована какая-то такая логика,
+        // возможно, следует вернуть проверку на active
+        it('should assign item actions for every item', () => {
+            collection.getItemBySourceKey(1).setActive(true);
+            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+            assert.isNotNull(actionsOf1, 'actions were not set to item 1');
+            assert.equal(actionsOf1.showed[0].title, 'message', 'first action of item 1 should be \'message\'');
+        });
+
         // T1.2.  В коллекции происходит набор конфигурации для шаблона ItemActions.
         it('should build a config for item action template', () => {
             const config = collection.getActionsTemplateConfig();
