@@ -1,8 +1,8 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/dropdown_new/Button/HeaderTemplate/Index');
+import controlTemplate = require('wml!Controls-demo/Menu/Popup/CloseButtonVisibility/MultiSelect/Index');
 import {Memory} from 'Types/source';
 
-class HeaderContentTemplate extends Control {
+class CloseButtonVisibility extends Control {
     protected _template: TemplateFunction = controlTemplate;
     protected _source: Memory;
 
@@ -18,6 +18,8 @@ class HeaderContentTemplate extends Control {
     }
 
     static _theme: string[] = ['Controls/Classes'];
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/dropdown_new/Button/Index'];
+
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
-export default HeaderContentTemplate;
+export default CloseButtonVisibility;

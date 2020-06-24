@@ -2006,7 +2006,7 @@ const _private = {
             );
             self._editingItemData = self._editInPlace.getEditingItemData();
 
-            if (options.itemActions && self._editInPlace.shouldShowToolbar()) {
+            if (options.itemActions || self._editInPlace.shouldShowToolbar()) {
                 _private.updateItemActions(self, options);
             }
         }
@@ -3038,6 +3038,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onItemClick(e, item, originalEvent) {
+        if (this._itemActionsController) {
+            this._itemActionsController.deactivateSwipe();
+        }
         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
             /*
              When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
@@ -3052,7 +3055,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
         }
-
     },
 
     beginEdit(options) {
