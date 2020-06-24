@@ -1,5 +1,7 @@
 import uDimension = require('Controls/Utils/getDimensions');
 import { IMarkerModel, IOptions, TVisibility, Visibility, TKey } from './interface';
+import { CollectionItem } from 'Controls/display';
+import { Model } from 'Types/entity';
 
 export class Controller {
    private _model: IMarkerModel;
@@ -110,7 +112,7 @@ export class Controller {
          return this._markedKey;
       }
 
-      const nextKey = nextItem.getContents().getKey();
+      const nextKey = this._getKey(nextItem);
       this.setMarkedKey(nextKey);
       return nextKey;
    }
@@ -125,7 +127,7 @@ export class Controller {
          return this._markedKey;
       }
 
-      const prevKey = prevItem.getContents().getKey();
+      const prevKey = this._getKey(prevItem);
       this.setMarkedKey(prevKey);
       return prevKey;
    }
@@ -140,9 +142,9 @@ export class Controller {
       const prevItem = this._model.getPrevByIndex(removedItemsIndex);
 
       if (nextItem) {
-         this.setMarkedKey(nextItem.getContents().getKey());
+         this.setMarkedKey(this._getKey(nextItem));
       } else if (prevItem) {
-         this.setMarkedKey(prevItem.getContents().getKey());
+         this.setMarkedKey(this._getKey(prevItem));
       } else {
          this.setMarkedKey(undefined);
       }
@@ -162,13 +164,25 @@ export class Controller {
 
       const item = this._model.getValidItemForMarker(firstItemIndex);
       if (item) {
-         const itemKey = item.getContents().getKey();
+         const itemKey = this._getKey(item);
          this.setMarkedKey(itemKey);
       } else {
          this.setMarkedKey(undefined);
       }
 
       return this._markedKey;
+   }
+
+   /*
+      TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+       https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+   */
+   private _getKey(item: CollectionItem<Model>): TKey {
+      let contents = item.getContents();
+      if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+         contents = contents[(contents as any).length - 1];
+      }
+      return contents.getKey();
    }
 
    private _setMarkerOnFirstItem(): TKey {
