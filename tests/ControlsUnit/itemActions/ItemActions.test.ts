@@ -954,6 +954,29 @@ describe('Controls/_itemActions/Controller', () => {
             });
         });
 
+        // Надо добавлять кнопку закрытия для случая контекстного меню (когда parentAction не задан)
+        it('should add close button for template config when parentAction isn\'t set', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
+            assert.isTrue(config.templateOptions.closeButtonVisibility);
+        });
+
+        // Надо добавлять кнопку закрытия для случая дополнительного меню parentAction._isMenu===true
+        it('should add close button for template config when parentAction._isMenu===true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            assert.isTrue(config.templateOptions.closeButtonVisibility);
+        });
+
+        // Не надо добавлять кнопку закрытия меню, если передан обычный parentAction
+        it('should add close button for template config when parentAction._isMenu===true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.isFalse(config.templateOptions.closeButtonVisibility);
+        });
+
         // T3.3. Если в метод передан contextMenu=true, то в config.direction.horizontal будет right, иначе left
         it('should set config.direction.horizontal as \'right\' when contextMenu=true', () => {
             const item3 = collection.getItemBySourceKey(3);
