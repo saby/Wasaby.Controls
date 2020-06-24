@@ -1,12 +1,14 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Template = require('wml!Controls-demo/BreadCrumbs/Multiline/MultilinePath');
 import {Model} from 'Types/entity';
+import {SyntheticEvent} from "Vdom/Vdom";
 
 class Multiline extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     protected _items: object;
     protected _items2: object;
     protected _item: object;
+    protected _info: string = '';
 
     protected _beforeMount(): void {
         this._items  = [
@@ -119,6 +121,10 @@ class Multiline extends Control<IControlOptions> {
                 keyProperty: 'id'
             });
         });
+    }
+
+    private _onItemClick(e: SyntheticEvent<MouseEvent>, item: Model): void {
+        this._info = '' + item.getId();
     }
 
     static _theme: string[] = ['Controls/Classes'];

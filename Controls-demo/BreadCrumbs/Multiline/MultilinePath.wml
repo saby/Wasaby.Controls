@@ -4,13 +4,15 @@
         <Controls.breadcrumbs:MultilinePath attr:id="double"
                                             items="{{_items}}"
                                             parentProperty="parent"
-                                            keyProperty="id"/>
+                                            keyProperty="id"
+                                            on:itemClick="_onItemClick()"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">MultilinePath - 2 crumbs</div>
         <Controls.breadcrumbs:MultilinePath items="{{_items2}}"
                                             parentProperty="parent"
-                                            keyProperty="id"/>
+                                            keyProperty="id"
+                                            on:itemClick="_onItemClick()"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">MultilinePath in miniCard</div>
@@ -26,11 +28,15 @@
                             <Controls.breadcrumbs:MultilinePath attr:id="double"
                                                                 items="{{_items}}"
                                                                 parentProperty="parent"
-                                                                keyProperty="id"/>
+                                                                keyProperty="id"
+                                                                on:itemClick="_onItemClick()"/>
                         </div>
                     </ws:bodyContentTemplate>
                 </Controls.popupTemplate:Dialog>
             </ws:template>
         </Controls.popup:PreviewerTarget>
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Нажали на элемент с id: {{_info}}</div>
     </div>
 </div>
