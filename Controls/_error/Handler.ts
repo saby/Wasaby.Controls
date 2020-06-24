@@ -1,8 +1,7 @@
-/// <amd-module name="Controls/_dataSource/_error/Handler" />
 import Mode from './Mode';
 import {
     ViewConfig as ParkingViewConfig
-} from '../_parking/Handler';
+} from './_parking/Handler';
 import { IVersionable } from 'Types/entity';
 import { HTTPStatus } from 'Browser/Transport';
 

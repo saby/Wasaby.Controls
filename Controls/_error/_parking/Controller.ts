@@ -1,11 +1,10 @@
-/// <amd-module name="Controls/_dataSource/_parking/Controller" />
-import { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';
+import { Handler, ViewConfig } from './Handler';
 import { constants } from 'Env/Env';
 import { load } from 'Core/library';
 import { Logger } from 'UI/Utils';
 import { PromiseCanceledError } from 'Types/entity';
 
-interface IParkingControllerOptions<TViewConfig = ViewConfig> {
+export interface IParkingControllerOptions<TViewConfig = ViewConfig> {
     handlers: Handler[];
     configField: string;
     viewConfig?: Partial<TViewConfig>;
