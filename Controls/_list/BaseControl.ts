@@ -927,11 +927,13 @@ const _private = {
             return bottomScroll < triggerOffset * 1.3;
         }
     },
-
+    calcViewSize(viewSize: number, pagingVisible: boolean): number {
+        return viewSize - (pagingVisible ? PAGING_PADDING : 0);
+    },
     needShowPagingByScrollSize(self, viewSize: number, viewPortSize: number): boolean {
         let result = self._pagingVisible;
 
-        const proportion = (viewSize / viewPortSize);
+        const proportion = (_private.calcViewSize(viewSize, result) / viewPortSize);
 
         // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
         if (!result) {
