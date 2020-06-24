@@ -16,7 +16,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
     protected _visibleItemsSecond: Record[] = [];
     protected _width: number = 0;
     protected ARROW_WIDTH: number = 0;
-    protected BREAD_CRUMB_MIN_WIDTH: number = 36;
+    protected BREAD_CRUMB_MIN_WIDTH: number = 0;
     protected DOTS_WIDTH: number = 0;
     protected _indexEdge: number = 0;
     protected _items: Record[];
@@ -41,19 +41,20 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
         if (this._options.items !== newOptions.items || this._width !== this._container.clientWidth
             || this._options.theme !== newOptions.theme) {
             this._items = newOptions.items;
-            this._visibleItemsFirst = [];
-            this._visibleItemsSecond = [];
             this._calculateBreadCrumbsToDraw(newOptions.items, this._width);
         }
     }
 
     private _initializeConstants(theme: string): void {
         this.ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow controls-BreadCrumbsView__arrow_theme-' + theme + ' icon-size icon-DayForwardBsLine"></span>');
-        const dotsWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title  controls-BreadCrumbsView__title_theme-' + theme + +' controls-BreadCrumbsView__crumb_theme-' + this._options.theme + '">...</div>');
+        const dotsWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title  controls-BreadCrumbsView__title_theme-' + theme + ' controls-BreadCrumbsView__crumb_theme-' + theme + '">...</div>');
         this.DOTS_WIDTH = this.ARROW_WIDTH + dotsWidth;
+        this.BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__crumb_withOverflow_theme-' + theme + ' controls-BreadCrumbsView__crumb_theme-' + theme + '"></div>');
     }
 
     private _calculateBreadCrumbsToDraw(items, containerWidth: number): void {
+        this._visibleItemsFirst = [];
+        this._visibleItemsSecond = [];
         const itemsWidth = this._getItemsWidth(items, this._options.displayProperty);
         const currentContainerWidth = itemsWidth.reduce((accumulator, currentValue) => accumulator + currentValue);
         let shrinkItemIndex;
@@ -165,8 +166,6 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
     private _onResize(): void {
         if (this._width !== this._container.clientWidth) {
             this._width = this._container.clientWidth;
-            this._visibleItemsFirst = [];
-            this._visibleItemsSecond = [];
             this._calculateBreadCrumbsToDraw(this._items, this._width);
         }
     }

@@ -50,8 +50,10 @@
 
 .controls-BreadCrumbsView__crumb_withOverflow {
    flex-shrink: 1;
-   min-width: @item_icon-size_default_breadcrumbsView + @item_text_min-width_breadcrumbs ;
    .text-overflow();
+}
+.controls-BreadCrumbsView__crumb_withOverflow_theme-@{themeName} {
+   min-width: @item_icon-size_default_breadcrumbsView + @item_text_min-width_breadcrumbs ;
 }
 .controls-BreadCrumbsView__crumb_withoutOverflow {
    flex-shrink: 0;
@@ -148,10 +150,6 @@
    overflow: hidden;
    min-width: 0;
    display: inline;
-}
-.controls-BreadCrumbsView__titleWrapper_withOverflow {
-   min-width: 36px;
-   flex-shrink: 1;
 }
 
 .controls-BreadCrumbsView__title_enabled {
