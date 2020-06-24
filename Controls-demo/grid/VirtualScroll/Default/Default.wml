@@ -8,7 +8,7 @@
                         source="{{_viewSource}}"
                         columns="{{_columns}}"
                         navigation="{{_options.navigation}}">
-                    <ws:virtualScrollConfig pageSize="{{100}}"/>
+                    <ws:virtualScrollConfig pageSize="{{20}}"/>
                 </Controls.grid:View>
             </Controls.scroll:Container>
         </ws:content>
