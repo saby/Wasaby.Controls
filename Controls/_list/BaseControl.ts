@@ -2695,7 +2695,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            _private.updateInitializedItemActions(this, newOptions, true);
+            _private.updateInitializedItemActions(this, newOptions, newOptions.itemActions !== this._options.itemActions);
         }
 
         if (this._itemsChanged) {
