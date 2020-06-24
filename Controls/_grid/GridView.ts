@@ -248,6 +248,7 @@ var
 
                 if (newCfg.columnScroll) {
                     _private.initColumnScroll(this, newCfg);
+                    this._setColumnScrollContainersAfterRender = true;
                 } else {
                     this._columnScrollController.destroy();
                     this._columnScrollController = null;
@@ -314,6 +315,15 @@ var
                 // if (oldOptions.root !== this._options.root) {
                 //     this._columnScrollController.resetSizes();
                 // }
+
+                if (this._setColumnScrollContainersAfterRender) {
+                    this._columnScrollController.setContainers({
+                        scrollContainer: this._children.columnScrollContainer,
+                        contentContainer: this._children.columnScrollContainer.getElementsByClassName(COLUMN_SCROLL_JS_SELECTORS.CONTENT)[0],
+                        stylesContainer: this._children.columnScrollStylesContainer
+                    });
+                    this._setColumnScrollContainersAfterRender = false;
+                }
 
                 // Если изменилось несколько опций, из за которых требуется пересчитать размеры коризонтального скролла,
                 // то перечет должен случиться только один раз.
