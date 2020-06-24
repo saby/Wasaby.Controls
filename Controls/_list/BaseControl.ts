@@ -2111,10 +2111,9 @@ const _private = {
      * Деактивирует свайп, если контроллер ItemActions проинициализирован
      * @param self
      */
-    closeSwipe(self) {
+    closeSwipe(self): void {
         if (self._listViewModel.isActionsAssigned()) {
-                self._itemActionsController.deactivateSwipe();
-            }
+            self._itemActionsController.deactivateSwipe();
         }
     },
 
