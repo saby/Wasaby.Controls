@@ -1435,6 +1435,7 @@ var
         getItemDataByItem(dispItem) {
             const self = this;
             const current = this._model.getItemDataByItem(dispItem);
+            const navigation = this._options.navigation;
             let stickyColumn;
 
             if (current._gridViewModelCached) {
@@ -1460,7 +1461,8 @@ var
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
             current.getSeparatorForColumn = _private.getSeparatorForColumn;
-            current.isLastItem = !this.getHasMoreData() && (this.getCount() - 1 === this.getIndex(dispItem));
+            current.isLastItem = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
+                                 (this.getCount() - 1 === this.getIndex(dispItem));
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())

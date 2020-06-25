@@ -657,7 +657,7 @@ const _private = {
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
-            return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
+            return self._sourceController.load(filter, self._options.sorting, direction, null, self._options.root).addCallback(function(addedItems) {
                 // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 // до реализации функционала и проблемы из новости делаем решение по месту:
                 // посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
@@ -2098,9 +2098,19 @@ const _private = {
      * @param options
      * @private
      */
-    updateInitializedItemActions(self, options: any) {
+    updateInitializedItemActions(self, options: any): void {
         if (self._itemActionsInitialized) {
             _private.updateItemActions(self, options);
+        }
+    },
+
+    /**
+     * Деактивирует свайп, если контроллер ItemActions проинициализирован
+     * @param self
+     */
+    closeSwipe(self) {
+        if (self._listViewModel.isActionsAssigned()) {
+            self._itemActionsController.deactivateSwipe();
         }
     }
 };
@@ -2675,6 +2685,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.updateInitializedItemActions(this, newOptions);
             });
         }
+        if (newOptions.itemActions !== this._options.itemActions) {
+            _private.closeSwipe(this);
+        }
 
         /*
          * Переинициализация ранее проинициализированных опций записи нужна при:
@@ -2691,7 +2704,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            _private.updateInitializedItemActions(this, newOptions);
+            _private.updateInitializedItemActions(this, newOptions, newOptions.itemActions !== this._options.itemActions);
         }
 
         if (this._itemsChanged) {
@@ -3005,9 +3018,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onItemClick(e, item, originalEvent) {
-        if (this._itemActionsController) {
-            this._itemActionsController.deactivateSwipe();
-        }
+        _private.closeSwipe(this);
         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
             /*
              When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.

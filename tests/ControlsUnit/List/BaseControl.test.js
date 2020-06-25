@@ -707,6 +707,7 @@ define([
                   hasMore: false
                }
             },
+            root: 'testRoot',
             searchValue: 'test'
          };
 
@@ -730,6 +731,7 @@ define([
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
          assert.isTrue(ctrl._listViewModel.getHasMoreData());
+         assert.isTrue(ctrl._sourceController.hasMoreData('down', 'testRoot'));
 
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
@@ -3113,6 +3115,7 @@ define([
             ctrl._itemActionsController.deactivateSwipe = () => {
                isDeactivateSwipeCalled = true;
             };
+            ctrl._listViewModel.setActionsAssigned(true);
             ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
             assert.isTrue(isDeactivateSwipeCalled);
          });
@@ -5319,6 +5322,7 @@ define([
          let items;
          let sandbox;
          let updateItemActionsCalled;
+         let isDeactivateSwipeCalled;
 
          beforeEach(() => {
             items = new collection.RecordSet({
@@ -5346,9 +5350,16 @@ define([
             };
             instance = new lists.BaseControl(cfg);
             instance.saveOptions(cfg);
+            instance._viewModelConstructor = cfg.viewModelConstructor;
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
+            instance._itemActionsController = {
+               deactivateSwipe: () => {
+                  isDeactivateSwipeCalled = true;
+               }
+            };
             sandbox = sinon.createSandbox();
             updateItemActionsCalled = false;
+            isDeactivateSwipeCalled = false;
          });
 
          afterEach(() => {
@@ -5372,7 +5383,7 @@ define([
          });
 
          // Необходимо вызывать updateItemActions при изиенении самих ItemActions
-         it('should call updateItemActions when ItemActions have been changed', async () => {
+         it('should call updateItemActions when ItemActions have changed', async () => {
             instance._itemActionsInitialized = true;
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
                updateItemActionsCalled = true;
@@ -5388,6 +5399,24 @@ define([
                ]
             });
             assert.isTrue(updateItemActionsCalled);
+         });
+
+         // Надо сбрасывать свайп, если изменились ItemActions. Иначе после их изменения свайп будет оставаться поверх записи
+         it('should deactivate swipe if it is activated and itemActions have changed', async () => {
+            instance._itemActionsInitialized = true;
+            instance._listViewModel.setActionsAssigned(true);
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {});
+            await instance._beforeUpdate({
+               ...cfg,
+               source: instance._options.source,
+               itemActions: [
+                  {
+                     id: 2,
+                     title: '456'
+                  }
+               ]
+            });
+            assert.isTrue(isDeactivateSwipeCalled);
          });
 
          // Необходимо вызывать updateItemActions при изиенении модели (Демка Controls-demo/Explorer/ExplorerLayout)
