@@ -66,6 +66,12 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
         return getStackConfig(popupOptions, this._getCurrentPopupId());
     }
 
+    protected _getIndicatorConfig(): void {
+        const baseConfig = super._getIndicatorConfig();
+        baseConfig.isGlobal = true;
+        return baseConfig;
+    }
+
     static openPopup(config: IStackPopupOptions): Promise<string> {
         return new Promise((resolve) => {
             const newCfg = getStackConfig(config);
