@@ -84,32 +84,21 @@ export class Controller {
       return this._markedKey;
    }
 
-   setMarkerAfterFilter(): TKey {
-      const item = this._model.getItemBySourceKey(this._markedKey);
-      if (item) {
-         if (!item.isMarked()) {
-            this._model.setMarkedKey(this._markedKey, true);
-         }
-      } else {
-         if (this._markerVisibility === Visibility.Visible || this._markerVisibility === Visibility.OnActivated && this._markedKey) {
-            this._markedKey = this._setMarkerOnFirstItem();
-         }
-      }
-      return this._markedKey;
-   }
-
    /**
     * Проставляет заново маркер в модели
     * @remark Не уведомляет о проставлении маркера
-    * Если markerVisibility='visible' и элемента с marked key не существует, то маркер поставим на первый элемент
+    * Если markerVisibility='visible' или ='onactivated' и маркер уже был проставлен и элемента с marked key не существует,
+    * то маркер поставим на первый элемент
     */
-   restoreMarker(): void {
+   restoreMarker(): TKey {
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item) {
          item.setMarked(true, true);
-      } else if (this._markerVisibility === Visibility.Visible) {
-         this._markedKey = this._setMarkerOnFirstItem(true);
+      } else if (this._markerVisibility === Visibility.Visible || this._markerVisibility === Visibility.OnActivated && this._markedKey) {
+         this._markedKey = this._setMarkerOnFirstItem();
       }
+
+      return this._markedKey;
    }
 
    /**

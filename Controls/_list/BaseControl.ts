@@ -377,7 +377,7 @@ const _private = {
 
     restoreModelState(self: any, options: any): void {
         if (self._markerController) {
-            self._markerController.restoreMarker();
+            self._markedKey = self._markerController.restoreMarker();
         } else {
             if (options.markerVisibility !== 'hidden') {
                 self._markerController = _private.createMarkerController(self, options);
@@ -2937,11 +2937,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._callbackAfterUpdate.forEach((callback) => {
                 callback();
             });
-
-            if (!isEqual(oldOptions.filter, this._options.filter) && this._markerController) {
-                this._markerController.setMarkerAfterFilter();
-            }
-
             this._callbackAfterUpdate = null;
         }
 
