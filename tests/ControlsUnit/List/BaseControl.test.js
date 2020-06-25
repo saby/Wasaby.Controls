@@ -3487,9 +3487,6 @@ define([
             });
          });
 
-
-
-
          it('cancelEdit', function() {
             var cfg = {
                viewName: 'Controls/List/ListView',
@@ -3672,6 +3669,10 @@ define([
          });
 
          it('readOnly, beginEdit', function() {
+            const sandbox = sinon.createSandbox();
+            sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
+               isCloseSwipeCalled = true;
+            });
             var opt = {
                test: 'test'
             };
@@ -3706,6 +3707,7 @@ define([
             var result = ctrl.beginEdit(opt);
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
+            sandbox.restore();
          });
 
          it('readOnly, beginAdd', function() {
