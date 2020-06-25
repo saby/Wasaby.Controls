@@ -145,7 +145,10 @@ define([
             updateItemActions: () => undefined,
             multiSelectVisibility: false,
             notify: () => undefined,
-            forceUpdate: () => undefined
+            forceUpdate: () => undefined,
+            readOnly: false,
+            listViewModel: listViewModel
+
          });
          eip._formController = {
             submit: function() {
@@ -2145,6 +2148,15 @@ define([
             eip.updateEditingData({listViewModel: listViewModel});
 
             assert.isTrue(spy.notCalled);
+         });
+
+         it('should reset editing data if readoonly', async (done) => {
+            sinon.stub(eip, '_setEditingItemData').callsFake(() => {
+               done();
+            });
+            eip.updateEditingData({
+               readOnly: true
+            });
          });
       });
 
