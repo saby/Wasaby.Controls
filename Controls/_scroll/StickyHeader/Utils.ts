@@ -1,4 +1,4 @@
-import Env = require('Env/Env');
+import {detection} from 'Env/Env';
 import getDimensions = require('Controls/Utils/getDimensions');
 
 let lastId = 0;
@@ -61,7 +61,7 @@ export interface IOffset {
  * https://developer.mozilla.org/ru/docs/Web/CSS/position
  */
 export function isStickySupport(): boolean {
-   return !Env.detection.isIE || Env.detection.IEVersion > 15;
+   return !detection.isIE || detection.IEVersion > 15;
 }
 
 export function getNextId(): number {
@@ -117,4 +117,20 @@ const CONTENTS_STYLE: string = 'contents';
 
 export function isHidden(element: HTMLElement): boolean {
     return !!element.closest('.ws-hidden');
+}
+
+// For android, use a large patch, because 1 pixel is not enough. For all platforms we use the minimum values since
+// there may be layout problems if the headers will have paddings, margins, etc.
+const
+    ANDROID_GAP_FIX_OFFSET: number = 3,
+    MOBILE_GAP_FIX_OFFSET: number = 1;
+
+export function getGapFixSize(): number {
+    let offset: number = 0;
+    if (detection.isMobileAndroid) {
+        offset = ANDROID_GAP_FIX_OFFSET;
+    } else if (detection.isMobilePlatform) {
+        offset = MOBILE_GAP_FIX_OFFSET;
+    }
+    return offset;
 }
