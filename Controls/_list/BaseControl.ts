@@ -1343,7 +1343,7 @@ const _private = {
      * @param newItems
      */
     shouldUpdateItemActions(newItems): boolean {
-        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged';
+        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged|editingContents';
         return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     },
 
@@ -1826,7 +1826,7 @@ const _private = {
     },
 
     createSelectionController(self: any, options: any): SelectionController {
-        if (!self._listViewModel || !self._items) {
+        if (!self._listViewModel || !self._items || options.multiSelectVisibility === 'hidden') {
             return null;
         }
 
@@ -1886,7 +1886,10 @@ const _private = {
    onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
       let result;
       if (!this._selectionController) {
-        this._createSelectionController();
+         this._selectionController = _private.createSelectionController(this, this._options);
+         if (this._selectionController === null) {
+             return;
+         }
       }
 
       this._selectionController.setLimit(limit);
@@ -2701,6 +2704,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.updateInitializedItemActions(this, newOptions);
             });
         }
+        // Если поменялись ItemActions, то закрываем свайп
         if (newOptions.itemActions !== this._options.itemActions) {
             _private.closeSwipe(this);
         }
@@ -3506,8 +3510,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (!this._selectionController) {
                     this._createSelectionController();
                 }
-                const result = this._selectionController.toggleItem(key);
-                _private.handleSelectionControllerResult(this, result);
+                if (this._selectionController) {
+                    const result = this._selectionController.toggleItem(key);
+                    _private.handleSelectionControllerResult(this, result);
+                }
                 this._notify('checkboxClick', [key, item.isSelected()]);
 
                 // Animation should be played only if checkboxes are visible.
@@ -3596,6 +3602,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         if (this._scrollController) {
             this._scrollController.itemsContainerReady(itemsContainerGetter);
+        }
+    },
+
+    /**
+     * Вызывает деактивацию свайпа когда список теряет фокус
+     * @private
+     */
+    _onListDeactivated: function() {
+        if (!this._itemActionsMenuId) {
+            _private.closeSwipe(this);
         }
     },
 

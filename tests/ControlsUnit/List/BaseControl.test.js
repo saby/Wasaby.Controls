@@ -1690,6 +1690,132 @@ define([
          assert.isTrue(notifySpy.called);
       });
 
+      it('_private.createSelectionController', async function() {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [],
+               excludedKeys: []
+            },
+            baseControl = new lists.BaseControl(lnCfg);
+
+
+         baseControl.saveOptions(lnCfg);
+         await baseControl._beforeMount(lnCfg);
+
+         let controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
+         assert.isNotNull(controller);
+
+         controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+         assert.isNull(controller);
+
+         baseControl._items = null;
+         controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+         assert.isNull(controller);
+
+         baseControl._listViewModel = null;
+         controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+         assert.isNull(controller);
+      });
+
+      it('_private.onSelectedTypeChanged', async function() {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [],
+               excludedKeys: [],
+               multiSelectVisibility: 'hidden'
+            },
+            baseControl = new lists.BaseControl(lnCfg);
+
+         const onSelectedTypeChanged = lists.BaseControl._private.onSelectedTypeChanged.bind(baseControl);
+
+         baseControl.saveOptions(lnCfg);
+         await baseControl._beforeMount(lnCfg);
+
+         const notifySpy = sinon.spy(baseControl, '_notify');
+
+         onSelectedTypeChanged('selectAll', undefined);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('listSelectedKeysCountChanged').called);
+
+         lnCfg.multiSelectVisibility = 'visible';
+
+         notifySpy.resetHistory();
+         onSelectedTypeChanged('selectAll', undefined);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
+
+         notifySpy.resetHistory();
+         onSelectedTypeChanged('selectAll', 3);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [3, true], {bubbling: true}).called);
+
+         notifySpy.resetHistory();
+         onSelectedTypeChanged('unselectAll', undefined);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
+
+         notifySpy.resetHistory();
+         onSelectedTypeChanged('toggleAll', undefined);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
+      });
+
+      it('_private.updateMarkerController', async function() {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'visible'
+            },
+            baseControl = new lists.BaseControl(cfg);
+
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+
+         const notifySpy = sinon.spy(baseControl._listViewModel, '_notify');
+
+         lists.BaseControl._private.updateMarkerController(baseControl, cfg);
+         assert.isFalse(notifySpy.called);
+
+         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
+         assert.isTrue(notifySpy.called);
+
+         notifySpy.resetHistory();
+         baseControl._listViewModel.setItems(new collection.RecordSet({
+            rawData: data,
+            keyProperty: 'id'
+         }));
+         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
+         assert.isTrue(notifySpy.called);
+      });
+
       it('_private.setMarkedKey', () => {
          const baseControl = {
             _markerController: {
@@ -4603,6 +4729,28 @@ define([
          });
       });
 
+      it('should close Swipe when list loses its focus (_onListDeactivated() is called)', () => {
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source
+         };
+         const instance = new lists.BaseControl(cfg);
+         const sandbox = sinon.createSandbox();
+         let isCloseSwipeCalled = false;
+         sandbox.replace(lists.BaseControl._private, 'closeSwipe', () => {
+            isCloseSwipeCalled = true;
+         });
+         instance._onListDeactivated();
+         assert.isTrue(isCloseSwipeCalled);
+         sandbox.restore();
+      });
+
       it('resolveIndicatorStateAfterReload', function() {
          let listViewModelCount = 0;
          var baseControlMock = {
@@ -4968,9 +5116,12 @@ define([
             _listViewModel: {
                getCount: () => 5
             },
-            handleSelectionControllerResult: () => {},
-            _updateInitializedItemActions: () => {}
+            handleSelectionControllerResult: () => {}
          };
+         const sandbox = sinon.createSandbox();
+         sandbox.replace(lists.BaseControl._private, 'updateInitializedItemActions', (self, options) => {
+            handleinitItemActionsCalled = true;
+         });
 
          lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
          assert.isFalse(clearSelectionCalled);
@@ -5005,6 +5156,8 @@ define([
          assert.isFalse(clearSelectionCalled);
          assert.isTrue(handleResetCalled);
          assert.isTrue(handleAddItemsCalled);
+
+         sandbox.restore();
       });
 
       it('should fire "drawItems" with new collection if source item has changed', async function() {
@@ -5135,33 +5288,87 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
-      // Смена маркера не должна ровоцировать обновление itemActions
-      it('should not call updateItemActions when marker has changed', () => {
-         let handleinitItemActionsCalled = false;
-
-         const self = {
-            _options: {
-               root: 5
-            },
-            _prevRootId: 5,
-            _selectionController: {
-               isAllSelected: () => true,
-               clearSelection: () => {},
-               handleReset: (items, prevRoot, rootChanged) => {},
-               handleAddItems: (items) => {}
-            },
-            _listViewModel: {
-               getCount: () => 5
-            },
-            handleSelectionControllerResult: () => {},
-            _updateInitializedItemActions: () => {
+      describe('onListChange with some values of \'properties\' should not reinitialize itemactions', () => {
+         let self;
+         let handleinitItemActionsCalled;
+         let items;
+         let sandbox;
+         beforeEach(() => {
+            handleinitItemActionsCalled = false;
+            self = {
+               _options: {
+                  root: 5
+               },
+               _prevRootId: 5,
+               _selectionController: {
+                  isAllSelected: () => true,
+                  clearSelection: () => {},
+                  handleReset: (items, prevRoot, rootChanged) => {},
+                  handleAddItems: (items) => {}
+               },
+               _listViewModel: {
+                  getCount: () => 5
+               },
+               handleSelectionControllerResult: () => {}
+            };
+            items = [{}];
+            sandbox = sinon.createSandbox();
+            sandbox.replace(lists.BaseControl._private, 'updateInitializedItemActions', (self, options) => {
                handleinitItemActionsCalled = true;
-            }
-         };
-         const items = [{}];
-         items.properties = 'marked';
-         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
-         assert.isFalse(handleinitItemActionsCalled);
+            });
+         });
+
+         afterEach(() => {
+            sandbox.restore();
+         });
+
+         // Смена маркера не должна провоцировать обновление itemActions
+         it('should not call updateItemActions when marker has changed', () => {
+            items.properties = 'marked';
+            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            assert.isFalse(handleinitItemActionsCalled);
+         });
+
+         // Свайп не должен провоцировать обновление itemActions
+         it('should not call updateItemActions when item has swiped', () => {
+            items.properties = 'swiped';
+            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            assert.isFalse(handleinitItemActionsCalled);
+         });
+
+         // Активация не должна провоцировать обновление itemActions
+         it('should not call updateItemActions when item has been activated', () => {
+            items.properties = 'active';
+            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            assert.isFalse(handleinitItemActionsCalled);
+         });
+
+         // Установка флага hovered не должна провоцировать обновление itemActions
+         it('should not call updateItemActions when item\'s hovered has been set', () => {
+            items.properties = 'hovered';
+            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            assert.isFalse(handleinitItemActionsCalled);
+         });
+
+         // Drag не должен провоцировать обновление itemActions
+         it('should not call updateItemActions when item has been dragged', () => {
+            items.properties = 'dragged';
+            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            assert.isFalse(handleinitItemActionsCalled);
+         });
+
+         // Ввод данных в строку редактирования не должен провоцировать обновление itemActions
+         it('should not call updateItemActions when item has been dragged', () => {
+            items.properties = 'editingContents';
+            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            assert.isFalse(handleinitItemActionsCalled);
+         });
+
+         // Если значение properties===undefined не указан, то обновление itemActions происходит по умолчанию
+         it('should call updateItemActions when properties is not set', () => {
+            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            assert.isTrue(handleinitItemActionsCalled);
+         });
       });
 
       it('_afterUpdate while loading do not update loadingState', async function() {

@@ -4,7 +4,7 @@ import { Memory } from 'Types/source';
 import { isEqual } from 'Types/object';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem} from 'Controls/display';
+import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
@@ -125,11 +125,17 @@ export class Controller {
 
     private _theme: string;
 
+    // Высота опций записи для рассчётов свайп-конфига после изменения видимости опций записи
+    private _actionsHeight: number;
+
+    // Текущее позиционирование опций записи
+    private _itemActionsPosition: TItemActionsPosition;
+
     /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
      * TODO Когда мы перестанем использовать старую listViewModel,
-     *  необходимо будет вычистить return методов update() и _assignActions(). Эти методы будут void
+     *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
      * @param options
      */
     update(options: IItemActionsControllerOptions): Array<number | string> {
@@ -140,21 +146,22 @@ export class Controller {
         this._contextMenuConfig = options.contextMenuConfig;
         this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         this._actionsAlignment = options.actionAlignment || DEFAULT_ACTION_ALIGNMENT;
+        this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION
+        this._collection = options.collection;
+        this._updateActionsTemplateConfig(options);
+
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
-            this._itemActionVisibilityCallback !== options.visibilityCallback ||
-            this._collection !== options.collection
+            this._itemActionVisibilityCallback !== options.visibilityCallback
         ) {
-            this._collection = options.collection;
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
             this._itemActionVisibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
         }
         if (this._commonItemActions || this._itemActionsProperty) {
-            result = this._assignActions(options.editingItem);
+            result = this._updateItemActions(options.editingItem);
         }
-        this._calculateActionsTemplateConfig(options);
         return result;
     }
 
@@ -168,7 +175,7 @@ export class Controller {
         this.setSwipeAnimation(ANIMATION_STATE.OPEN);
         this._setSwipeItem(itemKey);
         this._collection.setActiveItem(item);
-        if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
+        if (this._itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
         }
         this._collection.nextVersion();
@@ -310,10 +317,10 @@ export class Controller {
      * Вычисляет операции над записью для каждого элемента коллекции
      * Для старой модели listViewModel возвращает массив id изменённых значений
      * TODO Когда мы перестанем использовать старую listViewModel,
-     *  необходимо будет вычистить return методов update() и _assignActions(). Эти методы будут void
+     *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
      * @private
      */
-    private _assignActions(editingItem?: CollectionItem<Model>): Array<number | string> {
+    private _updateItemActions(editingItem?: CollectionItem<Model>): Array<number | string> {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
         const assignActionsOnItem = (item) => {
@@ -336,6 +343,10 @@ export class Controller {
         this._collection.setActionsAssigned(true);
 
         if (hasChanges) {
+            // Если поменялась видимость ItemActions через VisibilityCallback, то надо обновить конфиг свайпа
+            if (this._itemActionsPosition !== 'outside') {
+                this._updateSwipeConfig(this._actionsHeight);
+            }
             this._collection.nextVersion();
         }
 
@@ -400,13 +411,14 @@ export class Controller {
     /**
      * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
      */
-    private _calculateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
+    private _updateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
+
         this._collection.setActionsTemplateConfig({
             toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
             itemActionsClass: options.itemActionsClass,
             size: this._iconSize,
-            itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
+            itemActionsPosition: this._itemActionsPosition,
             actionAlignment: this._actionsAlignment,
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
         });
@@ -432,7 +444,7 @@ export class Controller {
         if (!item) {
             return;
         }
-
+        this._actionsHeight = actionsContainerHeight;
         let actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
         actionsTemplateConfig.actionAlignment = this._actionsAlignment;
