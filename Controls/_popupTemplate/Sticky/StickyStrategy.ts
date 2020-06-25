@@ -398,16 +398,23 @@ interface IPosition {
             width: document && document.body.clientWidth,
             height: document && document.body.clientHeight
          };
+      },
+      prepareRestrictiveCoords(popupCfg, targetCoords): void {
+         if (popupCfg.restrictiveContainerCoords) {
+            // Полная проверка на 4 стороны позволит удалить calculateRestrictionContainerCoords
+            if (popupCfg.restrictiveContainerCoords.top > targetCoords.top) {
+               targetCoords.top = popupCfg.restrictiveContainerCoords.top;
+            }
+         }
       }
    };
 
    export = {
       getPosition: function(popupCfg, targetCoords) {
          var position = {
-
             // position: 'fixed'
          };
-
+         _private.prepareRestrictiveCoords(popupCfg, targetCoords);
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'horizontal'));
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'vertical'));
          _private.setMaxSizes(popupCfg, position);
