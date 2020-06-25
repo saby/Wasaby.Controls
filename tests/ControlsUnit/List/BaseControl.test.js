@@ -4738,6 +4738,28 @@ define([
          });
       });
 
+      it('should close Swipe when list loses its focus (_onListDeactivated() is called)', () => {
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source
+         };
+         const instance = new lists.BaseControl(cfg);
+         const sandbox = sinon.createSandbox();
+         let isCloseSwipeCalled = false;
+         sandbox.replace(lists.BaseControl._private, 'closeSwipe', () => {
+            isCloseSwipeCalled = true;
+         });
+         instance._onListDeactivated();
+         assert.isTrue(isCloseSwipeCalled);
+         sandbox.restore();
+      });
+
       it('resolveIndicatorStateAfterReload', function() {
          let listViewModelCount = 0;
          var baseControlMock = {
