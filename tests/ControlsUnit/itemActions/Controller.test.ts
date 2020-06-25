@@ -524,8 +524,10 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(config.actionAlignment, 'horizontal');
         });
 
-        // T2.4.2 Если свайпнули элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный конфиг
-        // Возможно, стоит подумать над тем, чтобы не обновлять конфиг каждый раз при обновлении контроллера
+        // T2.4.2 Если свайпнули элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный actionsTemplateConfig.
+        // Такой кейс возникает, например, когда при открытом свайпе мы открыли ПМО или нажали на какую-либо опцию в свайпе.
+        // При этом ItemActions не изменились, свайп не закрылся, но его надо перерисовать, т.к. поменялось значение,
+        // которое возвращает visibilityCallback() для actions.
         it('should update actionsTemplateConfig with correct options when item is swiped', () => {
             const updateWithSameParams = () => {
                 itemActionsController.update(initializeControllerOptions({
@@ -539,13 +541,12 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.activateSwipe(3, 50);
             const config = collection.getActionsTemplateConfig();
             assert.equal(config.actionAlignment, 'horizontal');
-            // Не деактивировали свайп и обновили конфиг
+            // Не деактивировали свайп и вызвали обновление ItemActions
             updateWithSameParams();
             assert.equal(config.actionAlignment, 'horizontal');
         });
 
         // T2.4.3 Если свайпнули другой элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный конфиг
-        // Возможно, стоит подумать над тем, чтобы не обновлять конфиг каждый раз при обновлении контроллера
         it('should update actionsTemplateConfig with correct options when another item is swiped', () => {
             const updateWithSameParams = () => {
                 itemActionsController.update(initializeControllerOptions({
