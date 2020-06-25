@@ -1469,6 +1469,7 @@ const _private = {
         if (self._itemActionsMenuId) {
             _private.closePopup(self, currentPopup ? currentPopup.id : null);
             self._itemActionsController.deactivateSwipe();
+            self._listViewModel.setActiveItem(null);
         }
     },
 

@@ -663,6 +663,12 @@ describe('Controls/_itemActions/Controller', () => {
 
             swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
             assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
+
+            const collectionVersion = collection.getVersion();
+            itemActionsController.deactivateSwipe();
+            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
+            assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
+            assert.equal(collection.getVersion(), collectionVersion, 'Version changed.');
         });
 
         // T2.13 При обновлении опций записи надо также обновлять конфиг свайпа
