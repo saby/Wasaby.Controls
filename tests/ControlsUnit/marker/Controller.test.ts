@@ -151,16 +151,36 @@ describe('Controls/marker/Controller', () => {
       });
    });
 
-   it('restoreSelection', () => {
-      controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
-      model.setItems(items);
+   describe('restoreMarker', () => {
+      it('markerVisibility = onactivated', () => {
+         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 1});
+         model.setItems(items);
 
-      const notifyLaterSpy = spy(model, '_notifyLater');
+         const notifyLaterSpy = spy(model, '_notifyLater');
 
-      controller.restoreMarker();
+         controller.restoreMarker();
 
-      assert.isFalse(notifyLaterSpy.called);
-      assert.isTrue(model.getItemBySourceKey(1).isMarked());
+         assert.isFalse(notifyLaterSpy.called, 'restoreMarker не должен уведомлять о простановке маркера');
+         assert.isTrue(model.getItemBySourceKey(1).isMarked());
+      });
+
+      it('markerVisibility = visible and not exists item with marked key', () => {
+         controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const notifyLaterSpy = spy(model, '_notifyLater');
+
+         controller.restoreMarker();
+
+         assert.isFalse(notifyLaterSpy.called, 'restoreMarker не должен уведомлять о простановке маркера');
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+      });
    });
 
    it('move marker next', () => {

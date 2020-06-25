@@ -1655,6 +1655,41 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged').called);
       });
 
+      it('_private.updateMarkerController', async function() {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'visible'
+            },
+            baseControl = new lists.BaseControl(cfg);
+
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+
+         const notifySpy = sinon.spy(baseControl._listViewModel, '_notify');
+
+         lists.BaseControl._private.updateMarkerController(baseControl, cfg);
+         assert.isFalse(notifySpy.called);
+
+         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
+         assert.isTrue(notifySpy.called);
+
+         notifySpy.resetHistory();
+         baseControl._listViewModel.setItems(new collection.RecordSet({
+            rawData: data,
+            keyProperty: 'id'
+         }));
+         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
+         assert.isTrue(notifySpy.called);
+      });
+
       it('_private.createSelectionController', async function() {
          const
             lnSource = new sourceLib.Memory({

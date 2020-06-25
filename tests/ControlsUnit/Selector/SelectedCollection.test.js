@@ -62,26 +62,32 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
          assert.isTrue(isNotifyCloseInfoBox);
       });
 
-      it('_openInfoBox', function() {
+      it('_openInfoBox', async () => {
          const items = [1, 2, 3, 4];
          const lookupCollection = new lookup.Collection();
          const stickyOpen = Sticky.openPopup;
+         const stickyId = 'testId';
          let templateOptions;
+         let stickyOptions;
 
          items.clone = () => items.slice();
          lookupCollection._options.items = items;
          lookupCollection._container = {};
          Sticky.openPopup = (config) => {
-            templateOptions = config.templateOptions;
-            return Promise.resolve('testId');
+            stickyOptions = config;
+            return Promise.resolve(stickyId);
          };
 
-         lookupCollection._openInfoBox();
-         assert.deepEqual(templateOptions.items, items);
+         await lookupCollection._openInfoBox();
+         assert.deepEqual(stickyOptions.templateOptions.items, items);
+         assert.equal(lookupCollection._infoBoxStickyId, stickyId);
+
+         stickyOptions.eventHandlers.onClose();
+         assert.isNull(lookupCollection._infoBoxStickyId);
 
          // Проверка на то что список элементов не будет меняться по ссылке
-         templateOptions.items.push(10);
-         assert.notDeepEqual(templateOptions.items, items);
+         stickyOptions.templateOptions.items.push(10);
+         assert.notDeepEqual(stickyOptions.templateOptions.items, items);
          Sticky.openPopup = stickyOpen;
       });
 

@@ -154,6 +154,23 @@ var
         setGrabbing(self, isGrabbing: boolean): void {
             self._isGrabbing = isGrabbing;
             self._viewGrabbingClasses = isGrabbing ? DRAG_SCROLL_JS_SELECTORS.CONTENT_GRABBING : '';
+        },
+        applyNewOptionsAfterReload(self, oldOptions, newOptions): void {
+            // todo remove isEqualWithSkip by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
+            self._columnsHaveBeenChanged = !GridIsEqualUtil.isEqualWithSkip(oldOptions.columns, newOptions.columns,
+                { template: true, resultTemplate: true });
+            if (self._columnsHaveBeenChanged) {
+                if (oldOptions.task1179424529) {
+                    // Набор колонок необходимо менять после перезагрузки. Иначе возникает ошибка, когда список
+                    // перерисовывается с новым набором колонок, но со старыми данными. Пример ошибки:
+                    // https://online.sbis.ru/opendoc.html?guid=91de986a-8cb4-4232-b364-5de985a8ed11
+                    self._doAfterReload(() => {
+                        self._listModel.setColumns(newOptions.columns);
+                    });
+                } else {
+                    self._listModel.setColumns(newOptions.columns);
+                }
+            }
         }
     },
     GridView = ListView.extend({
@@ -233,7 +250,6 @@ var
         _beforeUpdate(newCfg) {
             GridView.superclass._beforeUpdate.apply(this, arguments);
             const self = this;
-            this._columnsHaveBeenChanged = !GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true });
             if (this._options.resultsPosition !== newCfg.resultsPosition) {
                 if (this._listModel) {
                     this._listModel.setResultsPosition(newCfg.resultsPosition);
@@ -257,10 +273,7 @@ var
             if (this._options.resultsVisibility !== newCfg.resultsVisibility) {
                 this._listModel.setResultsVisibility(newCfg.resultsVisibility);
             }
-            // todo remove isEqualWithSkip by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
-            if (this._columnsHaveBeenChanged) {
-                this._listModel.setColumns(newCfg.columns);
-            }
+            _private.applyNewOptionsAfterReload(self, this._options, newCfg);
             // Вычисления в setHeader зависят от columnScroll.
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);

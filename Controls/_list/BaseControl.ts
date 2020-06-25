@@ -218,6 +218,13 @@ const _private = {
         }
     },
 
+    setReloadingState(self, state): void {
+        const view = self._children && self._children.listView;
+        if (view && view.setReloadingState) {
+            view.setReloadingState(state);
+        }
+    },
+
     reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
@@ -240,7 +247,9 @@ const _private = {
             }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
+            _private.setReloadingState(self, true);
             self._sourceController.load(filter, sorting, null, sourceConfig, cfg.root).addCallback(function(list) {
+                _private.setReloadingState(self, false);
                 _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
                 if (list.getCount()) {
@@ -1948,11 +1957,16 @@ const _private = {
    },
 
     updateMarkerController(self: any, options: any): void {
+        const optionsHasMarkedKey = options.hasOwnProperty('markedKey');
+        const notify = optionsHasMarkedKey && self._options.markedKey !== options.markedKey
+            || self._options.markerVisibility !== options.markerVisibility;
+
+        // если маркер не поменялся в опциях, то не нужно нотифаить
         self._markedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
-        });
+            markedKey: optionsHasMarkedKey ? options.markedKey : self._markedKey
+        }, !notify);
     },
 
     createDndListController(self: any, options: any): DndFlatController|DndTreeController {
@@ -2205,7 +2219,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _needBottomPadding: false,
     _noDataBeforeReload: null,
-    _intertialScrolling: null,
+    _inertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
 
     _keepScrollAfterReload: false,
