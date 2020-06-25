@@ -44,7 +44,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                items: [{
                   text: 'TOP START',
                   cfg: {
-                     message: TOP START,
+                     message: 'TOP START',
                      targetSide: 'top',
                      alignment: 'start'
                   }
