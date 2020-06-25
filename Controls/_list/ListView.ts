@@ -86,6 +86,8 @@ var ListView = BaseControl.extend(
         _defaultItemTemplate: defaultItemTemplate,
         _itemOutputWrapper: ItemOutputWrapper,
         _pendingRedraw: false,
+        _reloadInProgress: false,
+        _callbackAfterReload: null,
 
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
@@ -102,6 +104,31 @@ var ListView = BaseControl.extend(
             };
             this._onMarkedKeyChangedHandlerFnc = this._onMarkedKeyChangedHandler.bind(this);
         },
+
+        _doAfterReload(callback): void {
+            if (this._reloadInProgress) {
+                if (this._callbackAfterReload) {
+                    this._callbackAfterReload.push(callback);
+                } else {
+                    this._callbackAfterReload = [callback];
+                }
+            } else {
+                callback();
+            }
+        },
+
+        setReloadingState(state): void {
+            this._reloadInProgress = state;
+            if (state === false && this._callbackAfterReload) {
+                if (this._callbackAfterReload) {
+                    this._callbackAfterReload.forEach((callback) => {
+                        callback();
+                    });
+                    this._callbackAfterReload = null;
+                }
+            }
+        },
+
        _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions, this);
             if (newOptions.groupTemplate) {
