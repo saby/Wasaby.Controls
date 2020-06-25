@@ -223,6 +223,7 @@ export class Controller {
             return;
         }
         const menuActions = this._getMenuActions(item, parentAction);
+        const isActionMenu = !!parentAction && !parentAction._isMenu;
 
         if (!menuActions || menuActions.length === 0) {
             return;
@@ -235,8 +236,7 @@ export class Controller {
             keyProperty: 'id'
         });
         const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || DEFAULT_ACTION_SIZE;
-        const showHeader = !!parentAction && !parentAction._isMenu;
-        const headConfig = showHeader ? {
+        const headConfig = isActionMenu ? {
             caption: parentAction.title,
             icon: parentAction.icon,
             iconSize
@@ -250,12 +250,12 @@ export class Controller {
             dropdownClassName: 'controls-itemActionsV__popup',
             ...this._contextMenuConfig,
             root,
-            showHeader,
+            showHeader: isActionMenu,
             headConfig,
             iconSize,
-            closeButtonVisibility: !showHeader && !root
+            closeButtonVisibility: !isActionMenu && !root
         };
-        return {
+        const menuConfig: IMenuConfig = {
             opener,
             template: 'Controls/menu:Popup',
             actionOnScroll: 'close',
@@ -266,17 +266,20 @@ export class Controller {
                 vertical: 'top',
                 horizontal: 'right'
             },
-            direction: {
-                horizontal: isContextMenu ? 'right' : 'left'
-            },
             fittingMode: {
                 vertical: 'overflow',
                 horizontal: 'adaptive'
             },
-            className: showHeader ? 'controls-MenuButton_link_iconSize-medium_popup' : '' + `controls-ItemActions__popup__list_theme-${this._theme}`,
+            className: isActionMenu ? 'controls-MenuButton_link_iconSize-medium_popup ' : '' + `controls-ItemActions__popup__list_theme-${this._theme}`,
             nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
             autofocus: false
         };
+        if (!isActionMenu) {
+            menuConfig.direction = {
+                horizontal: isContextMenu ? 'right' : 'left'
+            }
+        }
+        return menuConfig;
     }
 
     /**
