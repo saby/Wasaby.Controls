@@ -1346,7 +1346,7 @@ const _private = {
      * @param newItems
      */
     shouldUpdateItemActions(newItems): boolean {
-        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged';
+        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged|editingContents';
         return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     },
 
