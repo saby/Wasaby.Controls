@@ -2937,6 +2937,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._callbackAfterUpdate.forEach((callback) => {
                 callback();
             });
+
+            if (!isEqual(oldOptions.filter, this._options.filter) && this._markerController) {
+                this._markerController.setMarkerAfterFilter();
+            }
+
             this._callbackAfterUpdate = null;
         }
 

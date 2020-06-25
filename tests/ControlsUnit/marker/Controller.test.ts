@@ -357,24 +357,4 @@ describe('Controls/marker/Controller', () => {
       controller.handleRemoveItems(2);
       assert.equal(model.getMarkedKey(), 2);
    });
-
-   it('onactivated and filter after set marker', () => {
-      controller = new MarkerController({model: model, markerVisibility: 'onactivated', markedKey: undefined});
-
-      let result = controller.setMarkedKey(3);
-      assert.equal(result, 3);
-      assert.equal(model.getMarkedKey(), 3);
-
-      model.setItems(new RecordSet({
-         rawData: [
-            {id: 1},
-            {id: 2}
-         ],
-         keyProperty: 'id'
-      }));
-
-      result = controller.update({model: model, markerVisibility: 'onactivated', markedKey: 3});
-      assert.equal(result, 1);
-      assert.equal(model.getMarkedKey(), 1);
-   });
 });
