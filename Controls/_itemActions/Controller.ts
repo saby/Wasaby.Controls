@@ -174,11 +174,14 @@ export class Controller {
      * Деактивирует Swipe для меню операций с записью
      */
     deactivateSwipe(): void {
-        this._setSwipeItem(null);
-        this._collection.setActiveItem(null);
-        this._collection.setSwipeConfig(null);
-        this._collection.setSwipeAnimation(null);
-        this._collection.nextVersion();
+        const currentSwipedItem = this.getSwipeItem();
+        if (currentSwipedItem) {
+            this._setSwipeItem(null);
+            this._collection.setActiveItem(null);
+            this._collection.setSwipeConfig(null);
+            this._collection.setSwipeAnimation(null);
+            this._collection.nextVersion();
+        }
     }
 
     /**
