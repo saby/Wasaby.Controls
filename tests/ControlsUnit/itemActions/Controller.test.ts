@@ -228,6 +228,18 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(actionsOf5.showed[0].title, 'message', 'first action of item 5 should be \'message\'');
         });
 
+        // T1.1.1.  Ннабор операций задаётся, в том числе для активного Item.
+        // то, что активный элемент был добавлен в исключения - по -видимому, рудимент,
+        // Возможно, предполагалось, что активному item опции задаются отдельно, поэтому если в рамках
+        // https://online.sbis.ru/opendoc.html?guid=716cc8d4-cea2-4335-b9b1-a8674bdaf5f9 будет реализована какая-то такая логика,
+        // возможно, следует вернуть проверку на active
+        it('should assign item actions for every item', () => {
+            collection.getItemBySourceKey(1).setActive(true);
+            const actionsOf1 = collection.getItemBySourceKey(1).getActions();
+            assert.isNotNull(actionsOf1, 'actions were not set to item 1');
+            assert.equal(actionsOf1.showed[0].title, 'message', 'first action of item 1 should be \'message\'');
+        });
+
         // T1.2.  В коллекции происходит набор конфигурации для шаблона ItemActions.
         it('should build a config for item action template', () => {
             const config = collection.getActionsTemplateConfig();
@@ -512,6 +524,47 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(config.actionAlignment, 'horizontal');
         });
 
+        // T2.4.2 Если свайпнули элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный конфиг
+        // Возможно, стоит подумать над тем, чтобы не обновлять конфиг каждый раз при обновлении контроллера
+        it('should update actionsTemplateConfig with correct options when item is swiped', () => {
+            const updateWithSameParams = () => {
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: horizontalOnlyItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+            };
+            updateWithSameParams();
+            itemActionsController.activateSwipe(3, 50);
+            const config = collection.getActionsTemplateConfig();
+            assert.equal(config.actionAlignment, 'horizontal');
+            // Не деактивировали свайп и обновили конфиг
+            updateWithSameParams();
+            assert.equal(config.actionAlignment, 'horizontal');
+        });
+
+        // T2.4.3 Если свайпнули другой элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный конфиг
+        // Возможно, стоит подумать над тем, чтобы не обновлять конфиг каждый раз при обновлении контроллера
+        it('should update actionsTemplateConfig with correct options when another item is swiped', () => {
+            const updateWithSameParams = () => {
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: horizontalOnlyItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+            };
+            updateWithSameParams();
+            itemActionsController.activateSwipe(3, 50);
+            const config = collection.getActionsTemplateConfig();
+            assert.equal(config.actionAlignment, 'horizontal');
+            // Не деактивировали свайп, активировали ноывый и обновили конфиг
+            itemActionsController.activateSwipe(2, 100);
+            updateWithSameParams();
+            assert.equal(config.actionAlignment, 'vertical');
+        });
+
         // T2.6. Устанавливается swiped элемент коллекции
         // T2.7. Устанавливается активный элемент коллекции
         // T2.8. Метод getSwipedItem возвращает корректный swiped элемент
@@ -588,6 +641,29 @@ describe('Controls/_itemActions/Controller', () => {
 
             swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
             assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
+        });
+
+        // T2.13 При обновлении опций записи надо также обновлять конфиг свайпа
+        it('should update swipe config on item actions update', () => {
+            itemActionsController.activateSwipe(1, 50);
+            const config = collection.getSwipeConfig();
+            assert.exists(config, 'Swipe activation should make configuration after swipe activation');
+            assert.equal(config.itemActions.showed[1].title, 'Time management', 'First action should be \'message\'');
+            const itemActionsClone = [...itemActions];
+            itemActionsClone.splice(3, 1,{
+                id: 4,
+                icon: 'icon-PupaAndLupa',
+                title: 'Pupa and Lupa',
+                showType: TItemActionShowType.TOOLBAR
+            });
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions: itemActionsClone,
+                theme: 'default'
+            }));
+            const config = collection.getSwipeConfig();
+            assert.exists(config, 'Swipe activation should make configuration after update item actions');
+            assert.equal(config.itemActions.showed[1].title, 'Pupa and Lupa', 'First action should be \'Pupa and Lupa\'');
         });
     });
 
