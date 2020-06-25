@@ -39,10 +39,23 @@ class PendingClass {
     private _pendingsCounter: number = 0;
     private _pendings: IRootPendingStorage = {};
     private _parallelDef: IParallelDef = {};
+    private _beforeUnloadHandler: (event: Event) => void;
 
     private readonly _notify: TNotifier;
 
     constructor(options: IPendingOptions) {
+        if (typeof window !== 'undefined') {
+            this._beforeUnloadHandler = (event: Event): void => {
+                // We shouldn't close the tab if there are any pendings
+                if (this.hasPendings()) {
+                    event.preventDefault();
+                    event.returnValue = '';
+                } else {
+                    window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+                }
+            };
+            window.addEventListener('beforeunload', this._beforeUnloadHandler);
+        }
         this._notify = options.notifyHandler;
     }
 
@@ -196,6 +209,9 @@ class PendingClass {
     destroy(): void {
         this._pendings = null;
         this._parallelDef = null;
+        if (typeof window !== 'undefined') {
+            window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+        }
     }
 }
 
