@@ -178,7 +178,25 @@ describe('Controls/marker/Controller', () => {
 
          controller.restoreMarker();
 
-         assert.isFalse(notifyLaterSpy.called, 'restoreMarker не должен уведомлять о простановке маркера');
+         assert.isFalse(notifyLaterSpy.called);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+      });
+
+      it('markerVisibility = onactivated and not exists item with marked key', () => {
+         controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const notifyLaterSpy = spy(model, '_notifyLater');
+
+         controller.restoreMarker();
+
+         assert.isFalse(notifyLaterSpy.called);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
       });
    });
