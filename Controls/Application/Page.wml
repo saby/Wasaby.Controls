@@ -55,7 +55,7 @@
                                                          attr:class="bodyContent__zIndex-context"
                                                          template="{{ _options.content }}"
                                                          scope="{{ templateConfig }}" />
-                                                      <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
+                                                      <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}" isGlobal="{{true}}">
                                                          <div></div>
                                                       </Controls.LoadingIndicator>
 
