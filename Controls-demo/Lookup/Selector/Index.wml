@@ -15,7 +15,7 @@
       </div>
 
       <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
-         <h4>Reuqire single selection</h4>
+         <h4>Require single selection</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"
                  displayProperty="title"
