@@ -1954,11 +1954,16 @@ const _private = {
    },
 
     updateMarkerController(self: any, options: any): void {
+        const optionsHasMarkedKey = options.hasOwnProperty('markedKey');
+        const notify = optionsHasMarkedKey && self._options.markedKey !== options.markedKey
+            || self._options.markerVisibility !== options.markerVisibility;
+
+        // если маркер не поменялся в опциях, то не нужно нотифаить
         self._markedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
-        });
+            markedKey: optionsHasMarkedKey ? options.markedKey : self._markedKey
+        }, !notify);
     },
 
     createDndListController(self: any, options: any): DndFlatController|DndTreeController {
