@@ -141,7 +141,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
         return {
             itemTemplate,
             backgroundStyle: 'default',
-            displayMode: 'default'
+            displayMode: 'default',
             fontSize: 'xs',
             fontColorStyle: 'label'
         };
