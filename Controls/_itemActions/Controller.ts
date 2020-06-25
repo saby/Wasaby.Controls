@@ -99,6 +99,10 @@ export interface IItemActionsControllerOptions {
      * Конфигурация для контекстного меню опции записи.
      */
     contextMenuConfig: IContextMenuConfig
+    /**
+     * Редактируемая запись
+     */
+    editingItem: CollectionItem<Model>
 }
 
 /**
@@ -148,7 +152,7 @@ export class Controller {
             this._itemActionVisibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
         }
         if (this._commonItemActions || this._itemActionsProperty) {
-            result = this._assignActions();
+            result = this._assignActions(options.editingItem);
         }
         this._calculateActionsTemplateConfig(options);
         return result;
@@ -477,7 +481,7 @@ export class Controller {
     private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
         let showed;
         const actions = this._collectActionsForItem(item);
-        if (this._collection.isEditing() && !item.isEditing()) {
+        if (this._collection.isEditing() && ((typeof item.isEditing === 'function') && !item.isEditing() || !item.isEditing)) {
             showed = []
         } else if (actions.length > 1) {
             showed = actions.filter((action) =>

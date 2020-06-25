@@ -2067,6 +2067,7 @@ const _private = {
             self._itemActionsController = new ItemActionsController();
         }
         const editingConfig = self._listViewModel.getEditingConfig();
+        const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
         let editArrowAction: IItemAction;
         if (options.showEditArrow) {
@@ -2082,6 +2083,7 @@ const _private = {
         }
         // Гарантированно инициализируем шаблоны, если это ещё не произошло
         const itemActionsChangeResult = self._itemActionsController.update({
+            editingItem: editingItemData,
             collection: self._listViewModel,
             itemActions: options.itemActions,
             itemActionsProperty: options.itemActionsProperty,
