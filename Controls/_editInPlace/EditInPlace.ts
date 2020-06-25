@@ -685,6 +685,8 @@ export default class EditInPlace {
                 // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
                 this._pendingInputRenderState = PendingInputRenderState.Rendering;
             }
+        } else {
+            this._setEditingItemData(null);
         }
     }
 
