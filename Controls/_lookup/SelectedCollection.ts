@@ -140,6 +140,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
          },
          eventHandlers: {
             onClose: () => {
+               this._notify('closeInfoBox', []);
                this._infoBoxStickyId = null;
             }
          }
@@ -147,7 +148,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
       this._notify('openInfoBox', [config]);
 
-      Sticky.openPopup(config).then((popupId) => {
+      return Sticky.openPopup(config).then((popupId) => {
          this._infoBoxStickyId = popupId;
       });
    }

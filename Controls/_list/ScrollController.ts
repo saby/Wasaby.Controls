@@ -164,9 +164,7 @@ export default class ScrollController {
     update(options: IOptions): void {
         if (options.collection && this._options.collection !== options.collection) {
             this._initModelObserving(options);
-            if (!this._virtualScroll || options.virtualScrollConfig) {
-                this._initVirtualScroll(options);
-            }
+            this._initVirtualScroll(options);
             this._options.collection = options.collection;
         }
 
@@ -390,7 +388,7 @@ export default class ScrollController {
     private _initVirtualScroll(options: IOptions): void {
         if (options.collection) {
             this._virtualScroll = new VirtualScroll(
-                options.virtualScrollConfig,
+                options.virtualScrollConfig || {},
                 {
                     viewport: this._viewportHeight,
                     scroll: this._viewHeight,
