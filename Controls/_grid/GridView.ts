@@ -574,19 +574,25 @@ var
                 });
             }
         },
-        _getCellByEventTarget(event: MouseEvent): HTMLElement {
-            return event.target.closest('.controls-Grid__row-cell');
+        _getCellByEventTarget(target: HTMLElement): HTMLElement {
+            return target.closest('.controls-Grid__row-cell');
         },
         _getCellIndexByEventTarget(event): number {
             if (!event) {
                 return null;
             }
-            const gridRow = event.target.closest('.controls-Grid__row');
+            let target = event.target;
+
+            // В FF целью события может быть элемент #text, у которого нет метода closest, в этом случае рассматриваем как цель его родителя.
+            if (target && !target.closest) {
+                target = target.parentElement;
+            }
+            const gridRow = target.closest('.controls-Grid__row');
             if (!gridRow) {
                 return null;
             }
             const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
-            const currentCell = this._getCellByEventTarget(event);
+            const currentCell = this._getCellByEventTarget(target);
             const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
             return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
         },
