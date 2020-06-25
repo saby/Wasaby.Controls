@@ -202,6 +202,7 @@ describe('Controls/_itemActions/Controller', () => {
             editArrowVisibilityCallback: options ? options.editArrowVisibilityCallback: null,
             contextMenuConfig: options ? options.contextMenuConfig: null,
             iconSize: options ? options.iconSize: 'm',
+            editingItem: options ? options.editingItem : null,
         };
     }
 
@@ -429,6 +430,26 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(item3.getActions().showed.length, 4, 'item 4 is editing and should contain 4 itemActions');
             assert.equal(actionsOf2.showed.length, 0, 'item 4 is editing and item 2 should not contain any itemActions');
         });
+        // T1.17 Если редактируемой(добавляемой) записи нет в рекордсете операции над записью инициализируются для нее
+        it('should assign itemActions for editig item that is not in collection', () => {
+            const list = new RecordSet({
+                keyProperty: 'id',
+                rawData: [{id: 100, name: 'Philip J. Fry', gender: 'M', itemActions: []},]
+            });
+            const editingItem = new CollectionItem<Record>({contents: list.at(0)});
+            editingItem.setEditing(true, editingItem.getContents());
+            collection.setEditing(true);
+            itemActionsController.update(initializeControllerOptions({
+                editingItem,
+                collection,
+                itemActions,
+                theme: 'default'
+            }));
+            const actionsOf2 = collection.getItemBySourceKey(2).getActions();
+            assert.equal(editingItem.getActions().showed.length, 4, 'item 4 is editing and should contain 4 itemActions');
+            assert.equal(actionsOf2.showed.length, 0, 'item 4 is editing and item 2 should not contain any itemActions');
+        });
+
 
         // T1.17. Должны адекватно набираться ItemActions для breadcrumbs (когда getContents() возвращает массив записей)
         // TODO возможно, это уйдёт из контроллера, т.к. по идее уровень абстракции в контроллере ниже и он не должен знать о breadcrumbs
@@ -642,6 +663,12 @@ describe('Controls/_itemActions/Controller', () => {
 
             swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
             assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
+
+            const collectionVersion = collection.getVersion();
+            itemActionsController.deactivateSwipe();
+            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
+            assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
+            assert.equal(collection.getVersion(), collectionVersion, 'Version changed.');
         });
 
         // T2.13 При обновлении опций записи надо также обновлять конфиг свайпа

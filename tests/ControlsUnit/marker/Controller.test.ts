@@ -178,7 +178,25 @@ describe('Controls/marker/Controller', () => {
 
          controller.restoreMarker();
 
-         assert.isFalse(notifyLaterSpy.called, 'restoreMarker не должен уведомлять о простановке маркера');
+         assert.isFalse(notifyLaterSpy.called);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+      });
+
+      it('markerVisibility = onactivated and not exists item with marked key', () => {
+         controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const notifyLaterSpy = spy(model, '_notifyLater');
+
+         controller.restoreMarker();
+
+         assert.isFalse(notifyLaterSpy.called);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
       });
    });
@@ -356,25 +374,5 @@ describe('Controls/marker/Controller', () => {
       }));
       controller.handleRemoveItems(2);
       assert.equal(model.getMarkedKey(), 2);
-   });
-
-   it('onactivated and filter after set marker', () => {
-      controller = new MarkerController({model: model, markerVisibility: 'onactivated', markedKey: undefined});
-
-      let result = controller.setMarkedKey(3);
-      assert.equal(result, 3);
-      assert.equal(model.getMarkedKey(), 3);
-
-      model.setItems(new RecordSet({
-         rawData: [
-            {id: 1},
-            {id: 2}
-         ],
-         keyProperty: 'id'
-      }));
-
-      result = controller.update({model: model, markerVisibility: 'onactivated', markedKey: 3});
-      assert.equal(result, 1);
-      assert.equal(model.getMarkedKey(), 1);
    });
 });

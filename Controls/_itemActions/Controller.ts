@@ -99,6 +99,10 @@ export interface IItemActionsControllerOptions {
      * Конфигурация для контекстного меню опции записи.
      */
     contextMenuConfig: IContextMenuConfig
+    /**
+     * Редактируемая запись
+     */
+    editingItem: CollectionItem<Model>
 }
 
 /**
@@ -156,7 +160,7 @@ export class Controller {
             this._itemActionVisibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
         }
         if (this._commonItemActions || this._itemActionsProperty) {
-            result = this._updateItemActions();
+            result = this._updateItemActions(options.editingItem);
         }
         return result;
     }
@@ -181,11 +185,14 @@ export class Controller {
      * Деактивирует Swipe для меню операций с записью
      */
     deactivateSwipe(): void {
-        this._setSwipeItem(null);
-        this._collection.setActiveItem(null);
-        this._collection.setSwipeConfig(null);
-        this._collection.setSwipeAnimation(null);
-        this._collection.nextVersion();
+        const currentSwipedItem = this.getSwipeItem();
+        if (currentSwipedItem) {
+            this._setSwipeItem(null);
+            this._collection.setActiveItem(null);
+            this._collection.setSwipeConfig(null);
+            this._collection.setSwipeAnimation(null);
+            this._collection.nextVersion();
+        }
     }
 
     /**
@@ -316,11 +323,10 @@ export class Controller {
      *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
      * @private
      */
-    private _updateItemActions(): Array<number | string> {
+    private _updateItemActions(editingItem?: CollectionItem<Model>): Array<number | string> {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
-        this._collection.setEventRaising(false, true);
-        this._collection.each((item) => {
+        const assignActionsOnItem = (item) => {
             if (!item['[Controls/_display/GroupItem]']) {
                 const contents = Controller._getItemContents(item);
 				const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
@@ -330,7 +336,12 @@ export class Controller {
                     changedItemsIds.push(contents.getKey());
                 }
             }
-        });
+        }
+        this._collection.setEventRaising(false, true);
+        this._collection.each(assignActionsOnItem);
+        if (editingItem) {
+            assignActionsOnItem(editingItem);
+        }
         this._collection.setEventRaising(true, true);
         this._collection.setActionsAssigned(true);
 
@@ -489,7 +500,7 @@ export class Controller {
     private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
         let showed;
         const actions = this._collectActionsForItem(item);
-        if (this._collection.isEditing() && !item.isEditing()) {
+        if (this._collection.isEditing() && ((typeof item.isEditing === 'function') && !item.isEditing() || !item.isEditing)) {
             showed = []
         } else if (actions.length > 1) {
             showed = actions.filter((action) =>
