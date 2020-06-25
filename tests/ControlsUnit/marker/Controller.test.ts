@@ -248,6 +248,22 @@ describe('Controls/marker/Controller', () => {
    });
 
    describe('handlerRemoveItems', () => {
+      it('exists current marked item', () => {
+         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
+
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const result = controller.handleRemoveItems(0);
+         assert.equal(result, 2);
+         assert.equal(model.getMarkedKey(), 2);
+      });
+
       it('exists next item', () => {
          controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: 2});
 
