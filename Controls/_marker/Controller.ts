@@ -200,14 +200,14 @@ export class Controller {
       if (!this._model.getCount()) {
          // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
          this._model.setMarkedKey(this._markedKey, false, true);
-         return undefined;
+         return null;
       }
 
       const firstItem = this._model.getFirstItem();
       if (!firstItem) {
          // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
          this._model.setMarkedKey(this._markedKey, false, true);
-         return undefined;
+         return null;
       }
 
       const firstItemKey = firstItem.getKey();
