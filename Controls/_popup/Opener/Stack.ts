@@ -67,10 +67,6 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
     }
 
     protected _getIndicatorConfig(): void {
-        // В случае со стики глобальный индикатор только мешает, к примеру в саггесте пока вводят в поле ввода
-        // зовется открытие автодополнения. при открытии глобальный индикатор блокирует нажатие клавиш и не позволяет
-        // вводить символы, пока саггест не откроется, хотя в этом случае блокировка не нужна.
-        // По сути так со всеми окнами, открывающимися от таргета.
         const baseConfig = super._getIndicatorConfig();
         baseConfig.isGlobal = true;
         return baseConfig;
