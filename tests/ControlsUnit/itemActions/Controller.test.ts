@@ -524,6 +524,47 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(config.actionAlignment, 'horizontal');
         });
 
+        // T2.4.2 Если свайпнули элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный конфиг
+        // Возможно, стоит подумать над тем, чтобы не обновлять конфиг каждый раз при обновлении контроллера
+        it('should update actionsTemplateConfig with correct options when item is swiped', () => {
+            const updateWithSameParams = () => {
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: horizontalOnlyItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+            };
+            updateWithSameParams();
+            itemActionsController.activateSwipe(3, 50);
+            const config = collection.getActionsTemplateConfig();
+            assert.equal(config.actionAlignment, 'horizontal');
+            // Не деактивировали свайп и обновили конфиг
+            updateWithSameParams();
+            assert.equal(config.actionAlignment, 'horizontal');
+        });
+
+        // T2.4.3 Если свайпнули другой элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный конфиг
+        // Возможно, стоит подумать над тем, чтобы не обновлять конфиг каждый раз при обновлении контроллера
+        it('should update actionsTemplateConfig with correct options when another item is swiped', () => {
+            const updateWithSameParams = () => {
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: horizontalOnlyItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+            };
+            updateWithSameParams();
+            itemActionsController.activateSwipe(3, 50);
+            const config = collection.getActionsTemplateConfig();
+            assert.equal(config.actionAlignment, 'horizontal');
+            // Не деактивировали свайп, активировали ноывый и обновили конфиг
+            itemActionsController.activateSwipe(2, 100);
+            updateWithSameParams();
+            assert.equal(config.actionAlignment, 'vertical');
+        });
+
         // T2.6. Устанавливается swiped элемент коллекции
         // T2.7. Устанавливается активный элемент коллекции
         // T2.8. Метод getSwipedItem возвращает корректный swiped элемент
@@ -600,6 +641,29 @@ describe('Controls/_itemActions/Controller', () => {
 
             swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
             assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
+        });
+
+        // T2.13 При обновлении опций записи надо также обновлять конфиг свайпа
+        it('should update swipe config on item actions update', () => {
+            itemActionsController.activateSwipe(1, 50);
+            const config = collection.getSwipeConfig();
+            assert.exists(config, 'Swipe activation should make configuration after swipe activation');
+            assert.equal(config.itemActions.showed[1].title, 'Time management', 'First action should be \'message\'');
+            const itemActionsClone = [...itemActions];
+            itemActionsClone.splice(3, 1,{
+                id: 4,
+                icon: 'icon-PupaAndLupa',
+                title: 'Pupa and Lupa',
+                showType: TItemActionShowType.TOOLBAR
+            });
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions: itemActionsClone,
+                theme: 'default'
+            }));
+            const config = collection.getSwipeConfig();
+            assert.exists(config, 'Swipe activation should make configuration after update item actions');
+            assert.equal(config.itemActions.showed[1].title, 'Pupa and Lupa', 'First action should be \'Pupa and Lupa\'');
         });
     });
 
