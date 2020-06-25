@@ -3403,87 +3403,92 @@ define([
       });
 
       describe('EditInPlace', function() {
-         it('beginEdit', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: lists.ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     hasMore: false
-                  },
-                  view: 'infinity',
+         describe('beginEdit(), BeginAdd()', () => {
+            let opt;
+            let cfg;
+            let ctrl;
+            let sandbox;
+            let isCloseSwipeCalled;
+            beforeEach(() => {
+               isCloseSwipeCalled = false;
+               opt = {
+                  test: 'test'
+               };
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
                   viewConfig: {
-                     pagingMode: 'direct'
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id',
+                     selectedKeys: [1, 3]
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
                   }
-               }
-            };
-            var ctrl = new lists.BaseControl(cfg);
-            ctrl._editInPlace = {
-               beginEdit: function(options) {
-                  assert.equal(options, opt);
-                  return cDeferred.success();
-               }
-            };
-            var result = ctrl.beginEdit(opt);
-            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
-            assert.isTrue(result.isSuccessful());
+               };
+               sandbox = sinon.createSandbox();
+               sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
+                  isCloseSwipeCalled = true;
+               });
+               ctrl = new lists.BaseControl(cfg);
+            });
+
+            afterEach(() => {
+               sandbox.restore();
+            });
+
+            it('beginEdit', function() {
+               ctrl._editInPlace = {
+                  beginEdit: function(options) {
+                     assert.equal(options, opt);
+                     return cDeferred.success();
+                  }
+               };
+               let result = ctrl.beginEdit(opt);
+               assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+               assert.isTrue(result.isSuccessful());
+            });
+
+            // Надо при beginEdit закрывать свайп.
+            it('should close swipe on beginEdit', () => {
+               ctrl._editInPlace = {
+                  beginEdit: function(options) {
+                     assert.equal(options, opt);
+                     return cDeferred.success();
+                  }
+               };
+               let result = ctrl.beginEdit(opt);
+               assert.isTrue(isCloseSwipeCalled);
+            });
+
+            it('beginAdd', function() {
+               ctrl._editInPlace = {
+                  beginAdd: function(options) {
+                     assert.equal(options, opt);
+                     return cDeferred.success();
+                  }
+               };
+               var result = ctrl.beginAdd(opt);
+               assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
+               assert.isTrue(result.isSuccessful());
+            });
          });
 
-         it('beginAdd', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: lists.ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     hasMore: false
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new lists.BaseControl(cfg);
-            ctrl._editInPlace = {
-               beginAdd: function(options) {
-                  assert.equal(options, opt);
-                  return cDeferred.success();
-               }
-            };
-            var result = ctrl.beginAdd(opt);
-            assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
-            assert.isTrue(result.isSuccessful());
-         });
+
+
 
          it('cancelEdit', function() {
             var cfg = {
@@ -5368,52 +5373,6 @@ define([
          it('should call updateItemActions when properties is not set', () => {
             lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
             assert.isTrue(handleinitItemActionsCalled);
-         });
-      });
-
-      describe('onListChange should close swipe, when called with newItems.properties=\'editing\'', () => {
-         let self;
-         let isCloseSwipeCalled;
-         let items;
-         let sandbox;
-         beforeEach(() => {
-            isCloseSwipeCalled = false;
-            self = {
-               _options: {
-                  root: 5
-               },
-               _prevRootId: 5,
-               _selectionController: {
-                  isAllSelected: () => true,
-                  clearSelection: () => {},
-                  handleReset: (items, prevRoot, rootChanged) => {},
-                  handleAddItems: (items) => {}
-               },
-               _listViewModel: {
-                  getCount: () => 5
-               },
-               handleSelectionControllerResult: () => {}
-            };
-            items = [{}];
-            sandbox = sinon.createSandbox();
-            sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
-               isCloseSwipeCalled = true;
-            });
-         });
-
-         afterEach(() => {
-            sandbox.restore();
-         });
-
-         it('onListChange should call swipe closing on newItems.properties===\'editing\'', () => {
-            items.properties = 'editing';
-            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
-            assert.isTrue(isCloseSwipeCalled);
-         });
-
-         it('onListChange should not call swipe closing on newItems.properties!==\'editing\'', () => {
-            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
-            assert.isFalse(isCloseSwipeCalled);
          });
       });
 
