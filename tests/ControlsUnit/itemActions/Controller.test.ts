@@ -524,8 +524,10 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(config.actionAlignment, 'horizontal');
         });
 
-        // T2.4.2 Если свайпнули элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный конфиг
-        // Возможно, стоит подумать над тем, чтобы не обновлять конфиг каждый раз при обновлении контроллера
+        // T2.4.2 Если свайпнули элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный actionsTemplateConfig.
+        // Такой кейс возникает, например, нажали на какую-либо опцию в свайпе. Например, "Показать/скрыть".
+        // При этом фокус не потерялся, ItemActions не изменились - свайп не закрылся, но его надо перерисовать, т.к. поменялось значение,
+        // которое возвращает visibilityCallback() для actions.
         it('should update actionsTemplateConfig with correct options when item is swiped', () => {
             const updateWithSameParams = () => {
                 itemActionsController.update(initializeControllerOptions({
@@ -539,13 +541,12 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.activateSwipe(3, 50);
             const config = collection.getActionsTemplateConfig();
             assert.equal(config.actionAlignment, 'horizontal');
-            // Не деактивировали свайп и обновили конфиг
+            // Не деактивировали свайп и вызвали обновление ItemActions
             updateWithSameParams();
             assert.equal(config.actionAlignment, 'horizontal');
         });
 
         // T2.4.3 Если свайпнули другой элемент, то при обновлении контроллера надо в шаблон прокидывать правильно рассчитанный конфиг
-        // Возможно, стоит подумать над тем, чтобы не обновлять конфиг каждый раз при обновлении контроллера
         it('should update actionsTemplateConfig with correct options when another item is swiped', () => {
             const updateWithSameParams = () => {
                 itemActionsController.update(initializeControllerOptions({
@@ -559,7 +560,7 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.activateSwipe(3, 50);
             const config = collection.getActionsTemplateConfig();
             assert.equal(config.actionAlignment, 'horizontal');
-            // Не деактивировали свайп, активировали ноывый и обновили конфиг
+            // Активировали новый свайп и обновили конфиг
             itemActionsController.activateSwipe(2, 100);
             updateWithSameParams();
             assert.equal(config.actionAlignment, 'vertical');
@@ -645,25 +646,35 @@ describe('Controls/_itemActions/Controller', () => {
 
         // T2.13 При обновлении опций записи надо также обновлять конфиг свайпа
         it('should update swipe config on item actions update', () => {
+            const itemActionsClone = [...itemActions];
+            let visibilityCallbackResult = false;
+            const controllerConfig = {
+                collection,
+                itemActions: itemActionsClone,
+                theme: 'default',
+                visibilityCallback: (action: IItemAction, item: Record) => {
+                    if (action.id === 9) {
+                        return visibilityCallbackResult;
+                    }
+                    return true;
+                }
+            };
+            itemActionsClone.splice(3, 0,{
+                id: 9,
+                icon: 'icon-SuperIcon',
+                title: 'Super puper',
+                showType: TItemActionShowType.TOOLBAR
+            });
+            itemActionsController.update(initializeControllerOptions(controllerConfig));
             itemActionsController.activateSwipe(1, 50);
             const config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration after swipe activation');
             assert.equal(config.itemActions.showed[1].title, 'Time management', 'First action should be \'message\'');
-            const itemActionsClone = [...itemActions];
-            itemActionsClone.splice(3, 1,{
-                id: 4,
-                icon: 'icon-PupaAndLupa',
-                title: 'Pupa and Lupa',
-                showType: TItemActionShowType.TOOLBAR
-            });
-            itemActionsController.update(initializeControllerOptions({
-                collection,
-                itemActions: itemActionsClone,
-                theme: 'default'
-            }));
+
+            visibilityCallbackResult = true;
+            itemActionsController.update(initializeControllerOptions(controllerConfig));
             const config = collection.getSwipeConfig();
-            assert.exists(config, 'Swipe activation should make configuration after update item actions');
-            assert.equal(config.itemActions.showed[1].title, 'Pupa and Lupa', 'First action should be \'Pupa and Lupa\'');
+            assert.equal(config.itemActions.showed[1].title, 'Super puper', 'First action should be \'Super puper\'');
         });
     });
 

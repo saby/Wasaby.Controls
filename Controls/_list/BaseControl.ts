@@ -2728,6 +2728,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.updateInitializedItemActions(this, newOptions);
             });
         }
+        // Если поменялись ItemActions, то закрываем свайп
         if (newOptions.itemActions !== this._options.itemActions) {
             _private.closeSwipe(this);
         }
@@ -3638,6 +3639,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         if (this._scrollController) {
             this._scrollController.itemsContainerReady(itemsContainerGetter);
+        }
+    },
+
+    /**
+     * Вызывает деактивацию свайпа когда список теряет фокус
+     * @private
+     */
+    _onListDeactivated: function() {
+        if (!this._itemActionsMenuId) {
+            _private.closeSwipe(this);
         }
     },
 
