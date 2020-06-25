@@ -20,22 +20,22 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
          _cfgBottom: null,
          _beforeMount: function() {
             this._cfgRight = {
-               message: 'right_start',
+               message: 'right',
                targetSide: 'right',
                alignment: 'start'
             };
             this._cfgLeft = {
-               message: 'left_start',
+               message: 'left',
                targetSide: 'left',
                alignment: 'start'
             };
             this._cfgTop = {
-               message: 'top_start',
+               message: 'top',
                targetSide: 'top',
                alignment: 'start'
             };
             this._cfgBottom = {
-               message: 'bottom_start',
+               message: 'bottom',
                targetSide: 'bottom',
                alignment: 'start'
             };
@@ -170,7 +170,7 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                   }
                }]
             }, {
-               header: 'Float',
+               header: 'Float and content',
                items: [{
                   text: 'TRUE',
                   cfg: {
@@ -189,10 +189,8 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                         ' lots of the country’s most prominent orchestras.',
                      floatCloseButton: false
                   }
-               }]
-            }, {
-               header: 'Content',
-               items: [{
+               },
+			   {
                   text: 'CUSTOM',
                   cfg: {
                      template: contentTpl,
