@@ -39,10 +39,23 @@ class PendingClass {
     private _pendingsCounter: number = 0;
     private _pendings: IRootPendingStorage = {};
     private _parallelDef: IParallelDef = {};
+    private _beforeUnloadHandler: (event: Event) => void;
 
     private readonly _notify: TNotifier;
 
     constructor(options: IPendingOptions) {
+        if (typeof window !== 'undefined') {
+            this._beforeUnloadHandler = (event: Event): void => {
+                // We shouldn't close the tab if there are any pendings
+                if (this.hasPendings()) {
+                    event.preventDefault();
+                    event.returnValue = '';
+                } else {
+                    window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+                }
+            };
+            window.addEventListener('beforeunload', this._beforeUnloadHandler);
+        }
         this._notify = options.notifyHandler;
     }
 
@@ -81,24 +94,29 @@ class PendingClass {
     }
 
     hideIndicators(root: string): void {
-        const pending = this._pendings[root];
-        Object.keys(pending).forEach((key) => {
-            const indicatorId = pending[key].loadingIndicatorId;
-            if (indicatorId) {
-                this._notify('hideIndicator', [indicatorId]);
-            }
-        });
+        let pending;
+        if (this._pendings) {
+            pending = this._pendings[root];
+            Object.keys(pending).forEach((key) => {
+                const indicatorId = pending[key].loadingIndicatorId;
+                if (indicatorId) {
+                    this._notify('hideIndicator', [indicatorId]);
+                }
+            });
+        }
     }
 
     unregisterPending(root: string, id: number): void {
         // hide indicator if no more pendings with indicator showing
         this.hideIndicators(root);
-        delete this._pendings[root][id];
-
-        // notify if no more pendings
-        if (!this.hasRegisteredPendings(root)) {
-            this._notify('pendingsFinished', []);
+        if (this._pendings) {
+            delete this._pendings[root][id];
+            // notify if no more pendings
+            if (!this.hasRegisteredPendings(root)) {
+                this._notify('pendingsFinished', []);
+            }
         }
+
     }
 
     finishPendingOperations(forceFinishValue: boolean, isInside?: boolean, root: string = null): Promise<unknown> {
@@ -196,6 +214,9 @@ class PendingClass {
     destroy(): void {
         this._pendings = null;
         this._parallelDef = null;
+        if (typeof window !== 'undefined') {
+            window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+        }
     }
 }
 

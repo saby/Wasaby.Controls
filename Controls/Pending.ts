@@ -113,18 +113,6 @@ import PendingClass from 'Controls/_popup/Manager/PendingClass';
       _template: tmpl,
       _pendingController: null,
       _beforeMount: function() {
-         if (typeof window !== 'undefined') {
-            this._beforeUnloadHandler = (event) => {
-               // We shouldn't close the tab if there are any pendings
-               if (this._hasPendings()) {
-                  event.preventDefault();
-                  event.returnValue = '';
-               } else {
-                  window.removeEventListener('beforeunload', this._beforeUnloadHandler);
-               }
-            };
-            window.addEventListener('beforeunload', this._beforeUnloadHandler);
-         }
          const pendingOptions = {
             notifyHandler: (eventName: string, args?: []) => {
                return this._notify(eventName, args, {bubbling: true});
@@ -189,9 +177,7 @@ import PendingClass from 'Controls/_popup/Manager/PendingClass';
          return this._pendingController.cancelFinishingPending(root);
       },
       _beforeUnmount: function() {
-         if (typeof window !== 'undefined') {
-            window.removeEventListener('beforeunload', this._beforeUnloadHandler);
-         }
+         this._pendingController.destroy();
       }
    });
 
