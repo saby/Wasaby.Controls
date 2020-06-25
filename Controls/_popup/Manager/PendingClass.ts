@@ -119,7 +119,7 @@ class PendingClass {
 
     }
 
-    finishPendingOperations(forceFinishValue: boolean, isInside?: boolean, root: string = null): Promise<unknown> {
+    finishPendingOperations(forceFinishValue: boolean, root: string = null): Promise<unknown> {
         let pendingResolver, pendingReject;
         const resultPromise = new Promise((resolve, reject) => {
             pendingResolver = resolve;
@@ -134,7 +134,7 @@ class PendingClass {
             const pending = pendingRoot[key];
             let isValid = true;
             if (pending.validate) {
-                isValid = pending.validate(isInside);
+                isValid = pending.validate();
             } else if (pending.validateCompatible) { //todo compatible
                 isValid = pending.validateCompatible();
             }
