@@ -143,6 +143,12 @@ export class Controller {
     * @param removedItemsIndex
     */
    handleRemoveItems(removedItemsIndex: number): TKey {
+      const item = this._model.getItemBySourceKey(this._markedKey);
+      if (item) {
+         this._model.setMarkedKey(this._markedKey, true);
+         return this._markedKey;
+      }
+
       const nextItem = this._model.getNextByIndex(removedItemsIndex);
       const prevItem = this._model.getPrevByIndex(removedItemsIndex);
 
