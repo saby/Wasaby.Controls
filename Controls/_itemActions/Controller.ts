@@ -4,7 +4,7 @@ import { Memory } from 'Types/source';
 import { isEqual } from 'Types/object';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem} from 'Controls/display';
+import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem, IItemActionsTemplateConfig} from 'Controls/display';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
@@ -393,15 +393,29 @@ export class Controller {
      * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
      */
     private _calculateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
-        this._collection.setActionsTemplateConfig({
-            toolbarVisibility: options.editingToolbarVisible,
-            style: options.style,
-            itemActionsClass: options.itemActionsClass,
-            size: this._iconSize,
-            itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
-            actionAlignment: this._actionsAlignment,
-            actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
-        });
+        const currentConfig = this._collection.getActionsTemplateConfig();
+        const itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION;
+        const actionCaptionPosition = options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
+        const isEqual: boolean = (
+            currentConfig &&
+            currentConfig.toolbarVisibility === options.editingToolbarVisible &&
+            currentConfig.style === options.style &&
+            currentConfig.itemActionsClass === options.itemActionsClass &&
+            currentConfig.size === this._iconSize &&
+            currentConfig.itemActionsPosition === itemActionsPosition &&
+            currentConfig.actionCaptionPosition === actionCaptionPosition
+        );
+        if (!isEqual) {
+            this._collection.setActionsTemplateConfig({
+                toolbarVisibility: options.editingToolbarVisible,
+                style: options.style,
+                itemActionsClass: options.itemActionsClass,
+                size: this._iconSize,
+                itemActionsPosition,
+                actionAlignment: this._actionsAlignment,
+                actionCaptionPosition
+            });
+        }
     }
 
     /**
