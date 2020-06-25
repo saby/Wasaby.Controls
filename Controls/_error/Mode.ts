@@ -1,4 +1,3 @@
-/// <amd-module name="Controls/_dataSource/_error/Mode" />
 /**
  * Перечисление. Способы отображения шаблона с сообщением об ошибке.
  * @class Controls/_dataSource/_error/Mode
