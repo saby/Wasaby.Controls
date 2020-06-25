@@ -466,8 +466,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemData.setActive(true, true);
         }
         this._activeItem = itemData;
-        // _nextModelVersion должен вызываться с true, иначе обновляются и перерисовываются вообще ВСЕ записи!
-        this._nextModelVersion(true, 'activeItemChanged');
+        this._nextModelVersion(false, 'activeItemChanged');
     },
 
     setDraggedItems(draggedItem: IFlatItemData, dragEntity): void {
