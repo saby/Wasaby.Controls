@@ -313,11 +313,10 @@ export class Controller {
      *  необходимо будет вычистить return методов update() и _assignActions(). Эти методы будут void
      * @private
      */
-    private _assignActions(): Array<number | string> {
+    private _assignActions(editingItem?: CollectionItem<Model>): Array<number | string> {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
-        this._collection.setEventRaising(false, true);
-        this._collection.each((item) => {
+        const assignActionsOnItem = (item) => {
             if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
                 const contents = Controller._getItemContents(item);
 				const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
@@ -327,7 +326,12 @@ export class Controller {
                     changedItemsIds.push(contents.getKey());
                 }
             }
-        });
+        }
+        this._collection.setEventRaising(false, true);
+        this._collection.each(assignActionsOnItem);
+        if (editingItem) {
+            assignActionsOnItem(editingItem);
+        }
         this._collection.setEventRaising(true, true);
         this._collection.setActionsAssigned(true);
 
