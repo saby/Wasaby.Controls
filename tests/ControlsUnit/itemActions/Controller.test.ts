@@ -430,7 +430,7 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(item3.getActions().showed.length, 4, 'item 4 is editing and should contain 4 itemActions');
             assert.equal(actionsOf2.showed.length, 0, 'item 4 is editing and item 2 should not contain any itemActions');
         });
-          // T1.17 Если редактируемой(добавляемой) записи нет в рекордсете операции над записью инициализируются для нее
+        // T1.17 Если редактируемой(добавляемой) записи нет в рекордсете операции над записью инициализируются для нее
         it('should assign itemActions for editig item that is not in collection', () => {
             const list = new RecordSet({
                 keyProperty: 'id',
