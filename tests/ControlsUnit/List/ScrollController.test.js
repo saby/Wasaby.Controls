@@ -36,5 +36,14 @@ define([
             });
          });
       });
+
+      describe('._registerObserver()', () => {
+         it('should do nothing if trigers was undefined', () => {
+            scrollController._triggers = undefined;
+            scrollController._observerRegistered = true;
+
+            assert.doesNotThrow(() => scrollController._registerObserver());
+         });
+      });
    });
 });

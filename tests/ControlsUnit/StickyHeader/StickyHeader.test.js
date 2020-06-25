@@ -187,7 +187,7 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            component._isMobilePlatform = true;
+            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
@@ -211,7 +211,7 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            component._isMobileAndroid = true;
+            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(3);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
@@ -236,7 +236,7 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            component._isMobilePlatform = true;
+            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
