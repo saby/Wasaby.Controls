@@ -107,8 +107,7 @@ export interface IItemActionsControllerOptions {
  * @author Аверкиев П.А
  */
 export class Controller {
-    // все опции, переданные в контроллер
-    private _options: IItemActionsControllerOptions;
+    private _collection: IItemActionsCollection;
     private _commonItemActions: IItemAction[];
     private _itemActionsProperty: string;
     private _itemActionVisibilityCallback: TItemActionVisibilityCallback;
@@ -138,16 +137,13 @@ export class Controller {
     update(options: IItemActionsControllerOptions): Array<number | string> {
         let result: Array<number | string> = [];
         this._theme = options.theme;
-
-        this._options = options;
-
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
         this._editArrowAction = options.editArrowAction;
         this._contextMenuConfig = options.contextMenuConfig;
         this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         this._actionsAlignment = options.actionAlignment || DEFAULT_ACTION_ALIGNMENT;
         this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION
-
+        this._collection = options.collection;
         this._updateActionsTemplateConfig(options);
 
         if (!options.itemActions ||
@@ -171,14 +167,14 @@ export class Controller {
      * @param actionsContainerHeight высота контейнера для отображения операций с записью
      */
     activateSwipe(itemKey: TItemKey, actionsContainerHeight: number): void {
-        const item = this._options.collection.getItemBySourceKey(itemKey);
+        const item = this._collection.getItemBySourceKey(itemKey);
         this.setSwipeAnimation(ANIMATION_STATE.OPEN);
         this._setSwipeItem(itemKey);
-        this._options.collection.setActiveItem(item);
+        this._collection.setActiveItem(item);
         if (this._itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
         }
-        this._options.collection.nextVersion();
+        this._collection.nextVersion();
     }
 
     /**
@@ -186,17 +182,17 @@ export class Controller {
      */
     deactivateSwipe(): void {
         this._setSwipeItem(null);
-        this._options.collection.setActiveItem(null);
-        this._options.collection.setSwipeConfig(null);
-        this._options.collection.setSwipeAnimation(null);
-        this._options.collection.nextVersion();
+        this._collection.setActiveItem(null);
+        this._collection.setSwipeConfig(null);
+        this._collection.setSwipeAnimation(null);
+        this._collection.nextVersion();
     }
 
     /**
      * Получает последний swiped элемент
      */
     getSwipeItem(): IItemActionsItem {
-        return this._options.collection.find((item) => item.isSwiped() || item.isRightSwiped());
+        return this._collection.find((item) => item.isSwiped() || item.isRightSwiped());
     }
 
     /**
@@ -288,14 +284,14 @@ export class Controller {
      * @param item Текущий элемент коллекции
      */
     setActiveItem(item: IItemActionsItem) {
-        this._options.collection.setActiveItem(item);
+        this._collection.setActiveItem(item);
     }
 
     /**
      * Возвращает текущий активный Item
      */
     getActiveItem(): IItemActionsItem {
-        return this._options.collection.getActiveItem();
+        return this._collection.getActiveItem();
     }
 
     /**
@@ -303,14 +299,14 @@ export class Controller {
      * @param animation
      */
     setSwipeAnimation(animation: ANIMATION_STATE): void {
-        this._options.collection.setSwipeAnimation(animation);
+        this._collection.setSwipeAnimation(animation);
     }
 
     /**
      * Возвраащет текущее состояние анимации из модели
      */
     getSwipeAnimation(): ANIMATION_STATE {
-        return this._options.collection.getSwipeAnimation();
+        return this._collection.getSwipeAnimation();
     }
 
     /**
@@ -323,8 +319,8 @@ export class Controller {
     private _updateItemActions(): Array<number | string> {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
-        this._options.collection.setEventRaising(false, true);
-        this._options.collection.each((item) => {
+        this._collection.setEventRaising(false, true);
+        this._collection.each((item) => {
             if (!item['[Controls/_display/GroupItem]']) {
                 const contents = Controller._getItemContents(item);
 				const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
@@ -335,14 +331,15 @@ export class Controller {
                 }
             }
         });
-        this._options.collection.setEventRaising(true, true);
-        this._options.collection.setActionsAssigned(true);
+        this._collection.setEventRaising(true, true);
+        this._collection.setActionsAssigned(true);
 
         if (hasChanges) {
+            // Если поменялась видимость ItemActions через VisibilityCallback, то надо обновить конфиг свайпа
             if (this._itemActionsPosition !== 'outside') {
                 this._updateSwipeConfig(this._actionsHeight);
             }
-            this._options.collection.nextVersion();
+            this._collection.nextVersion();
         }
 
         return changedItemsIds;
@@ -376,7 +373,7 @@ export class Controller {
      */
     private _setSwipeItem(key: TItemKey, silent?: boolean): void {
         const oldSwipeItem = this.getSwipeItem();
-        const newSwipeItem = this._options.collection.getItemBySourceKey(key);
+        const newSwipeItem = this._collection.getItemBySourceKey(key);
 
         if (oldSwipeItem) {
             oldSwipeItem.setSwiped(false, silent);
@@ -408,7 +405,7 @@ export class Controller {
      */
     private _updateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
 
-        this._options.collection.setActionsTemplateConfig({
+        this._collection.setActionsTemplateConfig({
             toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
             itemActionsClass: options.itemActionsClass,
@@ -441,7 +438,7 @@ export class Controller {
         }
         this._actionsHeight = actionsContainerHeight;
         let actions = item.getActions().all;
-        const actionsTemplateConfig = this._options.collection.getActionsTemplateConfig();
+        const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
         actionsTemplateConfig.actionAlignment = this._actionsAlignment;
 
         if (this._editArrowAction && this._editArrowVisibilityCallback(item)) {
@@ -469,7 +466,7 @@ export class Controller {
                 actionsTemplateConfig.actionCaptionPosition
             );
         }
-        this._options.collection.setActionsTemplateConfig(actionsTemplateConfig);
+        this._collection.setActionsTemplateConfig(actionsTemplateConfig);
         Controller._setItemActions(item, swipeConfig.itemActions);
 
         if (swipeConfig.twoColumns) {
@@ -480,7 +477,7 @@ export class Controller {
             ];
         }
 
-        this._options.collection.setSwipeConfig(swipeConfig);
+        this._collection.setSwipeConfig(swipeConfig);
     }
 
     /**
@@ -492,7 +489,7 @@ export class Controller {
     private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
         let showed;
         const actions = this._collectActionsForItem(item);
-        if (this._options.collection.isEditing() && !item.isEditing()) {
+        if (this._collection.isEditing() && !item.isEditing()) {
             showed = []
         } else if (actions.length > 1) {
             showed = actions.filter((action) =>
