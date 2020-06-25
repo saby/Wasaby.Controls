@@ -604,13 +604,17 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;
         this._editingItemData = itemData;
+        const newItems = [new CollectionItem({
+            contents: data.item
+        })];
+        if (itemData !== null) {
+            newItems.properties = 'editing'
+        }
         data.setEditing(itemData !== null);
         this._onCollectionChange(
            new EventObject('oncollectionchange', this._display),
            IObservable.ACTION_CHANGE,
-           [new CollectionItem({
-              contents: data.item
-           })],
+            newItems,
            data.index,
            [],
            0

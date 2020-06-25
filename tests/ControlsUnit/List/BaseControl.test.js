@@ -5371,6 +5371,52 @@ define([
          });
       });
 
+      describe('onListChange should close swipe, when called with newItems.properties=\'editing\'', () => {
+         let self;
+         let isCloseSwipeCalled;
+         let items;
+         let sandbox;
+         beforeEach(() => {
+            isCloseSwipeCalled = false;
+            self = {
+               _options: {
+                  root: 5
+               },
+               _prevRootId: 5,
+               _selectionController: {
+                  isAllSelected: () => true,
+                  clearSelection: () => {},
+                  handleReset: (items, prevRoot, rootChanged) => {},
+                  handleAddItems: (items) => {}
+               },
+               _listViewModel: {
+                  getCount: () => 5
+               },
+               handleSelectionControllerResult: () => {}
+            };
+            items = [{}];
+            sandbox = sinon.createSandbox();
+            sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
+               isCloseSwipeCalled = true;
+            });
+         });
+
+         afterEach(() => {
+            sandbox.restore();
+         });
+
+         it('onListChange should call swipe closing on newItems.properties===\'editing\'', () => {
+            items.properties = 'editing';
+            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            assert.isTrue(isCloseSwipeCalled);
+         });
+
+         it('onListChange should not call swipe closing on newItems.properties!==\'editing\'', () => {
+            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            assert.isFalse(isCloseSwipeCalled);
+         });
+      });
+
       it('_afterUpdate while loading do not update loadingState', async function() {
          var cfg = {
             viewName: 'Controls/List/ListView',

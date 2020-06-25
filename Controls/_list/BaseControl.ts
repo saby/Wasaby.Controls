@@ -1316,6 +1316,9 @@ const _private = {
                self.handleSelectionControllerResult(result);
             }
         }
+        if (newItems && newItems.properties  === 'editing') {
+            _private.closeSwipe(self);
+        }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
         // for example if Controls.explorer:View is switched from list to tile mode. The controller
         // will keep firing `indexesChanged` events, but we should not mark items as changed while
