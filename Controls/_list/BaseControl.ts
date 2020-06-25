@@ -380,7 +380,7 @@ const _private = {
 
     restoreModelState(self: any, options: any): void {
         if (self._markerController) {
-            self._markerController.restoreMarker();
+            self._markedKey = self._markerController.restoreMarker();
         } else {
             if (options.markerVisibility !== 'hidden') {
                 self._markerController = _private.createMarkerController(self, options);

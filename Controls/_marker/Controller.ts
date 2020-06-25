@@ -8,8 +8,6 @@ export class Controller {
    private _markerVisibility: TVisibility;
    private _markedKey: TKey;
 
-   private _wasSetMarker: boolean = false;
-
    constructor(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
@@ -52,7 +50,6 @@ export class Controller {
             return undefined;
          }
 
-         this._wasSetMarker = false;
          this._model.setMarkedKey(this._markedKey, false, silent);
          this._markedKey = undefined;
          return undefined;
@@ -69,20 +66,14 @@ export class Controller {
       }
 
       if (item) {
-         this._wasSetMarker = true;
          this._model.setMarkedKey(this._markedKey, false, true);
          this._model.setMarkedKey(key, true, silent);
          this._markedKey = key;
       } else {
          switch (this._markerVisibility) {
             case Visibility.OnActivated:
-               // если маркер уже был проставлен и элемента с этим ключом нет, то ставим маркер на первый элемент
-               if (this._wasSetMarker) {
-                  this._markedKey = this._setMarkerOnFirstItem(silent);
-               } else {
-                  this._model.setMarkedKey(this._markedKey, false, true);
-                  this._markedKey = null;
-               }
+               this._model.setMarkedKey(this._markedKey, false, true);
+               this._markedKey = null;
                break;
             case Visibility.Visible:
                this._markedKey = this._setMarkerOnFirstItem(silent);
@@ -96,15 +87,18 @@ export class Controller {
    /**
     * Проставляет заново маркер в модели
     * @remark Не уведомляет о проставлении маркера
-    * Если markerVisibility='visible' и элемента с marked key не существует, то маркер поставим на первый элемент
+    * Если markerVisibility='visible' или ='onactivated' и маркер уже был проставлен и элемента с marked key не существует,
+    * то маркер поставим на первый элемент
     */
-   restoreMarker(): void {
+   restoreMarker(): TKey {
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item) {
          item.setMarked(true, true);
-      } else if (this._markerVisibility === Visibility.Visible) {
-         this._markedKey = this._setMarkerOnFirstItem(true);
+      } else if (this._markerVisibility === Visibility.Visible || this._markerVisibility === Visibility.OnActivated && this._markedKey) {
+         this._markedKey = this._setMarkerOnFirstItem();
       }
+
+      return this._markedKey;
    }
 
    /**
@@ -207,7 +201,6 @@ export class Controller {
 
       const firstItemKey = firstItem.getKey();
       if (this._markedKey !== firstItemKey) {
-         this._wasSetMarker = true;
          this._model.setMarkedKey(this._markedKey, false, true);
          this._model.setMarkedKey(firstItemKey, true, silent);
       }
