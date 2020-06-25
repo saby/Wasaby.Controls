@@ -1071,7 +1071,6 @@ describe('Controls/_itemActions/Controller', () => {
         // Надо добавлять кнопку закрытия для случая контекстного меню (когда parentAction не задан)
         it('should add close button for template config when parentAction isn\'t set', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const actionsOf3 = item3.getActions();
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
             assert.isTrue(config.templateOptions.closeButtonVisibility);
         });
@@ -1091,20 +1090,28 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isFalse(config.templateOptions.closeButtonVisibility);
         });
 
-        // T3.3. Если в метод передан contextMenu=true, то в config.direction.horizontal будет right, иначе left
+        // T3.3. Если в метод передан contextMenu=true, то в config.direction.horizontal будет right
         it('should set config.direction.horizontal as \'right\' when contextMenu=true', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, true);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, true);
             assert.exists(config.direction, 'Direction options were not set');
             assert.equal(config.direction.horizontal, 'right');
         });
 
-        // T3.3.1 Если в метод передан contextMenu=true, то в config.direction.horizontal будет right, иначе left
-        it('should set result.direction.horizontal as \'left\' when contextMenu=false', () => {
+        // T3.3.1 Если в метод передан parentAction._isMenu===true, то в config.direction.horizontal будет left
+        it('should set result.direction.horizontal as \'left\' when contextMenu=true', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
             assert.exists(config.direction, 'Direction options were not set');
             assert.equal(config.direction.horizontal, 'left');
+        });
+
+        // T3.3.2 Не надо добавлять direction в menuConfig, если передан обычный parentAction
+        it('should add close button for template config when parentAction isn\'t set', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.notExists(config.direction);
         });
 
         // T3.4. Если в метод передан contextMenu=false, то в config.target будет объект с копией clickEvent.target.getBoundingClientRect()
