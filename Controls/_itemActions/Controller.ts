@@ -4,7 +4,7 @@ import { Memory } from 'Types/source';
 import { isEqual } from 'Types/object';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem, IItemActionsTemplateConfig} from 'Controls/display';
+import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
