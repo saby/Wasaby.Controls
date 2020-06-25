@@ -147,7 +147,7 @@ interface IErrbackConfig {
     error: CancelableError;
 }
 
-type CancelableError = Error & { canceled: boolean };
+type CancelableError = Error & { canceled?: boolean };
 type LoadingState = null | 'all' | 'up' | 'down';
 
 interface IIndicatorConfig {
