@@ -357,4 +357,49 @@ describe('Controls/marker/Controller', () => {
       controller.handleRemoveItems(2);
       assert.equal(model.getMarkedKey(), 2);
    });
+
+   describe('setMarkerAfterFilter', () => {
+      it('visible', () => {
+         controller = new MarkerController({model: model, markerVisibility: 'visible', markedKey: null});
+         // после фильтрации модель пересоздается
+         model.setItems(items);
+
+         let key = controller.setMarkerAfterFilter();
+         assert.equal(key, 1);
+
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+         key = controller.setMarkerAfterFilter();
+         assert.equal(key, 2);
+      });
+
+      it('onactivated', () => {
+         controller = new MarkerController({model: model, markerVisibility: 'onactivated', markedKey: null});
+         // после фильтрации модель пересоздается
+         model.setItems(items);
+
+         let key = controller.setMarkerAfterFilter();
+         assert.equal(key, null);
+
+         // если маркер уже был проставлен, то после фильтрации поставим на этот же, так как он остался
+         controller.setMarkedKey(1);
+         assert.equal(model.getMarkedKey(), 1);
+
+         // если маркер уже был проставлен, то после фильтрации поставим его на первый элемент, так как предыдущий удален
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+         key = controller.setMarkerAfterFilter();
+         assert.equal(key, 2);
+      });
+   });
 });
