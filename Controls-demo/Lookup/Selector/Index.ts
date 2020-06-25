@@ -18,6 +18,12 @@ export default class extends Control{
    protected _selectorTemplate: object = null;
    protected _selectorTemplateWithTabs: object = null;
 
+   private _textMultiply: string;
+   private _textMultiply2: string;
+   private _textMultiply3: string;
+   private _textSingle1: string;
+   private _textSingle2: string;
+
    protected _beforeMount() {
       this._source = new Memory({
          data: _companies,
@@ -50,6 +56,7 @@ export default class extends Control{
       this._selectedKeys4 = [];
       this._selectedKeys5 = [];
       this._selectedKeys6 = ['Альфа Директ сервис, ОАО'];
+      this._selectedKeys7 = [];
       this._selectedKeysAll = factory(_companies).map(function(item) {
          return item.id;
       }).value();
@@ -76,7 +83,7 @@ export default class extends Control{
    }
 
    protected selectedKeysChanged1(e, key) {
-      this._textSingle = 'Выбран ключ: ' + key;
+      this._textSingle1 = 'Выбран ключ: ' + key;
    }
 
    protected selectedKeysChanged2(e, keys) {
@@ -89,6 +96,10 @@ export default class extends Control{
 
    protected selectedKeysChanged4(e, keys) {
       this._textMultiply3 = 'Выбраны ключи: ' + keys.join(', ');
+   }
+
+   protected selectedKeysChanged5(e, key) {
+      this._textSingle2 = 'Выбраны ключи: ' + key;
    }
 
    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Lookup/Selector/Index'];
