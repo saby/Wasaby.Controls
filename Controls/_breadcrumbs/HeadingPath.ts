@@ -42,6 +42,8 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @public
  * @author Авраменко А.С.
@@ -57,6 +59,8 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @public
  * @author Авраменко А.С.

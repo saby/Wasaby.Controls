@@ -28,7 +28,7 @@ var
             if (!this._itemClickNotifiedByPathClick) {
                 const lastBreadCrumb = item.getContents()[item.getContents().length - 1];
                 if (lastBreadCrumb) {
-                    this._notify('itemClick', [lastBreadCrumb, e], {bubbling: true});
+                    this._notify('itemClick', [lastBreadCrumb, e, this._getCellIndexByEventTarget(e)], {bubbling: true});
                 }
             }
             this._itemClickNotifiedByPathClick = false;

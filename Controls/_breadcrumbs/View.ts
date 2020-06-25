@@ -17,6 +17,8 @@ import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
  * @class Controls/_breadcrumbs/View
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @private
  * @author Авраменко А.С.
@@ -140,6 +142,8 @@ class BreadCrumbsView extends Control<IControlOptions> {
             itemTemplate,
             backgroundStyle: 'default',
             displayMode: 'default'
+            fontSize: 'xs',
+            fontColorStyle: 'label'
         };
     }
     static _theme: string[] = ['Controls/crumbs'];

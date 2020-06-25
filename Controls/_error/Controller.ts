@@ -1,7 +1,6 @@
-/// <amd-module name="Controls/_dataSource/_error/Controller" />
 import { Logger } from 'UI/Utils';
 import { PromiseCanceledError } from 'Types/entity';
-import { Controller as ParkingController, loadHandlers } from 'Controls/_dataSource/parking';
+import ParkingController, { loadHandlers } from './_parking/Controller';
 import {
     Handler,
     HandlerConfig,

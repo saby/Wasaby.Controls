@@ -428,12 +428,12 @@ define(['Controls/grid'], function(gridMod) {
          gridView._listModel = {
             setBaseItemTemplateResolver: () => {},
             setColumnTemplate: () => {},
-            setColumns: () => {calledMethods.push('setColumns')},
-            setHeader: () => {calledMethods.push('setHeader')}
+            setColumns: (opts, silent) => {calledMethods.push(['setColumns', silent])},
+            setHeader: (opts, silent) => {calledMethods.push(['setHeader', silent])}
          };
          gridView._beforeMount(cfg);
 
-         assert.deepEqual(calledMethods, ['setColumns', 'setHeader']);
+         assert.deepEqual(calledMethods, [['setColumns', true], ['setHeader', true]]);
       });
 
       it('createDragScroll if allowed (no dnd)', () => {
