@@ -121,6 +121,12 @@ export class Controller {
 
     private _theme: string;
 
+    // Высота опций записи для рассчётов свайп-конфига после обновления опций записи
+    private _actionsHeight: number;
+
+    // Текущее позиционирование опций записи
+    private _itemActionsPosition: TItemActionsPosition;
+
     /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
@@ -136,6 +142,7 @@ export class Controller {
         this._contextMenuConfig = options.contextMenuConfig;
         this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         this._actionsAlignment = options.actionAlignment || DEFAULT_ACTION_ALIGNMENT;
+        this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
@@ -164,7 +171,7 @@ export class Controller {
         this.setSwipeAnimation(ANIMATION_STATE.OPEN);
         this._setSwipeItem(itemKey);
         this._collection.setActiveItem(item);
-        if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
+        if (this._itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
         }
         this._collection.nextVersion();
@@ -328,6 +335,9 @@ export class Controller {
         this._collection.setActionsAssigned(true);
 
         if (hasChanges) {
+            if (this._itemActionsPosition !== 'outside') {
+                this._updateSwipeConfig(this._actionsHeight);
+            }
             this._collection.nextVersion();
         }
 
@@ -394,7 +404,6 @@ export class Controller {
      */
     private _calculateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
         const currentConfig = this._collection.getActionsTemplateConfig();
-        const itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION;
         const actionCaptionPosition = options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
         const isEqual: boolean = (
             currentConfig &&
@@ -402,7 +411,7 @@ export class Controller {
             currentConfig.style === options.style &&
             currentConfig.itemActionsClass === options.itemActionsClass &&
             currentConfig.size === this._iconSize &&
-            currentConfig.itemActionsPosition === itemActionsPosition &&
+            currentConfig.itemActionsPosition === this._itemActionsPosition &&
             currentConfig.actionCaptionPosition === actionCaptionPosition
         );
         if (!isEqual) {
@@ -411,7 +420,7 @@ export class Controller {
                 style: options.style,
                 itemActionsClass: options.itemActionsClass,
                 size: this._iconSize,
-                itemActionsPosition,
+                itemActionsPosition: this._itemActionsPosition,
                 actionAlignment: this._actionsAlignment,
                 actionCaptionPosition
             });
@@ -438,7 +447,7 @@ export class Controller {
         if (!item) {
             return;
         }
-
+        this._actionsHeight = actionsContainerHeight;
         let actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
         actionsTemplateConfig.actionAlignment = this._actionsAlignment;
