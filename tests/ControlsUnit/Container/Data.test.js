@@ -283,7 +283,7 @@ define(
                      keyProperty: 'id',
                      data: sourceDataEdited
                   }), idProperty: 'id'}).addCallback(function() {
-                  assert.isTrue(data._items === items);
+                  assert.isTrue(data._items !== items);
                   done();
                });
             });
