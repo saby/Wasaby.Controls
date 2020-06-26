@@ -3149,7 +3149,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(itemData);
         const key = contents ? contents.getKey() : itemData.key;
-        const item = this._listViewModel.getItemBySourceKey(key);
+        const item = this._listViewModel.getItemBySourceKey(key) || itemData;
         this.setMarkedKey(key);
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
     },
@@ -3167,7 +3167,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(itemData);
         const key = contents ? contents.getKey() : itemData.key;
-        const item = this._listViewModel.getItemBySourceKey(key);
+        const item = this._listViewModel.getItemBySourceKey(key) || itemData;
         this.setMarkedKey(key);
 
         if (action && !action._isMenu && !action['parent@']) {
