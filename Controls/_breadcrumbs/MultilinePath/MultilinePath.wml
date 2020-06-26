@@ -18,6 +18,4 @@
                     on:itemClick="_itemClickHandler()"/>
         </ws:if>
     </div>
-    <Controls.event:Listener event="controlResize"
-                             on:controlResize="_onResize()"/>
 </div>

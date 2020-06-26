@@ -8,6 +8,18 @@ import * as template from 'wml!Controls/_breadcrumbs/MultilinePath/MultilinePath
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 import {Record, Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {UnregisterUtil, RegisterUtil} from 'Controls/event';
+
+/*
+ * Хлебные крошки в две строки
+ * @class Controls/_breadcrumbs/MultilinePath
+ * @extends Core/Control
+ * @mixes Controls/interface/IBreadCrumbs
+ * @control
+ * @public
+ * @author Бондарь А.В.
+ * @demo Controls-demo/BreadCrumbs/Multiline/Index
+ */
 
 class MultilinePath extends Control<IBreadCrumbsOptions> {
 
@@ -22,6 +34,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
     protected _items: Record[];
 
     protected _afterMount(options: IBreadCrumbsOptions, contexts?: object, receivedState?: void): void {
+        RegisterUtil(this, 'controlResize', this._onResize.bind(this));
         if (this._options.items && this._options.items.length > 0) {
             this._items = this._options.items;
             this._width = this._container.clientWidth;
@@ -44,15 +57,18 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
             this._calculateBreadCrumbsToDraw(newOptions.items, this._width);
         }
     }
-
-    private _initializeConstants(theme: string): void {
-        this.ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow controls-BreadCrumbsView__arrow_theme-' + theme + ' icon-size icon-DayForwardBsLine"></span>');
-        const dotsWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title  controls-BreadCrumbsView__title_theme-' + theme + ' controls-BreadCrumbsView__crumb_theme-' + theme + '">...</div>');
-        this.DOTS_WIDTH = this.ARROW_WIDTH + dotsWidth;
-        this.BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__crumb_withOverflow_theme-' + theme + ' controls-BreadCrumbsView__crumb_theme-' + theme + '"></div>');
+    protected _beforeUnmount(): void {
+        UnregisterUtil(this, 'controlResize');
     }
 
-    private _calculateBreadCrumbsToDraw(items, containerWidth: number): void {
+    private _initializeConstants(theme: string): void {
+        this.ARROW_WIDTH = getWidthUtil.getWidth(`<span class="controls-BreadCrumbsView__arrow controls-BreadCrumbsView__arrow_theme-${theme} icon-size icon-DayForwardBsLine"></span>`);
+        const dotsWidth = getWidthUtil.getWidth(`<div class="controls-BreadCrumbsView__title  controls-BreadCrumbsView__title_theme-${theme} controls-BreadCrumbsView__crumb_theme-${theme}">...</div>`);
+        this.DOTS_WIDTH = this.ARROW_WIDTH + dotsWidth;
+        this.BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth(`<div class="controls-BreadCrumbsView__crumb_withOverflow_theme-${theme} controls-BreadCrumbsView__crumb_theme-${theme}"></div>`);
+    }
+
+    private _calculateBreadCrumbsToDraw(items: Record[], containerWidth: number): void {
         this._visibleItemsFirst = [];
         this._visibleItemsSecond = [];
         const itemsWidth = this._getItemsWidth(items, this._options.displayProperty);
@@ -61,6 +77,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
         let firstContainerItems = [];
 
         if (items.length <= 2) {
+            // Если крошек меньше двух, располагаем их в первом контейнере
             firstContainerItems = items.map((item, index, items) => {
                 const hasArrow = index !== 0;
                 const withOverflow = itemsWidth[index] - (hasArrow ? this.ARROW_WIDTH : 0) > this.BREAD_CRUMB_MIN_WIDTH;
@@ -68,9 +85,11 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
             });
             this._visibleItemsFirst = firstContainerItems;
         } else {
+            // Если крошки занимают меньше доступной ширины, начинам расчеты
             if (currentContainerWidth > containerWidth) {
                 let firstContainerWidth = 0;
                 let secondContainerWidth = 0;
+                // заполняем в первый контейнер то, что помещается. Запоминаем индекс последней крошки
                 while (firstContainerWidth < containerWidth) {
                     firstContainerWidth += itemsWidth[this._indexEdge];
                     this._indexEdge++;
@@ -80,12 +99,13 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
                     firstContainerItems.push(items[i]);
                 }
                 this._visibleItemsFirst = BreadCrumbsUtil.drawBreadCrumbsItems(firstContainerItems);
+                // рассчитываем ширину второго контейнера, заполненного оставшимися крошками
                 for (let i = this._indexEdge; i < items.length; i++) {
                     secondContainerWidth += itemsWidth[i];
                 }
-
+                // если второй контейнер по ширине больше, чем доступная ширина, начинаем расчеты
                 if (secondContainerWidth > containerWidth) {
-                    // Замыливаем предпоследнюю крошку
+                    // Сначала пробуем замылить предпоследнюю крошку
                     const secondContainerItems = [];
                     if (this._canShrink(itemsWidth[items.length - 2], secondContainerWidth, containerWidth)) {
                         for (let j = this._indexEdge; j < items.length; j++) {
@@ -113,12 +133,11 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
                             shrinkItemIndex = this._indexEdge;
                             secondContainerWidth -= itemsWidth[this._indexEdge] - this.BREAD_CRUMB_MIN_WIDTH;
                         }
-
+                        // заполняем крошками, которые влезли, второй контейнер (не считая последней)
                         for (let j = this._indexEdge; j <= index; j++) {
                             secondContainerItems.push(BreadCrumbsUtil.getItemData(j, items, true, j === shrinkItemIndex));
                         }
-                        // this._visibleItemsSecond = secondContainerItems;
-
+                        // добавляем точки
                         let dotsItem = {};
                         dotsItem[this._options.displayProperty] = '...';
 
@@ -143,6 +162,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
                 }
 
             } else {
+                // Если все крошки поместились, добавляем их в первый контейнер
                 this._visibleItemsFirst = BreadCrumbsUtil.drawBreadCrumbsItems(items);
             }
         }

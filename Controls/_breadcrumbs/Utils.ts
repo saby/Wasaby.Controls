@@ -16,11 +16,9 @@ export default {
         };
     },
     drawBreadCrumbsItems(items: Record[], arrow: boolean = false): any[] {
-        let visibleItems = [];
-        visibleItems = items.map((item, index, items) => {
+        return items.map((item, index, items) => {
             return this.getItemData(index, items, arrow);
         });
-        return visibleItems;
     }
 
 };
