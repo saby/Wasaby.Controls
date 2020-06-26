@@ -781,7 +781,19 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             current._isSelected = false;
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[4]);
+         });
 
+         it('should add backgroundStyle when columnScroll is true and row is not in editing state', () => {
+            const gridViewModel = new gridMod.GridViewModel({ ...cfg, columnScroll: true});
+            const current = gridViewModel.getCurrent();
+            assert.isFalse(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll().indexOf(`controls-background-default_theme-${theme}`) === -1);
+         });
+
+         it('should not add backgroundStyle when columnScroll is true and row is in editing state', () => {
+            const gridViewModel = new gridMod.GridViewModel({ ...cfg, columnScroll: true});
+            const current = gridViewModel.getCurrent();
+            gridViewModel._setEditingItemData(current);
+            assert.isTrue(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll().indexOf(`controls-background-default_theme-${theme}`) === -1);
          });
       });
       describe('getCurrent', function() {
