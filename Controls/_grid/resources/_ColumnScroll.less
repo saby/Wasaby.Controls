@@ -13,6 +13,12 @@
    position: relative;
 }
 
+.ws-is-mobile-safari .controls-ColumnScroll_content_wrapper {
+   // Запрещаем инерционный скроллинг в гриде с горизонтальным скроллом.
+   // Горизонтальный скролл работает через transform, контейнер должен быть неподвижным.
+   overflow: hidden;
+}
+
 .controls-ColumnScroll__shadow_theme-@{themeName} {
    top: 0;
    bottom: 0;
