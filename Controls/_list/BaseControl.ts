@@ -1786,7 +1786,7 @@ const _private = {
             model.setHasMoreData(hasMoreData);
         }
     },
-    jumpToEnd(self) {
+    jumpToEnd(self): void {
         const lastItem =
             self._options.useNewModel
             ? self._listViewModel.getLast()?.getContents()
