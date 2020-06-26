@@ -115,20 +115,18 @@
 
       <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
          <h4>Selection with invalid validation</h4>
-         <div class="controls-invalid-container">
-            <Controls.lookup:Selector
-                    source="{{_sourceButton}}"
-                    displayProperty="title"
-                    keyProperty="id"
-                    caption="Выберите компанию"
-                    bind:selectedKeys="_selectedKeys7"
-                    on:selectedKeysChanged="selectedKeysChanged5()"
-                    selectorTemplate="{{_selectorTemplate}}"
-                    validationStatus="invalid"
-            >
-            </Controls.lookup:Selector>
-            <div>{{_textSingle2}}</div>
-         </div>
+         <Controls.lookup:Selector
+                 source="{{_sourceButton}}"
+                 displayProperty="title"
+                 keyProperty="id"
+                 caption="Выберите компанию"
+                 bind:selectedKeys="_selectedKeys7"
+                 on:selectedKeysChanged="selectedKeysChanged5()"
+                 selectorTemplate="{{_selectorTemplate}}"
+                 validationStatus="invalid"
+         >
+         </Controls.lookup:Selector>
+         <div>{{_textSingle2}}</div>
       </div>
    </div>
 </div>

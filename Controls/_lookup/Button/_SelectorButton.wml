@@ -1,4 +1,5 @@
-<div class="controls-Selectorbutton{{_options.items.getCount() === 0 ? ' controls-Selectorbutton_empty'}}">
+<div class="controls-Selectorbutton{{_options.items.getCount() === 0 ? ' controls-Selectorbutton_empty'}}
+   {{_options.validationStatus!== 'valid' ? 'controls-invalid-container'}}">
    <ws:if data="{{_options.items.getCount()}}">
       <Controls._lookup.SelectedCollection
               items="{{_options.items}}"
@@ -38,5 +39,7 @@
                                   on:click="_open()"/>
       </ws:else>
    </ws:else>
-   <div class="{{ _options.validationStatus!== 'valid' ? 'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
+   <ws:if data="{{_options.validationStatus!== 'valid'}}">
+      <div class="{{'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
+   </ws:if>
 </div>

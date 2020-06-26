@@ -34,11 +34,11 @@ export default class SelectorButton extends Control<ISelectorButtonOptions> impl
       this._notify('updateItems', [new List()]);
    };
 
-   protected _crossClick(event: SyntheticEvent<Event>, item: Model): void {
+   protected _crossClick(event: SyntheticEvent<Event>, item: object): void {
       this._notify('removeItem', [item]);
    };
 
-   protected _itemClickHandler(event: SyntheticEvent<Event>, item: Model): void {
+   protected _itemClickHandler(event: SyntheticEvent<Event>, item: object): void {
       this._notify('itemClick', [item]);
 
       if (!this._options.readOnly && !this._options.multiSelect) {
@@ -46,7 +46,7 @@ export default class SelectorButton extends Control<ISelectorButtonOptions> impl
       }
    };
 
-   protected _openInfoBox(event: SyntheticEvent<Event>, config: Object): void {
+   protected _openInfoBox(event: SyntheticEvent<Event>, config: object): void {
       // @ts-ignore
       config.width = this._container.offsetWidth;
    }
