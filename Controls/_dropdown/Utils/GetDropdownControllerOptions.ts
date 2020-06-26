@@ -50,6 +50,7 @@ function getDropdownControllerOptions(options: IDropdownControllerOptions): IDro
         showHeader: options.showHeader,
         headConfig: options.headConfig,
         groupTemplate: options.groupTemplate,
+        groupProperty: options.groupProperty,
         searchParam: options.searchParam,
         minSearchLength: options.minSearchLength,
         searchDelay: options.searchDelay,
