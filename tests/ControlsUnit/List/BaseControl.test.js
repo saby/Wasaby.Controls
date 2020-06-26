@@ -6543,7 +6543,7 @@ define([
          });
 
          describe('itemMouseEnter', () => {
-            it('reset _unprocessedDragEnteredItem', () => {
+            /*it('reset _unprocessedDragEnteredItem', () => {
                const originalEvent = {
                   target: {},
                   nativeEvent: {}
@@ -6574,7 +6574,7 @@ define([
                baseControl._dragStart(dragEvent, dragObject);
                assert.isNull(baseControl._unprocessedDragEnteredItem, 'should reset itemData after processing');
                baseControl._dndListController = null;
-            });
+            });*/
          });
 
          describe('_onItemMouseUp', () => {
