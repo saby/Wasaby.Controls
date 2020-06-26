@@ -64,22 +64,18 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
    private _prepareOptions(options: IHeadingOptions): void {
       if (options.size) {
          // TODO: будет удалено в версию после 5100
-         // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-         // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-         /*Logger.error('Controls.heading.Title: Используется устаревшая опция size. ' +
+         Logger.error('Controls.heading.Title: Используется устаревшая опция size. ' +
              'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-             'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');*/
+             'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
          this._fontSize = mapFontSize[options.size];
       } else {
          this._fontSize = options.fontSize;
       }
       if (options.style) {
          // TODO: будет удалено в версию после 5100
-         // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-         // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-         /*Logger.error('Controls.heading.Title: Используется устаревшая опция style. ' +
+         Logger.error('Controls.heading.Title: Используется устаревшая опция style. ' +
              'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-             'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');*/
+             'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');
          this._fontColorStyle = mapFontColorStyle[options.style];
       } else {
          this._fontColorStyle = options.fontColorStyle;
