@@ -230,14 +230,54 @@ export class Controller {
             return;
         }
         const menuActions = this._getMenuActions(item, parentAction);
-        const isActionMenu = !!parentAction && !parentAction._isMenu;
-
         if (!menuActions || menuActions.length === 0) {
             return;
         }
 
-        // there was a fake target before, check if it is needed
         const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
+        const isActionMenu = !!parentAction && !parentAction._isMenu;
+        const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
+
+        let menuConfig: IMenuConfig = {
+            opener,
+            template: 'Controls/menu:Popup',
+            actionOnScroll: 'close',
+            target,
+            templateOptions,
+            className: `controls-MenuButton_link_iconSize-medium_popup theme_${this._theme}`,
+            closeOnOutsideClick: true,
+            autofocus: false,
+            fittingMode: {
+                vertical: 'overflow',
+                horizontal: 'adaptive'
+            },
+            readOnly: false
+        };
+        if (!isActionMenu) {
+            menuConfig = {
+                ...menuConfig,
+                direction: {
+                    horizontal: isContextMenu ? 'right' : 'left'
+                },
+                targetPoint: {
+                    vertical: 'top',
+                    horizontal: 'right'
+                },
+                className: `controls-ItemActions__popup__list_theme-${this._theme}`,
+                nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
+            }
+        }
+        return menuConfig;
+    }
+
+    /**
+     * Возвращает конфиг для шаблона меню опций
+     * @param isActionMenu
+     * @param parentAction
+     * @param menuActions
+     * @private
+     */
+    private _getActionsMenuTemplateConfig(isActionMenu: boolean, parentAction: IItemAction, menuActions: IItemAction[]): IMenuTemplateOptions {
         const source = new Memory({
             data: menuActions,
             keyProperty: 'id'
@@ -249,7 +289,7 @@ export class Controller {
             iconSize
         } : null;
         const root = parentAction && parentAction.id;
-        const templateOptions: IMenuTemplateOptions = {
+        return {
             source,
             keyProperty: 'id',
             parentProperty: 'parent',
@@ -262,31 +302,6 @@ export class Controller {
             iconSize,
             closeButtonVisibility: !isActionMenu && !root
         };
-        const menuConfig: IMenuConfig = {
-            opener,
-            template: 'Controls/menu:Popup',
-            actionOnScroll: 'close',
-            target,
-            templateOptions,
-            closeOnOutsideClick: true,
-            targetPoint: {
-                vertical: 'top',
-                horizontal: 'right'
-            },
-            fittingMode: {
-                vertical: 'overflow',
-                horizontal: 'adaptive'
-            },
-            className: isActionMenu ? 'controls-MenuButton_link_iconSize-medium_popup ' : '' + `controls-ItemActions__popup__list_theme-${this._theme}`,
-            nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
-            autofocus: false
-        };
-        if (!isActionMenu) {
-            menuConfig.direction = {
-                horizontal: isContextMenu ? 'right' : 'left'
-            }
-        }
-        return menuConfig;
     }
 
     /**

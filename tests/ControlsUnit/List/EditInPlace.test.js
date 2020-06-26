@@ -2153,6 +2153,7 @@ define([
             sinon.stub(eip, '_setEditingItemData').callsFake(() => {
                done();
             });
+            eip._editingItemData = {};
             eip.updateEditingData({
                readOnly: true
             });
