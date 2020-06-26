@@ -57,6 +57,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
             this._calculateBreadCrumbsToDraw(newOptions.items, this._width);
         }
     }
+
     protected _beforeUnmount(): void {
         UnregisterUtil(this, 'controlResize');
     }
@@ -72,7 +73,6 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
         this._visibleItemsFirst = [];
         this._visibleItemsSecond = [];
         const itemsWidth = this._getItemsWidth(items, this._options.displayProperty);
-        const currentContainerWidth = itemsWidth.reduce((accumulator, currentValue) => accumulator + currentValue);
         let shrinkItemIndex;
         let firstContainerItems = [];
 
@@ -86,84 +86,71 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
             this._visibleItemsFirst = firstContainerItems;
         } else {
             // Если крошки занимают меньше доступной ширины, начинам расчеты
-            if (currentContainerWidth > containerWidth) {
-                let firstContainerWidth = 0;
-                let secondContainerWidth = 0;
-                // заполняем в первый контейнер то, что помещается. Запоминаем индекс последней крошки
-                while (firstContainerWidth < containerWidth) {
-                    firstContainerWidth += itemsWidth[this._indexEdge];
-                    this._indexEdge++;
-                }
-                this._indexEdge -= 1;
-                for (let i = 0; i < this._indexEdge; i++) {
-                    firstContainerItems.push(items[i]);
-                }
-                this._visibleItemsFirst = BreadCrumbsUtil.drawBreadCrumbsItems(firstContainerItems);
-                // рассчитываем ширину второго контейнера, заполненного оставшимися крошками
-                for (let i = this._indexEdge; i < items.length; i++) {
-                    secondContainerWidth += itemsWidth[i];
-                }
-                // если второй контейнер по ширине больше, чем доступная ширина, начинаем расчеты
-                if (secondContainerWidth > containerWidth) {
-                    // Сначала пробуем замылить предпоследнюю крошку
-                    const secondContainerItems = [];
-                    if (this._canShrink(itemsWidth[items.length - 2], secondContainerWidth, containerWidth)) {
-                        for (let j = this._indexEdge; j < items.length; j++) {
-                            secondContainerItems.push(BreadCrumbsUtil.getItemData(j, items, true, j === items.length - 2));
-                        }
-                        this._visibleItemsSecond = secondContainerItems;
+            let firstContainerWidth = 0;
+            let secondContainerWidth = 0;
+            // заполняем в первый контейнер то, что помещается. Запоминаем индекс последней крошки
+            while (firstContainerWidth < containerWidth) {
+                firstContainerWidth += itemsWidth[this._indexEdge];
+                this._indexEdge++;
+            }
+            this._indexEdge -= 1;
+            for (let i = 0; i < this._indexEdge; i++) {
+                firstContainerItems.push(items[i]);
+            }
+            this._visibleItemsFirst = BreadCrumbsUtil.drawBreadCrumbsItems(firstContainerItems);
+            // рассчитываем ширину второго контейнера, заполненного оставшимися крошками
+            for (let i = this._indexEdge; i < items.length; i++) {
+                secondContainerWidth += itemsWidth[i];
+            }
+            secondContainerWidth -= itemsWidth[items.length - 2];
+            secondContainerWidth += this.BREAD_CRUMB_MIN_WIDTH;
+            // если второй контейнер по ширине больше, чем доступная ширина, начинаем расчеты
+            if (secondContainerWidth > containerWidth) {
+                // предпоследняя не уместилась - сразу вычитаем ее ширину
+                secondContainerWidth -= this.BREAD_CRUMB_MIN_WIDTH;
+                // Сначала пробуем замылить предпоследнюю крошку
+                const secondContainerItems = [];
+                // если замылить не получилось - показываем точки
+                secondContainerWidth += this.DOTS_WIDTH;
+                let index;
+                // предпоследняя не поместилась - начинаем с пред-предпоследней
+                for (index = items.length - 3; index >= this._indexEdge; index--) {
+                    if (secondContainerWidth <= containerWidth) {
+                        break;
+                    } else if (this._canShrink(itemsWidth[index], secondContainerWidth, containerWidth)) {
+                        shrinkItemIndex = index;
+                        secondContainerWidth -= itemsWidth[index] - this.BREAD_CRUMB_MIN_WIDTH;
+                        break;
                     } else {
-                        // если замылить не получилось - показываем точки
-                        secondContainerWidth += this.DOTS_WIDTH;
-                        let index;
-                        for (index = items.length - 2; index > this._indexEdge; index--) {
-                            if (secondContainerWidth <= containerWidth) {
-                                break;
-                            } else if (this._canShrink(itemsWidth[index], secondContainerWidth, containerWidth)) {
-                                shrinkItemIndex = index;
-                                secondContainerWidth -= itemsWidth[index] - this.BREAD_CRUMB_MIN_WIDTH;
-                                break;
-                            } else {
-                                secondContainerWidth -= itemsWidth[index];
-                            }
-                        }
-
-                        // Если осталось всего 2 крошки, но места все равно не хватает, то пытаемся обрезать первый элемент.
-                        if (index === this._indexEdge && secondContainerWidth > containerWidth && itemsWidth[this._indexEdge] > this.BREAD_CRUMB_MIN_WIDTH) {
-                            shrinkItemIndex = this._indexEdge;
-                            secondContainerWidth -= itemsWidth[this._indexEdge] - this.BREAD_CRUMB_MIN_WIDTH;
-                        }
-                        // заполняем крошками, которые влезли, второй контейнер (не считая последней)
-                        for (let j = this._indexEdge; j <= index; j++) {
-                            secondContainerItems.push(BreadCrumbsUtil.getItemData(j, items, true, j === shrinkItemIndex));
-                        }
-                        // добавляем точки
-                        let dotsItem = {};
-                        dotsItem[this._options.displayProperty] = '...';
-
-                        secondContainerItems.push({
-                            getPropValue: ItemsUtil.getPropertyValue,
-                            item: dotsItem,
-                            isDots: true,
-                            hasArrow: true
-                        });
-                        // добавляем последнюю папку
-                        secondContainerItems.push(BreadCrumbsUtil.getItemData(items.length - 1, items, true, false));
-
-                        this._visibleItemsSecond = secondContainerItems;
+                        secondContainerWidth -= itemsWidth[index];
                     }
-                } else {
-                    // если все остальные крошки поместились - пушим по второй контейнер
-                    const secondContainerItems = [];
-                    for (let i = this._indexEdge; i < items.length; i++) {
-                        secondContainerItems.push(items[i]);
-                    }
-                    this._visibleItemsSecond = BreadCrumbsUtil.drawBreadCrumbsItems(secondContainerItems, true);
                 }
+                // заполняем крошками, которые влезли, второй контейнер (не считая последней)
+                for (let j = this._indexEdge; j <= index; j++) {
+                    secondContainerItems.push(BreadCrumbsUtil.getItemData(j, items, true, j === shrinkItemIndex));
+                }
+                // добавляем точки
+                let dotsItem = {};
+                dotsItem[this._options.displayProperty] = '...';
+
+                secondContainerItems.push({
+                    getPropValue: ItemsUtil.getPropertyValue,
+                    item: dotsItem,
+                    isDots: true,
+                    hasArrow: true
+                });
+                // добавляем последнюю папку
+                secondContainerItems.push(BreadCrumbsUtil.getItemData(items.length - 1, items, true, false));
+
+                this._visibleItemsSecond = secondContainerItems;
 
             } else {
-                // Если все крошки поместились, добавляем их в первый контейнер
-                this._visibleItemsFirst = BreadCrumbsUtil.drawBreadCrumbsItems(items);
+                // если все остальные крошки поместились - пушим по второй контейнер
+                const secondContainerItems = [];
+                for (let j = this._indexEdge; j < items.length; j++) {
+                    secondContainerItems.push(BreadCrumbsUtil.getItemData(j, items, true, j === items.length - 2));
+                }
+                this._visibleItemsSecond = secondContainerItems;
             }
         }
         this._indexEdge = 0;
@@ -190,7 +177,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
         }
     }
 
-    private _itemClickHandler(e: SyntheticEvent<MouseEvent> , item: Model): void {
+    private _itemClickHandler(e: SyntheticEvent<MouseEvent>, item: Model): void {
         e.stopPropagation();
         this._notify('itemClick', [item]);
     }
