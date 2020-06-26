@@ -247,8 +247,6 @@ export class Controller {
             className: `controls-MenuButton_link_iconSize-medium_popup theme_${this._theme}`,
             closeOnOutsideClick: true,
             autofocus: false,
-            closeOnOutsideClick: true
-            closePopupBeforeUnmount: true
             fittingMode: {
                 vertical: 'overflow',
                 horizontal: 'adaptive'
