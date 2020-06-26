@@ -3969,7 +3969,7 @@ define([
          assert.isNull(ctrl._draggingItem);
       });
       describe('mouseDown with different buttons', function() {
-         it('dragNDrop do not start on right or middle mouse button', async function() {
+         /*it('dragNDrop do not start on right or middle mouse button', async function() {
             var source = new sourceLib.Memory({
                keyProperty: 'id',
                data: data
@@ -4045,7 +4045,7 @@ define([
             domEvent.nativeEvent.button = 0;
             ctrl._itemMouseDown({}, itemData, domEvent);
             assert.isTrue(dragNDropStarted);
-         });
+         });*/
       });
 
       it('startDragNDrop', () => {
@@ -4153,7 +4153,7 @@ define([
          assert.isNull(ctrl._unprocessedDragEnteredItem);
       });
 
-      it('_dragEnter only works with ItemsEntity', function() {
+      /*it('_dragEnter only works with ItemsEntity', function() {
          const ctrl = new lists.BaseControl({});
 
          ctrl._listViewModel = {
@@ -4186,7 +4186,7 @@ define([
          ctrl._dragEnter({}, goodDragObject);
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
-      });
+      });*/
 
       it('native drag prevent only by native "dragstart" event', async function() {
          let isDefaultPrevented = false;
@@ -6500,7 +6500,7 @@ define([
          });
 
          describe('_onItemMouseDown', () => {
-            it('reset _unprocessedDragEnteredItem', () => {
+            /*it('reset _unprocessedDragEnteredItem', () => {
                const originalEvent = {
                   target: {},
                   nativeEvent: {}
@@ -6510,7 +6510,7 @@ define([
                baseControl._unprocessedDragEnteredItem = {};
                baseControl._itemMouseDown(event, itemData, originalEvent);
                assert.isNull(baseControl._unprocessedDragEnteredItem);
-            });
+            });*/
             it('notify parent', () => {
                const originalEvent = {
                   target: {},
