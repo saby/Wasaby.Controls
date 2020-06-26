@@ -7,7 +7,7 @@ define([
    'UI/Utils'
 ], function(
    dataSource,
-   Env,
+   { constants },
    Transport,
    { PromiseCanceledError },
    { Logger }
@@ -289,6 +289,87 @@ define([
          // default mode in handler's config
          // default mode in result
          // dafault template
+      });
+
+      describe('_getIVersion()', () => {
+         it('returns empty object on server side', () => {
+            const { isServerSide } = constants;
+            constants.isServerSide = true;
+            try {
+               assert.isEmpty(Controller._getIVersion());
+            } finally {
+               constants.isServerSide = isServerSide;
+            }
+         });
+
+         it('returns IVersionable on browser side', () => {
+            const { isServerSide } = constants;
+            constants.isServerSide = false;
+            try {
+               const result = Controller._getIVersion();
+               assert.isObject(result, 'must return an object');
+               assert.isTrue(result['[Types/_entity/IVersionable]'], 'must have [Types/_entity/IVersionable]');
+               assert.isFunction(result.getVersion, 'must have getVersion()');
+               assert.isNumber(result.getVersion(), 'getVersion() must return a number');
+            } finally {
+               constants.isServerSide = isServerSide;
+            }
+         });
+      });
+
+      describe('_isNeedHandle()', () => {
+         it('returns false for Abort error', () => {
+            const error = new Transport.fetch.Errors.Abort('test-url');
+            assert.isFalse(Controller._isNeedHandle(error));
+         });
+
+         it('returns false for processed error', () => {
+            const error = { processed: true };
+            assert.isFalse(Controller._isNeedHandle(error));
+         });
+
+         it('returns false for canceled error', () => {
+            const error = { canceled: true };
+            assert.isFalse(Controller._isNeedHandle(error));
+         });
+
+         it('returns true for other types', () => {
+            const error = new Error();
+            assert.isTrue(Controller._isNeedHandle(error));
+         });
+      });
+
+      describe('_prepareConfig()', () => {
+         it('returns a config for an error', () => {
+            const error = new Error();
+            const result = Controller._prepareConfig(error);
+            assert.deepEqual(result, {
+               error,
+               mode: 'dialog'
+            });
+         });
+
+         it('returns a config with default mode', () => {
+            const error = new Error();
+            const config = { error };
+            const result = Controller._prepareConfig(config);
+            assert.notStrictEqual(result, config, 'must return a new object');
+            assert.deepEqual(result, {
+               error,
+               mode: 'dialog'
+            });
+         });
+
+         it('returns a copy of the config', () => {
+            const error = new Error();
+            const config = {
+               error,
+               mode: 'include'
+            };
+            const result = Controller._prepareConfig(config);
+            assert.notStrictEqual(result, config, 'must return a new object');
+            assert.deepEqual(result, config);
+         });
       });
    });
 });

@@ -1,5 +1,7 @@
 import { Logger } from 'UI/Utils';
-import { PromiseCanceledError } from 'Types/entity';
+import { IVersionable, PromiseCanceledError } from 'Types/entity';
+import { constants } from 'Env/Env';
+import { fetch } from 'Browser/Transport';
 import ParkingController, { loadHandlers } from './_parking/Controller';
 import {
     Handler,
@@ -8,8 +10,6 @@ import {
     ViewConfig
 } from './Handler';
 import Mode from './Mode';
-import { fetch } from 'Browser/Transport';
-import { IVersionable } from 'Types/entity';
 import Popup, { IPopupHelper } from './Popup';
 
 export type Config = {
@@ -17,44 +17,7 @@ export type Config = {
     viewConfig?: Partial<ViewConfig>;
 };
 
-/// region helpers
-const getIVersion = (): IVersionable => {
-    const id: number = Math.random();
-    /*
-     * неоходимо для прохождения dirty-checking при схранении объекта на инстансе компонента,
-     * для дальнейшего его отображения через прокидывание параметра в Container
-     * в случа, когда два раза пришла одна и та же ошибка, а между ними стейт не менялся
-     */
-    return {
-        '[Types/_entity/IVersionable]': true,
-        getVersion(): number {
-            return id;
-        }
-    };
-};
-
-const isNeedHandle = (error: Error): boolean => {
-    return !(
-        (error instanceof fetch.Errors.Abort) ||
-        // @ts-ignore
-        error.processed ||
-        // @ts-ignore
-        error.canceled
-    );
-};
-
-const prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> => {
-    if (config instanceof Error) {
-        return {
-            error: config,
-            mode: Mode.dialog
-        };
-    }
-    return {
-        mode: Mode.dialog,
-        ...config
-    };
-};
+type CanceledError = Error & { canceled?: boolean; };
 
 let popupHelper: IPopupHelper;
 
@@ -154,9 +117,9 @@ export default class ErrorController {
     process<TError extends ProcessedError = ProcessedError>(
         config: HandlerConfig<TError> | TError
     ): Promise<ViewConfig | void> {
-        const _config = prepareConfig<TError>(config);
+        const _config = ErrorController._prepareConfig<TError>(config);
 
-        if (!isNeedHandle(_config.error)) {
+        if (!ErrorController._isNeedHandle(_config.error)) {
             return Promise.resolve();
         }
 
@@ -171,7 +134,7 @@ export default class ErrorController {
                 mode: handlerResult.mode || _config.mode,
                 template: handlerResult.template,
                 options: handlerResult.options,
-                ...getIVersion()
+                ...ErrorController._getIVersion()
             };
         }).catch((error: PromiseCanceledError) => {
             if (!error.isCanceled) {
@@ -193,6 +156,49 @@ export default class ErrorController {
      * Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
      */
     static readonly CONFIG_FIELD: string = 'errorHandlers';
+
+    private static _getIVersion(): Partial<IVersionable> {
+        if (constants.isServerSide) {
+            // При построении контролов на сервере мы не будем добавлять в конфиг
+            // функцию getVersion(), иначе конфиг не сможет нормально десериализоваться.
+            return {};
+        }
+
+        const id: number = Math.random();
+        /*
+         * неоходимо для прохождения dirty-checking при схранении объекта на инстансе компонента,
+         * для дальнейшего его отображения через прокидывание параметра в Container
+         * в случа, когда два раза пришла одна и та же ошибка, а между ними стейт не менялся
+         */
+        return {
+            '[Types/_entity/IVersionable]': true,
+            getVersion(): number {
+                return id;
+            }
+        };
+    };
+
+    private static _isNeedHandle(error: ProcessedError & CanceledError): boolean {
+        return !(
+            (error instanceof fetch.Errors.Abort) ||
+            error.processed ||
+            error.canceled
+        );
+    };
+
+    private static _prepareConfig<T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> {
+        if (config instanceof Error) {
+            return {
+                error: config,
+                mode: Mode.dialog
+            };
+        }
+
+        return {
+            mode: Mode.dialog,
+            ...config
+        };
+    };
 }
 
 // Загружаем модули обработчиков заранее, чтобы была возможность использовать их при разрыве соединения.
