@@ -464,6 +464,60 @@ var _private = {
     * </pre>
     */
 
+   /**
+    * @name Controls/_tabs/Buttons#rightTemplateProperty
+    * @cfg {String} Имя поля, которое содержит шаблон отображения элемента, находящегося справа от основного содержимого.
+    * @example
+    * <pre>
+    *    <Controls.tabs:Buttons rightTemplateProperty="myTemplate"
+    *                           source="{{_source}}
+    *                           ...>
+    *    </Controls.tabs:Buttons>
+    * </pre>
+    *
+    * myTemplate
+    * <pre>
+    *    <div class="{{item.get('icon')}} icon-small controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div
+    * </pre>
+    * <pre>
+    *    _source: new Memory({
+    *              keyProperty: 'id',
+    *              data: [
+    *                     {id: 1, title: 'I agree'},
+    *                     {id: 2, title: 'I not decide'},
+    *                     {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
+    *              ]
+    *    })
+    * </pre>
+    */
+
+   /**
+    * @name Controls/_tabs/Buttons#leftTemplateProperty
+    * @cfg {String} Имя поля, которое содержит шаблон отображения элемента, находящегося слева от основного содержимого.
+    * @example
+    * <pre>
+    *    <Controls.tabs:Buttons leftTemplateProperty="myTemplate"
+    *                           source="{{_source}}
+    *                           ...>
+    *    </Controls.tabs:Buttons>
+    * </pre>
+    *
+    * myTemplate
+    * <pre>
+    *    <div class="{{item.get('icon')}} icon-small controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div
+    * </pre>
+    * <pre>
+    *    _source: new Memory({
+    *              keyProperty: 'id',
+    *              data: [
+    *                     {id: 1, title: 'I agree'},
+    *                     {id: 2, title: 'I not decide'},
+    *                     {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
+    *              ]
+    *    })
+    * </pre>
+    */
+
    var TabsButtons = Control.extend({
       _template: TabButtonsTpl,
       _items: null,

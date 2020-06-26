@@ -19,7 +19,7 @@ import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
  * @control
  * @author Красильников А.С.
  * @category Popup
- * @demo Controls-demo/Popup/Opener/DialogPG
+ * @demo Controls-demo/Popup/Opener/StackDemo
  * @public
  */
 
