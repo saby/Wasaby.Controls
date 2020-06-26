@@ -504,6 +504,55 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isUndefined(config.twoColumns);
         });
 
+        // T2.3.1. Если при инициализации в конфиге контекстного меню передан footerTemplate нужно принудительно показывать кнопку "ещё"
+        it('should add menu button for horizontal swipe when contextMenu.footerTemplate is passed', () => {
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions: horizontalOnlyItemActions,
+                theme: 'default',
+                actionAlignment: 'horizontal',
+                contextMenuConfig: {
+                    footerTemplate: 'template'
+                }
+            }));
+            itemActionsController.activateSwipe(3, 50);
+            const config = collection.getSwipeConfig();
+            assert.exists(config, 'Swipe activation should make configuration');
+            assert.isTrue(config.itemActions.showed[config.itemActions.showed.length -1]._isMenu, 'menu button was not added');
+        });
+
+        // T2.3.2. Если при инициализации в конфиге контекстного меню передан headerTemplate нужно принудительно показывать кнопку "ещё"
+        it('should add menu button for horizontal swipe when contextMenu.headerTemplate is passed', () => {
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions: horizontalOnlyItemActions,
+                theme: 'default',
+                actionAlignment: 'horizontal',
+                contextMenuConfig: {
+                    headerTemplate: 'template'
+                }
+            }));
+            itemActionsController.activateSwipe(3, 50);
+            const config = collection.getSwipeConfig();
+            assert.exists(config, 'Swipe activation should make configuration');
+            assert.isTrue(config.itemActions.showed[config.itemActions.showed.length -1]._isMenu, 'menu button was not added');
+        });
+
+        // T2.3.2. кнопка "Ещё" в горизонтальном свайпе не будет показана, если записей меньше 4
+        // (этот тест работает до тех пор, пока мы не сделаем расчёт горизонтальных опций от их ширины, см. horizontalMeasurer)
+        it('should add menu button for horizontal swipe when contextMenu.headerTemplate is passed', () => {
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions: horizontalOnlyItemActions,
+                theme: 'default',
+                actionAlignment: 'horizontal'
+            }));
+            itemActionsController.activateSwipe(3, 50);
+            const config = collection.getSwipeConfig();
+            assert.exists(config, 'Swipe activation should make configuration');
+            assert.notExists(config.itemActions.showed[config.itemActions.showed.length -1]._isMenu, 'menu button was added');
+        });
+
         // T2.3. В зависимости от actionAlignment, для получения конфигурации используется правильный measurer
         // T2.5. Конфигурация для Swipe происходит с установкой twoColumnsActions, если measurer вернул в конфиг twoColumns
         it('should use vertical measurer when actionAlignment=\'vertical\'', () => {

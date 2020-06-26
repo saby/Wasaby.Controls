@@ -71,6 +71,14 @@ export type TItemActionsPosition = 'inside'|'outside'|'custom';
 export type TItemActionsSize = 'm'|'s';
 
 /**
+ * @cfg {string} TItemActionsSize
+ * Видимость кнопки "Ещё" в свайпе
+ * @variant visible - кнопка видима в любом случае
+ * @variant adaptive - Расчёт происходит от количесива элементов в свайпе
+ */
+export type TMenuButtonVisibility = 'visible'|'adaptive';
+
+/**
  * Configuration object for a button which will be shown when the user hovers over a list item.
  * TODO duplicated from IList
  */
