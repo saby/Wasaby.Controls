@@ -146,7 +146,6 @@ export class Controller {
       // Если элемент с текущем маркером не удален, то маркер не нужно менять
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item) {
-         this._model.setMarkedKey(this._markedKey, true);
          return this._markedKey;
       }
 
