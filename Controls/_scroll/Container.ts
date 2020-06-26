@@ -1249,7 +1249,8 @@ let
           }
       },
 
-      _restoreScrollPosition(event: SyntheticEvent<Event>, heightDifference: number, direction: string): void {
+      _restoreScrollPosition(event: SyntheticEvent<Event>, heightDifference: number, direction: string,
+                             correctingHeight: number = 0): void {
          // На это событие должен реагировать только ближайший скролл контейнер.
          // В противном случае произойдет подскролл в ненужном контейнере
          event.stopPropagation();
@@ -1261,8 +1262,8 @@ let
               this.setOverflowScrolling('auto');
           }
          const newPosition = direction === 'up' ?
-             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference :
-             this._savedScrollTop - heightDifference;
+             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference - correctingHeight :
+             this._savedScrollTop - heightDifference + correctingHeight;
 
          this._children.scrollWatcher.setScrollTop(newPosition, true);
       },
