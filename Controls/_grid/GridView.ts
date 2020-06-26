@@ -581,7 +581,7 @@ var
                 return element.parentElement;
             }
             return element;
-        }
+        },
         _getCellByEventTarget(target: HTMLElement): HTMLElement {
             return target.closest('.controls-Grid__row-cell');
         },
