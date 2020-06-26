@@ -332,6 +332,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         version = (this._editingItemData ? 'WITH_EDITING_' : 'WITHOUT_EDITING_') + version;
         if (this._editingItemData && this._editingItemData.key === key) {
             version = 'EDITING_' + version;
+            version = `MULTISELECT-${this._options.multiSelectVisibility}_${version}`;
         }
         if (this._swipeItem && this._swipeItem.key === key) {
             version = 'SWIPE_' + version;
