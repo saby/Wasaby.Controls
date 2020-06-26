@@ -608,9 +608,9 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._onCollectionChange(
            new EventObject('oncollectionchange', this._display),
            IObservable.ACTION_CHANGE,
-           [new CollectionItem({
-              contents: data.item
-           })],
+            [new CollectionItem({
+                contents: data.item
+            })],
            data.index,
            [],
            0
