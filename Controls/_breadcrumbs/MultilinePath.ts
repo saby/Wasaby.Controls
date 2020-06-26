@@ -172,7 +172,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
     private _getItemsWidth(items: Record[], displayProperty: string): number[] {
         const itemsWidth = [];
         items.forEach((item, index) => {
-            const itemTitleWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title  controls-BreadCrumbsView__title_theme-' + this._options.theme + ' controls-BreadCrumbsView__crumb_theme-' + this._options.theme + '">' + ItemsUtil.getPropertyValue(item, displayProperty) + '</div>');
+            const itemTitleWidth = getWidthUtil.getWidth(`<div class="controls-BreadCrumbsView__title  controls-BreadCrumbsView__title_theme-${this._options.theme} controls-BreadCrumbsView__crumb_theme-${this._options.theme}">${ItemsUtil.getPropertyValue(item, displayProperty)}</div>`);
             const itemWidth = index !== 0 ? itemTitleWidth + this.ARROW_WIDTH : itemTitleWidth;
             itemsWidth.push(itemWidth);
         });
