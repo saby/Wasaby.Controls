@@ -34,6 +34,7 @@ class BaseDropdown extends Control<IControlOptions> {
     }
 
     protected _onClose(): void {
+        this._popupId = null;
         this._controller.handleClose();
         this._notify('dropDownClose');
     }
@@ -52,6 +53,10 @@ class BaseDropdown extends Control<IControlOptions> {
 
     protected closeMenu(): void {
         this._controller.closeMenu();
+    }
+
+    _beforeUnmount(): void {
+        this._controller.destroy();
     }
 }
 

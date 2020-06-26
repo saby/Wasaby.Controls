@@ -181,16 +181,9 @@ class Button extends BaseDropdown {
 
    _handleMouseDown(event: SyntheticEvent): void {
       const config = {
-         templateOptions: {
-            selectorDialogResult: this._selectorTemplateResult.bind(this),
-            selectorOpener: StackOpener
-         },
          eventHandlers: {
             onOpen: this._onOpen.bind(this),
-            onClose: () => {
-               this._popupId = null;
-               this._onClose();
-            },
+            onClose: this._onClose.bind(this),
             onResult: (action, data, nativeEvent) => {
                this._onResult(action, data, nativeEvent);
             }
@@ -214,12 +207,6 @@ class Button extends BaseDropdown {
          case 'itemClick':
             this._itemClick(data, nativeEvent);
             break;
-         case 'selectorResult':
-            this._selectorResult(data, nativeEvent);
-            break;
-         case 'selectorDialogOpened':
-            this._selectorDialogOpened(data);
-            break;
          case 'footerClick':
             this._footerClick(data);
       }
@@ -233,20 +220,6 @@ class Button extends BaseDropdown {
       if (res !== false) {
          this._controller.handleSelectedItems(item);
       }
-   }
-
-   protected _selectorResult(data, nativeEvent): void {
-      this._controller.onSelectorResult(data);
-      this._onItemClickHandler(data, nativeEvent);
-   }
-
-   protected _selectorTemplateResult(event, selectedItems): void {
-      let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
-      this._selectorResult(result);
-   }
-
-   _beforeUnmount(): void {
-      this._controller.destroy();
    }
 }
 

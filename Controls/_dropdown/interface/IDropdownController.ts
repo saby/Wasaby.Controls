@@ -1,9 +1,10 @@
-import {IControlOptions} from 'UI/Base';
+import {Control, IControlOptions} from 'UI/Base';
 import {INavigationOptions, IFilterOptions, IMultiSelectableOptions} from 'Controls/interface';
-import {IMenuPopup} from 'Controls/menu';
+import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {IDropdownSourceOptions} from './IDropdownSource';
-import {RecordSet} from "Types/collection";
-import {Memory} from "Types/source";
+import {RecordSet} from 'Types/collection';
+import {Memory} from 'Types/source';
+import {IStickyPosition} from 'Controls/popup';
 export type TKey = string|number|null;
 
 export interface IDropdownController {
@@ -21,8 +22,7 @@ export interface IDropdownController {
 }
 
 export interface IDropdownControllerOptions extends IControlOptions, IDropdownSourceOptions, INavigationOptions,
-    IFilterOptions, IMultiSelectableOptions, IMenuPopup {
-    notifySelectedItemsChanged: Function;
+    IFilterOptions, IMultiSelectableOptions, IMenuPopupOptions {
     keyProperty: string;
     notifyEvent: Function;
     lazyItemsLoading?: boolean;
@@ -36,4 +36,7 @@ export interface IDropdownControllerOptions extends IControlOptions, IDropdownSo
     popupClassName?: string;
     marker?: boolean;
     typeShadow?: string;
+    openerControl: Control;
+    targetPoint: IStickyPosition;
+    menuPopupOptions?: IMenuPopupOptions;
 }

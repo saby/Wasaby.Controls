@@ -173,10 +173,7 @@ class ComboBox extends BaseDropdown {
             },
             eventHandlers: {
                onOpen: this._onOpen.bind(this),
-               onClose: () => {
-                  this._popupId = null;
-                  this._onClose();
-               },
+               onClose: this._onClose.bind(this),
                onResult: this._onResult.bind(this)
             }
          };
@@ -197,10 +194,6 @@ class ComboBox extends BaseDropdown {
          this._selectedItemsChangedHandler([item]);
          this._controller.handleSelectedItems(item);
       }
-   }
-
-   _beforeUnmount(): void {
-      this._controller.destroy();
    }
 
    //FIXME delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3

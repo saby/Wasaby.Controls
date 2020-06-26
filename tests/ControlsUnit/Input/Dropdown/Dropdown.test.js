@@ -151,6 +151,183 @@ define(
             ddl._prepareDisplayState(items.slice(0, 3));
             assert.equal(ddl._tooltip, 'Запись 1, Запись 2, Запись 3');
          });
+
+         it('_selectorTemplateResult', () => {
+            let opened;
+            let newConfig = Clone(config);
+            let ddl = getDropdown(newConfig);
+            ddl._beforeMount(config);
+            popup.Sticky.closePopup = () => { opened = false; };
+            let curItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  },
+                     {
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
+               });
+            ddl._controller._items = curItems;
+            ddl._controller._source = config.source;
+            let newItems = [ {
+               id: '9',
+               title: 'Запись 9'
+            },
+               {
+                  id: '10',
+                  title: 'Запись 10'
+               },
+               {
+                  id: '1',
+                  title: 'Запись 1'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  title: 'Запись 3'
+               }
+            ];
+
+            ddl._selectorTemplateResult('selectorResult', selectedItems);
+            assert.deepEqual(newItems, ddl._controller._items.getRawData());
+         });
+
+         it('_selectorTemplateResult selectorCallback', () => {
+            let newConfig = Clone(config);
+            let ddl = getDropdown(newConfig);
+            let opened;
+            ddl._beforeMount(config);
+            ddl._notify = (event, data) => {
+               if (event === 'selectorCallback') {
+                  data[1].at(0).set({id: '11', title: 'Запись 11'});
+               }
+            };
+            popup.Sticky.closePopup = () => { opened = false; };
+
+            let curItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  },
+                     {
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
+               });
+            ddl._controller._items = curItems;
+            ddl._controller._source = config.source;
+            let newItems = [
+               { id: '11', title: 'Запись 11' },
+               { id: '9', title: 'Запись 9' },
+               { id: '10', title: 'Запись 10' },
+               { id: '1', title: 'Запись 1' },
+               { id: '2', title: 'Запись 2' },
+               { id: '3', title: 'Запись 3' }
+            ];
+
+            ddl._selectorTemplateResult('selectorResult', selectedItems);
+            assert.deepEqual(newItems, ddl._controller._items.getRawData());
+         });
+
+         it('_selectorResult', function() {
+            let newConfig = Clone(config);
+            let ddl = getDropdown(newConfig);
+            ddl._beforeMount(config);
+            let curItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  },
+                     {
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
+               });
+            ddl._controller._items = curItems;
+            let newItems = [ {
+               id: '9',
+               title: 'Запись 9'
+            },
+               {
+                  id: '10',
+                  title: 'Запись 10'
+               },
+               {
+                  id: '1',
+                  title: 'Запись 1'
+               },
+               {
+                  id: '2',
+                  title: 'Запись 2'
+               },
+               {
+                  id: '3',
+                  title: 'Запись 3'
+               }
+            ];
+            ddl._controller._source = config.source;
+            ddl._selectorResult(selectedItems);
+            assert.deepEqual(newItems, ddl._controller._items.getRawData());
+            assert.isOk(ddl._controller._menuSource);
+         });
       });
    }
 );

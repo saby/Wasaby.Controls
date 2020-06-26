@@ -334,10 +334,7 @@ class Input extends BaseDropdown {
          },
          eventHandlers: {
             onOpen: this._onOpen.bind(this),
-            onClose: () => {
-               this._popupId = null;
-               this._onClose();
-            },
+            onClose: this._onClose.bind(this),
             onResult: this._onResult.bind(this)
          }
       };
@@ -393,10 +390,6 @@ class Input extends BaseDropdown {
    protected _selectorTemplateResult(event, selectedItems): void {
       let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
       this._selectorResult(result);
-   }
-
-   _beforeUnmount(): void {
-      this._controller.destroy();
    }
 
    private _getSelectedKeys(items, keyProperty) {
