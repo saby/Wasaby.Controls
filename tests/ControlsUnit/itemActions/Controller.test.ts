@@ -748,7 +748,7 @@ describe('Controls/_itemActions/Controller', () => {
         it('should set config.templateOptions.showHeader \'false\' when parentAction is _isMenu', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.showed.length - 1], null, false);
             assert.exists(config.templateOptions, 'Template options were not set when no isMenu parent passed');
             assert.isFalse(config.templateOptions.showHeader, 'showHeader should be false when isMenu parent passed');
         });
@@ -774,7 +774,7 @@ describe('Controls/_itemActions/Controller', () => {
         it('should collect only non-TOOLBAR item actions when parentAction._isMenu="true"', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.showed.length - 1], null, false);
             assert.exists(config.templateOptions, 'Template options were not set');
             assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
             // @ts-ignore
@@ -1079,12 +1079,12 @@ describe('Controls/_itemActions/Controller', () => {
         it('should add close button for template config when parentAction._isMenu===true', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.showed.length - 1], null, false);
             assert.isTrue(config.templateOptions.closeButtonVisibility);
         });
 
         // Не надо добавлять кнопку закрытия меню, если передан обычный parentAction
-        it('should add close button for template config when parentAction._isMenu===true', () => {
+        it('should add close button for template config when parentAction._isMenu!==true', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.isFalse(config.templateOptions.closeButtonVisibility);
@@ -1099,16 +1099,16 @@ describe('Controls/_itemActions/Controller', () => {
         });
 
         // T3.3.1 Если в метод передан parentAction._isMenu===true, то в config.direction.horizontal будет left
-        it('should set result.direction.horizontal as \'left\' when contextMenu=true', () => {
+        it('should set result.direction.horizontal as \'left\' when parentAction._isMenu===true', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.showed.length - 1], null, false);
             assert.exists(config.direction, 'Direction options were not set');
             assert.equal(config.direction.horizontal, 'left');
         });
 
         // T3.3.2 Не надо добавлять direction в menuConfig, если передан обычный parentAction
-        it('should add close button for template config when parentAction isn\'t set', () => {
+        it('should not set direction when parentAction._isMenu!==true', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
             assert.notExists(config.direction);
@@ -1125,7 +1125,7 @@ describe('Controls/_itemActions/Controller', () => {
         it('should apply iconSize to templateOptions', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.showed.length - 1], null, false);
             assert.exists(config.templateOptions, 'Template options were not set');
             assert.equal(config.templateOptions.iconSize, 'm', 'iconSize from templateOptions has not been applied');
         });
@@ -1167,18 +1167,90 @@ describe('Controls/_itemActions/Controller', () => {
         it('should not set "controls-itemActionsV__action_icon_theme-default" CSS class for menu item actions icons', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.length - 1], null, false);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.showed.length - 1], null, false);
             const calculatedChildren = config.templateOptions.source;
             assert.exists(calculatedChildren, 'Menu actions source haven\'t been set in template options');
-            assert.equal(calculatedChildren.data[0].icon.indexOf('controls-itemActionsV__action_icon_theme'), -1, 'Css class \'controls-itemActionsV__action_icon_theme-\' should not be added to menu item');
+            assert.notMatch(calculatedChildren.data[0].icon, /controls-itemActionsV__action_icon_theme/, 'Css class \'controls-itemActionsV__action_icon_theme-\' should not be added to menu item');
         });
 
+        // T3.8. В любом случае нужно посчитать fittingMode
         it('should set config.fittingMode.vertical as \'overflow\'', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
-            assert.exists(config.fittingMode, 'Direction options were not set');
+            assert.exists(config.fittingMode, 'fittingMode options were not set');
             assert.equal(config.fittingMode.vertical, 'overflow');
             assert.equal(config.fittingMode.horizontal, 'adaptive');
+        });
+
+        // T3.9. Для Контекстного меню нужно обязательно добавлять CSS класс controls-ItemActions__popup__list_theme-default
+        it('should set config.className with value controls-ItemActions__popup__list_theme-default when parentAction isn\'t set', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, true);
+            assert.equal(config.className, 'controls-ItemActions__popup__list_theme-default');
+        });
+
+        // T3.10. Для Дополнительного меню нужно обязательно добавлять CSS класс controls-ItemActions__popup__list_theme-default
+        it('should set config.className with value controls-ItemActions__popup__list_theme-default when parentAction._isMenu===true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.showed.length - 1], null, false);
+            assert.equal(config.className, 'controls-ItemActions__popup__list_theme-default');
+        });
+
+        // T3.11. Для Обычного Меню нужно обязательно добавлять CSS класс controls-MenuButton_link_iconSize-medium_popup theme_default
+        it('should set config.className with value controls-MenuButton_link_iconSize-medium_popup theme_default when parentAction._isMenu!==true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.equal(config.className, 'controls-MenuButton_link_iconSize-medium_popup theme_default');
+        });
+
+        // T3.12. Если в метод передан contextMenu=true, то будет расчитан config.targetPoint
+        it('should set config.targetPoint when contextMenu=true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, true);
+            assert.exists(config.targetPoint, 'targetPoint options were not set');
+            assert.equal(config.targetPoint.vertical, 'top');
+            assert.equal(config.targetPoint.horizontal, 'right');
+        });
+
+        // T3.13 Если в метод передан parentAction._isMenu===true, то будет расчитан config.targetPoint
+        it('should set config.targetPoint when parentAction._isMenu===true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.showed.length - 1], null, false);
+            assert.exists(config.targetPoint, 'targetPoint options were not set');
+            assert.equal(config.targetPoint.vertical, 'top');
+            assert.equal(config.targetPoint.horizontal, 'right');
+        });
+
+        // T3.14 Не надо добавлять config.targetPoint, если передан обычный parentAction
+        it('should not set config.targetPoint when parentAction._isMenu!==true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.notExists(config.targetPoint);
+        });
+
+        // T3.15. Если в метод передан contextMenu=true, то будет расчитан config.nativeEvent
+        it('should set config.targetPoint when contextMenu=true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, true);
+            assert.exists(config.nativeEvent);
+        });
+
+        // T3.16 Если в метод передан parentAction._isMenu===true, то будет расчитан config.nativeEvent
+        it('should not set config.nativeEvent when parentAction._isMenu===true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const actionsOf3 = item3.getActions();
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, actionsOf3.showed[actionsOf3.showed.length - 1], null, false);
+            assert.notExists(config.nativeEvent);
+        });
+
+        // T3.17 Не надо добавлять config.nativeEvent, если передан обычный parentAction
+        it('should not set config.nativeEvent when parentAction._isMenu!==true', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            assert.notExists(config.nativeEvent);
         });
     });
 
