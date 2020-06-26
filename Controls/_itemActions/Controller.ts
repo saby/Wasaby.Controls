@@ -102,7 +102,7 @@ export interface IItemActionsControllerOptions {
     /**
      * Редактируемая запись
      */
-    editingItem: CollectionItem<Model>
+    editingItem: IItemActionsItem
 }
 
 /**
@@ -326,7 +326,7 @@ export class Controller {
      *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
      * @private
      */
-    private _updateItemActions(editingItem?: CollectionItem<Model>): Array<number | string> {
+    private _updateItemActions(editingItem?: IItemActionsItem): Array<number | string> {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
         const assignActionsOnItem = (item) => {
