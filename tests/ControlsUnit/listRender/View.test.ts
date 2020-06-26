@@ -161,7 +161,8 @@ describe('Controls/_listRender/View', () => {
                 getActiveItem: function() {
                     return this._$activeItem;
                 },
-                at: () => item
+                at: () => item,
+                find: () => null
             };
             fakeEvent = {
                 propagating: true,
@@ -207,6 +208,10 @@ describe('Controls/_listRender/View', () => {
             assert.exists(popupConfig, 'popupConfig has not been set');
             assert.equal(popupConfig.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
             assert.equal(popupConfig.templateOptions.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
+
+            view._closePopup();
+            assert.strictEqual(view._itemActionsController.getActiveItem(), null);
+            assert.strictEqual(view._itemActionsController.getSwipeItem(), null);
         });
     });
 });
