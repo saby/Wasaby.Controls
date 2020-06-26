@@ -2188,6 +2188,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _pagingCfg: null,
     _pagingVisible: false,
+    _actualPagingVisible: false,
 
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
@@ -2902,6 +2903,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadingIndicatorState && !isLoading && hasTrigger && isTriggerVisible) {
             _private.hideIndicator(this);
         }
+
+        if (this._scrollController) {
+            let correctingHeight = 0;
+
+            // correctingHeight предназначен для предотвращения проблемы с восстановлением позиции скролл в случае,
+            // когда новые индексы виртуального скролла применяются одновременно с показом Paging.
+            // todo выпилить task1179588447 по ошибке: https://online.sbis.ru/opendoc.html?guid=cd0ba66a-115c-44d1-9384-0c81675d5b08
+            if (this._options.task1179588447 && !this._actualPagingVisible && this._pagingVisible) {
+                // Можно юзать константу PAGING_HEIGHT, но она старая, 32px. Править константу в 4100 страшно, поправим
+                // её по ошибке: https://online.sbis.ru/opendoc.html?guid=cd0ba66a-115c-44d1-9384-0c81675d5b08
+                correctingHeight = 33;
+            }
+            this._scrollController.afterRender(correctingHeight);
+        }
+        this._actualPagingVisible = this._pagingVisible;
     },
 
     _notifyOnDrawItems(): void {
@@ -2909,12 +2925,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
-        }
-    },
-
-    _afterRender(): void {
-        if (this._scrollController) {
-            this._scrollController.afterRender();
         }
     },
 

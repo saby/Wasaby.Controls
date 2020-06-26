@@ -191,9 +191,9 @@ export default class ScrollController {
         }
     }
 
-    afterRender(): void {
+    afterRender(correctingHeight: number = 0): void {
         this._isRendering = false;
-        this._afterRenderHandler();
+        this._afterRenderHandler(correctingHeight);
     }
 
     reset(): void {
@@ -584,7 +584,7 @@ export default class ScrollController {
         }
     }
 
-    private _afterRenderHandler(): void {
+    private _afterRenderHandler(correctingHeight: number = 0): void {
         if (this._virtualScroll.rangeChanged) {
             this._viewResize(this._container.offsetHeight, false);
             const itemsContainer = this.__getItemsContainer();
@@ -598,7 +598,7 @@ export default class ScrollController {
         }
 
         if (this._virtualScroll.isNeedToRestorePosition) {
-            this._restoreScrollPosition();
+            this._restoreScrollPosition(correctingHeight);
             this.checkTriggerVisibilityWithTimeout();
             this._restoreScrollResolve = null;
         } else if (this._restoreScrollResolve) {
@@ -637,11 +637,11 @@ export default class ScrollController {
     /**
      * Нотифицирует скролл контейнеру о том, что нужно восстановить скролл
      */
-    private _restoreScrollPosition(): void {
+    private _restoreScrollPosition(correctingHeight: number = 0): void {
         const {direction, heightDifference} = this._virtualScroll.getParamsToRestoreScroll();
 
         this._fakeScroll = true;
-        this._notify('restoreScrollPosition', [heightDifference, direction], {bubbling: true});
+        this._notify('restoreScrollPosition', [heightDifference, direction, correctingHeight], {bubbling: true});
         this._fakeScroll = false;
     }
 
