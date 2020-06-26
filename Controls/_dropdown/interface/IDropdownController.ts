@@ -1,6 +1,7 @@
 import {Control, IControlOptions} from 'UI/Base';
-import {INavigationOptions, IFilterOptions, IMultiSelectableOptions} from 'Controls/interface';
+import {INavigationOptions, IFilterOptions, IMultiSelectableOptions, ISearchOptions} from 'Controls/interface';
 import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
+import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {IDropdownSourceOptions} from './IDropdownSource';
 import {RecordSet} from 'Types/collection';
 import {Memory} from 'Types/source';
@@ -22,7 +23,7 @@ export interface IDropdownController {
 }
 
 export interface IDropdownControllerOptions extends IControlOptions, IDropdownSourceOptions, INavigationOptions,
-    IFilterOptions, IMultiSelectableOptions, IMenuPopupOptions {
+    IFilterOptions, IMultiSelectableOptions, IMenuPopupOptions, IMenuControlOptions, ISearchOptions {
     keyProperty: string;
     notifyEvent: Function;
     lazyItemsLoading?: boolean;
@@ -39,4 +40,8 @@ export interface IDropdownControllerOptions extends IControlOptions, IDropdownSo
     openerControl: Control;
     targetPoint: IStickyPosition;
     menuPopupOptions?: IMenuPopupOptions;
+    additionalProperty?: string;
+    hasIconPin?: boolean;
+    showHeader?: boolean;
+    headConfig?: object;
 }

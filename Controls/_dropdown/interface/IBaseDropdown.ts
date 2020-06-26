@@ -1,12 +1,12 @@
 import {IControlOptions} from 'UI/Base';
-import {INavigationOptions, IFilterOptions, IMultiSelectableOptions, ITooltip, ISearch} from 'Controls/interface';
+import {INavigationOptions, IFilterOptions, IMultiSelectableOptions, ITooltipOptions, ISearchOptions} from 'Controls/interface';
 import { IStickyPopupOptions } from 'Controls/_popup/interface/ISticky';
-import {IMenuPopup} from 'Controls/menu';
+import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {IDropdownSourceOptions} from './IDropdownSource';
 export type TKey = string|number|null;
 
 export interface IBaseDropdownOptions extends IControlOptions, IDropdownSourceOptions, INavigationOptions,
-    IFilterOptions, IMultiSelectableOptions, IMenuPopup, IStickyPopupOptions, ITooltip, ISearch {
+    IFilterOptions, IMultiSelectableOptions, IMenuPopupOptions, IStickyPopupOptions, ITooltipOptions, ISearchOptions {
     dropdownClassName?: string;
     historyId?: string;
     popupClassName?: string;
