@@ -3090,6 +3090,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     beginEdit(options) {
+        _private.closeSwipe(this);
         return this._options.readOnly ? Deferred.fail() : this._editInPlace.beginEdit(options);
     },
 
