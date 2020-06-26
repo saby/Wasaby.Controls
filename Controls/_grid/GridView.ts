@@ -88,7 +88,8 @@ var
                 let hoveredCellContainer = null;
                 if (nativeEvent) {
                     container = nativeEvent.target.closest('.controls-ListView__itemV');
-                    hoveredCellContainer = self._getCellByEventTarget(nativeEvent);
+                    let target = self._getCorrectElement(nativeEvent.target);
+                    hoveredCellContainer = self._getCellByEventTarget(target);
                 }
                 self._notify('hoveredCellChanged', [item, container, hoveredCellIndex, hoveredCellContainer]);
             }
@@ -574,19 +575,28 @@ var
                 });
             }
         },
-        _getCellByEventTarget(event: MouseEvent): HTMLElement {
-            return event.target.closest('.controls-Grid__row-cell');
+        _getCorrectElement(element: HTMLElement): HTMLElement {
+            // В FF целью события может быть элемент #text, у которого нет метода closest, в этом случае рассматриваем как цель его родителя.
+            if (element && !element.closest && element.parentElement) {
+                return element.parentElement;
+            }
+            return element;
+        },
+        _getCellByEventTarget(target: HTMLElement): HTMLElement {
+            return target.closest('.controls-Grid__row-cell');
         },
         _getCellIndexByEventTarget(event): number {
             if (!event) {
                 return null;
             }
-            const gridRow = event.target.closest('.controls-Grid__row');
+            let target = this._getCorrectElement(event.target);
+         
+            const gridRow = target.closest('.controls-Grid__row');
             if (!gridRow) {
                 return null;
             }
             const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
-            const currentCell = this._getCellByEventTarget(event);
+            const currentCell = this._getCellByEventTarget(target);
             const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
             return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
         },
