@@ -1,0 +1,70 @@
+<Controls.scroll:Container attr:class="post-GradationBase__scroll">
+    <Controls.list:DataContainer
+            keyProperty="{{ _keyProperty }}"
+            source="{{ _source }}">
+        <Controls.list:Container>
+            <div>
+                <Controls.grid:View
+                        name="view"
+                        columns="{{ _columns }}"
+                        itemTemplate="{{ _itemTemplate }}"
+                        emptyTemplate="{{ _emptyTemplate }}"
+                        useTableInOldBrowsers="{{true}}"
+                        contextMenuVisibility="{{false}}"
+                        itemPadding="{{ _itemPadding }}"
+                        groupTemplate="{{ _groupTemplate }}"
+                        collapsedGroups="{{ _collapsedGroups }}"
+                        editingConfig="{{ _editingConfig }}"
+                        groupingKeyCallback="{{ _groupingKeyCallback }}"
+                        itemsReadyCallback="{{ _itemsLoadHandler }}"
+                        itemActions="{{ _itemActions }}"
+                        showEditArrow="{{ _showEditArrow }}"
+                        itemActionVisibilityCallback="{{ _itemActionVisibilityCallback }}"
+                        on:editArrowClick="_notifyHandler('editArrowClick')"
+                        on:beforeBeginEdit="_editHandler('beforeBeginEdit')"
+                        on:afterBeginEdit="_editHandler('afterBeginEdit')"
+                        on:beforeEndEdit="_editHandler('beforeEndEdit')"
+                        on:afterEndEdit="_editHandler('afterEndEdit')">
+                    <ws:header>
+                        <ws:Array>
+                            <ws:Object
+                                    align="left"
+                                    startRow="{{1}}"
+                                    endRow="{{2}}"
+                                    startColumn="{{1}}"
+                                    endColumn="{{3}}">
+                                <ws:template>
+                                    <ws:partial template="{{ _headerRow }}" attr:class="post-GradationBase__header">
+                                        <ws:addButton>
+                                            <Controls.buttons:Button
+                                                    viewMode="toolButton"
+                                                    icon="icon-AddButtonNew"
+                                                    iconStyle="secondary"
+                                                    iconSize="s"
+                                                    readOnly="{{ _isEditing }}"
+                                                    size="s"
+                                                    attr:class="post-Gradation__addButton"
+                                                    on:click="_addItem()"/>
+                                        </ws:addButton>
+                                    </ws:partial>
+                                </ws:template>
+                            </ws:Object>
+                        </ws:Array>
+                    </ws:header>
+                    <ws:navigation
+                            view="infinity"
+                            source="page">
+                        <ws:sourceConfig
+                                hasMore="{{false}}"
+                                pageSize="{{10}}"
+                                page="{{0}}"/>
+                    </ws:navigation>
+                </Controls.grid:View>
+                <Controls.list:Remover
+                        name="remover"
+                        on:afterItemsRemove="_notifyHandler('afterItemsRemove')"
+                />
+            </div>
+        </Controls.list:Container>
+    </Controls.list:DataContainer>
+</Controls.scroll:Container>
