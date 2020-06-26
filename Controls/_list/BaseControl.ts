@@ -113,6 +113,9 @@ const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_SHOW_PROPORTION = 2;
 const MAX_SCROLL_PAGING_HIDE_PROPORTION = 1;
+const DRAG_SHIFT_LIMIT = 4;
+const IE_MOUSEMOVE_FIX_DELAY = 50;
+const DRAGGING_OFFSET = 10;
 
 const ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
 
@@ -393,34 +396,6 @@ const _private = {
             if (options.selectedKeys && options.selectedKeys.length > 0) {
                 self._selectionController = _private.createSelectionController(self, options);
             }
-        }
-    },
-
-    startDragNDrop(self, domEvent, itemData): void {
-        if (!self._options.readOnly && self._options.itemsDragNDrop
-                && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)) {
-            const key = itemData.getContents().getKey();
-
-            // Support moving with mass selection.
-            // Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-            let selection = {
-                selected: self._options.selectedKeys || [],
-                excluded: self._options.excludedKeys || []
-            };
-            selection = DndFlatController.getSelectionForDragNDrop(self._listViewModel, selection, key);
-            const recordSet = self._listViewModel.getCollection();
-
-            // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
-            // количество записей будет отдавать selectionController https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
-            getItemsBySelection(selection, self._options.source, recordSet, self._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
-                const dragStartResult = self._notify('dragStart', [items, key]);
-                if (dragStartResult) {
-                    if (self._options.dragControlId) {
-                        dragStartResult.dragControlId = self._options.dragControlId;
-                    }
-                    self._children.dragNDropContainer.startDragNDrop(dragStartResult, domEvent, { immediately: false }, key);
-                }
-            });
         }
     },
 
@@ -1973,14 +1948,6 @@ const _private = {
         }, !notify);
     },
 
-    createDndListController(self: any, options: any): DndFlatController|DndTreeController {
-        if (options.parentProperty) {
-            return new DndTreeController(self._listViewModel);
-        } else {
-            return new DndFlatController(self._listViewModel);
-        }
-    },
-
     createEditInPlace(self: typeof BaseControl, options: any): void {
         if (options.editingConfig) {
             self._editInPlace = new EditInPlace({
@@ -2149,6 +2116,108 @@ const _private = {
             _private.updateItemActions(self, options);
         }
     }
+
+    // region Drag-N-Drop
+
+    startDragNDrop(self, domEvent, itemData): void {
+        if (
+            !self._options.readOnly && self._options.itemsDragNDrop
+            && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)
+        ) {
+            const key = itemData.getContents().getKey();
+
+            // Перемещать с помощью массового выбора
+            // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+            let selection = {
+                selected: self._options.selectedKeys || [],
+                excluded: self._options.excludedKeys || []
+            };
+            selection = DndFlatController.getSelectionForDragNDrop(self._listViewModel, selection, key);
+            const recordSet = self._listViewModel.getCollection();
+
+            // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
+            // количество записей будет отдавать selectionController
+            // https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
+            getItemsBySelection(selection, self._options.source, recordSet, self._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
+                const dragStartResult = self._notify('dragStart', [items, key]);
+                if (dragStartResult) {
+                    if (self._options.dragControlId) {
+                        dragStartResult.dragControlId = self._options.dragControlId;
+                    }
+                    self._startDragNDrop(dragStartResult, domEvent, key);
+                }
+            });
+        }
+    },
+
+    createDndListController(self: any, options: any): DndFlatController|DndTreeController {
+        if (options.parentProperty) {
+            return new DndTreeController(self._listViewModel);
+        } else {
+            return new DndFlatController(self._listViewModel);
+        }
+    },
+
+    getPageXY(event): object {
+        let pageX, pageY;
+        if (event.type === 'touchstart' || event.type === 'touchmove') {
+            pageX = event.touches[0].pageX;
+            pageY = event.touches[0].pageY;
+        } else if (event.type === 'touchend') {
+            pageX = event.changedTouches[0].pageX;
+            pageY = event.changedTouches[0].pageY;
+        } else {
+            pageX = event.pageX;
+            pageY = event.pageY;
+        }
+
+        return {
+            x: pageX,
+            y: pageY
+        };
+    },
+    isDragStarted(startEvent, moveEvent): boolean {
+        const offset = _private.getDragOffset(moveEvent, startEvent);
+        return Math.abs(offset.x) > DRAG_SHIFT_LIMIT || Math.abs(offset.y) > DRAG_SHIFT_LIMIT;
+    },
+    clearSelection(event): void {
+        if (event.type === 'mousedown') {
+            //снимаем выделение с текста иначе не будут работать клики,
+            // а выделение не будет сниматься по клику из за preventDefault
+            const selection = window.getSelection();
+            if (selection.removeAllRanges) {
+                selection.removeAllRanges();
+            } else if (selection.empty) {
+                selection.empty();
+            }
+        }
+    },
+    getDragOffset(moveEvent, startEvent): object {
+        const moveEventXY = _private.getPageXY(moveEvent),
+              startEventXY = _private.getPageXY(startEvent);
+
+        return {
+            y: moveEventXY.y - startEventXY.y,
+            x: moveEventXY.x - startEventXY.x
+        };
+    },
+    onMove(self, nativeEvent): void {
+        if (self._startEvent) {
+            const dragObject = self._getDragObject(nativeEvent, self._startEvent);
+            if (!self._documentDragging && _private.isDragStarted(self._startEvent, nativeEvent)) {
+                self._insideDragging = true;
+                self._notify('_documentDragStart', [dragObject], {bubbling: true});
+            }
+            if (self._documentDragging) {
+                self._notify('dragMove', [dragObject]);
+                if (self._options.draggingTemplate) {
+                    self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
+                }
+            }
+        }
+    }
+
+    // endregion
 };
 
 /**
@@ -2590,6 +2659,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateShadowModeAfterMount();
             this._updateShadowModeAfterMount = null;
         }
+
+        this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
+        this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
     },
 
     _beforeUpdate(newOptions) {
@@ -2877,6 +2949,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
+
+        this._notify('unregister', ['documentDragStart', this], {bubbling: true});
+        this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
 
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
@@ -3291,18 +3366,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
     },
 
-    _dragEnd(event, dragObject) {
-        if (this._dndListController) {
-            const targetPosition = this._dndListController.getDragPosition();
-            if (targetPosition) {
-                this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
-            }
-
-            // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
-            // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
-            this._showActions = false;
-        }
-    },
 
     handleKeyDown(event): void {
         this._onViewKeyDown(event);
@@ -3320,64 +3383,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
-    _dragEnter(event, dragObject) {
-        // если мы утащим в другой список, то в нем нужно создать контроллер
-        if (!this._dndListController) {
-            this._dndListController = _private.createDndListController(this, this._options);
-        }
-        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
-        ) {
-            const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
-
-            if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-                // TODO dnd нужно разобраться для чего это. Так как на wi про эту ситуацию ни слова
-                // если это будет не нужно, то убрать 2-ой параметр в методе DndFlatController.setDraggedItems
-                const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
-                this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
-            } else if (dragEnterResult === true) {
-                this._dndListController.setDraggedItems(dragObject.entity);
-            }
-        }
-    },
-
-    _dragLeave(): void {
-        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (this._dndListController) {
-        this._dndListController.setDragPosition(null);
-        }
-    },
-
-    _documentDragEnd(): void {
-        // Reset the state of the dragndrop after the movement on the source happens.
-        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (this._dndListController) {
-        if (this._dragEndResult instanceof Promise) {
-                _private.showIndicator(this);
-                this._dragEndResult.addBoth(() => {
-                    this._dndListController.endDrag();
-                    _private.hideIndicator(this);
-            });
-        } else {
-            this._dndListController.endDrag();
-        }
-        }
-    },
 
     getDndListController(): DndFlatController | DndTreeController {
         return this._dndListController;
     },
 
-    _processItemMouseEnterWithDragNDrop(itemData) {
-        let dragPosition;
-        if (this._dndListController.isDragging()) {
-            dragPosition = this._dndListController.calculateDragPosition(itemData);
-            if (dragPosition && this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                    this._dndListController.setDragPosition(dragPosition);
-                }
-            this._unprocessedDragEnteredItem = null;
-        }
-    },
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = itemData;
@@ -3665,8 +3675,241 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._scrollController) {
             this._scrollController.observeScroll(eventName, params);
         }
+    },
+
+    // region Drag-N-Drop
+
+    _dragEntity: undefined, // хранит список перетаскиваемых элементов и ключ элемента, за который потащили (draggedKey)
+    _startEvent: undefined,
+    _documentDragging: false,
+    _insideDragging: false,
+    _endDragNDropTimer: null,
+    _draggedKey: null,
+
+    _startDragNDrop(entity, mouseDownEvent, draggedKey): void {
+        this._dragEntity = entity;
+        this._draggedKey = draggedKey;
+        this._startEvent = mouseDownEvent.nativeEvent;
+        _private.clearSelection(this._startEvent);
+        if (this._startEvent && this._startEvent.target) {
+            this._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
+        }
+        this._registerMouseMove();
+        this._registerMouseUp();
+    },
+
+    _onMouseMove(event): void {
+        // В яндекс браузере каким то образом пришел nativeEvent === null, после чего
+        // упала ошибка в коде ниже и страница стала некликабельной. Повторить ошибку не получилось
+        // добавляем защиту на всякий случай.
+        if (event.nativeEvent) {
+            if (detection.isIE) {
+                this._onMouseMoveIEFix(event);
+            } else {
+                // Check if the button is pressed while moving.
+                if (!event.nativeEvent.buttons) {
+                    this._dragNDropEnded(event);
+                }
+            }
+
+            // Не надо вызывать onMove если не нажата кнопка мыши.
+            // Кнопка мыши может быть не нажата в 2 случаях:
+            // 1) Мышь увели за пределы браузера, там отпустили и вернули в браузер
+            // 2) Баг IE, который подробнее описан в методе _onMouseMoveIEFix
+            if (event.nativeEvent.buttons) {
+                _private.onMove(this, event.nativeEvent);
+            }
+        }
+    },
+
+    _onMouseMoveIEFix(event): void {
+        // In IE strange bug, the cause of which could not be found. During redrawing of the table the MouseMove
+        // event at which buttons = 0 shoots. In 10 milliseconds we will check that the button is not pressed.
+        if (!event.nativeEvent.buttons && !this._endDragNDropTimer) {
+            this._endDragNDropTimer = setTimeout(() => {
+                this._dragNDropEnded(event);
+            }, IE_MOUSEMOVE_FIX_DELAY);
+        } else {
+            clearTimeout(this._endDragNDropTimer);
+            this._endDragNDropTimer = null;
+        }
+    },
+
+    _onTouchMove(event): void {
+        _private.onMove(this, event.nativeEvent);
+    },
+
+    _onMouseUp(event): void {
+        if (this._startEvent) {
+            this._dragNDropEnded(event);
+        }
+    },
+
+    _mouseEnter(event): void {
+        this._initItemActions(event, this._options);
+
+        if (this._documentDragging) {
+            this._insideDragging = true;
+
+            this._dragEnter(this._getDragObject());
+        }
+    },
+
+    _mouseLeave(event): void {
+        if (this._documentDragging) {
+            this._insideDragging = false;
+            this._dragLeave();
+        }
+    },
+
+    _dragLeave(): void {
+        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
+        if (this._dndListController) {
+            this._dndListController.setDragPosition(null);
+        }
+    },
+
+    _documentDragStart(dragObject): void {
+        if (this._insideDragging) {
+            this._dragStart(dragObject, this._draggedKey);
+        } else {
+            this._dragEntity = dragObject.entity;
+        }
+        this._documentDragging = true;
+        this._notify('documentDragStart', [dragObject]);
+    },
+
+    _dragStart(dragObject, draggedKey): void {
+        if (!this._dndListController) {
+            this._dndListController = _private.createDndListController(this, this._options);
+        }
+
+        this._dndListController.startDrag(draggedKey, dragObject.entity);
+
+        // Cобытие mouseEnter на записи может сработать до dragStart.
+        // И тогда перемещение при наведении не будет обработано.
+        // В таком случае обрабатываем наведение на запись сейчас.
+        //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
+        if (this._unprocessedDragEnteredItem) {
+            this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
+        }
+    },
+
+    _dragEnd(dragObject): void {
+        if (this._dndListController) {
+            const targetPosition = this._dndListController.getDragPosition();
+            if (targetPosition) {
+                this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            }
+
+            // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
+            // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
+            this._showActions = false;
+        }
+    },
+
+    _processItemMouseEnterWithDragNDrop(itemData): void {
+        let dragPosition;
+        if (this._dndListController.isDragging()) {
+            dragPosition = this._dndListController.calculateDragPosition(itemData);
+            const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.item, dragPosition.position]);
+            if (dragPosition && changeDragTarget !== false) {
+                this._dndListController.setDragPosition(dragPosition);
+            }
+            this._unprocessedDragEnteredItem = null;
+        }
+    },
+
+    _documentDragEnd(dragObject): void {
+        if (this._insideDragging) {
+            this._dragEnd(dragObject);
+        }
+
+        this._insideDragging = false;
+        this._documentDragging = false;
+
+        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
+        if (this._dndListController) {
+            if (this._dragEndResult instanceof Promise) {
+                _private.showIndicator(this);
+                this._dragEndResult.addBoth(() => {
+                    this._dndListController.endDrag();
+                    _private.hideIndicator(this);
+                });
+            } else {
+                this._dndListController.endDrag();
+            }
+        }
+    },
+
+    _getDragObject(mouseEvent?, startEvent?): object {
+        const result = {
+            entity: this._dragEntity
+        };
+        if (mouseEvent && startEvent) {
+            result.domEvent = mouseEvent;
+            result.position = _private.getPageXY(mouseEvent);
+            result.offset = _private.getDragOffset(mouseEvent, startEvent);
+            result.draggingTemplateOffset = DRAGGING_OFFSET;
+        }
+        return result;
+    },
+
+    _dragNDropEnded(event): void {
+        if (this._documentDragging) {
+            this._notify('_documentDragEnd', [this._getDragObject(event.nativeEvent, this._startEvent)], {bubbling: true});
+        }
+        if (this._startEvent && this._startEvent.target) {
+            this._startEvent.target.classList.remove('controls-DragNDrop__dragTarget');
+        }
+        this._unregisterMouseMove();
+        this._unregisterMouseUp();
+        this._dragEntity = null;
+        this._startEvent = null;
+    },
+
+    _dragEnter(dragObject): void {
+        // если мы утащим в другой список, то в нем нужно создать контроллер
+        if (!this._dndListController) {
+            this._dndListController = _private.createDndListController(this, this._options);
+        }
+        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
+        if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
+        ) {
+            const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
+
+            if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
+                // TODO dnd нужно разобраться для чего это. Так как на wi про эту ситуацию ни слова
+                // если это будет не нужно, то убрать 2-ой параметр в методе DndFlatController.setDraggedItems
+                const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
+                this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
+            } else if (dragEnterResult === true) {
+                this._dndListController.setDraggedItems(dragObject.entity);
+            }
+        }
+    },
+
+    _registerMouseMove(): void {
+        this._notify('register', ['mousemove', this, this._onMouseMove], {bubbling: true});
+        this._notify('register', ['touchmove', this, this._onTouchMove], {bubbling: true});
+    },
+
+    _unregisterMouseMove(): void {
+        this._notify('unregister', ['mousemove', this], {bubbling: true});
+        this._notify('unregister', ['touchmove', this], {bubbling: true});
+    },
+
+    _registerMouseUp(): void {
+        this._notify('register', ['mouseup', this, this._onMouseUp], {bubbling: true});
+        this._notify('register', ['touchend', this, this._onMouseUp], {bubbling: true});
+    },
+
+    _unregisterMouseUp(): void {
+        this._notify('unregister', ['mouseup', this], {bubbling: true});
+        this._notify('unregister', ['touchend', this], {bubbling: true});
     }
 
+    // endregion
 });
 
 // TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757

@@ -80,19 +80,7 @@
     </ws:if>
 </ws:template>
 <ws:template name="withDragNDrop">
-    <Controls.dragnDrop:Container
-        on:dragStart="_dragStart()"
-        on:dragEnd="_dragEnd()"
-        on:dragLeave="_dragLeave()"
-        on:dragEnter="_dragEnter()"
-        on:documentDragEnd="_documentDragEnd()"
-        draggingTemplate="{{_options.draggingTemplate}}"
-        name="dragNDropContainer"
-    >
-        <ws:content>
-            <ws:partial template="{{viewContent}}" />
-        </ws:content>
-    </Controls.dragnDrop:Container>
+    <ws:partial template="{{viewContent}}" draggingTemplate="{{_options.draggingTemplate}}"/>
 </ws:template>
 <ws:template name="viewTpl">
     <div class="controls-ScrollController">
@@ -178,16 +166,7 @@
     </div>
 </ws:template>
 <ws:template name="fullView">
-    <ws:if data="{{_options.itemsDragNDrop}}">
-        <ws:partial template="withDragNDrop">
-            <ws:viewContent>
-                <ws:partial template="viewTpl"  name="{{name}}"/>
-            </ws:viewContent>
-        </ws:partial>
-    </ws:if>
-    <ws:else>
-        <ws:partial template="viewTpl" name="{{name}}"/>
-    </ws:else>
+    <ws:partial template="viewTpl" name="{{name}}"/>
 </ws:template>
 
 <Controls.dataSource:error.Container
@@ -195,7 +174,11 @@
     viewConfig="{{ __error }}"
     on:keyDown="_onViewKeyDown()"
 >
-    <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:mouseenter="_initItemActions(_options)" on:touchstart="_initItemActions(_options)">
+    <div class="controls-BaseControl"
+         on:sortingChanged="_sortingChanged()"
+         on:mouseenter="_mouseEnter()"
+         on:mouseleave="_mouseLeave()"
+         on:touchstart="_initItemActions(_options)">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
 
         <ws:if data="{{_listViewModel}}">
