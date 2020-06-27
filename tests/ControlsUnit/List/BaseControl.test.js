@@ -4338,14 +4338,14 @@ define([
          });
       });
 
-      describe('_onItemSwipe animation', function() {
+      describe('_onItemSwipe animation for rightSwipe with or without multiselectVisibility', function() {
          let childEvent;
          let itemData;
          let instance;
          let sandbox;
          let isRightSwipeActivated;
 
-         function initTest(multiSelectVisibility) {
+         function initTest(options) {
             const cfg = {
                viewName: 'Controls/List/ListView',
                viewConfig: {
@@ -4357,10 +4357,9 @@ define([
                },
                viewModelConstructor: lists.ListViewModel,
                source: source,
-               multiSelectVisibility: multiSelectVisibility,
-               selectedKeysCount: 1,
                selectedKeys: [1],
-               excludedKeys: []
+               excludedKeys: [],
+               ...options
             };
             instance = new lists.BaseControl(cfg);
             instance._children = {
@@ -4411,21 +4410,41 @@ define([
          });
 
          it('multiSelectVisibility: visible, should start animation', function() {
-            initTest('visible');
+            initTest({multiSelectVisibility: 'visible'});
             instance._onItemSwipe({}, itemData, childEvent);
             assert.isTrue(isRightSwipeActivated);
          });
 
          it('multiSelectVisibility: onhover, should start animation', function() {
-            initTest('onhover');
+            initTest({multiSelectVisibility: 'onhover'});
             instance._onItemSwipe({}, itemData, childEvent);
             assert.isTrue(isRightSwipeActivated);
          });
 
          it('multiSelectVisibility: hidden, should not start animation', function() {
-            initTest('hidden');
+            initTest({multiSelectVisibility: 'hidden'});
             instance._onItemSwipe({}, itemData, childEvent);
             assert.isFalse(isRightSwipeActivated);
+         });
+
+         it('should not create selection controller when isItemsSelectionAllowed returns false', () => {
+            let isSelectionControllerCreated = false;
+            initTest({multiSelectVisibility: 'hidden'});
+            instance._createSelectionController = () => {
+               isSelectionControllerCreated = true;
+            };
+            instance._onItemSwipe({}, itemData, childEvent);
+            assert.isFalse(isSelectionControllerCreated);
+         });
+
+         it('should create selection controller when isItemsSelectionAllowed returns true', () => {
+            let isSelectionControllerCreated = false;
+            initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+            instance._createSelectionController = () => {
+               isSelectionControllerCreated = true;
+            };
+            instance._onItemSwipe({}, itemData, childEvent);
+            assert.isTrue(isSelectionControllerCreated);
          });
       });
 
