@@ -345,7 +345,9 @@ export default class ScrollController {
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
         this._checkTriggerVisibilityTimeout = setTimeout(() => {
-            this._checkTriggerVisibility();
+            this._doAfterRender(() => {
+                this._checkTriggerVisibility();
+            });
             this._checkTriggerVisibilityTimeout = null;
         }, TRIGGER_VISIBILITY_DELAY);
     }
