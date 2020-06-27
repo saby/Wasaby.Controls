@@ -1533,6 +1533,7 @@ define([
                 multiSelectVisibility: 'visible',
                 selectedKeys: [],
                 excludedKeys: [],
+                selectedKeysCount: 0,
                 source: new sourceLib.Memory({
                    keyProperty: 'key',
                    data: [{
@@ -1756,17 +1757,7 @@ define([
          const notifySpy = sinon.spy(baseControl, '_notify');
 
          onSelectedTypeChanged('selectAll', undefined);
-
-         // Получается, что не важно, что в multiSelectVisibility. Тут всегда будут вызываться эти методы?
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
-         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
-         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged').called);
-
-         lnCfg.multiSelectVisibility = 'visible';
-
-         notifySpy.resetHistory();
-         onSelectedTypeChanged('selectAll', undefined);
-         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
 

@@ -2132,6 +2132,20 @@ const _private = {
         if (self._listViewModel.isActionsAssigned()) {
             self._itemActionsController.deactivateSwipe();
         }
+    },
+
+
+    /**
+     * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
+     * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
+     * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
+     * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
+     *
+     * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
+     * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+     */
+    isItemsSelectionAllowed(options: object): boolean {
+        return options.hasOwnProperty('selectedKeysCount');
     }
 };
 
@@ -3519,7 +3533,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.nextVersion();
             } else {
                 // After the right swipe the item should get selected.
-                if (!this._selectionController) {
+                if (!this._selectionController && _private.isItemsSelectionAllowed(this)) {
                     this._createSelectionController();
                 }
                 if (this._selectionController) {
