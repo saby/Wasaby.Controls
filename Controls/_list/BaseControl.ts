@@ -1827,7 +1827,7 @@ const _private = {
     },
 
     createSelectionController(self: any, options: any): SelectionController {
-        if (!self._listViewModel || !self._items || options.multiSelectVisibility === 'hidden') {
+        if (!self._listViewModel || !self._items) {
             return null;
         }
 

@@ -1690,12 +1690,16 @@ define([
          assert.isTrue(notifySpy.called);
       });
 
-      it('_private.createSelectionController', async function() {
-         const
+      describe('_private.createSelectionController', function() {
+         let lnSource;
+         let lnCfg;
+         let baseControl;
+         let controller;
+         beforeEach(async () => {
             lnSource = new sourceLib.Memory({
                keyProperty: 'id',
                data: data
-            }),
+            });
             lnCfg = {
                viewName: 'Controls/List/ListView',
                source: lnSource,
@@ -1703,18 +1707,14 @@ define([
                viewModelConstructor: lists.ListViewModel,
                selectedKeys: [],
                excludedKeys: []
-            },
+            };
             baseControl = new lists.BaseControl(lnCfg);
-
-
-         baseControl.saveOptions(lnCfg);
-         await baseControl._beforeMount(lnCfg);
-
-         let controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
+            baseControl.saveOptions(lnCfg);
+            await baseControl._beforeMount(lnCfg);
+         });
+         it('should init SelectionController', () => {
+         controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
          assert.isNotNull(controller);
-
-         controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-         assert.isNull(controller);
 
          baseControl._items = null;
          controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
@@ -1723,6 +1723,12 @@ define([
          baseControl._listViewModel = null;
          controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
          assert.isNull(controller);
+         });
+
+         it('should init selection controller even when multiselectVisibility===\'null\'', () => {
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            assert.isNotNull(controller);
+         });
       });
 
       it('_private.onSelectedTypeChanged', async function() {
