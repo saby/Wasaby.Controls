@@ -137,6 +137,12 @@ export class Controller {
     * @param removedItemsIndex
     */
    handleRemoveItems(removedItemsIndex: number): TKey {
+      // Если элемент с текущем маркером не удален, то маркер не нужно менять
+      const item = this._model.getItemBySourceKey(this._markedKey);
+      if (item) {
+         return this._markedKey;
+      }
+
       const nextItem = this._model.getNextByIndex(removedItemsIndex);
       const prevItem = this._model.getPrevByIndex(removedItemsIndex);
 
