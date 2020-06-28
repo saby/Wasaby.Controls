@@ -3533,7 +3533,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.nextVersion();
             } else {
                 // After the right swipe the item should get selected.
-                if (!this._selectionController && _private.isItemsSelectionAllowed(this.options)) {
+                if (!this._selectionController && _private.isItemsSelectionAllowed(this._options)) {
                     this._createSelectionController();
                 }
                 if (this._selectionController) {
