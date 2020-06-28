@@ -2097,7 +2097,8 @@ define([
 
             Object.assign(eip._options,{
                listViewModel: listViewModel,
-               source: source
+               source: source,
+               multiSelectVisibility: 'hidden'
             });
 
             await eip.beginAdd();
@@ -2107,7 +2108,6 @@ define([
                assert.equal(editingItem, eip._editingItemData.item);
                assert.equal(eip._options.multiSelectVisibility, 'visible');
             };
-            eip._editingItemData = Object.assign({}, eip._editingItemData);
             eip.updateEditingData({multiSelectVisibility: 'visible', listViewModel: listViewModel});
             assert.isTrue(isItemDataRegenerated);
          });
@@ -2118,7 +2118,8 @@ define([
 
             Object.assign(eip._options,{
                listViewModel: listViewModel,
-               source: source
+               source: source,
+               multiSelectVisibility: 'visible'
             });
 
             await eip.beginAdd();
@@ -2127,8 +2128,8 @@ define([
 
             let spy = sinon.spy(listViewModel, 'subscribe');
 
-            eip.updateEditingData({listViewModel: listViewModel});
-            eip.updateEditingData({listViewModel: listViewModel});
+            eip.updateEditingData({listViewModel: listViewModel, multiSelectVisibility: 'visible'});
+            eip.updateEditingData({listViewModel: listViewModel, multiSelectVisibility: 'visible'});
 
             assert.isTrue(spy.calledOnceWith('onCollectionChange', eip._updateIndex));
          });
