@@ -17,7 +17,7 @@ import {
     TItemActionsPosition,
     TActionCaptionPosition,
     TEditArrowVisibilityCallback,
-    TActionDisplayMode
+    TActionDisplayMode, TMenuButtonVisibility
 } from './interface/IItemActions';
 import { IStickyPopupOptions } from 'Controls/popup';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
@@ -465,6 +465,7 @@ export class Controller {
         if (!item) {
             return;
         }
+        const menuButtonVisibility = this._getSwipeMenuButtonVisibility(this._contextMenuConfig);
         this._actionsHeight = actionsContainerHeight;
         let actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
@@ -480,7 +481,8 @@ export class Controller {
             actions,
             actionsTemplateConfig.actionAlignment,
             actionsContainerHeight,
-            actionsTemplateConfig.actionCaptionPosition
+            actionsTemplateConfig.actionCaptionPosition,
+            menuButtonVisibility
         );
 
         if (
@@ -492,7 +494,8 @@ export class Controller {
                 actions,
                 actionsTemplateConfig.actionAlignment,
                 actionsContainerHeight,
-                actionsTemplateConfig.actionCaptionPosition
+                actionsTemplateConfig.actionCaptionPosition,
+                menuButtonVisibility
             );
         }
         this._collection.setActionsTemplateConfig(actionsTemplateConfig);
@@ -507,6 +510,16 @@ export class Controller {
         }
 
         this._collection.setSwipeConfig(swipeConfig);
+    }
+
+    /**
+     * Возвращает значение видимоси кнопки "Ещё" для свайпа
+     * @param contextMenuConfig
+     * @private
+     */
+    private _getSwipeMenuButtonVisibility(contextMenuConfig): TMenuButtonVisibility {
+        return (contextMenuConfig && (contextMenuConfig.footerTemplate
+            || contextMenuConfig.headerTemplate)) ? 'visible' : 'adaptive';
     }
 
     /**
@@ -664,13 +677,15 @@ export class Controller {
         actions: IItemAction[],
         actionAlignment: string,
         actionsContainerHeight: number,
-        actionCaptionPosition: 'right'|'bottom'|'none'
+        actionCaptionPosition: TActionCaptionPosition,
+        menuButtonVisibility?: TMenuButtonVisibility
     ): ISwipeConfig {
         const measurer = actionAlignment === 'vertical' ? verticalMeasurer : horizontalMeasurer;
         const config: ISwipeConfig = measurer.getSwipeConfig(
             actions,
             actionsContainerHeight,
-            actionCaptionPosition
+            actionCaptionPosition,
+            menuButtonVisibility
         );
         config.needTitle = measurer.needTitle;
         config.needIcon = measurer.needIcon;
