@@ -51,7 +51,7 @@ export default class extends Control {
     }
 
     protected _dragEnd(_: SyntheticEvent, entity: Collection<Model>, target: unknown, position: string): void {
-        // @ts-ignore
+        // tslint:disable-next-line
         this._children.listMover.moveItems(entity.getItems(), target, position);
     }
 
