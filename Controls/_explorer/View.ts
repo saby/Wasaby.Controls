@@ -160,7 +160,7 @@ var
                self._isGoingBack = false;
             }
             if (self._isGoingFront) {
-               self._children.treeControl.setMarkedKey(null);
+               self._children.treeControl.setMarkedKey(undefined);
                self._isGoingFront = false;
             }
             if (self._pendingViewMode) {
