@@ -116,13 +116,13 @@ describe('Controls/marker/Controller', () => {
          controller = new MarkerController({model: model, markerVisibility: 'onactivated', markedKey: 2});
 
          let result = controller.setMarkedKey(undefined);
-         assert.equal(result, undefined);
-         assert.equal(model.getMarkedKey(), undefined);
+         assert.strictEqual(result, undefined);
+         assert.strictEqual(model.getMarkedKey(), null);
 
          const setMarkedKeySpy = spy(model, 'setMarkedKey');
          result = controller.setMarkedKey(undefined);
-         assert.equal(result, undefined);
-         assert.equal(model.getMarkedKey(), undefined);
+         assert.strictEqual(result, undefined);
+         assert.strictEqual(model.getMarkedKey(), null);
          assert.isFalse(setMarkedKeySpy.called);
       });
 

@@ -45,14 +45,14 @@ export class Controller {
     * @return {string|number} новый ключ маркера
     */
    setMarkedKey(key: TKey, silent: boolean = false): TKey {
-      if (key === undefined && this._markerVisibility !== Visibility.Visible) {
-         if (this._markedKey === undefined) {
-            return undefined;
+      if ((key === undefined || key === null) && this._markerVisibility !== Visibility.Visible) {
+         if (this._markedKey === key) {
+            return this._markedKey;
          }
 
          this._model.setMarkedKey(this._markedKey, false, silent);
-         this._markedKey = undefined;
-         return undefined;
+         this._markedKey = key;
+         return this._markedKey;
       }
 
       const item = this._model.getItemBySourceKey(key);
