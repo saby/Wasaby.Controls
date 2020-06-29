@@ -1,19 +1,20 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/TwoLevelsWithoutPhoto/TwoLevelsWithoutPhoto';
 import {Memory} from 'Types/source';
 import {Gadgets} from '../../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { TExpandOrColapsItems } from 'Controls-demo/types';
 
-export default class extends Control {
+export default class extends Control<IControlOptions> {
    protected _template: TemplateFunction = Template;
    protected _viewSource: Memory;
+   // tslint:disable-next-line
    protected _expandedItems: TExpandOrColapsItems = [1, 2, 4];
    protected _twoLvlColumnsNoPhoto: IColumn[] = Gadgets.getGridTwoLevelColumnsWithPhoto().map((cur) => ({
       ...cur, template: undefined
    }));
 
-   protected _beforeMount(options): void {
+   protected _beforeMount(options: IControlOptions): void {
       if (options.hasOwnProperty('collapseNodes')) {
          this._expandedItems = [];
       }

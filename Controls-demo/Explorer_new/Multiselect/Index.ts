@@ -2,25 +2,26 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/Explorer_new/Multiselect/Multiselect';
 import {Gadgets} from '../DataHelpers/DataCatalog';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
-
+import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { TRoot, IHeader } from 'Controls-demo/types';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
-   protected _viewSource;
-   protected _columns = Gadgets.getGridColumns();
+   protected _viewSource: MemorySource;
+   protected _columns: IColumn[] = Gadgets.getGridColumns();
    protected _viewMode: string = 'table';
-   protected _root = null;
+   protected _root: TRoot = null;
    private _multiselect: 'visible'|'hidden'|'onhover' = 'visible';
-   protected _header = Gadgets.getHeader();
+   protected _header: IHeader[] = Gadgets.getHeader();
 
-   protected _beforeMount() {
+   protected _beforeMount(): void {
       this._viewSource = new MemorySource({
          keyProperty: 'id',
          data: Gadgets.getData()
       });
    }
 
-   protected _onToggle() {
+   protected _onToggle(): void {
       switch (this._multiselect) {
          case 'visible':
             this._multiselect = 'hidden';

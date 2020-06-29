@@ -12,6 +12,7 @@ export default class extends Control {
     protected _columns: IColumn[] = Gadgets.getColumnsWithFixedWidth().map((cur) => ({
         ...cur, template: elipsisTpl
     }));
+    // tslint:disable-next-line
     protected _expandedItems: TExpandOrColapsItems = [1, 11, 111, 1111, 11111, 111111, 2, 22, 222, 2222];
 
     protected _beforeMount(): void {

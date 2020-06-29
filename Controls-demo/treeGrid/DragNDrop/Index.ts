@@ -8,11 +8,12 @@ import { TRoot, TItemsReadyCallback } from 'Controls-demo/types';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
+import { IColumn } from 'Controls/_grid/interface/IColumn';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
-    protected _columns = Gadgets.getGridColumnsForFlat();
+    protected _columns: IColumn[] = Gadgets.getGridColumnsForFlat();
     protected _viewMode: string = 'table';
     protected _root: TRoot = null;
     protected _selectedKeys: Number[] = [];
@@ -32,17 +33,17 @@ export default class extends Control {
         this._items = items;
     }
 
-    protected _dragStart(_, items: number[]): ListEntity {
+    protected _dragStart(_: SyntheticEvent, items: number[]): ListEntity {
         let hasBadItems = false;
         const firstItem = this._items.getRecordById(items[0]);
 
-        items.forEach(function(item) {
+        items.forEach((item: unknown): ListEntity => {
             if (item === 0) {
                 hasBadItems = true;
             }
         });
         return hasBadItems ? false : new ListEntity({
-            items: items,
+            items,
             mainText: firstItem.get('title'),
             image: firstItem.get('image'),
             additionalText: firstItem.get('additional')
@@ -50,12 +51,13 @@ export default class extends Control {
     }
 
     protected _dragEnd(_: SyntheticEvent, entity: Collection<Model>, target: unknown, position: string): void {
+        //@ts-ignore
         this._children.listMover.moveItems(entity.getItems(), target, position);
     }
+
     protected _onToggle(): void {
         this._multiselect = this._multiselect === 'visible' ? 'hidden' : 'visible';
     }
-
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

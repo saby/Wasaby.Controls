@@ -12,7 +12,7 @@ export default class extends Control {
    protected _viewMode: string = 'table';
    protected _root: TRoot = null;
 
-   protected _beforeMount() {
+   protected _beforeMount(): void {
       this._viewSource = new MemorySource({
          keyProperty: 'id',
          data: Gadgets.getData()
