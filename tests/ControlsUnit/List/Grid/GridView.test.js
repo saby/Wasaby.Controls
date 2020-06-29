@@ -410,9 +410,10 @@ define(['Controls/grid'], function(gridMod) {
 
       describe('column scroll', function () {
 
-         const DEBUG = false;
+         const DEBUG = true;
          let gridView;
          let cfg;
+         let contentContainer;
 
          beforeEach(() => {
             cfg = {
@@ -433,6 +434,26 @@ define(['Controls/grid'], function(gridMod) {
                setColumnScroll: () => {},
                unsubscribe:() => {}
             };
+
+            contentContainer = {
+               offsetWidth: 100,
+               scrollWidth: 200,
+               querySelector: () => {},
+               querySelectorAll: (selector) => selector === '.controls-Grid_columnScroll_wrapper' ? [] : null
+            };
+
+            gridView._children.columnScrollContainer = {
+               offsetWidth: contentContainer['offsetWidth'],
+               getClientRects: () => [{}, {}],
+               getElementsByClassName: (selector) => {
+                  if (selector === 'controls-Grid_columnScroll') {
+                     return [contentContainer];
+                  } else if(selector === 'controls-BaseControl__emptyTemplate') {
+                     return [null];
+                  }
+               }
+            };
+            gridView._children.columnScrollStylesContainer = {};
          });
 
          describe('init, disable and destroy column scroll', () => {
@@ -447,32 +468,47 @@ define(['Controls/grid'], function(gridMod) {
                }
             };
 
+            beforeEach(() => {
+               gridView.saveOptions(cfg);
+            });
+
             it('on mount, without column scroll', () => {
                gridView._beforeMount({...cfg, columnScroll: undefined});
+               gridView.saveOptions({...cfg, columnScroll: undefined});
+               gridView._afterMount();
                assert.isUndefined(gridView._columnScrollController, ERROR_MSG.SHOULD_NOT_BE.COLUMN_SCROLL);
                assert.isUndefined(gridView._dragScrollController, ERROR_MSG.SHOULD_NOT_BE.DRAG_SCROLL);
             });
 
             it('on mount, with drag scroll, default options', () => {
                gridView._beforeMount(cfg);
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
                assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
                assert.isDefined(gridView._dragScrollController, ERROR_MSG.SHOULD_BE.DRAG_SCROLL);
             });
 
             it('on mount, with items DND', () => {
                gridView._beforeMount({...cfg, itemsDragNDrop: true});
+               gridView.saveOptions({...cfg, itemsDragNDrop: true});
+               gridView._afterMount();
                assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
                assert.isUndefined(gridView._dragScrollController, ERROR_MSG.SHOULD_NOT_BE.DRAG_SCROLL);
             });
 
             it('on mount, with items DND and drag scroll', () => {
                gridView._beforeMount({...cfg, itemsDragNDrop: true, dragScrolling: true});
+               gridView.saveOptions({...cfg, itemsDragNDrop: true, dragScrolling: true});
+               gridView._afterMount();
                assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
                assert.isDefined(gridView._dragScrollController, ERROR_MSG.SHOULD_BE.DRAG_SCROLL);
             });
 
             it('by update options', () => {
                gridView._beforeMount(cfg);
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
+
                assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
                assert.isDefined(gridView._dragScrollController, ERROR_MSG.SHOULD_BE.DRAG_SCROLL);
 
@@ -489,6 +525,9 @@ define(['Controls/grid'], function(gridMod) {
 
             it('destroy column scroll before unmount view', () => {
                gridView._beforeMount(cfg);
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
+
                assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
                assert.isDefined(gridView._dragScrollController, ERROR_MSG.SHOULD_BE.DRAG_SCROLL);
 
@@ -500,24 +539,50 @@ define(['Controls/grid'], function(gridMod) {
          });
 
          describe('update sizes', () => {
-            it('on view resize', () => {
-               assert.equal(1, DEBUG ? 2 : 1);
+            it('on view resize', async () => {
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
+
+               await new Promise((resolve) => {
+                  contentContainer.offsetWidth = 125;
+                  contentContainer.scrollWidth = 600;
+                  gridView._resizeHandler();
+
+                  setTimeout(() => {
+                     assert.equal(gridView._containerSize, 125);
+                     assert.equal(gridView._contentSizeForHScroll, 600);
+                     resolve();
+                  }, 20);
+               });
             });
 
-            it('on list collection changed', () => {
-               assert.equal(1, DEBUG ? 2 : 1);
+            it('on list collection changed', async () => {
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
+
+               await new Promise((resolve) => {
+                  contentContainer.offsetWidth = 125;
+                  contentContainer.scrollWidth = 600;
+                  gridView.resizeNotifyOnListChanged();
+
+                  setTimeout(() => {
+                     assert.equal(gridView._containerSize, 125);
+                     assert.equal(gridView._contentSizeForHScroll, 600);
+                     resolve();
+                  }, 20);
+               });
             });
 
             it('on toggle multiselect', () => {
-               assert.equal(1, DEBUG ? 2 : 1);
-            });
+               gridView.saveOptions({...cfg, multiSelectVisibility: 'hidden'});
+               gridView._afterMount();
 
-            it('after init in mount', () => {
-               assert.equal(1, DEBUG ? 2 : 1);
-            });
+               contentContainer.offsetWidth = 125;
+               contentContainer.scrollWidth = 600;
+               gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible'});
 
-            it('after init by changing options', () => {
-               assert.equal(1, DEBUG ? 2 : 1);
+               assert.equal(gridView._containerSize, 125);
+               assert.equal(gridView._contentSizeForHScroll, 600);
             });
 
             it('should update column scroll sizes if options has been changed (only once per lifecycle)', () => {
@@ -528,6 +593,9 @@ define(['Controls/grid'], function(gridMod) {
                   setMultiSelectVisibility: () => {calledMethods.push('setMultiSelectVisibility')},
                   updateSizes: () => {calledMethods.push('updateSizes')}
                };
+               gridView._children.columnScrollContainer = {
+                  getElementsByClassName: (selector) => selector === 'controls-Grid_columnScroll' ? [{offsetWidth: 100, scrollWidth: 200}] : null
+               };
 
                gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2});
                assert.deepEqual(calledMethods, ['setStickyColumnsCount', 'setMultiSelectVisibility', 'updateSizes']);
@@ -536,60 +604,19 @@ define(['Controls/grid'], function(gridMod) {
 
          it('mounting with option startScrollPosition === end', () => {
             const testCfg = { ...cfg, columnScrollStartPosition: 'end' };
-            gridView.saveOptions(testCfg);
-            gridView._isColumnScrollVisible = () => true;
-
             gridView._beforeMount(testCfg);
-
-            gridView._children = {
-               columnScrollStylesContainer: {},
-               columnScrollContainer: {
-                  getElementsByClassName: () => [{}]
-               }
-            };
-
-            gridView._columnScrollController.updateSizes = (callback) => {
-               gridView._columnScrollController.getScrollLength = () => 300;
-               callback({
-                  contentSizeForScrollBar: 300,
-                  scrollWidth: 300,
-                  containerSize: 400,
-                  contentSize: 700
-               });
-            };
+            gridView.saveOptions(testCfg);
 
             gridView._afterMount(testCfg);
 
-            assert.equal(300, gridView._columnScrollController.getScrollPosition());
+            assert.equal(100, gridView._columnScrollController.getScrollPosition());
 
-            assert.equal(300, gridView._contentSizeForHScroll);
-            assert.equal(300, gridView._horizontalScrollWidth);
-            assert.equal(400, gridView._containerSize);
+            assert.equal(200, gridView._contentSizeForHScroll);
+            assert.equal(100, gridView._horizontalScrollWidth);
+            assert.equal(100, gridView._containerSize);
 
-            assert.equal(300, gridView._dragScrollController._scrollLength);
-            assert.equal(300, gridView._dragScrollController._scrollPosition);
-         });
-
-         it('only one update sizes while mounting', () => {
-            const testCfg = { ...cfg, columnScrollStartPosition: 'end' };
-            let updateSizesCount = 0;
-
-            gridView.saveOptions(testCfg);
-            gridView._isColumnScrollVisible = () => true;
-
-            gridView._beforeMount(testCfg);
-
-            gridView._columnScrollController.updateSizes = (callback) => updateSizesCount++;
-            gridView._children = {
-               columnScrollStylesContainer: {},
-               columnScrollContainer: {
-                  getElementsByClassName: () => [{}]
-               }
-            };
-
-            gridView._afterMount(testCfg);
-
-            assert.equal(1, updateSizesCount);
+            assert.equal(100, gridView._dragScrollController._scrollLength);
+            assert.equal(100, gridView._dragScrollController._scrollPosition);
          });
 
          it('is drag scrolling enabled in different cases', () => {
@@ -622,7 +649,7 @@ define(['Controls/grid'], function(gridMod) {
                gridView._options.editingItemData = hasEditing
             };
 
-            gridView._columnScrollController.isVisible = () => needScrollBySize;
+            gridView._columnScrollController = { isVisible: () => needScrollBySize };
             gridView._options.listModel = {
                getItems: () => hasItemsRecordSet ? {
                   getCount: () => itemsCount
@@ -660,45 +687,49 @@ define(['Controls/grid'], function(gridMod) {
          });
 
          it('update column scroll shadow classes should not leads to forceUpdate (const classes object)', () => {
-            gridView._beforeMount(cfg);
-
-            let startClasses = '';
-            let endClasses = '';
-            gridView._columnScrollController.getShadowClasses = (pos) => pos === 'start' ? startClasses : endClasses;
+            gridView.saveOptions(cfg);
+            gridView._afterMount();
 
             const oldClasses = gridView._columnScrollShadowClasses;
-            assert.equal('', oldClasses.start);
-            assert.equal('', oldClasses.end);
-
-            startClasses = '123';
-            endClasses = '123';
+            assert.equal(
+                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default controls-ColumnScroll__shadow_invisible',
+                oldClasses.start
+            );
+            assert.equal(
+                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default',
+                oldClasses.end
+            );
+            gridView._columnScrollController._shadowState.start = true;
             gridView._updateColumnScrollShadowClasses();
 
             const newClasses = gridView._columnScrollShadowClasses;
-            assert.equal('123', newClasses.start);
-            assert.equal('123', newClasses.end);
+            assert.equal(
+                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default',
+                newClasses.start
+            );
+            assert.equal(
+                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default',
+                newClasses.end
+            );
 
             assert.equal(oldClasses, newClasses);
          });
 
          it('update column scroll shadow styles should not leads to forceUpdate (const styles object)', () => {
-            gridView._beforeMount(cfg);
-
-            let startStyles = '';
-            let endStyles = '';
-            gridView._columnScrollController.getShadowStyles = (pos) => pos === 'start' ? startStyles : endStyles;
+            gridView.saveOptions(cfg);
+            gridView._afterMount();
 
             const oldStyles = gridView._columnScrollShadowStyles;
+
             assert.equal('', oldStyles.start);
             assert.equal('', oldStyles.end);
 
-            startStyles = '123';
-            endStyles = '123';
+            gridView._columnScrollController._shadowState.start = true;
             gridView._updateColumnScrollShadowStyles();
 
             const newStyles = gridView._columnScrollShadowStyles;
-            assert.equal('123', newStyles.start);
-            assert.equal('123', newStyles.end);
+            assert.equal('left: 0px;', newStyles.start);
+            assert.equal('', newStyles.end);
 
             assert.equal(oldStyles, newStyles);
          });
@@ -738,6 +769,7 @@ define(['Controls/grid'], function(gridMod) {
          it('resize on list changed with column scroll', () => {
             let columnScrollResizeHandlerCalled = false;
             let updateShadowStyleCalled = false;
+            gridView.saveOptions(cfg);
 
             gridView._columnScrollController = {
                updateSizes(c) {

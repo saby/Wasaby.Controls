@@ -199,7 +199,7 @@ export class ColumnScroll {
      * вызвано еще одно обновление. Время ожидания регулируется константой DELAY_UPDATE_SIZES.
      * @see DELAY_UPDATE_SIZES
      */
-    updateSizes(afterUpdateCallback: () => void = null, immediate: boolean = false): void {
+    updateSizes(afterUpdateCallback: TAfterUpdateSizesCallback, immediate: boolean = false): void {
         const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
         if (immediate) {
             this._updateSizes(isFullGridSupport, afterUpdateCallback);
@@ -266,7 +266,7 @@ export class ColumnScroll {
         }
     }
 
-    private _debouncedUpdateSizes(isFullGridSupport: boolean, afterUpdateCallback: Function): void {
+    private _debouncedUpdateSizes(isFullGridSupport: boolean, afterUpdateCallback: TAfterUpdateSizesCallback): void {
         /* this function is debounced in ctor. Signatures of _debouncedUpdateSizes and _updateSizes must be equal */
     }
 

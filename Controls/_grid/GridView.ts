@@ -29,7 +29,7 @@ import * as ColumnTpl from 'wml!Controls/_grid/Column';
 import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 
 import {Logger} from 'UI/Utils';
-import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
+import {shouldAddActionsCell, shouldDrawColumnScroll} from 'Controls/_grid/utils/GridColumnScrollUtil';
 import { stickyLadderCellsCount } from 'Controls/_grid/utils/GridLadderUtil';
 import {SyntheticEvent} from "Vdom/Vdom";
 
@@ -113,7 +113,46 @@ var
             return bounds.max - bounds.min;
         },
 
-        initColumnScroll(self, options): void {
+        /**
+         * Создает или удаляет контроллер горизонтального скролла в зависимости от того, нужен ли он списку
+         *  should be called in the end of life cycle
+         */
+        actualizeColumnScroll(self, options, isOnMount?: boolean): 'created' | 'actual' | 'destroyed' {
+            let result: 'created' | 'actual' | 'destroyed';
+
+            if (options.columnScroll) {
+                const scrollContainer = self._children.columnScrollContainer;
+                const contentContainer = scrollContainer.getElementsByClassName(COLUMN_SCROLL_JS_SELECTORS.CONTENT)[0];
+                const needBySize = shouldDrawColumnScroll(scrollContainer, contentContainer);
+
+                if (needBySize) {
+                    if (!self._columnScrollController) {
+                        _private.createColumnScroll(self, options);
+                        self._columnScrollController.updateSizes((newSizes) => {
+                            if (isOnMount && self._options.columnScrollStartPosition === 'end') {
+                                self._columnScrollController.setScrollPosition(newSizes.contentSize - newSizes.containerSize);
+                            }
+                            self._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
+                            self._horizontalScrollWidth = newSizes.scrollWidth;
+                            self._containerSize = newSizes.containerSize;
+                            self._updateColumnScrollData();
+                        }, true);
+                        result = 'created';
+                    } else {
+                        result = 'actual';
+                    }
+                } else {
+                    _private.destroyColumnScroll(self);
+                    result = 'destroyed';
+                }
+            } else {
+                _private.destroyColumnScroll(self);
+                result = 'destroyed';
+            }
+
+            return result;
+        },
+        createColumnScroll(self, options): void {
             self._columnScrollController = new ColumnScroll({
                 stickyColumnsCount: options.stickyColumnsCount,
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden',
@@ -125,11 +164,17 @@ var
             self._columnScrollShadowClasses = { start: '', end: '' };
             self._columnScrollShadowStyles = { start: '', end: '' };
 
-            if (self._isDragScrollingEnabled(options)) {
+            if (self._isDragScrollingEnabled(options) && !self._dragScrollController) {
                 _private.initDragScroll(self, options);
             }
+
+            self._columnScrollController.setContainers({
+                scrollContainer: self._children.columnScrollContainer,
+                contentContainer: self._children.columnScrollContainer.getElementsByClassName(COLUMN_SCROLL_JS_SELECTORS.CONTENT)[0],
+                stylesContainer: self._children.columnScrollStylesContainer
+            });
         },
-        initDragScroll(self, options) {
+        initDragScroll(self, options, pure?: boolean): void {
             const startDragNDropCallback = !options.startDragNDropCallback ? null : () => {
                 _private.setGrabbing(self, false);
                 options.startDragNDropCallback();
@@ -145,21 +190,65 @@ var
                     self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
                 }
             });
-            self._dragScrollController.updateScrollData({
-                scrollLength: self._columnScrollController.getScrollLength(),
-                scrollPosition: self._columnScrollController.getScrollPosition()
-            });
             _private.setGrabbing(self, false);
             self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
         },
-        destroyColumnScroll(self) {
-            self._columnScrollController?.destroy();
-            self._columnScrollController = null;
-            _private.destroyDragScroll(self);
+        updateColumnScrollByOptions(self, oldOptions, newOptions): void {
+            const stickyColumnsCountChanged = newOptions.stickyColumnsCount !== oldOptions.stickyColumnsCount;
+            const multiSelectVisibilityChanged = newOptions.multiSelectVisibility !== oldOptions.multiSelectVisibility;
+            const dragScrollingChanged = newOptions.dragScrolling !== oldOptions.dragScrolling;
+
+            if (stickyColumnsCountChanged || multiSelectVisibilityChanged || self._columnsHaveBeenChanged) {
+                const columnScrollStatus = _private.actualizeColumnScroll(self, newOptions);
+
+                if (self._columnScrollController) {
+
+                    // Если изменилось несколько опций, из за которых требуется пересчитать размеры коризонтального скролла,
+                    // то перечет должен случиться только один раз.
+                    // Если горизонтльный скролл был только что создан, то он хранит актуальные размеры.
+                    const shouldUpdateSizes = columnScrollStatus !== 'created';
+
+                    if (stickyColumnsCountChanged) {
+                        self._columnScrollController.setStickyColumnsCount(newOptions.stickyColumnsCount, shouldUpdateSizes);
+                    }
+                    if (multiSelectVisibilityChanged) {
+                        self._columnScrollController.setMultiSelectVisibility(newOptions.multiSelectVisibility, shouldUpdateSizes);
+                    }
+
+                    if (shouldUpdateSizes) {
+                        // Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
+                        self._columnScrollController.updateSizes((newSizes) => {
+                            self._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
+                            self._horizontalScrollWidth = newSizes.scrollWidth;
+                            self._containerSize = newSizes.containerSize;
+                            self._updateColumnScrollData();
+                        }, true);
+                    }
+                }
+            } else if (dragScrollingChanged && newOptions.dragScrolling) {
+                // При включении перетаскивания не нужно ничего перерисовывать. Нужно просто отдать контроллеру перетаскивания размеры.
+                // Сделать при инициализации это нельзя, т.к. контроллеры drag и scroll создаются на разных хуках (before и after update соотв.)
+                // Создание dragScroll на afterUpdate вынудит делать _forceUpdate для обновления состояний (курсор над записями).
+                // Создание columnScroll на beforeUpdate невозможно, т.к. контроллер создается только по мере необходимости.
+                self._updateColumnScrollData();
+            }
         },
-        destroyDragScroll(self) {
-            self._dragScrollController?.destroy();
-            self._dragScrollController = null;
+        destroyColumnScroll(self): void {
+            if (self._columnScrollController) {
+                self._columnScrollController.destroy();
+                self._columnScrollController = null;
+                self._columnScrollContainerClasses = COLUMN_SCROLL_JS_SELECTORS.CONTAINER;
+                self._columnScrollShadowClasses = null;
+                self._columnScrollShadowStyles = null;
+                _private.destroyDragScroll(self);
+            }
+        },
+        destroyDragScroll(self): void {
+            if (self._dragScrollController) {
+                self._dragScrollController.destroy();
+                self._dragScrollController = null;
+                self._dragScrollOverlayClasses = '';
+            }
         },
         setGrabbing(self, isGrabbing: boolean): void {
             self._isGrabbing = isGrabbing;
@@ -199,7 +288,8 @@ var
         _headerContentTemplate: HeaderContentTpl,
 
         _notifyHandler: tmplNotify,
-        _columnScrollContainerClasses: null,
+        _columnScrollContainerClasses: '',
+        _dragScrollOverlayClasses: '',
         _horizontalScrollPosition: 0,
         _contentSizeForHScroll: 0,
         _horizontalScrollWidth: 0,
@@ -221,9 +311,6 @@ var
             this._listModel.setColumns(cfg.columns, true);
             this._listModel.setHeader(cfg.header, true);
 
-            if (cfg.columnScroll) {
-                _private.initColumnScroll(this, cfg);
-            }
             this._horizontalPositionChangedHandler = this._horizontalPositionChangedHandler.bind(this);
 
             return resultSuper;
@@ -231,24 +318,9 @@ var
 
         _afterMount(): void {
             GridView.superclass._afterMount.apply(this, arguments);
-            if (this._columnScrollController) {
-                this._columnScrollController.setContainers({
-                    scrollContainer: this._children.columnScrollContainer,
-                    contentContainer: this._children.columnScrollContainer.getElementsByClassName(COLUMN_SCROLL_JS_SELECTORS.CONTENT)[0],
-                    stylesContainer: this._children.columnScrollStylesContainer
-                });
-                this._columnScrollController.updateSizes((newSizes) => {
-                    // this._forceUpdate(); #rea_columnnScroll
-                    if (this._options.columnScrollStartPosition === 'end' && this._isColumnScrollVisible()) {
-                        this._columnScrollController.setScrollPosition(newSizes.contentSize - newSizes.containerSize);
-                    }
-                    this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                    this._horizontalScrollWidth = newSizes.scrollWidth;
-                    this._containerSize = newSizes.containerSize;
-                    this._updateColumnScrollData();
-                }, true);
+            if (this._options.columnScroll) {
+                _private.actualizeColumnScroll(this, this._options, true);
             }
-
             this._isFullMounted = true;
         },
 
@@ -266,11 +338,7 @@ var
             // В зависимости от columnScroll вычисляются значения колонок для stickyHeader в методе setHeader.
             if (this._options.columnScroll !== newCfg.columnScroll) {
                 this._listModel.setColumnScroll(newCfg.columnScroll);
-
-                if (newCfg.columnScroll) {
-                    _private.initColumnScroll(this, newCfg);
-                    this._setColumnScrollContainersAfterRender = true;
-                } else {
+                if (!newCfg.columnScroll) {
                     _private.destroyColumnScroll(this);
                 }
             }
@@ -323,46 +391,10 @@ var
         _afterUpdate(oldOptions): void {
             GridView.superclass._afterUpdate.apply(this, arguments);
 
-            if (this._columnScrollController) {
-                // TODO: Проверить https://online.sbis.ru/doc/97a4c361-8507-4f50-a5b6-0c3824582f4b
-                //  #rea_columnnScroll
-                // if (oldOptions.root !== this._options.root) {
-                //     this._columnScrollController.resetSizes();
-                // }
-
-                if (this._setColumnScrollContainersAfterRender) {
-                    this._columnScrollController.setContainers({
-                        scrollContainer: this._children.columnScrollContainer,
-                        contentContainer: this._children.columnScrollContainer.getElementsByClassName(COLUMN_SCROLL_JS_SELECTORS.CONTENT)[0],
-                        stylesContainer: this._children.columnScrollStylesContainer
-                    });
-                    this._setColumnScrollContainersAfterRender = false;
-                }
-
-                // Если изменилось несколько опций, из за которых требуется пересчитать размеры коризонтального скролла,
-                // то перечет должен случиться только один раз.
-                const shouldUpdateSizes = this._columnsHaveBeenChanged ||
-                    this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount ||
-                    this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility;
-
-                if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
-                    this._columnScrollController.setStickyColumnsCount(this._options.stickyColumnsCount, shouldUpdateSizes);
-                }
-                if (this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility) {
-                    this._columnScrollController.setMultiSelectVisibility(this._options.multiSelectVisibility, shouldUpdateSizes);
-                }
-
-                if (shouldUpdateSizes) {
-                    // Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
-                    this._columnScrollController.updateSizes((newSizes) => {
-                        this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                        this._horizontalScrollWidth = newSizes.scrollWidth;
-                        this._containerSize = newSizes.containerSize;
-                        this._updateColumnScrollData();
-                    }, true);
-                }
-
+            if (this._options.columnScroll) {
+                _private.updateColumnScrollByOptions(this, oldOptions, this._options);
             }
+
             this._columnsHaveBeenChanged = false;
         },
 
@@ -401,13 +433,16 @@ var
             GridView.superclass.resizeNotifyOnListChanged.apply(this, arguments);
 
             // TODO: Проверить https://online.sbis.ru/opendoc.html?guid=a768cb95-9c30-4f75-b1fb-9182228e5550 #rea_columnnScroll
-            if (this._isFullMounted && this._columnScrollController) {
-                this._columnScrollController.updateSizes((newSizes) => {
-                    this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                    this._horizontalScrollWidth = newSizes.scrollWidth;
-                    this._containerSize = newSizes.containerSize;
-                    this._updateColumnScrollData();
-                });
+            if (this._isFullMounted && this._options.columnScroll) {
+                const columnScrollStatus = _private.actualizeColumnScroll(this, this._options);
+                if (columnScrollStatus === 'actual') {
+                    this._columnScrollController.updateSizes((newSizes) => {
+                        this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
+                        this._horizontalScrollWidth = newSizes.scrollWidth;
+                        this._containerSize = newSizes.containerSize;
+                        this._updateColumnScrollData();
+                    });
+                }
             }
         },
 
@@ -447,7 +482,7 @@ var
             if (this._listModel.getDragItemData()) {
                 classes.add('controls-Grid_dragging_process');
             }
-            if (this._columnScrollController) {
+            if (this._options.columnScroll) {
                 classes.add(COLUMN_SCROLL_JS_SELECTORS.CONTENT);
                 classes.add(DRAG_SCROLL_JS_SELECTORS.CONTENT, this._isDragScrollingVisible(options));
             }
@@ -601,12 +636,17 @@ var
             return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
         },
         _resizeHandler(e): void {
-            this._columnScrollController?.updateSizes((newSizes) => {
-                this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                this._horizontalScrollWidth = newSizes.scrollWidth;
-                this._containerSize = newSizes.containerSize;
-                this._updateColumnScrollData();
-            });
+            if (this._options.columnScroll) {
+                const columnScrollStatus = _private.actualizeColumnScroll(this, this._options);
+                if (columnScrollStatus === 'actual') {
+                    this._columnScrollController.updateSizes((newSizes) => {
+                        this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
+                        this._horizontalScrollWidth = newSizes.scrollWidth;
+                        this._containerSize = newSizes.containerSize;
+                        this._updateColumnScrollData();
+                    });
+                }
+            }
         },
         _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
             if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.getEditingItemData()) {
