@@ -26,7 +26,7 @@
  * @author Крайнов Д.О.
  */
 
-import Selector = require("Controls/_lookup/Button");
+import {default as Selector} from "Controls/_lookup/Button";
 import Input = require("Controls/_lookup/Lookup");
 import MultipleInput = require("Controls/_lookup/MultipleInput");
 import {default as Collection} from "Controls/_lookup/SelectedCollection";
