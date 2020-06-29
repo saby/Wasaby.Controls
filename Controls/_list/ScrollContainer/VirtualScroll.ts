@@ -521,7 +521,7 @@ export default class VirtualScroll {
             stop = itemsCount;
         } else if (direction === 'up') {
             start = Math.max(0, start - fixedSegmentSize);
-            if(start > itemsCount) {
+            if (start > itemsCount) {
                 start = Math.max(0, itemsCount - this._options.pageSize);
             }
             stop = Math.min(itemsCount, Math.max(this._range.stop, start + this._options.pageSize));
