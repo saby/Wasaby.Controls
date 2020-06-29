@@ -15,12 +15,12 @@ export default class extends Control {
     protected _columns: IColumnRes[] = getEditing().getEditingColumns();
     protected _markedKey: number;
     protected _dataLoadCallback: TItemsReadyCallback = this._dataCallback.bind(this);
-    protected _items: any;
+    protected _items: RecordSet;
     protected _lastId: number;
     protected _selectedKeys: number[] = [];
-    protected _viewModel: any;
+    protected _viewModel: unknown;
 
-    protected _itemActions: any = [{
+    protected _itemActions: IItemAction = [{
         id: 1,
         icon: 'icon-Erase icon-error',
         title: 'delete',
@@ -71,10 +71,11 @@ export default class extends Control {
     }
 
     private _toggleAddButton(): void {
+        // tslint:disable-next-line
         const self = this;
         this._viewSource.query().addCallback((items) => {
             const rawData = items.getRawData();
-            const getSumm = (title) => rawData.items.reduce((acc, cur) => {
+            const getSumm = (title) => rawData.items.reduce((acc: number, cur: unknown) => {
                 acc += parseInt(cur[title], 10) || 0;
                 return acc;
             }, 0)

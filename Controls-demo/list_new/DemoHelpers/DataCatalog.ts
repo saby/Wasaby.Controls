@@ -1,4 +1,4 @@
-import {showType} from "../../../Controls/Utils/Toolbar";
+import {showType} from '../../../Controls/Utils/Toolbar';
 
 const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nulla ex, consectetur lacinia odio blandit sit amet.';
 
@@ -116,7 +116,8 @@ function getGroupedCatalog(): Array<{
             id: 8,
             title: 'ASUS Zenbook F-234',
             brand: 'asus',
-            longBrandName: 'AsusTek Computer Inc. stylised as ASUSTeK (Public TWSE: 2357 LSE: ASKD), based in Beitou District, Taipei, Taiwan'
+            longBrandName: 'AsusTek Computer Inc. stylised as ASUSTeK' +
+                '(Public TWSE: 2357 LSE: ASKD), based in Beitou District, Taipei, Taiwan'
         },
         {
             id: 9,
@@ -124,7 +125,7 @@ function getGroupedCatalog(): Array<{
             brand: 'acer',
             longBrandName: 'acer'
         }
-    ]
+    ];
 }
 
 function getGroupedCatalogWithHiddenGroup(): Array<{
@@ -181,7 +182,6 @@ function getGroupedCatalogWithHiddenGroup(): Array<{
     ];
 }
 
-
 function getEditableCatalog(): Array<{
     id: number,
     beforeBeginEditTitle: string,
@@ -214,18 +214,24 @@ function getEditableCatalog(): Array<{
             beforeBeginEditTitle: 'Редактирование не начнется, при этом валидация занимает 1 сек.',
             beforeEndEditTitle: 'Редактирование не завершится если поле пустое, при этом валидация занимает 1 сек.'
         }
-    ]
+    ];
 }
 
 function getContactsCatalog(): Array<{ id: number, title: string }> {
     return [
         {
             id: 0,
-            title: 'What makes every American a typical one is a desire to get a well-paid job that will cover their credit card. A credit card is an indispensable part of life in America. In other words, any American knows that how he or she handles their credit card or cards, either will help them or haunt them for years... re-establish his/her good credit by applying for a secured credit.'
+            title: 'What makes every American a typical one is a desire to get' +
+                'a well-paid job that will cover their credit card. A credit card is an' +
+                'indispensable part of life in America. In other words, any American knows' +
+                'that how he or she handles their credit card or cards, either will help them' +
+                'or haunt them for years... re-establish his/her good credit by applying for a secured credit.'
         },
         {
             id: 1,
-            title: 'For those who are deep in credit card debt, there are some Credit Services agencies that offer anyone in America both online or telephone, and face-to-face counseling.'
+            title: 'For those who are deep in credit card debt, there are some' +
+                'Credit Services agencies that offer anyone in America both online or' +
+                'telephone, and face-to-face counseling.'
         },
         {
             id: 2,
@@ -233,66 +239,70 @@ function getContactsCatalog(): Array<{ id: number, title: string }> {
         },
         {
             id: 3,
-            title: 'Once debts have been repaid, an American can re-establish his/her good credit by applying for a secured credit card and paying the balance off regularly.'
+            title: 'Once debts have been repaid, an American can re-establish his/her good' +
+                'credit by applying for a secured credit card and paying the balance off regularly.'
         }
     ];
 }
 
-function getContactsCatalogWithActions(): any {
+function getContactsCatalogWithActions(): unknown {
     const catalog = getContactsCatalog();
-
+    // tslint:disable-next-line
     catalog[0]['itemActions'] = [
         {
             id: 1,
             title: 'Прочитано',
-            showType: showType.TOOLBAR,
+            showType: showType.TOOLBAR
         },
         {
             id: 2,
             icon: 'icon-PhoneNull',
             title: 'Позвонить',
-            showType: showType.MENU_TOOLBAR,
+            showType: showType.MENU_TOOLBAR
         },
         {
             id: 3,
             icon: 'icon-EmptyMessage',
             title: 'Написать',
-            showType: showType.TOOLBAR,
+            showType: showType.TOOLBAR
         }
     ];
+    // tslint:disable-next-line
     catalog[1]['itemActions'] = [];
+    // tslint:disable-next-line
     catalog[2]['itemActions'] = [
         {
             id: 1,
             icon: 'icon-Chat',
             title: 'Диалог',
             showType: showType.MENU_TOOLBAR,
-            parent: 3,
+            parent: 3
         },
         {
             id: 2,
             icon: 'icon-Email',
             title: 'Email',
             showType: showType.MENU,
-            parent: 3,
+            parent: 3
         },
         {
             id: 3,
             icon: 'icon-Profile',
             title: 'Профиль пользователя',
-            showType: showType.MENU,
+            showType: showType.MENU
         }
     ];
+    // tslint:disable-next-line
     catalog[3]['itemActions'] = [];
 
     return catalog;
 }
 
 interface  IGenerateDataOptions<TEntityData = {}> {
-    count: number,
-    keyProperty?: string,
-    entityTemplate?: Record<string, 'number'|'string'|'lorem'|'lorem_alter'>,
-    beforeCreateItemCallback?: (item: TEntityData) => void | false
+    count: number;
+    keyProperty?: string;
+    entityTemplate?: Record<string, 'number'|'string'|'lorem'|'lorem_alter'>;
+    beforeCreateItemCallback?: (item: TEntityData) => void | false;
 }
 
 /**
@@ -303,15 +313,22 @@ interface  IGenerateDataOptions<TEntityData = {}> {
  * @returns {Array<TEntityData extends Record<string, any>>}
  */
 function generateData<
+    // tslint:disable-next-line
     TEntityData extends Record<string, any> = {}
     >(
-        {count, entityTemplate = {id: 'number', title: 'string'}, keyProperty = 'id', beforeCreateItemCallback = () => {}}: IGenerateDataOptions<TEntityData>
-    ): Array<TEntityData> {
+        {count, entityTemplate = {id: 'number', title: 'string'},
+        keyProperty = 'id',
+        // tslint:disable-next-line
+        beforeCreateItemCallback = () => {}}: IGenerateDataOptions<TEntityData>
+    ): TEntityData[] {
 
-    const items: Array<TEntityData> = [];
+    const items: TEntityData[] = [];
 
-    const createItem = (entityTemplate: IGenerateDataOptions["entityTemplate"], forLoremPseudoRandom: number = 0): TEntityData => {
-        let item = {};
+    const createItem = (
+      // tslint:disable-next-line
+        entityTemplate: IGenerateDataOptions["entityTemplate"],
+        forLoremPseudoRandom: number = 0): TEntityData => {
+        const item = {};
 
         Object.keys(entityTemplate).forEach((key) => {
             if (entityTemplate[key] === 'string') {
@@ -319,21 +336,24 @@ function generateData<
             } else if (entityTemplate[key] === 'number') {
                 item[key] = 0;
             } else if (entityTemplate[key] === 'lorem') {
+                // tslint:disable-next-line
                 item[key] = forLoremPseudoRandom % 3 === 0 ? `${LOREM.slice(0, 110)}.` : (forLoremPseudoRandom % 2 === 0 ? `${LOREM} ${LOREM}` : `${LOREM.slice(0, 50)}.`);
             } else if (entityTemplate[key] === 'lorem_alter') {
+                // tslint:disable-next-line
                 const r = Math.floor(Math.random() * 100) % 100;
+                // tslint:disable-next-line
                 item[key] = r < 50 ? `${LOREM.slice(0, 110)}.` : (r < 70 ? `${LOREM} ${LOREM}` : `${LOREM.slice(0, 50)}.`);
             } else {
                 item[key] = entityTemplate[key];
             }
         });
 
-        return <TEntityData>item;
+        return item as TEntityData;
     };
 
     for (let i = 0; i < count; i++) {
-        let item = createItem(entityTemplate, items.length);
-        //@ts-ignore
+        const item = createItem(entityTemplate, items.length);
+        // tslint:disable-next-line
         item[keyProperty] = items.length;
         if (beforeCreateItemCallback(item) !== false) {
             items.push(item);
@@ -351,4 +371,4 @@ export {
     getGroupedCatalogWithHiddenGroup,
     getEditableCatalog,
     generateData
-}
+};

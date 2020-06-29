@@ -8,7 +8,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _itemActions: Array<{}> = getItemActions();
-    protected _contextMenuConfig: any = {
+    protected _contextMenuConfig: { iconSize: string } = {
         iconSize: 's'
     };
 
@@ -18,7 +18,6 @@ export default class extends Control {
             data: getData()
         });
     }
-
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

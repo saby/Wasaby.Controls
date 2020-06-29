@@ -4,10 +4,10 @@ import {Memory} from 'Types/source';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 
 interface IItem {
-    title: string,
-    id: number,
-    keyProperty: string,
-    count: number,
+    title: string;
+    id: number;
+    keyProperty: string;
+    count: number;
 }
 
 export default class extends Control {
@@ -19,24 +19,25 @@ export default class extends Control {
         keyProperty: 'id',
         count: 1000,
         beforeCreateItemCallback: (item: IItem) => {
-            item.title = `Запись с ключом ${item.id}.`
+            item.title = `Запись с ключом ${item.id}.`;
         }
     });
 
-    protected _removeItems() {
+    protected _removeItems(): void {
         const keys = [];
+      // tslint:disable-next-line
         for (let i = 0; i < 10; i++) {
             keys.push(this._itemsCount - 1 - i);
         }
-        //@ts-ignore
+        // tslint:disable-next-line
         this._viewSource.destroy(keys).addCallback(() => {
+            // tslint:disable-next-line
             this._itemsCount -= 10;
-            //@ts-ignore
             this._children.list.reload();
         });
     }
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: this.dataArray

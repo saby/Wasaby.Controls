@@ -8,6 +8,7 @@ import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {showType} from 'Controls/Utils/Toolbar';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
+import {IItemAction} from './interface/IItemActions';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -15,7 +16,7 @@ export default class extends Control {
     protected _viewSource: Memory;
     protected _fakeItemId: number;
     protected _columns: IColumn[];
-    protected _itemActions: any = [
+    protected _itemActions: IItemAction[] = [
         {
             id: 1,
             icon: 'icon-Erase icon-error',
@@ -36,12 +37,13 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._columns = getCountriesStats().getColumnsWithFixedWidths().map((column, index) => {
             const resultColumn = column;
+            // tslint:disable-next-line
             if (index !== 0) {
                 resultColumn.template = index < 3 ? editingCellText : editingCellNumber;
             }
             return resultColumn;
         });
-
+        // tslint:disable-next-line
         const data = getCountriesStats().getData().slice(0, 5);
         this._fakeItemId = data[data.length - 1].id;
         this._viewSource = new Memory({keyProperty: 'id', data});

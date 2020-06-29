@@ -16,7 +16,9 @@ export default class extends Control {
 
     protected _beforeMount(): void {
         const data = getCountriesStats().getData();
+        // tslint:disable-next-line
         const country = data[2].country;
+        // tslint:disable-next-line
         data[2].country = `${country} ${country} ${country} ${country} ${country} ${country}`;
 
         this._viewSource = new Memory({

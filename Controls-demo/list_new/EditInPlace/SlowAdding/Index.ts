@@ -5,6 +5,8 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {editing} from 'Controls/Constants';
 
+const TIMEOUT2500 = 2500;
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
@@ -28,7 +30,7 @@ export default class extends Control {
             return new Promise((resolve) => {
                 setTimeout(() => {
                     resolve();
-                }, 2500);
+                }, TIMEOUT2500);
             }).then(() => {
                 return new Model({
                     keyProperty: 'id',
@@ -39,11 +41,11 @@ export default class extends Control {
                 });
             });
         };
-        this._viewSource.update = (item: any) => {
+        this._viewSource.update = (item: unknown) => {
             return new Promise((resolve) => {
                 setTimeout(() => {
                     resolve(item);
-                }, 2500);
+                }, TIMEOUT2500);
             }).then(originUpdate);
         };
     }
@@ -55,7 +57,6 @@ export default class extends Control {
     }
 
     protected _addItem(): void {
-        //@ts-ignore
         this._children.list.beginAdd();
     }
     static _styles: string[] = ['Controls-demo/Controls-demo'];

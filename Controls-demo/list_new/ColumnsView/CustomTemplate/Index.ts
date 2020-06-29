@@ -3,6 +3,7 @@ import template = require('wml!Controls-demo/list_new/ColumnsView/CustomTemplate
 import {Memory as MemorySource, Memory} from 'Types/source';
 import {generateData} from '../../DemoHelpers/DataCatalog';
 import {RecordSet} from 'Types/collection';
+import {INavigation} from 'Controls-demo/types';
 
 const NUMBER_OF_ITEMS = 50;
 
@@ -11,15 +12,15 @@ export default class RenderDemo extends Control {
 
     protected _viewSource: Memory;
 
-    protected _navigation: any;
+    protected _navigation: INavigation;
 
     protected _itemActions: [object];
 
     protected _items: RecordSet;
 
     private _dataArray: Array<{id: number, title: string, description: string}>;
-
-    private deleteHandler(item): void {
+    // tslint:disable-next-line
+    private deleteHandler(item: any): void {
         const id = item.getId();
         const index = this._items.getIndex(item);
         this._items.removeAt(index);
@@ -42,6 +43,7 @@ export default class RenderDemo extends Control {
             entityTemplate: {title: 'string', description: 'lorem_alter'},
             beforeCreateItemCallback: (item) => {
                 item.title = `Запись с id="${item.id}". ${item.title}`;
+                // tslint:disable-next-line
                 item.column = item.id < 10 ? 0 : (item.id > 23 ? 1 : 2);
             }
         });
