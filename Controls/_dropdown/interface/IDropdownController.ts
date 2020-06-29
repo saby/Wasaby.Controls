@@ -8,8 +8,8 @@ import {Memory} from 'Types/source';
 import {IStickyPosition} from 'Controls/popup';
 export type TKey = string|number|null;
 
-export interface IDropdownController {
-    loadItems(recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|RecordSet;
+export default interface IDropdownController {
+    beforeMount(recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void;
     registerScrollEvent(): void;
     update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void;
     loadDependencies(): Promise<any>;

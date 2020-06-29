@@ -1,10 +1,16 @@
 import {Control, IControlOptions} from 'UI/Base';
 import Env = require('Env/Env');
 import {SyntheticEvent} from "Vdom/Vdom";
+import IDropdownController from 'Controls/_dropdown/interface/IDropdownController';
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
 class BaseDropdown extends Control<IControlOptions> {
+    protected _controller: IDropdownController = null;
+
+    protected _afterMount(): void {
+        this._controller.registerScrollEvent();
+    }
 
     protected _handleKeyDown(event): void {
         if (event.nativeEvent.keyCode === Env.constants.key.esc && this._popupId) {

@@ -3,6 +3,7 @@ import Control = require('Core/Control');
 // @ts-ignore
 import {Sticky as StickyOpener, Stack as StackOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
+import isEmpty = require('Core/helpers/Object/isEmpty');
 import chain = require('Types/chain');
 import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
 import dropdownUtils = require('Controls/_dropdown/Util');
@@ -53,21 +54,12 @@ class _Controller implements IDropdownController {
       this._options = options;
    }
 
-   loadItems(): Promise<RecordSet> {
-      return new Promise((resolve) => {
-         this._loadItems(this._options).addCallback((items) => {
-            const beforeMountResult = {};
-
-            if (historyUtils.isHistorySource(this._source)) {
-               beforeMountResult.history = this._source.getHistory();
-               beforeMountResult.items = this._source.getItems(false);
-            } else {
-               beforeMountResult.items = items;
-            }
-
-            resolve(beforeMountResult);
-         });
-      });
+   beforeMount(recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
+      if (!recievedState || isEmpty(recievedState)) {
+         return this.loadItems();
+      } else {
+         this.setItems(recievedState);
+      }
    }
 
    registerScrollEvent(): void {
@@ -186,6 +178,23 @@ class _Controller implements IDropdownController {
       });
       this._setItems(null);
       this._open();
+   }
+
+   private loadItems(): Promise<RecordSet> {
+      return new Promise((resolve) => {
+         this._loadItems(this._options).addCallback((items) => {
+            const beforeMountResult = {};
+
+            if (historyUtils.isHistorySource(this._source)) {
+               beforeMountResult.history = this._source.getHistory();
+               beforeMountResult.items = this._source.getItems(false);
+            } else {
+               beforeMountResult.items = items;
+            }
+
+            resolve(beforeMountResult);
+         });
+      });
    }
 
    private _open(popupOptions?: object): Promise<any> {

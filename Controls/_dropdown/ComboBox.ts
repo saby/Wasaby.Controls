@@ -6,12 +6,11 @@ import dropdownUtils = require('Controls/_dropdown/Util');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
 import Controller = require('Controls/_dropdown/_Controller');
-import {SyntheticEvent} from "Vdom/Vdom";
-import isEmpty = require('Core/helpers/Object/isEmpty');
+import {SyntheticEvent} from 'Vdom/Vdom';
 import {ISingleSelectableOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {RecordSet} from 'Types/collection';
-import {getDropdownControllerOptions} from "./Utils/GetDropdownControllerOptions";
+import {getDropdownControllerOptions} from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
@@ -99,15 +98,7 @@ class ComboBox extends BaseDropdown {
       };
 
       this._controller = new Controller(this._getControllerOptions(options));
-      if (!recievedState || isEmpty(recievedState)) {
-         return this._controller.loadItems();
-      } else {
-         this._controller.setItems(recievedState);
-      }
-   }
-
-   _afterMount(): void {
-      this._controller.registerScrollEvent();
+      return this._controller.beforeMount(recievedState);
    }
 
    _beforeUpdate(options: IComboboxOptions): void {

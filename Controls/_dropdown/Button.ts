@@ -1,20 +1,18 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import ActualApi from 'Controls/_buttons/ActualApi';
 import Controller = require('Controls/_dropdown/_Controller');
-import {SyntheticEvent} from "Vdom/Vdom";
+import {SyntheticEvent} from 'Vdom/Vdom';
 import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
-import {Stack as StackOpener} from 'Controls/popup';
-import {getDropdownControllerOptions} from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
-import isEmpty = require('Core/helpers/Object/isEmpty');
 import {IGroupedOptions} from 'Controls/dropdown';
 import {IIconOptions, IHeightOptions, IIconSizeOptions, IIconStyleOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
-import {RecordSet} from "Types/collection";
+import {RecordSet} from 'Types/collection';
+import {getDropdownControllerOptions} from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 
 interface IButtonOptions extends IBaseDropdownOptions, IGroupedOptions, IIconOptions, IHeightOptions,
          IIconSizeOptions, IIconStyleOptions, IMenuControlOptions, IMenuPopupOptions {
@@ -103,16 +101,8 @@ class Button extends BaseDropdown {
       this._controller = new Controller(this._getControllerOptions(options));
 
       if (!options.lazyItemsLoading) {
-         if (!recievedState || isEmpty(recievedState)) {
-            return this._controller.loadItems();
-         } else {
-            this._controller.setItems(recievedState);
-         }
+         return this._controller.beforeMount(recievedState);
       }
-   }
-
-   _afterMount(): void {
-      this._controller.registerScrollEvent();
    }
 
    _beforeUpdate(options: IButtonOptions): void {

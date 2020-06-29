@@ -1,5 +1,5 @@
 import rk = require('i18n!Controls');
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Input/Input');
 import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
 import Utils = require('Types/util');
@@ -8,17 +8,15 @@ import dropdownUtils = require('Controls/_dropdown/Util');
 import {isEqual} from 'Types/object';
 import Controller = require('Controls/_dropdown/_Controller');
 import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
-import {SyntheticEvent} from "Vdom/Vdom";
+import {SyntheticEvent} from 'Vdom/Vdom';
 import {Stack as StackOpener} from 'Controls/popup';
-import isEmpty = require('Core/helpers/Object/isEmpty');
-import {IMenuPopup} from "../menu";
-import {IGroupedOptions} from "./interface/IGrouped";
+import {IGroupedOptions} from './interface/IGrouped';
 import {IIconSizeOptions} from 'Controls/interface';
-import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
+import IMenuPopup, {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
-import {RecordSet} from "Types/collection";
-import {getDropdownControllerOptions} from "./Utils/GetDropdownControllerOptions";
+import {RecordSet} from 'Types/collection';
+import {getDropdownControllerOptions} from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 
 interface IInputOptions extends IBaseDropdownOptions, IGroupedOptions, IIconSizeOptions,
     IMenuPopupOptions, IMenuControlOptions {
@@ -262,15 +260,7 @@ class Input extends BaseDropdown {
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
 
-      if (!recievedState || isEmpty(recievedState)) {
-         return this._controller.loadItems();
-      } else {
-         this._controller.setItems(recievedState);
-      }
-   }
-
-   _afterMount(): void {
-      this._controller.registerScrollEvent();
+      return this._controller.beforeMount(recievedState);
    }
 
    _beforeUpdate(options: IInputOptions): void {
