@@ -1533,6 +1533,7 @@ define([
                 multiSelectVisibility: 'visible',
                 selectedKeys: [],
                 excludedKeys: [],
+                selectedKeysCount: 0,
                 source: new sourceLib.Memory({
                    keyProperty: 'key',
                    data: [{
@@ -1690,12 +1691,16 @@ define([
          assert.isTrue(notifySpy.called);
       });
 
-      it('_private.createSelectionController', async function() {
-         const
+      describe('_private.createSelectionController', function() {
+         let lnSource;
+         let lnCfg;
+         let baseControl;
+         let controller;
+         beforeEach(async () => {
             lnSource = new sourceLib.Memory({
                keyProperty: 'id',
                data: data
-            }),
+            });
             lnCfg = {
                viewName: 'Controls/List/ListView',
                source: lnSource,
@@ -1703,18 +1708,14 @@ define([
                viewModelConstructor: lists.ListViewModel,
                selectedKeys: [],
                excludedKeys: []
-            },
+            };
             baseControl = new lists.BaseControl(lnCfg);
-
-
-         baseControl.saveOptions(lnCfg);
-         await baseControl._beforeMount(lnCfg);
-
-         let controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
+            baseControl.saveOptions(lnCfg);
+            await baseControl._beforeMount(lnCfg);
+         });
+         it('should init SelectionController', () => {
+         controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
          assert.isNotNull(controller);
-
-         controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-         assert.isNull(controller);
 
          baseControl._items = null;
          controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
@@ -1723,6 +1724,12 @@ define([
          baseControl._listViewModel = null;
          controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
          assert.isNull(controller);
+         });
+
+         it('should init selection controller even when multiselectVisibility===\'null\'', () => {
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            assert.isNotNull(controller);
+         });
       });
 
       it('_private.onSelectedTypeChanged', async function() {
@@ -1749,14 +1756,6 @@ define([
 
          const notifySpy = sinon.spy(baseControl, '_notify');
 
-         onSelectedTypeChanged('selectAll', undefined);
-         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
-         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
-         assert.isFalse(notifySpy.withArgs('listSelectedKeysCountChanged').called);
-
-         lnCfg.multiSelectVisibility = 'visible';
-
-         notifySpy.resetHistory();
          onSelectedTypeChanged('selectAll', undefined);
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
@@ -4339,14 +4338,14 @@ define([
          });
       });
 
-      describe('_onItemSwipe animation', function() {
+      describe('_onItemSwipe animation for rightSwipe with or without multiselectVisibility', function() {
          let childEvent;
          let itemData;
          let instance;
          let sandbox;
          let isRightSwipeActivated;
 
-         function initTest(multiSelectVisibility) {
+         function initTest(options) {
             const cfg = {
                viewName: 'Controls/List/ListView',
                viewConfig: {
@@ -4358,10 +4357,9 @@ define([
                },
                viewModelConstructor: lists.ListViewModel,
                source: source,
-               multiSelectVisibility: multiSelectVisibility,
-               selectedKeysCount: 1,
                selectedKeys: [1],
-               excludedKeys: []
+               excludedKeys: [],
+               ...options
             };
             instance = new lists.BaseControl(cfg);
             instance._children = {
@@ -4412,21 +4410,41 @@ define([
          });
 
          it('multiSelectVisibility: visible, should start animation', function() {
-            initTest('visible');
+            initTest({multiSelectVisibility: 'visible'});
             instance._onItemSwipe({}, itemData, childEvent);
             assert.isTrue(isRightSwipeActivated);
          });
 
          it('multiSelectVisibility: onhover, should start animation', function() {
-            initTest('onhover');
+            initTest({multiSelectVisibility: 'onhover'});
             instance._onItemSwipe({}, itemData, childEvent);
             assert.isTrue(isRightSwipeActivated);
          });
 
          it('multiSelectVisibility: hidden, should not start animation', function() {
-            initTest('hidden');
+            initTest({multiSelectVisibility: 'hidden'});
             instance._onItemSwipe({}, itemData, childEvent);
             assert.isFalse(isRightSwipeActivated);
+         });
+
+         it('should not create selection controller when isItemsSelectionAllowed returns false', () => {
+            let isSelectionControllerCreated = false;
+            initTest({multiSelectVisibility: 'hidden'});
+            instance._createSelectionController = () => {
+               isSelectionControllerCreated = true;
+            };
+            instance._onItemSwipe({}, itemData, childEvent);
+            assert.isFalse(isSelectionControllerCreated);
+         });
+
+         it('should create selection controller when isItemsSelectionAllowed returns true', () => {
+            let isSelectionControllerCreated = false;
+            initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+            instance._createSelectionController = () => {
+               isSelectionControllerCreated = true;
+            };
+            instance._onItemSwipe({}, itemData, childEvent);
+            assert.isTrue(isSelectionControllerCreated);
          });
       });
 
