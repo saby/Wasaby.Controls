@@ -36,6 +36,7 @@
                 controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}"
           attr:title="{{_options.tooltip}}">
         <ws:partial template="wrapper"
+                    _options="{{_options}}"
                     _viewMode="{{_viewMode}}"
                     _fontSize="{{_fontSize}}"
                     _height="{{_height}}"
@@ -64,6 +65,7 @@
        attr:title="{{_options.tooltip}}"
        attr:href="{{_options.href}}">
         <ws:partial template="wrapper"
+                    _options="{{_options}}"
                     _viewMode="{{_viewMode}}"
                     _fontSize="{{_fontSize}}"
                     _height="{{_height}}"
