@@ -272,7 +272,7 @@ define([
 
          explorerMod.View._private.itemsSetCallback(explorer);
 
-         assert.strictEqual(markedKey, null);
+         assert.strictEqual(markedKey, undefined);
          assert.isFalse(explorer._isGoingFront);
       });
 

@@ -100,8 +100,8 @@ export class Controller {
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item) {
          item.setMarked(true, true);
-      } else if (this._markerVisibility === Visibility.Visible
-          || this._markerVisibility === Visibility.OnActivated && this._markedKey && this._model.getCount() > 0) {
+      } else if (this._model.getCount() > 0
+          && (this._markerVisibility === Visibility.Visible || this._markerVisibility === Visibility.OnActivated && this._markedKey)) {
          this._markedKey = this._setMarkerOnFirstItem();
       }
 
