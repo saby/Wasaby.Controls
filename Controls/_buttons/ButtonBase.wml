@@ -23,7 +23,7 @@
     </span>
 </ws:template>
 
-<ws:if data="{{_options._useSpan}}">
+<ws:if data="{{false && _options._useSpan}}">
     <span attr:class="controls-BaseButton
                 controls-Button_{{_viewMode}} controls-Button_{{_viewMode}}_theme-{{_options.theme}}
                 {{_hoverIcon ? ' controls-Button_hoverIcon'}} controls-Button_{{_options.readOnly ? 'readonly' : 'clickable'}}
