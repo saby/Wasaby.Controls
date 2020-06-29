@@ -8,9 +8,8 @@
     </ws:headerContentTemplate>
     <ws:bodyContentTemplate>
         <Controls.lookupPopup:Controller name="SelectorController" selectedItems="{{_options.selectedItems}}">
-            <Controls.list:DataContainer source="{{_source}}" keyProperty="{{_keyProperty}}" filter="{{_filter}}">
-                <Controls.lookupPopup:Container multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
-                <Controls.browser:Browser searchParam="title" minSearchLength="{{3}}">
+                <Controls.browser:Browser searchParam="title" minSearchLength="{{3}}" source="{{_source}}" keyProperty="{{_keyProperty}}" filter="{{_filter}}">
+                    <Controls.lookupPopup:Container multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
                     <div class="ws-fragment">
                         <div class="controlsDemo__wrapper">
                             <Controls.search:InputContainer>
@@ -44,9 +43,8 @@
                             </Controls.list:Container>
                         </Controls.lookupPopup:ListContainer>
                     </div>
-                </Controls.browser:Browser>
                 </Controls.lookupPopup:Container>
-            </Controls.list:DataContainer>
+                </Controls.browser:Browser>
         </Controls.lookupPopup:Controller>
     </ws:bodyContentTemplate>
 </Controls.popupTemplate:Stack>

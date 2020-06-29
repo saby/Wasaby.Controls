@@ -102,6 +102,7 @@ import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling'
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {IList} from './_list/interface/IList';
+import {default as DataController} from 'Controls/_list/Data/ControllerClass';
 
 export {
     AddButton,
@@ -146,5 +147,6 @@ export {
     InertialScrolling,
     IVirtualScrollConfig,
     IList,
-    VirtualScroll
+    VirtualScroll,
+    DataController
 };
