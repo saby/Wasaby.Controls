@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls-demo/Toolbar/ToolbarBox';
+import * as template from 'wml!Controls-demo/Toolbar/BoxView/ToolbarBox';
 import 'wml!Controls-demo/Toolbar/resources/customToolbarBoxTemplate';
 import {Memory} from 'Types/source';
 
