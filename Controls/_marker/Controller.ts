@@ -72,6 +72,7 @@ export class Controller {
       } else {
          switch (this._markerVisibility) {
             case Visibility.OnActivated:
+               // Маркер сбросим только если список не пустой и элемента с текущим маркером не найдено
                if (this._model.getCount() > 0) {
                   if (this._markedKey) {
                      this._markedKey = this._setMarkerOnFirstItem();

@@ -43,10 +43,10 @@ describe('Controls/marker/Controller', () => {
 
    describe('update', () => {
       it('change marked key', () => {
-         const result = controller.update({model: model, markedKey: 2})
+         const result = controller.update({model: model, markedKey: 2});
          assert.equal(model.getMarkedKey(), 2);
          assert.equal(result, 2);
-      })
+      });
 
       it('pass null if markedKey was set', () => {
          let result = controller.setMarkedKey(1);
@@ -148,6 +148,36 @@ describe('Controls/marker/Controller', () => {
          const result = controller.setMarkedKey(4);
          assert.equal(result, undefined);
          assert.equal(model.getMarkedKey(), undefined);
+      });
+
+      it('onactivated', () => {
+         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: undefined});
+
+         let result = controller.setMarkedKey(3);
+         assert.equal(result, 3);
+         assert.equal(model.getMarkedKey(), 3);
+
+         // markedKey не должен сброситсья, если список пустой
+         model.setItems(new RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         }));
+
+         result = controller.update({model, markerVisibility: 'onactivated', markedKey: 3});
+         assert.equal(result, 3);
+         assert.equal(model.getMarkedKey(), 3);
+
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 1},
+               {id: 2}
+            ],
+            keyProperty: 'id'
+         }));
+
+         result = controller.update({model, markerVisibility: 'onactivated', markedKey: 3});
+         assert.equal(result, 1);
+         assert.equal(model.getMarkedKey(), 1);
       });
    });
 
