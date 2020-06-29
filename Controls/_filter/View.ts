@@ -673,21 +673,15 @@ var Filter = Control.extend({
                 });
             } else if (_private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this);
-            } else if (newOptions.task1179601261) {
-                if (this._loadDeferred.isReady()) {
-                    resultDef = _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
-                        _private.updateText(self, self._source, self._configs);
-                    });
-                } else {
-                    this._loadDeferred.addCallback((): void => {
-                        _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
-                            _private.updateText(self, self._source, self._configs);
-                        });
-                    });
-                }
-            } else {
+            } else if (this._loadDeferred.isReady()) {
                 resultDef = _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
                     _private.updateText(self, self._source, self._configs);
+                });
+            } else {
+                resultDef = this._loadDeferred.addCallback((): void => {
+                    _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
+                        _private.updateText(self, self._source, self._configs);
+                    });
                 });
             }
             return resultDef;
