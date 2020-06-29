@@ -32,4 +32,38 @@ describe('Controls/_dateRange/Controllers/DateRangeSelectionController', () => {
             });
         });
     });
+    describe('_getDisplayedRangeEdges', () => {
+        [{
+            initialOptions: {
+                startValue: new Date(2020, 0, 1),
+                endValue: new Date(2020, 0, 1),
+                rangeSelectedCallback: (startValue, endValue) => {
+                    return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate() + 2),
+                        new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate() + 6)];
+                }
+            },
+            resultRange: [new Date(2020, 0, 3), new Date(2020, 0, 7)]
+        }, {
+            initialOptions: {
+                startValue: new Date(2020, 5, 10),
+                endValue: new Date(2020, 5, 10),
+                selectionType: 'quantum',
+                quantum: { weeks: [1] },
+                rangeSelectedCallback: (startValue) => {
+                    return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate() + 1),
+                        new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate() + 2)];
+                }
+            },
+            resultRange: [new Date(2020, 5, 9), new Date(2020, 5, 10)]
+        }].forEach((test, i) => {
+            it(`should return proper range for options ${JSON.stringify(test.initialOptions)}.`, () => {
+                const
+                    component: DateRangeSelectionController =
+                        calendarTestUtils.createComponent(DateRangeSelectionController, test.initialOptions);
+
+                const range = component._getDisplayedRangeEdges(test.initialOptions.startValue);
+                assert.deepEqual(range, test.resultRange);
+            });
+        });
+    });
 });

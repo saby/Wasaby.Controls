@@ -387,6 +387,30 @@ define(
             });
          });
 
+         describe('_updateSwipeItem', function() {
+            let menuControl = getMenu();
+            menuControl._listModel = getListModel();
+
+            const item1 = menuControl._listModel.at(0);
+            const item2 = menuControl._listModel.at(1);
+
+            it('swipe to the left', () => {
+               menuControl._updateSwipeItem(item1, true);
+               assert.isTrue(item1.isSwiped());
+            });
+
+            it('swipe to the left another item', () => {
+               menuControl._updateSwipeItem(item2, true);
+               assert.isTrue(item2.isSwiped(), 'swipe to the left');
+               assert.isFalse(item1.isSwiped(), 'swipe to the left');
+            });
+
+            it('swipe to the right', () => {
+               menuControl._updateSwipeItem(item2, false);
+               assert.isFalse(item1.isSwiped(), 'swipe to the right');
+            });
+         });
+
          describe('_separatorMouseEnter', function() {
             let isClosed, isMouseInArea = true, menuControl = getMenu();
             beforeEach(() => {

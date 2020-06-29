@@ -237,12 +237,21 @@
 .controls-TreeGrid__nodeFooterCell_columnSeparator-size_s_theme-@{themeName} {
    border-left: @column_separator_s_thickness_grid solid @column_separator_s_color_grid;
 }
-.controls-TreeGrid__nodeFooterContent_padding-top-s_theme-@{themeName} {
-   padding-top: @node-footer_padding-top-s;
+
+/* row separators for node */
+.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-null_theme-@{themeName} {
+   border-top-width: 0;
+   padding-top: @node-footer_padding-top;
 }
-.controls-TreeGrid__nodeFooterContent_padding-top-l_theme-@{themeName} {
-   padding-top: 0;
+.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s_theme-@{themeName} {
+   border-top: @item-separator_s_thickness_list solid @item_separator_s_color_list;
+   padding-top: @node-footer_padding-top - @item-separator_s_thickness_list;
 }
+.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-l_theme-@{themeName} {
+   border-top: @item-separator_l_thickness_list solid @item_separator_l_color_list;
+   padding-top: @node-footer_padding-top - @item-separator_l_thickness_list;
+}
+
 .controls-TreeGrid__nodeFooterContent_theme-@{themeName}:before {
     content: '\200b';
     font-size: @node-footer_max-font-size_treeGrid;
@@ -293,25 +302,6 @@
 .controls-TreeGrid__row-cell_default_theme-@{themeName}.controls-TreeGrid__row-cell__item_theme-@{themeName},
 .controls-TreeGrid__row-cell__item_theme-@{themeName} .controls-EditingTemplateText_size_default_theme-@{themeName} {
   font-size: @item_font-size_m_grid;
-}
-
-.controls-TreeGrid__nodeFooterContent_withRowSeparator_theme-@{themeName} {
-   border-top-color: @item_separator_s_color_list;
-}
-
-.controls-TreeGrid__nodeFooterContent_withRowSeparator-l_theme-@{themeName} {
-   border-top-color: @item_separator_l_color_list;
-}
-.controls-TreeGrid__nodeFooterContent_withoutRowSeparator_theme-@{themeName} {
-   border-top-color: transparent;
-}
-
-.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s_theme-@{themeName} {
-   border-top-width: @item-separator_s_thickness_list;
-}
-
-.controls-TreeGrid__nodeFooterContent_rowSeparatorSize-l_theme-@{themeName} {
-   border-top-width: @item-separator_l_thickness_list;
 }
 
 // Отступы подвала слева

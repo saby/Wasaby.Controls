@@ -4,7 +4,10 @@ import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {CrudWrapper} from 'Controls/dataSource';
+import {
+    getButtonTemplate, hasSourceChanged,
+    getButtonTemplateOptionsByItem, getTemplateByItem, loadItems
+} from 'Controls/_toolbars/Util';
 
 import {
     IHierarchyOptions, IIconSizeOptions,
@@ -13,50 +16,10 @@ import {
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import * as template from 'wml!Controls/_toolbars/BoxView/BoxView';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/BoxView/ItemTemplate';
-import {ButtonTemplate, IButtonOptions, cssStyleGeneration} from 'Controls/buttons';
+import {IButtonOptions} from 'Controls/buttons';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
-
-// todo: избавиться в этом компоне
-export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: IControlOptions = {}): IButtonOptions {
-    const icon = item.get('icon');
-    const style = item.get('buttonStyle');
-    const viewMode = item.get('viewMode');
-
-    const size = item.get('iconSize') || toolbarOptions.iconSize;
-    const iconSize = item.get('iconSize') || toolbarOptions.iconSize;
-
-    const iconStyle = item.get('iconStyle');
-    const transparent = item.get('buttonTransparent');
-    const caption = item.get('caption');
-    const captionPosition = item.get('captionPosition');
-    const readOnly = item.get('readOnly') || toolbarOptions.readOnly;
-    const fontColorStyle = item.get('fontColorStyle');
-    const contrastBackground = item.get('contrastBackground');
-    const cfg: IButtonOptions = {};
-    cfg._hoverIcon = true;
-    cssStyleGeneration.call(cfg, {
-        size,
-        icon,
-        style,
-        viewMode,
-        iconStyle,
-        iconSize,
-        transparent,
-        caption,
-        captionPosition,
-        readOnly,
-        fontColorStyle,
-        contrastBackground
-    });
-    cfg.readOnly = readOnly;
-    return cfg;
-}
-
-export function getButtonTemplate(): TemplateFunction {
-    return ButtonTemplate;
-}
 
 /**
  * Интерфейс опций контрола {@link Controls/toolbars:BoxView}.
@@ -70,10 +33,11 @@ export interface IToolbarBoxOptions extends IControlOptions, IHierarchyOptions, 
 /**
  * Графический контрол, отображаемый в виде панели с размещенными на ней кнопками, клик по которым вызывает соответствующие им команды.
  *
- * @class Controls/_toolbars:BoxView
+ * @class Controls/_toolbars/BoxView
  * @extends UI/Base:Control
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_toolbars/IToolbarSource
+ * @demo Controls-demo/Toolbar/BoxView/Index
  *
  * @author Красильников А.С.
  */
@@ -87,38 +51,25 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
     readonly '[Controls/_toolbars/IToolbarSource]': boolean = true;
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
 
-    private _setStateByItems(items: TItems, source: ICrudPlus): void {
+    private _setStateByItems(items: TItems): void {
         this._items = items;
-    }
-
-    private _setStateBySource(source: ICrudPlus): Promise<TItems> {
-        return ToolbarBox._loadItems(source).then((items) => {
-            this._setStateByItems(items, source);
-
-            return items;
-        });
     }
 
     protected _getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
         return getButtonTemplateOptionsByItem(item, this._options);
     }
 
-    private _hasSourceChanged(newSource?: ICrudPlus) {
-        const currentSource = this._options.source;
-        return newSource && currentSource !== newSource;
-    }
-
     protected _beforeMount(options: IToolbarBoxOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
         if (receivedItems) {
-            this._setStateByItems(receivedItems, options.source);
+            this._setStateByItems(receivedItems);
         } else if (options.source) {
-            return this._setStateBySource(options.source);
+            return this.setStateBySource(options.source);
         }
     }
 
     protected _beforeUpdate(newOptions: IToolbarBoxOptions): void {
-        if (this._hasSourceChanged(newOptions.source)) {
-            this._setStateBySource(newOptions.source);
+        if (hasSourceChanged(newOptions.source, this._options.source)) {
+            this.setStateBySource(newOptions.source);
         }
     }
 
@@ -133,24 +84,20 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
         event.stopPropagation();
     }
 
+    protected setStateBySource(source: ICrudPlus): Promise<TItems> {
+        return loadItems(source).then((items) => {
+            this._setStateByItems(items);
+            return items;
+        });
+    }
+
     protected _getTemplateByItem(item: TItem): TemplateFunction {
-        const selfItemTemplate: TemplateFunction = item.get(this._options.itemTemplateProperty);
-
-        if (selfItemTemplate) {
-            return selfItemTemplate;
-        }
-
-        return this._options.itemTemplate;
+        return getTemplateByItem(item, this._options);
     }
 
     static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
 
-    private static _loadItems(source: ICrudPlus): Promise<TItems> {
-        const crudWrapper = new CrudWrapper({source});
-        return crudWrapper.query({});
-    }
-
-    static getDefaultOptions() {
+    static getDefaultOptions(): object {
         return {
             iconSize: 's',
             itemTemplate: defaultItemTemplate

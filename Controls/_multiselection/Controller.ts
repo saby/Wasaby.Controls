@@ -11,7 +11,6 @@ import {
    ISelectionModel
 } from './interface';
 import clone = require('Core/core-clone');
-import { Model } from 'Types/entity';
 
 /**
  * @class Controls/_multiselector/SelectionController
@@ -61,24 +60,14 @@ export class Controller {
     * @param options
     */
    update(options: ISelectionControllerOptions): ISelectionControllerResult {
-      const modelChanged = options.model !== this._model;
-      const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
       this._strategy.update(options.strategyOptions);
 
-      if (modelChanged) {
-         this._model = options.model;
-      }
-
       const oldSelection = clone(this._selection);
-      if (selectionChanged) {
-         this._selectedKeys = options.selectedKeys.slice();
-         this._excludedKeys = options.excludedKeys.slice();
-      }
+      this._selectedKeys = options.selectedKeys.slice();
+      this._excludedKeys = options.excludedKeys.slice();
 
-      if (selectionChanged || modelChanged) {
-
-         this._updateModel(this._selection);
-      }
+      this._model = options.model;
+      this._updateModel(this._selection);
 
       return this._getResult(oldSelection, this._selection);
    }
@@ -207,10 +196,6 @@ export class Controller {
 
    private _getItemsKeys(items: Array<CollectionItem<Record>>): TKeys {
       return items.map((item) => item.getContents ? item.getContents().getId() : item.getId());
-   }
-
-   private _isSelectionChanged(selectedKeys: TKeys, excludedKeys: TKeys): boolean {
-      return !isEqual(selectedKeys, this._selectedKeys) || !isEqual(excludedKeys, this._excludedKeys);
    }
 
    private _getResult(oldSelection: ISelection, newSelection: ISelection): ISelectionControllerResult {

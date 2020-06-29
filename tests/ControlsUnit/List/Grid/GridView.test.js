@@ -113,19 +113,6 @@ define(['Controls/grid'], function(gridMod) {
          gridView._options.itemPadding = undefined;
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_default_theme-default');
       });
-      it('beforeMount', function() {
-         var
-            cfg = {
-               columns: []
-            },
-            gridView = new gridMod.GridView(cfg);
-         gridView._listModel = {
-            setHandlersForPartialSupport: function(){},
-            setColumnTemplate: function(){},
-            setBaseItemTemplateResolver: () => {}
-         };
-         gridView._beforeMount(cfg);
-      });
       it('beforeUpdate', function() {
          var
             superclassBeforeUpdateCalled = false,
@@ -427,6 +414,28 @@ define(['Controls/grid'], function(gridMod) {
          });
       });
 
+      it('set columns and header on mount', function () {
+         const cfg = {
+            multiSelectVisibility: 'hidden',
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+         const calledMethods = [];
+         gridView.saveOptions(cfg);
+         gridView._listModel = {
+            setBaseItemTemplateResolver: () => {},
+            setColumnTemplate: () => {},
+            setColumns: (opts, silent) => {calledMethods.push(['setColumns', silent])},
+            setHeader: (opts, silent) => {calledMethods.push(['setHeader', silent])}
+         };
+         gridView._beforeMount(cfg);
+
+         assert.deepEqual(calledMethods, [['setColumns', true], ['setHeader', true]]);
+      });
+
       it('createDragScroll if allowed (no dnd)', () => {
          const cfg = {
             multiSelectVisibility: 'visible',
@@ -441,7 +450,9 @@ define(['Controls/grid'], function(gridMod) {
          gridView.saveOptions(cfg);
          gridView._listModel = {
             setBaseItemTemplateResolver: () => {},
-            setColumnTemplate: () => {}
+            setColumnTemplate: () => {},
+            setColumns: () => {},
+            setHeader: () => {}
          };
          gridView._beforeMount(cfg);
          assert.isDefined(gridView._columnScrollController);

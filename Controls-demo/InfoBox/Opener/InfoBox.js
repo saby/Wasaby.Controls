@@ -20,22 +20,22 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
          _cfgBottom: null,
          _beforeMount: function() {
             this._cfgRight = {
-               message: message,
+               message: 'right',
                targetSide: 'right',
                alignment: 'start'
             };
             this._cfgLeft = {
-               message: message,
+               message: 'left',
                targetSide: 'left',
                alignment: 'start'
             };
             this._cfgTop = {
-               message: message,
+               message: 'top',
                targetSide: 'top',
                alignment: 'start'
             };
             this._cfgBottom = {
-               message: message,
+               message: 'bottom',
                targetSide: 'bottom',
                alignment: 'start'
             };
@@ -44,21 +44,21 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                items: [{
                   text: 'TOP START',
                   cfg: {
-                     message: message,
+                     message: 'TOP START',
                      targetSide: 'top',
                      alignment: 'start'
                   }
                }, {
                   text: 'TOP CENTER',
                   cfg: {
-                     message: message,
+                     message: 'TOP CENTER',
                      targetSide: 'top',
                      alignment: 'center'
                   }
                }, {
                   text: 'TOP END',
                   cfg: {
-                     message: message,
+                     message: 'TOP END',
                      targetSide: 'top',
                      alignment: 'end'
 
@@ -66,63 +66,63 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                }, {
                   text: 'BOTTOM START',
                   cfg: {
-                     message: message,
+                     message: 'BOTTOM START',
                      targetSide: 'bottom',
                      alignment: 'start'
                   }
                }, {
                   text: 'BOTTOM CENTER',
                   cfg: {
-                     message: message,
+                     message: 'BOTTOM CENTER',
                      targetSide: 'bottom',
                      alignment: 'center'
                   }
                }, {
                   text: 'BOTTOM END',
                   cfg: {
-                     message: message,
+                     message: 'BOTTOM END',
                      targetSide: 'bottom',
                      alignment: 'end'
                   }
                }, {
                   text: 'LEFT START',
                   cfg: {
-                     message: message,
+                     message: 'LEFT START',
                      targetSide: 'left',
                      alignment: 'start'
                   }
                }, {
                   text: 'LEFT CENTER',
                   cfg: {
-                     message: message,
+                     message: 'LEFT CENTER',
                      targetSide: 'left',
                      alignment: 'center'
                   }
                }, {
                   text: 'LEFT END',
                   cfg: {
-                     message: message,
+                     message: 'LEFT END',
                      targetSide: 'left',
                      alignment: 'end'
                   }
                }, {
                   text: 'RIGHT START',
                   cfg: {
-                     message: message,
+                     message: 'RIGHT START',
                      targetSide: 'right',
                      alignment: 'start'
                   }
                }, {
                   text: 'RIGHT CENTER',
                   cfg: {
-                     message: message,
+                     message: 'RIGHT CENTER',
                      targetSide: 'right',
                      alignment: 'center'
                   }
                }, {
                   text: 'RIGHT END',
                   cfg: {
-                     message: message,
+                     message: 'RIGHT END',
                      targetSide: 'right',
                      alignment: 'end'
                   }
@@ -132,45 +132,45 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                items: [{
                   text: 'UNACCENTED',
                   cfg: {
-                     message: message,
+                     message: 'UNACCENTED',
                      style: 'unaccented'
                   }
                }, {
                   text: 'DANGER',
                   cfg: {
-                     message: message,
+                     message: 'DANGER',
                      style: 'danger'
                   }
                }, {
                   text: 'WARNING',
                   cfg: {
-                     message: message,
+                     message: 'WARNING',
                      style: 'warning'
 
                   }
                }, {
                   text: 'SUCCESS',
                   cfg: {
-                     message: message,
+                     message: 'SUCCESS',
                      style: 'success'
 
                   }
                }, {
                   text: 'SECONDARY',
                   cfg: {
-                     message: message,
+                     message: 'SECONDARY',
                      style: 'secondary'
 
                   }
                }, {
                   text: 'INFO',
                   cfg: {
-                     message: message,
+                     message: 'INFO',
                      style: 'info'
                   }
                }]
             }, {
-               header: 'Float',
+               header: 'Float and content',
                items: [{
                   text: 'TRUE',
                   cfg: {
@@ -189,10 +189,8 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                         ' lots of the country’s most prominent orchestras.',
                      floatCloseButton: false
                   }
-               }]
-            }, {
-               header: 'Content',
-               items: [{
+               },
+			   {
                   text: 'CUSTOM',
                   cfg: {
                      template: contentTpl,

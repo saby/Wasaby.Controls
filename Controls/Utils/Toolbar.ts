@@ -56,6 +56,7 @@
  * @class Controls/Utils/Toolbar
  * @public
  */
+
 import {Abstract as ChainAbstract, factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';

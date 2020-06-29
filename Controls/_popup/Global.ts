@@ -134,6 +134,10 @@ const Global = Control.extend({
     * @private
     */
    _openDialogHandler(event, template, templateOptions, opener = null) {
+      // Нужно остановить всплытие события serviceError, так как оно обработано здесь.
+      // Иначе другой popup:Global, который может быть на странице, покажет диалог ещё раз.
+      event.stopPropagation();
+
       this._onDialogClosed();
 
       return Dialog.openPopup({

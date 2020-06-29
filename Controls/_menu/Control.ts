@@ -58,6 +58,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
     protected _applyButtonVisible: boolean = false;
+    protected _closeButtonVisible: boolean = false;
     private _sourceController: SourceController = null;
     private _subDropdownItem: CollectionItem<Model>|null;
     private _selectionChanged: boolean = false;
@@ -85,6 +86,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                            receivedState?: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
         this._additionalFilter = this.additionalFilter.bind(this, options);
+
+        this._closeButtonVisible = options.itemPadding.right === 'menu-close';
 
         if (options.source) {
             return this.loadItems(options);
@@ -172,12 +175,16 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                          item: CollectionItem<Model>,
                          swipeEvent: SyntheticEvent<TouchEvent>,
                          swipeContainerHeight: number): void {
+        const isSwipeLeft = swipeEvent.nativeEvent.direction === 'left';
+        const itemKey = item.getContents().getKey();
         if (this._options.itemActions) {
-            if (swipeEvent.nativeEvent.direction === 'left') {
-                this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
+            if (isSwipeLeft) {
+                this._itemActionsController.activateSwipe(itemKey, swipeContainerHeight);
             } else {
                 this._itemActionsController.deactivateSwipe();
             }
+        } else {
+            this._updateSwipeItem(item, isSwipeLeft);
         }
     }
 
@@ -519,6 +526,17 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
         }
     }
 
+    private _updateSwipeItem(newSwipedItem: CollectionItem<Model>, isSwipeLeft: boolean): void {
+        const oldSwipedItem = this._listModel.find(
+            (item) => item.isSwiped() || item.isRightSwiped());
+        if (isSwipeLeft && oldSwipedItem) {
+            oldSwipedItem.setSwiped(false);
+        }
+
+        newSwipedItem.setSwiped(isSwipeLeft);
+        this._listModel.nextVersion();
+    }
+
     private createViewModel(items: RecordSet, options: IMenuControlOptions): void {
         this._listModel = this.getCollection(items, options);
         this.setSelectedItems(this._listModel, options.selectedKeys);
@@ -780,7 +798,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             root: null,
             emptyKey: null,
             moreButtonCaption: rk('Еще') + '...',
-            groupTemplate
+            groupTemplate,
+            itemPadding: {}
         };
     }
 

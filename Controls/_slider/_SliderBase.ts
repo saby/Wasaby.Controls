@@ -3,12 +3,16 @@ import {ISliderOptions} from './interface/ISlider';
 import {default as Utils} from './Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import {constants} from 'Env/Env';
 
 export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
 }
 
+const MOBILE_TOOLTIP_HIDE_DELAY: number = 3000;
+
 class SliderBase extends Control<ISliderBaseOptions> {
     private _tooltipPosition: number | null = null;
+    private _hideTooltipTimerId: number;
     protected _tooltipValue: string | null = null;
     protected _isDrag: boolean = false;
 
@@ -24,10 +28,22 @@ class SliderBase extends Control<ISliderBaseOptions> {
             this._tooltipPosition = this._getValue(event);
             this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
                 : this._tooltipPosition;
+
+            // На мобилках события ухода мыши не стряляют (если не ткнуть пальцем в какую-то область)
+            // В этом случае, по стандарту, скрываю тултип через 3 секунды.
+            if (constants.browser.isMobileIOS || constants.browser.isMobileAndroid) {
+                if (this._hideTooltipTimerId) {
+                    clearTimeout(this._hideTooltipTimerId);
+                }
+                this._hideTooltipTimerId = setTimeout(() => {
+                    this._hideTooltipTimerId = null;
+                    this._mouseLeaveAndTouchEndHandler();
+                }, MOBILE_TOOLTIP_HIDE_DELAY);
+            }
         }
     }
 
-    _mouseLeaveAndTouchEndHandler(event: SyntheticEvent<MouseEvent>): void {
+    _mouseLeaveAndTouchEndHandler(event?: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
             this._tooltipValue = null;
             this._tooltipPosition = null;
