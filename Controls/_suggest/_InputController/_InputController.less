@@ -1,3 +1,5 @@
+@import "../../_scroll/Scroll/_contentEnvironmentZIndex";
+
 .controls-SuggestV {
 	max-width: 100%;
 	position: relative;
@@ -12,17 +14,11 @@
 	border: @popup_border-color_suggest @popup_border-thickness_suggest solid;
 	box-sizing: border-box;
 	background-color: @background-color_sticky;
-	/* Почему тут z-index:2
-		Контекст наложения формируется по определённым правилам, его формирует либо корневой элемент (тег HTML),
-		либо один из списка стилей https://developer.mozilla.org/ru/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context.
-		По-умолчанию элементы находятся в стеке в порядке следования в DOM дереве. Поэтому для того, чтобы список был выше, делаем ему z-index: 1;
-		Но, под автодополнением (ниже по дом дереву) может лежать scrollContainer у котого в стилях контента тоже z-index:1,
-		и если ему никто не создал контекст наложения, то он будет перекрывать автодополнение.  Поэтому необходимый минимум - z-index: 2*/
-	z-index: 2;
+	z-index: @z-index_Scroll-contentEnvironment+1;
 }
 
 .controls-Suggest-Text_style_overInput {
-	z-index: 3;
+	z-index: @z-index_Scroll-contentEnvironment+2;
 }
 
 .controls-Suggest__footer {
