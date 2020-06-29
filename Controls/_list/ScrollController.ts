@@ -133,7 +133,9 @@ export default class ScrollController {
 
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};
-        this._initModelObserving(options);
+        if (options.needScrollCalculation) {
+            this._initModelObserving(options);
+        }
         this._initVirtualScroll(options);
         this._callbacks = options.callbacks;
     }
@@ -163,7 +165,9 @@ export default class ScrollController {
 
     update(options: IOptions): void {
         if (options.collection && this._options.collection !== options.collection) {
-            this._initModelObserving(options);
+            if (options.needScrollCalculation) {
+                this._initModelObserving(options);
+            }
             this._initVirtualScroll(options);
             this._options.collection = options.collection;
         }
