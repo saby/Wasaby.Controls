@@ -1258,7 +1258,7 @@ let
           // дерганья и лишняя загрузка данных.
           // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
           if (Env.detection.isMobileIOS) {
-              this.setOverflowScrolling('auto');
+              this.setOverflowScrolling('');
           }
          const newPosition = direction === 'up' ?
              this._children.content.scrollHeight - this._savedScrollPosition + heightDifference :
