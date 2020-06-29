@@ -1,6 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Memory} from 'Types/source';
+import {StickyHelper} from 'Controls/popup';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_breadcrumbs/View/View');
 import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
@@ -14,6 +16,8 @@ import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
  * @class Controls/_breadcrumbs/View
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @private
  * @author Авраменко А.С.
@@ -23,10 +27,25 @@ class BreadCrumbsView extends Control<IControlOptions> {
     protected _template: TemplateFunction =  template;
     protected _itemsTemplate: TemplateFunction = itemsTemplate;
     protected _popupIsOpen: boolean = false;
+    private _menuOpener: StickyHelper;
 
     protected _beforeMount(): void {
         // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
         this._onResult = this._onResult.bind(this);
+        this._menuOpener = new StickyHelper();
+    }
+
+    protected _afterMount(options?: IControlOptions, contexts?: any): void {
+        RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
+    }
+
+    protected _beforeUnmount(): void {
+        UnregisterUtil(this, 'scroll');
+        this._menuOpener.closePopup();
+    }
+
+    private _scrollHandler(): void {
+        this._menuOpener.closePopup();
     }
 
     private _onItemClick(e: SyntheticEvent<Event>, itemData): void {
@@ -68,9 +87,23 @@ class BreadCrumbsView extends Control<IControlOptions> {
             });
 
             if (!this._popupIsOpen) {
-                this._children.menuOpener.open({
+                const templateClassName = `controls-BreadCrumbsController__menu_theme-${this._options.theme}`;
+                this._menuOpener.openPopup({
+                    template: 'Controls/menu:Popup',
+                    opener: this,
                     target: e.currentTarget,
+                    closeOnOutsideClick: true,
+                    eventHandlers: {
+                        onResult: this._onResult,
+                        onOpen: () => {
+                            this._popupIsOpen = true;
+                        },
+                        onClose: () => {
+                            this._popupIsOpen = false;
+                        }
+                    },
                     templateOptions: {
+                        className: templateClassName,
                         source: rs,
                         itemTemplate: menuItemTemplate,
                         displayProperty: this._options.displayProperty
@@ -85,16 +118,8 @@ class BreadCrumbsView extends Control<IControlOptions> {
                     fittingMode: 'overflow'
                 });
             } else {
-                this._children.menuOpener.close();
+                this._menuOpener.closePopup();
             }
-    }
-
-    protected _onOpen(): void {
-        this._popupIsOpen = true;
-    }
-
-    protected _onClose(): void {
-        this._popupIsOpen = false;
     }
 
     protected _applyHighlighter = applyHighlighter;
@@ -103,17 +128,19 @@ class BreadCrumbsView extends Control<IControlOptions> {
         this._notify('hoveredItemChanged', [item]);
     }
 
-    protected _onResult(event: SyntheticEvent<Event>, actionName, data): void {
+    protected _onResult(actionName: string, data): void {
         if (actionName === 'itemClick' && !this._options.readOnly) {
             this._notify('itemClick', [data]);
-            this._children.menuOpener.close();
+            this._menuOpener.closePopup();
         }
     }
 
     static getDefaultOptions() {
         return {
             itemTemplate,
-            backgroundStyle: 'default'
+            backgroundStyle: 'default',
+            fontSize: 'xs',
+            fontColorStyle: 'label'
         };
     }
     static _theme: string[] = ['Controls/crumbs'];

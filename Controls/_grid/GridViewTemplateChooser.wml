@@ -2,7 +2,7 @@
     <ws:partial template="{{_gridTemplate}}"
                 _listModel="{{_listModel}}"
                 _isFullGridSupport="{{ _listModel.isFullGridSupport() }}"
-                _gridViewClasses="{{_getGridViewClasses()}}"
+                _gridViewClasses="{{_getGridViewClasses(_options)}}"
                 _gridViewStyles="{{_getGridViewStyles()}}"
                 _baseHeaderTemplate="{{_baseHeaderTemplate}}"
                 _resultsTemplate="{{_resultsTemplate}}"
@@ -19,6 +19,7 @@
                 _horizontalScrollPosition="{{ _horizontalScrollPosition }}"
                 _horizontalPositionChangedHandler="{{ _horizontalPositionChangedHandler }}"
                 _horizontalScrollWidth="{{ _horizontalScrollWidth }}"
+                _containerSize="{{ _containerSize }}"
 
                 _options="{{_options}}"/>
 </ws:template>
@@ -33,7 +34,7 @@
             <div name="columnScrollShadowEnd" class="{{ _columnScrollShadowClasses.end }}"></div>
         </ws:if>
 
-        <ws:if data="{{ _isDragScrollingEnabled() }}">
+        <ws:if data="{{ _isDragScrollingEnabled(_options) }}">
             <div class="{{ _dragScrollOverlayClasses }}"
                  on:mouseup="_onDragScrollOverlayMouseUp()"
                  on:touchend="_onDragScrollOverlayTouchEnd()"
@@ -64,6 +65,7 @@
                     __trackVisible="{{ true }}"
                     _horizontalPositionChangedHandler="{{ _horizontalPositionChangedHandler }}"
                     _horizontalScrollPosition="{{ _horizontalScrollPosition }}"
+                    _containerSize="{{ _containerSize }}"
                     _contentSizeForHScroll="{{ _contentSizeForHScroll }}"
                     _horizontalScrollWidth="{{ _horizontalScrollWidth }}"
                     __isColumnScrollVisible="{{ _isColumnScrollVisible() }}"

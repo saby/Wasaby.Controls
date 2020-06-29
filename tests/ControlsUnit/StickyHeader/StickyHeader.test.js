@@ -187,7 +187,7 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            component._isMobilePlatform = true;
+            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
@@ -211,7 +211,7 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            component._isMobileAndroid = true;
+            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(3);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
@@ -236,7 +236,7 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            component._isMobilePlatform = true;
+            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
@@ -254,6 +254,7 @@ define([
       describe('set top', function() {
          it('should update top', function () {
             const component = createComponent(StickyHeader, {});
+            component._canScroll = true;
             component._model = {fixedPosition: ''};
             component._container = {
                style: { top: null },
@@ -291,6 +292,7 @@ define([
          it('should update bottom', function () {
             const component = createComponent(StickyHeader, {});
             component._model = {fixedPosition: ''};
+            component._canScroll = true;
             component._container = {
                style: { top: null }
             };
@@ -356,6 +358,7 @@ define([
          it('should turn on a shadow and generate force update if the corresponding identifier is passed.', function() {
             const component = createComponent(StickyHeader, {});
             component._isFixed = false;
+            component._canScroll = true;
             component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
             component._updateFixed([component._index]);
@@ -366,6 +369,7 @@ define([
          it('should turn off a shadow and generate force update if the corresponding identifier is not passed.', function() {
             const component = createComponent(StickyHeader, {});
             component._isFixed = true;
+            component._canScroll = true;
             component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
             component._updateFixed(['someId']);

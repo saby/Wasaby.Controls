@@ -90,13 +90,14 @@ export default class QueryParamsController implements IQueryParamsController {
     ): void {
         const more = list.getMetaData().more;
         let recordSetWithNavigation;
+        let meta;
 
         if (more instanceof RecordSet) {
             more.each((nav: NavigationRecord) => {
-                recordSetWithNavigation = new RecordSet();
-                recordSetWithNavigation.setMetaData({
-                    more: nav.get('nav_result')
-                });
+                recordSetWithNavigation = list.clone(true);
+                meta = recordSetWithNavigation.getMetaData();
+                meta.more = nav.get('nav_result');
+                recordSetWithNavigation.setMetaData(meta);
                 this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction, config);
             });
         } else {

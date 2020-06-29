@@ -46,6 +46,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
    _startValue: null,
    _endValue: null,
    _dateConstructor: DateTime,
+   _rangeSelectedCallback: null,
 
    constructor: function(cfg) {
       ModuleClass.superclass.constructor.apply(this, arguments);
@@ -64,6 +65,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
          this._endValue = options.endValue;
          changed = true;
       }
+      this._rangeSelectedCallback = options.rangeSelectedCallback;
       return changed;
    },
 
@@ -110,6 +112,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
     */
    shiftForward: function() {
       var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.FORWARD);
+      range = this._rangeSelected(range);
       this.setRange(_private.createDate(this, range[0]), _private.createDate(this, range[1]));
    },
 
@@ -119,7 +122,14 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
     */
    shiftBack: function() {
       var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.BACK);
+      range = this._rangeSelected(range);
       this.setRange(_private.createDate(this, range[0]), _private.createDate(this, range[1]));
+   },
+   _rangeSelected(range: Date[]): Date[] {
+      if (this._rangeSelectedCallback) {
+         return this._rangeSelectedCallback(range[0], range[1]);
+      }
+      return range;
    }
 });
 

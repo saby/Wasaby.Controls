@@ -34,19 +34,19 @@ export interface IButtonControlOptions extends IControlOptions, IHrefOptions, IC
     captionPosition: 'left' | 'right';
 }
 
-export function cssStyleGeneration(options: IButtonControlOptions): void {
+export function cssStyleGeneration(options: IButtonControlOptions, hasMsg: boolean = false): void {
     const currentButtonClass = ActualApi.styleToViewMode(options.style);
     const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
 
-    this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly);
-    this._contrastBackground = ActualApi.contrastBackground(options);
+    this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly, hasMsg);
+    this._contrastBackground = ActualApi.contrastBackground(options, hasMsg);
     this._viewMode = oldViewModeToken.viewMode;
     if (typeof oldViewModeToken.contrast !== 'undefined') {
         this._contrastBackground = oldViewModeToken.contrast;
     }
-    this._height = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewMode);
+    this._height = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewMode, hasMsg);
     this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
-    this._fontSize = ActualApi.fontSize(options);
+    this._fontSize = ActualApi.fontSize(options, hasMsg);
     this._hasIcon = !!options.icon;
 
     this._caption = options.caption;
@@ -67,7 +67,7 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
 
 /**
  * Графический контрол, который предоставляет пользователю возможность простого запуска события при нажатии на него.
- * 
+ *
  * @remark
  * Кнопки могут отображаться в нескольких режимах, отличающихся друга от друга внешне.
  * Полезные ссылки:
@@ -123,15 +123,15 @@ export function cssStyleGeneration(options: IButtonControlOptions): void {
  * @name Controls/_buttons/Button#viewMode
  * @cfg {Enum} Режим отображения кнопки.
  * @variant button В виде обычной кнопки по-умолчанию.
- * @variant link В виде гиперссылки.
+ * @variant linkButton В виде гиперссылки.
  * @variant toolButton В виде кнопки для панели инструментов.
  * @variant functionalButton В виде кнопки выполняющей определенную функцию. Например добавление или сохранение.
  * @default button
  * @demo Controls-demo/Buttons/ViewModes/Index
  * @example
- * Кнопка в режиме отображения 'link'.
+ * Кнопка в режиме отображения 'linkButton'.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="linkButton" size="xl"/>
  * </pre>
  * Кнопка в режиме отображения 'toolButton'.
  * <pre>
@@ -204,7 +204,7 @@ class Button extends Control<IButtonControlOptions> implements
    protected _hoverIcon: boolean = true;
 
    protected _beforeMount(options: IButtonControlOptions): void {
-      cssStyleGeneration.call(this, options);
+      cssStyleGeneration.call(this, options, true);
    }
 
    protected _beforeUpdate(newOptions: IButtonControlOptions): void {

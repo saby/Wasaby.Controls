@@ -335,6 +335,20 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          });
       });
 
+      it('Suggest::_private.searchErrback without children', function() {
+         var self = getComponentObject();
+         self._children = {};
+
+         return new Promise(function(resolve) {
+            self._loading = true;
+            suggestMod._InputController._private.searchErrback(self, {canceled: false}).then(function() {
+               assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
+               assert.isFalse(self._loading);
+               resolve();
+            });
+         });
+      });
+
       it('Suggest::_private.setSearchValue', function() {
          var self = {};
 

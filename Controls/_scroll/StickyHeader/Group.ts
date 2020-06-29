@@ -1,6 +1,15 @@
 import {SyntheticEvent} from "Vdom/Vdom";
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
+import {
+    isStickySupport,
+    getNextId,
+    getOffset,
+    POSITION,
+    IOffset,
+    IFixedEventData,
+    TRegisterEventData,
+    getGapFixSize
+} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/Group');
 import {SHADOW_VISIBILITY} from './_StickyHeader';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
@@ -91,7 +100,11 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     }
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
-        return getOffset(parentElement, this._container, position);
+        let offset: number = getOffset(parentElement, this._container, position);
+        if (this._fixed) {
+            offset += getGapFixSize();
+        }
+        return offset;
     }
 
     resetSticky(): void {

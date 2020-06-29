@@ -673,11 +673,17 @@ export default class EditInPlace {
         return result;
     }
 
-    updateEditingData(options: IEditingOptions, formController: any): void {
+    updateEditingData(options: IEditingOptions): void {
+        const hasMultiSelectChanged = this._options.multiSelectVisibility !== options.multiSelectVisibility;
         this._updateOptions(options);
         if (!this._options.readOnly) {
             this._sequentialEditing = _private.getSequentialEditing(options.editingConfig);
-            if (this._editingItemData && this._options.listViewModel.getEditingItemData() !== this._editingItemData) {
+            if (this._editingItemData &&
+                (
+                    hasMultiSelectChanged ||
+                    this._options.listViewModel.getEditingItemData() !== this._editingItemData
+                )
+            ) {
                 this._setEditingItemData(this._editingItemData.item);
             }
 
@@ -685,8 +691,8 @@ export default class EditInPlace {
                 // Запустилась синхронизация, по завершению которой будет отрисовано поле ввода
                 this._pendingInputRenderState = PendingInputRenderState.Rendering;
             }
-
-            this.registerFormOperation(formController);
+        } else if(this._editingItemData) {
+            this._setEditingItemData(null);
         }
     }
 

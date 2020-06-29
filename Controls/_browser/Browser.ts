@@ -33,6 +33,7 @@ export default class Browser extends Control {
         this._createSearchController(options, context);
         this._operationsController = this._createOperationsController(options);
         this._searchController = this._createSearchController(options, context);
+        this._searchValue = this._searchController.getSearchValue();
     }
 
     protected _beforeUpdate(options, context): void {
@@ -60,8 +61,8 @@ export default class Browser extends Control {
         this._getOperationsController().unregisterHandler(event, component, config);
     }
 
-    protected _selectedTypeChangedHandler(event: SyntheticEvent<null>, typeName: string): void {
-        this._getOperationsController().selectionTypeChanged(typeName);
+    protected _selectedTypeChangedHandler(event: SyntheticEvent<null>, typeName: string, limit?: number): void {
+        this._getOperationsController().selectionTypeChanged(typeName, limit);
     }
 
     protected _selectedKeysCountChanged(e, count: number|null, isAllSelected: boolean): void {

@@ -108,6 +108,20 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
          lastPopupOptions.templateOptions.handlers.onSelectComplete();
       });
 
+      it('showSelector notify selector close', function() {
+         const baseController = getBaseController();
+         let selectorCloseNotified = false;
+         baseController._closeHandler = () => {};
+         baseController.notify = (eventName) => {
+            if (eventName === 'selectorClose') {
+               selectorCloseNotified = true;
+            }
+         };
+         showSelector.default(baseController, undefined, true);
+         lastPopupOptions.eventHandlers.onClose();
+         assert.isFalse(selectorCloseNotified);
+      });
+
       it('showSelector with isCompoundTemplate:false', function() {
          const baseController = getBaseController();
          const sandbox = sinon.createSandbox();

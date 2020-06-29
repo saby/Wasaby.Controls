@@ -156,19 +156,21 @@ define('Controls-demo/List/Grid/GridWithEditing', [
       },
       _beforeBeginEdit: function(e, options, isAdd) {
          if (isAdd) {
-            return new entity.Model({
-               keyProperty: 'id',
-               rawData: {
-                  'id': ++this._itemId,
-                  'name': '',
-                  'description': '',
-                  'price': null,
-                  'balance': null,
-                  'balanceCostSumm': null,
-                  'reserve': null,
-                  'costPrice': 0
-               }
-            });
+            return {
+               item: new entity.Model({
+                  keyProperty: 'id',
+                  rawData: {
+                     'id': ++this._itemId,
+                     'name': '',
+                     'description': '',
+                     'price': null,
+                     'balance': null,
+                     'balanceCostSumm': null,
+                     'reserve': null,
+                     'costPrice': 0
+                  }
+               })
+            };
          }
          return undefined;
       },

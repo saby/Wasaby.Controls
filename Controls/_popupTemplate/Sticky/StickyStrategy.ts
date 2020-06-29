@@ -9,6 +9,15 @@ if (detection.isMobileIOS && detection.IOSVersion === 12) {
    import('Controls/Utils/TouchKeyboardHelper').then((module) => TouchKeyboardHelper = module.default);
 }
 
+interface IVisualViewport {
+   height: number;
+   offsetLeft: number;
+   offsetTop: number;
+   pageLeft: number;
+   pageTop: number;
+   width: number;
+}
+
 interface IPosition {
     left?: Number;
     right?: Number;
@@ -327,7 +336,11 @@ interface IPosition {
          if (popupCfg.config.maxWidth) {
             position.maxWidth = Math.min(popupCfg.config.maxWidth, windowSizes.width);
          } else {
-            position.maxWidth = windowSizes.width;
+            let horizontalPadding = 0;
+            if (popupCfg.fittingMode.horizontal === 'adaptive') {
+               horizontalPadding = position.left || position.right || 0;
+            }
+            position.maxWidth = windowSizes.width - horizontalPadding;
          }
 
          if (popupCfg.config.minWidth) {
@@ -339,9 +352,11 @@ interface IPosition {
          } else {
             // На ios возвращается неверная высота страницы, из-за чего накладывая maxWidth === windowSizes.height
             // окно визуально обрезается. Делаю по body, у него высота правильная
-            const verticalPadding = position.top || position.bottom || 0;
-            position.maxHeight = _private.getViewportHeight() - verticalPadding;
-            // position.maxHeight = windowSizes.height;
+            let verticalPadding = 0;
+            if (popupCfg.fittingMode.vertical === 'adaptive') {
+               verticalPadding = position.top || position.bottom || 0;
+            }
+            position.maxHeight = _private.getViewportHeight() - verticalPadding + _private.getVisualViewport().pageTop;
          }
 
          if (popupCfg.config.minHeight) {
@@ -371,7 +386,7 @@ interface IPosition {
           return document.body.clientHeight;
       },
 
-      getVisualViewport(): object {
+      getVisualViewport(): IVisualViewport {
          if (window?.visualViewport) {
             return window.visualViewport;
          }
@@ -383,16 +398,23 @@ interface IPosition {
             width: document && document.body.clientWidth,
             height: document && document.body.clientHeight
          };
+      },
+      prepareRestrictiveCoords(popupCfg, targetCoords): void {
+         if (popupCfg.restrictiveContainerCoords) {
+            // Полная проверка на 4 стороны позволит удалить calculateRestrictionContainerCoords
+            if (popupCfg.restrictiveContainerCoords.top > targetCoords.top) {
+               targetCoords.top = popupCfg.restrictiveContainerCoords.top;
+            }
+         }
       }
    };
 
    export = {
       getPosition: function(popupCfg, targetCoords) {
          var position = {
-
             // position: 'fixed'
          };
-
+         _private.prepareRestrictiveCoords(popupCfg, targetCoords);
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'horizontal'));
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'vertical'));
          _private.setMaxSizes(popupCfg, position);

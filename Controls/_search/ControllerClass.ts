@@ -223,6 +223,10 @@ export default class SearchControllerClass {
         this._setInputSearchValue(value);
     }
 
+    getSearchValue(): string {
+        return this._searchValue;
+    }
+
     private _isSearchValueShort(searchValue: string, minSearchLength: number): boolean {
         return !searchValue || searchValue.length < minSearchLength;
     }

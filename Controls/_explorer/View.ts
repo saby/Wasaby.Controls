@@ -440,7 +440,12 @@ var
     * </pre>
     */
 
-   var Explorer = Control.extend({
+   /**
+    * @name Controls/_explorer/View#displayMode
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
+    */
+
+    var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
       _root: null,
@@ -662,7 +667,8 @@ var
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         backButtonStyle: 'secondary',
+         backButtonIconStyle: 'primary',
+         backButtonFontColorStyle: 'secondary',
          stickyHeader: true,
          searchStartingWith: 'root',
          showActionButton: false

@@ -41,13 +41,17 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._items = options.items;
    }
 
+   setItems(items: RecordSet): void {
+      this._items = items;
+   }
+
    select(selection: ISelection, keys: TKeys): ISelection {
       const cloneSelection = clone(selection);
 
       keys.forEach((key) => {
          const item: Record = this._items.getRecordById(key);
 
-         if (!item || this._hierarchyRelation.isNode(item) !== LEAF) {
+         if (!item || this._isNode(item)) {
             this._selectNode(cloneSelection, key);
          } else {
             this._selectLeaf(cloneSelection, key);
@@ -62,7 +66,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       keys.forEach((key) => {
          const item = this._items.getRecordById(key);
-         if (!item || this._hierarchyRelation.isNode(item) !== LEAF) {
+         if (!item || this._isNode(item)) {
             this._unselectNode(cloneSelection, key);
          } else {
             this._unselectLeaf(cloneSelection, key);
@@ -173,7 +177,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
             this._isAllSelected(selection, parentId));
 
-         if (this._selectAncestors && this._hierarchyRelation.isNode(item) !== LEAF) {
+         if (this._selectAncestors && this._isNode(item)) {
             isSelected = this._getStateNode(itemId, isSelected, {
                selected: selectedKeysWithEntryPath,
                excluded: selection.excluded
@@ -196,7 +200,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                const itemId: TKey = selection.selected[index];
                const item: Record = this._items.getRecordById(itemId);
 
-               if (!item || this._hierarchyRelation.isNode(item) !== LEAF) {
+               if (!item || this._isNode(item)) {
                   selectedNodes.push(itemId);
                }
 
@@ -211,7 +215,13 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
          for (let index = 0; index < selectedNodes.length; index++) {
             const nodeKey: TKey = selectedNodes[index];
-            const countItemsSelectedInNode: number|null = this._getSelectedChildrenCount(nodeKey, selection, this._items, this._hierarchyRelation, this._selectDescendants);
+            const nodeSourceController = this._nodesSourceControllers?.get(nodeKey);
+            let countItemsSelectedInNode;
+            if (nodeSourceController?.hasMoreData('down')) {
+                countItemsSelectedInNode = null;
+            } else {
+                countItemsSelectedInNode = this._getSelectedChildrenCount(nodeKey, selection, this._items, this._hierarchyRelation, this._selectDescendants);
+            }
 
             if (countItemsSelectedInNode === null) {
                countItemsSelected = null;
@@ -377,6 +387,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       const sourceController = this._nodesSourceControllers.get(itemId);
       const hasMoreData: boolean|void = sourceController ? sourceController.hasMoreData('down') : true;
       const children: Record[] = this._getChildren(itemId, this._items, this._hierarchyRelation);
+      const entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH];
       const listKeys = initialState ? selection.excluded : selection.selected;
       let countChildrenInList: boolean|number|null = 0;
 
@@ -385,7 +396,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          const childId: TKey = child.getId();
          const childInList = listKeys.includes(childId);
 
-         if (this._hierarchyRelation.isNode(child) !== LEAF) {
+         if (this._isNode(child)) {
             const stateChildNode = this._getStateNode(childId, childInList ? !initialState : initialState, selection);
 
             if (stateChildNode === null) {
@@ -405,8 +416,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          } else {
             stateNode = null;
          }
-      } else if (!children.length) {
-         const entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH];
+      } else if (entryPath) {
          const childrenFromPath = this._getChildrenByEntryPath(itemId, entryPath);
          const hasChildrenInKeys = listKeys.some((key) => childrenFromPath.includes(key));
          if (hasChildrenInKeys) {
@@ -432,7 +442,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._getChildren(nodeId, items, hierarchyRelation).forEach((child) => {
          ArraySimpleValuesUtil.addSubArray(children, [child]);
 
-         if (hierarchyRelation.isNode(child)) {
+         if (this._isNode(child)) {
             ArraySimpleValuesUtil.addSubArray(children, this._getAllChildren(child.getId(), items, hierarchyRelation));
          }
       });
@@ -471,8 +481,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return childrenIds;
    }
 
-   private _isHasChildren(item: Record, hierarchyRelation: relation.Hierarchy): boolean {
-      return hierarchyRelation ? hierarchyRelation.hasDeclaredChildren(item) !== false : false;
+   private _isHasChildren(item: Record, items: RecordSet, hierarchyRelation: relation.Hierarchy): boolean {
+      return hierarchyRelation.hasDeclaredChildren(item) !== false
+         || this._getChildren(item.getKey(), items, hierarchyRelation).length > 0;
    }
 
    private _getSelectedChildrenCount(
@@ -499,7 +510,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                      selectedChildrenCount++;
                   }
 
-                  if (hierarchyRelation.isNode(childItem) && this._isHasChildren(childItem, hierarchyRelation) && deep !== false) {
+                  if (this._isNode(childItem) && this._isHasChildren(childItem, items, hierarchyRelation) && deep !== false) {
                      childNodeSelectedCount = this._getSelectedChildrenCount(childId, selection, items, hierarchyRelation);
 
                      if (childNodeSelectedCount === null) {
@@ -511,7 +522,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                }
             }
          });
-      } else if (!nodeItem || this._isHasChildren(nodeItem, hierarchyRelation)) {
+      } else if (!nodeItem || this._isHasChildren(nodeItem, items, hierarchyRelation)) {
          selectedChildrenCount = null;
       }
 
@@ -527,5 +538,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _getChildren(nodeId: TKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): Record[] {
       return hierarchyRelation.getChildren(nodeId, items);
+   }
+
+   /**
+    * Проверяет что элемент узел или скрытый узел
+    * @param item
+    * @private
+    */
+   private _isNode(item: Record): boolean {
+      return this._hierarchyRelation.isNode(item) !== LEAF;
    }
 }

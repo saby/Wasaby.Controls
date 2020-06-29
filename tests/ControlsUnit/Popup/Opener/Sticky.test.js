@@ -123,8 +123,12 @@ define(
                sizes: {}
             };
             let container = {
-               offsetWidth: 100,
-               offsetHeight: 100
+               getBoundingClientRect: () => {
+                  return {
+                     width: 100,
+                     height: 100
+                  };
+               }
             };
             StickyController.elementCreated(item, container);
             assert.equal(typeof item.positionConfig, 'object'); // Конфиг сохранился
@@ -579,7 +583,8 @@ define(
                   maxHeight: 200,
                   height: 150,
                   minHeight: 110
-               }
+               },
+               fittingMode: {}
             };
             let position = {};
             StickyStrategy._private.setMaxSizes(popupCfg, position);
@@ -591,6 +596,7 @@ define(
             assert.equal(position.minHeight, popupCfg.config.minHeight);
 
             popupCfg.config.maxHeight = undefined;
+            popupCfg.fittingMode.vertical = 'adaptive';
             position = {};
             StickyStrategy._private.setMaxSizes(popupCfg, position);
             assert.equal(position.maxHeight, BODY_HEIGHT);
@@ -602,6 +608,19 @@ define(
             position = {bottom: 50};
             StickyStrategy._private.setMaxSizes(popupCfg, position);
             assert.equal(position.maxHeight, BODY_HEIGHT - 50);
+
+            popupCfg.config.maxWidth = undefined;
+            popupCfg.fittingMode.horizontal = 'adaptive';
+            position = {};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, 1920);
+            position = {left: 20};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, 1900);
+
+            position = {right: 200};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, 1720);
          });
 
          it('Centered targetPoint sticky', () => {
@@ -673,13 +692,13 @@ define(
             // возвращаем их обратно
             assert.strictEqual(container.style.width, '100px');
             assert.strictEqual(container.style.height, '100px');
-            assert.isUndefined(container.style.maxHeight);
+            assert.strictEqual(container.style.maxHeight, '');
 
             item.popupOptions.maxHeight = 300;
             container.style.maxHeight = '200px';
             StickyController.elementAfterUpdated(item, container);
             assert.strictEqual(newContainer.style.maxHeight, '300px');
-            assert.strictEqual(container.style.maxHeight, '200px');
+            assert.strictEqual(container.style.maxHeight, '');
             StickyController.prepareConfig = prepareConfig;
             StickyController._isTargetVisible = isTargetVisible;
          });

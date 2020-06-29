@@ -72,6 +72,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
       this._createSearchController(options, context);
+      this._searchValue = this._searchController.getSearchValue();
    },
 
    _beforeUnmount(): void {

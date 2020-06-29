@@ -68,11 +68,16 @@ var Component = RangeSelectionController.extend({
    },
 
    _getDisplayedRangeEdges: function(item) {
+      let range;
       if (this._selectionType !== Component.SELECTION_TYPES.quantum) {
-         return Component.superclass._getDisplayedRangeEdges.apply(this, arguments);
+         range = Component.superclass._getDisplayedRangeEdges.apply(this, arguments);
+      } else {
+         range = CalendarUtils.updateRangeByQuantum(this.getSelectionBaseValue() || item, item, this._quantum);
       }
-
-      return CalendarUtils.updateRangeByQuantum(this.getSelectionBaseValue() || item, item, this._quantum);
+      if (this._rangeSelectedCallback) {
+         range = this._rangeSelectedCallback(range[0], range[1]);
+      }
+      return range;
    }
 });
 

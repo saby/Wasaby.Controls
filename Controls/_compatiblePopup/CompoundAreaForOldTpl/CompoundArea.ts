@@ -331,6 +331,13 @@ var CompoundArea = CompoundContainer.extend([
       var container = self.getContainer()[0];
       container.wsControl = self;
 
+      // Заполнять нужно раньше чем позовется doAutofocus ниже.
+      // doAutofocus спровоцирует уход фокуса, старый менеджер будет проверять связи и звать метод getOpener,
+      // который в совместимости возвращает данные с состояния. если они не заполнены, будут проблемы с проверкой связи.
+      self.__openerFromCfg = self._options.__openerFromCfg;
+      self._parent = self._options.parent;
+      self._logicParent = self._options.parent;
+
       // Переведем фокус сразу на окно, после построения шаблона уже сфокусируем внутренности
       // Если этого не сделать, то во время построения окна, при уничтожении контролов в других областях запустится восстановление фокуса,
       // которое восстановит его в последнюю активную область.
@@ -358,9 +365,7 @@ var CompoundArea = CompoundContainer.extend([
       if (self.__parentFromCfg && self._registerToParent) {
          self._registerToParent(self.__parentFromCfg);
       }
-      self.__openerFromCfg = self._options.__openerFromCfg;
-      self._parent = self._options.parent;
-      self._logicParent = self._options.parent;
+
 
       // Чтобы после применения makeInstanceCompatible BaseCompatible не стирал self._logicParent,
       // нужно в оставить его в опциях в поле _logicParent, logicParent или parent.
@@ -1095,6 +1100,16 @@ var CompoundArea = CompoundContainer.extend([
             Controller.update(id, popupConfig.popupOptions);
          }
 
+         const changeVisible = () => {
+            self._isVisible = visible;
+
+            if (visible !== prevVisible) {
+               // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
+               // стреляя событием onAfterVisibilityChange
+               self._notifyCompound('onAfterVisibilityChange', visible);
+            }
+         };
+
          if (visible && !prevVisible) {
             // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
             // окна на экране. Чтобы не было видно "прыжка" со старой позиции (вычисленной при старых размерах)
@@ -1106,6 +1121,7 @@ var CompoundArea = CompoundContainer.extend([
             popupConfig.isHiddenForRecalc = true;
 
             var popupAfterUpdated = function popupAfterUpdated(item, container) {
+               changeVisible();
                if (item.isHiddenForRecalc) {
                   // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
                   item.isHiddenForRecalc = false;
@@ -1140,14 +1156,8 @@ var CompoundArea = CompoundContainer.extend([
 
             // если не попадаем в elementAfterUpdated потому что он случился раньше, то попадаем хотя бы по таймауту
             setTimeout(popupAfterUpdated.bind(self, popupConfig, popupContainer), 2000);
-         }
-
-         this._isVisible = visible;
-
-         if (visible !== prevVisible) {
-            // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
-            // стреляя событием onAfterVisibilityChange
-            this._notifyCompound('onAfterVisibilityChange', visible);
+         } else {
+            changeVisible();
          }
       }
    },

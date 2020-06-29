@@ -1,47 +1,66 @@
-import Control = require('Core/Control');
+// @ts-ignore
 import template = require('wml!Controls/_lookup/Button/_SelectorButton');
+// @ts-ignore
 import itemTemplate = require('wml!Controls/_lookup/Button/itemTemplate');
+// @ts-ignore
 import rk = require('i18n!Controls');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {List} from 'Types/collection';
+import {IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import { Model } from 'Types/entity';
 
+export interface ISelectorButtonOptions extends IControlOptions, IValidationStatusOptions {
+   multiSelect?: boolean;
+   fontColorStyle: string;
+   buttonStyle: string;
+   maxVisibleItems: number;
+   itemTemplate: TemplateFunction;
+   showSelectorCaption: string;
+}
 
-   var SelectorButton = Control.extend({
-      _template: template,
+export default class SelectorButton extends Control<ISelectorButtonOptions> implements IValidationStatus {
+   '[Controls/_interface/IValidationStatus]': true;
 
-      _open: function() {
-         this._notify('showSelector');
-      },
+   protected _template: TemplateFunction = template;
 
-      _reset: function() {
-         this._notify('updateItems', [new List()]);
-      },
-
-      _crossClick: function(event, item) {
-         this._notify('removeItem', [item]);
-      },
-
-      _itemClickHandler: function(event, item) {
-         this._notify('itemClick', [item]);
-
-         if (!this._options.readOnly && !this._options.multiSelect) {
-            this._open();
-         }
-      },
-
-      _openInfoBox: function(event, config) {
-         config.width = this._container.offsetWidth;
-      }
-   });
-
-   SelectorButton._theme = ['Controls/lookup'];
-   SelectorButton.getDefaultOptions = function() {
-      return {
-         style: 'secondary',
-         maxVisibleItems: 7,
-         itemTemplate: itemTemplate,
-         showSelectorCaption: `+${rk('еще')}`
-      };
+   // @ts-ignore
+   private _open(): void {
+      this._notify('showSelector');
    };
 
-   export = SelectorButton;
+   // @ts-ignore
+   private _reset(): void {
+      this._notify('updateItems', [new List()]);
+   };
 
+   protected _crossClick(event: SyntheticEvent<Event>, item: object): void {
+      this._notify('removeItem', [item]);
+   };
+
+   protected _itemClickHandler(event: SyntheticEvent<Event>, item: object): void {
+      this._notify('itemClick', [item]);
+
+      if (!this._options.readOnly && !this._options.multiSelect) {
+         this._open();
+      }
+   };
+
+   protected _openInfoBox(event: SyntheticEvent<Event>, config: object): void {
+      // @ts-ignore
+      config.width = this._container.offsetWidth;
+   }
+
+   static _theme: string[] = ['Controls/lookup'];
+
+   static getDefaultOptions = (): ISelectorButtonOptions => {
+      return {
+         fontColorStyle: 'link',
+         buttonStyle: 'secondary',
+         maxVisibleItems: 7,
+         itemTemplate: itemTemplate,
+         showSelectorCaption: `+${rk('еще')}`,
+         validationStatus: 'valid'
+      };
+   };
+}

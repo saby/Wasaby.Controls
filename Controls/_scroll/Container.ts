@@ -529,7 +529,7 @@ let
          this.calcStyleOverflow(options.scrollMode);
          this._displayState = {};
          this._stickyHeaderContext = new StickyHeaderContext({
-            shadowPosition: options.topShadowVisibility !== SHADOW_VISIBILITY.HIDDEN ? 'bottom' : '',
+            shadowPosition: '',
          });
          this._headersHeight = {
             top: 0,
@@ -781,16 +781,6 @@ let
             return false;
          }
 
-         // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
-         // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
-         // and immediately after the second event it is not necessary.
-         // These conditions appear during scrollTop < 0. Just do not display the shadow when scrollTop < 0.
-         // Turn off this check on the first build when there is no dom tree yet.
-         if (Env.detection.isMobileIOS && position === POSITION.TOP && this._children.content &&
-               _private.getScrollTop(this, this._children.content) < 0) {
-            return false;
-         }
-
          return this._displayState.shadowVisible[position];
       },
 
@@ -837,7 +827,7 @@ let
       },
 
       setOverflowScrolling: function(value: string) {
-          this._children.content.style.webkitOverflowScrolling = value;
+          this._children.content.style.overflow = value;
       },
 
       /**
@@ -1247,37 +1237,35 @@ let
          // В противном случае произойдет подскролл в ненужном контейнере
          event.stopPropagation();
 
-         // Инерционный скролл приводит к дерганью: мы уже
-         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
-         // дерганья и лишняя загрузка данных.
-         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
-         // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
-         if (Env.detection.isMobileIOS) {
-            this.setOverflowScrolling('auto');
-         }
-
          this._savedScrollTop = this._children.content.scrollTop;
          this._savedScrollPosition = this._children.content.scrollHeight - this._savedScrollTop;
+          // Инерционный скролл приводит к дерганью: мы уже
+          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
+          // дерганья и лишняя загрузка данных.
+          // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
+          // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
+          if (Env.detection.isMobileIOS) {
+              this.setOverflowScrolling('hidden');
+          }
       },
 
-      _restoreScrollPosition(event: SyntheticEvent<Event>, heightDifference: number, direction: string): void {
+      _restoreScrollPosition(event: SyntheticEvent<Event>, heightDifference: number, direction: string,
+                             correctingHeight: number = 0): void {
          // На это событие должен реагировать только ближайший скролл контейнер.
          // В противном случае произойдет подскролл в ненужном контейнере
          event.stopPropagation();
-
+          // Инерционный скролл приводит к дерганью: мы уже
+          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
+          // дерганья и лишняя загрузка данных.
+          // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
+          if (Env.detection.isMobileIOS) {
+              this.setOverflowScrolling('');
+          }
          const newPosition = direction === 'up' ?
-             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference :
-             this._savedScrollTop - heightDifference;
+             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference - correctingHeight :
+             this._savedScrollTop - heightDifference + correctingHeight;
 
          this._children.scrollWatcher.setScrollTop(newPosition, true);
-
-         // Инерционный скролл приводит к дерганью: мы уже
-         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
-         // дерганья и лишняя загрузка данных.
-         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
-         if (Env.detection.isMobileIOS) {
-            this.setOverflowScrolling('');
-         }
       },
 
       _fixedHandler: function(event, topHeight, bottomHeight) {

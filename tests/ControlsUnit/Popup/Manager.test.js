@@ -229,8 +229,8 @@ define(
                }
             }, new BaseController());
             Manager.remove(id).then(() => {
-               assert.equal(eventCloseFired, true);
-               assert.equal(eventOnCloseFired, true);
+               assert.equal(eventCloseFired, false);
+               assert.equal(eventOnCloseFired, false);
                done();
             });
          });

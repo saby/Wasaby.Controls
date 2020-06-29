@@ -140,8 +140,19 @@ export class ColumnScroll {
         this._setStickyColumnsCount(newStickyColumnsCount, silence, GridLayoutUtil.isFullGridSupport());
     }
 
+    setMultiSelectVisibility(newMultiSelectVisibility: 'visible' | 'hidden' | 'onhover', silence: boolean = false): void {
+        this._setMultiSelectVisibility(newMultiSelectVisibility, silence, GridLayoutUtil.isFullGridSupport());
+    }
+
     private _setStickyColumnsCount(newStickyColumnsCount: number, silence: boolean = false, isFullGridSupport: boolean): void {
         this._options.stickyColumnsCount = newStickyColumnsCount;
+        if (!silence) {
+            this._updateFixedColumnWidth(isFullGridSupport);
+        }
+    }
+
+    private _setMultiSelectVisibility(newMultiSelectVisibility: 'visible' | 'hidden' | 'onhover', silence: boolean = false, isFullGridSupport: boolean): void {
+        this._options.hasMultiSelect = newMultiSelectVisibility !== 'hidden';
         if (!silence) {
             this._updateFixedColumnWidth(isFullGridSupport);
         }
@@ -400,6 +411,10 @@ export class ColumnScroll {
      * @param element
      */
     scrollToElementIfHidden(element: HTMLElement): void {
+        // Не скроллим к зафиксированным ячейкам.
+        if (!!element.closest(`.${JS_SELECTORS.FIXED_ELEMENT}`)) {
+            return;
+        }
         const { right: activeElementRight, left: activeElementLeft  } = element.getBoundingClientRect();
 
         const containerRect = this._scrollContainer.getBoundingClientRect();

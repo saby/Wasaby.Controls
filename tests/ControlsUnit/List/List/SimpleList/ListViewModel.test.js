@@ -130,9 +130,15 @@ define([
          // assert.include(version, 'ITEM_ACTION_2');
 
          assert.include(version, 'WITHOUT_EDITING');
-         model._setEditingItemData({ key: 21, item: {}, setEditing: () => {} });
+
+         const editingItemData = { key: 21, item: {}, setEditing: () => {}, getVersion: () => '' };
+         model._setEditingItemData(editingItemData);
          version = model._calcItemVersion(item, key);
          assert.include(version, 'WITH_EDITING');
+
+         model._options.multiSelectVisibility = 'visible';
+         version = model._calcItemVersion(editingItemData, 21);
+         assert.equal(version, 'MULTISELECT-visible_EDITING_WITH_EDITING_1');
       });
 
       it('isShouldBeDrawnItem', function() {
@@ -569,6 +575,25 @@ define([
          assert.isAbove(lv.getVersion(), originalVersion);
       });
 
+      it('getPreviousItem', () => {
+         const model = new lists.ListViewModel({
+            items: new collection.RecordSet({
+               rawData: data,
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         let prevItemKey = model.getPreviousItem(1);
+         assert.equal(prevItemKey, 1);
+
+         prevItemKey = model.getPreviousItem(0);
+         assert.equal(prevItemKey, undefined);
+
+         prevItemKey = model.getPreviousItem(5);
+         assert.equal(prevItemKey, 3);
+      });
+
       describe('DragNDrop methods', function() {
          var dragItemData, dragEntity, target, lvm, current;
 
@@ -648,6 +673,33 @@ define([
             lvm._options.multiSelectVisibility = 'onhover';
             var item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
+         });
+
+
+         it('getMultiSelectClassList', () => {
+            const current = {
+               multiSelectVisibility: 'visible',
+               multiSelectStatus: false
+            };
+
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.multiSelectVisibility = 'onhover';
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
+
+            current.multiSelectStatus = true;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.multiSelectStatus = null;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.multiSelectStatus = undefined;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
          });
 
          it('setDragTargetPosition', function() {

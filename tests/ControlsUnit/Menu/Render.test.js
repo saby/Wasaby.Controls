@@ -118,6 +118,11 @@ define(
             renderOptions.multiSelect = true;
             rightSpacing = menuRender.getRightSpacing(renderOptions);
             assert.equal(rightSpacing, 'menu-multiSelect');
+
+            renderOptions.itemPadding.right = 'menu-close';
+            renderOptions.multiSelect = true;
+            rightSpacing = menuRender.getRightSpacing(renderOptions);
+            assert.equal(rightSpacing, 'menu-close-multiSelect');
          });
 
          describe('addEmptyItem', function() {

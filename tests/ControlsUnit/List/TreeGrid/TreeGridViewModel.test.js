@@ -270,6 +270,8 @@ define(['Controls/treeGrid',
                 }),
                 keyProperty: 'id',
                 nodeProperty: 'type',
+                theme: 'default',
+                rowSeparatorSize: 'l',
                 parentProperty: 'parent',
                 columns: initialColumns,
                 columnScroll: true
@@ -295,6 +297,10 @@ define(['Controls/treeGrid',
          let nodeFooter = model.getItemDataByItem.call(model).nodeFooters[0];
          assert.equal(nodeFooter.rowIndex, 2);
          assert.equal(nodeFooter.colspanStyles, 'grid-column-start: 2; grid-column-end: 4;');
+
+         assert.isTrue(nodeFooter.classes.indexOf('controls-TreeGrid__nodeFooterContent_rowSeparatorSize-null_theme-default') === -1);
+         assert.isTrue(nodeFooter.classes.indexOf('controls-TreeGrid__nodeFooterContent_rowSeparatorSize-s_theme-default') === -1);
+         assert.isTrue(nodeFooter.classes.indexOf('controls-TreeGrid__nodeFooterContent_rowSeparatorSize-l_theme-default') !== -1);
 
          treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
       });

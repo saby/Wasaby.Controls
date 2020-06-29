@@ -138,7 +138,7 @@ var _private = {
                 .load(filter, options.sorting, null, null, nodeKey)
                 .addCallbacks((list) => {
                     listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
-                    baseSourceController.calculateState(list, nodeKey);
+                    baseSourceController.calculateState(list, null, nodeKey);
                     if (options.uniqueKeys) {
                         listViewModel.mergeItems(list);
                     } else {
@@ -210,7 +210,7 @@ var _private = {
         self._children.baseControl.showIndicator();
         nodeSourceControllers.get(nodeKey).load(filter, self._options.sorting, 'down', null, nodeKey).addCallbacks((list) => {
             listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
-            baseSourceController.calculateState(list, nodeKey);
+            baseSourceController.calculateState(list, 'down', nodeKey);
             if (self._options.uniqueKeys) {
                 listViewModel.mergeItems(list);
             } else {
@@ -518,6 +518,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             if (this._options.editingConfig) {
                 baseControl.cancelEdit();
             }
+
+            this.setMarkedKey(undefined);
+
             baseControl.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
         }
 

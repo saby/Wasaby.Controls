@@ -101,7 +101,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
      * @returns {Boolean} Is popup opened
      */
     isOpened(): boolean {
-        return !!ManagerController.find(this._popupId);
+        return BaseOpener.isOpened(this._popupId);
     }
 
     private _openPopup(cfg: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
@@ -324,6 +324,10 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         return ManagerController.remove(popupId);
     }
 
+    static isOpened(popupId: string): boolean {
+        return !!ManagerController.find(popupId);
+    }
+
     /**
      *
      * @param config
@@ -392,7 +396,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
 
         if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
-            Logger.warn('Controls/popup:Sticky : Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
+            Logger.error('Controls/popup:Sticky : Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
         }
 
         return baseCfg;

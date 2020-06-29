@@ -5,7 +5,7 @@ import {Direction, IAdditionalQueryParams} from 'Controls/source';
 import {IBaseSourceConfig, INavigationSourceConfig} from 'Controls/interface';
 import {Collection} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
-import {equal, ok} from 'assert';
+import {equal, ok, strictEqual} from 'assert';
 
 class FakeController implements IQueryParamsController {
    destroy(): void {}
@@ -36,8 +36,17 @@ class FakeController implements IQueryParamsController {
        void {}
 }
 
-const recordSetWithMultiNavigation = new RecordSet();
-recordSetWithMultiNavigation.setMetaData({
+const items = [{
+   id: 1,
+   name: 'Иванов'
+}, {
+   id: 2,
+   name: 'Петров'
+}];
+const metaNavigation = {
+   more: true
+};
+const metaMultiNavigation = {
    more: new RecordSet({
       rawData: [
          {
@@ -49,13 +58,25 @@ recordSetWithMultiNavigation.setMetaData({
             nav_result: false
          }
       ]
-   })
-});
+   }),
+   path: new RecordSet()
+};
 
-const recordSetWithSingleNavigation = new RecordSet();
-recordSetWithSingleNavigation.setMetaData({
-   more: true
+const recordSetWithMultiNavigation = new RecordSet({
+   rawData: items
 });
+recordSetWithMultiNavigation.setMetaData(metaMultiNavigation);
+
+const recordSetWithSingleNavigation = new RecordSet({
+   rawData: items
+});
+recordSetWithSingleNavigation.setMetaData(metaNavigation);
+const modelMock = {
+   getItems: () => recordSetWithSingleNavigation
+};
+const modelMockWithMultiNavigation = {
+   getItems: () => recordSetWithMultiNavigation
+};
 
 describe('Controls/_source/QueryParamsController', () => {
    let controller;
@@ -80,23 +101,46 @@ describe('Controls/_source/QueryParamsController', () => {
       equal(queryParams.length, 2);
    });
 
-   it('updateQueryProperties', () => {
-      controller.updateQueryProperties(recordSetWithMultiNavigation);
-      ok(!!controller.getController(1));
-      ok(!!controller.getController(2));
+   describe('updateQueryProperties', () => {
+      it('controller created for every root in multiNavigation', () => {
+         controller.updateQueryProperties(recordSetWithMultiNavigation);
+         ok(!!controller.getController(1));
+         ok(!!controller.getController(2));
+      });
+      it('path in metaData after updateQueryProperties', () => {
+         queryParamsWithPageController.updateQueryProperties(recordSetWithMultiNavigation);
+         ok(recordSetWithMultiNavigation.getMetaData().path);
+      });
    });
 
-   describe('hasMoreData', () => {
-      it('hasMoreData for multi navigation query result', () => {
-         queryParamsWithPageController.updateQueryProperties(recordSetWithMultiNavigation);
-         ok(queryParamsWithPageController.hasMoreData('down', 1));
-         equal(queryParamsWithPageController.hasMoreData('down', 2), false);
-         equal(queryParamsWithPageController.hasMoreData('down'), true);
+   describe('pageQueryParamsController', () => {
+
+      describe('setState', () => {
+
+         it('setState with multiNavigation', () => {
+            queryParamsWithPageController.setState(modelMock);
+            strictEqual(queryParamsWithPageController.getAllDataCount(), true);
+         });
+
+         it('setState with singleNavigation', () => {
+            queryParamsWithPageController.setState(modelMockWithMultiNavigation);
+            strictEqual(queryParamsWithPageController.getAllDataCount(), true);
+         });
+
       });
 
-      it('hasMoreData for single navigation query result', () => {
-         queryParamsWithPageController.updateQueryProperties(recordSetWithSingleNavigation, 'down');
-         ok(queryParamsWithPageController.hasMoreData('down'));
+      describe('hasMoreData', () => {
+         it('hasMoreData for multi navigation query result', () => {
+            queryParamsWithPageController.updateQueryProperties(recordSetWithMultiNavigation);
+            ok(queryParamsWithPageController.hasMoreData('down', 1));
+            equal(queryParamsWithPageController.hasMoreData('down', 2), false);
+            equal(queryParamsWithPageController.hasMoreData('down'), true);
+         });
+
+         it('hasMoreData for single navigation query result', () => {
+            queryParamsWithPageController.updateQueryProperties(recordSetWithSingleNavigation, 'down');
+            ok(queryParamsWithPageController.hasMoreData('down'));
+         });
       });
    });
 });
