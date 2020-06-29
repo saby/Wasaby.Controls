@@ -2435,6 +2435,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         _private.updateNavigation(this);
 
+       if (this._options.rowSeparatorSize !== newCfg.rowSeparatorSize) {
+          this._listViewModel.setRowSeparatorSize(newCfg.rowSeparatorSize);
+       }
+
         if (
             !newOptions.useNewModel &&
             (
