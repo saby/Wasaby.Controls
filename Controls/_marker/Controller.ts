@@ -45,14 +45,14 @@ export class Controller {
     * @return {string|number} новый ключ маркера
     */
    setMarkedKey(key: TKey, silent: boolean = false): TKey {
-      if (key === undefined && this._markerVisibility !== Visibility.Visible) {
-         if (this._markedKey === undefined) {
-            return undefined;
+      if ((key === undefined || key === null) && this._markerVisibility !== Visibility.Visible) {
+         if (this._markedKey === key) {
+            return this._markedKey;
          }
 
          this._model.setMarkedKey(this._markedKey, false, silent);
-         this._markedKey = undefined;
-         return undefined;
+         this._markedKey = key;
+         return this._markedKey;
       }
 
       const item = this._model.getItemBySourceKey(key);
@@ -72,8 +72,15 @@ export class Controller {
       } else {
          switch (this._markerVisibility) {
             case Visibility.OnActivated:
-               this._model.setMarkedKey(this._markedKey, false, true);
-               this._markedKey = null;
+               // Маркер сбросим только если список не пустой и элемента с текущим маркером не найдено
+               if (this._model.getCount() > 0) {
+                  if (this._markedKey) {
+                     this._markedKey = this._setMarkerOnFirstItem();
+                  } else {
+                     this._model.setMarkedKey(this._markedKey, false, true);
+                     this._markedKey = null;
+                  }
+               }
                break;
             case Visibility.Visible:
                this._markedKey = this._setMarkerOnFirstItem(silent);
@@ -94,7 +101,8 @@ export class Controller {
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item) {
          item.setMarked(true, true);
-      } else if (this._markerVisibility === Visibility.Visible || this._markerVisibility === Visibility.OnActivated && this._markedKey) {
+      } else if (this._model.getCount() > 0
+          && (this._markerVisibility === Visibility.Visible || this._markerVisibility === Visibility.OnActivated && this._markedKey)) {
          this._markedKey = this._setMarkerOnFirstItem();
       }
 
