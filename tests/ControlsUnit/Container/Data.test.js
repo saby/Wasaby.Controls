@@ -58,45 +58,33 @@ define(
             };
          };
 
-         it('resolvePrefetchSourceResult', function() {
-            var data = getDataWithConfig({source: source, keyProperty: 'id'});
-            var items = new collection.RecordSet();
-            items.setMetaData({
-               newMeta: false
-            });
-            data._items = items;
-
-            var itemsWithAnotherMeta = data._items.clone();
-            itemsWithAnotherMeta.setMetaData({
-               newMeta: true
-            });
-
-            lists.DataContainer._private.resolvePrefetchSourceResult(data, {data: itemsWithAnotherMeta});
-            assert.isTrue(data._items.getMetaData().newMeta);
-         });
-
          it('update source', function(done) {
-            var data = getDataWithConfig({source: source, keyProperty: 'id'});
-            var newSource = new sourceLib.Memory({
+            const dataOptions = {source: source, keyProperty: 'id'};
+            const data = getDataWithConfig(dataOptions);
+            const newSource = new sourceLib.Memory({
                keyProperty: 'id',
                data: sourceDataEdited
             });
-            data._dataOptionsContext = new contexts.ContextOptions();
-            var loadDef = data._beforeUpdate({source: newSource, idProperty: 'id'})
-            assert.isTrue(data._loading);
-            loadDef.addCallback(function(items) {
-               try {
-                  assert.deepEqual(data._items.getRawData(), sourceDataEdited);
-                  assert.isFalse(data._loading);
-                  done();
-               } catch (e) {
-                  done(e)
-               }
+
+            data._beforeMount(dataOptions).then(() => {
+               data._dataOptionsContext = new contexts.ContextOptions();
+               var loadDef = data._beforeUpdate({source: newSource, idProperty: 'id'})
+               assert.isTrue(data._loading);
+               loadDef.addCallback(function() {
+                  try {
+                     assert.deepEqual(data._items.getRawData(), sourceDataEdited);
+                     assert.isFalse(data._loading);
+                     done();
+                  } catch (e) {
+                     done(e);
+                  }
+               });
             });
          });
 
-         it('source and filter/navigation changed', () => {
-            const data = getDataWithConfig({source: source, keyProperty: 'id'});
+         it('source and filter/navigation changed', async () => {
+            const dataOptions = {source: source, keyProperty: 'id'};
+            const data = getDataWithConfig(dataOptions);
             data._dataOptionsContext = new contexts.ContextOptions();
 
             const newSource = new sourceLib.Memory({
@@ -105,6 +93,7 @@ define(
             });
             const newNavigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};
             const newFilter = {title: 'Ivan'};
+            await data._beforeMount(dataOptions);
 
             const loadDef = data._beforeUpdate({
                source: newSource,
@@ -137,7 +126,7 @@ define(
             data._beforeMount({source: newSource, idProperty: 'id'}, {}, sourceData);
 
             assert.deepEqual(data._items, sourceData);
-            assert.isTrue(!!data._prefetchSource);
+            assert.isTrue(!!data._dataController._prefetchSource);
 
             resetCallback();
          });
@@ -157,9 +146,9 @@ define(
             let resetCallback = setNewEnvironmentValue(true);
 
             data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
-            assert.isTrue(data._prefetchSource.getOriginal() === memory);
-            assert.isTrue(data._prefetchSource !== prefetchSource);
-            assert.equal(data._prefetchSource._$data.query, sourceData);
+            assert.isTrue(data._dataController._prefetchSource.getOriginal() === memory);
+            assert.isTrue(data._dataController._prefetchSource !== prefetchSource);
+            assert.equal(data._dataController._prefetchSource._$data.query, sourceData);
 
             resetCallback();
          });
@@ -178,23 +167,15 @@ define(
             let data = getDataWithConfig({source: prefetchSource, keyProperty: 'id'});
 
             await data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
-            assert.isTrue(data._prefetchSource.getOriginal() === memory);
-            assert.isTrue(data._prefetchSource !== prefetchSource);
-            assert.equal(data._prefetchSource._$data.query, sourceData);
+            assert.isTrue(data._dataController._prefetchSource.getOriginal() === memory);
+            assert.isTrue(data._dataController._prefetchSource !== prefetchSource);
+            assert.equal(data._dataController._prefetchSource._$data.query, sourceData);
          });
 
          it('_beforeMount with root and parentProperty', async() => {
-            const dataSetMock = {
-               test: true,
-               getKeyProperty() {
-                  return 'id';
-               },
-               setKeyProperty() {
-                  return 1;
-               }
-            };
+            const data = new sourceLib.DataSet();
             let sourceQuery;
-            const source = {
+            const dataSource = {
                query: function(query) {
                   sourceQuery = query;
                   return Deferred.success(dataSetMock);
@@ -204,7 +185,7 @@ define(
             };
 
             const dataOptions = {
-               source: source,
+               source: dataSource,
                keyProperty: 'id',
                filter: {},
                parentProperty: 'testParentProperty',
@@ -263,9 +244,8 @@ define(
 
             //new source received in _beforeUpdate
             data._beforeUpdate({source: source}).addCallback(function() {
-               assert.isTrue(data._source === source);
-               assert.isTrue(data._dataOptionsContext.source === source);
-               assert.isTrue(!!data._dataOptionsContext.prefetchSource);
+               assert.isTrue(data._dataController._options.source === source);
+               assert.isTrue(!!data._dataController._prefetchSource);
                done();
             });
          });
@@ -355,15 +335,15 @@ define(
             var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
             var data = getDataWithConfig(config);
 
-            data._beforeMount(config).addCallback(function() {
-               assert.isTrue(!!data._dataOptionsContext.prefetchSource);
-               assert.equal(data._dataOptionsContext.source, source);
+            data._beforeMount(config).then(function() {
+               assert.isTrue(!!data._dataController._prefetchSource);
+               assert.equal(data._dataController._options.source, source);
                assert.isTrue(dataLoadErrbackCalled);
                done();
             });
          });
 
-         it('_private.createPrefetchSource with error data', function(done) {
+         it('_beforeMount with error data', function(done) {
             var queryCalled = false;
             var source = {
                query: function() {
@@ -381,47 +361,10 @@ define(
             var error = new Error('test');
 
             var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
-            var self = getDataWithConfig(config);
-            lists.DataContainer._private.resolveOptions(self, {source:source});
-
-            var promise = lists.DataContainer._private.createPrefetchSource(self, error, config);
+            var promise = getDataWithConfig(config)._beforeMount(config);
             assert.instanceOf(promise, Promise);
             promise.then(function(result) {
-               assert.equal(result.error, error);
-               assert.isTrue(dataLoadErrbackCalled);
-               assert.isFalse(queryCalled);
-               done();
-            }).catch(function(error) {
-               done(error);
-            });
-         });
-
-         it('_private.createPrefetchSource with error query result', function(done) {
-            var error = new Error('test');
-            var queryCalled = false;
-
-            var source = {
-               query: function() {
-                  queryCalled = true;
-                  return Deferred.fail(error);
-               },
-               _mixins: [],
-               "[Types/_source/ICrud]": true
-            };
-            var dataLoadErrbackCalled = false;
-            var dataLoadErrback = function() {
-               dataLoadErrbackCalled = true;
-            };
-
-            var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
-            var self = getDataWithConfig(config);
-            lists.DataContainer._private.resolveOptions(self, {source:source});
-
-            var promise = lists.DataContainer._private.createPrefetchSource(self, undefined, config);
-
-            assert.instanceOf(promise, Promise);
-            promise.then(function(result) {
-               assert.equal(result.error, error);
+               assert.equal(result, error);
                assert.isTrue(dataLoadErrbackCalled);
                assert.isTrue(queryCalled);
                done();
@@ -430,81 +373,15 @@ define(
             });
          });
 
-         it('_private.createPrefetchSource with data', function(done) {
-            var data = {test: true};
+         it('_beforeMount with collapsed groups', function(done) {
+            var data = new sourceLib.DataSet();
             var queryCalled = false;
+            let queryFilter;
 
             var source = {
-               query: function() {
+               query: function(query) {
                   queryCalled = true;
-                  return Deferred.success(data);
-               },
-               _mixins: [],
-               "[Types/_source/ICrud]": true
-            };
-            var dataLoadErrbackCalled = false;
-            var dataLoadErrback = function() {
-               dataLoadErrbackCalled = true;
-            };
-
-            var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
-            var self = getDataWithConfig(config);
-            lists.DataContainer._private.resolveOptions(self, {source:source});
-
-            var promise = lists.DataContainer._private.createPrefetchSource(self, data, config);
-
-            assert.instanceOf(promise, Promise);
-            promise.then(function(result) {
-               assert.equal(result.data, data);
-               assert.isFalse(dataLoadErrbackCalled);
-               assert.isFalse(queryCalled);
-               done();
-            }).catch(function(error) {
-               done(error);
-            });
-         });
-
-         it('_private.createPrefetchSource with data query result', function(done) {
-            var data = {test: true};
-            var queryCalled = false;
-
-            var source = {
-               query: function() {
-                  queryCalled = true;
-                  return Deferred.success(data);
-               },
-               _mixins: [],
-               "[Types/_source/ICrud]": true
-            };
-            var dataLoadErrbackCalled = false;
-            var dataLoadErrback = function() {
-               dataLoadErrbackCalled = true;
-            };
-
-            var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
-            var self = getDataWithConfig(config);
-            lists.DataContainer._private.resolveOptions(self, {source:source});
-
-            var promise = lists.DataContainer._private.createPrefetchSource(self, undefined, dataLoadErrback);
-
-            assert.instanceOf(promise, Promise);
-            promise.then(function(result) {
-               assert.equal(result.data, data);
-               assert.isFalse(dataLoadErrbackCalled);
-               assert.isTrue(queryCalled);
-               done();
-            }).catch(function(error) {
-               done(error);
-            });
-         });
-
-         it('_private.createPrefetchSource with collapsed groups', function(done) {
-            var data = {test: true};
-            var queryCalled = false;
-
-            var source = {
-               query: function(a, d, v, b, r) {
-                  queryCalled = true;
+                  queryFilter = query.getWhere();
                   return Deferred.success(data);
                },
                _mixins: [],
@@ -526,96 +403,19 @@ define(
                return originConfigGetParam();
             };
 
-            lists.DataContainer._private.resolveOptions(self, {source:source});
 
-            var promise = lists.DataContainer._private.createPrefetchSource(self, data, config);
-
+            var promise = self._beforeMount(config);
             assert.instanceOf(promise, Promise);
-            promise.then(function(result) {
-               assert.equal(result.data, data);
+            promise.then(function() {
                assert.isFalse(dataLoadErrbackCalled);
-               assert.isFalse(queryCalled);
+               assert.isTrue(queryCalled);
                Config.UserConfig.getParam = originConfigGetParam;
-               assert.deepEqual(self._filter, { collapsedGroups: [1, 3] });
+               assert.deepEqual(queryFilter, { collapsedGroups: [1, 3] });
                done();
             }).catch(function(error) {
                Config.UserConfig.getParam = originConfigGetParam;
                done(error);
             });
-         });
-
-         it('_private.resolveOptions', function() {
-            const self = {
-               _options: {}
-            };
-            const dataOptions = {
-               filter: {},
-               root: 'test',
-               parentProperty: 'testParentProperty'
-            };
-
-            lists.DataContainer._private.resolveOptions(self, dataOptions);
-            assert.deepEqual(self._filter, dataOptions.filter);
-         });
-         it('_private.isEqualItems', function() {
-
-            var collectionData = [{
-               'id': 1,
-               'title': 'Отдел',
-               'parent': null,
-               'parent@': true,
-               'group': '1'
-            }, {
-               'id': 2,
-               'title': 'Компания',
-               'parent': null,
-               'parent@': null,
-               'group': '1'
-            }];
-
-            var source1 = new collection.RecordSet({
-               rawData: collectionData,
-               keyProperty: 'id'
-            });
-
-            var source2 = new collection.RecordSet({
-               rawData: collectionData,
-               keyProperty: 'id'
-            });
-
-            var source3 = new collection.RecordSet({
-               rawData: collectionData,
-               keyProperty: 'objectId'
-            });
-
-            assert.equal(lists.DataContainer._private.isEqualItems(source1, source2), true);
-
-            assert.equal(lists.DataContainer._private.isEqualItems(source1, source3), false);
-
-         });
-         it('_private.getGroupHistoryId', function() {
-            assert.equal(lists.DataContainer._private.getGroupHistoryId({
-               groupingKeyCallback: () => {},
-               historyIdCollapsedGroups: 'grId'
-            }), 'grId');
-
-            assert.equal(lists.DataContainer._private.getGroupHistoryId({
-               groupProperty: 'any',
-               historyIdCollapsedGroups: 'grId'
-            }), 'grId');
-
-            assert.equal(lists.DataContainer._private.getGroupHistoryId({
-               groupingKeyCallback: () => {},
-               groupHistoryId: 'grId',
-            }), 'grId');
-
-            assert.isUndefined(lists.DataContainer._private.getGroupHistoryId({
-               groupHistoryId: 'grId',
-            }));
-
-            assert.isUndefined(lists.DataContainer._private.getGroupHistoryId({
-               groupProperty: 'any',
-            }));
          });
       });
    });
