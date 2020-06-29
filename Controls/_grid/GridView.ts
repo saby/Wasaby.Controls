@@ -152,6 +152,15 @@ var
             _private.setGrabbing(self, false);
             self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
         },
+        destroyColumnScroll(self) {
+            self._columnScrollController?.destroy();
+            self._columnScrollController = null;
+            _private.destroyDragScroll(self);
+        },
+        destroyDragScroll(self) {
+            self._dragScrollController?.destroy();
+            self._dragScrollController = null;
+        },
         setGrabbing(self, isGrabbing: boolean): void {
             self._isGrabbing = isGrabbing;
             self._viewGrabbingClasses = isGrabbing ? DRAG_SCROLL_JS_SELECTORS.CONTENT_GRABBING : '';
@@ -236,16 +245,11 @@ var
                     this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
                     this._horizontalScrollWidth = newSizes.scrollWidth;
                     this._containerSize = newSizes.containerSize;
-                    if (this._dragScrollController) {
-                        this._dragScrollController.updateScrollData({
-                            scrollLength: newSizes.contentSize - newSizes.containerSize,
-                            scrollPosition: this._columnScrollController.getScrollPosition()
-                        });
-                    }
                     this._updateColumnScrollData();
                 }, true);
             }
 
+            this._isFullMounted = true;
         },
 
         _beforeUpdate(newCfg) {
@@ -267,8 +271,7 @@ var
                     _private.initColumnScroll(this, newCfg);
                     this._setColumnScrollContainersAfterRender = true;
                 } else {
-                    this._columnScrollController.destroy();
-                    this._columnScrollController = null;
+                    _private.destroyColumnScroll(this);
                 }
             }
             if (this._options.resultsVisibility !== newCfg.resultsVisibility) {
@@ -302,21 +305,18 @@ var
             if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
                 this._resultsTemplate = newCfg.resultsTemplate || this._baseResultsTemplate;
             }
-            if (this._dragScrollController) {
-                if (this._options.itemsDragNDrop !== newCfg.itemsDragNDrop) {
-                    this._dragScrollController.setStartDragNDropCallback(!newCfg.itemsDragNDrop ? null : () => {
-                        _private.setGrabbing(self, false);
-                        newCfg.startDragNDropCallback();
-                    });
-                }
-            }
+
             if (this._options.dragScrolling !== newCfg.dragScrolling) {
                 if (newCfg.dragScrolling) {
                     _private.initDragScroll(this, newCfg);
                 } else {
-                    this._dragScrollController.destroy();
-                    this._dragScrollController = null;
+                    _private.destroyDragScroll(this);
                 }
+            } else if (this._dragScrollController && (this._options.itemsDragNDrop !== newCfg.itemsDragNDrop)) {
+                this._dragScrollController.setStartDragNDropCallback(!newCfg.itemsDragNDrop ? null : () => {
+                    _private.setGrabbing(self, false);
+                    newCfg.startDragNDropCallback();
+                });
             }
         },
 
@@ -368,10 +368,7 @@ var
 
         _beforeUnmount(): void {
             GridView.superclass._beforeUnmount.apply(this, arguments);
-            if (this._columnScrollController) {
-                this._columnScrollController.destroy();
-                this._columnScrollController = null;
-            }
+            _private.destroyColumnScroll(this);
         },
 
         /**
@@ -404,12 +401,14 @@ var
             GridView.superclass.resizeNotifyOnListChanged.apply(this, arguments);
 
             // TODO: Проверить https://online.sbis.ru/opendoc.html?guid=a768cb95-9c30-4f75-b1fb-9182228e5550 #rea_columnnScroll
-            this._columnScrollController?.updateSizes((newSizes) => {
-                this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                this._horizontalScrollWidth = newSizes.scrollWidth;
-                this._containerSize = newSizes.containerSize;
-                this._updateColumnScrollData();
-            });
+            if (this._isFullMounted && this._columnScrollController) {
+                this._columnScrollController.updateSizes((newSizes) => {
+                    this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
+                    this._horizontalScrollWidth = newSizes.scrollWidth;
+                    this._containerSize = newSizes.containerSize;
+                    this._updateColumnScrollData();
+                });
+            }
         },
 
         _resolveItemTemplate(options): TemplateFunction {
@@ -567,13 +566,14 @@ var
         _updateColumnScrollData(): void {
             this._updateColumnScrollShadowClasses();
             this._updateColumnScrollShadowStyles();
-            this._horizontalScrollPosition = this._columnScrollController.getScrollPosition();
-            if (this._dragScrollController) {
-                this._dragScrollController.updateScrollData({
-                    scrollLength: this._columnScrollController.getScrollLength(),
-                    scrollPosition: this._horizontalScrollPosition
-                });
+            const newScrollPosition = this._columnScrollController.getScrollPosition();
+            if (this._horizontalScrollPosition !== newScrollPosition) {
+                this._horizontalScrollPosition = newScrollPosition;
             }
+            this._dragScrollController?.updateScrollData({
+                scrollLength: this._columnScrollController.getScrollLength(),
+                scrollPosition: this._horizontalScrollPosition
+            });
         },
         _getCorrectElement(element: HTMLElement): HTMLElement {
             // В FF целью события может быть элемент #text, у которого нет метода closest, в этом случае рассматриваем как цель его родителя.
@@ -590,7 +590,7 @@ var
                 return null;
             }
             let target = this._getCorrectElement(event.target);
-         
+
             const gridRow = target.closest('.controls-Grid__row');
             if (!gridRow) {
                 return null;
