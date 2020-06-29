@@ -673,7 +673,7 @@ var Filter = Control.extend({
                 });
             } else if (_private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this);
-            } else if (newOptions.task1179601261) {
+            } else if (newOptions.task1179601261 && this._loadDeferred) {
                 if (this._loadDeferred.isReady()) {
                     resultDef = _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
                         _private.updateText(self, self._source, self._configs);
