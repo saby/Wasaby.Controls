@@ -30,7 +30,7 @@ export default class extends Control {
             data: Gadgets.getFlatData()
         });
     }
-
+    // tslint:disable-next-line
     protected _hoveredCellChanged(_: SyntheticEvent, item: any, itemContainer: any, cell: any): void {
         this._hoveredCellIndex = cell === null ? -1 : cell;
     }

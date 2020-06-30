@@ -11,12 +11,11 @@ export default class extends Control {
    protected _columns: IColumn[] = Gadgets.getColumnsForFlat();
    protected _expandedItems: TExpandOrColapsItems = [null];
 
-
    protected _beforeMount(): void {
       this._viewSource = new Memory({
          keyProperty: 'id',
          data: Gadgets.getDataSet(),
-         filter: () => true,  
+         filter: () => true
       });
    }
 

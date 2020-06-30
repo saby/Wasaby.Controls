@@ -29,7 +29,7 @@ export default class extends Control {
             displayProperty: title,
             width: this._newColumnWidth,
             compatibleWidth: this._newColumnWidth
-        }
+        };
         this._columns = [...this._columns, column];
         this._header = [...this._header, { title }];
         this._collIndex++;
@@ -38,7 +38,7 @@ export default class extends Control {
 
     protected changeWidth = (): void => {
         this._tableWidth = this._tableWidthTemp;
-        const columns = this._columns.map((cur) => ({ ...cur, fakeIndex: this._fakeIndex }))
+        const columns = this._columns.map((cur) => ({ ...cur, fakeIndex: this._fakeIndex }));
         this._columns = [...columns];
         this._fakeIndex++;
         this._forceUpdate();

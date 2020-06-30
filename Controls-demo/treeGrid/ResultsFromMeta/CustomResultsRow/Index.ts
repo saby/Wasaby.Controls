@@ -47,7 +47,8 @@ export default class extends Control {
     }
 
     private _setResultRow(): void {
-        const results = this._children.tree._children.listControl._children.baseControl.getViewModel().getItems().getMetaData().results;
+        const results = this._children.tree._children.listControl._children.baseControl
+            .getViewModel().getItems().getMetaData().results;
         results.set('price', Gadgets.getResults().partial[this._partialResultsIndex]);
         this._fullResultsIndex = ++this._partialResultsIndex % Gadgets.getResults().partial.length;
     }

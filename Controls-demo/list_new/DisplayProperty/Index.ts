@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/DisplayProperty/DisplayProperty';
-import {Memory} from 'Types/source'
+import {Memory} from 'Types/source';
 import {getFewCategories as getData} from '../DemoHelpers/DataCatalog';
 import 'wml!Controls-demo/list_new/ItemTemplate/FromFile/itemTemplate';
 

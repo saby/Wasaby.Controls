@@ -4,10 +4,10 @@ import {Memory} from 'Types/source';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 
 interface IItem {
-    title: string,
-    id: number,
-    keyProperty: string,
-    count: number,
+    title: string;
+    id: number;
+    keyProperty: string;
+    count: number;
 }
 
 export default class extends Control {
@@ -18,7 +18,7 @@ export default class extends Control {
         keyProperty: 'id',
         count: 1000,
         beforeCreateItemCallback: (item: IItem) => {
-            item.title = `Запись с ключом ${item.id}.`
+            item.title = `Запись с ключом ${item.id}.`;
         }
     });
 

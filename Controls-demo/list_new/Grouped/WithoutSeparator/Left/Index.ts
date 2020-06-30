@@ -3,7 +3,7 @@ import {Memory} from 'Types/source';
 
 import {getFewCategories as getData} from '../../../DemoHelpers/DataCatalog';
 
-import * as Template from 'wml!Controls-demo/list_new/Grouped/WithoutSeparator/Left/Left'
+import * as Template from 'wml!Controls-demo/list_new/Grouped/WithoutSeparator/Left/Left';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
