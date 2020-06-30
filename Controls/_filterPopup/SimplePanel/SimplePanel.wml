@@ -10,7 +10,7 @@
             <ws:partial template="{{_options.itemTemplate}}"
                         isLast="{{_items.length === index + 1}}"
                         scope="{{item}}"
-                        hasApplyButton="{{_hasApplyButton}}"
+                        hasApplyButton="{{!index && _hasApplyButton}}"
                         on:itemClick="_itemClickHandler(item)"
                         on:checkBoxClick="_checkBoxClickHandler(index)"
                         on:moreButtonClick="_moreButtonClick(item)"/>
