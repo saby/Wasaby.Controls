@@ -83,7 +83,7 @@ export default class FlatController {
    calculateDragPosition(targetItemData: IFlatItemData, position?: TPosition): IDragPosition {
       let prevIndex = -1;
 
-      //If you hover on a record that is being dragged, then the position should not change.
+      // If you hover on a record that is being dragged, then the position should not change.
       if (this._draggingItemData && this._draggingItemData.index === targetItemData.index) {
          return null;
       }
