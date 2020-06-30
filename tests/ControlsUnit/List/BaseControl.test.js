@@ -3000,13 +3000,7 @@ define([
                      title: '123'
                   }
                ],
-               viewModelConstructor: lists.ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6
-                  }
-               }
+               viewModelConstructor: lists.ListViewModel
             };
             isActionsUpdated = false;
             stubItemActionsController = sinon.stub(itemActions.Controller.prototype, 'update').callsFake(() => {
