@@ -11,6 +11,7 @@ import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * Для открытия диалоговых окон из кода используйте {@link Controls/popup:DialogOpener}.
  *
  * @class Controls/_popup/Opener/Dialog
  * @extends Controls/_popup/Opener/BaseOpener
@@ -49,6 +50,9 @@ class Dialog extends BaseOpener<IDialogOpenerOptions> implements IDialogOpener, 
     static openPopup(config: IDialogOpenerOptions): Promise<string> {
         return new Promise((resolve) => {
             const newCfg = getDialogConfig(config);
+            if (!newCfg.hasOwnProperty('isHelper')) {
+                Logger.warn('Controls/popup:Dialog: Для открытия диалоговых окон из кода используйте DialogOpener');
+            }
             if (!newCfg.hasOwnProperty('opener')) {
                 Logger.error(Dialog.prototype._moduleName + ': Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }
