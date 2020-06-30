@@ -59,7 +59,7 @@ export default class DataControllerClass {
     }
 
     setItems(items: RecordSet): RecordSet {
-        if (DataControllerClass._isEqualItems(this._items, items)) {
+        if (items && DataControllerClass._isEqualItems(this._items, items)) {
             this._items.setMetaData(items.getMetaData());
             this._items.assign(items);
         } else {

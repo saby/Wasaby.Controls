@@ -178,7 +178,7 @@ define(
             const dataSource = {
                query: function(query) {
                   sourceQuery = query;
-                  return Deferred.success(dataSetMock);
+                  return Deferred.success(data);
                },
                _mixins: [],
                "[Types/_source/ICrud]": true
