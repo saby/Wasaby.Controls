@@ -128,6 +128,8 @@ var Component = BaseControl.extend({
    _startValue: null,
    _endValue: null,
 
+   _rangeSelectedCallback: null,
+
    _beforeMount: function(options) {
       // Приводим копию опций к нормальному виду что бы однотипно работать с ними.
       // Сохраняем старые нормализованные опции в поле _state.
@@ -137,7 +139,7 @@ var Component = BaseControl.extend({
       this._selectionType = options.selectionType;
       this._startValue = options.startValue;
       this._endValue = options.endValue;
-
+      this._rangeSelectedCallback = options.rangeSelectedCallback;
       this._selectionProcessing = options.selectionProcessing;
       this._displayedStartValue = options.displayedStartValue || this._startValue;
       this._displayedEndValue = options.displayedEndValue || this._endValue;

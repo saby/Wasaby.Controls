@@ -108,5 +108,17 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
         });
         assert.isFalse(isCallbackCalled, 'Callback wasCalled for destroyed controller.');
     });
-});
 
+    it('shouldn\'t scroll to fixed element', () => {
+        const target = {
+            closest: (selector: string) => selector === '.controls-Grid_columnScroll__fixed' ? {} : null,
+            getBoundingClientRect: () => ({
+                left: -100,
+                right: 100
+            })
+        } as HTMLElement;
+        assert.equal(columnScroll.getScrollPosition(), 0);
+        columnScroll.scrollToElementIfHidden(target);
+        assert.equal(columnScroll.getScrollPosition(), 0);
+    });
+});

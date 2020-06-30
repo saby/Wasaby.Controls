@@ -18,7 +18,7 @@ export default class extends Control {
             keyProperty: 'id',
             data: getCountriesStats().getData()
         });
-
+        // tslint:disable
         this._header[this._header.length-2].template = SquareTemplate;
         this._header[this._header.length-1].template = PopulationTemplate;
     }

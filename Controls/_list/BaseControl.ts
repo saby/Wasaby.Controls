@@ -221,6 +221,13 @@ const _private = {
         }
     },
 
+    setReloadingState(self, state): void {
+        const view = self._children && self._children.listView;
+        if (view && view.setReloadingState) {
+            view.setReloadingState(state);
+        }
+    },
+
     reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
@@ -243,7 +250,9 @@ const _private = {
             }
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
+            _private.setReloadingState(self, true);
             self._sourceController.load(filter, sorting, null, sourceConfig, cfg.root).addCallback(function(list) {
+                _private.setReloadingState(self, false);
                 _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
                 if (list.getCount()) {
@@ -371,7 +380,7 @@ const _private = {
 
     restoreModelState(self: any, options: any): void {
         if (self._markerController) {
-            self._markerController.restoreMarker();
+            self._markedKey = self._markerController.restoreMarker();
         } else {
             if (options.markerVisibility !== 'hidden') {
                 self._markerController = _private.createMarkerController(self, options);
@@ -660,7 +669,7 @@ const _private = {
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
-            return self._sourceController.load(filter, self._options.sorting, direction).addCallback(function(addedItems) {
+            return self._sourceController.load(filter, self._options.sorting, direction, null, self._options.root).addCallback(function(addedItems) {
                 // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 // до реализации функционала и проблемы из новости делаем решение по месту:
                 // посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
@@ -1337,7 +1346,7 @@ const _private = {
      * @param newItems
      */
     shouldUpdateItemActions(newItems): boolean {
-        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged';
+        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged|editingContents';
         return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     },
 
@@ -1463,6 +1472,7 @@ const _private = {
         if (self._itemActionsMenuId) {
             _private.closePopup(self, currentPopup ? currentPopup.id : null);
             self._itemActionsController.deactivateSwipe();
+            self._listViewModel.setActiveItem(null);
         }
     },
 
@@ -1880,7 +1890,10 @@ const _private = {
    onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
       let result;
       if (!this._selectionController) {
-        this._createSelectionController();
+         this._selectionController = _private.createSelectionController(this, this._options);
+         if (this._selectionController === null) {
+             return;
+         }
       }
 
       this._selectionController.setLimit(limit);
@@ -1948,11 +1961,16 @@ const _private = {
    },
 
     updateMarkerController(self: any, options: any): void {
+        const optionsHasMarkedKey = options.hasOwnProperty('markedKey');
+        const notify = optionsHasMarkedKey && self._options.markedKey !== options.markedKey
+            || self._options.markerVisibility !== options.markerVisibility;
+
+        // если маркер не поменялся в опциях, то не нужно нотифаить
         self._markedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
-        });
+            markedKey: optionsHasMarkedKey ? options.markedKey : self._markedKey
+        }, !notify);
     },
 
     createDndListController(self: any, options: any): DndFlatController|DndTreeController {
@@ -2006,7 +2024,7 @@ const _private = {
             );
             self._editingItemData = self._editInPlace.getEditingItemData();
 
-            if (options.itemActions && self._editInPlace.shouldShowToolbar()) {
+            if (options.itemActions || self._editInPlace.shouldShowToolbar()) {
                 _private.updateItemActions(self, options);
             }
         }
@@ -2056,6 +2074,7 @@ const _private = {
             self._itemActionsController = new ItemActionsController();
         }
         const editingConfig = self._listViewModel.getEditingConfig();
+        const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
         let editArrowAction: IItemAction;
         if (options.showEditArrow) {
@@ -2071,6 +2090,7 @@ const _private = {
         }
         // Гарантированно инициализируем шаблоны, если это ещё не произошло
         const itemActionsChangeResult = self._itemActionsController.update({
+            editingItem: editingItemData,
             collection: self._listViewModel,
             itemActions: options.itemActions,
             itemActionsProperty: options.itemActionsProperty,
@@ -2101,10 +2121,34 @@ const _private = {
      * @param options
      * @private
      */
-    updateInitializedItemActions(self, options: any) {
+    updateInitializedItemActions(self, options: any): void {
         if (self._listViewModel.isActionsAssigned()) {
             _private.updateItemActions(self, options);
         }
+    },
+
+    /**
+     * Деактивирует свайп, если контроллер ItemActions проинициализирован
+     * @param self
+     */
+    closeSwipe(self): void {
+        if (self._listViewModel.isActionsAssigned()) {
+            self._itemActionsController.deactivateSwipe();
+        }
+    },
+
+
+    /**
+     * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
+     * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
+     * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
+     * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
+     *
+     * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
+     * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+     */
+    isItemsSelectionAllowed(options: object): boolean {
+        return options.hasOwnProperty('selectedKeysCount');
     },
 
     /**
@@ -2174,6 +2218,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _pagingCfg: null,
     _pagingVisible: false,
+    _actualPagingVisible: false,
 
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
@@ -2208,7 +2253,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _needBottomPadding: false,
     _noDataBeforeReload: null,
-    _intertialScrolling: null,
+    _inertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
 
     _keepScrollAfterReload: false,
@@ -2704,6 +2749,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.updateInitializedItemActions(this, newOptions);
             });
         }
+        // Если поменялись ItemActions, то закрываем свайп
+        if (newOptions.itemActions !== this._options.itemActions) {
+            _private.closeSwipe(this);
+        }
 
         /*
          * Переинициализация ранее проинициализированных опций записи нужна при:
@@ -2719,7 +2768,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            _private.updateInitializedItemActions(this, newOptions);
+            _private.updateInitializedItemActions(this, newOptions, newOptions.itemActions !== this._options.itemActions);
         }
 
         if (
@@ -2901,6 +2950,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadingIndicatorState && !isLoading && hasTrigger && isTriggerVisible) {
             _private.hideIndicator(this);
         }
+
+        if (this._scrollController) {
+            let correctingHeight = 0;
+
+            // correctingHeight предназначен для предотвращения проблемы с восстановлением позиции скролл в случае,
+            // когда новые индексы виртуального скролла применяются одновременно с показом Paging.
+            // todo выпилить task1179588447 по ошибке: https://online.sbis.ru/opendoc.html?guid=cd0ba66a-115c-44d1-9384-0c81675d5b08
+            if (this._options.task1179588447 && !this._actualPagingVisible && this._pagingVisible) {
+                // Можно юзать константу PAGING_HEIGHT, но она старая, 32px. Править константу в 4100 страшно, поправим
+                // её по ошибке: https://online.sbis.ru/opendoc.html?guid=cd0ba66a-115c-44d1-9384-0c81675d5b08
+                correctingHeight = 33;
+            }
+            this._scrollController.afterRender(correctingHeight);
+        }
+        this._actualPagingVisible = this._pagingVisible;
     },
 
     _notifyOnDrawItems(): void {
@@ -2908,12 +2972,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
-        }
-    },
-
-    _afterRender(): void {
-        if (this._scrollController) {
-            this._scrollController.afterRender();
         }
     },
 
@@ -3038,6 +3096,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onItemClick(e, item, originalEvent) {
+        _private.closeSwipe(this);
         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
             /*
              When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
@@ -3052,10 +3111,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
         }
-
     },
 
     beginEdit(options) {
+        _private.closeSwipe(this);
         return this._options.readOnly ? Deferred.fail() : this._editInPlace.beginEdit(options);
     },
 
@@ -3114,7 +3173,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(itemData);
         const key = contents ? contents.getKey() : itemData.key;
-        const item = this._listViewModel.getItemBySourceKey(key);
+        const item = this._listViewModel.getItemBySourceKey(key) || itemData;
         this.setMarkedKey(key);
         _private.openItemActionsMenu(this, null, clickEvent, item, true);
     },
@@ -3132,7 +3191,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(itemData);
         const key = contents ? contents.getKey() : itemData.key;
-        const item = this._listViewModel.getItemBySourceKey(key);
+        const item = this._listViewModel.getItemBySourceKey(key) || itemData;
         this.setMarkedKey(key);
 
         if (action && !action._isMenu && !action['parent@']) {
@@ -3518,11 +3577,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.nextVersion();
             } else {
                 // After the right swipe the item should get selected.
-                if (!this._selectionController) {
+                if (!this._selectionController && _private.isItemsSelectionAllowed(this._options)) {
                     this._createSelectionController();
                 }
-                const result = this._selectionController.toggleItem(key);
-                _private.handleSelectionControllerResult(this, result);
+                if (this._selectionController) {
+                    const result = this._selectionController.toggleItem(key);
+                    _private.handleSelectionControllerResult(this, result);
+                }
                 this._notify('checkboxClick', [key, item.isSelected()]);
 
                 // Animation should be played only if checkboxes are visible.
@@ -3611,6 +3672,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         if (this._scrollController) {
             this._scrollController.itemsContainerReady(itemsContainerGetter);
+        }
+    },
+
+    /**
+     * Вызывает деактивацию свайпа когда список теряет фокус
+     * @private
+     */
+    _onListDeactivated: function() {
+        if (!this._itemActionsMenuId) {
+            _private.closeSwipe(this);
         }
     },
 

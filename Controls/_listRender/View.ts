@@ -417,6 +417,8 @@ export default class View extends Control<IViewOptions> {
     private _closePopup() {
         if (this._itemActionsMenuId) {
         Sticky.closePopup(this._itemActionsMenuId);
+            this._itemActionsController.setActiveItem(null);
+            this._itemActionsController.deactivateSwipe();
             UnregisterUtil(this, 'scroll');
         }
         this._itemActionsMenuId = null;

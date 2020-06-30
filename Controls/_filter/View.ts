@@ -673,6 +673,12 @@ var Filter = Control.extend({
                 });
             } else if (_private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this);
+            } else if (this._loadDeferred && !this._loadDeferred.isReady()) {
+                resultDef = this._loadDeferred.addCallback((): void => {
+                    _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
+                        _private.updateText(self, self._source, self._configs);
+                    });
+                });
             } else {
                 resultDef = _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
                     _private.updateText(self, self._source, self._configs);

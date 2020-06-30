@@ -65,6 +65,8 @@ class FormController extends Control<IControlOptions> {
         const finishDef = this._children.registrator.finishPendingOperations();
         finishDef.then((finishResult) => {
             this._operation = 'Finish Pending';
+        }, (error) => {
+            // отмена
         });
     }
 

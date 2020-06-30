@@ -3,6 +3,8 @@ import * as Template from 'wml!Controls-demo/grid/HoveredCell/HoveredCell';
 import {Memory} from 'Types/source';
 import {getCountriesStats} from '../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
+import {Model} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -17,7 +19,7 @@ export default class extends Control {
         });
     }
 
-    protected _hoveredCellChanged(_, item: any, __: any, cell: number): void {
+    protected _hoveredCellChanged(_: SyntheticEvent, item: Model, __: number, cell: number): void {
         this._hoveredCell = item ? ('key: ' + item.getKey() + '; cell: ' + cell) : 'null';
     }
 

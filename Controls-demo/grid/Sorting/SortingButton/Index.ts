@@ -1,7 +1,7 @@
-import {Control, TemplateFunction} from 'UI/Base'
-import * as Template from "wml!Controls-demo/grid/Sorting/SortingButton/SortingButton"
-import {Memory} from 'Types/source'
-import {getCountriesStats} from "../../DemoHelpers/DataCatalog"
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/grid/Sorting/SortingButton/SortingButton';
+import {Memory} from 'Types/source';
+import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { IHeader } from 'Controls-demo/types';
 
@@ -10,7 +10,7 @@ export default class extends Control {
     protected _viewSource: Memory;
     protected _header: IHeader[] = getCountriesStats().getHeaderWithSorting(undefined);
     protected _columns: IColumn[] = getCountriesStats().getColumnsWithWidthsForSortingDemo();
-    protected _sorting: any[] = [];
+    protected _sorting: unknown = [];
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({

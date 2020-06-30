@@ -1,6 +1,9 @@
 export default {
     addZIndex(zIndex: number): void {
-        const oldWindowManager = requirejs('Core/WindowManager');
+        let oldWindowManager;
+        if (requirejs.defined('Core/WindowManager')) {
+            oldWindowManager = requirejs('Core/WindowManager');
+        }
         // Сообщим старому WM про текущий zindex открываемого вдомного окна
         // Так как старый WM всегда сам назначал zindex, приходится лезть в приватные св-ва
         if (oldWindowManager) {
@@ -20,7 +23,10 @@ export default {
         }
     },
     removeZIndex(zIndex: number): void {
-        const oldWindowManager = requirejs('Core/WindowManager');
+        let oldWindowManager;
+        if (requirejs.defined('Core/WindowManager')) {
+            oldWindowManager = requirejs('Core/WindowManager');
+        }
         if (oldWindowManager) {
             oldWindowManager.releaseZIndex(zIndex);
         }

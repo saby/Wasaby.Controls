@@ -5,7 +5,6 @@ import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { IHeader } from 'Controls-demo/types';
 import * as Template from 'wml!Controls-demo/grid/Results/SingleRecordResults/Visible/Visible';
 
-
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
@@ -13,12 +12,15 @@ export default class extends Control {
     protected _columns: IColumn[] = getCountriesStats().getColumnsWithWidths().map((col) => {
         switch (col.displayProperty) {
             case 'population':
+                // tslint:disable-next-line
                 col.result = 143420300;
                 break;
             case 'square':
+                // tslint:disable-next-line
                 col.result = 17075200;
                 break;
             case 'populationDensity':
+                // tslint:disable-next-line
                 col.result = 8;
                 break;
         }

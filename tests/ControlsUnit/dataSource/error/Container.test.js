@@ -55,7 +55,7 @@ define([
          });
 
          it('closes previously opened dialog', function() {
-            sinon.stub(instance, '_closeDialog');
+            sinon.spy(instance, '_closeDialog');
             instance._popupId = 'test';
 
             return instance._openDialog({}).then(() => {

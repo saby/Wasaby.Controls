@@ -35,19 +35,17 @@ export default class extends Control {
 
         return new Dnd.ItemsEntity({
             items,
-            title: firstItem.get('title'),
+            title: firstItem.get('title')
         });
     }
 
     protected _dragEnd(_: SyntheticEvent, entity: Collection<Model>, target: unknown, position: string): void {
-        //@ts-ignore
         this._children.listMover.moveItems(entity.getItems(), target, position);
     }
 
     protected _onToggle(): void {
         this._multiselect = this._multiselect === 'visible' ? 'hidden' : 'visible';
     }
-
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

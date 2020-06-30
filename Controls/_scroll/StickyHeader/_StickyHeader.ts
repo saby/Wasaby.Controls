@@ -11,7 +11,8 @@ import {
     IOffset,
     validateIntersectionEntries,
     isHidden,
-    IFixedEventData
+    IFixedEventData,
+    getGapFixSize
 } from 'Controls/_scroll/StickyHeader/Utils';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import fastUpdate from './FastUpdate';
@@ -58,12 +59,6 @@ export interface IStickyHeaderOptions extends IControlOptions {
  * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
  * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
  */
-
-// For android, use a large patch, because 1 pixel is not enough. For all platforms we use the minimum values since
-// there may be layout problems if the headers will have paddings, margins, etc.
-const
-    ANDROID_GAP_FIX_OFFSET: number = 3,
-    MOBILE_GAP_FIX_OFFSET: number = 1;
 
 interface IStickyHeaderContext {
     stickyHeader: Function;
@@ -116,6 +111,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _cachedStyles: CSSStyleDeclaration = null;
     private _cssClassName: string = null;
     private _canScroll: boolean = false;
+    private _negativeScrollTop: boolean = false;
     private _lastFixedPosition: string = '';
 
     protected _notifyHandler: Function = tmplNotify;
@@ -175,7 +171,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         // Переделать на новые события
         // https://online.sbis.ru/opendoc.html?guid=ca70827b-ee39-4d20-bf8c-32b10d286682
-        RegisterUtil(this, 'listScroll', this._onScrollStateChanged.bind(this));
+        RegisterUtil(this, 'listScroll', this._onScrollStateChanged);
 
         this._initObserver();
         this.updateBottomShadowStyle();
@@ -202,7 +198,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
-        return getOffset(parentElement, this._container, position);
+        let offset = getOffset(parentElement, this._container, position);
+        if (this._model?.isFixed()) {
+            offset += getGapFixSize();
+        }
+        return offset;
     }
 
     resetSticky(): void {
@@ -213,6 +213,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         const container: HTMLElement = this._container;
         if (!isHidden(container)) {
             this._height = container.offsetHeight;
+            if (this._model?.isFixed()) {
+                this._height -= getGapFixSize();
+            }
         }
         return this._height;
     }
@@ -249,7 +252,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._options.shadowVisibility;
     }
 
-    protected _onScrollStateChanged(eventType: string): void {
+    protected _onScrollStateChanged(eventType: string, scrollState): void {
         if (eventType === 'canScroll') {
             this._canScroll = true;
             if (this._model.fixedPosition !== this._lastFixedPosition) {
@@ -257,6 +260,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
         } else if (eventType === 'cantScroll') {
             this._canScroll = false;
+        } else if (eventType === 'scrollMoveSync') {
+            this._negativeScrollTop = scrollState.scrollTop < 0;
         }
     }
 
@@ -340,6 +345,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         this._model.update(validateIntersectionEntries(entries, this._scroll));
 
+        // Не отклеиваем заголовки scrollTop отрицательный.
+        if (this._negativeScrollTop && this._model.fixedPosition === '') {
+            return;
+        }
+
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
             if (this._canScroll) {
@@ -398,11 +408,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
          * In this way, the content of the header does not change visually, and the free space disappears.
          * The offset must be at least as large as the free space. Take the nearest integer equal to one.
          */
-        if (this._isMobileAndroid) {
-            offset = ANDROID_GAP_FIX_OFFSET;
-        } else if (this._isMobilePlatform) {
-            offset = MOBILE_GAP_FIX_OFFSET;
-        }
+        offset = getGapFixSize();
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
 
@@ -495,7 +501,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 const offsetWidth = container.offsetWidth;
                 let offsetHeight = container.offsetHeight;
                 if (this._options.position.indexOf('bottom') !== -1) {
-                    offsetHeight -= MOBILE_GAP_FIX_OFFSET;
+                    offsetHeight -= getGapFixSize();
                 }
                 this._bottomShadowStyle =
                      `bottom: unset; right: unset; top:${offsetHeight}px; width:${offsetWidth}px;`;
