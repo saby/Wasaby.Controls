@@ -2,6 +2,7 @@
  * Библиотека, которая реализует <a href='/doc/platform/developmentapl/interface-development/controls/toolbar/'>набор команд</a> в виде кнопок и выпадающего меню с дополнительными командами.
  * @library Controls/toolbars
  * @includes View Controls/_toolbars/View
+ * @includes BoxView Controls/_toolbars/BoxView
  * @includes ItemTemplate Controls/toolbars:ItemTemplate
  * @includes IToolbarSource Controls/_toolbars/IToolbarSource
  * @includes IToolbarOptions Controls/_toolbars/IToolbarOptions
