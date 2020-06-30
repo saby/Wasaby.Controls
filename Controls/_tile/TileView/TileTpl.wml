@@ -93,7 +93,7 @@
       </ws:partial>
    </ws:if>
    <ws:else>
-      <ws:partial template="itemTpl" attr:style="{{(staticHeight ? ('height:' + itemData.itemsHeight + 'px; ') : '') + '-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
+      <ws:partial template="itemTpl" attr:style="{{(staticHeight ? ('height:' + height ? height : itemData.itemsHeight + 'px; ') : '') + '-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
          <ws:if data="{{!staticHeight}}">
             <div style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
          </ws:if>

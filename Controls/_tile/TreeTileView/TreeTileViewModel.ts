@@ -5,14 +5,35 @@ import InvisibleFor = require('wml!Controls/_tile/TileView/resources/InvisibleFo
 
 var DEFAULT_FOLDER_WIDTH = 250;
 const TILE_SIZES = {
-    small: {
-        minWidth: 220
+    s: {
+        top: {
+            width: 220,
+            imageHeight: 180
+        },
+        side: {
+            width: 400,
+            imageWidth: 300
+        }
     },
-    medium: {
-        minWidth: 320
+    m: {
+        top: {
+            width: 320,
+            imageHeight: 240
+        },
+        side: {
+            width: 400,
+            imageWidth: 160
+        }
     },
-    large: {
-        minWidth: 420
+    l: {
+        top: {
+            width: 420,
+            imageHeight: 320
+        },
+        side: {
+            width: 650,
+            imageWidth: 300
+        }
     }
 };
 
@@ -107,10 +128,16 @@ var TreeTileViewModel = TreeViewModel.extend({
     getTileItemData: function () {
         var opts = this._tileModel.getTileItemData();
         opts.defaultFolderWidth = DEFAULT_FOLDER_WIDTH;
-        if (this._options.tileMode === 'dynamic' && this._options.tileSize) {
-            opts.tileSize = TILE_SIZES[this._options.tileSize];
+        if (this._options.tileSize) {
+            opts.getTileSizes = this.getTileSizes;
+            opts.tileSize = this._options.tileSize;
         }
         return opts;
+    },
+
+    getTileSizes(tileSize: string, imagePosition: string = 'top'): object {
+        const sizeParams = TILE_SIZES[tileSize];
+        return sizeParams[imagePosition === 'top' ? 'top' : 'side'];
     },
 
     setTileMode: function (tileMode) {
