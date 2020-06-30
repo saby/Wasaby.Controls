@@ -48,8 +48,9 @@ export default class extends Control {
     }
 
     protected _changePosition(): void {
+        // tslint:disable-next-line
         this._position = 60;
-        // @ts-ignore
+        // tslint:disable-next-line
         this._children.list.reload();
     }
 

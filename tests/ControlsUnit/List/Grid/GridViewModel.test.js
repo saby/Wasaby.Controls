@@ -783,6 +783,20 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[4]);
 
          });
+
+         it('getItemColumnCellClasses with backgroundColorStyle', function() {
+            var
+               gridViewModel = new gridMod.GridViewModel(cfg),
+               current,
+               expectedResult = 'controls-Grid__row-cell controls-Grid__row-cell_theme-default  controls-Grid__row-cell-background-hover_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default ' +
+                  'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default controls-Grid__row-cell-checkbox_theme-default ' +
+                  'controls-Grid__row-checkboxCell_rowSpacingTop_l_theme-default ';
+
+            current = gridViewModel.getCurrent();
+
+            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme, 'danger').getAll(),
+               expectedResult + ' controls-Grid__row-cell_background_danger_theme-default');
+         });
       });
       describe('getCurrent', function() {
          var

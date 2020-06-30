@@ -863,8 +863,9 @@ define(
                   keyProperty: 'id',
                   multiSelect: true}
             };
-            filterView._configs = configs;
             filterView._displayText = {};
+            filterView._beforeMount(defaultConfig);
+            filterView._configs = configs;
             filterView._beforeUpdate({source: source}).addCallback(() => {
                assert.strictEqual(configs['state'].popupItems.getCount(), 7);
                assert.strictEqual(configs['state'].items.getCount(), 7);

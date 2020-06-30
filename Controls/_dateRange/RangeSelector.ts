@@ -74,6 +74,7 @@ var Component = BaseSelector.extend({
                 opts.endValue = options.startValue;
             }
         }
+        opts.rangeSelectedCallback = options.rangeSelectedCallback;
         Component.superclass._updateRangeModel.call(this, opts);
     },
 
@@ -109,6 +110,7 @@ var Component = BaseSelector.extend({
                 clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility,
                 range: this._options.range,
                 _displayDate: this._options._displayDate,
+                rangeSelectedCallback: this._options.rangeSelectedCallback
             }
         };
     },

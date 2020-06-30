@@ -8,9 +8,9 @@ import { IHeader } from 'Controls-demo/types';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: any = getCountriesStats().getColumnsWithWidths().map((cur, i) => {
+    protected _columns: unknown = getCountriesStats().getColumnsWithWidths().map((cur, i) => {
         if (i > 1) {
-            return { ...cur, template: 'wml!Controls-demo/grid/ColumnScroll/WithEditing/_cellEditor' }
+            return { ...cur, template: 'wml!Controls-demo/grid/ColumnScroll/WithEditing/_cellEditor' };
         }
         return cur;
     });

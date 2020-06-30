@@ -6,7 +6,7 @@ import {generateData} from '../../DemoHelpers/DataCatalog';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    private _dataArray: any = generateData({count: 30, entityTemplate: {title: 'lorem'}});
+    private _dataArray: unknown = generateData({count: 30, entityTemplate: {title: 'lorem'}});
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({

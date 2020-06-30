@@ -312,34 +312,6 @@ define(['Controls/grid'], function(gridMod) {
          assert.equal(0, gridView.getResultsHeight());
 
       });
-      it('resize on list changed with column scroll', function() {
-         let cfg = {
-               columns: [
-                  { displayProperty: 'field1', template: 'column1' },
-                  { displayProperty: 'field2', template: 'column2' }
-               ]
-            },
-            gridView = new gridMod.GridView(cfg),
-            columnScrollResizeHandlerCalled = false,
-            updateShadowStyleCalled = false,
-            controlResizeNotified = false;
-         gridView._columnScrollController = {
-            updateSizes(c) {
-               columnScrollResizeHandlerCalled = true;
-               c({
-                  contentSizeForScrollBar: 100,
-                  scrollWidth: 80
-               });
-            }
-         };
-         gridView._updateColumnScrollData = () => {
-            updateShadowStyleCalled = true;
-         };
-
-         gridView.resizeNotifyOnListChanged();
-         assert.isTrue(columnScrollResizeHandlerCalled);
-         assert.isTrue(updateShadowStyleCalled);
-      });
 
       it('itemClick sends right args', function() {
          const cfg = {
@@ -436,89 +408,387 @@ define(['Controls/grid'], function(gridMod) {
          assert.deepEqual(calledMethods, [['setColumns', true], ['setHeader', true]]);
       });
 
-      it('createDragScroll if allowed (no dnd)', () => {
-         const cfg = {
-            multiSelectVisibility: 'visible',
-            columnScroll: true,
-            itemsDragNDrop: true,
-            columns: [
-               { displayProperty: 'field1', template: 'column1' },
-               { displayProperty: 'field2', template: 'column2' }
-            ]
-         };
-         const gridView = new gridMod.GridView(cfg);
-         gridView.saveOptions(cfg);
-         gridView._listModel = {
-            setBaseItemTemplateResolver: () => {},
-            setColumnTemplate: () => {},
-            setColumns: () => {},
-            setHeader: () => {}
-         };
-         gridView._beforeMount(cfg);
-         assert.isDefined(gridView._columnScrollController);
-         assert.isUndefined(gridView._dragScrollController);
-      });
+      describe('column scroll', function () {
 
-      it('should call dragscroll only if column scroll enabled', function () {
-         const cfg = {
-            multiSelectVisibility: 'visible',
-            columns: [
-               { displayProperty: 'field1', template: 'column1' },
-               { displayProperty: 'field2', template: 'column2' }
-            ]
-         };
-         const gridView = new gridMod.GridView(cfg);
-         const calledMethods = [];
-         gridView._dragScrollController = {};
+         const DEBUG = true;
+         let gridView;
+         let cfg;
+         let contentContainer;
 
-         [
-            'onViewMouseDown',
-            'onViewTouchStart',
-            'onViewMouseMove',
-            'onViewTouchMove',
-            'onViewMouseUp',
-            'onViewTouchEnd',
-            'onOverlayMouseMove',
-            'onOverlayTouchMove',
-            'onOverlayMouseUp',
-            'onOverlayTouchEnd',
-            'onOverlayMouseLeave'
-         ].forEach((methodName) => {
-            gridView._dragScrollController[methodName] = () => {
-               calledMethods.push(methodName);
+         beforeEach(() => {
+            cfg = {
+               multiSelectVisibility: 'visible',
+               columnScroll: true,
+               columns: [
+                  { displayProperty: 'field1', template: 'column1' },
+                  { displayProperty: 'field2', template: 'column2' }
+               ]
             };
+
+            gridView = new gridMod.GridView(cfg);
+            gridView._listModel = {
+               setBaseItemTemplateResolver: () => {},
+               setColumnTemplate: () => {},
+               setColumns: () => {},
+               setHeader: () => {},
+               setColumnScroll: () => {},
+               unsubscribe:() => {}
+            };
+
+            contentContainer = {
+               offsetWidth: 100,
+               scrollWidth: 200,
+               querySelector: () => {},
+               querySelectorAll: (selector) => selector === '.controls-Grid_columnScroll_wrapper' ? [] : null
+            };
+
+            gridView._children.columnScrollContainer = {
+               offsetWidth: contentContainer['offsetWidth'],
+               getClientRects: () => [{}, {}],
+               getElementsByClassName: (selector) => {
+                  if (selector === 'controls-Grid_columnScroll') {
+                     return [contentContainer];
+                  } else if(selector === 'controls-BaseControl__emptyTemplate') {
+                     return [null];
+                  }
+               }
+            };
+            gridView._children.columnScrollStylesContainer = {};
          });
 
-         gridView._startDragScrolling({}, 'mouse');
-         gridView._startDragScrolling({}, 'touch');
-         gridView._moveDragScroll({}, 'mouse');
-         gridView._moveDragScroll({}, 'touch');
-         gridView._stopDragScrolling({}, 'mouse');
-         gridView._stopDragScrolling({}, 'touch');
+         describe('init, disable and destroy column scroll', () => {
+            const ERROR_MSG = {
+               SHOULD_BE: {
+                  COLUMN_SCROLL: 'ColumnScrollController must be created.',
+                  DRAG_SCROLL: 'DragScrollController must be created.'
+               },
+               SHOULD_NOT_BE: {
+                  COLUMN_SCROLL: 'ColumnScrollController must be undefined or null.',
+                  DRAG_SCROLL: 'DragScrollController must be undefined or null.'
+               }
+            };
 
-         assert.deepEqual(calledMethods, []);
-      });
+            beforeEach(() => {
+               gridView.saveOptions(cfg);
+            });
 
-      it('should update column scroll sizes if options has been changed (only once per lifecycle)', function () {
-         const cfg = {
-            multiSelectVisibility: 'hidden',
-            stickyColumnsCount: 1,
-            columns: [
-               { displayProperty: 'field1', template: 'column1' },
-               { displayProperty: 'field2', template: 'column2' }
-            ]
-         };
-         const gridView = new gridMod.GridView(cfg);
-         gridView.saveOptions(cfg);
-         const calledMethods = [];
-         gridView._columnScrollController = {
-            setStickyColumnsCount: () => {calledMethods.push('setStickyColumnsCount')},
-            setMultiSelectVisibility: () => {calledMethods.push('setMultiSelectVisibility')},
-            updateSizes: () => {calledMethods.push('updateSizes')}
-         };
+            it('on mount, without column scroll', () => {
+               gridView._beforeMount({...cfg, columnScroll: undefined});
+               gridView.saveOptions({...cfg, columnScroll: undefined});
+               gridView._afterMount();
+               assert.isUndefined(gridView._columnScrollController, ERROR_MSG.SHOULD_NOT_BE.COLUMN_SCROLL);
+               assert.isUndefined(gridView._dragScrollController, ERROR_MSG.SHOULD_NOT_BE.DRAG_SCROLL);
+            });
 
-         gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2});
-         assert.deepEqual(calledMethods, ['setStickyColumnsCount', 'setMultiSelectVisibility', 'updateSizes']);
+            it('on mount, with drag scroll, default options', () => {
+               gridView._beforeMount(cfg);
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
+               assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
+               assert.isDefined(gridView._dragScrollController, ERROR_MSG.SHOULD_BE.DRAG_SCROLL);
+            });
+
+            it('on mount, with items DND', () => {
+               gridView._beforeMount({...cfg, itemsDragNDrop: true});
+               gridView.saveOptions({...cfg, itemsDragNDrop: true});
+               gridView._afterMount();
+               assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
+               assert.isUndefined(gridView._dragScrollController, ERROR_MSG.SHOULD_NOT_BE.DRAG_SCROLL);
+            });
+
+            it('on mount, with items DND and drag scroll', () => {
+               gridView._beforeMount({...cfg, itemsDragNDrop: true, dragScrolling: true});
+               gridView.saveOptions({...cfg, itemsDragNDrop: true, dragScrolling: true});
+               gridView._afterMount();
+               assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
+               assert.isDefined(gridView._dragScrollController, ERROR_MSG.SHOULD_BE.DRAG_SCROLL);
+            });
+
+            it('by update options', () => {
+               gridView._beforeMount(cfg);
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
+
+               assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
+               assert.isDefined(gridView._dragScrollController, ERROR_MSG.SHOULD_BE.DRAG_SCROLL);
+
+               gridView._beforeUpdate({...cfg, columnScroll: false});
+
+               assert.isNull(gridView._columnScrollController, ERROR_MSG.SHOULD_NOT_BE.COLUMN_SCROLL);
+               assert.isNull(gridView._dragScrollController, ERROR_MSG.SHOULD_NOT_BE.DRAG_SCROLL);
+
+               gridView._beforeUpdate({...cfg, columnScroll: true});
+
+               assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
+               assert.isDefined(gridView._dragScrollController, ERROR_MSG.SHOULD_BE.DRAG_SCROLL);
+            });
+
+            it('destroy column scroll before unmount view', () => {
+               gridView._beforeMount(cfg);
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
+
+               assert.isDefined(gridView._columnScrollController, ERROR_MSG.SHOULD_BE.COLUMN_SCROLL);
+               assert.isDefined(gridView._dragScrollController, ERROR_MSG.SHOULD_BE.DRAG_SCROLL);
+
+               gridView._beforeUnmount();
+
+               assert.isNull(gridView._columnScrollController, ERROR_MSG.SHOULD_NOT_BE.COLUMN_SCROLL);
+               assert.isNull(gridView._dragScrollController, ERROR_MSG.SHOULD_NOT_BE.DRAG_SCROLL);
+            });
+         });
+
+         describe('update sizes', () => {
+            it('on view resize', async () => {
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
+
+               await new Promise((resolve) => {
+                  contentContainer.offsetWidth = 125;
+                  contentContainer.scrollWidth = 600;
+                  gridView._resizeHandler();
+
+                  setTimeout(() => {
+                     assert.equal(gridView._containerSize, 125);
+                     assert.equal(gridView._contentSizeForHScroll, 600);
+                     resolve();
+                  }, 20);
+               });
+            });
+
+            it('on list collection changed', async () => {
+               gridView.saveOptions(cfg);
+               gridView._afterMount();
+
+               await new Promise((resolve) => {
+                  contentContainer.offsetWidth = 125;
+                  contentContainer.scrollWidth = 600;
+                  gridView.resizeNotifyOnListChanged();
+
+                  setTimeout(() => {
+                     assert.equal(gridView._containerSize, 125);
+                     assert.equal(gridView._contentSizeForHScroll, 600);
+                     resolve();
+                  }, 20);
+               });
+            });
+
+            it('on toggle multiselect', () => {
+               gridView.saveOptions({...cfg, multiSelectVisibility: 'hidden'});
+               gridView._afterMount();
+
+               contentContainer.offsetWidth = 125;
+               contentContainer.scrollWidth = 600;
+               gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible'});
+
+               assert.equal(gridView._containerSize, 125);
+               assert.equal(gridView._contentSizeForHScroll, 600);
+            });
+
+            it('should update column scroll sizes if options has been changed (only once per lifecycle)', () => {
+               gridView.saveOptions({...cfg, multiSelectVisibility: 'hidden'});
+               const calledMethods = [];
+               gridView._columnScrollController = {
+                  setStickyColumnsCount: () => {calledMethods.push('setStickyColumnsCount')},
+                  setMultiSelectVisibility: () => {calledMethods.push('setMultiSelectVisibility')},
+                  updateSizes: () => {calledMethods.push('updateSizes')}
+               };
+               gridView._children.columnScrollContainer = {
+                  getElementsByClassName: (selector) => selector === 'controls-Grid_columnScroll' ? [{offsetWidth: 100, scrollWidth: 200}] : null
+               };
+
+               gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2});
+               assert.deepEqual(calledMethods, ['setStickyColumnsCount', 'setMultiSelectVisibility', 'updateSizes']);
+            });
+         });
+
+         it('mounting with option startScrollPosition === end', () => {
+            const testCfg = { ...cfg, columnScrollStartPosition: 'end' };
+            gridView._beforeMount(testCfg);
+            gridView.saveOptions(testCfg);
+
+            gridView._afterMount(testCfg);
+
+            assert.equal(100, gridView._columnScrollController.getScrollPosition());
+
+            assert.equal(200, gridView._contentSizeForHScroll);
+            assert.equal(100, gridView._horizontalScrollWidth);
+            assert.equal(100, gridView._containerSize);
+
+            assert.equal(100, gridView._dragScrollController._scrollLength);
+            assert.equal(100, gridView._dragScrollController._scrollPosition);
+         });
+
+         it('is drag scrolling enabled in different cases', () => {
+            /* [dragScrolling, itemsDragNDrop, expectedVisibility] */
+            [
+               [undefined, undefined, true],
+               [undefined, true, false],
+               [undefined, false, true],
+               [true, undefined, true],
+               [true, true, true],
+               [true, false, true],
+               [false, undefined, false],
+               [false, true, false],
+               [false, false, false]
+            ].forEach((params, index) => {
+               assert.equal(
+                   params[2],
+                   gridView._isDragScrollingEnabled({ dragScrolling: params[0], itemsDragNDrop: params[1] }),
+                   `Wrong drag scroll visibility with params[${index}]: {dragScrolling: ${params[0]}, itemsDragNDrop: ${params[1]}}`
+               );
+            });
+         });
+
+         it('is column scroll visible in different cases', () => {
+            gridView._beforeMount(cfg);
+            let needScrollBySize;
+            let hasItemsRecordSet;
+            let itemsCount;
+            let setEditing = (hasEditing) => {
+               gridView._options.editingItemData = hasEditing
+            };
+
+            gridView._columnScrollController = { isVisible: () => needScrollBySize };
+            gridView._options.listModel = {
+               getItems: () => hasItemsRecordSet ? {
+                  getCount: () => itemsCount
+               } : null
+            };
+
+            // hasItemsRecordSet, itemsCount, needScrollBySize, hasEditing,   EXPECTED_VISIBILITY
+            [
+               [false, 0, false, false, false],
+               [false, 0, false, true, false],
+               [false, 0, true, false, false],
+               [false, 0, true, true, false],
+               [false, 5, false, false, false],
+               [false, 5, false, true, false],
+               [false, 5, true, false, false],
+               [false, 5, true, true, false],
+               [true, 0, false, false, false],
+               [true, 0, false, true, false],
+               [true, 0, true, false, false],
+               [true, 0, true, true, true],
+               [true, 5, false, false, false],
+               [true, 5, false, true, false],
+               [true, 5, true, false, true],
+               [true, 5, true, true, true]
+            ].forEach((params, index) => {
+               hasItemsRecordSet = params[0];
+               itemsCount = params[1];
+               needScrollBySize = params[2];
+               setEditing(params[3]);
+
+               assert.equal(params[4], gridView._isColumnScrollVisible(),
+                   `Wrong column scroll visibility with params[${index}]: {hasItemsRecordSet: ${params[0]}, itemsCount: ${params[1]}, needScrollBySize: ${params[2]}, hasEditing: ${params[3]}.}`
+               );
+            });
+         });
+
+         it('update column scroll shadow classes should not leads to forceUpdate (const classes object)', () => {
+            gridView.saveOptions(cfg);
+            gridView._afterMount();
+
+            const oldClasses = gridView._columnScrollShadowClasses;
+            assert.equal(
+                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default controls-ColumnScroll__shadow_invisible',
+                oldClasses.start
+            );
+            assert.equal(
+                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default',
+                oldClasses.end
+            );
+            gridView._columnScrollController._shadowState.start = true;
+            gridView._updateColumnScrollShadowClasses();
+
+            const newClasses = gridView._columnScrollShadowClasses;
+            assert.equal(
+                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default',
+                newClasses.start
+            );
+            assert.equal(
+                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default',
+                newClasses.end
+            );
+
+            assert.equal(oldClasses, newClasses);
+         });
+
+         it('update column scroll shadow styles should not leads to forceUpdate (const styles object)', () => {
+            gridView.saveOptions(cfg);
+            gridView._afterMount();
+
+            const oldStyles = gridView._columnScrollShadowStyles;
+
+            assert.equal('', oldStyles.start);
+            assert.equal('', oldStyles.end);
+
+            gridView._columnScrollController._shadowState.start = true;
+            gridView._updateColumnScrollShadowStyles();
+
+            const newStyles = gridView._columnScrollShadowStyles;
+            assert.equal('left: 0px;', newStyles.start);
+            assert.equal('', newStyles.end);
+
+            assert.equal(oldStyles, newStyles);
+         });
+
+         it('should call drag scroll methods only if column scroll enabled', () => {
+            const calledMethods = [];
+            gridView._dragScrollController = {};
+
+            [
+               'onViewMouseDown',
+               'onViewTouchStart',
+               'onViewMouseMove',
+               'onViewTouchMove',
+               'onViewMouseUp',
+               'onViewTouchEnd',
+               'onOverlayMouseMove',
+               'onOverlayTouchMove',
+               'onOverlayMouseUp',
+               'onOverlayTouchEnd',
+               'onOverlayMouseLeave'
+            ].forEach((methodName) => {
+               gridView._dragScrollController[methodName] = () => {
+                  calledMethods.push(methodName);
+               };
+            });
+
+            gridView._startDragScrolling({}, 'mouse');
+            gridView._startDragScrolling({}, 'touch');
+            gridView._moveDragScroll({}, 'mouse');
+            gridView._moveDragScroll({}, 'touch');
+            gridView._stopDragScrolling({}, 'mouse');
+            gridView._stopDragScrolling({}, 'touch');
+
+            assert.deepEqual(calledMethods, []);
+         });
+
+         it('resize on list changed with column scroll', () => {
+            let columnScrollResizeHandlerCalled = false;
+            let updateShadowStyleCalled = false;
+            gridView.saveOptions(cfg);
+
+            gridView._columnScrollController = {
+               updateSizes(c) {
+                  columnScrollResizeHandlerCalled = true;
+                  c({
+                     contentSizeForScrollBar: 100,
+                     scrollWidth: 80
+                  });
+               }
+            };
+            gridView._updateColumnScrollData = () => {
+               updateShadowStyleCalled = true;
+            };
+            gridView._isFullMounted = true;
+
+            gridView.resizeNotifyOnListChanged();
+            assert.isTrue(columnScrollResizeHandlerCalled);
+            assert.isTrue(updateShadowStyleCalled);
+         });
       });
    });
 

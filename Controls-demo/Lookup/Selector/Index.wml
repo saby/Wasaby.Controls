@@ -11,11 +11,11 @@
                  on:selectedKeysChanged="selectedKeysChanged1()"
                  selectorTemplate="{{_selectorTemplate}}">
          </Controls.lookup:Selector>
-         <div>{{_textSingle}}</div>
+         <div>{{_textSingle1}}</div>
       </div>
 
       <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
-         <h4>Reuqire single selection</h4>
+         <h4>Require single selection</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"
                  displayProperty="title"

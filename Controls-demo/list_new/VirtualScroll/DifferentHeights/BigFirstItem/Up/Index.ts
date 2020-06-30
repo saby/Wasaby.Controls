@@ -12,8 +12,9 @@ export default class extends Control {
         entityTemplate: {title: 'lorem'},
         beforeCreateItemCallback: (item) => {
             item.title = `Запись с id="${item.id}". ${item.title}`;
+            // tslint:disable-next-line
             if (item.id === 999) {
-                item.title = 'Это очень большая запись!'
+                item.title = 'Это очень большая запись!';
             }
         }
     });

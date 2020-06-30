@@ -3,13 +3,18 @@ import * as Template from 'wml!Controls-demo/list_new/Navigation/DigitPaging/Wit
 import {Memory} from 'Types/source';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 
+interface IItem {
+    title: string;
+    id: number | string;
+}
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
 
-    private _dataArray = generateData({
+    private _dataArray: unknown = generateData({
         count: 100,
-        beforeCreateItemCallback: (item: any) => {
+        beforeCreateItemCallback: (item: IItem) => {
             item.title = `Запись с идентификатором ${item.id} и каким то не очень длинным текстом`;
         }
     });

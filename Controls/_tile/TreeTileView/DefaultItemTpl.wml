@@ -16,6 +16,7 @@
       swipeTemplate="{{swipeTemplate}}"
       checkboxReadOnly="{{checkboxReadOnly}}"
       cursor="{{cursor}}"
+      backgroundColorStyle="{{backgroundColorStyle}}"
       multiSelectTpl="{{multiSelectTpl}}"/>
 </ws:template>
 <ws:template name="leafTemplate">
@@ -37,6 +38,7 @@
       contentTemplate="{{contentTpl}}"
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"
+      backgroundColorStyle="{{backgroundColorStyle}}"
       multiSelectTpl="{{multiSelectTpl}}"/>
 </ws:template>
 <ws:if data="{{invisible}}">

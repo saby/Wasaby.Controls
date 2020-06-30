@@ -37,13 +37,13 @@ export default class extends Control {
         let hasBadItems = false;
         const firstItem = this._items.getRecordById(items[0]);
 
-        items.forEach(function(item) {
+        items.forEach((item: unknown): ListEntity => {
             if (item === 0) {
                 hasBadItems = true;
             }
         });
         return hasBadItems ? false : new ListEntity({
-            items: items,
+            items,
             mainText: firstItem.get('title'),
             image: firstItem.get('image'),
             additionalText: firstItem.get('additional')
@@ -57,7 +57,6 @@ export default class extends Control {
     protected _onToggle(): void {
         this._multiselect = this._multiselect === 'visible' ? 'hidden' : 'visible';
     }
-
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

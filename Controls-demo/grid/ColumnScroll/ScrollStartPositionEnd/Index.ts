@@ -1,7 +1,7 @@
-import {Control, TemplateFunction} from 'UI/Base'
-import * as Template from "wml!Controls-demo/grid/ColumnScroll/ScrollStartPositionEnd/ScrollStartPositionEnd"
-import {Memory} from 'Types/source'
-import {getCountriesStats} from "../../DemoHelpers/DataCatalog"
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/grid/ColumnScroll/ScrollStartPositionEnd/ScrollStartPositionEnd';
+import {Memory} from 'Types/source';
+import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { IHeader } from 'Controls-demo/types';
 

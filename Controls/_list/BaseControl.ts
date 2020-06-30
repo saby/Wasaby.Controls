@@ -74,6 +74,7 @@ import 'wml!Controls/_list/BaseControl/Footer';
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
 import {IList} from "./interface/IList";
+import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -1807,7 +1808,7 @@ const _private = {
     // region Multiselection
 
     createSelectionController(self: any, options: any): SelectionController {
-        if (!self._listViewModel || !self._items || options.multiSelectVisibility === 'hidden') {
+        if (!self._listViewModel || !self._items) {
             return null;
         }
 
@@ -2108,6 +2109,20 @@ const _private = {
         }
     },
 
+
+    /**
+     * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
+     * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
+     * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
+     * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
+     *
+     * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
+     * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+     */
+    isItemsSelectionAllowed(options: object): boolean {
+        return options.hasOwnProperty('selectedKeysCount');
+    },
+
     /**
      * инициализирует опции записи при загрузке контрола
      * @param self
@@ -2288,6 +2303,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _pagingCfg: null,
     _pagingVisible: false,
+    _actualPagingVisible: false,
 
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
@@ -3031,6 +3047,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadingIndicatorState && !isLoading && hasTrigger && isTriggerVisible) {
             _private.hideIndicator(this);
         }
+
+        if (this._scrollController) {
+            let correctingHeight = 0;
+
+            // correctingHeight предназначен для предотвращения проблемы с восстановлением позиции скролл в случае,
+            // когда новые индексы виртуального скролла применяются одновременно с показом Paging.
+            // todo выпилить task1179588447 по ошибке: https://online.sbis.ru/opendoc.html?guid=cd0ba66a-115c-44d1-9384-0c81675d5b08
+            if (this._options.task1179588447 && !this._actualPagingVisible && this._pagingVisible) {
+                // Можно юзать константу PAGING_HEIGHT, но она старая, 32px. Править константу в 4100 страшно, поправим
+                // её по ошибке: https://online.sbis.ru/opendoc.html?guid=cd0ba66a-115c-44d1-9384-0c81675d5b08
+                correctingHeight = 33;
+            }
+            this._scrollController.afterRender(correctingHeight);
+        }
+        this._actualPagingVisible = this._pagingVisible;
     },
 
     _notifyOnDrawItems(): void {
@@ -3038,12 +3069,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
-        }
-    },
-
-    _afterRender(): void {
-        if (this._scrollController) {
-            this._scrollController.afterRender();
         }
     },
 
@@ -3307,7 +3332,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let hasDragScrolling = false;
         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {
-            hasDragScrolling = typeof this._options.dragScrolling === 'boolean' ? this._options.dragScrolling : !this._options.itemsDragNDrop;
+            hasDragScrolling = isColumnScrollShown(this._container) && (
+                typeof this._options.dragScrolling === 'boolean' ? this._options.dragScrolling : !this._options.itemsDragNDrop
+            );
         }
         if (this._unprocessedDragEnteredItem) {
             this._unprocessedDragEnteredItem = null;
@@ -3580,7 +3607,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.nextVersion();
             } else {
                 // After the right swipe the item should get selected.
-                if (!this._selectionController) {
+                if (!this._selectionController && _private.isItemsSelectionAllowed(this._options)) {
                     this._createSelectionController();
                 }
                 if (this._selectionController) {

@@ -5,9 +5,7 @@ define('Controls/Application/Core',
    [
       'Core/Control',
       'wml!Controls/Application/Core',
-      'Application/Initializer',
       'Application/Env',
-      'Controls/Application/StateReceiver',
       'UI/theme/controller',
       'UI/Base',
       'Controls/Application/HeadData',
@@ -16,9 +14,7 @@ define('Controls/Application/Core',
    ],
    function(Control,
       template,
-      AppInit,
       AppEnv,
-      StateReceiver,
       controller,
       UIBase,
       HeadData) {
@@ -43,21 +39,6 @@ define('Controls/Application/Core',
                /* TODO: set to presentation service */
                process.domain.req.compatible = false;
             } catch (e) {
-            }
-
-            // __hasRequest - для совместимости, пока не смержено WS. Нужно чтобы работало
-            // и так и сяк
-            if (!AppInit.isInit()) {
-               var stateReceiverInst = new StateReceiver();
-               AppInit.default(cfg, void 0, stateReceiverInst);
-
-               if (typeof window === 'undefined' || window.__hasRequest === undefined) {
-                  // need create request for SSR
-                  // on client request will create in app-init.js
-                  if (typeof window !== 'undefined' && window.receivedStates) {
-                     stateReceiverInst.deserialize(window.receivedStates);
-                  }
-               }
             }
 
             var headData = new HeadData([], true);

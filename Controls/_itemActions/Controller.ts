@@ -17,7 +17,7 @@ import {
     TItemActionsPosition,
     TActionCaptionPosition,
     TEditArrowVisibilityCallback,
-    TActionDisplayMode
+    TActionDisplayMode, TMenuButtonVisibility
 } from './interface/IItemActions';
 import { IStickyPopupOptions } from 'Controls/popup';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
@@ -230,14 +230,54 @@ export class Controller {
             return;
         }
         const menuActions = this._getMenuActions(item, parentAction);
-        const isActionMenu = !!parentAction && !parentAction._isMenu;
-
         if (!menuActions || menuActions.length === 0) {
             return;
         }
 
-        // there was a fake target before, check if it is needed
         const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
+        const isActionMenu = !!parentAction && !parentAction._isMenu;
+        const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
+
+        let menuConfig: IMenuConfig = {
+            opener,
+            template: 'Controls/menu:Popup',
+            actionOnScroll: 'close',
+            target,
+            templateOptions,
+            className: `controls-MenuButton_link_iconSize-medium_popup theme_${this._theme}`,
+            closeOnOutsideClick: true,
+            autofocus: false,
+            fittingMode: {
+                vertical: 'overflow',
+                horizontal: 'adaptive'
+            },
+            readOnly: false
+        };
+        if (!isActionMenu) {
+            menuConfig = {
+                ...menuConfig,
+                direction: {
+                    horizontal: isContextMenu ? 'right' : 'left'
+                },
+                targetPoint: {
+                    vertical: 'top',
+                    horizontal: 'right'
+                },
+                className: `controls-ItemActions__popup__list_theme-${this._theme}`,
+                nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
+            }
+        }
+        return menuConfig;
+    }
+
+    /**
+     * Возвращает конфиг для шаблона меню опций
+     * @param isActionMenu
+     * @param parentAction
+     * @param menuActions
+     * @private
+     */
+    private _getActionsMenuTemplateConfig(isActionMenu: boolean, parentAction: IItemAction, menuActions: IItemAction[]): IMenuTemplateOptions {
         const source = new Memory({
             data: menuActions,
             keyProperty: 'id'
@@ -249,7 +289,7 @@ export class Controller {
             iconSize
         } : null;
         const root = parentAction && parentAction.id;
-        const templateOptions: IMenuTemplateOptions = {
+        return {
             source,
             keyProperty: 'id',
             parentProperty: 'parent',
@@ -262,31 +302,6 @@ export class Controller {
             iconSize,
             closeButtonVisibility: !isActionMenu && !root
         };
-        const menuConfig: IMenuConfig = {
-            opener,
-            template: 'Controls/menu:Popup',
-            actionOnScroll: 'close',
-            target,
-            templateOptions,
-            closeOnOutsideClick: true,
-            targetPoint: {
-                vertical: 'top',
-                horizontal: 'right'
-            },
-            fittingMode: {
-                vertical: 'overflow',
-                horizontal: 'adaptive'
-            },
-            className: isActionMenu ? 'controls-MenuButton_link_iconSize-medium_popup ' : '' + `controls-ItemActions__popup__list_theme-${this._theme}`,
-            nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
-            autofocus: false
-        };
-        if (!isActionMenu) {
-            menuConfig.direction = {
-                horizontal: isContextMenu ? 'right' : 'left'
-            }
-        }
-        return menuConfig;
     }
 
     /**
@@ -450,6 +465,7 @@ export class Controller {
         if (!item) {
             return;
         }
+        const menuButtonVisibility = this._getSwipeMenuButtonVisibility(this._contextMenuConfig);
         this._actionsHeight = actionsContainerHeight;
         let actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
@@ -465,7 +481,8 @@ export class Controller {
             actions,
             actionsTemplateConfig.actionAlignment,
             actionsContainerHeight,
-            actionsTemplateConfig.actionCaptionPosition
+            actionsTemplateConfig.actionCaptionPosition,
+            menuButtonVisibility
         );
 
         if (
@@ -477,7 +494,8 @@ export class Controller {
                 actions,
                 actionsTemplateConfig.actionAlignment,
                 actionsContainerHeight,
-                actionsTemplateConfig.actionCaptionPosition
+                actionsTemplateConfig.actionCaptionPosition,
+                menuButtonVisibility
             );
         }
         this._collection.setActionsTemplateConfig(actionsTemplateConfig);
@@ -492,6 +510,16 @@ export class Controller {
         }
 
         this._collection.setSwipeConfig(swipeConfig);
+    }
+
+    /**
+     * Возвращает значение видимоси кнопки "Ещё" для свайпа
+     * @param contextMenuConfig
+     * @private
+     */
+    private _getSwipeMenuButtonVisibility(contextMenuConfig): TMenuButtonVisibility {
+        return (contextMenuConfig && (contextMenuConfig.footerTemplate
+            || contextMenuConfig.headerTemplate)) ? 'visible' : 'adaptive';
     }
 
     /**
@@ -649,13 +677,15 @@ export class Controller {
         actions: IItemAction[],
         actionAlignment: string,
         actionsContainerHeight: number,
-        actionCaptionPosition: 'right'|'bottom'|'none'
+        actionCaptionPosition: TActionCaptionPosition,
+        menuButtonVisibility?: TMenuButtonVisibility
     ): ISwipeConfig {
         const measurer = actionAlignment === 'vertical' ? verticalMeasurer : horizontalMeasurer;
         const config: ISwipeConfig = measurer.getSwipeConfig(
             actions,
             actionsContainerHeight,
-            actionCaptionPosition
+            actionCaptionPosition,
+            menuButtonVisibility
         );
         config.needTitle = measurer.needTitle;
         config.needIcon = measurer.needIcon;

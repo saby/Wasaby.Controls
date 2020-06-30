@@ -1,6 +1,6 @@
 <div>
     <Controls.Container.Async templateName="Controls/heading:Title">
-        <ws:templateOptions caption="{[Выбрано]}" size="s" readOnly="{{true}}"/>
+        <ws:templateOptions caption="{[Выбрано]}" fontSize="m" readOnly="{{true}}"/>
     </Controls.Container.Async>
     <ws:for data="item in selectedItems">
         <div>{{item.get(displayProperty)}}</div>

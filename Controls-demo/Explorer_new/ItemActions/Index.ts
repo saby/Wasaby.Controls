@@ -8,7 +8,7 @@ import { TRoot } from 'Controls-demo/types';
 import { IItemAction } from 'Controls/itemActions';
 
 interface IFilter {
-   demo: number
+   demo: number;
 }
 
 export default class extends Control {
@@ -19,7 +19,7 @@ export default class extends Control {
    protected _searchStartingWith: string = 'root';
    protected _searchStartingWithSource: Memory = null;
    protected _filter: IFilter = { demo: 123 };
-   protected _itemActions: IItemAction;
+   protected _itemActions: IItemAction[];
 
    protected _beforeMount(): void {
       this._viewSource = new MemorySource({
