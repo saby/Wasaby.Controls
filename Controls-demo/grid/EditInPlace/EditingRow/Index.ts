@@ -15,12 +15,12 @@ export default class extends Control {
     private data: object[] = getPorts().getData().map((cur) => this.getData(cur));
     protected selectedKey: number = 1;
 
-    private getData(data: object) {
-        for (let key in data) {
+    private getData(data: object): object {
+        for (const key in data) {
             if (data[key]) {
                 data[key] = '' + data[key];
             } else {
-                data[key] = ''
+                data[key] = '';
             }
 
         }
@@ -37,8 +37,6 @@ export default class extends Control {
             keyProperty: 'id',
             data: getPorts().getDocumentSigns()
         });
-
-
     }
 
     private onChange1 = (_: SyntheticEvent, name: string, item: Model, value: number): void => {

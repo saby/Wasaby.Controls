@@ -21,7 +21,7 @@ import * as dragScrollPopulationCell from 'wml!Controls-demo/grid/ColumnScroll/D
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { IHeader } from 'Controls-demo/types';
 
-interface IData {
+export interface IData {
     id: number;
     number?: number;
     country?: string;
@@ -1110,7 +1110,7 @@ const getPorts = () => {
             }
         ]
     };
-}
+};
 
 interface IEditingData {
     id: number | string;
@@ -1129,7 +1129,7 @@ interface IEditingData {
     document?: string;
 }
 
-function getEditing(): unknown {
+const getEditing = () => {
     return {
         getEditingData: (): IEditingData[] => [
             {
@@ -1303,7 +1303,7 @@ function getEditing(): unknown {
             }
         ]
     };
-}
+};
 
 interface IDataForShow {
     id: number;

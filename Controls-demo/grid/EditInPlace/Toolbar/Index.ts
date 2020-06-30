@@ -39,6 +39,7 @@ export default class extends Control {
             const resultColumn = column;
             // tslint:disable-next-line
             if (index !== 0) {
+                // tslint:disable-next-line
                 resultColumn.template = index < 3 ? editingCellText : editingCellNumber;
             }
             return resultColumn;

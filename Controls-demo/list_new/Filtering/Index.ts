@@ -7,7 +7,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
 
-    protected _filter: any = {
+    protected _filter: { title: string[] } = {
         title: ['Notebooks', 'Tablets', 'Laptop computers']
     };
 
