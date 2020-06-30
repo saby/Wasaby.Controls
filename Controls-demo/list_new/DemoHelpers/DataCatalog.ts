@@ -117,7 +117,7 @@ function getGroupedCatalog(): Array<{
             title: 'ASUS Zenbook F-234',
             brand: 'asus',
             longBrandName: 'AsusTek Computer Inc. stylised as ASUSTeK' +
-                '(Public TWSE: 2357 LSE: ASKD), based in Beitou District, Taipei, Taiwan'
+                ' (Public TWSE: 2357 LSE: ASKD), based in Beitou District, Taipei, Taiwan'
         },
         {
             id: 9,
@@ -222,16 +222,16 @@ function getContactsCatalog(): Array<{ id: number, title: string }> {
         {
             id: 0,
             title: 'What makes every American a typical one is a desire to get' +
-                'a well-paid job that will cover their credit card. A credit card is an' +
-                'indispensable part of life in America. In other words, any American knows' +
-                'that how he or she handles their credit card or cards, either will help them' +
-                'or haunt them for years... re-establish his/her good credit by applying for a secured credit.'
+                ' a well-paid job that will cover their credit card. A credit card is an' +
+                ' indispensable part of life in America. In other words, any American knows' +
+                ' that how he or she handles their credit card or cards, either will help them' +
+                ' or haunt them for years... re-establish his/her good credit by applying for a secured credit.'
         },
         {
             id: 1,
             title: 'For those who are deep in credit card debt, there are some' +
-                'Credit Services agencies that offer anyone in America both online or' +
-                'telephone, and face-to-face counseling.'
+                ' Credit Services agencies that offer anyone in America both online or' +
+                ' telephone, and face-to-face counseling.'
         },
         {
             id: 2,
@@ -240,7 +240,7 @@ function getContactsCatalog(): Array<{ id: number, title: string }> {
         {
             id: 3,
             title: 'Once debts have been repaid, an American can re-establish his/her good' +
-                'credit by applying for a secured credit card and paying the balance off regularly.'
+                ' credit by applying for a secured credit card and paying the balance off regularly.'
         }
     ];
 }
