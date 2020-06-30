@@ -30,9 +30,7 @@ define('Controls-demo/CompatibleDemo/WasabyEnv/DemoControls/WasabyContainer',
          },
 
          _setTextOld: function(e, value) {
-            if (this._parent && this._parent._parent) {
-               this._parent._parent._setText(e, value);
-            }
+            this._parent._logicParent._setText(e, value);
          },
       });
       WasabyContainer._styles = ['Controls-demo/CompatibleDemo/CompatibleDemo'];
