@@ -130,9 +130,15 @@ define([
          // assert.include(version, 'ITEM_ACTION_2');
 
          assert.include(version, 'WITHOUT_EDITING');
-         model._setEditingItemData({ key: 21, item: {}, setEditing: () => {} });
+
+         const editingItemData = { key: 21, item: {}, setEditing: () => {}, getVersion: () => '' };
+         model._setEditingItemData(editingItemData);
          version = model._calcItemVersion(item, key);
          assert.include(version, 'WITH_EDITING');
+
+         model._options.multiSelectVisibility = 'visible';
+         version = model._calcItemVersion(editingItemData, 21);
+         assert.equal(version, 'MULTISELECT-visible_EDITING_WITH_EDITING_1');
       });
 
       it('isShouldBeDrawnItem', function() {

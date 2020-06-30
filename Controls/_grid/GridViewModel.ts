@@ -1069,6 +1069,7 @@ var
 
         setHasMoreData: function(hasMore: boolean) {
             this._model.setHasMoreData(hasMore);
+            this._nextModelVersion(true);
         },
 
         getHasMoreData: function() {
@@ -1778,6 +1779,10 @@ var
 
             if (this._lastItemKey === key) {
                 version = 'LAST_ITEM_' + version;
+
+                if (this._options.rowSeparatorSize) {
+                    version = 'WITH_SEPARATOR_' + `${this._model.getHasMoreData()}_` + version;
+                }
             }
 
             version += _private.calcLadderVersion(this._ladder, index);

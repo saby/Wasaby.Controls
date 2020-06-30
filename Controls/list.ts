@@ -101,6 +101,7 @@ import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
+import {default as ScrollController} from './_list/ScrollController';
 import {IList} from './_list/interface/IList';
 
 export {
@@ -146,5 +147,6 @@ export {
     InertialScrolling,
     IVirtualScrollConfig,
     IList,
-    VirtualScroll
+    VirtualScroll,
+    ScrollController
 };

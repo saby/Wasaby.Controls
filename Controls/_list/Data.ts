@@ -254,6 +254,9 @@ export interface IDataOptions extends ISourceOptions, IHierarchyOptions, IFilter
             if (this._options.source !== newOptions.source) {
                this._loading = true;
                return _private.createPrefetchSource(this, null, newOptions).then((result) => {
+                  if (newOptions.task1179424529) {
+                     this._items = null;
+                  }
                   _private.resolvePrefetchSourceResult(this, result);
                   _private.updateDataOptions(this, this._dataOptionsContext);
                   this._dataOptionsContext.updateConsumers();
