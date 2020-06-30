@@ -2097,7 +2097,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // endregion
 
-
     // region Drag-N-Drop
 
     setDraggedItems(draggedItem: T, dragEntity: ItemsEntity): void {
@@ -2115,7 +2114,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setDragPosition(position: IDragPosition): void {
         const strategy = this.getStrategyInstance(DragStrategy) as DragStrategy<unknown>;
-        if (strategy) {
+        if (strategy && position) {
             // TODO dnd в старой модели передается куда вставлять относительно этого индекса
             strategy.avatarIndex = position.index;
             this.nextVersion();
