@@ -54,4 +54,19 @@ export default interface IBaseItemTemplateOptions {
     * @default false
     */
    checkboxReadOnly?: boolean;
+   /**
+    * @typedef {String} backgroundColorStyle
+    * @variant danger
+    * @variant success
+    * @variant warning
+    * @variant primary
+    * @variant secondary
+    * @variant unaccented
+    * @variant readonly
+    */
+   /**
+    * @name Controls/interface/IItemTemplate#backgroundColorStyle
+    * @cfg {backgroundColorStyle} Стиль фона элемента.
+    */
+   backgroundColorStyle?: string;
 }
