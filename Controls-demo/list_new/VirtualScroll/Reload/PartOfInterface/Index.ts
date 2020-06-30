@@ -26,7 +26,7 @@ export default class extends Control {
     }
 
     protected _reloadList(): void {
-        // @ts-ignore
+        // tslint:disable-next-line
         this._children.list.reload();
     }
 

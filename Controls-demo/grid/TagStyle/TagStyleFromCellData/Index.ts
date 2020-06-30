@@ -1,15 +1,19 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import {CollectionItem} from 'Controls/display';
+import {Record} from 'Types/entity';
 
-import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
+import {getCountriesStats, IData} from '../../DemoHelpers/DataCatalog';
+import { IColumn } from 'Controls/_grid/interface/IColumn';
 
 import * as template from 'wml!Controls-demo/grid/TagStyle/TagStyleFromCellData/TagStyleFromCellData';
+
+const MAXITEM = 7;
 
 export default class TagStyleGridDemo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _viewSource: Memory;
-    protected _columns: any;
+    protected _columns: IColumn[];
 
     // Название свойства, из которого следует брать стильдля тега
     protected _tagStyleProperty: string;
@@ -23,14 +27,14 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     // Значение выбранной колонки
     protected _currentValue: string;
 
-    constructor(cfg: any) {
+    constructor(cfg: IControlOptions) {
         super(cfg);
         this._tagStyleProperty = 'customProperty';
         this._columns = this._getModifiedColumns();
     }
 
     protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
-        const data = this._getModifiedData().slice(0, 7);
+        const data = this._getModifiedData().slice(0, MAXITEM);
         this._viewSource = new Memory({
             keyProperty: 'id',
             data
@@ -45,7 +49,9 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
      * @param nativeEvent
      * @private
      */
-    protected _onTagClickCustomHandler(event: Event, item: CollectionItem<any>, columnIndex: number, nativeEvent: Event): void {
+    protected _onTagClickCustomHandler(
+        event: Event, item: CollectionItem<Record>, columnIndex: number, nativeEvent: Event
+    ): void {
         this._currentColumnIndex = columnIndex;
         this._currentEvent = 'click';
         this._currentValue = item.getContents().get('population');
@@ -59,7 +65,9 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
      * @param nativeEvent
      * @private
      */
-    protected _onTagHoverCustomHandler(event: Event, item: CollectionItem<any>, columnIndex: number, nativeEvent: Event): void {
+    protected _onTagHoverCustomHandler(
+        event: Event, item: CollectionItem<Record>, columnIndex: number, nativeEvent: Event
+    ): void {
         this._currentColumnIndex = columnIndex;
         this._currentEvent = 'hover';
         this._currentValue = item.getContents().get('population');
@@ -69,8 +77,9 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
      * Получаем список колонок с необходимыми настройками
      * @private
      */
-    private _getModifiedColumns(): any {
+    private _getModifiedColumns(): IColumn[] {
         const result = getCountriesStats().getColumnsWithFixedWidths().map((cur, i) => {
+        // tslint:disable-next-line
             if (i === 3) {
                 return {
                     ...cur,
@@ -83,7 +92,7 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
         return result;
     }
 
-    private _getModifiedData(): any {
+    private _getModifiedData(): IData[] {
         const styleVariants = [
             null,
             'info',

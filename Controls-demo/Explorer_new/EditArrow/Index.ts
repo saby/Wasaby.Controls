@@ -6,6 +6,12 @@ import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { TRoot } from 'Controls-demo/types';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
+interface IItem {
+   getId: () => string;
+}
+
+const TIMEOUT = 2000;
+
 export default class extends Control {
    protected _template: TemplateFunction = Template;
    protected _viewSource: MemorySource;
@@ -22,20 +28,20 @@ export default class extends Control {
       });
    }
 
-   protected _editArrowClick(_: SyntheticEvent, item: any): void {
+   protected _editArrowClick(_: SyntheticEvent, item: IItem): void {
       if (!this._isBoxOpen) {
-         this._currentText = `Arrow was Clicked from item id: ${item.getId()}`
+         this._currentText = `Arrow was Clicked from item id: ${item.getId()}`;
          this._isBoxOpen = true;
          this._hideBox();
       } else {
-         this._currentText = `Arrow was Clicked from item id: ${item.getId()}`
+         this._currentText = `Arrow was Clicked from item id: ${item.getId()}`;
       }
    }
 
    private _hideBox(): void {
       setTimeout(() => {
          this._isBoxOpen = false;
-      }, 2000);
+      }, TIMEOUT);
    }
 
    static _styles: string[] = ['Controls-demo/Controls-demo'];

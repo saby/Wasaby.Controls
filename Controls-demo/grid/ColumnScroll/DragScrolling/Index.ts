@@ -32,7 +32,7 @@ export default class extends Control {
     private _itemsReady(items: RecordSet): void {
         this._itemsFirst = items;
     }
-
+    // tslint:disable-next-line
     protected _dragStart(_: SyntheticEvent, draggedKeys: number[]): any {
         let title = '';
 
@@ -42,9 +42,11 @@ export default class extends Control {
 
         return new Dnd.ItemsEntity({
             items: draggedKeys,
+            // tslint:disable-next-line
             title: title.trim().slice(0, title.length - 2)
         });
-    };
+    }
+
     protected _dragEnd(_: SyntheticEvent, entity: Collection<Model>, target: unknown, position: string): void {
         this._selectedKeys = [];
         this._children.listMover.moveItems(entity.getItems(), target, position);

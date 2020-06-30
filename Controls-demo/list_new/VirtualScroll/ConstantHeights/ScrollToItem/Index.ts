@@ -16,7 +16,7 @@ export default class extends Control {
     private dataArray: IItem[] = generateData<IItem>({
         keyProperty: 'id',
         count: 1000,
-        beforeCreateItemCallback: (item) => {
+        beforeCreateItemCallback: (item: IItem) => {
             item.title = `Запись с ключом ${item.id}.`;
         }
     });
@@ -29,7 +29,6 @@ export default class extends Control {
     }
 
     protected _scrollToItem(event: SyntheticEvent, id: number): void {
-        // @ts-ignore
         this._children.list.scrollToItem(id, false, true);
     }
 

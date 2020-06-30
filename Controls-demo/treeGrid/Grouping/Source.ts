@@ -1,7 +1,8 @@
 import {HierarchicalMemory} from 'Types/source';
 
-function generateData(count: number): any[] {
+function generateData(count: number): unknown[] {
     const result = [];
+    // tslint:disable-next-line
     const countsArray = [5, 7, 12, 3, 8, 6, 22, 1, 4, 16];
     let countIdx = 0;
     for (let i = 0; i < count; i++) {
@@ -10,11 +11,15 @@ function generateData(count: number): any[] {
             title: 'item_' + i,
             count: countsArray[countIdx],
             parent: null,
+            // tslint:disable-next-line
             hasChildren: i % 3 === 0,
             type: true,
+            // tslint:disable-next-line
             group: 'group_' + (i < count / 2 ? 1 : 2)
         });
+        // tslint:disable-next-line
         if (i % 3 === 0) {
+            // tslint:disable-next-line
             for (let j = 0; j < 3; j++) {
                 result.push({
                     key: 'key_' + i + '_' + j,
@@ -23,10 +28,12 @@ function generateData(count: number): any[] {
                     parent: 'key_' + i,
                     hasChildren: false,
                     type: true,
+                    // tslint:disable-next-line
                     group: 'group_' + (i < count / 2 ? 1 : 2)
                 });
             }
         }
+        // tslint:disable-next-line
         countIdx = countIdx < 9 ? countIdx + 1 : 0;
     }
     return result;
@@ -60,7 +67,8 @@ export function createGroupingSource(cfg: IDemoCreateSourceCfg): HierarchicalMem
         }
     });
     const originalQueryFn = source.query;
-    source.query = function() {
+    // tslint:disable-next-line
+    source.query = function(): any {
         return originalQueryFn.apply(this, arguments).then((result) => {
             const resultData = result.getRawData();
             const lastResultKey = resultData.items[resultData.items.length - 1].key;

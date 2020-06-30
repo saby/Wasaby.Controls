@@ -161,6 +161,14 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.deepEqual({range: {start: 0, stop: 4}, placeholders: {top: 0, bottom: 0}},
                 instance.removeItems(4, 1));
         });
+        it('remove more than a page', () => {
+            instance.resetRange(5, 10);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([60, 60, 60, 60, 60, 60, 60, 60, 60, 60]));
+
+            assert.deepEqual({range: {start: 0, stop: 3}, placeholders: {top: 0, bottom: 0}},
+                instance.removeItems(3, 7));
+        });
     });
     describe('.removeItems | forcedShift', () => {
         let instance: controller;

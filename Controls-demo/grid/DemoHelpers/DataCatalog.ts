@@ -11,7 +11,7 @@ import * as moneyEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/mone
 import * as numberEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/numberEditor';
 import * as defaultEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/defaultEditor';
 import * as Images from 'Controls-demo/DragNDrop/Images';
-import * as itemTpl from  'wml!Controls-demo/grid/resources/CellTemplates/CellWithBgc';
+import * as itemTpl from 'wml!Controls-demo/grid/resources/CellTemplates/CellWithBgc';
 import * as itemCountr from 'wml!Controls-demo/grid/resources/CellTemplates/CountryTemp';
 import * as resTpl from 'wml!Controls-demo/grid/EditInPlace/EditingCell/resultsTpl';
 import * as notScrollableCell from 'wml!Controls-demo/grid/ColumnScroll/DragScrolling/notScrollableCell';
@@ -21,7 +21,7 @@ import * as dragScrollPopulationCell from 'wml!Controls-demo/grid/ColumnScroll/D
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { IHeader } from 'Controls-demo/types';
 
-interface IData {
+export interface IData {
     id: number;
     number?: number;
     country?: string;
@@ -36,15 +36,15 @@ interface IData {
     photo?: string;
     state?: string;
     fullName?: string;
-    invoice?: number,
-    documentSign?: number,
-    documentNum?: number,
-    taxBase?: number,
-    document?: string,
-    documentDate?: null | string,
-    serviceContract?: null | string,
-    description?: string,
-    shipper?: null | string
+    invoice?: number;
+    documentSign?: number;
+    documentNum?: number;
+    taxBase?: number;
+    document?: string;
+    documentDate?: null | string;
+    serviceContract?: null | string;
+    description?: string;
+    shipper?: null | string;
 }
 
 export interface IColumnRes extends IColumn {
@@ -58,16 +58,16 @@ interface IResults {
 }
 
 interface IImages {
-    dogadkin: string
-    kesareva: string
-    korbyt: string
-    krainov: string
-    baturina: string
+    dogadkin: string;
+    kesareva: string;
+    korbyt: string;
+    krainov: string;
+    baturina: string;
 }
 
 const resultCellTpl = numberResultTpl;
 
-function getCountriesStats() {
+const getCountriesStats = () => {
     return {
         getData: (): IData[] => [
             {
@@ -254,7 +254,7 @@ function getCountriesStats() {
             {
                 displayProperty: 'capital',
                 width: '200px'
-            },
+            }
         ],
 
         getColumnsWithoutWidths: (): IColumn[] => [
@@ -286,12 +286,12 @@ function getCountriesStats() {
         getColumnsForLoad: (): IColumn[] => [
             {
                 displayProperty: 'id',
-                width: '50px',
+                width: '50px'
             },
             {
                 displayProperty: 'load',
-                width: '200px',
-            },
+                width: '200px'
+            }
 
         ],
         getColumnsWithFixedWidths: (): IColumn[] => [
@@ -323,7 +323,7 @@ function getCountriesStats() {
         getColumnsWithWidthsForSortingDemo: (): IColumnRes[] => [
             {
                 displayProperty: 'number',
-                width: '40px',
+                width: '40px'
             },
             {
                 displayProperty: 'country',
@@ -439,6 +439,7 @@ function getCountriesStats() {
                     populationDensity: 1.87
                 }
             ],
+            // tslint:disable-next-line
             partial: [12345678910, 23456789101, 34567891012]
         }),
         getColumnsWithAlign: (): IColumn[] => [
@@ -473,7 +474,7 @@ function getCountriesStats() {
                 compatibleWidth: '60px'
             }
         ],
-        getColumnsWithValign: (): any => [
+        getColumnsWithValign: () => [
             {
                 displayProperty: 'number',
                 width: '40px',
@@ -523,19 +524,19 @@ function getCountriesStats() {
             },
             {
                 title: 'Столица строны из рейтинга',
-                textOverflow: textOverflow
+                textOverflow
             },
             {
                 title: 'Население страны по данным на 2018г.',
-                textOverflow: textOverflow
+                textOverflow
             },
             {
                 title: 'Площадь км2',
-                textOverflow: textOverflow
+                textOverflow
             },
             {
                 title: 'Плотность населения чел/км2',
-                textOverflow: textOverflow
+                textOverflow
             }
         ],
         getMultiHeader: (): IHeader[] => [
@@ -720,7 +721,7 @@ function getCountriesStats() {
             },
             {
                 title: 'Название столицы страны',
-                textOverflow: textOverflow,
+                textOverflow,
                 sortingProperty: 'capital',
                 align: 'left'
             },
@@ -736,7 +737,7 @@ function getCountriesStats() {
             },
             {
                 title: 'Плотность населения чел/км2',
-                textOverflow: textOverflow,
+                textOverflow,
                 sortingProperty: 'populationDensity',
                 align: 'right'
             }
@@ -769,11 +770,11 @@ function getCountriesStats() {
                 width: 'max-content',
                 compatibleWidth: '60px'
             }
-        ],
-    }
-}
+        ]
+    };
+};
 
-function getMultilineLadder() {
+const getMultilineLadder = () => {
     return {
         getData: (): IData[] => [
             {
@@ -861,7 +862,7 @@ function getMultilineLadder() {
                 name: 'Колесов В.'
             }
         ],
-        getColumns: (): any => [
+        getColumns: () => [
             {
                 template: 'wml!Controls-demo/grid/resources/CellTemplates/LadderMultilineDateTime',
                 width: '125px',
@@ -873,9 +874,9 @@ function getMultilineLadder() {
             }
         ]
     };
-}
+};
 
-function getTasks() {
+const getTasks = () => {
     return {
         getData: (): IData[] => [
             {
@@ -960,7 +961,8 @@ function getTasks() {
             },
             {
                 id: 11,
-                message: 'Не работают хлебные крошки и навигация по ним если идентификатор записи равен 0 Как повторить',
+                message: 'Не работают хлебные крошки и навигация по' +
+                    'ним если идентификатор записи равен 0 Как повторить',
                 fullName: 'Догадкин Владимир',
                 photo: getImages().dogadkin,
                 date: '28 фев',
@@ -975,7 +977,7 @@ function getTasks() {
                 state: 'Выполнение'
             }
         ],
-        getColumns: (): IColumn[] | any => [
+        getColumns: () => [
             {
                 template: 'wml!Controls-demo/grid/resources/CellTemplates/LadderTasksPhoto',
                 width: '98px'
@@ -1003,24 +1005,24 @@ function getTasks() {
                 width: '100px'
             }
         ],
-        getDefaultWithEditingColumns: (): IColumn[] | any => [
+        getDefaultWithEditingColumns: (): IColumn[] => [
             {
                 displayProperty: 'id',
-                width: '30px',
+                width: '30px'
             },
             {
                 displayProperty: 'state',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/Grouped/WithEditing/_cellEditor',
+                template: 'wml!Controls-demo/grid/Grouped/WithEditing/_cellEditor'
             },
             {
                 displayProperty: 'date',
                 width: '100px',
-                template: 'wml!Controls-demo/grid/Grouped/WithEditing/_cellEditor',
+                template: 'wml!Controls-demo/grid/Grouped/WithEditing/_cellEditor'
             }
-        ],
-    }
-}
+        ]
+    };
+};
 
 function getImages(): IImages {
     return {
@@ -1029,10 +1031,10 @@ function getImages(): IImages {
         korbyt: constants.resourceRoot + 'Controls-demo/grid/resources/images/korbyt.png',
         krainov: constants.resourceRoot + 'Controls-demo/grid/resources/images/krainov.png',
         baturina: constants.resourceRoot + 'Controls-demo/grid/resources/images/baturina.png'
-    }
+    };
 }
 
-function getPorts() {
+const getPorts = () => {
     return {
         getData: (): IData[] => [
             {
@@ -1107,27 +1109,27 @@ function getPorts() {
                 title: 'ТД не предусмотрено'
             }
         ]
-    }
-}
+    };
+};
 
 interface IEditingData {
-    id: number | string
-    title?: string
-    description?: string
-    price?: string
-    balance?: string
-    balanceCostSumm?: string
-    reserve?: string
-    costPrice?: string
-    email?: string
-    required?: string
-    length?: string
-    documentSign?: number,
-    taxBase?: number,
-    document?: string
+    id: number | string;
+    title?: string;
+    description?: string;
+    price?: string;
+    balance?: string;
+    balanceCostSumm?: string;
+    reserve?: string;
+    costPrice?: string;
+    email?: string;
+    required?: string;
+    length?: string;
+    documentSign?: number;
+    taxBase?: number;
+    document?: string;
 }
 
-function getEditing() {
+const getEditing = () => {
     return {
         getEditingData: (): IEditingData[] => [
             {
@@ -1166,26 +1168,26 @@ function getEditing() {
                 id: '1',
                 email: 'semen@gmail.com',
                 required: '89069953970',
-                length: '1234',
+                length: '1234'
             },
             {
                 id: '2',
                 email: 'artem@gmail.com',
                 required: '89069953970',
-                length: '123',
+                length: '123'
             },
             {
                 id: '3',
                 email: 'oleg@gmail.com',
                 required: '89069953970',
-                length: 'hello',
+                length: 'hello'
             }
         ],
-        getEditingColumns: (): any => [
+        getEditingColumns: (): IColumn[] => [
             {
                 displayProperty: 'title',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor'
             },
             {
                 displayProperty: 'price',
@@ -1204,7 +1206,7 @@ function getEditing() {
             {
                 displayProperty: 'description',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor'
             },
             {
                 displayProperty: 'costPrice',
@@ -1221,22 +1223,22 @@ function getEditing() {
                 results: 6
             }
         ],
-        getEditingColumnsValidation: (): any => [
+        getEditingColumnsValidation: () => [
             {
                 displayProperty: 'email',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditor',
+                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditor'
             },
             {
                 displayProperty: 'required',
                 width: 'max-content',
-                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorRequired',
+                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorRequired'
             },
             {
                 displayProperty: 'length',
                 width: 'max-content',
-                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorDate',
-            },
+                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorDate'
+            }
         ],
         getEditingHeaderValidations: (): IHeader[] => [
             {
@@ -1247,7 +1249,7 @@ function getEditing() {
             },
             {
                 title: 'Length'
-            },
+            }
         ],
         getDecoratedEditingData: (): IEditingData[] => [
             {
@@ -1276,7 +1278,7 @@ function getEditing() {
             { title: 'Порт прибытия' },
             { title: 'Цена по накладной' },
             { title: 'Номер накладной' },
-            { title: 'Код накладной' },
+            { title: 'Код накладной' }
         ],
         getDecoratedEditingColumns: (): IColumn[] => [
             {
@@ -1301,19 +1303,23 @@ function getEditing() {
             }
         ]
     };
-}
+};
 
 interface IDataForShow {
-    id: number
-    px: string
-    fr1of3:string
-    fr2of3: string
-    minMax: string
-    auto: string
-    maxContent: string
+    id: number;
+    px: string;
+    fr1of3: string;
+    fr2of3: string;
+    minMax: string;
+    auto: string;
+    maxContent: string;
 }
 
-function forShowWidths() {
+function forShowWidths(): {
+    getData(): IDataForShow[];
+    getHeader(): IHeader[];
+    getColumns1(): IColumn[];
+} {
     return {
         getData(): IDataForShow[] {
             return [
@@ -1335,7 +1341,7 @@ function forShowWidths() {
                     auto: 'Ячейка 3/4',
                     minMax: 'Ячейка 2/6'
                 }
-            ]
+            ];
         },
         getHeader(): IHeader[] {
             return [
@@ -1357,7 +1363,7 @@ function forShowWidths() {
                 {
                     title: 'minmax(50px, 200px)'
                 }
-            ]
+            ];
         },
         getColumns1(): IColumn[] {
             return [
@@ -1390,29 +1396,29 @@ function forShowWidths() {
                     width: 'minmax(50px, 200px)',
                     compatibleWidth: '200px'
                 }
-            ]
-        },
-    }
+            ];
+        }
+    };
 }
 
 interface IDataForPadding {
-    id: number,
-    number: string,
-    country: string,
-    capital: string,
-    population: number,
-    square: number,
-    populationDensity: number
+    id: number;
+    number: string;
+    country: string;
+    capital: string;
+    population: number;
+    square: number;
+    populationDensity: number;
 }
 
 const cellPadding = () => ({
-    getCollumns: (): any => ([
+    getCollumns: () => ([
         {
             displayProperty: 'number',
             width: '100px',
             template: itemCountr,
             cellPadding: {
-                right: 's',
+                right: 's'
             }
         },
         {
@@ -1427,7 +1433,7 @@ const cellPadding = () => ({
         {
             displayProperty: 'capital',
             width: '100px'
-        },
+        }
     ]),
     getData: (): IDataForPadding[] => ([
         {
@@ -1479,30 +1485,30 @@ const cellPadding = () => ({
     getCellPaddingHeader: (): IHeader[] => {
         return [
             {
-                title: 'right: S',
+                title: 'right: S'
             },
             {
-                title: 'left: S and right: null',
+                title: 'left: S and right: null'
             },
             {
-                title: 'left: default',
+                title: 'left: default'
             }
         ];
     }
-})
+});
 
 interface IDndData {
-    id: number,
-    title: string,
-    additional: string,
-    image: string,
-    'Раздел@': boolean,
-    Раздел: null | boolean
+    id: number;
+    title: string;
+    additional: string;
+    image: string;
+    'Раздел@': boolean;
+    Раздел: null | boolean;
 }
 
 interface IForDnD {
-  data: IDndData[]
-  columns: IColumn[]
+  data: IDndData[];
+  columns: IColumn[];
 }
 
 const DragNDrop = (): IForDnD => ({
@@ -1524,6 +1530,7 @@ const DragNDrop = (): IForDnD => ({
         id: 2,
         title: 'Solar',
         additional: 'Star',
+        // tslint:disable-next-line
         image: Images[2],
         'Раздел@': true,
         Раздел: null
@@ -1531,6 +1538,7 @@ const DragNDrop = (): IForDnD => ({
         id: 3,
         title: 'Luna',
         additional: 'Sattelite',
+        // tslint:disable-next-line
         image: Images[3],
         'Раздел@': null,
         Раздел: null
@@ -1538,6 +1546,7 @@ const DragNDrop = (): IForDnD => ({
         id: 4,
         title: 'Pizza',
         additional: 'Food',
+        // tslint:disable-next-line
         image: Images[4],
         'Раздел@': null,
         Раздел: null
@@ -1545,6 +1554,7 @@ const DragNDrop = (): IForDnD => ({
         id: 5,
         title: 'Monkey',
         additional: 'Animals',
+        // tslint:disable-next-line
         image: Images[5],
         'Раздел@': null,
         Раздел: null
@@ -1554,17 +1564,17 @@ const DragNDrop = (): IForDnD => ({
         width: '30px'
     }, {
         displayProperty: 'title',
-        width: '200px',
+        width: '200px'
     }, {
         displayProperty: 'additional',
-        width: '200px',
-    }],
-})
+        width: '200px'
+    }]
+});
 
 interface IDataForChangeSource {
-    id: number
-    load: string | number
-    title: string
+    id: number;
+    load: string | number;
+    title: string;
 }
 
 interface IChangeSource {
@@ -1646,8 +1656,7 @@ const changeSourceData = (): IChangeSource => ({
 
         }]
 });
-
-
+// tslint:disable
 const countries: string[] = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
     ,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"
     ,"Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica"

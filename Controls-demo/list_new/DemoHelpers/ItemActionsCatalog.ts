@@ -94,6 +94,7 @@ function getMoreActions(): Array<{
             icon: 'icon-Erase icon-error',
             title: 'delete pls',
             showType: showType.TOOLBAR,
+            // tslint:disable-next-line
             handler: () => { console.log('click to error-icon') }
         },
         {
@@ -101,6 +102,7 @@ function getMoreActions(): Array<{
             icon: 'icon-View icon-small',
             title: 'view',
             showType: showType.TOOLBAR,
+            // tslint:disable-next-line
             handler: () => { console.log('click to View-icon') }
         },
         {
@@ -108,13 +110,14 @@ function getMoreActions(): Array<{
             icon: 'icon-Motion icon-small',
             title: 'motion',
             showType: showType.TOOLBAR,
+            // tslint:disable-next-line
             handler: () => { console.log('click to Motion-icon') }
         }
-    ]
+    ];
 }
 
 export {
     getActionsForContacts,
     getActionsWithDisplayMode,
     getMoreActions
-}
+};

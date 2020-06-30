@@ -12,15 +12,14 @@ export default class extends Control {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: getData()
-        })
+        });
     }
 
     protected _beginAdd(): void {
-        let item = {
+        const item = {
             id: ++this._fakeItemId,
             title: ''
         };
-        //@ts-ignore
         this._children.list.beginAdd({item});
     }
 

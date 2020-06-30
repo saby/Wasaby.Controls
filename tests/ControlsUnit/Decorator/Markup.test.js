@@ -446,8 +446,8 @@ define([
                '<a rel="noreferrer noopener" target="_blank">Test link</a>' +
                '<pre>Test pretty print</pre>' +
                '<label>Test label</label>' +
-               '<font>Test font</font>' +
-               '<blockquote><div>Test block quote</div></blockquote>' +
+               '<font color="red" face="verdana" size="5">Test font</font>' +
+               '<blockquote cite="http://www.worldwildlife.org/who/index.html"><div>Test block quote</div></blockquote>' +
                '<p><b>T</b><strong>e</strong><i>s</i><em>t</em><u> </u><s>s</s><strike>t</strike><q>yles</q></p>' +
                '<p><h1>head</h1><h2>head</h2><h3>head</h3><h4>head</h4><h5>head</h5><h6>head</h6></p>' +
                '<input id="testInput" />' +

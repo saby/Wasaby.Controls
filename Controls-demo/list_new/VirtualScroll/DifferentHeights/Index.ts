@@ -6,10 +6,11 @@ import {generateData} from '../../DemoHelpers/DataCatalog';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
+    // tslint:disable-next-line
+    private _dataArray: Array<{count: number, entityTemplate: {title: string}}> =
+        generateData({count: 1000, entityTemplate: {title: 'lorem'}});
 
-    private _dataArray: any = generateData({count: 1000, entityTemplate: {title: 'lorem'}});
-
-    protected _beforeMount(): any {
+    protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: this._dataArray

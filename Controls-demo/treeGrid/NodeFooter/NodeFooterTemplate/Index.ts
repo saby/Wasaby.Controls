@@ -15,9 +15,7 @@ export default class extends Control {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
             data: Gadgets.getFlatData(),
-            filter: function () {
-                return true;
-            }
+            filter: (): boolean => true
         });
     }
 

@@ -167,11 +167,9 @@ const ActualApi = {
          if (typeof options.transparent !== 'undefined') {
             if (hasMsg) {
                // TODO: будет удалено в версию после 5100
-               // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-               // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-               /*Logger.error('Button: Используется устаревшая опция transparent". ' +
+               Logger.error('Button: Используется устаревшая опция transparent". ' +
                    'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию contrastBackground.');*/
+                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию contrastBackground.');
             }
             return !options.transparent;
          } else {
@@ -187,11 +185,9 @@ const ActualApi = {
       } else {
          if (optionStyle && hasMsg) {
             // TODO: будет удалено в версию после 5100
-            // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-            // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-            /*Logger.error('Button: Используется устаревшая опция style". ' +
+            Logger.error('Button: Используется устаревшая опция style". ' +
                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-               'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию buttonStyle.');*/
+               'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию buttonStyle.');
          }
          if (calcStyle) {
             return calcStyle;
@@ -262,11 +258,9 @@ const ActualApi = {
          if (typeof(options.size) !== 'undefined') {
             if (hasMsg) {
                // TODO: будет удалено в версию после 5100
-               // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-               // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-               /*Logger.error('Button: Используется устаревшая опция size". ' +
+               Logger.error('Button: Используется устаревшая опция size". ' +
                    'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');*/
+                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
             }
             if (options.viewMode === 'button') {
                // кнопки l размера имеют шрифт xl в теме
@@ -321,11 +315,9 @@ const ActualApi = {
          if (viewMode === 'button') {
             if (hasMsg && optionSize) {
                // TODO: будет удалено в версию после 5100
-               // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-               // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-               /*Logger.error('Button: Используется устаревшая опция size". ' +
+               Logger.error('Button: Используется устаревшая опция size". ' +
                    'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');*/
+                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');
             }
             switch (optionSize) {
                case 's': height = 'default'; break;
@@ -337,11 +329,9 @@ const ActualApi = {
          } else if (viewMode === 'toolButton' || viewMode === 'pushButton' || viewMode === 'functionalButton') {
             if (hasMsg && optionSize) {
                // TODO: будет удалено в версию после 5100
-               // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-               // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-               /*Logger.error('Button: Используется устаревшая опция size". ' +
+               Logger.error('Button: Используется устаревшая опция size". ' +
                    'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');*/
+                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');
             }
             switch (optionSize) {
                case 's': height = 'default'; break;

@@ -88,7 +88,8 @@ var
                 let hoveredCellContainer = null;
                 if (nativeEvent) {
                     container = nativeEvent.target.closest('.controls-ListView__itemV');
-                    hoveredCellContainer = self._getCellByEventTarget(nativeEvent);
+                    let target = self._getCorrectElement(nativeEvent.target);
+                    hoveredCellContainer = self._getCellByEventTarget(target);
                 }
                 self._notify('hoveredCellChanged', [item, container, hoveredCellIndex, hoveredCellContainer]);
             }
@@ -154,6 +155,23 @@ var
         setGrabbing(self, isGrabbing: boolean): void {
             self._isGrabbing = isGrabbing;
             self._viewGrabbingClasses = isGrabbing ? DRAG_SCROLL_JS_SELECTORS.CONTENT_GRABBING : '';
+        },
+        applyNewOptionsAfterReload(self, oldOptions, newOptions): void {
+            // todo remove isEqualWithSkip by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
+            self._columnsHaveBeenChanged = !GridIsEqualUtil.isEqualWithSkip(oldOptions.columns, newOptions.columns,
+                { template: true, resultTemplate: true });
+            if (self._columnsHaveBeenChanged) {
+                if (oldOptions.task1179424529) {
+                    // Набор колонок необходимо менять после перезагрузки. Иначе возникает ошибка, когда список
+                    // перерисовывается с новым набором колонок, но со старыми данными. Пример ошибки:
+                    // https://online.sbis.ru/opendoc.html?guid=91de986a-8cb4-4232-b364-5de985a8ed11
+                    self._doAfterReload(() => {
+                        self._listModel.setColumns(newOptions.columns);
+                    });
+                } else {
+                    self._listModel.setColumns(newOptions.columns);
+                }
+            }
         }
     },
     GridView = ListView.extend({
@@ -233,7 +251,6 @@ var
         _beforeUpdate(newCfg) {
             GridView.superclass._beforeUpdate.apply(this, arguments);
             const self = this;
-            this._columnsHaveBeenChanged = !GridIsEqualUtil.isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true });
             if (this._options.resultsPosition !== newCfg.resultsPosition) {
                 if (this._listModel) {
                     this._listModel.setResultsPosition(newCfg.resultsPosition);
@@ -248,6 +265,7 @@ var
 
                 if (newCfg.columnScroll) {
                     _private.initColumnScroll(this, newCfg);
+                    this._setColumnScrollContainersAfterRender = true;
                 } else {
                     this._columnScrollController.destroy();
                     this._columnScrollController = null;
@@ -256,10 +274,7 @@ var
             if (this._options.resultsVisibility !== newCfg.resultsVisibility) {
                 this._listModel.setResultsVisibility(newCfg.resultsVisibility);
             }
-            // todo remove isEqualWithSkip by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
-            if (this._columnsHaveBeenChanged) {
-                this._listModel.setColumns(newCfg.columns);
-            }
+            _private.applyNewOptionsAfterReload(self, this._options, newCfg);
             // Вычисления в setHeader зависят от columnScroll.
             if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
@@ -314,6 +329,15 @@ var
                 // if (oldOptions.root !== this._options.root) {
                 //     this._columnScrollController.resetSizes();
                 // }
+
+                if (this._setColumnScrollContainersAfterRender) {
+                    this._columnScrollController.setContainers({
+                        scrollContainer: this._children.columnScrollContainer,
+                        contentContainer: this._children.columnScrollContainer.getElementsByClassName(COLUMN_SCROLL_JS_SELECTORS.CONTENT)[0],
+                        stylesContainer: this._children.columnScrollStylesContainer
+                    });
+                    this._setColumnScrollContainersAfterRender = false;
+                }
 
                 // Если изменилось несколько опций, из за которых требуется пересчитать размеры коризонтального скролла,
                 // то перечет должен случиться только один раз.
@@ -551,19 +575,28 @@ var
                 });
             }
         },
-        _getCellByEventTarget(event: MouseEvent): HTMLElement {
-            return event.target.closest('.controls-Grid__row-cell');
+        _getCorrectElement(element: HTMLElement): HTMLElement {
+            // В FF целью события может быть элемент #text, у которого нет метода closest, в этом случае рассматриваем как цель его родителя.
+            if (element && !element.closest && element.parentElement) {
+                return element.parentElement;
+            }
+            return element;
+        },
+        _getCellByEventTarget(target: HTMLElement): HTMLElement {
+            return target.closest('.controls-Grid__row-cell');
         },
         _getCellIndexByEventTarget(event): number {
             if (!event) {
                 return null;
             }
-            const gridRow = event.target.closest('.controls-Grid__row');
+            let target = this._getCorrectElement(event.target);
+         
+            const gridRow = target.closest('.controls-Grid__row');
             if (!gridRow) {
                 return null;
             }
             const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
-            const currentCell = this._getCellByEventTarget(event);
+            const currentCell = this._getCellByEventTarget(target);
             const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
             return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
         },

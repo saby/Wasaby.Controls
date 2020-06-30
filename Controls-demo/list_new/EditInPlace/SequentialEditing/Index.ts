@@ -11,7 +11,7 @@ export default class extends Control {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: getData()
-        })
+        });
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

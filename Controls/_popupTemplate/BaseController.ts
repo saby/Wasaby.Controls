@@ -49,9 +49,7 @@ abstract class BaseController {
     _elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         if (this._checkContainer(item, container, 'elementCreated')) {
             item.popupState = this.POPUP_STATE_CREATED;
-            if (!isNewEnvironment()) {
-                oldWindowManager.addZIndex(item.currentZIndex);
-            }
+            oldWindowManager.addZIndex(item.currentZIndex);
             return this.elementCreated && this.elementCreated.apply(this, arguments);
         }
     }
@@ -98,9 +96,7 @@ abstract class BaseController {
             item.popupState = this.POPUP_STATE_DESTROYING;
             item._destroyDeferred = this.elementDestroyed && this.elementDestroyed.apply(this, arguments);
             return item._destroyDeferred.addCallback(() => {
-                if (!isNewEnvironment()) {
-                    oldWindowManager.removeZIndex(item.currentZIndex);
-                }
+                oldWindowManager.removeZIndex(item.currentZIndex);
                 item.popupState = this.POPUP_STATE_DESTROYED;
             });
         }

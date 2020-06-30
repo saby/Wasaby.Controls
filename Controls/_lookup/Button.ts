@@ -1,4 +1,5 @@
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+// @ts-ignore
 import template = require('wml!Controls/_lookup/Button/SelectorButton');
 
 
@@ -65,12 +66,11 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * </pre>
  */
 
-var Button = Control.extend({
-   _template: template,
+export default class Button extends Control<IControlOptions> {
+   protected _template: TemplateFunction = template;
 
-   showSelector: function (popupOptions) {
+   protected showSelector(popupOptions: object): any {
+      // @ts-ignore
       return this._children.controller.showSelector(popupOptions);
    }
-});
-
-export = Button;
+}

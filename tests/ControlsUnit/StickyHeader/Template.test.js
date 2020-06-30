@@ -3,9 +3,10 @@ define(
       'Controls/scroll',
       'Env/Env',
       'ControlsUnit/resources/TemplateUtil',
+      'Controls/_scroll/StickyHeader/Utils',
       'Controls/_scroll/StickyHeader/_StickyHeader'
    ],
-   function(scroll, Env, TemplateUtil, _StickyHeaderLib) {
+   function(scroll, Env, TemplateUtil, StickyHeaderUtils, _StickyHeaderLib) {
 
       'use strict';
 
@@ -105,7 +106,7 @@ define(
             it('On the mobile platform', function() {
                var sandbox = sinon.createSandbox();
 
-               inst._isMobilePlatform = true;
+               sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
                inst._model.fixedPosition = 'top';
                sandbox.replace(inst, '_getComputedStyle', function() {
                   return { paddingTop: '0px' };

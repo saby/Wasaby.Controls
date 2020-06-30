@@ -10,7 +10,7 @@ export default class extends Control {
     protected _columns: IColumn[];
     protected _navigation: object;
 
-    protected _beforeMount(): any {
+    protected _beforeMount(): void {
         this._columns = [{
             displayProperty: 'title',
             width: ''

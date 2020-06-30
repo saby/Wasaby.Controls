@@ -6,9 +6,9 @@ import {getCountriesStats, countries} from '../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 
 interface IItem {
-   capital: string,
-   number: number,
-   country: string
+   capital: string;
+   number: number;
+   country: string;
 }
 
 export default class extends Control {
@@ -17,7 +17,7 @@ export default class extends Control {
    protected _columns: IColumn[] = getCountriesStats().getColumnsForVirtual();
    private count: number = 0;
 
-   private dataArray = generateData({
+   private dataArray: IItem[] = generateData({
       keyProperty: 'id',
       count: 50,
       beforeCreateItemCallback: (item: IItem) => {
@@ -37,4 +37,3 @@ export default class extends Control {
 
    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
-

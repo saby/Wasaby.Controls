@@ -10,6 +10,7 @@ import {getMoreActions} from '../../../list_new/DemoHelpers/ItemActionsCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { IHeader, TItemsReadyCallback } from 'Controls-demo/types';
 import {RecordSet} from 'Types/collection';
+import { IItemAction } from 'Controls/itemActions';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -19,7 +20,7 @@ export default class extends Control {
     protected _markedKey: number;
     protected _dataLoadCallback: TItemsReadyCallback = this._dataCallback.bind(this);
     protected _items: RecordSet;
-    protected _itemActions: any = [...getMoreActions()];
+    protected _itemActions: IItemAction[] = [...getMoreActions()];
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -32,10 +33,9 @@ export default class extends Control {
         this._items = items;
     }
 
-
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 
 export {
     LengthChecker
-}
+};

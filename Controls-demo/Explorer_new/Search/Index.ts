@@ -3,18 +3,20 @@ import * as Template from 'wml!Controls-demo/Explorer_new/Search/Search';
 import {Gadgets} from '../DataHelpers/DataCatalog';
 import {Memory} from 'Types/source';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
-
+import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { TRoot } from 'Controls-demo/types';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
-   protected _viewSource;
-   protected _columns = Gadgets.getSearchColumns();
-   protected _root = null;
+   protected _viewSource: MemorySource;
+   protected _columns: IColumn[] = Gadgets.getSearchColumns();
+   protected _root: TRoot = null;
    protected _searchStartingWith: string = 'root';
    protected _searchStartingWithSource: Memory = null;
-   protected _filter = { demo: 123 };
+   // tslint:disable-next-line
+   protected _filter: object = { demo: 123 };
 
-   protected _beforeMount() {
+   protected _beforeMount(): void {
       this._viewSource = new MemorySource({
          keyProperty: 'id',
          data: Gadgets.getSearchData()

@@ -1,11 +1,10 @@
-/// <amd-module name="Controls/_dataSource/_parking/Controller" />
-import { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';
+import { Handler, ViewConfig } from './Handler';
 import { constants } from 'Env/Env';
 import { load } from 'Core/library';
 import { Logger } from 'UI/Utils';
 import { PromiseCanceledError } from 'Types/entity';
 
-interface IParkingControllerOptions<TViewConfig = ViewConfig> {
+export interface IParkingControllerOptions<TViewConfig = ViewConfig> {
     handlers: Handler[];
     configField: string;
     viewConfig?: Partial<TViewConfig>;
@@ -74,10 +73,10 @@ export function callHandler<TArg, TResult>(
  * @param handlers Обработчики ошибок
  * @param config
  */
-export function findTemplate<TConfig>(
+export function findTemplate<TConfig, TViewConfig extends ViewConfig = ViewConfig>(
     [handler, ...otherHandlers]: Array<Handler | string>,
     config: TConfig
-): Promise<ViewConfig | void> {
+): Promise<TViewConfig | void> {
     if (!handler) {
         return Promise.resolve();
     }
@@ -98,7 +97,7 @@ export function findTemplate<TConfig>(
             // Если это не отмена, то логируем ошибку и продолжаем выполнение обработчиков.
             Logger.error('Handler error', null, error);
         })
-        .then((viewConfig) => viewConfig || findTemplate(otherHandlers, config));
+        .then((viewConfig: void | TViewConfig) => viewConfig || findTemplate(otherHandlers, config));
 }
 
 /// endregion helpers
@@ -216,7 +215,7 @@ export default class ParkingController<TViewConfig extends ViewConfig = ViewConf
             (result: Promise<TViewConfig | void>, getHandlers: () => Handler[]) =>
                 result.then((viewConfig) => viewConfig
                     ? this._composeViewConfig(viewConfig)
-                    : findTemplate(getHandlers(), config)
+                    : findTemplate<TConfig, TViewConfig>(getHandlers(), config)
                 ),
             Promise.resolve());
     }
