@@ -1,0 +1,18 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+    <div class="controlsDemo__wrapper__horizontal controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Всплывающее окно с опцией className</div>
+        <Controls.suggest:Input
+                attr:class="controlsDemo__input demo-SuggestNew__noDelay"
+                bind:value="_suggestCustomValue"
+                displayProperty="title"
+                searchParam="title"
+                searchDelay="{{0}}"
+                navigation="{{_navigation}}"
+                source="{{_source}}">
+            <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/Input/SearchDelay/resources/SuggestTemplate">
+                <ws:templateOptions demoClass="demo-SuggestInputList"/>
+            </ws:suggestTemplate>
+            <ws:suggestPopupOptions className="ControlsDemo-Suggest__red-border-popup" />
+        </Controls.suggest:Input>
+    </div>
+</div>
