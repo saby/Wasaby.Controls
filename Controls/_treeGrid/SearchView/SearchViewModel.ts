@@ -72,6 +72,9 @@ var
                  return tmplColspan !== false ? undefined : 1;
              }
          };
+         data.shouldHideColumnSeparator = (tmplColspan, isColumnScrollVisible): boolean => {
+             return isColumnScrollVisible && tmplColspan !== false;
+         };
          data.resolveItemTemplate = function(itemData) {
             if (!itemData.breadCrumbs && self._options.itemTemplate) {
                return self._options.itemTemplate;
