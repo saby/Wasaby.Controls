@@ -217,6 +217,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.showEditArrow = this._options.showEditArrow;
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle || this._options.style;
+        itemsModelCurrent.backgroundHoverStyle = this._options.backgroundHoverStyle || itemsModelCurrent.backgroundStyle;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrollConfig = this._isSupportVirtualScroll();
