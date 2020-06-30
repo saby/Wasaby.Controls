@@ -68,6 +68,26 @@ describe('Controls/search:ControllerClass', () => {
         assert.isFalse(searchController._isSearchValueChanged('test'));
     });
 
+    it('_searchCallback', () => {
+        const searchController = new ControllerClass(getDefaultOptions(), {});
+        const result = {
+            data: {
+                getMetaData: () => {
+                    return {
+                        switchedStr: 'test',
+                        results: 'res'
+                    };
+                }
+            }
+        };
+        searchController._updateSearchParams = () => {};
+        searchController._options.itemsChangedCallback = () => {};
+
+        searchController._searchCallback(result);
+        assert.equal(searchController._searchValue, 'test');
+        assert.equal(searchController._misspellValue, 'test');
+    });
+
     it('isSearchValueShort', () => {
         const searchController = new ControllerClass(getDefaultOptions(), {});
         assert.isFalse(searchController._isSearchValueShort('test', 3));
