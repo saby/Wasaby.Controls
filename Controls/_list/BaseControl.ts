@@ -1253,9 +1253,9 @@ const _private = {
         const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
 
         self._notify('updateShadowMode', [{
-            top: (shadowVisibility.up ||
+            top: (shadowVisibility?.up ||
                 showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (shadowVisibility.down ||
+            bottom: (shadowVisibility?.down ||
                 showShadowByNavigation &&
                 showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
