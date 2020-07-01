@@ -52,7 +52,8 @@ define(
                displayProperty: defaultConfig.displayProperty,
                emptyText: defaultConfig.emptyText,
                emptyKey: defaultConfig.emptyKey,
-               hasApplyButton: defaultConfig.hasApplyButton
+               hasApplyButton: defaultConfig.hasApplyButton,
+               hasClose: true
             });
             let list = getHierarchyList(defaultConfig);
             list._beforeMount(defaultConfig);
@@ -83,7 +84,8 @@ define(
                displayProperty: defaultConfig.displayProperty,
                emptyText: defaultConfig.emptyText,
                emptyKey: defaultConfig.emptyKey,
-               hasApplyButton: defaultConfig.hasApplyButton
+               hasApplyButton: defaultConfig.hasApplyButton,
+               hasClose: true
             });
             let config = {...defaultConfig, items: sbisItems, selectorItems: sbisItems};
             let list = getHierarchyList(config);
