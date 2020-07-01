@@ -7,6 +7,7 @@ import { DndFlatController } from 'Controls/listDragNDrop';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { ItemsEntity } from 'Controls/dragnDrop';
+import { Collection } from 'Controls/display';
 
 describe('Controls/_listDragNDrop/FlatController', () => {
    let controller, model;
@@ -22,7 +23,7 @@ describe('Controls/_listDragNDrop/FlatController', () => {
    const cfg = {
       items,
       keyProperty: 'id'
-   }
+   };
 
    beforeEach(() => {
       model = new ListViewModel(cfg);
@@ -55,11 +56,11 @@ describe('Controls/_listDragNDrop/FlatController', () => {
          const entity = new ItemsEntity( { items: [1] } );
 
          let modelSetDraggedItemsCalled = false;
-         model.setDraggedItems = function (draggedItemData, e) {
+         model.setDraggedItems = (draggedItemData, e) => {
             assert.equal(draggedItemData.key, 1);
             assert.equal(e, entity);
             modelSetDraggedItemsCalled = true;
-         }
+         };
 
          controller.setDraggedItems(entity, draggedItem);
 
@@ -69,6 +70,27 @@ describe('Controls/_listDragNDrop/FlatController', () => {
          // Это нужно обязательно проверить, так как если не проставить isDragging,
          // то на перетаскиваемый элемент не повесится нужный css класс
          assert.isTrue(controller._draggingItemData.isDragging);
+      });
+
+      it('new model', () => {
+         const model = new Collection({
+            collection: items
+         });
+         const controller = new DndFlatController(model);
+
+         const draggedItem = model.getItemBySourceKey(1);
+         const entity = new ItemsEntity( { items: [1] } );
+
+         let modelSetDraggedItemsCalled = false;
+         model.setDraggedItems = (draggedItem, e) => {
+            assert.equal(draggedItem.getContents().getKey(), 1);
+            assert.equal(e, entity);
+            modelSetDraggedItemsCalled = true;
+         };
+
+         controller.setDraggedItems(entity, draggedItem);
+
+         assert.isTrue(modelSetDraggedItemsCalled);
       });
    });
 
