@@ -144,9 +144,10 @@ interface IErrbackConfig {
     dataLoadErrback?: (error: Error) => any;
     mode?: dataSourceError.Mode;
     templateOptions?: object;
-    error: Error;
+    error: CancelableError;
 }
 
+type CancelableError = Error & { canceled?: boolean };
 type LoadingState = null | 'all' | 'up' | 'down';
 
 interface IIndicatorConfig {
@@ -699,10 +700,12 @@ const _private = {
                 _private.hideError(self);
 
                 return addedItems;
-            }).addErrback((error: Error) => {
+            }).addErrback((error: CancelableError) => {
                 _private.hideIndicator(self);
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
-                _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
+                if (!error.canceled) {
+                    _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
+                }
                 return _private.crudErrback(self, {
                     error,
                     dataLoadErrback: userErrback,
