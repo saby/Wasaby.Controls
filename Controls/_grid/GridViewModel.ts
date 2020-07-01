@@ -270,7 +270,6 @@ var
 
             if (current.columnScroll) {
                 classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
-                classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             } else if (!checkBoxCell) {
                 classLists.base += ' controls-Grid__cell_fit';
             }
@@ -279,6 +278,10 @@ var
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
                 classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
+            }
+
+            if (current.columnScroll && !current.isEditing) {
+                classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
