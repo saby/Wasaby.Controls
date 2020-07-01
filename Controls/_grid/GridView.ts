@@ -87,8 +87,8 @@ var
                 let container = null;
                 let hoveredCellContainer = null;
                 if (nativeEvent) {
-                    container = nativeEvent.target.closest('.controls-ListView__itemV');
                     let target = self._getCorrectElement(nativeEvent.target);
+                    container = target.closest('.controls-ListView__itemV');
                     hoveredCellContainer = self._getCellByEventTarget(target);
                 }
                 self._notify('hoveredCellChanged', [item, container, hoveredCellIndex, hoveredCellContainer]);
