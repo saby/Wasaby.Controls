@@ -811,7 +811,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     markItemReloaded: function(key) {
         this._reloadedKeys[key] = ++this._singleItemReloadCount;
     },
-
     setRowSeparatorSize(rowSeparatorSize: IListSeparatorOptions['rowSeparatorSize']): void {
         this._options.rowSeparatorSize = _private.getSeparatorSizes({rowSeparatorSize});
     }
