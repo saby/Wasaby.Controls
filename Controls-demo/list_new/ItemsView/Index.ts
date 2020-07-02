@@ -7,7 +7,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _items: collection.RecordSet;
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._items = new collection.RecordSet({
             rawData: getData(),
             keyProperty: 'id'

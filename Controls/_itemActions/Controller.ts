@@ -4,7 +4,7 @@ import { Memory } from 'Types/source';
 import { isEqual } from 'Types/object';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE, CollectionItem} from 'Controls/display';
+import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {
     IItemActionsCollection,
     TItemActionVisibilityCallback,
@@ -17,7 +17,7 @@ import {
     TItemActionsPosition,
     TActionCaptionPosition,
     TEditArrowVisibilityCallback,
-    TActionDisplayMode
+    TActionDisplayMode, TMenuButtonVisibility
 } from './interface/IItemActions';
 import { IStickyPopupOptions } from 'Controls/popup';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
@@ -99,6 +99,10 @@ export interface IItemActionsControllerOptions {
      * Конфигурация для контекстного меню опции записи.
      */
     contextMenuConfig: IContextMenuConfig
+    /**
+     * Редактируемая запись
+     */
+    editingItem: CollectionItem<Model>
 }
 
 /**
@@ -121,11 +125,17 @@ export class Controller {
 
     private _theme: string;
 
+    // Высота опций записи для рассчётов свайп-конфига после изменения видимости опций записи
+    private _actionsHeight: number;
+
+    // Текущее позиционирование опций записи
+    private _itemActionsPosition: TItemActionsPosition;
+
     /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
      * TODO Когда мы перестанем использовать старую listViewModel,
-     *  необходимо будет вычистить return методов update() и _assignActions(). Эти методы будут void
+     *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
      * @param options
      */
     update(options: IItemActionsControllerOptions): Array<number | string> {
@@ -136,21 +146,22 @@ export class Controller {
         this._contextMenuConfig = options.contextMenuConfig;
         this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         this._actionsAlignment = options.actionAlignment || DEFAULT_ACTION_ALIGNMENT;
+        this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION
+        this._collection = options.collection;
+        this._updateActionsTemplateConfig(options);
+
         if (!options.itemActions ||
             !isEqual(this._commonItemActions, options.itemActions) ||
             this._itemActionsProperty !== options.itemActionsProperty ||
-            this._itemActionVisibilityCallback !== options.visibilityCallback ||
-            this._collection !== options.collection
+            this._itemActionVisibilityCallback !== options.visibilityCallback
         ) {
-            this._collection = options.collection;
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
             this._itemActionVisibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
         }
         if (this._commonItemActions || this._itemActionsProperty) {
-            result = this._assignActions();
+            result = this._updateItemActions(options.editingItem);
         }
-        this._calculateActionsTemplateConfig(options);
         return result;
     }
 
@@ -164,7 +175,7 @@ export class Controller {
         this.setSwipeAnimation(ANIMATION_STATE.OPEN);
         this._setSwipeItem(itemKey);
         this._collection.setActiveItem(item);
-        if (this._collection.getActionsTemplateConfig().itemActionsPosition !== 'outside') {
+        if (this._itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
         }
         this._collection.nextVersion();
@@ -174,11 +185,14 @@ export class Controller {
      * Деактивирует Swipe для меню операций с записью
      */
     deactivateSwipe(): void {
-        this._setSwipeItem(null);
-        this._collection.setActiveItem(null);
-        this._collection.setSwipeConfig(null);
-        this._collection.setSwipeAnimation(null);
-        this._collection.nextVersion();
+        const currentSwipedItem = this.getSwipeItem();
+        if (currentSwipedItem) {
+            this._setSwipeItem(null);
+            this._collection.setActiveItem(null);
+            this._collection.setSwipeConfig(null);
+            this._collection.setSwipeAnimation(null);
+            this._collection.nextVersion();
+        }
     }
 
     /**
@@ -216,58 +230,77 @@ export class Controller {
             return;
         }
         const menuActions = this._getMenuActions(item, parentAction);
-
         if (!menuActions || menuActions.length === 0) {
             return;
         }
 
-        // there was a fake target before, check if it is needed
         const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
-        const source = new Memory({
-            data: menuActions,
-            keyProperty: 'id'
-        });
-        const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || DEFAULT_ACTION_SIZE;
-        const showHeader = parentAction !== null && parentAction !== undefined && !parentAction._isMenu;
-        const headConfig = showHeader ? {
-            caption: parentAction.title,
-            icon: parentAction.icon,
-            iconSize
-        } : null;
-        const templateOptions: IMenuTemplateOptions = {
-            source,
-            keyProperty: 'id',
-            parentProperty: 'parent',
-            nodeProperty: 'parent@',
-            dropdownClassName: 'controls-itemActionsV__popup',
-            closeButtonVisibility: true,
-            ...this._contextMenuConfig,
-            root: parentAction && parentAction.id,
-            showHeader,
-            headConfig,
-            iconSize
-        };
-        return {
+        const isActionMenu = !!parentAction && !parentAction._isMenu;
+        const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
+
+        let menuConfig: IMenuConfig = {
             opener,
             template: 'Controls/menu:Popup',
             actionOnScroll: 'close',
             target,
             templateOptions,
+            className: `controls-MenuButton_link_iconSize-medium_popup theme_${this._theme}`,
             closeOnOutsideClick: true,
-            targetPoint: {
-                vertical: 'top',
-                horizontal: 'right'
-            },
-            direction: {
-                horizontal: isContextMenu ? 'right' : 'left'
-            },
+            autofocus: false,
             fittingMode: {
                 vertical: 'overflow',
                 horizontal: 'adaptive'
             },
-            className: showHeader ? 'controls-MenuButton_link_iconSize-medium_popup' : '' + `controls-ItemActions__popup__list_theme-${this._theme}`,
-            nativeEvent: isContextMenu ? clickEvent.nativeEvent : null,
-            autofocus: false
+            readOnly: false
+        };
+        if (!isActionMenu) {
+            menuConfig = {
+                ...menuConfig,
+                direction: {
+                    horizontal: isContextMenu ? 'right' : 'left'
+                },
+                targetPoint: {
+                    vertical: 'top',
+                    horizontal: 'right'
+                },
+                className: `controls-ItemActions__popup__list_theme-${this._theme}`,
+                nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
+            }
+        }
+        return menuConfig;
+    }
+
+    /**
+     * Возвращает конфиг для шаблона меню опций
+     * @param isActionMenu
+     * @param parentAction
+     * @param menuActions
+     * @private
+     */
+    private _getActionsMenuTemplateConfig(isActionMenu: boolean, parentAction: IItemAction, menuActions: IItemAction[]): IMenuTemplateOptions {
+        const source = new Memory({
+            data: menuActions,
+            keyProperty: 'id'
+        });
+        const iconSize = (this._contextMenuConfig && this._contextMenuConfig.iconSize) || DEFAULT_ACTION_SIZE;
+        const headConfig = isActionMenu ? {
+            caption: parentAction.title,
+            icon: parentAction.icon,
+            iconSize
+        } : null;
+        const root = parentAction && parentAction.id;
+        return {
+            source,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'parent@',
+            dropdownClassName: 'controls-itemActionsV__popup',
+            ...this._contextMenuConfig,
+            root,
+            showHeader: isActionMenu,
+            headConfig,
+            iconSize,
+            closeButtonVisibility: !isActionMenu && !root
         };
     }
 
@@ -305,15 +338,14 @@ export class Controller {
      * Вычисляет операции над записью для каждого элемента коллекции
      * Для старой модели listViewModel возвращает массив id изменённых значений
      * TODO Когда мы перестанем использовать старую listViewModel,
-     *  необходимо будет вычистить return методов update() и _assignActions(). Эти методы будут void
+     *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
      * @private
      */
-    private _assignActions(): Array<number | string> {
+    private _updateItemActions(editingItem?: CollectionItem<Model>): Array<number | string> {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
-        this._collection.setEventRaising(false, true);
-        this._collection.each((item) => {
-            if (!item.isActive() && !item['[Controls/_display/GroupItem]']) {
+        const assignActionsOnItem = (item) => {
+            if (!item['[Controls/_display/GroupItem]']) {
                 const contents = Controller._getItemContents(item);
 				const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
                 const itemChanged = Controller._setItemActions(item, actionsContainer);
@@ -322,11 +354,20 @@ export class Controller {
                     changedItemsIds.push(contents.getKey());
                 }
             }
-        });
+        }
+        this._collection.setEventRaising(false, true);
+        this._collection.each(assignActionsOnItem);
+        if (editingItem) {
+            assignActionsOnItem(editingItem);
+        }
         this._collection.setEventRaising(true, true);
         this._collection.setActionsAssigned(true);
 
         if (hasChanges) {
+            // Если поменялась видимость ItemActions через VisibilityCallback, то надо обновить конфиг свайпа
+            if (this._itemActionsPosition !== 'outside') {
+                this._updateSwipeConfig(this._actionsHeight);
+            }
             this._collection.nextVersion();
         }
 
@@ -391,13 +432,14 @@ export class Controller {
     /**
      * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
      */
-    private _calculateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
+    private _updateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
+
         this._collection.setActionsTemplateConfig({
             toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
             itemActionsClass: options.itemActionsClass,
             size: this._iconSize,
-            itemActionsPosition: options.itemActionsPosition || DEFAULT_ACTION_POSITION,
+            itemActionsPosition: this._itemActionsPosition,
             actionAlignment: this._actionsAlignment,
             actionCaptionPosition: options.actionCaptionPosition || DEFAULT_ACTION_CAPTION_POSITION
         });
@@ -423,7 +465,8 @@ export class Controller {
         if (!item) {
             return;
         }
-
+        const menuButtonVisibility = this._getSwipeMenuButtonVisibility(this._contextMenuConfig);
+        this._actionsHeight = actionsContainerHeight;
         let actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
         actionsTemplateConfig.actionAlignment = this._actionsAlignment;
@@ -438,7 +481,8 @@ export class Controller {
             actions,
             actionsTemplateConfig.actionAlignment,
             actionsContainerHeight,
-            actionsTemplateConfig.actionCaptionPosition
+            actionsTemplateConfig.actionCaptionPosition,
+            menuButtonVisibility
         );
 
         if (
@@ -450,7 +494,8 @@ export class Controller {
                 actions,
                 actionsTemplateConfig.actionAlignment,
                 actionsContainerHeight,
-                actionsTemplateConfig.actionCaptionPosition
+                actionsTemplateConfig.actionCaptionPosition,
+                menuButtonVisibility
             );
         }
         this._collection.setActionsTemplateConfig(actionsTemplateConfig);
@@ -468,6 +513,16 @@ export class Controller {
     }
 
     /**
+     * Возвращает значение видимоси кнопки "Ещё" для свайпа
+     * @param contextMenuConfig
+     * @private
+     */
+    private _getSwipeMenuButtonVisibility(contextMenuConfig): TMenuButtonVisibility {
+        return (contextMenuConfig && (contextMenuConfig.footerTemplate
+            || contextMenuConfig.headerTemplate)) ? 'visible' : 'adaptive';
+    }
+
+    /**
      * Набирает операции, которые должны быть показаны только в тулбаре или в тулбаре и в меню и возвращает
      * объект {showed, all}
      * @param item
@@ -476,7 +531,7 @@ export class Controller {
     private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
         let showed;
         const actions = this._collectActionsForItem(item);
-        if (this._collection.isEditing() && !item.isEditing()) {
+        if (this._collection.isEditing() && ((typeof item.isEditing === 'function') && !item.isEditing() || !item.isEditing)) {
             showed = []
         } else if (actions.length > 1) {
             showed = actions.filter((action) =>
@@ -622,13 +677,15 @@ export class Controller {
         actions: IItemAction[],
         actionAlignment: string,
         actionsContainerHeight: number,
-        actionCaptionPosition: 'right'|'bottom'|'none'
+        actionCaptionPosition: TActionCaptionPosition,
+        menuButtonVisibility?: TMenuButtonVisibility
     ): ISwipeConfig {
         const measurer = actionAlignment === 'vertical' ? verticalMeasurer : horizontalMeasurer;
         const config: ISwipeConfig = measurer.getSwipeConfig(
             actions,
             actionsContainerHeight,
-            actionCaptionPosition
+            actionCaptionPosition,
+            menuButtonVisibility
         );
         config.needTitle = measurer.needTitle;
         config.needIcon = measurer.needIcon;

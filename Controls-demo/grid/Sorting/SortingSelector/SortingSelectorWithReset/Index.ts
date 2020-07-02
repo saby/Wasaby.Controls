@@ -3,7 +3,6 @@ import * as Template from 'wml!Controls-demo/grid/Sorting/SortingSelector/Sortin
 import {Memory} from 'Types/source';
 import {getCountriesStats} from '../../../DemoHelpers/DataCatalog';
 
-
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _sortingParams: object[] = [];

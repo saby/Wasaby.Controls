@@ -1,0 +1,33 @@
+<div class="controlsDemo__wrapper controlsDemo__flexColumn">
+    <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400 controlsDemo-Lookup-simple">
+        <div class="controls-text-label_theme-{{_options.theme}} controlsDemo__cell">invalid status</div>
+        <Controls.lookup:Selector
+                bind:selectedKeys="_selectedKeys"
+                searchParam="title"
+                source="{{_source}}"
+                keyProperty="id"
+                multiSelect="{{false}}"
+                validationStatus="invalid">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/lookup:ItemTemplate"
+                            displayProperty="title"/>
+            </ws:itemTemplate>
+        </Controls.lookup:Selector>
+    </div>
+
+    <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400 controlsDemo-Lookup-simple">
+        <div class="controls-text-label_theme-{{_options.theme}} controlsDemo__cell">invalidAccent status</div>
+        <Controls.lookup:Selector
+                bind:selectedKeys="_selectedKeys"
+                searchParam="title"
+                source="{{_source}}"
+                keyProperty="id"
+                multiSelect="{{false}}"
+                validationStatus="invalidAccent">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/lookup:ItemTemplate"
+                            displayProperty="title"/>
+            </ws:itemTemplate>
+        </Controls.lookup:Selector>
+    </div>
+</div>

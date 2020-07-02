@@ -198,16 +198,24 @@
    .inline-flexbox();
 }
 
+@padding-right_menu-multiSelect: @apply-button_inline-height_menuPopup + (@apply-button_offset_menuPopup * 2);
+
 .controls-ListView__item-rightPadding_menu-multiselect_theme-@{themeName} {
-   padding-right: @apply-button_inline-height_menuPopup + (@apply-button_offset_menuPopup * 2);
+   padding-right: @padding-right_menu-multiSelect;
 }
 
 .controls-ListView__item-rightPadding_menu-expander_theme-@{themeName} {
    padding-right: @hierarchy_icon_offset-right_menu + @hierarchy_icon-size_menu + @hierarchy_icon_offset-left_menu;
 }
 
+@padding-right_menu-close: @close-button_offset-left_sticky + @width_closeButton_link + @close-button_offset-right_sticky;
+
 .controls-ListView__item-rightPadding_menu-close_theme-@{themeName} {
-   padding-right: @close-button_offset-left_sticky + @width_closeButton_link + @close-button_offset-right_sticky;
+   padding-right: @padding-right_menu-close;
+}
+
+.controls-ListView__item-rightPadding_menu-close-multiselect_theme-@{themeName} {
+   padding-right: @padding-right_menu-close + @padding-right_menu-multiSelect;
 }
 
 .controls-ListView__item-rightPadding_menu-pin_theme-@{themeName} {
@@ -248,16 +256,18 @@
    cursor: pointer;
 }
 
-.controls-Menu__applyButton {
-   height: 100%;
-   width: 100%;
-}
-
 .controls-Menu__applyButton_theme-@{themeName} {
    position: absolute;
-   right: @apply-button_offset_menuPopup;
    top: (@item_height_menu - @apply-button_inline-height_menuPopup) / 2;
    z-index: 2;
+}
+
+.controls-Menu_withClose__applyButton_theme-@{themeName} {
+   right: @close-button_offset-right_sticky + @width_closeButton_link + @apply-button_offset_menuPopup;
+}
+
+.controls-Menu_default__applyButton_theme-@{themeName} {
+   right: @apply-button_offset_menuPopup;
 }
 
 .controls-Menu__footer_moreButton_theme-@{themeName} {

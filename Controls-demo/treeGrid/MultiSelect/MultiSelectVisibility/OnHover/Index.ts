@@ -8,7 +8,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _columns: IColumn[] = Gadgets.getGridColumnsForFlat();
-    protected _selectedKeys: Array<number> = [];
+    protected _selectedKeys: number[] = [];
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({

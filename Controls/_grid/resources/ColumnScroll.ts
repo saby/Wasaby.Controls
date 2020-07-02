@@ -411,6 +411,10 @@ export class ColumnScroll {
      * @param element
      */
     scrollToElementIfHidden(element: HTMLElement): void {
+        // Не скроллим к зафиксированным ячейкам.
+        if (!!element.closest(`.${JS_SELECTORS.FIXED_ELEMENT}`)) {
+            return;
+        }
         const { right: activeElementRight, left: activeElementLeft  } = element.getBoundingClientRect();
 
         const containerRect = this._scrollContainer.getBoundingClientRect();

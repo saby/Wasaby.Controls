@@ -6,22 +6,23 @@ import cInstance = require('Core/core-instance');
 import {Memory} from 'Types/source';
 import {ListItems} from 'Controls/dragnDrop';
 import * as TaskEntity from 'Controls-demo/DragNDrop/MasterDetail/TasksEntity';
-import {TItemKey} from 'Controls/_display/interface';
 import { TItemsReadyCallback } from 'Controls-demo/types';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
+import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { INavigation } from 'Controls-demo/types';
 
 export default class RenderDemo extends Control {
     protected _template: TemplateFunction = template;
-    protected gridColumns = [{
+    protected gridColumns: IColumn[] = [{
         displayProperty: 'name',
         width: '1fr',
         template: columnTemplate
     }];
     protected _viewSource: Memory;
-    protected _navigation: any;
+    protected _navigation: INavigation;
     protected _selectedKeys: number[];
     protected _items: [object];
     protected _detailSource: Memory;
@@ -33,7 +34,7 @@ export default class RenderDemo extends Control {
 
     protected _dataArray: Array<{id: number, title: string, description: string}>;
 
-    _initSource() {
+    _initSource(): void {
         this._detailSource = new Memory({
             keyProperty: 'id',
             data: data.detail
@@ -60,54 +61,55 @@ export default class RenderDemo extends Control {
     _itemsReadyDetail(items: RecordSet): void {
         this._itemsDetail = items;
     }
-
-    _dragEnterMaster(_: SyntheticEvent, entity: any) {
+    // tslint:disable-next-line
+    _dragEnterMaster(_: SyntheticEvent, entity: any): void {
         return cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/MasterDetail/TasksEntity');
     }
 
+    // tslint:disable-next-line
     _dragStartMaster(_: SyntheticEvent, items: RecordSet): any {
-        var firstItem = this._itemsMaster.getRecordById(items[0]);
-
+        const firstItem = this._itemsMaster.getRecordById(items[0]);
         return new ListItems({
-            items: items,
+            items,
             mainText: firstItem.get('name')
         });
     }
+    // tslint:disable-next-line
     _dragStartDetail(_: SyntheticEvent, items: RecordSet): any {
-        var firstItem = this._itemsDetail.getRecordById(items[0]);
-
+        const firstItem = this._itemsDetail.getRecordById(items[0]);
         return new TaskEntity({
-            items: items,
+            items,
             mainText: firstItem.get('name'),
             image: firstItem.get('img'),
             additionalText: firstItem.get('shortMsg')
         });
     }
 
+    // tslint:disable-next-line
     _dragEndMaster(_: SyntheticEvent, entity: Collection<Model>, target: any, position: string): void {
-        var
-            item,
-            targetId,
-            items = entity.getItems();
+        let item = null;
+        let targetId = null;
+        const items = entity.getItems();
 
         if (cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/MasterDetail/TasksEntity')) {
             targetId = target.get('id');
-            items.forEach(function(id) {
+            // tslint:disable-next-line
+            items.forEach((id: string | number): void => {
                 item = this._itemsDetail.getRecordById(id);
                 item.set('parent', targetId);
                 this._detailSource.update(item);
             }, this);
-            // @ts-ignore
+            // tslint:disable-next-line
             this._children.detailList.reload();
             this._selectedKeys = [];
         } else {
-            // @ts-ignore
+            // tslint:disable-next-line
             this._children.masterMover.moveItems(items, target, position);
         }
     }
-
+    // tslint:disable-next-line
     _dragEndDetail(_: SyntheticEvent, entity: Collection<Model>, target: any, position: string): void {
-        // @ts-ignore
+        // tslint:disable-next-line
         this._children.detailMover.moveItems(entity.getItems(), target, position);
     }
 

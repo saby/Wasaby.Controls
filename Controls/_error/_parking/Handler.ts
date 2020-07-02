@@ -1,4 +1,3 @@
-/// <amd-module name="Controls/_dataSource/_parking/Handler" />
 import { TemplateFunction } from 'UI/Base';
 
 /**

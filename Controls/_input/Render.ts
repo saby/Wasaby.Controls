@@ -13,6 +13,7 @@ import IBorderVisibility, {
     getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes
 } from './interface/IBorderVisibility';
 
+// @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
 
 type State =
@@ -219,6 +220,8 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
             state: ''
         };
     }
+
+    static _theme: string[] = ['Controls/input', 'Controls/Classes'];
 }
 
 export default Render;

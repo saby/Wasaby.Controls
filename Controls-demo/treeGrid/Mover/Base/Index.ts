@@ -13,7 +13,7 @@ export default class extends Control {
     private _excludedKeys: TExpandOrColapsItems;
     private _filter: object;
 
-    protected _beforeMount(): any {
+    protected _beforeMount(): void {
         this._columns = [{
             displayProperty: 'title',
             width: ''
@@ -50,7 +50,6 @@ export default class extends Control {
     protected _afterItemsMove(): void {
         this._children.treeGrid.reload();
     }
-
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

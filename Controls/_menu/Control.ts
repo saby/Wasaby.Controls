@@ -58,6 +58,7 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
     protected _applyButtonVisible: boolean = false;
+    protected _closeButtonVisible: boolean = false;
     private _sourceController: SourceController = null;
     private _subDropdownItem: CollectionItem<Model>|null;
     private _selectionChanged: boolean = false;
@@ -86,6 +87,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
                            receivedState?: RecordSet): Deferred<RecordSet> {
         this._expandedItemsFilter = this.expandedItemsFilter.bind(this);
         this._additionalFilter = this.additionalFilter.bind(this, options);
+
+        this._closeButtonVisible = options.itemPadding.right === 'menu-close';
 
         if (options.source) {
             return this.loadItems(options);
@@ -805,7 +808,8 @@ class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
             root: null,
             emptyKey: null,
             moreButtonCaption: rk('Еще') + '...',
-            groupTemplate
+            groupTemplate,
+            itemPadding: {}
         };
     }
 
