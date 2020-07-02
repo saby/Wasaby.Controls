@@ -9,7 +9,8 @@ import {IStickyPosition} from 'Controls/popup';
 export type TKey = string|number|null;
 
 export default interface IDropdownController {
-    prepareItems(recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void;
+    loadItems(): Promise<RecordSet>;
+    setItems(recievedState: {items?: RecordSet, history?: RecordSet}):RecordSet;
     update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void;
     loadDependencies(): Promise<any>;
     setMenuPopupTarget(target: any): void;

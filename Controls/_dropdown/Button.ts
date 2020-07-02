@@ -5,6 +5,7 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import ActualApi from 'Controls/_buttons/ActualApi';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {loadItems} from 'Controls/_dropdown/Util';
 import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
 import {IGroupedOptions} from 'Controls/dropdown';
 import {IIconOptions, IHeightOptions, IIconSizeOptions, IIconStyleOptions} from 'Controls/interface';
@@ -101,7 +102,7 @@ class Button extends BaseDropdown {
       this._controller = new Controller(this._getControllerOptions(options));
 
       if (!options.lazyItemsLoading) {
-         return this._controller.prepareItems(recievedState);
+         return loadItems(this, recievedState);
       }
    }
 

@@ -3,10 +3,9 @@ import * as Control from 'Core/Control';
 // @ts-ignore
 import {Sticky as StickyOpener, Stack as StackOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
-import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {factory} from 'Types/chain';
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
-import prepareEmpty from 'Controls/_dropdown/Util';
+import {prepareEmpty} from 'Controls/_dropdown/Util';
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import * as mStubs from 'Core/moduleStubs';
@@ -53,12 +52,40 @@ export default class _Controller implements IDropdownController {
       this._options = options;
    }
 
-   prepareItems(recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
-      if (!recievedState || isEmpty(recievedState)) {
-         return this.loadItems();
-      } else {
-         this.setItems(recievedState);
-      }
+   loadItems(): Promise<RecordSet> {
+      return new Promise((resolve) => {
+         this._loadItems(this._options).addCallback((items) => {
+            const beforeMountResult = {};
+
+            if (isHistorySource(this._source)) {
+               beforeMountResult.history = this._source.getHistory();
+               beforeMountResult.items = this._source.getItems(false);
+            } else {
+               beforeMountResult.items = items;
+            }
+
+            resolve(beforeMountResult);
+         });
+      });
+   }
+
+   setItems(recievedState: {items?: RecordSet, history?: RecordSet}): RecordSet {
+      return this._getSourceController(this._options).addCallback((sourceController) => {
+         this._setItems(recievedState.items);
+         sourceController.calculateState(this._items);
+
+         if (recievedState.history) {
+            this._source.setHistory(recievedState.history);
+            this._setItems(this._source.prepareItems(this._items));
+         }
+
+         this._updateSelectedItems(this._options.emptyText, this._options.selectedKeys, this._options.keyProperty, this._options.selectedItemsChangedCallback);
+         if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback(this._items);
+         }
+
+         return sourceController;
+      });
    }
 
    update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void {
@@ -174,23 +201,6 @@ export default class _Controller implements IDropdownController {
       this._open();
    }
 
-   private loadItems(): Promise<RecordSet> {
-      return new Promise((resolve) => {
-         this._loadItems(this._options).addCallback((items) => {
-            const beforeMountResult = {};
-
-            if (isHistorySource(this._source)) {
-               beforeMountResult.history = this._source.getHistory();
-               beforeMountResult.items = this._source.getItems(false);
-            } else {
-               beforeMountResult.items = items;
-            }
-
-            resolve(beforeMountResult);
-         });
-      });
-   }
-
    private _open(popupOptions?: object): Promise<any> {
       if (this._options.readOnly) {
          return Promise.resolve();
@@ -221,25 +231,6 @@ export default class _Controller implements IDropdownController {
              }
           }
       );
-   }
-
-   private setItems(recievedState: {items?: RecordSet, history?: RecordSet}): RecordSet {
-      return this._getSourceController(this._options).addCallback((sourceController) => {
-         this._setItems(recievedState.items);
-         sourceController.calculateState(this._items);
-
-         if (recievedState.history) {
-            this._source.setHistory(recievedState.history);
-            this._setItems(this._source.prepareItems(this._items));
-         }
-
-         this._updateSelectedItems(this._options.emptyText, this._options.selectedKeys, this._options.keyProperty, this._options.selectedItemsChangedCallback);
-         if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback(this._items);
-         }
-
-         return sourceController;
-      });
    }
 
    private _getloadItemsPromise(): Promise<any> {

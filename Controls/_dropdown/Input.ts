@@ -4,7 +4,7 @@ import template = require('wml!Controls/_dropdown/Input/Input');
 import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
 import * as Utils from 'Types/util';
 import {factory} from 'Types/chain';
-import prepareEmpty from 'Controls/_dropdown/Util';
+import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
 import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
 import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
@@ -260,7 +260,7 @@ class Input extends BaseDropdown {
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
 
-      return this._controller.prepareItems(recievedState);
+      return loadItems(this, recievedState);
    }
 
    _beforeUpdate(options: IInputOptions): void {
