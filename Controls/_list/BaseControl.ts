@@ -2074,10 +2074,16 @@ const _private = {
         if (self.__error || !self._listViewModel) {
             return;
         }
+        const editingConfig = self._listViewModel.getEditingConfig();
+        // Если нет опций записи, проперти, и тулбар для редактируемой записи выставлен в false, то не надо
+        // инициализировать контроллер
+        if (!options.itemActions && !options.itemActionsProperty && !editingConfig?.toolbarVisibility) {
+            return;
+        }
         if (!self._itemActionsController) {
             self._itemActionsController = new ItemActionsController();
         }
-        const editingConfig = self._listViewModel.getEditingConfig();
+
         const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
         let editArrowAction: IItemAction;

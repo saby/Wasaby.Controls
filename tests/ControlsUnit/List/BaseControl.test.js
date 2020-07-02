@@ -15,9 +15,9 @@ define([
    'Types/entity',
    'Controls/popup',
    'Controls/listDragNDrop',
-   'Controls/listRender',
+   'Controls/itemActions',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, listRender) {
+], function(sourceLib, collection, lists, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, itemActions) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -2930,14 +2930,14 @@ define([
          assert.isTrue(item.isSelected());
       });
 
-      describe('updateItemActions', function() {
+      describe('initializing of sourceController', function() {
          var source = new sourceLib.Memory({
                keyProperty: 'id',
                data: data
             }),
             cfg = {
                editingConfig: {
-                  item: new entity.Model({rawData: { id: 1 }})
+                  item: new entity.Model({rawData: {id: 1}})
                },
                viewName: 'Controls/List/ListView',
                source: source,
@@ -2960,15 +2960,11 @@ define([
 
          baseControl.saveOptions(cfg);
          baseControl._beforeMount(cfg);
-         var actionsUpdateCount = 0;
          baseControl._container = {
             clientHeight: 100,
-            getBoundingClientRect: () => ({ y: 0 })
+            getBoundingClientRect: () => ({y: 0})
          };
 
-         afterEach(() => {
-            actionsUpdateCount = 0;
-         });
           it('update sourceController onListChange', function() {
               sandbox.stub(lists.BaseControl._private, 'prepareFooter');
 
@@ -2977,17 +2973,101 @@ define([
 
               sinon.assert.calledOnce(lists.BaseControl._private.prepareFooter);
           });
+      });
+
+      describe('calling updateItemActions method with different params', function() {
+         let stubItemActionsController;
+         let source;
+         let isActionsUpdated;
+         let cfg;
+         let baseControl;
+
+         const initTestBaseControl = (config) => {
+            const _baseControl = new lists.BaseControl(config);
+            _baseControl.saveOptions(config);
+            _baseControl._beforeMount(config);
+            _baseControl._container = {
+               clientHeight: 100,
+               getBoundingClientRect: () => ({ y: 0 })
+            };
+            return _baseControl;
+         };
+
+         beforeEach(() => {
+            source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            });
+            cfg = {
+               editingConfig: {
+                  item: new entity.Model({rawData: { id: 1 }})
+               },
+               viewName: 'Controls/List/ListView',
+               source: source,
+               keyProperty: 'id',
+               itemActions: [
+                  {
+                     id: 1,
+                     title: '123'
+                  }
+               ],
+               viewModelConstructor: lists.ListViewModel
+            };
+            isActionsUpdated = false;
+            stubItemActionsController = sinon.stub(itemActions.Controller.prototype, 'update').callsFake(() => {
+               isActionsUpdated = true;
+               return [];
+            });
+         });
+         afterEach(() => {
+            stubItemActionsController.restore();
+         });
+
          it('control in error state, should not call update', function() {
+            baseControl = initTestBaseControl(cfg);
             baseControl.__error = true;
             lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
-            assert.equal(actionsUpdateCount, 0);
+            assert.isFalse(isActionsUpdated);
             baseControl.__error = false;
          });
          it('without listViewModel should not call update', function() {
+            baseControl = initTestBaseControl(cfg);
             baseControl._listViewModel = null;
             lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
-            assert.equal(actionsUpdateCount, 0);
+            assert.isFalse(isActionsUpdated);
             baseControl._beforeMount(cfg);
+         });
+
+         // Если нет опций записи, проперти, и тулбар для редактируемой записи выставлен в false, то не надо
+         // инициализировать контроллер
+         it('should not initialize controller when there are no itemActions, no itemActionsProperty and toolbarVisibility is false', () => {
+            baseControl = initTestBaseControl({ ...cfg, itemActions: null });
+            lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
+            assert.isFalse(isActionsUpdated);
+         });
+
+         it('should initialize controller when itemActions are set, but, there are no itemActionsProperty and toolbarVisibility is false', () => {
+            baseControl = initTestBaseControl({ ...cfg });
+            lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
+            assert.isTrue(isActionsUpdated);
+         });
+
+         it('should initialize controller when itemActionsProperty is set, but, there are no itemActions and toolbarVisibility is false', () => {
+            baseControl = initTestBaseControl({ ...cfg, itemActions: null, itemActionsProperty: 'myActions' });
+            lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
+            assert.isTrue(isActionsUpdated);
+         });
+
+         it('should initialize controller when toolbarVisibility is true, but, there are no itemActions and no itemActionsProperty', () => {
+            baseControl = initTestBaseControl({
+               ...cfg,
+               itemActions: null,
+               editingConfig: {
+                  toolbarVisibility: true
+               }
+            });
+            lists.BaseControl._private.updateItemActions(baseControl, baseControl._options);
+            assert.isTrue(isActionsUpdated);
          });
       });
       describe('resetScrollAfterReload', function() {
