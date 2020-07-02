@@ -290,7 +290,7 @@ export default class SearchControllerClass {
                 searchDelay: options.searchDelay || this._options.searchDelay,
                 searchValueTrim: options.searchValueTrim || this._options.searchValueTrim,
                 filter: {...options.filter} || {},
-                source: options.source,
+                source: options.source || this._options.source,
                 sorting: options.sorting,
                 navigation: options.navigation,
                 keyProperty: options.keyProperty,
@@ -521,6 +521,9 @@ export default class SearchControllerClass {
                 self._notify('searchValueChanged', [searchValue]);
             },
             itemsChangedCallback: (items) => {
+                if (self._itemsChanged) {
+                    self._itemsChanged(null, items);
+                }
                 self._notify('itemsChanged', [items]);
             },
             pathChangedCallback: (path) => {
@@ -548,6 +551,9 @@ export default class SearchControllerClass {
                 self._misspellValue = value;
             },
             filterChangedCallback: (filter) => {
+                if (self._filterChanged) {
+                    self._filterChanged(null, filter);
+                }
                 self._notify('filterChanged', [filter]);
             },
             dataLoadErrback: (error: Object|Error) => {
