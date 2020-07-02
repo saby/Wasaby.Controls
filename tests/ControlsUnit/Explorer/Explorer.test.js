@@ -712,14 +712,6 @@ define([
                   commitEdit: () => commitEditResult
                }
             };
-
-            explorer._restoredMarkedKeys = {
-               null: {
-                  markedKey: null
-               }
-            };
-
-
             await (new Promise((res) => {
                isEventResultReturns = explorer._onItemClick({
                   stopPropagation: function() {
@@ -736,19 +728,19 @@ define([
                   nativeEvent: 123
                }, 3);
 
+               assert.strictEqual(explorer._restoredMarkedKeys['null'].markedKey, 'itemId');
+               assert.strictEqual(explorer._restoredMarkedKeys['itemId'].parent, null);
+               assert.strictEqual(explorer._restoredMarkedKeys['itemId'].markedKey, null);
+
                setTimeout(() => {
                   res();
                }, 0);
             }));
 
             assert.isFalse(isEventResultReturns);
-            assert.deepEqual({
-               ...explorer._restoredMarkedKeys,
-               itemId: {
-                  parent: null,
-                  markedKey: null
-               }
-            }, explorer._restoredMarkedKeys);
+            assert.strictEqual(explorer._restoredMarkedKeys['null'].markedKey, 'itemId');
+            assert.strictEqual(explorer._restoredMarkedKeys['itemId'].parent, null);
+            assert.strictEqual(explorer._restoredMarkedKeys['itemId'].markedKey, null);
             assert.isTrue(isPropagationStopped);
             // Click
             assert.isTrue(isWeNotified);
