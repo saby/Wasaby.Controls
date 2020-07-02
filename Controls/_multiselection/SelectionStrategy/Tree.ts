@@ -241,7 +241,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       let isAllSelected;
 
       if (byEveryItem) {
-         isAllSelected = !hasMoreData && itemsCount === this.getCount(selection, hasMoreData)
+         isAllSelected = !hasMoreData && itemsCount > 0 && itemsCount === this.getCount(selection, hasMoreData)
             || this._isAllSelectedInRoot(selection) && selection.excluded.length === 1;
       } else {
          isAllSelected = this._isAllSelectedInRoot(selection);
