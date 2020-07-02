@@ -6,25 +6,27 @@ import {deepStrictEqual, ok} from 'assert';
 import {stub} from 'sinon';
 import {error} from 'Controls/dataSource';
 
-const data = [
-    {
-        id: 0,
-        title: 'Sasha'
-    },
-    {
-        id: 1,
-        title: 'Aleksey'
-    },
-    {
-        it: 2,
-        title: 'Dmitry'
-    }
-];
+function getData(): object[] {
+    return [
+        {
+            id: 0,
+            title: 'Sasha'
+        },
+        {
+            id: 1,
+            title: 'Aleksey'
+        },
+        {
+            id: 2,
+            title: 'Dmitry'
+        }
+    ];
+}
 
 function getSource(): Memory {
     return new Memory({
         keyProperty: 'id',
-        data
+        data: getData()
     });
 }
 const source = getSource();
@@ -33,7 +35,7 @@ const sourceWithError = getSource();
 sourceWithError.query = () => Promise.reject(new Error());
 
 const recordSet = new RecordSet({
-    rawData: data,
+    rawData: getData(),
     keyProperty: 'id'
 });
 
@@ -53,7 +55,7 @@ function getLookupControllerWithEmptySelectedKeys(): BaseControllerClass {
 
 function getLookupControllerWithSelectedKeys(additionalConfig?: object): BaseControllerClass {
     let options = getControllerOptions();
-    options.selectedKeys = ['0', '1', '2'];
+    options.selectedKeys = [0, 1, 2];
     options = {...options, ...additionalConfig};
     return new BaseControllerClass(options as ILookupBaseControllerOptions);
 }
@@ -92,7 +94,7 @@ describe('Controls/_lookup/BaseControllerClass', () => {
     it('setItems', () => {
         const controller = getLookupControllerWithEmptySelectedKeys();
         controller.setItems(recordSet);
-        deepStrictEqual(controller.getSelectedKeys(), ['1', '2', '3']);
+        deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
     });
 
     describe('getItems', () => {
@@ -100,13 +102,13 @@ describe('Controls/_lookup/BaseControllerClass', () => {
         controller.setItems(recordSet);
 
         const items = controller.getItems() as RecordSet;
-        deepStrictEqual(items.getRawData(), data);
+        deepStrictEqual(items.getRawData(), getData);
     });
 
     it('addItem', () => {
         const controller = getLookupControllerWithEmptySelectedKeys();
         const item = new Model({
-            rawData: data[0],
+            rawData: getData[0],
             keyProperty: 'id'
         });
         controller.addItem(item);
@@ -118,7 +120,7 @@ describe('Controls/_lookup/BaseControllerClass', () => {
     it('removeItem', () => {
         const controller = getLookupControllerWithSelectedKeys();
         const item = new Model({
-            rawData: data[0],
+            rawData: getData[0],
             keyProperty: 'id'
         });
 
@@ -135,7 +137,7 @@ describe('Controls/_lookup/BaseControllerClass', () => {
     it('getSelectedKeys', () => {
         const controller = getLookupControllerWithEmptySelectedKeys();
         controller.setItems(recordSet);
-        deepStrictEqual(controller.getSelectedKeys(), ['1', '2', '3']);
+        deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
     });
 
     it('getTextValue', () => {
