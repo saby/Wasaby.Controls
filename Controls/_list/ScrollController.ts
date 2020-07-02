@@ -152,7 +152,7 @@ export default class ScrollController {
         this.__mounted = true;
         this._setContainer(container);
         if (this._container) {
-            this._setTriggers(triggers);
+            this.setTriggers(triggers);
             this._viewResize(this._container.offsetHeight, false);
             this.registerObserver();
             this._afterRenderHandler();
@@ -771,7 +771,10 @@ export default class ScrollController {
         }
     }
 
-    private _setTriggers(triggers: IScrollTriggers) {
+    setTriggers(triggers: IScrollTriggers) {
+        if (this._triggers && triggers.scrollObserver !== this._triggers.scrollObserver) {
+            this._observerRegistered = false;
+        }
         this._triggers = {};
         SCROLL_TRIGGERS.forEach(name => {
             this._triggers[name] = triggers[name];
