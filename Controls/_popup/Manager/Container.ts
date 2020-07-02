@@ -119,7 +119,7 @@ class Container extends Control<IControlOptions> {
 
             //TODO: опция _ignoreDOMStack выключаает костыль для автотестов. Как только автотесты поправят нужно удалить
             // опцию у нас и у прикладных разработчиков https://online.sbis.ru/doc/106f376f-92df-4850-9927-fc2a2626770a
-            const isIgnoreDOMStack = item.popupOptions._ignoreDOMStack === true;
+            const isIgnoreDOMStack = item.popupOptions?._ignoreDOMStack === true;
             if ((item.controller.TYPE === 'Stack' && !isIgnoreDOMStack) || item.controller.TYPE === 'Dialog') {
                 at = 0;
             }
