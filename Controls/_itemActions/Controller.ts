@@ -24,6 +24,7 @@ import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
 import { Utils } from './Utils';
 import {IContextMenuConfig} from './interface/IContextMenuConfig';
+import {CollectionItem} from 'Controls/display';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -90,19 +91,19 @@ export interface IItemActionsControllerOptions {
     /**
      * Опция записи, которую необходимо тображать в свайпе, если есть editArrow
      */
-    editArrowAction: IItemAction;
+    editArrowAction?: IItemAction;
     /**
      * Видимость Опция записи, которую необходимо тображать в свайпе, если есть editArrow
      */
-    editArrowVisibilityCallback: TEditArrowVisibilityCallback
+    editArrowVisibilityCallback?: TEditArrowVisibilityCallback
     /**
      * Конфигурация для контекстного меню опции записи.
      */
-    contextMenuConfig: IContextMenuConfig
+    contextMenuConfig?: IContextMenuConfig
     /**
      * Редактируемая запись
      */
-    editingItem: CollectionItem<Model>
+    editingItem?: CollectionItem<Model>
 }
 
 /**

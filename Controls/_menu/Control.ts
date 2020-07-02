@@ -757,15 +757,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
             itemActionsClass: `controls-Menu__itemActions_position_rightCenter_theme-${options.theme}`,
-            iconSize: editingConfig ? 's' : 'm',
-            // Options below for prevent tslint errors
-            editingToolbarVisible: editingConfig?.toolbarVisibility,
-            contextMenuConfig: undefined,
-            editArrowAction: undefined,
-            editArrowVisibilityCallback(item: unknown): boolean {
-                return false;
-            },
-            editingItem: undefined
+            iconSize: editingConfig ? 's' : 'm'
         });
     }
 
