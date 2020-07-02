@@ -40,7 +40,7 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
         }
     }
 
-    enrichItems(dates: number[]): Promise<TItems> | void {
+    enrichItems(dates: number[]): Promise<TItems> {
         if (!this._source) {
             return;
         }
@@ -56,6 +56,8 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
             start = new this._dateConstructor(Math.min.apply(null, newDatesIds));
             end = new this._dateConstructor(Math.max.apply(null, newDatesIds));
             return this._source.query(this._getQuery(start, end)).then(this._updateData.bind(this));
+        } else {
+            return Promise.resolve(null);
         }
     }
 

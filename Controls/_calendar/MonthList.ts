@@ -22,6 +22,7 @@ import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
+import {error as dataSourceError, parking} from 'Controls/dataSource';
 import {Logger} from 'UI/Utils';
 
 interface IModuleComponentOptions extends
@@ -93,6 +94,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _enrichItemsDebounced: Function;
 
     protected _virtualPageSize: number;
+    protected _errorViewConfig: parking.ViewConfig;
+    private _errorController: dataSourceError.Controller = new dataSourceError.Controller({});
 
     protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
                            Promise<TItems> | void {
@@ -360,13 +363,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     protected invalidatePeriod(start: Date, end: Date): void {
         if (this._extData) {
             this._extData.invalidatePeriod(start, end);
-            this._extData.enrichItems(this._displayedDates);
+            this._extData.enrichItems(this._displayedDates).catch((error: Error) => this._errorHandler(error));
         }
     }
 
     private _enrichItems(): void {
         if (this._extData) {
-            this._extData.enrichItems(this._displayedDates);
+            this._extData.enrichItems(this._displayedDates).catch((error: Error) => this._errorHandler(error));
         }
     }
 
@@ -460,6 +463,16 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _dateToDataString(date: Date): string {
         return monthListUtils.dateToId(date);
+    }
+
+    private _errorHandler(error: Error): Promise<unknown> {
+        return this._errorController.process({
+            error,
+            mode: dataSourceError.Mode.dialog
+        }).then((errorViewConfig) => {
+            this._errorViewConfig = errorViewConfig;
+            return error;
+        });
     }
 
     // Формируем дату для шаблона элемента через эту функцию несмотря на то,
