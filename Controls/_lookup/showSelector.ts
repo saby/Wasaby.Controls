@@ -27,7 +27,7 @@ function getPopupOptions(self): IStackPopupOptions {
 
 function getTemplateOptions(self, multiSelect) {
     return {
-        selectedItems: self._getItems().clone(),
+        selectedItems: self._lookupController.getItems().clone(),
         multiSelect: multiSelect,
         handlers: {
             onSelectComplete: function (event, result) {
