@@ -97,7 +97,6 @@ define('Controls/Application',
             var jml = [];
             jml = jml.concat(_private.translateJML('style', styles || []));
             jml = jml.concat(_private.translateJML('meta', meta || []));
-            jml = jml.concat(_private.translateJML('script', scripts || []));
             return jml;
          },
          isHover: function(touchClass, dragClass) {
