@@ -52,12 +52,12 @@ class PositionNavigationStore implements INavigationStore {
 
     constructor(cfg: IPositionNavigationStoreOptions) {
         if (cfg.field !== undefined) {
-            this._field = cfg.field.length ? cfg.field as TFieldValue : [cfg.field] as TFieldValue;
+            this._field = cfg.field instanceof Array ? cfg.field as TFieldValue : [cfg.field] as TFieldValue;
         } else {
             throw new Error('Option field is undefined in PositionNavigation');
         }
         if (cfg.position !== undefined) {
-            this._position = cfg.position.length ? cfg.position : [cfg.position];
+            this._position = cfg.position instanceof Array ? cfg.position : [cfg.position];
         } else {
             // Default value of position
             cfg.position = [null];

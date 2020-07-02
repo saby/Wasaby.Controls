@@ -322,7 +322,7 @@ describe('Controls/_source/NavigationController', () => {
                 const nc = new NavigationController({
                     navigationType: 'position',
                     navigationConfig: {
-                        position: 1,
+                        position: null,
                         field: 'id',
                         direction: 'bothways',
                         limit: QUERY_LIMIT
@@ -330,7 +330,7 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 const params = nc.getQueryParams({filter: defFilter, sorting: defSorting});
-                assert.equal(1, params.filter['id~'], 'Wrong query params');
+                assert.equal(null, params.filter['id~'], 'Wrong query params');
                 assert.equal(QUERY_LIMIT, params.limit, 'Wrong query params');
             });
 
