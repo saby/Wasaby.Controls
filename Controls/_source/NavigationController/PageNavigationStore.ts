@@ -35,8 +35,8 @@ class PageNavigationStore implements INavigationStore {
         } else {
             throw new Error('Option pageSize is undefined in PagePagination');
         }
-
-        this._hasMore = !!cfg.hasMore;
+        // if hasMore defined as "false", should be "false" else should be "true". By default should be "true"
+        this._hasMore = cfg.hasMore !== false;
     }
 
     private _initPages(pageNumber: number): void {

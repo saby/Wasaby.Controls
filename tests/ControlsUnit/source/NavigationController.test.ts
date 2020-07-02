@@ -269,6 +269,30 @@ describe('Controls/_source/NavigationController', () => {
                 hasMore = nc.hasMoreData('backward');
                 assert.isFalse(hasMore, 'Wrong more value');
             });
+
+            it('hasMoreData (hasMore is undefined) boolean true root', () => {
+                const START_PAGE = 0;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({more: false});
+
+                const params = nc.updateQueryProperties(rs);
+                let hasMore = nc.hasMoreData('forward');
+                assert.isFalse(hasMore, 'Wrong more value');
+                hasMore = nc.hasMoreData('backward');
+                assert.isFalse(hasMore, 'Wrong more value');
+            });
         });
 
     });
