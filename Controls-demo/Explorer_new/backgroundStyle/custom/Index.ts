@@ -13,7 +13,7 @@ export default class extends Control {
    protected _root: TRoot = null;
    protected _searchStartingWith: string = 'root';
    protected _searchStartingWithSource: Memory = null;
-   protected _filter = {demo: 123};
+   protected _filter: object = {demo: 123};
    protected _header: IHeader[] = [
       {
          title: ''

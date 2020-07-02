@@ -16,6 +16,7 @@ export default class extends Control {
     }
 
     protected getBackgroundColorStyle(itemIndex: number): string {
+        // tslint:disable-next-line
         if (itemIndex % 2 === 0) {
             return 'danger';
         }
