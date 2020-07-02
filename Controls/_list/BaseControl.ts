@@ -2042,6 +2042,7 @@ const _private = {
             collection: self._listViewModel,
             activeElement: options.activeElement,
             useNewModel: options.useNewModel,
+            forceInitVirtualScroll: self._options?.navigation?.view === 'infinity',
             callbacks: {
                 triggerOffsetChanged: self.triggerOffsetChangedHandler.bind(self),
                 changeIndicatorState: self.changeIndicatorStateHandler.bind(self),
@@ -2746,7 +2747,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
-            this._scrollController.update({collection: newOptions.listViewModel || this.getViewModel(), ...newOptions});
+            this._scrollController.update({
+                forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
+                collection: newOptions.listViewModel || this.getViewModel(),
+                ...newOptions
+            });
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
