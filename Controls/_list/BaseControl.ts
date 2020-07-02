@@ -3020,6 +3020,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
+            this._scrollController.setTriggers(this._children)
             this._scrollController.registerObserver();
         }
     },
