@@ -126,23 +126,48 @@ describe('Controls/_multiselection/Controller', () => {
       });
    });
 
-   it('clearSelection', () => {
-      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-      const result = controller.clearSelection();
-      assert.isTrue(setSelectedItemsSpy.called);
-      assert.deepEqual(result, {
-         selectedKeysDiff: {
-            added: [],
-            removed: [],
-            keys: []
-         },
-         excludedKeysDiff: {
-            added: [],
-            removed: [],
-            keys: []
-         },
-         selectedCount: 0,
-         isAllSelected: false
+   describe('clearSelection', () => {
+      it('not empty model', () => {
+         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+         const result = controller.clearSelection();
+         assert.isTrue(setSelectedItemsSpy.called);
+         assert.deepEqual(result, {
+            selectedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            excludedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            selectedCount: 0,
+            isAllSelected: false
+         });
+      });
+
+      it('clearSelection and empty model', () => {
+         model.setItems(new RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         }));
+
+         const result = controller.clearSelection();
+         assert.deepEqual(result, {
+            selectedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            excludedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            selectedCount: 0,
+            isAllSelected: false
+         });
       });
    });
 
