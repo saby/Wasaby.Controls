@@ -226,7 +226,7 @@ export class Controller {
          selectedKeysDiff: selectedDifference,
          excludedKeysDiff: excludedDifference,
          selectedCount: selectionCount,
-         isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getHasMoreData(), this._model.getCount())
+         isAllSelected: this._strategy.isAllSelected(newSelection, this._model.getHasMoreData(), this._model.getCount(), false)
       };
    }
 
