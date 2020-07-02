@@ -41,7 +41,10 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
-    <ws:if data="{{_loadingIndicatorState === 'all'}}">
+    <!-- Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate. -->
+    <!-- Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала. -->
+    <!-- В таком случае выводим индикатор над списком. -->
+    <ws:if data="{{_loadingIndicatorState === 'all' && !__needShowEmptyTemplate(_options.emptyTemplate, _listViewModel)}}">
         <ws:partial template="loadingIndicator"/>
     </ws:if>
     <ws:if data="{{_options.footerTemplate}}">
@@ -201,7 +204,10 @@
 
         <ws:if data="{{_listViewModel}}">
 
-            <ws:if data="{{_loadingIndicatorState=== 'up'}}">
+            <!-- Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate. -->
+            <!-- Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала. -->
+            <!-- В таком случае выводим индикатор над списком. -->
+            <ws:if data="{{ _loadingIndicatorState === 'up' || (_loadingIndicatorState === 'all' && __needShowEmptyTemplate(_options.emptyTemplate, _listViewModel)) }}">
                 <ws:partial template="loadingIndicator"/>
             </ws:if>
 
