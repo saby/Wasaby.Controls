@@ -259,6 +259,14 @@ var
             if (this._options.theme !== newCfg.theme) {
                 this._listModel.setTheme(newCfg.theme);
             }
+            if (this._options.stickyColumnsCount !== newCfg.stickyColumnsCount) {
+                this._listModel.setStickyColumnsCount(newCfg.stickyColumnsCount);
+                this._columnScrollController?.setStickyColumnsCount(newCfg.stickyColumnsCount, true);
+            }
+            if (this._options.multiSelectVisibility !== newCfg.stickyColumnsCount) {
+                this._columnScrollController?.setMultiSelectVisibility(newCfg.multiSelectVisibility, true);
+            }
+
             // В зависимости от columnScroll вычисляются значения колонок для stickyHeader в методе setHeader.
             if (this._options.columnScroll !== newCfg.columnScroll) {
                 this._listModel.setColumnScroll(newCfg.columnScroll);
@@ -295,9 +303,6 @@ var
             }
             if (this._options.columnSeparatorSize !== newCfg.columnSeparatorSize) {
                 this._listModel.setColumnSeparatorSize(newCfg.columnSeparatorSize);
-            }
-            if (this._options.stickyColumnsCount !== newCfg.stickyColumnsCount) {
-                this._listModel.setStickyColumnsCount(newCfg.stickyColumnsCount);
             }
             if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
                 this._resultsTemplate = newCfg.resultsTemplate || this._baseResultsTemplate;
@@ -344,13 +349,6 @@ var
                 const shouldUpdateSizes = this._columnsHaveBeenChanged ||
                     this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount ||
                     this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility;
-
-                if (this._options.stickyColumnsCount !== oldOptions.stickyColumnsCount) {
-                    this._columnScrollController.setStickyColumnsCount(this._options.stickyColumnsCount, shouldUpdateSizes);
-                }
-                if (this._options.multiSelectVisibility !== oldOptions.multiSelectVisibility) {
-                    this._columnScrollController.setMultiSelectVisibility(this._options.multiSelectVisibility, shouldUpdateSizes);
-                }
 
                 if (shouldUpdateSizes) {
                     // Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
@@ -590,7 +588,7 @@ var
                 return null;
             }
             let target = this._getCorrectElement(event.target);
-         
+
             const gridRow = target.closest('.controls-Grid__row');
             if (!gridRow) {
                 return null;
