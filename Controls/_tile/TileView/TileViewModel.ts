@@ -43,7 +43,8 @@ var TileViewModel = ListViewModel.extend({
             imageProperty: this._options.imageProperty,
             defaultItemWidth: DEFAULT_ITEM_WIDTH,
             defaultShadowVisibility: 'visible',
-            itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT
+            itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT,
+            getTileSizes: () => {}
         };
     },
 

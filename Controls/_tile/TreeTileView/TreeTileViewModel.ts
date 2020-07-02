@@ -2,6 +2,7 @@ import TileViewModel = require('Controls/_tile/TileView/TileViewModel');
 import {TreeViewModel} from 'Controls/treeGrid';
 import cMerge = require('Core/core-merge');
 import InvisibleFor = require('wml!Controls/_tile/TileView/resources/InvisibleFor');
+import {object} from 'Types/util';
 
 var DEFAULT_FOLDER_WIDTH = 250;
 const TILE_SIZES = {
@@ -135,9 +136,13 @@ var TreeTileViewModel = TreeViewModel.extend({
         return opts;
     },
 
-    getTileSizes(tileSize: string, imagePosition: string = 'top'): object {
-        const sizeParams = TILE_SIZES[tileSize];
-        return sizeParams[imagePosition === 'top' ? 'top' : 'side'];
+    getTileSizes(tileSize: string, imagePosition: string = 'top', imageViewMode = 'rectangle'): object {
+        const sizeParams = object.clone(TILE_SIZES[tileSize]);
+        const tileSizes = sizeParams[imagePosition === 'top' ? 'top' : 'side'];
+        if (imageViewMode !== 'rectangle') {
+            tileSizes.imageHeight = tileSizes.imageWidth;
+        }
+        return tileSizes;
     },
 
     setTileMode: function (tileMode) {

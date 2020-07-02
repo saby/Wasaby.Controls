@@ -15,11 +15,13 @@
          </ws:if>
       </ws:if>
       <ws:else>
-         <ws:partial
-            template="imageTemplate"
-            viewMode="{{_options.imageViewMode}}"
-            imageProerty="{{_options.imageProperty}}"
-            itemData="{{itemData}}"/>
+         <ws:if data="{{_options.imageViewMode !== 'none'}}">
+            <ws:partial
+               template="imageTemplate"
+               viewMode="{{_options.imageViewMode}}"
+               imageProerty="{{_options.imageProperty}}"
+               itemData="{{itemData}}"/>
+         </ws:if>
          <div class="controls-listTemplates__tableCellTemplate__content-theme-{{_options.theme}}">
             <ws:if data="{{contentTemplate}}">
                <ws:partial
