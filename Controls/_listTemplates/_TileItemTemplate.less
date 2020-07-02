@@ -1,3 +1,9 @@
+.controls-listTemplates__tileItemTemplate {
+   display: flex;
+   width: 100%;
+   height: 100%;
+}
+
 .controls-listTemplates__tileItemTemplate-image_position-right {
    flex-direction: row-reverse;
 }
@@ -10,9 +16,11 @@
    margin: @offset_m;
    display: flex;
    flex-direction: column;
-   flex-grow: 1;
 }
 
 .controls-listTemplates__tiItemTemplate-caption_theme-@{themeName} {
    margin-bottom: @offset_3xs;
+}
+.controls-listTemplates__tileItemTemplate__item {
+   height: 100%;
 }

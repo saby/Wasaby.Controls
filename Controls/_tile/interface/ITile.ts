@@ -167,7 +167,7 @@
  */
 
  /**
- * @name Controls/_tile/interface/ITile#tileMode
+ * @name Controls/_tile/interface/ITile#tileMode 
  * @cfg {String} Режим отображения плитки с динамической/фиксированной шириной.
  * @variant static Отображается плитка с фиксированной шириной.
  * @variant dynamic Отображается плитка с динамической шириной.
@@ -187,18 +187,18 @@
  */
 /**
  * @name Controls/_tile/interface/ITile#tileSize
- * @cfg {String} Минимальный размер плитки с статическим видом отображения.
- * @variant s
- * @variant m
- * @variant l
+ * @cfg {String} Минимальный размер плитки с динамическим видом отображения.
+ * @variant small
+ * @variant medium
+ * @variant large
  * @example
  * <pre class="brush: html">
  *    <Controls.tile:View source="{{_viewSource}}"
  *                   keyProperty="id"
  *                   parentProperty="Раздел"
- *                   tileSize="s"
+ *                   tileSize="small"
  *                   nodeProperty="Раздел@"
- *                   tileMode="static">
+ *                   tileMode="dynamic">
  *       <ws:itemTemplate>
  *          ...
  *       </ws:itemTemplate>
