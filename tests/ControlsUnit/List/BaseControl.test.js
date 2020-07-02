@@ -2697,7 +2697,8 @@ define([
                   return Promise.resolve();
                },
                registerObserver: () => undefined,
-               reset: () => undefined
+               reset: () => undefined,
+               setTriggers: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
