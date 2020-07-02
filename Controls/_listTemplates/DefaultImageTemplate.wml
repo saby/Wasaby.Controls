@@ -1,5 +1,4 @@
-<div class="controls-listTemplates__imageTemplate" style="height: {{_options.height * (!_options.isNode || _options.viewMode !== 'rectangle' ? 1 : _options.compressionCoefficient)}}px;
-                                                          width: {{_options.width}}px;">
+<div class="controls-listTemplates__imageTemplate" style="height:{{_options.imageHeight}}px;">
    <img class="controls-listTemplates__imageTemplate_image
                controls-listTemplates__imageTemplate_image_viewMode-{{_options.viewMode}}"
         src="{{_options.src}}"/>
