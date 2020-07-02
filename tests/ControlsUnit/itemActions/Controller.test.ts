@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {Record} from 'Types/entity';
+import {Model, Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ANIMATION_STATE, Collection, CollectionItem} from 'Controls/display';
@@ -667,9 +667,10 @@ describe('Controls/_itemActions/Controller', () => {
                 icon: '',
                 showType: TItemActionShowType.TOOLBAR,
             };
-            let callbackIsCalled = false;
-            const editArrowVisibilityCallback = () => {
-                callbackIsCalled = true;
+            let recordWithCorrectType = false;
+            const editArrowVisibilityCallback = (record: Model) => {
+                // Тут не должна попасть проекция
+                recordWithCorrectType = !!record.get && !record.getContents;
                 return true;
             };
             itemActionsController.update(initializeControllerOptions({
@@ -682,6 +683,7 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.activateSwipe(1, 50);
             const config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration');
+            assert.isTrue(recordWithCorrectType, 'editArrowVisibilityCallback should be called with Model type argument');
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
 
