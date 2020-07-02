@@ -1,23 +1,23 @@
 import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
-import Utils = require('Types/util');
-import dropdownUtils = require('Controls/_dropdown/Util');
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
-import Controller = require('Controls/_dropdown/_Controller');
+import * as Utils from 'Types/util';
+import prepareEmpty from 'Controls/_dropdown/Util';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
+import Controller from 'Controls/_dropdown/_Controller';
+import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ISingleSelectableOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {RecordSet} from 'Types/collection';
-import {getDropdownControllerOptions} from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
    value?: string;
 }
 
-let getPropValue = Utils.object.getPropertyValue.bind(Utils);
+const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Полный список параметров отображается при нажатии на контрол.
@@ -98,7 +98,7 @@ class ComboBox extends BaseDropdown {
       };
 
       this._controller = new Controller(this._getControllerOptions(options));
-      return this._controller.beforeMount(recievedState);
+      return this._controller.prepareItems(recievedState);
    }
 
    _beforeUpdate(options: IComboboxOptions): void {
@@ -144,7 +144,7 @@ class ComboBox extends BaseDropdown {
       this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null || selectedItems[0] === null;
       if (this._isEmptyItem) {
          this._value = '';
-         this._placeholder = dropdownUtils.prepareEmpty(this._options.emptyText);
+         this._placeholder = prepareEmpty(this._options.emptyText);
       } else {
          this._value = String(getPropValue(selectedItems[0], this._options.displayProperty) || '');
          this._placeholder = this._options.placeholder;

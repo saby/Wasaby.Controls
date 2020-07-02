@@ -78,7 +78,7 @@ define(
          };
 
          let getDropdownController = function(config) {
-            let dropdownCntroller = new dropdown._Controller(config);
+            let dropdownCntroller = new dropdown._Controller.default(config);
             return dropdownCntroller;
          };
 

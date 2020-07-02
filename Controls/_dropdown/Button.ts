@@ -1,18 +1,18 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
-import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import {cssStyleGeneration} from 'Controls/_dropdown/Button/MenuUtils';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import ActualApi from 'Controls/_buttons/ActualApi';
-import Controller = require('Controls/_dropdown/_Controller');
+import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
+import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
 import {IGroupedOptions} from 'Controls/dropdown';
 import {IIconOptions, IHeightOptions, IIconSizeOptions, IIconStyleOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {RecordSet} from 'Types/collection';
-import {getDropdownControllerOptions} from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 
 interface IButtonOptions extends IBaseDropdownOptions, IGroupedOptions, IIconOptions, IHeightOptions,
          IIconSizeOptions, IIconStyleOptions, IMenuControlOptions, IMenuPopupOptions {
@@ -95,13 +95,13 @@ class Button extends BaseDropdown {
    protected _hasItems: boolean = true;
 
    _beforeMount(options: IButtonOptions, recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
-      this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+      this._offsetClassName = cssStyleGeneration(options);
       this._updateState(options);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
 
       if (!options.lazyItemsLoading) {
-         return this._controller.beforeMount(recievedState);
+         return this._controller.prepareItems(recievedState);
       }
    }
 
@@ -109,7 +109,7 @@ class Button extends BaseDropdown {
       this._controller.update(this._getControllerOptions(options));
       if (this._options.size !== options.size || this._options.icon !== options.icon ||
          this._options.viewMode !== options.viewMode) {
-         this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+         this._offsetClassName = cssStyleGeneration(options);
       }
       this._updateState(options);
    }

@@ -1,12 +1,12 @@
 // @ts-ignore
-import Control = require('Core/Control');
+import * as Control from 'Core/Control';
 // @ts-ignore
 import {Sticky as StickyOpener, Stack as StackOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
-import isEmpty = require('Core/helpers/Object/isEmpty');
-import chain = require('Types/chain');
-import historyUtils = require('Controls/_dropdown/dropdownHistoryUtils');
-import dropdownUtils = require('Controls/_dropdown/Util');
+import * as isEmpty from 'Core/helpers/Object/isEmpty';
+import {factory} from 'Types/chain';
+import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
+import prepareEmpty from 'Controls/_dropdown/Util';
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import * as mStubs from 'Core/moduleStubs';
@@ -15,7 +15,6 @@ import {RecordSet} from 'Types/collection';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
-import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 /**
  * Контроллер для выпадающих списков.
@@ -45,7 +44,7 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
  * @param {Types/collection:RecordSet} items Выбранные элементы.
  */
 
-class _Controller implements IDropdownController {
+export default class _Controller implements IDropdownController {
    protected _items: RecordSet = null;
    protected _loadItemsTempPromise: Promise<any> = null;
    protected _options: IDropdownControllerOptions = null;
@@ -54,16 +53,12 @@ class _Controller implements IDropdownController {
       this._options = options;
    }
 
-   beforeMount(recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
+   prepareItems(recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
       if (!recievedState || isEmpty(recievedState)) {
          return this.loadItems();
       } else {
          this.setItems(recievedState);
       }
-   }
-
-   registerScrollEvent(): void {
-      RegisterUtil(this._options.openerControl, 'scroll', this._handleScroll.bind(this));
    }
 
    update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void {
@@ -139,7 +134,6 @@ class _Controller implements IDropdownController {
       }
       this._setItems(null);
       this._closeDropdownList();
-      UnregisterUtil(this._options.openerControl, 'scroll');
    }
 
    handleSelectedItems(data): void {
@@ -155,11 +149,11 @@ class _Controller implements IDropdownController {
       var newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
 
       // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
-      if (historyUtils.isHistorySource(this._source)) {
+      if (isHistorySource(this._source)) {
          if (newItems.length) {
             this._sourceController = null;
          }
-         this._updateHistory(chain.factory(selectedItems).toArray());
+         this._updateHistory(factory(selectedItems).toArray());
       } else {
          this._items.prepend(newItems);
          this._setItems(this._items);
@@ -185,7 +179,7 @@ class _Controller implements IDropdownController {
          this._loadItems(this._options).addCallback((items) => {
             const beforeMountResult = {};
 
-            if (historyUtils.isHistorySource(this._source)) {
+            if (isHistorySource(this._source)) {
                beforeMountResult.history = this._source.getHistory();
                beforeMountResult.items = this._source.getItems(false);
             } else {
@@ -261,14 +255,8 @@ class _Controller implements IDropdownController {
       return this._loadItemsPromise;
    }
 
-   private _handleScroll(): void {
-      if (this._popupId) {
-         this._closeDropdownList();
-      }
-   }
-
    private _getEmptyText(): string {
-      return dropdownUtils.prepareEmpty(this._options.emptyText);
+      return prepareEmpty(this._options.emptyText);
    }
 
    private _setItems(items: RecordSet|null): void {
@@ -300,7 +288,7 @@ class _Controller implements IDropdownController {
    }
 
    private _hasHistory(options): boolean {
-      return options.historyId || historyUtils.isHistorySource(options.source);
+      return options.historyId || isHistorySource(options.source);
    }
 
    private _isLocalSource(source): boolean {
@@ -320,7 +308,7 @@ class _Controller implements IDropdownController {
 
       if (this._hasHistory(options)) {
          if (this._isLocalSource(options.source) || !options.historyNew) {
-            filter = historyUtils.getSourceFilter(options.filter, this._source);
+            filter = getSourceFilter(options.filter, this._source);
          } else {
             filter.historyIds = [options.historyId];
          }
@@ -333,7 +321,7 @@ class _Controller implements IDropdownController {
       let sourcePromise;
 
       if (this._hasHistory(options) && this._isLocalSource(options.source) && !options.historyNew) {
-         sourcePromise = historyUtils.getSource(options.source, options.historyId);
+         sourcePromise = getSource(options.source, options.historyId);
       } else {
          sourcePromise = Promise.resolve(options.source);
       }
@@ -400,7 +388,7 @@ class _Controller implements IDropdownController {
             addToSelected(null);
          }
       } else {
-         chain.factory(selectedKeys).each( (key) => {
+         factory(selectedKeys).each( (key) => {
             // fill the array of selected items from the array of selected keys
             addToSelected(key);
          });
@@ -413,7 +401,7 @@ class _Controller implements IDropdownController {
    private _getNewItems(items: RecordSet, selectedItems: RecordSet, keyProperty: string): Model[] {
       const newItems = [];
 
-      chain.factory(selectedItems).each((item) => {
+      factory(selectedItems).each((item) => {
          if (!this._getItemByKey(items, item.get(keyProperty), keyProperty)) {
             newItems.push(item);
          }
@@ -422,7 +410,7 @@ class _Controller implements IDropdownController {
    }
 
    private _prepareItem(item, keyProperty, source) {
-      if (historyUtils.isHistorySource(source)) {
+      if (isHistorySource(source)) {
          return source.resetHistoryFields(item, keyProperty);
       } else {
          return item;
@@ -430,8 +418,8 @@ class _Controller implements IDropdownController {
    }
 
    private _updateHistory(items): void {
-      if (historyUtils.isHistorySource(this._source)) {
-         this._source.update(items, historyUtils.getMetaHistory());
+      if (isHistorySource(this._source)) {
+         this._source.update(items, getMetaHistory());
 
          if (this._sourceController && this._source.getItems) {
             this._setItems(this._source.getItems());
@@ -567,4 +555,3 @@ _Controller.getOptionTypes = function getOptionTypes() {
       selectedKeys: descriptor(Array)
    };
 };
-export = _Controller;

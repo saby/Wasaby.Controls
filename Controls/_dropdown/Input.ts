@@ -2,12 +2,12 @@ import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Input/Input');
 import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
-import Utils = require('Types/util');
-import chain = require('Types/chain');
-import dropdownUtils = require('Controls/_dropdown/Util');
+import * as Utils from 'Types/util';
+import {factory} from 'Types/chain';
+import prepareEmpty from 'Controls/_dropdown/Util';
 import {isEqual} from 'Types/object';
-import Controller = require('Controls/_dropdown/_Controller');
-import BaseDropdown = require('Controls/_dropdown/BaseDropdown');
+import Controller from 'Controls/_dropdown/_Controller';
+import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Stack as StackOpener} from 'Controls/popup';
 import {IGroupedOptions} from './interface/IGrouped';
@@ -16,7 +16,7 @@ import IMenuPopup, {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup
 import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {RecordSet} from 'Types/collection';
-import {getDropdownControllerOptions} from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 
 interface IInputOptions extends IBaseDropdownOptions, IGroupedOptions, IIconSizeOptions,
     IMenuPopupOptions, IMenuControlOptions {
@@ -260,7 +260,7 @@ class Input extends BaseDropdown {
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
 
-      return this._controller.beforeMount(recievedState);
+      return this._controller.prepareItems(recievedState);
    }
 
    _beforeUpdate(options: IInputOptions): void {
@@ -384,7 +384,7 @@ class Input extends BaseDropdown {
 
    private _getSelectedKeys(items, keyProperty) {
       let keys = [];
-      chain.factory(items).each(function (item) {
+      factory(items).each(function (item) {
          keys.push(getPropValue(item, keyProperty));
       });
       return keys;
@@ -392,7 +392,7 @@ class Input extends BaseDropdown {
 
    private _getTooltip(items, displayProperty) {
       var tooltips = [];
-      chain.factory(items).each(function (item) {
+      factory(items).each(function (item) {
          tooltips.push(getPropValue(item, displayProperty));
       });
       return tooltips.join(', ');
@@ -405,7 +405,7 @@ class Input extends BaseDropdown {
    private _getText(items) {
       let text = '';
       if (this.isEmptyItem(items[0])) {
-         text = dropdownUtils.prepareEmpty(this._options.emptyText);
+         text = prepareEmpty(this._options.emptyText);
       } else {
          text = getPropValue(items[0], this._options.displayProperty);
       }

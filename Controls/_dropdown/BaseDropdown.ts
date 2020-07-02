@@ -1,19 +1,21 @@
 import {Control, IControlOptions} from 'UI/Base';
-import Env = require('Env/Env');
-import {SyntheticEvent} from "Vdom/Vdom";
+import {constants} from 'Env/Env';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import IDropdownController from 'Controls/_dropdown/interface/IDropdownController';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
-class BaseDropdown extends Control<IControlOptions> {
+export default class BaseDropdown extends Control<IControlOptions> {
     protected _controller: IDropdownController = null;
+    protected _popupId: string = null;
 
-    protected _afterMount(): void {
-        this._controller.registerScrollEvent();
+    protected _afterMount(options?: IControlOptions, contexts?: any): void {
+        RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
     }
 
     protected _handleKeyDown(event): void {
-        if (event.nativeEvent.keyCode === Env.constants.key.esc && this._popupId) {
+        if (event.nativeEvent.keyCode === constants.key.esc && this._popupId) {
             this._controller.closeMenu();
             event.stopPropagation();
         }
@@ -61,9 +63,14 @@ class BaseDropdown extends Control<IControlOptions> {
         this._controller.closeMenu();
     }
 
-    _beforeUnmount(): void {
+    protected _handleScroll(): void {
+        if (this._popupId) {
+            this._controller.closeMenu();
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        UnregisterUtil(this, 'scroll');
         this._controller.destroy();
     }
 }
-
-export = BaseDropdown;

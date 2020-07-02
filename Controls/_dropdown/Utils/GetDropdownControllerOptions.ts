@@ -1,7 +1,6 @@
 import {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
-import {TemplateFunction} from "UI/Base";
 
-function getDropdownControllerOptions(options: IDropdownControllerOptions): IDropdownControllerOptions {
+export default function getDropdownControllerOptions(options: IDropdownControllerOptions): IDropdownControllerOptions {
     const dropdownOptions: IDropdownControllerOptions = {
         source: options.source,
         filter: options.filter,
@@ -58,7 +57,3 @@ function getDropdownControllerOptions(options: IDropdownControllerOptions): IDro
     };
     return dropdownOptions;
 }
-
-export {
-    getDropdownControllerOptions
-};
