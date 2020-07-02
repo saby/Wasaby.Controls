@@ -578,13 +578,16 @@ var
          event.stopPropagation();
 
          const changeRoot = () => {
-             // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся
-            _private.setRestoredKeyObject(this, item);
             _private.setRoot(this, item.getId());
             this._isGoingFront = true;
          };
 
          if (res !== false && item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
+            // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся.
+            // Дополнять restoredKeyObject нужно СИНХРОННО, иначе на момент вызова restoredKeyObject опции уже будут
+            // новые и маркер запомнится не для того root'а. Ошибка:
+            // https://online.sbis.ru/opendoc.html?guid=38d9ca66-7088-4ad4-ae50-95a63ae81ab6
+            _private.setRestoredKeyObject(this, item);
             if (!this._options.editingConfig) {
                changeRoot();
             } else {
