@@ -42,7 +42,7 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
 
     enrichItems(dates: number[]): Promise<TItems> {
         if (!this._source) {
-            return;
+            return Promise.resolve(null);
         }
 
         let
