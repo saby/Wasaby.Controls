@@ -7,10 +7,10 @@ export function prepareEmpty(emptyText) {
    }
 }
 
-export function loadItems(control, recievedState) {
+export function loadItems(controller, recievedState) {
    if (!recievedState || isEmpty(recievedState)) {
-      return control._controller.loadItems();
+      return controller.loadItems();
    } else {
-      control._controller.setItems(recievedState);
+      controller.setItems(recievedState);
    }
 }
