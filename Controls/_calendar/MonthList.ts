@@ -291,34 +291,36 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         // We go around all the elements where the intersection with the scrolled container has changed and
         // find the element that is at the top and it is not fully displayed.
         for (const entry of entries) {
-            if (entry.data.type !== ITEM_TYPES.body) {
-                continue;
-            }
-            const entryDate: Date = entry.data.date;
-            const rootBounds: DOMRect = entry.nativeEntry.rootBounds;
-            // На Ipad приходит уже не актуальное положение элементов.
-            // При дальнейшем скролировании обсервер уже не вызывается.
-            const boundingClientRect: DOMRect = detection.isMobileIOS ?
-                entry.nativeEntry.target.getBoundingClientRect() : entry.nativeEntry.boundingClientRect;
+            if (entry.data) {
+                if (entry.data.type !== ITEM_TYPES.body) {
+                    continue;
+                }
+                const entryDate: Date = entry.data.date;
+                const rootBounds: DOMRect = entry.nativeEntry.rootBounds;
+                // На Ipad приходит уже не актуальное положение элементов.
+                // При дальнейшем скролировании обсервер уже не вызывается.
+                const boundingClientRect: DOMRect = detection.isMobileIOS ?
+                    entry.nativeEntry.target.getBoundingClientRect() : entry.nativeEntry.boundingClientRect;
 
-            // We select only those containers that are not fully displayed
-            // and intersect with the scrolled container in its upper part, or lie higher.
-            if (boundingClientRect.top - rootBounds.top <= 0) {
-                if (boundingClientRect.bottom - rootBounds.top > 0) {
-                    // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
-                    date = entryDate;
-                    break;
-                } else if (rootBounds.top - boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
-                    // If the container is completely invisible and lies on top of the scrolled area,
-                    // then the next container may intersect with the scrolled area.
-                    // We save the date, and check the following. This condition branch is needed,
-                    // because a situation is possible when the container partially intersected from above, climbed up,
-                    // persecuted, and the lower container approached the upper edge and its intersection did not change.
-                    const delta: number = this._options.order === 'asc' ? 1 : -1;
-                    if (this._options.viewMode === VIEW_MODE.year) {
-                        date = new this._options.dateConstructor(entryDate.getFullYear() + delta, entryDate.getMonth());
-                    } else {
-                        date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + delta);
+                // We select only those containers that are not fully displayed
+                // and intersect with the scrolled container in its upper part, or lie higher.
+                if (boundingClientRect.top - rootBounds.top <= 0) {
+                    if (boundingClientRect.bottom - rootBounds.top > 0) {
+                        // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
+                        date = entryDate;
+                        break;
+                    } else if (rootBounds.top - boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
+                        // If the container is completely invisible and lies on top of the scrolled area,
+                        // then the next container may intersect with the scrolled area.
+                        // We save the date, and check the following. This condition branch is needed,
+                        // because a situation is possible when the container partially intersected from above, climbed up,
+                        // persecuted, and the lower container approached the upper edge and its intersection did not change.
+                        const delta: number = this._options.order === 'asc' ? 1 : -1;
+                        if (this._options.viewMode === VIEW_MODE.year) {
+                            date = new this._options.dateConstructor(entryDate.getFullYear() + delta, entryDate.getMonth());
+                        } else {
+                            date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + delta);
+                        }
                     }
                 }
             }
