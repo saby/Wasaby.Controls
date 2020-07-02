@@ -471,7 +471,7 @@ export class Controller {
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
         actionsTemplateConfig.actionAlignment = this._actionsAlignment;
 
-        if (this._editArrowAction && this._editArrowVisibilityCallback(item)) {
+        if (this._editArrowAction && this._editArrowVisibilityCallback(item.getContents())) {
             if (!actions.find((action) => action.id === 'view')) {
                 actions = [this._editArrowAction, ...actions];
             }
