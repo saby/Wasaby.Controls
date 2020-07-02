@@ -68,36 +68,6 @@ describe('Controls/search:ControllerClass', () => {
         assert.isFalse(searchController._isSearchValueChanged('test'));
     });
 
-    it('_searchCallback', () => {
-        const searchController = new ControllerClass(getDefaultOptions(), {});
-        const result = {
-            data: {
-                getMetaData: () => {
-                    return {
-                        switchedStr: 'test',
-                        results: 'res'
-                    };
-                }
-            }
-        };
-        searchController._updateSearchParams = () => {};
-        searchController._options.itemsChangedCallback = () => {};
-
-        searchController._searchCallback(result);
-        assert.notEqual(searchController._searchValue, 'test');
-        assert.equal(searchController._misspellValue, 'test');
-
-        result.data.getMetaData = () => {
-            return {
-                switchedStr: 'test',
-                results: 'res',
-                returnSwitched: true
-            };
-        };
-        searchController._searchCallback(result);
-        assert.equal(searchController._searchValue, 'test');
-    });
-
     it('isSearchValueShort', () => {
         const searchController = new ControllerClass(getDefaultOptions(), {});
         assert.isFalse(searchController._isSearchValueShort('test', 3));
@@ -146,6 +116,33 @@ describe('Controls/search:ControllerClass', () => {
             options.searchValue = 'test';
             new ControllerClass(options, {});
             assert.isFalse(searchValueChangedCallbackCalled);
+        });
+    });
+
+    it('update with switchedReturn', () => {
+        const searchController = new ControllerClass(getDefaultOptions(), {});
+        const options = {
+            searchParam: 'title',
+            searchValue: 'еуые',
+            source: getMemorySource(),
+            keyProperty: 'id',
+            loadingChangedCallback: () => {},
+            itemsChangedCallback: () => {}
+        };
+        const context = {
+            dataOptions: {
+                source: options.source
+            }
+        };
+
+        searchController._options.searchDelay = 0;
+        searchController._needStartSearchBySearchValueChanged = () => true;
+        searchController._isNeedRecreateSearchControllerOnOptionsChanged = () => false;
+        searchController._updateSearchParams = () => {};
+
+        searchController.update(options, context).then(() => {
+            assert.equal(searchController._searchValue, 'tst');
+            assert.equal(searchController._misspellValue, 'test');
         });
     });
 });

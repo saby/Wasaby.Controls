@@ -367,7 +367,7 @@ export default class SearchControllerClass {
         return this._searchController && this._searchController.isLoading();
     }
 
-    private _needUpdateSearchValue(data: RecordSet): boolean {
+    private _needChangeSearchValueToSwitchedString(data: RecordSet): boolean {
         const metaData = data && data.getMetaData();
         return metaData ? metaData.returnSwitched : false;
     }
@@ -377,7 +377,7 @@ export default class SearchControllerClass {
         this._options.itemsChangedCallback(result.data);
         const switchedStr = getSwitcherStrFromData(result.data);
         this._setMisspellValue(switchedStr);
-        if (this._needUpdateSearchValue(result.data)) {
+        if (this._needChangeSearchValueToSwitchedString(result.data)) {
             this._setSearchValue(switchedStr);
         }
     }
