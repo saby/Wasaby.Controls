@@ -1,11 +1,44 @@
 import {ListViewModel} from 'Controls/list';
 import cMerge = require('Core/core-merge');
 import {Logger} from 'UI/Utils';
+import {object} from 'Types/util';
 
 var
     DEFAULT_ITEM_WIDTH = 250,
     DEFAULT_ITEM_HEIGHT = 200,
     ITEM_COMPRESSION_COEFFICIENT = 0.7;
+const TILE_SIZES = {
+    s: {
+        top: {
+            width: 220,
+            imageHeight: 180
+        },
+        side: {
+            width: 400,
+            imageWidth: 300
+        }
+    },
+    m: {
+        top: {
+            width: 320,
+            imageHeight: 240
+        },
+        side: {
+            width: 400,
+            imageWidth: 160
+        }
+    },
+    l: {
+        top: {
+            width: 420,
+            imageHeight: 320
+        },
+        side: {
+            width: 650,
+            imageWidth: 300
+        }
+    }
+};
 
 var TileViewModel = ListViewModel.extend({
     constructor: function () {
@@ -36,6 +69,15 @@ var TileViewModel = ListViewModel.extend({
         return current;
     },
 
+    getTileSizes(tileSize: string, imagePosition: string = 'top', imageViewMode: string = 'rectangle'): object {
+        const sizeParams = object.clone(TILE_SIZES[tileSize]);
+        const tileSizes = sizeParams[imagePosition === 'top' ? 'top' : 'side'];
+        if (imageViewMode !== 'rectangle') {
+            tileSizes.imageHeight = tileSizes.imageWidth;
+        }
+        return tileSizes;
+    },
+
     getTileItemData: function () {
         return {
             tileMode: this._tileMode,
@@ -43,8 +85,7 @@ var TileViewModel = ListViewModel.extend({
             imageProperty: this._options.imageProperty,
             defaultItemWidth: DEFAULT_ITEM_WIDTH,
             defaultShadowVisibility: 'visible',
-            itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT,
-            getTileSizes: () => {}
+            itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT
         };
     },
 
