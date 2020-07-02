@@ -194,36 +194,27 @@ var
             self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
         },
         updateColumnScrollByOptions(self, oldOptions, newOptions): void {
+            const columnScrollStatus = _private.actualizeColumnScroll(self, newOptions);
+            if (columnScrollStatus === 'destroyed') {
+                return;
+            }
+
             const stickyColumnsCountChanged = newOptions.stickyColumnsCount !== oldOptions.stickyColumnsCount;
             const multiSelectVisibilityChanged = newOptions.multiSelectVisibility !== oldOptions.multiSelectVisibility;
             const dragScrollingChanged = newOptions.dragScrolling !== oldOptions.dragScrolling;
 
             if (stickyColumnsCountChanged || multiSelectVisibilityChanged || self._columnsHaveBeenChanged) {
-                const columnScrollStatus = _private.actualizeColumnScroll(self, newOptions);
 
-                if (self._columnScrollController) {
+                // Если горизонтльный скролл был только что создан, то он хранит актуальные размеры.
+                if (columnScrollStatus !== 'created') {
 
-                    // Если изменилось несколько опций, из за которых требуется пересчитать размеры коризонтального скролла,
-                    // то перечет должен случиться только один раз.
-                    // Если горизонтльный скролл был только что создан, то он хранит актуальные размеры.
-                    const shouldUpdateSizes = columnScrollStatus !== 'created';
-
-                    if (stickyColumnsCountChanged) {
-                        self._columnScrollController.setStickyColumnsCount(newOptions.stickyColumnsCount, shouldUpdateSizes);
-                    }
-                    if (multiSelectVisibilityChanged) {
-                        self._columnScrollController.setMultiSelectVisibility(newOptions.multiSelectVisibility, shouldUpdateSizes);
-                    }
-
-                    if (shouldUpdateSizes) {
-                        // Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
-                        self._columnScrollController.updateSizes((newSizes) => {
-                            self._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                            self._horizontalScrollWidth = newSizes.scrollWidth;
-                            self._containerSize = newSizes.containerSize;
-                            self._updateColumnScrollData();
-                        }, true);
-                    }
+                    // Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
+                    self._columnScrollController.updateSizes((newSizes) => {
+                        self._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
+                        self._horizontalScrollWidth = newSizes.scrollWidth;
+                        self._containerSize = newSizes.containerSize;
+                        self._updateColumnScrollData();
+                    }, true);
                 }
             } else if (dragScrollingChanged && newOptions.dragScrolling) {
                 // При включении перетаскивания не нужно ничего перерисовывать. Нужно просто отдать контроллеру перетаскивания размеры.
@@ -335,6 +326,14 @@ var
             if (this._options.theme !== newCfg.theme) {
                 this._listModel.setTheme(newCfg.theme);
             }
+            if (this._options.stickyColumnsCount !== newCfg.stickyColumnsCount) {
+                this._listModel.setStickyColumnsCount(newCfg.stickyColumnsCount);
+                this._columnScrollController?.setStickyColumnsCount(newCfg.stickyColumnsCount, true);
+            }
+            if (this._options.multiSelectVisibility !== newCfg.stickyColumnsCount) {
+                this._columnScrollController?.setMultiSelectVisibility(newCfg.multiSelectVisibility, true);
+            }
+
             // В зависимости от columnScroll вычисляются значения колонок для stickyHeader в методе setHeader.
             if (this._options.columnScroll !== newCfg.columnScroll) {
                 this._listModel.setColumnScroll(newCfg.columnScroll);
@@ -366,9 +365,6 @@ var
             }
             if (this._options.columnSeparatorSize !== newCfg.columnSeparatorSize) {
                 this._listModel.setColumnSeparatorSize(newCfg.columnSeparatorSize);
-            }
-            if (this._options.stickyColumnsCount !== newCfg.stickyColumnsCount) {
-                this._listModel.setStickyColumnsCount(newCfg.stickyColumnsCount);
             }
             if (this._options.resultsTemplate !== newCfg.resultsTemplate) {
                 this._resultsTemplate = newCfg.resultsTemplate || this._baseResultsTemplate;
