@@ -1,8 +1,7 @@
 <ws:template name="imageTemplate">
    <ws:partial template="wml!Controls/_listTemplates/DefaultImageTemplate"
                attr:class="controls-listTemplates_tableCellTemplate-image-theme-{{_options.theme}}"
-               src="{{_options.itemData.item[_options.imageProperty]}}"
-               viewMode="{{_options.viewMode}}"/>
+               src="{{_options.itemData.item[_options.imageProperty]}}"/>
 </ws:template>
 
 <ws:template name="itemContentTpl">
@@ -17,18 +16,18 @@
       <ws:else>
          <ws:partial
             template="imageTemplate"
-            viewMode="{{_options.imageViewMode}}"
             imageProerty="{{_options.imageProperty}}"
             itemData="{{itemData}}"/>
-         <div class="controls-listTemplates__tableCellTemplate__content-theme-{{_options.theme}}">
+         <div class="controls-listTemplates__tableCellTemplate__content-theme-{{_options.theme}} ws-ellipsis">
             <ws:if data="{{contentTemplate}}">
                <ws:partial
+                  attr:class="ws-ellipsis"
                   template="{{contentTemplate}}"
                   itemData="{{itemData}}"/>
             </ws:if>
             <ws:if data="{{footerTemplate}}">
                <ws:partial
-                  attr:class="controls-listTemplates__tableCellTemplate__footer-theme-{{_options.theme}}"
+                  attr:class="controls-listTemplates__tableCellTemplate__footer-theme-{{_options.theme}} ws-ellipsis"
                   template="{{footerTemplate}}"
                   itemData="{{itemData}}"/>
             </ws:if>
