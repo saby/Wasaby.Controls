@@ -84,8 +84,18 @@ describe('Controls/search:ControllerClass', () => {
         searchController._options.itemsChangedCallback = () => {};
 
         searchController._searchCallback(result);
-        assert.equal(searchController._searchValue, 'test');
+        assert.notEqual(searchController._searchValue, 'test');
         assert.equal(searchController._misspellValue, 'test');
+
+        result.data.getMetaData = () => {
+            return {
+                switchedStr: 'test',
+                results: 'res',
+                returnSwitched: true
+            };
+        };
+        searchController._searchCallback(result);
+        assert.equal(searchController._searchValue, 'test');
     });
 
     it('isSearchValueShort', () => {

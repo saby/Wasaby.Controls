@@ -367,12 +367,17 @@ export default class SearchControllerClass {
         return this._searchController && this._searchController.isLoading();
     }
 
+    private _needUpdateSearchValue(data: RecordSet): boolean {
+        const metaData = data && data.getMetaData();
+        return metaData ? metaData.returnSwitched : false;
+    }
+
     private _searchCallback(result: ISearchCallbackResult, filter: object): void {
         this._updateSearchParams(filter);
         this._options.itemsChangedCallback(result.data);
         const switchedStr = getSwitcherStrFromData(result.data);
         this._setMisspellValue(switchedStr);
-        if (switchedStr) {
+        if (this._needUpdateSearchValue(result.data)) {
             this._setSearchValue(switchedStr);
         }
     }
