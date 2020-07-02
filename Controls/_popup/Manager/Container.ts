@@ -99,8 +99,8 @@ class Container extends Control<IControlOptions> {
         this._pendingController.registerPending(promise, config);
     }
 
-    private _finishPendingHandler(event: Event, forceFinishValue: boolean, root: string): void {
-        this._pendingController.finishPendingOperations(forceFinishValue, root);
+    private _finishPendingHandler(event: Event, forceFinishValue: boolean, root: string): Promise<unknown> {
+        return this._pendingController.finishPendingOperations(forceFinishValue, root);
     }
 
     private _cancelFinishingPendingHandler(event: Event, root: string): void {
