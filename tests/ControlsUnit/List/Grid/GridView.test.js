@@ -510,14 +510,18 @@ define(['Controls/grid'], function(gridMod) {
          };
          const gridView = new gridMod.GridView(cfg);
          gridView.saveOptions(cfg);
+         gridView._listModel = {
+            setStickyColumnsCount: () => {}
+         };
          const calledMethods = [];
          gridView._columnScrollController = {
             setStickyColumnsCount: () => {calledMethods.push('setStickyColumnsCount')},
             setMultiSelectVisibility: () => {calledMethods.push('setMultiSelectVisibility')},
             updateSizes: () => {calledMethods.push('updateSizes')}
          };
-
-         gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2});
+         gridView._beforeUpdate({...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2});
+         gridView.saveOptions({...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2});
+         gridView._afterUpdate(cfg);
          assert.deepEqual(calledMethods, ['setStickyColumnsCount', 'setMultiSelectVisibility', 'updateSizes']);
       });
    });
