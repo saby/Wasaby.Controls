@@ -48,7 +48,7 @@ define(
             it('loadItems returns items', () => {
                let menuControl = getMenu();
                return new Promise((resolve) => {
-                  menuControl.loadItems(defaultOptions).addCallback((items) => {
+                  menuControl._loadItems(defaultOptions).addCallback((items) => {
                      assert.deepEqual(items.getRawData(), defaultItems);
                      resolve();
                   });
@@ -64,7 +64,7 @@ define(
                };
                const menuControl = getMenu(menuOptions);
                return new Promise((resolve) => {
-                  menuControl.loadItems(menuOptions).addCallback((items) => {
+                  menuControl._loadItems(menuOptions).addCallback((items) => {
                      assert.equal(items.getCount(), 2);
                      resolve();
                   });
@@ -79,7 +79,7 @@ define(
                   isDataLoadCallbackCalled = true;
                };
                return new Promise((resolve) => {
-                  menuControl.loadItems(menuOptions).addCallback(() => {
+                  menuControl._loadItems(menuOptions).addCallback(() => {
                      assert.isTrue(isDataLoadCallbackCalled);
                      resolve();
                   });
@@ -93,7 +93,7 @@ define(
                options.source.query = () => Promise.reject(new Error());
 
                return new Promise((resolve) => {
-                  menuControl.loadItems(options).then(() => {
+                  menuControl._loadItems(options).then(() => {
                      assert.isNotNull(menuControl._errorConfig);
                      resolve();
                   });
@@ -124,7 +124,7 @@ define(
             });
 
             it ('check group', function() {
-               let listModel = menuControl.getCollection(items, {
+               let listModel = menuControl._getCollection(items, {
                   groupProperty: 'group'
                });
                assert.instanceOf(listModel.at(0), display.GroupItem);
@@ -141,7 +141,7 @@ define(
                   ],
                   keyProperty: 'key'
                });
-               let listModel = menuControl.getCollection(doubleItems, { keyProperty: 'key' });
+               let listModel = menuControl._getCollection(doubleItems, { keyProperty: 'key' });
                assert.equal(listModel.getCount(), 1);
             });
          });
@@ -232,17 +232,17 @@ define(
                });
 
                it('submenu is not open, item is list', function() {
-                  sinon.stub(menuControl, 'handleCurrentItem');
+                  sinon.stub(menuControl, '_handleCurrentItem');
                   menuControl._itemClick('itemClick', item, {});
                   assert.equal(selectedItem.getKey(), 1);
                });
 
                it('submenu is not open, item is node', function() {
-                  sinon.stub(menuControl, 'handleCurrentItem');
+                  sinon.stub(menuControl, '_handleCurrentItem');
                   item.set('node', true);
                   menuControl._options.nodeProperty = 'node';
                   menuControl._itemClick('itemClick', item, {});
-                  sinon.assert.calledOnce(menuControl.handleCurrentItem);
+                  sinon.assert.calledOnce(menuControl._handleCurrentItem);
                   assert.isNull(selectedItem);
                   sinon.restore();
                });
@@ -267,7 +267,7 @@ define(
                menuControl._context = {
                   isTouch: { isTouch: false }
                };
-               handleStub = sandbox.stub(menuControl, 'startOpeningTimeout');
+               handleStub = sandbox.stub(menuControl, '_startOpeningTimeout');
             });
 
             it('on groupItem', function() {
@@ -344,21 +344,21 @@ define(
             expectedOptions.searchParam = null;
             expectedOptions.iWantBeWS3 = false;
 
-            let resultOptions = menuControl.getTemplateOptions(item);
+            let resultOptions = menuControl._getTemplateOptions(item);
             assert.deepEqual(resultOptions, expectedOptions);
          });
 
          it('isSelectedKeysChanged', function() {
             let menuControl = getMenu();
             let initKeys = [];
-            let result = menuControl.isSelectedKeysChanged([], initKeys);
+            let result = menuControl._isSelectedKeysChanged([], initKeys);
             assert.isFalse(result);
 
-            result = menuControl.isSelectedKeysChanged([2], initKeys);
+            result = menuControl._isSelectedKeysChanged([2], initKeys);
             assert.isTrue(result);
 
             initKeys = [2, 1];
-            result = menuControl.isSelectedKeysChanged([1, 2], initKeys);
+            result = menuControl._isSelectedKeysChanged([1, 2], initKeys);
             assert.isFalse(result);
          });
 
@@ -377,7 +377,7 @@ define(
                })
             };
 
-            menuControl.setSubMenuPosition();
+            menuControl._setSubMenuPosition();
             assert.deepEqual(menuControl._subMenuPosition, {
 
                // т.к. left < clientX, прибавляем ширину к left
@@ -420,8 +420,8 @@ define(
                };
 
                menuControl._subMenu = true;
-               menuControl.setSubMenuPosition = function() {};
-               menuControl.isMouseInOpenedItemArea = function() {
+               menuControl._setSubMenuPosition = function() {};
+               menuControl._isMouseInOpenedItemAreaCheck = function() {
                   return isMouseInArea;
                };
             });
@@ -457,15 +457,15 @@ define(
             menuControl._children = {
                Sticky: { close: () => { isClosed = true; } }
             };
-            menuControl.isMouseInOpenedItemArea = function() {
+            menuControl._isMouseInOpenedItemAreaCheck = function() {
                return false;
             };
-            menuControl.setSubMenuPosition = function() {};
+            menuControl._setSubMenuPosition = function() {};
             menuControl._subDropdownItem = true;
             menuControl._footerMouseEnter(event);
             assert.isTrue(isClosed);
 
-            menuControl.isMouseInOpenedItemArea = function() {
+            menuControl._isMouseInOpenedItemAreaCheck = function() {
                return true;
             };
             menuControl._subDropdownItem = true;
@@ -478,11 +478,11 @@ define(
             let listModel = getListModel();
             let menuControl = getMenu();
             let selectedKeys = [2, 3];
-            let selectedItems = menuControl.getSelectedItemsByKeys(listModel, selectedKeys);
+            let selectedItems = menuControl._getSelectedItemsByKeys(listModel, selectedKeys);
             assert.equal(selectedItems.length, 2);
 
             selectedKeys = [];
-            selectedItems = menuControl.getSelectedItemsByKeys(listModel, selectedKeys);
+            selectedItems = menuControl._getSelectedItemsByKeys(listModel, selectedKeys);
             assert.equal(selectedItems.length, 0);
          });
 
@@ -563,19 +563,19 @@ define(
                root: null
             };
             it('item parent = null, root = null', function() {
-               isVisible = menuControl.displayFilter(hierarchyOptions, item);
+               isVisible = menuControl.constructor._displayFilter(hierarchyOptions, item);
                assert.isTrue(isVisible);
             });
 
             it('item parent = undefined, root = null', function() {
                item.set('parent', undefined);
-               isVisible = menuControl.displayFilter(hierarchyOptions, item);
+               isVisible = menuControl.constructor._displayFilter(hierarchyOptions, item);
                assert.isTrue(isVisible);
             });
 
             it('item parent = 1, root = null', function() {
                item.set('parent', '1');
-               isVisible = menuControl.displayFilter(hierarchyOptions, item);
+               isVisible = menuControl.constructor._displayFilter(hierarchyOptions, item);
                assert.isFalse(isVisible);
             });
          });
@@ -590,25 +590,25 @@ define(
             });
 
             it('item hasn`t group', function() {
-               groupId = menuControl.groupMethod(menuOptions, item);
+               groupId = menuControl._groupMethod(menuOptions, item);
                assert.equal(groupId, ControlsConstants.view.hiddenGroup);
             });
 
             it('group = 0', function() {
                item.set('group', 0);
-               groupId = menuControl.groupMethod(menuOptions, item);
+               groupId = menuControl._groupMethod(menuOptions, item);
                assert.equal(groupId, 0);
             });
 
             it('item is history', function() {
                item.set('pinned', true);
-               groupId = menuControl.groupMethod(menuOptions, item);
+               groupId = menuControl._groupMethod(menuOptions, item);
                assert.equal(groupId, ControlsConstants.view.hiddenGroup);
             });
 
             it('item is history, root = 2', function() {
                menuOptions.root = 2;
-               groupId = menuControl.groupMethod(menuOptions, item);
+               groupId = menuControl._groupMethod(menuOptions, item);
                assert.equal(groupId, ControlsConstants.view.hiddenGroup);
             });
          });
@@ -625,7 +625,7 @@ define(
 
          it('getCollection', function() {
             let menuControl = getMenu();
-            let listModel = menuControl.getCollection(new collection.RecordSet(), {
+            let listModel = menuControl._getCollection(new collection.RecordSet(), {
                searchParam: 'title',
                searchValue: 'searchText'
             });
