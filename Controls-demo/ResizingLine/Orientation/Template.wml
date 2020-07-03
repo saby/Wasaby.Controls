@@ -6,10 +6,14 @@
             <Controls.dragnDrop:ResizingLine attr:class="controlsDemo__horizontalResizingLine controlsDemo__horizontalResizingLine_top"
                                              on:offset="_offsetHandler('centerContainerTop')"
                                              orientation="vertical"
-                                             direction="reverse"/>
+                                             direction="reverse"
+                                             maxOffset="{{_maxOffset}}"
+                                             minOffset="{{_minOffset}}"/>
             <Controls.dragnDrop:ResizingLine attr:class="controlsDemo__horizontalResizingLine controlsDemo__horizontalResizingLine_bottom"
                                              on:offset="_offsetHandler('centerContainer')"
-                                             orientation="vertical"/>
+                                             orientation="vertical"
+                                             maxOffset="{{_maxOffset}}"
+                                             minOffset="{{_minOffset}}"/>
         </div>
     </div>
 
@@ -18,10 +22,14 @@
     <div style="width: 170px">
         <div class="controlsDemo__container_horizontal" style="width: {{_widthOfCenterContainer}}px; left: {{_left}}px">
             <Controls.dragnDrop:ResizingLine attr:class="controlsDemo__resizingLine controlsDemo__resizingLine_right"
-                                             on:offset="_offsetHandler('centerHorizontalContainer')"/>
+                                             on:offset="_offsetHandler('centerHorizontalContainer')"
+                                             maxOffset="{{_maxOffset2}}"
+                                             minOffset="{{_minOffset2}}"/>
             <Controls.dragnDrop:ResizingLine attr:class="controlsDemo__resizingLine controlsDemo__resizingLine_left"
                                              on:offset="_offsetHandler('centerHorizontalContainerLeft')"
-                                             direction="reverse"/>
+                                             direction="reverse"
+                                             maxOffset="{{_maxOffset2}}"
+                                             minOffset="{{_minOffset2}}"/>
         </div>
     </div>
 </div>
