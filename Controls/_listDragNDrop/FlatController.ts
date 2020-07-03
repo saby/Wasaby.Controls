@@ -41,7 +41,7 @@ export default class FlatController {
 
    startDrag(draggedKey: TKey, entity: ItemsEntity): void {
       const draggedItem = this._model.getItemBySourceKey(draggedKey);
-      this.setDraggedItems(entity, draggedItem)
+      this.setDraggedItems(entity, draggedItem);
    }
 
    setDraggedItems(entity: ItemsEntity, draggedItem: CollectionItem<Model> = null): void {

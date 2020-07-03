@@ -2138,12 +2138,12 @@ const _private = {
 
     // region Drag-N-Drop
 
-    startDragNDrop(self, domEvent, itemData): void {
+    startDragNDrop(self, domEvent, item): void {
         if (
             !self._options.readOnly && self._options.itemsDragNDrop
             && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)
         ) {
-            const key = itemData.getContents().getKey();
+            const key = item.getContents().getKey();
 
             // Перемещать с помощью массового выбора
             // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
@@ -2234,15 +2234,14 @@ const _private = {
     onMove(self, nativeEvent): void {
         if (self._startEvent) {
             const dragObject = self._getDragObject(nativeEvent, self._startEvent);
-            if (!self._documentDragging && _private.isDragStarted(self._startEvent, nativeEvent)) {
-                self._insideDragging = true;
-                self._notify('_documentDragStart', [dragObject], {bubbling: true});
-            }
             if (self._documentDragging) {
                 self._notify('dragMove', [dragObject]);
                 if (self._options.draggingTemplate) {
                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
                 }
+            } else if (_private.isDragStarted(self._startEvent, nativeEvent)) {
+                self._insideDragging = true;
+                self._notify('_documentDragStart', [dragObject], {bubbling: true});
             }
         }
     }
@@ -3811,32 +3810,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!this._dndListController) {
             this._dndListController = _private.createDndListController(this, this._options);
         }
-        // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
-        if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')
-        ) {
+        if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-                // TODO dnd нужно разобраться для чего это. Так как на wi про эту ситуацию ни слова
-                // если это будет не нужно, то убрать 2-ой параметр в методе DndFlatController.setDraggedItems
                 const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
                 this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
             } else if (dragEnterResult === true) {
                 this._dndListController.setDraggedItems(dragObject.entity);
             }
-        }
-    },
-
-    _dragEnd(dragObject): void {
-        if (this._dndListController) {
-            const targetPosition = this._dndListController.getDragPosition();
-            if (targetPosition) {
-                this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
-            }
-
-            // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
-            // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
-            this._showActions = false;
         }
     },
 
@@ -3855,8 +3837,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _documentDragEnd(dragObject): void {
-        if (this._insideDragging) {
-            this._dragEnd(dragObject);
+        let dragEndResult: Promise<any> | undefined;
+        if (this._insideDragging && this._dndListController) {
+            const targetPosition = this._dndListController.getDragPosition();
+            if (targetPosition) {
+                dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            }
+
+            // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
+            // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
+            this._showActions = false;
         }
 
         this._insideDragging = false;
@@ -3864,9 +3854,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController) {
-            if (this._dragEndResult instanceof Promise) {
+            if (dragEndResult instanceof Promise) {
                 _private.showIndicator(this);
-                this._dragEndResult.addBoth(() => {
+                dragEndResult.addBoth(() => {
                     this._dndListController.endDrag();
                     _private.hideIndicator(this);
                 });
