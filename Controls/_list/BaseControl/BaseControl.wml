@@ -41,12 +41,7 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
-    <!-- Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate. -->
-    <!-- Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала. -->
-    <!-- В таком случае выводим индикатор над списком. -->
-    <ws:if data="{{_loadingIndicatorState === 'all' && !__needShowEmptyTemplate(_options.emptyTemplate, _listViewModel)}}">
-        <ws:partial template="loadingIndicator"/>
-    </ws:if>
+    <ws:partial if="{{ _shouldShowLoadingIndicator('inFooter') }}" template="loadingIndicator"/>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content_theme-{{_options.theme}}">
             <ws:partial template="{{_options.footerTemplate}}"/>
@@ -204,12 +199,7 @@
 
         <ws:if data="{{_listViewModel}}">
 
-            <!-- Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate. -->
-            <!-- Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала. -->
-            <!-- В таком случае выводим индикатор над списком. -->
-            <ws:if data="{{ _loadingIndicatorState === 'up' || (_loadingIndicatorState === 'all' && __needShowEmptyTemplate(_options.emptyTemplate, _listViewModel)) }}">
-                <ws:partial template="loadingIndicator"/>
-            </ws:if>
+            <ws:partial if="{{ _shouldShowLoadingIndicator('beforeEmptyTemplate') }}" template="loadingIndicator"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
 
@@ -218,9 +208,7 @@
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
 
-        <ws:if data="{{_loadingIndicatorState === 'down'}}">
-            <ws:partial template="loadingIndicator"/>
-        </ws:if>
+        <ws:partial if="{{ _shouldShowLoadingIndicator('afterList') }}" template="loadingIndicator"/>
 
         <ws:if data="{{_showContinueSearchButton}}">
             <ws:partial template="{{_options.continueSearchTemplate}}">
