@@ -104,7 +104,7 @@ export default class _Controller implements IDropdownController {
       if ((newOptions.source && (newOptions.source !== oldOptions.source || !this._sourceController)) ||
           !isEqual(newOptions.navigation, oldOptions.navigation) ||
           !isEqual(newOptions.filter, oldOptions.filter)) {
-         this.reloadItems(newOptions, oldOptions);
+         return this.reloadItems(newOptions, oldOptions);
       } else if (newOptions.selectedKeys !== oldOptions.selectedKeys && this._items) {
          this._updateSelectedItems(newOptions.emptyText, newOptions.selectedKeys,
              newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
