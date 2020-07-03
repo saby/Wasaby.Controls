@@ -5,13 +5,22 @@ interface IOpenerStaticMethods {
     openPopup: (popupOptions: IBasePopupOptions) => Promise<string>;
     closePopup: (popupId: string) => void;
 }
+/**
+ * Базовый хелпер для открытия всплывающих окон
+ * @class Controls/_popup/PopupHelper/Base
+ * @control
+ * @author Красильников А.С.
+ * @category Popup
+ * @private
+ */
 
 export default class Base {
     _popupId: string;
     _opener: IOpenerStaticMethods;
 
-    openPopup(popupOptions: IBasePopupOptions): void {
+    open(popupOptions: IBasePopupOptions): void {
         const config: IBasePopupOptions = {...popupOptions};
+        config.isHelper = true;
         if (this.isOpened()) {
             config.id = this._popupId;
         }
@@ -20,7 +29,7 @@ export default class Base {
         });
     }
 
-    closePopup(): void {
+    close(): void {
         return this._opener.closePopup(this._popupId);
     }
 
