@@ -288,4 +288,26 @@ define('Controls/interface/IDropdown', [], function() {
     * </pre>
     */
 
+   /**
+    * Перезагружает данные выпадающего списка.
+    * @function Controls/interface/IDropdown#reload
+    * @example
+    * WML:
+    * <pre>
+    *    <AnyControl on:itemsChanged="_reload()">
+    *       ...
+    *    </AnyControl>
+    *    <Controls.dropDown:Button name="dropDownButton">
+    *       ...
+    *    </Controls.dropDown:Button>
+    * </pre>
+    *
+    * ts:
+    * <pre>
+    *    _reload(): void {
+    *       this._children.dropDownButton.reload();
+    *    }
+    * </pre>
+    */
+
 });
