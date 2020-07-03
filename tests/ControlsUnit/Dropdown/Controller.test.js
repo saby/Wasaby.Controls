@@ -121,6 +121,29 @@ define(
             assert.deepEqual(actualMeta, { '$_pinned': true });
          });
 
+         it('reload', function() {
+            let newOptions = clone(config);
+            const newItems = [
+               {
+                  id: '1',
+                  title: 'Тест 1'
+               },
+               {
+                  id: '2',
+                  title: 'Тест 2'
+               }
+            ];
+            const newSource =  new sourceLib.Memory({
+               keyProperty: 'id',
+               data: newItems
+            });
+
+            let dropdownController = getDropdownController(newOptions);
+            dropdownController.reload({source: newSource}).then(()=> {
+               assert.deepEqual(dropdownController._items.at(0).get('title'), 'Тест 1');
+            });
+         });
+
          describe('update', function() {
             let dropdownController, opened, updatedItems;
             beforeEach(function() {

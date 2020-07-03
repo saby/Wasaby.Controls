@@ -116,16 +116,20 @@ export default class _Controller implements IDropdownController {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
-            return this._loadItems(newOptions).addCallback((items) => {
-               if (items && this._isOpened) {
-                  this._open();
-               }
-            });
+            return this.reload(newOptions);
          }
       } else if (newOptions.selectedKeys !== oldOptions.selectedKeys && this._items) {
          this._updateSelectedItems(newOptions.emptyText, newOptions.selectedKeys,
              newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
       }
+   }
+
+   reload(newOptions: IDropdownControllerOptions): Promise<RecordSet> {
+      return this._loadItems(newOptions).addCallback((items) => {
+         if (items && this._isOpened) {
+            this._open();
+         }
+      });
    }
 
    loadDependencies(): Promise<any> {

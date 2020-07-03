@@ -10,6 +10,7 @@ export type TKey = string|number|null;
 
 export default interface IDropdownController {
     loadItems(): Promise<RecordSet>;
+    reload(newOptions: IDropdownControllerOptions): Promise<RecordSet>;
     setItems(recievedState: {items?: RecordSet, history?: RecordSet}):RecordSet;
     update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void;
     loadDependencies(): Promise<any>;
