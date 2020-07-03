@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_lookup/MultipleInput/MultipleInput');
 import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
 import showSelector from 'Controls/_lookup/showSelector';
@@ -75,7 +75,7 @@ import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
  */
 
 export default class MultipleInput extends BaseLookup {
-    _template: template;
+    _template: TemplateFunction = template;
 
     showSelector(popupOptions: IStackPopupOptions): void {
         showSelector(this, popupOptions, true);
