@@ -257,7 +257,7 @@ var
             return result;
         },
 
-        getItemColumnCellClasses: function(current, theme) {
+        getItemColumnCellClasses: function(current, theme, backgroundColorStyle) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'relativeCellWrapper', 'columnContent');
             let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
@@ -268,9 +268,12 @@ var
             classLists.base += `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme} controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
             _private.prepareSeparatorClasses(current, classLists, theme);
 
+            if (backgroundColorStyle) {
+                classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
+            }
+
             if (current.columnScroll) {
                 classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
-                classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             } else if (!checkBoxCell) {
                 classLists.base += ' controls-Grid__cell_fit';
             }
@@ -279,6 +282,10 @@ var
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
                 classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
+            }
+
+            if (current.columnScroll && !current.isEditing) {
+                classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
@@ -477,10 +484,14 @@ var
 
         /**
          * Возвращает CSS класс для установки background
-         * @param options Опции IList | объект, содержащий theme, style, backgroundStyle
+         * @param options Опции IList | объект, содержащий theme, style, backgroundStyle, backgroundColorStyle
          * @param addSpace Добавлять ли пробел перед выводимой строкой
          */
-        getBackgroundStyle(options: {theme: string, style?: string, backgroundStyle?: string}, addSpace?: boolean): string {
+        getBackgroundStyle(options: {theme: string, style?: string, backgroundStyle?: string, backgroundColorStyle?: string}, addSpace?: boolean): string {
+            if (options.backgroundColorStyle) {
+                return `${addSpace ? ' ' : ''}controls-Grid__row-cell_background_${options.backgroundColorStyle}_theme-${options.theme}`
+            }
+
             return `${addSpace ? ' ' : ''}controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
         },
 
@@ -1582,7 +1593,7 @@ var
                     (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
             };
 
-            current.getCurrentColumn = function() {
+            current.getCurrentColumn = function(backgroundColorStyle) {
                 const currentColumn: any = {
                         item: current.item,
                         style: current.style,
@@ -1608,7 +1619,7 @@ var
                         getItemActionPositionClasses: current.getItemActionPositionClasses,
                         getItemActionClasses: current.getItemActionClasses
                     };
-                currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme);
+                currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme, backgroundColorStyle);
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
                      * isColspaned добавлена как костыль для временного лечения ошибки.

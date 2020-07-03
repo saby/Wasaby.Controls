@@ -8,7 +8,7 @@ import { IColumn } from 'Controls/_grid/interface/IColumn';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-
+    // tslint:disable-next-line
     protected _header: IHeader[] = getCountriesStats().getDefaultHeader().slice(1, 4);
     protected _columns: IColumn[] = [
         {
@@ -29,6 +29,7 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
+            // tslint:disable-next-line
             data: getCountriesStats().getData().slice(0, 5)
         });
     }

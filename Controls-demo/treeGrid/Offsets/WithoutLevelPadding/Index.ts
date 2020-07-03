@@ -15,7 +15,7 @@ export default class extends Control {
       this._viewSource = new Memory({
          keyProperty: 'id',
          data: Gadgets.getFlatData(),
-         filter: () => true,
+         filter: (): boolean => true
       });
    }
 

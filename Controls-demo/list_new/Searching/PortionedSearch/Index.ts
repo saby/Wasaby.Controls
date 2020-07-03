@@ -16,6 +16,7 @@ export default class extends Control {
             source: new Memory({
                 keyProperty: 'id',
                 data: this._dataArray,
+                // tslint:disable-next-line
                 filter: (item: any, query: any) => {
                     let res = true;
 

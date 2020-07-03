@@ -20,6 +20,7 @@
    filter="{{_options.filter}}"
    sorting="{{_options.sorting}}"
    value="{{_options.value}}"
+   suggestPopupOptions="{{_options.suggestPopupOptions}}"
    bind:suggestState="_suggestState">
    <Controls.input:Text
       scope="{{_options}}"

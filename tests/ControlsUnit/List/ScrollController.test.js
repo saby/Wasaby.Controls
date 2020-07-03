@@ -45,5 +45,18 @@ define([
             assert.doesNotThrow(() => scrollController._registerObserver());
          });
       });
+
+      describe('.setTriggers()', () => {
+         it('should reset observerRegistered if scrollObserver was changed', () => {
+            scrollController._triggers = {
+               scrollObserver: {}
+            };
+            scrollController._observerRegistered = true;
+            scrollController.setTriggers({
+               scrollObserver: {}
+            });
+            assert.isFalse(scrollController._observerRegistered);
+         });
+      });
    });
 });

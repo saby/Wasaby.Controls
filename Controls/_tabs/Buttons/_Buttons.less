@@ -4,13 +4,23 @@
       width: 0;
       display: inline-block;
       visibility: hidden;
-      line-height: @item_height_tabs + @border-thickness_tabs;//why so magic
+      line-height: @item_height_tabs;
       font-size: @unselected_item_font-size_tabs;
    }
 }
 .controls-Tabs__itemClickableArea_theme_@{themeName} {
    min-height: 100%;
+   position: relative;
    .tabs-baseline();
+   &:after {
+      height: @marker_thickness_tabs;
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left:0;
+      width: 100%;
+      z-index: 1;
+   }
 }
 .controls-Tabs_theme_@{themeName} {
    height: @item_height_tabs;
@@ -101,9 +111,6 @@
 .controls-Tabs__item_state_selected_theme_@{themeName} {
    font-weight: @item_selected_font-weight_tabs;
    font-size: @secondary_item_font-size_tabs;
-   &:after {
-      z-index: 1;
-   }
 }
 .controls-Tabs__item_align_left_theme_@{themeName} {
    margin-left: -@border-thickness_tabs + @item_offset_tabs;
@@ -127,29 +134,15 @@
    margin: 0 @padding-horizontal_tabs + @border-thickness_tabs;
 }
 .controls-Tabs_style_primary__item_state_selected_theme_@{themeName} {
-   position: relative;
    color: @primary_item_text-color_tabs;
    &:after {
-      height: @marker_thickness_tabs;
       background: @primary_marker_color_tabs;
-      content: '';
-      position: absolute;
-      bottom: @border-thickness_tabs;
-      left:0;
-      width: 100%;
    }
 }
 .controls-Tabs_style_secondary__item_state_selected_theme_@{themeName} {
-   position: relative;
    color: @secondary_item_text-color_tabs;
    &:after {
-      height: @marker_thickness_tabs;
       background: @secondary_marker_color_tabs;
-      content: '';
-      position: absolute;
-      bottom: @border-thickness_tabs;
-      left:0;
-      width: 100%;
    }
 }
 .controls-Tabs__item_overflow {
@@ -158,6 +151,7 @@
    max-width: 100%;
    display: inline-block;
    white-space: nowrap;
+   height: 100%;
 }
 //TODO: удалить этот стиль для фото над табами оп задаче https://online.sbis.ru/opendoc.html?guid=c54eee1c-0578-4047-b3e8-666f078a3ae8
 .controls-Tabs__item_type_photo_theme_@{themeName} {

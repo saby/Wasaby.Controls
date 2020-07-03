@@ -14,5 +14,6 @@
        attr:key="{{listModel.getCurrent().key}}"
        itemActionsPosition="{{itemActionsPosition}}"
        backgroundStyle="{{backgroundStyle}}"
+       isColumnScrollVisible="{{isColumnScrollVisible}}"
        tagTemplate="{{tagTemplate}}"/>
 </ws:if>{{listModel.goToNext()}}

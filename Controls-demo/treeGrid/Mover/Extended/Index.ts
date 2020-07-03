@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGrid/Mover/Extended/Extended';
 import {HierarchicalMemory} from 'Types/source';
-import {Gadgets} from "../../DemoHelpers/DataCatalog";
+import {Gadgets} from '../../DemoHelpers/DataCatalog';
 import {TColumns} from 'Controls/grid';
 import { TExpandOrColapsItems } from 'Controls-demo/types';
 
@@ -13,7 +13,7 @@ export default class extends Control {
     private _filter: object = {};
     protected _columns: TColumns;
 
-    protected _beforeMount(): any {
+    protected _beforeMount(): void {
         this._columns = [{
             displayProperty: 'title',
             width: '1fr',

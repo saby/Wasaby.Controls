@@ -227,9 +227,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set top(value: number) {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
+            // При установке top'а учитываем gap
+            const offset = getGapFixSize();
+            const topValue = value - offset;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
             fastUpdate.mutate(() => {
-                this._container.style.top = `${value}px`;
+                this._container.style.top = `${topValue}px`;
             });
             this._forceUpdateIfCanScroll();
         }
@@ -242,8 +245,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set bottom(value: number) {
         if (this._stickyHeadersHeight.bottom !== value) {
             this._stickyHeadersHeight.bottom = value;
+            // При установке bottom учитываем gap
+            const offset = getGapFixSize();
+            const bottomValue = value - offset;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
-            this._container.style.bottom = `${value}px`;
+            this._container.style.bottom = `${bottomValue}px`;
             this._forceUpdateIfCanScroll();
         }
     }

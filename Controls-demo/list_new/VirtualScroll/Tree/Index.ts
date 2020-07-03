@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls-demo/list_new/VirtualScroll/Tree/Tree';
-import {DataSet, Memory, Query} from 'Types/source';
+import {DataSet, Memory, Query, QueryWhereExpression} from 'Types/source';
 
 interface IItem {
     id: number;
@@ -9,10 +9,12 @@ interface IItem {
     parent: number;
 }
 
+const COUNTNUMBER = 20;
+
 class PositionSourceMock extends Memory {
     query(query?: Query<unknown>): Promise<DataSet> {
-        const filter: any = query.getWhere();
-        const limit: any = query.getLimit();
+        const filter: QueryWhereExpression<unknown> = query.getWhere();
+        const limit: number = query.getLimit();
 
         const isPrepend = typeof filter['id<='] !== 'undefined';
         const isAppend = typeof filter['id>='] !== 'undefined';
@@ -20,6 +22,7 @@ class PositionSourceMock extends Memory {
         const items: IItem[] = [];
         let position = filter['id<='] || filter['id>='] || filter['id~'] || 0;
         const originPosition = position;
+        // tslint:disable-next-line
         position += filter.parent || 0;
 
         if (isPrepend) {
@@ -30,15 +33,15 @@ class PositionSourceMock extends Memory {
             items.push({
                 id: position,
                 title: `Запись #${position}`,
-                parent: position > 20 ? 20 : undefined,
-                node: position === 20 ? true : null
+                parent: position > COUNTNUMBER ? COUNTNUMBER : undefined,
+                node: position === COUNTNUMBER ? true : null
             });
         }
 
         return Promise.resolve(this._prepareQueryResult({
             items,
             meta: {
-                total: isPosition ? { before: true, after: true } : originPosition <= 20
+                total: isPosition ? { before: true, after: true } : originPosition <= COUNTNUMBER
             }
         }, null));
     }

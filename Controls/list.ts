@@ -103,6 +103,7 @@ import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {default as ScrollController} from './_list/ScrollController';
 import {IList} from './_list/interface/IList';
+import {default as DataController} from 'Controls/_list/Data/ControllerClass';
 
 export {
     AddButton,
@@ -148,5 +149,6 @@ export {
     IVirtualScrollConfig,
     IList,
     VirtualScroll,
-    ScrollController
+    ScrollController,
+    DataController
 };

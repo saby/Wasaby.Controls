@@ -16,10 +16,11 @@ export default class extends Control {
     protected _columns: IColumn[] = getCountriesStats().getColumnsWithWidths().map((c, i) => ({
         ...c,
         result: undefined,
+        // tslint:disable-next-line
         resultTemplate: (i === 4 ? sqResTpl : (i === 5 ? defResTpl : undefined))
     }));
-    private _fullResultsIndex = 0;
-    private _partialResultsIndex = 0;
+    private _fullResultsIndex: number = 0;
+    private _partialResultsIndex: number = 0;
 
     constructor() {
         super({});

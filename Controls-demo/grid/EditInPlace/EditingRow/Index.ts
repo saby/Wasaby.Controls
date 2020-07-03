@@ -12,20 +12,20 @@ export default class extends Control {
     protected _viewSource: Memory;
     protected _columns: IColumn[] = getPorts().getColumns();
     protected _documentSignMemory: Memory;
+    private data: object[] = getPorts().getData().map((cur) => this.getData(cur));
+    protected selectedKey: number = 1;
 
-    private getData(data: any) {
-        for (let key in data) {
+    private getData(data: object): object {
+        for (const key in data) {
             if (data[key]) {
                 data[key] = '' + data[key];
             } else {
-                data[key] = ''
+                data[key] = '';
             }
 
         }
         return data;
     }
-    private data: any = getPorts().getData().map((cur) => this.getData(cur));
-    protected selectedKey: number = 1;
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -37,11 +37,9 @@ export default class extends Control {
             keyProperty: 'id',
             data: getPorts().getDocumentSigns()
         });
-
-
     }
 
-    private onChange1 = (_: SyntheticEvent, name: string, item: Model, value: any): void => {
+    private onChange1 = (_: SyntheticEvent, name: string, item: Model, value: number): void => {
         item.set(name, value);
     }
 

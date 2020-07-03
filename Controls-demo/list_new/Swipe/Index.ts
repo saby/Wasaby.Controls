@@ -9,9 +9,10 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _itemActions: IItemAction[] = getItemActions();
+      // tslint:disable-next-line
     protected _selectedKeys: number[] = [0, 2];
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: getData()
