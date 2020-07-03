@@ -17,8 +17,7 @@ import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-
-const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
+import DependenciesTimer from 'Controls/Utils/DependenciesTimer';
 
 var _private = {
    createSourceController: function(self, options) {
@@ -457,6 +456,7 @@ var _Controller = Control.extend({
    _template: template,
    _items: null,
    _loadItemsTempPromise: null,
+   _dependenciesTimer: null,
 
    _beforeMount: function (options, context, receivedState) {
       let result;
@@ -502,6 +502,10 @@ var _Controller = Control.extend({
 
    _afterMount: function() {
       RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
+
+      if (!this._dependenciesTimer) {
+         this._dependenciesTimer = new DependenciesTimer();
+      }
    },
 
    _beforeUpdate: function (newOptions) {
@@ -624,12 +628,12 @@ var _Controller = Control.extend({
 
    _mouseEnterHandler: function() {
       if (!this._options.readOnly) {
-         this._loadDependenciesTimer = setTimeout(this.loadDependencies.bind(this), PRELOAD_DEPENDENCIES_HOVER_DELAY);
+         this._dependenciesTimer.start(this.loadDependencies.bind(this));
       }
    },
 
    _mouseLeaveHandler: function() {
-      clearTimeout(this._loadDependenciesTimer);
+      this._dependenciesTimer.stop();
    },
 
    _scrollHandler: function() {
