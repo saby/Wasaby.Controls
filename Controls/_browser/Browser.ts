@@ -5,9 +5,19 @@ import {ControllerClass as OperationsController} from 'Controls/operations';
 import {ControllerClass as SearchController} from 'Controls/search';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {RecordSet} from 'Types/collection';
-import {ContextOptions as DataOptions} from "../context";
+
+import {DataController} from 'Controls/list';
+import {ContextOptions as DataOptions} from '../context';
+import {RegisterClass} from 'Controls/event';
+import {default as DataControllerClass} from '../_list/Data/ControllerClass';
+import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 type Key = string|number|null;
+
+interface IDataChildContext {
+    dataOptions: unknown;
+}
 
 export default class Browser extends Control {
     protected _template: TemplateFunction = template;
@@ -26,7 +36,15 @@ export default class Browser extends Control {
     private _deepReload: boolean = undefined;
     private _inputSearchValue: string = '';
 
-    protected _beforeMount(options, context): void {
+    private _dataController: DataController;
+    private _itemsReadyCallback: Function;
+    private _loading: boolean = false;
+    private _items: RecordSet;
+    private _filter: object;
+    private _dataOptionsContext: unknown;
+    private _errorRegister: RegisterClass;
+
+    protected _beforeMount(options, context, receivedState): void|Promise<RecordSet> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
@@ -34,11 +52,44 @@ export default class Browser extends Control {
         this._operationsController = this._createOperationsController(options);
         this._searchController = this._createSearchController(options, context);
         this._searchValue = this._searchController.getSearchValue();
+
+        this._filter = options.filter;
+        this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
+        this._errorRegister = new RegisterClass({register: 'dataError'});
+        this._dataController = new DataControllerClass({...options});
+        this._dataOptionsContext = this._dataController.createContext();
+
+        if (receivedState && isNewEnvironment()) {
+            this._items = receivedState;
+            this._dataController.setItems(receivedState);
+            this._dataController.updateContext(this._dataOptionsContext);
+        } else if (options.source) {
+            return this._dataController.loadItems().then((items) => {
+                this._items = items;
+                this._dataController.setItems(items);
+                this._dataController.updateContext(this._dataOptionsContext);
+                return items;
+            });
+        }
     }
 
-    protected _beforeUpdate(options, context): void {
-        this._operationsController.update(options);
-        this._searchController.update(this._getSearchControllerOptions(options), context);
+    protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
+        const isChanged = this._dataController.update({...newOptions});
+
+        if (this._options.source !== newOptions.source) {
+            this._loading = true;
+            return this._dataController.loadItems().then((result) => {
+                this._items = this._dataController.setItems(result);
+                this._dataController.updateContext(this._dataOptionsContext);
+                this._loading = false;
+                return result;
+            });
+        } else if (isChanged) {
+            this._dataController.setFilter(this._filter = newOptions.filter);
+            this._dataController.updateContext(this._dataOptionsContext);
+        }
+        this._operationsController.update(newOptions);
+        this._searchController.update(this._getSearchControllerOptions(newOptions), context);
     }
 
     protected _beforeUnmount(): void {
@@ -51,14 +102,66 @@ export default class Browser extends Control {
             this._searchController.destroy();
             this._searchController = null;
         }
+
+        if (this._errorRegister) {
+            this._errorRegister.destroy();
+            this._errorRegister = null;
+        }
+    }
+
+    _itemsReadyCallbackHandler(items): void {
+        if (this._items !== items) {
+            this._items = this._dataController.setItems(items);
+            this._dataController.updateContext(this._dataOptionsContext);
+        }
+
+        if (this._options.itemsReadyCallback) {
+            this._options.itemsReadyCallback(items);
+        }
+    }
+
+    _filterChanged(event: SyntheticEvent, filter: object): void {
+        this._dataController.setFilter(this._filter = filter);
+        this._dataController.updateContext(this._dataOptionsContext);
+
+        /* If filter changed, prefetchSource should return data not from cache,
+           will be changed by task https://online.sbis.ru/opendoc.html?guid=861459e2-a229-441d-9d5d-14fdcbc6676a */
+        this._dataOptionsContext.prefetchSource = this._options.source;
+        this._dataOptionsContext.updateConsumers();
+    }
+
+    protected _rootChanged(event: SyntheticEvent, root: Key): void {
+        this._notify('rootChanged', [root]);
+    }
+
+    protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
+        // search:Cotnroller fires two events after search: itemsChanged, filterChanged
+        // on filterChanged event filter state will updated
+        // on itemChanged event prefetchSource will updated,
+        // but createPrefetchSource method work async becouse of promise,
+        // then we need to create prefetchSource synchronously
+        this._dataController.setItems(items);
+        this._dataController.updateContext(this._dataOptionsContext);
+    }
+
+    protected _getChildContext(): IDataChildContext {
+        return {
+            dataOptions: this._dataOptionsContext
+        };
+    }
+
+    protected _onDataError(event: SyntheticEvent, errbackConfig: dataSourceError.ViewConfig): void {
+        this._errorRegister.start(errbackConfig);
     }
 
     protected _registerHandler(event, registerType, component, callback, config): void {
+        this._errorRegister.register(event, registerType, component, callback, config);
         this._getOperationsController().registerHandler(event, registerType, component, callback, config);
     }
 
     protected _unregisterHandler(event, registerType, component, config): void {
-        this._getOperationsController().unregisterHandler(event, component, config);
+        this._errorRegister.unregister(event, component, config);
+        this._getOperationsController().unregisterHandler(event, registerType, component, config);
     }
 
     protected _selectedTypeChangedHandler(event: SyntheticEvent<null>, typeName: string, limit?: number): void {
@@ -119,6 +222,7 @@ export default class Browser extends Control {
 
     _getSearchControllerOptions(options): object {
         const optionsChangedCallbacks = SearchController.getStateAndOptionsChangedCallbacks(this);
+        optionsChangedCallbacks.filter = this._filter;
         return {...options, ...optionsChangedCallbacks};
     }
 

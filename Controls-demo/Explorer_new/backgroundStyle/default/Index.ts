@@ -6,7 +6,6 @@ import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
 import {IColumn} from 'Controls/_grid/interface/IColumn';
 import {TRoot, IHeader} from 'Controls-demo/types';
 
-
 export default class extends Control {
    protected _template: TemplateFunction = Template;
    protected _viewSource: MemorySource;
@@ -14,7 +13,7 @@ export default class extends Control {
    protected _root: TRoot = null;
    protected _searchStartingWith: string = 'root';
    protected _searchStartingWithSource: Memory = null;
-   protected _filter = {demo: 123};
+   protected _filter: object = {demo: 123};
    protected _header: IHeader[] = [
       {
          title: ''

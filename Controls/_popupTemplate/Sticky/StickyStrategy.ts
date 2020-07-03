@@ -405,6 +405,9 @@ interface IPosition {
             if (popupCfg.restrictiveContainerCoords.top > targetCoords.top) {
                targetCoords.top = popupCfg.restrictiveContainerCoords.top;
             }
+            if (popupCfg.restrictiveContainerCoords.bottom < targetCoords.bottom) {
+               targetCoords.bottom = popupCfg.restrictiveContainerCoords.bottom;
+            }
          }
       }
    };

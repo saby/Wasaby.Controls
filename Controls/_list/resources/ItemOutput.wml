@@ -19,6 +19,7 @@
       itemData="{{itemData}}"
       actionsType="{{itemActionsPosition}}"
       backgroundStyle="{{backgroundStyle}}"
+      isColumnScrollVisible="{{isColumnScrollVisible}}"
       tagTemplate="{{tagTemplate}}"/>
 </ws:template>
 <ws:if data="{{itemData.dragTargetPosition === 'before'}}">

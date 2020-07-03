@@ -74,6 +74,7 @@ import 'wml!Controls/_list/BaseControl/Footer';
 import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
 import {IList} from "./interface/IList";
+import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -147,9 +148,10 @@ interface IErrbackConfig {
     dataLoadErrback?: (error: Error) => any;
     mode?: dataSourceError.Mode;
     templateOptions?: object;
-    error: Error;
+    error: CancelableError;
 }
 
+type CancelableError = Error & { canceled?: boolean };
 type LoadingState = null | 'all' | 'up' | 'down';
 
 interface IIndicatorConfig {
@@ -702,10 +704,12 @@ const _private = {
                 _private.hideError(self);
 
                 return addedItems;
-            }).addErrback((error: Error) => {
+            }).addErrback((error: CancelableError) => {
                 _private.hideIndicator(self);
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
-                _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
+                if (!error.canceled) {
+                    _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
+                }
                 return _private.crudErrback(self, {
                     error,
                     dataLoadErrback: userErrback,
@@ -1252,9 +1256,9 @@ const _private = {
         const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
 
         self._notify('updateShadowMode', [{
-            top: (shadowVisibility.up ||
+            top: (shadowVisibility?.up ||
                 showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
-            bottom: (shadowVisibility.down ||
+            bottom: (shadowVisibility?.down ||
                 showShadowByNavigation &&
                 showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
@@ -2070,10 +2074,16 @@ const _private = {
         if (self.__error || !self._listViewModel) {
             return;
         }
+        const editingConfig = self._listViewModel.getEditingConfig();
+        // Если нет опций записи, проперти, и тулбар для редактируемой записи выставлен в false, то не надо
+        // инициализировать контроллер
+        if (!options.itemActions && !options.itemActionsProperty && !editingConfig?.toolbarVisibility) {
+            return;
+        }
         if (!self._itemActionsController) {
             self._itemActionsController = new ItemActionsController();
         }
-        const editingConfig = self._listViewModel.getEditingConfig();
+
         const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
         let editArrowAction: IItemAction;
@@ -3010,6 +3020,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
+            this._scrollController.setTriggers(this._children)
             this._scrollController.registerObserver();
         }
     },
@@ -3235,7 +3246,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let hasDragScrolling = false;
         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {
-            hasDragScrolling = typeof this._options.dragScrolling === 'boolean' ? this._options.dragScrolling : !this._options.itemsDragNDrop;
+            hasDragScrolling = isColumnScrollShown(this._container) && (
+                typeof this._options.dragScrolling === 'boolean' ? this._options.dragScrolling : !this._options.itemsDragNDrop
+            );
         }
         if (this._unprocessedDragEnteredItem) {
             this._unprocessedDragEnteredItem = null;

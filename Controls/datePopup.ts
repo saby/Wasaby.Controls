@@ -286,8 +286,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
-    _currentDayIntersectHandler: function(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
-        this._homeButtonVisible = !entries[entries.length - 1].nativeEntry.intersectionRatio;
+    _currentDayIntersectHandler: function(event: SyntheticEvent, entry: IntersectionObserverSyntheticEntry): void {
+        this._homeButtonVisible = !entry.nativeEntry.intersectionRatio;
     },
 
     _yearsRangeChanged: function (e, start, end) {

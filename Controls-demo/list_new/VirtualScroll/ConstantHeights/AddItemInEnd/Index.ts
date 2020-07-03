@@ -16,7 +16,7 @@ export default class extends Control {
     private _viewSource: Memory;
     private _itemsCount: number = 1000;
 
-    protected get _page() {
+    protected get _page(): number {
         // tslint:disable-next-line
         return Math.ceil(this._itemsCount / 100 );
     }

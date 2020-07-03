@@ -1,8 +1,4 @@
 <Controls.validate:Controller name="formController">
-   <Controls.scroll:IntersectionObserverController
-         threshold="{{[0, 0.01, 0.99, 1]}}"
-         observerName="datePopup"
-         on:intersect="_currentDayIntersectHandler()">
       <div class="controls-PeriodDialog controls-PeriodDialog_theme-{{_options.theme}}">
       <ws:partial
          template="{{_headerTmpl}}"
@@ -104,5 +100,4 @@
             </Controls._datePopup.DateRange>
          </Controls.dateRange:DateRangeSelectionController>
       </div>
-   </Controls.scroll:IntersectionObserverController>
 </Controls.validate:Controller>
