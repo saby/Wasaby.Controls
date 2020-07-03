@@ -181,7 +181,11 @@ class Button extends BaseDropdown {
          }
       };
       this._controller.setMenuPopupTarget(this._container.children[0]);
-      this._controller.openMenu(config).then((result) => {
+      this.openMenu(config);
+   }
+
+   openMenu(popupOptions?: IMenuPopupOptions): void {
+      this._controller.openMenu(popupOptions).then((result) => {
          if (typeof result === 'string') {
             this._popupId = result;
          } else if (result) {
