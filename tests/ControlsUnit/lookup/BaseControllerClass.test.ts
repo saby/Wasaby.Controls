@@ -34,10 +34,12 @@ const source = getSource();
 const sourceWithError = getSource();
 sourceWithError.query = () => Promise.reject(new Error());
 
-const recordSet = new RecordSet({
-    rawData: getData(),
-    keyProperty: 'id'
-});
+function getRecordSet(): RecordSet {
+    return new RecordSet({
+        rawData: getData(),
+        keyProperty: 'id'
+    });
+}
 
 function getControllerOptions(): object {
     return {
@@ -93,22 +95,21 @@ describe('Controls/_lookup/BaseControllerClass', () => {
 
     it('setItems', () => {
         const controller = getLookupControllerWithEmptySelectedKeys();
-        controller.setItems(recordSet);
+        controller.setItems(getRecordSet());
         deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
     });
 
-    describe('getItems', () => {
+    it('getItems', () => {
+        const resultItemsCount = 3;
         const controller = getLookupControllerWithEmptySelectedKeys();
-        controller.setItems(recordSet);
-
-        const items = controller.getItems() as RecordSet;
-        deepStrictEqual(items.getRawData(), getData);
+        controller.setItems(getRecordSet());
+        deepStrictEqual(controller.getItems().getCount(), resultItemsCount);
     });
 
     it('addItem', () => {
         const controller = getLookupControllerWithEmptySelectedKeys();
         const item = new Model({
-            rawData: getData[0],
+            rawData: getData()[0],
             keyProperty: 'id'
         });
         controller.addItem(item);
@@ -120,23 +121,19 @@ describe('Controls/_lookup/BaseControllerClass', () => {
     it('removeItem', () => {
         const controller = getLookupControllerWithSelectedKeys();
         const item = new Model({
-            rawData: getData[0],
+            rawData: getData()[0],
             keyProperty: 'id'
         });
 
-        return new Promise((resolve) => {
-            controller.loadItems().then(() => {
-                controller.removeItem(item);
-
-                deepStrictEqual(controller.getItems().getCount(), 2);
-                resolve();
-            });
-        });
+        controller.setItems(getRecordSet());
+        controller.removeItem(item);
+        deepStrictEqual(controller.getSelectedKeys(), [1, 2]);
+        deepStrictEqual(controller.getItems().getCount(), 2);
     });
 
     it('getSelectedKeys', () => {
         const controller = getLookupControllerWithEmptySelectedKeys();
-        controller.setItems(recordSet);
+        controller.setItems(getRecordSet());
         deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
     });
 
