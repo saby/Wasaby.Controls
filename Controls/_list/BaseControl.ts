@@ -2243,14 +2243,15 @@ const _private = {
     onMove(self, nativeEvent): void {
         if (self._startEvent) {
             const dragObject = self._getDragObject(nativeEvent, self._startEvent);
+            if (!self._documentDragging && _private.isDragStarted(self._startEvent, nativeEvent)) {
+                self._insideDragging = true;
+                self._notify('_documentDragStart', [dragObject], {bubbling: true});
+            }
             if (self._documentDragging) {
                 self._notify('dragMove', [dragObject]);
                 if (self._options.draggingTemplate) {
                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
                 }
-            } else if (_private.isDragStarted(self._startEvent, nativeEvent)) {
-                self._insideDragging = true;
-                self._notify('_documentDragStart', [dragObject], {bubbling: true});
             }
         }
     }
