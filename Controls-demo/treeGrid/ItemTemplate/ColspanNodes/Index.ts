@@ -7,6 +7,7 @@ import { IColumn } from 'Controls/_grid/interface/IColumn';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
+    // tslint:disable-next-line
     protected _columns: IColumn[] = Gadgets.getGridColumnsForFlat().slice(0, 2);
 
     protected _beforeMount(): void {

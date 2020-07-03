@@ -10,7 +10,7 @@ define(
 
       'use strict';
 
-      const  _StickyHeader = _StickyHeaderLib.default;
+      const _StickyHeader = _StickyHeaderLib.default;
 
       describe('Controls.StickyHeader.Template', function() {
          var ctrl, template, inst, compat;

@@ -29,7 +29,10 @@
 </ws:template>
 
 <ws:template name="separatedCell">
-    <ws:partial template="{{currentColumn.template}}"
+    <!-- При горизонтальном скролле хлебные крошки выводятся без колспанов (крошка в первой ячейке, остальные пустые, разделитель колонок скрыт). -->
+    <!-- Этот механизм вызывает шаблон колонок, как при обычном рендере. -->
+    <!-- Не нужно ренднрить контент ячейки, если это не ячейка с colspanTemplate-->
+    <ws:partial template="{{ renderSeparatedColumnContent !== false ? currentColumn.template : 'Controls/grid:ColumnTemplate' }}"
                 editArrowTemplate="{{editArrowTemplate}}"
                 attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
@@ -149,14 +152,14 @@
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
        {{itemData.resetColumnIndex();}}
        <ws:if data="{{itemData.hasMultiSelect}}">
-           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}"/>
            {{itemData.goToNextColumn();}}
        </ws:if>
-       <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+       <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
        <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}"/>
        </ws:for>
    </ws:else>
 </tr>

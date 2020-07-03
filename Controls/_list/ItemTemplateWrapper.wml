@@ -9,6 +9,7 @@
             template="{{itemTemplate}}"
             itemData="{{itemData}}"
             backgroundStyle="{{backgroundStyle}}"
+            isColumnScrollVisible="{{isColumnScrollVisible}}"
             tagTemplate="{{tagTemplate}}"/>
 </ws:template>
 <ws:if data="{{itemData.isEditing}}">

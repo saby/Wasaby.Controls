@@ -10,6 +10,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _columns: IColumn[] = Gadgets.getColumnsWithFixedWidth().map((cur, i) => {
+        // tslint:disable-next-line
         if (i === 2) {
             return {
                 ...cur,

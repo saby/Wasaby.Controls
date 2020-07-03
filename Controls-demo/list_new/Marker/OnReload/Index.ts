@@ -17,7 +17,6 @@ export default class extends Control {
 
     protected _reloadList(e: MouseEvent): void {
         e.preventDefault();
-        //@ts-ignore
         this._children.list.reload().then(() => {
             this._listReloaded = true;
         });

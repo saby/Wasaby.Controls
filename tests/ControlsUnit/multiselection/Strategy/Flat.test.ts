@@ -190,27 +190,41 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
       });
    });
 
-   it('isAllSelected', () => {
-      let selection = { selected: [null], excluded: [] };
-      assert.isTrue(strategy.isAllSelected(selection, false, 3));
+   describe('isAllSelected', () => {
+      it('not empty model', () => {
+         let selection = { selected: [null], excluded: [] };
+         assert.isTrue(strategy.isAllSelected(selection, false, 3));
 
-      selection = { selected: [null], excluded: [5] };
-      assert.isFalse(strategy.isAllSelected(selection, false, 3));
+         selection = { selected: [null], excluded: [5] };
+         assert.isFalse(strategy.isAllSelected(selection, false, 3));
 
-      selection = { selected: [1, 2, 3], excluded: [] };
-      assert.isFalse(strategy.isAllSelected(selection, true, 3));
+         selection = { selected: [1, 2, 3], excluded: [] };
+         assert.isFalse(strategy.isAllSelected(selection, true, 3));
 
-      selection = { selected: [1, 2, 3], excluded: [] };
-      assert.isTrue(strategy.isAllSelected(selection, false, 3));
+         selection = { selected: [1, 2, 3], excluded: [] };
+         assert.isTrue(strategy.isAllSelected(selection, false, 3));
 
-      selection = { selected: [], excluded: [] };
-      assert.isFalse(strategy.isAllSelected(selection, false, 3, false));
+         selection = { selected: [], excluded: [] };
+         assert.isFalse(strategy.isAllSelected(selection, false, 3, false));
 
-      selection = { selected: [null], excluded: [] };
-      assert.isTrue(strategy.isAllSelected(selection, false, 3, false));
+         selection = { selected: [null], excluded: [] };
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, false));
 
-      selection = { selected: [null, 2], excluded: [3] };
-      assert.isTrue(strategy.isAllSelected(selection, false, 3, false));
+         selection = { selected: [null, 2], excluded: [3] };
+         assert.isTrue(strategy.isAllSelected(selection, false, 3, false));
+      });
+
+      it('empty model', () => {
+         const strategy = new FlatSelectionStrategy({
+            items: new RecordSet({
+               rawData: [ ],
+               keyProperty: 'id'
+            })
+         });
+
+         const selection = { selected: [], excluded: [] };
+         assert.isFalse(strategy.isAllSelected(selection, false, 0, true));
+      });
    });
 
    it('setItems', () => {

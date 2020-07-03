@@ -13,7 +13,7 @@ function load(sourceOptions, data) {
    });
 
    let params = {filter: sourceOptions.filter, sorting: sourceOptions.sorting} as IAdditionalQueryParams;
-   if (sourceOptions.navigation) {
+   if (sourceOptions.navigation && sourceOptions.navigation.source) {
       const navigationController = new NavigationController({
          navigationType: sourceOptions.navigation.source,
          navigationConfig: sourceOptions.navigation.sourceConfig

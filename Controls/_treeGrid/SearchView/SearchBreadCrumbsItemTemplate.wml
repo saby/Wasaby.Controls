@@ -1,9 +1,11 @@
 <ws:partial template="{{itemData.resolveItemTemplate(itemData)}}"
             scope="{{_options}}"
-            colspan="{{itemData.getColspan(colspan)}}"
-            colspanLength="{{ 1 }}"
+            colspan="{{itemData.getColspan(colspan, isColumnScrollVisible)}}"
+            colspanLength="{{ itemData.getColspanLength(colspan, isColumnScrollVisible) }}"
+            renderSeparatedColumnContent="{{ colspan === false }}"
             expanderIcon="none"
-            marker="{{false}}"
+            marker="{{ false }}"
+            attr:class="{{ itemData.shouldHideColumnSeparator(colspan, isColumnScrollVisible) ? 'controls-Grid__row__searchBreadCrumbs_withoutColumnSeparator' }}"
             attr:key="{{ itemData.key }}__breadcrumbs">
     <ws:colspanTemplate>
         <!-- Сюда нельзя прокидывать _options.backgroundStyle, т.к. будет неправильный фон у спозиционированных absolute/fixed эл-в -->
