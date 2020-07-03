@@ -2,6 +2,10 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IExpandableOptions, IExpandable} from 'Controls/interface';
 import ButtonTemplate = require('wml!Controls/_operations/Button/Button');
 import {default as Store} from 'Controls/Store';
+import DependenciesTimer from "Controls/Utils/DependenciesTimer";
+import {SyntheticEvent} from 'Vdom/Vdom';
+import * as mStubs from 'Core/moduleStubs';
+
 export interface IOperationsButtonOptions extends IControlOptions, IExpandableOptions {
 }
 
@@ -35,12 +39,15 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
  *
  */
 
-class OperationsButton extends Control<IOperationsButtonOptions> implements IExpandable {
+export default class OperationsButton extends Control<IOperationsButtonOptions> implements IExpandable {
    '[Controls/_toggle/interface/IExpandable]': true;
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = ButtonTemplate;
    protected _expanded: boolean = false;
    protected _expandedCallbackId: string;
+
+   private _dependenciesTimer: DependenciesTimer = null;
+   private _loadOperationsPanelPromise: Promise<unknown> = null;
 
    protected _expandedChanged(value): void {
       if (this._expanded !== !!value) {
@@ -53,13 +60,20 @@ class OperationsButton extends Control<IOperationsButtonOptions> implements IExp
              (expanded) => this._expandedChanged(expanded)
          );
       }
+
+      if (!this._dependenciesTimer) {
+         this._dependenciesTimer = new DependenciesTimer();
+      }
    }
    protected _beforeUnmount(): void {
       if (this._expandedCallbackId) {
          Store.unsubscribe(this._expandedCallbackId);
       }
    }
-   protected _onClick(): void {
+   protected _onClickHandler(event: SyntheticEvent): void {
+      event.stopPropagation();
+   }
+   protected _mouseDownHandler(): void {
       if (!this._options.readOnly) {
          this._notify('expandedChanged', [!this._options.expanded]);
          if (this._options.useStore) {
@@ -67,6 +81,26 @@ class OperationsButton extends Control<IOperationsButtonOptions> implements IExp
          }
       }
    }
+   protected _mouseEnterHandler(): void {
+      if (!this._options.readOnly) {
+         this._dependenciesTimer.start(this._loadDependencies);
+      }
+   }
+   protected _mouseLeaveHandler(): void {
+      this._dependenciesTimer.stop();
+   }
+   private _loadDependencies(): Promise<unknown> {
+      const dependencies = [
+         ((): Promise<unknown> => {
+            if (!this._loadOperationsPanelPromise) {
+               this._loadOperationsPanelPromise = mStubs.require(['Controls/operationsPanel']);
+            }
+            return this._loadOperationsPanelPromise;
+         })()
+      ];
+
+      return Promise.all(dependencies);
+   }
+
    static _theme: string[] = ['Controls/operations'];
 }
-export default OperationsButton;
