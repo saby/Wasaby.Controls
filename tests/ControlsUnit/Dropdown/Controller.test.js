@@ -133,13 +133,14 @@ define(
                   title: 'Тест 2'
                }
             ];
-            const newSource =  new sourceLib.Memory({
+            const newSource = new sourceLib.Memory({
                keyProperty: 'id',
                data: newItems
             });
 
             let dropdownController = getDropdownController(newOptions);
-            dropdownController.reload({source: newSource}).then(()=> {
+            dropdownController._options.source = newSource;
+            dropdownController.reload().then(()=> {
                assert.deepEqual(dropdownController._items.at(0).get('title'), 'Тест 1');
             });
          });

@@ -71,7 +71,7 @@ export default class BaseDropdown extends Control<IControlOptions> {
         }
     }
 
-    protected reload(options: IBaseDropdownOptions): void {
+    protected reload(): void {
         const controllerOptions = getDropdownControllerOptions(options);
         this._controller.reload(controllerOptions);
     }

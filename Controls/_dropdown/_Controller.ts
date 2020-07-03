@@ -116,7 +116,7 @@ export default class _Controller implements IDropdownController {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
-            return this.reload(newOptions);
+            return this.reload();
          }
       } else if (newOptions.selectedKeys !== oldOptions.selectedKeys && this._items) {
          this._updateSelectedItems(newOptions.emptyText, newOptions.selectedKeys,
@@ -124,8 +124,8 @@ export default class _Controller implements IDropdownController {
       }
    }
 
-   reload(newOptions: IDropdownControllerOptions): Promise<RecordSet> {
-      return this._loadItems(newOptions).addCallback((items) => {
+   reload(): Promise<RecordSet> {
+      return this._loadItems(this._options).addCallback((items) => {
          if (items && this._isOpened) {
             this._open();
          }
