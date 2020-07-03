@@ -7,6 +7,7 @@ import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_breadcrumbs/View/View');
 import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
 import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplate');
+import itemsMultilineTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemMultilineTemplate');
 import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemTemplate');
 import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
 
@@ -26,6 +27,7 @@ import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
 class BreadCrumbsView extends Control<IControlOptions> {
     protected _template: TemplateFunction =  template;
     protected _itemsTemplate: TemplateFunction = itemsTemplate;
+    protected _itemsMultilineTemplate: TemplateFunction = itemsMultilineTemplate;
     protected _popupIsOpen: boolean = false;
     private _menuOpener: StickyHelper;
 
@@ -139,6 +141,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
         return {
             itemTemplate,
             backgroundStyle: 'default',
+            displayMode: 'default',
             fontSize: 'xs',
             fontColorStyle: 'label'
         };
