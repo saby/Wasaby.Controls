@@ -13,6 +13,10 @@ export default class BaseDropdown extends Control<IControlOptions> {
     reload(): void {
         this._controller.reload();
     }
+  
+    closeMenu(): void {
+        this._controller.closeMenu();
+    }
 
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
         RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
@@ -60,10 +64,6 @@ export default class BaseDropdown extends Control<IControlOptions> {
 
     protected _selectorDialogOpened(data): void {
         this._initSelectorItems = data;
-        this._controller.closeMenu();
-    }
-
-    protected closeMenu(): void {
         this._controller.closeMenu();
     }
 

@@ -102,11 +102,11 @@ define([
                }
             };
             bc._menuOpener = {
-               openPopup: function (openerOptions) {
+               open: function (openerOptions) {
                   assert.equal(openerOptions.target, 123);
                   assert.equal(openerOptions.templateOptions.displayProperty, 'test');
                },
-               closePopup: function () {
+               close: function () {
                }
             };
             bc._dotsClick({
@@ -128,7 +128,7 @@ define([
             }
          };
          bc._menuOpener = {
-            closePopup: function () {
+            close: function () {
                done();
             }
          };

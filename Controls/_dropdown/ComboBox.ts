@@ -11,6 +11,7 @@ import {ISingleSelectableOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {RecordSet} from 'Types/collection';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
@@ -169,14 +170,18 @@ class ComboBox extends BaseDropdown {
             }
          };
          this._controller.setMenuPopupTarget(this._container);
-         this._controller.openMenu(config).then((result) => {
-            if (typeof result === 'string') {
-               this._popupId = result;
-            } else if (result) {
-               this._selectedItemsChangedHandler(result);
-            }
-         });
+         this.openMenu(config);
       }
+   }
+
+   openMenu(popupOptions?: IMenuPopupOptions): void {
+      this._controller.openMenu(popupOptions).then((result) => {
+         if (typeof result === 'string') {
+            this._popupId = result;
+         } else if (result) {
+            this._selectedItemsChangedHandler(result);
+         }
+      });
    }
 
    protected _onResult(action: string, data): void {

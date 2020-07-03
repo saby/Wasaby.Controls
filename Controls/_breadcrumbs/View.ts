@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Memory} from 'Types/source';
-import {StickyHelper} from 'Controls/popup';
+import {StickyOpener} from 'Controls/popup';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_breadcrumbs/View/View');
@@ -29,12 +29,12 @@ class BreadCrumbsView extends Control<IControlOptions> {
     protected _itemsTemplate: TemplateFunction = itemsTemplate;
     protected _itemsMultilineTemplate: TemplateFunction = itemsMultilineTemplate;
     protected _popupIsOpen: boolean = false;
-    private _menuOpener: StickyHelper;
+    private _menuOpener: StickyOpener;
 
     protected _beforeMount(): void {
         // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
         this._onResult = this._onResult.bind(this);
-        this._menuOpener = new StickyHelper();
+        this._menuOpener = new StickyOpener();
     }
 
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
@@ -43,11 +43,11 @@ class BreadCrumbsView extends Control<IControlOptions> {
 
     protected _beforeUnmount(): void {
         UnregisterUtil(this, 'scroll');
-        this._menuOpener.closePopup();
+        this._menuOpener.close();
     }
 
     private _scrollHandler(): void {
-        this._menuOpener.closePopup();
+        this._menuOpener.close();
     }
 
     private _onItemClick(e: SyntheticEvent<Event>, itemData): void {
@@ -90,7 +90,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
 
             if (!this._popupIsOpen) {
                 const templateClassName = `controls-BreadCrumbsController__menu_theme-${this._options.theme}`;
-                this._menuOpener.openPopup({
+                this._menuOpener.open({
                     template: 'Controls/menu:Popup',
                     opener: this,
                     target: e.currentTarget,
@@ -120,7 +120,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
                     fittingMode: 'overflow'
                 });
             } else {
-                this._menuOpener.closePopup();
+                this._menuOpener.close();
             }
     }
 
@@ -133,7 +133,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
     protected _onResult(actionName: string, data): void {
         if (actionName === 'itemClick' && !this._options.readOnly) {
             this._notify('itemClick', [data]);
-            this._menuOpener.closePopup();
+            this._menuOpener.close();
         }
     }
 
