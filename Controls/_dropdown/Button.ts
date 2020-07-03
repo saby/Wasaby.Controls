@@ -90,7 +90,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IGroupedOptions, IIconOpt
  * @demo Controls-demo/Buttons/Menu/MenuPG
  */
 
-class Button extends BaseDropdown {
+export default class Button extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _tmplNotify: Function = tmplNotify;
    protected _hasItems: boolean = true;
@@ -232,8 +232,6 @@ Button.getDefaultOptions = function () {
 };
 
 Button._theme = ['Controls/dropdown', 'Controls/Classes'];
-
-export = Button;
 
 /**
  * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.

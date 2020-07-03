@@ -248,7 +248,7 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * </pre>
  */
 
-class Input extends BaseDropdown {
+export default class Input extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
    protected _text: string = '';
@@ -426,5 +426,3 @@ class Input extends BaseDropdown {
 }
 
 Input._theme = ['Controls/dropdown', 'Controls/Classes'];
-
-export = Input;
