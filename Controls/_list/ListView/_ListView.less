@@ -252,6 +252,14 @@
    font-size: @grouping_expander_icon-size_list;
 }
 
+// В safari вне зависимости от величины @grouping_separator_thickness_list разделительная полоса групп
+// рисуется на 1px выше, чем надо
+.ws-is-mobile-safari {
+   .controls-ListView__groupSeparator-left_theme-@{themeName}, .controls-ListView__groupSeparator-right_theme-@{themeName} {
+      height: (@grouping_height_list / 2 - @grouping_separator_thickness_list) + 1;
+   }
+}
+
 .controls-ListView__groupSeparator-left_theme-@{themeName} {
    margin-right: @grouping_expander_padding-left_list;
 }
