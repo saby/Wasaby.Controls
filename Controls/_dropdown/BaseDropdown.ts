@@ -3,7 +3,6 @@ import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import IDropdownController from 'Controls/_dropdown/interface/IDropdownController';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
@@ -12,8 +11,7 @@ export default class BaseDropdown extends Control<IControlOptions> {
     protected _popupId: string = null;
 
     reload(): void {
-        const controllerOptions = getDropdownControllerOptions(options);
-        this._controller.reload(controllerOptions);
+        this._controller.reload();
     }
 
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
