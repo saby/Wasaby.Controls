@@ -83,6 +83,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _openSubMenuEvent: MouseEvent;
     private _errorController: dataSourceError.Controller;
     private _errorConfig: dataSourceError.ViewConfig|void;
+    private _popupId: string|null;
 
     protected _beforeMount(options: IMenuControlOptions,
                            context?: object,
@@ -295,7 +296,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 })
             });
         }
-        this._options.selectorOpener.open(this._getSelectorDialogOptions(this._options, selectedItems));
+        this._options.selectorOpener.openPopup(this._getSelectorDialogOptions(this._options, selectedItems)).then((popupId) => {
+            this._popupId = popupId;
+        });
         this._notify('moreButtonClick', [selectedItems]);
     }
 
@@ -471,9 +474,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         Merge(templateConfig, selectorTemplate.templateOptions);
 
         return Merge({
+            opener: this,
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
-            isCompoundTemplate: options.isCompoundTemplate
+            isCompoundTemplate: options.isCompoundTemplate,
+            eventHandlers: {
+                onResult: (result, event) => {
+                    selectorDialogResult(event, result);
+                    selectorOpener.closePopup(this._popupId);
+                }
+            }
         }, selectorTemplate.popupOptions || {});
     }
 
