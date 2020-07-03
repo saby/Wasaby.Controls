@@ -17,6 +17,7 @@ export default class extends Control {
             data: Gadgets.getFlatData()
         });
         this._columns[0].template = TitleCellTemplate;
+        // tslint:disable-next-line
         this._columns[2].template = CountryCellTemplate;
     }
 

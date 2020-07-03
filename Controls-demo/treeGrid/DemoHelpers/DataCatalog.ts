@@ -22,7 +22,7 @@ interface IData {
    size?: string;
    year?: string;
    note?: string;
-   nodeType?: boolean | null
+   nodeType?: boolean | null;
 }
 
 interface IResults {

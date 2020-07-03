@@ -2,7 +2,7 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { TreeSelectionStrategy } from 'Controls/multiselection';
+import { FlatSelectionStrategy, TreeSelectionStrategy } from 'Controls/multiselection';
 import { relation } from 'Types/entity';
 import * as ListData from 'ControlsUnit/ListData';
 import { RecordSet } from 'Types/collection';
@@ -454,6 +454,22 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const selection = { selected: [1, 2, 3, 4, 5, 6, 7], excluded: [] };
          assert.isFalse(strategy.isAllSelected(selection, true, 7));
          assert.isFalse(strategy.isAllSelected(selection, true, 7, false));
+      });
+
+      it('empty model', () => {
+         const strategy = new TreeSelectionStrategy({
+            nodesSourceControllers,
+            selectDescendants: false,
+            selectAncestors: false,
+            hierarchyRelation: hierarchy,
+            rootId: null,
+            items: new RecordSet({
+               rawData: [],
+               keyProperty: 'id'
+            })
+         });
+         const selection = { selected: [], excluded: [] };
+         assert.isFalse(strategy.isAllSelected(selection, false, 0, true));
       });
    });
 

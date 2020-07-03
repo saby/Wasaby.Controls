@@ -1,18 +1,19 @@
 import {TemplateFunction} from 'UI/Base';
 import {IMenuBaseOptions} from './IMenuBase';
 import {ISourceOptions, INavigationOptions, IFilterOptions, ISelectorDialogOptions} from 'Controls/interface';
-import {Stack} from 'Controls/popup/Stack';
 import {IItemAction} from 'Controls/itemActions';
+import {Stack} from "Controls/popup";
 
 export type TKey = string|number|null;
 
-export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, INavigationOptions,
+export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, INavigationOptions<unknown>,
         IFilterOptions, ISelectorDialogOptions {
     nodeFooterTemplate?: TemplateFunction;
     root?: TKey;
     selectorOpener?: Stack;
     itemActions?: IItemAction[];
     dataLoadCallback: Function;
+    selectorDialogResult: Function;
 }
 
 /**

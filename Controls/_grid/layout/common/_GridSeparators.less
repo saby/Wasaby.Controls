@@ -68,3 +68,9 @@
    border-left-width: @column_separator_s_thickness_grid;
    border-left-color: @column_separator_s_color_grid;
 }
+
+// Хлебные крошки при горизонтальном скролле фактически не колспанятся вообще, по стандарту они должны разбиватьс на 2 колонки (фикс и скроллируемая).
+// Чтобы крошка выглядела по стандарту, уберем на ней разделители колонок.
+.controls-Grid__row__searchBreadCrumbs_withoutColumnSeparator .controls-Grid__columnSeparator_size-s_theme-@{themeName} {
+   border-left-width: 0;
+}

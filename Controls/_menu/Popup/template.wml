@@ -65,6 +65,7 @@
                        itemPadding="{{_itemPadding}}"
                        dataLoadCallback="{{_dataLoadCallback}}"
                        headingIcon="{{_headingIcon}}"
+                       headerTemplate="{{_headerTemplate || _options.headerTemplate}}"
                        theme="{{_options.theme}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:applyClick="_sendResult('applyClick')"

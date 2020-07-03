@@ -131,22 +131,33 @@ define([
       describe('_observeHandler', function() {
          it('should not update state if control is hidden', function() {
             const component = createComponent(StickyHeader, {});
+            var sandbox = sinon.createSandbox();
             component._container = {
-               closest: sinon.stub().returns(true)
+               closest: sandbox.stub().returns(true)
             };
-            sinon.stub(component, '_createObserver');
-            sinon.stub(StickyHeaderUtils, 'isHidden').returns(true);
+            sandbox.stub(component, '_createObserver');
+            sandbox.stub(StickyHeaderUtils, 'isHidden').returns(true);
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
-            sinon.stub(component._model, 'update');
+            sandbox.stub(component._model, 'update');
 
             component._observeHandler();
 
-            sinon.assert.notCalled(component._model.update);
-            sinon.restore();
+            sandbox.assert.notCalled(component._model.update);
+            sandbox.restore();
          });
       });
 
       describe('_getStyle', function() {
+         var sandbox;
+         beforeEach(function() {
+            sandbox = sinon.createSandbox();
+         });
+
+         afterEach(function() {
+            sandbox.restore();
+            sandbox = null;
+         });
+
          it('should set correct z-index', function() {
             const component = createComponent(StickyHeader, {fixedZIndex: 2});
             component._context = {
@@ -176,7 +187,6 @@ define([
 
          it('should return correct min-height.', function() {
             const
-               sandbox = sinon.createSandbox(),
                component = createComponent(StickyHeader, { fixedZIndex: 2, position: 'topbottom' });
             sandbox.replace(component, '_getComputedStyle', function() {
                return { boxSizing: 'border-box', minHeight: '30px' };
@@ -196,13 +206,10 @@ define([
             component._minHeight = 40;
             component._container.style.minHeight = 40;
             assert.include(component._getStyle(), 'min-height:40px;');
-
-            sandbox.restore();
          });
 
          it('should return correct styles for Android.', function() {
             const
-               sandbox = sinon.createSandbox(),
                component = createComponent(StickyHeader, { fixedZIndex: 2, position: 'top' });
             let style;
             sandbox.replace(component, '_getComputedStyle', function() {
@@ -215,19 +222,15 @@ define([
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
-
             style = component._getStyle();
             assert.include(style, 'min-height:33px;');
             assert.include(style, 'top: 7px;');
             assert.include(style, 'margin-top: -3px;');
             assert.include(style, 'padding-top:4px;');
-
-            sandbox.restore();
          });
 
          it('should return correct styles for container with border on mobile platforms.', function() {
             const
-               sandbox = sinon.createSandbox(),
                component = createComponent(StickyHeader, { fixedZIndex: 2, position: 'top' });
             let style;
             sandbox.replace(component, '_getComputedStyle', function() {

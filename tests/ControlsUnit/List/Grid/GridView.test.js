@@ -432,7 +432,8 @@ define(['Controls/grid'], function(gridMod) {
                setColumns: () => {},
                setHeader: () => {},
                setColumnScroll: () => {},
-               unsubscribe:() => {}
+               unsubscribe: () => {},
+               setStickyColumnsCount: () => {}
             };
 
             contentContainer = {
@@ -573,21 +574,39 @@ define(['Controls/grid'], function(gridMod) {
                });
             });
 
-            it('on toggle multiselect', () => {
+            it('on toggle multiselect', async () => {
                gridView.saveOptions({...cfg, multiSelectVisibility: 'hidden'});
                gridView._afterMount();
 
+               assert.equal(gridView._containerSize, 100);
+               assert.equal(gridView._contentSizeForHScroll, 200);
+
+               /*
+               * Переключение режима множественного выбора приводит к ресайзу списка
+               * и запускается отложенное обновление размеров. Нужно проверить, что
+               * отложенное обновление будет вызвано на контроллере с правильными опциями.
+               * */
                contentContainer.offsetWidth = 125;
                contentContainer.scrollWidth = 600;
-               gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible'});
 
-               assert.equal(gridView._containerSize, 125);
-               assert.equal(gridView._contentSizeForHScroll, 600);
+               await new Promise((resolve) => {
+                  gridView._beforeUpdate({...cfg, multiSelectVisibility: 'visible'});
+                  gridView.saveOptions({...cfg, multiSelectVisibility: 'visible'});
+                  gridView._resizeHandler();
+                  gridView._afterUpdate({...cfg, multiSelectVisibility: 'hidden'});
+
+                  setTimeout(resolve, 20);
+               }).then(() => {
+                  assert.equal(gridView._containerSize, 125);
+                  assert.equal(gridView._contentSizeForHScroll, 600);
+               });
             });
 
             it('should update column scroll sizes if options has been changed (only once per lifecycle)', () => {
-               gridView.saveOptions({...cfg, multiSelectVisibility: 'hidden'});
+               const oldOptions = {...cfg, multiSelectVisibility: 'hidden'};
+               const newOptions = {...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2};
                const calledMethods = [];
+               gridView.saveOptions(oldOptions);
                gridView._columnScrollController = {
                   setStickyColumnsCount: () => {calledMethods.push('setStickyColumnsCount')},
                   setMultiSelectVisibility: () => {calledMethods.push('setMultiSelectVisibility')},
@@ -597,7 +616,10 @@ define(['Controls/grid'], function(gridMod) {
                   getElementsByClassName: (selector) => selector === 'controls-Grid_columnScroll' ? [{offsetWidth: 100, scrollWidth: 200}] : null
                };
 
-               gridView._afterUpdate({...cfg, multiSelectVisibility: 'visible', stickyColumnsCount: 2});
+               gridView._beforeUpdate(newOptions);
+               gridView.saveOptions(newOptions);
+               gridView._afterUpdate(oldOptions);
+
                assert.deepEqual(calledMethods, ['setStickyColumnsCount', 'setMultiSelectVisibility', 'updateSizes']);
             });
          });

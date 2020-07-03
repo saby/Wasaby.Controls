@@ -290,7 +290,7 @@ export default class SearchControllerClass {
                 searchDelay: options.searchDelay || this._options.searchDelay,
                 searchValueTrim: options.searchValueTrim || this._options.searchValueTrim,
                 filter: {...options.filter} || {},
-                source: options.source,
+                source: options.source || this._options.source,
                 sorting: options.sorting,
                 navigation: options.navigation,
                 keyProperty: options.keyProperty,
@@ -367,10 +367,19 @@ export default class SearchControllerClass {
         return this._searchController && this._searchController.isLoading();
     }
 
+    private _needChangeSearchValueToSwitchedString(data: RecordSet): boolean {
+        const metaData = data && data.getMetaData();
+        return metaData ? metaData.returnSwitched : false;
+    }
+
     private _searchCallback(result: ISearchCallbackResult, filter: object): void {
         this._updateSearchParams(filter);
         this._options.itemsChangedCallback(result.data);
-        this._setMisspellValue(getSwitcherStrFromData(result.data));
+        const switchedStr = getSwitcherStrFromData(result.data);
+        this._setMisspellValue(switchedStr);
+        if (this._needChangeSearchValueToSwitchedString(result.data)) {
+            this._setSearchValue(switchedStr);
+        }
     }
 
     private _abortCallback(filter: object): void {
@@ -521,6 +530,9 @@ export default class SearchControllerClass {
                 self._notify('searchValueChanged', [searchValue]);
             },
             itemsChangedCallback: (items) => {
+                if (self._itemsChanged) {
+                    self._itemsChanged(null, items);
+                }
                 self._notify('itemsChanged', [items]);
             },
             pathChangedCallback: (path) => {
@@ -548,6 +560,9 @@ export default class SearchControllerClass {
                 self._misspellValue = value;
             },
             filterChangedCallback: (filter) => {
+                if (self._filterChanged) {
+                    self._filterChanged(null, filter);
+                }
                 self._notify('filterChanged', [filter]);
             },
             dataLoadErrback: (error: Object|Error) => {

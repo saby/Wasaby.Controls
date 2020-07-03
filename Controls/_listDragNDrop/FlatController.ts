@@ -35,7 +35,7 @@ export default class FlatController {
       this._model = model;
    }
 
-   update(model: IFlatModel) {
+   update(model: IFlatModel): void {
       this._model = model;
    }
 
@@ -47,10 +47,18 @@ export default class FlatController {
    setDraggedItems(entity: ItemsEntity, draggedItem: CollectionItem<Model> = null): void {
       this._entity = entity;
 
+      // TODO нужно доработать совместимость между старой и новой моделями.
+      //  Сейчас drag-n-drop в новой модели поддерживает только перетаскивание элемента в другой список.
+      //  Например, Задачи/В работе в режиме плитки перетаскивание в папку.
       if (draggedItem) {
-         this._draggingItemData = this._model.getItemDataByItem(draggedItem);
-         // это перетаскиваемый элемент, поэтому чтобы на него навесился нужный css класс isDragging = true
-         this._draggingItemData.isDragging = true;
+         if (this._model.getItemDataByItem) {
+            this._draggingItemData = this._model.getItemDataByItem(draggedItem);
+            // это перетаскиваемый элемент, поэтому чтобы на него навесился нужный css класс isDragging = true
+            this._draggingItemData.isDragging = true;
+         } else {
+            this._model.setDraggedItems(draggedItem, entity);
+            return;
+         }
       }
 
       this._model.setDraggedItems(this._draggingItemData, entity);
@@ -76,7 +84,7 @@ export default class FlatController {
       return this._dragPosition;
    }
 
-   getDragEntity(): any {
+   getDragEntity(): ItemsEntity {
       return this._entity;
    }
 
