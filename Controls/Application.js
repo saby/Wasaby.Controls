@@ -97,7 +97,7 @@ define('Controls/Application',
          generateJML: function (links, styles, meta) {
             return []
                // фильтруем css (их вставит theme_controller)
-               .concat(_private.translateJML('link', links.filter((l) => l.type !== 'text/css')))
+               .concat(_private.translateJML('link', links.filter(function (l) { return l.type !== 'text/css'; })))
                .concat(_private.translateJML('style', styles))
                .concat(_private.translateJML('meta', meta));
          },
