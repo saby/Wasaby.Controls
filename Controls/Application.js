@@ -86,16 +86,17 @@ define('Controls/Application',
          },
 
          // Generates JML from options array of objects
-         translateJML: function JMLTranslator(type, objects) {
+         translateJML: function JMLTranslator(type, obj) {
+            var objects = obj || [];
             var result = [];
             for (var i = 0; i < objects.length; i++) {
                result[i] = [type, objects[i]];
             }
             return result;
          },
-         generateJML: function (links = [], styles = [], meta = []) {
+         generateJML: function (links, styles, meta) {
             return []
-            // фильтруем css (их вставит theme_controller)
+               // фильтруем css (их вставит theme_controller)
                .concat(_private.translateJML('link', links.filter((l) => l.type !== 'text/css')))
                .concat(_private.translateJML('style', styles))
                .concat(_private.translateJML('meta', meta));
