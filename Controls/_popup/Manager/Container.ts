@@ -63,6 +63,19 @@ class Container extends Control<IControlOptions> {
      */
     setPopupItems(popupItems: List<IPopupItem>): void {
         this._popupItems = popupItems;
+        this._calcOverlayId(popupItems);
+    }
+
+    private _calcOverlayId(popupItems: List<IPopupItem>): void {
+        let maxModalPopup;
+        popupItems.each((item: IPopupItem) => {
+            if (item.modal) {
+                if (!maxModalPopup || item.currentZIndex > maxModalPopup.currentZIndex) {
+                    maxModalPopup = item;
+                }
+            }
+        });
+        this._overlayId = maxModalPopup?.id;
     }
 
     removePopupItem(popupItems: List<IPopupItem>, removedItem: IPopupItem, removeCallback: Function): void {
@@ -105,29 +118,6 @@ class Container extends Control<IControlOptions> {
 
     private _cancelFinishingPendingHandler(event: Event, root: string): void {
         this._pendingController.cancelFinishingPending(root);
-    }
-
-    // todo: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
-    protected _getItems(popupItems: List<IPopupItem>): List<IPopupItem> {
-        const reversePopupList: List<IPopupItem> = new List();
-        let maxModalPopup: IPopupItem;
-        popupItems.each((item: IPopupItem) => {
-            let at;
-            // Для поддержки старых автотестов, нужно, чтобы открываемые стековые и диалоговые окна в DOM располагались
-            // выше чем уже открытые. Со всеми окнами так делать нельзя, доп окна (стики) открываемые на 1 уровне, имеют
-            // одинаковый z-index и последнее открытое окно должно быть выше, это осуществялется за счет позиции в DOM.
-            if (item.controller.TYPE === 'Stack' || item.controller.TYPE === 'Dialog') {
-                at = 0;
-            }
-            if (item.modal) {
-                if (!maxModalPopup || item.currentZIndex > maxModalPopup.currentZIndex) {
-                    maxModalPopup = item;
-                }
-            }
-            reversePopupList.add(item, at);
-        });
-        this._overlayId = maxModalPopup?.id;
-        return reversePopupList;
     }
 
     protected _keyDownHandler(event: Event): void {
