@@ -95,7 +95,7 @@ export default class Button extends BaseDropdown {
    protected _tmplNotify: Function = tmplNotify;
    protected _hasItems: boolean = true;
 
-   _beforeMount(options: IButtonOptions, recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
+   _beforeMount(options: IButtonOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._offsetClassName = cssStyleGeneration(options);
       this._updateState(options);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
@@ -216,22 +216,22 @@ export default class Button extends BaseDropdown {
          this._controller.handleSelectedItems(item);
       }
    }
+
+   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
+
+   static getDefaultOptions(): object {
+      return {
+         showHeader: true,
+         filter: {},
+         style: 'secondary',
+         viewMode: 'button',
+         size: 'm',
+         iconStyle: 'secondary',
+         transparent: true,
+         lazyItemsLoading: false
+      };
+   }
 }
-
-Button.getDefaultOptions = function () {
-   return {
-      showHeader: true,
-      filter: {},
-      style: 'secondary',
-      viewMode: 'button',
-      size: 'm',
-      iconStyle: 'secondary',
-      transparent: true,
-      lazyItemsLoading: false
-   };
-};
-
-Button._theme = ['Controls/dropdown', 'Controls/Classes'];
 
 /**
  * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.
