@@ -90,7 +90,7 @@ class ComboBox extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
 
-   _beforeMount(options: IComboboxOptions, recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
+   _beforeMount(options: IComboboxOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
@@ -196,14 +196,14 @@ class ComboBox extends BaseDropdown {
    private _getContainerNode(container:[HTMLElement]|HTMLElement): HTMLElement {
       return container[0] || container;
    }
+
+   static _theme: string[] = ['Controls/dropdown'];
+
+   static getDefaultOptions(): object {
+      return {
+         placeholder: rk('Выберите') + '...'
+      };
+   }
 }
-
-ComboBox.getDefaultOptions = function () {
-   return {
-      placeholder: rk('Выберите') + '...'
-   };
-};
-
-ComboBox._theme = ['Controls/dropdown'];
 
 export = ComboBox;
