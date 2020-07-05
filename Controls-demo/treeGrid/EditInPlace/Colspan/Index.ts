@@ -1,9 +1,9 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/treeGrid/EditInPlace/Padding/InputFontSize';
+import * as Template from 'wml!Controls-demo/treeGrid/EditInPlace/Colspan/Colspan';
 import {Memory} from 'Types/source';
 import {Gadgets} from '../../DemoHelpers/DataCatalog';
-import * as TitleCellTemplate from 'wml!Controls-demo/treeGrid/EditInPlace/Padding/ColumnTemplate/Title';
-import * as CountryCellTemplate from 'wml!Controls-demo/treeGrid/EditInPlace/Padding/ColumnTemplate/Country';
+import * as TitleCellTemplate from 'wml!Controls-demo/treeGrid/EditInPlace/Colspan/ColumnTemplate/Title';
+import * as CountryCellTemplate from 'wml!Controls-demo/treeGrid/EditInPlace/Colspan/ColumnTemplate/Country';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 
 export default class extends Control {
