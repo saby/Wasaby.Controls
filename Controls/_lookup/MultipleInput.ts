@@ -80,7 +80,7 @@ export default class MultipleInput extends BaseLookup {
     protected _notifyHandler: Function = tmplNotify;
 
     showSelector(popupOptions: IStackPopupOptions): void {
-        showSelector(this, popupOptions, true);
+        showSelector(this, popupOptions, false);
     }
 
     static getDefaultOptions(): object {
