@@ -24,8 +24,8 @@
   ],
   "output": "controls-utils.package.js"
 }, {
-  "includePackages": [
-    "Controls/controls-utils.package.js"
+  "include": [
+    "Controls/buttons"
   ],
-  "extendsTo": "vdom-superbundle.package.js"
+  "extendsTo": "online-superbundle.package.js"
 }]

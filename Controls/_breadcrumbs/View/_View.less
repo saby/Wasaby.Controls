@@ -41,11 +41,24 @@
 .controls-BreadCrumbsView__crumb_theme-@{themeName} {
   color: @item_text-color_default_breadcrumbsView;
   height: @height_breadcrumbsView;
+  font-size: @item_font-size_default_breadcrumbsView;
   &:before {
     font-size: @line-height_breadcrumbsView;
   }
    padding-right: @droppable_border-thickness_breadcrumbsView;
 }
+
+.controls-BreadCrumbsView__crumb_withOverflow {
+   flex-shrink: 1;
+   .text-overflow();
+}
+.controls-BreadCrumbsView__crumb_withOverflow_theme-@{themeName} {
+   min-width: @item_icon-size_default_breadcrumbsView + @item_text_min-width_breadcrumbs ;
+}
+.controls-BreadCrumbsView__crumb_withoutOverflow {
+   flex-shrink: 0;
+}
+
 .controls-BreadCrumbsView__crumb__left_edge {
    padding: 0 @droppable_border-thickness_breadcrumbsView;
 }

@@ -1,27 +1,24 @@
 import {ItemsUtil} from 'Controls/list';
+import {Record} from 'Types/entity';
 
-var _private = {
-    getItemData: function (index, items) {
-        var
-            currentItem = items[index],
-            count = items.length;
+export default {
+    shouldRedraw(currentItems: Record[], newItems: Record[]): boolean {
+        return currentItems !== newItems;
+    },
+    getItemData(index: number, items: Record[], arrow: boolean = false, withOverflow: boolean = false): object {
+        const currentItem = items[index];
+        const count = items.length;
         return {
             getPropValue: ItemsUtil.getPropertyValue,
             item: currentItem,
-            hasArrow: count > 1 && index !== 0
+            hasArrow: count > 1 && index !== 0 || arrow,
+            withOverflow
         };
-    }
-};
-
-export default {
-    drawBreadCrumbs: function (self, items) {
-        self._visibleItems = [];
-            self._visibleItems = items.map(function (item, index, items) {
-                return _private.getItemData(index, items);
-            });
     },
-    shouldRedraw: function (currentItems, newItems) {
-        return currentItems !== newItems;
+    drawBreadCrumbsItems(items: Record[], arrow: boolean = false): any[] {
+        return items.map((item, index, items) => {
+            return this.getItemData(index, items, arrow);
+        });
     }
 
 };

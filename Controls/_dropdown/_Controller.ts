@@ -146,7 +146,7 @@ export default class _Controller implements IDropdownController {
       }
    }
 
-   openMenu(popupOptions?: object): void {
+   openMenu(popupOptions?: object): Promise<any> {
       return this._open(popupOptions);
    }
 

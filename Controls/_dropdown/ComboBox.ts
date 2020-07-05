@@ -11,6 +11,7 @@ import {ISingleSelectableOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {RecordSet} from 'Types/collection';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
@@ -89,7 +90,7 @@ class ComboBox extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
 
-   _beforeMount(options: IComboboxOptions, recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
+   _beforeMount(options: IComboboxOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
@@ -169,14 +170,18 @@ class ComboBox extends BaseDropdown {
             }
          };
          this._controller.setMenuPopupTarget(this._container);
-         this._controller.openMenu(config).then((result) => {
-            if (typeof result === 'string') {
-               this._popupId = result;
-            } else if (result) {
-               this._selectedItemsChangedHandler(result);
-            }
-         });
+         this.openMenu(config);
       }
+   }
+
+   openMenu(popupOptions?: IMenuPopupOptions): void {
+      this._controller.openMenu(popupOptions).then((result) => {
+         if (typeof result === 'string') {
+            this._popupId = result;
+         } else if (result) {
+            this._selectedItemsChangedHandler(result);
+         }
+      });
    }
 
    protected _onResult(action: string, data): void {
@@ -191,14 +196,14 @@ class ComboBox extends BaseDropdown {
    private _getContainerNode(container:[HTMLElement]|HTMLElement): HTMLElement {
       return container[0] || container;
    }
+
+   static _theme: string[] = ['Controls/dropdown'];
+
+   static getDefaultOptions(): object {
+      return {
+         placeholder: rk('Выберите') + '...'
+      };
+   }
 }
-
-ComboBox.getDefaultOptions = function () {
-   return {
-      placeholder: rk('Выберите') + '...'
-   };
-};
-
-ComboBox._theme = ['Controls/dropdown'];
 
 export = ComboBox;
