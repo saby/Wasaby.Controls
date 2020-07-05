@@ -4,6 +4,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
 import showSelector from 'Controls/_lookup/showSelector';
 import {default as BaseLookup} from 'Controls/_lookup/BaseLookup';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
@@ -75,7 +76,8 @@ import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
  */
 
 export default class MultipleInput extends BaseLookup {
-    _template: TemplateFunction = template;
+    protected _template: TemplateFunction = template;
+    protected _notifyHandler: Function = tmplNotify;
 
     showSelector(popupOptions: IStackPopupOptions): void {
         showSelector(this, popupOptions, true);

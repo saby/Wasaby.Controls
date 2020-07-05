@@ -4,6 +4,7 @@ import * as template from 'wml!Controls/_lookup/Button/SelectorButton';
 import {default as BaseLookup} from 'Controls/_lookup/BaseLookup';
 import showSelector from 'Controls/_lookup/showSelector';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * Кнопка-ссылка с возможностью выбора значений из справочника.
@@ -70,6 +71,7 @@ import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 
 export default class Button extends BaseLookup {
    protected _template: TemplateFunction = template;
+   protected _notifyHandler: Function = tmplNotify;
 
    showSelector(popupOptions: IStackPopupOptions): void {
       return showSelector(this, popupOptions, this._options.multiSelect);
