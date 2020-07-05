@@ -29,7 +29,7 @@ export class Controller {
       // если visibility изменили на visible и не передали ключ, то ставим marker на первый элемент,
       // иначе проставляем переданный ключ
       if (markerVisibilityChanged && this._markerVisibility === Visibility.Visible && !options.markedKey) {
-         this._markedKey = this._setMarkerOnFirstItem(silent);
+         this._markedKey = this._setMarkerOnFirstItem();
       } else {
          this.setMarkedKey(options.markedKey, silent);
       }
@@ -83,7 +83,7 @@ export class Controller {
                }
                break;
             case Visibility.Visible:
-               this._markedKey = this._setMarkerOnFirstItem(silent);
+               this._markedKey = this._setMarkerOnFirstItem();
                break;
          }
       }
@@ -198,7 +198,7 @@ export class Controller {
       return contents.getKey();
    }
 
-   private _setMarkerOnFirstItem(silent: boolean = false): TKey {
+   private _setMarkerOnFirstItem(): TKey {
       // если модель пустая, то не на что ставить маркер
       if (!this._model.getCount()) {
          // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
@@ -216,7 +216,7 @@ export class Controller {
       const firstItemKey = firstItem.getKey();
       if (this._markedKey !== firstItemKey) {
          this._model.setMarkedKey(this._markedKey, false, true);
-         this._model.setMarkedKey(firstItemKey, true, silent);
+         this._model.setMarkedKey(firstItemKey, true);
       }
       return firstItemKey;
    }
