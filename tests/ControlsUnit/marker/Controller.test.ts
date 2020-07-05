@@ -91,6 +91,7 @@ describe('Controls/marker/Controller', () => {
       });
 
       it('pass key by not exists item', () => {
+         controller.setMarkedKey(2);
          const notifySpy = spy(model, '_notify');
          const result = controller.update({
             model,
