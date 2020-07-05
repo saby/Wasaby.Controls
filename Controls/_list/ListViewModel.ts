@@ -813,6 +813,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
     setRowSeparatorSize(rowSeparatorSize: IListSeparatorOptions['rowSeparatorSize']): void {
         this._options.rowSeparatorSize = _private.getSeparatorSizes({rowSeparatorSize});
+        this._nextModelVersion();
     }
 });
 

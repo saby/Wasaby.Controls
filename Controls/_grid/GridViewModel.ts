@@ -1940,7 +1940,6 @@ var
 
         setRowSeparatorSize(rowSeparatorSize: IGridSeparatorOptions['rowSeparatorSize']): void {
             this._model.setRowSeparatorSize(rowSeparatorSize);
-            this._nextModelVersion();
         },
 
         setColumnSeparatorSize(columnSeparatorSize: IGridSeparatorOptions['columnSeparatorSize']): void {
