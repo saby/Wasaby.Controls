@@ -6,7 +6,7 @@ import {descriptor, Model} from 'Types/entity';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 
-export default abstract class BaseLookup extends Control{
+export default abstract class BaseLookup extends Control {
     protected _lookupController: LookupController;
 
     protected _beforeMount(options, receivedState: void|RecordSet): void|Promise<RecordSet> {
@@ -78,10 +78,9 @@ export default abstract class BaseLookup extends Control{
 
     private _notifyChanges(): void {
         const controller = this._lookupController;
-        const notify = this._notify;
-        notify('selectedKeysChanged', [controller.getSelectedKeys()]);
-        notify('itemsChanged', [controller.getItems()]);
-        notify('textValueChanged', [controller.getTextValue()]);
+        this._notify('selectedKeysChanged', [controller.getSelectedKeys()]);
+        this._notify('itemsChanged', [controller.getItems()]);
+        this._notify('textValueChanged', [controller.getTextValue()]);
     }
 
     static getDefaultOptions(): object {
