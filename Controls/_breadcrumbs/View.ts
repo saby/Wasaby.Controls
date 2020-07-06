@@ -10,6 +10,7 @@ import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTe
 import itemsMultilineTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemMultilineTemplate');
 import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemTemplate');
 import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
+import {Record} from 'Types/entity';
 
 /**
  * BreadCrumbs/View.
@@ -30,10 +31,23 @@ class BreadCrumbsView extends Control<IControlOptions> {
     protected _itemsMultilineTemplate: TemplateFunction = itemsMultilineTemplate;
     protected _popupIsOpen: boolean = false;
     private _menuOpener: StickyOpener;
+    protected _items: Record[];
 
     protected _beforeMount(options): void {
-        if (options.visibleItems.length <= 2) {
-            options.visibleItems.forEach((item) => item.withOverflow = true);
+        this._items = options.visibleItems;
+        if (this._items.length <= 2) {
+            this._items.forEach((item) => item.withOverflow = true);
+        }
+        // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
+        this._onResult = this._onResult.bind(this);
+        this._menuOpener = new StickyOpener();
+    }
+    protected _beforeUpdate(newOptions): void {
+        if (newOptions.visibleItems !== this._items) {
+            this._items = newOptions.visibleItems;
+        }
+        if (newOptions.visibleItems !== this._items && newOptions.visibleItems.length <= 2) {
+            this._items.forEach((item) => item.withOverflow = true);
         }
         // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
         this._onResult = this._onResult.bind(this);
