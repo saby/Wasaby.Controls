@@ -15,7 +15,7 @@
       <ws:partial
               attr:style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout)}};
                           max-width: {{_getItemMaxWidth(index, _options.items.getCount(), _options.maxVisibleItems, _options.itemsLayout, _counterWidth)}}"
-              attr:class="js-controls-SelectedCollection__item controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
+              attr:class="js-controls-SelectedCollection__item controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}_theme-{{_options.theme}}"
               template="{{_options.itemTemplate}}"
               item="{{item}}"
               displayProperty="{{_options.displayProperty}}"
