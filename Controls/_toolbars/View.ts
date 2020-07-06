@@ -30,6 +30,8 @@ import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
 import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
+import DependenciesTimer from "Controls/Utils/DependenciesTimer";
+import {IoC} from "Env/Env";
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -133,6 +135,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     protected _template: TemplateFunction = template;
 
+    protected _dependenciesTimer: DependenciesTimer = null;
+    private _loadViewPromise: Promise<unknown> = null;
+
     _children: {
         menuTarget: HTMLElement
     };
@@ -149,6 +154,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
         this._resultHandler = this._resultHandler.bind(this);
         this._closeHandler = this._closeHandler.bind(this);
+    }
+
+    protected _afterMount(): void {
+        if (!this._dependenciesTimer) {
+            this._dependenciesTimer = new DependenciesTimer();
+        }
     }
 
     private _getMenuConfig(): IStickyPopupOptions {
@@ -381,7 +392,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return getButtonTemplateOptionsByItem(item, this._options);
     }
 
-    protected _showMenu(event: SyntheticEvent<UIEvent>): void {
+    protected _mouseDownHandler(event: SyntheticEvent<UIEvent>): void {
         if (!this._options.readOnly) {
             if (!this._isLoadMenuItems) {
                 this._setMenuItems();
@@ -396,6 +407,32 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
          * For example, list can catch this event and generate 'itemClick'.
          */
         event.stopPropagation();
+    }
+    protected _onClickHandler(event: SyntheticEvent): void {
+        event.stopPropagation();
+    }
+    protected _mouseEnterHandler() {
+        if (!this._options.readOnly) {
+            this._dependenciesTimer.start(this._loadDependencies);
+        }
+    }
+    protected _mouseLeaveHandler(): void {
+        this._dependenciesTimer.stop();
+    }
+    private _loadDependencies(): Promise<unknown> {
+        try {
+            if (!this._isLoadMenuItems) {
+                this._setMenuItems();
+                this._isLoadMenuItems = true;
+            }
+
+            if (!this._loadViewPromise) {
+                this._loadViewPromise = import('Controls/menu');
+            }
+            return this._loadViewPromise;
+        } catch (e) {
+            IoC.resolve('ILogger').error('_toolbars:View', e);
+        }
     }
 
     /**
