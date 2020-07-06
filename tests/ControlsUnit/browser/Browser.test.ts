@@ -46,6 +46,20 @@ describe('Controls/browser:Browser', () => {
                 equal(browser._searchValue, 'Sash');
             });
 
+            it('filter in context without source on _beforeMount', () => {
+                const options = getBrowserOptions();
+                const filter = {
+                    testField: 'testValue'
+                };
+                options.source = null;
+                options.filter = filter;
+
+                const browser = getBrowser(options);
+                browser._beforeMount(options, {});
+                equal(browser._dataOptionsContext.filter, filter);
+                equal(browser._filter, filter);
+            });
+
         });
     });
 
