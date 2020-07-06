@@ -3,6 +3,39 @@ import {ok} from 'assert';
 import {createSandbox} from 'sinon';
 import {RecordSet} from 'Types/collection';
 import {Stack} from 'Controls/popup';
+import {Memory} from 'Types/source';
+
+function getData(): object[] {
+    return [
+        {
+            id: 0,
+            title: 'Sasha'
+        },
+        {
+            id: 1,
+            title: 'Aleksey'
+        },
+        {
+            id: 2,
+            title: 'Dmitry'
+        }
+    ];
+}
+
+function getSource(): Memory {
+    return new Memory({
+        keyProperty: 'id',
+        data: getData()
+    });
+}
+
+function getLookupOptions(): object {
+    return {
+        source: getSource(),
+        keyProperty: 'id',
+        selectedKeys: []
+    };
+}
 
 function getLookup({closeSuggestCallback}) {
     const lookupControl = new Input();
@@ -41,5 +74,16 @@ describe('lookup', () => {
         ok(isSelectorOpened);
         ok(isSuggestClosed);
         sandBox.restore();
+    });
+
+    describe('_beforeMount', () => {
+
+        it('selectedKeys is empty (selectedKeys: [])', () => {
+            const options = getLookupOptions();
+            const lookup = new Input(options);
+
+            ok(lookup._beforeMount(options) === undefined);
+        });
+
     });
 });
