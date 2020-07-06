@@ -351,7 +351,7 @@ class StickyController extends BaseController {
         if (Env.detection.isMobileIOS) {
             item.position.top = 0;
             item.position.left = 0;
-            item.position.hidden = true;
+            item.position.invisible = true;
         }
     }
 

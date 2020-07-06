@@ -46,6 +46,7 @@ export interface IPopupPosition {
    minWidth?: number;
    maxHeight?: number;
    minHeight?: number;
+   invisible?: boolean;
    hidden?: boolean;
 }
 
