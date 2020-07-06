@@ -36,7 +36,8 @@ export default class ColumnsInnerView extends Control {
     private _columnsCount: number;
     private _columnsController: ColumnsController;
     private _markerController: MarkerController;
-    private _columnsIndexes: number[][];
+    private _columnsIndexes:  Array<number>[];
+    private _columnsKeys:  Array<string | number>[];
     private _model: Collection<Model>;
     protected _options: IColumnsInnerViewOptions;
     private _spacing: number = SPACING;
@@ -117,49 +118,88 @@ export default class ColumnsInnerView extends Control {
 
     private updateColumnIndexesByModel(): void {
         this._columnsIndexes = new Array<[number]>(this._columnsCount);
+        this._columnsKeys = new Array<[number | string]>(this._columnsCount);
         for (let i = 0; i < this._columnsCount; i++) {
             this._columnsIndexes[i] = [];
+            this._columnsKeys[i] = [];
         }
         this._model.each( (item, index) => {
-            this._columnsIndexes[item.getColumn()].push(index as number);
+            this._columnsIndexes[item.getColumn()].push(index as number);            
+            this._columnsKeys[item.getColumn()].push(item.getContents().getKey());
         });
     }
     private updateColumns(): void {
         this._columnsIndexes = null;
+        this._columnsKeys = null;
         this._model.each(this.setColumnOnItem.bind(this));
         this.updateColumnIndexesByModel();
     }
-    private processRemoving(removedItemsIndex: number, removedItems: [CollectionItem<Model>]): void {
-        const collection = this._options.listModel.getCollection();
-        const total = collection.getCount();
-        if (removedItems.length === 1) {
-            if (this._options.columnsMode === 'auto') {
-                let currColumn = removedItems[0].getColumn();
-                let currColumnIndex = this._columnsIndexes[currColumn].findIndex((elem) => elem === removedItemsIndex);
-                this.updateColumnIndexesByModel();
+    private processRemovingItem(item: any): boolean {
+        let done = true;
+        if (item.columnIndex === this._columnsKeys[item.column].length) {
+            done = false;
+            while (!done && (item.column + 1) < this._columnsCount) {
                 
-                if (currColumnIndex === this._columnsIndexes[currColumn].length) {
-                    let done = false;
-                    while (!done && (currColumn + 1)< this._columnsCount) {
-                        
-                        if (this._columnsIndexes[currColumn + 1].length > 0) {
-                            
-                            if (this._columnsIndexes[currColumn + 1].length > 1) {
-                                done = true;
-                            }
-                            let nextIndex = this._columnsIndexes[currColumn + 1].pop();
-                            this._columnsIndexes[currColumn].push(nextIndex);
-                            let nextItem = this._model.getItemBySourceIndex(nextIndex);
-                            nextItem.setColumn(currColumn);
-                        }
-                        currColumn++;
+                if (this._columnsKeys[item.column + 1].length > 0) {
+                    
+                    if (this._columnsKeys[item.column + 1].length > 1) {
+                        done = true;
                     }
-                    if (!done) {
-                        this._notify('loadMore', ['down']);
-                    }
+                    let nextKey = this._columnsKeys[item.column + 1].pop();
+                    this._columnsKeys[item.column].push(nextKey);
+                    let nextIndex = this._columnsIndexes[item.column + 1].pop();
+                    this._columnsIndexes[item.column].push(nextIndex);
+                    let nextItem = this._model.getItemBySourceKey(nextKey) as CollectionItem<Model>;
+                    nextItem.setColumn(item.column);
                 }
+                item.column++;
             }
         }
+        return !done;
+    }
+    private processRemoving(removedItemsIndex: number, removedItems: [CollectionItem<Model>]): void {
+        const collection = this._options.listModel.getCollection();
+        let removedItemsIndexes = removedItems.map((item) => {
+            let column = item.getColumn();
+            let columnIndex = this._columnsKeys[column].findIndex((elem) => elem === item.getContents().getKey());
+            return {
+                column,
+                columnIndex,
+            }
+        });
+        this.updateColumnIndexesByModel();
+        let needLoadMore = removedItemsIndexes.some(this.processRemovingItem.bind(this));
+        
+        if (needLoadMore) {
+            this._notify('loadMore', ['down']);
+        }
+        // if (removedItems.length === 1) {
+        //     if (this._options.columnsMode === 'auto') {
+        //         let currColumn = removedItems[0].getColumn();
+        //         let currColumnIndex = this._columnsKeys[currColumn].findIndex((elem) => elem === removedItems[0].getContents().getKey());
+                
+        //         if (currColumnIndex === this._columnsKeys[currColumn].length) {
+        //             let done = false;
+        //             while (!done && (currColumn + 1) < this._columnsCount) {
+                        
+        //                 if (this._columnsIndexes[currColumn + 1].length > 0) {
+                            
+        //                     if (this._columnsIndexes[currColumn + 1].length > 1) {
+        //                         done = true;
+        //                     }
+        //                     let nextKey = this._columnsIndexes[currColumn + 1].pop();
+        //                     this._columnsIndexes[currColumn].push(nextKey);
+        //                     let nextItem = this._model.getItemBySourceKey(nextKey) as CollectionItem<Model>;
+        //                     nextItem.setColumn(currColumn);
+        //                 }
+        //                 currColumn++;
+        //             }
+        //             if (!done) {
+        //                 this._notify('loadMore', ['down']);
+        //             }
+        //         }
+        //     }
+        // }
     }
     protected _onCollectionChange(_e: unknown,
                                   action: string,
@@ -173,7 +213,7 @@ export default class ColumnsInnerView extends Control {
         if (action === 'rm') {
             this.processRemoving(removedItemsIndex, removedItems);
         }
-        if (action !== 'rm' && action !== 'ch' && action !== 'm') {
+        if (action === 'rs') {
             this.updateColumns();
         }
     }
