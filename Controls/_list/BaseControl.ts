@@ -2619,7 +2619,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     _loadMore(event, direction): void {
         this.loadMore(direction);
-    }
+    },
 
     triggerVisibilityChangedHandler(direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
