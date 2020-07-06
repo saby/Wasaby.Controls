@@ -45,6 +45,15 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
           assert.equal(lookupPopup.Container._private.getSelectedItems(emptyOptions, emptyContext).getCount(), 0);
       });
 
+      it('_beforeUnmount', () => {
+         const container = new lookupPopup.Container();
+
+         container._loadingIndicatorId = 'testId';
+         container._beforeUnmount();
+
+         assert.isNull(container._loadingIndicatorId);
+      });
+
       it('_private::getInitialSelectedItems', () => {
          const self = {};
          self._selectedKeys = [1];
