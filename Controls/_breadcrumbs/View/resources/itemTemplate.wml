@@ -1,4 +1,6 @@
-<div class="controls-BreadCrumbsView__crumb{{edge ? ' controls-BreadCrumbsView__max-width__edge' : ' controls-BreadCrumbsView__max-width'}} controls-BreadCrumbsView__crumb_theme-{{_options.theme}}">
+<div class="controls-BreadCrumbsView__crumb
+{{edge ? ' controls-BreadCrumbsView__max-width__edge' : ' controls-BreadCrumbsView__max-width'}} controls-BreadCrumbsView__crumb_theme-{{_options.theme}}
+{{itemData.withOverflow ? ' controls-BreadCrumbsView__crumb_withOverflow  controls-BreadCrumbsView__crumb_withOverflow_theme-' + _options.theme : ' controls-BreadCrumbsView__crumb_withoutOverflow'}}">
     <ws:if data="{{ itemData.hasArrow }}">
         <span class="controls-BreadCrumbsView__arrow controls-BreadCrumbsView__arrow_theme-{{_options.theme}} icon-size icon-DayForwardBsLine{{!_options.readOnly ? ' controls-BreadCrumbsView__arrow_enabled controls-BreadCrumbsView__arrow_enabled_theme-' + _options.theme}}"></span>
     </ws:if>

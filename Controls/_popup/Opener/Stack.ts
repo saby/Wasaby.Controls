@@ -12,6 +12,7 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/stack/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * Для открытия стековых окон из кода используйте {@link Controls/popup:StackOpener}.
  *
  * @class Controls/popup:Stack
  * @extends Controls/_popup/Opener/BaseOpener
@@ -75,6 +76,9 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
     static openPopup(config: IStackPopupOptions): Promise<string> {
         return new Promise((resolve) => {
             const newCfg = getStackConfig(config);
+            if (!newCfg.hasOwnProperty('isHelper')) {
+                Logger.warn('Controls/popup:Stack: Для открытия стековых окон из кода используйте StackOpener');
+            }
             if (!newCfg.hasOwnProperty('opener')) {
                 Logger.error('Controls/popup:Stack: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }

@@ -298,7 +298,7 @@ var
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
             }
 
-            if (current._isSelected) {
+            if (current._isSelected && current.markerVisibility !== 'hidden') {
                 style = current.style || 'default';
                 classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 

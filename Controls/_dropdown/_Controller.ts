@@ -116,16 +116,20 @@ export default class _Controller implements IDropdownController {
             /* source changed, items is not actual now */
             this._setItems(null);
          } else {
-            return this._loadItems(newOptions).addCallback((items) => {
-               if (items && this._isOpened) {
-                  this._open();
-               }
-            });
+            return this.reload();
          }
       } else if (newOptions.selectedKeys !== oldOptions.selectedKeys && this._items) {
          this._updateSelectedItems(newOptions.emptyText, newOptions.selectedKeys,
              newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
       }
+   }
+
+   reload(): Promise<RecordSet> {
+      return this._loadItems(this._options).addCallback((items) => {
+         if (items && this._isOpened) {
+            this._open();
+         }
+      });
    }
 
    loadDependencies(): Promise<any> {
@@ -146,7 +150,7 @@ export default class _Controller implements IDropdownController {
       }
    }
 
-   openMenu(popupOptions?: object): void {
+   openMenu(popupOptions?: object): Promise<any> {
       return this._open(popupOptions);
    }
 
@@ -222,7 +226,7 @@ export default class _Controller implements IDropdownController {
                 this._isOpened = true;
                 return openPopup();
              } else if (count === 1) {
-                return Promise.resolve(this._items.at(0));
+                return Promise.resolve([this._items.at(0)]);
              }
           },
           () => {

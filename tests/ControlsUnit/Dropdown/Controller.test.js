@@ -78,7 +78,7 @@ define(
          };
 
          let getDropdownController = function(config) {
-            let dropdownCntroller = new dropdown._Controller.default(config);
+            let dropdownCntroller = new dropdown._Controller(config);
             return dropdownCntroller;
          };
 
@@ -119,6 +119,30 @@ define(
             dropdownController.pinClick(expectedItem);
             assert.isFalse(expectedItem.get('pinned'));
             assert.deepEqual(actualMeta, { '$_pinned': true });
+         });
+
+         it('reload', function() {
+            let newOptions = clone(config);
+            const newItems = [
+               {
+                  id: '1',
+                  title: 'Тест 1'
+               },
+               {
+                  id: '2',
+                  title: 'Тест 2'
+               }
+            ];
+            const newSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: newItems
+            });
+
+            let dropdownController = getDropdownController(newOptions);
+            dropdownController._options.source = newSource;
+            dropdownController.reload().then(()=> {
+               assert.deepEqual(dropdownController._items.at(0).get('title'), 'Тест 1');
+            });
          });
 
          describe('update', function() {
@@ -594,7 +618,7 @@ define(
             assert.isFalse(opened);
          });
 
-         it('openMenu', () => {
+         it('openMenu', async() => {
             let dropdownController = getDropdownController(config);
             let openConfig;
 
@@ -604,11 +628,14 @@ define(
                keyProperty: 'id',
                rawData: items
             });
-            popup.Sticky.closePopup = () => {closed = true; };
 
-            dropdownController.openMenu({ testOption: 'testValue' }).then(function() {
-               assert.equal(openConfig.testOption, 'testValue');
+            sandbox.replace(popup.Sticky, 'openPopup', (popupConfig) => {
+               openConfig = popupConfig;
+               return Promise.resolve(true);
             });
+
+            await dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
 
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',
@@ -620,9 +647,24 @@ define(
             openConfig = null;
             dropdownController._options.footerTemplate = {};
 
-            dropdownController.openMenu({ testOption: 'testValue' }).then(function() {
-               assert.equal(openConfig.testOption, 'testValue');
+            await dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
+
+            dropdownController._options.footerTemplate = null;
+            dropdownController._options.emptyText = '123';
+            openConfig = null;
+
+            await dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
+
+            dropdownController._options.emptyText = null;
+            openConfig = null;
+
+            await dropdownController.openMenu().then((items) => {
+               assert.equal(items[0].get('id'), 1);
             });
+            assert.equal(openConfig, null);
+
          });
 
          it('closeMenu', () => {

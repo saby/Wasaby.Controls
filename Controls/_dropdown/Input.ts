@@ -248,19 +248,19 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * </pre>
  */
 
-class Input extends BaseDropdown {
+export default class Input extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
    protected _text: string = '';
    protected _hasMoreText: string = '';
    protected _selectedItems = '';
 
-   _beforeMount(options: IInputOptions, recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
+   _beforeMount(options: IInputOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._prepareDisplayState = this._prepareDisplayState.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
 
-      return loadItems(this._controller, recievedState);
+      return loadItems(this._controller, recievedState, options.source);
    }
 
    _beforeUpdate(options: IInputOptions): void {
@@ -329,7 +329,11 @@ class Input extends BaseDropdown {
          }
       };
       this._controller.setMenuPopupTarget(this._container);
-      this._controller.openMenu(config).then((result) => {
+      this.openMenu(config);
+   }
+
+   openMenu(popupOptions?: IMenuPopupOptions): void {
+      this._controller.openMenu(popupOptions).then((result) => {
          if (typeof result === 'string') {
             this._popupId = result;
          } else if (result) {
@@ -419,8 +423,6 @@ class Input extends BaseDropdown {
       }
       return moreText;
    }
+
+   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
 }
-
-Input._theme = ['Controls/dropdown', 'Controls/Classes'];
-
-export = Input;
