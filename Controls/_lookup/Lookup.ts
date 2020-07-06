@@ -1,5 +1,9 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_lookup/Lookup/Lookup');
+import * as template from 'wml!Controls/_lookup/Lookup/Lookup';
+import {TemplateFunction} from 'UI/Base';
+import {default as BaseLookup} from 'Controls/_lookup/BaseLookup';
+import showSelector from 'Controls/_lookup/showSelector';
+import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
@@ -173,14 +177,12 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * If the value is not specified, the comment field will not be displayed.
  */
 
-var Lookup = Control.extend({
-   _template: template,
+export default class Lookup extends BaseLookup {
+   protected _template: TemplateFunction = template;
+   protected _notifyHandler: Function = tmplNotify;
 
-   showSelector: function (popupOptions) {
+   showSelector(popupOptions: IStackPopupOptions): void {
       this._children.view.closeSuggest();
-      return this._children.controller.showSelector(popupOptions);
+      return showSelector(this, popupOptions, this._options.multiSelect);
    }
-});
-
-export = Lookup;
-
+}
