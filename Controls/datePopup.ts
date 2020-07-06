@@ -3,7 +3,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor, Date as WSDate} from 'Types/entity';
-import {dateMaskConstants} from 'Controls/interface';
+import {dateMaskConstants} from 'Controls/Utils/DateControlsUtils';
 import {IRangeSelectable} from 'Controls/dateRange';
 import {DateRangeModel, IDateRangeSelectable} from 'Controls/dateRange';
 import {getRangeValueValidators} from 'Controls/Utils/DateControlsUtils';

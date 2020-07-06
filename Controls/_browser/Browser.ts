@@ -70,6 +70,8 @@ export default class Browser extends Control {
                 this._dataController.updateContext(this._dataOptionsContext);
                 return items;
             });
+        } else {
+            this._dataController.updateContext(this._dataOptionsContext);
         }
     }
 

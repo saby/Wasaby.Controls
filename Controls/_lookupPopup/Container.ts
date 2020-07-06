@@ -339,7 +339,6 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
          loadSelectedItems(self: object, filter: object): Promise<RecordSet> {
             const dataOptions = self.context.get('dataOptions');
             const items = dataOptions.items;
-            let indicatorId;
             let loadItemsPromise;
 
             if (_private.needLoadItemsOnSelectComplete(self)) {
@@ -351,11 +350,11 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                } else {
                   const crudWrapper = _private.getCrudWrapper(dataOptions.source);
                   const loadItemsCallback = (loadedItems) => {
-                     self._notify('hideIndicator', [indicatorId], {bubbling: true});
+                     _private.hideIndicator(self);
                      return loadedItems;
                   };
 
-                  indicatorId = self._notify('showIndicator', [], {bubbling: true});
+                  _private.showIndicator(self);
                   loadItemsPromise = crudWrapper.query({filter}).then(loadItemsCallback, loadItemsCallback);
                }
             } else {
@@ -363,6 +362,17 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             }
 
             return loadItemsPromise;
+         },
+
+         showIndicator(self): void {
+            self._loadingIndicatorId = self._notify('showIndicator', [], {bubbling: true});
+         },
+
+         hideIndicator(self): void {
+            if (self._loadingIndicatorId) {
+               self._notify('hideIndicator', [self._loadingIndicatorId], {bubbling: true});
+               self._loadingIndicatorId = null;
+            }
          }
       };
 
@@ -373,6 +383,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
          _selection: null,
          _excludedKeys: null,
          _selectCompleteInitiator: false,
+         _loadingIndicatorId: null,
 
          _beforeMount(options, context): void {
             this._selectedKeys = _private.getSelectedKeys(options, context);
@@ -395,6 +406,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
 
          _beforeUnmount(): void {
             UnregisterUtil(this, 'selectComplete');
+            _private.hideIndicator(this);
          },
 
          _selectComplete(): void {

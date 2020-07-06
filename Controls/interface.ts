@@ -53,7 +53,7 @@ export {default as IIcon, IIconOptions} from './_interface/IIcon';
 export {default as IIconSize, IIconSizeOptions} from './_interface/IIconSize';
 export {default as IFontColorStyle, IFontColorStyleOptions} from './_interface/IFontColorStyle';
 export {default as IFontSize, IFontSizeOptions} from './_interface/IFontSize';
-export {default as IFontWeight, IFontWeightOptions, TFontWeight, getFontWeightTypes} from './_interface/IFontWeight';
+export {default as IFontWeight, IFontWeightOptions, TFontWeight} from './_interface/IFontWeight';
 export {default as IHeight, IHeightOptions} from './_interface/IHeight';
 export {default as ISingleSelectable, ISingleSelectableOptions, TSelectedKey} from './_interface/ISingleSelectable';
 export {default as IMultiSelectable, IMultiSelectableOptions, TSelectedKeys} from './_interface/IMultiSelectable';
@@ -64,7 +64,7 @@ export {default as INumberFormat, INumberFormatOptions} from './_interface/INumb
 export {default as IExpandable, IExpandableOptions} from './_interface/IExpandable';
 export {default as ISorting, ISortingOptions} from './_interface/ISorting';
 export {default as ILookup, ILookupOptions} from './_interface/ILookup';
-export {default as IDateMask, IDateMaskOptions, dateMaskConstants} from './_interface/IDateMask';
+export {default as IDateMask, IDateMaskOptions} from './_interface/IDateMask';
 export {default as IDateRangeValidators, IDateRangeValidatorsOptions, DateRangeValidators} from './_interface/IDateRangeValidators';
 export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropStorage';
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';

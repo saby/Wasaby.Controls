@@ -59,6 +59,13 @@ define([
          });
       });
 
+      describe('_registerObserver', () => {
+         it('should not throw error when observer doesnt exists', () => {
+            scrollController._triggers = {};
+            assert.doesNotThrow(() => scrollController._registerObserver());
+         });
+      });
+
 
       describe('._initVirtualScroll()', () => {
          it('should not create virtual scroll', () => {

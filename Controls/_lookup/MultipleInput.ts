@@ -1,6 +1,10 @@
-import Control = require('Core/Control');
+import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_lookup/MultipleInput/MultipleInput');
 import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
+import showSelector from 'Controls/_lookup/showSelector';
+import {default as BaseLookup} from 'Controls/_lookup/BaseLookup';
+import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
@@ -71,19 +75,20 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @author Герасимов А.М.
  */
 
-var MultipleInput = Control.extend({
-    _template: template,
+export default class MultipleInput extends BaseLookup {
+    protected _template: TemplateFunction = template;
+    protected _notifyHandler: Function = tmplNotify;
 
-    showSelector: function (popupOptions) {
-        return this._children.controller.showSelector(popupOptions);
+    showSelector(popupOptions: IStackPopupOptions): void {
+        showSelector(this, popupOptions, false);
     }
-});
 
-MultipleInput.getDefaultOptions = function() {
-    return {
-        itemTemplate: itemTemplate
-    };
-};
-
-export = MultipleInput
-
+    static getDefaultOptions(): object {
+        return {
+            ...BaseLookup.getDefaultOptions(),
+            ...{
+                itemTemplate
+            }
+        };
+    }
+}

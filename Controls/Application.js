@@ -95,9 +95,10 @@ define('Controls/Application',
          },
          generateJML: function(links, styles, meta, scripts) {
             var jml = [];
+            // фильтруем css (их вставит theme_controller)
+            jml = jml.concat(_private.translateJML('link', (links || []).filter(function (l) { return l.type !== 'text/css'; })))
             jml = jml.concat(_private.translateJML('style', styles || []));
             jml = jml.concat(_private.translateJML('meta', meta || []));
-            jml = jml.concat(_private.translateJML('script', scripts || []));
             return jml;
          },
          isHover: function(touchClass, dragClass) {

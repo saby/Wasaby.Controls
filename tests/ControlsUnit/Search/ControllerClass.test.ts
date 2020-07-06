@@ -118,4 +118,31 @@ describe('Controls/search:ControllerClass', () => {
             assert.isFalse(searchValueChangedCallbackCalled);
         });
     });
+
+    it('update with switchedReturn', () => {
+        const searchController = new ControllerClass(getDefaultOptions(), {});
+        const options = {
+            searchParam: 'title',
+            searchValue: 'еуые',
+            source: getMemorySource(),
+            keyProperty: 'id',
+            loadingChangedCallback: () => {},
+            itemsChangedCallback: () => {}
+        };
+        const context = {
+            dataOptions: {
+                source: options.source
+            }
+        };
+
+        searchController._options.searchDelay = 0;
+        searchController._needStartSearchBySearchValueChanged = () => true;
+        searchController._isNeedRecreateSearchControllerOnOptionsChanged = () => false;
+        searchController._updateSearchParams = () => {};
+
+        searchController.update(options, context).then(() => {
+            assert.equal(searchController._searchValue, 'tst');
+            assert.equal(searchController._misspellValue, 'test');
+        });
+    });
 });
