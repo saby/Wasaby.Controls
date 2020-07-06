@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/list_new/hoverBackgroundStyle/hoverBackgroundStyle';
+import * as Template from 'wml!Controls-demo/list_new/ItemTemplate/hoverBackgroundStyle/hoverBackgroundStyle';
 import {Memory} from 'Types/source';
-import {getFewCategories as getData} from '../DemoHelpers/DataCatalog';
+import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -14,5 +14,5 @@ export default class extends Control {
         });
     }
 
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/List_new/hoverBackgroundStyle/hoverBackgroundStyle'];
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/List_new/ItemTemplate/hoverBackgroundStyle/hoverBackgroundStyle'];
 }
