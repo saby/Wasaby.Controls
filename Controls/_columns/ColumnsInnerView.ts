@@ -173,33 +173,6 @@ export default class ColumnsInnerView extends Control {
         if (needLoadMore) {
             this._notify('loadMore', ['down']);
         }
-        // if (removedItems.length === 1) {
-        //     if (this._options.columnsMode === 'auto') {
-        //         let currColumn = removedItems[0].getColumn();
-        //         let currColumnIndex = this._columnsKeys[currColumn].findIndex((elem) => elem === removedItems[0].getContents().getKey());
-                
-        //         if (currColumnIndex === this._columnsKeys[currColumn].length) {
-        //             let done = false;
-        //             while (!done && (currColumn + 1) < this._columnsCount) {
-                        
-        //                 if (this._columnsIndexes[currColumn + 1].length > 0) {
-                            
-        //                     if (this._columnsIndexes[currColumn + 1].length > 1) {
-        //                         done = true;
-        //                     }
-        //                     let nextKey = this._columnsIndexes[currColumn + 1].pop();
-        //                     this._columnsIndexes[currColumn].push(nextKey);
-        //                     let nextItem = this._model.getItemBySourceKey(nextKey) as CollectionItem<Model>;
-        //                     nextItem.setColumn(currColumn);
-        //                 }
-        //                 currColumn++;
-        //             }
-        //             if (!done) {
-        //                 this._notify('loadMore', ['down']);
-        //             }
-        //         }
-        //     }
-        // }
     }
     protected _onCollectionChange(_e: unknown,
                                   action: string,
