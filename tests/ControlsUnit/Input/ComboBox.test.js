@@ -85,11 +85,20 @@ define(
             };
          });
 
-         it('_beforeMount', function() {
-            let combobox = getCombobox(config);
-            combobox._beforeMount(config);
-            assert.equal(combobox._value, 'New text');
-            assert.equal(combobox._placeholder, 'This is placeholder');
+         describe('_beforeMount', function() {
+            it('beforeMount with selectedKeys', () => {
+               let combobox = getCombobox(config);
+               combobox._beforeMount(config);
+               assert.equal(combobox._value, 'New text');
+               assert.equal(combobox._placeholder, 'This is placeholder'); 
+            });
+
+            it('beforeMount without source', () => {
+               const comboboxOptions = {...config};
+               delete comboboxOptions.source;
+               const combobox = getCombobox(comboboxOptions);
+               assert.ok(combobox._beforeMount(comboboxOptions) === undefined);
+            });
          });
 
          it('_beforeUpdate width change', function() {
