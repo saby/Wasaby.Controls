@@ -1,11 +1,14 @@
 import {Logger} from 'UI/Utils';
+import {constants} from 'Env/Env';
 
 export function inlineHeight(size: string, inlineHeight: string): string {
     if (size) {
-        // TODO: будет удалено в версию после 5100
-        Logger.error('Controls.input: Используется устаревшая опция size. ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.input: Используется устаревшая опция size. ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');
+        }
         return size;
     }
     if (inlineHeight) {
@@ -15,10 +18,12 @@ export function inlineHeight(size: string, inlineHeight: string): string {
 
 export function fontColorStyle(fontStyle: string, fontColorStyle: string): string {
     if (fontStyle) {
-        // TODO: будет удалено в версию после 5100
-        Logger.error('Controls.input: Используется устаревшая опция fontStyle. ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.input: Используется устаревшая опция fontStyle. ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');
+        }
         return fontStyle;
     }
     if (fontColorStyle) {
@@ -28,10 +33,12 @@ export function fontColorStyle(fontStyle: string, fontColorStyle: string): strin
 
 export function fontSize(fontStyle: string, fontSize: string): string {
     if (fontStyle) {
-        // TODO: будет удалено в версию после 5100
-        Logger.error('Controls.input: Используется устаревшая опция fontStyle. ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.input: Используется устаревшая опция fontStyle. ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
+        }
         switch (fontStyle) {
             case 'primary':
             case 'secondary': return '3xl';
