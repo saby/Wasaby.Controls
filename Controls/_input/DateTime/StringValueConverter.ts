@@ -1,6 +1,6 @@
 import cExtend = require('Core/core-simpleExtend');
 import formatter = require('Types/formatter');
-import {dateMaskConstants} from 'Controls/interface';
+import {dateMaskConstants} from 'Controls/Utils/DateControlsUtils';
 import dateUtils = require('Controls/Utils/Date');
 import {getMaskType, DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, TIME_MASK_TYPE} from './Utils';
 

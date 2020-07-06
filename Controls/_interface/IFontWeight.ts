@@ -1,5 +1,3 @@
-import {descriptor, DescriptorValidator} from 'Types/entity';
-
 /**
  * @typedef TFontWeight
  * @variant default
@@ -20,12 +18,6 @@ export interface IFontWeightOptions {
      * @demo Controls-demo/Decorator/Money/FontWeight/Index
      */
     fontWeight: TFontWeight;
-}
-
-export function getFontWeightTypes(): Record<keyof IFontWeightOptions, DescriptorValidator> {
-    return {
-        fontWeight: descriptor<string>(String).oneOf(['default', 'bold'])
-    };
 }
 
 /**
