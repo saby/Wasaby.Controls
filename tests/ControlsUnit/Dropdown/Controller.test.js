@@ -618,7 +618,7 @@ define(
             assert.isFalse(opened);
          });
 
-         it('openMenu', () => {
+         it('openMenu', async() => {
             let dropdownController = getDropdownController(config);
             let openConfig;
 
@@ -628,11 +628,14 @@ define(
                keyProperty: 'id',
                rawData: items
             });
-            popup.Sticky.closePopup = () => {closed = true; };
 
-            dropdownController.openMenu({ testOption: 'testValue' }).then(function() {
-               assert.equal(openConfig.testOption, 'testValue');
+            sandbox.replace(popup.Sticky, 'openPopup', (popupConfig) => {
+               openConfig = popupConfig;
+               return Promise.resolve(true);
             });
+
+            await dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
 
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',
@@ -644,9 +647,24 @@ define(
             openConfig = null;
             dropdownController._options.footerTemplate = {};
 
-            dropdownController.openMenu({ testOption: 'testValue' }).then(function() {
-               assert.equal(openConfig.testOption, 'testValue');
+            await dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
+
+            dropdownController._options.footerTemplate = null;
+            dropdownController._options.emptyText = '123';
+            openConfig = null;
+
+            await dropdownController.openMenu({ testOption: 'testValue' });
+            assert.equal(openConfig.testOption, 'testValue');
+
+            dropdownController._options.emptyText = null;
+            openConfig = null;
+
+            await dropdownController.openMenu().then((items) => {
+               assert.equal(items[0].get('id'), 1);
             });
+            assert.equal(openConfig, null);
+
          });
 
          it('closeMenu', () => {
