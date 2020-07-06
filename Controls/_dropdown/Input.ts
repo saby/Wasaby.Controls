@@ -260,7 +260,7 @@ export default class Input extends BaseDropdown {
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
 
-      return loadItems(this._controller, recievedState);
+      return loadItems(this._controller, recievedState, options.source);
    }
 
    _beforeUpdate(options: IInputOptions): void {
