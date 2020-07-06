@@ -14,7 +14,7 @@ export default abstract class BaseLookup extends Control {
 
         if (receivedState && !isEmpty(receivedState)) {
             this._lookupController.setItems(receivedState);
-        } else {
+        } else if (options.selectedKeys.length) {
             return this._lookupController.loadItems();
         }
     }
