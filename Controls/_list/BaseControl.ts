@@ -233,6 +233,19 @@ const _private = {
         }
     },
 
+    checkNeedAttachLoadTopTriggerToNull(self): void {
+        // Если нужно сделать опциональным поведение отложенной загрузки вверх, то проверку добавлять здесь.
+        // if (!cfg.attachLoadTopTriggerToNull) return;
+        const sourceController = self._sourceController;
+        const hasMoreData = _private.hasMoreData(self, sourceController, 'up');
+        if (sourceController && hasMoreData) {
+            self._attachLoadTopTriggerToNull = true;
+            self._needScrollToFirstItem = true;
+        } else {
+            self._attachLoadTopTriggerToNull = false;
+        }
+    },
+
     reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
@@ -356,6 +369,8 @@ const _private = {
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
                     _private.checkLoadToDirectionCapability(self, filter, navigation);
+                } else {
+                    _private.checkNeedAttachLoadTopTriggerToNull(self);
                 }
                 });
             }).addErrback(function(error: Error) {
@@ -613,6 +628,7 @@ const _private = {
                 self._listViewModel.prependItems(addedItems);
             }
             afterAddItems(countCurrentItems, addedItems);
+            self._attachLoadTopTriggerToNull = false;
         };
 
         const loadCallback = (addedItems, countCurrentItems) => {
@@ -659,20 +675,7 @@ const _private = {
                 }
 
                 self._inertialScrolling.callAfterScrollStopped(() => {
-                    // todo remove "if" by https://online.sbis.ru/opendoc.html?guid=87707f3b-3dc8-45f9-9797-e43508f4fa7e
-                    if (self._options.task1179374792) {
-                        // Приходится делать таймаут для того, чтобы добавление элементов произошло гарантированно ПОСЛЕ
-                        // отрисовки пересчитанного _pagingVisible и не в процессе фазы обновления (doAfterUpdate).
-                        // Так же см. скриншот, приложенный к реквесту в ошибке:
-                        // https://online.sbis.ru/opendoc.html?guid=b6715c2a-704a-414b-b764-ea2aa4b9776b
-                        setTimeout(() => {
-                            _private.doAfterUpdate(self, () => {
-                                loadCallback(addedItems, countCurrentItems);
-                            });
-                        });
-                    } else {
-                        loadCallback(addedItems, countCurrentItems);
-                    }
+                    loadCallback(addedItems, countCurrentItems);
                 });
 
                 // Скрываем ошибку после успешной загрузки данных
@@ -2007,6 +2010,7 @@ const _private = {
 
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
+            attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
             virtualScrollConfig: options.virtualScrollConfig || {},
             needScrollCalculation: self._needScrollCalculation,
             scrollObserver: self._children.scrollObserver,
@@ -2708,6 +2712,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
+        _private.checkNeedAttachLoadTopTriggerToNull(this);
     },
 
     _beforeUpdate(newOptions) {
@@ -2839,7 +2844,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
-            this._scrollController.update({collection: newOptions.listViewModel || this.getViewModel(), ...newOptions});
+            this._scrollController.update({attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull, collection: newOptions.listViewModel || this.getViewModel(), ...newOptions});
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -3071,6 +3076,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.afterRender(correctingHeight);
         }
         this._actualPagingVisible = this._pagingVisible;
+
+        this._scrollToFirstItemIfNeed();
+    },
+
+    _scrollToFirstItemIfNeed(): void {
+        if (this._needScrollToFirstItem) {
+            this._needScrollToFirstItem = false;
+            const firstDispItem = this.getViewModel().at(0);
+            const firstItem = firstDispItem && firstDispItem.getContents();
+            const firstItemKey = firstItem && firstItem.getKey ? firstItem.getKey() : null;
+            if (firstItemKey !== null) {
+                _private.scrollToItem(this, firstItemKey, false, true);
+            }
+        }
     },
 
     _notifyOnDrawItems(): void {

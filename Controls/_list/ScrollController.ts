@@ -39,6 +39,7 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
         itemHeightProperty?: string;
         viewportHeight?: number;
     };
+    attachLoadTopTriggerToNull: boolean;
     needScrollCalculation: boolean;
     collection: Collection<Record>;
     activeElement: string | number;
@@ -76,8 +77,10 @@ export default class ScrollController {
     // TODO: этот код должен быть убран после
     // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
     private get _calculatedTriggerVisibility(): ITriggerState {
+        const topTriggerOffset =
+            this._getTopTriggerOffset(this._triggerOffset, this._options.attachLoadTopTriggerToNull);
         return {
-            up: this._triggerOffset >= this._lastScrollTop - this._container.offsetTop,
+            up: topTriggerOffset >= this._lastScrollTop - this._container.offsetTop,
             down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
         };
     }
@@ -91,8 +94,6 @@ export default class ScrollController {
     private _viewportHeight: number = 0;
     private _triggerOffset: number = 0;
     private _lastScrollTop: number = 0;
-
-    private _updateShadowModeAfterMount: Function|null = null;
 
     private _updateShadowModeAfterMount: Function|null = null;
     private _triggerVisibility: ITriggerState = {up: false, down: false};
@@ -179,6 +180,10 @@ export default class ScrollController {
         }
         if (options.activeElement) {
             this._options.activeElement = options.activeElement;
+        }
+        if (this._options.attachLoadTopTriggerToNull !== options.attachLoadTopTriggerToNull) {
+            this._options.attachLoadTopTriggerToNull = options.attachLoadTopTriggerToNull;
+            this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
         }
         this._isRendering = true;
     }
@@ -757,13 +762,19 @@ export default class ScrollController {
         }
     }
 
+    private _getTopTriggerOffset(triggerOffset: number, attachLoadTopTriggerToNull: boolean): number {
+        return attachLoadTopTriggerToNull ? 0 : triggerOffset;
+    }
+
     private _updateTriggerOffset(scrollHeight: number, viewportHeight: number): void {
         this._triggerOffset =
             (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
             this._options._triggerPositionCoefficient;
-        this._triggers?.topVirtualScrollTrigger?.style.top = `${this._triggerOffset}px`;
+        const topTriggerOffset =
+            this._getTopTriggerOffset(this._triggerOffset, this._options.attachLoadTopTriggerToNull);
+        this._triggers?.topVirtualScrollTrigger?.style.top = `${topTriggerOffset}px`;
         this._triggers?.bottomVirtualScrollTrigger?.style.bottom = `${this._triggerOffset}px`;
-        this._callbacks.triggerOffsetChanged(this._triggerOffset, this._triggerOffset);
+        this._callbacks.triggerOffsetChanged(topTriggerOffset, this._triggerOffset);
     }
 
     private static _setCollectionIterator(collection: Collection<Record>, mode: 'remove' | 'hide'): void {
