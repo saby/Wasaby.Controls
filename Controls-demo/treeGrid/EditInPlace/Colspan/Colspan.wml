@@ -6,8 +6,9 @@
             parentProperty="parent"
             nodeProperty="type">
         <ws:itemTemplate>
-            <ws:partial template="Controls/treeGrid:ItemTemplate" colspanTemplate="Controls/treeGrid:ItemTemplate" colspan="{{true}}" marker="{{false}}" scope="{{ itemTemplate }}"/>
+            <ws:partial template="{{_itemTemplate}}"/>
         </ws:itemTemplate>
-        <ws:editingConfig editOnClick="{{true}}" enabled="{{true}}"/>
+        <ws:editingConfig editOnClick="{{true}}" enabled="{{true}}" equentialEditing="{{true}}"
+                          toolbarVisibility="{{true}}"/>
     </Controls.treeGrid:View>
 </div>

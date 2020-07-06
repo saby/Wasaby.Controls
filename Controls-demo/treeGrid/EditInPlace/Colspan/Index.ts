@@ -1,13 +1,13 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGrid/EditInPlace/Colspan/Colspan';
+import * as ItemTemplate from 'wml!Controls-demo/treeGrid/EditInPlace/Colspan/resource/Item';
 import {Memory} from 'Types/source';
 import {Gadgets} from '../../DemoHelpers/DataCatalog';
-import * as TitleCellTemplate from 'wml!Controls-demo/treeGrid/EditInPlace/Colspan/ColumnTemplate/Title';
-import * as CountryCellTemplate from 'wml!Controls-demo/treeGrid/EditInPlace/Colspan/ColumnTemplate/Country';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
+    protected _itemTemplate: TemplateFunction = ItemTemplate;
     protected _viewSource: Memory;
     private _columns: IColumn[] = Gadgets.getGridColumnsForFlat();
 
@@ -16,9 +16,6 @@ export default class extends Control {
             keyProperty: 'id',
             data: Gadgets.getFlatData()
         });
-        this._columns[0].template = TitleCellTemplate;
-        // tslint:disable-next-line
-        this._columns[2].template = CountryCellTemplate;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
