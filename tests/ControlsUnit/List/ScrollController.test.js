@@ -58,5 +58,12 @@ define([
             assert.isFalse(scrollController._observerRegistered);
          });
       });
+
+      describe('_registerObserver', () => {
+         it('should not throw error when observer doesnt exists', () => {
+            scrollController._triggers = {};
+            assert.doesNotThrow(() => scrollController._registerObserver());
+         });
+      });
    });
 });
