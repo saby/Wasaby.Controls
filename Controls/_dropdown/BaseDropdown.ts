@@ -10,6 +10,10 @@ export default class BaseDropdown extends Control<IControlOptions> {
     protected _controller: IDropdownController = null;
     protected _popupId: string = null;
 
+    reload(): void {
+        this._controller.reload();
+    }
+  
     closeMenu(): void {
         this._controller.closeMenu();
     }
