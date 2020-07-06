@@ -4,7 +4,7 @@ import ButtonTemplate = require('wml!Controls/_operations/Button/Button');
 import {default as Store} from 'Controls/Store';
 import DependenciesTimer from "Controls/Utils/DependenciesTimer";
 import {SyntheticEvent} from 'Vdom/Vdom';
-import * as mStubs from 'Core/moduleStubs';
+import {IoC} from 'Env/Env';
 
 export interface IOperationsButtonOptions extends IControlOptions, IExpandableOptions {
 }
@@ -90,16 +90,14 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
       this._dependenciesTimer.stop();
    }
    private _loadDependencies(): Promise<unknown> {
-      const dependencies = [
-         ((): Promise<unknown> => {
-            if (!this._loadOperationsPanelPromise) {
-               this._loadOperationsPanelPromise = mStubs.require(['Controls/operationsPanel']);
-            }
-            return this._loadOperationsPanelPromise;
-         })()
-      ];
-
-      return Promise.all(dependencies);
+      try {
+         if (!this._loadOperationsPanelPromise) {
+            this._loadOperationsPanelPromise = import('Controls/operationsPanel');
+         }
+         return this._loadOperationsPanelPromise;
+      } catch (e) {
+         IoC.resolve('ILogger').error('_operations:Button', e);
+      }
    }
 
    static _theme: string[] = ['Controls/operations'];
