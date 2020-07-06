@@ -39,7 +39,7 @@ export default abstract class BaseLookup extends Control {
         this._notifyChanges();
     }
 
-    protected _addItems(event: SyntheticEvent, item: Model): void {
+    protected _addItem(event: SyntheticEvent, item: Model): void {
         if (this._lookupController.addItem(item)) {
             this._notifyChanges();
         }
