@@ -371,11 +371,15 @@ class StackController extends BaseController {
     }
 
     private _showPopup(item: IPopupItem): void {
+        // TODO: https://online.sbis.ru/opendoc.html?guid=2b0f7d75-15e8-4549-8780-2ec83037ecf8
         item.popupOptions.hidden = false;
+        item.position.hidden = false;
     }
 
     private _hidePopup(item: IPopupItem): void {
+        // TODO: https://online.sbis.ru/opendoc.html?guid=2b0f7d75-15e8-4549-8780-2ec83037ecf8
         item.popupOptions.hidden = true;
+        item.position.hidden = true;
     }
 
     private _updatePopupOptions(item: IPopupItem): void {

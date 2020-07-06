@@ -216,7 +216,7 @@ class DialogController extends BaseController {
         // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
         if (this._isIOS12()) {
             defaultCoordinate = 0;
-            item.position.hidden = true;
+            item.position.invisible = true;
         }
         // Get top and left coordinate from propStorageId
         item.position.top = item.popupOptions.top || defaultCoordinate;
