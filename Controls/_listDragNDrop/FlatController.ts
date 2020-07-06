@@ -10,8 +10,7 @@ export interface IFlatModel {
    setDragPosition(position: IDragPosition): void;
    resetDraggedItems(): void;
 
-   calculateDragTargetPosition(itemData: IFlatItemData, position?: TPosition): IDragPosition;
-   getItemDataByItem(item: CollectionItem<Model>);
+   getItemDataByItem(item: CollectionItem<Model>): any;
    getItemBySourceKey(key: TKey): CollectionItem<Model>;
 
    getIndexByKey(key: TKey): number;

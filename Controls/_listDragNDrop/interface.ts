@@ -3,8 +3,8 @@ import { Model } from 'Types/entity';
 import { IFlatItemData } from './FlatController';
 import { ITreeItemData } from './TreeController';
 
-export type TPosition = 'after'|'before'|'on'
-export type TKey = number|string
+export type TPosition = 'after'|'before'|'on';
+export type TKey = number|string;
 
 export interface IDragPosition {
    index: number;
@@ -14,6 +14,6 @@ export interface IDragPosition {
 }
 
 export interface IOffset {
-   top: number,
-   bottom: number
+   top: number;
+   bottom: number;
 }
