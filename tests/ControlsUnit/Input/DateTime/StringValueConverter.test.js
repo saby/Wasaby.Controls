@@ -1,13 +1,13 @@
 define([
    'Core/core-merge',
    'Types/formatter',
-   'Controls/interface',
+   'Controls/Utils/DateControlsUtils',
    'Controls/input',
    'Controls/Utils/Date'
 ], function(
    cMerge,
    formatter,
-   interfaceModule,
+   DateControlsUtils,
    input,
    dateUtils
 ) {
@@ -20,7 +20,7 @@ define([
          replacer: '_',
       },
       now = new Date(),
-      masks = interfaceModule.dateMaskConstants;
+      masks = DateControlsUtils.dateMaskConstants;
 
    describe('Controls/_input/DateTime/StringValueConverter', function() {
 

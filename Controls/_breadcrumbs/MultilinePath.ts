@@ -97,7 +97,13 @@ class MultilinePath extends Control<IBreadCrumbsOptions> {
             for (let i = 0; i < this._indexEdge; i++) {
                 firstContainerItems.push(items[i]);
             }
+            // позволяем сокращаться последней папке в первом контейнере
+            if (firstContainerWidth - itemsWidth[this._indexEdge] + this.BREAD_CRUMB_MIN_WIDTH <= containerWidth) {
+                firstContainerItems.push(items[this._indexEdge]);
+                this._indexEdge++;
+            }
             this._visibleItemsFirst = BreadCrumbsUtil.drawBreadCrumbsItems(firstContainerItems);
+            this._visibleItemsFirst[this._visibleItemsFirst.length - 1].withOverflow = true;
             // рассчитываем ширину второго контейнера, заполненного оставшимися крошками
             for (let i = this._indexEdge; i < items.length; i++) {
                 secondContainerWidth += itemsWidth[i];

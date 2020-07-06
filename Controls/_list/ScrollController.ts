@@ -141,7 +141,7 @@ export default class ScrollController {
     }
 
     protected _registerObserver(): void {
-        if (!this._observerRegistered && this._triggers) {
+        if (!this._observerRegistered && this._triggers && this._triggers.scrollObserver) {
             // @ts-ignore
             this._triggers.scrollObserver.startRegister(this._triggers);
             this._observerRegistered = true;
