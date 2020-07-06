@@ -78,7 +78,7 @@ define(
          };
 
          let getDropdownController = function(config) {
-            let dropdownCntroller = new dropdown._Controller.default(config);
+            let dropdownCntroller = new dropdown._Controller(config);
             return dropdownCntroller;
          };
 
@@ -119,6 +119,30 @@ define(
             dropdownController.pinClick(expectedItem);
             assert.isFalse(expectedItem.get('pinned'));
             assert.deepEqual(actualMeta, { '$_pinned': true });
+         });
+
+         it('reload', function() {
+            let newOptions = clone(config);
+            const newItems = [
+               {
+                  id: '1',
+                  title: 'Тест 1'
+               },
+               {
+                  id: '2',
+                  title: 'Тест 2'
+               }
+            ];
+            const newSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: newItems
+            });
+
+            let dropdownController = getDropdownController(newOptions);
+            dropdownController._options.source = newSource;
+            dropdownController.reload().then(()=> {
+               assert.deepEqual(dropdownController._items.at(0).get('title'), 'Тест 1');
+            });
          });
 
          describe('update', function() {

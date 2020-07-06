@@ -1,7 +1,10 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 // @ts-ignore
-import template = require('wml!Controls/_lookup/Button/SelectorButton');
-
+import * as template from 'wml!Controls/_lookup/Button/SelectorButton';
+import {default as BaseLookup} from 'Controls/_lookup/BaseLookup';
+import showSelector from 'Controls/_lookup/showSelector';
+import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * Кнопка-ссылка с возможностью выбора значений из справочника.
@@ -66,11 +69,11 @@ import template = require('wml!Controls/_lookup/Button/SelectorButton');
  * </pre>
  */
 
-export default class Button extends Control<IControlOptions> {
+export default class Button extends BaseLookup {
    protected _template: TemplateFunction = template;
+   protected _notifyHandler: Function = tmplNotify;
 
-   protected showSelector(popupOptions: object): any {
-      // @ts-ignore
-      return this._children.controller.showSelector(popupOptions);
+   showSelector(popupOptions: IStackPopupOptions): void {
+      return showSelector(this, popupOptions, this._options.multiSelect);
    }
 }

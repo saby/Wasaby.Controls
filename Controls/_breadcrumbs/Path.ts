@@ -45,7 +45,7 @@ var BreadCrumbs = Control.extend({
 
     _beforeMount: function (options) {
         if (options.items && options.items.length > 0) {
-            BreadCrumbsUtil.drawBreadCrumbs(this, options.items);
+            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(options.items);
         }
     },
     _beforeUpdate: function (newOptions) {
@@ -53,7 +53,7 @@ var BreadCrumbs = Control.extend({
     },
     _redrawIfNeed: function(currentItems, newItems) {
         if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems)) {
-            BreadCrumbsUtil.drawBreadCrumbs(this, newItems);
+            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(newItems);
             this._viewUpdated = true;
         }
     },

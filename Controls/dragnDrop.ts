@@ -34,7 +34,7 @@ import ItemEntity = require('Controls/_dragnDrop/Entity/Item');
 import Compound = require('Controls/_dragnDrop/Controller/Compound');
 import DraggingTemplateWrapper = require('wml!Controls/_dragnDrop/DraggingTemplateWrapper');
 import ListItems = require('Controls/_dragnDrop/Entity/List/Items');
-export {default as ResizingLine, IResizingLineOptions} from 'Controls/_dragnDrop/ResizingLine';
+export {default as ResizingLine} from 'Controls/_dragnDrop/ResizingLine';
 
 export {
    Container,

@@ -90,12 +90,12 @@ interface IButtonOptions extends IBaseDropdownOptions, IGroupedOptions, IIconOpt
  * @demo Controls-demo/Buttons/Menu/MenuPG
  */
 
-class Button extends BaseDropdown {
+export default class Button extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _tmplNotify: Function = tmplNotify;
    protected _hasItems: boolean = true;
 
-   _beforeMount(options: IButtonOptions, recievedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>|void {
+   _beforeMount(options: IButtonOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._offsetClassName = cssStyleGeneration(options);
       this._updateState(options);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
@@ -181,7 +181,11 @@ class Button extends BaseDropdown {
          }
       };
       this._controller.setMenuPopupTarget(this._container.children[0]);
-      this._controller.openMenu(config).then((result) => {
+      this.openMenu(config);
+   }
+
+   openMenu(popupOptions?: IMenuPopupOptions): void {
+      this._controller.openMenu(popupOptions).then((result) => {
          if (typeof result === 'string') {
             this._popupId = result;
          } else if (result) {
@@ -212,24 +216,22 @@ class Button extends BaseDropdown {
          this._controller.handleSelectedItems(item);
       }
    }
+
+   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
+
+   static getDefaultOptions(): object {
+      return {
+         showHeader: true,
+         filter: {},
+         style: 'secondary',
+         viewMode: 'button',
+         size: 'm',
+         iconStyle: 'secondary',
+         transparent: true,
+         lazyItemsLoading: false
+      };
+   }
 }
-
-Button.getDefaultOptions = function () {
-   return {
-      showHeader: true,
-      filter: {},
-      style: 'secondary',
-      viewMode: 'button',
-      size: 'm',
-      iconStyle: 'secondary',
-      transparent: true,
-      lazyItemsLoading: false
-   };
-};
-
-Button._theme = ['Controls/dropdown', 'Controls/Classes'];
-
-export = Button;
 
 /**
  * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.
