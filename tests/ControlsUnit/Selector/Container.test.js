@@ -175,6 +175,32 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
          assert.isTrue(preparedFilter.searchParam === 'test');
       });
 
+      it('prepare filter with selected node and searchParam', () => {
+         const filter = {
+            searchParam: 'test',
+            parent: 123
+         };
+         const source = new sourceLib.Memory();
+         const selection = operations.selectionToRecord({ selected: [1, 2], excluded: [3, 4] }, source.getAdapter());
+         const items = new collection.RecordSet({
+            rawData: [
+               {
+                  id: 1,
+                  isNode: true
+               }
+            ]
+         });
+         const preparedFilter = lookupPopup.Container._private.prepareFilter({
+            filter,
+            selection,
+            searchParam: 'searchParam',
+            root: 1,
+            nodeProperty: 'isNode',
+            items
+         });
+         assert.equal(preparedFilter.searchParam, 'test');
+      });
+
       it('prepareResult', function() {
          var result = 'result';
          var selectedKeys = [];
