@@ -172,8 +172,8 @@ export default class _Controller implements IDropdownController {
       this._closeDropdownList();
    }
 
-   getPreparedItem(data, keyProperty, source) {
-      return this._prepareItem(data, keyProperty, source);
+   getPreparedItem(data, keyProperty) {
+      return this._prepareItem(data, keyProperty, this._source);
    }
 
    onSelectorResult(selectedItems): void {

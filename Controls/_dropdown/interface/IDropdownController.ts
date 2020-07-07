@@ -19,7 +19,7 @@ export default interface IDropdownController {
     closeMenu(): void;
     destroy(): void;
     applyClick(data: RecordSet): void;
-    getPreparedItem(data: RecordSet, keyProperty: TKey, source: Memory): any;
+    getPreparedItem(data: RecordSet, keyProperty: TKey): any;
     onSelectorResult(selectedItems: RecordSet): void;
 }
 
