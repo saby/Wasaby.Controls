@@ -6,9 +6,10 @@ define(
       'Controls/display',
       'Types/collection',
       'Types/entity',
-      'Controls/Constants'
+      'Controls/Constants',
+      'Controls/popup'
    ],
-   function(menu, source, Clone, display, collection, entity, ControlsConstants) {
+   function(menu, source, Clone, display, collection, entity, ControlsConstants, popup) {
       describe('Menu:Control', function() {
          let defaultItems = [
             { key: 0, title: 'все страны' },
@@ -500,10 +501,15 @@ define(
             menuControl._listModel = getListModel();
 
             let selectCompleted = false, closed = false, opened = false, actualOptions;
-            menuControl._options.selectorOpener = {
-               openPopup: (tplOptions) => { opened = true; actualOptions = tplOptions; return Promise.resolve()},
-               closePopup: () => { closed = true; }
-            };
+
+            let sandbox = sinon.createSandbox();
+            sandbox.replace(popup.Stack, 'openPopup', (tplOptions) => {
+               opened = true;
+               actualOptions = tplOptions;
+               return Promise.resolve();
+            });
+            sandbox.replace(popup.Stack, 'closePopup', () => { closed = true; });
+
             menuControl._options.selectorDialogResult = () => {selectCompleted = true};
 
             menuControl._openSelectorDialog(menuOptions);
@@ -519,6 +525,7 @@ define(
 
             actualOptions.eventHandlers.onResult();
             assert.isTrue(closed);
+            sandbox.restore();
          });
 
          it('_openSelectorDialog with empty item', () => {
@@ -537,12 +544,16 @@ define(
                title: 'Not selected'
             };
             items.push(emptyItem);
-            emptyMenuControl._options.selectorOpener = {
-               openPopup: (tplOptions) => { selectorOptions = tplOptions; return Promise.resolve()},
-            };
+            let sandbox = sinon.createSandbox();
+            sandbox.replace(popup.Stack, 'openPopup', (tplOptions) => {
+               selectorOptions = tplOptions;
+               return Promise.resolve();
+            });
             emptyMenuControl._listModel = getListModel(items);
             emptyMenuControl._openSelectorDialog({});
             assert.strictEqual(selectorOptions.templateOptions.selectedItems.getCount(), 0);
+
+            sandbox.restore();
          });
 
          describe('displayFilter', function() {

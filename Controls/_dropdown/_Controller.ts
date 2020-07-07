@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as Control from 'Core/Control';
 // @ts-ignore
-import {Sticky as StickyOpener, Stack as StackOpener} from 'Controls/popup';
+import {Sticky as StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
 import {factory} from 'Types/chain';
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
@@ -513,8 +513,7 @@ export default class _Controller implements IDropdownController {
          width: this._options.width !== undefined ?
              (this.target[0] || this.target).offsetWidth :
              undefined,
-         hasMoreButton: this._sourceController.hasMoreData('down'),
-         selectorOpener: StackOpener
+         hasMoreButton: this._sourceController.hasMoreData('down')
       };
       const config = {
          id: this._popupId,

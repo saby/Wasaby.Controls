@@ -457,7 +457,6 @@ import {Model} from 'Types/entity';
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),
                navigation: this._configs[index]._sourceController.getNavigation(),
-               selectorOpener: this._children.selectorOpener,
                selectorDialogResult: this._onSelectorTemplateResult.bind(this),
                afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this),
                dropdownClassName: `controls-FastFilter_width-popup_theme-${this._options.theme}`
