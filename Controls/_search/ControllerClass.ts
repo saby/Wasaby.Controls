@@ -450,7 +450,11 @@ export default class SearchControllerClass {
     }
 
     private _setPendingSearchValue(value: string|null): void {
-        this._pendingSearchValue = value;
+        if (this._options.dataLoadCallback) {
+            this._pendingSearchValue = value;
+        } else {
+            this._setSearchValue(value);
+        }
     }
 
     private _setRoot(root: Key): void {
