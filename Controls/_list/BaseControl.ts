@@ -238,7 +238,8 @@ const _private = {
         // if (!cfg.attachLoadTopTriggerToNull) return;
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
         // В случае с pages, demand и maxCount проблема дополнительной загрузки после инициализации списка отсутствует.
-        if (!_private.isInfinityNavigation(self._options.navigation)) {
+        const isInfinityNavigation = _private.isInfinityNavigation(self._options.navigation);
+        if (!isInfinityNavigation) {
             return;
         }
         const sourceController = self._sourceController;
@@ -248,6 +249,14 @@ const _private = {
             self._needScrollToFirstItem = true;
         } else {
             self._attachLoadTopTriggerToNull = false;
+        }
+        if (self._scrollController) {
+            self._scrollController.update({
+                attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
+                forceInitVirtualScroll: isInfinityNavigation,
+                collection: self.getViewModel(),
+                ...self._options
+            });
         }
     },
 
@@ -2026,7 +2035,7 @@ const _private = {
             collection: self._listViewModel,
             activeElement: options.activeElement,
             useNewModel: options.useNewModel,
-            forceInitVirtualScroll: self._options?.navigation?.view === 'infinity',
+            forceInitVirtualScroll: options?.navigation?.view === 'infinity',
             callbacks: {
                 triggerOffsetChanged: self.triggerOffsetChangedHandler.bind(self),
                 changeIndicatorState: self.changeIndicatorStateHandler.bind(self),
@@ -2857,7 +2866,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.update({
                 attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
-                collection: newOptions.listViewModel || this.getViewModel(),
+                collection: this.getViewModel(),
                 ...newOptions
             });
         }
