@@ -10,7 +10,6 @@ export interface IPageQueryParamsControllerOptions {
     pageSize: number;
     page?: number;
     hasMore?: boolean;
-    multiNavigation?: boolean;
 }
 
 /**
