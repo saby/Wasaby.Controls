@@ -629,7 +629,9 @@ export default class EditInPlace {
             this._options.editingConfig &&
             this._options.editingConfig.editOnClick &&
             !this._options.readOnly &&
-            originalEvent.type === 'click'
+            originalEvent.type === 'click' &&
+            //событие onclick при даблкике срабатвает два раза, второй раз там item из редактирования по месту
+            this._editingItem !== item
         ) {
             if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
                 result = this.commitEdit();
