@@ -70,9 +70,9 @@ define([
 
       });
 
-      describe('load', function (done) {
+      describe('load', function () {
 
-         it('load from source', () => {
+         it('load from source', (done) => {
             var controller = new scroll.Controller({
                source: source
             });
