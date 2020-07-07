@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/Explorer_new/backgroundStyle/custom/backgroundStyleCustom';
+import * as Template from 'wml!Controls-demo/Explorer_new/backgroundStyle/masterClassic/backgroundStyleMasterClassic';
 import {Gadgets} from '../../DataHelpers/DataCatalog';
 import {Memory} from 'Types/source';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
@@ -57,9 +57,8 @@ export default class extends Control {
       });
    }
 
-   static _theme: string[] = ['Controls/Classes'];
+   static _theme: string[] = ['Controls/Classes', 'Controls/masterDetail'];
    static _styles: string[] = [
-      'Controls-demo/Controls-demo',
-      'Controls-demo/Explorer_new/backgroundStyle/custom/backgroundStyleCustom'
+      'Controls-demo/Controls-demo'
    ];
 }

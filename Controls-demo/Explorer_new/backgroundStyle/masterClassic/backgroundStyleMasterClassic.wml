@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper__padding-left">
+<div class="controlsDemo__wrapper__padding-left controls-background-masterClassic_theme-default">
     <div class="controlsDemo__cell controlsDemo__inline-block demo-ItemPaddingAll__vertical">
         <div class="ws-flexbox ws-flex-wrap">
             <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m">
@@ -11,8 +11,9 @@
                             displayProperty="title"
                             parentProperty="parent"
                             nodeProperty="parent@"
-                            markedKey="1"
+                            style="masterClassic"
                             header="{{_header}}"
+                            markedKey="1"
                             showEditArrow="{{true}}"
                             showActionButton="{{true}}"
                             columns="{{_columns}}">
@@ -29,6 +30,7 @@
                             displayProperty="title"
                             parentProperty="parent"
                             nodeProperty="parent@"
+                            style="masterClassic"
                             markerVisibility="hidden"
                             showEditArrow="{{true}}"
                             showActionButton="{{true}}"
@@ -50,6 +52,7 @@
                                         displayProperty="title"
                                         parentProperty="parent"
                                         nodeProperty="parent@"
+                                        style="masterClassic"
                                         markerVisibility="hidden"
                                         viewMode="search"
                                         showEditArrow="{{true}}"
