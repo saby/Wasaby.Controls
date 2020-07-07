@@ -2660,7 +2660,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (newOptions.searchValue !== this._options.searchValue) {
-            this._listViewModel.setSearchValue(newOptions.searchValue);
+            _private.doAfterUpdate(this, () => {
+                this._listViewModel.setSearchValue(newOptions.searchValue);
+            });
             _private.getPortionedSearch(self).reset();
         }
         if (newOptions.editingConfig !== this._options.editingConfig) {
