@@ -41,6 +41,7 @@ export interface IPositionQueryParamsControllerOptions {
     position: PositionCfg;
     direction: CursorDirection;
     limit: number;
+    multiNavigation?: boolean;
 }
 
 /**

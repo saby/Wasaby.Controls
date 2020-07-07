@@ -7,26 +7,62 @@ define([
    'Core/core-instance',
    'Types/collection'
 ], function(scroll, sourceLib, cInstance, collection){
-   describe('Controls.Controllers.SourceController', function () {
-      var data, source;
-      beforeEach(function() {
-         data = [
-            {
-               id : 1,
-               title : 'Первый',
-               type: 1
-            },
-            {
-               id : 2,
-               title : 'Второй',
-               type: 2
-            },
-            {
-               id : 3,
-               title : 'Третий',
-               type: 2
+
+   const data = [
+      {
+         id : 1,
+         title : 'Первый',
+         type: 1
+      },
+      {
+         id : 2,
+         title : 'Второй',
+         type: 2
+      },
+      {
+         id : 3,
+         title : 'Третий',
+         type: 2
+      }
+   ];
+   function getControllerWithMultiNavigation() {
+      const source = new sourceLib.Memory({
+         keyProperty: 'id',
+         data: data
+      });
+      const controller = new scroll.Controller({
+         source: source,
+         navigation: {
+            source: 'page',
+            sourceConfig: {
+               pageSize: 1,
+               hasMore: false
             }
-         ];
+         }
+      });
+      const metaMultiNavigation = {
+         more: new collection.RecordSet({
+            rawData: [
+               {
+                  id: 1,
+                  nav_result: 3
+               },
+               {
+                  id: 2,
+                  nav_result: 3
+               }
+            ]
+         })
+      };
+      const recordSetWithMultiNavigation = new collection.RecordSet();
+      recordSetWithMultiNavigation.setMetaData(metaMultiNavigation);
+      controller.calculateState(recordSetWithMultiNavigation);
+      return controller;
+   }
+
+   describe('Controls.Controllers.SourceController', function () {
+      var source;
+      beforeEach(function() {
          source = new sourceLib.Memory({
             data: data,
             keyProperty: 'id'
@@ -34,20 +70,40 @@ define([
 
       });
 
-      it('load', function (done) {
-         var controller = new scroll.Controller({
-            source: source
+      describe('load', function (done) {
+
+         it('load from source', () => {
+            var controller = new scroll.Controller({
+               source: source
+            });
+
+            var def = controller.load();
+            assert.isTrue(controller.isLoading(), 'Wrong _isloading value');
+            def.addCallback(function(rs){
+               assert.isFalse(controller.isLoading(), 'Wrong _isloading value');
+               assert.isTrue(cInstance.instanceOfModule(rs, 'Types/collection:RecordSet'), 'load doesn\'t returns recordset instance');
+               assert.equal(3, rs.getCount(), 'load doesn\'t returns recordset instance');
+               controller.destroy();
+               done();
+            });
          });
 
-         var def = controller.load();
-         assert.isTrue(controller.isLoading(), 'Wrong _isloading value');
-         def.addCallback(function(rs){
-            assert.isFalse(controller.isLoading(), 'Wrong _isloading value');
-            assert.isTrue(cInstance.instanceOfModule(rs, 'Types/collection:RecordSet'), 'load doesn\'t returns recordset instance');
-            assert.equal(3, rs.getCount(), 'load doesn\'t returns recordset instance');
-            controller.destroy();
-            done();
+         it('load with multiNavigation', () => {
+            const controller = getControllerWithMultiNavigation();
+            const originQuery = controller._source.query;
+            let queryInstance;
+            controller._source.query = (query) => {
+               queryInstance = query;
+               return originQuery.apply(controller._source, arguments);
+            };
+            return new Promise((resolve) => {
+               controller.load({}, null, null, {multiNavigation: true}).then(() => {
+                  assert.equal(queryInstance.getUnion().length, 1);
+                  resolve();
+               });
+            });
          });
+
       });
 
       it('load with config', function (done) {
@@ -111,7 +167,7 @@ define([
             direction: null,
             paramsController: controller._queryParamsController
          });
-         assert.deepEqual({filter:{}, limit: 10, offset: 0, meta: { hasMore: false, navigationType: sourceLib.SbisService.NAVIGATION_TYPE.PAGE } }, resParams, 'Wrong query params in page navigation');
+         assert.deepEqual({filter:{}, limit: 10, offset: 0, meta: { hasMore: false, navigationType: sourceLib.SbisService.NAVIGATION_TYPE.PAGE } }, resParams[0], 'Wrong query params in page navigation');
 
          controller = new scroll.Controller({
             source: source,
@@ -130,7 +186,7 @@ define([
             direction: null,
             paramsController: controller._queryParamsController
          });
-         assert.deepEqual({limit: 10, offset: undefined, filter: {'id>=': 2}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, resParams, 'Wrong query params in position navigation');
+         assert.deepEqual({limit: 10, offset: undefined, filter: {'id>=': 2}, meta: { navigationType: sourceLib.SbisService.NAVIGATION_TYPE.POSITION } }, resParams[0], 'Wrong query params in position navigation');
 
          var originalFilter = {};
          resParams = scroll.Controller._private.modifyQueryParamsWithNavigation({
