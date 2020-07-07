@@ -27,6 +27,7 @@
  */
 
 import Container = require('Controls/_scroll/Container');
+import ContainerNew from 'Controls/_scroll/ContainerNew';
 import Watcher = require('Controls/_scroll/Scroll/Watcher');
 import StickyHeader = require('Controls/_scroll/StickyHeader');
 import _Scrollbar = require('Controls/_scroll/Scroll/Scrollbar');
@@ -46,6 +47,7 @@ import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
 
 export {
    Container,
+   ContainerNew as _ContainerNew,
    Watcher,
    StickyHeader,
    _Scrollbar,
