@@ -461,6 +461,40 @@ define(
                assert.equal(filterPopup.DetailPanel._private.filterHistoryItems(self, historyItems).getCount(), 1);
             });
 
+            it('getFilter', () => {
+               const items = [
+                  {
+                     id: 'list',
+                     value: 5,
+                     resetValue: 1,
+                     textValue: 'listValue'
+                  },
+                  {
+                     name: 'text',
+                     value: '123',
+                     resetValue: '',
+                     visibility: true,
+                     textValue: null
+                  },
+                  {
+                     name: 'bool',
+                     value: true,
+                     resetValue: false,
+                     visibility: false
+                  },
+                  {
+                     id: 'object',
+                     value: {},
+                     resetValue: null
+                  }
+               ];
+               assert.deepEqual(filterPopup.DetailPanel._private.getFilter(items), {
+                  list: 5,
+                  text: '123',
+                  object: {}
+               });
+            });
+
             it('_private:reloadHistoryItems', function() {
                if (Env.constants.isServerSide) { return; }
                filter.HistoryUtils.getHistorySource({historyId: 'TEST_RELOAD_ITEMS_HISTORY_ID'}).getItems = () => {

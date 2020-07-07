@@ -58,5 +58,51 @@ define([
             assert.isFalse(scrollController._observerRegistered);
          });
       });
+
+      describe('_registerObserver', () => {
+         it('should not throw error when observer doesnt exists', () => {
+            scrollController._triggers = {};
+            assert.doesNotThrow(() => scrollController._registerObserver());
+         });
+      });
+
+
+      describe('._initVirtualScroll()', () => {
+         it('should not create virtual scroll', () => {
+            let items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: [{id: 1}]
+            });
+            let viewModel = new ListViewModel({
+               items: items,
+               keyProperty: 'id'
+            });
+            scrollController._initVirtualScroll({
+               collection: viewModel,
+               virtualScrollConfig: {
+                  pageSize: 5
+               }
+            });
+            assert.isUndefined(scrollController._virtualScroll);
+         });
+
+         it('should create virtual scroll when pageSise more than items count', () => {
+            let items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: [{id: 1},{id: 2},{id: 3},{id: 4}]
+            });
+            let viewModel = new ListViewModel({
+               items: items,
+               keyProperty: 'id'
+            });
+            scrollController._initVirtualScroll({
+               collection: viewModel,
+               virtualScrollConfig: {
+                  pageSize: 3
+               }
+            });
+            assert.isDefined(scrollController._virtualScroll);
+         });
+      });
    });
 });

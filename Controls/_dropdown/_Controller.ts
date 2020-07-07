@@ -226,7 +226,7 @@ export default class _Controller implements IDropdownController {
                 this._isOpened = true;
                 return openPopup();
              } else if (count === 1) {
-                return Promise.resolve(this._items.at(0));
+                return Promise.resolve([this._items.at(0)]);
              }
           },
           () => {
