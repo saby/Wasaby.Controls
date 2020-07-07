@@ -2618,6 +2618,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.loadToDirectionIfNeed(this, direction, this._options.filter);
         }
     },
+    _loadMore(event, direction): void {
+        this.loadMore(direction);
+    },
 
     triggerVisibilityChangedHandler(direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;

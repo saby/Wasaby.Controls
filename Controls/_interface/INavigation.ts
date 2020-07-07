@@ -79,6 +79,7 @@ export interface IBasePositionSourceConfig {
     position?: unknown[] | unknown;
     direction?: TNavigationDirection;
     limit?: number;
+    multiNavigation?: boolean;
 }
 
 /**
@@ -117,6 +118,7 @@ export interface INavigationPositionSourceConfig extends IBasePositionSourceConf
 export interface IBasePageSourceConfig {
     page?: number;
     pageSize: number;
+    multiNavigation?: boolean;
 }
 
 /**

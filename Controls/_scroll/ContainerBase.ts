@@ -1,43 +1,43 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls/_scroll/Scroll/ContainerBase/ContainerBase');
+import {detection} from 'Env/Env';
+import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RegisterClass} from 'Controls/event';
-import {getVerticalPosition, getHorizontalPosition, canScroll} from 'Controls/_scroll/Scroll/Utils';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import ResizeObserverUtil from 'Controls/Utils/ResizeObserverUtil';
+import {canScrollByState, getScrollPositionTypeByState, SCROLL_DIRECTION} from './Utils/Scroll';
+import {scrollTo} from './Utils/Scroll';
+import {IScrollState} from './Utils/ScrollState';
+import {SCROLL_MODE} from './Container/Type';
+import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
+import tmplNotify = require('Controls/Utils/tmplNotify');
 
-interface IContainerBaseOptions extends IControlOptions {
-    scrollMode?: string;
+export interface IContainerBaseOptions extends IControlOptions {
+    scrollMode?: SCROLL_MODE;
 }
 
-interface IState {
-    scrollTop?: number;
-    scrollLeft?: number;
-    clientHeight?: number;
-    scrollHeight?: number;
-    clientWidth?: number;
-    scrollWidth?: number;
-    verticalPosition?: string;
-    horizontalPosition?: string;
-    canScroll?: boolean;
-    viewPortRect?: ClientRect;
-}
+const KEYBOARD_SHOWING_DURATION: number = 500;
 
 export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _template: TemplateFunction = template;
     protected _container: HTMLElement = null;
     protected _options: IContainerBaseOptions;
 
-    private _state: IState = {};
-    private _oldState: IState = null;
+    protected _state: IScrollState = {};
+    protected _oldState: IScrollState = null;
 
     private _registrars: any = [];
 
-    private _stickyHeaderObserver: ResizeObserverUtil;
+    private _resizeObserver: ResizeObserverUtil;
 
     private _resizeObserverSupported: boolean;
+    // private _edgeObservers: IntersectionObserver[] = [];
+
+    private _scrollLockedPosition: number = null;
+
+    protected _tmplNotify: tmplNotify;
 
     _beforeMount(): void {
-        this._stickyHeaderObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
+        this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
         this._resizeObserverSupported = typeof window !== 'undefined' && window.ResizeObserver;
         this._registrars.scrollStateChanged = new RegisterClass({register: 'scrollStateChanged'});
         // событие viewportResize используется только в списках.
@@ -47,16 +47,19 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _afterMount(): void {
-        this._stickyHeaderObserver.observe(this._container);
-        this._stickyHeaderObserver.observe(this._children.contentObserver);
-        this._updateStateAndGenerateEvents({
-            scrollTop: 0,
-            scrollLeft: 0
-        });
+        this._resizeObserver.observe(this._children.scrollContainer);
+        this._resizeObserver.observe(this._children.content);
+        this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
+        // this._createEdgeIntersectionObserver();
+
+        if (detection.isMobileIOS) {
+            this._lockScrollPositionUntilKeyboardShown = this._lockScrollPositionUntilKeyboardShown.bind(this);
+            Bus.globalChannel().subscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
+         }
     }
 
     _beforeUnmount(): void {
-        this._stickyHeaderObserver.terminate();
+        this._resizeObserver.terminate();
         for (const registrar of this._registrars) {
             registrar.destroy();
         }
@@ -69,6 +72,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _scrollHandler(e: SyntheticEvent): void {
+        if (this._scrollLockedPosition !== null) {
+            this._children.scrollContainer.scrollTop = this._scrollLockedPosition;
+            return;
+        }
         this.onScrollContainer({
             scrollTop: e.currentTarget.scrollTop,
             scrollLeft: e.currentTarget.scrollLeft,
@@ -85,15 +92,34 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._registrars.scrollStateChanged.unregister(e, registerType, component);
     }
 
-    scrollTo(scrollTop: number): void {
-        this._container.scrollTop = scrollTop;
+    // _createEdgeIntersectionObserver() {
+    //     const rootMarginMap = {
+    //         top: '0px 0px -99% 0px',
+    //         bottom: '-99% 0px 0px 0px'
+    //     }
+    //     for (let edge in rootMarginMap) {
+    //         this._edgeObservers[edge] = new IntersectionObserver(this._edgeIntersectionHandler.bind(this, edge), {
+    //             root: this._children.scrollContainer,
+    //             rootMargin: rootMarginMap[edge]
+    //         });
+    //         this._edgeObservers[edge].observe(this._children.content);
+    //     }
+    // }
+    //
+    // _edgeIntersectionHandler(edge, entries, observer): void {
+    //     // console.log(edge);
+    // }
+
+    scrollTo(scrollPosition: number, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL): void {
+        scrollTo(this._children.scrollContainer, scrollPosition, direction);
     }
 
-    onScrollContainer(newState: IState): void {
+    onScrollContainer(newState: IScrollState): void {
         this._updateStateAndGenerateEvents(newState);
     }
 
     _onRegisterNewComponent(component: any): void {
+        // Возможно тут лучше не вычитывать стэйт, а дождаться когда контрол его инициализирует и после этого послать событие.
         if (Object.keys(this._state).length === 0) {
             this._updateState(this._getFullStateFromDOM());
         }
@@ -104,7 +130,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._notify('scrollStateChanged', [{...this._state}, {...this._oldState}]);
     }
 
-    _onResizeContainer(newState: IState): void {
+    _onResizeContainer(newState: IScrollState): void {
         if (this._resizeObserverSupported) {
             this._updateStateAndGenerateEvents(newState);
         } else {
@@ -112,7 +138,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
     }
 
-    _updateStateAndGenerateEvents(newState: IState): void {
+    _updateStateAndGenerateEvents(newState: IScrollState): void {
         const isStateUpdated = this._updateState(newState);
         if (isStateUpdated) {
             // Новое событие
@@ -158,33 +184,37 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _resizeObserverCallback(entries: any): void {
-        const newState: IState = {};
+        const newState: IScrollState = {};
         for (const entry of entries) {
-            if (entry.target === this._container) {
+            if (entry.target === this._children.scrollContainer) {
                 newState.clientHeight = entry.contentRect.height;
                 newState.clientWidth = entry.contentRect.width;
             }
-            if (entry.target === this._children.contentObserver) {
-                newState.scrollHeight = entry.contentRect.height;
-                newState.scrollWidth = entry.contentRect.width;
+            if (entry.target === this._children.content) {
+                // Не можем брать размеры из события, т.к. на размеры скроллируемого контента могут влиять
+                // маргины на вложенных контейнерах.
+                // newState.scrollHeight = entry.contentRect.height;
+                // newState.scrollWidth = entry.contentRect.width;
+                newState.scrollHeight = this._children.scrollContainer.scrollHeight;
+                newState.scrollWidth = this._children.scrollContainer.scrollWidth;
             }
         }
         this._onResizeContainer(newState);
     }
 
-    _getFullStateFromDOM(): IState {
+    _getFullStateFromDOM(): IScrollState {
         const newState = {
-            scrollTop: this._container.scrollTop,
-            scrollLeft: this._container.scrollLeft,
-            clientHeight: this._container.clientHeight,
-            scrollHeight: this._children.contentObserver.scrollHeight,
-            clientWidth: this._container.clientWidth,
-            scrollWidth: this._children.contentObserver.scrollWidth
+            scrollTop: this._children.scrollContainer.scrollTop,
+            scrollLeft: this._children.scrollContainer.scrollLeft,
+            clientHeight: this._children.scrollContainer.clientHeight,
+            scrollHeight: this._children.content.scrollHeight,
+            clientWidth: this._children.scrollContainer.clientWidth,
+            scrollWidth: this._children.content.scrollWidth
         };
         return newState;
     }
 
-    _updateState(newState: IState): boolean {
+    _updateState(newState: IScrollState): boolean {
         let isStateUpdated = false;
         this._oldState = {...this._state};
         Object.keys(newState).forEach((key) => {
@@ -200,11 +230,40 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _updateCalculatedState(): void {
-        this._state.verticalPosition = getVerticalPosition(this._state.scrollTop, this._state.clientHeight,
-            this._state.scrollHeight);
-        this._state.horizontalPosition = getHorizontalPosition(this._state.scrollLeft, this._state.clientWidth,
-            this._state.scrollWidth);
-        this._state.canScroll = canScroll(this._state.scrollHeight, this._state.clientHeight);
-        this._state.viewPortRect = this._children.contentObserver.getBoundingClientRect();
+        this._state.verticalPosition = getScrollPositionTypeByState(this._state, SCROLL_DIRECTION.VERTICAL);
+        this._state.horizontalPosition = getScrollPositionTypeByState(this._state, SCROLL_DIRECTION.HORIZONTAL);
+        this._state.canVerticalScroll = canScrollByState(this._state, SCROLL_DIRECTION.VERTICAL);
+        this._state.canHorizontalScroll = canScrollByState(this._state, SCROLL_DIRECTION.HORIZONTAL);
+        this._state.viewPortRect = this._children.content.getBoundingClientRect();
     }
+
+    /* При получении фокуса input'ами на IOS13, может вызывается подскролл у ближайшего контейнера со скролом,
+       IPAD пытается переместить input к верху страницы. Проблема не повторяется,
+       если input будет выше клавиатуры после открытия. */
+    _lockScrollPositionUntilKeyboardShown(): void {
+        this._scrollLockedPosition = this._state.scrollTop;
+        setTimeout(() => {
+            this._scrollLockedPosition = null;
+        }, KEYBOARD_SHOWING_DURATION);
+    }
+
+    protected _doScroll(scrollParam) {
+        if (scrollParam === 'top') {
+            this.setScrollTop(0);
+        } else {
+            const
+                clientHeight = this._state.clientHeight,
+                scrollHeight = this._state.scrollHeight,
+                currentScrollTop = this._state.scrollTop + (this._isVirtualPlaceholderMode() ? this._topPlaceholderSize : 0);
+            if (scrollParam === 'bottom') {
+                this.setScrollTop(scrollHeight - clientHeight);
+            } else if (scrollParam === 'pageUp') {
+                this.setScrollTop(currentScrollTop - clientHeight);
+            } else if (scrollParam === 'pageDown') {
+                this.setScrollTop(currentScrollTop + clientHeight);
+            }
+        }
+    }
+
+    static _theme: string[] = ['Controls/scroll'];
 }
