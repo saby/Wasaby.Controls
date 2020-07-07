@@ -2,7 +2,7 @@
      on:registerPending="_registerPendingHandler()"
      on:finishPendingOperations="_finishPendingHandler()"
      on:cancelFinishingPending="_cancelFinishingPendingHandler()">
-    <ws:for data="index, item in _getItems(_popupItems)">
+    <ws:for data="index, item in _popupItems">
         <ws:if data="{{item.id === _overlayId}}">
             <div class="controls-Container__overlay"
                  on:mousedown="_overlayClickHandler()"
@@ -17,7 +17,9 @@
                                        on:activated="_popupActivated(item.id)"
                                        attr:class="controls-Container__popup
                    {{_popupItems.getCount() - 1 === index ? 'controls-Scroll_webkitOverflowScrollingTouch'}}
-                   {{item.popupOptions.className}} {{item.position.hidden ? 'ws-invisible'}}"
+                   {{item.popupOptions.className}}
+                   {{item.position.invisible ? 'ws-invisible'}}
+                   {{item.position.hidden ? 'ws-hidden'}}"
                                            attr:style="z-index: {{item.currentZIndex}};
                    position: {{item.position.position !== undefined ? item.position.position : 'absolute'}};
                    left: {{item.position.left === undefined ? 'auto' : item.position.left + 'px'}};
