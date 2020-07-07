@@ -236,6 +236,11 @@ const _private = {
     checkNeedAttachLoadTopTriggerToNull(self): void {
         // Если нужно сделать опциональным поведение отложенной загрузки вверх, то проверку добавлять здесь.
         // if (!cfg.attachLoadTopTriggerToNull) return;
+        // Прижимать триггер к верху списка нужно только при infinity-навигации.
+        // В случае с pages, demand и maxCount проблема дополнительной загрузки после инициализации списка отсутствует.
+        if (!_private.isInfinityNavigation(self._options.navigation)) {
+            return;
+        }
         const sourceController = self._sourceController;
         const hasMoreData = _private.hasMoreData(self, sourceController, 'up');
         if (sourceController && hasMoreData) {
@@ -821,6 +826,10 @@ const _private = {
 
     isPagesNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         return navigation && navigation.view === 'pages';
+    },
+
+    isInfinityNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
+        return navigation && navigation.view === 'infinity';
     },
 
     needShowShadowByNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>, itemsCount: number): boolean {
