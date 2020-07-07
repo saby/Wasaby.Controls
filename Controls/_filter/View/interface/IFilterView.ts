@@ -21,10 +21,10 @@
  * @property {Boolean} multiSelect Определяет, установлен ли множественный выбор.
  * @property {Controls/_interface/ISelectorDialog} selectorTemplate Шаблон панели выбора элементов.
  * @property {Function|String} itemTemplate Шаблон рендеринга элементов.
- * Подробнее о настройке itemTemplate читайте {@link Controls/menu:IMenuControl#itemTemplate здесь}.
+ * Подробнее о настройке itemTemplate читайте {@link Controls/_menu/interface/ItemTemplate здесь}.
  * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
  * @property {String} itemTemplateProperty Имя свойства, содержащего шаблон для рендеринга элементов.
- * Подробнее о настройке itemTemplateProperty читайте {@link Controls/menu:IMenuControl#itemTemplateProperty здесь}.
+ * Подробнее о настройке itemTemplateProperty читайте {@link Controls/_menu/interface/IMenuControl здесь}.
  * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
  * @property {Object} filter Конфигурация фильтра-объект с именами полей и их значениями.
  * Подробнее читайте {@link Controls/_interface/IFilter#filter здесь}.
