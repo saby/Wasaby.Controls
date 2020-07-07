@@ -1,5 +1,4 @@
 import {TemplateFunction, Control} from 'UI/Base';
-import {ICrudPlus} from 'Types/source';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
@@ -22,7 +21,6 @@ export interface IColumnsInnerViewOptions extends IList {
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
     initialWidth: number;
-    source: ICrudPlus;
 }
 
 const SPACING = 12;
@@ -37,7 +35,6 @@ export default class ColumnsInnerView extends Control {
     private _columnsController: ColumnsController;
     private _markerController: MarkerController;
     private _columnsIndexes:  Array<number>[];
-    private _columnsKeys:  Array<string | number>[];
     private _model: Collection<Model>;
     protected _options: IColumnsInnerViewOptions;
     private _spacing: number = SPACING;
@@ -118,38 +115,32 @@ export default class ColumnsInnerView extends Control {
 
     private updateColumnIndexesByModel(): void {
         this._columnsIndexes = new Array<[number]>(this._columnsCount);
-        this._columnsKeys = new Array<[number | string]>(this._columnsCount);
         for (let i = 0; i < this._columnsCount; i++) {
             this._columnsIndexes[i] = [];
-            this._columnsKeys[i] = [];
         }
         this._model.each( (item, index) => {
-            this._columnsIndexes[item.getColumn()].push(index as number);            
-            this._columnsKeys[item.getColumn()].push(item.getContents().getKey());
+            this._columnsIndexes[item.getColumn()].push(index as number);         
         });
     }
     private updateColumns(): void {
         this._columnsIndexes = null;
-        this._columnsKeys = null;
         this._model.each(this.setColumnOnItem.bind(this));
         this.updateColumnIndexesByModel();
     }
     private processRemovingItem(item: any): boolean {
         let done = true;
-        if (item.columnIndex === this._columnsKeys[item.column].length) {
+        if (item.columnIndex >= this._columnsIndexes[item.column].length) {
             done = false;
             while (!done && (item.column + 1) < this._columnsCount) {
                 
-                if (this._columnsKeys[item.column + 1].length > 0) {
+                if (this._columnsIndexes[item.column + 1].length > 0) {
                     
-                    if (this._columnsKeys[item.column + 1].length > 1) {
+                    if (this._columnsIndexes[item.column + 1].length > 1) {
                         done = true;
                     }
-                    let nextKey = this._columnsKeys[item.column + 1].pop();
-                    this._columnsKeys[item.column].push(nextKey);
                     let nextIndex = this._columnsIndexes[item.column + 1].pop();
                     this._columnsIndexes[item.column].push(nextIndex);
-                    let nextItem = this._model.getItemBySourceKey(nextKey) as CollectionItem<Model>;
+                    let nextItem = this._model.getItemBySourceIndex(nextIndex) as CollectionItem<Model>;
                     nextItem.setColumn(item.column);
                 }
                 item.column++;
@@ -159,9 +150,9 @@ export default class ColumnsInnerView extends Control {
     }
     private processRemoving(removedItemsIndex: number, removedItems: [CollectionItem<Model>]): void {
         const collection = this._options.listModel.getCollection();
-        let removedItemsIndexes = removedItems.map((item) => {
+        let removedItemsIndexes = removedItems.map((item, index) => {
             let column = item.getColumn();
-            let columnIndex = this._columnsKeys[column].findIndex((elem) => elem === item.getContents().getKey());
+            let columnIndex = this._columnsIndexes[column].findIndex((elem) => elem === (index + removedItemsIndex));
             return {
                 column,
                 columnIndex,
