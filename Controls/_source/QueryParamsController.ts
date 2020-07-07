@@ -50,12 +50,11 @@ export default class QueryParamsController implements IQueryParamsController {
         direction: 'up' | 'down',
         callback?: Function,
         config?: IBaseSourceConfig,
-        multiNavigation?: boolean,
         root?: Key
-    ): IAdditionalQueryParams {
+    ): IAdditionalQueryParams|IAdditionalQueryParams[] {
         let result;
 
-        if (multiNavigation) {
+        if (config && config.multiNavigation) {
             result = [];
             this._controllers.forEach((item) => {
                 result.push({
