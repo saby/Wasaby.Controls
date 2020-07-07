@@ -112,6 +112,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             result = this._loadItems(newOptions).then(() => {
                 this._notifyResizeAfterRender = true;
             });
+        } else if (newOptions.viewMode !== this._options.viewMode) {
+            this.createViewModel(
+                this._listModel.getCollection() as unknown as RecordSet<Model>,
+                newOptions
+            );
         }
         if (this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
             this._setSelectedItems(this._listModel, newOptions.selectedKeys);
@@ -565,7 +570,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
         let listModel: Search<Model> | Collection<Model>;
 
-        if (options.searchParam && options.searchValue) {
+        if (options.searchParam && (options.searchValue || options.viewMode === 'search')) {
             listModel = new Search({...collectionConfig,
                 nodeProperty: options.nodeProperty,
                 parentProperty: options.parentProperty,
