@@ -49,9 +49,6 @@ class BreadCrumbsView extends Control<IControlOptions> {
         if (newOptions.visibleItems !== this._items && newOptions.visibleItems.length <= 2) {
             this._items.forEach((item) => item.withOverflow = true);
         }
-        // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
-        this._onResult = this._onResult.bind(this);
-        this._menuOpener = new StickyOpener();
     }
 
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
