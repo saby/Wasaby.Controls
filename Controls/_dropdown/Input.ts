@@ -9,7 +9,6 @@ import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
 import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Stack as StackOpener} from 'Controls/popup';
 import {IGroupedOptions} from './interface/IGrouped';
 import {IIconSizeOptions} from 'Controls/interface';
 import IMenuPopup, {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
@@ -319,8 +318,7 @@ export default class Input extends BaseDropdown {
    _handleMouseDown(event: SyntheticEvent): void {
       const config = {
          templateOptions: {
-            selectorDialogResult: this._selectorTemplateResult.bind(this),
-            selectorOpener: StackOpener
+            selectorDialogResult: this._selectorTemplateResult.bind(this)
          },
          eventHandlers: {
             onOpen: this._onOpen.bind(this),
