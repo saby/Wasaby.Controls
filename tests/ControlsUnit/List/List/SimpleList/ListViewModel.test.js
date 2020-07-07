@@ -370,7 +370,7 @@ define([
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
          assert.isFalse(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
-         assert.isFalse(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
+         assert.isTrue(nextModelVersionSpy.withArgs(true, 'markedKeyChanged').called);
 
          notifySpy.resetHistory();
          nextModelVersionSpy.resetHistory();
