@@ -24,7 +24,6 @@ export default interface ICaption {
 /**
  * @name Controls/_interface/ICaption#caption
  * @cfg {String} Определяет текст заголовка контрола.
- * @remark Вы можете передать разметку в заголовок.
  * @example
  * **Пример 1.** Кнопка с заголовком.
  * <pre>
@@ -35,7 +34,6 @@ export default interface ICaption {
 /*
  * @name Controls/_interface/ICaption#caption
  * @cfg {String} Control caption text.
- * @remark You can submit the markup to the caption.
  * @example
  * Control has caption 'Dialog'.
  * <pre>
