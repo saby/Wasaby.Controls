@@ -4,7 +4,6 @@
             source="{{_viewSource}}"
             itemActions="{{_itemActions}}"
             contextMenuConfig="{{_contextMenuConfig}}"
-            size="s"
     >
         <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}" />
     </Controls.list:View>
