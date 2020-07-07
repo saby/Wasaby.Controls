@@ -565,7 +565,20 @@ define(
             dropdownController._open();
          });
 
-         describe ('menuPopupOptions', () => {
+         it('getPreparedItem', () => {
+            let dropdownController = getDropdownController(configLazyLoad);
+            let actualSource;
+
+            dropdownController._prepareItem = (item, key, source) => {
+               actualSource = source;
+            };
+
+            dropdownController._source = 'testSource';
+            dropdownController.getPreparedItem('item', 'key');
+            assert.equal(actualSource, 'testSource');
+         });
+
+         describe('menuPopupOptions', () => {
             let newConfig, dropdownController;
             beforeEach(() => {
                newConfig = clone(config);
