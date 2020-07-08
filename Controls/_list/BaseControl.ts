@@ -3755,8 +3755,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return this._loadingIndicatorState === 'all' && !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel);
         }
         return false;
-    }
-    
+    },
+
     // region Drag-N-Drop
 
     getDndListController(): DndFlatController | DndTreeController {
