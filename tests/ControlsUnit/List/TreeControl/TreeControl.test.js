@@ -2247,7 +2247,7 @@ define([
          dndController._draggingItemData = { dispItem: model.getItemBySourceKey(1) };
 
          const toggleExpandedSpy = sinon.spy(treeGrid.TreeControl._private, 'toggleExpanded');
-         await treeControl._dragEnd(null, null, model.getItemBySourceKey(2).getContents(), '');
+         await treeControl._dragEnd(null, { getItems: () => [2] }, model.getItemBySourceKey(2).getContents(), '');
 
          assert.isTrue(toggleExpandedSpy.withArgs(treeControl, model.getItemBySourceKey(2)).called);
          assert.isTrue(model.getItemBySourceKey(1).isMarked());
