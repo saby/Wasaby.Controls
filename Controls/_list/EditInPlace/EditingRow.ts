@@ -6,8 +6,10 @@ import { constants } from 'Env/Env';
 var EditingRow = Control.extend({
     _template: template,
 
-    _afterMount: function () {
-        this.activate();
+    _afterMount: function (cfg) {
+        if (!cfg.columnScroll) {
+            this.activate();
+        }
 
         // TODO: this._container может быть не HTMLElement, а jQuery-элементом, убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
         var container = this._container.get ? this._container.get(0) : this._container;
