@@ -3,7 +3,6 @@ import {IExpandableOptions, IExpandable} from 'Controls/interface';
 import ButtonTemplate = require('wml!Controls/_operations/Button/Button');
 import {default as Store} from 'Controls/Store';
 import DependenciesTimer from "Controls/Utils/DependenciesTimer";
-import {SyntheticEvent} from 'Vdom/Vdom';
 import {IoC} from 'Env/Env';
 
 export interface IOperationsButtonOptions extends IControlOptions, IExpandableOptions {
@@ -69,9 +68,6 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
       if (this._expandedCallbackId) {
          Store.unsubscribe(this._expandedCallbackId);
       }
-   }
-   protected _onClickHandler(event: SyntheticEvent): void {
-      event.stopPropagation();
    }
    protected _mouseDownHandler(): void {
       if (!this._options.readOnly) {
