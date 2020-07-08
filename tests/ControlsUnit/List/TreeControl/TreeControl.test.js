@@ -8,7 +8,8 @@ define([
    'Types/collection',
    'Types/source',
    'Controls/Application/SettingsController',
-   'Controls/source'
+   'Controls/source',
+   'Controls/listDragNDrop'
 ], function(
    treeGrid,
    listMod,
@@ -19,7 +20,8 @@ define([
    collection,
    sourceLib,
    SettingsController,
-   cSource
+   cSource,
+   listDragNDrop
 ) {
    function correctCreateTreeControl(cfg) {
       var
@@ -2201,6 +2203,53 @@ define([
 
          assert.deepEqual(nodes, [1]);
          assert.deepEqual(lists, [2]);
+      });
+
+      it('_dragEnd', async () => {
+         const
+            rawData = [{
+               key: 1,
+               parent: null,
+               node: false
+            }, {
+               key: 2,
+               parent: null,
+               node: true
+            }, {
+               key: 3,
+               parent: 2,
+               node: false
+            }],
+            cfg = {
+               columns: [],
+               source: new sourceLib.Memory({
+                  data: rawData,
+                  keyProperty: 'key'
+               }),
+               keyProperty: 'key',
+               nodeProperty: 'node',
+               parentProperty: 'parent'
+            },
+            treeControl = correctCreateTreeControl(cfg);
+
+         const model = treeControl._children.baseControl.getViewModel();
+         model.setItems(new collection.RecordSet({
+            rawData: rawData,
+            keyProperty: 'key'
+         }));
+         const dndController = new listDragNDrop.DndTreeController(model);
+         treeControl._children.baseControl._dndListController = dndController;
+         model.setMarkedKey(1, true);
+
+         assert.isTrue(model.getItemBySourceKey(1).isMarked());
+         assert.isFalse(model.isExpanded(model.getItemBySourceKey(2)));
+
+         dndController._draggingItemData = { dispItem: model.getItemBySourceKey(1) };
+
+         await treeControl._dragEnd(null, null, model.getItemBySourceKey(2).getContents(), '');
+
+         assert.isTrue(model.getItemBySourceKey(1).isMarked());
+         // assert.isTrue(model.isExpanded(model.getItemBySourceKey(2)));
       });
    });
 });
