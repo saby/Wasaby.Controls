@@ -690,7 +690,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         // то нужно раскрыть узел, чтобы маркер остался на том же элементе
         const targetCollectionItem = this._children.baseControl.getViewModel().getItemBySourceKey(item.getKey());
         const draggedItemData = dndListController.getDraggedItemData();
-        if (targetCollectionItem && draggedItemData.dispItem.isMarked()) {
+        if (targetCollectionItem && draggedItemData.dispItem.isMarked() && entity.getItems().length === 1) {
             _private.toggleExpanded(this, targetCollectionItem);
         }
     },
