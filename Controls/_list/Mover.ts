@@ -415,16 +415,21 @@ var Mover = BaseAction.extend({
         }
     },
     moveItemsWithDialog(items: []|IMoveItemsParams): void {
-        const isNewLogic = !items.forEach && !items.selected;
 
-        if (this.validate(items)) {
-            if (isNewLogic) {
-                _private.openMoveDialog(this, items);
-            } else {
-                _private.getItemsBySelection.call(this, items).addCallback((items: []) => {
-                    _private.openMoveDialog(this, _private.prepareMovedItems(this, items));
-                });
+        if (this._options.moveDialogTemplate) {
+            const isNewLogic = !items.forEach && !items.selected;
+
+            if (this.validate(items)) {
+                if (isNewLogic) {
+                    _private.openMoveDialog(this, items);
+                } else {
+                    _private.getItemsBySelection.call(this, items).addCallback((items: []) => {
+                        _private.openMoveDialog(this, _private.prepareMovedItems(this, items));
+                    });
+                }
             }
+        } else {
+            Logger.warn('Mover: Can\'t call moveItemsWithDialog! moveDialogTemplate option, is undefined', this);
         }
     }
 });
