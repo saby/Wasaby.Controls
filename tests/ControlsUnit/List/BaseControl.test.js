@@ -5630,7 +5630,9 @@ define([
 
          cfgClone.searchValue = 'test';
          instance._beforeUpdate(cfgClone);
+         assert.isTrue(instance._listViewModel._options.searchValue !== cfgClone.searchValue);
          instance._afterUpdate({});
+         assert.isTrue(instance._listViewModel._options.searchValue === cfgClone.searchValue);
 
          assert.isTrue(portionSearchReseted);
          portionSearchReseted = false;
