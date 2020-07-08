@@ -5,7 +5,7 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import ActualApi from 'Controls/_buttons/ActualApi';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {loadItems} from 'Controls/_dropdown/Util';
+import {loadItems, isLeftMouseButton} from 'Controls/_dropdown/Util';
 import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
 import {IGroupedOptions} from 'Controls/dropdown';
 import {IIconOptions, IHeightOptions, IIconSizeOptions, IIconStyleOptions} from 'Controls/interface';
@@ -170,7 +170,10 @@ export default class Button extends BaseDropdown {
       return handlerResult;
    }
 
-   _handleMouseDown(event: SyntheticEvent): void {
+   _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
+      if (!isLeftMouseButton(event)) {
+         return;
+      }
       const config = {
          eventHandlers: {
             onOpen: this._onOpen.bind(this),
