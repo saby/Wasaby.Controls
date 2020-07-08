@@ -1,9 +1,4 @@
-import {Control} from 'UI/Base';
 import {Model} from 'Types/entity';
-import {SyntheticEvent} from 'Vdom/Vdom';
-import {IBaseCollection, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
-import {ISource} from 'Controls/interface';
-import {IContextMenuConfig} from "./IContextMenuConfig";
 
 /**
  * @typedef {String} TItemActionShowType
@@ -80,7 +75,6 @@ export type TMenuButtonVisibility = 'visible'|'adaptive';
 
 /**
  * Configuration object for a button which will be shown when the user hovers over a list item.
- * TODO duplicated from IList
  */
 export interface IItemAction {
     /**
@@ -162,8 +156,6 @@ interface IShownItemAction extends IItemAction {
     showIcon?: boolean;
 }
 
-export type TActionClickCallback = (clickEvent: SyntheticEvent<MouseEvent>, action: IItemAction, contents: Model) => void;
-
 export type TItemActionVisibilityCallback = (action: IItemAction, item: unknown) => boolean;
 
 export type TEditArrowVisibilityCallback = (item: unknown) => boolean;
@@ -171,55 +163,4 @@ export type TEditArrowVisibilityCallback = (item: unknown) => boolean;
 export interface IItemActionsContainer {
     all: IItemAction[];
     showed: IShownItemAction[];
-}
-
-export interface IItemActionsItem {
-    getActions(): IItemActionsContainer;
-    getContents(): Model;
-    setActions(actions: IItemActionsContainer, silent?: boolean): void;
-    setActive(active: boolean, silent?: boolean): void;
-    isActive(): boolean;
-    setSwiped(swiped: boolean, silent?: boolean): void;
-    isSwiped(): boolean;
-    isRightSwiped(): boolean;
-    isEditing(): boolean;
-}
-
-export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
-    setEventRaising?(raising: boolean, analyze?: boolean): void;
-    isActionsAssigned(): boolean;
-    setActionsAssigned(assigned: boolean): void;
-    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void;
-    getActionsTemplateConfig(): IItemActionsTemplateConfig;
-    setSwipeConfig(config: ISwipeConfig): void;
-    getSwipeConfig(): ISwipeConfig;
-    setSwipeAnimation(state: ANIMATION_STATE): void;
-    getSwipeAnimation(): ANIMATION_STATE;
-
-    /**
-     * Было решено переместить get/setActiveItem в коллекцию, т.к.
-     * в TileView так организована работа с isHovered, isScaled и isAnimated и
-     * мы не можем снять эти состояния при клике внутри ItemActions
-     * @param item
-     */
-    setActiveItem(item: IItemActionsItem): void;
-    getActiveItem(): IItemActionsItem;
-    isEditing(): boolean;
-}
-
-export interface IMenuTemplateOptions extends IContextMenuConfig {
-    source: ISource;
-    keyProperty: string;
-    parentProperty: string;
-    nodeProperty: string;
-    dropdownClassName: string;
-    closeButtonVisibility: boolean;
-    root: number | string;
-    showHeader: boolean;
-    iconSize: TItemActionsSize;
-    headConfig?: {
-        caption: string;
-        icon: string;
-        iconSize: TItemActionsSize;
-    };
 }

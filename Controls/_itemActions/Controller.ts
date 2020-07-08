@@ -4,13 +4,12 @@ import { Memory } from 'Types/source';
 import { isEqual } from 'Types/object';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
-import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
+import { TItemKey, ISwipeConfig, ANIMATION_STATE, IBaseCollection, IItemActionsTemplateConfig } from 'Controls/display';
+import { IStickyPopupOptions } from 'Controls/popup';
+import { IMenuPopupOptions } from 'Controls/menu';
 import {
-    IItemActionsCollection,
     TItemActionVisibilityCallback,
-    IItemActionsItem,
     IItemActionsContainer,
-    IMenuTemplateOptions,
     TItemActionShowType,
     TItemActionsSize,
     IItemAction,
@@ -19,7 +18,6 @@ import {
     TEditArrowVisibilityCallback,
     TActionDisplayMode, TMenuButtonVisibility
 } from './interface/IItemActions';
-import { IStickyPopupOptions } from 'Controls/popup';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
 import { Utils } from './Utils';
@@ -32,6 +30,40 @@ const DEFAULT_ACTION_CAPTION_POSITION = 'none';
 const DEFAULT_ACTION_POSITION = 'inside';
 
 const DEFAULT_ACTION_SIZE = 'm';
+
+export interface IItemActionsItem {
+    getActions(): IItemActionsContainer;
+    getContents(): Model;
+    setActions(actions: IItemActionsContainer, silent?: boolean): void;
+    setActive(active: boolean, silent?: boolean): void;
+    isActive(): boolean;
+    setSwiped(swiped: boolean, silent?: boolean): void;
+    isSwiped(): boolean;
+    isRightSwiped(): boolean;
+    isEditing(): boolean;
+}
+
+export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
+    setEventRaising?(raising: boolean, analyze?: boolean): void;
+    isActionsAssigned(): boolean;
+    setActionsAssigned(assigned: boolean): void;
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void;
+    getActionsTemplateConfig(): IItemActionsTemplateConfig;
+    setSwipeConfig(config: ISwipeConfig): void;
+    getSwipeConfig(): ISwipeConfig;
+    setSwipeAnimation(state: ANIMATION_STATE): void;
+    getSwipeAnimation(): ANIMATION_STATE;
+
+    /**
+     * Было решено переместить get/setActiveItem в коллекцию, т.к.
+     * в TileView так организована работа с isHovered, isScaled и isAnimated и
+     * мы не можем снять эти состояния при клике внутри ItemActions
+     * @param item
+     */
+    setActiveItem(item: IItemActionsItem): void;
+    getActiveItem(): IItemActionsItem;
+    isEditing(): boolean;
+}
 
 export interface IItemActionsControllerOptions {
     /**
@@ -238,7 +270,7 @@ export class Controller {
         const isActionMenu = !!parentAction && !parentAction._isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
 
-        let menuConfig: IMenuConfig = {
+        let menuConfig: IStickyPopupOptions = {
             opener,
             template: 'Controls/menu:Popup',
             actionOnScroll: 'close',
@@ -277,7 +309,7 @@ export class Controller {
      * @param menuActions
      * @private
      */
-    private _getActionsMenuTemplateConfig(isActionMenu: boolean, parentAction: IItemAction, menuActions: IItemAction[]): IMenuTemplateOptions {
+    private _getActionsMenuTemplateConfig(isActionMenu: boolean, parentAction: IItemAction, menuActions: IItemAction[]): IMenuPopupOptions {
         const source = new Memory({
             data: menuActions,
             keyProperty: 'id'
@@ -341,7 +373,7 @@ export class Controller {
      *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
      * @private
      */
-    private _updateItemActions(editingItem?: CollectionItem<Model>): Array<number | string> {
+    private _updateItemActions(editingItem?: IItemActionsItem): Array<number | string> {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
         const assignActionsOnItem = (item) => {
