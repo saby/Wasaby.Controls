@@ -103,7 +103,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
       if (eventName) {
          event.stopPropagation();
-         this._notify(eventName, [item]);
+         this._notify(eventName, [item, event]);
       }
    }
 
