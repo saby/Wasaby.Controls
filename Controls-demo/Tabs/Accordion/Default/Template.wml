@@ -7,4 +7,12 @@
             items="{{_items}}"
             >
     </Controls.tabs:Accordion>
+    <div>Accordion 2</div>
+    <Controls.tabs:Accordion2
+            class="controlsDemo__height500"
+            bind:selectedKey="_selectedKey"
+            keyProperty="id"
+            items="{{_items}}"
+            >
+    </Controls.tabs:Accordion2>
 </div>
