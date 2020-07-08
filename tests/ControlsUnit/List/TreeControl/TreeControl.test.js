@@ -2205,7 +2205,7 @@ define([
          assert.deepEqual(lists, [2]);
       });
 
-      it('_dragEnd', async () => {
+      it('_dragEnd', async() => {
          const
             rawData = [{
                key: 1,
@@ -2246,9 +2246,12 @@ define([
 
          dndController._draggingItemData = { dispItem: model.getItemBySourceKey(1) };
 
+         const toggleExpandedSpy = sinon.spy(treeGrid.TreeControl._private, 'toggleExpanded');
          await treeControl._dragEnd(null, null, model.getItemBySourceKey(2).getContents(), '');
 
+         assert.isTrue(toggleExpandedSpy.withArgs(treeControl, model.getItemBySourceKey(2)).called);
          assert.isTrue(model.getItemBySourceKey(1).isMarked());
+         // TODO _private.toggleExpanded работает асинхронно, но await не помогает дождаться
          // assert.isTrue(model.isExpanded(model.getItemBySourceKey(2)));
       });
    });

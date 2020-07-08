@@ -680,7 +680,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         dndListController.stopCountDownForExpandNode();
     },
 
-    async _dragEnd(e: SyntheticEvent, entity: ItemsEntity, item: Model, position: string): Promise<void> {
+    _dragEnd(e: SyntheticEvent, entity: ItemsEntity, item: Model, position: string): void {
         const dndListController = this._children.baseControl.getDndListController();
         if (dndListController instanceof DndTreeController) {
             dndListController.stopCountDownForExpandNode();
