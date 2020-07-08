@@ -2,7 +2,7 @@ import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
 import * as Utils from 'Types/util';
-import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
+import {prepareEmpty, loadItems, isLeftMouseButton} from 'Controls/_dropdown/Util';
 import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import Controller from 'Controls/_dropdown/_Controller';
 import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
@@ -154,7 +154,10 @@ class ComboBox extends BaseDropdown {
       }
    }
 
-   _handleMouseDown(event: SyntheticEvent): void {
+   _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
+      if (!isLeftMouseButton(event)) {
+         return;
+      }
       if (this._popupId) {
          this._controller.closeMenu();
       } else {

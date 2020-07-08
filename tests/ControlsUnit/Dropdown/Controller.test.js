@@ -423,7 +423,10 @@ define(
             dropdownController._items = itemsRecords.clone();
             dropdownController._source = 'testSource';
 
-            popup.Sticky.openPopup = () => {opened = true; };
+            sandbox.replace(popup.Sticky, 'openPopup', () => {
+               opened = true;
+               return Promise.resolve(true);
+            });
             dropdownController._sourceController = { hasMoreData: () => false, load: () => Deferred.success(itemsRecords.clone()) };
             dropdownController._open().then(function() {
                assert.isTrue(!!dropdownController._menuSource);
@@ -631,53 +634,63 @@ define(
             assert.isFalse(opened);
          });
 
-         it('openMenu', async() => {
+         describe('openMenu', () => {
             let dropdownController = getDropdownController(config);
             let openConfig;
 
-            dropdownController._sourceController = { hasMoreData: () => false };
-            dropdownController._source = 'testSource';
-            dropdownController._items = new collection.RecordSet({
-               keyProperty: 'id',
-               rawData: items
+            before(() => {
+               dropdownController._sourceController = { hasMoreData: () => false };
+               dropdownController._source = 'testSource';
+               dropdownController._items = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: items
+               });
+               sandbox.replace(popup.Sticky, 'openPopup', (popupConfig) => {
+                  openConfig = popupConfig;
+                  return Promise.resolve(true);
+               });
             });
 
-            sandbox.replace(popup.Sticky, 'openPopup', (popupConfig) => {
-               openConfig = popupConfig;
-               return Promise.resolve(true);
+            it('simple', async() => {
+               await dropdownController.openMenu({ testOption: 'testValue' });
+               assert.equal(openConfig.testOption, 'testValue');
             });
 
-            await dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
+            describe('one item', () => {
+               beforeEach(() => {
+                  dropdownController._items = new collection.RecordSet({
+                     keyProperty: 'id',
+                     rawData: [{
+                        id: 1,
+                        title: 'testTitle'
+                     }]
+                  });
+                  dropdownController._options.footerTemplate = null;
+                  dropdownController._options.emptyText = null;
+                  openConfig = null;
+               });
 
-            dropdownController._items = new collection.RecordSet({
-               keyProperty: 'id',
-               rawData: [{
-                  id: 1,
-                  title: 'testTitle'
-               }]
+               it('with footer', async() => {
+                  dropdownController._options.footerTemplate = {};
+
+                  await dropdownController.openMenu({ testOption: 'testValue' });
+                  assert.equal(openConfig.testOption, 'testValue');
+               });
+
+               it('with emptyText', async() => {
+                  dropdownController._options.emptyText = '123';
+
+                  await dropdownController.openMenu({ testOption: 'testValue' });
+                  assert.equal(openConfig.testOption, 'testValue');
+               });
+
+               it('simple', async() => {
+                  await dropdownController.openMenu().then((items) => {
+                     assert.equal(items[0].get('id'), 1);
+                  });
+                  assert.equal(openConfig, null);
+               });
             });
-            openConfig = null;
-            dropdownController._options.footerTemplate = {};
-
-            await dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
-
-            dropdownController._options.footerTemplate = null;
-            dropdownController._options.emptyText = '123';
-            openConfig = null;
-
-            await dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
-
-            dropdownController._options.emptyText = null;
-            openConfig = null;
-
-            await dropdownController.openMenu().then((items) => {
-               assert.equal(items[0].get('id'), 1);
-            });
-            assert.equal(openConfig, null);
-
          });
 
          it('closeMenu', () => {
