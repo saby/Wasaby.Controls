@@ -188,7 +188,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                _options: {
                   multiSelectVisibility: 'visible'
                }
-            }, 1, 1), '1_1_0');
+            }, 1, 1), '1_1_0_MS');
          });
 
          it('isNeedToHighlight', function() {
