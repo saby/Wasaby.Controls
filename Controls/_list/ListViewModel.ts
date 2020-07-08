@@ -760,7 +760,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setMultiSelectVisibility: function(multiSelectVisibility) {
         this._options.multiSelectVisibility = multiSelectVisibility;
-        this._nextModelVersion(true);
+        this._nextModelVersion();
     },
 
     getMultiSelectVisibility: function() {

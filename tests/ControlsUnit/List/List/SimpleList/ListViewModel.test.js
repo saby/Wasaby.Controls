@@ -469,7 +469,7 @@ define([
          var iv = new lists.ListViewModel(cfg);
          var curPrefixItemVersion = iv._prefixItemVersion;
          iv.setMultiSelectVisibility('visible');
-         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
+         assert.equal(iv._prefixItemVersion, curPrefixItemVersion + 1);
       });
 
       it('setSwipeItem', function() {
