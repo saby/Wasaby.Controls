@@ -5503,31 +5503,35 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: lists.ListViewModel,
+            viewModelConstructor: treeGrid.TreeViewModel,
             keyProperty: 'id',
-            source: source
+            source: source,
+            selectedKeys: [],
+            excludedKeys: [],
+            parentProperty: 'node'
          };
          let instance = new lists.BaseControl(cfg);
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
 
-         let clearSelectionCalled = false;
-         instance._selectionController = {
-            update() {},
-            clearSelection() { clearSelectionCalled = true; },
-            handleReset() {},
-            isAllSelected() { return false; }
-         };
+         const notifySpy = sinon.spy(instance, '_notify');
 
+         instance._createSelectionController();
          let cfgClone = { ...cfg, root: 'newvalue' };
          instance._beforeUpdate(cfgClone);
-         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
 
-         instance._selectionController.isAllSelected = function() { return true; };
-         cfgClone = { ...cfg, root: 'newvalue1' };
+         cfgClone = { ...cfg, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
          instance._beforeUpdate(cfgClone);
-         assert.isTrue(clearSelectionCalled);
+         instance.saveOptions(cfgClone);
+
+         cfgClone = { ...cfg, root: 'newvalue1', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
       it('_beforeUpdate with new searchValue', async function() {
