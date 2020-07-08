@@ -14,7 +14,6 @@ import {RecordSet} from 'Types/collection';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
-import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Контроллер для выпадающих списков.
@@ -51,19 +50,6 @@ export default class _Controller implements IDropdownController {
 
    constructor(options: IDropdownControllerOptions) {
       this._options = options;
-   }
-
-   protected _clickHandler(event: SyntheticEvent): void {
-      // stop bubbling event, so the list does not handle click event.
-      event.stopPropagation();
-   }
-
-   protected _mouseDownHandler(): void {
-      if (this._popupId) {
-         this.closeDropdownList(this);
-      } else {
-         this._open();
-      }
    }
 
    loadItems(): Promise<RecordSet> {
