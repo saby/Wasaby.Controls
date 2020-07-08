@@ -397,12 +397,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._notify('menuOpened', [], {bubbling: true});
             this._openMenu(this._getMenuConfig());
         }
-        /**
-         * Stop bubbling of 'click' after opening the menu.
-         * Nobody should have to catch the 'click'', if toolbar handled it.
-         * For example, list can catch this event and generate 'itemClick'.
-         */
-        event.stopPropagation();
     }
     protected _onClickHandler(event: SyntheticEvent): void {
         event.stopPropagation();
