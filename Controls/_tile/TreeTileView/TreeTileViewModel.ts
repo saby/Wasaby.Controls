@@ -97,7 +97,6 @@ var TreeTileViewModel = TreeViewModel.extend({
         var opts = this._tileModel.getTileItemData();
         opts.defaultFolderWidth = DEFAULT_FOLDER_WIDTH;
         if (this._options.tileSize) {
-            opts.getTileSizes = this._tileModel.getTileSizes;
             opts.tileSize = this._options.tileSize;
         }
         return opts;

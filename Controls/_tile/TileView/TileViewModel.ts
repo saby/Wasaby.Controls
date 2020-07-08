@@ -79,7 +79,7 @@ var TileViewModel = ListViewModel.extend({
     },
 
     getTileItemData: function () {
-        return {
+        const resultData =  {
             tileMode: this._tileMode,
             itemsHeight: this._itemsHeight,
             imageProperty: this._options.imageProperty,
@@ -87,6 +87,10 @@ var TileViewModel = ListViewModel.extend({
             defaultShadowVisibility: 'visible',
             itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT
         };
+        if (this._options.tileSize) {
+            resultData.getTileSizes = this.getTileSizes;
+        }
+        return resultData;
     },
 
     setTileMode: function (tileMode) {
