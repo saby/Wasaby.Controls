@@ -14,7 +14,7 @@ import {RecordSet} from 'Types/collection';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
-import DependenciesTimer from 'Controls/Utils/DependenciesTimer';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Контроллер для выпадающих списков.
@@ -48,7 +48,6 @@ export default class _Controller implements IDropdownController {
    protected _items: RecordSet = null;
    protected _loadItemsTempPromise: Promise<any> = null;
    protected _options: IDropdownControllerOptions = null;
-   protected _dependenciesTimer: DependenciesTimer = null;
 
    constructor(options: IDropdownControllerOptions) {
       this._options = options;
@@ -65,16 +64,6 @@ export default class _Controller implements IDropdownController {
       } else {
          this._open();
       }
-   }
-
-   _mouseEnterHandler(): void {
-      if (!this._options.readOnly) {
-         this._dependenciesTimer.start(this.loadDependencies.bind(this));
-      }
-   }
-
-   _mouseLeaveHandler(): void {
-      this._dependenciesTimer.stop();
    }
 
    loadItems(): Promise<RecordSet> {
