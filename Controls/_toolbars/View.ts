@@ -156,12 +156,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         this._closeHandler = this._closeHandler.bind(this);
     }
 
-    protected _afterMount(): void {
-        if (!this._dependenciesTimer) {
-            this._dependenciesTimer = new DependenciesTimer();
-        }
-    }
-
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
         return {...this._menuOptions, ...{
@@ -407,11 +401,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
     protected _mouseEnterHandler() {
         if (!this._options.readOnly) {
+            if (!this._dependenciesTimer) {
+                this._dependenciesTimer = new DependenciesTimer();
+            }
             this._dependenciesTimer.start(this._loadDependencies);
         }
     }
     protected _mouseLeaveHandler(): void {
-        this._dependenciesTimer.stop();
+        this._dependenciesTimer?.stop();
     }
     private _loadDependencies(): Promise<unknown> {
         try {
