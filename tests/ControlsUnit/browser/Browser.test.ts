@@ -72,4 +72,25 @@ describe('Controls/browser:Browser', () => {
 
     });
 
+    describe('_beforeUpdate', () => {
+
+        describe('searchController', () => {
+
+            it('context in searchController updated', async () => {
+                const options = getBrowserOptions();
+                const filter = {
+                    testField: 'testValue'
+                };
+                options.filter = filter;
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+
+                browser._beforeUpdate(options);
+                deepStrictEqual(browser._searchController._dataOptions.filter, filter);
+            });
+
+        });
+
+    });
+
 });
