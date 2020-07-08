@@ -34,6 +34,7 @@
                         itemData="{{_options.itemData}}"/>
          </ws:if>
          <ws:partial template="footerTemplate"
+                     footerTemplate="{{_options.footerTemplate}}"
                      itemData="{{_options.itemData}}"/>
       </div>
    </div>
