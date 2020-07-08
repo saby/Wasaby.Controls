@@ -1537,7 +1537,7 @@ var
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const index = current.stickyProperties.indexOf(stickyProperty);
                     const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
-                    if ((stickyProperty === ladderProperty || !stickyProperty) && self._ladder.stickyLadder[current.index][ladderProperty].ladderLength >= 1) {
+                    if ((stickyProperty === ladderProperty || !stickyProperty) && self._ladder.stickyLadder[current.index][ladderProperty]?.ladderLength >= 1) {
                         result += ' controls-Grid__row-cell__ladder-content_hiddenForLadder_show-on-drag';
                     } else {
                         result += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
@@ -1549,6 +1549,10 @@ var
                     }
                     if (stickyProperty === ladderProperty && index === 1 && hasMainCell) {
                         result += ' controls-Grid__row-cell__ladder-content_additional-with-main';
+                    }
+                } else {
+                    if (!(self._ladder.ladder[current.index][ladderProperty]?.ladderLength >= 1)) {
+                        result += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
                     }
                 }
                 return result;
