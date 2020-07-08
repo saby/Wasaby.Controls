@@ -6,11 +6,15 @@
    width: 100%;
    position: relative;
 }
-.controls-Grid_dragging_process .controls-Grid__row-ladder-cell {
-   display: none;
-}
-.controls-Grid_dragging_process .controls-Grid__row-cell__content_ladderHeader {
-   visibility: visible;
+.controls-Grid_dragging_process {
+   .controls-Grid__row-ladder-cell {
+      display: none;
+   }
+
+   .controls-Grid__row-cell__content_hiddenForLadder .controls-Grid__row-cell__ladder-content,
+   .controls-Grid__row-cell__content_ladderHeader {
+      visibility: visible;
+   }
 }
 .controls-GridView__itemV_marker-default_theme-@{themeName} {
    position: absolute;
