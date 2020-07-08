@@ -254,12 +254,14 @@ export default class Input extends BaseDropdown {
    protected _hasMoreText: string = '';
    protected _selectedItems = '';
 
-   _beforeMount(options: IInputOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
+   _beforeMount(options: IInputOptions,
+                context: object,
+                receivedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._prepareDisplayState = this._prepareDisplayState.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
 
-      return loadItems(this._controller, recievedState, options.source);
+      return loadItems(this._controller, receivedState, options.source);
    }
 
    _beforeUpdate(options: IInputOptions): void {

@@ -90,7 +90,9 @@ class ComboBox extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
 
-   _beforeMount(options: IComboboxOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
+   _beforeMount(options: IComboboxOptions,
+                context: object,
+                receivedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
@@ -99,7 +101,7 @@ class ComboBox extends BaseDropdown {
       };
 
       this._controller = new Controller(this._getControllerOptions(options));
-      return loadItems(this._controller, recievedState, options.source);
+      return loadItems(this._controller, receivedState, options.source);
    }
 
    _beforeUpdate(options: IComboboxOptions): void {
