@@ -95,14 +95,16 @@ export default class Button extends BaseDropdown {
    protected _tmplNotify: Function = tmplNotify;
    protected _hasItems: boolean = true;
 
-   _beforeMount(options: IButtonOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
+   _beforeMount(options: IButtonOptions,
+                context: object,
+                receivedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._offsetClassName = cssStyleGeneration(options);
       this._updateState(options);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
 
       if (!options.lazyItemsLoading) {
-         return loadItems(this._controller, recievedState, options.source);
+         return loadItems(this._controller, receivedState, options.source);
       }
    }
 
