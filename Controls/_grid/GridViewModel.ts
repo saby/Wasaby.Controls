@@ -1555,7 +1555,7 @@ var
                         result += ' controls-Grid__row-cell__ladder-content_additional-with-main';
                     }
                 }
-                if (!hiddenForLadder && !(self._ladder.ladder[current.index][ladderProperty].ladderLength && self._ladder.ladder[current.index][ladderProperty].ladderLength >= 1)) {
+                if (!hiddenForLadder && !self._ladder.ladder[current.index][ladderProperty].ladderLength) {
                     result += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
                 }
                 
