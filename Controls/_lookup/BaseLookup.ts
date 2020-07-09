@@ -10,6 +10,7 @@ type LookupReceivedState = RecordSet|null;
 
 export default abstract class BaseLookup extends Control {
     protected _lookupController: LookupController;
+    protected _items: RecordSet|List<Model>;
 
     protected _beforeMount(
         options: ILookupBaseControllerOptions,
@@ -19,15 +20,22 @@ export default abstract class BaseLookup extends Control {
         this._lookupController = new LookupController(options);
 
         if (receivedState && !isEmpty(receivedState)) {
+            this._items = receivedState;
             this._lookupController.setItems(receivedState);
         } else if (options.selectedKeys.length) {
-            return this._lookupController.loadItems();
+            return this._lookupController.loadItems().then((items) => {
+                this._items = items;
+                return items;
+            });
+        } else {
+            this._items = this._lookupController.getItems();
         }
     }
 
     protected _beforeUpdate(newOptions: ILookupBaseControllerOptions): void {
         const updateResult = this._lookupController.update(newOptions);
         const updateResultCallback = () => {
+            this._items = this._lookupController.getItems();
             this._notifyChanges();
         };
 

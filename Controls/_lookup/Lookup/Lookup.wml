@@ -2,7 +2,7 @@
     <Controls._lookup.Lookup.LookupView
             name="view"
             scope="{{_options}}"
-            items="{{_lookupController.getItems()}}"
+            items="{{_items}}"
             on:showSelector="_showSelectorHandler()"
             on:addItem="_addItemHandler()"
             on:removeItem="_removeItemHandler()"

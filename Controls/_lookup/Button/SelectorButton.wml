@@ -1,9 +1,9 @@
 <div class="controls-Selectorbutton
-            {{_lookupController.getItems().getCount() === 0 ? ' controls-Selectorbutton_empty'}}
+            {{_items.getCount() === 0 ? ' controls-Selectorbutton_empty'}}
             {{_options.validationStatus!== 'valid' ? 'controls-invalid-container'}}">
-    <ws:if data="{{_lookupController.getItems().getCount()}}">
+    <ws:if data="{{_items.getCount()}}">
         <Controls._lookup.SelectedCollection
-                items="{{_lookupController.getItems()}}"
+                items="{{_items}}"
                 maxVisibleItems="{{_options.maxVisibleItems}}"
                 displayProperty="{{_options.displayProperty}}"
                 multiLine="{{true}}"
@@ -21,7 +21,7 @@
         <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
             <span on:click="_showSelectorHandler()" attr:class="controls-Selectorbutton_button-more">{{_options.showSelectorCaption}}</span>
         </ws:if>
-        <ws:if data="{{_lookupController.getItems().getCount() > 1 && !_options.readOnly}}">
+        <ws:if data="{{_items.getCount() > 1 && !_options.readOnly}}">
             <span on:click="_reset()" attr:class="controls-Selectorbutton__button-reset">{[Очистить]}</span>
         </ws:if>
     </ws:if>
