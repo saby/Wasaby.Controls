@@ -540,6 +540,7 @@
    min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
    flex-shrink: 1;
    box-sizing: border-box;
+   height: 100%;
 }
 
 .controls-Grid__row-cell_cursor-default {
@@ -564,7 +565,7 @@
    // иначе все position: absolute элементы внутри position: sticky
    // начинают сроиться относительно родителя уровнем выше
    // translateZ лечит высоту, но ломает ширину внутри sticky контейнер
-   // translateY правит обе проблемы, с ним нормализуетя и высота и ширина, поэтому используем его   
+   // translateY правит обе проблемы, с ним нормализуетя и высота и ширина, поэтому используем его
    transform: translateY(0);
 }
 
