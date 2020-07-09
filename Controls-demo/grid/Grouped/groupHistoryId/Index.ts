@@ -11,8 +11,6 @@ interface IItem {
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
-   protected _items: any = {};
-   protected _demoSelectedKey: string = '0';
    protected _viewSource: Memory;
    protected _columns: IColumn[] = [
       {
@@ -30,9 +28,10 @@ export default class extends Control {
    ];
    protected _groupHistoryId: string = '';
    protected readonly GROUP_HISTORY_ID_NAME: string = 'MY_NEWS';
-   _groupingKeyCallback = (item: IItem): string => {
+
+   protected _groupingKeyCallback = (item: IItem): string => {
       return item.get('fullName');
-   };
+   }
 
    protected _beforeMount(): void {
       Config.UserConfig.setParam('LIST_COLLAPSED_GROUP_' + this.GROUP_HISTORY_ID_NAME, JSON.stringify(['Крайнов Дмитрий']));
