@@ -14,7 +14,7 @@
  *          keyProperty="id"
  *          displayProperty="title">
  *       <ws:itemTemplate>
- *          <ws:partial template="Controls.menu:ItemTemplate">
+ *          <ws:partial template="Controls/menu:ItemTemplate">
  *              <ws:additionalTextTemplate>
  *                  <div>{{itemTemplate.itemData.item.get('comment')}}</div>
  *              </ws:additionalTextTemplate>

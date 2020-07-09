@@ -94,9 +94,11 @@ interface IHeaderModel {
 var
     _private = {
         calcItemColumnVersion: function(self, itemVersion, columnIndex, index) {
-            let
-                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
-                version = `${itemVersion}_${self._columnsVersion}_${hasMultiselect ? columnIndex - 1 : columnIndex}`;
+            const hasMultiselect = self._options.multiSelectVisibility !== 'hidden';
+            let version = `${itemVersion}_${self._columnsVersion}_${hasMultiselect ? columnIndex - 1 : columnIndex}`;
+            if (hasMultiselect && columnIndex === 1) {
+                version += '_MS';
+            }
 
             version += _private.calcLadderVersion(self._ladder, index);
 
@@ -1540,9 +1542,18 @@ var
             };
             current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
                 let result = '';
+                let hiddenForLadder = false;
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const index = current.stickyProperties.indexOf(stickyProperty);
                     const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
+                    if (self._ladder.stickyLadder[current.index][ladderProperty]) {
+                        if ((stickyProperty === ladderProperty || !stickyProperty) && self._ladder.stickyLadder[current.index][ladderProperty].ladderLength >= 1) {
+                            result += ' controls-Grid__row-cell__ladder-content_hiddenForLadder_show-on-drag';
+                        } else {
+                            result += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
+                        }
+                        hiddenForLadder = true;
+                    }
                     if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
                         index === 1 && !hasMainCell ||
                         index === 0 && hasMainCell)) {
@@ -1552,6 +1563,10 @@ var
                         result += ' controls-Grid__row-cell__ladder-content_additional-with-main';
                     }
                 }
+                if (!hiddenForLadder && !self._ladder.ladder[current.index][ladderProperty].ladderLength) {
+                    result += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
+                }
+                
                 return result;
             };
 

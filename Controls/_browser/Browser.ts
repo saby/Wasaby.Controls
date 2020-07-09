@@ -48,7 +48,6 @@ export default class Browser extends Control {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
-        this._createSearchController(options, context);
         this._operationsController = this._createOperationsController(options);
 
         this._filter = options.filter;
@@ -86,7 +85,10 @@ export default class Browser extends Control {
             this._dataController.updateContext(this._dataOptionsContext);
         }
         this._operationsController.update(newOptions);
-        this._searchController.update(this._getSearchControllerOptions(newOptions), context);
+        this._searchController.update(
+            this._getSearchControllerOptions(newOptions),
+            {dataOptions: this._dataOptionsContext}
+        );
     }
 
     protected _beforeUnmount(): void {

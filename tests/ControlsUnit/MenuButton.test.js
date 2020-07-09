@@ -391,6 +391,16 @@ define(
             menu._beforeUpdate(newOptions);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-large_duplicate_popup');
          });
+
+         it('_dataLoadCallback', () => {
+            let loadedItems = new collection.RecordSet({ rawData: [] });
+            menu._dataLoadCallback(loadedItems);
+            assert.isFalse(menu._hasItems);
+
+            loadedItems = new collection.RecordSet({ rawData: [{ id: 1 }] });
+            menu._dataLoadCallback(loadedItems);
+            assert.isTrue(menu._hasItems);
+         });
       });
    }
 );

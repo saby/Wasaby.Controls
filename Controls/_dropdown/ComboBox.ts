@@ -117,6 +117,7 @@ class ComboBox extends BaseDropdown {
       const controllerOptions = getDropdownControllerOptions(options);
       return { ...controllerOptions, ...{
             selectedKeys: [options.selectedKey],
+            dataLoadCallback: options.dataLoadCallback,
             marker: false,
             popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
                            + ' controls-ComboBox-popup_theme-' + options.theme,
