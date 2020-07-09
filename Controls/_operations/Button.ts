@@ -2,8 +2,9 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IExpandableOptions, IExpandable} from 'Controls/interface';
 import ButtonTemplate = require('wml!Controls/_operations/Button/Button');
 import {default as Store} from 'Controls/Store';
-import DependenciesTimer from "Controls/Utils/DependenciesTimer";
+import {DependencyTimer, isLeftMouseButton} from "Controls/Utils/FastOpen";
 import {IoC} from 'Env/Env';
+import {SyntheticEvent} from "Vdom/Vdom";
 
 export interface IOperationsButtonOptions extends IControlOptions, IExpandableOptions {
 }
@@ -45,7 +46,7 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
    protected _expanded: boolean = false;
    protected _expandedCallbackId: string;
 
-   private _dependenciesTimer: DependenciesTimer = null;
+   private _dependenciesTimer: DependencyTimer = null;
    private _loadOperationsPanelPromise: Promise<unknown> = null;
 
    protected _expandedChanged(value): void {
@@ -65,7 +66,10 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
          Store.unsubscribe(this._expandedCallbackId);
       }
    }
-   protected _mouseDownHandler(): void {
+   protected _mouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
+      if (isLeftMouseButton(event)) {
+         return;
+      }
       if (!this._options.readOnly) {
          this._notify('expandedChanged', [!this._options.expanded]);
          if (this._options.useStore) {
@@ -76,7 +80,7 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
    protected _mouseEnterHandler(): void {
       if (!this._options.readOnly) {
          if (!this._dependenciesTimer) {
-            this._dependenciesTimer = new DependenciesTimer();
+            this._dependenciesTimer = new DependencyTimer();
          }
          this._dependenciesTimer.start(this._loadDependencies);
       }

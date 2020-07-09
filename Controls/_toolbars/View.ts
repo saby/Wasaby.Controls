@@ -30,7 +30,7 @@ import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
 import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
-import DependenciesTimer from "Controls/Utils/DependenciesTimer";
+import {DependencyTimer, isLeftMouseButton} from "Controls/Utils/FastOpen";
 import {IoC} from "Env/Env";
 
 type TItem = Record;
@@ -135,7 +135,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     protected _template: TemplateFunction = template;
 
-    protected _dependenciesTimer: DependenciesTimer = null;
+    protected _dependenciesTimer: DependencyTimer = null;
     private _loadViewPromise: Promise<unknown> = null;
 
     _children: {
@@ -386,7 +386,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return getButtonTemplateOptionsByItem(item, this._options);
     }
 
-    protected _mouseDownHandler(event: SyntheticEvent<UIEvent>): void {
+    protected _mouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
+        if (isLeftMouseButton(event)) {
+            return;
+        }
         if (!this._options.readOnly) {
             if (!this._isLoadMenuItems) {
                 this._setMenuItems();
@@ -402,7 +405,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _mouseEnterHandler() {
         if (!this._options.readOnly) {
             if (!this._dependenciesTimer) {
-                this._dependenciesTimer = new DependenciesTimer();
+                this._dependenciesTimer = new DependencyTimer();
             }
             this._dependenciesTimer.start(this._loadDependencies);
         }

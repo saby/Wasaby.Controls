@@ -1,7 +1,8 @@
+import {SyntheticEvent} from "Vdom/Vdom";
 
 const PRELOAD_DEPENDENCIES_HOVER_DELAY = 80;
 
-export default class DependenciesTimer {
+export class DependencyTimer {
     protected _loadDependenciesTimer: number;
 
     start(callback: Function): void {
@@ -11,5 +12,8 @@ export default class DependenciesTimer {
     stop(): void {
         clearTimeout(this._loadDependenciesTimer);
     }
+}
 
+export function isLeftMouseButton(event: SyntheticEvent<MouseEvent>): boolean {
+    return event.nativeEvent.button === 0;
 }
