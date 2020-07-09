@@ -1825,7 +1825,7 @@ const _private = {
     // region Multiselection
 
     createSelectionController(self: any, options: any): SelectionController {
-        if (!self._listViewModel || !self._items) {
+        if (!self._listViewModel || !self._listViewModel.getCollection()) {
             return null;
         }
 

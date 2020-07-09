@@ -3243,43 +3243,26 @@ define([
       });
 
       it('_onCheckBoxClick', function() {
-         var rs = new collection.RecordSet({
+         const cfg = {
             keyProperty: 'id',
-            rawData: data
-         });
-
-         var source = new sourceLib.Memory({
-            keyProperty: 'id',
-            data: data
-         });
-
-         var cfg = {
-            selectedKeys: [1, 3],
             viewName: 'Controls/List/ListView',
             source: source,
+            viewModelConstructor: lists.ListViewModel,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
                items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            },
-            viewModelConstructor: lists.ListViewModel,
-            navigation: {
-               source: 'page',
-               sourceConfig: {
-                  pageSize: 6,
-                  page: 0,
-                  hasMore: false
-               },
-               view: 'infinity',
-               viewConfig: {
-                  pagingMode: 'direct'
-               }
+               keyProperty: 'id'
             }
          };
          var ctrl = new lists.BaseControl(cfg);
+         ctrl._selectionController = {
+            isAllSelected: () => true,
+            clearSelection: () => null,
+            toggleItem: () => null,
+            updateModel: () => null
+         };
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._notify = function(e, args) {
@@ -3287,24 +3270,11 @@ define([
             assert.equal(args[0], 2);
             assert.equal(args[1], 0);
          };
-         ctrl._selectionController = {
-            toggleItem: function(key) {
-                  assert.equal(key, 2);
-            },
-            handleReset: function() {}
-         };
          ctrl._onCheckBoxClick({}, 2, 0);
          ctrl._notify = function(e, args) {
             assert.equal(e, 'checkboxClick');
             assert.equal(args[0], 1);
             assert.equal(args[1], 1);
-         };
-         ctrl._selectionController = {
-            toggleItem: function(key) {
-                  assert.equal(key, 1);
-            },
-            handleReset: function() {},
-            restoreSelection() {}
          };
          ctrl._onCheckBoxClick({}, 1, 1);
       });
