@@ -134,34 +134,6 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   _getChildrenByEntryPath(nodeId: TKey, path: any[] = []): TKey[] {
-      let result = [];
-      let children;
-      const childrenMap = new Map();
-      path.forEach((pathItem) => {
-         if (!childrenMap.has(pathItem.parent)) {
-            childrenMap.set(pathItem.parent, [pathItem.id]);
-         } else {
-            childrenMap.get(pathItem.parent).push(pathItem.id);
-         }
-      });
-      children = childrenMap.get(nodeId) || [];
-      childrenMap.delete(nodeId);
-      while (children.length) {
-         let tempChildren = [];
-         result = result.concat(children);
-         children.forEach((key: TKey): void => {
-            if (childrenMap.has(key)) {
-               tempChildren = tempChildren.concat(childrenMap.get(key));
-               childrenMap.delete(key);
-            }
-         });
-         children = tempChildren;
-      }
-
-      return result;
-   }
-
    getSelectionForModel(selection: ISelection): Map<boolean|null, Model[]> {
       const selectedItems = new Map();
       // IE не поддерживает инициализацию конструктором
@@ -259,6 +231,34 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          currentParentId = this._getParentId(item.getKey());
          allChildrenExcluded = this._isAllChildrenExcluded(selection, currentParentId);
       }
+   }
+
+   private _getChildrenByEntryPath(nodeId: TKey, path: any[] = []): TKey[] {
+      let result = [];
+      let children;
+      const childrenMap = new Map();
+      path.forEach((pathItem) => {
+         if (!childrenMap.has(pathItem.parent)) {
+            childrenMap.set(pathItem.parent, [pathItem.id]);
+         } else {
+            childrenMap.get(pathItem.parent).push(pathItem.id);
+         }
+      });
+      children = childrenMap.get(nodeId) || [];
+      childrenMap.delete(nodeId);
+      while (children.length) {
+         let tempChildren = [];
+         result = result.concat(children);
+         children.forEach((key: TKey): void => {
+            if (childrenMap.has(key)) {
+               tempChildren = tempChildren.concat(childrenMap.get(key));
+               childrenMap.delete(key);
+            }
+         });
+         children = tempChildren;
+      }
+
+      return result;
    }
 
    private _isAllSelectedInRoot(selection: ISelection): boolean {

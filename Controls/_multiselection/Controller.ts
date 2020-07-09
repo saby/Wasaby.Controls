@@ -13,7 +13,7 @@ import clone = require('Core/core-clone');
 
 /**
  * @class Controls/_multiselector/SelectionController
- * @author Авраменко А.С.
+ * @author Панихин К.А.
  * @private
  */
 export class Controller {
@@ -84,13 +84,12 @@ export class Controller {
 
    /**
     * Проставляет выбранные элементы в модели
-    * @remark Не уведомляет о изменениях в модели
-    * @return {ISelectionControllerResult}
+    * @void
     */
-   restoreSelection(): void {
+   updateModel(): void {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
       this._strategy.setItems(this._model.getCollection());
-      this._updateModel(this._selection, true);
+      this._updateModel(this._selection);
    }
 
    /**
@@ -99,7 +98,7 @@ export class Controller {
     *  Иначе проверка происходит по наличию единого признака выбранности всех элементов.
     * @return {ISelectionControllerResult}
     */
-   isAllSelected(byEveryItem: boolean): boolean {
+   isAllSelected(byEveryItem: boolean = true): boolean {
       return this._strategy.isAllSelected(
          this._selection,
          this._model.getHasMoreData(),
@@ -187,10 +186,6 @@ export class Controller {
       const oldSelection = clone(this._selection);
       this._remove(this._getItemsKeys(removedItems));
       return this._getResult(oldSelection, this._selection);
-   }
-
-   updateModel(): void {
-      this._updateModel(this._selection);
    }
 
    private _clearSelection(): void {

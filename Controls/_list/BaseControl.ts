@@ -422,7 +422,7 @@ const _private = {
         }
 
         if (self._selectionController) {
-            self._selectionController.restoreSelection();
+            self._selectionController.updateModel();
         } else {
             if (options.selectedKeys && options.selectedKeys.length > 0) {
                 self._selectionController = _private.createSelectionController(self, options);
@@ -2834,7 +2834,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
-            // TODO пересмотреть это место
             if ((self._options.root !== newOptions.root || filterChanged) && this._selectionController.isAllSelected(false)) {
                 const result = this._selectionController.clearSelection();
                 _private.handleSelectionControllerResult(this, result);

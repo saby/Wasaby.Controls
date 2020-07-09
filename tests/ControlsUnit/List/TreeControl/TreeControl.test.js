@@ -871,7 +871,7 @@ define([
          assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
       });
 
-/*      describe('List nafigation', function() {
+      describe('List navigation', function() {
          var stubScrollToItem;
 
          before(function() {
@@ -941,7 +941,7 @@ define([
                }, 1);
             }, 1);
          });
-      });*/
+      });
       it('TreeControl._beforeUpdate name of property', function() {
          var
             source = new sourceLib.Memory({

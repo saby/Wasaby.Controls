@@ -1389,12 +1389,12 @@ define([
             activateCalled = false;
          });
 
-         /*it ('moveMarkerToNext', () => {
+         it ('moveMarkerToNext', () => {
             lists.BaseControl._private.moveMarkerToNext(instance, event);
             assert.isTrue(activateCalled);
             assert.isTrue(preventDefaultCalled);
             assert.equal(instance._listViewModel.getMarkedKey(), 3);
-         });*/
+         });
 
          it ('moveMarkerToPrev', () => {
             lists.BaseControl._private.moveMarkerToPrevious(instance, event);
@@ -1536,59 +1536,61 @@ define([
          assert.isFalse(notified);
       });
 
-      // it('spaceHandler', async function() {
-      //    var
-      //        cfg = {
-      //           viewModelConstructor: lists.ListViewModel,
-      //           markerVisibility: 'visible',
-      //           keyProperty: 'key',
-      //           multiSelectVisibility: 'visible',
-      //           selectedKeys: [],
-      //           excludedKeys: [],
-      //           selectedKeysCount: 0,
-      //           source: new sourceLib.Memory({
-      //              keyProperty: 'key',
-      //              data: [{
-      //                 key: 1
-      //              }, {
-      //                 key: 2
-      //              }, {
-      //                 key: 3
-      //              }]
-      //           }),
-      //           selectedKeys: [],
-      //           excludedKeys: []
-      //        },
-      //        baseControl = new lists.BaseControl(cfg);
-      //
-      //    const event = {
-      //       preventDefault: () => {}
-      //    };
-      //    const sandbox = sinon.createSandbox();
-      //
-      //    baseControl.saveOptions(cfg);
-      //    await baseControl._beforeMount(cfg);
-      //
-      //    baseControl._loadingIndicatorState = 'all';
-      //    lists.BaseControl._private.enterHandler(baseControl);
-      //
-      //    baseControl._loadingIndicatorState = null;
-      //    sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
-      //    const handleSelectionControllerResult = sinon.spy(lists.BaseControl._private, 'handleSelectionControllerResult');
-      //    lists.BaseControl._private.spaceHandler(baseControl, event);
-      //    assert.isTrue(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
-      //    assert.isTrue(handleSelectionControllerResult.withArgs(baseControl, undefined).calledOnce);
-      //
-      //    baseControl.getViewModel()._markedKey = 5;
-      //    lists.BaseControl._private.spaceHandler(baseControl, event);
-      //    assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
-      //
-      //    baseControl._options.multiSelectVisibility = 'hidden';
-      //    lists.BaseControl._private.spaceHandler(baseControl, event);
-      //    assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
-      //
-      //    sandbox.restore();
-      // });
+      it('spaceHandler', async function() {
+         var
+             cfg = {
+                viewModelConstructor: lists.ListViewModel,
+                markerVisibility: 'visible',
+                keyProperty: 'key',
+                multiSelectVisibility: 'visible',
+                selectedKeys: [],
+                excludedKeys: [],
+                selectedKeysCount: 0,
+                source: new sourceLib.Memory({
+                   keyProperty: 'key',
+                   data: [{
+                      key: 1
+                   }, {
+                      key: 2
+                   }, {
+                      key: 3
+                   }]
+                }),
+                selectedKeys: [],
+                excludedKeys: []
+             },
+             baseControl = new lists.BaseControl(cfg);
+
+         const event = {
+            preventDefault: () => {}
+         };
+         const sandbox = sinon.createSandbox();
+
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+
+         baseControl._loadingIndicatorState = 'all';
+         lists.BaseControl._private.enterHandler(baseControl);
+
+         baseControl._loadingIndicatorState = null;
+         sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
+         const notifySpy = sinon.spy(baseControl, '_notify');
+         lists.BaseControl._private.spaceHandler(baseControl, event);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).called);
+
+         baseControl.getViewModel()._markedKey = 5;
+         lists.BaseControl._private.spaceHandler(baseControl, event);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged', [[1], [], []]).called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false]).called);
+
+         notifySpy.resetHistory();
+         baseControl._options.multiSelectVisibility = 'hidden';
+         lists.BaseControl._private.spaceHandler(baseControl, event);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('listSelectedKeysCountChanged').called);
+
+         sandbox.restore();
+      });
 
       it('_private.handleSelectionControllerResult', () => {
          const baseControl = {
@@ -1632,41 +1634,31 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
-      // it('_private.updateSelectionController', async function() {
-      //    const
-      //       lnSource = new sourceLib.Memory({
-      //          keyProperty: 'id',
-      //          data: data
-      //       }),
-      //       lnCfg = {
-      //          viewName: 'Controls/List/ListView',
-      //          source: lnSource,
-      //          keyProperty: 'id',
-      //          viewModelConstructor: lists.ListViewModel,
-      //          selectedKeys: [1],
-      //          excludedKeys: []
-      //       },
-      //       baseControl = new lists.BaseControl(lnCfg);
-      //
-      //
-      //    baseControl.saveOptions(lnCfg);
-      //    await baseControl._beforeMount(lnCfg);
-      //    baseControl._createSelectionController();
-      //
-      //    const notifySpy = sinon.spy(baseControl, '_notify');
-      //
-      //    await baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
-      //    assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
-      //    assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
-      //    assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged').called);
-      //
-      //    notifySpy.resetHistory();
-      //
-      //    await baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
-      //    assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
-      //    assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
-      //    assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged').called);
-      // });
+      it('_private.updateSelectionController', async function() {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [1],
+               excludedKeys: []
+            },
+            baseControl = new lists.BaseControl(lnCfg);
+
+
+         baseControl.saveOptions(lnCfg);
+         await baseControl._beforeMount(lnCfg);
+         baseControl._createSelectionController();
+
+         assert.isTrue(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+         baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
+         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+      });
 
       it('_private.updateMarkerController', async function() {
          const
@@ -3153,14 +3145,13 @@ define([
          });
       });
 
-     /* it('List navigation by keys and after reload', function(done) {
+      it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
          lists.BaseControl._private.scrollToItem = function() {
          };
 
          var
             stopImmediateCalled = false,
-            preventDefaultCalled = false,
             getParamsKeyDown = function(keyCode) {
                return {
                   stopImmediatePropagation: function() {
@@ -3190,7 +3181,9 @@ define([
                keyProperty: 'id',
                markedKey: 1,
                markerVisibility: 'visible',
-               viewModelConstructor: lists.ListViewModel
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [],
+               excludedKeys: []
             },
             lnCfg2 = {
                viewName: 'Controls/List/ListView',
@@ -3204,15 +3197,11 @@ define([
                keyProperty: 'id',
                markedKey: 'firstItem',
                markerVisibility: 'visible',
-               viewModelConstructor: lists.ListViewModel
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [],
+               excludedKeys: []
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
-         lnBaseControl._selectionController = {
-            toggleItem: function() {},
-            handleReset: function() {},
-            update: function() {},
-            restoreSelection: () => {}
-         };
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -3245,13 +3234,13 @@ define([
                setTimeout(function() {
                   lnBaseControl._afterUpdate({});
                   // TODO хз почему после beforeUpdate новые опции не записываются в _options
-                  /!*assert.equal(lnBaseControl.getViewModel()
-                     .getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');*!/
+                  /*assert.equal(lnBaseControl.getViewModel()
+                     .getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');*/
                   done();
                }, 1);
             }, 1);
          }, 1);
-      });*/
+      });
 
       it('_onCheckBoxClick', function() {
          var rs = new collection.RecordSet({
@@ -5635,7 +5624,7 @@ define([
             sandbox.restore();
          });
 
-         /*// Необходимо вызывать updateItemActions при изменении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
+         // Необходимо вызывать updateItemActions при изменении visibilityCallback (демка Controls-demo/OperationsPanel/Demo)
          it('should call updateItemActions when visibilityCallback has changed', async () => {
             instance._listViewModel.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
@@ -5649,9 +5638,9 @@ define([
                }
             });
             assert.isTrue(updateItemActionsCalled);
-         });*/
+         });
 
-         /*// Необходимо вызывать updateItemActions при изиенении самих ItemActions
+         // Необходимо вызывать updateItemActions при изиенении самих ItemActions
          it('should call updateItemActions when ItemActions have changed', async () => {
             instance._listViewModel.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
@@ -5668,7 +5657,7 @@ define([
                ]
             });
             assert.isTrue(updateItemActionsCalled);
-         });*/
+         });
 
          // Надо сбрасывать свайп, если изменились ItemActions. Иначе после их изменения свайп будет оставаться поверх записи
          it('should deactivate swipe if it is activated and itemActions have changed', async () => {
@@ -5711,7 +5700,7 @@ define([
             assert.isTrue(updateItemActionsCalled);
          });
 
-        /* // при неидентичности source необходимо перезапрашивать данные этого source и затем вызывать updateItemActions
+         // при неидентичности source необходимо перезапрашивать данные этого source и затем вызывать updateItemActions
          it('should call updateItemActions when data was reloaded', async () => {
             instance._listViewModel.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
@@ -5727,9 +5716,9 @@ define([
                ]
             });
             assert.isTrue(updateItemActionsCalled);
-         });*/
+         });
 
-         /*// при смене значения свойства readOnly необходимо вызывать updateItemAction
+         // при смене значения свойства readOnly необходимо вызывать updateItemAction
          it('should call updateItemActions when readOnly option has been changed', () => {
             instance._listViewModel.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
@@ -5741,9 +5730,9 @@ define([
                readOnly: true,
             });
             assert.isTrue(updateItemActionsCalled);
-         });*/
+         });
 
-         /*// при смене значения свойства itemActionsPosition необходимо вызывать updateItemAction
+         // при смене значения свойства itemActionsPosition необходимо вызывать updateItemAction
          it('should call updateItemActions when itemActionsPosition option has been changed', () => {
             instance._listViewModel.setActionsAssigned(true);
             sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
@@ -5755,7 +5744,7 @@ define([
                itemActionsPosition: 'outside',
             });
             assert.isTrue(updateItemActionsCalled);
-         });*/
+         });
       });
 
       it('_beforeMount with PrefetchProxy in source', function() {
