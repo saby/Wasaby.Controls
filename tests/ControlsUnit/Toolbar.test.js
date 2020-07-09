@@ -171,6 +171,7 @@ define(
                toolbar._children.menuTarget = {
                   _container: 'target'
                };
+               toolbar._openMenu = () => {};
                toolbar._showMenu({
                   stopPropagation: () => {
                   }
@@ -411,7 +412,6 @@ define(
                      _children: {
                         menuTarget: 'menuTarget'
                      },
-                     _popupId: '123',
                      _menuSource: recordForMenu
                   },
                   templateOptions = {
@@ -433,15 +433,15 @@ define(
                const toolbar = new toolbars.View();
                const config = toolbar._getMenuConfig.call(testSelf);
                assert.deepEqual(config.templateOptions, templateOptions);
-               assert.deepEqual(config.id, '123');
             });
             it('toolbar closed by his parent', () => {
                let isMenuClosed = false;
                toolbar._nodeProperty = '@parent';
-               popupLib.Sticky.closePopup = function() {
+               toolbar._sticky.close = function() {
                   isMenuClosed = true;
                };
-               toolbar._popupId = 'test';
+               toolbar._sticky.isOpened = () => true;
+               toolbar._notify = () => {};
                toolbar._resultHandler('itemClick', itemWithOutMenu);
                assert.equal(isMenuClosed, true, 'toolbar closed, but his submenu did not');
             });

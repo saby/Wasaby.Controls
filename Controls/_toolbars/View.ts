@@ -4,7 +4,7 @@ import {factory, RecordSet} from 'Types/collection';
 import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {Sticky  as StickyOpener} from 'Controls/popup';
+import {StickyOpener} from 'Controls/popup';
 import {showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
 
 import {
@@ -142,7 +142,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IIconSize]': boolean = true;
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
     readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
-    private _popupId: string;
+    private _sticky: StickyOpener;
 
     constructor(...args) {
         super(args);
@@ -154,7 +154,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
         return {...this._menuOptions, ...{
-                id: this._popupId,
                 opener: this,
                 className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
                 templateOptions: {
@@ -233,7 +232,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             eventHandlers: {
                 onResult: this._resultHandler,
                 onClose: () => {
-                    this._popupId = null;
                     this._closeHandler();
                 }
             },
@@ -243,8 +241,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             fittingMode: {
                 vertical: 'adaptive',
                 horizontal: 'overflow'
-            },
-            id: this._popupId
+            }
         };
     }
 
@@ -291,15 +288,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _openMenu(config: IMenuOptions): void {
-        StickyOpener.openPopup(config).then((popupId) => {
-            this._popupId = popupId;
-        });
+        this._sticky.open(config);
     }
 
     protected _beforeMount(options: IToolbarOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
         this._setState(options);
         this._menuOptions = this._getMenuOptions();
         this._originalSource = options.source;
+        this._sticky = new StickyOpener();
         if (receivedItems) {
             this._setStateByItems(receivedItems, options.source);
         } else if (options.source) {
@@ -314,6 +310,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (hasSourceChanged(newOptions.source, this._options.source)) {
             this._originalSource = newOptions.source;
             this._isLoadMenuItems = false;
+            this._sticky.close();
             this.setStateBySource(newOptions.source);
         }
     }
@@ -326,8 +323,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             /**
              * menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
              */
-            if (this._popupId && !item.get(this._nodeProperty)) {
-                StickyOpener.closePopup(this._popupId);
+            if (this._sticky.isOpened() && !item.get(this._nodeProperty)) {
+                this._sticky.close();
             }
         }
     }
