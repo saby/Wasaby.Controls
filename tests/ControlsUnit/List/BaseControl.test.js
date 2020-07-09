@@ -1718,16 +1718,12 @@ define([
             await baseControl._beforeMount(lnCfg);
          });
          it('should init SelectionController', () => {
-         controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
-         assert.isNotNull(controller);
+            controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
+            assert.isNotNull(controller);
 
-         baseControl._items = null;
-         controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-         assert.isNull(controller);
-
-         baseControl._listViewModel = null;
-         controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-         assert.isNull(controller);
+            baseControl._listViewModel = null;
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            assert.isNull(controller);
          });
 
          it('should init selection controller even when multiselectVisibility===\'null\'', () => {
@@ -5791,7 +5787,6 @@ define([
       describe('beforeUpdate', () => {
          let cfg;
          let instance;
-         let createSelectionControllerSpy;
 
          beforeEach(() => {
             cfg = {
@@ -5828,25 +5823,21 @@ define([
 
          it('should create selection controller', async () => {
             assert.isNull(instance._markerController);
-            createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
             instance._items = instance._listViewModel.getItems();
             await instance._beforeUpdate({
                ...cfg,
                selectedKeys: [1]
             });
             assert.isNotNull(instance._selectionController);
-            assert.isTrue(createSelectionControllerSpy.calledOnce);
          });
 
          it('not should create selection controller', async () => {
             assert.isNull(instance._markerController);
             await instance._beforeUpdate({
                ...cfg,
-               selectedKeys: [1],
                viewModelConstructor: null
             });
             assert.isNull(instance._selectionController);
-            assert.equal(createSelectionControllerSpy.callCount, 2);
          });
       });
 
