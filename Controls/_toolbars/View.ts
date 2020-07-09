@@ -288,6 +288,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _openMenu(config: IMenuOptions): void {
+        if (!this._sticky) {
+            this._sticky = new StickyOpener();
+        }
         this._sticky.open(config);
     }
 
@@ -295,7 +298,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         this._setState(options);
         this._menuOptions = this._getMenuOptions();
         this._originalSource = options.source;
-        this._sticky = new StickyOpener();
         if (receivedItems) {
             this._setStateByItems(receivedItems, options.source);
         } else if (options.source) {
@@ -310,7 +312,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (hasSourceChanged(newOptions.source, this._options.source)) {
             this._originalSource = newOptions.source;
             this._isLoadMenuItems = false;
-            this._sticky.close();
+            this._sticky?.close();
             this.setStateBySource(newOptions.source);
         }
     }

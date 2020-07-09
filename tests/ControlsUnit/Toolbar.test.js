@@ -437,8 +437,10 @@ define(
             it('toolbar closed by his parent', () => {
                let isMenuClosed = false;
                toolbar._nodeProperty = '@parent';
-               toolbar._sticky.close = function() {
-                  isMenuClosed = true;
+               toolbar._sticky = {
+                  close: function () {
+                     isMenuClosed = true;
+                  }
                };
                toolbar._sticky.isOpened = () => true;
                toolbar._notify = () => {};
