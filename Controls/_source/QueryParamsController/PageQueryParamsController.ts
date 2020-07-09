@@ -73,18 +73,13 @@ class PageQueryParamsController implements IQueryParamsController {
             neededPage = this._page;
         }
 
-        addParams.offset = (config?.page || neededPage) * pageSize;
+        addParams.offset = (config && config.page !== void 0 ? config.page : neededPage) * pageSize;
         addParams.limit = pageSize;
 
         if (this._options.hasMore === false) {
             addParams.meta.hasMore = false;
         }
         
-        callback && callback({
-            page: neededPage,
-            pageSize
-        });
-
         return addParams;
     }
 
@@ -144,13 +139,15 @@ class PageQueryParamsController implements IQueryParamsController {
      * @param list {Types/collection:RecordSet} object containing meta information for current request
      * @param direction {Direction} nav direction ('up' or 'down')
      */
-    updateQueryProperties(list?: RecordSet | {[p: string]: unknown}, direction?: Direction, config?: IBasePageSourceConfig): void {
+    updateQueryProperties(list?: RecordSet | {[p: string]: unknown}, direction?: Direction, config?: IBasePageSourceConfig, callback?): void {
         const meta = (list as RecordSet).getMetaData();
         this._validateNavigation(meta.more);
         this._more = meta.more;
         if (direction === 'down') {
+            callback && callback ({page: this._nextPage, pageSize: this._options.pageSize});
             this._nextPage++;
         } else if (direction === 'up') {
+            callback && callback ({page: this._prevPage, pageSize: this._options.pageSize});
             this._prevPage--;
         } else {
 
@@ -164,11 +161,16 @@ class PageQueryParamsController implements IQueryParamsController {
                     throw new Error('pageSize, переданный для единичной перезагрузки списка, должен нацело делиться на pageSize из опции navigation.sourceConfig.');
                 }
 
+                this._prevPage = this._page - 1;
+
                 // если мы загрузили 0 страницу размера 30 , то мы сейчас на 2 странице размера 10
                 this._page = (config.page + 1) * pageSizeCoef - 1;
+                this._nextPage = this._page + 1;
+            } else {
+                this._nextPage = this._page + 1;
+                this._prevPage = this._page - 1;
             }
-            this._nextPage = this._page + 1;
-            this._prevPage = this._page - 1;
+            callback && callback ({page: this._page, pageSize: this._options.pageSize});
         }
     }
 
