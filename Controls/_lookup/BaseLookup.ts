@@ -1,6 +1,6 @@
 import {Control} from 'UI/Base';
 import {RecordSet, List} from 'Types/collection';
-import {default as LookupController, ILookupBaseControllerOptions} from './BaseControllerClass';
+import {default as LookupController, ILookupBaseControllerOptions, SelectedItems} from './BaseControllerClass';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor, Model} from 'Types/entity';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
@@ -10,7 +10,7 @@ type LookupReceivedState = RecordSet|null;
 
 export default abstract class BaseLookup extends Control {
     protected _lookupController: LookupController;
-    protected _items: RecordSet|List<Model>;
+    protected _items: SelectedItems;
 
     protected _beforeMount(
         options: ILookupBaseControllerOptions,
@@ -35,12 +35,12 @@ export default abstract class BaseLookup extends Control {
     protected _beforeUpdate(newOptions: ILookupBaseControllerOptions): void {
         const updateResult = this._lookupController.update(newOptions);
         const updateResultCallback = () => {
-            this._items = this._lookupController.getItems();
-            this._notifyChanges();
+            this._afterItemsChanged();
         };
 
         if (updateResult instanceof Promise) {
-            updateResult.then(() => {
+            updateResult.then((items) => {
+                this._lookupController.setItems(items);
                 updateResultCallback();
             });
         } else if (updateResult) {
@@ -54,7 +54,7 @@ export default abstract class BaseLookup extends Control {
 
     protected _updateItems(items: RecordSet|List<Model>): void {
         this._lookupController.setItems(items);
-        this._notifyChanges();
+        this._afterItemsChanged();
     }
 
     protected _addItemHandler(event: SyntheticEvent, item: Model): void {
@@ -63,7 +63,7 @@ export default abstract class BaseLookup extends Control {
 
     protected _addItem(item: Model): void {
         if (this._lookupController.addItem(item)) {
-            this._notifyChanges();
+            this._afterItemsChanged();
         }
     }
 
@@ -73,7 +73,7 @@ export default abstract class BaseLookup extends Control {
 
     protected _removeItem(item: Model): void {
         if (this._lookupController.removeItem(item)) {
-            this._notifyChanges();
+            this._afterItemsChanged();
         }
     }
 
@@ -93,18 +93,23 @@ export default abstract class BaseLookup extends Control {
         this.activate();
     }
 
-    protected _selectCallback(event: SyntheticEvent, result): void {
+    protected _selectCallback(event: SyntheticEvent, result: SelectedItems): void {
         const selectResult =
             this._notify('selectorCallback', [this._lookupController.getItems(), result]) ||
             result;
         this._lookupController.setItemsAndSaveToHistory(selectResult);
-        this._notifyChanges();
+        this._afterItemsChanged();
         if (this._options.value) {
             this._notify('valueChanged', ['']);
         }
     }
 
     abstract showSelector(popupOptions?: IStackPopupOptions): void;
+
+    private _afterItemsChanged(): void {
+        this._items = this._lookupController.getItems();
+        this._notifyChanges();
+    }
 
     private _notifyChanges(): void {
         const controller = this._lookupController;
