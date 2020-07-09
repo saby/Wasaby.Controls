@@ -1,16 +1,47 @@
-<div>
-    <Controls._lookup.Button._SelectorButton
-            scope="{{_options}}"
-            items="{{_lookupController.getItems()}}"
-            on:showSelector="_showSelector()"
-            on:addItem="_addItem()"
-            on:removeItem="_removeItem()"
-            on:updateItems="_updateItems()"
-            on:valueChanged="_notifyHandler('valueChanged')"
-            on:itemClick="_notifyHandler('itemClick')"
-            on:inputCompleted="_notifyHandler('inputCompleted')"
-            on:tagClick="_notifyHandler('tagClick')"
-            on:tagHover="_notifyHandler('tagHover')"
-            on:openInfoBox="_notifyHandler('openInfoBox')"
-            on:closeInfoBox="_notifyHandler('closeInfoBox')"/>
+<div class="controls-Selectorbutton
+            {{_lookupController.getItems().getCount() === 0 ? ' controls-Selectorbutton_empty'}}
+            {{_options.validationStatus!== 'valid' ? 'controls-invalid-container'}}">
+    <ws:if data="{{_lookupController.getItems().getCount()}}">
+        <Controls._lookup.SelectedCollection
+                items="{{_lookupController.getItems()}}"
+                maxVisibleItems="{{_options.maxVisibleItems}}"
+                displayProperty="{{_options.displayProperty}}"
+                multiLine="{{true}}"
+                clickable="{{true}}"
+                on:itemClick="_itemClickHandler()"
+                on:crossClick="_removeItemHandler()"
+                on:openInfoBox="_openInfoBox()"
+                on:closeInfobox="_notifyHandler('closeInfoBox')"
+                attr:class="{{!_options.readOnly && _options.multiSelect ? 'controls-Selectorbutton_selectedCollection_multiSelect'}}">
+            <ws:itemTemplate>
+                <ws:partial template="{{_options.itemTemplate}}" clickable="{{!_options.multiSelect && !_options.readOnly}}"
+                            attr:class="{{!_options.readOnly ? 'controls-Selectorbutton_selectedItem_' + (_options.multiSelect ? 'multi' : 'single')}}"/>
+            </ws:itemTemplate>
+        </Controls._lookup.SelectedCollection>
+        <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
+            <span on:click="_showSelectorHandler()" attr:class="controls-Selectorbutton_button-more">{{_options.showSelectorCaption}}</span>
+        </ws:if>
+        <ws:if data="{{_lookupController.getItems().getCount() > 1 && !_options.readOnly}}">
+            <span on:click="_reset()" attr:class="controls-Selectorbutton__button-reset">{[Очистить]}</span>
+        </ws:if>
+    </ws:if>
+    <ws:else>
+        <ws:if data="{{_options.readOnly}}">
+            <span attr:class="controls-Selectorbutton_button-select_readOnly">{{_options.caption}}</span>
+        </ws:if>
+        <ws:else>
+            <Controls.buttons:Button name="link"
+                                     attr:class="controls-Selectorbutton_link"
+                                     viewMode="link"
+                                     caption="{{_options.caption}}"
+                                     fontColorStyle="{{_options.fontColorStyle}}"
+                                     fontSize="{{_options.fontSize}}"
+                                     buttonStyle="{{_options.buttonStyle}}"
+                                     style="{{_options.style}}"
+                                     on:click="_showSelectorHandler()"/>
+        </ws:else>
+    </ws:else>
+    <ws:if data="{{_options.validationStatus!== 'valid'}}">
+        <div class="{{'controls-invalid-border controls-' + _options.validationStatus + '-border_theme-' + _options.theme}}"></div>
+    </ws:if>
 </div>
