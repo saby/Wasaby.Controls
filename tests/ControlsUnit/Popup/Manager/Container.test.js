@@ -58,6 +58,19 @@ define(
             assert.equal(Container._overlayId, undefined);
             Container.destroy();
          });
+
+         it('popup items redraw promise', () => {
+            const Container = new popupMod.Container();
+            Container._calcOverlayId = () => {};
+            let isRedrawPromiseResolve = false;
+            const redrawPromise = Container.setPopupItems({}).then(() => {
+               isRedrawPromiseResolve = true;
+               assert.equal(isRedrawPromiseResolve, true);
+               Container.destroy();
+            });
+            Container._afterRender();
+            return redrawPromise;
+         });
       });
    }
 );

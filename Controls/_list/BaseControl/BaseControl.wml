@@ -79,11 +79,14 @@
 </ws:template>
 <ws:template name="viewTpl">
     <div class="controls-ScrollController">
-        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;"></div>
-        <div name="topLoadTrigger"></div>
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{!_isMounted ? 'display: none;'}}"></div>
+        <!-- Скрываем topLoadTrigger через display: none, чтобы он не срабатывал сразу после mount. Отступы ему ещё не установлены и он
+        сработает сразу после инициализации, хотя далеко не факт что это нужно. -->
+        <div name="topLoadTrigger" style="{{!_isMounted ? 'display: none'}}"></div>
         <Controls.validate:Controller name="formController">
             <ws:partial
                     attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
+                    attr:style="{{_attachLoadTopTriggerToNull && _isMounted ? 'padding-top: 1px;'}}"
                     name="{{name}}"
                     template="{{ _options.content }}"
                     scope="{{_options}}"

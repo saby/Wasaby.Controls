@@ -259,28 +259,3 @@ export default interface IMenuControl {
  * };
  * </pre>
  */
-
-/**
- * @event Controls/_menu/interface/IMenuControl#itemClick Происходит при выборе элемента
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} item Выбранный элемент.
- * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, подменю не закроется.
- * По умолчанию, когда выбран пункт с иерархией, подменю закрывается.
- * @example
- * В следующем примере показано, как незакрывать подменю, если кликнули на пункт с иерархией.
- * <pre>
- *    <Controls.menu:Control
- *          displayProperty="title"
- *          keyProperty="key"
- *          source="{{_source}}"
- *          on:itemClick="_itemClickHandler()" />
- * </pre>
- * TS:
- * <pre>
- *    protected _itemClickHandler(e, item): boolean {
- *       if (item.get(nodeProperty)) {
- *          return false;
- *       }
- *    }
- * </pre>
- */
