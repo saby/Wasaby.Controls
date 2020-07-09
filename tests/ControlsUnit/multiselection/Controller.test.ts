@@ -36,7 +36,7 @@ describe('Controls/_multiselection/Controller', () => {
       });
    });
 
-   describe('update', () => {
+/*   describe('update', () => {
       it('model changed', () => {
          model =  new ListViewModel({
             items,
@@ -65,7 +65,7 @@ describe('Controls/_multiselection/Controller', () => {
          }, false, false);
          assert.isTrue(setSelectedItemsSpy.called);
       });
-   });
+   });*/
 
    it('restoreSelection', () => {
       controller = new SelectionController({
