@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/grid/Grouped/groupHistoryId/groupHi
 import {Memory} from 'Types/source';
 import {getTasks} from '../../DemoHelpers/DataCatalog';
 import {IColumn} from 'Controls/_grid/interface/IColumn';
-import Config = require('Env/Config');
+import * as Config from 'Env/Config';
 
 interface IItem {
    get: (item: string) => string;
