@@ -43,6 +43,16 @@ class Manager extends Control<IManagerOptions> {
         ManagerController.setManager(this);
         ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
         EventBus.channel('navigation').subscribe('onBeforeNavigate', this._navigationHandler.bind(this));
+
+        if (detection.isMobilePlatform) {
+            window.addEventListener('orientationchange', () => {
+                // Таймаут нужен, чтобы размеры страницы изменились. На момент вызова события размеры старые.
+                setTimeout(() => {
+                    this.orientationChangeHandler();
+                }, 0);
+            });
+        }
+
         if (detection.isMobileIOS) {
             this._controllerVisibilityChangeHandler = this._controllerVisibilityChangeHandler.bind(this);
             EventBus.globalChannel().subscribe('MobileInputFocus', this._controllerVisibilityChangeHandler);
@@ -177,6 +187,18 @@ class Manager extends Control<IManagerOptions> {
             (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYED);
+    }
+
+    private orientationChangeHandler(): void {
+        let needUpdate = false;
+        this._popupItems.each((item) => {
+            if (this._popupUpdated(item.id)) {
+                needUpdate = true;
+            }
+        });
+        if (needUpdate) {
+            this._redrawItems();
+        }
     }
 
     private _updateContext(context: IManagerTouchContext): void {
