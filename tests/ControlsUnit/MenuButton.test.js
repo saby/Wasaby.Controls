@@ -165,7 +165,7 @@ define(
                   data: items
                })
             };
-            return menu._beforeMount(config, null, itemsRecords.clone()).then(() => {
+            return menu._beforeMount(config, {}, { items: itemsRecords.clone() }).then(() => {
                assert.deepEqual(selectedItems, [null]);
                assert.isTrue(selectedItemsChangeCalled);
             });
@@ -195,7 +195,7 @@ define(
                   data: items
                })
             };
-            return menu._beforeMount(config, null, itemsRecords.clone()).then(() => {
+            return menu._beforeMount(config, null, null).then(() => {
                assert.deepEqual(selectedItems, []);
                assert.isTrue(selectedItemsChangeCalled);
             });

@@ -2,7 +2,7 @@ import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
 import * as Utils from 'Types/util';
-import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
+import {prepareEmpty, loadItems, isLeftMouseButton} from 'Controls/_dropdown/Util';
 import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import Controller from 'Controls/_dropdown/_Controller';
 import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
@@ -90,7 +90,9 @@ class ComboBox extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
 
-   _beforeMount(options: IComboboxOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
+   _beforeMount(options: IComboboxOptions,
+                context: object,
+                receivedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
@@ -99,7 +101,7 @@ class ComboBox extends BaseDropdown {
       };
 
       this._controller = new Controller(this._getControllerOptions(options));
-      return loadItems(this._controller, recievedState, options.source);
+      return loadItems(this._controller, receivedState, options.source);
    }
 
    _beforeUpdate(options: IComboboxOptions): void {
@@ -152,7 +154,10 @@ class ComboBox extends BaseDropdown {
       }
    }
 
-   _handleMouseDown(event: SyntheticEvent): void {
+   _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
+      if (!isLeftMouseButton(event)) {
+         return;
+      }
       if (this._popupId) {
          this._controller.closeMenu();
       } else {
@@ -186,7 +191,7 @@ class ComboBox extends BaseDropdown {
 
    protected _onResult(action: string, data): void {
       if (action === 'itemClick') {
-         const item = this._controller.getPreparedItem(data, this._options.keyProperty, this._source);
+         const item = this._controller.getPreparedItem(data, this._options.keyProperty);
          this._selectedItemsChangedHandler([item]);
          this._controller.handleSelectedItems(item);
       }

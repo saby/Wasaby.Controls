@@ -94,9 +94,11 @@ interface IHeaderModel {
 var
     _private = {
         calcItemColumnVersion: function(self, itemVersion, columnIndex, index) {
-            let
-                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
-                version = `${itemVersion}_${self._columnsVersion}_${hasMultiselect ? columnIndex - 1 : columnIndex}`;
+            const hasMultiselect = self._options.multiSelectVisibility !== 'hidden';
+            let version = `${itemVersion}_${self._columnsVersion}_${hasMultiselect ? columnIndex - 1 : columnIndex}`;
+            if (hasMultiselect && columnIndex === 1) {
+                version += '_MS';
+            }
 
             version += _private.calcLadderVersion(self._ladder, index);
 

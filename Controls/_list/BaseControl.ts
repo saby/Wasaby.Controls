@@ -2640,6 +2640,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.loadToDirectionIfNeed(this, direction, this._options.filter);
         }
     },
+    _loadMore(event, direction): void {
+        this.loadMore(direction);
+    },
 
     triggerVisibilityChangedHandler(direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
@@ -2807,7 +2810,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (newOptions.searchValue !== this._options.searchValue) {
-            this._listViewModel.setSearchValue(newOptions.searchValue);
+            _private.doAfterUpdate(this, () => {
+                this._listViewModel.setSearchValue(newOptions.searchValue);
+            });
             _private.getPortionedSearch(self).reset();
         }
         if (newOptions.editingConfig !== this._options.editingConfig) {
@@ -2843,11 +2848,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
-            _private.updateSelectionController(this, newOptions);
             if ((self._options.root !== newOptions.root || filterChanged) && this._selectionController.isAllSelected(false)) {
                 const result = this._selectionController.clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
+            _private.updateSelectionController(this, newOptions);
         } else {
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
             if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
@@ -3774,6 +3779,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter'): boolean {
+        // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
+        // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
+        // В таком случае выводим индикатор над списком.
+        if (position === 'beforeEmptyTemplate') {
+            return this._loadingIndicatorState === 'up' || (
+                this._loadingIndicatorState === 'all' && this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel)
+            );
+        } else if (position === 'afterList') {
+            return this._loadingIndicatorState === 'down';
+        } else if (position === 'inFooter') {
+            return this._loadingIndicatorState === 'all' && !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel);
+        }
+        return false;
+    },
+
     // region Drag-N-Drop
 
     getDndListController(): DndFlatController | DndTreeController {
@@ -3965,7 +3986,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('unregister', ['mouseup', this], {bubbling: true});
         this._notify('unregister', ['touchend', this], {bubbling: true});
     }
-
     // endregion
 });
 

@@ -1,4 +1,5 @@
 import {Logger} from 'UI/Utils';
+import {constants} from 'Env/Env';
 
 const deprecatedClassesOfButton = {
    iconButtonBordered: {
@@ -165,7 +166,7 @@ const ActualApi = {
          return options.contrastBackground;
       } else {
          if (typeof options.transparent !== 'undefined') {
-            if (hasMsg) {
+            if (hasMsg && constants.isBrowserPlatform) {
                // TODO: будет удалено в версию после 5100
                Logger.error('Button: Используется устаревшая опция transparent". ' +
                    'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
@@ -183,7 +184,7 @@ const ActualApi = {
       } else if (optionButtonStyle) {
          return optionButtonStyle;
       } else {
-         if (optionStyle && hasMsg) {
+         if (optionStyle && hasMsg && constants.isBrowserPlatform) {
             // TODO: будет удалено в версию после 5100
             Logger.error('Button: Используется устаревшая опция style". ' +
                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
@@ -256,7 +257,7 @@ const ActualApi = {
          return options.fontSize;
       } else {
          if (typeof(options.size) !== 'undefined') {
-            if (hasMsg) {
+            if (hasMsg && constants.isBrowserPlatform) {
                // TODO: будет удалено в версию после 5100
                Logger.error('Button: Используется устаревшая опция size". ' +
                    'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
@@ -313,7 +314,7 @@ const ActualApi = {
       } else {
          let height = 'default';
          if (viewMode === 'button') {
-            if (hasMsg && optionSize) {
+            if (hasMsg && optionSize && constants.isBrowserPlatform) {
                // TODO: будет удалено в версию после 5100
                Logger.error('Button: Используется устаревшая опция size". ' +
                    'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
@@ -327,7 +328,7 @@ const ActualApi = {
             }
             return height;
          } else if (viewMode === 'toolButton' || viewMode === 'pushButton' || viewMode === 'functionalButton') {
-            if (hasMsg && optionSize) {
+            if (hasMsg && optionSize && constants.isBrowserPlatform) {
                // TODO: будет удалено в версию после 5100
                Logger.error('Button: Используется устаревшая опция size". ' +
                    'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +

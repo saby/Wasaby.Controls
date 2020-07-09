@@ -1,14 +1,17 @@
 import {IBackOptions} from './Back';
-import {Logger} from "UI/Utils";
+import {Logger} from 'UI/Utils';
+import {constants} from 'Env/Env';
 
 export function counterSize(size: 's' | 'm' | 'l', fontSize: string): string {
     if (fontSize) {
         return fontSize;
     } else {
-        // TODO: будет удалено в версию после 5100
-        Logger.error('Controls.heading.Back: Используется устаревшая опция size. ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Back: Используется устаревшая опция size. ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
+        }
         const fontSizesTable = {
             s: 'm',
             m: 'l',
@@ -23,10 +26,12 @@ export function counterStyle(style: 'primary' | 'secondary' | 'disabled', fontCo
     if (fontColorStyle) {
         return fontColorStyle;
     } else {
-        // TODO: будет удалено в версию после 5100
-        Logger.error('Controls.heading.Counter: Используется устаревшая опция style. ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Counter: Используется устаревшая опция style. ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');
+        }
         const fontStylesTable = {
             primary: 'primary',
             secondary: 'secondary',
@@ -48,10 +53,12 @@ export function backSizeOptions(size: string): string {
 
 export function backSize(options: IBackOptions): { fontSize: string, iconSize: string } {
     if (options.size !== undefined) {
-        // TODO: будет удалено в версию после 5100
-        Logger.error('Controls.heading.Back: Используется устаревшая опция size. ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опции fontSize и iconSize');
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Back: Используется устаревшая опция size. ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опции fontSize и iconSize');
+        }
     }
     return {
         fontSize: options.fontSize || backSizeOptions(options.size) ,
@@ -61,18 +68,22 @@ export function backSize(options: IBackOptions): { fontSize: string, iconSize: s
 
 export function backStyleOptions(style: 'primary' | 'secondary'): { fontColorStyle: string, iconStyle: string } {
     if (style === 'secondary') {
-        // TODO: будет удалено в версию после 5100
-        Logger.error('Controls.heading.Back: Используется устаревшая опция style="secondary". ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на fontColorStyle: "secondary", iconStyle: "primary".');
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Back: Используется устаревшая опция style="secondary". ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на fontColorStyle: "secondary", iconStyle: "primary".');
+        }
         return {
             fontColorStyle: 'secondary', iconStyle: 'primary'
         };
     } else {
-        // TODO: будет удалено в версию после 5100
-        Logger.error('Controls.heading.Back: Используется устаревшая опция style="primary". ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на fontColorStyle: "primary", iconStyle: "secondary".');
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Back: Используется устаревшая опция style="primary". ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на fontColorStyle: "primary", iconStyle: "secondary".');
+        }
         return {
             fontColorStyle: 'primary', iconStyle: 'secondary'
         };

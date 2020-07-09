@@ -5503,31 +5503,35 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: lists.ListViewModel,
+            viewModelConstructor: treeGrid.TreeViewModel,
             keyProperty: 'id',
-            source: source
+            source: source,
+            selectedKeys: [],
+            excludedKeys: [],
+            parentProperty: 'node'
          };
          let instance = new lists.BaseControl(cfg);
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
 
-         let clearSelectionCalled = false;
-         instance._selectionController = {
-            update() {},
-            clearSelection() { clearSelectionCalled = true; },
-            handleReset() {},
-            isAllSelected() { return false; }
-         };
+         const notifySpy = sinon.spy(instance, '_notify');
 
+         instance._createSelectionController();
          let cfgClone = { ...cfg, root: 'newvalue' };
          instance._beforeUpdate(cfgClone);
-         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
 
-         instance._selectionController.isAllSelected = function() { return true; };
-         cfgClone = { ...cfg, root: 'newvalue1' };
+         cfgClone = { ...cfg, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
          instance._beforeUpdate(cfgClone);
-         assert.isTrue(clearSelectionCalled);
+         instance.saveOptions(cfgClone);
+
+         cfgClone = { ...cfg, root: 'newvalue1', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
       it('_beforeUpdate with new searchValue', async function() {
@@ -5562,7 +5566,9 @@ define([
 
          cfgClone.searchValue = 'test';
          instance._beforeUpdate(cfgClone);
+         assert.isTrue(instance._listViewModel._options.searchValue !== cfgClone.searchValue);
          instance._afterUpdate({});
+         assert.isTrue(instance._listViewModel._options.searchValue === cfgClone.searchValue);
 
          assert.isTrue(portionSearchReseted);
          portionSearchReseted = false;
@@ -6022,6 +6028,44 @@ define([
           lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
+
+      it('_shouldShowLoadingIndicator', () => {
+         const baseControl = new lists.BaseControl();
+
+         /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
+         const testCases = [
+            ['beforeEmptyTemplate', 'up', true,    true],
+            ['beforeEmptyTemplate', 'up', false,   true],
+            ['beforeEmptyTemplate', 'down', true,  false],
+            ['beforeEmptyTemplate', 'down', false, false],
+            ['beforeEmptyTemplate', 'all', true,   true],
+            ['beforeEmptyTemplate', 'all', false,  false],
+
+            ['afterList', 'up', true,     false],
+            ['afterList', 'up', false,    false],
+            ['afterList', 'down', true,   true],
+            ['afterList', 'down', false,  true],
+            ['afterList', 'all', true,    false],
+            ['afterList', 'all', false,   false],
+
+            ['inFooter', 'up', true,      false],
+            ['inFooter', 'up', false,     false],
+            ['inFooter', 'down', true,    false],
+            ['inFooter', 'down', false,   false],
+            ['inFooter', 'all', true,     false],
+            ['inFooter', 'all', false,    true]
+         ];
+
+         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
+             `Wrong return value of _shouldShowLoadingIndicator('${caseData[0]}'). Expected ${caseData[3]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[1]}, __needShowEmptyTemplate: ${caseData[2]} }.`;
+
+         testCases.forEach((caseData, index) => {
+            baseControl._loadingIndicatorState = caseData[1];
+            baseControl.__needShowEmptyTemplate = () => caseData[2];
+            assert.equal(baseControl._shouldShowLoadingIndicator(caseData[0]), caseData[3], getErrorMsg(index, caseData));
+         });
+      });
 
       describe('navigation', function() {
          it('Navigation demand', async function() {

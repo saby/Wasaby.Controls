@@ -80,6 +80,8 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
                   this._dataController.updateContext(this._dataOptionsContext);
                   return items;
                });
+            } else {
+               this._dataController.updateContext(this._dataOptionsContext);
             }
          },
 

@@ -5,7 +5,7 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import ActualApi from 'Controls/_buttons/ActualApi';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {loadItems} from 'Controls/_dropdown/Util';
+import {loadItems, isLeftMouseButton} from 'Controls/_dropdown/Util';
 import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
 import {IGroupedOptions} from 'Controls/dropdown';
 import {IIconOptions, IHeightOptions, IIconSizeOptions, IIconStyleOptions} from 'Controls/interface';
@@ -95,14 +95,16 @@ export default class Button extends BaseDropdown {
    protected _tmplNotify: Function = tmplNotify;
    protected _hasItems: boolean = true;
 
-   _beforeMount(options: IButtonOptions, recievedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
+   _beforeMount(options: IButtonOptions,
+                context: object,
+                receivedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
       this._offsetClassName = cssStyleGeneration(options);
       this._updateState(options);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
 
       if (!options.lazyItemsLoading) {
-         return loadItems(this._controller, recievedState, options.source);
+         return loadItems(this._controller, receivedState, options.source);
       }
    }
 
@@ -170,7 +172,10 @@ export default class Button extends BaseDropdown {
       return handlerResult;
    }
 
-   _handleMouseDown(event: SyntheticEvent): void {
+   _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
+      if (!isLeftMouseButton(event)) {
+         return;
+      }
       const config = {
          eventHandlers: {
             onOpen: this._onOpen.bind(this),
@@ -208,7 +213,7 @@ export default class Button extends BaseDropdown {
    }
 
    protected _itemClick(data, nativeEvent): void {
-      const item = this._controller.getPreparedItem(data, this._options.keyProperty, this._source);
+      const item = this._controller.getPreparedItem(data, this._options.keyProperty);
       const res = this._onItemClickHandler([item], nativeEvent);
 
       // dropDown must close by default, but user can cancel closing, if returns false from event

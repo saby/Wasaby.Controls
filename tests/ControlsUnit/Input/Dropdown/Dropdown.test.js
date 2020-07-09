@@ -112,6 +112,21 @@ define(
             assert.isFalse(isKeysChanged);
          });
 
+         it('_handleMouseDown', () => {
+            let actualOptions = null;
+            let ddl = getDropdown(config);
+            ddl._controller = { setMenuPopupTarget: () => {} };
+            ddl.openMenu = (config) => { actualOptions = config; };
+
+            const event = { nativeEvent: { button: 2 } };
+            ddl._handleMouseDown(event);
+            assert.equal(actualOptions, null);
+
+            event.nativeEvent.button = 0;
+            ddl._handleMouseDown(event);
+            assert.isOk(actualOptions.templateOptions);
+         });
+
          it('_dataLoadCallback', () => {
             let ddl = getDropdown(config);
             ddl._dataLoadCallback(new collection.RecordSet({
@@ -177,14 +192,14 @@ define(
                      id: '1',
                      title: 'Запись 1'
                   },
-                     {
-                        id: '9',
-                        title: 'Запись 9'
-                     },
-                     {
-                        id: '10',
-                        title: 'Запись 10'
-                     }]
+                  {
+                     id: '9',
+                     title: 'Запись 9'
+                  },
+                  {
+                     id: '10',
+                     title: 'Запись 10'
+                  }]
                });
             ddl._controller._items = curItems;
             ddl._controller._source = config.source;
@@ -192,22 +207,22 @@ define(
                id: '9',
                title: 'Запись 9'
             },
-               {
-                  id: '10',
-                  title: 'Запись 10'
-               },
-               {
-                  id: '1',
-                  title: 'Запись 1'
-               },
-               {
-                  id: '2',
-                  title: 'Запись 2'
-               },
-               {
-                  id: '3',
-                  title: 'Запись 3'
-               }
+            {
+               id: '10',
+               title: 'Запись 10'
+            },
+            {
+               id: '1',
+               title: 'Запись 1'
+            },
+            {
+               id: '2',
+               title: 'Запись 2'
+            },
+            {
+               id: '3',
+               title: 'Запись 3'
+            }
             ];
 
             ddl._selectorTemplateResult('selectorResult', selectedItems);
@@ -245,14 +260,14 @@ define(
                      id: '1',
                      title: 'Запись 1'
                   },
-                     {
-                        id: '9',
-                        title: 'Запись 9'
-                     },
-                     {
-                        id: '10',
-                        title: 'Запись 10'
-                     }]
+                  {
+                     id: '9',
+                     title: 'Запись 9'
+                  },
+                  {
+                     id: '10',
+                     title: 'Запись 10'
+                  }]
                });
             ddl._controller._items = curItems;
             ddl._controller._source = config.source;
@@ -292,36 +307,36 @@ define(
                      id: '1',
                      title: 'Запись 1'
                   },
-                     {
-                        id: '9',
-                        title: 'Запись 9'
-                     },
-                     {
-                        id: '10',
-                        title: 'Запись 10'
-                     }]
+                  {
+                     id: '9',
+                     title: 'Запись 9'
+                  },
+                  {
+                     id: '10',
+                     title: 'Запись 10'
+                  }]
                });
             ddl._controller._items = curItems;
             let newItems = [ {
                id: '9',
                title: 'Запись 9'
             },
-               {
-                  id: '10',
-                  title: 'Запись 10'
-               },
-               {
-                  id: '1',
-                  title: 'Запись 1'
-               },
-               {
-                  id: '2',
-                  title: 'Запись 2'
-               },
-               {
-                  id: '3',
-                  title: 'Запись 3'
-               }
+            {
+               id: '10',
+               title: 'Запись 10'
+            },
+            {
+               id: '1',
+               title: 'Запись 1'
+            },
+            {
+               id: '2',
+               title: 'Запись 2'
+            },
+            {
+               id: '3',
+               title: 'Запись 3'
+            }
             ];
             ddl._controller._source = config.source;
             ddl._selectorResult(selectedItems);

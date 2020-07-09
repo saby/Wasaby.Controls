@@ -245,16 +245,20 @@ define([
                if (test.position === 'topbottom') {
                   component._headersStack['top'].push(data.id);
                   component._headersStack['bottom'].push(data.id);
+                  component._fixedHeadersStack['bottom'].push(data.id);
                } else {
                   component._headersStack[test.position].push(data.id);
+                  component._fixedHeadersStack[test.position].push(data.id);
                }
                return component._stickyRegisterHandler(event, data, false).then(function() {
                   assert.isUndefined(component._headers[data.id]);
                   if (test.position === 'topbottom') {
                      assert.notInclude(component._headersStack['top'], data.id);
                      assert.notInclude(component._headersStack['bottom'], data.id);
+                     assert.notInclude(component._fixedHeadersStack['bottom'], data.id);
                   } else {
                      assert.notInclude(component._headersStack[test.position], data.id);
+                     assert.notInclude(component._fixedHeadersStack[test.position], data.id);
                   }
                });
             });

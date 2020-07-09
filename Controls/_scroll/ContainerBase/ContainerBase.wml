@@ -1,0 +1,25 @@
+<div class="controls-Scroll-ContainerBase"
+     name="scrollContainer"
+     on:scroll="_scrollHandler()">
+    <div class="controls-containerBase_contentObserver" name="content">
+        <ws:partial
+            attr:class="controls-containerBase_userContent"
+            template="{{_options.content}}"
+            scope="{{_options}}"
+            on:controlResize="_resizeHandler()"
+            on:register="_registerIt()"
+            on:unregister="_unRegisterIt()"
+
+            on:itemMouseDown="_tmplNotify('itemMouseDown')"
+            on:rootChanged="_tmplNotify('rootChanged')"
+            on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
+            on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
+            on:checkboxClick="_tmplNotify('checkboxClick')"
+            on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
+            on:actionClick="_tmplNotify('actionClick')"
+            on:editArrowClick="_tmplNotify('editArrowClick')"
+            on:navigationParamsChanged="_tmplNotify('navigationParamsChanged')"
+
+        />
+    </div>
+</div>

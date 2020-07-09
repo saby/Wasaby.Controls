@@ -217,12 +217,14 @@ var Component = BaseControl.extend([EventProxyMixin], {
                 {periodQuantum: rangeSelectionUtils.PERIOD_TYPE.month}
             ));
         } else if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable) {
-            css.push(rangeSelectionUtils.prepareHoveredClass(
+            const hoveredClass: string = rangeSelectionUtils.prepareHoveredClass(
                 itemValue,
                 this._options.hoveredStartValue,
                 this._options.hoveredEndValue,
                 {cssPrefix: MONTHS_RANGE_CSS_CLASS_PREFIX}
-            ));
+            );
+            css.push(hoveredClass);
+            css.push(`${hoveredClass}_theme-${this._options.theme}`);
         }
 
         return css.join(' ');

@@ -97,7 +97,7 @@ describe('Controls/_source/QueryParamsController', () => {
 
    it('prepareQueryParams', () => {
       controller.updateQueryProperties(recordSetWithMultiNavigation);
-      const queryParams = controller.prepareQueryParams('down', () => {}, {}, true);
+      const queryParams = controller.prepareQueryParams('down', () => {}, {multiNavigation: true});
       equal(queryParams.length, 2);
    });
 

@@ -46,6 +46,7 @@ define([
          mover = new lists.Mover({});
          mover._options.parentProperty = 'folder';
          mover._options.nodeProperty = 'folder@';
+         mover._options.moveDialogTemplate = {};
          mover._items = items;
          mover._source = new source.Memory({
             keyProperty: 'id',
