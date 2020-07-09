@@ -50,13 +50,9 @@ export class Controller {
     */
    update(options: ISelectionControllerOptions): void {
       this._strategy.update(options.strategyOptions);
-
-      const oldSelection = clone(this._selection);
       this._selectedKeys = options.selectedKeys.slice();
       this._excludedKeys = options.excludedKeys.slice();
-
       this._model = options.model;
-      this._updateModel(this._selection);
    }
 
    /**
@@ -191,6 +187,10 @@ export class Controller {
       const oldSelection = clone(this._selection);
       this._remove(this._getItemsKeys(removedItems));
       return this._getResult(oldSelection, this._selection);
+   }
+
+   updateModel(): void {
+      this._updateModel(this._selection);
    }
 
    private _clearSelection(): void {

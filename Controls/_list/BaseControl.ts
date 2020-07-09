@@ -2839,11 +2839,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 const result = this._selectionController.clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
+            _private.updateSelectionController(this, newOptions);
 
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
                || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
-            if (selectionChanged) {
-                _private.updateSelectionController(this, newOptions);
+            if (selectionChanged || this._modelRecreated) {
+                this._selectionController.updateModel();
             }
         } else {
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
