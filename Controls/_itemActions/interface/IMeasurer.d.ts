@@ -4,6 +4,7 @@ import { IItemAction, TActionCaptionPosition } from './IItemAction';
 export interface IMeasurer {
    getSwipeConfig(
       actions: IItemAction[],
+      rowWidth: number,
       rowHeight: number,
       actionCaptionPosition: TActionCaptionPosition,
       menuButtonVisibility?: 'visible'|'adaptive'

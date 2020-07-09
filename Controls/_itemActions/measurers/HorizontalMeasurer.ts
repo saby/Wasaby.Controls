@@ -3,7 +3,7 @@ import { ISwipeConfig } from 'Controls/display';
 
 import { IMeasurer } from '../interface/IMeasurer';
 import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
-import { Utils } from '../Utils';
+import { MeasurerUtils } from './MeasurerUtils';
 
 const MAX_ACTIONS_COUNT = 3;
 const HEIGHT_LOWER_BOUND_WITH_TITLE = 58;
@@ -25,12 +25,13 @@ function getItemActionsSize(
 export const horizontalMeasurer: IMeasurer = {
    getSwipeConfig(
       actions: IItemAction[],
+      rowWidth: number,
       rowHeight: number,
       actionCaptionPosition: ActionCaptionPosition,
       menuButtonVisibility?: 'visible'|'adaptive'
    ): ISwipeConfig {
 
-      let itemActions = Utils.getActualActions(actions);
+      let itemActions = MeasurerUtils.getActualActions(actions);
 
       if (itemActions.length > MAX_ACTIONS_COUNT || menuButtonVisibility === 'visible') {
          itemActions = itemActions.slice(0, MAX_ACTIONS_COUNT);

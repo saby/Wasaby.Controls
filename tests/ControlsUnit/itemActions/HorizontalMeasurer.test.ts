@@ -116,6 +116,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                         id: 4,
                         icon: 'icon-DK'
                     }),
+                    150,
                     20,
                     'right'
                 ),
@@ -134,7 +135,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 20, 'none'),
+                horizontalMeasurer.getSwipeConfig(actions, 150, 20, 'none'),
                 result
             );
         });
@@ -150,7 +151,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 39, 'none'),
+                horizontalMeasurer.getSwipeConfig(actions, 150,39, 'none'),
                 result
             );
         });
@@ -166,7 +167,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 20, 'bottom'),
+                horizontalMeasurer.getSwipeConfig(actions, 150, 20, 'bottom'),
                 result
             );
         });
@@ -182,7 +183,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 59, 'bottom'),
+                horizontalMeasurer.getSwipeConfig(actions, 150, 59, 'bottom'),
                 result
             );
         });
@@ -240,7 +241,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             ];
             assert.deepEqual(
                 result,
-                horizontalMeasurer.getSwipeConfig(otherActions, 59, 'none').itemActions.showed
+                horizontalMeasurer.getSwipeConfig(otherActions, 150, 59, 'none').itemActions.showed
             );
         });
     });
