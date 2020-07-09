@@ -4,6 +4,7 @@
       <ws:partial
          name="errorContainer"
          template="{{ _options.errorContainer || _errorContainer }}"
+            record="{{content.record}}"
          viewConfig="{{ __error }}"
          on:dialogClosed="_onCloseErrorDialog()"
       >

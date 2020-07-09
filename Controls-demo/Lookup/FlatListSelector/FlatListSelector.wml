@@ -13,11 +13,11 @@
                     <Controls.browser:Browser searchParam="title" minSearchLength="{{3}}">
                         <div class="ws-fragment">
                             <div class="controlsDemo__wrapper">
-                                <Controls.search:InputContainer>
+                            <Controls.search:InputContainer scope="{{content}}">
                                     <Controls.search:Input/>
                                 </Controls.search:InputContainer>
                             </div>
-                            <Controls.lookupPopup:ListContainer multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
+                            <Controls.lookupPopup:ListContainer scope="{{content}}" multiSelect="{{_options.multiSelect ? 'visible'}}" keyProperty="{{_keyProperty}}">
                                 <Controls.list:Container>
                                     <Controls.grid:View displayProperty="title" idProperty="{{_keyProperty}}" multiSelectVisibility="{{_options.multiSelect ? 'visible'}}" emptyTemplate="Не найдено">
                                         <ws:columns>

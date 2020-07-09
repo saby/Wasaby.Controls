@@ -10,7 +10,7 @@
     <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
         <div>
             <Controls.list:Mover name="listMover"/>
-            <Controls.operations:Controller bind:selectedKeys="_selectedKeys">
+            <Controls.operations:Controller scope="{{content}}" bind:selectedKeys="_selectedKeys">
                 <Controls.list:Container>
                     <Controls.scroll:Container attr:class="controlsDemo__inline-flex"
                                                attr:style="width: 700px; height: 500px;">

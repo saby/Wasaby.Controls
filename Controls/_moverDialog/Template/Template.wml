@@ -64,7 +64,7 @@
                                            icon="icon-Undo2"
                                            iconSize="s" iconStyle="secondary"/>
                </ws:if>
-               <Controls.scroll:Container attr:class="controls-MoveDialog__scroll">
+               <Controls.scroll:Container scope="{{content}}" attr:class="controls-MoveDialog__scroll">
                   <Controls.list:Container>
                      <ws:if data="{{ _options.hasOwnProperty('markedKey') }}">
                         <ws:partial template="explorerWithMarkedKey"/>

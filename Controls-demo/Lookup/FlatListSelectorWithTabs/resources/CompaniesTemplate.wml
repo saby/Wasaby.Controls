@@ -7,11 +7,11 @@
             <Controls.browser:Browser searchParam="title" minSearchLength="{{3}}">
                 <div class="ws-fragment">
                     <div class="controlsDemo__wrapper">
-                        <Controls.search:InputContainer>
+                    <Controls.search:InputContainer scope="{{content}}">
                             <Controls.search:Input/>
                         </Controls.search:InputContainer>
                     </div>
-                    <Controls.list:Container>
+                    <Controls.list:Container scope="{{content}}">
                         <Controls.lookupPopup:ListContainer>
                             <Controls.list:View
                                 attr:class="ControlsDemo-Selector__flatListCompanies"

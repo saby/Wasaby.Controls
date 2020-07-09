@@ -5,7 +5,7 @@
         <div>
             <Controls.operations:Panel selectedCountConfig="{{_selectedCountConfig}}" source="{{null}}"/>
 
-                <Controls.list:Container>
+                <Controls.list:Container scope="{{content}}">
                     <Controls.treeGrid:View
                             keyProperty="id"
                             columns="{{_gridColumns}}"

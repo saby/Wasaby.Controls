@@ -9,6 +9,7 @@
                    style="withBackground"
                    toolbarVisibility="{{true}}">
                <Controls.editableArea:Base
+                  scope="{{content}}"
                        bind:value="content.editObject.text1"
                        attr:class="ControlsDemo-EditableArea__firstExample__editor_wrapper"
                        style="asLink"
