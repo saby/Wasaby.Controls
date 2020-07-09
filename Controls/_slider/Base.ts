@@ -29,6 +29,7 @@ const maxPercentValue = 100;
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Base/Base/Index
+ * @demo Controls-demo/Slider/Base/StandartSliderBaseDemo
  */
 
 /*
@@ -41,6 +42,7 @@ const maxPercentValue = 100;
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
  * @demo Controls-demo/Slider/Base/Base/Index
+ * @demo Controls-demo/Slider/Base/StandartSliderBaseDemo
  */
 
 /**
@@ -83,6 +85,7 @@ const maxPercentValue = 100;
  *       </ws:intervals>
  *    </Controls.slider:Base>
  * </pre>
+ * @demo Controls-demo/Slider/Base/Intervals/Index
  */
 
 /*
@@ -103,6 +106,7 @@ const maxPercentValue = 100;
  *       </ws:intervals>
  *    </Controls.slider:Base>
  * </pre>
+ * @demo Controls-demo/Slider/Base/Intervals/Index
  */
 
 class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
