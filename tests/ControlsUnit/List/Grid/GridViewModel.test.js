@@ -1341,19 +1341,19 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             it('with main cell', () => {
                ladderViewModel._model._curIndex = 0;
                let current = ladderViewModel.getCurrent();
-               assert.equal(current.getLadderContentClasses('prop1', 'prop1'),' controls-Grid__row-cell__ladder-content_hiddenForLadder_show-on-drag','wrong classes');
-               assert.equal(current.getLadderContentClasses('prop1', 'prop2'),' controls-Grid__row-cell__ladder-content_hiddenForLadder controls-Grid__row-cell__ladder-content_displayNoneForLadder','wrong classes');
-               assert.equal(current.getLadderContentClasses('prop2', 'prop1'),' controls-Grid__row-cell__ladder-content_hiddenForLadder','wrong classes');
-               assert.equal(current.getLadderContentClasses('prop2', 'prop2'),' controls-Grid__row-cell__ladder-content_hiddenForLadder_show-on-drag controls-Grid__row-cell__ladder-content_additional-with-main','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop1', 'prop1'),'','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop1', 'prop2'),' controls-Grid__row-cell__ladder-content_displayNoneForLadder','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop2', 'prop1'),'','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop2', 'prop2'),' controls-Grid__row-cell__ladder-content_additional-with-main','wrong classes');
 
             });
             it('without main cell', () => {
                ladderViewModel._model._curIndex = 1;
                let current = ladderViewModel.getCurrent();
-               assert.equal(current.getLadderContentClasses('prop1', 'prop1'),' controls-Grid__row-cell__ladder-content_hiddenForLadder','wrong classes');
-               assert.equal(current.getLadderContentClasses('prop1', 'prop2'),' controls-Grid__row-cell__ladder-content_hiddenForLadder','wrong classes');
-               assert.equal(current.getLadderContentClasses('prop2', 'prop1'),' controls-Grid__row-cell__ladder-content_hiddenForLadder controls-Grid__row-cell__ladder-content_displayNoneForLadder','wrong classes');
-               assert.equal(current.getLadderContentClasses('prop2', 'prop2'),' controls-Grid__row-cell__ladder-content_hiddenForLadder_show-on-drag','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop1', 'prop1'),'','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop1', 'prop2'),'','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop2', 'prop1'),' controls-Grid__row-cell__ladder-content_displayNoneForLadder','wrong classes');
+               assert.equal(current.getLadderContentClasses('prop2', 'prop2'),'','wrong classes');
             });
          });
          it('prepareLadder should reset cache of updated items', function () {
