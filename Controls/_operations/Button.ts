@@ -59,10 +59,6 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
              (expanded) => this._expandedChanged(expanded)
          );
       }
-
-      if (!this._dependenciesTimer) {
-         this._dependenciesTimer = new DependenciesTimer();
-      }
    }
    protected _beforeUnmount(): void {
       if (this._expandedCallbackId) {
@@ -79,11 +75,14 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
    }
    protected _mouseEnterHandler(): void {
       if (!this._options.readOnly) {
+         if (!this._dependenciesTimer) {
+            this._dependenciesTimer = new DependenciesTimer();
+         }
          this._dependenciesTimer.start(this._loadDependencies);
       }
    }
    protected _mouseLeaveHandler(): void {
-      this._dependenciesTimer.stop();
+      this._dependenciesTimer?.stop();
    }
    private _loadDependencies(): Promise<unknown> {
       try {
