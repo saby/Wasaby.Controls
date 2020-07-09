@@ -334,6 +334,10 @@ var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin], {
             resultDef.callback(getHistoryDataSet());
          });
       } else if (!storageDef && !storageData) {
+         /**
+          * В retailOffline нет сервиса истории и его там нельзя вызывать, в таком случае работаем без истории вообще.
+          * FIXME: https://online.sbis.ru/opendoc.html?guid=f0e4521b-873a-4b1a-97fe-2ecbb12409d1
+          */
          if (detection.retailOffline) {
             const emptyData = new DataSet({
                rawData: {
