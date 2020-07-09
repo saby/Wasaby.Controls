@@ -1534,6 +1534,7 @@ var
             };
             current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
                 let result = '';
+                let hiddenForLadder = false;
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const index = current.stickyProperties.indexOf(stickyProperty);
                     const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
@@ -1543,6 +1544,7 @@ var
                         } else {
                             result += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
                         }
+                        hiddenForLadder = true;
                     }
                     if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
                         index === 1 && !hasMainCell ||
@@ -1553,7 +1555,7 @@ var
                         result += ' controls-Grid__row-cell__ladder-content_additional-with-main';
                     }
                 }
-                if (!(self._ladder.ladder[current.index][ladderProperty].ladderLength && self._ladder.ladder[current.index][ladderProperty].ladderLength >= 1)) {
+                if (!hiddenForLadder && !(self._ladder.ladder[current.index][ladderProperty].ladderLength && self._ladder.ladder[current.index][ladderProperty].ladderLength >= 1)) {
                     result += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
                 }
                 
