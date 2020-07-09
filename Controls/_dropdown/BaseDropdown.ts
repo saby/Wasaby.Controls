@@ -3,12 +3,12 @@ import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import IDropdownController from 'Controls/_dropdown/interface/IDropdownController';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-import DependenciesTimer from "Controls/Utils/DependenciesTimer";
+import {DependencyTimer} from "Controls/Utils/FastOpen";
 
 export default class BaseDropdown extends Control<IControlOptions> {
     protected _controller: IDropdownController = null;
     protected _popupId: string = null;
-    protected _dependenciesTimer: DependenciesTimer = null;
+    protected _dependenciesTimer: DependencyTimer = null;
 
     reload(): void {
         this._controller.reload();
@@ -37,7 +37,7 @@ export default class BaseDropdown extends Control<IControlOptions> {
     protected _handleMouseEnter(event: SyntheticEvent): void {
         if (!this._options.readOnly) {
             if (!this._dependenciesTimer) {
-                this._dependenciesTimer = new DependenciesTimer();
+                this._dependenciesTimer = new DependencyTimer();
             }
             this._dependenciesTimer.start(this._controller.loadDependencies.bind(this._controller));
         }
