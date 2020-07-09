@@ -80,11 +80,6 @@
    margin: @item_offset_tile / 2;
 }
 
-.controls-TileView__item .controls-itemActionsV {
-   visibility: visible;
-   opacity: 0;
-}
-
 .controls-TileView__itemContent_theme-@{themeName} {
    background-color: @item_backgorund-color_tile;
    box-sizing: border-box;
@@ -105,6 +100,7 @@
 }
 
 .controls-TileView__item_animated .controls-itemActionsV {
+   visibility: visible;
    transition: opacity 0.05s step-end;
 }
 .controls-TileView__item_animated {
