@@ -1,4 +1,4 @@
-import DependencyTimer from 'Controls/Utils/DependenciesTimer';
+import {DependencyTimer} from 'Controls/Utils/FastOpen';
 import * as sinon from 'sinon';
 import {assert} from 'chai';
 
