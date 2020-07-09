@@ -211,7 +211,14 @@
    flex-grow: 1;
    box-sizing: border-box;
    max-width: 100%;
-   height: 100%;
+}
+
+// Хак для новой версии хрома (84 dev), заведён issue в поддержке хрома. В IE ломает вёрстку в автотестах
+.ws-is-chrome {
+   .controls-Grid__row-cell__content,
+   .controls-Grid__row-cell_colspaned {
+      height: 100%;
+   }
 }
 
 .controls-Grid__itemAction.controls-itemActionsV_outside_theme-@{themeName} {
@@ -600,7 +607,6 @@
    min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
    flex-shrink: 1;
    box-sizing: border-box;
-   height: 100%;
 }
 
 .controls-Grid__row-cell_cursor-default {
