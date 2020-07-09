@@ -156,9 +156,11 @@ class Component extends Control {
                 return Promise.resolve().then(this._registerDelayed.bind(this));
             }
         } else {
+            // При 'отрегистриации' удаляем заголовок из всех возможных стэков
             this._unobserveStickyHeader(this._headers[data.id]);
             delete this._headers[data.id];
-            this._removeFromHeadersStack(data.id, data.position);
+            this._removeFromStack(data.id, this._headersStack);
+            this._removeFromStack(data.id, this._fixedHeadersStack);
             this._removeFromDelayedStack(data.id);
         }
         return Promise.resolve();
@@ -395,17 +397,22 @@ class Component extends Control {
         }
     }
 
-    private _removeFromHeadersStack(id: number, position: string) {
-        var index = this._headersStack['top'].indexOf(id);
-        if (index !== -1) {
-            this._headersStack['top'].splice(index, 1);
-        }
-        index = this._headersStack['bottom'].indexOf(id);
-        if (index !== -1) {
-            this._headersStack['bottom'].splice(index, 1);
-        }
+    private _removeFromStack(id: number, stack: object): void {
+        let isUpdated = false;
+        let index = stack['top'].indexOf(id);
 
-        this._updateTopBottom();
+        if (index !== -1) {
+            stack['top'].splice(index, 1);
+            isUpdated = true;
+        }
+        index = stack['bottom'].indexOf(id);
+        if (index !== -1) {
+            stack['bottom'].splice(index, 1);
+            isUpdated = true;
+        }
+        if (isUpdated) {
+            this._updateTopBottom();
+        }
     }
 
     private _removeFromDelayedStack(id: number): void {

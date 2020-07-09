@@ -459,7 +459,8 @@ var CompoundArea = CompoundContainer.extend([
             .subscribe('onVisible',
                function(event, visibility) {
                   if (!self.isDestroyed() && !visibility) {
-                     const parentVdomPopup = $(self._options.target).closest('.controls-Popup__template');
+                     // После правок на шаблон совместимости перестал вешаться класс. Вешается на окно.
+                     const parentVdomPopup = $(self._options.target).closest('.controls-Popup');
                      // Вдомные стековые окна, если перекрыты другими окнами из стека, скрываются через ws-hidden.
                      // PopupMixin реагирует на скритие таргета и закрывается.
                      // Делаю фикс, чтобы в этом случае попап миксин не закрывался

@@ -122,11 +122,21 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     _loadDepsCallback(cfg: TBaseOpenerOptions, result: ILoadDependencies, resolve: Function): void {
-        cfg.id = this._getCurrentPopupId();
-        BaseOpener.showDialog(result.template, cfg, result.controller, this).addCallback((id: string) => {
-            this._popupId = id;
-            resolve(id);
-        });
+        const showPopup = () => {
+            cfg.id = this._getCurrentPopupId();
+            BaseOpener.showDialog(result.template, cfg, result.controller, this).addCallback((id: string) => {
+                this._popupId = id;
+                resolve(id);
+            });
+        };
+
+        // TODO: Compatible На старой странице могут несколько раз синхронно вызвать показ окна.
+        // Пока не построился менеджер, то проверить открыто ли окно с таким id корректно нельзя, дожидаюсь менеджера.
+        if (!isNewEnvironment()) {
+            BaseOpenerUtil.getManagerWithCallback(showPopup);
+        } else {
+            showPopup();
+        }
     }
 
     private _getModulesSync(config: TBaseOpenerOptions, controller: string): ILoadDependencies|null {
