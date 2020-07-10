@@ -147,12 +147,12 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
 
          currentSelector = '.js-controls-SelectedCollection__item__caption';
          selectedCollection._itemClick(event, model);
-         sinon.assert.calledWith(selectedCollection._notify, 'itemClick', [model]);
+         sinon.assert.calledWith(selectedCollection._notify, 'itemClick', [model, event]);
          assert.isTrue(propagationStopped);
 
          currentSelector = '.js-controls-SelectedCollection__item__cross';
          selectedCollection._itemClick(event, model);
-         sinon.assert.calledWith(selectedCollection._notify, 'crossClick', [model]);
+         sinon.assert.calledWith(selectedCollection._notify, 'crossClick', [model, event]);
          assert.isTrue(propagationStopped);
 
          sandbox.restore();
