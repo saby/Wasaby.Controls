@@ -2760,6 +2760,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const resetPaging = this._pagingNavigation && filterChanged;
         const recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         const sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
+        const groupMethodChanged = newOptions.groupMethod !== this._options.groupMethod;
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
@@ -2778,7 +2779,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (
             !newOptions.useNewModel &&
             (
-                newOptions.groupMethod !== this._options.groupMethod ||
+                groupMethodChanged ||
                 newOptions.viewModelConstructor !== this._viewModelConstructor
             )
         ) {
@@ -2804,10 +2805,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._dndListController) {
             this._dndListController.update(this._listViewModel, newOptions.canStartDragNDrop);
-        }
-
-        if (newOptions.groupMethod !== this._options.groupMethod) {
-            _private.reload(this, newOptions);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
@@ -2893,19 +2890,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             });
         }
 
-        if (filterChanged || recreateSource || sortingChanged) {
+        if (filterChanged || recreateSource || sortingChanged || groupMethodChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
-
+            if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
+                this._prepareGroups(newOptions, (collapsedGroups) => {
+                    self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                });
+            }
             // return result here is for unit tests
             return _private.reload(self, newOptions).addCallback(() => {
                 this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                 _private.updateInitializedItemActions(this, newOptions);
-                if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
-                    this._prepareGroups(newOptions, (collapsedGroups) => {
-                        self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
-                    });
-                }
             });
         } else {
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
