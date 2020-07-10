@@ -11,21 +11,21 @@ var
 const TILE_SIZES = {
     s: {
         horizontal: {
-            width: 220,
+            width: 210,
             imageHeight: 180
         },
         vertical: {
-            width: 400,
+            width: 390,
             imageWidth: 300
         }
     },
     m: {
         horizontal: {
-            width: 320,
+            width: 310,
             imageHeight: 240
         },
         vertical: {
-            width: 400,
+            width: 390,
             imageWidth: 160
         }
     },
@@ -35,7 +35,7 @@ const TILE_SIZES = {
             imageHeight: 320
         },
         vertical: {
-            width: 650,
+            width: 640,
             imageWidth: 300
         }
     }
