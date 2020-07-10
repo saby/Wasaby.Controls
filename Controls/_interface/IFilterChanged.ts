@@ -2,6 +2,7 @@
  * Интерфейс для контролов, которые поддерживают фильтрацию данных.
  *
  * @interface Controls/_interface/IFilterChanged
+ * @mixin Controls/_interface/IFilter
  * @public
  * @author Авраменко А.С.
  */
