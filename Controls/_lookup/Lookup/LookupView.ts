@@ -123,7 +123,7 @@ var _private = {
           * при вставке в innerHTML на выходе мы получим "&quot;", для того что бы получить  кавычку и правильно посчитать ширину элементов сами &amp заменяем на &*/
          measurer.innerHTML = itemsTemplate({
             _options: merge(Collection.getDefaultOptions(), _private.getCollectionOptions(newOptions, maxVisibleItems, counterWidth)),
-            _visibleItemsCount: maxVisibleItems,
+            _visibleItems: _private.getLastSelectedItems(newOptions.items, maxVisibleItems),
             _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth,
             _getItemOrder: selectedCollectionUtils.getItemOrder,
             _contentTemplate: ContentTemplate,
