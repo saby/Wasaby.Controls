@@ -1526,18 +1526,6 @@ const _private = {
         }
     },
 
-    prepareCollapsedGroups(config) {
-        const result = new Deferred();
-        if (config.historyIdCollapsedGroups || config.groupHistoryId) {
-            groupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
-                result.callback(collapsedGroupsFromStore || config.collapsedGroups);
-            });
-        } else {
-            result.callback(config.collapsedGroups);
-        }
-        return result;
-    },
-
     getSortingOnChange(currentSorting, propName) {
         let sorting = cClone(currentSorting || []);
         let sortElem;
@@ -2454,11 +2442,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return this._prepareGroups(newOptions, (collapsedGroups) => {
-            return this._prepareItemsMount(self, newOptions, receivedState, collapsedGroups);
+            return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups);
         });
     },
 
-    _prepareItemsMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
+    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
             let viewModelConfig = cClone(newOptions);
@@ -2943,12 +2931,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._loadedItems) {
             this._shouldRestoreScrollPosition = true;
-        }
-    },
-
-    _prepareItemsUpdate(self, newOptions, collapsedGroups) {
-        if (collapsedGroups) {
-            self._listViewModel.setCollapsedGroups(collapsedGroups);
         }
     },
 
