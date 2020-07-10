@@ -14,7 +14,7 @@ import { Sticky, IStickyPopupOptions } from 'Controls/popup';
 
 /**
  * Контрол, отображающий коллекцию элементов.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
@@ -103,7 +103,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
       if (eventName) {
          event.stopPropagation();
-         this._notify(eventName, [item, event]);
+         this._notify(eventName, [item, event.nativeEvent]);
       }
    }
 
