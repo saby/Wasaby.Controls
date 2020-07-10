@@ -15,12 +15,19 @@
 
 .controls-ColumnScroll__shadow_theme-@{themeName} {
    top: 0;
-   bottom: 0;
    z-index: @z-index_Scroll-shadow;
    position: absolute;
    pointer-events: none;
    width: @columnscroll_shadow-blur_grid;
    box-sizing: border-box;
+}
+
+.controls-ColumnScroll__shadow_without-bottom-padding_theme-@{themeName} {
+   bottom: 0;
+}
+
+.controls-ColumnScroll__shadow_with-bottom-padding_theme-@{themeName} {
+   bottom: @height_outside_itemActions;
 }
 
 // Набор классов для установки градиента горизонтального скролла через backgroundStyle (default, transparent)
