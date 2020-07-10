@@ -688,7 +688,7 @@ const _private = {
                     self._scrollController.startBatchAdding(direction);
                 }
 
-                self.getInertialScrolling().callAfterScrollStopped(() => {
+                self._getInertialScrolling().callAfterScrollStopped(() => {
                     loadCallback(addedItems, countCurrentItems);
                 });
 
@@ -2433,7 +2433,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
         const self = this;
-
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
@@ -2585,7 +2584,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     },
 
-    getInertialScrolling(): InertialScrolling {
+    _getInertialScrolling(): InertialScrolling {
         if (!this._inertialScrolling) {
             this._inertialScrolling = new InertialScrolling();
         }
@@ -2596,7 +2595,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.handleListScrollSync(this, params);
 
         if (detection.isMobileIOS) {
-            this.getInertialScrolling().scrollStarted();
+            this._getInertialScrolling().scrollStarted();
         }
     },
 
