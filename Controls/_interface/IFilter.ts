@@ -1,5 +1,4 @@
 import {QueryWhere} from 'Types/source';
-import IFilterChanged from './IFilterChanged';
 
 export interface IFilterOptions {
     filter?: QueryWhere;
@@ -17,7 +16,7 @@ export default interface IFilter {
 }
 
 /**
- * @name Controls/_interface/IFilterChanged#filter
+ * @name Controls/_interface/IFilter#filter
  * @cfg {Object} Конфигурация объекта фильтра. Фильтр отправляется в запрос к источнику для получения данных.
  * @remark
  * При изменении фильтра важно передавать новый объект фильтра, изменение объекта по ссылке не приведет к желаемому результату.
