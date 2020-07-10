@@ -2843,7 +2843,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
                || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
             if (selectionChanged || this._modelRecreated) {
-                this._selectionController.updateModel();
+                // handleSelectionControllerResult чтобы отправить информацию для ПМО
+                const result = this._selectionController.updateModel();
+                _private.handleSelectionControllerResult(this, result);
             }
         } else {
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан

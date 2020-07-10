@@ -123,13 +123,13 @@ describe('Controls/_multiselection/Controller', () => {
 
    describe('clearSelection', () => {
       it('not empty model', () => {
-         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
+         controller.toggleItem(1);
+
          const result = controller.clearSelection();
-         assert.isTrue(setSelectedItemsSpy.called);
          assert.deepEqual(result, {
             selectedKeysDiff: {
                added: [],
-               removed: [],
+               removed: [1],
                keys: []
             },
             excludedKeysDiff: {
@@ -140,6 +140,9 @@ describe('Controls/_multiselection/Controller', () => {
             selectedCount: 0,
             isAllSelected: false
          });
+         assert.isFalse(model.getItemBySourceKey(1).isSelected());
+         assert.isFalse(model.getItemBySourceKey(2).isSelected());
+         assert.isFalse(model.getItemBySourceKey(3).isSelected());
       });
 
       it('clearSelection and empty model', () => {

@@ -78,18 +78,18 @@ export class Controller {
    clearSelection(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._clearSelection();
-      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
 
    /**
     * Проставляет выбранные элементы в модели
-    * @void
+    * @return {ISelectionControllerResult}
     */
-   updateModel(): void {
+   updateModel(): ISelectionControllerResult {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
       this._strategy.setItems(this._model.getCollection());
       this._updateModel(this._selection);
+      return this._getResult(this._selection, this._selection);
    }
 
    /**
