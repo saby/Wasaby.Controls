@@ -46,7 +46,7 @@ function calculateActionsSizes(itemActions: IItemAction[], templateConfig: ISwip
    return MeasurerUtils.calculateSizesOfItems(
        itemsHtml,
        'controls-UtilsItemAction__measurer',
-       'controls-itemActionsV__action');
+       'controls-Swipe__action');
 }
 
 /**
@@ -60,7 +60,7 @@ function calculateVisibleActions(
     actions: IItemAction[],
     moreButton: IItemAction,
     rowWidth: number,
-    templateConfig: ISwipeActionTemplateConfig) {
+    templateConfig: ISwipeActionTemplateConfig): IItemAction[] {
    const moreButtonSize = calculateActionSize(moreButton, templateConfig);
    let maxWidth = rowWidth - moreButtonSize;
 
@@ -68,7 +68,7 @@ function calculateVisibleActions(
    // Это позволит не производить слишком много вычислений с DOM
    const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
    const itemActionsSizes = calculateActionsSizes(itemActions, templateConfig);
-   let visibleActions = [];
+   const visibleActions: IItemAction[] = [];
    itemActions.every((action, index) => {
       maxWidth -= itemActionsSizes[index];
       if (maxWidth < 0) {
@@ -88,14 +88,15 @@ export const horizontalMeasurer: IMeasurer = {
       actionCaptionPosition: ActionCaptionPosition,
       menuButtonVisibility?: 'visible'|'adaptive'
    ): ISwipeConfig {
-      let visibleActions = [];
       let isMenuButtonVisible = menuButtonVisibility === 'visible';
+      let visibleActions = MeasurerUtils.getActualActions(actions);
       const actionTemplateConfig: ISwipeActionTemplateConfig = {
          itemActionsSize: getItemActionsSize(rowHeight, actionCaptionPosition),
          paddingSize: 'm',
          needIcon: this.needIcon,
          needTitle: this.needTitle,
          actionCaptionPosition,
+         actionAlignment: 'horizontal',
          theme: 'default', // todo,
          hasActionWithIcon: false // todo
       };
@@ -107,15 +108,9 @@ export const horizontalMeasurer: IMeasurer = {
          showType: TItemActionShowType.TOOLBAR
       };
 
-      if (actions.length > MAX_ACTIONS_COUNT) {
-         visibleActions = calculateVisibleActions(
-             MeasurerUtils.getActualActions(actions),
-             moreButton,
-             rowWidth,
-             actionTemplateConfig);
+      if (visibleActions.length > MAX_ACTIONS_COUNT) {
+         visibleActions = calculateVisibleActions(visibleActions, moreButton, rowWidth, actionTemplateConfig);
          isMenuButtonVisible = true;
-      } else {
-         visibleActions = actions;
       }
 
       if (isMenuButtonVisible) {
