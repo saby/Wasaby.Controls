@@ -484,7 +484,7 @@ const _private = {
                 self._notify('markedKeyChanged', [self._markedKey]);
             }
             if (!self._options.hasOwnProperty('markedKey')) {
-                self._markerController.updateModel();
+                self._markerController?.updateModel();
             }
         }
     },
@@ -1985,6 +1985,9 @@ const _private = {
                    if (newMarkedKey !== self._markedKey) {
                        self._markedKey = newMarkedKey;
                        self._notify('markedKeyChanged', [self._markedKey]);
+                   }
+                   if (!self._options.hasOwnProperty('markedKey')) {
+                       self._markerController.updateModel();
                    }
                }
                break;
