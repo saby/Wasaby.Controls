@@ -460,17 +460,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._openSubMenuEvent.clientX,this._subMenuPosition.top +
             this._subMenuPosition.height, this._openSubMenuEvent.clientY, curMouseEvent.clientX, curMouseEvent.clientY);
 
-        return MenuControl._getSign(firstSegment) === MenuControl._getSign(secondSegment) &&
-            MenuControl._getSign(firstSegment) === MenuControl._getSign(thirdSegment);
-    }
-
-    // FIXME https://online.sbis.ru/opendoc.html?guid=923f813d-7ed2-4e7d-94d8-65b0b733a4bd
-    private static _getSign(x: number): number {
-        x = +x;
-        if (x === 0 || isNaN(x)) {
-            return x;
-        }
-        return x > 0 ? 1 : -1;
+        return Math.sign(firstSegment) === Math.sign(secondSegment) &&
+            Math.sign(firstSegment) === Math.sign(thirdSegment);
     }
 
     private static _calculatePointRelativePosition(firstSegmentPointX: number,
