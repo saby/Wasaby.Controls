@@ -7,6 +7,7 @@
  * @includes Controller Controls/_operations/Controller
  * @includes SimpleMultiSelector Controls/_operations/__MultiSelector
  * @includes MultiSelectorCheckbox Controls/_operations/MultiSelector/Checkbox
+ * @includes MultiSelector Controls/_operations/MultiSelector
  * @public
  * @author Крайнов Д.О.
  */
@@ -28,7 +29,8 @@ import Controller from 'Controls/_operations/Controller';
 import Container = require('Controls/_operations/Container');
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 import {default as Button} from './_operations/Button';
-import MultiSelector from 'Controls/_operations/__MultiSelector';
+import {default as SimpleMultiSelector} from 'Controls/_operations/__MultiSelector';
+import {default as MultiSelector} from 'Controls/_operations/MultiSelector';
 import FilterController from 'Controls/_operations/FilterController';
 import {default as MultiSelectorCheckbox} from 'Controls/_operations/MultiSelector/Checkbox';
 import {default as ControllerClass} from 'Controls/_operations/ControllerClass';
@@ -41,7 +43,8 @@ export {
    Controller,
    Container,
    selectionToRecord,
-   MultiSelector as SimpleMultiSelector,
+   SimpleMultiSelector,
+   MultiSelector,
    FilterController,
    MultiSelectorCheckbox,
    ControllerClass

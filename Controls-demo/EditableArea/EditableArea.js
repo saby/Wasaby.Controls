@@ -4,15 +4,12 @@ define('Controls-demo/EditableArea/EditableArea', [
    'Types/entity',
    'Types/source',
    'wml!Controls-demo/EditableArea/resources/exampleTabTemplate',
-   'wml!Controls-demo/EditableArea/resources/exampleTabTemplate2',
-
+   'wml!Controls-demo/EditableArea/resources/exampleTabTemplate2'
 ], function(
    Control,
    template,
    entity,
-   source,
-   exampleTabTemplate,
-   exampleTabTemplate2
+   source
 ) {
    'use strict';
    var tabsData = [
@@ -22,7 +19,7 @@ define('Controls-demo/EditableArea/EditableArea', [
             align: 'left',
             number: '3565654',
             date: '09.01.17',
-            itemTemplate: exampleTabTemplate
+            itemTemplate: 'wml!Controls-demo/EditableArea/resources/exampleTabTemplate'
          },
          {
             id: 1,
@@ -35,7 +32,7 @@ define('Controls-demo/EditableArea/EditableArea', [
             id: 0,
             align: 'left',
             name: 'Компания "Сбис плюс"',
-            itemTemplate: exampleTabTemplate2
+            itemTemplate: 'wml!Controls-demo/EditableArea/resources/exampleTabTemplate2'
          }];
 
    var EditableArea = Control.extend({

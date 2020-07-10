@@ -5,7 +5,6 @@ import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {Logger} from 'UI/Utils';
 import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
 import {goUpByControlTree} from 'UI/Focus';
-import {delay as runDelayed} from 'Types/function';
 import {List} from 'Types/collection';
 import {Bus as EventBus} from 'Env/Event';
 import {detection} from 'Env/Env';
@@ -44,6 +43,16 @@ class Manager extends Control<IManagerOptions> {
         ManagerController.setManager(this);
         ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
         EventBus.channel('navigation').subscribe('onBeforeNavigate', this._navigationHandler.bind(this));
+
+        if (detection.isMobilePlatform) {
+            window.addEventListener('orientationchange', () => {
+                // Таймаут нужен, чтобы размеры страницы изменились. На момент вызова события размеры старые.
+                setTimeout(() => {
+                    this.orientationChangeHandler();
+                }, 0);
+            });
+        }
+
         if (detection.isMobileIOS) {
             this._controllerVisibilityChangeHandler = this._controllerVisibilityChangeHandler.bind(this);
             EventBus.globalChannel().subscribe('MobileInputFocus', this._controllerVisibilityChangeHandler);
@@ -178,6 +187,18 @@ class Manager extends Control<IManagerOptions> {
             (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYED);
+    }
+
+    private orientationChangeHandler(): void {
+        let needUpdate = false;
+        this._popupItems.each((item) => {
+            if (this._popupUpdated(item.id)) {
+                needUpdate = true;
+            }
+        });
+        if (needUpdate) {
+            this._redrawItems();
+        }
     }
 
     private _updateContext(context: IManagerTouchContext): void {
@@ -553,10 +574,10 @@ class Manager extends Control<IManagerOptions> {
         this._redrawItems();
     }
 
-    private _redrawItems(): void {
+    private _redrawItems(): Promise<void> {
         this._updateZIndex();
         this._popupItems._nextVersion();
-        ManagerController.getContainer().setPopupItems(this._popupItems);
+        return ManagerController.getContainer().setPopupItems(this._popupItems);
     }
 
     private _updateZIndex(): void {
@@ -703,10 +724,7 @@ class Manager extends Control<IManagerOptions> {
 
     private _updatePopupOptions(id: string, item: IPopupItem, oldOptions: IPopupOptions, result: boolean): void {
         if (result) {
-            this._redrawItems();
-
-            // wait, until popup will be update options
-            runDelayed(() => {
+            this._redrawItems().then(() => {
                 ManagerController.getContainer().activatePopup(id);
             });
         } else {

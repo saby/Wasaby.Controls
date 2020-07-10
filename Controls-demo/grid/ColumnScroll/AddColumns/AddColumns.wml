@@ -2,7 +2,7 @@
     <div class="controlDemo__input-row">
         Add column
         <Controls.input:Text bind:value="_newColumnWidth" placeholder="new column width"/>
-        <Controls.buttons:Button caption="Add column" on:click="addColumn()"/>
+        <Controls.buttons:Button class="ControlsDemo-AddColumns__add-column" caption="Add column" on:click="addColumn()"/>
     </div>
     <div class="controlDemo__input-row">
         Change table container width

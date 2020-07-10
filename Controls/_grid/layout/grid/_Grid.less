@@ -11,7 +11,7 @@
       display: none;
    }
 
-   .controls-Grid__row-cell__content_hiddenForLadder .controls-Grid__row-cell__ladder-content,
+   .controls-Grid__row-cell__content_ladderHeader .controls-Grid__row-cell__ladder-content:not(.controls-Grid__row-cell__ladder-content_hiddenForLadder),
    .controls-Grid__row-cell__content_ladderHeader {
       visibility: visible;
    }
@@ -212,6 +212,14 @@
    max-width: 100%;
 }
 
+// Хак для новой версии хрома (84 dev), заведён issue в поддержке хрома. В IE ломает вёрстку в автотестах
+.ws-is-chrome {
+   .controls-Grid__row-cell__content,
+   .controls-Grid__row-cell_colspaned {
+      height: 100%;
+   }
+}
+
 .controls-Grid__itemAction.controls-itemActionsV_outside_theme-@{themeName} {
    z-index: @z-index-Grid-results-cell + 1 // на 1 больше чем у results; только для весла, иначе будут поверх шапки
 }
@@ -362,6 +370,7 @@
 .controls-Grid__row-cell__ladder-content_displayNoneForLadder {
    display: none;
 }
+
 .controls-Grid__row-cell__ladder-content_hiddenForLadder,
 .controls-Grid__row-cell__content_hiddenForLadder .controls-Grid__row-cell__ladder-content {
    visibility: hidden;
@@ -623,7 +632,7 @@
    // иначе все position: absolute элементы внутри position: sticky
    // начинают сроиться относительно родителя уровнем выше
    // translateZ лечит высоту, но ломает ширину внутри sticky контейнер
-   // translateY правит обе проблемы, с ним нормализуетя и высота и ширина, поэтому используем его   
+   // translateY правит обе проблемы, с ним нормализуетя и высота и ширина, поэтому используем его
    transform: translateY(0);
 }
 
