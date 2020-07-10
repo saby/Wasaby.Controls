@@ -4,7 +4,7 @@ import template = require('wml!Controls/_menu/Popup/searchHeaderTemplate');
 class SearchHeaderTemplate extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
 
-    protected _afterMount() {
+    protected _afterMount(): void {
         this._children.menuSearch.activate();
     }
 
