@@ -69,6 +69,14 @@
 
 .controls-PeriodDialog__header-period {
    flex-grow: 1;
+   align-self: baseline;
+}
+
+.controls-PeriodDialog__header-period::before {
+   content: '\200b';
+   display: inline-block;
+   width: 0;
+   font-size: @header_lineheight_dialog;
 }
 
 .controls-PeriodDialog__header-rangeDash {
