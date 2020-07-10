@@ -22,6 +22,7 @@ export class MeasurerUtils {
     static calculateActionsSizes(itemActions: IItemAction[], rowWidth: number, itemActionTemplate: Function) {
         let itemsHtml = [];
 
+
         // 1. Вызываем шаблон каждой опции и собираем в массив строк HTML
         // 2.
         const itemsSizes = MeasurerUtils.measureSizesOfItems(
