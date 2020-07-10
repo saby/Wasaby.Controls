@@ -225,7 +225,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             } else {
                 recordPromise = this._createRecordBeforeMount(options);
             }
-            if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.DELAYED_CREATE) {
+            if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.CREATE) {
                 return recordPromise;
             }
         }

@@ -11,8 +11,6 @@ define([
       it('initializingWay', (done) => {
          let FC = new form.Controller();
 
-         let baseReadRecordBeforeMount = form.Controller._readRecordBeforeMount;
-         let baseCreateRecordBeforeMount = form.Controller._createRecordBeforeMount;
          let cfg = {
             record: new entity.Record(),
          };
@@ -85,8 +83,6 @@ define([
          });
 
          Promise.all([p1, p2, p3, p4]).then(() => {
-            form.Controller._readRecordBeforeMount = baseReadRecordBeforeMount;
-            form.Controller._createRecordBeforeMount = baseCreateRecordBeforeMount;
             FC.destroy();
             done();
          });
