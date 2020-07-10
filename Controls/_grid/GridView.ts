@@ -115,6 +115,7 @@ var
 
         initColumnScroll(self, options): void {
             self._columnScrollController = new ColumnScroll({
+                needBottomPadding: options._needBottomPadding,
                 stickyColumnsCount: options.stickyColumnsCount,
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden',
                 theme: options.theme,

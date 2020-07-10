@@ -7,6 +7,7 @@ import {detection} from 'Env/Env';
 export interface IColumnScrollOptions {
     stickyColumnsCount?: number;
     hasMultiSelect: boolean;
+    needBottomPadding?: boolean;
 
     theme?: string;
     backgroundStyle?: string;
@@ -168,6 +169,7 @@ export class ColumnScroll {
         const backgroundStyle = this._options.backgroundStyle;
 
         let shadowClasses = `controls-ColumnScroll__shadow_theme-${theme}`
+            + ` controls-ColumnScroll__shadow_with${this._options.needBottomPadding ? '' : 'out'}-bottom-padding_theme-${theme}`
             + ` controls-ColumnScroll__shadow-${position}_theme-${theme}`
             + ` controls-horizontal-gradient-${backgroundStyle}_theme-${theme}`;
 
