@@ -1,5 +1,5 @@
 import uDimension = require('Controls/Utils/getDimensions');
-import { IMarkerModel, IOptions, TVisibility, Visibility, TKey } from './interface';
+import { IMarkerModel, IOptions, TKey, TVisibility, Visibility } from './interface';
 import { CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 
@@ -7,67 +7,57 @@ export class Controller {
    private _model: IMarkerModel;
    private _markerVisibility: TVisibility;
    private _markedKey: TKey;
+   private _prevMarkedKey: TKey;
 
    constructor(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
       this.setMarkedKey(options.markedKey);
+
+      if (this._markedKey !== null) {
+         this.updateModel();
+      }
    }
 
    /**
     * Обновить состояние контроллера
     * @param options
-    * @param [silent=false]
-    * @return {number|string} измененный или нет ключ маркера
+    * @return {number|string} Ключ маркера
     */
-   update(options: IOptions, silent: boolean = false): TKey {
-      const markerVisibilityChanged = this._markerVisibility !== options.markerVisibility;
-
+   update(options: IOptions): TKey {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-
-      // если visibility изменили на visible и не передали ключ, то ставим marker на первый элемент,
-      // иначе проставляем переданный ключ
-      if (markerVisibilityChanged && this._markerVisibility === Visibility.Visible && !options.markedKey) {
-         this._markedKey = this._setMarkerOnFirstItem();
-      } else {
-         this.setMarkedKey(options.markedKey, silent);
-      }
-
+      this.setMarkedKey(options.markedKey);
       return this._markedKey;
+   }
+
+   /**
+    * Обновить маркер в модели
+    */
+   updateModel(): void {
+      this._model.setMarkedKey(this._prevMarkedKey, false);
+      this._model.setMarkedKey(this._markedKey, true);
    }
 
    /**
     * Снимает старый маркер и ставит новый
     * Если по переданному ключу не найден элемент, то маркер ставится на первый элемент списка
     * @param key ключ элемента, на который ставится маркер
-    * @param [silent=false]
     * @return {string|number} новый ключ маркера
     */
-   setMarkedKey(key: TKey, silent: boolean = false): TKey {
+   setMarkedKey(key: TKey): TKey {
       if ((key === undefined || key === null) && this._markerVisibility !== Visibility.Visible) {
-         if (this._markedKey === key) {
-            return this._markedKey;
-         }
-
-         this._model.setMarkedKey(this._markedKey, false, silent);
          this._markedKey = key;
          return this._markedKey;
       }
 
       const item = this._model.getItemBySourceKey(key);
       if (this._markedKey === key && item) {
-         // если список перестроится, то в модели сбросится маркер, а в контроллере сохранится
-         if (!item.isMarked()) {
-            this._model.setMarkedKey(this._markedKey, false, true);
-            this._model.setMarkedKey(key, true, silent);
-         }
          return this._markedKey;
       }
 
+      this._prevMarkedKey = this._markedKey;
       if (item) {
-         this._model.setMarkedKey(this._markedKey, false, true);
-         this._model.setMarkedKey(key, true, silent);
          this._markedKey = key;
       } else {
          switch (this._markerVisibility) {
@@ -77,7 +67,6 @@ export class Controller {
                   if (this._markedKey) {
                      this._markedKey = this._setMarkerOnFirstItem();
                   } else {
-                     this._model.setMarkedKey(this._markedKey, false, true);
                      this._markedKey = null;
                   }
                }
@@ -93,9 +82,9 @@ export class Controller {
 
    /**
     * Проставляет заново маркер в модели
-    * @remark Не уведомляет о проставлении маркера, если не устанавливается маркер на первый элемент
-    * Если markerVisibility='visible' или ='onactivated' и маркер уже был проставлен и элемента с marked key не существует,
-    * то маркер поставим на первый элемент
+    * @remark
+    *  Если markerVisibility='visible' или ='onactivated' и маркер уже был проставлен и элемента с marked key не существует,
+    *  то маркер поставим на первый элемент
     */
    restoreMarker(): TKey {
       const item = this._model.getItemBySourceKey(this._markedKey);
@@ -103,6 +92,7 @@ export class Controller {
          item.setMarked(true, true);
       } else if (this._model.getCount() > 0
           && (this._markerVisibility === Visibility.Visible || this._markerVisibility === Visibility.OnActivated && this._markedKey)) {
+         this._prevMarkedKey = this._markedKey;
          this._markedKey = this._setMarkerOnFirstItem();
       }
 
@@ -159,7 +149,7 @@ export class Controller {
       } else if (prevItem) {
          this.setMarkedKey(this._getKey(prevItem));
       } else {
-         this.setMarkedKey(undefined);
+         this.setMarkedKey(null);
       }
 
       return this._markedKey;
@@ -180,7 +170,7 @@ export class Controller {
          const itemKey = this._getKey(item);
          this.setMarkedKey(itemKey);
       } else {
-         this.setMarkedKey(undefined);
+         this.setMarkedKey(null);
       }
 
       return this._markedKey;
@@ -206,24 +196,15 @@ export class Controller {
    private _setMarkerOnFirstItem(): TKey {
       // если модель пустая, то не на что ставить маркер
       if (!this._model.getCount()) {
-         // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
-         this._model.setMarkedKey(this._markedKey, false, true);
          return null;
       }
 
       const firstItem = this._model.getFirstItem();
       if (!firstItem) {
-         // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
-         this._model.setMarkedKey(this._markedKey, false, true);
          return null;
       }
 
-      const firstItemKey = firstItem.getKey();
-      if (this._markedKey !== firstItemKey) {
-         this._model.setMarkedKey(this._markedKey, false, true);
-         this._model.setMarkedKey(firstItemKey, true);
-      }
-      return firstItemKey;
+      return firstItem.getKey();
    }
 
    private _getFirstVisibleItemIndex(items: HTMLElement[], verticalOffset: number): number {

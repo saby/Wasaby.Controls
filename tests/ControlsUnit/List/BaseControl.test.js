@@ -1393,14 +1393,14 @@ define([
             lists.BaseControl._private.moveMarkerToNext(instance, event);
             assert.isTrue(activateCalled);
             assert.isTrue(preventDefaultCalled);
-            assert.equal(instance._listViewModel.getMarkedKey(), 3);
+            assert.equal(instance._markedKey, 3);
          });
 
          it ('moveMarkerToPrev', () => {
             lists.BaseControl._private.moveMarkerToPrevious(instance, event);
             assert.isTrue(activateCalled);
             assert.isTrue(preventDefaultCalled);
-            assert.equal(instance._listViewModel.getMarkedKey(), 1);
+            assert.equal(instance._markedKey, 1);
          });
       });
 
@@ -1686,13 +1686,13 @@ define([
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
 
-         const notifySpy = sinon.spy(baseControl._listViewModel, '_notify');
+         const notifySpy = sinon.spy(baseControl, '_notify');
 
          lists.BaseControl._private.updateMarkerController(baseControl, cfg);
-         assert.isFalse(notifySpy.called);
+         assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
 
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
-         assert.isTrue(notifySpy.called);
+         assert.isTrue(notifySpy.withArgs('markedKeyChanged', [2]).called);
 
          notifySpy.resetHistory();
          baseControl._listViewModel.setItems(new collection.RecordSet({
@@ -1700,7 +1700,7 @@ define([
             keyProperty: 'id'
          }));
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isTrue(notifySpy.called);
+         assert.isFalse(notifySpy.withArgs('markedKeyChanged').called);
       });
 
       describe('_private.createSelectionController', function() {
@@ -1792,41 +1792,6 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
       });
 
-      it('_private.updateMarkerController', async function() {
-         const
-            lnSource = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: data
-            }),
-            cfg = {
-               viewName: 'Controls/List/ListView',
-               source: lnSource,
-               keyProperty: 'id',
-               viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'visible'
-            },
-            baseControl = new lists.BaseControl(cfg);
-
-         baseControl.saveOptions(cfg);
-         await baseControl._beforeMount(cfg);
-
-         const notifySpy = sinon.spy(baseControl._listViewModel, '_notify');
-
-         lists.BaseControl._private.updateMarkerController(baseControl, cfg);
-         assert.isFalse(notifySpy.called);
-
-         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
-         assert.isTrue(notifySpy.called);
-
-         notifySpy.resetHistory();
-         baseControl._listViewModel.setItems(new collection.RecordSet({
-            rawData: data,
-            keyProperty: 'id'
-         }));
-         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isTrue(notifySpy.called);
-      });
-
       it('_private.setMarkedKey', () => {
          const baseControl = {
             _markerController: {
@@ -1834,7 +1799,8 @@ define([
                   assert.equal(key, 2);
                   return key;
                }
-            }
+            },
+            _notify: () => null
          };
 
          const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
@@ -3155,8 +3121,7 @@ define([
 
       it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
-         lists.BaseControl._private.scrollToItem = function() {
-         };
+         lists.BaseControl._private.scrollToItem = () => null;
 
          var
             stopImmediateCalled = false,
@@ -3207,12 +3172,6 @@ define([
                viewModelConstructor: lists.ListViewModel
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
-         lnBaseControl._selectionController = {
-            toggleItem: function() {},
-            handleReset: function() {},
-            update: function() {},
-            restoreSelection: () => {}
-         };
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -3226,29 +3185,16 @@ define([
                   .getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
 
                lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.down));
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
+               assert.equal(lnBaseControl._markedKey, 2, 'Invalid value of markedKey after press "down".');
 
                lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
+               assert.equal(lnBaseControl._markedKey, 3, 'Invalid value of markedKey after press "space".');
 
                lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
+               assert.equal(lnBaseControl._markedKey, 2, 'Invalid value of markedKey after press "up".');
 
                assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-
-               // reload with new source (first item with id "firstItem")
-               lnBaseControl._beforeUpdate(lnCfg2);
-
-               setTimeout(function() {
-                  lnBaseControl._afterUpdate({});
-                  // TODO хз почему после beforeUpdate новые опции не записываются в _options
-                  /*assert.equal(lnBaseControl.getViewModel()
-                     .getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');*/
-                  done();
-               }, 1);
+               done();
             }, 1);
          }, 1);
       });

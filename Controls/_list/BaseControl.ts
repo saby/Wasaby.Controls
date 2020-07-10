@@ -478,7 +478,11 @@ const _private = {
 
     setMarkedKey(self, key: string | number): void {
         if (self._markerController) {
-            self._markedKey = self._markerController.setMarkedKey(key);
+            const newMarkedKey = self._markerController.setMarkedKey(key);
+            if (newMarkedKey !== self._markedKey) {
+                self._markedKey = newMarkedKey;
+                self._notify('markedKeyChanged', [self._markedKey]);
+            }
         }
     },
     moveMarkerToNext(self, event) {
@@ -492,7 +496,11 @@ const _private = {
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
-            self._markedKey = self._markerController.moveMarkerToNext();
+            const newMarkedKey = self._markerController.moveMarkerToNext();
+            if (newMarkedKey !== self._markedKey) {
+                self._markedKey = newMarkedKey;
+                self._notify('markedKeyChanged', [self._markedKey]);
+            }
             _private.scrollToItem(self, self._markedKey);
         }
     },
@@ -507,7 +515,11 @@ const _private = {
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
-            self._markedKey = self._markerController.moveMarkerToPrev();
+            const newMarkedKey = self._markerController.moveMarkerToPrev();
+            if (newMarkedKey !== self._markedKey) {
+                self._markedKey = newMarkedKey;
+                self._notify('markedKeyChanged', [self._markedKey]);
+            }
             _private.scrollToItem(self, self._markedKey);
         }
     },
@@ -552,11 +564,13 @@ const _private = {
         }
 
         if (toggledItemId) {
-            if (!self._selectionController) {
-                self._createSelectionController();
+            if (self._options.hasOwnProperty('selectedKeys')) {
+                if (!self._selectionController) {
+                    self._createSelectionController();
+                }
+                const result = self._selectionController.toggleItem(toggledItemId);
+                _private.handleSelectionControllerResult(self, result);
             }
-            const result = self._selectionController.toggleItem(toggledItemId);
-            _private.handleSelectionControllerResult(self, result);
             _private.moveMarkerToNext(self, event);
         }
     },
@@ -1132,7 +1146,11 @@ const _private = {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
-            self._markedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
+            const newMarkedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
+            if (newMarkedKey !== self._markedKey) {
+                self._markedKey = newMarkedKey;
+                self._notify('markedKeyChanged', [self._markedKey]);
+            }
             self._setMarkerAfterScroll = false;
         }
     },
@@ -1938,6 +1956,8 @@ const _private = {
 
     // endregion
 
+    // region Marker
+
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
       // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
       // при подписке на модель событие remove летит еще и при скрытии элементов
@@ -1949,7 +1969,11 @@ const _private = {
                    selectionControllerResult = self._selectionController.handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerController) {
-                   self._markedKey = self._markerController.handleRemoveItems(removedItemsIndex);
+                   const newMarkedKey = self._markerController.handleRemoveItems(removedItemsIndex);
+                   if (newMarkedKey !== self._markedKey) {
+                       self._markedKey = newMarkedKey;
+                       self._notify('markedKeyChanged', [self._markedKey]);
+                   }
                }
                break;
        }
@@ -1965,17 +1989,18 @@ const _private = {
    },
 
     updateMarkerController(self: any, options: any): void {
-        const optionsHasMarkedKey = options.hasOwnProperty('markedKey');
-        const notify = optionsHasMarkedKey && self._options.markedKey !== options.markedKey
-            || self._options.markerVisibility !== options.markerVisibility;
-
-        // если маркер не поменялся в опциях, то не нужно нотифаить
-        self._markedKey = self._markerController.update({
+        const newMarkedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: optionsHasMarkedKey ? options.markedKey : self._markedKey
-        }, !notify);
+            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
+        });
+        if (newMarkedKey !== self._markedKey) {
+            self._markedKey = newMarkedKey;
+            self._notify('markedKeyChanged', [self._markedKey]);
+        }
     },
+
+    // endregion
 
     createEditInPlace(self: typeof BaseControl, options: any): void {
         if (options.editingConfig) {
@@ -2841,6 +2866,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._markerController) {
             _private.updateMarkerController(this, newOptions);
+            this._markerController.updateModel();
         } else {
             if (newOptions.markerVisibility !== 'hidden') {
                 this._markerController = _private.createMarkerController(self, newOptions);
@@ -3411,12 +3437,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
         // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.
         // Например, записи в мастере или запись в списке с dragScrolling'ом.
-        // При таких сценариях нельзя устанавливать маркер по событию itemClick, т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
+        // При таких сценариях нельзя устанавливать маркер по событию itemClick,
+        // т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
         // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет.
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        const canBeMarked = this._mouseDownItemKey === key && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
+        const canBeMarked = this._mouseDownItemKey === key
+           && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
 
         if (canBeMarked) {
             this.setMarkedKey(key);
