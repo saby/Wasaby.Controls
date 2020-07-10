@@ -23,17 +23,17 @@ class HorizontalMeasurer implements IMeasurer {
       actionCaptionPosition: ActionCaptionPosition,
       menuButtonVisibility?: 'visible'|'adaptive'
    ): ISwipeConfig {
-      let isMenuButtonVisible = menuButtonVisibility === 'visible';
-      let visibleActions = MeasurerUtils.getActualActions(actions);
+      const actualActions: IItemAction[] = MeasurerUtils.getActualActions(actions);
+      let visibleActions: IItemAction[] = [];
       const actionTemplateConfig = this._getActionTemplateConfig(rowHeight, actionCaptionPosition);
       const moreButton = HorizontalMeasurer._getMoreButton();
 
-      if (visibleActions.length > MAX_ACTIONS_COUNT) {
-         visibleActions = HorizontalMeasurer._calculateVisibleActions(visibleActions, moreButton, rowWidth, actionTemplateConfig);
-         isMenuButtonVisible = true;
+      if (actualActions.length) {
+         visibleActions =
+             HorizontalMeasurer._calculateVisibleActions(actualActions, moreButton, rowWidth, actionTemplateConfig);
       }
 
-      if (isMenuButtonVisible) {
+      if (menuButtonVisibility === 'visible' || visibleActions.length < actualActions.length) {
          visibleActions.push(moreButton);
       }
 
@@ -113,7 +113,7 @@ class HorizontalMeasurer implements IMeasurer {
     * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
     */
    private static _calculateActionSize(itemAction: IItemAction, templateConfig: ISwipeActionTemplateConfig): number {
-      return HorizontalMeasurer._calculateActionsSizes([itemAction], templateConfig)[0];
+      return this._calculateActionsSizes([itemAction], templateConfig)[0];
    }
 
    /**
@@ -144,11 +144,11 @@ class HorizontalMeasurer implements IMeasurer {
        moreButton: IItemAction,
        rowWidth: number,
        templateConfig: ISwipeActionTemplateConfig): IItemAction[] {
-      const moreButtonSize = HorizontalMeasurer._calculateActionSize(moreButton, templateConfig);
+      const moreButtonSize = this._calculateActionSize(moreButton, templateConfig);
       let maxWidth = rowWidth - moreButtonSize;
 
       // По стандарту, показываем не более трёх опций в свайпе.
-      // Это позволит не производить слишком много вычислений с DOM
+      // Кроме всего прочего, это позволит не производить слишком много вычислений с DOM
       const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
       const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig);
       const visibleActions: IItemAction[] = [];
