@@ -1800,7 +1800,10 @@ define([
                   return key;
                }
             },
-            _notify: () => null
+            _notify: () => null,
+            _options: {
+               hasOwnProperty: () => true
+            }
          };
 
          const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');

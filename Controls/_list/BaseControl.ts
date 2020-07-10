@@ -1986,9 +1986,6 @@ const _private = {
                        self._markedKey = newMarkedKey;
                        self._notify('markedKeyChanged', [self._markedKey]);
                    }
-                   if (!self._options.hasOwnProperty('markedKey')) {
-                       self._markerController.updateModel();
-                   }
                }
                break;
        }
