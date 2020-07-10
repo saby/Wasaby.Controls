@@ -688,7 +688,7 @@ const _private = {
                     self._scrollController.startBatchAdding(direction);
                 }
 
-                self.getInertialScrolling.callAfterScrollStopped(() => {
+                self.getInertialScrolling().callAfterScrollStopped(() => {
                     loadCallback(addedItems, countCurrentItems);
                 });
 
@@ -2596,7 +2596,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.handleListScrollSync(this, params);
 
         if (detection.isMobileIOS) {
-            this.getInertialScrolling.scrollStarted();
+            this.getInertialScrolling().scrollStarted();
         }
     },
 
