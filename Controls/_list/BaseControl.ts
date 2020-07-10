@@ -2912,12 +2912,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.updateInitializedItemActions(this, newOptions);
                 self._listViewModel.setCollapsedGroups(tCollapsedGroups);
                 if (isColspanGproupsUpdate) {
-                    self._listViewModel.setCollapsedGroups(tCollspanGroups)
+                    self._listViewModel.setCollapsedGroups(tCollspanGroups);
                 }
             });
         } else {
             if (isColspanGproupsUpdate) {
-                self._listViewModel.setCollapsedGroups(tCollspanGroups)
+                self._listViewModel.setCollapsedGroups(tCollspanGroups);
             }
         }
         // Если поменялись ItemActions, то закрываем свайп
