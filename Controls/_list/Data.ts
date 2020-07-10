@@ -41,7 +41,18 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
 
       /**
        * @name Controls/_list/Data#root
-       * @cfg {Number|String} Идентификатор корневого узла.
+       * @cfg {Number|String} Идентификатор корневого узла. 
+       * Он отправляеться в фильтре. 
+       * Значение береться из опции {@link Controls/_interface/IHierarchy#parentProperty parentProperty}.
+       * @example
+       * <pre>
+       *    <Controls.list:DataContainer
+       *       keyProperty="id"
+       *       filter="{{_filter}}"
+       *       source="{{_source}}" 
+       *       root="Сотрудники"
+       *    />
+       * </pre>
        */
 
 
