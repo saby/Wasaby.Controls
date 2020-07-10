@@ -38,7 +38,7 @@ define([
       var validCtrl = new validateMod.Container();
       validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
       beforeEach(function() {
-         stubP = sinon.stub(validCtrl._private, 'callInfoBox').callsFake(() => undefined);
+         stubP = sinon.stub(validCtrl, '_callInfoBox').callsFake(() => undefined);
       });
       afterEach(function() {
          stubP.restore();
@@ -53,7 +53,7 @@ define([
       it('closeInfoBox', () => {
          validCtrl._isOpened = false;
          validCtrl._validationResult = 'error';
-         validCtrl._private.openInfoBox(validCtrl);
+         validCtrl._openInfoBox(validCtrl);
          validCtrl._mouseInfoboxHandler({type: 'mouseenter'});
          assert.deepEqual(validCtrl._isOpened, true);
          validCtrl._mouseInfoboxHandler({type: 'close'});
