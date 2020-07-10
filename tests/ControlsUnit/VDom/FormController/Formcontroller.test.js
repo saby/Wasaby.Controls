@@ -283,6 +283,30 @@ define([
          FC.destroy();
       });
 
+      it('calcInitializingWay', () => {
+         let FC = new form.Controller();
+         const options = {};
+         let initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'create');
+
+         options.key = 123;
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'read');
+
+         options.record = 123;
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'delayedRead');
+
+         delete options.key;
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'local');
+
+         options.initializingWay = 'test';
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'test');
+         FC.destroy();
+      });
+
       it('FormController update', (done) => {
          let isUpdatedCalled = false;
          let FC = new form.Controller();
