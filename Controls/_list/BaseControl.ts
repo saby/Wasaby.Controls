@@ -483,6 +483,9 @@ const _private = {
                 self._markedKey = newMarkedKey;
                 self._notify('markedKeyChanged', [self._markedKey]);
             }
+            if (!self._options.hasOwnProperty('markedKey')) {
+                self._markerController.updateModel();
+            }
         }
     },
     moveMarkerToNext(self, event) {
@@ -500,6 +503,9 @@ const _private = {
             if (newMarkedKey !== self._markedKey) {
                 self._markedKey = newMarkedKey;
                 self._notify('markedKeyChanged', [self._markedKey]);
+            }
+            if (!self._options.hasOwnProperty('markedKey')) {
+                self._markerController.updateModel();
             }
             _private.scrollToItem(self, self._markedKey);
         }
@@ -519,6 +525,9 @@ const _private = {
             if (newMarkedKey !== self._markedKey) {
                 self._markedKey = newMarkedKey;
                 self._notify('markedKeyChanged', [self._markedKey]);
+            }
+            if (!self._options.hasOwnProperty('markedKey')) {
+                self._markerController.updateModel();
             }
             _private.scrollToItem(self, self._markedKey);
         }
@@ -1150,6 +1159,9 @@ const _private = {
             if (newMarkedKey !== self._markedKey) {
                 self._markedKey = newMarkedKey;
                 self._notify('markedKeyChanged', [self._markedKey]);
+            }
+            if (!self._options.hasOwnProperty('markedKey')) {
+                self._markerController.updateModel();
             }
             self._setMarkerAfterScroll = false;
         }
@@ -1973,6 +1985,9 @@ const _private = {
                    if (newMarkedKey !== self._markedKey) {
                        self._markedKey = newMarkedKey;
                        self._notify('markedKeyChanged', [self._markedKey]);
+                   }
+                   if (!self._options.hasOwnProperty('markedKey')) {
+                       self._markerController.updateModel();
                    }
                }
                break;
