@@ -6,8 +6,8 @@ import { Model } from 'Types/entity';
 export class Controller {
    private _model: IMarkerModel;
    private _markerVisibility: TVisibility;
-   private _markedKey: TKey;
-   private _prevMarkedKey: TKey;
+   private _markedKey: TKey = null;
+   private _prevMarkedKey: TKey = null;
 
    constructor(options: IOptions) {
       this._model = options.model;
@@ -35,8 +35,11 @@ export class Controller {
     * Обновить маркер в модели
     */
    updateModel(): void {
-      this._model.setMarkedKey(this._prevMarkedKey, false);
-      this._model.setMarkedKey(this._markedKey, true);
+      if (this._prevMarkedKey !== this._markedKey) {
+         this._model.setMarkedKey(this._prevMarkedKey, false);
+         this._model.setMarkedKey(this._markedKey, true);
+         this._prevMarkedKey = this._markedKey;
+      }
    }
 
    /**
