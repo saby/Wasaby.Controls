@@ -69,7 +69,8 @@ describe('Controls/_lookup/BaseControllerClass', () => {
             const controller = getLookupControllerWithSelectedKeys();
 
             return new Promise((resolve) => {
-                controller.loadItems().then(() => {
+                controller.loadItems().then((items) => {
+                    controller.setItems(items);
                     const resultItemsCount = 3;
                     deepStrictEqual(controller.getItems().getCount(), resultItemsCount);
                     resolve();
@@ -141,7 +142,8 @@ describe('Controls/_lookup/BaseControllerClass', () => {
         const controller = getLookupControllerWithSelectedKeys();
 
         return new Promise((resolve) => {
-            controller.loadItems().then(() => {
+            controller.loadItems().then((items) => {
+                controller.setItems(items);
                 deepStrictEqual(controller.getTextValue(), 'Sasha, Aleksey, Dmitry');
                 resolve();
             });
