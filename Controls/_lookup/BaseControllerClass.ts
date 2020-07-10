@@ -10,7 +10,7 @@ import {object} from 'Types/util';
 import * as mStubs from 'Core/moduleStubs';
 
 type Key = string|number|null;
-type SelectedItems = RecordSet|List<Model>;
+export type SelectedItems = RecordSet|List<Model>;
 
 export interface ILookupBaseControllerOptions extends IFilterOptions, ISourceOptions {
     selectedKeys: Key[];
@@ -72,7 +72,7 @@ export default class LookupBaseControllerClass {
         return updateResult;
     }
 
-    loadItems(): Promise<RecordSet | null> {
+    loadItems(): Promise<RecordSet | null>{
         const options = this._options;
         const filter = {...options.filter};
         const keyProperty = options.keyProperty;
@@ -82,7 +82,6 @@ export default class LookupBaseControllerClass {
         return this._getSourceController().load(filter).then(
             (items) => {
                 LookupBaseControllerClass.checkLoadedItems(items, this._selectedKeys, keyProperty);
-                this._setItems(items);
 
                 if (options.dataLoadCallback) {
                     options.dataLoadCallback(items);

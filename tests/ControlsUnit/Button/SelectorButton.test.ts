@@ -2,7 +2,7 @@ import {assert} from 'chai';
 import * as chai from 'chai';
 // @ts-ignore
 import * as Clone from 'Core/core-clone';
-import SelectorButton, {ISelectorButtonOptions} from 'Controls/_lookup/Button/_SelectorButton';
+import SelectorButton, {ISelectorButtonOptions} from 'Controls/_lookup/Button';
 
 interface ITestOptions extends ISelectorButtonOptions {
    multiSelect: boolean;
@@ -13,7 +13,7 @@ interface ITestOptions extends ISelectorButtonOptions {
    readOnly?: boolean;
 }
 
-describe('Controls/_lookup/Button/_SelectorButton', (): void => {
+describe('Controls/_lookup/Button/', (): void => {
    const config: ITestOptions = {
       ...SelectorButton.getDefaultOptions(),
       multiSelect: true,
