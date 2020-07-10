@@ -59,6 +59,7 @@ export default abstract class BaseLookup extends Control {
 
     protected _addItemHandler(event: SyntheticEvent, item: Model): void {
         this._addItem(item);
+        this._notify('choose', [item]);
     }
 
     protected _addItem(item: Model): void {
