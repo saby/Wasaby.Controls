@@ -50,7 +50,7 @@ interface ISelectedCollectionChildren {
 
 class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _template: TemplateFunction = template;
-   protected _visibleItems: unknown[] = 0;
+   protected _visibleItemsCount: number = 0;
    protected _notifyHandler: (event: SyntheticEvent, eventName: string) => void = tmplNotify;
    protected _getItemMaxWidth: Function = selectedCollectionUtils.getItemMaxWidth;
    protected _getItemOrder: Function = selectedCollectionUtils.getItemOrder;
@@ -63,13 +63,13 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
    protected _beforeMount(options: IControlOptions): void {
       this._clickCallbackPopup = this._clickCallbackPopup.bind(this);
-      this._visibleItems = this._getVisibleItems(options.items, options.maxVisibleItems);
+      this._visibleItemsCount = this._getVisibleItemsCount(options.items, options.maxVisibleItems);
       this._counterWidth = options._counterWidth || 0;
    }
 
    protected _beforeUpdate(newOptions): void {
       const itemsCount: number = newOptions.items.getCount();
-      this._visibleItems = this._getVisibleItems(newOptions.items, newOptions.maxVisibleItems);
+      this._visibleItemsCount = this._getVisibleItemsCount(newOptions.items, newOptions.maxVisibleItems);
 
       if (this._isShowCounter(itemsCount, newOptions.maxVisibleItems)) {
          this._counterWidth = newOptions._counterWidth ||
@@ -153,11 +153,9 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       });
    }
 
-   private _getVisibleItems(items: RecordSet, maxVisibleItems: number): unknown[]  {
-      const itemsInArray: unknown[] = chain.factory(items).value();
-      const indexFirstVisibleItem: number = Math.max(maxVisibleItems ? items.getCount() - maxVisibleItems : 0, 0);
-
-      return itemsInArray.slice(indexFirstVisibleItem);
+   private _getVisibleItemsCount(items: RecordSet, maxVisibleItems: number): number  {
+      const itemsCount = items.getCount();
+      return itemsCount > maxVisibleItems ? maxVisibleItems : itemsCount;
    }
 
    private _getCounterWidth(itemsCount: number, readOnly: boolean, itemsLayout: String): number {

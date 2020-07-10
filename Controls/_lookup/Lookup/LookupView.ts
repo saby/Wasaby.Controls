@@ -117,14 +117,13 @@ var _private = {
          collectionItems,
          itemsSizes = [],
          measurer = document.createElement('div'),
-         maxVisibleItems = newOptions.multiLine ? newOptions.maxVisibleItems : items.length,
-         visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems);
+         maxVisibleItems = newOptions.multiLine ? newOptions.maxVisibleItems : items.length;
 
          /* toDO !KONGO Шаблонизатор для кавычки в шаблоне возвращает строковое представление в виде "&amp;quot;", т.е. &quot (ковычка) представляется как &amp;quot;
           * при вставке в innerHTML на выходе мы получим "&quot;", для того что бы получить  кавычку и правильно посчитать ширину элементов сами &amp заменяем на &*/
          measurer.innerHTML = itemsTemplate({
             _options: merge(Collection.getDefaultOptions(), _private.getCollectionOptions(newOptions, maxVisibleItems, counterWidth)),
-            _visibleItems: visibleItems,
+            _visibleItemsCount: maxVisibleItems,
             _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth,
             _getItemOrder: selectedCollectionUtils.getItemOrder,
             _contentTemplate: ContentTemplate,
