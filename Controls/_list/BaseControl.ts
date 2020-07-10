@@ -2893,15 +2893,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             });
         }
 
-        let tCollspanGroups = [],
-            isColspanGproupsUpdate:Boolean = false;
-        if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
-            this._prepareGroups(newOptions, (collapsedGroups) => {
-                tCollspanGroups = collapsedGroups ? collapsedGroups : [];
-                isColspanGproupsUpdate = true;
-            });
-        }
-
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
@@ -2910,14 +2901,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return _private.reload(self, newOptions).addCallback(() => {
                 this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                 _private.updateInitializedItemActions(this, newOptions);
-                self._listViewModel.setCollapsedGroups(tCollapsedGroups);
-                if (isColspanGproupsUpdate) {
-                    self._listViewModel.setCollapsedGroups(tCollspanGroups);
+                if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
+                    this._prepareGroups(newOptions, (collapsedGroups) => {
+                        self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                    });
                 }
             });
         } else {
-            if (isColspanGproupsUpdate) {
-                self._listViewModel.setCollapsedGroups(tCollspanGroups);
+            if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
+                this._prepareGroups(newOptions, (collapsedGroups) => {
+                    self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                });
             }
         }
         // Если поменялись ItemActions, то закрываем свайп
