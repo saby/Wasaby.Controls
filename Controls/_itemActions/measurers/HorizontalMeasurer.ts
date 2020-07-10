@@ -113,22 +113,25 @@ class HorizontalMeasurer implements IMeasurer {
     * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
     */
    private static _calculateActionSize(itemAction: IItemAction, templateConfig: ISwipeActionTemplateConfig): number {
-      return this._calculateActionsSizes([itemAction], templateConfig)[0];
+      return this._calculateActionsSizes([itemAction], templateConfig).itemsSizes[0];
    }
 
    /**
-    * Вычисляет горизонтальные размеры опций свайпа.
+    * Вычисляет горизонтальные размеры опций свайпа с учётом размеров блока, в который они завёрнуты.
     * @param itemActions видимые по свайпу опции записи
     * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
     */
-   private static _calculateActionsSizes(itemActions: IItemAction[], templateConfig: ISwipeActionTemplateConfig): number[] {
+   private static _calculateActionsSizes(itemActions: IItemAction[], templateConfig: ISwipeActionTemplateConfig): {
+      itemsSizes: number[];
+      blockSize: number;
+   } {
       const itemsHtml = itemActions.map((action) => SwipeActionTemplate({
          ...templateConfig,
          action
       }));
       return MeasurerUtils.calculateSizesOfItems(
           itemsHtml,
-          'controls-UtilsItemAction__measurer',
+          'controls-Swipe_horizontal_theme-default',
           'controls-Swipe__action');
    }
 
@@ -145,15 +148,15 @@ class HorizontalMeasurer implements IMeasurer {
        rowWidth: number,
        templateConfig: ISwipeActionTemplateConfig): IItemAction[] {
       const moreButtonSize = this._calculateActionSize(moreButton, templateConfig);
-      let maxWidth = rowWidth - moreButtonSize;
 
       // По стандарту, показываем не более трёх опций в свайпе.
       // Кроме всего прочего, это позволит не производить слишком много вычислений с DOM
       const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
       const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig);
+      let maxWidth = rowWidth - moreButtonSize - itemActionsSizes.blockSize;
       const visibleActions: IItemAction[] = [];
       itemActions.every((action, index) => {
-         maxWidth -= itemActionsSizes[index];
+         maxWidth -= itemActionsSizes.itemsSizes[index];
          if (maxWidth < 0) {
             return false;
          }
