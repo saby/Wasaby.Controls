@@ -5,6 +5,12 @@ import {default as BaseLookup} from 'Controls/_lookup/BaseLookup';
 import showSelector from 'Controls/_lookup/showSelector';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 import * as tmplNotify from 'Controls/Utils/tmplNotify';
+import {List} from 'Types/collection';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Model} from 'Types/entity';
+import * as itemTemplate from 'wml!Controls/_lookup/Button/itemTemplate';
+import {IValidationStatusOptions, ValidationStatus} from '../_interface/IValidationStatus';
+import rk = require('i18n!Controls');
 
 /**
  * Кнопка-ссылка с возможностью выбора значений из справочника.
@@ -69,11 +75,49 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
  * </pre>
  */
 
+export interface ISelectorButtonOptions extends IControlOptions, IValidationStatusOptions {
+   multiSelect?: boolean;
+   fontColorStyle: string;
+   buttonStyle: string;
+   maxVisibleItems: number;
+   itemTemplate: TemplateFunction;
+   showSelectorCaption: string;
+}
+
 export default class Button extends BaseLookup {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
 
-   showSelector(popupOptions: IStackPopupOptions): void {
+   showSelector(popupOptions?: IStackPopupOptions): void {
       return showSelector(this, popupOptions, this._options.multiSelect);
+   }
+
+   protected _reset(): void {
+      this._updateItems(new List());
+   }
+
+   protected _itemClickHandler(event: SyntheticEvent<Event>, item: Model): void {
+      this._notify('itemClick', [item]);
+
+      if (!this._options.readOnly && !this._options.multiSelect) {
+         this._showSelector();
+      }
+   }
+
+   protected _openInfoBox(event: SyntheticEvent<Event>, config: object): void {
+      config.width = this._container.offsetWidth;
+   }
+
+   static getDefaultOptions = (): ISelectorButtonOptions => {
+      const buttonOptions = {
+         fontColorStyle: 'link',
+         buttonStyle: 'secondary',
+         maxVisibleItems: 7,
+         itemTemplate,
+         showSelectorCaption: `+${rk('еще')}`,
+         validationStatus: 'valid' as ValidationStatus
+      };
+      const baseOptions = BaseLookup.getDefaultOptions();
+      return {...buttonOptions, ...baseOptions};
    }
 }
