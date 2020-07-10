@@ -17,28 +17,13 @@ export class MeasurerUtils {
     }
 
     /**
-     * Позволяет получить горизонтальные размеры опций свайпа для расчёта их видимости в текущем контейнере.
-     */
-    static calculateActionsSizes(itemActions: IItemAction[], rowWidth: number, itemActionTemplate: Function) {
-        let itemsHtml = [];
-
-
-        // 1. Вызываем шаблон каждой опции и собираем в массив строк HTML
-        // 2.
-        const itemsSizes = MeasurerUtils.measureSizesOfItems(
-            itemsHtml,
-            'controls-UtilsItemAction__measurer',
-            'controls-itemActionsV__action');
-    }
-
-    /**
      * Вычисляет горизонтальные размеры элементов, переданных в первом аргументе
      * Создаёт HTML контейнер с содержимым переданных в itemsHtml элементов и вычисляет гориз. размер каждого элемента
      * @param itemsHtml
      * @param measurerBlockClass
      * @param itemClass
      */
-    static measureSizesOfItems(itemsHtml: string[], measurerBlockClass: string, itemClass: string): number[] {
+    static calculateSizesOfItems(itemsHtml: string[], measurerBlockClass: string, itemClass: string): number[] {
         const itemsSizes: number[] = [];
         const measurer: HTMLElement = document.createElement('div');
         measurer.innerHTML = itemsHtml.join('');

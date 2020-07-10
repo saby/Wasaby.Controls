@@ -28,15 +28,4 @@ export {
 export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
 export {Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';
-
-import * as ItemActionsForTemplate from 'wml!Controls/_itemActions/resources/templates/ItemActionsFor';
-import * as ItemActionsTemplate from 'wml!Controls/_itemActions/resources/templates/ItemActionsTemplate';
-import * as SwipeActionTemplate from 'wml!Controls/_itemActions/resources/templates/SwipeAction';
-import * as SwipeActionsTemplate from 'wml!Controls/_itemActions/resources/templates/SwipeTemplate';
-
-export {
-    ItemActionsForTemplate,
-    ItemActionsTemplate,
-    SwipeActionTemplate,
-    SwipeActionsTemplate
-}
+export {ItemActionsForTemplate, SwipeActionTemplate, ItemActionsTemplate, SwipeActionsTemplate} from './_itemActions/Templates'

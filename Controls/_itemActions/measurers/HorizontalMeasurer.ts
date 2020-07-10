@@ -4,6 +4,8 @@ import { ISwipeConfig } from 'Controls/display';
 import { IMeasurer } from '../interface/IMeasurer';
 import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
 import { MeasurerUtils } from './MeasurerUtils';
+import { ISwipeActionTemplateConfig } from '../interface/ISwipeActionTemplateConfig';
+import {SwipeActionTemplate} from '../Templates';
 
 const MAX_ACTIONS_COUNT = 3;
 const HEIGHT_LOWER_BOUND_WITH_TITLE = 58;
@@ -22,6 +24,62 @@ function getItemActionsSize(
    }
 }
 
+/**
+ * Вычисляет горизонтальный размер одной опции свайпа.
+ * @param itemAction видимая по свайпу опция записи
+ * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
+ */
+function calculateActionSize(itemAction: IItemAction, templateConfig: ISwipeActionTemplateConfig): number {
+   return calculateActionsSizes([itemAction], templateConfig)[0];
+}
+
+/**
+ * Вычисляет горизонтальные размеры опций свайпа.
+ * @param itemActions видимые по свайпу опции записи
+ * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
+ */
+function calculateActionsSizes(itemActions: IItemAction[], templateConfig: ISwipeActionTemplateConfig): number[] {
+   const itemsHtml = itemActions.map((action) => SwipeActionTemplate({
+      ...templateConfig,
+      action
+   }));
+   return MeasurerUtils.calculateSizesOfItems(
+       itemsHtml,
+       'controls-UtilsItemAction__measurer',
+       'controls-itemActionsV__action');
+}
+
+/**
+ * Вычисляет на основе горизонтальных размеров видимые опции свайпа
+ * @param actions все опции свайпа
+ * @param moreButton опция "Ещё"
+ * @param rowWidth ширина контейнера для отображения опций свайпа
+ * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
+ */
+function calculateVisibleActions(
+    actions: IItemAction[],
+    moreButton: IItemAction,
+    rowWidth: number,
+    templateConfig: ISwipeActionTemplateConfig) {
+   const moreButtonSize = calculateActionSize(moreButton, templateConfig);
+   let maxWidth = rowWidth - moreButtonSize;
+
+   // По стандарту, показываем не более трёх опций в свайпе.
+   // Это позволит не производить слишком много вычислений с DOM
+   const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
+   const itemActionsSizes = calculateActionsSizes(itemActions, templateConfig);
+   let visibleActions = [];
+   itemActions.every((action, index) => {
+      maxWidth -= itemActionsSizes[index];
+      if (maxWidth < 0) {
+         return false;
+      }
+      visibleActions.push(action);
+      return true;
+   });
+   return visibleActions;
+}
+
 export const horizontalMeasurer: IMeasurer = {
    getSwipeConfig(
       actions: IItemAction[],
@@ -30,29 +88,49 @@ export const horizontalMeasurer: IMeasurer = {
       actionCaptionPosition: ActionCaptionPosition,
       menuButtonVisibility?: 'visible'|'adaptive'
    ): ISwipeConfig {
+      let visibleActions = [];
+      let isMenuButtonVisible = menuButtonVisibility === 'visible';
+      const actionTemplateConfig: ISwipeActionTemplateConfig = {
+         itemActionsSize: getItemActionsSize(rowHeight, actionCaptionPosition),
+         paddingSize: 'm',
+         needIcon: this.needIcon,
+         needTitle: this.needTitle,
+         actionCaptionPosition,
+         theme: 'default', // todo,
+         hasActionWithIcon: false // todo
+      };
+      const moreButton: IItemAction = {
+         id: null,
+         icon: 'icon-SwipeMenu',
+         title: rk('Ещё'),
+         _isMenu: true,
+         showType: TItemActionShowType.TOOLBAR
+      };
 
-      let itemActions = MeasurerUtils.getActualActions(actions);
+      if (actions.length > MAX_ACTIONS_COUNT) {
+         visibleActions = calculateVisibleActions(
+             MeasurerUtils.getActualActions(actions),
+             moreButton,
+             rowWidth,
+             actionTemplateConfig);
+         isMenuButtonVisible = true;
+      } else {
+         visibleActions = actions;
+      }
 
-      if (itemActions.length > MAX_ACTIONS_COUNT || menuButtonVisibility === 'visible') {
-         itemActions = itemActions.slice(0, MAX_ACTIONS_COUNT);
-         itemActions.push({
-            id: null,
-            icon: 'icon-SwipeMenu',
-            title: rk('Ещё'),
-            _isMenu: true,
-            showType: TItemActionShowType.TOOLBAR
-         });
+      if (isMenuButtonVisible) {
+         visibleActions.push(moreButton);
       }
 
       return {
-         itemActionsSize: getItemActionsSize(rowHeight, actionCaptionPosition),
+         itemActionsSize: actionTemplateConfig.itemActionsSize,
          itemActions: {
             all: actions,
-            showed: itemActions
+            showed: visibleActions
          },
-         paddingSize: 'm',
-         needIcon: this.needIcon,
-         needTitle: this.needTitle
+         paddingSize: actionTemplateConfig.paddingSize,
+         needIcon: actionTemplateConfig.needIcon,
+         needTitle: actionTemplateConfig.needTitle
       };
    },
    needIcon(
