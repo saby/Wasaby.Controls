@@ -317,6 +317,11 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
+    protected _beforeUnmount(): void {
+        this._sticky?.close();
+        this._sticky = null;
+    }
+
     protected _resultHandler(action, data): void {
         if (action === 'itemClick') {
             const item = data;
