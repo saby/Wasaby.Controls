@@ -2455,7 +2455,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
-            let viewModelConfig = cClone(newOptions);
+            let viewModelConfig = {...newOptions};
             if (collapsedGroups) {
                 viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
             }
