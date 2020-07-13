@@ -241,7 +241,6 @@ export class ColumnScroll {
             // reset scroll position after resize, if we don't need scroll
             if (newContentSize <= newContainerSize) {
                 this._scrollPosition = 0;
-                this._drawTransform(0, isFullGridSupport);
             }
 
             this._updateShadowState();
